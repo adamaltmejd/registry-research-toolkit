@@ -320,6 +320,33 @@ class ResolvedClassificationLink(_ResolvedModel):
         return self
 
 
+def _validate_classification_domain(
+    value_set: ResolvedCodeSet | None,
+    links: tuple[ResolvedClassificationLink, ...],
+) -> None:
+    slugs = [link.classification for link in links]
+    if slugs != sorted(set(slugs)):
+        raise ValueError("classification links must have unique sorted books")
+    for link in links:
+        if link.conformance is None:
+            continue
+        if value_set is None:
+            raise ValueError("conformance requires an effective value set")
+        conformance = link.conformance
+        members = set(value_set.members)
+        checked = set(conformance.checked_codes)
+        if checked != {code for code, _ in members}:
+            raise ValueError(
+                "conformance must check every distinct code in the value set"
+            )
+        nonconforming = set(conformance.nonconforming_members)
+        if (
+            not nonconforming <= members
+            or not {code for code, _ in nonconforming} <= checked
+        ):
+            raise ValueError("nonconforming members must be checked domain members")
+
+
 class ResolvedState(_ResolvedDeliveryScope):
     variant: ResolvedVariant
     delivery_column_name: str
@@ -350,27 +377,7 @@ class ResolvedState(_ResolvedDeliveryScope):
 
     @model_validator(mode="after")
     def _classification_contract(self) -> Self:
-        slugs = [link.classification for link in self.classification_links]
-        if slugs != sorted(set(slugs)):
-            raise ValueError("state classification links must have unique sorted books")
-        for link in self.classification_links:
-            if link.conformance is None:
-                continue
-            if self.value_set is None:
-                raise ValueError("state conformance requires an effective value set")
-            conformance = link.conformance
-            members = set(self.value_set.members)
-            checked = set(conformance.checked_codes)
-            if checked != {code for code, _ in members}:
-                raise ValueError(
-                    "conformance must check every distinct code in the state value set"
-                )
-            nonconforming = set(conformance.nonconforming_members)
-            if (
-                not nonconforming <= members
-                or not {code for code, _ in nonconforming} <= checked
-            ):
-                raise ValueError("nonconforming members must be checked state members")
+        _validate_classification_domain(self.value_set, self.classification_links)
         return self
 
 
@@ -388,6 +395,7 @@ class ResolvedAliasWindow(_ResolvedWindow):
     coding_metadata: Literal["shared", "per_column"] = "shared"
     value_set: ResolvedCodeSet | None = None
     value_set_version_label: str = ""
+    classification_links: tuple[ResolvedClassificationLink, ...] = ()
 
     @model_validator(mode="after")
     def _column_scope(self) -> Self:
@@ -410,11 +418,14 @@ class ResolvedAliasWindow(_ResolvedWindow):
                 "shared representation column metadata comes from its state"
             )
         if self.coding_metadata == "shared" and (
-            self.value_set is not None or self.value_set_version_label
+            self.value_set is not None
+            or self.value_set_version_label
+            or self.classification_links
         ):
             raise ValueError("shared representation coding comes from its state")
         if self.coding_metadata == "per_column" and self.value_set is None:
             raise ValueError("per-column coding requires a complete finite domain")
+        _validate_classification_domain(self.value_set, self.classification_links)
         return self
 
 
@@ -751,7 +762,15 @@ def _validate_catalog_metadata(
             raise ValueError(f"unknown classification reference: {slug}")
 
     for variable in variables:
-        for state in variable.states:
+        domains: list[tuple[ResolvedState | ResolvedAliasWindow, str]] = [
+            (state, state.delivery_column_name) for state in variable.states
+        ]
+        domains.extend(
+            (window, alias.delivery_column_name)
+            for alias in variable.aliases
+            for window in alias.windows
+        )
+        for state, column in domains:
             for link in state.classification_links:
                 require_classification(link.classification)
                 conformance = link.conformance
@@ -769,14 +788,13 @@ def _validate_catalog_metadata(
                     if pair[0] in checked and pair[0] not in canonical
                 }
                 scoped_pairs = set()
-                context = f"{variable.register_ref.provider}/{variable.register_ref.slug}/{variable.slug} column {state.delivery_column_name!r} {state.valid_from}..{state.valid_to} book {book.slug!r}"
+                context = f"{variable.register_ref.provider}/{variable.register_ref.slug}/{variable.slug} column {column!r} {state.valid_from}..{state.valid_to} book {book.slug!r}"
                 for certificate in conformance.scoped_sentinels:
                     if (
                         certificate.classification_sha256
                         != canonical_sha256(book.model_dump(mode="json"))
-                        or certificate.delivery_column_name
-                        != state.delivery_column_name
-                        or state.period_scope != "intervals"
+                        or certificate.delivery_column_name != column
+                        or getattr(state, "period_scope", "intervals") != "intervals"
                         or state.valid_from is None
                         or state.valid_to is None
                         or not certificate.valid_from
@@ -1301,6 +1319,24 @@ def write_resolved_catalog(
                             )
                         ),
                     )
+                    for window in sorted(alias.windows, key=lambda w: w.valid_from):
+                        for link in window.classification_links:
+                            conn.execute(
+                                "INSERT INTO alias_window_classification "
+                                "(variable_id, register_variant_id, delivery_column_name, valid_from, classification_id, provenance, conformance) "
+                                "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                                (
+                                    variable_id,
+                                    variant_id,
+                                    alias.delivery_column_name,
+                                    window.valid_from,
+                                    _classification_id(link.classification),
+                                    link.provenance,
+                                    link.conformance.model_dump_json()
+                                    if link.conformance is not None
+                                    else None,
+                                ),
+                            )
             validated_warnings = TypeAdapter(tuple[DataWarning, ...]).validate_python(
                 data_warnings, strict=True
             )

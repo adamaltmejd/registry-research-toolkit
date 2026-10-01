@@ -8017,3 +8017,145 @@ def test_parallel_representation_selects_checked_owner_without_literal_changes(
         )[0]
         == ()
     )
+
+
+@pytest.mark.parametrize(
+    "defect", [None, "gap", "outside", "metadata", "reference_period"]
+)
+def test_parallel_same_literal_nested_editions_preserve_exact_coverage(
+    tmp_path, defect
+):
+    from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+    from reg_meta_build.source_representations import resolve_representation_cases
+
+    path, original, naming = _pooled_parallel_fixture(tmp_path)
+    header = REGISTERINFORMATION_HEADER.split("|")
+    values = _var_row(
+        colname="First",
+        cvid=103,
+        var_id=1,
+        varname="Income",
+        year="2021",
+        versionname="2021-2022",
+        regver_id=113,
+    ).split("|")
+    nested = clean_scb_row(
+        header,
+        3,
+        {
+            name: (True, value, value)
+            for name, value in zip(header, values, strict=True)
+        },
+        _revision("fixture"),
+    ).record
+    records = (*original, nested)
+    path.write_text(
+        path.read_text().replace(
+            'source_editions = ["2020-2022"]',
+            'source_editions = ["2020-2022", "2021-2022"]',
+        )
+        + 'column_metadata = "per_column"\n'
+    )
+    if defect in {"gap", "outside"}:
+        # Narrow/extend the declared window, never the retained source intervals.
+        path.write_text(
+            path.read_text().replace(
+                'valid_from = "2020-01-01"',
+                'valid_from = "2019-01-01"'
+                if defect == "gap"
+                else 'valid_from = "2021-01-01"',
+            )
+        )
+    elif defect in {"metadata", "reference_period"}:
+        records = (
+            original[0].model_copy(
+                update={
+                    "fields": original[0].fields.model_copy(
+                        update={
+                            (
+                                "reference_period"
+                                if defect == "reference_period"
+                                else "operational_definition"
+                            ): value_field("A known quantity operation")
+                        }
+                    )
+                }
+            ),
+            original[1],
+            nested.model_copy(
+                update={
+                    "fields": nested.fields.model_copy(
+                        update={
+                            (
+                                "reference_period"
+                                if defect == "reference_period"
+                                else "operational_definition"
+                            ): value_field("A contrary quantity operation")
+                        }
+                    )
+                }
+            ),
+        )
+    naming = tuple(
+        name.model_copy(
+            update={
+                "target": name.target.model_copy(
+                    update={
+                        "expectations": capture_expectations(
+                            records, fields=("column_name",), coding=True
+                        ),
+                        "peer_guards": (
+                            name.target.peer_guards[0].model_copy(
+                                update={
+                                    "expected_members": tuple(
+                                        record_ref(r) for r in records
+                                    )
+                                }
+                            ),
+                        ),
+                    }
+                )
+            }
+        )
+        if name.target.kind == "variable"
+        else name
+        for name in naming
+    )
+    cases, diagnostics = _compile_pooled_parallel(path, records, naming)
+    if defect in {"gap", "outside", "metadata", "reference_period"}:
+        assert not cases and diagnostics
+        return
+    assert not diagnostics and len(cases) == 1
+    proof = resolve_representation_cases(
+        records, cases, coding=_parallel_coding(cases[0])
+    )
+    assert not proof.diagnostics
+    decision = cases[0].decision
+    occurrences = tuple(
+        replace(
+            source_occurrence(r),
+            variable_key=decision.variable_key,
+            identity_checked=True,
+        )
+        for r in records
+    )
+    formed = form_native_variable(
+        occurrences,
+        register=ResolvedRegister(provider="scb", slug="sample", name="Sample"),
+        variants={decision.variant_key: ResolvedVariant(slug="people", name="People")},
+        slug="income",
+        provider_key="family",
+        flags=SourceFields(
+            sensitivity=value_field(False), identifier=value_field(False)
+        ),
+        coding=_parallel_coding(cases[0]),
+        representations=proof.cases,
+    )
+    from reg_meta_build.source_occurrences import EffectiveOccurrence
+
+    assert {
+        r.record_id
+        for o in formed.occurrences
+        for r in (o.source_records if isinstance(o, EffectiveOccurrence) else (o,))
+    } == {r.record_id for r in records}
+    assert not formed.diagnostics and formed.variable is not None

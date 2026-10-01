@@ -685,3 +685,57 @@ def test_plural_classification_links_keep_independent_checks_and_provenance(tmp_
         r.table == "classification_conformance_code" and not r.identical
         for r in report.content.table_results
     )
+
+
+@pytest.mark.parametrize("change", [None, "provenance", "conformance"])
+def test_alias_classification_links_resolve_natural_ids_and_keep_changed_facts(
+    tmp_path, change
+):
+    left, right = tmp_path / "left.db", tmp_path / "right.db"
+    for path, offset in ((left, 0), (right, 100)):
+        _catalog(path, offset=offset)
+        with closing(sqlite3.connect(path)) as conn:
+            conn.execute(
+                "UPDATE variable_alias_window SET coding_metadata='per_column',value_set_id=?",
+                (offset + 9,),
+            )
+            conn.execute(
+                "INSERT INTO alias_window_classification VALUES (?,?,'Benefit','2000-01-01',?,'Source book',NULL)",
+                (offset + 5, offset + 3, offset + 7),
+            )
+            if path == right and change == "provenance":
+                conn.execute(
+                    "UPDATE alias_window_classification SET provenance='Changed source'"
+                )
+            elif path == right and change == "conformance":
+                conn.execute("UPDATE alias_window_classification SET conformance='{}'")
+            conn.commit()
+    diff = diff_catalog_semantics(left, right)
+    if change is None:
+        assert diff.content.identical
+    else:
+        assert not next(
+            t
+            for t in diff.content.table_results
+            if t.table == "alias_window_classification"
+        ).identical
+
+
+def test_equivalent_alias_classification_window_segmentation_is_neutral(tmp_path):
+    left, right = tmp_path / "left.db", tmp_path / "right.db"
+    for path in (left, right):
+        _catalog(path)
+        with closing(sqlite3.connect(path)) as conn:
+            conn.execute(
+                "INSERT INTO alias_window_classification VALUES (5,3,'Benefit','2000-01-01',7,'Source book',NULL)"
+            )
+            if path == right:
+                conn.execute("UPDATE variable_alias_window SET valid_to='2000-12-31'")
+                conn.execute(
+                    "INSERT INTO variable_alias_window (variable_id,register_variant_id,delivery_column_name,valid_from,valid_to,provenance) VALUES (5,3,'Benefit','2001-01-01','2001-12-31','Alias reason')"
+                )
+                conn.execute(
+                    "INSERT INTO alias_window_classification VALUES (5,3,'Benefit','2001-01-01',7,'Source book',NULL)"
+                )
+            conn.commit()
+    assert diff_catalog_semantics(left, right).content.identical

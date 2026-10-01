@@ -701,6 +701,20 @@ CREATE TABLE variable_alias_window (
 CREATE INDEX idx_variable_alias_window_lookup
     ON variable_alias_window(variable_id, register_variant_id);
 
+-- Book evidence belongs to this physical window, never to a sibling column.
+CREATE TABLE alias_window_classification (
+    variable_id INTEGER NOT NULL,
+    register_variant_id INTEGER NOT NULL,
+    delivery_column_name TEXT NOT NULL,
+    valid_from TEXT NOT NULL,
+    classification_id INTEGER NOT NULL REFERENCES classification(id),
+    provenance TEXT,
+    conformance TEXT CHECK (conformance IS NULL OR (json_valid(conformance) AND json_type(conformance) = 'object')),
+    PRIMARY KEY (variable_id, register_variant_id, delivery_column_name, valid_from, classification_id),
+    FOREIGN KEY (variable_id, register_variant_id, delivery_column_name, valid_from)
+        REFERENCES variable_alias_window(variable_id, register_variant_id, delivery_column_name, valid_from)
+);
+
 -- External-content projection for `variable_fts`. `variable_alias` stays the
 -- normalized source of truth; this view contributes a search-only, deterministic
 -- aggregate of historical delivery column names so FTS rebuilds can index the

@@ -86,6 +86,7 @@ _PLAIN_TABLES = frozenset(
         "source_join_key",
         "import_manifest",
         "state_classification",
+        "alias_window_classification",
         "classification_conformance",
         "classification_conformance_code",
         "variable_state_lineage",
@@ -170,6 +171,7 @@ _INHERITED_SCOPE = {
 _INTERVAL_TABLES = {
     "variable_state",
     "variable_alias_window",
+    "alias_window_classification",
     "variable_state_lineage",
     *_INHERITED_SCOPE,
 }
@@ -205,6 +207,13 @@ def _column_expression(
             "declared_classification_id",
         } and parent in {"state_classification", "classification_conformance"}:
             return _reference("classification", expression)
+        if parent == "variable_alias_window" and table == "alias_window_classification":
+            if column == "variable_id":
+                return _reference("variable", expression)
+            if column == "register_variant_id":
+                return _reference("register_variant", expression)
+            if column in {"delivery_column_name", "valid_from"}:
+                return expression
         if table not in _EMPTY_ONLY:
             raise UnsupportedSemanticSurface(
                 f"unsupported reference {table}.{column} to {parent}.{parent_column}"
@@ -413,6 +422,13 @@ def _project(source: Path, output: Path) -> None:
                             f"(SELECT {bound} FROM _id_variable_state "
                             f"WHERE original_id = s.{state_column}) AS {bound}"
                         )
+                if table == "alias_window_classification":
+                    kept.append("valid_to")
+                    expressions.append(
+                        "(SELECT w.valid_to FROM input.variable_alias_window w "
+                        "WHERE w.variable_id=s.variable_id AND w.register_variant_id=s.register_variant_id "
+                        "AND w.delivery_column_name=s.delivery_column_name AND w.valid_from=s.valid_from) AS valid_to"
+                    )
                 interval_table = table in _INTERVAL_TABLES
                 destination = "_interval_rows" if interval_table else table
                 conn.execute(

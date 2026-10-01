@@ -9,6 +9,7 @@ from calendar import monthrange
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date
+from itertools import combinations
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal, cast
 
@@ -17,7 +18,7 @@ from reg_meta.fqid import FqidKind, derive_variable_slug, parse as parse_fqid
 from reg_meta.source_evidence import canonical_sha256
 
 from ._curation import SentinelCode, curation_error, fold_column
-from ._resolved_common import covers_window
+from ._resolved_common import covers_window, remaining_windows
 from .cis2016_matrix import (
     Cis2014Matrix,
     convert_matrix,
@@ -117,7 +118,7 @@ from .source_curation import (
     evaluate_source_expectations,
 )
 from .source_effects import apply_occurrence_cases, record_ref
-from .source_intervals import coding_scope_bounds, scope_bounds
+from .source_intervals import coding_scope_bounds, reconcile_source_fields, scope_bounds
 from .source_naming import (
     AcceptedNamingEntry,
     LegacyNamingBinding,
@@ -1457,6 +1458,11 @@ def compile_parallel_representations(
             if corrected is not None
             else ()
         )
+        effective_by_ref = {
+            record_ref(record): occurrence
+            for occurrence in effective
+            for record in occurrence.source_records
+        }
         projected = tuple(
             (
                 record,
@@ -1523,11 +1529,59 @@ def compile_parallel_representations(
                 or {_edition_label(r) for r, _, _ in members}
                 != set(column.source_editions)
                 or any(
-                    coding_scope_bounds(source_scope) != (bounds,)
+                    not (intervals := coding_scope_bounds(source_scope))
+                    or any(lo < bounds[0] or hi > bounds[1] for lo, hi in intervals)
                     for _, _, source_scope in members
+                )
+                or remaining_windows(
+                    tuple(
+                        (
+                            date.fromordinal(lo).isoformat(),
+                            date.fromordinal(hi).isoformat(),
+                        )
+                        for _, _, source_scope in members
+                        for lo, hi in (coding_scope_bounds(source_scope) or ())
+                    ),
+                    column.valid_from,
+                    column.valid_to,
                 )
             ):
                 invalid = True
+            # Nested editions share a physical window only when their overlapping
+            # metadata agrees under the ordinary source reconciliation rules.
+            # simplify: pairwise edition contributors are small; index intervals
+            # if a literal column grows to thousands of overlapping originals.
+            for left, right in combinations(members, 2):
+                if any(
+                    max(lo, other_lo, lower) <= min(hi, other_hi, upper)
+                    for lo, hi in (coding_scope_bounds(left[2]) or ())
+                    for other_lo, other_hi in (coding_scope_bounds(right[2]) or ())
+                ):
+                    _, conflicts = reconcile_source_fields(
+                        tuple(
+                            effective_by_ref.get(record_ref(item[0]), item[0])
+                            for item in (left, right)
+                        )
+                    )
+                    if set(conflicts) & {
+                        "name",
+                        "description",
+                        "definition",
+                        "measurement_unit",
+                        "data_type",
+                        "data_length",
+                        "operational_definition",
+                        "source_attribution",
+                        "reference_period",
+                        "representation",
+                        "aggregation_level",
+                        "measurement_information",
+                        "base_register",
+                        "population_definition",
+                        "population_date",
+                        "geographic_coverage",
+                    }:
+                        invalid = True
             selected.extend(record for record, _, _ in members)
             selected_projection.extend(members)
         by_edition: dict[str | None, set[str | None]] = defaultdict(set)
@@ -1588,7 +1642,7 @@ def compile_parallel_representations(
                 _stale_partition(
                     ref,
                     entry.variable,
-                    "exact source editions/windows or complete parallel peers changed",
+                    "exact source editions/windows, overlapping literal metadata or complete parallel peers changed",
                 )
             )
             continue

@@ -17,6 +17,7 @@ from reg_meta_build._resolved_common import remaining_windows
 from reg_meta_build.resolved_catalog import (
     ResolvedAlias,
     ResolvedAliasWindow,
+    ResolvedClassificationLink,
     ResolvedCodeSet,
     ResolvedState,
 )
@@ -526,11 +527,11 @@ def form_representations(
                 )
                 for s in represented
             }
-            column_coding: dict[str, tuple[ResolvedCodeSet, str]] = {}
+            column_coding: dict[
+                str, tuple[ResolvedCodeSet, str, tuple[ResolvedClassificationLink, ...]]
+            ] = {}
             if first.coding_metadata == "per_column":
-                # simplify: only complete finite unclassified domains; add explicit
-                # alias conformance storage when a positively evidenced classified
-                # cohort needs it. Never inherit a sibling's classification.
+                # Each literal keeps its independently checked domain and books.
                 invalid_coding = False
                 for column in sorted(columns):
                     alternatives = {
@@ -543,20 +544,19 @@ def form_representations(
                         if s.delivery_column_name == column
                     }
                     if len(alternatives) != 1 or any(
-                        domain is None or classification_links
-                        for domain, _, classification_links in alternatives
+                        domain is None for domain, _, _ in alternatives
                     ):
                         invalid_coding = True
                         report(
                             "unsupported_representation_coding",
                             ("coding",),
                             (f"representation.{column}.value_set",),
-                            f"Literal column {column!r} needs one complete finite unclassified domain; no coding was selected.",
+                            f"Literal column {column!r} needs one complete finite domain; no coding was selected.",
                         )
                     else:
-                        domain, native_label, _ = next(iter(alternatives))
+                        domain, native_label, links = next(iter(alternatives))
                         assert domain is not None
-                        column_coding[column] = (domain, native_label)
+                        column_coding[column] = (domain, native_label, links)
                 if invalid_coding:
                     continue
                 codes, label, classification_links = None, "", ()
@@ -638,6 +638,9 @@ def form_representations(
                             value_set_version_label=column_coding[column.column][1]
                             if column.column in column_coding
                             else "",
+                            classification_links=column_coding[column.column][2]
+                            if column.column in column_coding
+                            else (),
                             **column_facts[column.column],
                         )
                     )

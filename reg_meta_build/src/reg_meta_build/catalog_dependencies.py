@@ -113,8 +113,11 @@ def resolve_variable_successions(
                 link.classification,
             )
             for v in variables
-            for state in v.states
-            for link in state.classification_links
+            for domain in (
+                *v.states,
+                *(window for alias in v.aliases for window in alias.windows),
+            )
+            for link in domain.classification_links
             if v.name is not None
         ),
         ((e.predecessor, e.successor, e.effective_year) for e in classifications),
@@ -557,6 +560,7 @@ def check_delivery_coverage(
                                 {
                                     "value_set": window.value_set,
                                     "value_set_version_label": window.value_set_version_label,
+                                    "classification_links": window.classification_links,
                                 }
                                 if window.coding_metadata == "per_column"
                                 else {}

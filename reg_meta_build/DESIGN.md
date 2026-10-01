@@ -1024,12 +1024,17 @@ An independent `coding_metadata = "per_column"` mode retains each checked column
 complete finite response domain on its alias windows. The shared quantity state claims
 no common domain when they differ. Original fields, scopes, complete peers and coding
 associations remain guarded; missing or contradictory within-column coding is withheld.
-Windows intersect the existing coding boundaries and cannot bridge a gap. Each window
-stores an existing value-set reference and its literal native version label; readers
-project that domain without falling back to shared coding. Shared mode carries no
-override. Initially this mode requires unclassified domains; classified domains need an
-explicit per-window conformance contract before acceptance. No codes are unioned,
-dropped or recoded, and no version names are invented.
+Windows intersect the existing coding boundaries and cannot bridge a gap. Same-literal
+source editions may have nested bounds only when their exact union covers the declared
+physical window without gaps or widening and their overlapping metadata agrees under the
+existing source reconciliation rules. Their original scopes remain guarded. Each window
+stores its value-set reference, literal native version label and independently checked
+classification links. `alias_window_classification` attaches each declared book and
+nullable conformance JSON to the exact composite physical-window key. Conformance checks
+the entire local domain and its overlap with that book, including nonstandard codes and
+scoped sentinels. The shared state carries no codes or books, and no window inherits a
+sibling's associations. Shared mode carries no override. No codes are unioned, dropped
+or recoded, and no version names are invented.
 
 Search aliases add discovery spellings without adding states or coverage. An alias
 window makes an already owned spelling orderable only within supported state coverage

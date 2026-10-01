@@ -1588,6 +1588,99 @@ def _check_tags(
 _AW_MIN_MERGED_FAMILIES = 8
 
 
+def _check_alias_classification(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    # Import locally: the common writer invokes this validator after IR validation.
+    from reg_meta_build.resolved_catalog import (
+        ResolvedClassificationLink,
+        ResolvedCodeSet,
+        ResolvedConformance,
+        _validate_classification_domain,
+    )
+
+    required = {
+        "alias_window_classification",
+        "variable_alias_window",
+        "classification",
+        "classification_code",
+        "value_code",
+        "value_set_member",
+    }
+    if not required <= tables:
+        result.fail(
+            "alias classification validation requires its association and coding tables"
+        )
+        return
+    invalid = 0
+    for row in conn.execute(
+        "SELECT a.classification_id, c.slug, a.conformance, w.coding_metadata, "
+        "w.value_set_id, a.delivery_column_name, a.valid_from, w.valid_to "
+        "FROM alias_window_classification a LEFT JOIN classification c ON c.id=a.classification_id "
+        "LEFT JOIN variable_alias_window w USING(variable_id, register_variant_id, delivery_column_name, valid_from)"
+    ):
+        book_id, slug, payload, mode, set_id, column, start, end = row
+        try:
+            if slug is None or mode != "per_column" or set_id is None:
+                raise ValueError(
+                    "association lacks its exact per-column window or book"
+                )
+            members = tuple(
+                tuple(pair)
+                for pair in conn.execute(
+                    "SELECT v.code, v.label FROM value_set_member m JOIN value_code v USING(code_id) WHERE m.value_set_id=? ORDER BY v.code,v.label",
+                    (set_id,),
+                )
+            )
+            domain = ResolvedCodeSet(members=members)
+            conformance = (
+                ResolvedConformance.model_validate_json(payload)
+                if payload is not None
+                else None
+            )
+            link = ResolvedClassificationLink(
+                classification=slug, conformance=conformance
+            )
+            _validate_classification_domain(domain, (link,))
+            if conformance is not None:
+                canonical = {
+                    r[0]
+                    for r in conn.execute(
+                        "SELECT v.code FROM classification_code c JOIN value_code v USING(code_id) WHERE c.classification_id=?",
+                        (book_id,),
+                    )
+                }
+                outside = {pair for pair in members if pair[0] not in canonical}
+                if outside != set(conformance.nonconforming_members) | set(
+                    conformance.sentinel_members
+                ):
+                    raise ValueError(
+                        "conformance does not describe exact alias/book overlap"
+                    )
+                for certificate in conformance.scoped_sentinels:
+                    if (
+                        certificate.delivery_column_name != column
+                        or not certificate.valid_from
+                        <= start
+                        <= end
+                        <= certificate.valid_to
+                        or not set(certificate.members) <= outside
+                    ):
+                        raise ValueError(
+                            "sentinel certificate does not belong to alias window"
+                        )
+        except ValueError:
+            invalid += 1
+    if invalid:
+        result.fail(
+            f"{invalid:,} alias classification association(s) have invalid physical-domain conformance"
+        )
+    else:
+        result.ok(
+            "alias classification associations preserve their exact physical domains and books"
+        )
+
+
 def _check_variable_alias_window(
     conn: sqlite3.Connection,
     result: ValidationResult,
@@ -1745,6 +1838,8 @@ def _check_variable_alias_window(
         result.fail(
             "alias coding validation requires value_set_member and state_classification tables"
         )
+
+    _check_alias_classification(conn, result, tables)
 
     if corpus:
         n_families = conn.execute(

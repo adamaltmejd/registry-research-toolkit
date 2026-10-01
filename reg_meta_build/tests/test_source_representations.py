@@ -941,7 +941,7 @@ def test_per_column_coding_source_domain_drift_fails_closed() -> None:
     ]
 
 
-@pytest.mark.parametrize("unsupported", ["missing", "classification", "conflict"])
+@pytest.mark.parametrize("unsupported", ["missing", "conflict"])
 def test_per_column_coding_withholds_unsupported_domain_without_shared_fallback(
     unsupported,
 ) -> None:
@@ -962,14 +962,6 @@ def test_per_column_coding_withholds_unsupported_domain_without_shared_fallback(
     ]
     if unsupported == "missing":
         states[0] = states[0].model_copy(update={"value_set": None})
-    elif unsupported == "classification":
-        states[0] = states[0].model_copy(
-            update={
-                "classification_links": (
-                    ResolvedClassificationLink(classification="sni2007"),
-                )
-            }
-        )
     else:
         states.append(states[0].model_copy(update={"value_set": states[1].value_set}))
     result, aliases, issues, _, _ = form_representations(
@@ -1541,3 +1533,64 @@ def test_delivery_metadata_keeps_unrelated_checked_field_corrections(changed_fie
         assert corrected.occurrences[0].fields.name is not None
         assert corrected.occurrences[0].fields.name.value == "Checked source wording"
         assert corrected.occurrences[0].source_records == (records[0],)
+
+
+def test_per_column_classifications_keep_independent_books_and_domains(tmp_path):
+    from reg_meta_build.resolved_catalog import (
+        ResolvedClassification,
+        ResolvedClassificationCode,
+        ResolvedConformance,
+    )
+
+    records, occurrences, case, variants, coding = _column_coding_setup()
+    books = tuple(
+        ResolvedClassification(
+            slug=f"codes-{column.lower()}",
+            short_name=column,
+            name=column,
+            codes=(ResolvedClassificationCode(code=code, label="Canonical"),),
+        )
+        for column, code in (("First", "01"), ("Second", "02"))
+    )
+    links = {
+        column: ResolvedClassificationLink(
+            classification=book.slug,
+            conformance=ResolvedConformance(
+                declared_classification=book.slug,
+                status="conforming",
+                checked_codes=(code,),
+            ),
+        )
+        for column, code, book in zip(
+            ("First", "Second"), ("01", "02"), books, strict=True
+        )
+    }
+    coding = {
+        key: replace(
+            resolution,
+            segments=tuple(
+                replace(segment, classification_links=(links[key[-1]],))
+                for segment in resolution.segments
+            ),
+        )
+        for key, resolution in coding.items()
+    }
+    formed, proof = _form((records, occurrences, case, variants, coding))
+    assert not proof.diagnostics and not formed.diagnostics
+    assert formed.variable is not None
+    variable = formed.variable
+    assert variable.states[0].classification_links == ()
+    assert {
+        a.delivery_column_name: a.windows[0].classification_links
+        for a in variable.aliases
+    } == {column: (link,) for column, link in links.items()}
+    check_delivery_coverage((variable,), formed.coverage, withheld={})
+    output = tmp_path / "per-column-books.db"
+    write_resolved_catalog((variable,), output, manifest={}, classifications=books)
+    with closing(open_built_db(output)) as conn:
+        assert [
+            tuple(row)
+            for row in conn.execute(
+                "SELECT a.delivery_column_name,c.slug,v.code FROM alias_window_classification a JOIN classification c ON c.id=a.classification_id JOIN variable_alias_window w USING(variable_id,register_variant_id,delivery_column_name,valid_from) JOIN value_set_member m ON m.value_set_id=w.value_set_id JOIN value_code v USING(code_id) ORDER BY a.delivery_column_name"
+            )
+        ] == [("First", "codes-first", "01"), ("Second", "codes-second", "02")]

@@ -1862,3 +1862,145 @@ def test_state_classification_links_refuse_duplicate_or_unsorted_books(defect):
         ResolvedState.model_validate(
             _state(2000).model_copy(update={"classification_links": links})
         )
+
+
+def _classified_alias_variable():
+    variable, book = _scoped_sentinel_variable()
+    original = variable.states[0]
+    window = ResolvedAliasWindow(
+        valid_from=original.valid_from,
+        valid_to=original.valid_to,
+        coding_metadata="per_column",
+        value_set=original.value_set,
+        value_set_version_label="Original physical list",
+        classification_links=original.classification_links,
+    )
+    backing = original.model_copy(
+        update={
+            "value_set": None,
+            "value_set_version_label": "",
+            "classification_links": (),
+        }
+    )
+    alias = ResolvedAlias(
+        variant=original.variant,
+        delivery_column_name=original.delivery_column_name,
+        windows=(window,),
+    )
+    return variable.model_copy(update={"states": (backing,), "aliases": (alias,)}), book
+
+
+def test_classified_alias_keeps_own_domain_and_book_without_backing_inheritance(
+    tmp_path,
+):
+    variable, book = _classified_alias_variable()
+    output = tmp_path / "alias.db"
+    write_resolved_catalog((variable,), output, manifest={}, classifications=(book,))
+    with closing(open_built_db(output)) as conn:
+        row = conn.execute(
+            "SELECT a.delivery_column_name, c.slug, a.conformance FROM alias_window_classification a JOIN classification c ON c.id=a.classification_id"
+        ).fetchone()
+        assert tuple(row[:2]) == ("AmPolTyp", book.slug)
+        assert (
+            ResolvedConformance.model_validate_json(row[2])
+            == variable.aliases[0].windows[0].classification_links[0].conformance
+        )
+        assert (
+            conn.execute("SELECT COUNT(*) FROM state_classification").fetchone()[0] == 0
+        )
+        assert (
+            conn.execute("SELECT value_set_id FROM variable_state").fetchone()[0]
+            is None
+        )
+        assert validate_built_db(output, corpus=False).passed
+
+
+@pytest.mark.parametrize(
+    "defect", ["wrong_book", "partial_codes", "missing_alias", "changed_member"]
+)
+def test_alias_conformance_sql_boundary_rejects_tampering(tmp_path, defect):
+    import sqlite3
+
+    from reg_meta_build.validate import _check_alias_classification
+
+    variable, book = _classified_alias_variable()
+    output = tmp_path / "alias.db"
+    write_resolved_catalog((variable,), output, manifest={}, classifications=(book,))
+    with closing(sqlite3.connect(output)) as conn:
+        conn.execute("PRAGMA foreign_keys=OFF")
+        if defect == "missing_alias":
+            conn.execute("DELETE FROM variable_alias_window")
+        elif defect == "wrong_book":
+            conn.execute("UPDATE classification SET slug='different-book'")
+        elif defect == "partial_codes":
+            conn.execute(
+                "UPDATE alias_window_classification SET conformance=json_set(conformance, '$.checked_codes', json('[\"001\"]'))"
+            )
+        else:
+            conn.execute(
+                "UPDATE value_code SET label='Changed label' WHERE code='09350'"
+            )
+        result = ValidationResult()
+        tables = {
+            row[0]
+            for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        _check_alias_classification(conn, result, tables)
+        assert not result.passed
+        assert any("alias classification" in failure for failure in result.failures)
+
+
+def test_alias_classification_contract_refuses_shared_and_unchecked_domain():
+    variable, _ = _classified_alias_variable()
+    window = variable.aliases[0].windows[0]
+    with pytest.raises(ValidationError, match="shared representation coding"):
+        ResolvedAliasWindow.model_validate(
+            window.model_dump() | {"coding_metadata": "shared"}
+        )
+    link = window.classification_links[0]
+    assert link.conformance is not None
+    with pytest.raises(ValidationError, match="every distinct code"):
+        ResolvedAliasWindow.model_validate(
+            window.model_dump()
+            | {
+                "classification_links": (
+                    link.model_copy(
+                        update={
+                            "conformance": link.conformance.model_copy(
+                                update={"checked_codes": ("001",)}
+                            )
+                        }
+                    ),
+                )
+            }
+        )
+
+
+def test_alias_scoped_certificate_book_fingerprint_is_checked_before_writing(tmp_path):
+    variable, book = _classified_alias_variable()
+    alias = variable.aliases[0]
+    window = alias.windows[0]
+    link = window.classification_links[0]
+    assert link.conformance is not None
+    certificate = link.conformance.scoped_sentinels[0].model_copy(
+        update={"classification_sha256": "b" * 64}
+    )
+    conformance = link.conformance.model_copy(
+        update={"scoped_sentinels": (certificate,)}
+    )
+    window = window.model_copy(
+        update={
+            "classification_links": (
+                link.model_copy(update={"conformance": conformance}),
+            )
+        }
+    )
+    variable = variable.model_copy(
+        update={"aliases": (alias.model_copy(update={"windows": (window,)}),)}
+    )
+    output = tmp_path / "bad-certificate.db"
+    with pytest.raises(ValueError, match="scoped sentinel certificate"):
+        write_resolved_catalog(
+            (variable,), output, manifest={}, classifications=(book,)
+        )
+    assert not output.exists()
