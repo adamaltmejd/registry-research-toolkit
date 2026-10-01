@@ -324,12 +324,31 @@ class PeerGuard(_CurationModel):
         return self
 
 
+def acknowledgement_evidence_sha256(
+    records: Iterable[SourceRecord], coding_sha256: Iterable[str] = ()
+) -> str:
+    """Pin full originals and bound physical coding evidence, including duplicates.
+
+    Content ordering is immaterial; multiplicity is not. Coding tokens come from
+    coding_source_sha256, which retains raw associations and validity evidence.
+    """
+    return canonical_sha256(
+        {
+            "originals": sorted(
+                canonical_sha256(record.model_dump(mode="json")) for record in records
+            ),
+            "coding": sorted(coding_sha256),
+        }
+    )
+
+
 class AcknowledgeDecision(_CurationModel):
     """Accept one exact unresolved error as a counted warning; its output stays withheld.
 
     It names the issue by the code, subject, refs, fields and period the
-    diagnostic already carries, so it pins no source members: matching
-    nothing, or more than one issue, is itself an error.
+    diagnostic already carries. An optional evidence fingerprint additionally pins
+    the full originals and bound coding assertions. Matching nothing, or more than
+    one issue, is itself an error.
     """
 
     kind: Literal["acknowledge"] = "acknowledge"
@@ -342,6 +361,9 @@ class AcknowledgeDecision(_CurationModel):
     register_key: NativeKey
     reason: str
     evidence: str
+    expected_evidence_sha256: str | None = Field(
+        default=None, pattern=r"^[0-9a-f]{64}$"
+    )
 
     @model_validator(mode="after")
     def _exact(self) -> Self:

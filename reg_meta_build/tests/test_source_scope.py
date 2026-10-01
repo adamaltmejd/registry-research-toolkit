@@ -1602,6 +1602,84 @@ def test_a_stale_acknowledgement_is_an_error():
     ]
 
 
+@pytest.mark.parametrize("change", ["definition", "physical_peer", "coding"])
+def test_guarded_acknowledgement_rejects_changed_full_evidence(monkeypatch, change):
+    from reg_meta_build.source_coding import (
+        CodeListClaim,
+        CodeMembershipClaim,
+        coding_source_sha256,
+    )
+    from reg_meta_build.source_curation import acknowledgement_evidence_sha256
+    from reg_meta_build.source_value_bindings import ValueBindingResult
+
+    items = (record(column="Rad"), record(column="Amount"))
+    key = native_variable_key(items[0])
+    claim = CodeListClaim(
+        "fixture",
+        TemporalScope(kind="year_independent"),
+        (CodeMembershipClaim("1", "Original", TemporalScope(kind="year_independent")),),
+    )
+    monkeypatch.setattr(
+        "reg_meta_build.source_scope.bind_occurrence_code_lists",
+        lambda *args, **kwargs: ValueBindingResult((claim,), (), ()),
+    )
+    (issue,) = resolve(items, provider_keys={key: None}).diagnostics
+    case = acknowledge(issue, items[0])
+    fingerprint = acknowledgement_evidence_sha256(
+        items, (coding_source_sha256(claim),) * 2
+    )
+    assert fingerprint == acknowledgement_evidence_sha256(
+        reversed(items), (coding_source_sha256(claim),) * 2
+    )
+    case = case.model_copy(
+        update={
+            "decision": case.decision.model_copy(
+                update={"expected_evidence_sha256": fingerprint}
+            )
+        }
+    )
+    assert resolve(items, cases=(case,), provider_keys={key: None}).acknowledged
+    if change == "definition":
+        items = (
+            items[0].model_copy(
+                update={
+                    "fields": items[0].fields.model_copy(
+                        update={"definition": value_field("Changed source meaning")}
+                    )
+                }
+            ),
+            items[1],
+        )
+    elif change == "physical_peer":
+        items = items[:1]
+    else:
+        claim = replace(claim, members=(replace(claim.members[0], label="Changed"),))
+    result = resolve(items, cases=(case,), provider_keys={key: None})
+    assert result.acknowledged == {}
+    assert [(d.code, d.severity) for d in result.diagnostics] == [
+        ("unresolved_catalog_identity", "error"),
+        ("stale_curation_entry", "error"),
+    ]
+    assert "changed original or coding evidence" in result.diagnostics[-1].detail
+
+
+def test_acknowledged_warning_persists_reviewed_reason_and_diagnostic_hash():
+    from hashlib import sha256
+
+    from reg_meta_build.data_warnings import scope_data_warnings
+
+    item = record()
+    key = native_variable_key(item)
+    (issue,) = resolve((item,), provider_keys={key: None}).diagnostics
+    case = acknowledge(issue, item)
+    result = resolve((item,), cases=(case,), provider_keys={key: None})
+    (warning,) = scope_data_warnings(result)
+    assert warning.detail == case.decision.reason
+    assert warning.diagnostic_detail_sha256 == sha256(issue.detail.encode()).hexdigest()
+    assert warning.variable_fqid is None
+    assert str(warning.register_fqid) == "scb/example"
+
+
 def test_distinct_field_issues_can_each_be_acknowledged():
     items = tuple(
         item.model_copy(

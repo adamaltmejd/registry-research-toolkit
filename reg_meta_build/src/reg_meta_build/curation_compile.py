@@ -6689,6 +6689,7 @@ def compile_curation(
                             register_key=register_key,
                             reason=ack.reason,
                             evidence=ack.evidence,
+                            expected_evidence_sha256=ack.expected_evidence_sha256,
                         ),
                     )
                 )

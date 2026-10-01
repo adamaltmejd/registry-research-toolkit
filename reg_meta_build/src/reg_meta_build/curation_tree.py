@@ -1610,6 +1610,9 @@ class AcknowledgeEntry(_CurationModel):
     valid_to: str | None = None
     reason: str
     evidence: str
+    expected_evidence_sha256: str | None = Field(
+        default=None, pattern=r"^[0-9a-f]{64}$"
+    )
 
     _trimmed = field_validator("code", "subject", "reason", "evidence")(
         _require_trimmed

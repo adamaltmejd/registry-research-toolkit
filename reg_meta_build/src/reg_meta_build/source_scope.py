@@ -17,6 +17,7 @@ from reg_meta_build.catalog_resolution import ParentResolution, resolve_parents
 from reg_meta_build.curation_compile import compile_coding_register
 from reg_meta_build.source_annotations import apply_alias_cases
 from reg_meta_build.source_classification_bindings import apply_classification_cases
+from reg_meta_build.source_coding import coding_source_sha256
 from reg_meta_build.source_coding_choices import apply_coding_choices
 from reg_meta_build.source_coordinates import (
     native_column_key,
@@ -34,6 +35,7 @@ from reg_meta_build.source_curation import (
     RepresentationDecision,
     ResolutionDiagnostic,
     SourceEvidence,
+    acknowledgement_evidence_sha256,
     evaluate_cases,
 )
 from reg_meta_build.source_effects import (
@@ -195,6 +197,20 @@ def resolve_source_scope(
     diagnostics = []
     counts = {"error": 0, "warning": 0}
     acknowledgements = tuple(c for c in cases if c.decision.kind == "acknowledge")
+    guarded_refs = {
+        ref
+        for case in acknowledgements
+        if isinstance(case.decision, AcknowledgeDecision)
+        and case.decision.expected_evidence_sha256 is not None
+        for ref in case.decision.refs
+    }
+    guarded_originals: dict[SourceRecordRef, list[SourceRecord]] = defaultdict(list)
+    if guarded_refs:
+        for original in originals:
+            ref = record_ref(original)
+            if ref in guarded_refs:
+                guarded_originals[ref].append(original)
+    guarded_coding: dict[SourceRecordRef, list[str]] = defaultdict(list)
     original_registers = (
         {record_ref(item): source_register_key(item) for item in originals}
         if acknowledgements
@@ -437,6 +453,12 @@ def resolve_source_scope(
                 occurrence, value_sessions, support=support
             )
             claims[column].extend(bound.claims)
+            if guarded_refs:
+                tokens = tuple(coding_source_sha256(claim) for claim in bound.claims)
+                for original in occurrence.source_records:
+                    ref = record_ref(original)
+                    if ref in guarded_refs:
+                        guarded_coding[ref].extend(tokens)
             if (
                 enumerated_bindings is not None
                 and occurrence.fields.column_name is not None
@@ -835,7 +857,15 @@ def resolve_source_scope(
         emit(issue)
     acknowledged: dict[ResolutionDiagnostic, ResolutionDiagnostic] = {}
     for case, decision, matched in held.values():
-        if len(matched) == 1:
+        evidence_matches = (
+            decision.expected_evidence_sha256 is None
+            or decision.expected_evidence_sha256
+            == acknowledgement_evidence_sha256(
+                (record for ref in decision.refs for record in guarded_originals[ref]),
+                (token for ref in decision.refs for token in guarded_coding[ref]),
+            )
+        )
+        if len(matched) == 1 and evidence_matches:
             issue = matched[0]
             warning = issue.model_copy(
                 update={"severity": "warning", "acknowledged_by": case.case_id}
@@ -847,11 +877,17 @@ def resolve_source_scope(
             record(issue)
         record(
             ResolutionDiagnostic(
-                code="overbroad_curation_entry" if matched else "stale_curation_entry",
+                code="overbroad_curation_entry"
+                if len(matched) > 1 and evidence_matches
+                else "stale_curation_entry",
                 severity="error",
                 case_id=case.case_id,
                 subject=decision.subject,
-                detail=f"The acknowledgement of {decision.code!r} matches {len(matched)} issues; it must name exactly one.",
+                detail=(
+                    f"The acknowledgement of {decision.code!r} has changed original or coding evidence."
+                    if not evidence_matches
+                    else f"The acknowledgement of {decision.code!r} matches {len(matched)} issues; it must name exactly one."
+                ),
                 refs=decision.refs,
                 fields=decision.fields,
                 valid_from=decision.valid_from,

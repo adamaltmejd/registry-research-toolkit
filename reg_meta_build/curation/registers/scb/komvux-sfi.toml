@@ -1876,3 +1876,1275 @@ valid_from = "2011-07-01"
 valid_to = "2011-12-31"
 column = "Datum"
 source_editions = ["2011 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "1996-07-01"
+valid_to = "1996-12-31"
+variable = "248.14640"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1996-07-01"
+valid_to = "1996-12-31"
+column = "Betyg"
+expected_codings = ["63141a2ee56f1320f457953f06627441062d1fcded0e6256b74c1fcacf9f13a8"]
+source_editions = ["1996 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "1996-07-01"
+valid_to = "1997-06-30"
+column = "betyg"
+expected_codings = ["dc7fff829cec6a97d7ab211649650ea529ab086d8201ccb5500177b3b26f2515"]
+source_editions = ["1996/1997"]
+
+[[representation.parallel]]
+valid_from = "1996-07-01"
+valid_to = "1996-12-31"
+variable = "248.14674"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1996-07-01"
+valid_to = "1996-12-31"
+column = "Orsak"
+expected_codings = ["9868a6592f64a5e7a099b893af2b4f20b4dfa2ca44e81af4ee65f740253510a4"]
+source_editions = ["1996 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "1996-07-01"
+valid_to = "1997-06-30"
+column = "orsak"
+expected_codings = ["d4e53919b4a8d9b2891096ba19a984c4c65e4862916b3f2aa06e1026e1f2306d"]
+source_editions = ["1996/1997"]
+
+[[representation.parallel]]
+valid_from = "1996-07-01"
+valid_to = "1996-12-31"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1996-07-01"
+valid_to = "1996-12-31"
+column = "LSKvux"
+expected_codings = ["1069f9d38af24fe09c1a84f53d4bdaa7a3e46fcc912467e7926a81681937432e"]
+source_editions = ["1996 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "1996-07-01"
+valid_to = "1997-06-30"
+column = "lskvux"
+expected_codings = ["a423c9551b5b39f7955ae510c5ee1c8b9ef2c22c9dc31e7733916613b4b249ec"]
+source_editions = ["1996/1997"]
+
+[[representation.parallel]]
+valid_from = "1997-01-01"
+valid_to = "1997-06-30"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1997-01-01"
+valid_to = "1997-06-30"
+column = "LSKvux"
+expected_codings = ["bd2f9ba391f156bc5eb73cd260e34d94a9ddd783cbe74c84e09a8fecf3be7ebc"]
+source_editions = ["1997 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "1997-01-01"
+valid_to = "1997-12-31"
+column = "Lskvux"
+expected_codings = ["eccbc34743b23d248ff1f444c8abbb2099649fb5231c1167473f518b607a90a7"]
+source_editions = ["1997"]
+[[representation.parallel.columns]]
+valid_from = "1996-07-01"
+valid_to = "1997-06-30"
+column = "lskvux"
+expected_codings = ["a423c9551b5b39f7955ae510c5ee1c8b9ef2c22c9dc31e7733916613b4b249ec"]
+source_editions = ["1996/1997"]
+
+[[representation.parallel]]
+valid_from = "1997-07-01"
+valid_to = "1997-12-31"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1997-07-01"
+valid_to = "1997-12-31"
+column = "LSKvux"
+expected_codings = ["f394b2014e570a628680418581e61224e7bb627490535cf31dcfb38f49a33d20"]
+source_editions = ["1997 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "1997-01-01"
+valid_to = "1997-12-31"
+column = "Lskvux"
+expected_codings = ["eccbc34743b23d248ff1f444c8abbb2099649fb5231c1167473f518b607a90a7"]
+source_editions = ["1997"]
+[[representation.parallel.columns]]
+valid_from = "1997-07-01"
+valid_to = "1998-06-30"
+column = "lskvux"
+expected_codings = ["cec164b3212e484ca81695b3edbf297df51a4844d67177b5c7549830ad9d1d8e"]
+source_editions = ["1997/1998"]
+
+[[representation.parallel]]
+valid_from = "1998-01-01"
+valid_to = "1998-06-30"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1998-01-01"
+valid_to = "1998-06-30"
+column = "LSKvux"
+expected_codings = ["b9483c054797e3000f083a46d39070ad1533b0117b0d6ee1bcf3441829ac5da2"]
+source_editions = ["1998 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "1998-01-01"
+valid_to = "1998-12-31"
+column = "Lskvux"
+expected_codings = ["825fc54f563a0c63caaf441cc873ad899ab81c2a01a3a9b130042df172f66757"]
+source_editions = ["1998"]
+[[representation.parallel.columns]]
+valid_from = "1997-07-01"
+valid_to = "1998-06-30"
+column = "lskvux"
+expected_codings = ["cec164b3212e484ca81695b3edbf297df51a4844d67177b5c7549830ad9d1d8e"]
+source_editions = ["1997/1998"]
+
+[[representation.parallel]]
+valid_from = "1998-07-01"
+valid_to = "1998-12-31"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1998-07-01"
+valid_to = "1998-12-31"
+column = "LSKvux"
+expected_codings = ["bd5c91822726addef78e8bcb0955989eb0cfa09cd1622fc2c90b234bd3cb6224"]
+source_editions = ["1998 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "1998-01-01"
+valid_to = "1998-12-31"
+column = "Lskvux"
+expected_codings = ["825fc54f563a0c63caaf441cc873ad899ab81c2a01a3a9b130042df172f66757"]
+source_editions = ["1998"]
+[[representation.parallel.columns]]
+valid_from = "1998-07-01"
+valid_to = "1999-06-30"
+column = "lskvux"
+expected_codings = ["d8937aae7f1135c6bde6b0bccd8c2b12fb0d2188fcde3b3219d6cadfa5d0e5e3"]
+source_editions = ["1998/1999"]
+
+[[representation.parallel]]
+valid_from = "1999-01-01"
+valid_to = "1999-06-30"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1999-01-01"
+valid_to = "1999-06-30"
+column = "LSKvux"
+expected_codings = ["8a1de079c4d440763f4c9f8e35bc02eb655cbf749a778158ef4ac0e364746a71"]
+source_editions = ["1999 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "1999-01-01"
+valid_to = "1999-12-31"
+column = "Lskvux"
+expected_codings = ["dcf35b935771954eb9f80073bc9c363931b84c4e3ead3bfb002988f169a61a2f"]
+source_editions = ["1999"]
+[[representation.parallel.columns]]
+valid_from = "1998-07-01"
+valid_to = "1999-06-30"
+column = "lskvux"
+expected_codings = ["d8937aae7f1135c6bde6b0bccd8c2b12fb0d2188fcde3b3219d6cadfa5d0e5e3"]
+source_editions = ["1998/1999"]
+
+[[representation.parallel]]
+valid_from = "1999-07-01"
+valid_to = "1999-12-31"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1999-07-01"
+valid_to = "1999-12-31"
+column = "LSKvux"
+expected_codings = ["d25a97ffd339db939c842a640f3eaf4495541e4520de6b01d053ada4c8d040d8"]
+source_editions = ["1999 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "1999-01-01"
+valid_to = "1999-12-31"
+column = "Lskvux"
+expected_codings = ["dcf35b935771954eb9f80073bc9c363931b84c4e3ead3bfb002988f169a61a2f"]
+source_editions = ["1999"]
+[[representation.parallel.columns]]
+valid_from = "1999-07-01"
+valid_to = "2000-06-30"
+column = "lskvux"
+expected_codings = ["a53c21358ecd384b3c82ba3e4fe3162aabaa89ca3c9774f3b604cb009ac53796"]
+source_editions = ["1999/2000"]
+
+[[representation.parallel]]
+valid_from = "2000-01-01"
+valid_to = "2000-06-30"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2000-01-01"
+valid_to = "2000-06-30"
+column = "LSKvux"
+expected_codings = ["38b0ee5b9c85f52c7a44cba79e21c200d377358a304df84a0170a3c619d6fd1d"]
+source_editions = ["2000 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2000-01-01"
+valid_to = "2000-12-31"
+column = "Lskvux"
+expected_codings = ["c390a7c50dd5dd27a56131719689fc1f6ebd4fd022da5ead5efe4bfa5f7fad87"]
+source_editions = ["2000"]
+[[representation.parallel.columns]]
+valid_from = "1999-07-01"
+valid_to = "2000-06-30"
+column = "lskvux"
+expected_codings = ["a53c21358ecd384b3c82ba3e4fe3162aabaa89ca3c9774f3b604cb009ac53796"]
+source_editions = ["1999/2000"]
+
+[[representation.parallel]]
+valid_from = "2000-07-01"
+valid_to = "2000-12-31"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2000-07-01"
+valid_to = "2000-12-31"
+column = "LSKvux"
+expected_codings = ["779ff3b5e3e2d2e7de3f9b47752fca5803032aae06141fcd5ba5580080b25edf"]
+source_editions = ["2000 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2000-01-01"
+valid_to = "2000-12-31"
+column = "Lskvux"
+expected_codings = ["c390a7c50dd5dd27a56131719689fc1f6ebd4fd022da5ead5efe4bfa5f7fad87"]
+source_editions = ["2000"]
+[[representation.parallel.columns]]
+valid_from = "2000-07-01"
+valid_to = "2001-06-30"
+column = "lskvux"
+expected_codings = ["41ed676c6f9f2f46e76c965af9811e4ca876438b46edde7f6c509ca2ee402e8f"]
+source_editions = ["2000/2001"]
+
+[[representation.parallel]]
+valid_from = "2001-01-01"
+valid_to = "2001-06-30"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2001-01-01"
+valid_to = "2001-06-30"
+column = "LSKvux"
+expected_codings = ["7a6fb3ac4e6756bfd526260420d34f83ec3b663a7a21f3d901584b9f9ad700c9"]
+source_editions = ["2001 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2001-01-01"
+valid_to = "2001-12-31"
+column = "Lskvux"
+expected_codings = ["2fbd89d64f2d709073776d1ffebc2549c6b92f3b5825668e5ca7ec11421d31c3"]
+source_editions = ["2001"]
+[[representation.parallel.columns]]
+valid_from = "2000-07-01"
+valid_to = "2001-06-30"
+column = "lskvux"
+expected_codings = ["41ed676c6f9f2f46e76c965af9811e4ca876438b46edde7f6c509ca2ee402e8f"]
+source_editions = ["2000/2001"]
+
+[[representation.parallel]]
+valid_from = "2001-07-01"
+valid_to = "2001-12-31"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2001-07-01"
+valid_to = "2001-12-31"
+column = "LSKvux"
+expected_codings = ["aaf4b5648d617b7ecacfc3619f7cd39a3e44b1b8b5f9460f336dd051b913db98"]
+source_editions = ["2001 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2001-01-01"
+valid_to = "2001-12-31"
+column = "Lskvux"
+expected_codings = ["2fbd89d64f2d709073776d1ffebc2549c6b92f3b5825668e5ca7ec11421d31c3"]
+source_editions = ["2001"]
+[[representation.parallel.columns]]
+valid_from = "2001-07-01"
+valid_to = "2002-06-30"
+column = "lskvux"
+expected_codings = ["5509a10e764f1a968924193c4c9d41afa4e04bcc219f23e7a980fa67ad29e5da"]
+source_editions = ["2001/2002"]
+
+[[representation.parallel]]
+valid_from = "2002-01-01"
+valid_to = "2002-06-30"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2002-01-01"
+valid_to = "2002-06-30"
+column = "LSKvux"
+expected_codings = ["91b2d8b029f5ce470f53a0e09d9a30d8c6c38405736bc9351579ae3d3816bd39"]
+source_editions = ["2002 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2002-01-01"
+valid_to = "2002-12-31"
+column = "Lskvux"
+expected_codings = ["7da4c542219e6943f7aeb86ad033aef8a26f6dafae15ef082afa465280a8a1b1"]
+source_editions = ["2002"]
+[[representation.parallel.columns]]
+valid_from = "2001-07-01"
+valid_to = "2002-06-30"
+column = "lskvux"
+expected_codings = ["5509a10e764f1a968924193c4c9d41afa4e04bcc219f23e7a980fa67ad29e5da"]
+source_editions = ["2001/2002"]
+
+[[representation.parallel]]
+valid_from = "2002-07-01"
+valid_to = "2002-12-31"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2002-07-01"
+valid_to = "2002-12-31"
+column = "LSKvux"
+expected_codings = ["febe43b180dccee35dfc429cc9f5cf10c19ad90cd8986de4b84d0a69dc5255a1"]
+source_editions = ["2002 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2002-01-01"
+valid_to = "2002-12-31"
+column = "Lskvux"
+expected_codings = ["7da4c542219e6943f7aeb86ad033aef8a26f6dafae15ef082afa465280a8a1b1"]
+source_editions = ["2002"]
+[[representation.parallel.columns]]
+valid_from = "2002-07-01"
+valid_to = "2003-06-30"
+column = "lskvux"
+expected_codings = ["4383936cd177ef12bd144d86f7338248922ba181dca0833c3a920d125f96eb15"]
+source_editions = ["2002/2003"]
+
+[[representation.parallel]]
+valid_from = "2003-01-01"
+valid_to = "2003-06-30"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2003-01-01"
+valid_to = "2003-06-30"
+column = "LSKvux"
+expected_codings = ["5b13d03f51aa0a215ec739dad7b58ae05404e61ba5436fca8085043b90fbcc12"]
+source_editions = ["2003 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+column = "Lskvux"
+expected_codings = ["6539504d1c4f77b72c3f6fd9d78f413c30ac66659f114a8bf344a04afb86de9d"]
+source_editions = ["2003"]
+[[representation.parallel.columns]]
+valid_from = "2002-07-01"
+valid_to = "2003-06-30"
+column = "lskvux"
+expected_codings = ["4383936cd177ef12bd144d86f7338248922ba181dca0833c3a920d125f96eb15"]
+source_editions = ["2002/2003"]
+
+[[representation.parallel]]
+valid_from = "2003-07-01"
+valid_to = "2003-12-31"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2003-07-01"
+valid_to = "2003-12-31"
+column = "LSKvux"
+expected_codings = ["eda259c016a643ae4cf6c872300c047dcda9527c7b71ca2fe0d2bc9bd013ea37"]
+source_editions = ["2003 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+column = "Lskvux"
+expected_codings = ["6539504d1c4f77b72c3f6fd9d78f413c30ac66659f114a8bf344a04afb86de9d"]
+source_editions = ["2003"]
+[[representation.parallel.columns]]
+valid_from = "2003-07-01"
+valid_to = "2004-06-30"
+column = "lskvux"
+expected_codings = ["30e046c08cf7262e8eb6876e3e2dd913cd103bda91edc6c924e0e7134bf702d3"]
+source_editions = ["2003/2004"]
+
+[[representation.parallel]]
+valid_from = "2004-01-01"
+valid_to = "2004-06-30"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2004-01-01"
+valid_to = "2004-06-30"
+column = "LSKvux"
+expected_codings = ["9e0280ccb22b3ff1559ab32784cb20e39615f956f7ab28bdfe7bae3a5558b578"]
+source_editions = ["2004 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+column = "Lskvux"
+expected_codings = ["80b04013458ed2839ca5912906b74147db22aee61383c7551a810f07940788f0"]
+source_editions = ["2004"]
+[[representation.parallel.columns]]
+valid_from = "2003-07-01"
+valid_to = "2004-06-30"
+column = "lskvux"
+expected_codings = ["30e046c08cf7262e8eb6876e3e2dd913cd103bda91edc6c924e0e7134bf702d3"]
+source_editions = ["2003/2004"]
+
+[[representation.parallel]]
+valid_from = "2004-07-01"
+valid_to = "2004-12-31"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2004-07-01"
+valid_to = "2004-12-31"
+column = "LSKvux"
+expected_codings = ["094891e164463ccde5ecab0f05b501bc82aedbc5775d580f09a2e3c9d5412179"]
+source_editions = ["2004 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+column = "Lskvux"
+expected_codings = ["80b04013458ed2839ca5912906b74147db22aee61383c7551a810f07940788f0"]
+source_editions = ["2004"]
+[[representation.parallel.columns]]
+valid_from = "2004-07-01"
+valid_to = "2005-06-30"
+column = "lskvux"
+expected_codings = ["4eed51b0ebb6bd6971dc8de1649ce3c90e7e64ca7f906057aa11a84a1757b038"]
+source_editions = ["2004/2005"]
+
+[[representation.parallel]]
+valid_from = "2005-01-01"
+valid_to = "2005-06-30"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2005-01-01"
+valid_to = "2005-06-30"
+column = "LSKvux"
+expected_codings = ["09724ed332a76c3dc5a2b9a8311f046f224c9e8649e5db20e8f3ef0022a5ba63"]
+source_editions = ["2005 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+column = "Lskvux"
+expected_codings = ["2fde880a8b528bd9bf8cfe23d0c0729688d133b3e3d97f3ba088eeee39c3c5f6"]
+source_editions = ["2005"]
+[[representation.parallel.columns]]
+valid_from = "2004-07-01"
+valid_to = "2005-06-30"
+column = "lskvux"
+expected_codings = ["4eed51b0ebb6bd6971dc8de1649ce3c90e7e64ca7f906057aa11a84a1757b038"]
+source_editions = ["2004/2005"]
+
+[[representation.parallel]]
+valid_from = "2005-07-01"
+valid_to = "2005-12-31"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2005-07-01"
+valid_to = "2005-12-31"
+column = "LSKvux"
+expected_codings = ["033ac3961af297e48d528df991e051506b1af4ec06da955db0ae1e34f4d1c20b"]
+source_editions = ["2005 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+column = "Lskvux"
+expected_codings = ["2fde880a8b528bd9bf8cfe23d0c0729688d133b3e3d97f3ba088eeee39c3c5f6"]
+source_editions = ["2005"]
+[[representation.parallel.columns]]
+valid_from = "2005-07-01"
+valid_to = "2006-06-30"
+column = "lskvux"
+expected_codings = ["37e287624d6620be28c575dc5bc028d4043abaff6bc1e2d83a47e4c449a33efb"]
+source_editions = ["2005/2006"]
+
+[[representation.parallel]]
+valid_from = "2006-01-01"
+valid_to = "2006-06-30"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2006-01-01"
+valid_to = "2006-06-30"
+column = "LSKvux"
+expected_codings = ["76643f1d532c4d2d63bfd0cd701da8b7195e9d7f3bba84fa6e1f9a86f29e88d1"]
+source_editions = ["2006 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+column = "Lskvux"
+expected_codings = ["4e2f54cdd387bc8388b87eead046296824d44296cff4088bde21beda9751e884"]
+source_editions = ["2006"]
+[[representation.parallel.columns]]
+valid_from = "2005-07-01"
+valid_to = "2006-06-30"
+column = "lskvux"
+expected_codings = ["37e287624d6620be28c575dc5bc028d4043abaff6bc1e2d83a47e4c449a33efb"]
+source_editions = ["2005/2006"]
+
+[[representation.parallel]]
+valid_from = "2006-07-01"
+valid_to = "2006-12-31"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2006-07-01"
+valid_to = "2006-12-31"
+column = "LSKvux"
+expected_codings = ["2873e323dfe2ffb45ad5387dd95627836eb46a06c5886f34f2853a759d87400c"]
+source_editions = ["2006 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+column = "Lskvux"
+expected_codings = ["4e2f54cdd387bc8388b87eead046296824d44296cff4088bde21beda9751e884"]
+source_editions = ["2006"]
+[[representation.parallel.columns]]
+valid_from = "2006-07-01"
+valid_to = "2007-06-30"
+column = "lskvux"
+expected_codings = ["415709c6b2eacca87f834bf07e3d8bfa0ffb56a7cebc0fa9cdfc95d27987256f"]
+source_editions = ["2006/2007"]
+
+[[representation.parallel]]
+valid_from = "2007-01-01"
+valid_to = "2007-06-30"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2007-01-01"
+valid_to = "2007-06-30"
+column = "LSKvux"
+expected_codings = ["50c3d225c0680bec2bba09d822a50a8ee709491ed748508d3dd4f526fc40b210"]
+source_editions = ["2007 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+column = "Lskvux"
+expected_codings = ["44494d759835530c3719f4e2bdc93fb9fd176984c81ca01e4243599b370376a4"]
+source_editions = ["2007"]
+[[representation.parallel.columns]]
+valid_from = "2006-07-01"
+valid_to = "2007-06-30"
+column = "lskvux"
+expected_codings = ["415709c6b2eacca87f834bf07e3d8bfa0ffb56a7cebc0fa9cdfc95d27987256f"]
+source_editions = ["2006/2007"]
+
+[[representation.parallel]]
+valid_from = "2007-07-01"
+valid_to = "2007-12-31"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2007-07-01"
+valid_to = "2007-12-31"
+column = "LSKvux"
+expected_codings = ["b9dcdf2738fab706450599975e97376b3c3a619286fe445e1b75ced7d4c8295f"]
+source_editions = ["2007 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+column = "Lskvux"
+expected_codings = ["44494d759835530c3719f4e2bdc93fb9fd176984c81ca01e4243599b370376a4"]
+source_editions = ["2007"]
+[[representation.parallel.columns]]
+valid_from = "2007-07-01"
+valid_to = "2008-06-30"
+column = "lskvux"
+expected_codings = ["24f822e6eb90e16ff690a46d9d1cbd5fdd7d4f1587d564ad95044ab3fc5d4a09"]
+source_editions = ["2007/2008"]
+
+[[representation.parallel]]
+valid_from = "2008-01-01"
+valid_to = "2008-06-30"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2008-01-01"
+valid_to = "2008-06-30"
+column = "LSKvux"
+expected_codings = ["f3e7f5505911b0719b762ea11cb5374bc5eb33852862c6a90e0205381d3d7520"]
+source_editions = ["2008 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+column = "Lskvux"
+expected_codings = ["fa4ff6728d69b422b8c7523cba8152c7cacbae20f0628185ba3ad9e23766b92d"]
+source_editions = ["2008"]
+[[representation.parallel.columns]]
+valid_from = "2007-07-01"
+valid_to = "2008-06-30"
+column = "lskvux"
+expected_codings = ["24f822e6eb90e16ff690a46d9d1cbd5fdd7d4f1587d564ad95044ab3fc5d4a09"]
+source_editions = ["2007/2008"]
+
+[[representation.parallel]]
+valid_from = "2008-07-01"
+valid_to = "2008-12-31"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2008-07-01"
+valid_to = "2008-12-31"
+column = "LSKvux"
+expected_codings = ["d34c3ba122361f7e53e2be23169ac610545014e5d39d6d604a6478e96cceb1f2"]
+source_editions = ["2008 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+column = "Lskvux"
+expected_codings = ["fa4ff6728d69b422b8c7523cba8152c7cacbae20f0628185ba3ad9e23766b92d"]
+source_editions = ["2008"]
+[[representation.parallel.columns]]
+valid_from = "2008-07-01"
+valid_to = "2009-06-30"
+column = "lskvux"
+expected_codings = ["397a20dbb472b9f977944251af4c78e90313821443aed06bc25121a16aef7ed5"]
+source_editions = ["2008/2009"]
+
+[[representation.parallel]]
+valid_from = "2009-01-01"
+valid_to = "2009-06-30"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2009-01-01"
+valid_to = "2009-06-30"
+column = "LSKvux"
+expected_codings = ["839e6dc6dbb4506e8ead174b403eab8e0d4f499db923a39cdf78d10b0a092fe1"]
+source_editions = ["2009 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+column = "Lskvux"
+expected_codings = ["ebba296fd5c13cec635cbb4e4a4ea9da5f7f9fbc548837f1493cc82cfa965484"]
+source_editions = ["2009"]
+[[representation.parallel.columns]]
+valid_from = "2008-07-01"
+valid_to = "2009-06-30"
+column = "lskvux"
+expected_codings = ["397a20dbb472b9f977944251af4c78e90313821443aed06bc25121a16aef7ed5"]
+source_editions = ["2008/2009"]
+
+[[representation.parallel]]
+valid_from = "2009-07-01"
+valid_to = "2009-12-31"
+variable = "248.14676"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2009-07-01"
+valid_to = "2009-12-31"
+column = "LSKvux"
+expected_codings = ["99ab320a3bf182c4d546fcdb18d17c1695af2e80754a27c513e8e911f4467015"]
+source_editions = ["2009 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+column = "Lskvux"
+expected_codings = ["ebba296fd5c13cec635cbb4e4a4ea9da5f7f9fbc548837f1493cc82cfa965484"]
+source_editions = ["2009"]
+
+[[representation.parallel]]
+valid_from = "1996-07-01"
+valid_to = "1996-12-31"
+variable = "248.14678"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1996-07-01"
+valid_to = "1996-12-31"
+column = "Invandrare"
+expected_codings = ["91a1fb8a680abc7646aef4457ac7aa19c6453e47a7e7f4a967241cbefbb17da4"]
+source_editions = ["1996 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "1996-07-01"
+valid_to = "1997-06-30"
+column = "invandrare"
+expected_codings = ["8abbf88dd2f1839e22ffcb3208a7d4e68bbc5f38390383abdd44538e8c70a937"]
+source_editions = ["1996/1997"]
+
+[[representation.parallel]]
+valid_from = "2010-01-01"
+valid_to = "2010-06-30"
+variable = "248.1993"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2010-01-01"
+valid_to = "2010-06-30"
+column = "SkolId"
+expected_codings = ["6cda817401ca23feb3ca9367492351e0162cdfd1500503230c8187f8c8713938"]
+source_editions = ["2010 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+column = "Skolid"
+expected_codings = ["31f32d5f45692c267ec3df33005c046e04e08b2694a64e12e5642b8fb3f551c1"]
+source_editions = ["2010"]
+
+[[representation.parallel]]
+valid_from = "2012-01-01"
+valid_to = "2012-06-30"
+variable = "248.1993"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2012-01-01"
+valid_to = "2012-06-30"
+column = "SkolId"
+expected_codings = ["7318dc0d44a0f6484fe8331d5d82b814eb4a41f29a9ad8bf0d0f07d30a2f1d84"]
+source_editions = ["2012 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+column = "Skolid"
+expected_codings = ["d4a249163ffc82ed2854329eff12c80e91f793e4d860f4e40fb6dccef6bc5d1a"]
+source_editions = ["2012"]
+
+[[representation.parallel]]
+valid_from = "2012-07-01"
+valid_to = "2012-12-31"
+variable = "248.1993"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2012-07-01"
+valid_to = "2012-12-31"
+column = "SkolId"
+expected_codings = ["43250259873ede9ea239de4d9723a9d6138d1594552e909e45551dc15211d5cd"]
+source_editions = ["2012 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+column = "Skolid"
+expected_codings = ["d4a249163ffc82ed2854329eff12c80e91f793e4d860f4e40fb6dccef6bc5d1a"]
+source_editions = ["2012"]
+
+[[representation.parallel]]
+valid_from = "2010-01-01"
+valid_to = "2010-06-30"
+variable = "248.1993"
+variant = "248.994"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+column = "SKOLID"
+expected_codings = ["31f32d5f45692c267ec3df33005c046e04e08b2694a64e12e5642b8fb3f551c1"]
+source_editions = ["2010"]
+[[representation.parallel.columns]]
+valid_from = "2010-01-01"
+valid_to = "2010-06-30"
+column = "SkolId"
+expected_codings = ["6cda817401ca23feb3ca9367492351e0162cdfd1500503230c8187f8c8713938"]
+source_editions = ["2010 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2010-07-01"
+valid_to = "2010-12-31"
+variable = "248.1993"
+variant = "248.994"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+column = "SKOLID"
+expected_codings = ["31f32d5f45692c267ec3df33005c046e04e08b2694a64e12e5642b8fb3f551c1"]
+source_editions = ["2010"]
+[[representation.parallel.columns]]
+valid_from = "2010-07-01"
+valid_to = "2010-12-31"
+column = "SkolId"
+expected_codings = ["f42173f2a43f662ec6f5d4292b5eda4898aac05165610206de22dd044c682098"]
+source_editions = ["2010 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2010-01-01"
+valid_to = "2010-06-30"
+variable = "248.257.fodelselandnamn"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2010-01-01"
+valid_to = "2010-06-30"
+column = "FodelseLandNamn"
+expected_codings = ["f7ec74fe16ad2934e6a53d886a21f151aef0bcdb63b73ffa664d6a2a8766ebd8"]
+source_editions = ["2010 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+column = "Fodelselandnamn"
+expected_codings = ["a14b7c352f30fd700f0eb996b0d504b7b274238fcecd7fa76c1768d8717ec7ae"]
+source_editions = ["2010"]
+
+[[representation.parallel]]
+valid_from = "2011-01-01"
+valid_to = "2011-06-30"
+variable = "248.257.fodelselandnamn"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2011-01-01"
+valid_to = "2011-06-30"
+column = "FodelseLandNamn"
+expected_codings = ["142d24b692d4c723a1216b90781c41b5a82bdcb1e3ca73fa5fa34ab6f066f22b"]
+source_editions = ["2011 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+column = "Fodelselandnamn"
+expected_codings = ["7b65ecab7afe15d9b97e5ba0458a583813b82f28d1d6ff5835761e430761c068"]
+source_editions = ["2011"]
+
+[[representation.parallel]]
+valid_from = "2012-01-01"
+valid_to = "2012-06-30"
+variable = "248.257.fodelselandnamn"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2012-01-01"
+valid_to = "2012-06-30"
+column = "FodelseLandNamn"
+expected_codings = ["2eaf394907a7a3c51d95c56d535102f3e605fc2157eef64b3d22ad156d9799d9"]
+source_editions = ["2012 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+column = "Fodelselandnamn"
+expected_codings = ["074f7eae5c0e4ea80492beafa42181affffcaf42126271b11771f6e930e2944c"]
+source_editions = ["2012"]
+
+[[representation.parallel]]
+valid_from = "2012-07-01"
+valid_to = "2012-12-31"
+variable = "248.257.fodelselandnamn"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2012-07-01"
+valid_to = "2012-12-31"
+column = "FodelseLandNamn"
+expected_codings = ["fe559c4ed4d65b0e3f8546c270d055a0e242b8cbb6884651e545cf8a6e5d8b1f"]
+source_editions = ["2012 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+column = "Fodelselandnamn"
+expected_codings = ["074f7eae5c0e4ea80492beafa42181affffcaf42126271b11771f6e930e2944c"]
+source_editions = ["2012"]
+
+[[representation.parallel]]
+valid_from = "2013-01-01"
+valid_to = "2013-06-30"
+variable = "248.257.fodelselandnamn"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2013-01-01"
+valid_to = "2013-06-30"
+column = "FodelseLandNamn"
+expected_codings = ["e2b5dd82abf7a339f423b1661df2c58b39211a3bf860981d72d12ca988a21d7a"]
+source_editions = ["2013 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+column = "Fodelselandnamn"
+expected_codings = ["1afaff38ea9e6719b49c46b0052721bb86f3bd9722940cd4c4e434c0fade5760"]
+source_editions = ["2013"]
+
+[[representation.parallel]]
+valid_from = "2013-07-01"
+valid_to = "2013-12-31"
+variable = "248.257.fodelselandnamn"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2013-07-01"
+valid_to = "2013-12-31"
+column = "FodelseLandNamn"
+expected_codings = ["d16115a5a05848c5b159b3343ec62db7280c2b950c28e0bcc8e4ea519d172769"]
+source_editions = ["2013 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+column = "Fodelselandnamn"
+expected_codings = ["1afaff38ea9e6719b49c46b0052721bb86f3bd9722940cd4c4e434c0fade5760"]
+source_editions = ["2013"]
+
+[[representation.parallel]]
+valid_from = "2014-01-01"
+valid_to = "2014-06-30"
+variable = "248.257.fodelselandnamn"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2014-01-01"
+valid_to = "2014-06-30"
+column = "FodelseLandNamn"
+expected_codings = ["94300139c57bc5b19a1600aad4c0764b6998557df19867022e3d049d4ba9a8c0"]
+source_editions = ["2014 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+column = "Fodelselandnamn"
+expected_codings = ["325b016f8bbca62dc01e5592ad1dd833401a2a8f0e1374924b5bb0fb9199af42"]
+source_editions = ["2014"]
+
+[[representation.parallel]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+variable = "248.257.fodelselandnamn"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+column = "FodelseLandNamn"
+expected_codings = ["6b9d0faab12d8ded7dfe521cdcbf3b7197bf61c8f7b2476be0499c115c19fe2b"]
+source_editions = ["2018"]
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+column = "FodelseLandnamn"
+expected_codings = ["592bb47f78ef976fea7f666a7d69070a8f90c43715bae84857ec54e34341f921"]
+source_editions = ["2018 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2014-07-01"
+valid_to = "2014-12-31"
+variable = "248.29412"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2014-07-01"
+valid_to = "2014-12-31"
+column = "KursTyp"
+expected_codings = ["99c8c535af1191376902e17068b8490763044d17b85143ae976a3044f671b567"]
+source_editions = ["2014 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+column = "Kurstyp"
+expected_codings = ["e913001c8c702046973b91eab293641751ac4be539b73ccce9db9ba70670acd8"]
+source_editions = ["2014"]
+
+[[representation.parallel]]
+valid_from = "2010-01-01"
+valid_to = "2010-06-30"
+variable = "248.44"
+variant = "248.994"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+column = "KON"
+expected_codings = ["9753552f8680829ec67f01172554ea3fc43fff030dfc6ca912cfaea9d496033c"]
+source_editions = ["2010"]
+[[representation.parallel.columns]]
+valid_from = "2010-01-01"
+valid_to = "2010-06-30"
+column = "Kon"
+expected_codings = ["c99733e17069607ef5039cfac5103e68163d5494372ffc6c4af4a4cdbd7ef680"]
+source_editions = ["2010 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2010-07-01"
+valid_to = "2010-12-31"
+variable = "248.44"
+variant = "248.994"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+column = "KON"
+expected_codings = ["9753552f8680829ec67f01172554ea3fc43fff030dfc6ca912cfaea9d496033c"]
+source_editions = ["2010"]
+[[representation.parallel.columns]]
+valid_from = "2010-07-01"
+valid_to = "2010-12-31"
+column = "Kon"
+expected_codings = ["e447e49c1e244ae67dc5eedfc0d4860ec5ba602014a4409e3e8cffba44a65b94"]
+source_editions = ["2010 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2011-01-01"
+valid_to = "2011-06-30"
+variable = "248.44"
+variant = "248.994"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+column = "KON"
+expected_codings = ["c4f50e7e09cee3c518fd67adc6859fe62769f6ebfc8712c581405b090601b0ab"]
+source_editions = ["2011"]
+[[representation.parallel.columns]]
+valid_from = "2011-01-01"
+valid_to = "2011-06-30"
+column = "Kon"
+expected_codings = ["2bca401ba7327c8202b957bb93c67a5148eebeac5ce0a5489dc0e4b51a674324"]
+source_editions = ["2011 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2011-07-01"
+valid_to = "2011-12-31"
+variable = "248.44"
+variant = "248.994"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+column = "KON"
+expected_codings = ["c4f50e7e09cee3c518fd67adc6859fe62769f6ebfc8712c581405b090601b0ab"]
+source_editions = ["2011"]
+[[representation.parallel.columns]]
+valid_from = "2011-07-01"
+valid_to = "2011-12-31"
+column = "Kon"
+expected_codings = ["10a2d18d5891c0ca049d6d4d8d644d1173c741991237b0948248a7d53f46fb7f"]
+source_editions = ["2011 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2019-01-01"
+valid_to = "2019-06-30"
+variable = "248.8534.komgrupp17"
+variant = "248.994"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+column = "Komgrupp17"
+expected_codings = ["0574a2fef403da4657fd8d0a82dc2f877c4185b0bb87589cbc1958e3cf11679c"]
+source_editions = ["2019"]
+[[representation.parallel.columns]]
+valid_from = "2019-01-01"
+valid_to = "2019-06-30"
+column = "komgrupp17"
+expected_codings = ["2a086ec2e72ab8daae1b2419821d95e00e80e894659dec4a097298fa15be76e8"]
+source_editions = ["2019 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2019-07-01"
+valid_to = "2019-12-31"
+variable = "248.8534.komgrupp17"
+variant = "248.994"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+column = "Komgrupp17"
+expected_codings = ["0574a2fef403da4657fd8d0a82dc2f877c4185b0bb87589cbc1958e3cf11679c"]
+source_editions = ["2019"]
+[[representation.parallel.columns]]
+valid_from = "2019-07-01"
+valid_to = "2019-12-31"
+column = "komgrupp17"
+expected_codings = ["dcc0fba1da14854880b25ea52c06d8ec2356c9012766eaea9793bc1cfb57200b"]
+source_editions = ["2019 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "1996-07-01"
+valid_to = "1996-12-31"
+variable = "248.8700"
+variant = "248.496"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Accepted prepared SCB export: this source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal has its own complete finite response domain over its original edition bounds; exact source coding fingerprints guard the original memberships and validity facts covering that intersection. Admit both physical representations only over their reviewed intersection. Retain per-column metadata, codes, labels, original periods and provenance separately; no domain union, borrowed codec or statistical-equivalence claim."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1996-07-01"
+valid_to = "1996-12-31"
+column = "Modersmal"
+expected_codings = ["34a84afbd3a68ee7ae582f41ab1dd5f5405306c404f8ae8ff628267fde0328f2"]
+source_editions = ["1996 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "1996-07-01"
+valid_to = "1997-06-30"
+column = "modersmal"
+expected_codings = ["6c5ec12de6e4bffb55466386e819daa9c2504b3cde0f30e5c55ed1fa058a430d"]
+source_editions = ["1996/1997"]

@@ -301,6 +301,45 @@ def _bytes(compiled) -> bytes:
     ).encode()
 
 
+def test_acknowledgement_compiler_preserves_optional_evidence_guard(tmp_path):
+    from reg_meta.source_evidence import SourceRecordRef
+    from reg_meta_build.curation_tree import AcknowledgeEntry
+
+    tree = _tree(tmp_path / "curation")
+    register = next(r for r in tree.registers if r.register_info.slug == "sample")
+    entry = AcknowledgeEntry(
+        code="unresolved_native_identity",
+        subject="scb/sample/one",
+        refs=[
+            SourceRecordRef(
+                source="fixture", semantic_record_key=("one",)
+            ).model_dump_json()
+        ],
+        reason="The source omits the physical matrix coordinates.",
+        evidence="Complete original source family.",
+        expected_evidence_sha256="a" * 64,
+    )
+    tree = replace(
+        tree,
+        registers=tuple(
+            r.model_copy(update={"acknowledge": [entry]}) if r is register else r
+            for r in tree.registers
+        ),
+    )
+    compiled = compile_curation(tree, _prepared(), (_scope(),), subset=True)
+    (case,) = (
+        case
+        for cases in compiled.cases.values()
+        for case in cases
+        if case.decision.kind == "acknowledge"
+    )
+    assert case.decision.expected_evidence_sha256 == entry.expected_evidence_sha256
+    with pytest.raises(ValueError):
+        AcknowledgeEntry.model_validate(
+            {**entry.model_dump(), "expected_evidence_sha256": "not-a-sha256"}
+        )
+
+
 def test_global_families_and_manifest_wiring_compile_for_subset(tmp_path):
     tree = _tree(tmp_path / "curation")
     result = compile_curation(tree, _prepared(), (_scope(),), subset=True)

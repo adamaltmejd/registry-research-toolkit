@@ -128,6 +128,13 @@ def scope_data_warnings(
         for v in result.variables.values()
         if v is not None
     )
+    reviewed_reasons = {
+        evaluation.case_id: evaluation.decision.reason
+        for evaluation in result.evaluations
+        if evaluation.status == "applicable"
+        and evaluation.decision is not None
+        and evaluation.decision.kind == "acknowledge"
+    }
     warnings = {}
     for issue in result.diagnostics if diagnostics is None else diagnostics:
         if issue.acknowledged_by is None and issue.code not in QUALITY_CODES:
@@ -187,7 +194,8 @@ def scope_data_warnings(
             "summary": WARNING_SUMMARIES.get(
                 issue.code, "The source has an acknowledged data limitation"
             ),
-            "detail": WARNING_DETAILS.get(
+            "detail": reviewed_reasons.get(issue.acknowledged_by)
+            or WARNING_DETAILS.get(
                 issue.code,
                 "An exact reviewed source limitation is acknowledged; the original diagnostic remains in the build report.",
             ),

@@ -2915,9 +2915,10 @@ def test_repo_reviewed_parallel_columns_keep_exact_wave_intersections(
         for register in tree.registers
         for entry in register.representation.delivery_metadata
     ]
-    assert len(metadata) == 22
+    assert len(metadata) == 38
     assert Counter(tuple(entry.fields) for entry in metadata) == {
-        ("description",): 22,
+        ("description",): 36,
+        ("name", "description"): 2,
     }
 
 

@@ -1090,12 +1090,12 @@ parent prose without recreating preliminary states.
 The pipeline captures source diagnostics after acknowledgement settlement. Every
 acknowledged limitation and a finite set of diagnostics affecting data interpretation
 are persisted; editorial metadata projection notices are not. Diagnostic warnings carry
-finite code-specific explanations and SHA-256 digests of the exact original diagnostic
-text. The completed report ledger retains that full text and source facts remain intact,
-without serializing entire value-set diagnostics into public warning payloads. Actual
-corrected source references establish ownership. Ambiguous ownership falls back to the
-actual resolved register, and an owner omitted from the final catalog cannot retain a
-variable coordinate.
+finite code-specific explanations (or the explicit reviewed acknowledgement reason) and
+SHA-256 digests of the exact original diagnostic text. The completed report ledger
+retains that full text and source facts remain intact, without serializing entire
+value-set diagnostics into public warning payloads. Actual corrected source references
+establish ownership. Ambiguous ownership falls back to the actual resolved register, and
+an owner omitted from the final catalog cannot retain a variable coordinate.
 
 Reviewed identity maps, coding selections/extensions, and missing-column errata can
 carry an explicit `data_warning` summary. Omitted annotations are silent. Only
@@ -1129,7 +1129,12 @@ acknowledgements per code. An entry that matches no error is stale, and one that
 more than one is over-broad; both are errors. Strict publication accepts acknowledged
 issues. A warning is either defined by a rule, such as `omitted_columnless_occurrence`,
 or a counted acknowledgement. The compiled `AcknowledgeDecision` reaches issues raised
-while its source scope resolves.
+while its source scope resolves. An optional `expected_evidence_sha256` pins the full
+original records named by its refs and their bound physical coding assertions. The
+canonical fingerprint ignores content ordering but retains multiplicity, source fields,
+parent facts, physical delivered cells, coding references, and raw coding associations
+and validity evidence. A changed fingerprint leaves the original error intact and adds a
+stale acknowledgement error. Unguarded entries retain exact issue matching.
 
 Diagnostic mode resolves exactly the same facts and issues. It scans the complete
 prepared scope set and writes only independently supported output to a separate new
