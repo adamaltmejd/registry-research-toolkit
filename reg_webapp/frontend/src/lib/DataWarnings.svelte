@@ -53,9 +53,10 @@ function unavailableLabel(field: string): string {
           {#if warning.withheld_output.length > 0}
             <p class="scope">Unavailable metadata: {[...new Set(warning.withheld_output.map(unavailableLabel))].join(", ")}</p>
           {/if}
-          {#if warning.detail !== warning.summary}
-            <TechnicalDetails><p>{warning.detail}</p></TechnicalDetails>
-          {/if}
+          <TechnicalDetails>
+            {#if warning.detail !== warning.summary}<p>{warning.detail}</p>{/if}
+            <p class="scope">Diagnostic SHA256: <code>{warning.diagnostic_detail_sha256}</code></p>
+          </TechnicalDetails>
         </li>
       {/each}
     </ul>

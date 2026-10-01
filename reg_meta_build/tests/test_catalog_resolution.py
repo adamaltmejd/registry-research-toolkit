@@ -540,3 +540,35 @@ def test_naming_declaration_for_unobserved_name_never_invents_parent_name() -> N
         "conflicting_parent_metadata",
         "unknown_parent_name",
     }
+
+
+def test_support_occurrence_retains_parents_without_materializing_delivery() -> None:
+    record = _record(Registerversionnamn="2012, preliminär version")
+    support = replace(source_occurrence(record), use="support")
+    parents = resolve_parents((support,), _names(record))
+    assert replace(parents, support_only_refs=()) == resolve_parents(
+        (record,), _names(record)
+    )
+    assert parents.support_only_refs == (record_ref(record),)
+    assert len(parents.editions) == 1
+    with pytest.raises(ValueError, match="support-only"):
+        form_native_variable(
+            (support,),
+            register=next(iter(parents.registers.values())),
+            variants=parents.variants,
+            slug="value",
+            provider_key="5",
+            flags=SourceFields(),
+            coding={},
+        )
+
+
+def test_support_parent_conflict_retains_existing_withholding_guard() -> None:
+    first, second = _conflicting_variant_pair()
+    names = (_register_declaration(first), _checked_variant_declaration(first))
+    ordinary = resolve_parents((first, second), names)
+    support = replace(source_occurrence(second), use="support")
+    resolved = resolve_parents((first, support), names)
+    assert replace(resolved, support_only_refs=()) == ordinary
+    assert resolved.support_only_refs == (record_ref(second),)
+    assert any(d.code == "conflicting_parent_metadata" for d in resolved.diagnostics)

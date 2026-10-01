@@ -319,7 +319,8 @@ CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
 # - 6.15.0: exact state/alias definitions and checked literal delivery units.
 # - 6.16.0: exact source names and descriptions at state/alias grain.
 # 6.17.0: persistent scoped data-quality warnings and explicit classification extensions.
-SCHEMA_VERSION = "6.17.0"
+# 6.18.0: concise diagnostic warnings retain the exact original-detail SHA256.
+SCHEMA_VERSION = "6.18.0"
 DB_FILENAME = "reg_meta.db"
 
 

@@ -59555,11 +59555,7 @@ name = "Co55"
 
 [[table.column]]
 name = "EMP"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/antal-anstallda"
-representation = "EMP"
+unmapped_reason = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
 
 [[table.column]]
 name = "EMPC"
@@ -60347,11 +60343,7 @@ representation = "H93"
 
 [[table.column]]
 name = "HO"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/ho"
-representation = "HO"
+unmapped_reason = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
 
 [[table.column]]
 name = "INMAR"
@@ -60467,11 +60459,7 @@ representation = "INUN"
 
 [[table.column]]
 name = "LILLAN"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/lilla-n-per-stratum"
-representation = "LillaN"
+unmapped_reason = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
 
 [[table.column]]
 name = "LILLAS"
@@ -60808,11 +60796,7 @@ representation = "StoraN"
 
 [[table.column]]
 name = "STRAT"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/stratum"
-representation = "STRAT"
+unmapped_reason = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
 
 [[table.column]]
 name = "TURN"
@@ -60880,11 +60864,7 @@ representation = "UNIT"
 
 [[table.column]]
 name = "WEIGHT"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/weight"
-representation = "WEIGHT"
+unmapped_reason = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
 
 [[table.column]]
 name = "co11"
@@ -73223,11 +73203,7 @@ representation = "COOP_INN_XRND"
 
 [[table.column]]
 name = "COOP_NO"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/samarbete-inom-ovriga-aktiviteter"
-representation = "COOP_NO"
+unmapped_reason = "COOP_NO and COOP_OTH both exist in CIS2020. Source question 39102 names COOP_OTH, and the questionnaire separately includes no cooperation. The meaning of physical COOP_NO is not established."
 
 [[table.column]]
 name = "COOP_NPO_EU_EFTA"
@@ -195727,16 +195703,7 @@ representation = "EMPCUSEPCT"
 
 [[table.column]]
 name = "EMPIUSEPCT"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-anstallda-anvander-dator"
-representation = "EMPIUSEPCT"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-sysselsatta-internetdator"
-representation = "EMPIUSEPCT"
+unmapped_reason = "The supplied 2008 business-survey metadata contain no exact literal EMPIUSEPCT with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "EXTRA"
@@ -196002,21 +195969,7 @@ representation = "SISAPROD"
 
 [[table.column]]
 name = "SISC"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/delar-data-leverantor"
-representation = "SISC"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/delar-lagertillgang-elektroniskt"
-representation = "SISC"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/lagertillgang-infoutbyte"
-representation = "SISC"
+unmapped_reason = "The supplied 2008 business-survey metadata contain no exact literal SISC with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "SISCADE"
@@ -196204,42 +196157,15 @@ representation = "WEB"
 
 [[table.column]]
 name = "WEBACC"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-produktkatalog"
-representation = "WEBACC"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-varubeskrivning-pris"
-representation = "WEBACC"
+unmapped_reason = "The supplied 2008 business-survey metadata contain no exact literal WEBACC with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "WEBCTM"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-avgransa-sokning"
-representation = "WEBCTM"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-kundanpassa-produkt"
-representation = "WEBCTM"
+unmapped_reason = "The supplied 2008 business-survey metadata contain no exact literal WEBCTM with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "WEBORD"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-bestalla-online"
-representation = "WEBORD"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-bestallning-bokning"
-representation = "WEBORD"
+unmapped_reason = "The supplied 2008 business-survey metadata contain no exact literal WEBORD with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "WEBPAY"
@@ -196251,16 +196177,7 @@ representation = "WEBPAY"
 
 [[table.column]]
 name = "WEBPER"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-anpassat-innehall"
-representation = "WEBPER"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-kund-igenkanning"
-representation = "WEBPER"
+unmapped_reason = "The supplied 2008 business-survey metadata contain no exact literal WEBPER with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "WEBVAC"
@@ -196538,16 +196455,7 @@ representation = "EMPCUSEPCT"
 
 [[table.column]]
 name = "EMPIUSEPCT"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-anstallda-anvander-dator"
-representation = "EMPIUSEPCT"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-sysselsatta-internetdator"
-representation = "EMPIUSEPCT"
+unmapped_reason = "The supplied 2009 business-survey metadata contain no exact literal EMPIUSEPCT with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "EXTRA"
@@ -196583,16 +196491,7 @@ representation = "GCERT"
 
 [[table.column]]
 name = "GDIST"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anstallda-distansarbete"
-representation = "GDIST"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/sysselsatta-utanfor-foretaget"
-representation = "GDIST"
+unmapped_reason = "The supplied 2009 business-survey metadata contain no exact literal GDIST with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "GMEET"
@@ -196612,16 +196511,7 @@ representation = "GSOLNRG"
 
 [[table.column]]
 name = "GUSENRG"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/miljopolicy-energi-it"
-representation = "GUSENRG"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/miljopolicy-it-energianvandning"
-representation = "GUSENRG"
+unmapped_reason = "The supplied 2009 business-survey metadata contain no exact literal GUSENRG with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "IACC"
@@ -196911,21 +196801,7 @@ representation = "SISAPROD"
 
 [[table.column]]
 name = "SISC"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/delar-data-leverantor"
-representation = "SISC"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/delar-lagertillgang-elektroniskt"
-representation = "SISC"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/lagertillgang-infoutbyte"
-representation = "SISC"
+unmapped_reason = "The supplied 2009 business-survey metadata contain no exact literal SISC with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "SISCADE"
@@ -197347,16 +197223,7 @@ representation = "EMPCUSEPCT"
 
 [[table.column]]
 name = "EMPIUSEPCT"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-anstallda-anvander-dator"
-representation = "EMPIUSEPCT"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-sysselsatta-internetdator"
-representation = "EMPIUSEPCT"
+unmapped_reason = "The supplied 2010 business-survey metadata contain no exact literal EMPIUSEPCT with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "EXTRA"
@@ -197416,16 +197283,7 @@ representation = "GCERT"
 
 [[table.column]]
 name = "GDIST"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anstallda-distansarbete"
-representation = "GDIST"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/sysselsatta-utanfor-foretaget"
-representation = "GDIST"
+unmapped_reason = "The supplied 2010 business-survey metadata contain no exact literal GDIST with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "GMEET"
@@ -197445,16 +197303,7 @@ representation = "GSOLNRG"
 
 [[table.column]]
 name = "GUSENRG"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/miljopolicy-energi-it"
-representation = "GUSENRG"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/miljopolicy-it-energianvandning"
-representation = "GUSENRG"
+unmapped_reason = "The supplied 2010 business-survey metadata contain no exact literal GUSENRG with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "IACC"
@@ -197533,16 +197382,7 @@ representation = "INVSND"
 
 [[table.column]]
 name = "ITERP1"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anvander-erp-affarssystem"
-representation = "ITERP1"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/foretaget-anvander-erp-system"
-representation = "ITERP1"
+unmapped_reason = "The supplied 2010 business-survey metadata contain no exact literal ITERP1 with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "JEAnt"
@@ -197845,21 +197685,7 @@ representation = "SISAPROD"
 
 [[table.column]]
 name = "SISC"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/delar-data-leverantor"
-representation = "SISC"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/delar-lagertillgang-elektroniskt"
-representation = "SISC"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/lagertillgang-infoutbyte"
-representation = "SISC"
+unmapped_reason = "The supplied 2010 business-survey metadata contain no exact literal SISC with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "SISCADE"
@@ -198158,39 +197984,11 @@ representation = "AWSELL"
 
 [[table.column]]
 name = "AWSEU"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/awseu"
-representation = "AWSEU"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/awshm"
-representation = "AWSEU"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/ehandel-bestallningar-webb-varlden"
-representation = "AWSEU"
+unmapped_reason = "The supplied 2011 business-survey metadata contain no exact literal AWSEU with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "AWSHM"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/awshm"
-representation = "AWSHM"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/awsww"
-representation = "AWSHM"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webb-bestallningar-fran-sverige"
-representation = "AWSHM"
+unmapped_reason = "The supplied 2011 business-survey metadata contain no exact literal AWSHM with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "AWSVALPCT"
@@ -198202,21 +198000,7 @@ representation = "AWSVALPCT"
 
 [[table.column]]
 name = "AWSWW"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/awsww"
-representation = "AWSWW"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/ehandel-bestallningar-webb-varlden"
-representation = "AWSWW"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webb-bestallningar-fran-varlden"
-representation = "AWSWW"
+unmapped_reason = "The supplied 2011 business-survey metadata contain no exact literal AWSWW with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "AXSELL"
@@ -198228,29 +198012,11 @@ representation = "AXSELL"
 
 [[table.column]]
 name = "AXSEU"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/edi-bestallningar-fran-ovriga-eu"
-representation = "AXSEU"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/tog-emot-edi-bestallningar-eu"
-representation = "AXSEU"
+unmapped_reason = "The supplied 2011 business-survey metadata contain no exact literal AXSEU with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "AXSHM"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/edi-bestallningar-fran-sverige"
-representation = "AXSHM"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/tog-emot-edi-bestallningar-sverige"
-representation = "AXSHM"
+unmapped_reason = "The supplied 2011 business-survey metadata contain no exact literal AXSHM with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "AXSVALPCT"
@@ -198262,16 +198028,7 @@ representation = "AXSVALPCT"
 
 [[table.column]]
 name = "AXSWW"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/edi-bestallningar-fran-resten-varlden"
-representation = "AXSWW"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/tog-emot-edi-bestallningar-varlden"
-representation = "AXSWW"
+unmapped_reason = "The supplied 2011 business-survey metadata contain no exact literal AXSWW with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "AgKat"
@@ -198355,16 +198112,7 @@ representation = "EMPIACC3GPCT"
 
 [[table.column]]
 name = "EMPIUSEPCT"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-anstallda-anvander-dator"
-representation = "EMPIUSEPCT"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-sysselsatta-internetdator"
-representation = "EMPIUSEPCT"
+unmapped_reason = "The supplied 2011 business-survey metadata contain no exact literal EMPIUSEPCT with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "FENr"
@@ -198416,16 +198164,7 @@ representation = "GCERT"
 
 [[table.column]]
 name = "GDIST"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anstallda-distansarbete"
-representation = "GDIST"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/sysselsatta-utanfor-foretaget"
-representation = "GDIST"
+unmapped_reason = "The supplied 2011 business-survey metadata contain no exact literal GDIST with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "GMEET"
@@ -198445,16 +198184,7 @@ representation = "GSOLNRG"
 
 [[table.column]]
 name = "GUSENRG"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/miljopolicy-energi-it"
-representation = "GUSENRG"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/miljopolicy-it-energianvandning"
-representation = "GUSENRG"
+unmapped_reason = "The supplied 2011 business-survey metadata contain no exact literal GUSENRG with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "IACC"
@@ -198490,16 +198220,7 @@ representation = "IGOV2IF"
 
 [[table.column]]
 name = "IGOV2PREU"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anbud-elektronisk-upphandling-eu"
-representation = "IGOV2PREU"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/igov2preu-upphandling-ovriga-eu"
-representation = "IGOV2PREU"
+unmapped_reason = "The supplied 2011 business-survey metadata contain no exact literal IGOV2PREU with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "IGOV2PRHM"
@@ -198967,16 +198688,7 @@ representation = "WEB"
 
 [[table.column]]
 name = "WEBORD"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-bestalla-online"
-representation = "WEBORD"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-bestallning-bokning"
-representation = "WEBORD"
+unmapped_reason = "The supplied 2011 business-survey metadata contain no exact literal WEBORD with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "lillan"
@@ -199134,16 +198846,7 @@ representation = "DSL"
 
 [[table.column]]
 name = "EMPIUSEPCT"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-anstallda-anvander-dator"
-representation = "EMPIUSEPCT"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-sysselsatta-internetdator"
-representation = "EMPIUSEPCT"
+unmapped_reason = "The supplied 2012 business-survey metadata contain no exact literal EMPIUSEPCT with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "EMPMDPCT"
@@ -199179,16 +198882,7 @@ representation = "GCOP"
 
 [[table.column]]
 name = "GDIST"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anstallda-distansarbete"
-representation = "GDIST"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/sysselsatta-utanfor-foretaget"
-representation = "GDIST"
+unmapped_reason = "The supplied 2012 business-survey metadata contain no exact literal GDIST with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "GMEET"
@@ -199216,16 +198910,7 @@ representation = "GSOLLOG"
 
 [[table.column]]
 name = "GSOLOTH"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/energibesparande-it"
-representation = "GSOLOTH"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/gsoloth-upphandling-ovriga-eu"
-representation = "GSOLOTH"
+unmapped_reason = "The supplied 2012 business-survey metadata contain no exact literal GSOLOTH with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "GSOLVENT"
@@ -199237,16 +198922,7 @@ representation = "GSOLVENT"
 
 [[table.column]]
 name = "GUSENRG"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/miljopolicy-energi-it"
-representation = "GUSENRG"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/miljopolicy-it-energianvandning"
-representation = "GUSENRG"
+unmapped_reason = "The supplied 2012 business-survey metadata contain no exact literal GUSENRG with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "IACC"
@@ -199290,16 +198966,7 @@ representation = "IGOV2IF"
 
 [[table.column]]
 name = "IGOV2PREU"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anbud-elektronisk-upphandling-eu"
-representation = "IGOV2PREU"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/igov2preu-upphandling-ovriga-eu"
-representation = "IGOV2PREU"
+unmapped_reason = "The supplied 2012 business-survey metadata contain no exact literal IGOV2PREU with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "IGOV2PRHM"
@@ -199335,16 +199002,7 @@ representation = "ISPD"
 
 [[table.column]]
 name = "ITERP1"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anvander-erp-affarssystem"
-representation = "ITERP1"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/foretaget-anvander-erp-system"
-representation = "ITERP1"
+unmapped_reason = "The supplied 2012 business-survey metadata contain no exact literal ITERP1 with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "ITSP2"
@@ -199436,16 +199094,7 @@ representation = "PMC"
 
 [[table.column]]
 name = "PMD"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anvander-mobilt-bredband-3g-4g"
-representation = "PMD"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/pmd"
-representation = "PMD"
+unmapped_reason = "The supplied 2012 business-survey metadata contain no exact literal PMD with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "PMD_APP"
@@ -199585,21 +199234,7 @@ representation = "SISAPROD"
 
 [[table.column]]
 name = "SISC"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/delar-data-leverantor"
-representation = "SISC"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/delar-lagertillgang-elektroniskt"
-representation = "SISC"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/lagertillgang-infoutbyte"
-representation = "SISC"
+unmapped_reason = "The supplied 2012 business-survey metadata contain no exact literal SISC with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table.column]]
 name = "SISCADE"
@@ -199779,16 +199414,7 @@ representation = "WEB"
 
 [[table.column]]
 name = "WEBORD"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-bestalla-online"
-representation = "WEBORD"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-bestallning-bokning"
-representation = "WEBORD"
+unmapped_reason = "The supplied 2012 business-survey metadata contain no exact literal WEBORD with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
 
 [[table]]
 id = "ITftg_Mikro_2013"
@@ -201066,29 +200692,11 @@ representation = "IACC"
 
 [[table.column]]
 name = "INV3R_PAP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-mottagna-e-fakturor-processas"
-representation = "INV3R_PAP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/inv3r-pap"
-representation = "INV3R_PAP"
+unmapped_reason = "The catalog has no supported delivery for physical INV3R_PAP in 2014. Available question metadata do not establish this exact column’s role for this year."
 
 [[table.column]]
 name = "INV3R_PMP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-mottagna-fakturor-ej-processas"
-representation = "INV3R_PMP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/faktura-ej-autoprocess"
-representation = "INV3R_PMP"
+unmapped_reason = "The catalog has no supported delivery for physical INV3R_PMP in 2014. Available question metadata do not establish this exact column’s role for this year."
 
 [[table.column]]
 name = "INV3SBG"
@@ -202232,11 +201840,7 @@ representation = "FETyp"
 
 [[table.column]]
 name = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/fixbb"
-representation = "FIXBB"
+unmapped_reason = "The catalog has no supported delivery for physical FIXBB in 2016. Available question metadata do not establish this exact column’s role for this year."
 
 [[table.column]]
 name = "FtgStat"
@@ -202288,16 +201892,7 @@ representation = "GSOLLOG"
 
 [[table.column]]
 name = "GSOLOTH"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/energibesparande-it"
-representation = "GSOLOTH"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/gsoloth-upphandling-ovriga-eu"
-representation = "GSOLOTH"
+unmapped_reason = "The supplied source records do not identify the exact question or native variable represented by physical GSOLOTH in 2016. Similar question wording does not establish the delivery link."
 
 [[table.column]]
 name = "GSOLVENT"
@@ -202309,16 +201904,7 @@ representation = "GSOLVENT"
 
 [[table.column]]
 name = "GUSENRG"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/miljopolicy-energi-it"
-representation = "GUSENRG"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/miljopolicy-it-energianvandning"
-representation = "GUSENRG"
+unmapped_reason = "The supplied source records do not identify the exact question or native variable represented by physical GUSENRG in 2016. Similar question wording does not establish the delivery link."
 
 [[table.column]]
 name = "IACC"
@@ -202594,42 +202180,15 @@ representation = "WEB"
 
 [[table.column]]
 name = "WEBACC"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-produktkatalog"
-representation = "WEBACC"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-varubeskrivning-pris"
-representation = "WEBACC"
+unmapped_reason = "The supplied source records do not identify the exact question or native variable represented by physical WEBACC in 2016. Similar question wording does not establish the delivery link."
 
 [[table.column]]
 name = "WEBCTM"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-avgransa-sokning"
-representation = "WEBCTM"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-kundanpassa-produkt"
-representation = "WEBCTM"
+unmapped_reason = "The supplied source records do not identify the exact question or native variable represented by physical WEBCTM in 2016. Similar question wording does not establish the delivery link."
 
 [[table.column]]
 name = "WEBORD"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-bestalla-online"
-representation = "WEBORD"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-bestallning-bokning"
-representation = "WEBORD"
+unmapped_reason = "The supplied source records do not identify the exact question or native variable represented by physical WEBORD in 2016. Similar question wording does not establish the delivery link."
 
 [[table.column]]
 name = "WEBOT"
@@ -202641,16 +202200,7 @@ representation = "WEBOT"
 
 [[table.column]]
 name = "WEBPER"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-anpassat-innehall"
-representation = "WEBPER"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-kund-igenkanning"
-representation = "WEBPER"
+unmapped_reason = "The supplied source records do not identify the exact question or native variable represented by physical WEBPER in 2016. Similar question wording does not establish the delivery link."
 
 [[table.column]]
 name = "WEBSM"
@@ -202965,16 +202515,7 @@ representation = "FETyp"
 
 [[table.column]]
 name = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anslutning-fast-bb-kabel"
-representation = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/fixbb"
-representation = "FIXBB"
+unmapped_reason = "Two source questions claim FIXBB in this year: native 15902 describes DSL through the telephone network; native 30783 describes any fixed broadband, including fibre and cable. Both use code 9, but with different meanings (not answered versus should not answer). The physical column’s intended question and code meanings are unresolved."
 
 [[table.column]]
 name = "FtgStat"
@@ -203648,16 +203189,7 @@ representation = "EMPMD1PCT"
 
 [[table.column]]
 name = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anslutning-fast-bb-kabel"
-representation = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/fixbb"
-representation = "FIXBB"
+unmapped_reason = "Two source questions claim FIXBB in this year: native 15902 describes DSL through the telephone network; native 30783 describes any fixed broadband, including fibre and cable. Both use code 9, but with different meanings (not answered versus should not answer). The physical column’s intended question and code meanings are unresolved."
 
 [[table.column]]
 name = "GBUYNRG"
@@ -206283,29 +205815,11 @@ representation = "IACC"
 
 [[table.column]]
 name = "INV3R_PAP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-mottagna-e-fakturor-processas"
-representation = "INV3R_PAP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/inv3r-pap"
-representation = "INV3R_PAP"
+unmapped_reason = "The catalog has no supported delivery for physical INV3R_PAP in 2014. Available question metadata do not establish this exact column’s role for this year."
 
 [[table.column]]
 name = "INV3R_PMP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-mottagna-fakturor-ej-processas"
-representation = "INV3R_PMP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/faktura-ej-autoprocess"
-representation = "INV3R_PMP"
+unmapped_reason = "The catalog has no supported delivery for physical INV3R_PMP in 2014. Available question metadata do not establish this exact column’s role for this year."
 
 [[table.column]]
 name = "INV3SBG"
@@ -207888,24 +207402,11 @@ representation = "EBUY2"
 
 [[table.column]]
 name = "EMPIUSEPCT"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-anstallda-anvander-dator"
-representation = "EMPIUSEPCT"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-sysselsatta-internetdator"
-representation = "EMPIUSEPCT"
+unmapped_reason = "The supplied source records do not identify the exact question or native variable represented by physical EMPIUSEPCT in 2016. Similar question wording does not establish the delivery link."
 
 [[table.column]]
 name = "EMPMD1PCT"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-anstallda-barbara-enheter-mobil"
-representation = "EMPMD1PCT"
+unmapped_reason = "The supplied source records do not identify the exact question or native variable represented by physical EMPMD1PCT in 2016. Similar question wording does not establish the delivery link."
 
 [[table.column]]
 name = "FENr"
@@ -207933,11 +207434,7 @@ representation = "FETyp"
 
 [[table.column]]
 name = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/fixbb"
-representation = "FIXBB"
+unmapped_reason = "The catalog has no supported delivery for physical FIXBB in 2016. Available question metadata do not establish this exact column’s role for this year."
 
 [[table.column]]
 name = "FtgStat"
@@ -207989,16 +207486,7 @@ representation = "GSOLLOG"
 
 [[table.column]]
 name = "GSOLOTH"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/energibesparande-it"
-representation = "GSOLOTH"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/gsoloth-upphandling-ovriga-eu"
-representation = "GSOLOTH"
+unmapped_reason = "The supplied source records do not identify the exact question or native variable represented by physical GSOLOTH in 2016. Similar question wording does not establish the delivery link."
 
 [[table.column]]
 name = "GSOLVENT"
@@ -208010,16 +207498,7 @@ representation = "GSOLVENT"
 
 [[table.column]]
 name = "GUSENRG"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/miljopolicy-energi-it"
-representation = "GUSENRG"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/miljopolicy-it-energianvandning"
-representation = "GUSENRG"
+unmapped_reason = "The supplied source records do not identify the exact question or native variable represented by physical GUSENRG in 2016. Similar question wording does not establish the delivery link."
 
 [[table.column]]
 name = "IACC"
@@ -208063,16 +207542,7 @@ representation = "IGOV2IF"
 
 [[table.column]]
 name = "IGOV2PREU"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anbud-elektronisk-upphandling-eu"
-representation = "IGOV2PREU"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/igov2preu-upphandling-ovriga-eu"
-representation = "IGOV2PREU"
+unmapped_reason = "The supplied source records do not identify the exact question or native variable represented by physical IGOV2PREU in 2016. Similar question wording does not establish the delivery link."
 
 [[table.column]]
 name = "IGOV2PRHM"
@@ -208100,29 +207570,11 @@ representation = "IGOVATD"
 
 [[table.column]]
 name = "INV3R_PAP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-mottagna-e-fakturor-processas"
-representation = "INV3R_PAP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/inv3r-pap"
-representation = "INV3R_PAP"
+unmapped_reason = "The supplied source records do not identify the exact question or native variable represented by physical INV3R_PAP in 2016. Similar question wording does not establish the delivery link."
 
 [[table.column]]
 name = "INV3R_PMP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-mottagna-fakturor-ej-processas"
-representation = "INV3R_PMP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/faktura-ej-autoprocess"
-representation = "INV3R_PMP"
+unmapped_reason = "The supplied source records do not identify the exact question or native variable represented by physical INV3R_PMP in 2016. Similar question wording does not establish the delivery link."
 
 [[table.column]]
 name = "INV3SB"
@@ -208462,29 +207914,11 @@ representation = "UTVANTP"
 
 [[table.column]]
 name = "UTVEGANV2"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-arsverken-programvaruutv-extern"
-representation = "UTVEGANV2"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/utveganv2"
-representation = "UTVEGANV2"
+unmapped_reason = "The supplied source records do not identify the exact question or native variable represented by physical UTVEGANV2 in 2016. Similar question wording does not establish the delivery link."
 
 [[table.column]]
 name = "UTVEXF2"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/arsverken-programvaruutv-ovriga"
-representation = "UTVEXF2"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/utvexf2"
-representation = "UTVEXF2"
+unmapped_reason = "The catalog has no supported delivery for physical UTVEXF2 in 2016. Available question metadata do not establish this exact column’s role for this year."
 
 [[table.column]]
 name = "UTVP"
@@ -208520,42 +207954,15 @@ representation = "WEB"
 
 [[table.column]]
 name = "WEBACC"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-produktkatalog"
-representation = "WEBACC"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-varubeskrivning-pris"
-representation = "WEBACC"
+unmapped_reason = "The supplied source records do not identify the exact question or native variable represented by physical WEBACC in 2016. Similar question wording does not establish the delivery link."
 
 [[table.column]]
 name = "WEBCTM"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-avgransa-sokning"
-representation = "WEBCTM"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-kundanpassa-produkt"
-representation = "WEBCTM"
+unmapped_reason = "The supplied source records do not identify the exact question or native variable represented by physical WEBCTM in 2016. Similar question wording does not establish the delivery link."
 
 [[table.column]]
 name = "WEBORD"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-bestalla-online"
-representation = "WEBORD"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-bestallning-bokning"
-representation = "WEBORD"
+unmapped_reason = "The supplied source records do not identify the exact question or native variable represented by physical WEBORD in 2016. Similar question wording does not establish the delivery link."
 
 [[table.column]]
 name = "WEBOT"
@@ -208567,16 +207974,7 @@ representation = "WEBOT"
 
 [[table.column]]
 name = "WEBPER"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-anpassat-innehall"
-representation = "WEBPER"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/webbplats-kund-igenkanning"
-representation = "WEBPER"
+unmapped_reason = "The supplied source records do not identify the exact question or native variable represented by physical WEBPER in 2016. Similar question wording does not establish the delivery link."
 
 [[table.column]]
 name = "WEBSM"
@@ -208913,16 +208311,7 @@ representation = "EMPIUSEPCT"
 
 [[table.column]]
 name = "EMPMD1PCT"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-anstallda-barbara-enheter-mobil"
-representation = "EMPMD1PCT"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/mobiluppkoppling-3g-4g"
-representation = "EMPMD1PCT"
+unmapped_reason = "Two source questions claim EMPMD1PCT in 2017: native 23393 describes mobile-phone 3G/4G internet use; native 28822 describes the share of employees supplied with other portable devices for mobile internet. The physical column does not identify which device definition or denominator applies."
 
 [[table.column]]
 name = "E_AEBEU"
@@ -209070,16 +208459,7 @@ representation = "FETyp"
 
 [[table.column]]
 name = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anslutning-fast-bb-kabel"
-representation = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/fixbb"
-representation = "FIXBB"
+unmapped_reason = "Two source questions claim FIXBB in this year: native 15902 describes DSL through the telephone network; native 30783 describes any fixed broadband, including fibre and cable. Both use code 9, but with different meanings (not answered versus should not answer). The physical column’s intended question and code meanings are unresolved."
 
 [[table.column]]
 name = "FtgStat"
@@ -209738,11 +209118,7 @@ representation = "UTVP"
 
 [[table.column]]
 name = "UTVSUP2"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/arsverken-programvaruutv-ovriga"
-representation = "UTVSUP2"
+unmapped_reason = "The catalog has no supported delivery for physical UTVSUP2 in 2017. Available question metadata do not establish this exact column’s role for this year."
 
 [[table.column]]
 name = "Vikt"
@@ -210190,16 +209566,7 @@ representation = "FETyp"
 
 [[table.column]]
 name = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/anslutning-fast-bb-kabel"
-representation = "FIXBB"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/fixbb"
-representation = "FIXBB"
+unmapped_reason = "Two source questions claim FIXBB in this year: native 15902 describes DSL through the telephone network; native 30783 describes any fixed broadband, including fibre and cable. Both use code 9, but with different meanings (not answered versus should not answer). The physical column’s intended question and code meanings are unresolved."
 
 [[table.column]]
 name = "FtgStat"

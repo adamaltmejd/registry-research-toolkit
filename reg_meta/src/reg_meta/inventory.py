@@ -346,6 +346,14 @@ class InventoryColumn(_InventoryModel):
 
     name: str = Field(min_length=1)
     mappings: tuple[ColumnMapping, ...] = Field(default=(), alias="mapping")
+    unmapped_reason: str | None = None
+
+    @field_validator("unmapped_reason")
+    @classmethod
+    def _nonblank_unmapped_reason(cls, value: str | None) -> str | None:
+        if value is not None and not value.strip():
+            raise ValueError("unmapped_reason must be nonblank")
+        return value
 
     @model_validator(mode="after")
     def _check_unique_mappings(self) -> InventoryColumn:
@@ -355,6 +363,8 @@ class InventoryColumn(_InventoryModel):
         resolution invariant (the cross-location arm is
         `DeliveryInventory._check_one_to_one_resolution`)."""
         seen: set[ColumnMapping] = set()
+        if self.unmapped_reason is not None and self.mappings:
+            raise ValueError("unmapped_reason cannot accompany mappings")
         for mapping in self.mappings:
             if mapping in seen:
                 raise ValueError(

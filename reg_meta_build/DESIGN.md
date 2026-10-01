@@ -1026,16 +1026,25 @@ source register's other deliveries.
 
 Panel keys require supported states in the exact variant. Losing one composite-key
 member makes that entire key unknown; it never manufactures a shorter key. Other axes,
-time grain and independently supported parent metadata survive.
+time grain and independently supported parent metadata survive. A reviewed support
+occurrence excludes delivery states, not its independently supplied register, variant,
+edition, population or object-type facts. Parent resolution reconciles these facts with
+the same naming, language, coordinate and conflict guards as catalog occurrences;
+`support_only_refs` continues to account for the excluded deliveries. Superseded
+preliminary editions therefore retain their own parent prose without recreating
+preliminary states.
 
 ## Persistent data warnings
 
 The pipeline captures source diagnostics after acknowledgement settlement. Every
 acknowledged limitation and a finite set of diagnostics affecting data interpretation
-are persisted; editorial metadata projection notices are not. Actual corrected source
-references establish ownership. Ambiguous ownership falls back to the actual resolved
-register, and an owner omitted from the final catalog cannot retain a variable
-coordinate.
+are persisted; editorial metadata projection notices are not. Diagnostic warnings carry
+finite code-specific explanations and SHA-256 digests of the exact original diagnostic
+text. The completed report ledger retains that full text and source facts remain intact,
+without serializing entire value-set diagnostics into public warning payloads. Actual
+corrected source references establish ownership. Ambiguous ownership falls back to the
+actual resolved register, and an owner omitted from the final catalog cannot retain a
+variable coordinate.
 
 Reviewed identity maps, coding selections/extensions, and missing-column errata can
 carry an explicit `data_warning` summary. Omitted annotations are silent. Only

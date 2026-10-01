@@ -1412,6 +1412,52 @@ def test_inventory_overlay_preserves_physical_column_with_checked_representation
 
 
 @pytest.mark.parametrize(
+    "reason", [None, '  Unresolved source owner; preserve "FIXBB".  ']
+)
+def test_inventory_unmap_preserves_exact_reason_without_other_changes(
+    tmp_path: Path, flavored_db: Path, reason: str | None
+) -> None:
+    overlay = '[[unmap]]\ntable = "T2019"\ncolumn = "T_kolumn"\n'
+    if reason is not None:
+        overlay += f"reason = {json.dumps(reason)}\n"
+    steward = _run_inventory(
+        tmp_path, flavored_db, overlay, "T2019", ["T_kolumn", "Unknown"]
+    )
+    inventory = load_delivery_inventory(steward / "inventory.toml")
+    assert inventory.tables[0].id == "T2019"
+    assert inventory.tables[0].edition == "2019"
+    assert [column.name for column in inventory.tables[0].columns] == [
+        "T_kolumn",
+        "Unknown",
+    ]
+    assert inventory.tables[0].columns[0].mappings == ()
+    assert inventory.tables[0].columns[0].unmapped_reason == reason
+    assert inventory.tables[0].columns[1].mappings == ()
+    assert inventory.tables[0].columns[1].unmapped_reason is None
+    baseline_dir = tmp_path / "without-reason"
+    baseline_dir.mkdir()
+    baseline_steward = _run_inventory(
+        baseline_dir,
+        flavored_db,
+        '[[unmap]]\ntable = "T2019"\ncolumn = "T_kolumn"\n',
+        "T2019",
+        ["T_kolumn", "Unknown"],
+    )
+    expected = load_delivery_inventory(baseline_steward / "inventory.toml").model_dump(
+        by_alias=False
+    )
+    expected["tables"][0]["columns"][0]["unmapped_reason"] = reason
+    assert inventory.model_dump(by_alias=False) == expected
+
+
+def test_inventory_unmap_refuses_blank_reason_before_writing(tmp_path: Path) -> None:
+    overlay = tmp_path / "overlay.toml"
+    overlay.write_text('[[unmap]]\ntable = "T2019"\ncolumn = "FIXBB"\nreason = "  "\n')
+    with pytest.raises(SystemExit, match="unmapped_reason must be nonblank"):
+        build_catalog._load_overlay(overlay)
+
+
+@pytest.mark.parametrize(
     "changes",
     [
         {"edition": 2020},

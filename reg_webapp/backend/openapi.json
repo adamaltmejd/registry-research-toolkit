@@ -1882,6 +1882,11 @@
             "title": "Detail",
             "type": "string"
           },
+          "diagnostic_detail_sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Diagnostic Detail Sha256",
+            "type": "string"
+          },
           "fields": {
             "default": [],
             "items": {
@@ -1983,6 +1988,7 @@
           "severity",
           "summary",
           "detail",
+          "diagnostic_detail_sha256",
           "source_subject"
         ],
         "title": "DataWarning",

@@ -110,6 +110,36 @@ def test_unresolved_column_carries_no_mappings(inventory: DeliveryInventory) -> 
     assert inventory.tables[0].columns[2].mappings == ()
 
 
+def test_unmapped_reason_is_retained_exactly(tmp_path) -> None:
+    reason = "  Source owner is unresolved; preserve this column.  "
+    text = FIXTURE_INVENTORY.replace(
+        'name = "LopNr"', f'name = "LopNr"\nunmapped_reason = "{reason}"'
+    )
+    inventory = load_inventory(_write(tmp_path, text))
+    column = inventory.tables[0].columns[2]
+    assert column.unmapped_reason == reason
+    assert column.mappings == ()
+
+
+@pytest.mark.parametrize("reason", ["", "   ", "\\t"])
+def test_unmapped_reason_refuses_blank_text(tmp_path, reason: str) -> None:
+    text = FIXTURE_INVENTORY.replace(
+        'name = "LopNr"', f'name = "LopNr"\nunmapped_reason = "{reason}"'
+    )
+    with pytest.raises(RegMetaError) as excinfo:
+        load_inventory(_write(tmp_path, text))
+    assert "unmapped_reason must be nonblank" in excinfo.value.message
+
+
+def test_unmapped_reason_refuses_active_mappings(tmp_path) -> None:
+    text = FIXTURE_INVENTORY.replace(
+        'name = "Kon"', 'name = "Kon"\nunmapped_reason = "Unresolved owner"'
+    )
+    with pytest.raises(RegMetaError) as excinfo:
+        load_inventory(_write(tmp_path, text))
+    assert "unmapped_reason cannot accompany mappings" in excinfo.value.message
+
+
 def test_one_column_maps_to_two_variants(inventory: DeliveryInventory) -> None:
     varukod = inventory.tables[1].columns[0]
     assert [mapping.register_variant for mapping in varukod.mappings] == [

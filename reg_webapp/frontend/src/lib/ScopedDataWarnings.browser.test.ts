@@ -17,6 +17,7 @@ const warning: DataWarningModel = {
   severity: "warning",
   summary: "Response codes unavailable.",
   detail: "No source dictionary supplied.",
+  diagnostic_detail_sha256: "d".repeat(64),
   source_subject: "original",
   fields: [],
   refs: [],

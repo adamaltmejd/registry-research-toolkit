@@ -46,7 +46,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from pydantic import Field, model_validator
-from reg_meta.inventory import ColumnMapping, edition_bounds
+from reg_meta.inventory import ColumnMapping, InventoryColumn, edition_bounds
 
 DEFAULT_CSV = max(
     Path(__file__).parent.glob("SWECOV_variables_full_*.csv"),
@@ -2951,7 +2951,13 @@ def _load_overlay(path: Path) -> dict:
             # inventoried (and still ships whenever its table is ordered), but
             # another table owns the shared variable — the aux-table join-key
             # disposition.
-            "unmap": {(e["table"], e["column"]) for e in raw.get("unmap", [])},
+            "unmap": {
+                (e["table"], e["column"]): InventoryColumn.model_validate(
+                    {"name": e["column"], "unmapped_reason": e.get("reason")},
+                    strict=True,
+                ).unmapped_reason
+                for e in raw.get("unmap", [])
+            },
             # Per-REGISTER school-year rule: which school year a table year
             # names on this register (see `_school_year_edition`).
             "school_year": {
@@ -3259,6 +3265,8 @@ def cmd_inventory(args: argparse.Namespace) -> None:
             if (table, col) in overlay["unmap"]:
                 n_unmapped += 1
                 lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
+                if (reason := overlay["unmap"][table, col]) is not None:
+                    lines.append(f"unmapped_reason = {_toml_str(reason)}")
                 continue
             u = LOPNR_PREFIX.sub("", col).upper()
             recs = [r for coord in sorted(coords) for r in by_coordcol[(coord, u)]]

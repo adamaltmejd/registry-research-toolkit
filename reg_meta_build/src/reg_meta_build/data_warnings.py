@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from collections import defaultdict
 from datetime import date
+from hashlib import sha256
 from typing import TYPE_CHECKING
 
 from reg_meta.catalog import DataWarning
@@ -62,6 +63,30 @@ WARNING_SUMMARIES = {
     "missing_data_type": "The stored data type is unavailable",
     "unresolved_data_type": "The stored data type could not be established",
     "omitted_columnless_occurrence": "Some source records cannot be linked to a delivered column",
+}
+
+
+WARNING_DETAILS = {
+    "unknown_support_key": "The source metadata is retained, but its link to a physical delivered column has not been established.",
+    "unknown_code_membership": "The original source codes are retained; their response labels could not be established.",
+    "unresolved_list_reference": "The supplied inputs refer to a response dictionary that is unavailable. No substitute dictionary has been assumed.",
+    "missing_coding_period": "The supplied evidence does not establish the stored response codes for this period. Other documented periods retain their known domains.",
+    "nonconforming_classification_codes": "The source response domain includes non-standard codes. Source codes remain available; only positively matched dictionary members count as verified classification codes.",
+    "sentinel_classification_codes": "The source retains special response codes outside the official classification. They must not be interpreted as official classification members.",
+    "unsupported_classification_scope": "The supplied evidence does not establish an applicable classification edition for this source window.",
+    "unresolved_classification_reference": "The named classification dictionary cannot be verified from the supplied inputs. Original source domains and declarations are retained.",
+    "unresolved_catalog_identity": "The source facts are retained, but the evidence does not establish a unique catalog variable identity.",
+    "unresolved_column_representation": "The source facts are retained, but the meaning of this physical delivery column could not be established.",
+    "ambiguous_named_identity": "The source assigns different meanings to the same delivered column. No single interpretation has been selected without evidence.",
+    "conflicting_code_memberships": "The supplied source lists disagree about response codes or their meanings. Ambiguous coding remains unavailable unless an exact reviewed domain establishes it.",
+    "conflicting_classification_labels": "The source supplies conflicting labels for classification codes. Original declarations remain available without an unsupported label correction.",
+    "unsupported_coding_scope": "The supplied evidence does not establish when this response domain applies. An unsupported period has not been inferred.",
+    "item_validity_set_aside": "Explicit source associations determine the applied response domain despite conflicting global code validity dates. The original dates are retained.",
+    "supported_erroneous_coding_association": "An exact reviewed source coding association is retained as evidence but is not applied to the response domain.",
+    "curated_state_omission": "An exact reviewed delivery interpretation lacks sufficient support and has been withheld. The original source records remain available.",
+    "missing_data_type": "The supplied evidence does not establish the stored data type for this delivery.",
+    "unresolved_data_type": "The source data type could not be resolved safely. No unsupported storage type has been selected.",
+    "omitted_columnless_occurrence": "The original source records have no usable physical column identity and are retained without attachment to a delivered column.",
 }
 
 
@@ -162,7 +187,13 @@ def scope_data_warnings(
             "summary": WARNING_SUMMARIES.get(
                 issue.code, "The source has an acknowledged data limitation"
             ),
-            "detail": issue.detail,
+            "detail": WARNING_DETAILS.get(
+                issue.code,
+                "An exact reviewed source limitation is acknowledged; the original diagnostic remains in the build report.",
+            ),
+            "diagnostic_detail_sha256": sha256(
+                issue.detail.encode("utf-8")
+            ).hexdigest(),
             "source_subject": issue.subject,
             "fields": list(issue.fields),
             "refs": [r.model_dump(mode="json") for r in issue.refs],
@@ -281,6 +312,9 @@ def scope_data_warnings(
                         "severity": "warning",
                         "summary": summary,
                         "detail": detail,
+                        "diagnostic_detail_sha256": sha256(
+                            detail.encode("utf-8")
+                        ).hexdigest(),
                         "source_subject": case_id,
                         "fields": list(fields),
                         "refs": [],

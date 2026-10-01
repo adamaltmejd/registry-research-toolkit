@@ -471,9 +471,12 @@ the obsolete variant-slot grammar and is wrong.
 ## Data warnings
 
 Source limitations and explicit interpretation assumptions are catalog data.
-`DataWarning` keeps the settled severity, readable summary, exact diagnostic text,
-source references, acknowledgement, and supplied delivery bounds. Its identity is the
-SHA-256 of its complete canonical content.
+`DataWarning` keeps the settled severity, readable summary and explanation, exact
+diagnostic SHA-256, source references, acknowledgement, and supplied delivery bounds.
+Its identity is the SHA-256 of its complete canonical content. Full technical diagnostic
+text stays in the completed build ledger; it is not duplicated into public warning
+responses. Authored assumption explanations retain their exact concise reason and
+provenance.
 
 `Catalog.data_warnings` accepts a register or binding FQID and optional period, variant,
 and literal representation filters. Binding aliases use the same canonical owner as

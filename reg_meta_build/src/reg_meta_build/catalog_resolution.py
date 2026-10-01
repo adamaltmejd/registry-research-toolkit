@@ -137,8 +137,9 @@ def resolve_parents(
                     support_only_refs.update(
                         record_ref(source) for source in record.source_records
                     )
-                else:
-                    yield from record.source_records
+                # Support use withholds delivery states, not independently supplied
+                # parent facts. Naming, language and conflict guards still apply.
+                yield from record.source_records
             else:
                 yield record
 

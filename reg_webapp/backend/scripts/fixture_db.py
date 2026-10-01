@@ -188,6 +188,8 @@ def build_catalog_fixture_db(db_path: Path) -> None:
 
 
 def _seed_data_warnings(conn: sqlite3.Connection) -> None:
+    from hashlib import sha256
+
     from reg_meta.catalog import DataWarning
     from reg_meta.source_evidence import canonical_sha256
 
@@ -219,6 +221,9 @@ def _seed_data_warnings(conn: sqlite3.Connection) -> None:
             "acknowledged_by": None,
             "case_id": None,
         }
+        payload["diagnostic_detail_sha256"] = sha256(
+            payload["detail"].encode()
+        ).hexdigest()
         warning = DataWarning.model_validate(
             {"warning_id": canonical_sha256(payload), **payload}
         )

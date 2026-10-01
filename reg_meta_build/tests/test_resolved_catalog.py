@@ -7,7 +7,11 @@ from typing import TYPE_CHECKING
 
 import pytest
 from pydantic import ValidationError
-from reg_meta.catalog import Catalog, ResolvedVariable as CatalogVariable
+from reg_meta.catalog import (
+    Catalog,
+    ResolvedRegister as CatalogRegister,
+    ResolvedVariable as CatalogVariable,
+)
 from reg_meta.db import CLASSIFICATION_SUCCESSION_AS_OF_YEAR, open_db
 from reg_meta.errors import RegMetaError
 from reg_meta.queries import search
@@ -580,6 +584,7 @@ def test_classifications_and_explicit_conformance_are_written_exactly(
         extensions = catalog.state_nonconforming_codes(state_id, value_set_id)
         assert canonical is not None and extensions is not None
         assert {m.code for m in canonical}.isdisjoint(m.code for m in extensions)
+        assert state.value_set is not None
         assert sorted((m.code, m.label) for m in (*canonical, *extensions)) == sorted(
             state.value_set.members
         )
@@ -1479,6 +1484,7 @@ def test_scoped_sentinel_certificate_requires_positive_source_and_case_evidence(
 
 def test_data_warnings_persist_and_filter_without_inventing_scope(tmp_path: Path):
     import sqlite3
+    from hashlib import sha256
 
     from reg_meta.catalog import DataWarning
     from reg_meta.source_evidence import canonical_sha256
@@ -1489,11 +1495,14 @@ def test_data_warnings_persist_and_filter_without_inventing_scope(tmp_path: Path
         "variant": "individuals",
         "delivery_column_name": "AmPolTyp",
         "valid_from": "2000-01-01",
-        "valid_to": "2000-12-31",
+        "valid_to": "2000-06-15",
         "code": "missing_coding_period",
         "severity": "warning",
         "summary": "Historical codes unavailable",
         "detail": "No source list for this window.",
+        "diagnostic_detail_sha256": sha256(
+            b"No source list for this window."
+        ).hexdigest(),
         "source_subject": "native:44",
         "fields": [],
         "refs": [],
@@ -1525,7 +1534,8 @@ def test_data_warnings_persist_and_filter_without_inventing_scope(tmp_path: Path
             ("scb", "historical", "old-name", "scb", "example", "ampoltyp"),
         )
         connection.commit()
-    with closing(open_db(output)) as conn:
+    with closing(sqlite3.connect(output)) as conn:
+        conn.row_factory = sqlite3.Row
         catalog = Catalog(conn)
         assert set(catalog.data_warnings("scb/historical/old-name")) == {
             warning,
@@ -1539,11 +1549,78 @@ def test_data_warnings_persist_and_filter_without_inventing_scope(tmp_path: Path
         assert catalog.data_warnings(
             "scb/example/ampoltyp", representation="Other"
         ) == (unscoped,)
-        variable = catalog.resolve("scb/example/ampoltyp")
+        variable = catalog.resolve_binding("scb/example/ampoltyp")
         assert set(variable.warnings) == {warning}
         assert set(variable.states[0].warning_ids) == {warning.warning_id}
         assert variable.states[1].warning_ids == ()
-        assert set(catalog.resolve("scb/example").warnings) == {unscoped}
+        register = catalog.resolve("scb/example")
+        assert isinstance(register, CatalogRegister)
+        assert set(register.warnings) == {unscoped}
+        with closing(sqlite3.connect(output)) as writer:
+            changed = warning.model_copy(
+                update={"detail": "Changed without content hash"}
+            )
+            writer.execute(
+                "UPDATE data_warning SET warning_json=? WHERE warning_id=?",
+                (changed.model_dump_json(), warning.warning_id),
+            )
+            writer.commit()
+        with pytest.raises(ValueError, match="content"):
+            catalog.data_warnings("scb/example")
+        with closing(sqlite3.connect(output)) as writer:
+            writer.execute(
+                "UPDATE data_warning SET warning_json=? WHERE warning_id=?",
+                (warning.model_dump_json(), warning.warning_id),
+            )
+            writer.commit()
+    with closing(sqlite3.connect(output)) as connection:
+        for column, lo, hi in (
+            ("Other", "2000-01-01", "2000-12-31"),
+            ("AmPolTyp", "2000-06-16", "2000-12-31"),
+        ):
+            connection.execute(
+                "INSERT INTO variable_alias_window (variable_id, register_variant_id, delivery_column_name, valid_from, valid_to, provenance) "
+                "SELECT variable_id, register_variant_id, ?, ?, ?, 'checked representation' FROM variable_state WHERE valid_from='2000-01-01'",
+                (column, lo, hi),
+            )
+        connection.commit()
+    with closing(open_db(output)) as conn:
+        catalog = Catalog(conn)
+        expanded = catalog.resolve_binding("scb/example/ampoltyp", with_codes=False)
+        for state in expanded.states:
+            assert state.valid_from is not None and state.valid_to is not None
+            exact = tuple(
+                w.warning_id
+                for w in catalog.data_warnings(
+                    expanded.fqid,
+                    period={"from": state.valid_from[:7], "to": state.valid_to[:7]},
+                    variant=state.variant,
+                    representation=state.delivery_column_name,
+                )
+                if w.variable_fqid == expanded.fqid
+                and (w.valid_from is None or w.valid_from <= state.valid_to)
+                and (w.valid_to is None or w.valid_to >= state.valid_from)
+            )
+            assert state.warning_ids == exact
+            if (
+                state.delivery_column_name == "Other"
+                or state.valid_from == "2000-06-16"
+            ):
+                assert state.warning_ids == ()
+    open_variable = _variable().model_copy(
+        update={"states": (_state(2000).model_copy(update={"valid_to": "9999-12-31"}),)}
+    )
+    open_output = tmp_path / "open.db"
+    write_resolved_catalog(
+        (open_variable,), open_output, manifest={}, data_warnings=(warning,)
+    )
+    with closing(open_db(open_output)) as connection:
+        (open_state,) = (
+            Catalog(connection)
+            .resolve_binding("scb/example/ampoltyp", with_codes=False)
+            .states
+        )
+        assert open_state.warning_ids == (warning.warning_id,)
     independent = _variable().model_copy(
         update={
             "states": (
@@ -1565,7 +1642,10 @@ def test_data_warnings_persist_and_filter_without_inventing_scope(tmp_path: Path
         data_warnings=(warning, unscoped),
     )
     with closing(open_db(independent_output)) as conn:
-        assert Catalog(conn).resolve("scb/example/ampoltyp").states[0].warning_ids == ()
+        assert (
+            Catalog(conn).resolve_binding("scb/example/ampoltyp").states[0].warning_ids
+            == ()
+        )
     with pytest.raises(ValidationError, match="identity"):
         write_resolved_catalog(
             (_variable(),),
@@ -1576,6 +1656,7 @@ def test_data_warnings_persist_and_filter_without_inventing_scope(tmp_path: Path
 
 
 def test_warning_ownership_requires_complete_source_and_delivery_witnesses():
+    from hashlib import sha256
     from types import SimpleNamespace
     from typing import cast
 
@@ -1627,9 +1708,23 @@ def test_warning_ownership_requires_complete_source_and_delivery_witnesses():
         evaluations=(),
     )
     (warning,) = scope_data_warnings(cast("ScopeResolution", scope))
+    assert warning.detail != issue.detail
+    assert warning.diagnostic_detail_sha256 == sha256(issue.detail.encode()).hexdigest()
     assert str(warning.variable_fqid) == "scb/example/ampoltyp"
     assert warning.variant == "individuals"
     assert warning.delivery_column_name == "AmPolTyp"
+    large_detail = "Original source label Å " * 100_000
+    scope.diagnostics = (
+        issue.model_copy(
+            update={"code": "item_validity_set_aside", "detail": large_detail}
+        ),
+    )
+    (compact,) = scope_data_warnings(cast("ScopeResolution", scope))
+    assert len(compact.detail) < 300
+    assert (
+        compact.diagnostic_detail_sha256
+        == sha256(large_detail.encode("utf-8")).hexdigest()
+    )
     scope.diagnostics = (
         issue.model_copy(
             update={

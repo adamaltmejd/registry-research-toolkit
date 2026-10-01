@@ -12,6 +12,7 @@ const warning: DataWarningModel = {
   severity: "warning",
   summary: "The stored response codes are unavailable for this delivery.",
   detail: "Source question categories do not establish the stored encoding.",
+  diagnostic_detail_sha256: "d".repeat(64),
   source_subject: "source record",
   fields: [],
   refs: [],
@@ -33,6 +34,13 @@ it("shows the limitation, delivery scope and unavailable metadata", async () => 
     .toBeVisible();
   await expect
     .element(page.getByText("Warning", { exact: true }))
+    .toBeVisible();
+  await expect
+    .element(page.getByText(warning.diagnostic_detail_sha256))
+    .not.toBeVisible();
+  await page.getByText("Technical details", { exact: true }).click();
+  await expect
+    .element(page.getByText(warning.diagnostic_detail_sha256))
     .toBeVisible();
 });
 

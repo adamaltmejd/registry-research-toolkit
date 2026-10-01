@@ -37,6 +37,7 @@ from .fqid import (
     Fqid,
     FqidError,
     FqidKind,
+    is_period,
     parse,
     period_token_for_bounds,
     period_token_to_bounds,
@@ -138,6 +139,7 @@ class DataWarning(_CatalogModel):
     severity: Literal["warning", "error"]
     summary: str
     detail: str
+    diagnostic_detail_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     source_subject: str
     fields: tuple[str, ...] = ()
     refs: tuple[SourceRecordRef, ...] = ()
@@ -3194,6 +3196,52 @@ class Catalog:
             return None
         return period_token_for_bounds(valid_from, valid_to)
 
+    def _state_warning_ids(
+        self,
+        state_id: int,
+        variant: str,
+        column: str | None,
+        valid_from: str | None,
+        valid_to: str | None,
+    ) -> tuple[str, ...]:
+        owner = self._conn.execute(
+            "SELECT p.slug, r.slug, v.slug FROM variable_state s "
+            "JOIN variable v USING(variable_id) JOIN register r USING(register_id) "
+            "JOIN provider p USING(provider_id) WHERE s.state_id = ?",
+            (state_id,),
+        ).fetchone()
+        period = None
+        if (
+            valid_from is not None
+            and valid_to is not None
+            and is_period(valid_from[:7])
+            and (is_period(valid_to[:7]) or valid_to == OPEN_ENDED_VALID_TO)
+        ):
+            period = {
+                "from": valid_from[:7],
+                "to": 9999 if valid_to == OPEN_ENDED_VALID_TO else valid_to[:7],
+            }
+        warnings = self.data_warnings(
+            Fqid.binding_fqid(*owner),
+            variant=variant,
+            representation=column,
+            period=period,
+        )
+        return tuple(
+            w.warning_id
+            for w in warnings
+            if w.variable_fqid == Fqid.binding_fqid(*owner)
+            and (w.delivery_column_name is None or w.delivery_column_name == column)
+            and (
+                w.valid_from is None
+                or (valid_to is not None and w.valid_from <= valid_to)
+            )
+            and (
+                w.valid_to is None
+                or (valid_from is not None and w.valid_to >= valid_from)
+            )
+        )
+
     def _row_to_state(
         self, row: sqlite3.Row, *, with_codes: bool, with_code_summary: bool
     ) -> VariableState:
@@ -3218,36 +3266,14 @@ class Catalog:
                 remediation="Rebuild the reg_meta DB (slug population is incomplete).",
             )
         family = self._variant_family_for_variant_id(rvid)
-        owner = self._conn.execute(
-            "SELECT p.slug, r.slug, v.slug FROM variable_state s "
-            "JOIN variable v USING(variable_id) JOIN register r USING(register_id) "
-            "JOIN provider p USING(provider_id) WHERE s.state_id = ?",
-            (row["state_id"],),
-        ).fetchone()
-        warnings = self.data_warnings(
-            Fqid.binding_fqid(*owner),
-            variant=variant,
-            representation=row["delivery_column_name"],
-        )
-        warnings = tuple(
-            w
-            for w in warnings
-            if w.variable_fqid == Fqid.binding_fqid(*owner)
-            and (
-                w.delivery_column_name is None
-                or w.delivery_column_name == row["delivery_column_name"]
-            )
-            and (
-                w.valid_from is None
-                or (row["valid_to"] is not None and w.valid_from <= row["valid_to"])
-            )
-            and (
-                w.valid_to is None
-                or (row["valid_from"] is not None and w.valid_to >= row["valid_from"])
-            )
-        )
         return VariableState(
-            warning_ids=tuple(w.warning_id for w in warnings),
+            warning_ids=self._state_warning_ids(
+                row["state_id"],
+                variant,
+                row["delivery_column_name"],
+                row["valid_from"],
+                row["valid_to"],
+            ),
             state_id=row["state_id"],
             variant=variant,
             variant_label=row["variant_label"],
@@ -3429,6 +3455,9 @@ class Catalog:
             return base.model_copy(
                 update={
                     "delivery_column_name": col,
+                    "warning_ids": self._state_warning_ids(
+                        base.state_id, base.variant, col, wfrom, wto
+                    ),
                     "valid_from": wfrom,
                     "valid_to": wto,
                     "operational_definition": None,

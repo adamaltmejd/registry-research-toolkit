@@ -1673,6 +1673,8 @@ export interface components {
             delivery_column_name?: string | null;
             /** Detail */
             detail: string;
+            /** Diagnostic Detail Sha256 */
+            diagnostic_detail_sha256: string;
             /**
              * Fields
              * @default []
