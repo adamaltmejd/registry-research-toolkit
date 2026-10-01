@@ -347,7 +347,7 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
 
     A value set is RESIDUAL iff it is MULTI-FAMILY (>1 candidate classification in
     the shared `_vs_cls` containment) AND >= 1 of its `variable_state` rows is still
-    unclassified (`classification_id IS NULL`). On a shipped DB that NULL is the
+    unclassified (no `state_classification` association). This absence is the
     final folded signal — `classification_candidate` (the build-scratch table the
     detector feeds) is DROPPED before ship, so it cannot be the read-side signal.
 
@@ -367,7 +367,7 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
     _build_containment_temp_tables(conn)
     try:
         # Multi-family value sets (>1 candidate cls) that still have >= 1
-        # unclassified state. `variable_state.classification_id IS NULL` is the
+        # unclassified state. Absence from `state_classification` is the
         # shipped final-fold signal; restrict to value-set-bearing states (a
         # code-less NULL-value_set state can't carry a classification link).
         multi_unclassified = {
@@ -382,7 +382,7 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
                 WHERE EXISTS (
                     SELECT 1 FROM variable_state vs
                     WHERE vs.value_set_id = mc.value_set_id
-                      AND vs.classification_id IS NULL
+                      AND NOT EXISTS (SELECT 1 FROM state_classification sc WHERE sc.state_id = vs.state_id)
                 )
                 """
             )
@@ -472,7 +472,7 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
             n_codes_by_vs.setdefault(value_set_id, int(n_codes))
 
         # Unclassified states per residual value set: the distinct (variable_id,
-        # value_set_id) state keys with classification_id NULL, joined to the
+        # value_set_id) state keys without a classification association, joined to the
         # variable FQID + name. A NULL slug segment (a partial/--skip-slugs build)
         # renders as an empty segment — the FQID is still informative.
         state_rows = conn.execute(
@@ -489,7 +489,7 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
             JOIN variable v ON v.variable_id = vs.variable_id
             JOIN register r ON r.register_id = v.register_id
             JOIN provider p ON p.provider_id = r.provider_id
-            WHERE vs.classification_id IS NULL
+            WHERE NOT EXISTS (SELECT 1 FROM state_classification sc WHERE sc.state_id = vs.state_id)
             ORDER BY vs.value_set_id, vs.variable_id
             """
         ).fetchall()
@@ -612,8 +612,9 @@ def _mixed_state_variable_ids(
         # NULL-value_set state can't carry a classification link and is never touched
         # by materialize). One row per (value_set_id, classification_id).
         full_states = conn.execute(
-            "SELECT DISTINCT value_set_id, classification_id FROM variable_state "
-            "WHERE variable_id = ? AND value_set_id IS NOT NULL",
+            "SELECT DISTINCT vs.value_set_id, sc.classification_id FROM variable_state vs "
+            "LEFT JOIN state_classification sc ON sc.state_id = vs.state_id "
+            "WHERE vs.variable_id = ? AND vs.value_set_id IS NOT NULL",
             (variable_id,),
         ).fetchall()
         for value_set_id, classification_id in full_states:
@@ -730,7 +731,7 @@ def render_residue_toml(result: ResidueResult) -> str:
         "#",
         "# The #416 code-set-containment detector auto-links the confident tier and",
         "# vintage-reclaims one-family residue; what remains is MULTI-FAMILY value",
-        "# sets with >= 1 still-unclassified (classification_id IS NULL) state. These",
+        "# sets with >= 1 still-unclassified (no classification association) state. These",
         "# are INFERRED candidates, NOT confirmed links. NOTHING here loads into a",
         "# build — review each and copy ONLY confirmed links into",
         "# reg_meta_build/curation/classifications/<short_name>.toml (drop/replace",

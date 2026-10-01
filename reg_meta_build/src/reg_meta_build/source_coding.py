@@ -24,7 +24,7 @@ from reg_meta_build.source_intervals import coding_scope_bounds
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from reg_meta_build.resolved_catalog import ResolvedConformance
+    from reg_meta_build.resolved_catalog import ResolvedClassificationLink
     from reg_meta_build.source_records import TemporalScope
     from reg_meta_build.source_values import SourceValueAssociation, SourceValueValidity
 
@@ -77,8 +77,7 @@ class CodingSegment:
     version_label: str = ""
     provenance: tuple[str, ...] = ()
     state_disposition: Literal["include", "omit", "withhold"] = "include"
-    classification: str | None = None
-    conformance: ResolvedConformance | None = None
+    classification_links: tuple[ResolvedClassificationLink, ...] = ()
     period_scope: Literal["intervals", "year_independent"] = "intervals"
 
 

@@ -27,7 +27,6 @@ from reg_meta.db import (
     CLASSIFICATION_SUCCESSION_AS_OF_YEAR,
     CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY,
     DB_FILENAME,
-    SCHEMA_VERSION,
     default_db_dir,
     register_py_lower,
 )
@@ -45,6 +44,7 @@ from reg_meta_build._resolved_common import (
 )
 from reg_meta_build.db import (
     DDL,
+    SCHEMA_VERSION,
     _populate_fts,
     _provider_id_for,
     _value_set_hash,
@@ -297,6 +297,29 @@ class ResolvedClassificationSuccession(_ResolvedModel):
         return value
 
 
+class ResolvedClassificationLink(_ResolvedModel):
+    """One source-declared book and its independently checked state domain."""
+
+    classification: str
+    conformance: ResolvedConformance | None = None
+    provenance: str | None = None
+
+    @field_validator("classification")
+    @classmethod
+    def _slug(cls, value: str) -> str:
+        validate_slug(value, "classification")
+        return value
+
+    @model_validator(mode="after")
+    def _book(self) -> Self:
+        if (
+            self.conformance is not None
+            and self.conformance.declared_classification != self.classification
+        ):
+            raise ValueError("classification link and conformance decision disagree")
+        return self
+
+
 class ResolvedState(_ResolvedDeliveryScope):
     variant: ResolvedVariant
     delivery_column_name: str
@@ -315,8 +338,7 @@ class ResolvedState(_ResolvedDeliveryScope):
     pooled: bool = False
     value_set: ResolvedCodeSet | None = None
     value_set_version_label: str = ""
-    classification: str | None = None
-    conformance: ResolvedConformance | None = None
+    classification_links: tuple[ResolvedClassificationLink, ...] = ()
 
     _column = field_validator("delivery_column_name")(_require_trimmed)
 
@@ -328,21 +350,22 @@ class ResolvedState(_ResolvedDeliveryScope):
 
     @model_validator(mode="after")
     def _classification_contract(self) -> Self:
-        if self.classification is not None:
-            validate_slug(self.classification, "classification")
-        if self.conformance is not None:
-            expected = self.conformance.declared_classification
-            if self.classification != expected or self.value_set is None:
-                raise ValueError(
-                    "state classification and conformance decision disagree"
-                )
+        slugs = [link.classification for link in self.classification_links]
+        if slugs != sorted(set(slugs)):
+            raise ValueError("state classification links must have unique sorted books")
+        for link in self.classification_links:
+            if link.conformance is None:
+                continue
+            if self.value_set is None:
+                raise ValueError("state conformance requires an effective value set")
+            conformance = link.conformance
             members = set(self.value_set.members)
-            checked = set(self.conformance.checked_codes)
+            checked = set(conformance.checked_codes)
             if checked != {code for code, _ in members}:
                 raise ValueError(
                     "conformance must check every distinct code in the state value set"
                 )
-            nonconforming = set(self.conformance.nonconforming_members)
+            nonconforming = set(conformance.nonconforming_members)
             if (
                 not nonconforming <= members
                 or not {code for code, _ in nonconforming} <= checked
@@ -729,61 +752,62 @@ def _validate_catalog_metadata(
 
     for variable in variables:
         for state in variable.states:
-            if state.classification is not None:
-                require_classification(state.classification)
-            conformance = state.conformance
-            if conformance is None:
-                continue
-            require_classification(conformance.declared_classification)
-            book = by_slug[conformance.declared_classification]
-            canonical = {code.code for code in book.codes}
-            sentinels = {sentinel.code for sentinel in book.sentinel_codes}
-            assert state.value_set is not None
-            checked = set(conformance.checked_codes)
-            observed = {
-                pair
-                for pair in state.value_set.members
-                if pair[0] in checked and pair[0] not in canonical
-            }
-            scoped_pairs = set()
-            context = f"{variable.register_ref.provider}/{variable.register_ref.slug}/{variable.slug} column {state.delivery_column_name!r} {state.valid_from}..{state.valid_to} book {book.slug!r}"
-            for certificate in conformance.scoped_sentinels:
-                if (
-                    certificate.classification_sha256
-                    != canonical_sha256(book.model_dump(mode="json"))
-                    or certificate.delivery_column_name != state.delivery_column_name
-                    or state.period_scope != "intervals"
-                    or state.valid_from is None
-                    or state.valid_to is None
-                    or not certificate.valid_from
-                    <= state.valid_from
-                    <= state.valid_to
-                    <= certificate.valid_to
-                    or not set(certificate.members) <= observed
-                    or any(
-                        code == member_code and label != member_label
-                        for code, label in certificate.members
-                        for member_code, member_label in state.value_set.members
-                    )
-                ):
+            for link in state.classification_links:
+                require_classification(link.classification)
+                conformance = link.conformance
+                if conformance is None:
+                    continue
+                require_classification(conformance.declared_classification)
+                book = by_slug[conformance.declared_classification]
+                canonical = {code.code for code in book.codes}
+                sentinels = {sentinel.code for sentinel in book.sentinel_codes}
+                assert state.value_set is not None
+                checked = set(conformance.checked_codes)
+                observed = {
+                    pair
+                    for pair in state.value_set.members
+                    if pair[0] in checked and pair[0] not in canonical
+                }
+                scoped_pairs = set()
+                context = f"{variable.register_ref.provider}/{variable.register_ref.slug}/{variable.slug} column {state.delivery_column_name!r} {state.valid_from}..{state.valid_to} book {book.slug!r}"
+                for certificate in conformance.scoped_sentinels:
+                    if (
+                        certificate.classification_sha256
+                        != canonical_sha256(book.model_dump(mode="json"))
+                        or certificate.delivery_column_name
+                        != state.delivery_column_name
+                        or state.period_scope != "intervals"
+                        or state.valid_from is None
+                        or state.valid_to is None
+                        or not certificate.valid_from
+                        <= state.valid_from
+                        <= state.valid_to
+                        <= certificate.valid_to
+                        or not set(certificate.members) <= observed
+                        or any(
+                            code == member_code and label != member_label
+                            for code, label in certificate.members
+                            for member_code, member_label in state.value_set.members
+                        )
+                    ):
+                        raise ValueError(
+                            f"scoped sentinel certificate disagrees with source state or canonical book: {context}"
+                        )
+                    scoped_pairs.update(certificate.members)
+                expected = {
+                    pair
+                    for pair in observed
+                    if pair[0] not in sentinels and pair not in scoped_pairs
+                }
+                if expected != set(conformance.nonconforming_members):
                     raise ValueError(
-                        f"scoped sentinel certificate disagrees with source state or canonical book: {context}"
+                        f"conformance disagrees with canonical code membership: {context}; expected nonconforming {sorted(expected)!r}, recorded {sorted(conformance.nonconforming_members)!r}"
                     )
-                scoped_pairs.update(certificate.members)
-            expected = {
-                pair
-                for pair in observed
-                if pair[0] not in sentinels and pair not in scoped_pairs
-            }
-            if expected != set(conformance.nonconforming_members):
-                raise ValueError(
-                    f"conformance disagrees with canonical code membership: {context}; expected nonconforming {sorted(expected)!r}, recorded {sorted(conformance.nonconforming_members)!r}"
-                )
-            expected_sentinels = observed - expected
-            if expected_sentinels != set(conformance.sentinel_members):
-                raise ValueError(
-                    f"conformance disagrees with curated sentinel code membership: {context}"
-                )
+                expected_sentinels = observed - expected
+                if expected_sentinels != set(conformance.sentinel_members):
+                    raise ValueError(
+                        f"conformance disagrees with curated sentinel code membership: {context}"
+                    )
 
 
 def _prepare_classification_succession(
@@ -951,8 +975,15 @@ def _write_conformance(
         ),
     )
     conn.executemany(
-        "INSERT INTO classification_conformance_code (state_id, code_id) VALUES (?, ?)",
-        ((state_id, _value_code_id(*pair)) for pair in sorted(extensions)),
+        "INSERT INTO classification_conformance_code (state_id, declared_classification_id, code_id) VALUES (?, ?, ?)",
+        (
+            (
+                state_id,
+                _classification_id(conformance.declared_classification),
+                _value_code_id(*pair),
+            )
+            for pair in sorted(extensions)
+        ),
     )
 
 
@@ -1184,8 +1215,8 @@ def write_resolved_catalog(
                         "INSERT INTO variable_state (state_id, variable_id, "
                         "register_variant_id, valid_from, valid_to, delivery_column_name, "
                         "data_type, data_length, operational_definition, provenance, pooled, "
-                        "value_set_id, value_set_version_label, source_register_text, classification_id, period_scope, definition, measurement_unit, name, description) "
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        "value_set_id, value_set_version_label, source_register_text, period_scope, definition, measurement_unit, name, description) "
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         (
                             state_id,
                             variable_id,
@@ -1203,9 +1234,6 @@ def write_resolved_catalog(
                             else None,
                             state.value_set_version_label,
                             state.source_register_text,
-                            _classification_id(state.classification)
-                            if state.classification is not None
-                            else None,
                             state.period_scope,
                             state.definition,
                             state.measurement_unit,
@@ -1213,8 +1241,17 @@ def write_resolved_catalog(
                             state.description,
                         ),
                     )
-                    if state.conformance is not None:
-                        _write_conformance(conn, state_id, state.conformance)
+                    for link in state.classification_links:
+                        conn.execute(
+                            "INSERT INTO state_classification (state_id, classification_id, provenance) VALUES (?, ?, ?)",
+                            (
+                                state_id,
+                                _classification_id(link.classification),
+                                link.provenance,
+                            ),
+                        )
+                        if link.conformance is not None:
+                            _write_conformance(conn, state_id, link.conformance)
                     conn.execute(
                         "INSERT OR IGNORE INTO variable_alias "
                         "(variable_id, register_variant_id, delivery_column_name) VALUES (?, ?, ?)",

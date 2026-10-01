@@ -24,6 +24,7 @@ from reg_meta_build.resolved_catalog import (
     ResolvedAliasWindow,
     ResolvedClassification,
     ResolvedClassificationCode,
+    ResolvedClassificationLink,
     ResolvedClassificationSuccession,
     ResolvedCodeSet,
     ResolvedConformance,
@@ -514,8 +515,11 @@ def test_classifications_and_explicit_conformance_are_written_exactly(
                     ("", "Unspecified"),
                 )
             ),
-            "classification": classification.slug,
-            "conformance": conformance,
+            "classification_links": (
+                ResolvedClassificationLink(
+                    classification=classification.slug, conformance=conformance
+                ),
+            ),
         }
     )
     variable = variable.model_copy(update={"states": (state,)})
@@ -528,7 +532,7 @@ def test_classifications_and_explicit_conformance_are_written_exactly(
         classification_successions=(succession,),
     )
     original = output.read_bytes()
-    with closing(open_db(output)) as conn:
+    with closing(open_db(output, check_schema=False)) as conn:
         assert tuple(
             conn.execute(
                 "SELECT c.short_name, c.name, c.name_en, c.publisher, c.valid_from, c.valid_to, "
@@ -571,21 +575,27 @@ def test_classifications_and_explicit_conformance_are_written_exactly(
             )
         ] == [("", "Unspecified"), ("missing", "Unlisted label")]
         assert conn.execute(
-            "SELECT c.slug FROM variable_state s LEFT JOIN classification c ON c.id=s.classification_id"
+            "SELECT c.slug FROM variable_state s JOIN state_classification sc USING(state_id) JOIN classification c ON c.id=sc.classification_id"
         ).fetchone()[0] == (classification.slug)
         assert conn.execute("SELECT count(*) FROM code_variable_map").fetchone()[0] == 3
-        from reg_meta.catalog import Catalog
-
-        state_id, value_set_id = conn.execute(
-            "SELECT state_id, value_set_id FROM variable_state"
-        ).fetchone()
-        catalog = Catalog(conn)
-        canonical = catalog.state_canonical_codes(state_id, value_set_id)
-        extensions = catalog.state_nonconforming_codes(state_id, value_set_id)
-        assert canonical is not None and extensions is not None
-        assert {m.code for m in canonical}.isdisjoint(m.code for m in extensions)
+        # Source and official labels can differ; membership is checked by code.
+        canonical = conn.execute(
+            "SELECT vc.code, vc.label FROM value_set_member m "
+            "JOIN value_code vc USING(code_id) "
+            "WHERE m.value_set_id=(SELECT value_set_id FROM variable_state) "
+            "AND vc.code IN (SELECT ccvc.code FROM classification_code cc "
+            "JOIN value_code ccvc ON ccvc.code_id=cc.code_id "
+            "JOIN classification c ON c.id=cc.classification_id WHERE c.slug=?)",
+            (classification.slug,),
+        ).fetchall()
+        extensions = conn.execute(
+            "SELECT vc.code, vc.label FROM classification_conformance_code cc "
+            "JOIN value_code vc USING(code_id) JOIN classification c ON c.id=cc.declared_classification_id WHERE c.slug=?",
+            (classification.slug,),
+        ).fetchall()
+        assert {row[0] for row in canonical}.isdisjoint(row[0] for row in extensions)
         assert state.value_set is not None
-        assert sorted((m.code, m.label) for m in (*canonical, *extensions)) == sorted(
+        assert sorted(tuple(row) for row in (*canonical, *extensions)) == sorted(
             state.value_set.members
         )
 
@@ -611,7 +621,13 @@ def test_bad_classification_references_or_membership_preserve_previous_catalog(
         variable = variable.model_copy(
             update={
                 "states": (
-                    variable.states[0].model_copy(update={"classification": "missing"}),
+                    variable.states[0].model_copy(
+                        update={
+                            "classification_links": (
+                                ResolvedClassificationLink(classification="missing"),
+                            )
+                        }
+                    ),
                 )
             }
         )
@@ -623,12 +639,16 @@ def test_bad_classification_references_or_membership_preserve_previous_catalog(
                 "states": (
                     variable.states[0].model_copy(
                         update={
-                            "classification": classification.slug,
                             "value_set": ResolvedCodeSet(members=(("999", "Missing"),)),
-                            "conformance": ResolvedConformance(
-                                declared_classification=classification.slug,
-                                status="conforming",
-                                checked_codes=("999",),
+                            "classification_links": (
+                                ResolvedClassificationLink(
+                                    classification=classification.slug,
+                                    conformance=ResolvedConformance(
+                                        declared_classification=classification.slug,
+                                        status="conforming",
+                                        checked_codes=("999",),
+                                    ),
+                                ),
                             ),
                         }
                     ),
@@ -1399,8 +1419,11 @@ def _scoped_sentinel_variable():
             "value_set": ResolvedCodeSet(
                 members=(("001", "Source label"), ("09350", "Okänt"))
             ),
-            "classification": book.slug,
-            "conformance": conformance,
+            "classification_links": (
+                ResolvedClassificationLink(
+                    classification=book.slug, conformance=conformance
+                ),
+            ),
         }
     )
     return _variable().model_copy(update={"states": (state,)}), book
@@ -1440,7 +1463,7 @@ def test_scoped_sentinel_certificate_tampering_is_refused_before_publish(
 ) -> None:
     variable, book = _scoped_sentinel_variable()
     state = variable.states[0]
-    conformance = state.conformance
+    conformance = state.classification_links[0].conformance
     assert conformance is not None
     certificate = conformance.scoped_sentinels[0]
     if defect == "missing":
@@ -1457,7 +1480,19 @@ def test_scoped_sentinel_certificate_tampering_is_refused_before_publish(
             update={"scoped_sentinels": (certificate.model_copy(update=update),)}
         )
     variable = variable.model_copy(
-        update={"states": (state.model_copy(update={"conformance": conformance}),)}
+        update={
+            "states": (
+                state.model_copy(
+                    update={
+                        "classification_links": (
+                            state.classification_links[0].model_copy(
+                                update={"conformance": conformance}
+                            ),
+                        )
+                    }
+                ),
+            )
+        }
     )
     output = tmp_path / "existing.db"
     output.write_bytes(b"previous")
@@ -1474,7 +1509,9 @@ def test_scoped_sentinel_certificate_requires_positive_source_and_case_evidence(
     None
 ):
     variable, _ = _scoped_sentinel_variable()
-    certificate = variable.states[0].conformance.scoped_sentinels[0]
+    certificate = (
+        variable.states[0].classification_links[0].conformance.scoped_sentinels[0]
+    )
     for field, invalid in (("source_fingerprints", ()), ("provenance", "")):
         with pytest.raises(ValidationError):
             type(certificate).model_validate(
@@ -1827,11 +1864,14 @@ def test_incomplete_classification_partition_preserves_previous_catalog(
     )
     state = variable.states[0].model_copy(
         update={
-            "classification": book.slug,
             "value_set": ResolvedCodeSet(
                 members=(("001", "Source label"), ("", "Source missing"))
             ),
-            "conformance": conformance,
+            "classification_links": (
+                ResolvedClassificationLink(
+                    classification=book.slug, conformance=conformance
+                ),
+            ),
         }
     )
     output = tmp_path / "reg_meta.db"
@@ -1844,3 +1884,14 @@ def test_incomplete_classification_partition_preserves_previous_catalog(
             classifications=(book,),
         )
     assert output.read_bytes() == b"previous"
+
+
+@pytest.mark.parametrize("defect", ["duplicate", "order"])
+def test_state_classification_links_refuse_duplicate_or_unsorted_books(defect):
+    first = ResolvedClassificationLink(classification="first")
+    second = ResolvedClassificationLink(classification="second")
+    links = (first, first) if defect == "duplicate" else (second, first)
+    with pytest.raises(ValueError, match="unique sorted books"):
+        ResolvedState.model_validate(
+            _state(2000).model_copy(update={"classification_links": links})
+        )

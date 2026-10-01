@@ -1729,7 +1729,7 @@ def _check_variable_alias_window(
         "SELECT COUNT(DISTINCT w.rowid) FROM variable_alias_window w JOIN variable_state vs "
         "ON vs.variable_id = w.variable_id AND vs.register_variant_id = w.register_variant_id "
         "AND vs.valid_from <= w.valid_to AND vs.valid_to >= w.valid_from "
-        "WHERE w.coding_metadata = 'per_column' AND (vs.classification_id IS NOT NULL "
+        "WHERE w.coding_metadata = 'per_column' AND (EXISTS (SELECT 1 FROM state_classification sc WHERE sc.state_id = vs.state_id) "
         "OR vs.value_set_id IS NOT NULL OR vs.value_set_version_label != '')"
     ).fetchone()[0]
     if contaminated:
@@ -2555,9 +2555,11 @@ def _count_vintage_lift_stream_mismatches(conn: sqlite3.Connection, note: str) -
             SELECT DISTINCT pc.slug AS predecessor_class_slug,
                             sc.slug AS successor_class_slug
             FROM variable_state pvs
-            JOIN classification pc ON pc.id = pvs.classification_id
+            JOIN state_classification pcl ON pcl.state_id = pvs.state_id
+            JOIN classification pc ON pc.id = pcl.classification_id
             JOIN variable_state svs ON svs.variable_id = ?
-            JOIN classification sc ON sc.id = svs.classification_id
+            JOIN state_classification scl ON scl.state_id = svs.state_id
+            JOIN classification sc ON sc.id = scl.classification_id
             JOIN classification_replaced_by cr
               ON cr.predecessor_slug = pc.slug
              AND cr.successor_slug = sc.slug

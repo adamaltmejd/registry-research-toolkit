@@ -1,5 +1,6 @@
 """Checked codebook bindings preserve original evidence and bounded ambiguity."""
 
+import sqlite3
 from dataclasses import replace
 from functools import cache
 from pathlib import Path
@@ -42,6 +43,24 @@ from reg_meta_build.source_records import (
     value_field,
 )
 from reg_meta_build.sources.scb_records import clean_scb_row
+
+
+def _sole_classification(state):
+    assert len(state.classification_links) <= 1
+    return (
+        state.classification_links[0].classification
+        if state.classification_links
+        else None
+    )
+
+
+def _sole_conformance(state):
+    assert len(state.classification_links) <= 1
+    return (
+        state.classification_links[0].conformance
+        if state.classification_links
+        else None
+    )
 
 
 def _setup(*, code="01", inline=True, sentinels=()):
@@ -167,11 +186,14 @@ def test_checked_classification_forms_and_writes_without_copying_canonical_label
     assert result.diagnostics == ()
     variable = _form(setup, result)
     state = variable.states[0]
-    assert state.classification == "fixture"
+    assert _sole_classification(state) == "fixture"
     assert state.value_set is not None and state.value_set.members == (
         ("01", "Source label"),
     )
-    assert state.conformance is not None and state.conformance.status == "conforming"
+    assert (
+        _sole_conformance(state) is not None
+        and _sole_conformance(state).status == "conforming"
+    )
     assert state.provenance is not None and "binding:" in state.provenance
     write_resolved_catalog(
         (variable,),
@@ -193,7 +215,10 @@ def test_codebook_change_is_checked_against_current_delivery():
     changed_book = book.model_copy(update={"name": "Changed definition"})
     result = _apply(setup, classifications={"fixture": changed_book})
     assert result.diagnostics == ()
-    assert next(iter(result.coding.values())).segments[0].classification == "fixture"
+    assert (
+        _sole_classification(next(iter(result.coding.values())).segments[0])
+        == "fixture"
+    )
 
 
 def test_book_losing_the_observed_code_severs_current_binding():
@@ -206,14 +231,17 @@ def test_book_losing_the_observed_code_severs_current_binding():
     result = _apply(setup, classifications={"fixture": shrunk})
     assert result.diagnostics[0].code == "nonconforming_classification_codes"
     state = _form(setup, result).states[0]
-    assert state.classification == "fixture"
-    assert state.conformance is not None and state.conformance.status == "extended"
+    assert _sole_classification(state) == "fixture"
+    assert (
+        _sole_conformance(state) is not None
+        and _sole_conformance(state).status == "extended"
+    )
     assert state.value_set is not None and state.value_set.members == (
         ("02", "Source label"),
     )
 
 
-def test_conflicting_bindings_withhold_only_overlap_and_preserve_inline_coding():
+def test_multiple_books_retain_independent_overlap_links_and_inline_coding():
     setup = _setup()
     case = setup[1]
     assert isinstance(case.decision, ClassificationDecision)
@@ -238,20 +266,28 @@ def test_conflicting_bindings_withhold_only_overlap_and_preserve_inline_coding()
     books = {**setup[3], "alternate": alternate}
     result = _apply(setup, (case, competing), classifications=books)
     states = _form(setup, result).states
-    assert [(s.valid_from, s.valid_to, s.classification) for s in states] == [
-        ("2020-01-01", "2020-06-30", "fixture"),
-        ("2020-07-01", "2020-12-31", None),
+    assert [
+        (
+            s.valid_from,
+            s.valid_to,
+            tuple(link.classification for link in s.classification_links),
+        )
+        for s in states
+    ] == [
+        ("2020-01-01", "2020-06-30", ("fixture",)),
+        ("2020-07-01", "2020-12-31", ("alternate", "fixture")),
     ]
     assert states[0].value_set == states[1].value_set
-    assert result.diagnostics[0].code == "conflicting_classification_decisions"
+    assert result.diagnostics[0].code == "multiple_classifications_declared"
+    assert result.diagnostics[0].severity == "warning"
     assert _apply(setup, (competing, case), classifications=books) == result
 
 
 def test_declared_reference_can_exist_without_inline_codes_but_inline_override_cannot():
     setup = _setup(inline=False)
     declared = _form(setup, _apply(setup)).states[0]
-    assert declared.classification == "fixture" and declared.value_set is None
-    assert declared.conformance is None
+    assert _sole_classification(declared) == "fixture" and declared.value_set is None
+    assert _sole_conformance(declared) is None
     case = setup[1]
     inline_case = case.model_copy(
         update={
@@ -269,11 +305,11 @@ def test_noncanonical_codes_keep_source_members_and_declared_evidence(tmp_path):
     result = _apply(setup)
     variable = _form(setup, result)
     state = variable.states[0]
-    assert state.classification == "fixture" and state.value_set is not None
+    assert _sole_classification(state) == "fixture" and state.value_set is not None
     assert state.value_set.members == (("99", "Source label"),)
-    assert state.conformance is not None
-    assert state.conformance.declared_classification == "fixture"
-    assert state.conformance.status == "extended"
+    assert _sole_conformance(state) is not None
+    assert _sole_conformance(state).declared_classification == "fixture"
+    assert _sole_conformance(state).status == "extended"
     assert result.diagnostics[0].code == "nonconforming_classification_codes"
     write_resolved_catalog(
         (variable,),
@@ -295,14 +331,14 @@ def test_curated_sentinel_keeps_checked_binding_with_warning(tmp_path):
     assert result.diagnostics[0].severity == "warning"
     variable = _form(setup, result)
     state = variable.states[0]
-    assert state.classification == "fixture"
+    assert _sole_classification(state) == "fixture"
     assert state.value_set is not None and state.value_set.members == (
         ("99", "Source label"),
     )
-    assert state.conformance is not None
-    assert state.conformance.status == "extended"
-    assert state.conformance.nonconforming_members == ()
-    assert state.conformance.sentinel_members == (("99", "Source label"),)
+    assert _sole_conformance(state) is not None
+    assert _sole_conformance(state).status == "extended"
+    assert _sole_conformance(state).nonconforming_members == ()
+    assert _sole_conformance(state).sentinel_members == (("99", "Source label"),)
     write_resolved_catalog(
         (variable,),
         tmp_path / "reg_meta.db",
@@ -411,12 +447,12 @@ def test_source_declaration_preserves_explicit_open_scope_without_adding_codes()
     result = _declared(setup, (occurrence,))
     assert result.evaluations == result.diagnostics == ()
     segment = next(iter(result.coding.values())).segments[0]
-    assert (segment.valid_from, segment.valid_to, segment.classification) == (
+    assert (segment.valid_from, segment.valid_to, _sole_classification(segment)) == (
         "2020-01-01",
         "9999-12-31",
         "fixture",
     )
-    assert segment.code_set is segment.conformance is None
+    assert segment.code_set is _sole_conformance(segment) is None
     assert "Source classification declaration" in segment.provenance[0]
 
 
@@ -428,7 +464,10 @@ def test_source_declaration_resolves_exact_alias():
         references={"FIX": "fixture", "Source title": "fixture"},
     )
     assert result.diagnostics == ()
-    assert next(iter(result.coding.values())).segments[0].classification == "fixture"
+    assert (
+        _sole_classification(next(iter(result.coding.values())).segments[0])
+        == "fixture"
+    )
 
 
 def test_family_reference_requires_one_edition_to_cover_whole_occurrence():
@@ -459,7 +498,10 @@ def test_family_reference_requires_one_edition_to_cover_whole_occurrence():
 
     result = _declared(setup, (occurrence("2020", "2020"),), **options)
     assert result.diagnostics == ()
-    assert next(iter(result.coding.values())).segments[0].classification == "fixture"
+    assert (
+        _sole_classification(next(iter(result.coding.values())).segments[0])
+        == "fixture"
+    )
     shifted = {
         **options,
         "classifications": {
@@ -469,7 +511,9 @@ def test_family_reference_requires_one_edition_to_cover_whole_occurrence():
     }
     result = _declared(setup, (occurrence("2020", "2020"),), **shifted)
     assert result.diagnostics == ()
-    assert next(iter(result.coding.values())).segments[0].classification == "second"
+    assert (
+        _sole_classification(next(iter(result.coding.values())).segments[0]) == "second"
+    )
     result = _declared(setup, (occurrence("2019", "2021"),), **options)
     assert [d.code for d in result.diagnostics] == [
         "unresolved_classification_reference"
@@ -489,7 +533,10 @@ def test_family_reference_requires_one_edition_to_cover_whole_occurrence():
     ]
     direct = _declared(setup, (_declaration(setup),), **options)
     assert direct.diagnostics == ()
-    assert next(iter(direct.coding.values())).segments[0].classification == "fixture"
+    assert (
+        _sole_classification(next(iter(direct.coding.values())).segments[0])
+        == "fixture"
+    )
 
 
 def test_source_and_case_bindings_compose_together_and_check_conformance():
@@ -499,8 +546,8 @@ def test_source_and_case_bindings_compose_together_and_check_conformance():
         "nonconforming_classification_codes"
     ]
     segment = next(iter(result.coding.values())).segments[0]
-    assert segment.classification == "fixture"
-    assert segment.conformance.declared_classification == "fixture"
+    assert _sole_classification(segment) == "fixture"
+    assert _sole_conformance(segment).declared_classification == "fixture"
     assert segment.code_set.members == (("outside", "Source label"),)
     assert len(segment.provenance) == 2
 
@@ -526,14 +573,19 @@ def test_source_conflict_with_case_is_bounded_and_order_independent():
     result = _declared(setup, occurrences, **options)
     assert result == _declared(setup, tuple(reversed(occurrences)), **options)
     assert [
-        (s.valid_from, s.valid_to, s.classification)
+        (
+            s.valid_from,
+            s.valid_to,
+            tuple(link.classification for link in s.classification_links),
+        )
         for s in next(iter(result.coding.values())).segments
     ] == [
-        ("2020-01-01", "2020-05-31", "fixture"),
-        ("2020-06-01", "2020-08-31", None),
-        ("2020-09-01", "2020-12-31", "fixture"),
+        ("2020-01-01", "2020-05-31", ("fixture",)),
+        ("2020-06-01", "2020-08-31", ("fixture", "second")),
+        ("2020-09-01", "2020-12-31", ("fixture",)),
     ]
-    assert result.diagnostics[0].code == "conflicting_classification_decisions"
+    assert result.diagnostics[0].code == "multiple_classifications_declared"
+    assert result.diagnostics[0].severity == "warning"
 
 
 @pytest.mark.parametrize("reference", ["FIX extra", "https://example.test/FIX"])
@@ -542,7 +594,7 @@ def test_unknown_reference_blocks_even_when_another_declaration_is_known(referen
     result = _declared(
         setup, (_declaration(setup), _declaration(setup, value_field(reference)))
     )
-    assert next(iter(result.coding.values())).segments[0].classification is None
+    assert _sole_classification(next(iter(result.coding.values())).segments[0]) is None
     assert [d.code for d in result.diagnostics] == [
         "unresolved_classification_reference"
     ]
@@ -574,20 +626,24 @@ def test_unknown_negative_and_absent_declarations_keep_distinct_meanings():
     negative = _declaration(setup, SourceField(status="negative"))
     result = _declared(setup, (negative,))
     assert result.diagnostics == ()
-    assert next(iter(result.coding.values())).segments[0].classification is None
+    assert _sole_classification(next(iter(result.coding.values())).segments[0]) is None
     result = _declared(setup, (_declaration(setup), negative))
     assert result.diagnostics[0].code == "conflicting_classification_decisions"
+    assert result.diagnostics[0].severity == "error"
     unknown = _declaration(setup, SourceField(status="unknown"))
     result = _declared(setup, (_declaration(setup), unknown))
     assert [d.code for d in result.diagnostics] == [
         "unknown_classification_declaration"
     ]
     assert result.diagnostics[0].severity == "warning"
-    assert next(iter(result.coding.values())).segments[0].classification == "fixture"
+    assert (
+        _sole_classification(next(iter(result.coding.values())).segments[0])
+        == "fixture"
+    )
     withheld = replace(unknown, withheld_fields=("classification_declared",))
     result = _declared(setup, (_declaration(setup), withheld))
     assert result.diagnostics[0].severity == "error"
-    assert next(iter(result.coding.values())).segments[0].classification is None
+    assert _sole_classification(next(iter(result.coding.values())).segments[0]) is None
     assert _declared(setup, (replace(unknown, use="support"),)).diagnostics == ()
 
 
@@ -626,9 +682,10 @@ def test_label_rule_normalizes_claims_and_preserves_occurrence_evidence():
         matched_labels=matched,
     )
     segment = result.coding[key].segments[0]
-    assert segment.classification == "fixture"
+    assert _sole_classification(segment) == "fixture"
     assert (
-        segment.conformance is not None and segment.conformance.status == "conforming"
+        _sole_conformance(segment) is not None
+        and _sole_conformance(segment).status == "conforming"
     )
     assert (
         "label rule: 'LKF 1998' -> fixture (classifications/FIX.toml)"
@@ -652,7 +709,7 @@ def test_label_rule_normalizes_claims_and_preserves_occurrence_evidence():
         label_rules={"LKF 1998": "fixture"},
     )
     assert changed.diagnostics == ()
-    assert changed.coding[key].segments[0].classification == "fixture"
+    assert _sole_classification(changed.coding[key].segments[0]) == "fixture"
 
 
 def test_label_rule_skips_segment_without_catalog_occurrence():
@@ -686,14 +743,14 @@ def test_two_labels_for_one_book_make_one_rule_binding():
         label_rules={"First": "fixture", "Second": "fixture"},
     )
     segment = result.coding[key].segments[0]
-    assert segment.classification == "fixture"
+    assert _sole_classification(segment) == "fixture"
     assert segment.provenance == (
         "label rule: 'First' -> fixture (classifications/FIX.toml)",
     )
     assert result.diagnostics == ()
 
 
-def test_label_rule_omits_state_and_conflicts_on_two_distinct_books():
+def test_label_rule_preserves_multiple_books_and_respects_omitted_state():
     setup = _setup()
     key, original = next(iter(setup[2].items()))
     first = replace(original.claims[0], version_label="First")
@@ -707,9 +764,12 @@ def test_label_rule_omits_state_and_conflicts_on_two_distinct_books():
         "label_rules": {"First": "fixture", "Second": "alternate"},
     }
     result = apply_classification_cases((setup[0],), (), **kwargs)
-    assert result.coding[key].segments[0].classification is None
+    assert tuple(
+        link.classification
+        for link in result.coding[key].segments[0].classification_links
+    ) == ("alternate", "fixture")
     assert [issue.code for issue in result.diagnostics] == [
-        "conflicting_classification_decisions"
+        "multiple_classifications_declared"
     ]
     omitted = replace(
         coding[key],
@@ -740,7 +800,7 @@ def test_override_wins_over_label_rule_on_its_window():
         override=("alternate", "classifications/ALT.toml#/binding/variable/1"),
     )
     assert result.diagnostics == ()
-    assert result.coding[key].segments[0].classification == "alternate"
+    assert _sole_classification(result.coding[key].segments[0]) == "alternate"
     duplicate_overrides: set[str] = set()
     apply_classification_cases(
         (setup[0],),
@@ -832,8 +892,8 @@ def test_grouped_sni_reporting_labels_are_not_bound_to_detailed_books(label, cod
     )
     assert result.diagnostics == ()
     segment = result.coding[key].segments[0]
-    assert segment.classification is None
-    assert segment.conformance is None
+    assert _sole_classification(segment) is None
+    assert _sole_conformance(segment) is None
     assert segment.code_set is not None
     assert segment.code_set.members == ((code, "Source label"),)
     assert result.coding[key].claims[0].version_label == label
@@ -858,9 +918,10 @@ def test_retained_detailed_sni_label_still_binds():
     )
     assert result.diagnostics == ()
     segment = result.coding[key].segments[0]
-    assert segment.classification == "sni2002"
+    assert _sole_classification(segment) == "sni2002"
     assert (
-        segment.conformance is not None and segment.conformance.status == "conforming"
+        _sole_conformance(segment) is not None
+        and _sole_conformance(segment).status == "conforming"
     )
     assert any(p.startswith("label rule:") for p in segment.provenance)
 
@@ -900,7 +961,7 @@ def test_scoped_sentinel_preserves_source_list_and_only_affects_its_window():
     case = _scoped_sentinel_case(setup, start="2020-07-01")
     result = _apply(setup, (setup[1], case))
     segments = result.coding[case.decision.column_key].segments
-    assert [(s.valid_from, s.valid_to, s.classification) for s in segments] == [
+    assert [(s.valid_from, s.valid_to, _sole_classification(s)) for s in segments] == [
         ("2020-01-01", "2020-06-30", "fixture"),
         ("2020-07-01", "2020-12-31", "fixture"),
     ]
@@ -909,9 +970,9 @@ def test_scoped_sentinel_preserves_source_list_and_only_affects_its_window():
         result.coding[case.decision.column_key].claims
         == setup[2][case.decision.column_key].claims
     )
-    assert segments[1].conformance.sentinel_members == (("99", "Source label"),)
-    certificate = segments[1].conformance.scoped_sentinels[0]
-    assert certificate.members == segments[1].conformance.sentinel_members
+    assert _sole_conformance(segments[1]).sentinel_members == (("99", "Source label"),)
+    certificate = _sole_conformance(segments[1]).scoped_sentinels[0]
+    assert certificate.members == _sole_conformance(segments[1]).sentinel_members
     assert certificate.classification_sha256 == case.decision.expected_classification
     assert certificate.source_fingerprints == case.decision.expected_source_codings
     assert certificate.valid_from == "2020-07-01"
@@ -965,13 +1026,14 @@ def test_scoped_sentinel_rejects_changed_coding_and_codebook(change):
     )
     assert "classification_evidence_changed" in {d.code for d in result.diagnostics}
     assert all(
-        s.classification == (None if s.valid_from.startswith("2019") else "fixture")
+        _sole_classification(s)
+        == (None if s.valid_from.startswith("2019") else "fixture")
         for s in result.coding[key].segments
     )
     assert all(
-        not s.conformance.sentinel_members
+        not _sole_conformance(s).sentinel_members
         for s in result.coding[key].segments
-        if s.conformance
+        if _sole_conformance(s)
     )
 
 
@@ -1005,7 +1067,7 @@ def test_scoped_sentinel_guard_uses_accepted_owner_and_complete_effective_peers(
     arguments = {"coding": coding, "classifications": setup[3]}
     evidence = SourceEvidence((record,), effective_occurrences=(accepted,))
     good = apply_classification_cases(evidence, (case,), **arguments)
-    assert good.coding[key].segments[0].classification == "fixture"
+    assert _sole_classification(good.coding[key].segments[0]) == "fixture"
     peer = record.model_copy(
         update={
             "record_id": "new-peer",
@@ -1043,7 +1105,7 @@ def test_scoped_sentinel_guard_uses_accepted_owner_and_complete_effective_peers(
     ):
         result = apply_classification_cases(changed, (case,), **arguments)
         assert result.diagnostics and all(
-            s.classification is None for s in result.coding[key].segments
+            _sole_classification(s) is None for s in result.coding[key].segments
         )
 
 
@@ -1071,10 +1133,13 @@ def test_scoped_sentinel_leaves_substantive_same_literal_in_another_window():
     )
     result = _apply(setup, (declared, case))
     old, new = result.coding[key].segments
-    assert old.classification == "fixture" and old.conformance.sentinel_members == ()
+    assert (
+        _sole_classification(old) == "fixture"
+        and _sole_conformance(old).sentinel_members == ()
+    )
     assert old.code_set.members == (("99", "Substantive industry"),)
-    assert new.classification == "fixture"
-    assert new.conformance.sentinel_members == (("99", "Source label"),)
+    assert _sole_classification(new) == "fixture"
+    assert _sole_conformance(new).sentinel_members == (("99", "Source label"),)
     assert result.coding[key].claims == (older, current)
 
 
@@ -1119,7 +1184,7 @@ def test_scoped_sentinel_requires_every_shared_ref_original_projection():
         coding=setup[2],
         classifications=setup[3],
     )
-    assert good.coding[key].segments[0].classification == "fixture"
+    assert _sole_classification(good.coding[key].segments[0]) == "fixture"
     missing = apply_classification_cases(
         SourceEvidence((record,), effective_occurrences=(first,)),
         (case,),
@@ -1127,7 +1192,7 @@ def test_scoped_sentinel_requires_every_shared_ref_original_projection():
         classifications=setup[3],
     )
     assert missing.evaluations[0].status != "applicable"
-    assert missing.coding[key].segments[0].classification is None
+    assert _sole_classification(missing.coding[key].segments[0]) is None
 
 
 def test_dated_classification_decision_does_not_date_independent_delivery():
@@ -1152,3 +1217,128 @@ def test_dated_classification_decision_does_not_date_independent_delivery():
         issue.code == "unsupported_classification_scope" for issue in result.diagnostics
     )
     assert result.coding == coding
+
+
+def test_two_book_conformance_and_extensions_are_stored_independently(tmp_path):
+    setup = _setup()
+    second = setup[3]["fixture"].model_copy(
+        update={
+            "slug": "second",
+            "short_name": "TWO",
+            "codes": (ResolvedClassificationCode(code="02", label="Two"),),
+        }
+    )
+    result = _declared(
+        setup,
+        (_declaration(setup), _declaration(setup, value_field("TWO"))),
+        references={"FIX": "fixture", "TWO": "second"},
+        classifications={**setup[3], "second": second},
+    )
+    variable = _form(setup, result)
+    state = variable.states[0]
+    assert state.value_set.members == (("01", "Source label"),)
+    assert [
+        (link.classification, link.conformance.status)
+        for link in state.classification_links
+    ] == [("fixture", "conforming"), ("second", "extended")]
+    assert all(link.provenance for link in state.classification_links)
+    output = tmp_path / "reg_meta.db"
+    write_resolved_catalog(
+        (variable,), output, manifest={}, classifications=(*setup[3].values(), second)
+    )
+    with sqlite3.connect(output) as connection:
+        assert connection.execute(
+            "SELECT c.slug, cc.status, cc.overlap FROM classification_conformance cc JOIN classification c ON c.id=cc.declared_classification_id ORDER BY c.slug"
+        ).fetchall() == [("fixture", "conforming", 1.0), ("second", "extended", 0.0)]
+        assert connection.execute(
+            "SELECT c.slug, vc.code FROM classification_conformance_code cc JOIN classification c ON c.id=cc.declared_classification_id JOIN value_code vc USING(code_id)"
+        ).fetchall() == [("second", "01")]
+        assert (
+            connection.execute("SELECT count(*) FROM state_classification").fetchone()[
+                0
+            ]
+            == 2
+        )
+        assert connection.execute("PRAGMA foreign_key_check").fetchall() == []
+        assert (
+            connection.execute(
+                "SELECT value FROM import_manifest WHERE key='schema_version'"
+            ).fetchone()[0]
+            == "7.0.0"
+        )
+    from reg_meta.db import open_db
+    from reg_meta.errors import RegMetaError
+
+    with pytest.raises(RegMetaError) as caught:
+        open_db(output)
+    assert caught.value.code == "schema_incompatible"
+    assert "7.0.0" in caught.value.message and "6.18.0" in caught.value.message
+    from reg_meta_build.db import open_built_db
+
+    with open_built_db(output) as conn:
+        assert (
+            conn.execute("SELECT count(*) FROM state_classification").fetchone()[0] == 2
+        )
+    conn.close()
+    with sqlite3.connect(output) as conn:
+        conn.execute(
+            "UPDATE import_manifest SET value='6.18.0' WHERE key='schema_version'"
+        )
+    with pytest.raises(RegMetaError) as stale:
+        open_built_db(output)
+    assert stale.value.code == "schema_incompatible"
+    assert "6.18.0" in stale.value.message and "7.0.0" in stale.value.message
+
+
+@pytest.mark.parametrize("difference", ["code", "label"])
+def test_plural_books_do_not_union_contrary_source_domains(difference):
+    setup = _setup()
+    key, original = next(iter(setup[2].items()))
+    first = replace(original.claims[0], version_label="First")
+    member = first.members[0]
+    changed = (
+        replace(member, code="02")
+        if difference == "code"
+        else replace(member, label="Different meaning")
+    )
+    second = replace(
+        first, claim_id="other", version_label="Second", members=(changed,)
+    )
+    coding = {key: resolve_code_membership((first, second))}
+    alternate = setup[3]["fixture"].model_copy(update={"slug": "alternate"})
+    result = apply_classification_cases(
+        (setup[0],),
+        (),
+        coding=coding,
+        classifications={**setup[3], "alternate": alternate},
+        occurrences=(source_occurrence(setup[0]),),
+        label_rules={"First": "fixture", "Second": "alternate"},
+    )
+    assert result.coding[key].issues == coding[key].issues
+    assert coding[key].issues
+    assert all(segment.code_set is None for segment in result.coding[key].segments)
+    assert all(
+        link.conformance is None
+        for segment in result.coding[key].segments
+        for link in segment.classification_links
+    )
+    assert tuple(
+        link.classification
+        for link in result.coding[key].segments[0].classification_links
+    ) == ("alternate", "fixture")
+
+
+def test_builder_open_refuses_unreadable_manifest_and_closes(tmp_path, monkeypatch):
+    from reg_meta.errors import RegMetaError
+
+    from reg_meta_build import db
+
+    path = tmp_path / "missing-manifest.db"
+    connection = sqlite3.connect(path)
+    monkeypatch.setattr(db, "_open_catalog_db", lambda *_args, **_kwargs: connection)
+    with pytest.raises(RegMetaError) as caught:
+        db.open_built_db(path)
+    assert caught.value.code == "schema_incompatible"
+    assert "manifest is missing or unreadable" in caught.value.message
+    with pytest.raises(sqlite3.ProgrammingError, match="closed"):
+        connection.execute("SELECT 1")

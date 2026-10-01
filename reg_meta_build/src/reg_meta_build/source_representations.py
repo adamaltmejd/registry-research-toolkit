@@ -522,8 +522,7 @@ def form_representations(
                 (
                     s.value_set,
                     s.value_set_version_label,
-                    s.classification,
-                    s.conformance,
+                    s.classification_links,
                 )
                 for s in represented
             }
@@ -538,17 +537,14 @@ def form_representations(
                         (
                             s.value_set,
                             s.value_set_version_label,
-                            s.classification,
-                            s.conformance,
+                            s.classification_links,
                         )
                         for s in represented
                         if s.delivery_column_name == column
                     }
                     if len(alternatives) != 1 or any(
-                        domain is None
-                        or classification is not None
-                        or conformance is not None
-                        for domain, _, classification, conformance in alternatives
+                        domain is None or classification_links
+                        for domain, _, classification_links in alternatives
                     ):
                         invalid_coding = True
                         report(
@@ -558,16 +554,16 @@ def form_representations(
                             f"Literal column {column!r} needs one complete finite unclassified domain; no coding was selected.",
                         )
                     else:
-                        domain, native_label, _, _ = next(iter(alternatives))
+                        domain, native_label, _ = next(iter(alternatives))
                         assert domain is not None
                         column_coding[column] = (domain, native_label)
                 if invalid_coding:
                     continue
-                codes, label, classification, conformance = None, "", None, None
+                codes, label, classification_links = None, "", ()
             elif len(code_values) == 1:
-                codes, label, classification, conformance = next(iter(code_values))
+                codes, label, classification_links = next(iter(code_values))
             else:
-                codes, label, classification, conformance = None, "", None, None
+                codes, label, classification_links = None, "", ()
                 fact_conflicts.extend(
                     (variant.slug, column, "coding", start, end)
                     for column in sorted(columns)
@@ -618,8 +614,7 @@ def form_representations(
                     source_register_text=values["source_register_text"],
                     value_set=codes,
                     value_set_version_label=label,
-                    classification=classification,
-                    conformance=conformance,
+                    classification_links=classification_links,
                     provenance=provenance,
                     pooled=all(s.pooled for s in represented),
                 )

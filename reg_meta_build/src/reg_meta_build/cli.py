@@ -28,7 +28,6 @@ from reg_meta.cli_common import (
 )
 from reg_meta.db import (
     DB_FILENAME,
-    SCHEMA_VERSION,
     db_path_from_args,
     default_db_dir,
     open_db,
@@ -56,9 +55,11 @@ from .concept_group_candidates import (
 )
 from .concept_groups import load_concept_groups
 from .db import (
+    SCHEMA_VERSION,
     _paths_overlap,
     _reject_input_repository_destination,
     _scb_snapshot_error,
+    open_built_db,
 )
 from .doc_coverage import compute_doc_coverage, render_doc_coverage_toml
 from .doc_db import build_doc_db, repo_docs_dir
@@ -764,8 +765,8 @@ def _build_parser() -> argparse.ArgumentParser:
         description=(
             "Emit the code-set-containment (#416) RESIDUE from a BUILT DB: the\n"
             "MULTI-FAMILY value sets (>1 candidate classification by code containment)\n"
-            "that still have >= 1 unclassified (variable_state.classification_id IS\n"
-            "NULL) state after the detector's confident tier + #494 vintage reclaim.\n"
+            "that still have >= 1 unclassified state (no state_classification association)\n"
+            "after the detector's confident tier + #494 vintage reclaim.\n"
             "Productizes the #494 throwaway recompute so a maintainer can curate\n"
             "reg_meta_build/curation/classifications/ from it. Reads a built DB; NEVER\n"
             "mutates it and NOTHING is materialized.\n\n"
@@ -1494,7 +1495,7 @@ def _cmd_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     # Schema-compat (open_db) rejects a stale DB up front, so seed reads run
     # against the current shape and give the user the right remediation rather
     # than a raw `OperationalError`.
-    conn = open_db(db)
+    conn = open_built_db(db)
     try:
         written = seed_all(conn, out_dir)
         # reg-meta-build always emits JSON on stdout, so hints (stderr) are
@@ -1751,10 +1752,10 @@ def _cmd_same_as_candidates(
     start = time.perf_counter()
     db = db_path_from_args(args.db)
     # Schema-checked open: the generator reads current-schema tables
-    # (variable_same_as, variable_state.classification_id), so a stale DB should
+    # (variable_same_as, state_classification), so a stale DB should
     # fail fast with the standard actionable schema-mismatch error, not crash
     # deep in a query.
-    conn = open_db(db)
+    conn = open_built_db(db)
     # CLI contract: <=0 means DISABLED; the API takes None for ∞.
     fanout = args.max_signal_fanout if args.max_signal_fanout > 0 else None
     try:
@@ -1937,7 +1938,7 @@ def _cmd_entity_key_pins(
     # Schema-checked open: the generator reads current-schema tables
     # (register_variant.panel_entity_key, variable.slug/provider_key), so a stale
     # DB should fail fast with the standard schema-mismatch error.
-    conn = open_db(db)
+    conn = open_built_db(db)
     try:
         pins = infer_entity_key_pins(conn, slug_dir, flavored=args.flavored)
     finally:
@@ -1995,7 +1996,7 @@ def _cmd_concept_group_candidates(
     # Schema-checked open: the generator reads current-schema tables
     # (variable.slug, concept_group_variable), so a stale DB should fail fast with
     # the standard actionable schema-mismatch error, not crash deep in a query.
-    conn = open_db(db)
+    conn = open_built_db(db)
     # Literal register groups are the record of accepted families. Their scopes
     # tell the candidate scan to preserve matching materialized members.
     groups = load_concept_groups(repo_curation_dir())
@@ -2050,9 +2051,9 @@ def _cmd_classification_residue(
     start = time.perf_counter()
     db = db_path_from_args(args.db)
     # Schema-checked open: the diagnostic reads current-schema tables
-    # (variable_state.classification_id, classification.supersedes_id), so a stale
+    # (state_classification, classification.supersedes_id), so a stale
     # DB should fail fast with the standard actionable schema-mismatch error.
-    conn = open_db(db)
+    conn = open_built_db(db)
     try:
         result = dump_classification_residue(conn)
     finally:
@@ -2085,7 +2086,7 @@ def _cmd_split_sibling_suspects(
     # Schema-checked open: the diagnostic reads current-schema tables (variable,
     # variable_state, concept_group_variable), so a stale DB should fail fast with
     # the standard actionable schema-mismatch error — same as the residue command.
-    conn = open_db(db)
+    conn = open_built_db(db)
     try:
         result = infer_split_sibling_suspects(conn)
     finally:
@@ -2120,7 +2121,7 @@ def _cmd_succession_candidates(
     # variable_state, variable_replaced_by, representation_replaced_by), so a stale
     # DB should fail fast with the standard actionable schema-mismatch error — same
     # as the split-sibling-suspects command.
-    conn = open_db(db)
+    conn = open_built_db(db)
     try:
         result = infer_succession_candidates(conn)
     finally:
@@ -2155,7 +2156,7 @@ def _cmd_doc_coverage(
     # diagnostic reads current-schema tables (variable_alias.delivery_column_name,
     # doc.variable), so a stale DB should fail fast with the standard actionable
     # schema-mismatch error — same as the residue command.
-    catalog_conn = open_db(db_path_from_args(args.db))
+    catalog_conn = open_built_db(db_path_from_args(args.db))
     try:
         doc_conn = open_doc_db(doc_db_path(args.db))
         try:

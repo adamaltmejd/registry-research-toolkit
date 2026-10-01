@@ -19,8 +19,12 @@ from typing import TYPE_CHECKING, cast
 
 from reg_meta.db import (
     get_manifest,
+    open_db as _open_catalog_db,
 )
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
+
+# Produced catalog schema; readers gate their independently supported version.
+SCHEMA_VERSION = "7.0.0"
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
@@ -216,6 +220,35 @@ EXPECTED_HEADERS: dict[str, list[str]] = {
     ],
     "VardemangderValidDates.csv": ["ItemID", "ValidFrom", "ValidTo"],
 }
+
+
+def open_built_db(db_path: Path) -> sqlite3.Connection:
+    """Open only the schema produced by this builder, independently of readers."""
+    conn = _open_catalog_db(db_path, check_schema=False)
+    try:
+        try:
+            version = get_manifest(conn).get("schema_version")
+        except sqlite3.OperationalError as exc:
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="schema_incompatible",
+                error_class="configuration",
+                message=f"Catalog manifest is missing or unreadable: {db_path}.",
+                remediation=f"Rebuild with reg-meta-build to produce schema {SCHEMA_VERSION}.",
+            ) from exc
+        if version != SCHEMA_VERSION:
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="schema_incompatible",
+                error_class="configuration",
+                message=f"Catalog schema {version!r} is incompatible with builder schema {SCHEMA_VERSION}: {db_path}.",
+                remediation="Use the matching builder or rebuild from pinned prepared sources.",
+            )
+    except BaseException:
+        conn.close()
+        raise
+    return conn
+
 
 DDL = """\
 -- Core tables (all IDs stored as INTEGER for compact storage)
@@ -530,16 +563,6 @@ CREATE TABLE variable_state (
     -- single-version case — SQLite treats NULLs as distinct, which would let
     -- duplicate non-multi-vintage states slip through. Mirrors '9999-12-31'.
     value_set_version_label TEXT NOT NULL DEFAULT '',
-    -- Classification family for this era's value set. The coalescer
-    -- can't set it (it runs before `populate_classifications`); a build step
-    -- backfills it after classifications + value-set minting, correlating each
-    -- state to its constituent `variable_instance` rows by (variable_id,
-    -- value_set_id) — see `_backfill_state_classifications`. NULL for code-less
-    -- or unclassified states. The query layer reads it from `variable_state`
-    -- (which has `variable_id`), so classification lookups sibling-isolate after
-    -- the A2.2 split — resolving the A2.6 `classifications_for_variable`
-    -- limitation that `variable_instance` (no `variable_id`) couldn't.
-    classification_id INTEGER REFERENCES classification(id),
     -- Full-date contract: ten-character ISO 8601 strings only. Length check
     -- is a cheap structural guard; a stricter regex isn't worth the runtime
     -- cost because the coalescer is the only writer.
@@ -582,11 +605,6 @@ CREATE UNIQUE INDEX idx_variable_state_independent_unique ON variable_state(vari
 CREATE INDEX idx_variable_state_value_set
     ON variable_state(value_set_id)
     WHERE value_set_id IS NOT NULL;
--- A2.7: serves `search_variables_by_classification` (filter states by family).
--- Partial — most states carry no classification.
-CREATE INDEX idx_variable_state_classification
-    ON variable_state(classification_id)
-    WHERE classification_id IS NOT NULL;
 -- #371: covering index for the #351 coverage aggregates
 -- (MIN(valid_from)/MAX(valid_to) span per variable / per register). With
 -- (variable_id, valid_from, valid_to) the MIN/MAX is satisfied index-only — no
@@ -774,14 +792,25 @@ CREATE INDEX idx_classification_code_code ON classification_code(code_id);
 -- a state whose value set declared a CSV-backed classification. `declared_*`
 -- preserves the source claim. The state keeps its classification link; source
 -- extensions stay outside the canonical book and are recorded separately.
+CREATE TABLE state_classification (
+    state_id INTEGER NOT NULL REFERENCES variable_state(state_id),
+    classification_id INTEGER NOT NULL REFERENCES classification(id),
+    provenance TEXT,
+    PRIMARY KEY (state_id, classification_id)
+) WITHOUT ROWID;
+CREATE INDEX idx_state_classification_book ON state_classification(classification_id);
+
 CREATE TABLE classification_conformance (
-    state_id INTEGER PRIMARY KEY REFERENCES variable_state(state_id),
-    declared_classification_id INTEGER NOT NULL REFERENCES classification(id),
+    state_id INTEGER NOT NULL,
+    declared_classification_id INTEGER NOT NULL,
     status TEXT NOT NULL CHECK (status IN ('conforming', 'extended')),
     checked_code_count INTEGER NOT NULL,
     matched_code_count INTEGER NOT NULL,
     nonconforming_code_count INTEGER NOT NULL,
-    overlap REAL NOT NULL CHECK (overlap >= 0.0 AND overlap <= 1.0)
+    overlap REAL NOT NULL CHECK (overlap >= 0.0 AND overlap <= 1.0),
+    PRIMARY KEY (state_id, declared_classification_id),
+    FOREIGN KEY (state_id, declared_classification_id)
+        REFERENCES state_classification(state_id, classification_id)
 );
 CREATE INDEX idx_classification_conformance_declared
     ON classification_conformance(declared_classification_id);
@@ -790,9 +819,12 @@ CREATE INDEX idx_classification_conformance_declared
 -- classification. Stored instead of recomputed at read time so the UI warning
 -- exactly matches the build gate.
 CREATE TABLE classification_conformance_code (
-    state_id INTEGER NOT NULL REFERENCES classification_conformance(state_id),
+    state_id INTEGER NOT NULL,
+    declared_classification_id INTEGER NOT NULL,
     code_id  INTEGER NOT NULL REFERENCES value_code(code_id),
-    PRIMARY KEY (state_id, code_id)
+    PRIMARY KEY (state_id, declared_classification_id, code_id),
+    FOREIGN KEY (state_id, declared_classification_id)
+        REFERENCES classification_conformance(state_id, declared_classification_id)
 ) WITHOUT ROWID;
 CREATE INDEX idx_classification_conformance_code_code
     ON classification_conformance_code(code_id);
@@ -2041,18 +2073,17 @@ def _insert_core_graph_from_ir(
 
     # None→sentinel reconciliation at the insert site: valid_to=None →
     # '9999-12-31', value_set_version_label=None → '' (the DDL NOT NULL
-    # DEFAULTs). classification_id is left NULL; _backfill_state_classifications
-    # tags it after classifications + value-set linkage exist.
+    # DEFAULTs). Steward IR declares no classification associations.
     conn.executemany(
         "INSERT INTO variable_state "
         "(state_id, variable_id, register_variant_id, valid_from, valid_to, "
         " data_type, data_length, delivery_column_name, source_register_text, "
         " operational_definition, provenance, pooled, value_set_id, "
-        " value_set_version_label, classification_id) "
+        " value_set_version_label) "
         "VALUES (:state_id, :variable_id, :register_variant_id, :valid_from, "
         " :valid_to, :data_type, :data_length, :delivery_column_name, "
         " :source_register_text, :operational_definition, :provenance, :pooled, "
-        " :value_set_id, :value_set_version_label, NULL)",
+        " :value_set_id, :value_set_version_label)",
         [
             {
                 "state_id": s.state_id,

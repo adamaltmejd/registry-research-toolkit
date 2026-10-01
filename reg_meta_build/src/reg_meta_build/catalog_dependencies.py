@@ -110,11 +110,12 @@ def resolve_variable_successions(
                 f"{v.register_ref.provider}/{v.register_ref.slug}",
                 v.name,
                 v.slug,
-                state.classification,
+                link.classification,
             )
             for v in variables
             for state in v.states
-            if state.classification is not None and v.name is not None
+            for link in state.classification_links
+            if v.name is not None
         ),
         ((e.predecessor, e.successor, e.effective_year) for e in classifications),
     )
@@ -526,7 +527,7 @@ def check_delivery_coverage(
                         or not window.value_set.members
                         or state.value_set is not None
                         or state.value_set_version_label
-                        or state.classification is not None
+                        or state.classification_links
                     ):
                         ob_facts.append(
                             f"{obligation.fqid} {obligation.variant}/{obligation.column} "

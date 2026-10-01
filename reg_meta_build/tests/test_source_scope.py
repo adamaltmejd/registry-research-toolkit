@@ -853,10 +853,17 @@ def test_scope_forwards_label_rule_and_fqid_override(tmp_path):
             },
         )
     assert (
-        ruled.variables[native_variable_key(item)].states[0].classification == "first"
+        ruled.variables[native_variable_key(item)]
+        .states[0]
+        .classification_links[0]
+        .classification
+        == "first"
     )
     assert (
-        overridden.variables[native_variable_key(item)].states[0].classification
+        overridden.variables[native_variable_key(item)]
+        .states[0]
+        .classification_links[0]
+        .classification
         == "second"
     )
     assert not ruled.diagnostics and not overridden.diagnostics

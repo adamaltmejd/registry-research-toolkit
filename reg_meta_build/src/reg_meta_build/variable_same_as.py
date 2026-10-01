@@ -123,7 +123,8 @@ def _load_var_signals(conn: sqlite3.Connection) -> dict[str, _VarSignals]:
     # State-level signals: which classifications and value sets each variable's
     # states carry, and whether a given value_set is classified on that side.
     for vid, value_set_id, classification_id in conn.execute(
-        "SELECT variable_id, value_set_id, classification_id FROM variable_state"
+        "SELECT vs.variable_id, vs.value_set_id, sc.classification_id FROM variable_state vs "
+        "LEFT JOIN state_classification sc ON sc.state_id=vs.state_id"
     ):
         acc = by_var_id.get(vid)
         if acc is None:

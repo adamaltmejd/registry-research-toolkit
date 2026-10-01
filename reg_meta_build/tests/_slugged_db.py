@@ -254,7 +254,7 @@ def add_state(
     cur = conn.execute(
         "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
         "valid_to, data_type, delivery_column_name, value_set_id, "
-        "value_set_version_label, classification_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "value_set_version_label) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         (
             vid,
             register_variant_id,
@@ -264,9 +264,13 @@ def add_state(
             delivery_column_name,
             value_set_id,
             value_set_version_label,
-            classification_id,
         ),
     )
+    if classification_id is not None:
+        conn.execute(
+            "INSERT INTO state_classification (state_id, classification_id) VALUES (?, ?)",
+            (cur.lastrowid, classification_id),
+        )
     return cur.lastrowid
 
 

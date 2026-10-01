@@ -12,7 +12,10 @@ from reg_meta.source_evidence import canonical_sha256
 
 from reg_meta_build._resolved_common import covers_window
 from reg_meta_build.normalization import normalize_text
-from reg_meta_build.resolved_catalog import ResolvedScopedSentinels
+from reg_meta_build.resolved_catalog import (
+    ResolvedClassificationLink,
+    ResolvedScopedSentinels,
+)
 from reg_meta_build.source_classifications import resolve_classification_conformance
 from reg_meta_build.source_coding import (
     CodingIssue,
@@ -284,14 +287,14 @@ def apply_classification_cases(
 
     Coding choices run first; their original claims remain the applicability
     basis. Classification never adds availability, copies canonical memberships,
-    chooses an identity, or acknowledges noncanonical codes. Conflicting declared
-    classes withhold only the binding on their intersection. Existing coding and
+    chooses an identity, or acknowledges noncanonical codes. Every positively named book retains its own association and conformance;
+    effective coding still requires independent source-domain agreement. Existing coding and
     omission diagnostics survive unchanged. An inline-only declaration has no
     effect where independently resolved inline codes are absent.
 
     Source declarations use the exact supplied reference dictionary. Their own
     explicitly open scopes remain open; finite curation windows never widen.
-    Conflicting declarations are withheld, not resolved by call/file order.
+    Multiple book claims do not select a winner or establish book equivalence.
     An occurrence-field correction can replace a checked original declaration.
     """
     occurrences = tuple(occurrences)
@@ -308,10 +311,7 @@ def apply_classification_cases(
             raise ValueError("classification has an unconverted canonical codebook")
         if classifications[decision.classification].slug != decision.classification:
             raise ValueError("classification mapping key differs from its identity")
-        if any(
-            s.classification is not None or s.conformance is not None
-            for s in coding[decision.column_key].segments
-        ):
+        if any(s.classification_links for s in coding[decision.column_key].segments):
             raise ValueError("classification cases must compose in one application")
         guarded = {ref for guard in case.peer_guards for ref in guard.expected_members}
         for target in (*case.targets, *case.support):
@@ -530,10 +530,7 @@ def apply_classification_cases(
                 )
             )
             continue
-        if any(
-            s.classification is not None or s.conformance is not None
-            for s in base.segments
-        ):
+        if any(s.classification_links for s in base.segments):
             raise ValueError(
                 "classification declarations must compose in one application"
             )
@@ -590,13 +587,13 @@ def apply_classification_cases(
                 )
             )
             classes = {d.classification for d in active if not d.unresolved}
-            if len(classes) > 1:
+            if None in classes and len(classes) > 1:
                 diagnostics.append(
                     ResolutionDiagnostic(
                         code="conflicting_classification_decisions",
                         severity="error",
                         subject=repr(key),
-                        detail=f"Declarations select different classifications {sorted(classes, key=repr)!r}; evidence {[p for d in active for p in d.provenance]!r}.",
+                        detail="A positive classification declaration contradicts an explicit negative declaration; neither is selected.",
                         refs=refs,
                         fields=("classification",),
                         valid_from=start,
@@ -604,58 +601,92 @@ def apply_classification_cases(
                         withheld_output=("state.classification",),
                     )
                 )
-            if len(classes) > 1 or any(d.unresolved for d in active):
+            if any(d.unresolved for d in active) or (
+                None in classes and len(classes) > 1
+            ):
                 if prior:
                     segments.append(segment)
                 continue
-            slug = next(iter(classes))
-            conformance = None
-            if slug is not None and segment.code_set is not None:
-                if slug not in canonical:
-                    canonical[slug] = frozenset(
-                        c.code for c in classifications[slug].codes
+            if len(classes) > 1:
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code="multiple_classifications_declared",
+                        severity="warning",
+                        subject=repr(key),
+                        detail=f"Source declarations name multiple books {sorted(c for c in classes if c is not None)!r}; each association is retained independently. No winning edition or equivalence between books is asserted.",
+                        refs=refs,
+                        fields=("classification",),
+                        valid_from=start,
+                        valid_to=end,
                     )
-                    sentinel_maps[slug] = _sentinel_map(classifications[slug])
-                local_sentinels = dict(sentinel_maps[slug])
-                actual_members = set(segment.code_set.members)
-                certificates = []
-                for binding in active:
-                    for code, label in binding.sentinel_members:
-                        if (code, label) in actual_members and all(
-                            member_code != code or member_label == label
-                            for member_code, member_label in actual_members
-                        ):
-                            local_sentinels[code] = label
-                    if binding.sentinel_certificate is not None:
-                        members = tuple(
-                            pair
-                            for pair in binding.sentinel_members
-                            if pair in actual_members
-                            and all(
-                                code != pair[0] or label == pair[1]
-                                for code, label in actual_members
-                            )
+                )
+            links = []
+            for slug in sorted(c for c in classes if c is not None):
+                book_bindings = [
+                    binding for binding in active if binding.classification == slug
+                ]
+                conformance = None
+                if slug is not None and segment.code_set is not None:
+                    if slug not in canonical:
+                        canonical[slug] = frozenset(
+                            c.code for c in classifications[slug].codes
                         )
-                        if members:
-                            certificates.append(
-                                binding.sentinel_certificate.model_copy(
-                                    update={"members": members}
+                        sentinel_maps[slug] = _sentinel_map(classifications[slug])
+                    local_sentinels = dict(sentinel_maps[slug])
+                    actual_members = set(segment.code_set.members)
+                    certificates = []
+                    for binding in book_bindings:
+                        for code, label in binding.sentinel_members:
+                            if (code, label) in actual_members and all(
+                                member_code != code or member_label == label
+                                for member_code, member_label in actual_members
+                            ):
+                                local_sentinels[code] = label
+                        if binding.sentinel_certificate is not None:
+                            members = tuple(
+                                pair
+                                for pair in binding.sentinel_members
+                                if pair in actual_members
+                                and all(
+                                    code != pair[0] or label == pair[1]
+                                    for code, label in actual_members
                                 )
                             )
-                checked = resolve_classification_conformance(
-                    segment.code_set,
-                    classification=slug,
-                    canonical_codes=canonical[slug],
-                    subject=repr(key),
-                    refs=refs,
-                    valid_from=start,
-                    valid_to=end,
-                    sentinel_codes=local_sentinels,
-                    scoped_sentinels=tuple(certificates),
+                            if members:
+                                certificates.append(
+                                    binding.sentinel_certificate.model_copy(
+                                        update={"members": members}
+                                    )
+                                )
+                    checked = resolve_classification_conformance(
+                        segment.code_set,
+                        classification=slug,
+                        canonical_codes=canonical[slug],
+                        subject=repr(key),
+                        refs=refs,
+                        valid_from=start,
+                        valid_to=end,
+                        sentinel_codes=local_sentinels,
+                        scoped_sentinels=tuple(certificates),
+                    )
+                    diagnostics.extend(checked.diagnostics)
+                    conformance = checked.conformance
+                links.append(
+                    ResolvedClassificationLink(
+                        classification=slug,
+                        conformance=conformance,
+                        provenance="\n".join(
+                            sorted(
+                                {
+                                    p
+                                    for binding in book_bindings
+                                    for p in binding.provenance
+                                }
+                            )
+                        ),
+                    )
                 )
-                diagnostics.extend(checked.diagnostics)
-                conformance = checked.conformance
-            elif not prior and base.claims:
+            if segment.code_set is None and not prior and base.claims:
                 coding_issues.append(
                     CodingIssue(
                         "missing_coding_period",
@@ -672,8 +703,7 @@ def apply_classification_cases(
             segments.append(
                 replace(
                     segment,
-                    classification=slug,
-                    conformance=conformance,
+                    classification_links=tuple(links),
                     provenance=attribution,
                 )
             )

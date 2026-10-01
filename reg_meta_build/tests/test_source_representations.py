@@ -14,6 +14,7 @@ from reg_meta.db import open_db
 from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.catalog_dependencies import check_delivery_coverage
 from reg_meta_build.resolved_catalog import (
+    ResolvedClassificationLink,
     ResolvedRegister,
     ResolvedVariant,
     write_resolved_catalog,
@@ -921,7 +922,13 @@ def test_per_column_coding_withholds_unsupported_domain_without_shared_fallback(
     if unsupported == "missing":
         states[0] = states[0].model_copy(update={"value_set": None})
     elif unsupported == "classification":
-        states[0] = states[0].model_copy(update={"classification": "scb/sni2007"})
+        states[0] = states[0].model_copy(
+            update={
+                "classification_links": (
+                    ResolvedClassificationLink(classification="sni2007"),
+                )
+            }
+        )
     else:
         states.append(states[0].model_copy(update={"value_set": states[1].value_set}))
     result, aliases, issues, _, _ = form_representations(

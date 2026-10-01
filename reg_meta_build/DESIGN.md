@@ -877,6 +877,15 @@ certificate against its actual state and book before validating membership. Miss
 changed or out-of-window certificates cannot broaden conformance. The certificate is
 build-time evidence; it adds no canonical codes or public sentinel policy.
 
+A state retains every positively named classification book as an independent
+association, with its declaration provenance and, when an effective response domain
+exists, a complete conformance check against that book. Simultaneous annual book claims
+do not choose a winning edition or assert equivalence between books. Each book's
+verified overlap and source-local extensions are stored separately. Coding still
+requires exact independent source-domain agreement: competing codes or labels remain
+unavailable with their original errors, rather than becoming a union. The public
+associations may therefore be known even when their conformance is unavailable.
+
 A parallel-column decision names each literal column and its finite delivery window. It
 reconciles sibling metadata and coding before forming shared states. Conflicting facts
 stay unknown; missing members or contradictory representation choices withhold the

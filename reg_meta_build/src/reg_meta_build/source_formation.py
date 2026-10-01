@@ -149,8 +149,7 @@ def _state_from_segment(
         or None,
         value_set=matched.code_set if matched else None,
         value_set_version_label=matched.version_label if matched else "",
-        classification=matched.classification if matched else None,
-        conformance=matched.conformance if matched else None,
+        classification_links=matched.classification_links if matched else (),
     )
 
 

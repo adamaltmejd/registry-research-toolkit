@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import shutil
 import sqlite3
+from contextlib import closing
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -19,6 +20,7 @@ from reg_meta.db import DB_FILENAME
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import FqidError, FqidKind, validate_slug
 
+from .db import open_built_db
 from .id import mint
 from .ir import (
     IRRegister,
@@ -326,7 +328,7 @@ def extend_db(
         )
 
     resolved_providers_dir = resolve_steward_providers_dir(providers_dir, steward)
-    with sqlite3.connect(f"file:{base_db}?mode=ro", uri=True) as source_db:
+    with closing(open_built_db(base_db)) as source_db:
         classification_short_names = frozenset(
             name
             for (name,) in source_db.execute("SELECT short_name FROM classification")

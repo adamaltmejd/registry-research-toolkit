@@ -9,10 +9,10 @@ from typing import TYPE_CHECKING
 import pytest
 from _curation_fixtures import write_fdb_partition_curation
 from _prepared_fixtures import accept_prepared
-from reg_meta.db import open_db
 from reg_meta.source_evidence import RecordLocator, SourceField, SourceRevision
 from reg_meta_build.catalog_dependencies import check_delivery_coverage
 from reg_meta_build.curation_compile import convert_column_partitions
+from reg_meta_build.db import open_built_db
 from reg_meta_build.prepared_sources import (
     open_prepared_source_records,
     prepare_source_records,
@@ -248,7 +248,7 @@ def test_explicit_open_ended_coverage_survives_formation_and_storage(
     )
     output = tmp_path / "catalog.db"
     write_resolved_catalog((result.variable,), output, manifest={})
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert tuple(
             conn.execute("SELECT valid_from, valid_to FROM variable_state").fetchone()
         ) == ("2004-01-01", "9999-12-31")
@@ -277,7 +277,7 @@ def test_prepared_native_family_forms_and_writes_without_handwritten_cases(
     write_resolved_catalog(
         (result.variable,), output, manifest={"source": manifest.sha256}
     )
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert tuple(
             conn.execute(
                 "SELECT provider_key, slug, name, definition FROM variable"
@@ -311,7 +311,7 @@ def test_pooled_only_edition_forms_one_marked_state(tmp_path: Path) -> None:
     assert state.pooled is True
     output = tmp_path / "catalog.db"
     write_resolved_catalog((result.variable,), output, manifest={})
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert tuple(
             conn.execute(
                 "SELECT valid_from, valid_to, pooled FROM variable_state"
@@ -701,7 +701,7 @@ def test_state_grain_texts_vary_by_period_without_a_variable_fact_conflict(
     assert result.variable.source_register_text is None
     output = tmp_path / "catalog.db"
     write_resolved_catalog((result.variable,), output, manifest={})
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert tuple(
             conn.execute(
                 "SELECT operational_definition, source_register_text FROM variable"

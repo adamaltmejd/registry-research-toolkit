@@ -3,7 +3,6 @@
 from contextlib import closing
 
 import pytest
-from reg_meta.db import open_db
 from reg_meta.errors import RegMetaError
 from reg_meta_build.catalog_dependencies import (
     DEFERRED_REFERENCE,
@@ -18,11 +17,13 @@ from reg_meta_build.catalog_dependencies import (
     resolve_variable_edge_groups,
 )
 from reg_meta_build.concept_groups import CodeLabelPair
+from reg_meta_build.db import open_built_db
 from reg_meta_build.resolved_catalog import (
     ResolvedAlias,
     ResolvedAliasWindow,
     ResolvedClassification,
     ResolvedClassificationCode,
+    ResolvedClassificationLink,
     ResolvedClassificationSuccession,
     ResolvedCodeSet,
     ResolvedEdition,
@@ -249,7 +250,7 @@ def test_month_groups_resolve_before_writing_with_ordered_facets(tmp_path):
         diagnostic=True,
         metadata=ResolvedMetadata(variable_groups=result.groups),
     )
-    with closing(open_db(path)) as conn:
+    with closing(open_built_db(path)) as conn:
         assert tuple(
             conn.execute("SELECT group_key,label,source FROM concept_group").fetchone()
         ) == ("ink", "Inkomst", "token")
@@ -396,7 +397,7 @@ def test_classification_chains_resolve_before_writing_with_explicit_split(tmp_pa
         classifications=books,
         classification_successions=edges,
     )
-    with closing(open_db(path)) as conn:
+    with closing(open_built_db(path)) as conn:
         assert [
             tuple(row)
             for row in conn.execute(
@@ -461,7 +462,7 @@ def test_code_label_pair_resolves_without_sql_and_writes_standard_group(tmp_path
         diagnostic=True,
         metadata=ResolvedMetadata(variable_groups=result.groups),
     )
-    with closing(open_db(path)) as conn:
+    with closing(open_built_db(path)) as conn:
         assert conn.execute("SELECT source FROM concept_group").fetchone()[0] == "edge"
         assert (
             conn.execute("SELECT COUNT(*) FROM concept_group_variable").fetchone()[0]
@@ -787,7 +788,7 @@ def test_panel_withholds_whole_composite_axis_and_preserves_shared_facts(tmp_pat
         parent_variants=result.variants,
         editions=result.editions,
     )
-    with closing(open_db(path)) as conn:
+    with closing(open_built_db(path)) as conn:
         assert tuple(
             conn.execute(
                 "SELECT panel_entity_key, panel_time_key, description FROM register_variant"
@@ -1688,11 +1689,8 @@ def test_per_column_alias_coding_preserves_exact_delivery_claims(damage):
     elif damage == "classified":
         state = state.model_copy(
             update={
-                "classification": ResolvedClassification(
-                    slug="example",
-                    short_name="Example",
-                    name="Example",
-                    codes=(ResolvedClassificationCode(code="1", label="Yes"),),
+                "classification_links": (
+                    ResolvedClassificationLink(classification="example"),
                 )
             }
         )
