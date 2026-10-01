@@ -195,7 +195,9 @@ def _source_bindings(
                     unresolved=code is not None,
                 )
             )
-    return selected, diagnostics
+    # Duplicate physical originals may state one identical unresolved declaration.
+    # Keep their bindings/evidence; report the complete diagnostic identity once.
+    return selected, list(dict.fromkeys(diagnostics))
 
 
 def _sentinel_map(classification: ResolvedClassification) -> dict[str, str]:

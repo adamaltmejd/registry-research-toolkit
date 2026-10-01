@@ -3698,3 +3698,643 @@ fields = ["identity", "column_name"]
 reason = "The source question “NgasT8_Naturgas Nät_Apparater för övriga större förbrukare_ antal Totalt” names co-delivered matrix fields but omits the stored row/table coordinate values needed to identify its quantity cell. Original question metadata and physical fields are retained; the unsupported scalar mapping is unavailable."
 evidence = "Reviewed complete source-native family under the approved unavailable-mapping policy. Physical Rad/Tabell/Typ and Kolumn1/Kolumn2 fields coexist; no row/table coordinate values or operational cell mapping are supplied. Preserve all source quantity wording, periods, types, units, coding references and associations. No scalar meaning, coordinate value, statistical equivalence or new variable is inferred. Complete evidence: Batch48-energy-matrix-source-boundary.json and Batch48-energy-matrix242-proof.json."
 expected_evidence_sha256 = "bfd63e8e5a1cfb0a9037930aa19e0ae4460637acba6e52c14e9949db0519e5e2"
+
+[[identity.partition]]
+variable = "200.16728"
+columns = {Fid = "200.16728", KNr = "200.16728", knr = "200.16728"}
+columns_ref = "Complete own-native source family has one stable positive exported name/definition and source-local co-delivered physical forms. Commune forms have identical own response domains; identifier/type forms are separately retained with their source-declared storage. All complete originals/parents/coding references are checked; no value equality or statistical equivalence is claimed. Batch48-energy-parallel4-proof.json."
+data_warning = "The source links these co-delivered physical forms to the same native question. Each column keeps its original storage metadata and source provenance; their observed values have not been independently compared or converted."
+
+[[identity.partition]]
+variable = "200.20251"
+columns = {KNr = "200.20251", knr = "200.20251"}
+columns_ref = "Complete own-native source family has one stable positive exported name/definition and source-local co-delivered physical forms. Commune forms have identical own response domains; identifier/type forms are separately retained with their source-declared storage. All complete originals/parents/coding references are checked; no value equality or statistical equivalence is claimed. Batch48-energy-parallel4-proof.json."
+data_warning = "The source links these co-delivered physical forms to the same native question. Each column keeps its original storage metadata and source provenance; their observed values have not been independently compared or converted."
+
+[[identity.partition]]
+variable = "200.36"
+columns = {Kommun = "200.36", kommunkod = "200.36"}
+columns_ref = "Complete own-native source family has one stable positive exported name/definition and source-local co-delivered physical forms. Commune forms have identical own response domains; identifier/type forms are separately retained with their source-declared storage. All complete originals/parents/coding references are checked; no value equality or statistical equivalence is claimed. Batch48-energy-parallel4-proof.json."
+data_warning = "The source links these co-delivered physical forms to the same native question. Each column keeps its original storage metadata and source provenance; their observed values have not been independently compared or converted."
+
+[[identity.partition]]
+variable = "200.45906"
+columns = {Ftyp = "200.45906", ftyp = "200.45906"}
+columns_ref = "Complete own-native source family has one stable positive exported name/definition and source-local co-delivered physical forms. Commune forms have identical own response domains; identifier/type forms are separately retained with their source-declared storage. All complete originals/parents/coding references are checked; no value equality or statistical equivalence is claimed. Batch48-energy-parallel4-proof.json."
+data_warning = "The source links these co-delivered physical forms to the same native question. Each column keeps its original storage metadata and source provenance; their observed values have not been independently compared or converted."
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.302"
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2010-01-01", valid_to = "2010-12-31", source_editions = ["2010"]}, {column = "Kommun", valid_from = "2010-01-01", valid_to = "2010-12-31", source_editions = ["2010"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.302"
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2011-01-01", valid_to = "2011-12-31", source_editions = ["2011"]}, {column = "Kommun", valid_from = "2011-01-01", valid_to = "2011-12-31", source_editions = ["2011"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.302"
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2012-01-01", valid_to = "2012-12-31", source_editions = ["2012"]}, {column = "Kommun", valid_from = "2012-01-01", valid_to = "2012-12-31", source_editions = ["2012"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.302"
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2013-01-01", valid_to = "2013-12-31", source_editions = ["2013"]}, {column = "Kommun", valid_from = "2013-01-01", valid_to = "2013-12-31", source_editions = ["2013"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.302"
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2014-01-01", valid_to = "2014-12-31", source_editions = ["2014"]}, {column = "Kommun", valid_from = "2014-01-01", valid_to = "2014-12-31", source_editions = ["2014"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.302"
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2015-01-01", valid_to = "2015-12-31", source_editions = ["2015"]}, {column = "Kommun", valid_from = "2015-01-01", valid_to = "2015-12-31", source_editions = ["2015"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.302"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2016-01-01", valid_to = "2016-12-31", source_editions = ["2016"]}, {column = "Kommun", valid_from = "2016-01-01", valid_to = "2016-12-31", source_editions = ["2016"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.302"
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2017-01-01", valid_to = "2017-12-31", source_editions = ["2017"]}, {column = "Kommun", valid_from = "2017-01-01", valid_to = "2017-12-31", source_editions = ["2017"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.302"
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2018-01-01", valid_to = "2018-12-31", source_editions = ["2018"]}, {column = "Kommun", valid_from = "2018-01-01", valid_to = "2018-12-31", source_editions = ["2018"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.302"
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2019-01-01", valid_to = "2019-12-31", source_editions = ["2019"]}, {column = "Kommun", valid_from = "2019-01-01", valid_to = "2019-12-31", source_editions = ["2019"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.302"
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2020-01-01", valid_to = "2020-12-31", source_editions = ["2020"]}, {column = "Kommun", valid_from = "2020-01-01", valid_to = "2020-12-31", source_editions = ["2020"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.302"
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2021-01-01", valid_to = "2021-12-31", source_editions = ["2021"]}, {column = "Kommun", valid_from = "2021-01-01", valid_to = "2021-12-31", source_editions = ["2021"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.302"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2022-01-01", valid_to = "2022-12-31", source_editions = ["2022"]}, {column = "Kommun", valid_from = "2022-01-01", valid_to = "2022-12-31", source_editions = ["2022"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.302"
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2023-01-01", valid_to = "2023-12-31", source_editions = ["2023"]}, {column = "Kommun", valid_from = "2023-01-01", valid_to = "2023-12-31", source_editions = ["2023"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.302"
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2024-01-01", valid_to = "2024-12-31", source_editions = ["2024"]}, {column = "Kommun", valid_from = "2024-01-01", valid_to = "2024-12-31", source_editions = ["2024"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.802"
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2009-01-01", valid_to = "2009-12-31", source_editions = ["2009"]}, {column = "Kommun", valid_from = "2009-01-01", valid_to = "2009-12-31", source_editions = ["2009"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.802"
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2010-01-01", valid_to = "2010-12-31", source_editions = ["2010"]}, {column = "Kommun", valid_from = "2010-01-01", valid_to = "2010-12-31", source_editions = ["2010"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.802"
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2011-01-01", valid_to = "2011-12-31", source_editions = ["2011"]}, {column = "Kommun", valid_from = "2011-01-01", valid_to = "2011-12-31", source_editions = ["2011"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.802"
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2012-01-01", valid_to = "2012-12-31", source_editions = ["2012"]}, {column = "Kommun", valid_from = "2012-01-01", valid_to = "2012-12-31", source_editions = ["2012"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.802"
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2013-01-01", valid_to = "2013-12-31", source_editions = ["2013"]}, {column = "Kommun", valid_from = "2013-01-01", valid_to = "2013-12-31", source_editions = ["2013"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.802"
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2014-01-01", valid_to = "2014-12-31", source_editions = ["2014"]}, {column = "Kommun", valid_from = "2014-01-01", valid_to = "2014-12-31", source_editions = ["2014"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.802"
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2015-01-01", valid_to = "2015-12-31", source_editions = ["2015"]}, {column = "Kommun", valid_from = "2015-01-01", valid_to = "2015-12-31", source_editions = ["2015"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.802"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2016-01-01", valid_to = "2016-12-31", source_editions = ["2016"]}, {column = "Kommun", valid_from = "2016-01-01", valid_to = "2016-12-31", source_editions = ["2016"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.802"
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2017-01-01", valid_to = "2017-12-31", source_editions = ["2017"]}, {column = "Kommun", valid_from = "2017-01-01", valid_to = "2017-12-31", source_editions = ["2017"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.802"
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2018-01-01", valid_to = "2018-12-31", source_editions = ["2018"]}, {column = "Kommun", valid_from = "2018-01-01", valid_to = "2018-12-31", source_editions = ["2018"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.802"
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2019-01-01", valid_to = "2019-12-31", source_editions = ["2019"]}, {column = "Kommun", valid_from = "2019-01-01", valid_to = "2019-12-31", source_editions = ["2019"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.802"
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2020-01-01", valid_to = "2020-12-31", source_editions = ["2020"]}, {column = "Kommun", valid_from = "2020-01-01", valid_to = "2020-12-31", source_editions = ["2020"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.802"
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2021-01-01", valid_to = "2021-12-31", source_editions = ["2021"]}, {column = "Kommun", valid_from = "2021-01-01", valid_to = "2021-12-31", source_editions = ["2021"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.802"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2022-01-01", valid_to = "2022-12-31", source_editions = ["2022"]}, {column = "Kommun", valid_from = "2022-01-01", valid_to = "2022-12-31", source_editions = ["2022"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.802"
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2023-01-01", valid_to = "2023-12-31", source_editions = ["2023"]}, {column = "Kommun", valid_from = "2023-01-01", valid_to = "2023-12-31", source_editions = ["2023"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.36"
+variant = "200.802"
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "kommunkod", valid_from = "2024-01-01", valid_to = "2024-12-31", source_editions = ["2024"]}, {column = "Kommun", valid_from = "2024-01-01", valid_to = "2024-12-31", source_editions = ["2024"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.302"
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2014-01-01", valid_to = "2014-12-31", source_editions = ["2014"]}, {column = "KNr", valid_from = "2014-01-01", valid_to = "2014-12-31", source_editions = ["2014"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.302"
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2015-01-01", valid_to = "2015-12-31", source_editions = ["2015"]}, {column = "KNr", valid_from = "2015-01-01", valid_to = "2015-12-31", source_editions = ["2015"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.302"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2016-01-01", valid_to = "2016-12-31", source_editions = ["2016"]}, {column = "KNr", valid_from = "2016-01-01", valid_to = "2016-12-31", source_editions = ["2016"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.302"
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2017-01-01", valid_to = "2017-12-31", source_editions = ["2017"]}, {column = "KNr", valid_from = "2017-01-01", valid_to = "2017-12-31", source_editions = ["2017"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.302"
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2018-01-01", valid_to = "2018-12-31", source_editions = ["2018"]}, {column = "KNr", valid_from = "2018-01-01", valid_to = "2018-12-31", source_editions = ["2018"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.302"
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2019-01-01", valid_to = "2019-12-31", source_editions = ["2019"]}, {column = "KNr", valid_from = "2019-01-01", valid_to = "2019-12-31", source_editions = ["2019"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.302"
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2020-01-01", valid_to = "2020-12-31", source_editions = ["2020"]}, {column = "KNr", valid_from = "2020-01-01", valid_to = "2020-12-31", source_editions = ["2020"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.302"
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2021-01-01", valid_to = "2021-12-31", source_editions = ["2021"]}, {column = "KNr", valid_from = "2021-01-01", valid_to = "2021-12-31", source_editions = ["2021"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.302"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2022-01-01", valid_to = "2022-12-31", source_editions = ["2022"]}, {column = "KNr", valid_from = "2022-01-01", valid_to = "2022-12-31", source_editions = ["2022"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.302"
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2023-01-01", valid_to = "2023-12-31", source_editions = ["2023"]}, {column = "KNr", valid_from = "2023-01-01", valid_to = "2023-12-31", source_editions = ["2023"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.302"
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2024-01-01", valid_to = "2024-12-31", source_editions = ["2024"]}, {column = "KNr", valid_from = "2024-01-01", valid_to = "2024-12-31", source_editions = ["2024"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.802"
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2014-01-01", valid_to = "2014-12-31", source_editions = ["2014"]}, {column = "KNr", valid_from = "2014-01-01", valid_to = "2014-12-31", source_editions = ["2014"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.802"
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2015-01-01", valid_to = "2015-12-31", source_editions = ["2015"]}, {column = "KNr", valid_from = "2015-01-01", valid_to = "2015-12-31", source_editions = ["2015"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.802"
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2016-01-01", valid_to = "2016-12-31", source_editions = ["2016"]}, {column = "KNr", valid_from = "2016-01-01", valid_to = "2016-12-31", source_editions = ["2016"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.802"
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2017-01-01", valid_to = "2017-12-31", source_editions = ["2017"]}, {column = "KNr", valid_from = "2017-01-01", valid_to = "2017-12-31", source_editions = ["2017"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.802"
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2018-01-01", valid_to = "2018-12-31", source_editions = ["2018"]}, {column = "KNr", valid_from = "2018-01-01", valid_to = "2018-12-31", source_editions = ["2018"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.802"
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2019-01-01", valid_to = "2019-12-31", source_editions = ["2019"]}, {column = "KNr", valid_from = "2019-01-01", valid_to = "2019-12-31", source_editions = ["2019"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.802"
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2020-01-01", valid_to = "2020-12-31", source_editions = ["2020"]}, {column = "KNr", valid_from = "2020-01-01", valid_to = "2020-12-31", source_editions = ["2020"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.802"
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2021-01-01", valid_to = "2021-12-31", source_editions = ["2021"]}, {column = "KNr", valid_from = "2021-01-01", valid_to = "2021-12-31", source_editions = ["2021"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.16728"
+variant = "200.802"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2022-01-01", valid_to = "2022-12-31", source_editions = ["2022"]}, {column = "KNr", valid_from = "2022-01-01", valid_to = "2022-12-31", source_editions = ["2022"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.20251"
+variant = "200.802"
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2023-01-01", valid_to = "2023-12-31", source_editions = ["2023"]}, {column = "KNr", valid_from = "2023-01-01", valid_to = "2023-12-31", source_editions = ["2023"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.20251"
+variant = "200.802"
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "knr", valid_from = "2024-01-01", valid_to = "2024-12-31", source_editions = ["2024"]}, {column = "KNr", valid_from = "2024-01-01", valid_to = "2024-12-31", source_editions = ["2024"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.45906"
+variant = "200.802"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "Ftyp", valid_from = "2022-01-01", valid_to = "2022-12-31", source_editions = ["2022"]}, {column = "ftyp", valid_from = "2022-01-01", valid_to = "2022-12-31", source_editions = ["2022"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.45906"
+variant = "200.802"
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "Ftyp", valid_from = "2023-01-01", valid_to = "2023-12-31", source_editions = ["2023"]}, {column = "ftyp", valid_from = "2023-01-01", valid_to = "2023-12-31", source_editions = ["2023"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
+
+[[representation.parallel]]
+variable = "200.45906"
+variant = "200.802"
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+co_delivered = true
+column_metadata = "per_column"
+columns = [{column = "Ftyp", valid_from = "2024-01-01", valid_to = "2024-12-31", source_editions = ["2024"]}, {column = "ftyp", valid_from = "2024-01-01", valid_to = "2024-12-31", source_editions = ["2024"]}]
+evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
+noted = "2026-10-01"
