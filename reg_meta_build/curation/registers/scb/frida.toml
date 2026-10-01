@@ -3,20 +3,12 @@ provider = "scb"
 slug = "frida"
 native_id = "121"
 
-# Source: archive/.../2026-09-16-goal-run/convert_frida_scoped_ownership.py:32-36.
-# v18: accepted-column-partitions:scb-registerinformation:121.56 adds 13 identity
-# effects, borgnr in variant 121.930 only (scopes/3c9b05bd3c86c3a705f2.json.gz).
-# The same case's PERSORGNR -> 121.56.persorgnr (4, variant 930) and
-# borgnr_bolag -> 121.56.borgnr-bolag (24, variant 953) are mechanical literal
-# discriminators, not listed here. borgnr in 16 other variants, BORGNR, Borgnr,
-# bpnr and BPNR stay unassigned; the tracked split 121.56.bpnr has no v18 owner.
-
-[[identity.column_owner]]
+# Checked literal ownership retains every source record and existing public slug.
+[[identity.partition]]
 variable = "121.56"
-variant = "121.930" # punktskatter-for-energi
-column = "borgnr"
-owner = "121.56.borgnr" # slug person-orgnr
-ref = "curation/relations.toml replaced_by edges scb/frida/person-orgnr <-> scb/frida/persorgnr (borgnr <-> PERSORGNR, variant punktskatter-for-energi, 2014 and 2018)."
+columns = { borgnr = "121.56.borgnr", BORGNR = "121.56.borgnr", Borgnr = "121.56.borgnr", bpnr = "121.56.bpnr", BPNR = "121.56.bpnr", PERSORGNR = "121.56.persorgnr", borgnr_bolag = "121.56.borgnr-bolag" }
+columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete source-native family 121.56: 396 originals in 21 variants. Literal case variants borgnr/BORGNR/Borgnr and bpnr/BPNR retain their existing catalog owners. Simultaneously delivered borgnr and bpnr in variants 947, 955 and 1596, and borgnr and borgnr_bolag in variant 953 remain separate. PERSORGNR in variant 930 retains its existing identity and succession edges. Shared generic native definitions do not override distinct physical columns or contradictory operational descriptions."
+data_warning = "Source operational definitions contradict the identifier roles for borgnr in variant 948 (company versus shareholder) and bpnr in variant 956 (company versus individual entrepreneur). Literal ownership preserves those conflicting descriptions and does not establish role equivalence. Independently delivered company, shareholder and owning-company columns remain separate."
 
 [[variant]]
 native_id = "121.237"
