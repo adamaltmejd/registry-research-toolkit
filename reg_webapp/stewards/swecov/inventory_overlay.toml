@@ -6607,3 +6607,12 @@ table = "CIS2006"
 column = "rtr"
 edition = 2006
 reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/koncernmarkering"
+representation = "Q1"
+table = "CIS2006"
+column = "GP"
+edition = 2006
+reason = "Exact source-wave company-group marker native4045 Q1; complete current source formation preserves own0/1 domain and covers2006. GP2-actual-formed-native-proof.json; native27731 only later2016–2020, excluded."

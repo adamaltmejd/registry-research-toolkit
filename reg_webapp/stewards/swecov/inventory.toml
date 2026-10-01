@@ -63835,13 +63835,8 @@ name = "GP"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/koncernforetag"
-representation = "GP"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/koncernmarkering"
-representation = "GP"
+representation = "Q1"
 
 [[table.column]]
 name = "HBeg"
@@ -66484,11 +66479,6 @@ name = "GP"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/koncernforetag"
-representation = "GP"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/koncernmarkering"
 representation = "GP"
 
@@ -67559,11 +67549,6 @@ representation = "FWTURN"
 
 [[table.column]]
 name = "GP"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/koncernforetag"
-representation = "GP"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
