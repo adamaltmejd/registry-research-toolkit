@@ -258,6 +258,13 @@ the chosen labeled row exactly; renaming or removing it makes the route stale. L
 `A_LOVA` routes to its Huvudtabell row and `A_LOVA_LISA` to its ekonomi/arbetsmarknad
 row. The prepared source-records schema is 15; older stores must be re-prepared.
 
+A missing SOS subset sheet does not establish that its variable rows describe one table.
+An authored named-variant topology binds the explicit native subset coordinates on those
+rows and carries their literal names into parent resolution. Missing declared tables
+make naming stale. The separately authored single `_default` topology remains an
+explicit curation choice. BU uses eleven native tables, keeping their differing storage
+types and coverage windows separate without altering the source records.
+
 ## Input storage and preparation
 
 Input capture and catalog building are separate operations. The host-local input Git
@@ -591,8 +598,17 @@ accepted name alone cannot establish a partition across ambiguous column spellin
 partition, rename or parallel-column family requires checked ownership and complete
 relevant membership. An implicit split suffix binds case or diacritic twin literals only
 when their folded column key matches and no variant edition co-delivers them. A
-one-owner partition may list a spelling that recurs after an intervening rename (A→B→A);
-a literal claimed by two native variables in the same edition needs a split or
+one-owner partition may list a spelling that recurs after an intervening rename (A→B→A).
+An explicitly reviewed complete literal map may retain the base source-native key when
+its named quantity and definition agree across deliveries. Such a map cannot mix split
+owners or unassigned literals. It preserves existing naming, guards all original fields,
+parent facts, coding references and complete family membership, and does not claim
+statistical equivalence across units, calculation methods or delivery levels. Exact
+source type spellings `numerisk`, `alfanumerisk` and `Character` classify as decimal,
+text and text during resolution, including already accepted prepared records. Original
+type declarations remain evidence; classification never uses substring guessing. Blank
+column records remain original evidence without manufacturing a delivered column; a
+literal claimed by two native variables in the same edition needs a split or
 `native_variable_id`, never a fold into one owner. Related but different variables
 remain connected through groups; a shared stem or suffix is not evidence that they are
 one variable.
@@ -879,10 +895,11 @@ donor. The existing `variable_alias_window` carries the mode and these literal f
 and selected-column reads project them, including nulls, onto that representation. An
 absent source attribution never inherits a sibling's questionnaire reference. Coverage
 checks compare the source claim with the same column's written window. Names retain the
-shared reconciliation contract; literal definitions and units require the guarded
-authoring described below; coding has its independent mode below. The default `shared`
-mode retains its existing behavior. Source SQL widths and precision remain literal
-metadata; this mode neither converts them nor asserts comparability.
+shared reconciliation contract; literal definitions require the guarded authoring below.
+Units are delivery facts with a common summary only when they agree; coding has its
+independent mode below. The default `shared` mode retains its existing behavior. Source
+SQL widths and precision remain literal metadata; this mode neither converts them nor
+asserts comparability.
 
 A calendar-month period family may supply an exact `expected_definitions` map for all
 months `01` through `12`. Every original definition must match its month before any
@@ -905,23 +922,24 @@ qualifiers cannot be collapsed from spelling alone. The builder does not guess s
 equivalence from arbitrary prose. When checked normalization establishes one common
 value, it replaces the need for a delivery-metadata permission for that field.
 
+Measurement units are ordinary delivery/state facts. Every physical state retains its
+literal unit or supplied absence. A common variable unit is populated only when all
+physical contributors have a positive, semantically agreed unit. Different scales,
+currencies or supplied absence leave that summary empty and emit a data warning when
+some positive unit is known. The builder never converts values or transfers a donor's
+unit to a delivery. Contradictory units within the same physical column interval remain
+errors. Blank-column originals stay raw evidence and do not supply a physical unit
+window. Unit-only curation permissions are therefore unnecessary and rejected.
+
 A checked `representation.delivery_metadata` decision permits only its explicitly listed
-fields (`name`, `description`, `measurement_unit`) to vary for one exact reviewed owner.
-Compilation captures every original field, source scope, parent and coding association,
-including sibling support. Checked preliminary-source dispositions participate in the
-compiler's ownership context, so their exact support rows cannot be mistaken for catalog
+text fields (`name`, `description`) to vary for one exact reviewed owner. Compilation
+captures every original field, source scope, parent and coding association, including
+sibling support. Checked preliminary-source dispositions participate in the compiler's
+ownership context, so their exact support rows cannot be mistaken for catalog
 contributors. Formation requires complete coverage of the owner's effective contributors
 before suppressing a disagreement in a permitted field. Each state and column window
-retains its literal texts and unit; a common value is written only when it agrees.
-Unknown names still withhold the quantity unless complete checked positive state names
-are available. Unit permission requires positive quantity names and definitions, permits
-exact supplied absence alongside at least one positive unit, and writes NULL for that
-absence without interpreting it. Unknown units and contradictions within one column
-remain unresolved. A checked added delivery with no supplied unit may retain NULL under
-that permission only when its exact column and period are covered and every own donor is
-a fully guarded target with positive quantity names and definitions. This does not
-transfer a donor's unit. Added positive or unknown units remain refused; name and
-description permissions do not receive this exception.
+retains its literal text; a common value is written only when it agrees. Unknown names
+still withhold the quantity unless complete checked positive state names are available.
 
 Ordinary delivery-metadata windows remain finite. An explicitly authored `source_scope`
 may retain an open supplied delivery scope only when it exactly matches every effective

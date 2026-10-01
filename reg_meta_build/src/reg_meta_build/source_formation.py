@@ -592,43 +592,14 @@ def _checked_delivery_metadata(
             continue
         valid = True
         for occurrence in effective:
-            # Guarded additions have no supplied unit. Their checked own donors
-            # establish identity; their units must not become the added unit.
-            added_unit_absence = (
-                field == "measurement_unit"
-                and occurrence.identity_checked
-                and bool(occurrence.corrections)
-                and not occurrence.source_records
-                and bool(occurrence.support_records)
-                and occurrence.occurrence_key is not None
-                and occurrence.fields.measurement_unit is None
-            )
             if occurrence.variable_key != decision.variable_key or (
-                not added_unit_absence
-                and (
-                    not occurrence.source_records
-                    or occurrence.support_records
-                    or occurrence.occurrence_key is not None
-                )
+                not occurrence.source_records
+                or occurrence.support_records
+                or occurrence.occurrence_key is not None
             ):
                 valid = False
                 break
-            contributors = (
-                occurrence.support_records
-                if added_unit_absence
-                else occurrence.source_records
-            )
-            if field == "measurement_unit" and any(
-                not _text(fields, required)
-                for fields in (
-                    tuple(source.fields for source in contributors)
-                    if added_unit_absence
-                    else (occurrence.fields,)
-                )
-                for required in ("name", "definition")
-            ):
-                valid = False
-                break
+            contributors = occurrence.source_records
             matching_columns = tuple(
                 column
                 for column in decision.columns
@@ -667,13 +638,9 @@ def _checked_delivery_metadata(
                         _field_matches(source, expected)
                         for expected in projection.fields
                     )
-                    and (
-                        added_unit_absence
-                        or any(
-                            expected.name == field
-                            and _field_matches(occurrence, expected)
-                            for expected in projection.fields
-                        )
+                    and any(
+                        expected.name == field and _field_matches(occurrence, expected)
+                        for expected in projection.fields
                     )
                     for projection in target.alternatives
                 ):
@@ -833,33 +800,28 @@ def form_native_variable(
             severity="warning",
         )
     canonical, conflicts = reconcile_source_fields(effective)
-    # operational_definition and source_attribution are state-grain, so varying
-    # texts are no variable-level conflict; their summary below stays populated
-    # only while reconciliation yields one stable value. Occurrence reconciliation
-    # also absorbs disagreements in these two fields while retaining provenance.
-    canonical_fields = {
-        "name",
-        "definition",
-        "description",
-        "measurement_unit",
-    }
-    unit_cases = _checked_delivery_metadata(
-        effective, representations, "measurement_unit"
+    # Units and operational texts belong to deliveries. A common unit is only a
+    # summary; incompatible scales still conflict within one physical interval.
+    canonical_fields = {"name", "definition", "description"}
+    physical = tuple(
+        occurrence
+        for occurrence in effective
+        if _text(occurrence.fields, "column_name")
     )
-    distinct_units = {
-        _text(occurrence.fields, "measurement_unit") for occurrence in effective
-    }
-    projected_unit = bool(unit_cases) and len(distinct_units) > 1
-    if projected_unit:
-        canonical_fields.discard("measurement_unit")
-        issue(
-            "delivery_metadata_projected",
-            "Checked literal delivery metadata remain on source states; no common unit or quantity conversion was selected. Cases: "
-            + ", ".join(unit_cases),
-            ("measurement_unit",),
-            ("variable.measurement_unit",),
-            severity="warning",
-        )
+    unit_fields, unit_conflicts = reconcile_source_fields(physical)
+    common_unit = _text(unit_fields, "measurement_unit")
+    if any(not _text(o.fields, "measurement_unit") for o in physical):
+        common_unit = None
+    if "measurement_unit" in unit_conflicts or common_unit is None:
+        common_unit = None
+        if any(_text(o.fields, "measurement_unit") for o in physical):
+            issue(
+                "delivery_units_vary",
+                "Literal units remain on delivery states; the source does not establish one common unit. No values were converted.",
+                ("measurement_unit",),
+                ("variable.measurement_unit",),
+                severity="warning",
+            )
     description_cases = _checked_delivery_metadata(
         effective, representations, "description"
     )
@@ -1053,30 +1015,6 @@ def form_native_variable(
                 new_states, new_issues, uncoded = _coded_states(
                     segment, variant, code_result, subject
                 )
-                if unit_cases:
-                    unit_attributions = {
-                        f"{case.case_id}: {case.decision.reason}\n{case.decision.provenance}"
-                        for case in representations
-                        if case.case_id in unit_cases
-                        and isinstance(case.decision, DeliveryMetadataDecision)
-                    }
-                    new_states = [
-                        state.model_copy(
-                            update={
-                                "provenance": "\n\n".join(
-                                    sorted(
-                                        unit_attributions
-                                        | (
-                                            {state.provenance}
-                                            if state.provenance
-                                            else set()
-                                        )
-                                    )
-                                )
-                            }
-                        )
-                        for state in new_states
-                    ]
                 waived[variant.slug, column].extend(uncoded)
                 created_states.extend(new_states)
                 if not new_states:
@@ -1320,9 +1258,7 @@ def form_native_variable(
         definition=_text(canonical, "definition"),
         description=_text(canonical, "description"),
         operational_definition=_text(canonical, "operational_definition"),
-        measurement_unit=None
-        if projected_unit
-        else _text(canonical, "measurement_unit"),
+        measurement_unit=common_unit,
         source_register_text=_text(canonical, "source_attribution"),
         is_sensitive=flag_values["is_sensitive"],
         is_identifier=flag_values["is_identifier"],

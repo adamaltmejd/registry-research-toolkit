@@ -282,3 +282,15 @@ valid_from = "2004-01-01"
 valid_to = "9999-12-31"
 reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
 evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx@sha256:51efc49437d907ce15e3149ada931cfbe60c40ed6d43cc656c1c5d6d6bb2f07c. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[errata.occurrence_period]]
+variable = "5028920659479690770.PKRETS"
+variant = "LSS"
+column = "PKRETS"
+expected_fields = [{ name = "coverage_from", status = "value", value = "1999-2003 samt 2007-" }, { name = "coverage_to", status = "unknown" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Personkrets enligt LSS, 1, 2 eller 3" }, { name = "name", status = "value", value = "Personkrets" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "unknown", intervals = [], label = "Data från=1999-2003 samt 2007-; Data till=<blank>" }
+expected_period = { kind = "not_applicable", intervals = [] }
+edition_scope = { kind = "intervals", intervals = [{ start = "1999", end = "2003" }, { start = "2007" }] }
+edition_period_scope = { kind = "not_applicable", intervals = [] }
+evidence = "The original Metadata - Variabelnivå PKRETS row explicitly supplies Data från=\"1999-2003 samt 2007-\". Parse its two disjoint windows literally; 2004–2006 remain unavailable. Preserve original coverage text, type, response codes and all source facts."
+noted = "2026-10-01"

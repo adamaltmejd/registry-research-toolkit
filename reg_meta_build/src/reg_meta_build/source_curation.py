@@ -727,32 +727,29 @@ class DeliveryMetadataDecision(_CurationModel):
     kind: Literal["delivery_metadata"] = "delivery_metadata"
     reviewed: Literal[True]
     variable_key: NativeKey
-    fields: tuple[Literal["measurement_unit", "name", "description"], ...] = Field(
-        min_length=1
-    )
+    fields: tuple[Literal["name", "description"], ...] = Field(min_length=1)
     columns: tuple[DeliveryMetadataColumn, ...] = Field(min_length=1)
     reason: str = Field(min_length=1)
     provenance: str = Field(min_length=1)
 
     @staticmethod
     def require_fields(fields: tuple[str, ...]) -> None:
-        if not fields or len(set(fields)) != len(fields):
+        if (
+            not fields
+            or len(set(fields)) != len(fields)
+            or set(fields) - {"name", "description"}
+        ):
             raise ValueError(
-                "delivery metadata field permissions must be nonempty and unique"
+                "delivery metadata field permissions must be nonempty, unique name or description fields"
             )
 
     @staticmethod
     def require_targets(
         targets: tuple[RecordExpectation, ...],
-        fields: tuple[Literal["measurement_unit", "name", "description"], ...],
+        fields: tuple[Literal["name", "description"], ...],
     ) -> None:
         DeliveryMetadataDecision.require_fields(fields)
         required: set[str] = set(fields)
-        unit_permission = "measurement_unit" in required
-        if unit_permission:
-            required.remove("measurement_unit")
-            required.update(("definition", "name"))
-        positive_unit = False
         for record in targets:
             for projection in record.alternatives:
                 supplied = {field.name: field for field in projection.fields}
@@ -766,23 +763,6 @@ class DeliveryMetadataDecision(_CurationModel):
                     raise ValueError(
                         "delivery metadata needs positive permitted source facts"
                     )
-                if unit_permission:
-                    unit = supplied.get("measurement_unit")
-                    if (
-                        unit is not None
-                        and unit.status == "value"
-                        and isinstance(unit.value, str)
-                        and unit.value.strip()
-                    ):
-                        positive_unit = True
-                    elif (
-                        unit is None
-                        or unit.status not in {"absent", "negative"}
-                        or unit.value is not None
-                    ):
-                        raise ValueError(
-                            "delivery metadata unit must be positive literal or explicit source absence"
-                        )
                 if (
                     set(supplied) != set(SourceFields.model_fields)
                     or projection.subject is None
@@ -794,11 +774,6 @@ class DeliveryMetadataDecision(_CurationModel):
                     raise ValueError(
                         "delivery metadata need complete original source projections"
                     )
-
-        if unit_permission and not positive_unit:
-            raise ValueError(
-                "delivery metadata requires at least one positive supplied unit"
-            )
 
     @model_validator(mode="after")
     def _owner(self) -> Self:

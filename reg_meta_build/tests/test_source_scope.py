@@ -526,6 +526,7 @@ def test_scope_routes_checked_delivery_metadata_to_literal_state_formation():
                 "fields": item.fields.model_copy(
                     update={
                         "definition": value_field("Annual received amount"),
+                        "name": value_field("Annual amount (" + unit + ")"),
                         "measurement_unit": value_field(unit),
                     }
                 )
@@ -537,7 +538,7 @@ def test_scope_routes_checked_delivery_metadata_to_literal_state_formation():
         )
     )
     case = CurationCase(
-        case_id="checked-literal-delivery-units",
+        case_id="checked-literal-delivery-names",
         peer_guards=(
             PeerGuard(
                 guard_id="whole-variable",
@@ -550,7 +551,7 @@ def test_scope_routes_checked_delivery_metadata_to_literal_state_formation():
             records, fields=tuple(SourceFields.model_fields), parents=True, coding=True
         ),
         decision=DeliveryMetadataDecision(
-            fields=("measurement_unit",),
+            fields=("name",),
             reviewed=True,
             variable_key=native_variable_key(records[0]),
             columns=(
@@ -562,14 +563,15 @@ def test_scope_routes_checked_delivery_metadata_to_literal_state_formation():
                     expected_codings=(),
                 ),
             ),
-            reason="Retain each supplied unit without converting amounts.",
+            reason="Retain exact supplied delivery names without selecting one common name.",
             provenance="exact source fixture",
         ),
     )
     result = resolve(records, cases=(case,))
-    assert [(issue.code, issue.severity) for issue in result.diagnostics] == [
-        ("delivery_metadata_projected", "warning")
-    ]
+    assert {(issue.code, issue.severity) for issue in result.diagnostics} == {
+        ("delivery_text_projected", "warning"),
+        ("delivery_units_vary", "warning"),
+    }
     variable = next(iter(result.variables.values()))
     assert variable.measurement_unit is None
     assert [

@@ -582,11 +582,20 @@ def _column_partition_plan(
         len(set(split_ids)) != len(split_ids)
         or not split_ids
         or any(
-            not key.startswith(source_id + ".") or not key[len(source_id) + 1 :]
+            key != source_id
+            and (not key.startswith(source_id + ".") or not key[len(source_id) + 1 :])
             for key in split_ids
         )
     ):
         raise ValueError("split keys must uniquely discriminate this source identity")
+    if source_id in split_ids and (
+        split_ids != (source_id,)
+        or declared_columns is None
+        or set(declared_columns.values()) != {source_id}
+    ):
+        raise ValueError(
+            "native ownership requires an explicit complete column map without split owners"
+        )
     columns: dict[str, list[SourceRecord]] = defaultdict(list)
     for record in records:
         column = record.fields.column_name
@@ -744,6 +753,8 @@ def convert_column_partitions(
     native = native_variable_key(first)
     register = source_register_key(first)
     assert native is not None and register is not None
+    if source_id in split_ids:
+        guard_fields = tuple(SourceFields.model_fields)
     expectations = capture_expectations(
         records,
         fields=tuple(dict.fromkeys(("column_name", *guard_fields))),
@@ -762,7 +773,11 @@ def convert_column_partitions(
     effects = {}
     bindings = []
     for split_id in sorted(set(partition_columns) | set(scoped_owners.values())):
-        key = (*native, "accepted-partition", split_id)
+        key = (
+            native
+            if split_id == source_id
+            else (*native, "accepted-partition", split_id)
+        )
         for column in partition_columns.get(split_id, ()):
             for record in columns[column]:
                 ref = record_ref(record)
@@ -2163,6 +2178,13 @@ def compile_partitions(
                 for i, item in enumerate(register.identity.rename, 1)
                 if item.variable == str(native[-1])
             ]
+            if any(source_id in item.columns.values() for _, item in partitions):
+                entries = tuple(
+                    item
+                    for item in all_entries_by_register[source, native[:5]]
+                    if item.entry.source_id == source_id
+                    or item.entry.source_id.startswith(source_id + ".")
+                )
             if not (
                 entries or partitions or scoped_entries or sos_splits or sos_renames
             ):
@@ -2173,7 +2195,8 @@ def compile_partitions(
                 source,
                 native,
                 records,
-                guarded=any(entry.expected_fields for _, entry in scoped_entries),
+                guarded=source_id in {item.entry.source_id for item in entries}
+                or any(entry.expected_fields for _, entry in scoped_entries),
             )
             expectations = capture_expectations(
                 records,
@@ -2245,7 +2268,8 @@ def compile_partitions(
                         scoped_owners=scoped,
                         guard_fields=(
                             tuple(SourceFields.model_fields)
-                            if any(entry.expected_fields for _, entry in scoped_entries)
+                            if source_id in split_ids
+                            or any(entry.expected_fields for _, entry in scoped_entries)
                             else ()
                         ),
                     )
@@ -2324,13 +2348,21 @@ def compile_partitions(
                     for effect in converted.case.decision.effects:
                         if isinstance(effect, CheckedIdentityChange):
                             identity_effects[effect.ref].append(effect)
-                    if converted.case.support or any(
-                        _literal_field(record, "column_name") is not None
-                        and not any(
-                            all(_field_matches(record, field) for field in effect.when)
-                            for effect in identity_effects.get(record_ref(record), ())
+                    if source_id not in split_ids and (
+                        converted.case.support
+                        or any(
+                            _literal_field(record, "column_name") is not None
+                            and not any(
+                                all(
+                                    _field_matches(record, field)
+                                    for field in effect.when
+                                )
+                                for effect in identity_effects.get(
+                                    record_ref(record), ()
+                                )
+                            )
+                            for record in records
                         )
-                        for record in records
                     ):
                         null_bases[scope_key].add(native)
                 else:
@@ -2739,6 +2771,13 @@ def compile_deferred_partitions(
                 for item in register.identity.rename
                 if item.variable == str(native[-1])
             ]
+            if any(source_id in item.columns.values() for item in partitions):
+                entries = tuple(
+                    item
+                    for item in all_entries_by_register[source, native[:5]]
+                    if item.entry.source_id == source_id
+                    or item.entry.source_id.startswith(source_id + ".")
+                )
             if not (
                 entries or partitions or scoped_entries or sos_splits or sos_renames
             ):
@@ -2752,7 +2791,8 @@ def compile_deferred_partitions(
                     source,
                     native,
                     records,
-                    guarded=any(entry.expected_fields for _, entry in scoped_entries),
+                    guarded=source_id in {item.entry.source_id for item in entries}
+                    or any(entry.expected_fields for _, entry in scoped_entries),
                 )
                 split_bases[scope_key].add(native)
                 scoped, scoped_issues = _scoped_column_owners(
@@ -2797,11 +2837,14 @@ def compile_deferred_partitions(
                     records,
                     fields=(
                         tuple(SourceFields.model_fields)
-                        if any(entry.expected_fields for _, entry in scoped_entries)
+                        if source_id in split_ids
+                        or any(entry.expected_fields for _, entry in scoped_entries)
                         else ("column_name",)
                     ),
-                    parents=any(entry.expected_fields for _, entry in scoped_entries),
-                    coding=any(entry.expected_fields for _, entry in scoped_entries),
+                    parents=source_id in split_ids
+                    or any(entry.expected_fields for _, entry in scoped_entries),
+                    coding=source_id in split_ids
+                    or any(entry.expected_fields for _, entry in scoped_entries),
                 )
                 guard = PeerGuard(
                     guard_id=f"accepted-partitions:{source}:{source_id}",
@@ -2813,7 +2856,11 @@ def compile_deferred_partitions(
                     expected_members=tuple(item.ref for item in expectations),
                 )
                 for split_id in sorted(bound):
-                    key = (*native, "accepted-partition", split_id)
+                    key = (
+                        native
+                        if split_id == source_id
+                        else (*native, "accepted-partition", split_id)
+                    )
                     bindings[scope_key].append(
                         LegacyNamingBinding(
                             kind="variable",
@@ -3000,6 +3047,10 @@ def _partition_owned_naming_entry(
     return (
         len(source_id.split(".")) == 3
         or any(
+            source_id in partition.columns.values()
+            for partition in register.identity.partition
+        )
+        or any(
             source_id == f"{register.register_info.native_id}.{rename.column}"
             for rename in register.identity.rename
         )
@@ -3026,7 +3077,14 @@ def compile_native_naming(
     """Bind tracked register slugs to exact native families and parent facts."""
     states = load_freeze_states(tree.root)
     scope_map = {(scope.source, scope.register_key): scope for scope in scopes}
+    named_sos_registers = {
+        register.register_info.native_id
+        for register in tree.registers
+        if register.register_info.provider == "sos"
+        and any(variant.slug != "_default" for variant in register.variant)
+    }
     bindings: dict[Any, list[LegacyNamingBinding]] = {key: [] for key in scope_map}
+    subject_variant_keys: set[NativeKey] = set()
     for source in sorted({scope.source for scope in scopes}):
         wanted = {scope.register_key for scope in scopes if scope.source == source}
         for family_key, members in prepared.records.iter_naming_families(
@@ -3085,6 +3143,15 @@ def compile_native_naming(
             scope_key = source, register_key
             if scope_key not in scope_map:
                 continue
+            missing_sos_variant_parents = (
+                bool(records)
+                and records[0].subject.provider == "sos"
+                and not any(
+                    parent.kind == "variant"
+                    for record in records
+                    for parent in record.parent_facts
+                )
+            )
             parents: dict[tuple[str, tuple[str | int, ...]], LegacyNamingBinding] = {}
             explicit_variants: set[tuple[str | int, ...]] = set()
             defaults: dict[
@@ -3133,6 +3200,34 @@ def compile_native_naming(
                         target=target,
                     )
                 native_register = source_register_key(cast("SourceRecord", record))
+                if (
+                    record.subject.provider == "sos"
+                    and missing_sos_variant_parents
+                    and native_register is not None
+                    and _naming_source_id("register", native_register)
+                    in named_sos_registers
+                    and record.subject.variant.status == "value"
+                ):
+                    native_key = native_variant_key(cast("SourceRecord", record))
+                    assert native_key is not None
+                    subject_variant_keys.add(native_key)
+                    explicit_variants.add(native_register)
+                    target = NativeNamingTarget(
+                        kind="register_variant",
+                        provider="sos",
+                        source_key=native_key,
+                        register_key=native_register,
+                    )
+                    parents["register_variant", native_key] = LegacyNamingBinding(
+                        kind="register_variant",
+                        provider="sos",
+                        source_id=_naming_source_id(
+                            "register_variant",
+                            native_key,
+                            member=record.subject.variant.name,
+                        ),
+                        target=target,
+                    )
                 if (
                     native_register is not None
                     and record.subject.variant.status == "not_applicable"
@@ -3388,9 +3483,9 @@ def compile_native_naming(
         variants = []
         for declaration in conversion.declarations:
             target = declaration.target
-            if target.kind != "register_variant" or target.source_key[-2:] != (
-                "variant",
-                "not-applicable",
+            if target.kind != "register_variant" or (
+                target.source_key[-2:] != ("variant", "not-applicable")
+                and target.source_key not in subject_variant_keys
             ):
                 continue
             slug = declaration.naming.slug
@@ -3402,7 +3497,9 @@ def compile_native_naming(
                     ResolvedVariant.model_validate(
                         {
                             "slug": slug,
-                            "name": "_default",
+                            "name": "_default"
+                            if target.source_key[-1] == "not-applicable"
+                            else target.source_key[-1],
                             "description": None,
                             "display_group": declaration.naming.display_group,
                             "panel_entity_key": declaration.naming.panel_entity_key,
@@ -3867,12 +3964,20 @@ def _compile_sos_register(
     lookup_signals: dict[str, list[bool]] = defaultdict(list)
     lookup_records = []
     diagnostics = []
-    has_variant_parent = False
+    has_variant_parent = any(
+        parent.kind == "variant" for record in records for parent in record.parent_facts
+    )
+    preserve_native_variants = not has_variant_parent and any(
+        variant.slug != "_default" for variant in register.variant
+    )
     for record in records:
+        if preserve_native_variants and record.subject.variant.status == "value":
+            key = native_variant_key(record)
+            if key is not None and record.subject.variant.name is not None:
+                parent_by_name[record.subject.variant.name].add(key)
         for parent in record.parent_facts:
             if parent.kind != "variant":
                 continue
-            has_variant_parent = True
             if parent.variant is None or not parent.variant.name:
                 continue
             name = parent.variant.name
@@ -3964,7 +4069,7 @@ def _compile_sos_register(
             if ref in source_use_refs:
                 continue
             token = record.subject.variant.name
-            if not has_variant_parent:
+            if not has_variant_parent and not preserve_native_variants:
                 register_key = source_register_key(record)
                 assert register_key is not None
                 variant_keys = ((*register_key, "variant", "not-applicable"),)
@@ -5258,6 +5363,7 @@ def _partition_memberships(
             for effect in case.decision.effects:
                 if not isinstance(effect, CheckedIdentityChange) or (
                     "accepted-partition" not in effect.variable_key
+                    and not case.case_id.startswith("accepted-column-partitions:")
                 ):
                     continue
                 condition = effect.when[0] if len(effect.when) == 1 else None

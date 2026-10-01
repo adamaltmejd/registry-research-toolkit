@@ -4,9 +4,8 @@ slug = "bu"
 native_id = "7550156225339591583"
 name = "Registret över insatser till barn och unga"
 
-# BU has no Deldatamängder sheet: every row goes to the synthesized default
-# variant (slug `_default`, already tracked in fqid_slugs/sos.toml). That rule is
-# mechanical (v18: 54 route cases, 150 effects) and needs no entry here.
+# BU has no Deldatamängder sheet, but each variable row names its native table.
+# Preserve those eleven source variants; types and periods differ between tables.
 
 # Two distinct variables share the name FOD_DATUMN; the normalized data_type is
 # the seam. sos.py KNOWN_SPLIT_ALLOWLIST (L1477-1479, #362).
@@ -23,14 +22,86 @@ parts = [
 ]
 
 [[variant]]
-native_id = "7550156225339591583.6478131538792493195"
-slug = "_default"
-display_group = "_default"
+native_id = "7550156225339591583.6979387149761493485"
+slug = "bu-barn-19602013"
+display_group = "bu_barn_19602013"
 panel_entity_key = "personnr"
-panel_time_key = "insats-beslut-datumn"
-panel_time_grain = "row"
 
-# Medicinska födelseregistret (MFR)
+[[variant]]
+native_id = "7550156225339591583.5517737065323335644"
+slug = "bu-barn-endastxnr"
+display_group = "bu_barn_endastxnr"
+panel_entity_key = "personnr"
+
+[[variant]]
+native_id = "7550156225339591583.8262836041189248598"
+slug = "bu-barn-pnrq0"
+display_group = "bu_barn_pnrq0"
+panel_entity_key = "personnr"
+
+[[variant]]
+native_id = "7550156225339591583.5605058933132841841"
+slug = "bu-insats"
+display_group = "bu_insats"
+panel_entity_key = "personnr"
+panel_time_grain = "row"
+panel_time_key = "insats-beslut-datumn"
+
+[[variant]]
+native_id = "7550156225339591583.4980872966315234452"
+slug = "bu-insats-19602013"
+display_group = "bu_insats_19602013"
+panel_entity_key = "personnr"
+panel_time_grain = "row"
+panel_time_key = "besldat"
+
+[[variant]]
+native_id = "7550156225339591583.5603219700258472414"
+slug = "bu-insats-endastxnr"
+display_group = "bu_insats_endastxnr"
+panel_entity_key = "personnr"
+panel_time_grain = "row"
+panel_time_key = "besldat"
+
+[[variant]]
+native_id = "7550156225339591583.8413702669791976068"
+slug = "bu-insats-pnrq0"
+display_group = "bu_insats_pnrq0"
+panel_entity_key = "personnr"
+panel_time_grain = "row"
+panel_time_key = "besldat"
+
+[[variant]]
+native_id = "7550156225339591583.5889362508203990501"
+slug = "bu-plac"
+display_group = "bu_plac"
+panel_entity_key = "personnr"
+panel_time_grain = "row"
+panel_time_key = "insats-beslut-datumn"
+
+[[variant]]
+native_id = "7550156225339591583.5325661757297592148"
+slug = "bu-plac-19602013"
+display_group = "bu_plac_19602013"
+panel_entity_key = "personnr"
+panel_time_grain = "row"
+panel_time_key = "besldat"
+
+[[variant]]
+native_id = "7550156225339591583.7522318943571038868"
+slug = "bu-plac-endastxnr"
+display_group = "bu_plac_endastxnr"
+panel_entity_key = "personnr"
+panel_time_grain = "row"
+panel_time_key = "besldat"
+
+[[variant]]
+native_id = "7550156225339591583.7522118218290837856"
+slug = "bu-plac-pnrq0"
+display_group = "bu_plac_pnrq0"
+panel_entity_key = "personnr"
+panel_time_grain = "row"
+panel_time_key = "besldat"
 
 [[variable]]
 native_id = "7550156225339591583.PNR"
@@ -92,7 +163,7 @@ slug = "specifikation-insatsen"
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
-subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FFODLAND', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'FFODLAND')"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FFODLAND', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'name', 'bu_barn_19602013', 'column', 'FFODLAND')"
 fields = ["classification_declared"]
 refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_19602013\",\"variable:FFODLAND\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
 valid_from = "1960-01-01"
@@ -102,7 +173,7 @@ evidence = "Maintainer-authorized restoration applies the existing exact unavail
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
-subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FFODLAND_KOD', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'FFODLAND_KOD')"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FFODLAND_KOD', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'name', 'bu_barn_pnrq0', 'column', 'FFODLAND_KOD')"
 fields = ["classification_declared"]
 refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_pnrq0\",\"variable:FFODLAND_KOD\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
 valid_from = "1960-01-01"
@@ -112,7 +183,7 @@ evidence = "Maintainer-authorized restoration applies the existing exact unavail
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
-subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FODELSELANDNAMN', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'FODELSELANDNAMN')"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FODELSELANDNAMN', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'name', 'bu_barn_pnrq0', 'column', 'FODELSELANDNAMN')"
 fields = ["classification_declared"]
 refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_pnrq0\",\"variable:FODELSELANDNAMN\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
 valid_from = "1960-01-01"
@@ -122,7 +193,7 @@ evidence = "Maintainer-authorized restoration applies the existing exact unavail
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
-subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FODELSELANDNAMNFAR', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'FODELSELANDNAMNFAR')"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FODELSELANDNAMNFAR', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'name', 'bu_barn_pnrq0', 'column', 'FODELSELANDNAMNFAR')"
 fields = ["classification_declared"]
 refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_pnrq0\",\"variable:FODELSELANDNAMNFAR\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
 valid_from = "1960-01-01"
@@ -132,7 +203,7 @@ evidence = "Maintainer-authorized restoration applies the existing exact unavail
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
-subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FODELSELANDNAMNMOR', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'FODELSELANDNAMNMOR')"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FODELSELANDNAMNMOR', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'name', 'bu_barn_pnrq0', 'column', 'FODELSELANDNAMNMOR')"
 fields = ["classification_declared"]
 refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_pnrq0\",\"variable:FODELSELANDNAMNMOR\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
 valid_from = "1960-01-01"
@@ -142,7 +213,7 @@ evidence = "Maintainer-authorized restoration applies the existing exact unavail
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
-subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FODLAND', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'FODLAND')"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FODLAND', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'name', 'bu_barn_19602013', 'column', 'FODLAND')"
 fields = ["classification_declared"]
 refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_19602013\",\"variable:FODLAND\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
 valid_from = "1960-01-01"
@@ -152,7 +223,7 @@ evidence = "Maintainer-authorized restoration applies the existing exact unavail
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
-subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FODLAND_KOD', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'FODLAND_KOD')"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FODLAND_KOD', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'name', 'bu_barn_pnrq0', 'column', 'FODLAND_KOD')"
 fields = ["classification_declared"]
 refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_pnrq0\",\"variable:FODLAND_KOD\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
 valid_from = "1960-01-01"
@@ -162,7 +233,7 @@ evidence = "Maintainer-authorized restoration applies the existing exact unavail
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
-subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'LK')"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'name', 'bu_insats_19602013', 'column', 'LK')"
 fields = ["classification_declared"]
 refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_insats_19602013\",\"variable:LK\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
 valid_from = "1960-01-01"
@@ -172,7 +243,7 @@ evidence = "Maintainer-authorized restoration applies the existing exact unavail
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
-subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'LK')"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'name', 'bu_insats_endastxnr', 'column', 'LK')"
 fields = ["classification_declared"]
 refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_insats_endastxnr\",\"variable:LK\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
 valid_from = "2001-01-01"
@@ -182,7 +253,7 @@ evidence = "Maintainer-authorized restoration applies the existing exact unavail
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
-subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'LK')"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'name', 'bu_insats_pnrq0', 'column', 'LK')"
 fields = ["classification_declared"]
 refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_insats_pnrq0\",\"variable:LK\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
 valid_from = "1960-01-01"
@@ -192,7 +263,7 @@ evidence = "Maintainer-authorized restoration applies the existing exact unavail
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
-subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'LK')"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'name', 'bu_plac', 'column', 'LK')"
 fields = ["classification_declared"]
 refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_plac\",\"variable:LK\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
 valid_from = "2018-01-01"
@@ -202,7 +273,7 @@ evidence = "Maintainer-authorized restoration applies the existing exact unavail
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
-subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'MFODLAND', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'MFODLAND')"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'MFODLAND', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'name', 'bu_barn_19602013', 'column', 'MFODLAND')"
 fields = ["classification_declared"]
 refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_19602013\",\"variable:MFODLAND\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
 valid_from = "1960-01-01"
@@ -212,7 +283,7 @@ evidence = "Maintainer-authorized restoration applies the existing exact unavail
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
-subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'MFODLAND_KOD', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'MFODLAND_KOD')"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'MFODLAND_KOD', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'name', 'bu_barn_19602013', 'column', 'MFODLAND_KOD')"
 fields = ["classification_declared"]
 refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_19602013\",\"variable:MFODLAND_KOD\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
 valid_from = "1960-01-01"
@@ -222,7 +293,7 @@ evidence = "Maintainer-authorized restoration applies the existing exact unavail
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
-subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'MFODLAND_KOD', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'MFODLAND_KOD')"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'MFODLAND_KOD', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'name', 'bu_barn_pnrq0', 'column', 'MFODLAND_KOD')"
 fields = ["classification_declared"]
 refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_pnrq0\",\"variable:MFODLAND_KOD\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
 valid_from = "1960-01-01"
@@ -232,7 +303,7 @@ evidence = "Maintainer-authorized restoration applies the existing exact unavail
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
-subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'PLACKOM', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'PLACKOM')"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'PLACKOM', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'name', 'bu_plac_19602013', 'column', 'PLACKOM')"
 fields = ["classification_declared"]
 refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_plac_19602013\",\"variable:PLACKOM\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
 valid_from = "1980-01-01"
@@ -242,7 +313,7 @@ evidence = "Maintainer-authorized restoration applies the existing exact unavail
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
-subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'PLACKOM', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'PLACKOM')"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'PLACKOM', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'name', 'bu_plac_endastxnr', 'column', 'PLACKOM')"
 fields = ["classification_declared"]
 refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_plac_endastxnr\",\"variable:PLACKOM\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
 valid_from = "2001-01-01"
@@ -252,7 +323,7 @@ evidence = "Maintainer-authorized restoration applies the existing exact unavail
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
-subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'PLACKOM', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'PLACKOM')"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'PLACKOM', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'name', 'bu_plac_pnrq0', 'column', 'PLACKOM')"
 fields = ["classification_declared"]
 refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_plac_pnrq0\",\"variable:PLACKOM\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
 valid_from = "1960-01-01"
@@ -262,10 +333,18 @@ evidence = "Maintainer-authorized restoration applies the existing exact unavail
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
-subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'PLAC_LK', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'PLAC_LK')"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'PLAC_LK', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'name', 'bu_plac', 'column', 'PLAC_LK')"
 fields = ["classification_declared"]
 refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_plac\",\"variable:PLAC_LK\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
 valid_from = "2018-01-01"
 valid_to = "9999-12-31"
 reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
 evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx@sha256:3ea799b1d4f75be47357a7ef70946bf95d1e6dca92786d353405bbae190cdd1d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[representation.delivery_metadata]]
+variable = "7550156225339591583.PLACDAT1"
+fields = ["description"]
+records = [{ ref = { source = "Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx", semantic_record_key = ["register:Registret över insatser till barn och unga", "deldatamangd:bu_insats_19602013", "variable:PLACDAT1"] }, alternatives = [{ fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "unknown" }, { name = "column_name", status = "value", value = "PLACDAT1" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "value", value = "1960" }, { name = "coverage_to", status = "value", value = "2014" }, { name = "data_length", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Dag då den första placeringen för insatsen påbörjades" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "value", value = false }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Datum för start av placering" }, { name = "operational_definition", status = "absent" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "absent" }, { name = "representation", status = "value", value = "YYYYMMDD" }, { name = "sensitivity", status = "value", value = true }, { name = "source_attribution", status = "value", value = "Kommun" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }], edition_scope = { kind = "intervals", intervals = [{ start = "1960", end = "2014" }] }, edition_period_scope = { kind = "not_applicable", intervals = [] }, subject = { provider = "sos", register = { status = "value", name = "Registret över insatser till barn och unga" }, variant = { status = "value", name = "bu_insats_19602013" }, variant_references = [], population = { status = "unknown" }, variable = { status = "value", native_id = "PLACDAT1", name = "Datum för start av placering" }, member = { status = "value", name = "PLACDAT1" }, native = {  } }, code_set_references = [], parent_facts = [] }] }, { ref = { source = "Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx", semantic_record_key = ["register:Registret över insatser till barn och unga", "deldatamangd:bu_insats_endastxnr", "variable:PLACDAT1"] }, alternatives = [{ fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "unknown" }, { name = "column_name", status = "value", value = "PLACDAT1" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "value", value = "2001" }, { name = "coverage_to", status = "value", value = "2014" }, { name = "data_length", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Dag då den första placeringen för insatsen påbörjades" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "value", value = true }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Datum för start av placering" }, { name = "operational_definition", status = "absent" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "absent" }, { name = "representation", status = "value", value = "YYYYMMDD" }, { name = "sensitivity", status = "value", value = true }, { name = "source_attribution", status = "unknown" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }], edition_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2014" }] }, edition_period_scope = { kind = "not_applicable", intervals = [] }, subject = { provider = "sos", register = { status = "value", name = "Registret över insatser till barn och unga" }, variant = { status = "value", name = "bu_insats_endastxnr" }, variant_references = [], population = { status = "unknown" }, variable = { status = "value", native_id = "PLACDAT1", name = "Datum för start av placering" }, member = { status = "value", name = "PLACDAT1" }, native = {  } }, code_set_references = [], parent_facts = [] }] }, { ref = { source = "Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx", semantic_record_key = ["register:Registret över insatser till barn och unga", "deldatamangd:bu_insats_pnrq0", "variable:PLACDAT1"] }, alternatives = [{ fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "unknown" }, { name = "column_name", status = "value", value = "PLACDAT1" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "value", value = "1960" }, { name = "coverage_to", status = "value", value = "2016" }, { name = "data_length", status = "absent" }, { name = "data_type", status = "value", value = "date" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Dag då den första placeringen för insatsen påbörjades" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "value", value = false }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Datum för start av placering" }, { name = "operational_definition", status = "absent" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "absent" }, { name = "representation", status = "value", value = "YYYY-MM-DD" }, { name = "sensitivity", status = "value", value = true }, { name = "source_attribution", status = "unknown" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }], edition_scope = { kind = "intervals", intervals = [{ start = "1960", end = "2016" }] }, edition_period_scope = { kind = "not_applicable", intervals = [] }, subject = { provider = "sos", register = { status = "value", name = "Registret över insatser till barn och unga" }, variant = { status = "value", name = "bu_insats_pnrq0" }, variant_references = [], population = { status = "unknown" }, variable = { status = "value", native_id = "PLACDAT1", name = "Datum för start av placering" }, member = { status = "value", name = "PLACDAT1" }, native = {  } }, code_set_references = [], parent_facts = [] }] }, { ref = { source = "Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx", semantic_record_key = ["register:Registret över insatser till barn och unga", "deldatamangd:bu_plac_19602013", "variable:PLACDAT1"] }, alternatives = [{ fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "unknown" }, { name = "column_name", status = "value", value = "PLACDAT1" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "value", value = "1960" }, { name = "coverage_to", status = "value", value = "2014" }, { name = "data_length", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Dag då placeringen påbörjades." }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "value", value = false }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Datum för start av placering" }, { name = "operational_definition", status = "absent" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "absent" }, { name = "representation", status = "value", value = "YYYYMMDD" }, { name = "sensitivity", status = "value", value = true }, { name = "source_attribution", status = "unknown" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }], edition_scope = { kind = "intervals", intervals = [{ start = "1960", end = "2014" }] }, edition_period_scope = { kind = "not_applicable", intervals = [] }, subject = { provider = "sos", register = { status = "value", name = "Registret över insatser till barn och unga" }, variant = { status = "value", name = "bu_plac_19602013" }, variant_references = [], population = { status = "unknown" }, variable = { status = "value", native_id = "PLACDAT1", name = "Datum för start av placering" }, member = { status = "value", name = "PLACDAT1" }, native = {  } }, code_set_references = [], parent_facts = [] }] }, { ref = { source = "Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx", semantic_record_key = ["register:Registret över insatser till barn och unga", "deldatamangd:bu_plac_endastxnr", "variable:PLACDAT1"] }, alternatives = [{ fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "unknown" }, { name = "column_name", status = "value", value = "PLACDAT1" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "value", value = "2001" }, { name = "coverage_to", status = "value", value = "2014" }, { name = "data_length", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Dag då placeringen påbörjades." }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "value", value = false }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Datum för start av placering" }, { name = "operational_definition", status = "absent" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "absent" }, { name = "representation", status = "value", value = "YYYYMMDD" }, { name = "sensitivity", status = "value", value = true }, { name = "source_attribution", status = "unknown" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }], edition_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2014" }] }, edition_period_scope = { kind = "not_applicable", intervals = [] }, subject = { provider = "sos", register = { status = "value", name = "Registret över insatser till barn och unga" }, variant = { status = "value", name = "bu_plac_endastxnr" }, variant_references = [], population = { status = "unknown" }, variable = { status = "value", native_id = "PLACDAT1", name = "Datum för start av placering" }, member = { status = "value", name = "PLACDAT1" }, native = {  } }, code_set_references = [], parent_facts = [] }] }, { ref = { source = "Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx", semantic_record_key = ["register:Registret över insatser till barn och unga", "deldatamangd:bu_plac_pnrq0", "variable:PLACDAT1"] }, alternatives = [{ fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "unknown" }, { name = "column_name", status = "value", value = "PLACDAT1" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "value", value = "1960" }, { name = "coverage_to", status = "value", value = "2016" }, { name = "data_length", status = "absent" }, { name = "data_type", status = "value", value = "date" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Dag då placeringen påbörjades." }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "value", value = false }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Datum för start av placering" }, { name = "operational_definition", status = "absent" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "absent" }, { name = "representation", status = "value", value = "Numeriskt datum" }, { name = "sensitivity", status = "value", value = true }, { name = "source_attribution", status = "unknown" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }], edition_scope = { kind = "intervals", intervals = [{ start = "1960", end = "2016" }] }, edition_period_scope = { kind = "not_applicable", intervals = [] }, subject = { provider = "sos", register = { status = "value", name = "Registret över insatser till barn och unga" }, variant = { status = "value", name = "bu_plac_pnrq0" }, variant_references = [], population = { status = "unknown" }, variable = { status = "value", native_id = "PLACDAT1", name = "Datum för start av placering" }, member = { status = "value", name = "PLACDAT1" }, native = {  } }, code_set_references = [], parent_facts = [] }] }]
+columns = [{ variant_key = ["Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx", "sos", "register", "name", "Registret över insatser till barn och unga", "variant", "name", "bu_insats_19602013"], column = "PLACDAT1", valid_from = "1960-01-01", valid_to = "2014-12-31", expected_codings = [] }, { variant_key = ["Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx", "sos", "register", "name", "Registret över insatser till barn och unga", "variant", "name", "bu_insats_endastxnr"], column = "PLACDAT1", valid_from = "2001-01-01", valid_to = "2014-12-31", expected_codings = [] }, { variant_key = ["Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx", "sos", "register", "name", "Registret över insatser till barn och unga", "variant", "name", "bu_insats_pnrq0"], column = "PLACDAT1", valid_from = "1960-01-01", valid_to = "2016-12-31", expected_codings = [] }, { variant_key = ["Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx", "sos", "register", "name", "Registret över insatser till barn och unga", "variant", "name", "bu_plac_19602013"], column = "PLACDAT1", valid_from = "1960-01-01", valid_to = "2014-12-31", expected_codings = [] }, { variant_key = ["Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx", "sos", "register", "name", "Registret över insatser till barn och unga", "variant", "name", "bu_plac_endastxnr"], column = "PLACDAT1", valid_from = "2001-01-01", valid_to = "2014-12-31", expected_codings = [] }, { variant_key = ["Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx", "sos", "register", "name", "Registret över insatser till barn och unga", "variant", "name", "bu_plac_pnrq0"], column = "PLACDAT1", valid_from = "1960-01-01", valid_to = "2016-12-31", expected_codings = [] }]
+evidence = "The six explicit BU source tables distinguish the date the first placement for an intervention started (bu_insats variants) from the date a placement started (bu_plac variants). Preserve each literal description only on its own native table and supplied period. Do not select a shared description, change the date encoding, extend availability or collapse native variants. Complete original fields, parent observations and coding references are guarded."
+noted = "2026-10-01"

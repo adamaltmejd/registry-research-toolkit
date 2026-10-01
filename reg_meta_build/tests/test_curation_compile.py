@@ -251,13 +251,14 @@ def _prepared():
     inputs = tuple(
         SimpleNamespace(
             origin="snapshot",
+            role=role,
             path=path,
             revision=_revision(dataset, artifact_path=f"snapshot-a:source/{path}"),
         )
-        for path, dataset in (
-            ("Identifierare.csv", "scb-identifierare"),
-            ("Timeseries.csv", "scb-timeseries"),
-            ("Registerinformation.csv", "scb-registerinformation"),
+        for path, dataset, role in (
+            ("Identifierare.csv", "scb-identifierare", "scb_auxiliary"),
+            ("Timeseries.csv", "scb-timeseries", "scb_events"),
+            ("Registerinformation.csv", "scb-registerinformation", "scb_records"),
         )
     )
     return SimpleNamespace(
@@ -450,6 +451,7 @@ def test_event_sources_pair_within_same_snapshot_revision(tmp_path):
     inputs = tuple(
         SimpleNamespace(
             origin="snapshot",
+            role="scb_events" if path == "Timeseries.csv" else "scb_records",
             path=path,
             revision=_revision(
                 dataset,
@@ -800,6 +802,7 @@ def _route_register(*routes):
     return SimpleNamespace(
         register_info=SimpleNamespace(provider="sos", slug="sample"),
         source_file="curation/registers/sos/sample.toml",
+        variant=[],
         identity=SimpleNamespace(
             route=tuple(
                 SimpleNamespace(deldatamangd=token, variants=names)
@@ -3153,13 +3156,16 @@ def test_compiled_delivered_addition_uses_unique_literal_split(tmp_path: Path):
 
 
 @pytest.mark.parametrize("drift", ["parent", "coding"])
-def test_guarded_column_partition_preserves_parent_and_coding_guards(drift: str):
+@pytest.mark.parametrize("owner", ["1.5", "1.5.a"])
+def test_guarded_column_partition_preserves_parent_and_coding_guards(
+    drift: str, owner: str
+):
     original = _errata_record(column="A", year="2020")
     conversion = convert_column_partitions(
         (original,),
         source_id="1.5",
-        split_ids=("1.5.a",),
-        declared_columns={"A": "1.5.a"},
+        split_ids=(owner,),
+        declared_columns={"A": owner},
         declaration_reference="exact source",
         guard_fields=tuple(SourceFields.model_fields),
     )
@@ -3198,13 +3204,17 @@ def test_guarded_column_partition_preserves_parent_and_coding_guards(drift: str)
     default = convert_column_partitions(
         (original,),
         source_id="1.5",
-        split_ids=("1.5.a",),
-        declared_columns={"A": "1.5.a"},
+        split_ids=(owner,),
+        declared_columns={"A": owner},
         declaration_reference="exact source",
     )
     assert default.case is not None
-    assert default.case.targets[0].alternatives[0].parent_facts is None
-    assert default.case.targets[0].alternatives[0].code_set_references is None
+    assert (default.case.targets[0].alternatives[0].parent_facts is None) == (
+        owner != "1.5"
+    )
+    assert (default.case.targets[0].alternatives[0].code_set_references is None) == (
+        owner != "1.5"
+    )
 
 
 def test_checked_delivered_blank_column_uses_partition_atomically(tmp_path: Path):
@@ -4643,7 +4653,7 @@ def test_delivery_metadata_use_fresh_partition_cases_without_duplicate_emission(
     target = records[0]
     bounds = target.edition_period_scope.intervals[0]
     entry = DeliveryMetadataEntry(
-        fields=["measurement_unit"],
+        fields=["name"],
         variable="1.5.ku",
         records=list(
             capture_expectations(
@@ -4733,9 +4743,9 @@ def test_delivery_metadata_use_fresh_partition_cases_without_duplicate_emission(
             for o in corrected.occurrences
             if o.use == "catalog" and o.variable_key == metadata.decision.variable_key
         )
-        assert _checked_delivery_metadata(
-            delivered, (metadata,), "measurement_unit"
-        ) == (metadata.case_id,)
+        assert _checked_delivery_metadata(delivered, (metadata,), "name") == (
+            metadata.case_id,
+        )
         assert {t.ref for t in metadata.targets} == {record_ref(final)}
         assert record_ref(preliminary) in {t.ref for t in metadata.support}
         changed_preliminary = preliminary.model_copy(
@@ -4766,7 +4776,10 @@ def test_delivery_metadata_use_fresh_partition_cases_without_duplicate_emission(
     )
 
 
-def test_classification_binding_matches_partition_produced_name(tmp_path: Path) -> None:
+@pytest.mark.parametrize("owner", ["1.5", "1.5.answer"])
+def test_classification_binding_matches_partition_produced_name(
+    tmp_path: Path, owner: str
+) -> None:
     root = tmp_path / "curation"
     _tree(root)
     register_file = root / "registers/scb/sample.toml"
@@ -4777,6 +4790,8 @@ def test_classification_binding_matches_partition_produced_name(tmp_path: Path) 
         + 'columns = { ANSWER = "1.5.answer" }\ncolumns_ref = "fixture"\n',
         encoding="utf-8",
     )
+    if owner == "1.5":
+        register_file.write_text(register_file.read_text().replace("1.5.answer", owner))
     (root / "classifications/GAMMA.toml").write_text(
         '[classification]\nshort_name = "GAMMA"\nslug = "gamma"\n'
         'name = "Gamma"\ncodes_file = "gamma.csv"\n'
@@ -6620,7 +6635,7 @@ def test_delivery_metadata_compiler_keeps_complete_literal_source_guards(
         for record, unit in zip(raw, ("100-tal kronor", "Kronor (SEK)"), strict=True)
     )
     entry = DeliveryMetadataEntry(
-        fields=["measurement_unit"],
+        fields=["name"],
         variable="1.1.income",
         records=list(
             capture_expectations(
@@ -7403,3 +7418,211 @@ def test_maintained_provider_coverage_uses_input_role_not_provider_name(
     )
     assert addition.fields == variable.fields
     assert result.occurrences[1].source_records == (variable,)
+
+
+@pytest.mark.parametrize("blank", [False, True])
+def test_checked_native_partition_keeps_base_naming_and_source_guards(
+    tmp_path: Path, blank: bool
+):
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root,
+        '\n[[variable]]\nnative_id = "1.5"\nslug = "quantity"\n'
+        '[[identity.partition]]\nvariable = "1.5"\n'
+        'columns = { OLD = "1.5", NEW = "1.5" }\n'
+        'columns_ref = "reviewed same source-native quantity"\n',
+    )
+    records = _scb_partition_records(("OLD", "NEW", "") if blank else ("OLD", "NEW"))
+    compiled, key, native = _compile_partition_fixture(root, records)
+    cases, naming, keys, ambiguities, _, issues = compiled
+    assert not issues and not ambiguities.get(key)
+    assert [
+        (n.target.source_key, n.naming.source_id, n.naming.slug) for n in naming[key]
+    ] == [(native, "1.5", "quantity")]
+    assert keys[key] == ((native, "5"),)
+    result = apply_occurrence_cases(records, cases[key])
+    assert not result.diagnostics and len(result.occurrences) == len(records)
+    assert all(o.variable_key == native for o in result.occurrences)
+    assert all(o.identity_checked for o in result.occurrences[:2])
+    assert all(
+        {field.name for field in projection.fields} == set(SourceFields.model_fields)
+        and projection.parent_facts is not None
+        and projection.code_set_references is not None
+        for target in (*cases[key][0].targets, *cases[key][0].support)
+        for projection in target.alternatives
+    )
+    deferred = compile_deferred_partitions(
+        load_curation_tree(root),
+        cast(
+            "Any",
+            SimpleNamespace(
+                records=SimpleNamespace(
+                    iter_partition_families=lambda *a, **k: iter(((native, records),))
+                )
+            ),
+        ),
+        (_partition_scope(records),),
+    )
+    assert deferred == (
+        compiled[1],
+        compiled[3],
+        compiled[4],
+        _partition_memberships(compiled[0]),
+    )
+    stale = apply_occurrence_cases(records[1:], cases[key])
+    assert {d.code for d in stale.diagnostics} >= {
+        "target_missing",
+        "peer_membership_changed",
+    }
+    assert not any(o.identity_checked for o in stale.occurrences)
+    expanded = (*records, _scb_partition_records(("OLD", "NEW", "", "OTHER"))[-1])
+    stale = apply_occurrence_cases(expanded, cases[key])
+    assert "peer_membership_changed" in {d.code for d in stale.diagnostics}
+    assert not any(o.identity_checked for o in stale.occurrences)
+
+
+@pytest.mark.parametrize(
+    "columns, owners, reference",
+    [
+        ({"OLD": "1.5"}, ("1.5",), "review"),
+        ({"OLD": "1.6", "NEW": "1.6"}, ("1.6",), "review"),
+        (None, ("1.5",), None),
+    ],
+)
+def test_native_partition_requires_complete_explicit_own_family(
+    columns, owners, reference
+):
+    with pytest.raises(ValueError):
+        convert_column_partitions(
+            _scb_partition_records(("OLD", "NEW")),
+            source_id="1.5",
+            split_ids=owners,
+            declared_columns=columns,
+            declaration_reference=reference,
+        )
+
+
+@pytest.mark.parametrize(
+    "columns, unassigned",
+    [
+        ({"OLD": "1.6"}, []),
+        ({"OLD": "1.5", "NEW": "1.5.new"}, []),
+        ({"OLD": "1.5"}, ["NEW"]),
+    ],
+)
+def test_authored_native_partition_rejects_foreign_or_partial_owners(
+    columns, unassigned
+):
+    from reg_meta_build.curation_tree import IdentityPartitionEntry
+
+    with pytest.raises(ValueError):
+        IdentityPartitionEntry(
+            variable="1.5",
+            columns=columns,
+            unassigned_columns=unassigned,
+            columns_ref="reviewed quantity",
+        )
+
+
+def test_sos_named_topology_preserves_tables_without_variant_parent_sheet(tmp_path):
+    root = tmp_path / "curation"
+    _tree(root)
+    path = root / "registers/sos/bu.toml"
+    path.parent.mkdir(parents=True)
+    register_id = mint("sos", "bu")
+    path.write_text(
+        f'[register]\nprovider = "sos"\nslug = "bu"\nnative_id = "{register_id}"\n'
+        + "".join(
+            f'[[variant]]\nnative_id = "{register_id}.{mint("sos", "bu", name)}"\nslug = "{name.lower()}"\n'
+            for name in ("A", "B")
+        )
+        + f'[[variable]]\nnative_id = "{register_id}.COL"\nslug = "col"\n'
+    )
+    source = "Socialstyrelsen/Metadata (BU).xlsx"
+    parent = _case_record(
+        provider="sos", register="Book", parent="register", source=source
+    )
+    variables = tuple(
+        _case_record(
+            provider="sos",
+            register="Book",
+            variant=name,
+            variable="COL",
+            source=source,
+            fields=SourceFields(
+                column_name=value_field("COL"), data_type=value_field(kind)
+            ),
+        )
+        for name, kind in (("A", "date"), ("B", "text"))
+    )
+    records = (parent, *variables)
+    tree = load_curation_tree(root)
+    register = next(r for r in tree.registers if r.register_info.slug == "bu")
+    cases, issues, _ = _compile_sos_register(register, records)
+    assert not issues and not cases
+    corrected = apply_occurrence_cases(variables, cases)
+    assert tuple(o.variant_key for o in corrected.occurrences) == tuple(
+        native_variant_key(r) for r in variables
+    )
+    assert tuple(o.fields.data_type for o in corrected.occurrences) == tuple(
+        r.fields.data_type for r in variables
+    )
+
+    class Reader:
+        def iter_native_families(self, source, registers=None):
+            return iter(((native_variable_key(variables[0]), variables),))
+
+        def iter_records(self, *, source):
+            return iter(records)
+
+    scope = CompiledScope(source=source, register_key=None, naming=())
+    names, variants, _, diagnostics, _ = compile_native_naming(
+        tree,
+        cast("Any", SimpleNamespace(records=_naming_reader(Reader()))),
+        (scope,),
+        subset=True,
+    )
+    assert not diagnostics
+    named = tuple(n for n in names[source, None] if n.target.kind == "register_variant")
+    assert {n.naming.slug for n in named} == {"a", "b"}
+    assert {n.target.source_key for n in named} == {
+        native_variant_key(r) for r in variables
+    }
+    assert {
+        key: (variant.slug, variant.name) for key, variant in variants[source, None]
+    } == {
+        native_variant_key(r): (r.subject.variant.name.lower(), r.subject.variant.name)
+        for r in variables
+    }
+    drifted = variables[0].model_copy(
+        update={
+            "subject": variables[0].subject.model_copy(
+                update={"variant": SourceCoordinate(status="value", name="C")}
+            )
+        }
+    )
+    records = (parent, drifted, variables[1])
+    _, _, _, diagnostics, _ = compile_native_naming(
+        tree,
+        cast("Any", SimpleNamespace(records=_naming_reader(Reader()))),
+        (scope,),
+        subset=True,
+    )
+    assert any(d.code == "stale_curation_entry" for d in diagnostics)
+
+
+def test_delivery_metadata_rejects_redundant_unit_permission():
+    from reg_meta_build.curation_tree import DeliveryMetadataEntry
+    from reg_meta_build.source_curation import DeliveryMetadataDecision
+
+    with pytest.raises(ValueError):
+        DeliveryMetadataEntry(
+            fields=["measurement_unit"],
+            variable="1.5",
+            records=[],
+            columns=[],
+            evidence="source",
+            noted="2026-10-01",
+        )
+    with pytest.raises(ValueError, match="name or description"):
+        DeliveryMetadataDecision.require_fields(("measurement_unit",))

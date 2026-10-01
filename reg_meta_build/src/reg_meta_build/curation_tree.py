@@ -941,15 +941,23 @@ class IdentityPartitionEntry(_CurationModel):
         from .fqid_slugs import _parse_variable_id
 
         family = self.variable
+        if family in self.columns.values() and (
+            set(self.columns.values()) != {family} or self.unassigned_columns
+        ):
+            raise ValueError(
+                "native ownership must cover all literals without split owners"
+            )
         for owner in self.columns.values():
             try:
                 _parse_variable_id(owner)
             except RegMetaError as exc:
                 raise ValueError(exc.message) from exc
             parts = owner.split(".")
+            if owner == family:
+                continue
             if len(parts) != 3 or ".".join(parts[:2]) != family:
                 raise ValueError(
-                    f"owner {owner!r} must be a canonical split key in family {family!r}"
+                    f"owner {owner!r} must be the native key or a canonical split key in family {family!r}"
                 )
             try:
                 validate_slug(parts[2], "variable")
@@ -1157,9 +1165,7 @@ class IdentityCuration(_CurationModel):
 
 class DeliveryMetadataEntry(_CurationModel):
     variable: str
-    fields: list[Literal["measurement_unit", "name", "description"]] = Field(
-        min_length=1
-    )
+    fields: list[Literal["name", "description"]] = Field(min_length=1)
     records: list[RecordExpectation] = Field(min_length=1)
     support: list[RecordExpectation] = Field(default_factory=list)
     columns: list[DeliveryMetadataColumn] = Field(min_length=1)

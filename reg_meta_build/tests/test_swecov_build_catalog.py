@@ -1920,3 +1920,72 @@ def test_inventory_column_windows_match_public_catalog_resolution(
     assert actual == expected
     if case == "source_replacement":
         assert {r[1:3] for r in actual} == {("2019-03-01", "2019-08-31")}
+
+
+@pytest.mark.parametrize(
+    "changes",
+    [
+        {},
+        {"unmapped_reason": " "},
+        {"unmapped_reason": "Reviewed", "graft": "sos/bu"},
+        {"unmapped_reason": "Reviewed", "target": "sos/bu/bu-insats"},
+    ],
+)
+def test_unmapped_source_route_requires_reason_and_no_catalog_target(
+    changes: dict,
+) -> None:
+    from pydantic import ValidationError
+
+    with pytest.raises(ValidationError):
+        build_catalog.SourceRoute.model_validate(
+            {
+                "category": "Socialstyrelsen",
+                "detail": "Barn",
+                "status": "unmapped",
+                **changes,
+            }
+        )
+
+
+@pytest.mark.parametrize("assigned", [False, True])
+def test_inventory_unmapped_route_retains_holdings_without_inferred_assignment(
+    tmp_path: Path, flavored_db: Path, monkeypatch: pytest.MonkeyPatch, assigned: bool
+) -> None:
+    reason = "Separate source variants do not establish this combined delivery's owner."
+    route = build_catalog.SourceRoute.model_validate(
+        {
+            "category": "Inera/1177",
+            "detail": "Ordered tests",
+            "status": "unmapped",
+            "unmapped_reason": reason,
+        }
+    )
+    policy = build_catalog.SourcePolicy.model_construct(route=[route])
+    monkeypatch.setitem(
+        build_catalog.MAPPING,
+        (route.category, route.detail),
+        policy.mapping()[(route.category, route.detail)],
+    )
+    overlay = (
+        '[[assign]]\ntable = "T2019"\nregister_variant = "inera/bestallda-prover/_default"\n'
+        if assigned
+        else ""
+    )
+    steward = _run_inventory(
+        tmp_path, flavored_db, overlay, "T2019", ["T_kolumn", "Unknown"]
+    )
+    table = load_delivery_inventory(steward / "inventory.toml").tables[0]
+    assert table.id == "T2019" and table.edition == "2019"
+    assert [column.name for column in table.columns] == ["T_kolumn", "Unknown"]
+    worklist = json.loads((tmp_path / "derived/inventory_worklist.json").read_text())
+    assert not worklist["assignment_needed"]
+    if assigned:
+        assert len(table.columns[0].mappings) == 1
+    else:
+        assert all(
+            column.mappings == () and column.unmapped_reason == reason
+            for column in table.columns
+        )
+        assert build_catalog._steward_scope(
+            "Inera/1177/Ordered tests", policy.mapping()[(route.category, route.detail)]
+        ) == (set(), set())

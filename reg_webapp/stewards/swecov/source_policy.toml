@@ -471,8 +471,8 @@ target = "scb/anst/sus"
 [[route]]
 category = "Socialstyrelsen"
 detail = "Barn"
-status = "mapped"
-target = "sos/bu/_default"
+status = "unmapped"
+unmapped_reason = "The processed SWECOV tables combine historical BU deliveries. The supplied workbook documents separate source tables and periods but does not establish one source variant for the combined physical table. Retain every physical column and declared edition without a verified catalog mapping."
 
 [[route]]
 category = "Socialstyrelsen"

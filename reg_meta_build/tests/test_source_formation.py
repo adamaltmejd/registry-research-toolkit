@@ -615,9 +615,7 @@ def test_canonical_text_conflict_preserves_states_and_withholds_only_that_fact()
     ]
 
 
-@pytest.mark.parametrize(
-    "field", ["name", "definition", "description", "measurement_unit"]
-)
+@pytest.mark.parametrize("field", ["name", "definition", "description"])
 def test_variable_grain_canonical_conflict_fields_are_unchanged(field: str) -> None:
     first = _record(2020)
     second = _record(2021)
@@ -644,6 +642,7 @@ def test_variable_grain_canonical_conflict_fields_are_unchanged(field: str) -> N
 @pytest.mark.parametrize(
     ("published", "other"),
     [
+        ("SEK", "kr"),
         ("Kronor", "kronor"),
         ("Kronor (SEK)", "kronor"),
         ("Antal månader", "Månader"),
@@ -1057,3 +1056,85 @@ def test_independent_delivery_forms_without_calendar_dates_and_retains_source():
     assert obligation.period_scope == "year_independent"
     assert obligation.valid_from is obligation.valid_to is None
     assert obligation.coding_claim == (state.value_set, "EU25")
+
+
+@pytest.mark.parametrize("same_period", [False, True])
+def test_delivery_units_keep_scales_and_refuse_overlapping_column_conflicts(
+    same_period: bool,
+) -> None:
+    records = tuple(
+        record.model_copy(
+            update={
+                "fields": record.fields.model_copy(
+                    update={"measurement_unit": value_field(unit)}
+                )
+            }
+        )
+        for record, unit in (
+            (_record(2020), "Kronor (SEK)"),
+            (
+                _record(2020 if same_period else 2021, row="second"),
+                "1000-tal kronor (KSEK)",
+            ),
+        )
+    )
+    result = _form(records)
+    assert result.variable is not None
+    assert result.variable.measurement_unit is None
+    assert any(d.code == "delivery_units_vary" for d in result.diagnostics)
+    assert not any(d.code == "conflicting_variable_fact" for d in result.diagnostics)
+    if same_period:
+        assert any(
+            d.code == "conflicting_occurrence_facts" and "measurement_unit" in d.fields
+            for d in result.diagnostics
+        )
+        assert all(state.measurement_unit is None for state in result.variable.states)
+    else:
+        assert {state.measurement_unit for state in result.variable.states} == {
+            "Kronor (SEK)",
+            "1000-tal kronor (KSEK)",
+        }
+
+
+def test_columnless_source_unit_does_not_override_physical_delivery_summary() -> None:
+    first = _record(2020).model_copy(
+        update={
+            "fields": _record(2020).fields.model_copy(
+                update={"measurement_unit": value_field("SEK")}
+            )
+        }
+    )
+    second = _record(2021, column="").model_copy(
+        update={
+            "fields": _record(2021).fields.model_copy(
+                update={
+                    "column_name": SourceField(status="negative", raw_value=""),
+                    "measurement_unit": value_field("KSEK"),
+                }
+            )
+        }
+    )
+    result = _form((first, second))
+    assert result.variable is not None
+    assert result.variable.measurement_unit == "SEK"
+    assert not any(d.code == "delivery_units_vary" for d in result.diagnostics)
+
+
+def test_missing_physical_unit_withholds_common_summary_without_filling_delivery() -> (
+    None
+):
+    first = _record(2020).model_copy(
+        update={
+            "fields": _record(2020).fields.model_copy(
+                update={"measurement_unit": value_field("SEK")}
+            )
+        }
+    )
+    result = _form((first, _record(2021)))
+    assert result.variable is not None
+    assert result.variable.measurement_unit is None
+    assert {
+        state.valid_from: state.measurement_unit for state in result.variable.states
+    } == {"2020-01-01": "SEK", "2021-01-01": None}
+    assert any(d.code == "delivery_units_vary" for d in result.diagnostics)
+    assert not any(d.severity == "error" for d in result.diagnostics)

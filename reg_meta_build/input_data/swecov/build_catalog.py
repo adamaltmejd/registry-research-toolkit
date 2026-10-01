@@ -324,6 +324,7 @@ def ground_pair(
 #   flavor         no canonical register (or register absent from reg_meta);
 #                  destined for the swecov-flavored DB ingest
 #   lookup         SWECOV-side helper/crosswalk table, not register data
+#   unmapped       retained physical holding without verified catalog ownership
 # Evidence notes ride along so the emitted catalog can cite them.
 
 
@@ -367,9 +368,10 @@ class RouteSplit(_PolicyModel):
 class SourceRoute(_PolicyModel):
     category: str = Field(min_length=1)
     detail: str
-    status: Literal["mapped", "split", "flavor", "lookup"]
+    status: Literal["mapped", "split", "flavor", "lookup", "unmapped"]
     target: VariantCoordinate | None = Field(default=None, min_length=1)
     note: str | None = None
+    unmapped_reason: str | None = None
     graft: RegisterCoordinate | None = Field(default=None, min_length=1)
     split: list[RouteSplit] = Field(default_factory=list)
 
@@ -379,6 +381,13 @@ class SourceRoute(_PolicyModel):
             raise ValueError("only mapped routes must name a target")
         if (self.status == "split") != bool(self.split):
             raise ValueError("only split routes must name selectors")
+        if self.status == "unmapped":
+            if not self.unmapped_reason or not self.unmapped_reason.strip():
+                raise ValueError("unmapped routes require a nonblank unmapped_reason")
+            if self.graft is not None:
+                raise ValueError("unmapped routes cannot name a graft")
+        elif self.unmapped_reason is not None:
+            raise ValueError("only unmapped routes may name an unmapped_reason")
         if len({entry.selector for entry in self.split}) != len(self.split):
             raise ValueError("duplicate route selector")
         return self
@@ -485,6 +494,8 @@ class SourcePolicy(_PolicyModel):
         result = {}
         for entry in self.route:
             value: dict = {"status": entry.status}
+            if entry.unmapped_reason is not None:
+                value["unmapped_reason"] = entry.unmapped_reason
             if entry.graft is not None:
                 value["graft"] = entry.graft
             if entry.note is not None:
@@ -1322,6 +1333,8 @@ def _ground_fallback(col, target_reg, csv_holdings, enriched, variant_index):
         pair = enriched.get(key)
         if pair:
             statuses.add((pair.get("mapping") or {}).get("status"))
+    if "unmapped" in statuses:
+        return "UNRESOLVED"
     if statuses and statuses <= {"flavor", "lookup", "residue"}:
         return "FLAVOR"
     best: dict[str, int] = {}
@@ -2129,6 +2142,8 @@ def _steward_scope(key: str, mapping: dict) -> tuple[set[str], set[str]]:
     holding to the global provider its content landed under (#422/#443); the
     holding-register map routes a canonical-on-a-specific-register holding
     (#444)."""
+    if mapping["status"] == "unmapped":
+        return set(), set()
     regs = _mapping_registers(mapping)
     provs: set[str] = set()
     if reg := _STEWARD_HOLDING_REGISTER.get(key):
@@ -2339,6 +2354,8 @@ def _table_coords(
     if table in overlay["assign"]:
         return set(overlay["assign"][table])
     status = mapping.get("status")
+    if status == "unmapped":
+        return set()
     if status == "mapped":
         return {mapping["to"]}
     if status == "split":
@@ -2524,6 +2541,12 @@ def cmd_inventory(args: argparse.Namespace) -> None:
                     }
                 )
                 continue
+        route_reasons = {
+            mapping["unmapped_reason"]
+            for _, mapping in entry["scopes"]
+            if mapping.get("status") == "unmapped"
+        }
+        route_reason = "\n\n".join(sorted(route_reasons)) if not coords else None
         registers = {"/".join(c.split("/")[:2]) for c in coords}
         mapped_registers |= registers
         # A bare name-derived YEAR on a school-year register names a school
@@ -2554,10 +2577,14 @@ def cmd_inventory(args: argparse.Namespace) -> None:
             lines.append(f"partition = {_toml_str(overlay['partition'][table])}")
         for col in cols:
             n_cols += 1
-            if (table, col) in overlay["unmap"]:
+            if (table, col) in overlay["unmap"] or (
+                route_reason and (table, col) not in overlay["mapping"]
+            ):
                 n_unmapped += 1
                 lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
-                if (reason := overlay["unmap"][table, col]) is not None:
+                if (
+                    reason := overlay["unmap"].get((table, col), route_reason)
+                ) is not None:
                     lines.append(f"unmapped_reason = {_toml_str(reason)}")
                 continue
             u = LOPNR_PREFIX.sub("", col).upper()

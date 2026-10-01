@@ -1051,7 +1051,7 @@ def _unit_fixture(*, overlap=False):
             colname="VALUE",
             var_id=1,
             cvid=100 + index,
-            varname="Income",
+            varname="Income " + year,
             vardef="Source supplied income definition",
             unit=unit,
             year=year,
@@ -1087,7 +1087,7 @@ def _unit_fixture(*, overlap=False):
             ),
         ),
         decision=DeliveryMetadataDecision(
-            fields=("measurement_unit",),
+            fields=("name",),
             reviewed=True,
             variable_key=first.variable_key,
             columns=(
@@ -1137,8 +1137,7 @@ def test_checked_delivery_metadata_retain_literals_and_coverage(tmp_path):
     records, _, _, _ = fixture
     _, baseline = _form_units(fixture, cases=())
     assert any(
-        issue.code == "conflicting_variable_fact"
-        and issue.fields == ("measurement_unit",)
+        issue.code == "conflicting_variable_fact" and issue.fields == ("name",)
         for issue in baseline.diagnostics
     )
     resolution, formed = _form_units(fixture)
@@ -1241,9 +1240,7 @@ def test_checked_delivery_metadata_do_not_resolve_same_column_conflicts():
     )
 
 
-def test_checked_delivery_metadata_reject_unknown_units_and_changed_coding():
-    from reg_meta_build.source_curation import capture_expectations
-
+def test_checked_delivery_metadata_reject_changed_coding():
     fixture = _unit_fixture()
     records, case, variants, coding = fixture
     key = next(iter(coding))
@@ -1253,26 +1250,6 @@ def test_checked_delivery_metadata_reject_unknown_units_and_changed_coding():
     assert any(
         issue.code == "stale_representation_coding" for issue in resolution.diagnostics
     )
-    unknown = tuple(
-        record.model_copy(
-            update={
-                "fields": record.fields.model_copy(update={"measurement_unit": None})
-            }
-        )
-        for record in records
-    )
-    unknown_case = case.model_copy(
-        update={
-            "targets": capture_expectations(
-                unknown,
-                fields=tuple(SourceFields.model_fields),
-                parents=True,
-                coding=True,
-            )
-        }
-    )
-    with pytest.raises(ValueError, match="at least one positive supplied unit"):
-        resolve_representation_cases(unknown, (unknown_case,), coding=coding)
 
 
 @pytest.mark.parametrize("name_permission", [False, True])
@@ -1367,7 +1344,7 @@ def test_delivery_metadata_permissions_do_not_cover_an_enlarged_effective_scope(
     resolution, formed = _form_units((records, case, variants, coding))
     assert resolution.cases == (case,)
     assert any(
-        d.code == "conflicting_variable_fact" and d.fields == ("measurement_unit",)
+        d.code == "conflicting_variable_fact" and d.fields == ("name",)
         for d in formed.diagnostics
     )
 
@@ -1505,9 +1482,10 @@ def test_delivery_metadata_keeps_unrelated_checked_field_corrections(changed_fie
         for d in formed.diagnostics
         if d.code == "conflicting_variable_fact" and d.fields == ("measurement_unit",)
     ]
-    assert bool(unit_conflicts) == (changed_field == "measurement_unit")
+    assert not unit_conflicts
+    assert any(d.code == "delivery_units_vary" for d in formed.diagnostics)
     if changed_field == "name":
-        # The independent name disagreement stays visible; unit permission grants no name waiver.
+        # The checked text permission cannot waive an independent field correction.
         assert any(
             d.code == "conflicting_variable_fact" and d.fields == ("name",)
             for d in formed.diagnostics
@@ -1515,191 +1493,3 @@ def test_delivery_metadata_keeps_unrelated_checked_field_corrections(changed_fie
         assert corrected.occurrences[0].fields.name is not None
         assert corrected.occurrences[0].fields.name.value == "Checked source wording"
         assert corrected.occurrences[0].source_records == (records[0],)
-
-
-def test_checked_delivery_metadata_preserves_literal_unit_absence():
-    from reg_meta.source_evidence import SourceField
-
-    original, case, variants, coding = _unit_fixture()
-    absent = original[0].model_copy(
-        update={
-            "fields": original[0].fields.model_copy(update={"measurement_unit": None})
-        }
-    )
-    records = (absent, original[1])
-    case = case.model_copy(
-        update={
-            "targets": capture_expectations(
-                records,
-                fields=tuple(SourceFields.model_fields),
-                parents=True,
-                coding=True,
-            )
-        }
-    )
-    resolution, formed = _form_units((records, case, variants, coding))
-    assert resolution.cases == (case,) and formed.variable is not None
-    assert formed.variable.measurement_unit is None
-    assert [s.measurement_unit for s in formed.variable.states] == [
-        None,
-        "Kronor (SEK)",
-    ]
-    assert not any(d.severity == "error" for d in formed.diagnostics)
-    check_delivery_coverage((formed.variable,), formed.coverage, withheld={})
-    changed = absent.model_copy(
-        update={
-            "fields": absent.fields.model_copy(
-                update={"measurement_unit": value_field("New literal unit")}
-            )
-        }
-    )
-    stale = resolve_representation_cases((changed, original[1]), (case,), coding=coding)
-    assert not stale.cases
-    unknown = absent.model_copy(
-        update={
-            "fields": absent.fields.model_copy(
-                update={
-                    "measurement_unit": SourceField(
-                        status="unknown", raw_value="Unknown source unit"
-                    )
-                }
-            )
-        }
-    )
-    unknown_case = case.model_copy(
-        update={
-            "targets": capture_expectations(
-                (unknown, original[1]),
-                fields=tuple(SourceFields.model_fields),
-                parents=True,
-                coding=True,
-            )
-        }
-    )
-    with pytest.raises(ValueError, match="positive literal or explicit source absence"):
-        resolve_representation_cases(
-            (unknown, original[1]), (unknown_case,), coding=coding
-        )
-    for missing in ("name", "definition"):
-        bad = absent.model_copy(
-            update={"fields": absent.fields.model_copy(update={missing: None})}
-        )
-        bad_case = case.model_copy(
-            update={
-                "targets": capture_expectations(
-                    (bad, original[1]),
-                    fields=tuple(SourceFields.model_fields),
-                    parents=True,
-                    coding=True,
-                )
-            }
-        )
-        with pytest.raises(ValueError, match="positive permitted source facts"):
-            resolve_representation_cases((bad, original[1]), (bad_case,), coding=coding)
-
-
-@pytest.mark.parametrize(
-    "drift", [None, "unit", "unknown", "unchecked", "column", "period"]
-)
-def test_checked_added_delivery_keeps_unit_absent(drift):
-    from reg_meta.source_evidence import SourceField
-    from reg_meta_build.source_curation import CuratedOccurrenceAddition
-
-    records, permission, variants, coding = _unit_fixture()
-    first = source_occurrence(records[0])
-    assert first.variable_key is not None and first.variant_key is not None
-    scope = TemporalScope(
-        kind="intervals", intervals=(ScopeInterval(start="2019", end="2019"),)
-    )
-    correction = CurationCase(
-        case_id="reviewed-held-delivery",
-        targets=permission.targets,
-        peer_guards=permission.peer_guards,
-        decision=OccurrenceCorrectionDecision(
-            reviewed=True,
-            reason="Exact held physical column",
-            provenance="Reviewed holding and own literal source donors",
-            effects=(
-                CuratedOccurrenceAddition(
-                    occurrence_key="held-2019",
-                    provider="scb",
-                    variable_key=first.variable_key,
-                    variant_key=first.variant_key,
-                    edition_key=("curation", "fixture", "2019"),
-                    fields=SourceFields(
-                        availability=value_field(True),
-                        column_name=value_field("VALUE"),
-                        data_type=value_field("integer"),
-                    ),
-                    edition_scope=scope,
-                    edition_period_scope=scope,
-                    evidence=tuple(target.ref for target in permission.targets),
-                ),
-            ),
-        ),
-    )
-    permission = permission.model_copy(
-        update={
-            "decision": permission.decision.model_copy(
-                update={
-                    "columns": (
-                        permission.decision.columns[0].model_copy(
-                            update={"valid_from": "2019-01-01"}
-                        ),
-                    )
-                }
-            )
-        }
-    )
-    corrected = apply_occurrence_cases(records, (correction,))
-    assert not corrected.diagnostics
-    added = corrected.occurrences[-1]
-    if drift in {"unit", "unknown", "column"}:
-        changes = (
-            {"column_name": value_field("OTHER")}
-            if drift == "column"
-            else {
-                "measurement_unit": value_field("Kronor (SEK)")
-                if drift == "unit"
-                else SourceField(status="unknown", raw_value="unspecified")
-            }
-        )
-        added = replace(added, fields=added.fields.model_copy(update=changes))
-    elif drift == "unchecked":
-        added = replace(added, corrections=())
-    elif drift == "period":
-        scope = TemporalScope(
-            kind="intervals", intervals=(ScopeInterval(start="2018", end="2018"),)
-        )
-        added = replace(added, edition_scope=scope, edition_period_scope=scope)
-    resolution = resolve_representation_cases(records, (permission,), coding=coding)
-    if drift == "column":
-        assert added.column_key is not None
-        coding = {**coding, added.column_key: resolve_code_membership(())}
-    formed = form_native_variable(
-        (*corrected.occurrences[:-1], added),
-        register=ResolvedRegister(provider="scb", slug="example", name="Example"),
-        variants=variants,
-        slug="income",
-        provider_key="1",
-        flags=SourceFields(
-            sensitivity=value_field(False), identifier=value_field(False)
-        ),
-        coding=coding,
-        representations=resolution.cases,
-    )
-    if drift is None:
-        assert formed.variable is not None
-        assert formed.variable.measurement_unit is None
-        assert [state.measurement_unit for state in formed.variable.states] == [
-            None,
-            "100-tal kronor",
-            "Kronor (SEK)",
-        ]
-        assert not any(issue.severity == "error" for issue in formed.diagnostics)
-        check_delivery_coverage((formed.variable,), formed.coverage, withheld={})
-    else:
-        assert any(
-            issue.severity == "error" and issue.fields == ("measurement_unit",)
-            for issue in formed.diagnostics
-        )
