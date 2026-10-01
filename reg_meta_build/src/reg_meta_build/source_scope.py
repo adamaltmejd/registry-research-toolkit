@@ -772,7 +772,13 @@ def resolve_source_scope(
             else None
         )
         coverage.extend(formed.coverage)
+        # Physical alternatives can emit one identical missing-domain issue twice.
+        emitted_missing_coding: set[ResolutionDiagnostic] = set()
         for issue in formed.diagnostics:
+            if issue.code == "missing_coding_period":
+                if issue in emitted_missing_coding:
+                    continue
+                emitted_missing_coding.add(issue)
             emit(issue)
         assert fqid is not None
         if formed.variable is None:

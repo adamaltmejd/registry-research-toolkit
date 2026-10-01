@@ -509,6 +509,14 @@ def _run_pipeline(
     )
     selected = CompiledGlobals.model_validate_json(global_json)
     scopes = {key: _compiled_scope(key, compiled) for key in visit}
+    selected_coding_names = {
+        name
+        for scope in scopes.values()
+        for name in declared_register_fqids(scope.naming).values()
+    }
+    if dump_decisions is None:
+        # Validated scopes own the cases now; keep the duplicate only for dumps.
+        compiled.cases.clear()
     _emit_timing("pipeline: validate compiled global contracts", contract_started)
     unselected_scopes: dict[tuple[str, NativeKey | None], CompiledScope] = {}
     if registers and not check:
@@ -1026,7 +1034,7 @@ def _run_pipeline(
                 for register, originals in slices:
                     scope_started = time.perf_counter()
                     scope_key = source, register
-                    scope = scopes[scope_key]
+                    scope = scopes.pop(scope_key)
                     scope_coding = tuple(
                         coding_registers[name]
                         for name in sorted(
@@ -1056,12 +1064,13 @@ def _run_pipeline(
                                 if diagnostic_issue.code == "overbroad_curation_entry"
                                 else "stale"
                             ].append(diagnostic_issue.case_id)
-                        compiled.cases[scope_key] = tuple(
-                            sorted(
-                                (*compiled.cases.get(scope_key, ()), *new_cases),
-                                key=lambda case: case.case_id,
+                        if dump_decisions is not None:
+                            compiled.cases[scope_key] = tuple(
+                                sorted(
+                                    (*compiled.cases.get(scope_key, ()), *new_cases),
+                                    key=lambda case: case.case_id,
+                                )
                             )
-                        )
 
                     resolution_started = time.perf_counter()
                     scope_issues: list[ResolutionDiagnostic] = []
@@ -1222,7 +1231,7 @@ def _run_pipeline(
                     )
                     _emit_timing(f"pipeline: scope {scope_key!r}", scope_started)
                     prepared.records.clear_decoded_records()
-                    del result, originals, uses
+                    del result, originals, uses, scope
             _emit_timing("pipeline: all source scopes", phase_started)
             for remaining in pending_source_issues.values():
                 for _, value in remaining:
@@ -1234,11 +1243,6 @@ def _run_pipeline(
                 raise ValueError(
                     f"{'selected' if registers else 'full'} source occurrence count differs from preparation"
                 )
-            selected_coding_names = {
-                name
-                for key in visit
-                for name in declared_register_fqids(scopes[key].naming).values()
-            }
             for name, ids in coding_ids.items():
                 if name in seen_coding:
                     continue

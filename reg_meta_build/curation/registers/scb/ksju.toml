@@ -336,3 +336,641 @@ refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[
 expected_evidence_sha256 = "806a24cba1e09a2910f1b64a3de736a2ebaa33a66c07ea913481359b5793d917"
 reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
 evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
+
+[[variable]]
+native_id = "195.26837"
+slug = "sjukfrom"
+deprecated = false
+
+[[identity.partition]]
+variable = "195.26837"
+columns = { SJUKFROM = "195.26837", SjukFrom = "195.26837", sjukfrom = "195.26837" }
+unassigned_columns = []
+columns_ref = "Complete accepted own-native time-key family: literal spelling changes retain the same explicitly defined month or sickness-period start-date quantity. Per-column metadata, storage types, original quarter operations and coding remain separate. No query encoding or value equivalence assertion. Proof: Batch48-employment-time-source-proof.json."
+
+[[acknowledge]]
+code = "unresolved_column_representation"
+subject = "scb/ksju/sjukfrom"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12641\",\"variable:26837\",\"member:557178\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12641\",\"variable:26837\",\"member:583675\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12641\",\"variable:26837\",\"member:583676\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12641\",\"variable:26837\",\"member:583677\"]}"]
+fields = ["column_name"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "This exact annual source window contains Q1–Q3 and Q4 sickness-period operations on different literal spellings, while all supplied edition bounds are annual. Preserve every quarterly original and keep the ambiguous annual representation unavailable. No quarter availability dates or delivery equivalence are inferred."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "887d88c22afefc6e11ce33ab0452e4d829121896df04bc65439e7157c3ca4edb"
+
+[[acknowledge]]
+code = "unresolved_column_representation"
+subject = "scb/ksju/sjukfrom"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12970\",\"variable:26837\",\"member:571964\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12970\",\"variable:26837\",\"member:583657\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12970\",\"variable:26837\",\"member:583658\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12970\",\"variable:26837\",\"member:583659\"]}"]
+fields = ["column_name"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "This exact annual source window contains Q1–Q3 and Q4 sickness-period operations on different literal spellings, while all supplied edition bounds are annual. Preserve every quarterly original and keep the ambiguous annual representation unavailable. No quarter availability dates or delivery equivalence are inferred."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "f8d0a211aff7eb32cf9de1fad06ac970c49f76bcb4d85811d8d2e89a56e40a5c"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-bgr98"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:563\",\"variable:4027\",\"member:21655\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "3774f6594a8dd22e54e4788882ccd09f603c7dcfdbf19fbed02836ec8e8c2d82"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-bgr98"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1586\",\"variable:4027\",\"member:114095\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "044eb8adca17917022966ed20cf20d4edea0bb4b042f591f8bf9b0271fdd77fe"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-bgr98"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1636\",\"variable:4027\",\"member:116717\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "831ae65bee02f6f8bb3436aec9276e37e5a0e89a53524516a95a51179893c206"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-bgr98n"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:563\",\"variable:4027\",\"member:21655\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "3774f6594a8dd22e54e4788882ccd09f603c7dcfdbf19fbed02836ec8e8c2d82"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-bgr98n"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1586\",\"variable:4027\",\"member:114095\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "044eb8adca17917022966ed20cf20d4edea0bb4b042f591f8bf9b0271fdd77fe"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-bgr98n"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1636\",\"variable:4027\",\"member:116717\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "831ae65bee02f6f8bb3436aec9276e37e5a0e89a53524516a95a51179893c206"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-bgr98t"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:563\",\"variable:4027\",\"member:21655\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "3774f6594a8dd22e54e4788882ccd09f603c7dcfdbf19fbed02836ec8e8c2d82"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-bgr98t"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1586\",\"variable:4027\",\"member:114095\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "044eb8adca17917022966ed20cf20d4edea0bb4b042f591f8bf9b0271fdd77fe"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-bgr98t"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1636\",\"variable:4027\",\"member:116717\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "831ae65bee02f6f8bb3436aec9276e37e5a0e89a53524516a95a51179893c206"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-bgr98u"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:563\",\"variable:4027\",\"member:21655\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "3774f6594a8dd22e54e4788882ccd09f603c7dcfdbf19fbed02836ec8e8c2d82"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-bgr98u"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1586\",\"variable:4027\",\"member:114095\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "044eb8adca17917022966ed20cf20d4edea0bb4b042f591f8bf9b0271fdd77fe"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-bgr98u"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1636\",\"variable:4027\",\"member:116717\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "831ae65bee02f6f8bb3436aec9276e37e5a0e89a53524516a95a51179893c206"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-bgr98x"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:563\",\"variable:4027\",\"member:21655\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "3774f6594a8dd22e54e4788882ccd09f603c7dcfdbf19fbed02836ec8e8c2d82"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-bgr98x"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1586\",\"variable:4027\",\"member:114095\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "044eb8adca17917022966ed20cf20d4edea0bb4b042f591f8bf9b0271fdd77fe"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-bgr98x"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1636\",\"variable:4027\",\"member:116717\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "831ae65bee02f6f8bb3436aec9276e37e5a0e89a53524516a95a51179893c206"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-ng1-2006"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:563\",\"variable:4027\",\"member:21655\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "3774f6594a8dd22e54e4788882ccd09f603c7dcfdbf19fbed02836ec8e8c2d82"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-ng1-2007"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1586\",\"variable:4027\",\"member:114095\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "044eb8adca17917022966ed20cf20d4edea0bb4b042f591f8bf9b0271fdd77fe"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-ng1-2007"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1636\",\"variable:4027\",\"member:116717\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "831ae65bee02f6f8bb3436aec9276e37e5a0e89a53524516a95a51179893c206"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-nggr2"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:563\",\"variable:4027\",\"member:21655\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "3774f6594a8dd22e54e4788882ccd09f603c7dcfdbf19fbed02836ec8e8c2d82"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-nggr2"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1586\",\"variable:4027\",\"member:114095\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "044eb8adca17917022966ed20cf20d4edea0bb4b042f591f8bf9b0271fdd77fe"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-nggr2"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1636\",\"variable:4027\",\"member:116717\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "831ae65bee02f6f8bb3436aec9276e37e5a0e89a53524516a95a51179893c206"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren-ngs1-2007"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1586\",\"variable:4027\",\"member:114095\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "044eb8adca17917022966ed20cf20d4edea0bb4b042f591f8bf9b0271fdd77fe"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1636\",\"variable:4027\",\"member:116717\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "831ae65bee02f6f8bb3436aec9276e37e5a0e89a53524516a95a51179893c206"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:563\",\"variable:4027\",\"member:21655\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "3774f6594a8dd22e54e4788882ccd09f603c7dcfdbf19fbed02836ec8e8c2d82"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1586\",\"variable:4027\",\"member:114095\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "044eb8adca17917022966ed20cf20d4edea0bb4b042f591f8bf9b0271fdd77fe"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/vikta"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:563\",\"variable:7330\",\"member:23812\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "896f1a9a2657f9bb4e633c080af5025ec96c86462b0d64ec259813ddc0105c86"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/vikta"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1586\",\"variable:7330\",\"member:114110\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "006bd1ca7884dd656e022b17df5f537649ea035215ca25e5569def5087d748ce"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/vikta"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1636\",\"variable:7330\",\"member:116738\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "cab4dbdc94154b603fbc83ff50221389aa848095cb61870f507c390fdf5ed4e6"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/vikta"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3774\",\"variable:7330\",\"member:231593\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "cc6098eaad4c133e53f6ac510e10dd5d2d95b691f96acf7c5f641292563fbba8"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/vikta"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3776\",\"variable:7330\",\"member:231625\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "417ec7ba436907ab71de7d8286dddddd6d23d39cbbc5462c8af8b4ed77052a5f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/vikta"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3777\",\"variable:7330\",\"member:231655\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-03-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "7aa3dd822572dc6dbc9eda2ef6fcf9c3f41d6e8dab9aa576556c12823b05b6f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/falltot"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:563\",\"variable:8174\",\"member:28022\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "edf07189d5262dc535dfdae6e04ff5495530e6ca0e379a560a2fa91189b506e3"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/falltot"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1586\",\"variable:8174\",\"member:114122\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "3112d59c1e86d5b5b3ed3fdfadcae6c8fda4f8a4c7ee83a68516fa7cf4715ba6"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/falltot"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1636\",\"variable:8174\",\"member:116720\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "0f93dbd91a845c06a5fe08eaefd1fbbd9edd0d18d4361e9a5b136d21243f8f82"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/falltot"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3774\",\"variable:8174\",\"member:231575\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "4368b60431d88e7ee6f6666ba4f01332352a895b47b53ac52b30cccb8465a226"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/falltot"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3776\",\"variable:8174\",\"member:231609\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "d5a5e05274d573134667c82d4dace76677fc99c092bf90dc18b2bf6d725d63a6"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/falltot"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3777\",\"variable:8174\",\"member:231639\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-03-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "0c1d1416dba17198c8f0915bf19d75658d797cc4ce7836d24c63e8259bebc445"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/falltot"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:18253\",\"variable:8174\",\"member:846066\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "db517e2281839593542ed73ea95bc33e6d7839cf511c93e8fd4ca0a3c5a24b40"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/falltot"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:18751\",\"variable:8174\",\"member:884725\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "04ccd9bdd730366774e1efd690eb0eaa85a3273ce905ec14d7ff78a0ae21be13"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/fallm"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:563\",\"variable:8177\",\"member:28119\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "648f442d570dc6e5c3564ff0c6606fe34fbe314913f1c3654b923ffb2a8d1a99"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/fallm"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1586\",\"variable:8177\",\"member:114123\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "ed119f8ca0926da03c1ad9d480575ce22dbeff1d2b3e607db6319ed60c669844"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/fallm"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1636\",\"variable:8177\",\"member:116721\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "e66f2679ee4caca10eebd989854804ca70af3a562bb05019e64d2b77d54e518a"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/fallm"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3774\",\"variable:8177\",\"member:231576\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "d86ea8f7c03a712f5502d18ac85821984d294a67aeef5ea79561eb66b04147ce"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/fallm"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3776\",\"variable:8177\",\"member:231610\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "2b47c79b2e701f501448523f91b7adce9b1587b4465993cc86d239b495db9b93"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/fallm"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3777\",\"variable:8177\",\"member:231640\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-03-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "b31a40491b20dabfb97e21356855f18923572d73569cadee67a57bb74b9bcd28"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/fallm"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:18253\",\"variable:8177\",\"member:846056\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "091b556d99a401acc685b080669442193a68f69c1e4879e100251fc237e6bbb4"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/fallm"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:18751\",\"variable:8177\",\"member:884735\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "a0be1c8d99bab47ed3fa21b610585f9b33eabf9297dd79e87e29e6d91b6dd0c3"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/fallk"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:563\",\"variable:8178\",\"member:28167\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "859a782e7979aa5ac804bfdf148371080536dd7b2a0e6fe36659d651802febac"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/fallk"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1586\",\"variable:8178\",\"member:114124\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "d44153e73782f574ed786d67f8bbe71e5816ce4a4d94d5077ede3409eae54fa8"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/fallk"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1636\",\"variable:8178\",\"member:116722\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "885a3aacac4bc5e91e59697375098c74e73102386cdd4b2b90706ce684f13df7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/fallk"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3774\",\"variable:8178\",\"member:231577\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "b92ce82d92eb071bdc50b19b3a40e686ef060766caee159f42cf3136bf1ff74d"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/fallk"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3776\",\"variable:8178\",\"member:231611\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "5c43857eea72c9bf1ee6b39f6923c6290abf96f2c7123564ed8241af922908b0"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/fallk"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3777\",\"variable:8178\",\"member:231641\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-03-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "c7001cf446c6b408c62c2d519ac85b02ffd944ea184365a66e3c6458491dd803"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/fallk"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:18253\",\"variable:8178\",\"member:846055\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "671c9ae568ee5a6f77dd8e680aaad955895c982b7c8b6ada0d5b206076d54ab5"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/fallk"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:18751\",\"variable:8178\",\"member:884736\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
+evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
+expected_evidence_sha256 = "c1a2f816a7b2ae0021a05315f3be2b3f6bcf14224cc4d25d4d4e2526b71c9f70"

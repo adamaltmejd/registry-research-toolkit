@@ -2378,6 +2378,75 @@ def test_ordinary_empty_reference_issue_cannot_use_source_ack_exception(monkeypa
     assert any(d.code == "stale_curation_entry" for d in result.diagnostics)
 
 
+@pytest.mark.parametrize(
+    "changed",
+    [
+        {},
+        {"detail": "Different unresolved source claim."},
+        {"refs": ()},
+        {"fields": ("coding", "representation")},
+        {"valid_from": "2020-02-01"},
+        {"valid_to": "2020-11-30"},
+        {"withheld_output": ("state",)},
+    ],
+)
+def test_formed_missing_coding_deduplicates_only_identical_issues(monkeypatch, changed):
+    from reg_meta_build.source_curation import acknowledgement_evidence_sha256
+    from reg_meta_build.source_formation import form_native_variable
+
+    item = record()
+    baseline = resolve((item,))
+    issue = ResolutionDiagnostic(
+        code="missing_coding_period",
+        severity="error",
+        subject="scb/test/v5",
+        detail="The exact delivery has no supported response domain.",
+        refs=(record_ref(item),),
+        fields=("coding",),
+        valid_from="2020-01-01",
+        valid_to="2020-12-31",
+        withheld_output=("state.value_set",),
+    )
+
+    def duplicate(*args, **kwargs):
+        formed = form_native_variable(*args, **kwargs)
+        return replace(formed, diagnostics=(issue, issue.model_copy(update=changed)))
+
+    monkeypatch.setattr("reg_meta_build.source_scope.form_native_variable", duplicate)
+    case = acknowledge(issue, item)
+    case = case.model_copy(
+        update={
+            "decision": case.decision.model_copy(
+                update={
+                    "expected_evidence_sha256": acknowledgement_evidence_sha256(
+                        (item,), ()
+                    )
+                }
+            )
+        }
+    )
+    result = resolve((item,), cases=(case,))
+    assert result.variables == baseline.variables
+    assert result.corrections == baseline.corrections
+    assert result.coverage == baseline.coverage
+    problems = [d for d in result.diagnostics if d.code == issue.code]
+    if not changed:
+        assert result.acknowledged == {issue.code: 1}
+        assert problems == [
+            issue.model_copy(
+                update={"severity": "warning", "acknowledged_by": case.case_id}
+            )
+        ]
+    else:
+        assert len(problems) == 2
+        if set(changed) <= {"detail", "withheld_output"}:
+            assert not result.acknowledged
+            assert any(d.code == "overbroad_curation_entry" for d in result.diagnostics)
+        else:
+            assert result.acknowledged == {issue.code: 1}
+            assert sum(d.severity == "error" for d in problems) == 1
+
+
 @pytest.mark.parametrize("change", ["flag", "column", "physical_duplicate"])
 def test_guarded_support_acknowledgement_pins_unattached_originals(change):
     from reg_meta_build.source_curation import acknowledgement_evidence_sha256

@@ -6,6 +6,7 @@ import gzip
 import hashlib
 import json
 import sqlite3
+import weakref
 from dataclasses import dataclass, replace
 from types import SimpleNamespace
 from typing import TYPE_CHECKING, cast
@@ -554,6 +555,109 @@ def test_rerun_is_byte_identical(catalog: CatalogFixture, tmp_path: Path) -> Non
     first_ledger = (tmp_path / "a-report/events.jsonl.gz").read_bytes()
     assert first_ledger == (tmp_path / "b-report/events.jsonl.gz").read_bytes()
     assert first_ledger[4:8] == bytes(4)
+
+
+@pytest.mark.parametrize("catalog", [True], indirect=True)
+@pytest.mark.parametrize("dump", [False, True])
+def test_completed_scope_contracts_are_released(
+    catalog: CatalogFixture,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    dump: bool,
+) -> None:
+    from reg_meta_build import pipeline
+
+    register = catalog.curation / "registers/scb/sample.toml"
+    register.write_text(
+        register.read_text(encoding="utf-8")
+        + '\n[[errata.field]]\nvariable = "1.101"\nvariant = "1.10"\n'
+        'column = "VALUE"\nedition = "110"\nfield = "name"\n'
+        'value = "Reviewed value"\n'
+        'expected_fields = [{name = "name", status = "value", value = "GenericVar"}, '
+        '{name = "definition", status = "value", value = "A generic family label"}, '
+        '{name = "description", status = "absent"}, '
+        '{name = "operational_definition", status = "absent"}]\n'
+        'expected_period_text = "2020"\n'
+        'expected_scope = {kind = "intervals", intervals = [{start = "2020", end = "2020"}]}\n'
+        'expected_period = {kind = "intervals", '
+        'intervals = [{start = "2020-01-01", end = "2020-12-31"}]}\n'
+        'evidence = "Reviewed fixture source label"\nnoted = "2026-10-01"\n',
+        encoding="utf-8",
+    )
+    catalog.build(
+        tmp_path / "reference.db",
+        tmp_path / "reference-report",
+        registers=("1", "2"),
+        dump_decisions=tmp_path / "reference-decisions",
+    )
+    compile_tree = pipeline.compile_curation
+    compile_scope = pipeline._compiled_scope
+    finalize = pipeline.finalize_classification_bindings
+    scopes = []
+    guarded_cases = []
+
+    def observed_compile(*args, **kwargs):
+        compiled = compile_tree(*args, **kwargs)
+        cases = [case for group in compiled.cases.values() for case in group]
+        assert len(cases) == 1
+        assert cases[0].targets and cases[0].peer_guards
+        assert cases[0].decision.kind == "correct_occurrences"
+        guarded_cases.append(cases[0].case_id)
+        return compiled
+
+    def observe_scope(*args):
+        scope = compile_scope(*args)
+        scopes.append(weakref.ref(scope))
+        return scope
+
+    def observed_finalize(compiled, *args, **kwargs):
+        assert len(scopes) == 2
+        assert all(ref() is None for ref in scopes)
+        cases = [case for group in compiled.cases.values() for case in group]
+        assert [case.case_id for case in cases] == (guarded_cases if dump else [])
+        return finalize(compiled, *args, **kwargs)
+
+    monkeypatch.setattr(pipeline, "compile_curation", observed_compile)
+    monkeypatch.setattr(pipeline, "_compiled_scope", observe_scope)
+    monkeypatch.setattr(pipeline, "finalize_classification_bindings", observed_finalize)
+    catalog.build(
+        tmp_path / "released.db",
+        tmp_path / "report",
+        registers=("1", "2"),
+        dump_decisions=tmp_path / "decisions" if dump else None,
+    )
+    with sqlite3.connect(tmp_path / "released.db") as conn:
+        assert conn.execute(
+            "SELECT name FROM variable WHERE slug = 'value' AND name = 'Reviewed value'"
+        ).fetchone() == ("Reviewed value",)
+    assert (tmp_path / "reference.db").read_bytes() == (
+        tmp_path / "released.db"
+    ).read_bytes()
+    assert (tmp_path / "reference-report/events.jsonl.gz").read_bytes() == (
+        tmp_path / "report/events.jsonl.gz"
+    ).read_bytes()
+    if dump:
+        assert {p.name: p.read_bytes() for p in (tmp_path / "decisions").iterdir()} == {
+            p.name: p.read_bytes() for p in (tmp_path / "reference-decisions").iterdir()
+        }
+
+    def invalid_compile(*args, **kwargs):
+        compiled = compile_tree(*args, **kwargs)
+        key, cases = next(
+            (key, cases) for key, cases in compiled.cases.items() if cases
+        )
+        invalid = cases[0].model_copy(update={"targets": ()})
+        return replace(compiled, cases={**compiled.cases, key: (invalid, *cases[1:])})
+
+    monkeypatch.setattr(pipeline, "compile_curation", invalid_compile)
+    with pytest.raises(ValueError, match="curation case needs exact targets"):
+        catalog.build(
+            tmp_path / "invalid.db",
+            tmp_path / "invalid-report",
+            registers=("1", "2"),
+            dump_decisions=tmp_path / "invalid-decisions" if dump else None,
+        )
+    assert not (tmp_path / "invalid.db").exists()
 
 
 @pytest.mark.parametrize("catalog", [True], indirect=True)
