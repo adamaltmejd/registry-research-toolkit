@@ -2101,3 +2101,355 @@ noted = "2026-10-01"
 authority = []
 edition_scope = {"kind" = "intervals", "intervals" = [{"start" = "1990"}]}
 edition_period_scope = {"kind" = "not_applicable", "intervals" = []}
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/ovrigt-annat-januari"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND01\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/ovrigt-annat-januari"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND01\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/ovrigt-annat-februari"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND02\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/ovrigt-annat-februari"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND02\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/ovrigt-annat-mars"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND03\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/ovrigt-annat-mars"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND03\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/ovrigt-annat-april"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND04\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/ovrigt-annat-april"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND04\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/ovrigt-annat-maj"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND05\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/ovrigt-annat-maj"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND05\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/ovrigt-annat-juni"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND06\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/ovrigt-annat-juni"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND06\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/ovrigt-annat-juli"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND07\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/ovrigt-annat-juli"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND07\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/ovrigt-annat-augusti"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND08\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/ovrigt-annat-augusti"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND08\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/ovrigt-annat-september"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND09\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/ovrigt-annat-september"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND09\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/ovrigt-annat-oktober"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND10\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/ovrigt-annat-oktober"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND10\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/ovrigt-annat-november"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND11\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/ovrigt-annat-november"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND11\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/ovrigt-annat-december"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND12\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/ovrigt-annat-december"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:ANNATIND12\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/hhstatus"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:HHSTATUS\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/hhstatus"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_MANAD\",\"variable:HHSTATUS\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/hhstatus"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:HHSTATUS\"]}", "{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_MANAD\",\"variable:HHSTATUS\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/personnr-aldsta-sokande"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:PERSONNR_ALDST\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/personnr-aldsta-sokande"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:PERSONNR_ALDST\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/personnr-yngsta-sokande"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:PERSONNR_YNGST\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/personnr-yngsta-sokande"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:PERSONNR_YNGST\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/personnr-aldsta-sokande-2"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:SOKALDSTPNR\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/personnr-aldsta-sokande-2"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_MANAD\",\"variable:SOKALDSTPNR\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/personnr-aldsta-sokande-2"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:SOKALDSTPNR\"]}", "{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_MANAD\",\"variable:SOKALDSTPNR\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/personnr-yngsta-sokande-2"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:SOKYNGSTPNR\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/personnr-yngsta-sokande-2"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_MANAD\",\"variable:SOKYNGSTPNR\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/personnr-yngsta-sokande-2"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:SOKYNGSTPNR\"]}", "{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_MANAD\",\"variable:SOKYNGSTPNR\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/utrikesfodd"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:UTRIKESFODD\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/utrikesfodd"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_MANAD\",\"variable:UTRIKESFODD\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/utrikesfodd"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:UTRIKESFODD\"]}", "{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_MANAD\",\"variable:UTRIKESFODD\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/antal-barn-16-17-ar"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_MANAD\",\"variable:BARN1617\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/antal-barn-16-17-ar"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_MANAD\",\"variable:BARN1617\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "sos/ekb/distrikt"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_MANAD\",\"variable:DISTRIKT\"]}"]
+fields = ["period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "sos/ekb/distrikt"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_MANAD\",\"variable:DISTRIKT\"]}"]
+fields = ["availability", "period"]
+reason = "The supplied occurrence leaves availability bounds blank. Preserve the source facts and unknown date scope; leave this delivery unavailable rather than invent a start year. No other supported occurrence supplies a dated state for this native variable."
+evidence = "Complete accepted WGS source-native family and maintained routing/correction/naming replay. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Exact availability limitation only; no guessed epoch, type, classification or value domain. Proof: Batch48-SOS-unavailable-periods-source-proof.json."

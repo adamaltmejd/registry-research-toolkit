@@ -178,14 +178,6 @@ noted = "2026-09-12"
 
 [[errata.delivered]]
 variant = "foretagssektorn"
-column = "v0401"
-versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
-upstream = "omitted-column-in-version"
-evidence = "SWECOV holds v0401 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
-noted = "2026-09-12"
-
-[[errata.delivered]]
-variant = "foretagssektorn"
 column = "v0402"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
 upstream = "omitted-column-in-version"

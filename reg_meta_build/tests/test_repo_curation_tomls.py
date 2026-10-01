@@ -1162,7 +1162,7 @@ def test_repo_scb_errata_parses() -> None:
     )
     assert errata  # the verified LISA DispInkKE case ships with the repo
     assert (len(errata.delivered), len(errata.columns), len(errata.versions)) == (
-        386,
+        385,
         1894,
         10,
     )

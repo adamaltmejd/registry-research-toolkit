@@ -19,6 +19,13 @@ omits catalog dependencies, delivery coverage, SQLite and corpus validation, eve
 selected registers. Run full verification at an agreed, coherent batch checkpoint.
 Curation-only edits do not require source preparation.
 
+During the SWECOV restoration, the builder produces schema 7 databases while readers
+still require schema 6. Keep restoration changes in `reg_meta_build`; reader and UI
+adaptation is a later task. Verify candidate outputs with builder-owned openers or
+read-only SQLite, rather than changing consumer compatibility to make a proof pass.
+`precheck-slugs --update-snapshot` can refresh the naming snapshot, but its legacy
+native-ID comparisons are not a validation gate for the new generated database IDs.
+
 ## Select inputs
 
 The same CLI option names select different artifacts at different stages:
