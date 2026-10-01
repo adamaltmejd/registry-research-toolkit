@@ -1315,10 +1315,12 @@ def _coding_window(window: list[str]) -> None:
         raise ValueError("coding window bounds are reversed")
 
 
-def _coding_members(value: list[list[str]]) -> list[list[str]]:
+def _coding_members(
+    value: list[list[str]], *, allow_empty_code: bool = False
+) -> list[list[str]]:
     if not value or any(len(pair) != 2 for pair in value):
         raise ValueError("members must be nonempty [code, label] pairs")
-    if any(not code or not label for code, label in value):
+    if any((not code and not allow_empty_code) or not label for code, label in value):
         raise ValueError("member codes and labels must be nonempty")
     if len({tuple(pair) for pair in value}) != len(value):
         raise ValueError("members must be unique")
@@ -1359,7 +1361,7 @@ class CodingChoiceEntry(_CheckedCodingEntry):
     @field_validator("keep_members")
     @classmethod
     def _members(cls, value: list[list[str]] | None) -> list[list[str]] | None:
-        return None if value is None else _coding_members(value)
+        return None if value is None else _coding_members(value, allow_empty_code=True)
 
     @field_validator("over")
     @classmethod

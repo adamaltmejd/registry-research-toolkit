@@ -430,6 +430,43 @@ def test_pin_free_choice_member_disambiguation_and_split_key() -> None:
     )
 
 
+def test_choice_preserves_documented_blank_sentinel_and_checks_complete_members():
+    ordinary = _claim("same label", "1")
+    superset = replace(
+        ordinary,
+        claim_id="superset",
+        members=ordinary.members
+        + (
+            CodeMembershipClaim(
+                "", "Not applicable", TemporalScope(kind="year_independent")
+            ),
+        ),
+    )
+    claims = (ordinary, superset)
+    cases, diagnostics, *_ = _compile_entry(
+        "choice",
+        {
+            "keep": "same label",
+            "keep_members": [["1", "Label"], ["", "Not applicable"]],
+            "over": ["same label"],
+        },
+        claims,
+    )
+    assert not diagnostics
+    result = _apply(_record(), claims, *cases)
+    assert result.accounting[0].status == "applied"
+    assert set(
+        result.coding[next(iter(result.coding))].segments[0].code_set.members
+    ) == {
+        ("1", "Label"),
+        ("", "Not applicable"),
+    }
+    changed = replace(superset, members=superset.members + _claim("extra", "2").members)
+    assert (
+        _apply(_record(), (ordinary, changed), *cases).accounting[0].status == "stale"
+    )
+
+
 def test_coding_target_captures_sibling_projection_on_same_ref() -> None:
     record = _record()
     sibling = record.model_copy(

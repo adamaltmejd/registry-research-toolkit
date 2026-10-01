@@ -1309,11 +1309,6 @@ slug = "summa-tillgangar-2"
 # register 176
 
 [[identity.partition]]
-variable = "168.48"
-columns = { "lvelopnr" = "168.48", "lvenr" = "168.48" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.48: 7 originals; one exported name (Lokal verksamhetsenhetsnummer) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
 variable = "168.56"
 columns = { "PeOrgNr" = "168.56", "PeorgnrHe" = "168.56", "Peorgnrhe" = "168.56", "peorgnr" = "168.56", "peorgnrhe" = "168.56" }
 columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.56: 134 originals; one exported name (Person-/organisationsnummer) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
@@ -1326,100 +1321,10 @@ columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3
 data_warning = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
 
 [[identity.partition]]
-variable = "168.690"
-columns = { "fgr6102" = "168.690", "lgr6102" = "168.690", "vgr6102" = "168.690" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.690: 3 originals; one exported name (Antal anställda) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4072"
-columns = { "fga13" = "168.4072", "kga13" = "168.4072", "vga13" = "168.4072" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4072: 13 originals; one exported name (Bruttoinvesteringar mark) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4080"
-columns = { "fga20" = "168.4080", "kga20" = "168.4080", "lga20" = "168.4080", "vga20" = "168.4080" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4080: 82 originals; one exported name (Summa nettoinvesteringar) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4083"
-columns = { "fga2101" = "168.4083", "lga2101" = "168.4083", "vga2101" = "168.4083" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4083: 61 originals; one exported name (Nettoinvesteringar flygplan) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4085"
-columns = { "fga2102" = "168.4085", "lga2102" = "168.4085", "vga2102" = "168.4085" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4085: 61 originals; one exported name (Nettoinvesteringar fartyg) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4087"
-columns = { "fga2103" = "168.4087", "lga2103" = "168.4087", "vga2103" = "168.4087" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4087: 61 originals; one exported name (Nettoinvesteringar rälsfordon) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4088"
-columns = { "fga22" = "168.4088", "kga22" = "168.4088", "vga22" = "168.4088" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4088: 13 originals; one exported name (Nettoinvesteringar byggnader och markanläggningar) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4094"
-columns = { "fga23" = "168.4094", "kga23" = "168.4094", "vga23" = "168.4094" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4094: 13 originals; one exported name (Nettoinvesteringar mark) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
 variable = "168.4098"
 columns = { "fgr6101" = "168.4098", "kgr6101" = "168.4098", "lgr6101" = "168.4098", "vgr6101" = "168.4098" }
 columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4098: 98 originals; one exported name (Medelantal anställda) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
 data_warning = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
-
-[[identity.partition]]
-variable = "168.4104"
-columns = { "fga11" = "168.4104", "kga11" = "168.4104", "lga11" = "168.4104", "vga11" = "168.4104" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4104: 82 originals; one exported name (Bruttoinvesteringar maskiner och inventarier) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4175"
-columns = { "fga10" = "168.4175", "kga10" = "168.4175", "lga10" = "168.4175", "vga10" = "168.4175" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4175: 82 originals; one exported name (Summa bruttoinvesteringar) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4177"
-columns = { "fga1103" = "168.4177", "lga1103" = "168.4177", "vga1103" = "168.4177" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4177: 61 originals; one exported name (Bruttoinvesteringar rälsfordon) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4178"
-columns = { "fga12" = "168.4178", "kga12" = "168.4178" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4178: 9 originals; one exported name (Bruttoinvesteringar byggnader) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4179"
-columns = { "fga121" = "168.4179", "fga141" = "168.4179", "lga141" = "168.4179", "vga121" = "168.4179", "vga141" = "168.4179" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4179: 63 originals; one exported name (Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4180"
-columns = { "fga1211" = "168.4180", "vga1211" = "168.4180" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4180: 9 originals; one exported name (Bruttoinvesteringar bostäder) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4181"
-columns = { "fga122" = "168.4181", "vga122" = "168.4181" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4181: 9 originals; one exported name (Bruttoinvesteringar av köpta byggnader och markanläggningar) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4203"
-columns = { "fgb233" = "168.4203", "fsum902" = "168.4203" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4203: 7 originals; one exported name (Andra finansiella anläggningstillgångar) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4215"
-columns = { "fgb219" = "168.4215", "vgb219" = "168.4215" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4215: 58 originals; one exported name (Varulager) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4224"
-columns = { "fgb370" = "168.4224", "fgb372" = "168.4224" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4224: 37 originals; one exported name (Summa eget kapital) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
 
 [[identity.partition]]
 variable = "168.4255"
@@ -1427,19 +1332,9 @@ columns = { "fgr509" = "168.4255", "kgr509" = "168.4255", "lgr509" = "168.4255",
 columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4255: 83 originals; one exported name (Förändring av lager och pågående arbete) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
 
 [[identity.partition]]
-variable = "168.4256"
-columns = { "fgr400" = "168.4256", "kgr400" = "168.4256", "lgr400" = "168.4256", "lhar400_jmf" = "168.4256", "vgr400" = "168.4256" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4256: 88 originals; one exported name (Nettoomsättning) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
 variable = "168.4257"
 columns = { "fgr401" = "168.4257", "kgr401" = "168.4257", "lgr401" = "168.4257", "vgr401" = "168.4257" }
 columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4257: 84 originals; one exported name (Övriga rörelseintäkter) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4262"
-columns = { "fgr502" = "168.4262", "lgr502" = "168.4262", "vgr502" = "168.4262" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4262: 63 originals; one exported name (Kostnader för handelsvaror) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
 
 [[identity.partition]]
 variable = "168.4263"
@@ -1448,134 +1343,14 @@ columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3
 data_warning = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
 
 [[identity.partition]]
-variable = "168.4266"
-columns = { "fgr503" = "168.4266", "lgr503" = "168.4266", "vgr503" = "168.4266" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4266: 63 originals; one exported name (Kostnader för råvaror) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4268"
-columns = { "fgr524" = "168.4268", "kgr524" = "168.4268", "lgr524" = "168.4268", "vgr524" = "168.4268" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4268: 17 originals; one exported name (Pensionskostnader) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4269"
-columns = { "fgr500" = "168.4269", "lgr500" = "168.4269", "lhar500_jmf" = "168.4269", "vgr500" = "168.4269" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4269: 65 originals; one exported name (Summa kostnader för råvaror och handelsvaror) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
 variable = "168.4272"
 columns = { "fgr530" = "168.4272", "kgr530" = "168.4272", "lgr530" = "168.4272", "vgr530" = "168.4272" }
 columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4272: 84 originals; one exported name (Övriga externa kostnader) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
 
 [[identity.partition]]
-variable = "168.4273"
-columns = { "fgr527" = "168.4273", "kgr527" = "168.4273", "lgr527" = "168.4273", "vgr527" = "168.4273" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4273: 17 originals; one exported name (Övriga personalkostnader) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4275"
-columns = { "fgb0362" = "168.4275", "fgb362" = "168.4275" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4275: 35 originals; one exported name (Utdelning) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4276"
-columns = { "fgb0363" = "168.4276", "fgb363" = "168.4276" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4276: 35 originals; one exported name (Aktieägartillskott, eget kapital) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4277"
-columns = { "fgb0364" = "168.4277", "fgb364" = "168.4277" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4277: 35 originals; one exported name (Koncernbidrag, eget kapital) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4278"
-columns = { "fgr0130" = "168.4278", "lgr0130" = "168.4278", "vgr0130" = "168.4278" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4278: 58 originals; one exported name (Rörelseresultat före avskrivningar) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4279"
-columns = { "fgr0140" = "168.4279", "lgr0140" = "168.4279", "vgr0140" = "168.4279" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4279: 58 originals; one exported name (Rörelseresultat) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4292"
-columns = { "fgr520" = "168.4292", "kgr520" = "168.4292", "vgr520" = "168.4292" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4292: 13 originals; one exported name (Kostnader för övriga sociala avgifter) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4294"
-columns = { "fga1102" = "168.4294", "lga1102" = "168.4294", "vga1102" = "168.4294" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4294: 61 originals; one exported name (Bruttoinvesteringar fartyg) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4295"
-columns = { "fga1101" = "168.4295", "lga1101" = "168.4295", "vga1101" = "168.4295" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4295: 61 originals; one exported name (Bruttoinvesteringar, flygplan) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4298"
-columns = { "fgr432" = "168.4298", "lgr432" = "168.4298", "vgr432" = "168.4298" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4298: 61 originals; one exported name (Intäkter från kommissionärsverksamhet) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4299"
-columns = { "fgr431" = "168.4299", "lgr431" = "168.4299", "vgr431" = "168.4299" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4299: 61 originals; one exported name (Intäkter från koncernintern hjälpverksamhet, holdingbolag) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
 variable = "168.4313"
 columns = { "fgr402" = "168.4313", "kgr402" = "168.4313", "lgr402" = "168.4313", "vgr402" = "168.4313" }
 columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4313: 84 originals; one exported name (Aktiverat arbete för egen räkning) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4314"
-columns = { "fgr552" = "168.4314", "kgr552" = "168.4314", "vgr552" = "168.4314" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4314: 13 originals; one exported name (Vinst vid avyttring av anläggningstillgångar, ej finansiella) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4315"
-columns = { "fgr556" = "168.4315", "kgr556" = "168.4315", "vgr556" = "168.4315" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4315: 13 originals; one exported name (Förlust vid avyttring av anläggningstillgångar, ej finansiella) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4318"
-columns = { "fgr0445" = "168.4318", "lgr0445" = "168.4318", "vgr0445" = "168.4318" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4318: 61 originals; one exported name (Bidrag för verksamheten) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4320"
-columns = { "fgb0360" = "168.4320", "fgb360" = "168.4320" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4320: 35 originals; one exported name (Nyemission inkl överkurs) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4321"
-columns = { "fgb0361" = "168.4321", "fgb361" = "168.4321" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4321: 35 originals; one exported name (Fondemission) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4322"
-columns = { "fgb0365" = "168.4322", "fgb365" = "168.4322" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4322: 35 originals; one exported name (Uppskrivning/nedskrivning mot uppskrivningsfond) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4323"
-columns = { "fgb0366" = "168.4323", "fgb366" = "168.4323" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4323: 35 originals; one exported name (Nedsättning av aktiekapital) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4324"
-columns = { "fgb0367" = "168.4324", "fgb367" = "168.4324" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4324: 35 originals; one exported name (Egna insättningar, handelsbolag och kommanditbolag) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4325"
-columns = { "fgb0368" = "168.4325", "fgb368" = "168.4325" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4325: 35 originals; one exported name (Egna uttag, handelsbolag och kommanditbolag) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4326"
-columns = { "fgb0369" = "168.4326", "fgb369_02" = "168.4326" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4326: 35 originals; one exported name (Oförklarade förändringar av eget kapital) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
 
 [[identity.partition]]
 variable = "168.4820"
@@ -1591,61 +1366,6 @@ columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3
 variable = "168.4822"
 columns = { "kgr429" = "168.4822", "lgr429" = "168.4822", "vgr429" = "168.4822" }
 columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4822: 45 originals; one exported name (Intäkter av övrigt) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4823"
-columns = { "lgr425" = "168.4823", "vgr425" = "168.4823" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4823: 26 originals; one exported name (Intäkter från provision) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4826"
-columns = { "lgr0471" = "168.4826", "vgr0471" = "168.4826" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4826: 26 originals; one exported name (Internleveranser av råvaror och halvfabrikat för vidareförädling) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4827"
-columns = { "lgr0472" = "168.4827", "vgr0472" = "168.4827" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4827: 26 originals; one exported name (Internleveranser av egenproducerade färdiga varor) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4828"
-columns = { "lgr0473" = "168.4828", "vgr0473" = "168.4828" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4828: 26 originals; one exported name (Internleveranser av handelsvaror och tjänster) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4829"
-columns = { "lgr0871" = "168.4829", "vgr0871" = "168.4829" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4829: 26 originals; one exported name (Interna köp av råvaror) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4830"
-columns = { "lgr0872" = "168.4830", "vgr0872" = "168.4830" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4830: 26 originals; one exported name (Interna köp av egenproducerade varor) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4831"
-columns = { "lgr0873" = "168.4831", "vgr0873" = "168.4831" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4831: 26 originals; one exported name (Interna köp av handelsvaror) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4832"
-columns = { "lgr1023" = "168.4832", "vgr1023" = "168.4832" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4832: 26 originals; one exported name (Intäkter från färdiga varor som levererats från annan verksamhet inom företaget) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4833"
-columns = { "lgr0874" = "168.4833", "vgr0874" = "168.4833", "vgrk0873" = "168.4833" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4833: 26 originals; one exported name (Interna köp av tjänster) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4834"
-columns = { "fga21" = "168.4834", "kga21" = "168.4834", "lga21" = "168.4834", "vga21" = "168.4834" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4834: 82 originals; one exported name (Nettoinvesteringar, maskiner och inventarier) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.4836"
-columns = { "lgr0128" = "168.4836", "vgr0128" = "168.4836" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4836: 42 originals; one exported name (Personalkostnader) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
 
 [[identity.partition]]
 variable = "168.4872"
@@ -1687,21 +1407,6 @@ columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3
 data_warning = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
 
 [[identity.partition]]
-variable = "168.6392"
-columns = { "fgr6103" = "168.6392", "lgr6103" = "168.6392", "vgr6103" = "168.6392" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.6392: 3 originals; one exported name (Antal sysselsatta) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.16443"
-columns = { "fgr501" = "168.16443", "kgr501" = "168.16443", "vgr501" = "168.16443" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.16443: 4 originals; one exported name (Legoarbeten och underentreprenörer) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.16558"
-columns = { "lhar502_jmf" = "168.16558", "vhar502_jmf" = "168.16558" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.16558: 26 originals; one exported name (Kostnader för handelsvaror (justerat för merchanting)) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
 variable = "168.19656"
 columns = { "fgr528" = "168.19656", "kgr528" = "168.19656", "lgr528" = "168.19656", "vgr528" = "168.19656" }
 columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.19656: 81 originals; one exported name (Sociala kostnader och andra personalkostnader) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
@@ -1711,28 +1416,3 @@ data_warning = "Calculation or input-source descriptions vary between delivery l
 variable = "168.19657"
 columns = { "fgr555" = "168.19657", "kgr555" = "168.19657", "lgr555" = "168.19657", "vgr555" = "168.19657" }
 columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.19657: 71 originals; one exported name (Övriga rörelsekostnader) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.19658"
-columns = { "fgr558" = "168.19658", "lgr558" = "168.19658", "vgr558" = "168.19658" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.19658: 54 originals; one exported name (Summa av- och nedskrivningar) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.19951"
-columns = { "fga14" = "168.19951", "kga14" = "168.19951", "lga14" = "168.19951", "vga14" = "168.19951" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.19951: 69 originals; one exported name (Bruttoinvesteringar byggnader, markanläggningar och mark) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.19952"
-columns = { "fga1411" = "168.19952", "lga1411" = "168.19952", "vga1411" = "168.19952" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.19952: 54 originals; one exported name (Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar - Därav bostäder) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.19953"
-columns = { "fga142" = "168.19953", "lga142" = "168.19953", "vga142" = "168.19953" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.19953: 54 originals; one exported name (Bruttoinvesteringar av köpta byggnader, markanläggningar och mark) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
-
-[[identity.partition]]
-variable = "168.19954"
-columns = { "fga24" = "168.19954", "kga24" = "168.19954", "lga24" = "168.19954", "vga24" = "168.19954" }
-columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.19954: 69 originals; one exported name (Nettoinvesteringar byggnader, markanläggningar och mark) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
