@@ -3536,7 +3536,7 @@ def compile_scb_preliminary(
     return cases
 
 
-def compile_sos_thin(
+def compile_provider_declarations(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
     scopes: tuple[CompiledScope, ...],
@@ -3547,7 +3547,12 @@ def compile_sos_thin(
     tuple[ResolutionDiagnostic, ...],
     dict[str, dict[str, list[str]]],
 ]:
-    """Compile SOS routing and authored coverage from selected original records."""
+    """Compile SOS routing and coverage from selected maintained provider declarations."""
+    thin_sources = {
+        entry.revision.dataset
+        for entry in prepared.manifest.inputs
+        if entry.role == "thin_provider" and entry.revision is not None
+    }
     registers = {
         f"{entry.register_info.provider}/{entry.register_info.slug}": entry
         for entry in tree.registers
@@ -3556,7 +3561,11 @@ def compile_sos_thin(
     diagnostics: list[ResolutionDiagnostic] = []
     report: dict[str, dict[str, list[str]]] = {}
     has_selected_provider = any(
-        name in registers and registers[name].register_info.provider != "scb"
+        name in registers
+        and (
+            registers[name].register_info.provider == "sos"
+            or scope.source in thin_sources
+        )
         for scope in scopes
         for name, _ in _scope_registers(scope)
     )
@@ -3573,7 +3582,10 @@ def compile_sos_thin(
                         (registers[name], key)
                         for name, key in _scope_registers(scope)
                         if name in registers
-                        and registers[name].register_info.provider != "scb"
+                        and (
+                            registers[name].register_info.provider == "sos"
+                            or scope.source in thin_sources
+                        )
                     ),
                     key=lambda item: item[0].source_file,
                 )
@@ -6543,7 +6555,7 @@ def compile_curation(
     correction_cases, correction_diagnostics, correction_report = (
         compile_occurrence_corrections(tree, prepared, scopes, subset=subset)
     )
-    thin_cases, thin_diagnostics, thin_report = compile_sos_thin(
+    thin_cases, thin_diagnostics, thin_report = compile_provider_declarations(
         tree, prepared, scopes, subset=subset
     )
     preliminary_cases = compile_scb_preliminary(prepared, scopes)

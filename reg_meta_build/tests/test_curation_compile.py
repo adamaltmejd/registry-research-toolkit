@@ -32,8 +32,8 @@ from reg_meta_build.curation_compile import (
     compile_native_naming,
     compile_occurrence_corrections,
     compile_partitions,
+    compile_provider_declarations,
     compile_scb_preliminary,
-    compile_sos_thin,
     convert_column_partitions,
     finalize_classification_bindings,
     tree_sha256,
@@ -1014,14 +1014,20 @@ def test_sos_data_type_stays_in_owning_source_and_register():
 def test_sos_data_type_skipped_register_is_accounted_in_subset():
     register = _sos_type_register()
     tree = SimpleNamespace(registers=(register,))
-    prepared = SimpleNamespace(value_sources=(), records=SimpleNamespace())
+    prepared = SimpleNamespace(
+        value_sources=(), records=SimpleNamespace(), manifest=SimpleNamespace(inputs=())
+    )
     case_id = "curation/registers/sos/sample.toml#/errata.data_type/1"
-    cases, diagnostics, report = compile_sos_thin(tree, prepared, (), subset=True)
+    cases, diagnostics, report = compile_provider_declarations(
+        tree, prepared, (), subset=True
+    )
     assert cases == {}
     assert diagnostics == ()
     assert report["sos/sample"]["entries_read"] == [case_id]
     assert report["sos/sample"]["not_evaluated_in_subset"] == [case_id]
-    _, diagnostics, report = compile_sos_thin(tree, prepared, (), subset=False)
+    _, diagnostics, report = compile_provider_declarations(
+        tree, prepared, (), subset=False
+    )
     assert [issue.code for issue in diagnostics] == ["stale_curation_entry"]
     assert report["sos/sample"]["stale"] == [case_id]
 
@@ -1050,13 +1056,16 @@ def test_sos_data_type_compiles_only_selected_native_source_scope():
     other = record.model_copy(update={"source": "Socialstyrelsen/other.xlsx"})
     prepared = SimpleNamespace(
         value_sources=(),
+        manifest=SimpleNamespace(inputs=()),
         records=SimpleNamespace(
             iter_records=lambda *, source: iter(
                 item for item in (record, other) if item.source == source
             )
         ),
     )
-    cases, diagnostics, report = compile_sos_thin(tree, prepared, (scope,), subset=True)
+    cases, diagnostics, report = compile_provider_declarations(
+        tree, prepared, (scope,), subset=True
+    )
     assert diagnostics == ()
     case = next(
         case
@@ -1292,13 +1301,19 @@ def test_mfr_reference_entries_exclude_missing_sheet_and_bdiag_consumers():
 def test_mfr_reference_absent_full_source_vs_skipped_subset():
     register, _ = _mfr_reference_register("BPNR")
     tree = SimpleNamespace(registers=(register,))
-    prepared = SimpleNamespace(value_sources=(), records=SimpleNamespace())
+    prepared = SimpleNamespace(
+        value_sources=(), records=SimpleNamespace(), manifest=SimpleNamespace(inputs=())
+    )
     case_id = f"{register.source_file}#/errata.classification_reference/1"
-    _, diagnostics, report = compile_sos_thin(tree, prepared, (), subset=True)
+    _, diagnostics, report = compile_provider_declarations(
+        tree, prepared, (), subset=True
+    )
     assert diagnostics == ()
     assert report["sos/mfr"]["entries_read"] == [case_id]
     assert report["sos/mfr"]["not_evaluated_in_subset"] == [case_id]
-    _, diagnostics, report = compile_sos_thin(tree, prepared, (), subset=False)
+    _, diagnostics, report = compile_provider_declarations(
+        tree, prepared, (), subset=False
+    )
     assert [issue.code for issue in diagnostics] == ["stale_curation_entry"]
     assert report["sos/mfr"]["stale"] == [case_id]
 
@@ -7300,3 +7315,91 @@ def test_partition_data_warning_is_explicit_and_scoped_to_annotated_members(
         record_ref(record) for record in records
     }
     assert case.decision.data_warning_fields == ("identity",)
+
+
+@pytest.mark.parametrize("provider", ["scb", "fk"])
+@pytest.mark.parametrize("source_role", ["thin_provider", "scb_records"])
+@pytest.mark.parametrize("declared_start", ["2019-01-01", None])
+def test_maintained_provider_coverage_uses_input_role_not_provider_name(
+    provider,
+    source_role,
+    declared_start,
+):
+    parent = _case_record(
+        provider=provider,
+        register="r",
+        parent="register",
+        fields=SourceFields(coverage_from=value_field(declared_start))
+        if declared_start
+        else SourceFields(name=value_field("Unknown coverage register")),
+    )
+    variable = _case_record(
+        provider=provider,
+        register="r",
+        variable="col",
+        fields=SourceFields(
+            column_name=value_field("COL"), availability=value_field(True)
+        ),
+    )
+    records = (parent, variable)
+    register_key = source_register_key(variable)
+    assert register_key is not None
+    register = SimpleNamespace(
+        register_info=SimpleNamespace(provider=provider, slug="r"),
+        source_file=f"curation/registers/{provider}/r.toml",
+    )
+    scope = CompiledScope(
+        source=variable.source,
+        register_key=None,
+        naming=(
+            NamingDeclaration(
+                target=NativeNamingTarget(
+                    kind="register", provider=provider, source_key=register_key
+                ),
+                naming=SlugEntry(
+                    kind="register", provider=provider, source_id="1", slug="r"
+                ),
+                contributors=(),
+            ),
+        ),
+    )
+    prepared = SimpleNamespace(
+        value_sources=(),
+        manifest=SimpleNamespace(
+            inputs=(
+                SimpleNamespace(
+                    role=source_role, revision=SimpleNamespace(dataset=variable.source)
+                ),
+            )
+        ),
+        records=SimpleNamespace(iter_records=lambda *, source: iter(records)),
+    )
+    if source_role == "thin_provider" and declared_start is None:
+        with pytest.raises(ValueError, match="empty or inverted thin coverage window"):
+            compile_provider_declarations(
+                SimpleNamespace(registers=(register,)), prepared, (scope,), subset=False
+            )
+        assert parent.parent_facts[0].fields.coverage_from is None
+        return
+    cases, diagnostics, _ = compile_provider_declarations(
+        SimpleNamespace(registers=(register,)),
+        prepared,
+        (scope,),
+        subset=False,
+    )
+    assert not diagnostics
+    if source_role != "thin_provider":
+        assert not cases
+        return
+    result = apply_occurrence_cases(records, cases[scope.source, None])
+    addition = next(
+        e
+        for c in cases[scope.source, None]
+        for e in c.decision.effects
+        if isinstance(e, CuratedOccurrenceAddition)
+    )
+    assert addition.edition_period_scope.intervals == (
+        ScopeInterval(start=declared_start, end=None),
+    )
+    assert addition.fields == variable.fields
+    assert result.occurrences[1].source_records == (variable,)

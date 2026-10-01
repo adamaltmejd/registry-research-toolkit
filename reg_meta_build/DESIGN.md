@@ -235,25 +235,28 @@ The identifier flag does not suppress an exact inline finite enumeration. Missin
 still produce an incomplete-membership diagnostic, while genuine open keys retain their
 existing treatment. A linkage marker cannot silently discard supplied code assertions.
 
-Authored thin-provider TOMLs use `sources/curated_records.py`. They are machine-readable
-source declarations with publisher and transcription provenance. Reading them does not
-apply parent defaults, invent false flags or make the old final-catalog adapter part of
-preparation. An omitted thin-provider flag is a deliberate false claim (Y-169). SOS
-workbook variables carry the same explicit-flag contract from the delivered template
-(Y-193): the Kopplingsvariabel cell is the identifier claim — a non-blank linkage marker
-reads as explicit true, a delivered blank as explicit false — and every workbook
-variable is explicitly sensitive, because all SOS deliveries are health and
-social-services microdata. Classification CSVs, authored code lists and the LISA
-workbook similarly supply source evidence for common resolution. The SOS register name
-is the DCAT-AP Titel; the general sheet's Datamängd cell is kept as `dataset_label`
-evidence and never competes with the name (their spellings disagree for LSS, HSL and
-SOL). A workbook without a DCAT sheet keeps Datamängd as its name. When a subset token
-occurs more than once, its semantic key and native variant coordinate include the row's
-Deldatamängdsetikett as well as Deldatamängdsnamn. Unique tokens retain their existing
-keys. An authored SOS route names the chosen labeled row exactly; renaming or removing
-it makes the route stale. LOVA's `A_LOVA` routes to its Huvudtabell row and
-`A_LOVA_LISA` to its ekonomi/arbetsmarknad row. The prepared source-records schema is
-15; older stores must be re-prepared.
+Authored thin-provider TOMLs use `sources/curated_records.py`. Their prepared input role
+selects the maintained-declaration compiler, including canonical SCB TOMLs. The provider
+name does not suppress this contract or apply it to SCB machine exports. Checked
+compilation combines declared parent and variable bounds; absent start bounds still fail
+without an inferred date. They are machine-readable source declarations with publisher
+and transcription provenance. Reading them does not apply parent defaults, invent false
+flags or make the old final-catalog adapter part of preparation. An omitted
+thin-provider flag is a deliberate false claim (Y-169). SOS workbook variables carry the
+same explicit-flag contract from the delivered template (Y-193): the Kopplingsvariabel
+cell is the identifier claim — a non-blank linkage marker reads as explicit true, a
+delivered blank as explicit false — and every workbook variable is explicitly sensitive,
+because all SOS deliveries are health and social-services microdata. Classification
+CSVs, authored code lists and the LISA workbook similarly supply source evidence for
+common resolution. The SOS register name is the DCAT-AP Titel; the general sheet's
+Datamängd cell is kept as `dataset_label` evidence and never competes with the name
+(their spellings disagree for LSS, HSL and SOL). A workbook without a DCAT sheet keeps
+Datamängd as its name. When a subset token occurs more than once, its semantic key and
+native variant coordinate include the row's Deldatamängdsetikett as well as
+Deldatamängdsnamn. Unique tokens retain their existing keys. An authored SOS route names
+the chosen labeled row exactly; renaming or removing it makes the route stale. LOVA's
+`A_LOVA` routes to its Huvudtabell row and `A_LOVA_LISA` to its ekonomi/arbetsmarknad
+row. The prepared source-records schema is 15; older stores must be re-prepared.
 
 ## Input storage and preparation
 
