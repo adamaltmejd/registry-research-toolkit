@@ -1972,8 +1972,11 @@ def _steward_load_db(db_path: Path):
     That arm reads the alias WINDOW table, not ``variable_alias``, because a
     window is what makes a spelling an orderable REPRESENTATION: the resolver
     (`Catalog._expand_state_windows`) surfaces an alias column only where its
-    window is CONTAINED in a state's validity and that state's own column
-    participates in the contained set, and §12's consistency gate
+    shared source window has a participating base column; provenance-bearing
+    curated windows are additive and need no base-column window. Shared windows
+    must be contained, while per-column storage or coding intersects states.
+    Participating source windows replace the canonical state's window; otherwise
+    the canonical representation remains. §12's consistency gate
     (`reg_meta.inventory_check`) refuses to boot a deployment whose inventory
     maps anything else. A bare ``variable_alias`` row is the search-only
     delivery-column history — mapping one would state holdings no order could
@@ -2018,6 +2021,15 @@ def _steward_load_db(db_path: Path):
            JOIN register_variant rv USING(register_variant_id)
            WHERE vs.delivery_column_name IS NOT NULL
              AND trim(vs.delivery_column_name) != '' AND v.slug IS NOT NULL
+             AND NOT (vs.period_scope='intervals' AND EXISTS (
+                 SELECT 1 FROM variable_alias_window b
+                 WHERE b.variable_id=vs.variable_id
+                   AND b.register_variant_id=vs.register_variant_id
+                   AND b.valid_from<=vs.valid_to AND vs.valid_from<=b.valid_to
+                   AND (b.provenance IS NULL OR b.coding_metadata='per_column')
+                   AND (b.column_metadata='per_column' OR b.coding_metadata='per_column'
+                        OR (vs.valid_from<=b.valid_from AND b.valid_to<=vs.valid_to))
+                   AND py_lower(b.delivery_column_name)=py_lower(vs.delivery_column_name)))
            UNION
            SELECT p.slug, r.slug, p.slug||'/'||r.slug||'/'||rv.slug, v.slug,
                   w.delivery_column_name, vs.data_type, v.is_identifier,
@@ -2032,13 +2044,20 @@ def _steward_load_db(db_path: Path):
                 AND vs.period_scope='intervals'
                 AND vs.valid_from<=w.valid_to AND w.valid_from<=vs.valid_to
            WHERE trim(w.delivery_column_name) != '' AND v.slug IS NOT NULL
-             AND EXISTS (SELECT 1 FROM variable_alias_window b
-                         WHERE b.variable_id=w.variable_id
-                           AND b.register_variant_id=w.register_variant_id
-                           AND b.valid_from<=MAX(vs.valid_from,w.valid_from)
-                           AND MIN(vs.valid_to,w.valid_to)<=b.valid_to
-                           AND py_lower(b.delivery_column_name)
-                               =py_lower(vs.delivery_column_name))
+             AND (w.column_metadata='per_column' OR w.coding_metadata='per_column'
+                  OR (vs.valid_from<=w.valid_from AND w.valid_to<=vs.valid_to))
+             AND (
+                 (w.provenance IS NOT NULL AND w.coding_metadata!='per_column')
+                 OR EXISTS (SELECT 1 FROM variable_alias_window b
+                            WHERE b.variable_id=w.variable_id
+                              AND b.register_variant_id=w.register_variant_id
+                              AND b.valid_from<=vs.valid_to AND vs.valid_from<=b.valid_to
+                              AND (b.provenance IS NULL OR b.coding_metadata='per_column')
+                              AND (b.column_metadata='per_column'
+                                   OR b.coding_metadata='per_column'
+                                   OR (vs.valid_from<=b.valid_from AND b.valid_to<=vs.valid_to))
+                              AND py_lower(b.delivery_column_name)
+                                  =py_lower(vs.delivery_column_name)))
            ORDER BY prov, reg, coord, vslug, col, vf, dtype"""
     ):
         u = col.upper()
@@ -2174,6 +2193,8 @@ class InventoryMappingOverride(ColumnMapping):
     """One reviewed physical coordinate with a checked catalog representation."""
 
     representation: str = Field(min_length=1)
+    # A reviewed physical table can select one documented questionnaire wave.
+    select_owner: bool = False
     table: str = Field(min_length=1)
     column: str = Field(min_length=1)
     edition: int | str
@@ -2196,7 +2217,9 @@ def _inventory_mapping_records(
     selected = [
         r
         for r in records
-        if r["coord"] == entry.register_variant and r["col"] == entry.representation
+        if r["coord"] == entry.register_variant
+        and r["col"] == entry.representation
+        and (not entry.select_owner or r["vslug"] == entry.variable.variable)
     ]
     admitted, issue = _inventory_period_records(selected, edition)
     owned = [r for r in admitted if r["vslug"] == entry.variable.variable]
@@ -2553,7 +2576,13 @@ def cmd_inventory(args: argparse.Namespace) -> None:
                     r
                     for r in recs
                     if r["coord"] != entry.register_variant
-                    or r["vslug"] != entry.variable.variable
+                    or (
+                        r["col"] != entry.representation
+                        or (
+                            not entry.select_owner
+                            and r["vslug"] != entry.variable.variable
+                        )
+                    )
                 ] + declared
             if mapping_issue:
                 worklist["mapping_scope_needed"].append(

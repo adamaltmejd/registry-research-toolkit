@@ -1571,6 +1571,51 @@ def test_inventory_overlay_preserves_other_positive_owner_for_ambiguity_check(
     assert worklist["mapping_scope_needed"][0]["code"] == "ambiguous_delivered_owners"
 
 
+def test_inventory_overlay_explicit_owner_selection_preserves_physical_column(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    import shutil
+
+    db = tmp_path / "competing-owner.db"
+    shutil.copyfile(flavored_db, db)
+    with sqlite3.connect(db) as conn:
+        conn.execute(
+            "UPDATE variable_state SET delivery_column_name='T_kolumn' "
+            "WHERE variable_id=903"
+        )
+    overlay = _literal_mapping_overlay(column="T_kolumn", select_owner=True)
+    steward = _run_inventory(tmp_path, db, overlay, "T2019", ["T_kolumn"])
+    column = load_delivery_inventory(steward / "inventory.toml").tables[0].columns[0]
+    assert column.name == "T_kolumn"
+    assert [str(m.variable) for m in column.mappings] == [
+        "inera/bestallda-prover/t-kolumn"
+    ]
+    assert column.mappings[0].representation == "T_kolumn"
+
+
+def test_inventory_overlay_owner_selection_requires_own_complete_coverage() -> None:
+    entry = build_catalog.InventoryMappingOverride.model_validate(
+        tomllib.loads(_literal_mapping_overlay(select_owner=True))["mapping"][0],
+        strict=True,
+    )
+    record = {
+        "coord": entry.register_variant,
+        "vslug": entry.variable.variable,
+        "col": entry.representation,
+        "period_scope": "intervals",
+        "valid_from": "2019-01-01",
+        "valid_to": "2019-06-30",
+    }
+    admitted, issue = build_catalog._inventory_mapping_records(
+        entry,
+        [record, {**record, "vslug": "different-quantity", "valid_to": "2019-12-31"}],
+        2019,
+        {entry.register_variant},
+    )
+    assert admitted == []
+    assert issue == "stale_declared_mapping_target"
+
+
 def test_inventory_dated_alias_intersects_states_even_if_literal_was_canonical(
     tmp_path: Path, flavored_db: Path
 ) -> None:
@@ -1593,7 +1638,8 @@ def test_inventory_dated_alias_intersects_states_even_if_literal_was_canonical(
     )
     conn.executemany(
         "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
-        "delivery_column_name, valid_from, valid_to) VALUES (904, 902, ?, ?, ?)",
+        "delivery_column_name, valid_from, valid_to, column_metadata) "
+        "VALUES (904, 902, ?, ?, ?, 'per_column')",
         [
             ("Earlier", "2019-01-01", "2020-12-31"),
             ("Current", "2019-01-01", "2019-12-31"),
@@ -1727,3 +1773,150 @@ def test_source_policy_rejects_unsafe_output_and_catalog_slugs(
     path.write_text(text, encoding="utf-8")
     with pytest.raises(SystemExit, match="invalid SWECOV source policy"):
         build_catalog._load_source_policy(path)
+
+
+@pytest.mark.parametrize(
+    ("provenance", "mode", "start", "end", "expected"),
+    [
+        (
+            "reviewed alias",
+            "shared",
+            "2019-03-01",
+            "2019-08-31",
+            [("2019-03-01", "2019-08-31")],
+        ),
+        (None, "shared", "2019-03-01", "2019-08-31", []),
+        ("reviewed alias", "shared", "2018-01-01", "2020-12-31", []),
+        (
+            "reviewed alias",
+            "per_column",
+            "2018-01-01",
+            "2020-12-31",
+            [("2019-01-01", "2019-12-31")],
+        ),
+    ],
+)
+def test_inventory_curated_alias_needs_no_base_column_window(
+    tmp_path: Path,
+    flavored_db: Path,
+    provenance: str | None,
+    mode: str,
+    start: str,
+    end: str,
+    expected: list[tuple[str, str]],
+) -> None:
+    import shutil
+
+    db = tmp_path / "additive-alias.db"
+    shutil.copyfile(flavored_db, db)
+    with sqlite3.connect(db) as conn:
+        conn.execute(
+            "UPDATE variable_state SET valid_from='2019-01-01', "
+            "valid_to='2019-12-31' WHERE variable_id=904"
+        )
+        conn.execute(
+            "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
+            "delivery_column_name, valid_from, valid_to, provenance, column_metadata) "
+            "VALUES (904,902,'Historic',?,?,?,?)",
+            (start, end, provenance, mode),
+        )
+    records = build_catalog._steward_load_db(db).get(
+        ("inera/bestallda-prover", "HISTORIC"), []
+    )
+    assert [(r["valid_from"], r["valid_to"]) for r in records] == expected
+
+
+@pytest.mark.parametrize("curated_backing", [False, True])
+def test_inventory_shared_alias_cannot_use_invalid_or_curated_source_backing(
+    tmp_path: Path,
+    flavored_db: Path,
+    curated_backing: bool,
+) -> None:
+    import shutil
+
+    db = tmp_path / "source-alias-guards.db"
+    shutil.copyfile(flavored_db, db)
+    with sqlite3.connect(db) as conn:
+        conn.execute(
+            "UPDATE variable_state SET valid_from='2019-01-01', "
+            "valid_to='2019-12-31' WHERE variable_id=904"
+        )
+        conn.execute(
+            "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
+            "delivery_column_name, valid_from, valid_to) "
+            "VALUES (904,902,'Historic','2019-03-01','2019-08-31')"
+        )
+        conn.execute(
+            "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
+            "delivery_column_name, valid_from, valid_to, provenance) "
+            "VALUES (904,902,'T_kolumn',?,?,?)",
+            (
+                "2019-01-01" if curated_backing else "2018-01-01",
+                "2019-12-31" if curated_backing else "2020-12-31",
+                "curated base" if curated_backing else None,
+            ),
+        )
+    assert ("inera/bestallda-prover", "HISTORIC") not in build_catalog._steward_load_db(
+        db
+    )
+
+
+@pytest.mark.parametrize(
+    "case",
+    ["source_replacement", "curated_additive", "source_no_base", "year_independent"],
+)
+def test_inventory_column_windows_match_public_catalog_resolution(
+    tmp_path: Path,
+    flavored_db: Path,
+    case: str,
+) -> None:
+    import shutil
+
+    from reg_meta.catalog import Catalog
+
+    db = tmp_path / "public-resolution-parity.db"
+    shutil.copyfile(flavored_db, db)
+    with sqlite3.connect(db) as conn:
+        conn.execute(
+            "UPDATE variable_state SET valid_from='2019-01-01', "
+            "valid_to='2019-12-31' WHERE variable_id=904"
+        )
+        if case == "year_independent":
+            conn.execute(
+                "UPDATE variable_state SET period_scope='year_independent', "
+                "valid_from=NULL,valid_to=NULL WHERE variable_id=904"
+            )
+        if case in {"source_replacement", "year_independent"}:
+            conn.execute(
+                "INSERT INTO variable_alias_window (variable_id,register_variant_id, "
+                "delivery_column_name,valid_from,valid_to) "
+                "VALUES (904,902,'T_kolumn','2019-03-01','2019-08-31')"
+            )
+        conn.execute(
+            "INSERT INTO variable_alias_window (variable_id,register_variant_id, "
+            "delivery_column_name,valid_from,valid_to,provenance) "
+            "VALUES (904,902,'Historic','2019-03-01','2019-08-31',?)",
+            ("reviewed alias" if case == "curated_additive" else None,),
+        )
+    with open_db(db) as conn:
+        public = Catalog(conn).states("inera/bestallda-prover/t-kolumn")
+    expected = {
+        (
+            state.delivery_column_name,
+            state.valid_from,
+            state.valid_to,
+            state.period_scope,
+        )
+        for state in public
+    }
+    records = build_catalog._steward_load_db(db)
+    actual = {
+        (r["col"], r["valid_from"], r["valid_to"], r["period_scope"])
+        for (register, _), rows in records.items()
+        if register == "inera/bestallda-prover"
+        for r in rows
+        if r["vslug"] == "t-kolumn"
+    }
+    assert actual == expected
+    if case == "source_replacement":
+        assert {r[1:3] for r in actual} == {("2019-03-01", "2019-08-31")}

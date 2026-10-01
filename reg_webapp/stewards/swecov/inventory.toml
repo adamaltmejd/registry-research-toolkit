@@ -70141,11 +70141,6 @@ name = "GP"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/koncernforetag"
-representation = "GP"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/koncernmarkering"
 representation = "GP"
 
@@ -73001,11 +72996,6 @@ name = "CLIM_CUST"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/clim-cust-efterfragan"
-representation = "CLIM_CUST"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/clim-cust-medvetenhet"
 representation = "CLIM_CUST"
 
@@ -73724,11 +73714,6 @@ name = "ENV_ENDEM"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/env-endem"
-representation = "ENV_ENDEM"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/env-endem-kort"
 representation = "ENV_ENDEM"
 
@@ -73750,11 +73735,6 @@ representation = "ENV_ENETX"
 
 [[table.column]]
 name = "ENV_ENGRA"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/env-engra"
-representation = "ENV_ENGRA"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -73787,11 +73767,6 @@ representation = "ENV_ENREQU"
 
 [[table.column]]
 name = "EXP_INNO_INN_XRND"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/exp-inno-inn-xrnd"
-representation = "EXP_INNO_INN_XRND"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -73833,11 +73808,6 @@ name = "FUND_AUT_LOC_REG_RNDINN"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/fund-aut-loc-reg-rndinn"
-representation = "FUND_AUT_LOC_REG_RNDINN"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/stod-for-innovationsverksamhet-kommun"
 representation = "FUND_AUT_LOC_REG_RNDINN"
 
@@ -73847,11 +73817,6 @@ name = "FUND_DEBT_SUCC"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/finansieringskalla-lanefinansiering"
-representation = "FUND_DEBT_SUCC"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/fund-debt-succ"
 representation = "FUND_DEBT_SUCC"
 
 [[table.column]]
@@ -73868,11 +73833,6 @@ name = "FUND_EQUIT_SUCC"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/finansieringskalla-aktiefinansiering"
-representation = "FUND_EQUIT_SUCC"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/fund-equit-succ"
 representation = "FUND_EQUIT_SUCC"
 
 [[table.column]]
@@ -73912,11 +73872,6 @@ name = "FUND_EU_OTH_RNDINN"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/fund-eu-oth-rndinn"
-representation = "FUND_EU_OTH_RNDINN"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/stod-for-innovationsverksamhet-eu"
 representation = "FUND_EU_OTH_RNDINN"
 
@@ -73930,11 +73885,6 @@ representation = "FUND_GOV_CTL"
 
 [[table.column]]
 name = "FUND_GOV_CTL_RNDINN"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/fund-gov-ctl-rndinn"
-representation = "FUND_GOV_CTL_RNDINN"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -74194,11 +74144,6 @@ register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inna-egen-fou"
 representation = "INNA_IH_RND"
 
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inna-ih-rnd"
-representation = "INNA_IH_RND"
-
 [[table.column]]
 name = "INNA_IH_RND_FREQ"
 
@@ -74228,21 +74173,11 @@ name = "INNA_RND_CONTR_OUT"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inna-rnd-contr-out"
-representation = "INNA_RND_CONTR_OUT"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inna-utlagd-fou"
 representation = "INNA_RND_CONTR_OUT"
 
 [[table.column]]
 name = "INNO_PCS_ACCT"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inno-pcs-acct"
-representation = "INNO_PCS_ACCT"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -74278,11 +74213,6 @@ name = "INNO_PCS_OPROC_EXTREL"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inno-pcs-oproc-extrel"
-representation = "INNO_PCS_OPROC_EXTREL"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/introduktion-metoder-externa-relationer"
 representation = "INNO_PCS_OPROC_EXTREL"
 
@@ -74299,21 +74229,11 @@ name = "INNO_PCS_SLS_SERV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inno-pcs-sls-serv"
-representation = "INNO_PCS_SLS_SERV"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/introduktion-metoder-marknadsforing"
 representation = "INNO_PCS_SLS_SERV"
 
 [[table.column]]
 name = "INNO_PCS_WR_DEC_HRM"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inno-pcs-wr-dec-hrm"
-representation = "INNO_PCS_WR_DEC_HRM"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -74434,11 +74354,6 @@ representation = "IPR_OUT_PAT"
 
 [[table.column]]
 name = "IPR_OUT_SELL"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/ipr-out-sell"
-representation = "IPR_OUT_SELL"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
@@ -202559,16 +202474,7 @@ representation = "GSOLFLOW"
 
 [[table.column]]
 name = "GSOLOTH"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/energibesparande-it"
-representation = "GSOLOTH"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/gsoloth-upphandling-ovriga-eu"
-representation = "GSOLOTH"
+unmapped_reason = "Reviewed source ambiguity: the 2017 export assigns GSOLOTH to both energy-saving IT solutions (native question 38333) and electronic public procurement in other EU countries (28818). The delivery metadata cannot select an owner. Physical holdings and both source-native questions are retained; inventory mapping is unavailable. Maintainer approved 2026-10-01."
 
 [[table.column]]
 name = "GSOLVENT"
@@ -202628,29 +202534,11 @@ representation = "IGOV2RT"
 
 [[table.column]]
 name = "INV3R_PAP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-mottagna-e-fakturor-processas"
-representation = "INV3R_PAP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/inv3r-pap"
-representation = "INV3R_PAP"
+unmapped_reason = "Reviewed source ambiguity: the 2017 export assigns INV3R_PAP to native questions 35491 and 38334 about automatically processable electronic invoices, with different supplier/denominator and reference-year wording. Delivery metadata cannot select an owner. Physical holdings and both source-native questions are retained; inventory mapping is unavailable. Maintainer approved 2026-10-01."
 
 [[table.column]]
 name = "INV3R_PMP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-mottagna-fakturor-ej-processas"
-representation = "INV3R_PMP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/faktura-ej-autoprocess"
-representation = "INV3R_PMP"
+unmapped_reason = "Reviewed source ambiguity: the 2017 export assigns INV3R_PMP to native questions 35490 and 38335 about invoices not automatically processable, with different supplier/denominator and reference-year wording. Delivery metadata cannot select an owner. Physical holdings and both source-native questions are retained; inventory mapping is unavailable. Maintainer approved 2026-10-01."
 
 [[table.column]]
 name = "INV3SB"
@@ -208524,16 +208412,7 @@ representation = "GSOLLOG"
 
 [[table.column]]
 name = "GSOLOTH"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/energibesparande-it"
-representation = "GSOLOTH"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/gsoloth-upphandling-ovriga-eu"
-representation = "GSOLOTH"
+unmapped_reason = "Reviewed source ambiguity: the 2017 export assigns GSOLOTH to both energy-saving IT solutions (native question 38333) and electronic public procurement in other EU countries (28818). The delivery metadata cannot select an owner. Physical holdings and both source-native questions are retained; inventory mapping is unavailable. Maintainer approved 2026-10-01."
 
 [[table.column]]
 name = "GSOLVENT"
@@ -208635,29 +208514,11 @@ representation = "IGOVATD"
 
 [[table.column]]
 name = "INV3R_PAP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-mottagna-e-fakturor-processas"
-representation = "INV3R_PAP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/inv3r-pap"
-representation = "INV3R_PAP"
+unmapped_reason = "Reviewed source ambiguity: the 2017 export assigns INV3R_PAP to native questions 35491 and 38334 about automatically processable electronic invoices, with different supplier/denominator and reference-year wording. Delivery metadata cannot select an owner. Physical holdings and both source-native questions are retained; inventory mapping is unavailable. Maintainer approved 2026-10-01."
 
 [[table.column]]
 name = "INV3R_PMP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/andel-mottagna-fakturor-ej-processas"
-representation = "INV3R_PMP"
-
-[[table.column.mapping]]
-register_variant = "scb/it-anvandning/it-anvandning-i-foretag"
-variable = "scb/it-anvandning/faktura-ej-autoprocess"
-representation = "INV3R_PMP"
+unmapped_reason = "Reviewed source ambiguity: the 2017 export assigns INV3R_PMP to native questions 35490 and 38335 about invoices not automatically processable, with different supplier/denominator and reference-year wording. Delivery metadata cannot select an owner. Physical holdings and both source-native questions are retained; inventory mapping is unavailable. Maintainer approved 2026-10-01."
 
 [[table.column]]
 name = "INV3SB"
