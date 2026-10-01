@@ -3439,9 +3439,7 @@ def cmd_errata(args: argparse.Namespace) -> None:
     repo_root = Path(__file__).resolve().parents[3]
     steward_dir = args.out or (repo_root / "reg_webapp" / "stewards" / "swecov")
     inventory = load_inventory(steward_dir / "inventory.toml")
-    # `check_schema=False`: this reads a flavored DB that may predate the running
-    # build's SCHEMA_VERSION, and the gate only touches long-stable tables.
-    conn = open_db(args.db, check_schema=False)
+    conn = open_db(args.db)
     try:
         report = coverage_misses(conn, inventory)
     finally:

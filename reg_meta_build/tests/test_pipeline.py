@@ -944,6 +944,38 @@ def test_compiled_scope_contract_revalidates_serialized_naming(
     assert not (tmp_path / "bad.db").exists()
 
 
+@pytest.mark.parametrize("local", [False, True])
+def test_late_coding_contract_revalidates_serialized_nested_decision(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch, local: bool
+) -> None:
+    from reg_meta_build import source_scope
+
+    register = catalog.curation / "registers/scb/sample.toml"
+    register.write_text(
+        register.read_text(encoding="utf-8")
+        + '\n[[coding.uncoded]]\nvariable = "1.101"\nvariant = "people"\n'
+        'column = "VALUE"\nperiods = [["2020-01-01", "2020-12-31"]]\n'
+        'reason = "Reviewed"\nsource = "fixture"\n',
+        encoding="utf-8",
+    )
+    compile_coding = source_scope.compile_coding_register
+
+    def invalid(*args, **kwargs):
+        cases, diagnostics = compile_coding(*args, **kwargs)
+        assert cases
+        decision = cases[0].decision.model_copy(update={"reason": " "})
+        case = cases[0].model_copy(update={"decision": decision})
+        return (case, *cases[1:]), diagnostics
+
+    monkeypatch.setattr(source_scope, "compile_coding_register", invalid)
+    with pytest.raises(ValueError, match="rationale and provenance"):
+        if local:
+            catalog.check(tmp_path / "report")
+        else:
+            catalog.build(tmp_path / "bad.db", tmp_path / "report", registers=("1",))
+    assert not (tmp_path / "bad.db").exists()
+
+
 def test_strict_curation_failure_preserves_previous_catalog(
     catalog: CatalogFixture, tmp_path: Path
 ) -> None:

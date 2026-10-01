@@ -422,8 +422,9 @@ from the input bundle.
    stored cases back into rules (label binding, naming hashes), and deleting
    `PipelineSelection`, the scope files and the offline conversion.
 5. Remove the register-specific code DESIGN.md lists as debt.
-6. First slice run, then the open decision below.
-7. Finish the slice.
+6. **Done:** first slice and its source-policy decisions.
+7. **Done:** strict slice, deterministic replay, explained semantic deltas and scoped
+   SWECOV holdings verification (2026-10-01; local Batch44 evidence).
 8. Onboard the remaining registers one at a time to semantic parity with 0.40.1.
 
 **Slice.**
@@ -440,14 +441,6 @@ The slice is done when all of these hold:
 - every warning is rule-defined or a counted acknowledgement;
 - the semantic diff against reg_meta 0.40.1 for those registers is explained;
 - `extend-db` SWECOV over the slice passes its holdings gate.
-
-**Open decision, after the first slice run.** Whether the three systematic error classes
-get documented reconciliation rules or register-level acknowledgements:
-
-- `empty_active_coding`;
-- `unresolved_native_identity`;
-- `conflicting_occurrence_facts`, where 77% are two overlapping editions disagreeing on
-  type or length spelling.
 
 Completion: the slice is done and every register is onboarded at semantic parity with
 0.40.1. At that gate, remove DESIGN.md's transitional notes and its pointer here, then

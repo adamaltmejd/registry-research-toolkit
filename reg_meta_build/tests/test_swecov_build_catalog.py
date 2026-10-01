@@ -22,10 +22,11 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _curation_fixtures import write_lisa_errata
-from reg_meta.db import open_db
+from reg_meta.db import SCHEMA_VERSION, open_db
 from reg_meta.errors import RegMetaError
 from reg_meta.inventory import edition_bounds, load_inventory as load_delivery_inventory
 from reg_meta.inventory_check import check_inventory, unresolved_message
+from reg_meta_build.edition_bounds import edition_claims
 from reg_meta_build.ir import (
     IRRegister,
     IRVariable,
@@ -35,7 +36,6 @@ from reg_meta_build.ir import (
     IRVariant,
 )
 from reg_meta_build.sources.curated import CuratedAdapter
-from reg_meta_build.sources.scb import register_edition_claims
 
 if TYPE_CHECKING:
     from types import ModuleType
@@ -416,6 +416,9 @@ def flavored_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     conn = sqlite3.connect(db_path)
     conn.executescript(DDL)
     conn.execute(
+        "INSERT INTO import_manifest VALUES (?, ?)", ("schema_version", SCHEMA_VERSION)
+    )
+    conn.execute(
         "INSERT INTO provider (provider_id, slug, name) VALUES (900, 'inera', 'Inera AB / 1177 Vårdguiden')"
     )
     conn.execute(
@@ -560,9 +563,8 @@ def test_inventory_maps_every_spelling_of_a_co_delivered_column(
     # §12's other half: every emitted mapping must resolve against the DB the
     # deployment serves, or `stewards.check_delivery_inventory` refuses boot.
     # `open_db` is the deployment's own read: `sqlite3.Row` and the `py_lower`
-    # SQL function the catalog resolves with. `check_schema=False` — the
-    # fixture carries no `import_manifest`.
-    conn = open_db(flavored_db, check_schema=False)
+    # SQL function the catalog resolves with.
+    conn = open_db(flavored_db)
     try:
         findings = check_inventory(
             load_delivery_inventory(steward_dir / "inventory.toml"), conn
@@ -788,6 +790,21 @@ def test_errata_worklist_is_empty_when_every_holding_has_a_window(
     assert tomllib.loads(worklist) == {}
 
 
+def test_errata_rejects_incompatible_catalog_schema(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    db = tmp_path / "old.db"
+    db.write_bytes(flavored_db.read_bytes())
+    with sqlite3.connect(db) as conn:
+        conn.execute(
+            "UPDATE import_manifest SET value = '0.1.0' WHERE key = 'schema_version'"
+        )
+    with pytest.raises(RegMetaError) as exc_info:
+        _errata_text(tmp_path, db, {2021: ("T_kolumn",)})
+    assert exc_info.value.code == "schema_incompatible"
+    assert not (tmp_path / "derived/errata_worklist.toml").exists()
+
+
 def test_errata_worklist_splits_version_missing_from_column_missing(
     tmp_path: Path, flavored_db: Path
 ) -> None:
@@ -955,7 +972,7 @@ def test_school_year_version_candidate_round_trips_through_scb_claims(
 
     assert [entry["name"] for entry in worklist["errata"]["version"]] == ["2020/2021"]
     assert worklist["errata"]["delivered"][0]["versions"] == ["2020/2021"]
-    claims = register_edition_claims(901, worklist["errata"]["version"][0]["name"])
+    claims = edition_claims(worklist["errata"]["version"][0]["name"])
     assert claims == (
         (2020, "2020-07-01", "2020-12-31"),
         (2021, "2021-01-01", "2021-06-30"),

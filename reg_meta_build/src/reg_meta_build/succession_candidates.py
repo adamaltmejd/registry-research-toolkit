@@ -1,14 +1,8 @@
 """Read-only succession-candidate curation worklist diagnostic.
 
-SCB variable identity is `(register_id, var_id)` and the build pools columns only
-WITHIN one var_id (`sources/scb.py::_triage_groups`); a split container gives every
-column its own variable (`_apply_split`). There is deliberately no automatic pooling
-across var_ids and no label-change rule, so a NEVER-CO-DELIVERED rename lands as two
-catalog variables with no edge between them: `ForvErs` under var 31395 (…2021) and
-var 47670 (2022…) are two browse rows for one column, and inside a split container
-`PeOrgNr` / `PeOrgNr_LISA` are the `-2` sibling pair. The designed fix is a CURATED
-`replaced_by` edge in `curation/relations.toml`; what was missing is the diagnostic
-that finds the candidates.
+A never-co-delivered rename can appear as two catalog variables without a
+succession edge. This diagnostic proposes checked ``replaced_by`` curation for
+adjacent delivery eras; it does not assign identity or continuity automatically.
 
 Neither existing diagnostic does it: `split_sibling_suspects.py` (#918) explicitly
 SKIPS non-co-delivered pairs (its gate 1 — a pair that never overlapped is not a

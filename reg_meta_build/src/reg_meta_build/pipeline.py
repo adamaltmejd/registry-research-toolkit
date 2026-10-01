@@ -146,6 +146,11 @@ class CompiledScope(_Model):
     variants: tuple[tuple[NativeKey, ResolvedVariant], ...] = ()
 
 
+_CURATION_CASES = TypeAdapter(
+    tuple[CurationCase, ...], config=ConfigDict(ser_json_inf_nan="constants")
+)
+
+
 class CompiledGlobals(_Model):
     """Strict contract for the declarations compiled from tracked curation."""
 
@@ -1032,6 +1037,10 @@ def _run_pipeline(
                     def record_coding_compilation(
                         register, new_cases, new_diagnostics, scope_key=scope_key
                     ) -> None:
+                        _CURATION_CASES.validate_json(
+                            _CURATION_CASES.dump_json(new_cases, warnings="error"),
+                            context=GuardValidationContext(),
+                        )
                         name = f"{register.register_info.provider}/{register.register_info.slug}"
                         if name in seen_coding:
                             raise ValueError(f"coding register compiled twice: {name}")
@@ -1046,15 +1055,6 @@ def _run_pipeline(
                                 if diagnostic_issue.code == "overbroad_curation_entry"
                                 else "stale"
                             ].append(diagnostic_issue.case_id)
-                        merged_scope = scopes[scope_key].model_copy(
-                            update={
-                                "cases": (*scopes[scope_key].cases, *new_cases),
-                            }
-                        )
-                        scopes[scope_key] = CompiledScope.model_validate_json(
-                            merged_scope.model_dump_json(),
-                            context=GuardValidationContext(),
-                        )
                         compiled.cases[scope_key] = tuple(
                             sorted(
                                 (*compiled.cases.get(scope_key, ()), *new_cases),

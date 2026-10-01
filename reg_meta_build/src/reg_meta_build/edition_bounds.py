@@ -143,7 +143,7 @@ def _year_range_span(folded: str) -> tuple[str, str] | None:
 
     No future-guard here: a range ending years from now is read like any other,
     because whether a register's names are forecast horizons is the caller's
-    declared fact (`_PROJECTION_REGISTERS` in `sources/scb.py`).
+    declared fact (`_PROJECTION_REGISTERS` in `sources/scb_records.py`).
     """
     m = _YEAR_RANGE_RE.search(folded)
     if m is None:
@@ -179,7 +179,7 @@ def vintage_claim(versionname: str | None) -> tuple[tuple[int, str, str], ...]:
     The name's first year (`extract_year`), narrowed inside that year by
     `edition_bounds`. Two callers: the single-year fallback below, and a declared
     projection register, where the version IS the vintage
-    (`_PROJECTION_REGISTERS` in `sources/scb.py`). Empty when the name carries no
+    (`_PROJECTION_REGISTERS` in `sources/scb_records.py`). Empty when the name carries no
     parseable year.
     """
     if not versionname:
@@ -213,7 +213,7 @@ def edition_claims(versionname: str | None) -> tuple[tuple[int, str, str], ...]:
     A pure function of the NAME: no build year, corpus statistic or wall clock
     enters here, so a rebuild of the same corpus stays byte-identical and a name
     reads the same whatever else the corpus happens to contain. The projection
-    policy is the caller's (`sources/scb.py::register_edition_claims`).
+    policy is separate from these period claims; `vintage_claim` reads a vintage.
 
     Cached: the coalescer parses per instance row (~515K) over a corpus of a few
     thousand DISTINCT edition names, and the result is immutable.

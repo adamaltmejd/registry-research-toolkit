@@ -1,12 +1,4 @@
-"""Tests for the value-set dedup validator.
-
-Exercises the module-level entry point (`validate_built_db`) and the
-argparse wiring for `reg-meta-build build-db` (validates by default,
-opt out with `--no-validate`). The CLI
-handler itself is two lines of glue around `validate_built_db` and
-`RegMetaError`; the validator module is the part with logic worth
-testing in depth.
-"""
+"""Tests for structural and corpus validation at the catalog write boundary."""
 
 from __future__ import annotations
 

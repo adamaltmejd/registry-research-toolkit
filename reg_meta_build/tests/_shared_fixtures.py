@@ -137,12 +137,8 @@ def db_path(fixture_db: Path) -> str:
 # ── build-driven test helpers (test_codelivery_build /
 #    test_coalesce_connectivity) — one definition, shared across suites ───────
 
-# Clearly-distinct codings for one column: pairwise-disjoint codes (symmetric
-# diff 6 > _COSMETIC_MAX_SYM=2 → not cosmetic) and DIFFERENT version labels
-# (→ no same-label-drift, and arbitrary labels rank equal under
-# _label_resolution_rank → no freshness tiebreak). Plain "YYYY" register
-# versions → equal authority/recency. So nothing in the co-delivery cascade
-# resolves two of these on one column except SUPERSESSION (distinct intro year).
+# Distinct, pairwise-disjoint coding domains and version labels. These fixtures
+# require explicit source evidence or checked curation to reconcile a shared column.
 CODING_A = [("11", "Alpha ett"), ("12", "Alpha två"), ("13", "Alpha tre")]
 CODING_B = [("21", "Beta ett"), ("22", "Beta två"), ("23", "Beta tre")]
 CODING_C = [("31", "Gamma ett"), ("32", "Gamma två"), ("33", "Gamma tre")]

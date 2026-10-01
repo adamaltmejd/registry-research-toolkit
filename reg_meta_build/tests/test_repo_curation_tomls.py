@@ -20,21 +20,18 @@ from _curation_fixtures import write_lisa_errata
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import FqidKind
 from reg_meta_build._curation import repo_curation_path
-from reg_meta_build.alias_windows import load_alias_windows
 from reg_meta_build.concept_groups import (
     load_classification_groups,
     load_code_label_pairs,
     load_concept_groups,
     load_worklist_concept_groups,
 )
-from reg_meta_build.curation_tree import load_curation_tree
-from reg_meta_build.delivery_enrichment import load_delivery_enrichment
+from reg_meta_build.curation_tree import CurationTree, load_curation_tree
 from reg_meta_build.doc_db import (
     _require_doc_source_str,
     load_doc_sources,
     load_related_documents,
 )
-from reg_meta_build.period_family_merges import load_period_family_merges
 from reg_meta_build.relations import _SAME_AS_MAX_COMPONENT, load_relations
 from reg_meta_build.scb_errata import load_scb_errata
 
@@ -48,6 +45,11 @@ from reg_meta_build.fqid_slugs import (
 # reg_meta_build/ package root (tests/ sits beside the curation/ directory).
 _ROOT = Path(__file__).resolve().parent.parent
 _CURATION = _ROOT / "curation"
+
+
+@pytest.fixture(scope="module")
+def repo_tree() -> CurationTree:
+    return load_curation_tree(_CURATION)
 
 
 # Y-304: the 75 reviewed IT-användning (258) recurrent-question identity
@@ -617,8 +619,10 @@ def test_catalog_overlays_share_one_directory() -> None:
     )
 
 
-def test_repo_classification_files_count_and_stay_unique() -> None:
-    tree = load_curation_tree(_CURATION)
+def test_repo_classification_files_count_and_stay_unique(
+    repo_tree: CurationTree,
+) -> None:
+    tree = repo_tree
     books = [entry.classification for entry in tree.classifications]
     labels = [
         label
@@ -640,8 +644,8 @@ def test_repo_classification_files_count_and_stay_unique() -> None:
     assert all((books_dir / book.codes_file).is_file() for book in books)
 
 
-def test_repo_rtb_named_edition_splits_load() -> None:
-    tree = load_curation_tree(_CURATION)
+def test_repo_rtb_named_edition_splits_load(repo_tree: CurationTree) -> None:
+    tree = repo_tree
     rtb = next(
         register for register in tree.registers if register.register_info.slug == "rtb"
     )
@@ -717,8 +721,8 @@ def test_repo_lineage_parses_from_overlay() -> None:
     assert config.overrides == {}
 
 
-def test_repo_coding_windows_are_ported() -> None:
-    tree = load_curation_tree(_CURATION)
+def test_repo_coding_windows_are_ported(repo_tree: CurationTree) -> None:
+    tree = repo_tree
     coding = [
         entry
         for register in tree.registers
@@ -942,22 +946,24 @@ def test_repo_classification_groups_parses() -> None:
     assert all(g.axis is None for g in groups)
 
 
-def test_repo_delivery_enrichment_parses() -> None:
-    enr = load_delivery_enrichment(_CURATION)
-    assert (len(enr.descriptions), len(enr.aliases)) == (359, 45)
+def test_repo_delivery_enrichment_parses(repo_tree: CurationTree) -> None:
+    registers = repo_tree.registers
+    descriptions = [d for r in registers for d in r.enrichment.description]
+    aliases = [a for r in registers for a in r.enrichment.alias]
+    assert (len(descriptions), len(aliases)) == (359, 45)
     # the #365 global description backfills + delivery-column aliases ship together
-    assert enr.descriptions
-    assert enr.aliases
+    assert descriptions
+    assert aliases
     # Slug resolution is maintainer-build territory; load-time shape is this gate.
-    assert all(d.provider and d.register and d.variable for d in enr.descriptions)
-    assert all(a.provider and a.register and a.delivery_column for a in enr.aliases)
+    assert all(d.register_fqid and d.variable for d in descriptions)
+    assert all(a.register_fqid and a.delivery_column for a in aliases)
 
 
-def test_repo_delivery_enrichment_keeps_issue_428_aliases() -> None:
-    aliases = load_delivery_enrichment(_CURATION).aliases
-    triples = {
-        (f"{a.provider}/{a.register}", a.variable, a.delivery_column) for a in aliases
-    }
+def test_repo_delivery_enrichment_keeps_issue_428_aliases(
+    repo_tree: CurationTree,
+) -> None:
+    aliases = [a for r in repo_tree.registers for a in r.enrichment.alias]
+    triples = {(a.register_fqid, a.variable, a.delivery_column) for a in aliases}
 
     assert {
         ("scb/gymnasieskola-betyg", "kurs", "Amneskod_omkodad"),
@@ -975,12 +981,14 @@ def test_repo_delivery_enrichment_keeps_issue_428_aliases() -> None:
     } <= triples
 
 
-def test_repo_alias_windows_parse_and_start_with_verified_it_case() -> None:
-    aliases = load_alias_windows(_CURATION)
+def test_repo_alias_windows_parse_and_start_with_verified_it_case(
+    repo_tree: CurationTree,
+) -> None:
+    aliases = [a for r in repo_tree.registers for a in r.representation.alias_window]
     assert len(aliases) == 4
 
     assert (
-        aliases[0].fqid,
+        aliases[0].variable,
         aliases[0].variant,
         aliases[0].column,
         aliases[0].source_editions,
@@ -988,16 +996,18 @@ def test_repo_alias_windows_parse_and_start_with_verified_it_case() -> None:
         "scb/it-anvandning/bestallde-varor-tjanster-webb-app",
         "it-anvandning-i-foretag",
         "AEBUY",
-        ("2018",),
+        ["2018"],
     )
 
 
-def test_repo_delivery_enrichment_tracks_curated_lisa_sni_slugs() -> None:
-    enr = load_delivery_enrichment(_CURATION)
+def test_repo_delivery_enrichment_tracks_curated_lisa_sni_slugs(
+    repo_tree: CurationTree,
+) -> None:
     lisa_variables = {
         d.variable
-        for d in enr.descriptions
-        if d.provider == "scb" and d.register == "lisa"
+        for r in repo_tree.registers
+        if (r.register_info.provider, r.register_info.slug) == ("scb", "lisa")
+        for d in r.enrichment.description
     }
 
     old_slugs = {
@@ -1033,16 +1043,14 @@ def test_repo_delivery_enrichment_tracks_curated_lisa_sni_slugs() -> None:
     assert curated_slugs <= lisa_variables
 
 
-def test_repo_period_family_merges_parses() -> None:
-    families = load_period_family_merges(_CURATION)
+def test_repo_period_family_merges_parses(repo_tree: CurationTree) -> None:
+    families = [f for r in repo_tree.registers for f in r.representation.period_family]
     assert families  # the #319 LISA monthly families ship with the repo
     assert len(families) == 8
     assert all(family.slug for family in families)
     # Member RESOLUTION (12 month columns exist for the stem) is maintainer-build
     # territory (the materializer fails fast); load-time shape is this gate.
-    assert all(
-        f.provider and f.register and f.family_stem and f.label for f in families
-    )
+    assert all(f.register_fqid and f.family_stem and f.label for f in families)
 
 
 def test_repo_relations_parses() -> None:
@@ -1265,7 +1273,7 @@ def test_repo_fdb_gaturest_declares_two_spelling_ownership() -> None:
     assert slugs[("scb", "1.830.pgaturest")] == "pgaturest"
 
 
-def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
+def test_repo_column_owning_splits_resolve_to_a_slug(repo_tree: CurationTree) -> None:
     # Register-file ownership is complete against the split slugs and each named
     # owner has an actual naming slug.
     slug_dir = repo_slug_dir()
@@ -1276,7 +1284,7 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         for e in entries
         if e.kind == "variable" and e.slug is not None
     }
-    tree = load_curation_tree(_CURATION)
+    tree = repo_tree
     partitions = [
         partition
         for register in tree.registers
@@ -1959,7 +1967,7 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
     assert absent_owners == set()
 
 
-def test_repo_iot_y310_separates_calculation_bases() -> None:
+def test_repo_iot_y310_separates_calculation_bases(repo_tree: CurationTree) -> None:
     # Y-310: 58 IoT native families each deliver three calculation bases, not
     # spelling aliases: individual X (variant 25.763), ordinary household XHB and
     # modelled shared-residence household XVXHB (both variant 25.1153). The map,
@@ -1973,7 +1981,7 @@ def test_repo_iot_y310_separates_calculation_bases() -> None:
         for entry in entries
         if entry.kind == "variable" and entry.slug is not None
     }
-    tree = load_curation_tree(_CURATION)
+    tree = repo_tree
     iot = next(
         register for register in tree.registers if register.register_info.slug == "iot"
     )
@@ -2236,8 +2244,10 @@ def test_related_documents_unknown_top_level_key_raises_curation_error(
     assert "top-level" in exc_info.value.message
 
 
-def test_repo_sun2020_levels_and_grouping_detail_have_exact_owners() -> None:
-    tree = load_curation_tree(_CURATION)
+def test_repo_sun2020_levels_and_grouping_detail_have_exact_owners(
+    repo_tree: CurationTree,
+) -> None:
+    tree = repo_tree
     expected = {
         "47.65": {
             "SUNInr1": "47.65.suninr-1",
@@ -2308,7 +2318,9 @@ def test_repo_sun2020_levels_and_grouping_detail_have_exact_owners() -> None:
     assert snapshot["scb/47.1315"] == "utbildnings-inriktning-sun-2000"
 
 
-def test_repo_fee_bases_and_hreg_representations_keep_distinct_owners() -> None:
+def test_repo_fee_bases_and_hreg_representations_keep_distinct_owners(
+    repo_tree: CurationTree,
+) -> None:
     # Source descriptions distinguish total/component bases, code/text, CSN/SCB
     # classifications and two fee indicators with different blank-code meanings.
     # Literal reuse on another native identity must not broaden these maps.
@@ -2357,7 +2369,7 @@ def test_repo_fee_bases_and_hreg_representations_keep_distinct_owners() -> None:
         "47.29830.studieavg": "avgiftsskyldighet-studieavg",
         "47.29830.avgskyldig": "avgiftsskyldighet-avgskyldig",
     }
-    tree = load_curation_tree(_CURATION)
+    tree = repo_tree
     partitions = {
         entry.variable: entry
         for register in tree.registers
@@ -2386,8 +2398,10 @@ def test_repo_fee_bases_and_hreg_representations_keep_distinct_owners() -> None:
     assert snapshot["scb/47.29874"] == "programinriktning"
 
 
-def test_repo_iot_disposable_income_keeps_capital_gain_exclusion_distinct() -> None:
-    tree = load_curation_tree(_CURATION)
+def test_repo_iot_disposable_income_keeps_capital_gain_exclusion_distinct(
+    repo_tree: CurationTree,
+) -> None:
+    tree = repo_tree
     iot = next(
         register for register in tree.registers if register.register_info.slug == "iot"
     )
@@ -2429,8 +2443,10 @@ def test_repo_iot_disposable_income_keeps_capital_gain_exclusion_distinct() -> N
     )
 
 
-def test_repo_iot_per_adult_income_retains_supplied_definition_bases() -> None:
-    tree = load_curation_tree(_CURATION)
+def test_repo_iot_per_adult_income_retains_supplied_definition_bases(
+    repo_tree: CurationTree,
+) -> None:
+    tree = repo_tree
     iot = next(
         register for register in tree.registers if register.register_info.slug == "iot"
     )
@@ -2477,7 +2493,9 @@ def test_repo_iot_per_adult_income_retains_supplied_definition_bases() -> None:
         ]
 
 
-def test_repo_iot_income_renames_retain_the_2019_source_basis_boundary() -> None:
+def test_repo_iot_income_renames_retain_the_2019_source_basis_boundary(
+    repo_tree: CurationTree,
+) -> None:
     expected = {
         "25.591": {
             "PKUAPEN": "25.591.tjanstepension-tjanst",
@@ -2516,7 +2534,7 @@ def test_repo_iot_income_renames_retain_the_2019_source_basis_boundary() -> None
             "INSFAST": "25.40060.inkomst-av-annan-fastighet",
         },
     }
-    tree = load_curation_tree(_CURATION)
+    tree = repo_tree
     iot = next(
         register for register in tree.registers if register.register_info.slug == "iot"
     )
@@ -2548,7 +2566,9 @@ def test_repo_iot_income_renames_retain_the_2019_source_basis_boundary() -> None
     assert not any(owner.startswith(("25.18384.", "25.30862.")) for owner in names)
 
 
-def test_repo_rtb_contexts_preserve_native_aliases_and_distinct_roles() -> None:
+def test_repo_rtb_contexts_preserve_native_aliases_and_distinct_roles(
+    repo_tree: CurationTree,
+) -> None:
     expected = {
         "2.19": {"ARegion": "2.19.a-region", "AReg": "2.19.a-region"},
         "2.250": {
@@ -2582,7 +2602,7 @@ def test_repo_rtb_contexts_preserve_native_aliases_and_distinct_roles() -> None:
             "StorStadsOmr": "2.40288.storstadsomrade",
         },
     }
-    tree = load_curation_tree(_CURATION)
+    tree = repo_tree
     rtb = next(
         register for register in tree.registers if register.register_info.slug == "rtb"
     )
@@ -2611,7 +2631,9 @@ def test_repo_rtb_contexts_preserve_native_aliases_and_distinct_roles() -> None:
     assert snapshot["scb/2.15.tidcivil"] == "tidpunkt-civilstand"
 
 
-def test_repo_hreg_source_constructs_preserve_event_anchors_and_aliases() -> None:
+def test_repo_hreg_source_constructs_preserve_event_anchors_and_aliases(
+    repo_tree: CurationTree,
+) -> None:
     expected = {
         "47.44": {"Kon": "47.44.kon", "Kon2": "47.44.kon", "kon": "47.44.kon"},
         "47.73": {"Ar": "47.73.ar", "KAr": "47.73.ar-for-tillgodoraknande"},
@@ -2642,7 +2664,7 @@ def test_repo_hreg_source_constructs_preserve_event_anchors_and_aliases() -> Non
             "MedverkHsKod": "47.38118.medverkande-hogskola",
         },
     }
-    tree = load_curation_tree(_CURATION)
+    tree = repo_tree
     hreg = next(
         register for register in tree.registers if register.register_info.slug == "hreg"
     )
@@ -2673,7 +2695,9 @@ def test_repo_hreg_source_constructs_preserve_event_anchors_and_aliases() -> Non
         assert not any(owner.startswith(f"{native}.") for owner in names)
 
 
-def test_repo_iot_operational_definitions_keep_slots_points_and_native_scope() -> None:
+def test_repo_iot_operational_definitions_keep_slots_points_and_native_scope(
+    repo_tree: CurationTree,
+) -> None:
     expected = {
         "25.21523": {
             "TKULONSF": "25.21523.vissa-ej-skattepliktiga-ersattningar",
@@ -2693,7 +2717,7 @@ def test_repo_iot_operational_definitions_keep_slots_points_and_native_scope() -
             "KBH": "25.40427.folkbokforingsforhallande",
         },
     }
-    tree = load_curation_tree(_CURATION)
+    tree = repo_tree
     iot = next(
         register for register in tree.registers if register.register_info.slug == "iot"
     )
@@ -2728,12 +2752,10 @@ def test_repo_iot_operational_definitions_keep_slots_points_and_native_scope() -
     assert snapshot["scb/25.39924"] == "indtj"
 
 
-def test_repo_workplace_employment_keeps_exact_bas_editions_separate() -> None:
-    lisa = next(
-        r
-        for r in load_curation_tree(_CURATION).registers
-        if r.register_info.native_id == "34"
-    )
+def test_repo_workplace_employment_keeps_exact_bas_editions_separate(
+    repo_tree: CurationTree,
+) -> None:
+    lisa = next(r for r in repo_tree.registers if r.register_info.native_id == "34")
     selectors = [p for p in lisa.identity.column_owner if p.variable == "34.15532"]
     assert len(selectors) == 5
     assert not any(p.variable == "34.15532" for p in lisa.identity.partition)
@@ -2751,12 +2773,10 @@ def test_repo_workplace_employment_keeps_exact_bas_editions_separate() -> None:
     }
 
 
-def test_repo_rtb_roles_and_date_granularity_remain_distinct() -> None:
-    rtb = next(
-        r
-        for r in load_curation_tree(_CURATION).registers
-        if r.register_info.native_id == "2"
-    )
+def test_repo_rtb_roles_and_date_granularity_remain_distinct(
+    repo_tree: CurationTree,
+) -> None:
+    rtb = next(r for r in repo_tree.registers if r.register_info.native_id == "2")
     maps = {p.variable: dict(p.columns) for p in rtb.identity.partition}
     country = maps["2.16234"]
     assert country["FlandLan"] == country["FLandLan"] == country["FLandlan"]
@@ -2768,8 +2788,10 @@ def test_repo_rtb_roles_and_date_granularity_remain_distinct() -> None:
     assert maps["2.339"]["FlyttGrans"] != maps["2.339"]["Posttyp"]
 
 
-def test_repo_identity_splits_preserve_public_dependency_targets() -> None:
-    tree = load_curation_tree(_CURATION)
+def test_repo_identity_splits_preserve_public_dependency_targets(
+    repo_tree: CurationTree,
+) -> None:
+    tree = repo_tree
     names = {
         entry.native_id: entry.slug
         for register in tree.registers
@@ -2810,18 +2832,20 @@ def test_repo_identity_splits_preserve_public_dependency_targets() -> None:
     } == {names["25.21515.inkl-kapitalvinst"]}
 
 
-def test_repo_reviewed_parallel_columns_keep_exact_wave_intersections() -> None:
-    tree = load_curation_tree(_CURATION)
+def test_repo_reviewed_parallel_columns_keep_exact_wave_intersections(
+    repo_tree: CurationTree,
+) -> None:
+    tree = repo_tree
     registers = {register.register_info.slug: register for register in tree.registers}
     innovation = registers["innovation-foretag"]
     hreg = registers["hreg"]
-    assert len(innovation.representation.parallel) == 127
+    assert len(innovation.representation.parallel) == 128
     assert (
         sum(
             e.column_metadata == "per_column"
             for e in innovation.representation.parallel
         )
-        == 117
+        == 118
     )
     assert (
         sum(
@@ -2830,6 +2854,16 @@ def test_repo_reviewed_parallel_columns_keep_exact_wave_intersections() -> None:
         )
         == 34
     )
+    (koncern_2008,) = [
+        entry
+        for entry in innovation.representation.parallel
+        if entry.variable == "257.4045.koncernmarkering"
+        and entry.valid_from == "2008-01-01"
+    ]
+    assert koncern_2008.valid_to == "2008-12-31"
+    assert koncern_2008.column_metadata == "per_column"
+    assert koncern_2008.coding_metadata == "shared"
+    assert {column.column for column in koncern_2008.columns} == {"A1", "GP"}
     assert len(hreg.representation.parallel) == 1
     for register in (innovation, hreg):
         for entry in register.representation.parallel:

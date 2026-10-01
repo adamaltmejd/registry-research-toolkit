@@ -9,7 +9,6 @@ from reg_meta_build.edition_bounds import (
     edition_claims,
     vintage_claim,
 )
-from reg_meta_build.sources.scb import register_edition_claims
 
 
 class TestEditionBounds:
@@ -277,24 +276,21 @@ class TestEditionClaims:
 
 
 class TestVintageClaim:
-    """The reading a DECLARED projection register gets: the version IS the
-    vintage, so a name states the horizon its forecast reaches rather than years
-    anything was delivered for. `register_edition_claims` routes register ids in
-    `_PROJECTION_REGISTERS` here and every other register to `edition_claims`."""
+    """A vintage identifies a forecast edition, not its projected coverage."""
 
     def test_projection_name_keeps_its_vintage_year(self) -> None:
         # befolkningsframskrivningar (register 310): `2011-2060` is one
         # 2011-vintage forecast, not a 50-year delivery span.
         assert vintage_claim("2011-2060") == ((2011, "2011-01-01", "2011-12-31"),)
-        assert register_edition_claims(310, "2009-2060 huvudalternativ") == (
+        assert vintage_claim("2009-2060 huvudalternativ") == (
             (2009, "2009-01-01", "2009-12-31"),
         )
 
-    def test_every_other_register_reads_the_full_span(self) -> None:
-        # The same name on a non-declared register claims all of it — the guard
-        # is the register, never the shape of the name.
-        assert register_edition_claims(311, "2011-2060") == edition_claims("2011-2060")
-        assert len(register_edition_claims(311, "2011-2060")) == 50
+    def test_period_claims_retain_the_full_span(self) -> None:
+        claims = edition_claims("2011-2060")
+        assert len(claims) == 50
+        assert claims[0] == (2011, "2011-01-01", "2011-12-31")
+        assert claims[-1] == (2060, "2060-01-01", "2060-12-31")
 
     def test_vintage_still_narrows_within_its_own_year(self) -> None:
         # It is `edition_bounds`' window, not a blind full year: a sub-annual

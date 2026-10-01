@@ -45,6 +45,7 @@ from reg_meta.source_evidence import (  # noqa: TC002 - Pydantic resolves nested
 from ._curation import (
     SentinelCode,
     curation_error,
+    fold_column,
     load_sentinel_codes,
     repo_curation_dir,
 )
@@ -709,6 +710,14 @@ class EnrichmentDescriptionEntry(_CurationModel):
     description: str
     provenance: str = ""
 
+    _text = field_validator("description")(_require_trimmed)
+
+    @field_validator("variable")
+    @classmethod
+    def _local_variable(cls, value: str) -> str:
+        validate_slug(value, "variable")
+        return value
+
 
 class EnrichmentAliasEntry(_CurationModel):
     register_fqid: str = Field(validation_alias="register")
@@ -716,10 +725,25 @@ class EnrichmentAliasEntry(_CurationModel):
     delivery_column: str
     provenance: str = ""
 
+    _text = field_validator("delivery_column")(_require_trimmed)
+    _variable = field_validator("variable")(EnrichmentDescriptionEntry._local_variable)
+
 
 class EnrichmentCuration(_CurationModel):
     description: list[EnrichmentDescriptionEntry] = Field(default_factory=list)
     alias: list[EnrichmentAliasEntry] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _unique_targets(self) -> EnrichmentCuration:
+        descriptions = [entry.variable for entry in self.description]
+        aliases = [
+            (entry.variable, entry.delivery_column.lower()) for entry in self.alias
+        ]
+        if len(descriptions) != len(set(descriptions)):
+            raise ValueError("duplicate description target")
+        if len(aliases) != len(set(aliases)):
+            raise ValueError("duplicate alias target")
+        return self
 
 
 class GroupAxis(_CurationModel):
@@ -764,6 +788,8 @@ class PeriodFamilyEntry(_CurationModel):
     slug: str
     expected_definitions: dict[str, str] | None = None
 
+    _text = field_validator("family_stem", "label")(_require_trimmed)
+
     @field_validator("expected_definitions")
     @classmethod
     def _month_definitions(cls, value: dict[str, str] | None) -> dict[str, str] | None:
@@ -790,6 +816,19 @@ class AliasWindowEntry(_CurationModel):
     source_editions: list[str]
     evidence: str
     noted: str
+
+    _text = field_validator("variant", "column", "evidence")(_require_trimmed)
+    _ref = field_validator("variable")(_variable)
+    _date = field_validator("noted")(ErrataClassificationReferenceEntry._noted)
+
+    @field_validator("source_editions")
+    @classmethod
+    def _editions(cls, value: list[str]) -> list[str]:
+        if not value or len(value) != len(set(value)):
+            raise ValueError("source_editions must be non-empty and unique")
+        for edition in value:
+            _require_trimmed(edition)
+        return value
 
 
 class ParallelRepresentationColumn(ColumnRepresentation):
@@ -1165,6 +1204,29 @@ class RepresentationCuration(_CurationModel):
     delivery_metadata: list[DeliveryMetadataEntry] = Field(default_factory=list)
     alias_window: list[AliasWindowEntry] = Field(default_factory=list)
     parallel: list[ParallelRepresentationEntry] = Field(default_factory=list)
+
+    @field_validator("alias_window")
+    @classmethod
+    def _unique_alias_columns(
+        cls, value: list[AliasWindowEntry]
+    ) -> list[AliasWindowEntry]:
+        keys = [
+            (entry.variable, entry.variant, fold_column(entry.column))
+            for entry in value
+        ]
+        if len(keys) != len(set(keys)):
+            raise ValueError("duplicate alias-window column")
+        return value
+
+    @field_validator("period_family")
+    @classmethod
+    def _unique_family_stems(
+        cls, value: list[PeriodFamilyEntry]
+    ) -> list[PeriodFamilyEntry]:
+        stems = [entry.family_stem for entry in value]
+        if len(stems) != len(set(stems)):
+            raise ValueError("duplicate period-family stem")
+        return value
 
 
 class CodingEntry(_CurationModel):
@@ -1921,6 +1983,12 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                     (row.code.rsplit("/", 1)[0], row.label.rsplit("/", 1)[0])
                 )
             elif isinstance(row, AliasWindowEntry):
+                if identity.provider != "scb":
+                    raise curation_error(
+                        _CODE,
+                        f"{file} [[{table}]] entry {index}: alias windows require an SCB register.",
+                        "Use the owning SCB register's source-edition declaration.",
+                    )
                 register_refs.append(row.variable.rsplit("/", 1)[0])
             for value in register_refs:
                 _check_register_ref(

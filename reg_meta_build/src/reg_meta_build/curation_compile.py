@@ -68,7 +68,7 @@ from .scb_errata import (
     convert_column_entry,
     convert_delivered_entry,
     edition_bindings,
-    load_scb_errata,
+    resolve_scb_errata,
 )
 from .source_coding import (
     coding_source_sha256,
@@ -5312,9 +5312,8 @@ def compile_errata(
     dict[str, dict[str, list[str]]],
 ]:
     """Compile the SCB omission ledger against complete native variant slices."""
-    loaded = load_scb_errata(
-        tree.root,
-        None,
+    loaded = resolve_scb_errata(
+        tree.registers,
         classifications=frozenset(
             c.classification.short_name for c in tree.classifications
         ),

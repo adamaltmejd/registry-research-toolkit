@@ -64,8 +64,8 @@ dependency and lineage resolution → `resolved_catalog.write_resolved_catalog`.
 Transitional: builder code still names specific registers or variants in four places.
 They are debt to remove, not precedent:
 
-- `sources/scb.py` `_PROJECTION_REGISTERS`, which reads one forecast register's edition
-  names as vintages;
+- `sources/scb_records.py` `_PROJECTION_REGISTERS`, which reads one forecast register's
+  edition names as vintages;
 - the LISA code-membership anchor in `validate.py`;
 - the CIS 2014 register/variant selector in `cis2016_matrix.py`;
 - the LISA variant pins in `source_inspection.py`.
@@ -155,10 +155,10 @@ never replaces the original cells:
   or `Kvartal 1-3 fr.o.m YYYY` label is an open quarterly delivery line from YYYY-01-01.
   This interval is its hull: it includes Q4 even though that line only delivers Q1–Q3.
   `source_scopes` alone applies this reading; `edition_bounds` and `edition_claims`
-  still read these labels as one year's Q1–Q3 for inventory coverage, errata era order
-  and `register_edition_claims`. Other multi-year periods remain pooled. The edition
-  label and a variable's declared measurement/reference period are separate
-  observations. An SCB `YYYY, slutlig version` edition supersedes the same variant's
+  still read these labels as one year's Q1–Q3 for inventory coverage and errata era
+  order. Other multi-year periods remain pooled. The edition label and a variable's
+  declared measurement/reference period are separate observations. An SCB
+  `YYYY, slutlig version` edition supersedes the same variant's
   `YYYY, preliminär version` per native variable, retaining its records as support
   evidence. A pooled scope carries its whole-range bounds (Y-202): the exact interval's
   endpoints for a multi-year exact range, else the first claim's start through the last

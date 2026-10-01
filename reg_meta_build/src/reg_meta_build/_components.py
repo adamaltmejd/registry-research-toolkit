@@ -1,11 +1,7 @@
-"""Deterministic union-find shared by the SCB triage component builders
-(`sources/scb.py`: contested-column clustering, rule-2 column connectivity) and
-the concept-group edge pass (`concept_groups.py`, #303).
+"""Deterministic union-find for catalog dependency components.
 
-One implementation so the determinism rule cannot diverge between the triage
-components and the browse groups that mirror them: ``union`` parents the
-larger root under the smaller (lex-min root), so component roots — and
-everything keyed on them — are stable regardless of edge insertion order.
+``union`` parents the larger root under the smaller (lex-min root), so
+component roots are stable regardless of edge insertion order.
 """
 
 from __future__ import annotations

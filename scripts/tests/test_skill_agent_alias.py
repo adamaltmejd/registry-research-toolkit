@@ -33,6 +33,7 @@ _SKILLS = {
     "reg-webapp-frontend-design": (".claude", ".agents"),
     "reg-webapp-design-reviewer": (".claude", ".agents"),
     "upgrade-deps": (".agents", ".claude"),
+    "build-db": (".agents", ".claude"),
 }
 
 

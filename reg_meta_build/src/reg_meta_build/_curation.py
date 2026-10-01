@@ -1,27 +1,12 @@
 """Shared helpers for the maintainer-edited curation TOML loaders.
 
-The scaffold (`load_curation_entries`, `curation_error`, `canonical_int`,
-`fold_column`) plus the per-entry leaf helpers below (`require_str`,
-`require_bool`, `require_evidence`, `require_fqid`, `resolve_variable_id`,
-`resolve_register_id`)
-serve the `[[entry]]` curation-TOML loaders —
-`concept_groups.py`, `tags.py`,
-`period_family_merges.py`, `delivery_enrichment.py`, `scb_errata.py`,
-`alias_windows.py`, and `relations.py` (the single
-typed `[[edge]]` surface for the curated pairwise relations — same_as /
-replaced_by, #522). Each loader threads its own `code` / `prefix` / `file_name`
-through (typically via a module-level `functools.partial`) so its established error
-codes (and near-identical messages) are preserved.
-The exceptions are `curation_tree.py` / `fqid_slugs.py` / `extend_db.py`, whose
-data shapes differ enough that they don't share this scaffold.
+The TOML scaffold and field helpers serve concept-group worklists, tags,
+SCB errata, and curated relations. Register contracts use Pydantic models in
+`curation_tree.py`; checked decisions compile in `curation_compile.py`.
 
-Two single-definition invariants the helpers enforce: id keys MUST canonicalize
-identically — a leniently coerced id (`int(1.5)`, `int(True)`, `int("01")`, a
-negative) silently produces an inert never-matching curation pin instead of an
-actionable load-time error (`canonical_int`); and the loaders' column keys must
-fold EXACTLY like the SCB coalescer's union-find node-col (`sources/scb.py`
-`_ascii_fold_lower` delegates here), or a curated column silently stops matching
-its triage component (`fold_column`).
+Canonical integers reject coercions that would silently change native IDs.
+Folded column keys are shared by source identity, curation bindings, and sibling
+checks, so a curated column matches the same spelling variants as its source.
 """
 
 from __future__ import annotations
@@ -130,13 +115,12 @@ def repo_worklist_path(file_name: str) -> Path | None:
 
 @functools.cache
 def fold_column(s: str) -> str:
-    """Canonical column-identity key: NFKD-decompose, strip non-ASCII, lowercase
-    (`Kön` → `kon`, `PersonNr` → `personnr`). This is the SCB rule-2 connectivity
-    key — case/diacritic column twins fold to one union-find node — and therefore
-    the form every curated column key is normalized to at load time. Cached: the
-    coalescer folds per row-column over ~515K instance rows, but the domain is
-    the corpus's distinct header spellings (tens of thousands), so a process-
-    lifetime cache is small and saves repeated NFKD passes."""
+    """Shared column key: NFKD-decompose, strip non-ASCII, lowercase.
+
+    `Kön` becomes `kon`, and `PersonNr` becomes `personnr`. Source identity,
+    storage declarations, and curated column bindings use this same fold.
+    Cache distinct spellings to avoid repeated Unicode normalization.
+    """
     return (
         unicodedata.normalize("NFKD", s)
         .encode("ascii", "ignore")
@@ -191,8 +175,8 @@ def widen_data_type_classes(classes: Iterable[str]) -> str | None:
 # `text`); SOS-style Swedish labels (`Heltal`, `Sträng (text)`, `Datum`) reach
 # the same column. Substring match is safe — the field only ever holds a type
 # name — and the two marker sets are disjoint across known types, so order
-# doesn't matter. Hoisted here (with `_data_type_class` below) so the SCB triage
-# (`sources/scb.py`) and the read-only split-sibling diagnostic
+# doesn't matter. Hoisted here (with `_data_type_class` below) so source sibling checks
+# (`source_siblings.py`) and the read-only split-sibling diagnostic
 # (`split_sibling_suspects.py`) share ONE numeric/text/other classifier — the
 # import-bug shape signal must not diverge between the build-time split and the
 # diagnostic that re-derives it. `fold_column` (above) is the only dependency, so
@@ -214,7 +198,7 @@ def _data_type_class(dt: str | None) -> str:
 
 
 # Code/label column-pair detection. Hoisted here (alongside `_data_type_class`)
-# so the SCB triage (`sources/scb.py`) and the read-only split-sibling diagnostic
+# so source sibling checks (`source_siblings.py`) and the read-only diagnostic
 # (`split_sibling_suspects.py`) apply ONE code-vs-label name heuristic — the build
 # checks it BEFORE the import-bug shape heuristic (a `<stem>` code + its
 # `<stem>namn` label is a representation pair, NOT a mis-typed delivery), so the
@@ -251,7 +235,7 @@ def _is_code_then_label(code: str, label: str) -> bool:
 def _looks_like_code_label_pair(col_a: str, col_b: str) -> bool:
     """A code column paired with its label column, in either order. Name-based
     only (the old #132 heuristic, re-derived to current conventions). Folds each
-    column via `fold_column` (== the SCB coalescer's `_ascii_fold_lower`)."""
+    column via the shared `fold_column` key."""
     a, b = fold_column(col_a), fold_column(col_b)
     if not a or not b:
         return False

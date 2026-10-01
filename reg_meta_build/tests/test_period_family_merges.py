@@ -12,7 +12,6 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.curation_compile import compile_matrix_repr, compile_period_families
 from reg_meta_build.curation_tree import load_register_files
-from reg_meta_build.period_family_merges import PeriodFamily, load_period_family_merges
 from reg_meta_build.pipeline import CompiledScope
 from reg_meta_build.source_coding import resolve_code_membership
 from reg_meta_build.source_coordinates import column_identity, source_register_key
@@ -47,14 +46,13 @@ def test_load_period_family_parses_explicit_slug(tmp_path: Path) -> None:
         'family_stem = "lonfink"\nlabel = "Lön per månad"\n'
         'slug = "lone-eller-foretagarinkomst-manad"\n',
     )
-    assert load_period_family_merges(root) == (
-        PeriodFamily(
-            "scb",
-            "lisa",
-            "lonfink",
-            "Lön per månad",
-            "lone-eller-foretagarinkomst-manad",
-        ),
+    (register,) = load_register_files(root)
+    (family,) = register.representation.period_family
+    assert (family.register_fqid, family.family_stem, family.label, family.slug) == (
+        "scb/lisa",
+        "lonfink",
+        "Lön per månad",
+        "lone-eller-foretagarinkomst-manad",
     )
 
 
@@ -65,7 +63,7 @@ def test_load_period_family_requires_authored_slug(tmp_path: Path) -> None:
         'family_stem = "lonfink"\nlabel = "Lön"\n',
     )
     with pytest.raises(RegMetaError) as exc:
-        load_period_family_merges(root)
+        load_register_files(root)
     assert exc.value.exit_code == EXIT_CONFIG
     assert "curation/registers/scb/lisa.toml" in exc.value.message
     assert "[[representation.period_family.slug]] entry 1" in exc.value.message
@@ -79,7 +77,7 @@ def test_load_period_family_rejects_unknown_key(tmp_path: Path) -> None:
         'family_stem = "lonfink"\nlabel = "Lön"\nslug = "lonfink"\nunknown = "x"\n',
     )
     with pytest.raises(RegMetaError) as exc:
-        load_period_family_merges(root)
+        load_register_files(root)
     assert exc.value.exit_code == EXIT_CONFIG
     assert "entry 1" in exc.value.message
 
@@ -91,7 +89,7 @@ def test_load_period_family_rejects_wrong_register(tmp_path: Path) -> None:
         'family_stem = "lonfink"\nlabel = "Lön"\nslug = "lonfink"\n',
     )
     with pytest.raises(RegMetaError) as exc:
-        load_period_family_merges(root)
+        load_register_files(root)
     assert exc.value.exit_code == EXIT_CONFIG
     assert "does not match" in exc.value.message
 
@@ -105,12 +103,8 @@ def test_load_period_family_rejects_duplicate_stem(tmp_path: Path) -> None:
         'family_stem = "x"\nlabel = "B"\nslug = "x"\n',
     )
     with pytest.raises(RegMetaError) as exc:
-        load_period_family_merges(root)
-    assert exc.value.code == "period_family_merges_invalid"
-
-
-def test_load_period_family_empty_when_no_tree() -> None:
-    assert load_period_family_merges(None) == ()
+        load_register_files(root)
+    assert "duplicate period-family stem" in exc.value.message
 
 
 def _month_records(count: int):

@@ -10,8 +10,8 @@ index. End users install [`reg_meta`](../reg_meta/) and fetch published database
    outside Git; the local input repository tracks lossless compact data and provenance.
 2. Prepare and fully validate a new candidate with provider-format adapters. Commit the
    candidate in the local input repository and pin its commit and manifest digest.
-3. Supply a checked selection and its per-register curation files. The selection pins
-   all prepared sources, exact decisions, naming and catalog dependencies.
+3. Select complete register scopes and their tracked curation files. Supply the exact
+   prepared input commit and manifest digest to every check and build.
 4. Run a diagnostic build to investigate discrepancies, then a strict build only when
    the selected inputs and curation are ready for publication.
 
@@ -28,13 +28,16 @@ reg-meta-build check-curation --prepared /path/to/accepted-prepared \
 
 # A diagnostic completes the selected scan but remains nonpublishable (exit 10).
 # Both paths must be new; the active catalog is untouched.
-reg-meta-build build-db --selection /path/to/selection.json \
+reg-meta-build build-db --prepared /path/to/accepted-prepared \
+  --input-commit EXACT_SHA --input-manifest-sha256 EXACT_SHA256 \
   --report-dir /path/to/new-report \
   --diagnostic --diagnostic-db-path /path/to/new-diagnostic.db
 
 # Strict publication refuses unresolved errors and preserves the previous catalog.
 reg-meta-build --db /path/to/output-dir build-db \
-  --selection /path/to/selection.json --report-dir /path/to/new-strict-report
+  --prepared /path/to/accepted-prepared \
+  --input-commit EXACT_SHA --input-manifest-sha256 EXACT_SHA256 \
+  --report-dir /path/to/new-strict-report
 ```
 
 During a curation batch, use focused TOML and slug tests for editing feedback.
@@ -44,11 +47,12 @@ batch checkpoint for approval, rather than after each small edit. Record the exa
 revision; further curation can proceed separately while that frozen revision is
 verified.
 
-`pipeline.PipelineSelection` and `pipeline.ScopeDeclarations` define the
-machine-readable selection contract. Scope files are pinned by SHA-256. Selection
-preparation is an explicit maintainer action; a build never refreshes curation
-expectations, calls an LLM, extracts PDF facts, or accepts new inputs. Warm builds use
-prepared stores without expanding cold archives or repeating preparation validation.
+The CLI validates the prepared input pins and compiles tracked TOML curation in process.
+Use `--curation-dir` to select another tracked tree and `--registers` for a
+nonpublishable subset. Reports record the curation digest. Input preparation is an
+explicit maintainer action; a build never refreshes curation expectations, calls an LLM,
+extracts PDF facts, or accepts new inputs. Warm builds use prepared stores without
+expanding cold archives or repeating preparation validation.
 
 Reports contain `summary.json` and a compressed structured event ledger with original
 source references, applicability failures and withheld output. Diagnostic mode retains

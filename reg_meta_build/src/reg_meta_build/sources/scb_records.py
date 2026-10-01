@@ -28,7 +28,6 @@ from reg_meta_build.source_records import (
     SourceSubject,
     value_field,
 )
-from reg_meta_build.sources.scb import _PROJECTION_REGISTERS
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator, Mapping, Sequence
@@ -36,6 +35,9 @@ if TYPE_CHECKING:
     from reg_meta_build.input_snapshot import ScbSnapshotReader
 
 LISA_REGISTER_ID = 34
+
+# Accepted forecast-register convention: editions denote vintages, not coverage.
+_PROJECTION_REGISTERS: set[int] = {310}
 
 
 @dataclass(frozen=True, slots=True)

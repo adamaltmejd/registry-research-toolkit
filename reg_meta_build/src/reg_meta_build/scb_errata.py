@@ -396,6 +396,29 @@ def load_scb_errata(
     column key: a column is one kind of omission or the other, never both.
     """
     registers_curation = load_register_files(path) if path is not None else ()
+    return resolve_scb_errata(
+        registers_curation,
+        slug_dir,
+        classifications=classifications,
+        classification_root=path,
+    )
+
+
+def resolve_scb_errata(
+    registers_curation: Sequence[RegisterCuration],
+    slug_dir: Path | None = None,
+    *,
+    classifications: frozenset[str] | None = None,
+    classification_root: Path | None = None,
+) -> ScbErrata:
+    """Resolve loaded register declarations without reparsing their source files.
+
+    Compilers supply the loaded classification names. The path loader may use
+    classification_root for its existing lazy classification lookup.
+    """
+    registers_curation = tuple(
+        sorted(registers_curation, key=lambda row: row.source_file)
+    )
     version_entries = _entries("version", registers_curation)
     delivered_entries = _entries("delivered", registers_curation)
     column_entries = _entries("column", registers_curation)
@@ -513,9 +536,9 @@ def load_scb_errata(
                     if classifications is not None
                     else frozenset(
                         item.classification.short_name
-                        for item in load_classifications(path)
+                        for item in load_classifications(classification_root)
                     )
-                    if path is not None
+                    if classification_root is not None
                     else frozenset()
                 )
             if classification not in declared_classifications:

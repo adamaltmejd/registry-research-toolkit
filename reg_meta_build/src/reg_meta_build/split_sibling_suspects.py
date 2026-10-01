@@ -13,30 +13,11 @@ worklist a maintainer reads, and materializes NOTHING. There is no loader for th
 emitted TOML on purpose — the maintainer folds (`curation/registers/<provider>/<slug>.toml`) or severs
 by hand; the `disposition` placeholder is the human's to fill.
 
-A SPLIT family is the variables sharing one `(register_id, provider_key)` (the
-A2.2 triage minted siblings under one source var_id). For each intra-family PAIR
-the reason is classified with the SAME PRECEDENCE as the build-time
-`sources/scb.py::_split_relation_kind` (the fold gate) so the diagnostic and the
-build can't diverge on which pairs are suspects vs representation/fold candidates:
-
-  1. CO-DELIVERY gate — the build short-circuits a non-co-delivered pair to the
-     generic (foldable) kind BEFORE any heuristic, because cross-edition shape
-     differences are meaningless (a temporal rename/split whose two siblings never
-     overlap is not a mis-import). So a pair is emitted ONLY when its two siblings
-     were co-delivered: each has a `variable_state` in the SAME `register_variant`
-     with OVERLAPPING `[valid_from, valid_to]`. A non-co-delivered pair is skipped.
-  2. `code_vs_label` — a code column + its `<stem>namn` label
-     (`_looks_like_code_label_pair`, mirroring the build's `code_vs_label_pair`):
-     a distinct representation/fold candidate, NOT an import-bug suspect.
-  3. `type_flip` — one side numeric, the other text (the primary SCB/SOS
-     import-bug signal).
-  4. `length_disagree` — an unclassifiable "other" type on at least one side with
-     a present-on-both differing `data_length`.
-
-The shape checks read each variable's REPRESENTATIVE state (its latest-era
-`variable_state`) and reuse the shared `_data_type_class` / `_looks_like_code_label_pair`
-helpers so the diagnostic and the build can't diverge on "numeric-vs-text" or
-"code-vs-label".
+A split family contains variables sharing one ``(register_id, provider_key)``.
+The diagnostic checks overlapping delivery windows, then reports code/label,
+numeric/text and length differences in that order. These are review heuristics,
+not rules that authorize a catalog merge. It uses representative latest-era
+states and the shared column/type normalization helpers.
 
 Each suspect also records whether the two variables are ALREADY co-grouped (share
 a `concept_group` via `concept_group_variable`): co-delivery and co-grouping are
@@ -115,14 +96,11 @@ class SplitSiblingResult:
 def _split_relation_reason(a: SiblingShape, b: SiblingShape) -> str | None:
     """Classify a CO-DELIVERED pair's relation, returning the `reason` or None.
 
-    Mirrors the precedence of `sources/scb.py::_split_relation_kind` (the
-    build-time fold gate) AFTER its co-delivery short-circuit — callers must apply
-    the co-delivery gate first (see `_codelivered_pairs`); this leaf assumes the
-    pair is co-delivered. Reusing the shared `_looks_like_code_label_pair` /
-    `_data_type_class` helpers, most specific first:
+    Callers first apply the window-overlap gate (`_codelivered_pairs`). The
+    shared column/type helpers classify the most specific shape first:
 
     - `code_vs_label` — a code column + its `<stem>namn` label (name-based, high
-      confidence; the build's `code_vs_label_pair`). A representation/fold
+      confidence). A representation/fold
       candidate, NOT an import-bug suspect — checked FIRST so a `<stem>` (numeric)
       / `<stem>namn` (text) pair is never mislabeled as a `type_flip`;
     - `type_flip` — one side numeric, the other text (the primary import-bug
@@ -241,7 +219,7 @@ def _codelivered_pairs(conn: sqlite3.Connection) -> set[frozenset[int]]:
     """The unordered `{variable_id, variable_id}` SPLIT-SIBLING pairs that were
     CO-DELIVERED: each side has a `variable_state` in the SAME `register_variant`
     whose `[valid_from, valid_to]` eras OVERLAP. This is the diagnostic side of
-    the build's co-delivery short-circuit (`sources/scb.py::_split_relation_kind`):
+    the diagnostic's window-overlap gate:
     a non-co-delivered pair (a temporal rename/split whose two siblings never
     shared a variant era) is NOT a suspect — its cross-edition shape difference is
     meaningless. Standard closed-interval overlap on the inclusive `YYYY-MM-DD`
@@ -252,16 +230,9 @@ def _codelivered_pairs(conn: sqlite3.Connection) -> set[frozenset[int]]:
     `provider_key IS NOT NULL`) — co-delivery is only asked about intra-family
     pairs, so the self-join never widens past a split family. `s1.variable_id <
     s2.variable_id` emits each unordered pair once."""
-    # simplify: window-overlap PROXY for the build's edition-exact co-delivery.
-    # The build (`scb.py::_triage_groups`) keys `codelivered_pairs` on a shared
-    # `(register_variant_id, regver_id)` EDITION bucket; the shipped
-    # `variable_state` materializes only projected `[valid_from, valid_to]` windows
-    # (no `regver_id`), so edition-exact co-delivery is not recomputable read-side.
-    # Window-overlap is the faithful available proxy and is CONSERVATIVE: it can
-    # over-include a boundary temporal-rename pair whose windows abut, but never
-    # drops a genuinely co-delivered pair — and this is a maintainer worklist that
-    # is triaged per-pair anyway. Upgrade to an exact edition join if `regver_id`
-    # is ever materialized into `variable_state`.
+    # simplify: overlapping validity windows approximate physical co-delivery;
+    # they can include unsupported pairs. Use exact edition membership if the
+    # catalog exposes it; these candidates always require curator review.
     rows = conn.execute(
         """
         SELECT DISTINCT s1.variable_id, s2.variable_id
@@ -285,9 +256,8 @@ def infer_split_sibling_suspects(conn: sqlite3.Connection) -> SplitSiblingResult
     NEVER mutates).
 
     A SPLIT family is the variables sharing one `(register_id, provider_key)` with
-    `provider_key IS NOT NULL` and >= 2 members. For each intra-family PAIR, with
-    the SAME precedence as the build-time `sources/scb.py::_split_relation_kind`:
-    a pair is SKIPPED unless CO-DELIVERED (`_codelivered_pairs` — the two siblings
+    `provider_key IS NOT NULL` and >= 2 members. For each intra-family pair,
+    a pair is skipped unless its delivery windows overlap (`_codelivered_pairs` — the two siblings
     overlap in some `register_variant`), then classified off each variable's
     representative `variable_state` (`_representative_shapes`) via
     `_split_relation_reason` — `code_vs_label` / `type_flip` / `length_disagree`.

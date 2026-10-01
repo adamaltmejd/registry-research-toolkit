@@ -8,7 +8,6 @@ import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.source_evidence import SourceRevision
-from reg_meta_build.alias_windows import load_alias_windows
 from reg_meta_build.curation_compile import compile_alias_windows
 from reg_meta_build.curation_tree import load_register_files
 from reg_meta_build.source_coordinates import (
@@ -50,19 +49,20 @@ def _entry(variable: str = "scb/testreg/test-variable", extra: str = "") -> str:
 
 def test_valid_alias_window_parses(tmp_path: Path) -> None:
     root = _write_register(tmp_path, _entry())
-    (alias,) = load_alias_windows(root)
-    assert (alias.fqid, alias.variant, alias.column, alias.source_editions) == (
+    (register,) = load_register_files(root)
+    (alias,) = register.representation.alias_window
+    assert (alias.variable, alias.variant, alias.column, alias.source_editions) == (
         "scb/testreg/test-variable",
         "test-variant",
         "AEBUY",
-        ("2018",),
+        ["2018"],
     )
 
 
 def test_unknown_key_is_rejected(tmp_path: Path) -> None:
     root = _write_register(tmp_path, _entry(extra='witness = "2015"\n'))
     with pytest.raises(RegMetaError) as exc:
-        load_alias_windows(root)
+        load_register_files(root)
     assert exc.value.exit_code == EXIT_CONFIG
     assert "entry 1" in exc.value.message
 
@@ -70,7 +70,7 @@ def test_unknown_key_is_rejected(tmp_path: Path) -> None:
 def test_wrong_register_is_rejected(tmp_path: Path) -> None:
     root = _write_register(tmp_path, _entry("scb/other/test-variable"))
     with pytest.raises(RegMetaError) as exc:
-        load_alias_windows(root)
+        load_register_files(root)
     assert exc.value.exit_code == EXIT_CONFIG
     assert "does not match" in exc.value.message
 
@@ -78,8 +78,8 @@ def test_wrong_register_is_rejected(tmp_path: Path) -> None:
 def test_invalid_noted_date_is_rejected(tmp_path: Path) -> None:
     root = _write_register(tmp_path, _entry().replace("2026-09-13", "soon"))
     with pytest.raises(RegMetaError) as exc:
-        load_alias_windows(root)
-    assert "YYYY-MM-DD" in exc.value.message
+        load_register_files(root)
+    assert "ISO date" in exc.value.message
 
 
 def test_unresolved_compiled_variable_fqid_is_stale(tmp_path: Path) -> None:
@@ -256,3 +256,20 @@ def test_alias_window_with_two_compiled_variable_keys_is_overbroad(
     )
     assert cases == ()
     assert [issue.code for issue in issues] == ["overbroad_curation_entry"]
+
+
+@pytest.mark.parametrize("editions", ["[]", '["2018", "2018"]', '[" "]'])
+def test_alias_window_requires_distinct_nonempty_source_editions(
+    tmp_path: Path, editions: str
+) -> None:
+    root = _write_register(tmp_path, _entry().replace('["2018"]', editions))
+    with pytest.raises(RegMetaError) as exc:
+        load_register_files(root)
+    assert exc.value.exit_code == EXIT_CONFIG
+
+
+def test_alias_window_rejects_duplicate_folded_columns(tmp_path: Path) -> None:
+    root = _write_register(tmp_path, _entry() + _entry().replace("AEBUY", "aebuy"))
+    with pytest.raises(RegMetaError) as exc:
+        load_register_files(root)
+    assert "duplicate alias-window column" in exc.value.message

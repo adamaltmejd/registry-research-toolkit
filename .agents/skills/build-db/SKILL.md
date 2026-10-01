@@ -15,9 +15,9 @@ sources, resolve checked curation, then write SQLite.
 
 ## Select inputs
 
-Use the maintainer's exact selection JSON. It pins a prepared-source commit and manifest
-digest, scope declarations and catalog metadata. Record the code revision and selection
-digest alongside the build evidence. Never substitute a branch name, infer a newer input
+Use the maintainer's accepted prepared directory, exact input commit and manifest
+digest, and tracked curation tree. Record the code revision and curation digest
+alongside the build evidence. Never substitute a branch name, infer a newer input
 revision, or rewrite guards to make an update pass.
 
 If a change requires new source interpretation or curation, prepare a separate candidate
@@ -34,10 +34,13 @@ verification, preserving the active catalog.
 
 ```sh
 run_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-build.XXXXXX")"
-selection="/absolute/path/to/selection.json"
+prepared="/absolute/path/to/accepted-prepared"
+input_commit="EXACT_SHA"
+input_manifest_sha256="EXACT_SHA256"
 
 # Diagnostic: complete the scan and retain unresolved discrepancies (exit 10).
-uv run reg-meta-build build-db --selection "$selection" \
+uv run reg-meta-build build-db --prepared "$prepared" \
+  --input-commit "$input_commit" --input-manifest-sha256 "$input_manifest_sha256" \
   --report-dir "$run_dir/report" --timing \
   --diagnostic --diagnostic-db-path "$run_dir/diagnostic.db" \
   > "$run_dir/build.log" 2>&1
@@ -53,7 +56,9 @@ Use a separate new run directory for strict verification:
 ```sh
 run_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-build.XXXXXX")"
 uv run reg-meta-build --db "$run_dir/catalog" build-db \
-  --selection "$selection" --report-dir "$run_dir/report" --timing \
+  --prepared "$prepared" \
+  --input-commit "$input_commit" --input-manifest-sha256 "$input_manifest_sha256" \
+  --report-dir "$run_dir/report" --timing \
   > "$run_dir/build.log" 2>&1
 ```
 
@@ -87,14 +92,15 @@ differences. Inspect the report before accepting a claimed bounded change. Row c
 alone are insufficient. For a broad pipeline refactor, use its agreed comparison scope
 rather than inventing an exhaustive discrepancy-by-discrepancy curation gate.
 
-For deterministic replay, run the same pinned selection in a second fresh process and
-compare database bytes and decompressed event-ledger bytes. Keep timing conditions
-explicit: overlapping builds or audits are not isolated performance benchmarks.
+For deterministic replay, run the same pinned inputs and curation in a second fresh
+process and compare database bytes and decompressed event-ledger bytes. Keep timing
+conditions explicit: overlapping builds or audits are not isolated performance
+benchmarks.
 
 ## Report
 
-Report the code revision, exact input selection, output/report/log paths, actual exit
-status, summary status and publication readiness, relevant validation, SQLite checks,
-timings and comparison results. Separate engineering verification from unresolved
-curation. Preserve accepted inputs, cold archives and the active catalog. Clean only
-task-owned scratch artifacts after their required evidence has been retained.
+Report the code revision, exact input pins and curation digest, output/report/log paths,
+actual exit status, summary status and publication readiness, relevant validation,
+SQLite checks, timings and comparison results. Separate engineering verification from
+unresolved curation. Preserve accepted inputs, cold archives and the active catalog.
+Clean only task-owned scratch artifacts after their required evidence has been retained.
