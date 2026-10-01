@@ -1696,3 +1696,34 @@ def test_source_policy_loader_refuses_unknown_sections(tmp_path: Path) -> None:
     path.write_text(build_catalog.SOURCE_POLICY_PATH.read_text() + "\n[[unknown]]\n")
     with pytest.raises(SystemExit, match="invalid SWECOV source policy"):
         build_catalog._load_source_policy(path)
+
+
+@pytest.mark.parametrize(
+    ("section", "field", "value"),
+    [
+        ("flavor", "provider", "../escape"),
+        ("flavor", "provider", "/absolute"),
+        ("provider_scope", "provider", "../escape"),
+        ("provider_scope", "provider", "/absolute"),
+        ("flavor", "register", "../escape"),
+        ("flavor", "register", "Not a slug"),
+        ("flavor", "variant_slug", "../escape"),
+        ("flavor", "variant_slug", "Not a slug"),
+    ],
+)
+def test_source_policy_rejects_unsafe_output_and_catalog_slugs(
+    tmp_path: Path, section: str, field: str, value: str
+) -> None:
+    text = build_catalog.SOURCE_POLICY_PATH.read_text(encoding="utf-8")
+    raw = tomllib.loads(text)
+    old = raw[section][0][field]
+    marker = f"[[{section}]]"
+    start = text.index(marker)
+    replacement = f"{field} = {json.dumps(value)}"
+    text = text[:start] + text[start:].replace(
+        f"{field} = {json.dumps(old, ensure_ascii=False)}", replacement, 1
+    )
+    path = tmp_path / "source_policy.toml"
+    path.write_text(text, encoding="utf-8")
+    with pytest.raises(SystemExit, match="invalid SWECOV source policy"):
+        build_catalog._load_source_policy(path)

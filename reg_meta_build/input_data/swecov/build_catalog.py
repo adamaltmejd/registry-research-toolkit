@@ -54,7 +54,7 @@ from pydantic import (
     field_validator,
     model_validator,
 )
-from reg_meta.fqid import FqidKind, parse as parse_fqid
+from reg_meta.fqid import FqidKind, parse as parse_fqid, validate_slug
 from reg_meta.inventory import ColumnMapping, InventoryColumn, edition_bounds
 
 DEFAULT_CSV = max(
@@ -333,6 +333,12 @@ def _register_coordinate(value: str) -> str:
     return value
 
 
+def _provider_slug(value: str) -> str:
+    validate_slug(value, FqidKind.PROVIDER)
+    return value
+
+
+ProviderSlug = Annotated[str, AfterValidator(_provider_slug)]
 RegisterCoordinate = Annotated[str, AfterValidator(_register_coordinate)]
 VariantCoordinate = Annotated[str, AfterValidator(ColumnMapping._check_variant_coord)]
 
@@ -380,7 +386,7 @@ class SourceRoute(_PolicyModel):
 
 class FlavorDisposition(_PolicyModel):
     holding: str = Field(min_length=1)
-    provider: str = Field(min_length=1)
+    provider: ProviderSlug = Field(min_length=1)
     provider_name: str = Field(min_length=1)
     register_key: str = Field(alias="register", min_length=1)
     register_name: str = Field(min_length=1)
@@ -405,7 +411,7 @@ class FlavorDisposition(_PolicyModel):
 
 class ProviderScope(_PolicyModel):
     holding_prefix: str = Field(min_length=1)
-    provider: str = Field(min_length=1)
+    provider: ProviderSlug = Field(min_length=1)
 
 
 class RegisterScope(_PolicyModel):
