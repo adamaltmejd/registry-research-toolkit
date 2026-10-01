@@ -47266,3 +47266,169 @@ valid_to = "2005-12-31"
 reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
 evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
 expected_evidence_sha256 = "a48d527549894adc85b95d96e3094ee717b13fe01fe2ffda65711e9ad4973048"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/frida/bsni200"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13724\",\"variable:19053\",\"member:621760\"]}"]
+fields = ["coding"]
+valid_from = "2002-01-01"
+valid_to = "2002-12-31"
+reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
+evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
+expected_evidence_sha256 = "b4a3e175965652a04e259fb1e5b028b21f20c7f44d21f61077d287125f2fbd71"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/frida/bsni200"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13723\",\"variable:19053\",\"member:621159\"]}"]
+fields = ["coding"]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
+evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
+expected_evidence_sha256 = "08810670686f5608f0f2d78736c2ed310083fb4d54ed6a03569a4b4d8906806d"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/frida/bsni200"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13722\",\"variable:19053\",\"member:621156\"]}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
+evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
+expected_evidence_sha256 = "a7614d96b699533095fd7b9f0369c1857056c745dddf5c83d4b71c1de1155119"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/frida/bsni200"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13721\",\"variable:19053\",\"member:620555\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
+evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
+expected_evidence_sha256 = "f310242503760f32ec0735aec8025b903890de95953325eca7c86c91c7ffba43"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/frida/bsni200"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:11620\",\"variable:19053\",\"member:536629\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
+evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
+expected_evidence_sha256 = "5d9e38dc796ec1179a7b979eb8583ef4ef18819e6c4ab6b779d5c8f389014e7d"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/frida/bsni200"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:5087\",\"variable:19053\",\"member:315734\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
+evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
+expected_evidence_sha256 = "259563328b22098430a13f267f482dca521d5505ff7548fdc18428862c60c53b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/frida/bngr"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15628\",\"variable:2702\",\"member:744059\"]}"]
+fields = ["coding"]
+valid_from = "2002-01-01"
+valid_to = "2002-12-31"
+reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
+evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
+expected_evidence_sha256 = "f5410e7a0fd03c53fe6aa161b5263b1c16e2cc609fc1a6eb0877441c9184ab14"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/frida/bngr"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15620\",\"variable:2702\",\"member:742303\"]}"]
+fields = ["coding"]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
+evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
+expected_evidence_sha256 = "6904667574fbea68cf22783c779e71f863ded51cdf14662b8c3c9ae393841657"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/frida/bngr"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15613\",\"variable:2702\",\"member:740724\"]}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
+evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
+expected_evidence_sha256 = "2ce9af4a56a0cf7e0fd6920243495daba9046d89515cc57295c6429480195a98"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/frida/bngr"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15604\",\"variable:2702\",\"member:739599\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
+evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
+expected_evidence_sha256 = "05a55ee2a9b66515705184d259c93274e02bbb24cac0f1b38b8ba349536ab411"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/frida/bngr"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:12398\",\"variable:2702\",\"member:541444\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
+evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
+expected_evidence_sha256 = "bf28c1a74fa403a89b2a2ae1de6d63e5852f717353d08fc1c30f000e517ccc4f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/frida/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15779\",\"variable:4027\",\"member:754807\"]}"]
+fields = ["coding"]
+valid_from = "2000-01-01"
+valid_to = "2000-12-31"
+reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
+evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
+expected_evidence_sha256 = "6cfbff99096be0fa9c05984da1cefe3e6636ec42178d5ed9e4e5437ff1f3aa75"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/frida/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15778\",\"variable:4027\",\"member:754090\"]}"]
+fields = ["coding"]
+valid_from = "2001-01-01"
+valid_to = "2001-12-31"
+reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
+evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
+expected_evidence_sha256 = "f932b6fcdcbe7d45b3618a08d1a9cf58db89bd70ca1a2b8cb516014841366417"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/frida/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15628\",\"variable:4027\",\"member:744058\"]}"]
+fields = ["coding"]
+valid_from = "2002-01-01"
+valid_to = "2002-12-31"
+reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
+evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
+expected_evidence_sha256 = "d9a9b78abeb584115dfb10bb9d57ce4cf773e7f127429b780ec557692b107094"
+
+
+[[coding.extend]]
+variable = "121.19053"
+variant = "121.945"
+column = "BSNI92"
+periods = [["2001-01-01", "2002-12-31"]]
+reason = "The same BSNI92 field has one explicitly associated SNI92 detailed-group domain in 2000 and unchanged source definition and varchar(5) representation in 2001–2002. Apply the approved classification continuity policy to these two exact missing windows. Contrary SNI92/SNI2007 associations belong to other BSNI2002 literals, not these BSNI92 originals. Preserve the witnessed source domain and all original fields; no code conversion or neighbouring field borrowing."
+source = "Batch50-FRIDA-BSNI92-two-window-source-proof.json"
+expected_evidence_sha256 = "5251caf0c37e31c93b23e942e3051b3cdae4dec3af7d6b1d0a2fcc640d48ff8d"
+list = "Svensk standard för näringsgrensindelning, brancher SNI 92"
+witness = ["2000-01-01", "2000-12-31"]
