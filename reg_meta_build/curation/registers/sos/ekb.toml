@@ -2073,3 +2073,31 @@ valid_from = "1990-01-01"
 valid_to = "9999-12-31"
 reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
 evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx@sha256:5498215276150954903f0ff7c780c0d26d0c8b07f9f24043eddbc497218862cb. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+# Municipality-specific cessation does not end the field for remaining municipalities.
+
+[[errata.occurrence_period]]
+variable = "5352018376318353790.STADSDEL"
+variant = "EKB_AR"
+column = "STADSDEL"
+expected_fields = [{"name" = "coverage_from", "status" = "value", "value" = "1990"}, {"name" = "coverage_to", "status" = "value", "value" = "2017 (Malmö)"}, {"name" = "definition", "status" = "absent"}, {"name" = "description", "status" = "value", "value" = "Stadsdel/Kommundel el. dylik. Obligatorisk för Stockholm, Göteborg och Malmö. OBS! Från och med 2017 gäller Stadsdel/Kommundel el. dylik. Obligatorisk för Stockholm och Göteborg. Inga andra kommuner än Stockholm eller Göteborg får ha koder"}, {"name" = "name", "status" = "value", "value" = "Stadsdelsnämnd/motsvarande"}, {"name" = "operational_definition", "status" = "absent"}]
+expected_scope = {"kind" = "unknown", "intervals" = [], "label" = "Data från=1990; Data till=2017 (Malmö)"}
+expected_period = {"kind" = "not_applicable", "intervals" = []}
+evidence = "The literal end declaration says 2017 (Malmö), not an end for every geography. The same row explicitly requires this field for Stockholm and Göteborg from2017 and forbids codes for other municipalities. Retain field availability from supplied1990 with an open end; this does not imply continuing Malmö coverage or extend availability to other municipalities. All original bounds and geographic instructions remain intact. Batch48-EKB-geography-period-source-proof.json."
+noted = "2026-10-01"
+authority = []
+edition_scope = {"kind" = "intervals", "intervals" = [{"start" = "1990"}]}
+edition_period_scope = {"kind" = "not_applicable", "intervals" = []}
+
+[[errata.occurrence_period]]
+variable = "5352018376318353790.STADSDEL"
+variant = "EKB_MANAD"
+column = "STADSDEL"
+expected_fields = [{"name" = "coverage_from", "status" = "value", "value" = "1990"}, {"name" = "coverage_to", "status" = "value", "value" = "2017 (Malmö)"}, {"name" = "definition", "status" = "absent"}, {"name" = "description", "status" = "value", "value" = "Stadsdel/Kommundel el. dylik. Obligatorisk för Stockholm, Göteborg och Malmö. OBS! Från och med 2017 gäller Stadsdel/Kommundel el. dylik. Obligatorisk för Stockholm och Göteborg. Inga andra kommuner än Stockholm eller Göteborg får ha koder"}, {"name" = "name", "status" = "value", "value" = "Stadsdelsnämnd/motsvarande"}, {"name" = "operational_definition", "status" = "absent"}]
+expected_scope = {"kind" = "unknown", "intervals" = [], "label" = "Data från=1990; Data till=2017 (Malmö)"}
+expected_period = {"kind" = "not_applicable", "intervals" = []}
+evidence = "The literal end declaration says 2017 (Malmö), not an end for every geography. The same row explicitly requires this field for Stockholm and Göteborg from2017 and forbids codes for other municipalities. Retain field availability from supplied1990 with an open end; this does not imply continuing Malmö coverage or extend availability to other municipalities. All original bounds and geographic instructions remain intact. Batch48-EKB-geography-period-source-proof.json."
+noted = "2026-10-01"
+authority = []
+edition_scope = {"kind" = "intervals", "intervals" = [{"start" = "1990"}]}
+edition_period_scope = {"kind" = "not_applicable", "intervals" = []}

@@ -303,3 +303,451 @@ source_authority = { revision = { revision_id = "scb-registerinformation@sha256:
 keep = "Betyg inom nationella prov i SFI fr.o.m. 2012"
 keep_members = [["", "Värde saknas/Värde ska ej finnas"], ["1", "Ej uppnått målen"], ["9", "Ej deltagit i delprovet"], ["A", "A"], ["B", "B"], ["C", "C"], ["D", "D"], ["E", "E"], ["F", "F"], ["G", "Godkänt"], ["V", "Väl godkänt"]]
 over = ["Betyg inom nationella prov i SFI fr.o.m. 2012"]
+
+[[errata.field]]
+variable = "248.14675"
+variant = "248.496"
+column = "Utbildning"
+edition = "13285"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal år i skola i hemlandet." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Antal utbildningsår i hemlandet" }, { name = "operational_definition", status = "value", value = "Härleds från det som angetts i vår- och/eller höstinsamlingen. Om kursdeltagaren har olika värden i de olika insamlingarna sätts det värde som angetts i rapporteringen för kursen med senaste kursstart." }, { name = "representation", status = "absent" }]
+expected_period_text = "1997"
+expected_scope = { kind = "intervals", intervals = [{ start = "1997", end = "1997" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1997-01-01", end = "1997-12-31" }] }
+evidence = "The same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "År"
+
+[[errata.field]]
+variable = "248.14675"
+variant = "248.496"
+column = "Utbildning"
+edition = "13284"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal år i skola i hemlandet." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Antal utbildningsår i hemlandet" }, { name = "operational_definition", status = "value", value = "Härleds från det som angetts i vår- och/eller höstinsamlingen. Om kursdeltagaren har olika värden i de olika insamlingarna sätts det värde som angetts i rapporteringen för kursen med senaste kursstart." }, { name = "representation", status = "absent" }]
+expected_period_text = "1998"
+expected_scope = { kind = "intervals", intervals = [{ start = "1998", end = "1998" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1998-01-01", end = "1998-12-31" }] }
+evidence = "The same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "År"
+
+[[errata.field]]
+variable = "248.14675"
+variant = "248.496"
+column = "Utbildning"
+edition = "13283"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal år i skola i hemlandet." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Antal utbildningsår i hemlandet" }, { name = "operational_definition", status = "value", value = "Härleds från det som angetts i vår- och/eller höstinsamlingen. Om kursdeltagaren har olika värden i de olika insamlingarna sätts det värde som angetts i rapporteringen för kursen med senaste kursstart." }, { name = "representation", status = "absent" }]
+expected_period_text = "1999"
+expected_scope = { kind = "intervals", intervals = [{ start = "1999", end = "1999" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1999-01-01", end = "1999-12-31" }] }
+evidence = "The same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "År"
+
+[[errata.field]]
+variable = "248.14675"
+variant = "248.496"
+column = "Utbildning"
+edition = "13282"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal år i skola i hemlandet." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Antal utbildningsår i hemlandet" }, { name = "operational_definition", status = "value", value = "Härleds från det som angetts i vår- och/eller höstinsamlingen. Om kursdeltagaren har olika värden i de olika insamlingarna sätts det värde som angetts i rapporteringen för kursen med senaste kursstart." }, { name = "representation", status = "absent" }]
+expected_period_text = "2000"
+expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+evidence = "The same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "År"
+
+[[errata.field]]
+variable = "248.14675"
+variant = "248.496"
+column = "Utbildning"
+edition = "13281"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal år i skola i hemlandet." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Antal utbildningsår i hemlandet" }, { name = "operational_definition", status = "value", value = "Härleds från det som angetts i vår- och/eller höstinsamlingen. Om kursdeltagaren har olika värden i de olika insamlingarna sätts det värde som angetts i rapporteringen för kursen med senaste kursstart." }, { name = "representation", status = "absent" }]
+expected_period_text = "2001"
+expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2001" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2001-01-01", end = "2001-12-31" }] }
+evidence = "The same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "År"
+
+[[errata.field]]
+variable = "248.14675"
+variant = "248.496"
+column = "Utbildning"
+edition = "13280"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal år i skola i hemlandet." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Antal utbildningsår i hemlandet" }, { name = "operational_definition", status = "value", value = "Härleds från det som angetts i vår- och/eller höstinsamlingen. Om kursdeltagaren har olika värden i de olika insamlingarna sätts det värde som angetts i rapporteringen för kursen med senaste kursstart." }, { name = "representation", status = "absent" }]
+expected_period_text = "2002"
+expected_scope = { kind = "intervals", intervals = [{ start = "2002", end = "2002" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2002-01-01", end = "2002-12-31" }] }
+evidence = "The same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "År"
+
+[[errata.field]]
+variable = "248.14675"
+variant = "248.496"
+column = "Utbildning"
+edition = "13279"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal år i skola i hemlandet." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Antal utbildningsår i hemlandet" }, { name = "operational_definition", status = "value", value = "Härleds från det som angetts i vår- och/eller höstinsamlingen. Om kursdeltagaren har olika värden i de olika insamlingarna sätts det värde som angetts i rapporteringen för kursen med senaste kursstart." }, { name = "representation", status = "absent" }]
+expected_period_text = "2003"
+expected_scope = { kind = "intervals", intervals = [{ start = "2003", end = "2003" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end = "2003-12-31" }] }
+evidence = "The same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "År"
+
+[[errata.field]]
+variable = "248.14675"
+variant = "248.496"
+column = "Utbildning"
+edition = "13278"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal år i skola i hemlandet." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Antal utbildningsår i hemlandet" }, { name = "operational_definition", status = "value", value = "Härleds från det som angetts i vår- och/eller höstinsamlingen. Om kursdeltagaren har olika värden i de olika insamlingarna sätts det värde som angetts i rapporteringen för kursen med senaste kursstart." }, { name = "representation", status = "absent" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "The same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "År"
+
+[[errata.field]]
+variable = "248.14675"
+variant = "248.496"
+column = "Utbildning"
+edition = "13277"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal år i skola i hemlandet." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Antal utbildningsår i hemlandet" }, { name = "operational_definition", status = "value", value = "Härleds från det som angetts i vår- och/eller höstinsamlingen. Om kursdeltagaren har olika värden i de olika insamlingarna sätts det värde som angetts i rapporteringen för kursen med senaste kursstart." }, { name = "representation", status = "absent" }]
+expected_period_text = "2005"
+expected_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2005" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2005-01-01", end = "2005-12-31" }] }
+evidence = "The same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "År"
+
+[[errata.field]]
+variable = "248.14675"
+variant = "248.496"
+column = "Utbildning"
+edition = "13276"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal år i skola i hemlandet." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Antal utbildningsår i hemlandet" }, { name = "operational_definition", status = "value", value = "Härleds från det som angetts i vår- och/eller höstinsamlingen. Om kursdeltagaren har olika värden i de olika insamlingarna sätts det värde som angetts i rapporteringen för kursen med senaste kursstart." }, { name = "representation", status = "absent" }]
+expected_period_text = "2006"
+expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+evidence = "The same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "År"
+
+[[errata.field]]
+variable = "248.14675"
+variant = "248.496"
+column = "Utbildning"
+edition = "13274"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal år i skola i hemlandet." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Antal utbildningsår i hemlandet" }, { name = "operational_definition", status = "value", value = "Härleds från det som angetts i vår- och/eller höstinsamlingen. Om kursdeltagaren har olika värden i de olika insamlingarna sätts det värde som angetts i rapporteringen för kursen med senaste kursstart." }, { name = "representation", status = "absent" }]
+expected_period_text = "2007"
+expected_scope = { kind = "intervals", intervals = [{ start = "2007", end = "2007" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2007-01-01", end = "2007-12-31" }] }
+evidence = "The same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "År"
+
+[[errata.field]]
+variable = "248.14675"
+variant = "248.496"
+column = "Utbildning"
+edition = "4555"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal år i skola i hemlandet." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Antal utbildningsår i hemlandet" }, { name = "operational_definition", status = "value", value = "Anges av kursdeltagaren vid inskrivningen i svenskundervisning för invandrare." }, { name = "representation", status = "absent" }]
+expected_period_text = "2011"
+expected_scope = { kind = "intervals", intervals = [{ start = "2011", end = "2011" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2011-01-01", end = "2011-12-31" }] }
+evidence = "The same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "År"
+
+[[errata.field]]
+variable = "248.14675"
+variant = "248.496"
+column = "Utbildning"
+edition = "4886"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal år i skola i hemlandet." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Antal utbildningsår i hemlandet" }, { name = "operational_definition", status = "value", value = "Anges av kursdeltagaren vid inskrivningen i svenskundervisning för invandrare." }, { name = "representation", status = "absent" }]
+expected_period_text = "2012"
+expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+evidence = "The same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "År"
+
+[[errata.field]]
+variable = "248.14675"
+variant = "248.496"
+column = "Utbildning"
+edition = "4341"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal år i skola i hemlandet." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Antal utbildningsår i hemlandet" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = "2010"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+evidence = "The same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "År"
+
+[[errata.field]]
+variable = "248.14675"
+variant = "248.496"
+column = "Utbildning"
+edition = "13273"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal år i skola i hemlandet." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Antal utbildningsår i hemlandet" }, { name = "operational_definition", status = "value", value = "Härleds från det som angetts i vår- och/eller höstinsamlingen. Om kursdeltagaren har olika värden i de olika insamlingarna sätts det värde som angetts i rapporteringen för kursen med senaste kursstart." }, { name = "representation", status = "absent" }]
+expected_period_text = "2008"
+expected_scope = { kind = "intervals", intervals = [{ start = "2008", end = "2008" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2008-01-01", end = "2008-12-31" }] }
+evidence = "The same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "År"
+
+[[errata.field]]
+variable = "248.14675"
+variant = "248.496"
+column = "Utbildning"
+edition = "12912"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal år i skola i hemlandet." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Antal utbildningsår i hemlandet" }, { name = "operational_definition", status = "value", value = "Härleds från det som angetts i vår- och/eller höstinsamlingen. Om kursdeltagaren har olika värden i de olika insamlingarna sätts det värde som angetts i rapporteringen för kursen med senaste kursstart." }, { name = "representation", status = "absent" }]
+expected_period_text = "2009"
+expected_scope = { kind = "intervals", intervals = [{ start = "2009", end = "2009" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2009-01-01", end = "2009-12-31" }] }
+evidence = "The same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "År"
+
+[[errata.field]]
+variable = "248.14673"
+variant = "248.496"
+column = "ElevTim"
+edition = "13285"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Anger hur många timmar undervisning eleven har fått på aktuell kurs." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Undervisningstimmar i svenska för invandrare" }, { name = "operational_definition", status = "value", value = "Antalet undervisningstimmar om 60 minuter under vilka kursdeltagaren varit närvarande under perioden." }, { name = "representation", status = "absent" }]
+expected_period_text = "1997"
+expected_scope = { kind = "intervals", intervals = [{ start = "1997", end = "1997" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1997-01-01", end = "1997-12-31" }] }
+evidence = "The same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal timmar"
+
+[[errata.field]]
+variable = "248.14673"
+variant = "248.496"
+column = "ElevTim"
+edition = "13284"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Anger hur många timmar undervisning eleven har fått på aktuell kurs." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Undervisningstimmar i svenska för invandrare" }, { name = "operational_definition", status = "value", value = "Antalet undervisningstimmar om 60 minuter under vilka kursdeltagaren varit närvarande under perioden." }, { name = "representation", status = "absent" }]
+expected_period_text = "1998"
+expected_scope = { kind = "intervals", intervals = [{ start = "1998", end = "1998" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1998-01-01", end = "1998-12-31" }] }
+evidence = "The same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal timmar"
+
+[[errata.field]]
+variable = "248.14673"
+variant = "248.496"
+column = "ElevTim"
+edition = "13283"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Anger hur många timmar undervisning eleven har fått på aktuell kurs." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Undervisningstimmar i svenska för invandrare" }, { name = "operational_definition", status = "value", value = "Antalet undervisningstimmar om 60 minuter under vilka kursdeltagaren varit närvarande under perioden." }, { name = "representation", status = "absent" }]
+expected_period_text = "1999"
+expected_scope = { kind = "intervals", intervals = [{ start = "1999", end = "1999" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1999-01-01", end = "1999-12-31" }] }
+evidence = "The same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal timmar"
+
+[[errata.field]]
+variable = "248.14673"
+variant = "248.496"
+column = "ElevTim"
+edition = "13282"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Anger hur många timmar undervisning eleven har fått på aktuell kurs." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Undervisningstimmar i svenska för invandrare" }, { name = "operational_definition", status = "value", value = "Antalet undervisningstimmar om 60 minuter under vilka kursdeltagaren varit närvarande under perioden." }, { name = "representation", status = "absent" }]
+expected_period_text = "2000"
+expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+evidence = "The same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal timmar"
+
+[[errata.field]]
+variable = "248.14673"
+variant = "248.496"
+column = "ElevTim"
+edition = "13281"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Anger hur många timmar undervisning eleven har fått på aktuell kurs." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Undervisningstimmar i svenska för invandrare" }, { name = "operational_definition", status = "value", value = "Antalet undervisningstimmar om 60 minuter under vilka kursdeltagaren varit närvarande under perioden." }, { name = "representation", status = "absent" }]
+expected_period_text = "2001"
+expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2001" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2001-01-01", end = "2001-12-31" }] }
+evidence = "The same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal timmar"
+
+[[errata.field]]
+variable = "248.14673"
+variant = "248.496"
+column = "ElevTim"
+edition = "13280"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Anger hur många timmar undervisning eleven har fått på aktuell kurs." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Undervisningstimmar i svenska för invandrare" }, { name = "operational_definition", status = "value", value = "Antalet undervisningstimmar om 60 minuter under vilka kursdeltagaren varit närvarande under perioden." }, { name = "representation", status = "absent" }]
+expected_period_text = "2002"
+expected_scope = { kind = "intervals", intervals = [{ start = "2002", end = "2002" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2002-01-01", end = "2002-12-31" }] }
+evidence = "The same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal timmar"
+
+[[errata.field]]
+variable = "248.14673"
+variant = "248.496"
+column = "ElevTim"
+edition = "13279"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Anger hur många timmar undervisning eleven har fått på aktuell kurs." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Undervisningstimmar i svenska för invandrare" }, { name = "operational_definition", status = "value", value = "Antalet undervisningstimmar om 60 minuter under vilka kursdeltagaren varit närvarande under perioden." }, { name = "representation", status = "absent" }]
+expected_period_text = "2003"
+expected_scope = { kind = "intervals", intervals = [{ start = "2003", end = "2003" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end = "2003-12-31" }] }
+evidence = "The same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal timmar"
+
+[[errata.field]]
+variable = "248.14673"
+variant = "248.496"
+column = "ElevTim"
+edition = "13278"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Anger hur många timmar undervisning eleven har fått på aktuell kurs." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Undervisningstimmar i svenska för invandrare" }, { name = "operational_definition", status = "value", value = "Antalet undervisningstimmar om 60 minuter under vilka kursdeltagaren varit närvarande under perioden." }, { name = "representation", status = "absent" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "The same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal timmar"
+
+[[errata.field]]
+variable = "248.14673"
+variant = "248.496"
+column = "ElevTim"
+edition = "13277"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Anger hur många timmar undervisning eleven har fått på aktuell kurs." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Undervisningstimmar i svenska för invandrare" }, { name = "operational_definition", status = "value", value = "Antalet undervisningstimmar om 60 minuter under vilka kursdeltagaren varit närvarande under perioden." }, { name = "representation", status = "absent" }]
+expected_period_text = "2005"
+expected_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2005" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2005-01-01", end = "2005-12-31" }] }
+evidence = "The same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal timmar"
+
+[[errata.field]]
+variable = "248.14673"
+variant = "248.496"
+column = "ElevTim"
+edition = "13276"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Anger hur många timmar undervisning eleven har fått på aktuell kurs." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Undervisningstimmar i svenska för invandrare" }, { name = "operational_definition", status = "value", value = "Antalet undervisningstimmar om 60 minuter under vilka kursdeltagaren varit närvarande under perioden." }, { name = "representation", status = "absent" }]
+expected_period_text = "2006"
+expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+evidence = "The same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal timmar"
+
+[[errata.field]]
+variable = "248.14673"
+variant = "248.496"
+column = "ElevTim"
+edition = "13274"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Anger hur många timmar undervisning eleven har fått på aktuell kurs." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Undervisningstimmar i svenska för invandrare" }, { name = "operational_definition", status = "value", value = "Antalet undervisningstimmar om 60 minuter under vilka kursdeltagaren varit närvarande under perioden." }, { name = "representation", status = "absent" }]
+expected_period_text = "2007"
+expected_scope = { kind = "intervals", intervals = [{ start = "2007", end = "2007" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2007-01-01", end = "2007-12-31" }] }
+evidence = "The same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal timmar"
+
+[[errata.field]]
+variable = "248.14673"
+variant = "248.496"
+column = "Elevtim"
+edition = "4341"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Anger hur många timmar undervisning eleven har fått på aktuell kurs." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Undervisningstimmar i svenska för invandrare" }, { name = "operational_definition", status = "value", value = "Antalet undervisningstimmar om 60 minuter under vilka kursdeltagaren varit närvarande under perioden." }, { name = "representation", status = "absent" }]
+expected_period_text = "2010"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+evidence = "The same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal timmar"
+
+[[errata.field]]
+variable = "248.14673"
+variant = "248.496"
+column = "Elevtim"
+edition = "4555"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Anger hur många timmar undervisning eleven har fått på aktuell kurs." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Undervisningstimmar i svenska för invandrare" }, { name = "operational_definition", status = "value", value = "Antalet undervisningstimmar om 60 minuter under vilka kursdeltagaren varit närvarande under perioden." }, { name = "representation", status = "absent" }]
+expected_period_text = "2011"
+expected_scope = { kind = "intervals", intervals = [{ start = "2011", end = "2011" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2011-01-01", end = "2011-12-31" }] }
+evidence = "The same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal timmar"
+
+[[errata.field]]
+variable = "248.14673"
+variant = "248.496"
+column = "Elevtim"
+edition = "4886"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Anger hur många timmar undervisning eleven har fått på aktuell kurs." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Undervisningstimmar i svenska för invandrare" }, { name = "operational_definition", status = "value", value = "Antalet undervisningstimmar om 60 minuter under vilka kursdeltagaren varit närvarande under perioden." }, { name = "representation", status = "absent" }]
+expected_period_text = "2012"
+expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+evidence = "The same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal timmar"
+
+[[errata.field]]
+variable = "248.14673"
+variant = "248.496"
+column = "ElevTim"
+edition = "13273"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Anger hur många timmar undervisning eleven har fått på aktuell kurs." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Undervisningstimmar i svenska för invandrare" }, { name = "operational_definition", status = "value", value = "Antalet undervisningstimmar om 60 minuter under vilka kursdeltagaren varit närvarande under perioden." }, { name = "representation", status = "absent" }]
+expected_period_text = "2008"
+expected_scope = { kind = "intervals", intervals = [{ start = "2008", end = "2008" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2008-01-01", end = "2008-12-31" }] }
+evidence = "The same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal timmar"
+
+[[errata.field]]
+variable = "248.14673"
+variant = "248.496"
+column = "ElevTim"
+edition = "12912"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Anger hur många timmar undervisning eleven har fått på aktuell kurs." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Undervisningstimmar i svenska för invandrare" }, { name = "operational_definition", status = "value", value = "Antalet undervisningstimmar om 60 minuter under vilka kursdeltagaren varit närvarande under perioden." }, { name = "representation", status = "absent" }]
+expected_period_text = "2009"
+expected_scope = { kind = "intervals", intervals = [{ start = "2009", end = "2009" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2009-01-01", end = "2009-12-31" }] }
+evidence = "The same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal timmar"
