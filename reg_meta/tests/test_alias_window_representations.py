@@ -362,7 +362,7 @@ def test_per_column_coding_preserves_domains_native_labels_and_lazy_loading(
             (classification_id, state_id),
         )
         write_conn.execute(
-            "INSERT INTO classification_conformance VALUES (?, ?, 'kept', 2, 2, 0, 1.0)",
+            "INSERT INTO classification_conformance VALUES (?, ?, 'conforming', 2, 2, 0, 1.0)",
             (state_id, classification_id),
         )
         write_conn.execute("DELETE FROM variable_alias_window")

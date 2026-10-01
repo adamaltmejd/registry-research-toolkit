@@ -120,6 +120,7 @@ function node(
 
 function vstate(over: Partial<VariableStateModel>): VariableStateModel {
   return {
+    warning_ids: [],
     state_id: 1,
     period_scope: "intervals",
     variant: "individer",

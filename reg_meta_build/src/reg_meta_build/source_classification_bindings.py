@@ -655,8 +655,6 @@ def apply_classification_cases(
                 )
                 diagnostics.extend(checked.diagnostics)
                 conformance = checked.conformance
-                if conformance.status == "severed":
-                    slug = None
             elif not prior and base.claims:
                 coding_issues.append(
                     CodingIssue(

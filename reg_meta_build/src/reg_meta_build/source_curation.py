@@ -24,6 +24,7 @@ from reg_meta.source_evidence import (
     FieldScalar,
     FieldState,
     SourceField,
+    SourceRecordRef,
     canonical_sha256,
 )
 
@@ -56,21 +57,6 @@ if TYPE_CHECKING:
 
 class _CurationModel(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True, strict=True)
-
-
-class SourceRecordRef(_CurationModel):
-    """Revision- and layout-independent reference to one semantic source member."""
-
-    source: str
-    semantic_record_key: tuple[str, ...]
-
-    @model_validator(mode="after")
-    def _non_empty(self) -> Self:
-        if not self.source.strip() or not self.semantic_record_key:
-            raise ValueError("source record references must be non-empty")
-        if any(not part.strip() for part in self.semantic_record_key):
-            raise ValueError("semantic record key parts must be non-empty")
-        return self
 
 
 ExpectedFieldState = Literal["absent", "value", "unknown", "negative"]
@@ -542,6 +528,9 @@ type OccurrenceEffect = (
 class OccurrenceCorrectionDecision(_CurationModel):
     kind: Literal["correct_occurrences"] = "correct_occurrences"
     reviewed: Literal[True]
+    data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
+    data_warning_refs: tuple[SourceRecordRef, ...] = ()
+    data_warning_fields: tuple[str, ...] = ()
     effects: tuple[OccurrenceEffect, ...]
     reason: str = Field(min_length=1)
     provenance: str = Field(min_length=1)
@@ -1094,6 +1083,7 @@ class CodingDecision(_ColumnDecision):
     """Assign coding, explicit uncoded meaning, or omission to one exact window."""
 
     kind: Literal["coding"] = "coding"
+    data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
     selection: (
         CodingSelection
         | DocumentedCodingSelection

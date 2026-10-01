@@ -25,6 +25,7 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
+    getDataWarnings: vi.fn().mockResolvedValue([]),
     getCatalogNode: vi.fn(),
     getClassificationGroup: vi.fn(),
     getClassificationGroupGraph: vi.fn(),
@@ -1416,6 +1417,7 @@ function columnState(
   { id = 1, from = "1990-01-01", to = "9999-12-31" } = {},
 ): VariableStateModel {
   return {
+    warning_ids: [],
     state_id: id,
     period_scope: "intervals",
     variant,

@@ -7267,3 +7267,25 @@ def test_column_correction_requires_complete_fields_and_preserves_original(tmp_p
     ):
         with pytest.raises(ValueError):
             ErrataFieldEntry.model_validate({**entry.model_dump(), **updates})
+
+
+def test_partition_data_warning_is_explicit_and_scoped_to_annotated_members(
+    tmp_path: Path,
+):
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root,
+        '\n[[variable]]\nnative_id = "1.5.answer"\nslug = "answer"\n'
+        '[[identity.partition]]\nvariable = "1.5"\n'
+        'columns = { ANSWER = "1.5.answer" }\n'
+        'unassigned_columns = ["LEFT"]\ncolumns_ref = "fixture map"\n'
+        'data_warning = "Identity follows the exported source question"\n',
+    )
+    records = _scb_partition_records(("ANSWER", "LEFT"))
+    compiled, key, _ = _compile_partition_fixture(root, records)
+    (case,) = compiled[0][key]
+    assert case.decision.data_warning == "Identity follows the exported source question"
+    assert set(case.decision.data_warning_refs) == {
+        record_ref(record) for record in records
+    }
+    assert case.decision.data_warning_fields == ("identity",)

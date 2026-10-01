@@ -27,6 +27,7 @@ import {
   projectStore,
   type SourcePeriodEditTarget,
 } from "./project_store.svelte";
+import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
 import {
   Button,
   ConfirmDialog,
@@ -745,6 +746,7 @@ function confirmRemove(): void {
           title="No columns yet. Browse the catalog to add columns from this register."
         />
       {:else}
+        <ScopedDataWarnings fqid={fqidSegments(registerVariant).slice(0, 2).join("/")} period={periodWire} registerOnly framed={false} />
         <ul class="binding-list">
           <!-- Keyed by the store-owned STABLE client id (issue #200), not the index,
                so a middle binding remove remounts the correct BindingEditor instance.

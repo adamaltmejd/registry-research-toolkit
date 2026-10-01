@@ -33,6 +33,7 @@ from .curation_tree import (
     CodingSentinelEntry,
     EnrichmentAliasEntry,
     EnrichmentDescriptionEntry,
+    ErrataColumnEntry,
     ErrataDataTypeEntry,
     ErrataDeliveredEntry,
     ErrataFieldEntry,
@@ -2275,6 +2276,59 @@ def compile_partitions(
                 if partitions:
                     diagnostics.extend(converted.diagnostics)
                 if converted.case is not None:
+                    annotated_partitions = [
+                        entry
+                        for _, entry in partitions
+                        if entry.data_warning is not None
+                    ]
+                    annotated_owners = [
+                        entry
+                        for _, entry in scoped_entries
+                        if entry.data_warning is not None
+                    ]
+                    summaries = {
+                        entry.data_warning
+                        for entry in (*annotated_partitions, *annotated_owners)
+                    }
+                    if len(summaries) > 1:
+                        raise ValueError(
+                            "one identity family needs one consistent data warning summary"
+                        )
+                    if summaries:
+                        annotated_refs = {
+                            record_ref(record)
+                            for record in records
+                            if annotated_partitions
+                            or any(
+                                entry.variant
+                                == f"{register.register_info.native_id}.{record.subject.variant.native_id}"
+                                and entry.column
+                                == _literal_field(record, "column_name")
+                                and (
+                                    not entry.source_editions
+                                    or _edition_label(record) in entry.source_editions
+                                )
+                                for entry in annotated_owners
+                            )
+                        }
+                        converted = ColumnPartitionConversion(
+                            converted.bindings,
+                            converted.case.model_copy(
+                                update={
+                                    "decision": converted.case.decision.model_copy(
+                                        update={
+                                            "data_warning": next(iter(summaries)),
+                                            "data_warning_refs": tuple(
+                                                sorted(annotated_refs, key=str)
+                                            ),
+                                            "data_warning_fields": ("identity",),
+                                        }
+                                    )
+                                }
+                            ),
+                            converted.diagnostics,
+                        )
+                    assert converted.case is not None
                     cases[scope_key].append(converted.case)
                     identity_effects: dict[
                         SourceRecordRef, list[CheckedIdentityChange]
@@ -4626,6 +4680,7 @@ def compile_coding_register(
                             valid_to=end,
                             expected_codings=coding_expectations(claims, start, end),
                             selection=selection,
+                            data_warning=getattr(entry, "data_warning", None),
                             reason=entry.reason,
                             provenance=(
                                 f"{entry.source}\nSource rows: "
@@ -5588,6 +5643,18 @@ def compile_errata(
                         )
                     )
                     continue
+                assert isinstance(converted.decision, OccurrenceCorrectionDecision)
+                if isinstance(row, ErrataColumnEntry) and row.data_warning is not None:
+                    converted = converted.model_copy(
+                        update={
+                            "decision": converted.decision.model_copy(
+                                update={
+                                    "data_warning": row.data_warning,
+                                    "data_warning_fields": ("data_type",),
+                                }
+                            )
+                        }
+                    )
                 assert isinstance(converted.decision, OccurrenceCorrectionDecision)
                 moved_additions = sorted(
                     {

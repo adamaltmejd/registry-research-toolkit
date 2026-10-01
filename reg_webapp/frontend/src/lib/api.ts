@@ -460,6 +460,25 @@ export function getBindingLineageWarnings(
   );
 }
 
+export type DataWarningModel = Schemas["DataWarning"];
+
+export function getDataWarnings(
+  fqidPath: string,
+  params: {
+    period?: string | null;
+    variant?: string | null;
+    representation?: string | null;
+  } = {},
+): Promise<DataWarningModel[]> {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value) query.set(key, value);
+  }
+  return apiGet<DataWarningModel[]>(
+    `/catalog/${encodeFqid(fqidPath)}/data_warnings${query.size ? `?${query}` : ""}`,
+  );
+}
+
 /** One page of value set `valueSetId`'s codes. `state` switches the read to that
  * state's stored classification MISMATCH list (same code→label shape); the state
  * must carry this value set or the server 404s. `q` filters the WHOLE set before
@@ -469,6 +488,7 @@ export function getValueSetCodes(
   valueSetId: number,
   params: {
     state?: number | null;
+    partition?: "canonical" | "source_extensions";
     q?: string;
     offset?: number;
     limit?: number;
@@ -478,6 +498,9 @@ export function getValueSetCodes(
   const query = new URLSearchParams();
   if (params.state != null) {
     query.set("state", String(params.state));
+  }
+  if (params.partition) {
+    query.set("partition", params.partition);
   }
   if (params.q) {
     query.set("q", params.q);

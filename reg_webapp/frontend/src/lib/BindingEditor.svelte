@@ -3,6 +3,7 @@ import { catalogHref } from "./catalog";
 import { columnNames, UNASKED } from "./catalog_names.svelte";
 import type { Binding } from "./project_data";
 import { projectStore } from "./project_store.svelte";
+import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
 import { Button } from "./ui";
 import { bindingAnchorId } from "./validation";
 
@@ -101,6 +102,9 @@ const columnLabel = $derived(columnName || variable);
     Remove column
   </Button>
 </div>
+{#if variable}
+  <ScopedDataWarnings fqid={variable} {period} {variant} representation={strField("representation") || null} framed={false} />
+{/if}
 
 <style>
   .binding {

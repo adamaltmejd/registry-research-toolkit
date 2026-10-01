@@ -723,6 +723,7 @@ slug = "ej-skatteavdrag"
 # register 393
 
 [[coding.extend]]
+data_warning = "The documented 0/1 response domain is assumed to continue in this delivery; historical SCB encoding of an absent checkbox as 0 has not been independently verified."
 variable = "392.1073"
 variant = "392.1519"
 column = "FORMAN_HAR_JUSTERATS"
@@ -734,6 +735,7 @@ reason = "Accepted domain-continuity assumption (2026-09-30): reuse this exact S
 source = "SCB2020 löne- och förmånsutb exact column/Förekomst witness; SKV AGD service description2021-01-08 v1.8, PDF SHA25605e3077532c3dc824f1da30be82a756cd2cca816656923a858d5a2e1c0b084b6 pp26–29; https://www7.skatteverket.se/portal-wapi/open/apier-och-oppna-data/utvecklarportalen/v1/getFile/tjanstebeskrivning-agd-inlamning-v1 ; user accepted2026-09-30."
 
 [[coding.extend]]
+data_warning = "The documented 0/1 response domain is assumed to continue in this delivery; historical SCB encoding of an absent checkbox as 0 has not been independently verified."
 variable = "392.22251"
 variant = "392.1519"
 column = "FORMAN_SOM_PENSION_EJ_ULAG_SA"
@@ -745,6 +747,7 @@ reason = "Accepted domain-continuity assumption (2026-09-30): reuse this exact S
 source = "SCB2020 löne- och förmånsutb exact column/Förekomst witness; SKV AGD service description2021-01-08 v1.8, PDF SHA25605e3077532c3dc824f1da30be82a756cd2cca816656923a858d5a2e1c0b084b6 pp26–29; https://www7.skatteverket.se/portal-wapi/open/apier-och-oppna-data/utvecklarportalen/v1/getFile/tjanstebeskrivning-agd-inlamning-v1 ; user accepted2026-09-30."
 
 [[coding.extend]]
+data_warning = "The documented 0/1 response domain is assumed to continue in this delivery; historical SCB encoding of an absent checkbox as 0 has not been independently verified."
 variable = "392.6060"
 variant = "392.1519"
 column = "BILERSATTNING"
@@ -756,6 +759,7 @@ reason = "Accepted domain-continuity assumption (2026-09-30): reuse this exact S
 source = "SCB2020 löne- och förmånsutb exact column/Förekomst witness; SKV AGD service description2021-01-08 v1.8, PDF SHA25605e3077532c3dc824f1da30be82a756cd2cca816656923a858d5a2e1c0b084b6 pp26–29; https://www7.skatteverket.se/portal-wapi/open/apier-och-oppna-data/utvecklarportalen/v1/getFile/tjanstebeskrivning-agd-inlamning-v1 ; user accepted2026-09-30."
 
 [[coding.extend]]
+data_warning = "The documented 0/1 response domain is assumed to continue in this delivery; historical SCB encoding of an absent checkbox as 0 has not been independently verified."
 variable = "392.16099.bostadsf-ej-smahus-ej-ulag-sa"
 variant = "392.1519"
 column = "BOSTADSF_EJ_SMAHUS_EJ_ULAG_SA"
@@ -767,6 +771,7 @@ reason = "Accepted domain-continuity assumption (2026-09-30): reuse this exact S
 source = "SCB2020 löne- och förmånsutb exact column/Förekomst witness; SKV AGD service description2021-01-08 v1.8, PDF SHA25605e3077532c3dc824f1da30be82a756cd2cca816656923a858d5a2e1c0b084b6 pp26–29; https://www7.skatteverket.se/portal-wapi/open/apier-och-oppna-data/utvecklarportalen/v1/getFile/tjanstebeskrivning-agd-inlamning-v1 ; user accepted2026-09-30."
 
 [[coding.extend]]
+data_warning = "The documented 0/1 response domain is assumed to continue in this delivery; historical SCB encoding of an absent checkbox as 0 has not been independently verified."
 variable = "392.16099.bostadsf-ej-smahus-ulag-ag"
 variant = "392.1519"
 column = "BOSTADSF_EJ_SMAHUS_ULAG_AG"
@@ -778,6 +783,7 @@ reason = "Accepted domain-continuity assumption (2026-09-30): reuse this exact S
 source = "SCB2020 löne- och förmånsutb exact column/Förekomst witness; SKV AGD service description2021-01-08 v1.8, PDF SHA25605e3077532c3dc824f1da30be82a756cd2cca816656923a858d5a2e1c0b084b6 pp26–29; https://www7.skatteverket.se/portal-wapi/open/apier-och-oppna-data/utvecklarportalen/v1/getFile/tjanstebeskrivning-agd-inlamning-v1 ; user accepted2026-09-30."
 
 [[coding.extend]]
+data_warning = "The documented 0/1 response domain is assumed to continue in this delivery; historical SCB encoding of an absent checkbox as 0 has not been independently verified."
 variable = "392.16099.bostadsf-ej-smahus-ulag-ea"
 variant = "392.1519"
 column = "BOSTADSF_EJ_SMAHUS_ULAG_EA"
@@ -789,6 +795,7 @@ reason = "Accepted domain-continuity assumption (2026-09-30): reuse this exact S
 source = "SCB2020 löne- och förmånsutb exact column/Förekomst witness; SKV AGD service description2021-01-08 v1.8, PDF SHA25605e3077532c3dc824f1da30be82a756cd2cca816656923a858d5a2e1c0b084b6 pp26–29; https://www7.skatteverket.se/portal-wapi/open/apier-och-oppna-data/utvecklarportalen/v1/getFile/tjanstebeskrivning-agd-inlamning-v1 ; user accepted2026-09-30."
 
 [[coding.extend]]
+data_warning = "The documented 0/1 response domain is assumed to continue in this delivery; historical SCB encoding of an absent checkbox as 0 has not been independently verified."
 variable = "392.16099.bostadsf-smahus-ej-ulag-sa"
 variant = "392.1519"
 column = "BOSTADSF_SMAHUS_EJ_ULAG_SA"

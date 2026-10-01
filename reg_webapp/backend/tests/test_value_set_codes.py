@@ -142,7 +142,7 @@ def test_the_mismatch_list_is_read_through_its_own_state(client):
     severed = next(
         s
         for s in _states(client)
-        if (s["classification_conformance"] or {}).get("status") == "severed"
+        if (s["classification_conformance"] or {}).get("status") == "extended"
     )
     value_set_id = severed["value_set_id"]
     body = _codes(client, value_set_id, state=severed["state_id"])
@@ -165,7 +165,7 @@ def test_a_state_cannot_read_a_coding_it_does_not_carry(client):
     severed = next(
         s
         for s in _states(client)
-        if (s["classification_conformance"] or {}).get("status") == "severed"
+        if (s["classification_conformance"] or {}).get("status") == "extended"
     )
     other = next(
         s["value_set_id"]
@@ -210,7 +210,7 @@ class TestBindingPayloadIndependence:
             for s in _states(client)
             if s["classification_conformance"]
         ]
-        assert {v["status"] for v in verdicts} == {"kept", "severed"}
+        assert {v["status"] for v in verdicts} == {"extended"}
         assert all(v["nonconforming_codes"] == [] for v in verdicts)
         assert sorted(v["nonconforming_code_count"] for v in verdicts) == [3, 4, 5]
 
@@ -231,7 +231,7 @@ class TestBindingPayloadIndependence:
         state = next(s for s in body["states"] if s["value_set_id"] == 902)
         assert state["value_set"] is None
         assert state["value_set_summary"]["code_count"] == 600
-        assert state["classification_conformance"]["status"] == "kept"
+        assert state["classification_conformance"]["status"] == "extended"
         assert state["classification_conformance"]["nonconforming_codes"] == []
 
     def test_the_complete_export_still_embeds_everything(self, client):
@@ -243,6 +243,60 @@ class TestBindingPayloadIndependence:
         severed = next(
             s
             for s in states
-            if (s["classification_conformance"] or {}).get("status") == "severed"
+            if (s["classification_conformance"] or {}).get("status") == "extended"
         )
         assert len(severed["classification_conformance"]["nonconforming_codes"]) == 5
+
+
+def test_classification_partitions_preserve_source_labels_without_changing_the_book(
+    client,
+):
+    state = next(
+        s
+        for s in _states(client)
+        if s["value_set_id"] == 902 and s["classification_conformance"]
+    )
+    canonical = _codes(
+        client, 902, state=state["state_id"], partition="canonical", limit=1000
+    )
+    extensions = _codes(
+        client, 902, state=state["state_id"], partition="source_extensions", limit=1000
+    )
+    source = _codes(client, 902, limit=1000)
+    assert (
+        canonical["total"] == state["classification_conformance"]["matched_code_count"]
+    )
+    assert (
+        extensions["total"]
+        == state["classification_conformance"]["nonconforming_code_count"]
+    )
+    assert {c["code"] for c in canonical["codes"]}.isdisjoint(
+        c["code"] for c in extensions["codes"]
+    )
+    assert (
+        sorted(
+            canonical["codes"] + extensions["codes"],
+            key=lambda c: (c["code"], c["label"]),
+        )
+        == source["codes"]
+    )
+    assert canonical["codes"][0]["label"].startswith("Distrikt")
+    assert (
+        state["classification_slug"]
+        == state["classification_conformance"]["declared_classification_slug"]
+    )
+    assert (
+        _codes(
+            client,
+            902,
+            state=state["state_id"],
+            partition="canonical",
+            q="Distrikt 0010",
+        )["total"]
+        == 1
+    )
+    other = client.get(
+        "/api/value-sets/900/codes",
+        params={"state": state["state_id"], "partition": "canonical"},
+    )
+    assert other.status_code == 404

@@ -468,6 +468,28 @@ a 4-segment FQID does not parse at all). A test asserting `_default` is accepted
 slot, or that a 4-segment string like `sos/lss/_default/insatstyp` parses, is testing
 the obsolete variant-slot grammar and is wrong.
 
+## Data warnings
+
+Source limitations and explicit interpretation assumptions are catalog data.
+`DataWarning` keeps the settled severity, readable summary, exact diagnostic text,
+source references, acknowledgement, and supplied delivery bounds. Its identity is the
+SHA-256 of its complete canonical content.
+
+`Catalog.data_warnings` accepts a register or binding FQID and optional period, variant,
+and literal representation filters. Binding aliases use the same canonical owner as
+other catalog reads. Unassigned register warnings remain visible with a delivery filter,
+with their coordinates still unassigned. A warning is attached to a state only when
+source references positively witness its delivery coordinates and applicable dates.
+Unknown and year-independent states do not acquire dated warnings through an invented
+interval.
+
+Registers and resolved variables expose complete warnings. States expose `warning_ids`
+referencing the applicable warnings, so long diagnostic text and source references are
+not copied across annual states. `Catalog.data_warnings` resolves the complete records
+for any selected delivery. The web API also provides `/api/catalog/{fqid}/data_warnings`
+for project selection. Warnings inform interpretation; they do not change source values
+or prevent selection.
+
 ## Catalog API surface (§6.0)
 
 `Catalog` (`catalog.py`) is the in-process FQID→entity API the webapp's `/api/catalog/*`
@@ -1246,10 +1268,13 @@ Fresh builds emit only canonical `classification_code.is_valid = 1` rows and cac
 `classification.valid_code_count` for that canonical count.
 
 The build records declared value-set mismatches at state grain in
-`classification_conformance` / `classification_conformance_code`: kept links can warn
-about a minority of nonconforming codes, and low-overlap links are severed while the
-original declared classification and overlap evidence remain visible on the variable's
-value-set viewer.
+`classification_conformance` / `classification_conformance_code`. A known
+source-declared classification remains linked regardless of overlap. `conforming` means
+all delivered codes occur in its official book; `extended` means the source also
+supplies local codes, including explicitly curated nonstandard sentinels. The variable's
+value-set viewer separates matching source members from source extensions. Source labels
+remain intact, and local extensions never become official classification members.
+Unknown or ambiguous classification references remain unresolved.
 
 The CLI exposes this via `get classification --codes --only-valid` and includes
 `is_valid` per code in JSON output.

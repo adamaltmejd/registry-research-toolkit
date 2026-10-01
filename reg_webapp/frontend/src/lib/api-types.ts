@@ -188,6 +188,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/catalog/{fqid}/data_warnings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Data Warnings
+         * @description Source limitations for a register or selected delivery of a binding.
+         */
+        get: operations["get_data_warnings_api_catalog__fqid__data_warnings_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/catalog/{fqid}/dimensions": {
         parameters: {
             query?: never;
@@ -862,6 +882,11 @@ export interface components {
             variable_id: number;
             /** Via Same As */
             via_same_as?: string[] | null;
+            /**
+             * Warnings
+             * @default []
+             */
+            warnings: components["schemas"]["DataWarning"][];
         };
         /**
          * CatalogDriftWarning
@@ -969,9 +994,8 @@ export interface components {
          * @description Per-state value-set/classification conformance (#656).
          *
          *     `declared_classification_*` names the classification asserted by the source
-         *     value-set label. When `status == "severed"`, `VariableState.classification_slug`
-         *     is already None; this object preserves the original declaration plus the
-         *     coverage evidence explaining why the link was cleared.
+         *     value-set label. The known classification remains linked. `extended` means
+         *     the delivered domain also contains source-local codes outside that book.
          */
         ClassificationConformance: {
             /** Checked Code Count */
@@ -997,7 +1021,7 @@ export interface components {
              * Status
              * @enum {string}
              */
-            status: "kept" | "severed";
+            status: "conforming" | "extended";
         };
         /**
          * ClassificationDerivedFromRef
@@ -1633,6 +1657,58 @@ export interface components {
             reg_meta: components["schemas"]["RegMetaInfo"];
             steward: components["schemas"]["StewardInfo"];
             webapp: components["schemas"]["WebappInfo"];
+        };
+        /**
+         * DataWarning
+         * @description Retained source limitation or interpretation assumption, not an editorial notice.
+         */
+        DataWarning: {
+            /** Acknowledged By */
+            acknowledged_by?: string | null;
+            /** Case Id */
+            case_id?: string | null;
+            /** Code */
+            code: string;
+            /** Delivery Column Name */
+            delivery_column_name?: string | null;
+            /** Detail */
+            detail: string;
+            /**
+             * Fields
+             * @default []
+             */
+            fields: string[];
+            /**
+             * Refs
+             * @default []
+             */
+            refs: components["schemas"]["SourceRecordRef"][];
+            /** Register Fqid */
+            register_fqid: string;
+            /**
+             * Severity
+             * @enum {string}
+             */
+            severity: "warning" | "error";
+            /** Source Subject */
+            source_subject: string;
+            /** Summary */
+            summary: string;
+            /** Valid From */
+            valid_from?: string | null;
+            /** Valid To */
+            valid_to?: string | null;
+            /** Variable Fqid */
+            variable_fqid?: string | null;
+            /** Variant */
+            variant?: string | null;
+            /** Warning Id */
+            warning_id: string;
+            /**
+             * Withheld Output
+             * @default []
+             */
+            withheld_output: string[];
         };
         /**
          * DenseIntegerRange
@@ -2383,6 +2459,11 @@ export interface components {
             purpose?: string | null;
             /** Tags */
             tags?: components["schemas"]["TagMembership"][];
+            /**
+             * Warnings
+             * @default []
+             */
+            warnings: components["schemas"]["DataWarning"][];
         };
         /**
          * RegisterResponse
@@ -2413,6 +2494,11 @@ export interface components {
             purpose?: string | null;
             /** Tags */
             tags?: components["schemas"]["TagMembership"][];
+            /**
+             * Warnings
+             * @default []
+             */
+            warnings: components["schemas"]["DataWarning"][];
         };
         /**
          * RegisterSearchGroup
@@ -2654,6 +2740,16 @@ export interface components {
             period: number | string | components["schemas"]["PeriodRange"] | (number | string | components["schemas"]["PeriodRange"])[];
             /** Register Variant */
             register_variant: string;
+        };
+        /**
+         * SourceRecordRef
+         * @description Revision- and layout-independent reference to one semantic source member.
+         */
+        SourceRecordRef: {
+            /** Semantic Record Key */
+            semantic_record_key: string[];
+            /** Source */
+            source: string;
         };
         /**
          * StatesResponse
@@ -3215,6 +3311,11 @@ export interface components {
             variant_family_label?: string | null;
             /** Variant Label */
             variant_label: string | null;
+            /**
+             * Warning Ids
+             * @default []
+             */
+            warning_ids: string[];
         };
         /**
          * VariableWindow
@@ -3485,6 +3586,41 @@ export interface operations {
                 };
                 content: {
                     "application/json": (components["schemas"]["ProviderResponse"] | components["schemas"]["RegisterResponse"] | components["schemas"]["BindingNode"] | components["schemas"]["ClassificationRootResponse"] | components["schemas"]["ClassificationNode"]) | components["schemas"]["StatesResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_data_warnings_api_catalog__fqid__data_warnings_get: {
+        parameters: {
+            query?: {
+                representation?: string | null;
+                period?: string | null;
+                variant?: string | null;
+            };
+            header?: never;
+            path: {
+                fqid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataWarning"][];
                 };
             };
             /** @description Validation Error */
@@ -4043,6 +4179,7 @@ export interface operations {
         parameters: {
             query?: {
                 state?: number | null;
+                partition?: "source_extensions" | "canonical";
                 q?: string;
                 offset?: number;
                 limit?: number;

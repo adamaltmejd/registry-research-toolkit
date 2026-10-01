@@ -171,7 +171,7 @@ def test_checked_classification_forms_and_writes_without_copying_canonical_label
     assert state.value_set is not None and state.value_set.members == (
         ("01", "Source label"),
     )
-    assert state.conformance is not None and state.conformance.status == "kept"
+    assert state.conformance is not None and state.conformance.status == "conforming"
     assert state.provenance is not None and "binding:" in state.provenance
     write_resolved_catalog(
         (variable,),
@@ -206,8 +206,8 @@ def test_book_losing_the_observed_code_severs_current_binding():
     result = _apply(setup, classifications={"fixture": shrunk})
     assert result.diagnostics[0].code == "nonconforming_classification_codes"
     state = _form(setup, result).states[0]
-    assert state.classification is None
-    assert state.conformance is not None and state.conformance.status == "severed"
+    assert state.classification == "fixture"
+    assert state.conformance is not None and state.conformance.status == "extended"
     assert state.value_set is not None and state.value_set.members == (
         ("02", "Source label"),
     )
@@ -269,11 +269,11 @@ def test_noncanonical_codes_keep_source_members_and_declared_evidence(tmp_path):
     result = _apply(setup)
     variable = _form(setup, result)
     state = variable.states[0]
-    assert state.classification is None and state.value_set is not None
+    assert state.classification == "fixture" and state.value_set is not None
     assert state.value_set.members == (("99", "Source label"),)
     assert state.conformance is not None
     assert state.conformance.declared_classification == "fixture"
-    assert state.conformance.status == "severed"
+    assert state.conformance.status == "extended"
     assert result.diagnostics[0].code == "nonconforming_classification_codes"
     write_resolved_catalog(
         (variable,),
@@ -300,7 +300,7 @@ def test_curated_sentinel_keeps_checked_binding_with_warning(tmp_path):
         ("99", "Source label"),
     )
     assert state.conformance is not None
-    assert state.conformance.status == "kept"
+    assert state.conformance.status == "extended"
     assert state.conformance.nonconforming_members == ()
     assert state.conformance.sentinel_members == (("99", "Source label"),)
     write_resolved_catalog(
@@ -499,7 +499,7 @@ def test_source_and_case_bindings_compose_together_and_check_conformance():
         "nonconforming_classification_codes"
     ]
     segment = next(iter(result.coding.values())).segments[0]
-    assert segment.classification is None
+    assert segment.classification == "fixture"
     assert segment.conformance.declared_classification == "fixture"
     assert segment.code_set.members == (("outside", "Source label"),)
     assert len(segment.provenance) == 2
@@ -627,7 +627,9 @@ def test_label_rule_normalizes_claims_and_preserves_occurrence_evidence():
     )
     segment = result.coding[key].segments[0]
     assert segment.classification == "fixture"
-    assert segment.conformance is not None and segment.conformance.status == "kept"
+    assert (
+        segment.conformance is not None and segment.conformance.status == "conforming"
+    )
     assert (
         "label rule: 'LKF 1998' -> fixture (classifications/FIX.toml)"
         in segment.provenance
@@ -857,7 +859,9 @@ def test_retained_detailed_sni_label_still_binds():
     assert result.diagnostics == ()
     segment = result.coding[key].segments[0]
     assert segment.classification == "sni2002"
-    assert segment.conformance is not None and segment.conformance.status == "kept"
+    assert (
+        segment.conformance is not None and segment.conformance.status == "conforming"
+    )
     assert any(p.startswith("label rule:") for p in segment.provenance)
 
 
@@ -897,7 +901,7 @@ def test_scoped_sentinel_preserves_source_list_and_only_affects_its_window():
     result = _apply(setup, (setup[1], case))
     segments = result.coding[case.decision.column_key].segments
     assert [(s.valid_from, s.valid_to, s.classification) for s in segments] == [
-        ("2020-01-01", "2020-06-30", None),
+        ("2020-01-01", "2020-06-30", "fixture"),
         ("2020-07-01", "2020-12-31", "fixture"),
     ]
     assert segments[0].code_set == segments[1].code_set
@@ -960,7 +964,10 @@ def test_scoped_sentinel_rejects_changed_coding_and_codebook(change):
         classifications=books,
     )
     assert "classification_evidence_changed" in {d.code for d in result.diagnostics}
-    assert all(s.classification is None for s in result.coding[key].segments)
+    assert all(
+        s.classification == (None if s.valid_from.startswith("2019") else "fixture")
+        for s in result.coding[key].segments
+    )
     assert all(
         not s.conformance.sentinel_members
         for s in result.coding[key].segments
@@ -1064,7 +1071,7 @@ def test_scoped_sentinel_leaves_substantive_same_literal_in_another_window():
     )
     result = _apply(setup, (declared, case))
     old, new = result.coding[key].segments
-    assert old.classification is None and old.conformance.sentinel_members == ()
+    assert old.classification == "fixture" and old.conformance.sentinel_members == ()
     assert old.code_set.members == (("99", "Substantive industry"),)
     assert new.classification == "fixture"
     assert new.conformance.sentinel_members == (("99", "Source label"),)

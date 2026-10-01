@@ -20,6 +20,7 @@ from reg_meta.catalog import (
     ClassificationEdition,
     ConceptGroupMember,
     ConceptGroupSummary,
+    DataWarning,
     GroupAxis,
     LineageEdge,
     LineageWarning,
@@ -179,6 +180,7 @@ class RegisterNode(BaseModel):
     fqid: str
     name: str | None = None
     purpose: str | None = None
+    warnings: tuple[DataWarning, ...] = ()
     coverage: RegisterCoverage | None = None
     tags: list[TagMembership] = Field(default_factory=list)
 
@@ -296,6 +298,7 @@ class BindingNode(BaseModel):
     / `?value_set_version`) WITHOUT `?period` is a 422 — it is inert without a
     period, so it errors rather than silently embedding full history."""
 
+    warnings: tuple[DataWarning, ...] = ()
     kind: Literal["binding"] = "binding"
     fqid: str
     variable_id: int

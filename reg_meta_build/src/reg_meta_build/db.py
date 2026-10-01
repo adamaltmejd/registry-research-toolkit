@@ -777,7 +777,7 @@ CREATE INDEX idx_classification_code_code ON classification_code(code_id);
 CREATE TABLE classification_conformance (
     state_id INTEGER PRIMARY KEY REFERENCES variable_state(state_id),
     declared_classification_id INTEGER NOT NULL REFERENCES classification(id),
-    status TEXT NOT NULL CHECK (status IN ('kept', 'severed')),
+    status TEXT NOT NULL CHECK (status IN ('conforming', 'extended')),
     checked_code_count INTEGER NOT NULL,
     matched_code_count INTEGER NOT NULL,
     nonconforming_code_count INTEGER NOT NULL,
@@ -1394,6 +1394,21 @@ CREATE TABLE variable_state_lineage_warning (
     PRIMARY KEY (consumer_state_id, warning_kind)
 );
 CREATE INDEX idx_variable_state_lineage_warning_consumer ON variable_state_lineage_warning(consumer_state_id);
+
+CREATE TABLE data_warning (
+    warning_id TEXT PRIMARY KEY,
+    register_id INTEGER NOT NULL REFERENCES register(register_id),
+    variable_id INTEGER REFERENCES variable(variable_id),
+    register_variant_id INTEGER REFERENCES register_variant(register_variant_id),
+    delivery_column_name TEXT,
+    valid_from TEXT,
+    valid_to TEXT,
+    warning_json TEXT NOT NULL CHECK(json_valid(warning_json)),
+    CHECK(register_variant_id IS NULL OR variable_id IS NOT NULL),
+    CHECK(valid_from IS NULL OR valid_to IS NULL OR valid_from <= valid_to)
+);
+CREATE INDEX idx_data_warning_register ON data_warning(register_id, variable_id);
+CREATE INDEX idx_data_warning_variable ON data_warning(variable_id, valid_from, valid_to);
 
 -- Reference tables
 CREATE TABLE source_column_type (

@@ -22,6 +22,7 @@ from pydantic import (
     field_validator,
     model_validator,
 )
+from reg_meta.catalog import DataWarning
 from reg_meta.db import (
     CLASSIFICATION_SUCCESSION_AS_OF_YEAR,
     CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY,
@@ -238,7 +239,7 @@ class ResolvedConformance(_ResolvedModel):
     """The common resolver's explicit conformance decision, including omissions."""
 
     declared_classification: str
-    status: Literal["kept", "severed"]
+    status: Literal["conforming", "extended"]
     checked_codes: tuple[str, ...]
     nonconforming_members: tuple[tuple[str, str], ...] = ()
     # Observed non-canonical members whose code is on the declared
@@ -273,6 +274,13 @@ class ResolvedConformance(_ResolvedModel):
             code for code, _ in self.nonconforming_members
         }:
             raise ValueError("sentinel member overlaps nonconforming member")
+        expected_status = (
+            "extended"
+            if self.nonconforming_members or self.sentinel_members
+            else "conforming"
+        )
+        if self.status != expected_status:
+            raise ValueError("conformance status disagrees with source extensions")
         return self
 
 
@@ -323,20 +331,16 @@ class ResolvedState(_ResolvedDeliveryScope):
         if self.classification is not None:
             validate_slug(self.classification, "classification")
         if self.conformance is not None:
-            expected = (
-                self.conformance.declared_classification
-                if self.conformance.status == "kept"
-                else None
-            )
+            expected = self.conformance.declared_classification
             if self.classification != expected or self.value_set is None:
                 raise ValueError(
                     "state classification and conformance decision disagree"
                 )
             members = set(self.value_set.members)
             checked = set(self.conformance.checked_codes)
-            if not checked <= {code for code, _ in members}:
+            if checked != {code for code, _ in members}:
                 raise ValueError(
-                    "conformance checks a code outside the state value set"
+                    "conformance must check every distinct code in the state value set"
                 )
             nonconforming = set(self.conformance.nonconforming_members)
             if (
@@ -927,7 +931,10 @@ def _write_conformance(
     conn: sqlite3.Connection, state_id: int, conformance: ResolvedConformance
 ) -> None:
     checked = len(conformance.checked_codes)
-    nonconforming = len({code for code, _ in conformance.nonconforming_members})
+    extensions = set(conformance.nonconforming_members) | set(
+        conformance.sentinel_members
+    )
+    nonconforming = len({code for code, _ in extensions})
     matched = checked - nonconforming
     conn.execute(
         "INSERT INTO classification_conformance (state_id, declared_classification_id, status, "
@@ -945,10 +952,7 @@ def _write_conformance(
     )
     conn.executemany(
         "INSERT INTO classification_conformance_code (state_id, code_id) VALUES (?, ?)",
-        (
-            (state_id, _value_code_id(*pair))
-            for pair in sorted(conformance.nonconforming_members)
-        ),
+        ((state_id, _value_code_id(*pair)) for pair in sorted(extensions)),
     )
 
 
@@ -966,6 +970,7 @@ def write_resolved_catalog(
     classifications: tuple[ResolvedClassification, ...] = (),
     classification_successions: tuple[ResolvedClassificationSuccession, ...] = (),
     metadata: ResolvedMetadata | None = None,
+    data_warnings: tuple[DataWarning, ...] = (),
 ) -> Path:
     """Validate and atomically place a strict catalog or create-only diagnostic.
 
@@ -1259,6 +1264,66 @@ def write_resolved_catalog(
                             )
                         ),
                     )
+            validated_warnings = TypeAdapter(tuple[DataWarning, ...]).validate_python(
+                data_warnings, strict=True
+            )
+            written_variables = {
+                str(
+                    Fqid.binding_fqid(
+                        v.register_ref.provider, v.register_ref.slug, v.slug
+                    )
+                )
+                for v in variables
+            }
+            for value in sorted(validated_warnings, key=lambda w: w.warning_id):
+                warning = DataWarning.model_validate_json(value.model_dump_json())
+                if (
+                    warning.variable_fqid is not None
+                    and str(warning.variable_fqid) not in written_variables
+                ):
+                    payload = warning.model_dump(mode="json", exclude={"warning_id"})
+                    payload.update(
+                        variable_fqid=None, variant=None, delivery_column_name=None
+                    )
+                    warning = DataWarning.model_validate_json(
+                        json.dumps({"warning_id": canonical_sha256(payload), **payload})
+                    )
+                register = warning.register_fqid
+                variable = warning.variable_fqid
+                assert register.provider is not None and register.register is not None
+                warning_variable_id = None
+                if variable is not None:
+                    assert (
+                        variable.provider is not None
+                        and variable.register is not None
+                        and variable.variable is not None
+                    )
+                    warning_variable_id = _storage_id(
+                        variable.provider,
+                        "variable",
+                        variable.register,
+                        variable.variable,
+                    )
+                conn.execute(
+                    "INSERT INTO data_warning VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    (
+                        warning.warning_id,
+                        _storage_id(register.provider, "register", register.register),
+                        warning_variable_id,
+                        _storage_id(
+                            register.provider,
+                            "variant",
+                            register.register,
+                            warning.variant,
+                        )
+                        if warning.variant
+                        else None,
+                        warning.delivery_column_name,
+                        warning.valid_from,
+                        warning.valid_to,
+                        warning.model_dump_json(),
+                    ),
+                )
             write_resolved_metadata(conn, metadata_rows)
             conn.execute(
                 "INSERT INTO code_variable_map (code_id, variable_id) "

@@ -30,6 +30,7 @@ interface Props {
   /** Set to read that state's stored classification MISMATCH list instead of the
    * value set's own membership. The state must carry `valueSetId`. */
   stateId?: number | null;
+  partition?: "canonical" | "source_extensions";
   /** How many codes the whole (unfiltered) set has — from the leaf's summary, so
    * the filter affordance and its count render before the first page lands. */
   codeCount: number;
@@ -40,6 +41,7 @@ interface Props {
 let {
   valueSetId,
   stateId = null,
+  partition = "source_extensions",
   codeCount,
   filterLabel = "Filter codes",
   filterPlaceholder = "Filter codes…",
@@ -73,7 +75,9 @@ $effect(() => {
 // The identity of the SET being read. Everything accumulated is keyed on it, so
 // a new coding, a new state or a new query drops the earlier pages instead of
 // appending to them — no reset effect, and so no effect-ordering hazard.
-const setKey = $derived(`${valueSetId}:${stateId ?? ""}:${query.trim()}`);
+const setKey = $derived(
+  `${valueSetId}:${stateId ?? ""}:${partition}:${query.trim()}`,
+);
 
 // The pages BEFORE the one in flight, plus the matching total they were counted
 // against (so the progress line and the "load more" bound survive the next
@@ -108,6 +112,7 @@ const resource = asyncResource((signal) => {
     valueSetId,
     {
       state: stateId,
+      partition,
       q: query,
       offset: carried.codes.length,
       limit: PAGE_SIZE,

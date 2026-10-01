@@ -820,6 +820,7 @@ describe("rowAddSegments (#376 per-concrete-segment fan-out)", () => {
  * derivation read. */
 function leafState(over: Partial<VariableStateModel>): VariableStateModel {
   return {
+    warning_ids: [],
     state_id: 1,
     period_scope: "intervals",
     variant: "individer",

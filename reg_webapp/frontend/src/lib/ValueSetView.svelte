@@ -15,6 +15,7 @@ import {
   windowTitle,
 } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
+import { Tag } from "./ui";
 import ValueSetCodes from "./ValueSetCodes.svelte";
 
 // The PURE value-set / coding viewer for a variable's `variable_state` rows
@@ -309,10 +310,6 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
   return `changed ${changeDateLabel(change.at)}: ${change.notes.join("; ")}`;
 }
 
-function overlapPercent(overlap: number): string {
-  return `${Math.round(overlap * 100)}%`;
-}
-
 function usageWindowLabels(
   spans: DistinctValueSet["usages"][number]["spans"],
 ): { label: string; pooled: boolean }[] {
@@ -375,27 +372,16 @@ function trackDisclosure(key: string, event: Event): void {
 {#snippet conformanceNotice(source: StateConformance, scope: ConformanceScope | null)}
   {@const conf = source.verdict}
   {#if conformanceNeedsNotice(conf)}
-    <div class:severed={conf.status === "severed"} class="conformance-notice">
-      {#if conf.status === "severed"}
-        <p>
-          Declared classification
-          <a href={catalogHref(`class/${conf.declared_classification_slug}`)}>
-            {humanizeClassificationSlug(conf.declared_classification_slug)}
-          </a>
-          severed: {overlapPercent(conf.overlap)} of checked codes match this
-          classification.
-        </p>
-      {:else if conf.nonconforming_code_count > 0}
-        <p>
-          Declared classification
-          <a href={catalogHref(`class/${conf.declared_classification_slug}`)}>
-            {humanizeClassificationSlug(conf.declared_classification_slug)}
-          </a>
-          kept, but {conf.nonconforming_code_count}
-          {conf.nonconforming_code_count === 1 ? "code is" : "codes are"} not part
-          of this classification.
-        </p>
-      {/if}
+    <div class="conformance-notice extended">
+      <Tag tone="warn">{#snippet glyph()}▲{/snippet}Source extensions</Tag>
+      <p>
+        The source declares
+        <a href={catalogHref(`class/${conf.declared_classification_slug}`)}>
+          {humanizeClassificationSlug(conf.declared_classification_slug)}
+        </a>. {conf.matched_code_count} source {conf.matched_code_count === 1 ? "code matches" : "codes match"} this classification;
+        {conf.nonconforming_code_count} {conf.nonconforming_code_count === 1 ? "is a source extension" : "are source extensions"}.
+        Source extensions are not official classification codes.
+      </p>
       {#if scope}
         <!-- The years the verdict was RECORDED over — the states that carry it, which
              is often narrower than the coding's own usage window two lines above. Said
@@ -412,6 +398,17 @@ function trackDisclosure(key: string, event: Event): void {
           </p>
         {/if}
       {/if}
+      {#if conf.matched_code_count > 0 && source.valueSetId !== null}
+        {@const canonicalKey = `canonical:${source.stateId}`}
+        <details open={openPanels[canonicalKey] ?? false} ontoggle={(e) => trackDisclosure(canonicalKey, e)}>
+          <summary>Matching source codes ({conf.matched_code_count})</summary>
+          {#if openPanels[canonicalKey]}
+            <ValueSetCodes valueSetId={source.valueSetId} stateId={source.stateId}
+              partition="canonical" codeCount={conf.matched_code_count}
+              filterLabel="Filter matching source codes" filterPlaceholder="Filter matching source codes…" />
+          {/if}
+        </details>
+      {/if}
       {#if conf.nonconforming_code_count > 0 && source.valueSetId !== null}
         {@const panelKey = `mismatch:${source.stateId}`}
         <details
@@ -419,15 +416,15 @@ function trackDisclosure(key: string, event: Event): void {
           ontoggle={(e) => trackDisclosure(panelKey, e)}
         >
           <summary>
-            Nonconforming codes ({conf.nonconforming_code_count})
+            Source extensions ({conf.nonconforming_code_count})
           </summary>
           {#if openPanels[panelKey]}
             <ValueSetCodes
               valueSetId={source.valueSetId}
               stateId={source.stateId}
               codeCount={conf.nonconforming_code_count}
-              filterLabel="Filter nonconforming codes"
-              filterPlaceholder="Filter nonconforming codes…"
+              filterLabel="Filter source extensions"
+              filterPlaceholder="Filter source extensions…"
             />
           {/if}
         </details>
@@ -937,8 +934,8 @@ function trackDisclosure(key: string, event: Event): void {
     color: var(--text);
     font-size: var(--text-sm);
   }
-  .conformance-notice.severed {
-    border-left-color: var(--err);
+  .conformance-notice.extended {
+    border-left-color: var(--warn);
   }
   .conformance-notice p {
     margin: 0;

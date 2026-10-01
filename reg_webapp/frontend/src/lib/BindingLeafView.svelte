@@ -24,6 +24,7 @@ import {
   registerPrefixOf,
   windowTitle,
 } from "./catalog";
+import DataWarnings from "./DataWarnings.svelte";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
 import LineageDetails from "./LineageDetails.svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
@@ -40,6 +41,7 @@ import RepresentationPicker, {
   type PickerApplyPayload,
 } from "./RepresentationPicker.svelte";
 import { router } from "./router.svelte";
+import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
 import StagedAddStatus from "./StagedAddStatus.svelte";
 import SubjectView from "./SubjectView.svelte";
 import {
@@ -772,6 +774,10 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
 {/snippet}
 
 {#snippet picker()}
+  <div class="data-warnings">
+    <DataWarnings warnings={node.warnings ?? []} />
+    <ScopedDataWarnings fqid={registerPrefixOf(node.fqid)} registerOnly />
+  </div>
   <!-- #615: the period picker seeds from the global project window (windowStore)
        and shows the subject's coverage track. PRECEDENCE `?period` > window >
        full history is resolved inside the picker; submit/clear flow through the
@@ -1166,6 +1172,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
 />
 
 <style>
+  .data-warnings { display: flex; flex-direction: column; gap: var(--space-4); }
   .via code {
     font-size: var(--text-mono);
   }

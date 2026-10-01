@@ -21,7 +21,11 @@ import { projectStore } from "./project_store.svelte";
 // `catalog.ts` uses) — the partial-mock pattern the catalog views use.
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
-  return { ...actual, getCatalogNode: vi.fn() };
+  return {
+    ...actual,
+    getCatalogNode: vi.fn(),
+    getDataWarnings: vi.fn().mockResolvedValue([]),
+  };
 });
 
 /** One `?period`-resolved state, minimal: the resolve reads only the delivery

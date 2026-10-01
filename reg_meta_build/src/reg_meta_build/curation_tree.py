@@ -356,6 +356,7 @@ class ErrataDeliveredEntry(_CurationModel):
 
 
 class ErrataColumnEntry(_CurationModel):
+    data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
     variant: str
     column: str
     name: str
@@ -850,6 +851,7 @@ class ParallelRepresentationEntry(FiniteCurationWindow):
 
 
 class IdentityPartitionEntry(_CurationModel):
+    data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
     variable: str
     columns: dict[str, str]
     unassigned_columns: list[str] = Field(default_factory=list)
@@ -922,6 +924,7 @@ class IdentityPartitionEntry(_CurationModel):
 
 
 class IdentityColumnOwnerEntry(_CurationModel):
+    data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
     variable: str
     variant: str
     column: str
@@ -1222,6 +1225,7 @@ def _coding_members(value: list[list[str]]) -> list[list[str]]:
 
 
 class _CheckedCodingEntry(CodingEntry):
+    data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
     source_authority: PreparedCodingAuthority | None = None
 
     @field_validator("source_authority", mode="before")

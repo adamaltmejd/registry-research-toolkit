@@ -802,3 +802,21 @@ def test_concurrent_no_cross_thread_error(client, path: str):
         codes = list(pool.map(lambda _: client.get(path).status_code, range(50)))
     failures = [c for c in codes if c != 200]
     assert not failures, f"{path}: cross-thread failures under concurrency: {failures}"
+
+
+def test_data_warnings_endpoint(client):
+    response = client.get(f"/api/catalog/{_KON}/data_warnings?period=2020")
+    assert response.status_code == 200, response.json()
+    assert [w["code"] for w in response.json()] == ["omitted_columnless_occurrence"]
+    assert all(w["variable_fqid"] is None for w in response.json())
+    response = client.get("/api/catalog/scb/lisa/data_warnings")
+    assert response.status_code == 200, response.json()
+    assert len(response.json()) == 2
+    assert (
+        client.get(f"/api/catalog/{_KON}/data_warnings?period=invalid").status_code
+        == 422
+    )
+    assert (
+        client.get(f"/api/catalog/{_KON}/data_warnings?representation=%00").status_code
+        == 422
+    )

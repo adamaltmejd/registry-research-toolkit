@@ -363,6 +363,14 @@
               }
             ],
             "title": "Via Same As"
+          },
+          "warnings": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/DataWarning"
+            },
+            "title": "Warnings",
+            "type": "array"
           }
         },
         "required": [
@@ -541,7 +549,7 @@
       },
       "ClassificationConformance": {
         "additionalProperties": false,
-        "description": "Per-state value-set/classification conformance (#656).\n\n`declared_classification_*` names the classification asserted by the source\nvalue-set label. When `status == \"severed\"`, `VariableState.classification_slug`\nis already None; this object preserves the original declaration plus the\ncoverage evidence explaining why the link was cleared.",
+        "description": "Per-state value-set/classification conformance (#656).\n\n`declared_classification_*` names the classification asserted by the source\nvalue-set label. The known classification remains linked. `extended` means\nthe delivered domain also contains source-local codes outside that book.",
         "properties": {
           "checked_code_count": {
             "title": "Checked Code Count",
@@ -581,8 +589,8 @@
           },
           "status": {
             "enum": [
-              "kept",
-              "severed"
+              "conforming",
+              "extended"
             ],
             "title": "Status",
             "type": "string"
@@ -1827,6 +1835,157 @@
           "webapp"
         ],
         "title": "ContextResponse",
+        "type": "object"
+      },
+      "DataWarning": {
+        "additionalProperties": false,
+        "description": "Retained source limitation or interpretation assumption, not an editorial notice.",
+        "properties": {
+          "acknowledged_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Acknowledged By"
+          },
+          "case_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Case Id"
+          },
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "delivery_column_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delivery Column Name"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "fields": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Fields",
+            "type": "array"
+          },
+          "refs": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/SourceRecordRef"
+            },
+            "title": "Refs",
+            "type": "array"
+          },
+          "register_fqid": {
+            "title": "Register Fqid",
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "warning",
+              "error"
+            ],
+            "title": "Severity",
+            "type": "string"
+          },
+          "source_subject": {
+            "title": "Source Subject",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "valid_from": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid From"
+          },
+          "valid_to": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid To"
+          },
+          "variable_fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variable Fqid"
+          },
+          "variant": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variant"
+          },
+          "warning_id": {
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Warning Id",
+            "type": "string"
+          },
+          "withheld_output": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Withheld Output",
+            "type": "array"
+          }
+        },
+        "required": [
+          "warning_id",
+          "register_fqid",
+          "code",
+          "severity",
+          "summary",
+          "detail",
+          "source_subject"
+        ],
+        "title": "DataWarning",
         "type": "object"
       },
       "DenseIntegerRange": {
@@ -3403,6 +3562,14 @@
             },
             "title": "Tags",
             "type": "array"
+          },
+          "warnings": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/DataWarning"
+            },
+            "title": "Warnings",
+            "type": "array"
           }
         },
         "required": [
@@ -3490,6 +3657,14 @@
               "$ref": "#/components/schemas/TagMembership"
             },
             "title": "Tags",
+            "type": "array"
+          },
+          "warnings": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/DataWarning"
+            },
+            "title": "Warnings",
             "type": "array"
           }
         },
@@ -4041,6 +4216,29 @@
           "bindings"
         ],
         "title": "Source",
+        "type": "object"
+      },
+      "SourceRecordRef": {
+        "additionalProperties": false,
+        "description": "Revision- and layout-independent reference to one semantic source member.",
+        "properties": {
+          "semantic_record_key": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Semantic Record Key",
+            "type": "array"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "semantic_record_key"
+        ],
+        "title": "SourceRecordRef",
         "type": "object"
       },
       "StatesResponse": {
@@ -5261,6 +5459,15 @@
               }
             ],
             "title": "Variant Label"
+          },
+          "warning_ids": {
+            "default": [],
+            "items": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "title": "Warning Ids",
+            "type": "array"
           }
         },
         "required": [
@@ -5869,6 +6076,98 @@
           }
         },
         "summary": "Get Catalog Node"
+      }
+    },
+    "/api/catalog/{fqid}/data_warnings": {
+      "get": {
+        "description": "Source limitations for a register or selected delivery of a binding.",
+        "operationId": "get_data_warnings_api_catalog__fqid__data_warnings_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fqid",
+            "required": true,
+            "schema": {
+              "title": "Fqid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "representation",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Representation"
+            }
+          },
+          {
+            "in": "query",
+            "name": "period",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Period"
+            }
+          },
+          {
+            "in": "query",
+            "name": "variant",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Variant"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/DataWarning"
+                  },
+                  "title": "Response Get Data Warnings Api Catalog  Fqid  Data Warnings Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Data Warnings"
       }
     },
     "/api/catalog/{fqid}/dimensions": {
@@ -6676,6 +6975,20 @@
                 }
               ],
               "title": "State"
+            }
+          },
+          {
+            "in": "query",
+            "name": "partition",
+            "required": false,
+            "schema": {
+              "default": "source_extensions",
+              "enum": [
+                "source_extensions",
+                "canonical"
+              ],
+              "title": "Partition",
+              "type": "string"
             }
           },
           {

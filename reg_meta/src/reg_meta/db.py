@@ -318,7 +318,8 @@ CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
 # - 6.14.0: literal per-column alias type, width, operation and source attribution.
 # - 6.15.0: exact state/alias definitions and checked literal delivery units.
 # - 6.16.0: exact source names and descriptions at state/alias grain.
-SCHEMA_VERSION = "6.16.0"
+# 6.17.0: persistent scoped data-quality warnings and explicit classification extensions.
+SCHEMA_VERSION = "6.17.0"
 DB_FILENAME = "reg_meta.db"
 
 

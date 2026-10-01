@@ -111,6 +111,17 @@ trace-hook test that counts statements == 0).
 
 ## Catalog router structure
 
+Data-quality warnings are catalog evidence, separate from project validation errors.
+Register and binding responses embed their own warnings; the
+`/catalog/{fqid}/data_warnings` endpoint also supports period, variant and literal
+representation filtering. Unassigned register limitations remain visible but do not
+acquire an inferred variable owner. The catalog shows warnings before column selection,
+with their delivery scope. The project reads warnings for its selected columns and
+source periods, showing register limitations separately. A failed warning request
+remains visible rather than implying the data has no limitations. Warnings use the
+existing status tags and panels; inside project source cards the same content renders
+inline. They are not serialized into `project_data.json`.
+
 Catalog routes live in one `routes/catalog.py` APIRouter, declaring `/catalog`, then the
 suffixed routes, then `/catalog/{fqid:path}` (the catch-all **last**). Starlette matches
 in **declaration order** and the `{fqid:path}` converter greedy-consumes any suffix, so

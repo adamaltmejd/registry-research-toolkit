@@ -119,7 +119,7 @@ def test_conformance_checks_literal_codes_without_rewriting_source_labels() -> N
         {"01", "02", "03"},
     )
     assert result.diagnostics == ()
-    assert result.conformance.status == "kept"
+    assert result.conformance.status == "conforming"
     assert result.conformance.checked_codes == ("01", "02")
     assert result.conformance.nonconforming_members == ()
 
@@ -127,16 +127,14 @@ def test_conformance_checks_literal_codes_without_rewriting_source_labels() -> N
 @pytest.mark.parametrize("outside", ["", "9", "99", "?", "1"])
 def test_noncanonical_tokens_are_not_guessed_to_be_sentinels(outside: str) -> None:
     result = _conformance((("01", "Agreed"), (outside, "Literal source label")), {"01"})
-    assert result.conformance.status == "severed"
+    assert result.conformance.status == "extended"
     assert result.conformance.declared_classification == "fixture"
     assert result.conformance.nonconforming_members == (
         (outside, "Literal source label"),
     )
     issue = result.diagnostics[0]
     assert issue.code == "nonconforming_classification_codes"
-    assert issue.severity == "error" and issue.withheld_output == (
-        "state.classification",
-    )
+    assert issue.severity == "warning" and issue.withheld_output == ()
     assert issue.refs[0].semantic_record_key == ("row", "1")
     assert (issue.valid_from, issue.valid_to) == ("2020-01-01", "2020-12-31")
 
@@ -144,7 +142,7 @@ def test_noncanonical_tokens_are_not_guessed_to_be_sentinels(outside: str) -> No
 def test_high_overlap_does_not_waive_one_unexplained_code() -> None:
     pairs = tuple((str(i), f"Label {i}") for i in range(100))
     result = _conformance(pairs, {str(i) for i in range(99)})
-    assert result.conformance.status == "severed"
+    assert result.conformance.status == "extended"
     assert result.conformance.nonconforming_members == (("99", "Label 99"),)
     assert result == _conformance(tuple(reversed(pairs)), {str(i) for i in range(99)})
 
@@ -177,11 +175,11 @@ def test_sektorkod_cohort_conforms_exactly_and_extras_stay_severed() -> None:
     assert "00" not in insekt
     observed = tuple((code, f"Source {code}") for code in sorted(sektorkod))
     kept = _conformance(observed, sektorkod)
-    assert kept.conformance.status == "kept"
+    assert kept.conformance.status == "conforming"
     assert kept.conformance.nonconforming_members == ()
     assert kept.diagnostics == ()
     misbound = _conformance(observed, insekt)
-    assert misbound.conformance.status == "severed"
+    assert misbound.conformance.status == "extended"
     assert misbound.conformance.declared_classification == "fixture"
     assert [code for code, _ in misbound.conformance.nonconforming_members] == [
         "00",
@@ -197,7 +195,7 @@ def test_sektorkod_cohort_conforms_exactly_and_extras_stay_severed() -> None:
         ("", "Source empty"),
     )
     severed = _conformance(extras, sektorkod)
-    assert severed.conformance.status == "severed"
+    assert severed.conformance.status == "extended"
     assert severed.conformance.checked_codes == tuple(
         sorted(sektorkod | {"19", "99", "0", "000", ""})
     )
@@ -222,7 +220,7 @@ def test_curated_sentinel_keeps_binding_with_a_warning() -> None:
         {"01", "02"},
         {"00000": "not applicable"},
     )
-    assert result.conformance.status == "kept"
+    assert result.conformance.status == "extended"
     assert result.conformance.nonconforming_members == ()
     assert result.conformance.sentinel_members == (("00000", "Bulk missing"),)
     assert [issue.code for issue in result.diagnostics] == [
@@ -236,7 +234,7 @@ def test_curated_sentinel_keeps_binding_with_a_warning() -> None:
     assert (warning.valid_from, warning.valid_to) == ("2020-01-01", "2020-12-31")
     assert "'00000'" in warning.detail and "not applicable" in warning.detail
     assert "do not sever the binding" in warning.detail
-    assert "(the binding is kept)" in warning.detail
+    assert "(the known classification remains linked)" in warning.detail
 
 
 def test_sentinel_matching_is_exact_code_string() -> None:
@@ -247,7 +245,7 @@ def test_sentinel_matching_is_exact_code_string() -> None:
         {"01"},
         {"00000": "not applicable"},
     )
-    assert result.conformance.status == "severed"
+    assert result.conformance.status == "extended"
     assert result.conformance.sentinel_members == ()
     assert result.conformance.nonconforming_members == (("0", "not applicable"),)
     assert [issue.code for issue in result.diagnostics] == [
@@ -261,7 +259,7 @@ def test_non_sentinel_still_severs_and_error_lists_only_non_sentinels() -> None:
         {"01", "02"},
         {"00000": "not applicable"},
     )
-    assert result.conformance.status == "severed"
+    assert result.conformance.status == "extended"
     assert result.conformance.nonconforming_members == (("99", "Unknown"),)
     assert result.conformance.sentinel_members == (("00000", "Bulk missing"),)
     assert [issue.code for issue in result.diagnostics] == [
@@ -269,9 +267,9 @@ def test_non_sentinel_still_severs_and_error_lists_only_non_sentinels() -> None:
         "sentinel_classification_codes",
     ]
     error, warning = result.diagnostics
-    assert error.severity == "error"
+    assert error.severity == "warning"
     assert "'99'" in error.detail and "00000" not in error.detail
-    assert error.withheld_output == ("state.classification",)
+    assert error.withheld_output == ()
     assert warning.severity == "warning" and warning.withheld_output == ()
     assert "do not sever the binding" in warning.detail
     assert "binding is kept" not in warning.detail

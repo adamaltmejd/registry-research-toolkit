@@ -6616,3 +6616,93 @@ table = "CIS2006"
 column = "GP"
 edition = 2006
 reason = "Exact source-wave company-group marker native4045 Q1; complete current source formation preserves own0/1 domain and covers2006. GP2-actual-formed-native-proof.json; native27731 only later2016–2020, excluded."
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/varuinnovation-utvecklad-av-andra"
+representation = "INOTHGD"
+table = "CIS2012"
+column = "INOTHGD"
+edition = 2012
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.28054/INOTHGD. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/varuinnovation-utvecklad-med-andra"
+representation = "INTOGD"
+table = "CIS2012"
+column = "INTOGD"
+edition = 2012
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.28054/INTOGD. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/varuinnovation-utvecklad-av-foretaget"
+representation = "INITGD"
+table = "CIS2012"
+column = "InItGd"
+edition = 2012
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.28054/INITGD. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/processinnovation-utvecklad-av-foretaget"
+representation = "INITPS"
+table = "CIS2012"
+column = "INITPS"
+edition = 2012
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.28056/INITPS. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/processinnovation-utvecklad-av-andra"
+representation = "INOTHPS"
+table = "CIS2012"
+column = "INOTHPS"
+edition = 2012
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.28056/INOTHPS. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/processinnovation-utvecklad-med-andra"
+representation = "INTOPS"
+table = "CIS2012"
+column = "INTOPS"
+edition = 2012
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.28056/INTOPS. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/tjansteinnovation-utvecklad-av-andra"
+representation = "INOTHSV"
+table = "CIS2012"
+column = "INOTHSV"
+edition = 2012
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.28055/INOTHSV. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/tjansteinnovation-utvecklad-med-andra"
+representation = "INTOSV"
+table = "CIS2012"
+column = "INTOSV"
+edition = 2012
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.28055/INTOSV. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/tjansteinnovation-utvecklad-av-foretaget"
+representation = "INITSV"
+table = "CIS2012"
+column = "InItSv"
+edition = 2012
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.28055/INITSV. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/innovation-ej-kravd-i-upphandlingsavtal"
+representation = "PBNOCT"
+table = "CIS2012"
+column = "PBNOCT"
+edition = 2012
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.30131/PBNOCT. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."

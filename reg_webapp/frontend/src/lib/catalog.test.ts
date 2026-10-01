@@ -85,6 +85,7 @@ function ax(...names: string[]): { name: string; label: string }[] {
 // Minimal VariableStateModel — only the fields deriveType/distinctVersions read.
 function state(over: Partial<VariableStateModel>): VariableStateModel {
   return {
+    warning_ids: [],
     state_id: 1,
     period_scope: "intervals",
     variant: "v",
@@ -4174,7 +4175,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
       declared_classification_slug: "lkf1980",
       declared_classification_short_name: "LKF1980",
       declared_classification_name: "LKF 1980",
-      status: "kept" as const,
+      status: "conforming" as const,
       checked_code_count: 2,
       matched_code_count: 2,
       nonconforming_code_count: 0,
@@ -4280,7 +4281,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
       declared_classification_slug: "sun2020",
       declared_classification_short_name: "SUN 2020",
       declared_classification_name: "SUN 2020",
-      status: "kept" as const,
+      status: "conforming" as const,
       checked_code_count: 600,
       matched_code_count: 597,
       nonconforming_code_count: 3,
@@ -4326,7 +4327,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
       declared_classification_slug: "lkf1980",
       declared_classification_short_name: "LKF1980",
       declared_classification_name: "LKF 1980",
-      status: "kept" as const,
+      status: "conforming" as const,
       checked_code_count: 40,
       matched_code_count: 10,
       nonconforming_code_count: 30,
@@ -4335,7 +4336,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     };
     const severed = {
       ...kept,
-      status: "severed" as const,
+      status: "extended" as const,
       checked_code_count: 5,
       matched_code_count: 4,
       nonconforming_code_count: 1,
@@ -4358,8 +4359,8 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     // The louder verdict does not silence the other one: both lists stay open.
     expect(vs[0].conformances.map((c) => c.stateId)).toEqual([10, 11]);
     expect(vs[0].conformances.map((c) => c.verdict.status)).toEqual([
-      "kept",
-      "severed",
+      "conforming",
+      "extended",
     ]);
 
     // A clean verdict is carried too — it simply has nothing to say. WHICH

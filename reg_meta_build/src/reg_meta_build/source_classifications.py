@@ -51,8 +51,8 @@ def resolve_classification_conformance(
     """Check an already-declared binding against curated sentinel meanings.
 
     Literal code strings establish membership; labels remain the source's labels.
-    A mismatching code withholds the catalog binding, not the source code list or
-    the original declaration. Its exact members remain in conformance evidence.
+    A mismatching code remains a source extension beside the known claimed book.
+    Exact source members and labels remain in conformance evidence.
     A mismatching code on the declared classification's curated `sentinel_codes`
     list (exact code string, with its curated meaning) keeps the catalog binding:
     it stays a variable-local member of the state's value set — never a
@@ -78,7 +78,7 @@ def resolve_classification_conformance(
     )
     conformance = ResolvedConformance(
         declared_classification=classification,
-        status="severed" if nonconforming else "kept",
+        status="extended" if nonconforming or sentinel_members else "conforming",
         checked_codes=checked,
         nonconforming_members=nonconforming,
         sentinel_members=sentinel_members,
@@ -89,17 +89,16 @@ def resolve_classification_conformance(
         diagnostics.append(
             ResolutionDiagnostic(
                 code="nonconforming_classification_codes",
-                severity="error",
+                severity="warning",
                 subject=subject,
                 detail=f"Declared classification {classification!r} does not contain "
                 f"codes {sorted({code for code, _ in nonconforming})!r}. "
-                "The original code list and declared binding remain as evidence; "
-                "the catalog classification link is withheld pending a bounded decision.",
+                "The known classification remains linked as the source declaration; "
+                "these source extensions are not official classification codes.",
                 refs=refs,
                 fields=("coding", "classification"),
                 valid_from=valid_from,
                 valid_to=valid_to,
-                withheld_output=("state.classification",),
             )
         )
     if sentinel_members:
@@ -107,7 +106,7 @@ def resolve_classification_conformance(
             f"{code!r}: {sentinels[code]}"
             for code in sorted({code for code, _ in sentinel_members})
         )
-        kept_note = " (the binding is kept)" if not nonconforming else ""
+        kept_note = " (the known classification remains linked)"
         diagnostics.append(
             ResolutionDiagnostic(
                 code="sentinel_classification_codes",

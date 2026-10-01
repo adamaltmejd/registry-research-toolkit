@@ -1146,3 +1146,181 @@ periods = [["1997-01-01", "2000-12-31"]]
 reason = "The source explicitly links this CIVIL occurrence to its own Kodlista_Civil. Apply the accepted explicit variable-to-coding link policy to the exact 1997–2000 gap with the complete own-source 2001 witness. The supplied 2001 start alone does not establish a contrary civil-status regime. Preserve all seven literal codes, labels, source dates and original occurrences; no foreign-domain or later-scheme substitution."
 source = "Accepted Socialstyrelsen PAR workbook; exact representation Se Kodlista_Civil, complete same-workbook seven-member list; maintainer-approved explicit-link validity policy reviewed 2026-10-01"
 source_authority = { revision = { revision_id = "Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx@sha256:09abd39d6a5c45aa732466fc35bc86aaeed759e08b28ae8e954066a0083d08b3", dataset = "Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx", publisher = "Socialstyrelsen", purpose = "Selected machine-readable source declarations", upstream_revision = "host-selection-2026-09-14-not-a-provider-release", artifact_path = "catalog/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx", artifact_size = 101262, artifact_sha256 = "13133362ece0a9d7ac808b7e9844bdf0372dba11f884ff7a183f28bb5f415f0f" }, locators = [{ semantic_record_key = ["register:Patientregistret", "deldatamangd:PAR_SV", "variable:CIVIL"], physical_file = "catalog/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx", physical_table = "Metadata - Variabelnivå", physical_record = "row:87", physical_cells = ["Metadata - Variabelnivå!A87", "Metadata - Variabelnivå!B87", "Metadata - Variabelnivå!C87", "Metadata - Variabelnivå!D87", "Metadata - Variabelnivå!E87", "Metadata - Variabelnivå!F87", "Metadata - Variabelnivå!G87", "Metadata - Variabelnivå!H87", "Metadata - Variabelnivå!I87", "Metadata - Variabelnivå!J87", "Metadata - Variabelnivå!K87", "Metadata - Variabelnivå!L87", "Metadata - Variabelnivå!M87", "Metadata - Variabelnivå!N87", "Metadata - Variabelnivå!O87", "Metadata - Variabelnivå!P87", "Metadata - Variabelnivå!Q87", "Metadata - Variabelnivå!R87", "Metadata - Variabelnivå!S87", "Metadata - Variabelnivå!T87", "Metadata - Variabelnivå!U87", "Metadata - Variabelnivå!V87", "Metadata - Variabelnivå!W87", "Metadata - Variabelnivå!X87", "Metadata - Variabelnivå!Y87", "Metadata - Variabelnivå!Z87", "Metadata - Variabelnivå!AA87", "Metadata - Variabelnivå!AB87", "Metadata - Variabelnivå!AC87", "Metadata - Variabelnivå!AD87", "Metadata - Variabelnivå!AE87", "Metadata - Variabelnivå!AF87", "Metadata - Variabelnivå!AG87", "Metadata - Variabelnivå!AH87", "Metadata - Variabelnivå!AI87", "Metadata - Variabelnivå!AJ87", "Metadata - Variabelnivå!AK87", "Metadata - Variabelnivå!AL87", "Metadata - Variabelnivå!AM87", "Metadata - Variabelnivå!AN87", "Metadata - Variabelnivå!AO87", "Metadata - Variabelnivå!AP87", "Metadata - Variabelnivå!AQ87", "Metadata - Variabelnivå!AR87", "Metadata - Variabelnivå!AS87", "Metadata - Variabelnivå!AT87", "Metadata - Variabelnivå!AU87", "Metadata - Variabelnivå!AV87", "Metadata - Variabelnivå!AW87", "Metadata - Variabelnivå!AX87", "Metadata - Variabelnivå!AY87", "Metadata - Variabelnivå!AZ87", "Metadata - Variabelnivå!BA87", "Metadata - Variabelnivå!BB87", "Metadata - Variabelnivå!BC87", "Metadata - Variabelnivå!BD87", "Metadata - Variabelnivå!BE87", "Metadata - Variabelnivå!BF87", "Metadata - Variabelnivå!BG87", "Metadata - Variabelnivå!BH87", "Metadata - Variabelnivå!BI87", "Metadata - Variabelnivå!BJ87", "Metadata - Variabelnivå!BK87", "Metadata - Variabelnivå!BL87", "Metadata - Variabelnivå!BM87", "Metadata - Variabelnivå!BN87", "Metadata - Variabelnivå!BO87", "Metadata - Variabelnivå!BP87", "Metadata - Variabelnivå!BQ87", "Metadata - Variabelnivå!BR87", "Metadata - Variabelnivå!BS87", "Metadata - Variabelnivå!BT87", "Metadata - Variabelnivå!BU87", "Metadata - Variabelnivå!BV87", "Metadata - Variabelnivå!BW87", "Metadata - Variabelnivå!BX87", "Metadata - Variabelnivå!BY87", "Metadata - Variabelnivå!BZ87", "Metadata - Variabelnivå!CA87", "Metadata - Variabelnivå!CB87", "Metadata - Variabelnivå!CC87", "Metadata - Variabelnivå!CD87", "Metadata - Variabelnivå!CE87", "Metadata - Variabelnivå!CF87", "Metadata - Variabelnivå!CG87", "Metadata - Variabelnivå!CH87", "Metadata - Variabelnivå!CI87", "Metadata - Variabelnivå!CJ87", "Metadata - Variabelnivå!CK87", "Metadata - Variabelnivå!CL87", "Metadata - Variabelnivå!CM87", "Metadata - Variabelnivå!CN87", "Metadata - Variabelnivå!CO87", "Metadata - Variabelnivå!CP87", "Metadata - Variabelnivå!CQ87", "Metadata - Variabelnivå!CR87", "Metadata - Variabelnivå!CS87", "Metadata - Variabelnivå!CT87"] }], records = [{ ref = { source = "Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx", semantic_record_key = ["register:Patientregistret", "deldatamangd:PAR_SV", "variable:CIVIL"] }, alternatives = [{ fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "unknown" }, { name = "column_name", status = "value", value = "CIVIL" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "value", value = "1997" }, { name = "coverage_to", status = "unknown" }, { name = "data_length", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Patientens civilstånd 31/12" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "value", value = false }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Civilstånd" }, { name = "operational_definition", status = "absent" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "absent" }, { name = "representation", status = "value", value = "Se Kodlista_Civil" }, { name = "sensitivity", status = "value", value = true }, { name = "source_attribution", status = "value", value = "SCB" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }], edition_scope = { kind = "intervals", intervals = [{ start = "1997" }] }, edition_period_scope = { kind = "not_applicable", intervals = [] }, subject = { provider = "sos", register = { status = "value", name = "Patientregistret" }, variant = { status = "value", name = "PAR_SV" }, variant_references = [], population = { status = "unknown" }, variable = { status = "value", native_id = "CIVIL", name = "Civilstånd" }, member = { status = "value", name = "CIVIL" }, native = {  } }, code_set_references = [], parent_facts = [] }] }], codings = ["b1e5394069976b34816a17917d937bcdeb1fcafdadc730b9f120926cfd881a8a"], raw_codings = ["2bcbf370c59d2e922c5e866c161f10eae21356bd61bd91e49f57b4ca51ed40a5"], label_equivalences = [] }
+
+[[acknowledge]]
+code = "unresolved_list_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx@sha256:09abd39d6a5c45aa732466fc35bc86aaeed759e08b28ae8e954066a0083d08b3', 'sheet:Kodlista_DIAGNOS', '5c0ebff9b44d7f8ac72674ea9ef57d7fcbc2f23c69d295ee078101b9d43d5bc3', 0, ())"
+fields = ["coding"]
+refs = []
+reason = "User-approved bounded source limitation,2026-10-01: The exact named DIAGNOS sheet supplies no usable complete domain. Retain the pointer and empty dictionary; no invented domain."
+evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."
+
+[[acknowledge]]
+code = "unknown_code_membership"
+subject = "sos/par/foreskrift"
+fields = ["coding"]
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_OV\",\"variable:FORESKRIFT\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+valid_from = "2015-01-01"
+valid_to = "9999-12-31"
+reason = "User-approved bounded source limitation,2026-10-01: The exact supplied bare tokens lack verified literal labels. Preserve all raw tokens and associations; the labelled domain stays unavailable."
+evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."
+
+[[acknowledge]]
+code = "unknown_code_membership"
+subject = "sos/par/foreskrift"
+fields = ["coding"]
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_SV\",\"variable:FORESKRIFT\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+valid_from = "2015-01-01"
+valid_to = "9999-12-31"
+reason = "User-approved bounded source limitation,2026-10-01: The exact supplied bare tokens lack verified literal labels. Preserve all raw tokens and associations; the labelled domain stays unavailable."
+evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."
+
+[[acknowledge]]
+code = "unknown_code_membership"
+subject = "sos/par/foreskrift"
+fields = ["coding"]
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_TV\",\"variable:FORESKRIFT\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+valid_from = "2024-01-01"
+valid_to = "9999-12-31"
+reason = "User-approved bounded source limitation,2026-10-01: The exact supplied bare tokens lack verified literal labels. Preserve all raw tokens and associations; the labelled domain stays unavailable."
+evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'FLAND', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_OV', 'column', 'FLAND')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\",\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_OV\",\"variable:FLAND\"]}"]
+fields = ["classification_declared"]
+valid_from = "2001-01-01"
+valid_to = "9999-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'FLAND', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_SV', 'column', 'FLAND')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\",\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_SV\",\"variable:FLAND\"]}"]
+fields = ["classification_declared"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'LK', 'accepted-shape', 'Län och kommun där patienten var folkbokförd 31 december året för vårdkontakten. Finns i årsversionerna.', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_OV', 'column', 'LK')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\",\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_OV\",\"variable:LK\"]}"]
+fields = ["classification_declared"]
+valid_from = "2016-01-01"
+valid_to = "9999-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'LK', 'accepted-shape', 'Län och kommun där patienten var folkbokförd 31 december året för vårdkontakten. Finns i årsversionerna.', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_SV', 'column', 'LK')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\",\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_SV\",\"variable:LK\"]}"]
+fields = ["classification_declared"]
+valid_from = "2016-01-01"
+valid_to = "9999-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'LK', 'accepted-shape', 'Län och kommun där patienten var folkbokförd vid tidpunkten för slut av psykiatrisk vårdform. Saknas slutdatum används datum då registret skapas.  Finns i månadsversionen.', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_TV', 'column', 'LK')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\",\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_TV\",\"variable:LK\"]}"]
+fields = ["classification_declared"]
+valid_from = "2024-01-01"
+valid_to = "9999-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'LK', 'accepted-shape', 'Län och kommun där patienten var folkbokförd vid tidpunkten för vårdkontakten. Finns i månadsversionen.', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_OV', 'column', 'LK')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\",\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_OV\",\"variable:LK\"]}"]
+fields = ["classification_declared"]
+valid_from = "2015-01-01"
+valid_to = "9999-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'LK', 'accepted-shape', 'Län och kommun där patienten var folkbokförd vid utskrivningsdatum. Saknas utskrivningsdatum används datum då registret skapas. Finns i månadsversionen.', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_SV', 'column', 'LK')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\",\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_SV\",\"variable:LK\"]}"]
+fields = ["classification_declared"]
+valid_from = "2015-01-01"
+valid_to = "9999-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'LKF', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_OV', 'column', 'LKF')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\",\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_OV\",\"variable:LKF\"]}"]
+fields = ["classification_declared"]
+valid_from = "1997-01-01"
+valid_to = "2015-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'LKF', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_SV', 'column', 'LKF')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\",\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_SV\",\"variable:LKF\"]}"]
+fields = ["classification_declared"]
+valid_from = "1964-01-01"
+valid_to = "2015-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'LKF', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_TV', 'column', 'LKF')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\",\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_TV\",\"variable:LKF\"]}"]
+fields = ["classification_declared"]
+valid_from = "2010-01-01"
+valid_to = "2014-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'LKF_IN', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_OV', 'column', 'LKF_IN')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\",\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_OV\",\"variable:LKF_IN\"]}"]
+fields = ["classification_declared"]
+valid_from = "2001-01-01"
+valid_to = "2014-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'LKF_IN', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_SV', 'column', 'LKF_IN')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\",\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_SV\",\"variable:LKF_IN\"]}"]
+fields = ["classification_declared"]
+valid_from = "1997-01-01"
+valid_to = "2014-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'NATION', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_OV', 'column', 'NATION')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\",\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_OV\",\"variable:NATION\"]}"]
+fields = ["classification_declared"]
+valid_from = "2001-01-01"
+valid_to = "9999-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'NATION', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_SV', 'column', 'NATION')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\",\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_SV\",\"variable:NATION\"]}"]
+fields = ["classification_declared"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."

@@ -7,6 +7,11 @@ import ProjectEditorLifecycleHarness from "./ProjectEditorLifecycleHarness.svelt
 import type { ProjectData } from "./project_data";
 import { projectStore, setPersistence } from "./project_store.svelte";
 
+vi.mock("./api", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("./api")>()),
+  getDataWarnings: vi.fn().mockResolvedValue([]),
+}));
+
 // #991/#993: /project is a READ-ONLY data-order CART. The page shows the picked
 // sources/bindings read-only, supports delete + project-name edit + Open/Download +
 // automatic validation, and links out to the catalog for fixes. There is NO "Add source" /

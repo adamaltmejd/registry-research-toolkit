@@ -82,6 +82,7 @@ RESERVED_HTTP_SUFFIX_SLUGS: frozenset[str] = frozenset(
         "successors",
         "lineage",
         "lineage_warnings",
+        "data_warnings",
         "dimensions",
         "graph",
     }

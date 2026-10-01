@@ -24,6 +24,21 @@ class _SourceModel(BaseModel):
     )
 
 
+class SourceRecordRef(_SourceModel):
+    """Revision- and layout-independent reference to one semantic source member."""
+
+    source: str
+    semantic_record_key: tuple[str, ...]
+
+    @model_validator(mode="after")
+    def _non_empty(self) -> Self:
+        if not self.source.strip() or not self.semantic_record_key:
+            raise ValueError("source record references must be non-empty")
+        if any(not part.strip() for part in self.semantic_record_key):
+            raise ValueError("semantic record key parts must be non-empty")
+        return self
+
+
 def canonical_sha256(value: Any) -> str:
     payload = json.dumps(
         value,

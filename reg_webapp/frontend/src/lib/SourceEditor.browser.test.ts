@@ -31,6 +31,7 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
+    getDataWarnings: vi.fn().mockResolvedValue([]),
     getCatalogNode: vi.fn(),
     getCatalogRoot: vi.fn(),
     getRegisterVariants: vi.fn(),

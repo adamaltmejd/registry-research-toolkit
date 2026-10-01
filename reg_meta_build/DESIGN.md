@@ -810,19 +810,18 @@ re-derived on every build with no codebook-hash pin, so no codebook or builder c
 requires regenerating curation; a classification's overrides are curation.
 
 Conformance compares exact code strings. Noncanonical members preserve the original list
-and declared binding as evidence, withhold the state classification link and emit an
-error. There is no global sentinel waiver. A classification may instead curate its own
-exact-string sentinel list (`sentinel_codes = [{code, meaning}]` per `[classification]`
-in `curation/classifications/<short>.toml`) for bulk/missing tokens the source emits for
-uncoded members. An observed code on that list keeps the state binding (`kept`), stays a
-variable-local member of the state's value set — never a `classification_code` row — and
-is reported once per state as a warning naming the code and its curated meaning. Codes
-match exactly (`"00000"` never equals `"0"`); there are no patterns and no
-cross-classification lists, and unknown keys or duplicate codes fail the load fast. Any
-other noncanonical code still severs the binding with the existing error, which lists
-only the non-sentinel codes. A sentinel must not be a canonical code; the load refuses
-the overlap. The sentinel list is conformance curation, not codebook content, so
-curating a sentinel never stales a binding. Original coding issues remain visible.
+and the known source-declared classification link. They emit a warning and are recorded
+as source extensions beside matching official codes (`extended`); an exact match is
+`conforming`. The official codebook is never expanded from source data.
+
+A classification may curate an exact-string sentinel list
+(`sentinel_codes = [{code, meaning}]` per `[classification]` in
+`curation/classifications/<short>.toml`) for bulk/missing tokens. These are local source
+extensions with an additional warning naming their curated meaning. Codes match exactly
+(`"00000"` never equals `"0"`); there are no patterns or cross-classification lists.
+Unknown keys, duplicate codes and overlap with canonical members fail fast. Sentinel
+curation does not mutate the official codebook or stale a binding. Original coding
+issues remain visible. Unknown or ambiguous classification identities remain unresolved.
 
 Where one literal code has substantive meanings in other source lists, finite
 `coding.sentinel` entries name exact source code-label pairs at one accepted owner,
@@ -831,7 +830,7 @@ classification decisions. Complete original fields, scopes, coding, effective pe
 effective delivery and the selected codebook are guarded. Changed evidence withholds the
 scoped decision. Only matching pairs inside the reviewed windows become local sentinels;
 source lists and global codebooks remain unchanged. Missing memberships, competing lists
-and other noncanonical codes retain their existing errors.
+remain errors; other noncanonical codes are retained as source extensions.
 
 The resolver carries each accepted local exception to the writer as a checked
 certificate: literal column, finite state window, exact code-label pairs, selected
@@ -1028,6 +1027,23 @@ source register's other deliveries.
 Panel keys require supported states in the exact variant. Losing one composite-key
 member makes that entire key unknown; it never manufactures a shorter key. Other axes,
 time grain and independently supported parent metadata survive.
+
+## Persistent data warnings
+
+The pipeline captures source diagnostics after acknowledgement settlement. Every
+acknowledged limitation and a finite set of diagnostics affecting data interpretation
+are persisted; editorial metadata projection notices are not. Actual corrected source
+references establish ownership. Ambiguous ownership falls back to the actual resolved
+register, and an owner omitted from the final catalog cannot retain a variable
+coordinate.
+
+Reviewed identity maps, coding selections/extensions, and missing-column errata can
+carry an explicit `data_warning` summary. Omitted annotations are silent. Only
+applicable guarded decisions emit assumption warnings. Identity annotations retain the
+annotated source members; coding annotations use their exact native column and authored
+window; errata annotations follow the actual added occurrence, not its supporting native
+anchor. The writer validates each complete warning payload and stores it in an indexed
+`data_warning` table. No assumption is discovered by parsing evidence prose.
 
 ## Strict and diagnostic builds
 

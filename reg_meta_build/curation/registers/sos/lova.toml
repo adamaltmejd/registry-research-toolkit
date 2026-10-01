@@ -2478,3 +2478,203 @@ periods = []
 reason = "The physical variable name explicitly supplies every literal category code and meaning. Preserve the closed own-source code domain, every original flag, source field, scope and ordered association. This supplies labels without inferring a category from a control table or changing observed values."
 source = "Accepted LOVA workbook: exact own KATEGORI name, full original fields/parents and bare-code fingerprints; no dictionary-table availability inferred."
 source_authority = { revision = { revision_id = "Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx@sha256:d186882b9a8ef43c64210d00b4b0906628141180c88928b7e973c794b3e6ac0a", dataset = "Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx", publisher = "Socialstyrelsen", purpose = "Selected machine-readable source declarations", upstream_revision = "host-selection-2026-09-14-not-a-provider-release", artifact_path = "catalog/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx", artifact_size = 60767, artifact_sha256 = "2cda1584bfdbb70e06411f78bd77347c3acc57886ba4a2fcc488a7c669a34357" }, source_scope = { kind = "intervals", intervals = [{ start = "1995" }] }, locators = [{ semantic_record_key = ["register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)", "deldatamangd:A_LOVA_HOSP", "variable:KATEGORI"], physical_file = "catalog/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx", physical_table = "Metadata - Variabelnivå", physical_record = "row:82", physical_cells = ["Metadata - Variabelnivå!A82", "Metadata - Variabelnivå!B82", "Metadata - Variabelnivå!C82", "Metadata - Variabelnivå!D82", "Metadata - Variabelnivå!E82", "Metadata - Variabelnivå!F82", "Metadata - Variabelnivå!G82", "Metadata - Variabelnivå!H82", "Metadata - Variabelnivå!I82", "Metadata - Variabelnivå!J82", "Metadata - Variabelnivå!K82", "Metadata - Variabelnivå!L82", "Metadata - Variabelnivå!M82", "Metadata - Variabelnivå!N82", "Metadata - Variabelnivå!O82", "Metadata - Variabelnivå!P82"] }], records = [{ ref = { source = "Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx", semantic_record_key = ["register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)", "deldatamangd:A_LOVA_HOSP", "variable:KATEGORI"] }, alternatives = [{ fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "unknown" }, { name = "column_name", status = "value", value = "KATEGORI" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "value", value = "1900" }, { name = "coverage_to", status = "unknown" }, { name = "data_length", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Delar upp olika bevis i kategorier och LEG_SPEC_EXAM_NR är unikt per kategori" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "value", value = true }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Kategori LEG = legitimation eller SPEC = specialitet" }, { name = "operational_definition", status = "absent" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "absent" }, { name = "representation", status = "value", value = "LEG;SPEC" }, { name = "sensitivity", status = "value", value = true }, { name = "source_attribution", status = "value", value = "LOVA" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }], edition_scope = { kind = "intervals", intervals = [{ start = "1900" }] }, edition_period_scope = { kind = "not_applicable", intervals = [] }, subject = { provider = "sos", register = { status = "value", name = "Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)" }, variant = { status = "value", name = "A_LOVA_HOSP" }, variant_references = [], population = { status = "unknown" }, variable = { status = "value", native_id = "KATEGORI", name = "Kategori LEG = legitimation eller SPEC = specialitet" }, member = { status = "value", name = "KATEGORI" }, native = {  } }, code_set_references = [], parent_facts = [] }] }], codings = ["a54e7207c50d6ce0eb76b3f259da3d201270e597d7e37c5784ffe870b8ae9b58"], enumeration = { field = "name", syntax = "kategori-alpha-equals", lines = ["LEG = legitimation", "SPEC = specialitet"] }, raw_codings = ["63542ce86d0030d466df0ae43d83788e8f656561846fc8e6a0456187865bf738"], label_equivalences = [] }
+
+[[acknowledge]]
+code = "unknown_code_membership"
+subject = "sos/lova/agarkat"
+fields = ["coding"]
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA\",\"variable:AGARKAT\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "User-approved bounded source limitation,2026-10-01: The exact supplied bare tokens lack verified literal labels. Preserve all raw tokens and associations; the labelled domain stays unavailable."
+evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."
+
+[[acknowledge]]
+code = "unknown_code_membership"
+subject = "sos/lova/agarkat"
+fields = ["coding"]
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA_LISA\",\"variable:AGARKAT\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+valid_from = "1995-01-01"
+valid_to = "9999-12-31"
+reason = "User-approved bounded source limitation,2026-10-01: The exact supplied bare tokens lack verified literal labels. Preserve all raw tokens and associations; the labelled domain stays unavailable."
+evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."
+
+[[acknowledge]]
+code = "unknown_code_membership"
+subject = "sos/lova/arb-mark-stat"
+fields = ["coding"]
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA\",\"variable:ARB_MARK_STAT\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "User-approved bounded source limitation,2026-10-01: The exact supplied bare tokens lack verified literal labels. Preserve all raw tokens and associations; the labelled domain stays unavailable."
+evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."
+
+[[acknowledge]]
+code = "unknown_code_membership"
+subject = "sos/lova/arb-mark-stat-lisa"
+fields = ["coding"]
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA_LISA\",\"variable:ARB_MARK_STAT_LISA\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+valid_from = "1995-01-01"
+valid_to = "9999-12-31"
+reason = "User-approved bounded source limitation,2026-10-01: The exact supplied bare tokens lack verified literal labels. Preserve all raw tokens and associations; the labelled domain stays unavailable."
+evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."
+
+[[acknowledge]]
+code = "unknown_code_membership"
+subject = "sos/lova/ej-pnr"
+fields = ["coding"]
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA\",\"variable:EJ_PNR\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "User-approved bounded source limitation,2026-10-01: The exact supplied bare tokens lack verified literal labels. Preserve all raw tokens and associations; the labelled domain stays unavailable."
+evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."
+
+[[acknowledge]]
+code = "unknown_code_membership"
+subject = "sos/lova/kon"
+fields = ["coding"]
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA_PERSON\",\"variable:KON\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "User-approved bounded source limitation,2026-10-01: The exact supplied bare tokens lack verified literal labels. Preserve all raw tokens and associations; the labelled domain stays unavailable."
+evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."
+
+[[acknowledge]]
+code = "unknown_code_membership"
+subject = "sos/lova/larare"
+fields = ["coding"]
+refs = ["{\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA_PERSON\",\"variable:LARARE\"],\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\"}"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "User-approved bounded source limitation,2026-10-01: The exact supplied bare tokens lack verified literal labels. Preserve all raw tokens and associations; the labelled domain stays unavailable."
+evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'ARBSOKNOV', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers ekonomi och arbetsmarknadssituation', 'column', 'ARBSOKNOV')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\",\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA_LISA\",\"variable:ARBSOKNOV\"]}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "9999-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'ASTKOMMUN', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus', 'column', 'ASTKOMMUN')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\",\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA\",\"variable:ASTKOMMUN\"]}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'ASTKOMMUN', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers ekonomi och arbetsmarknadssituation', 'column', 'ASTKOMMUN')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\",\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA_LISA\",\"variable:ASTKOMMUN\"]}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "9999-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'BEHORIGHETSBEGRANSNINGSKOD', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA HOSP', 'column', 'BEHORIGHETSBEGRANSNINGSKOD')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\",\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA_HOSP\",\"variable:BEHORIGHETSBEGRANSNINGSKOD\"]}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "9999-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'FODELSELAN', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA PERSON', 'column', 'FODELSELAN')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\",\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA_PERSON\",\"variable:FODELSELAN\"]}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'HSKOLEORT', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus', 'column', 'HSKOLEORT')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\",\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA\",\"variable:HSKOLEORT\"]}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'INSTKOD', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus', 'column', 'INSTKOD')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\",\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA\",\"variable:INSTKOD\"]}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'INSTKOD', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers ekonomi och arbetsmarknadssituation', 'column', 'INSTKOD')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\",\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA_LISA\",\"variable:INSTKOD\"]}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'KOMMUN', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus', 'column', 'KOMMUN')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\",\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA\",\"variable:KOMMUN\"]}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'KOMMUN', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers ekonomi och arbetsmarknadssituation', 'column', 'KOMMUN')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\",\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA_LISA\",\"variable:KOMMUN\"]}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'SUN2000NIVA', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA EXAMEN', 'column', 'SUN2000NIVA')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\",\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA_EXAMEN\",\"variable:SUN2000NIVA\"]}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "9999-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'YRKESKOD', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA / Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus', 'column', 'YRKESKOD')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\",\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA\",\"variable:YRKESKOD\"]}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "2022-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variable', 'native-str', 'YRKESKOD', 'variant-key', 'Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx', 'sos', 'register', 'name', 'Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)', 'variant', 'name', 'LOVA HOSP', 'column', 'YRKESKOD')"
+refs = ["{\"source\":\"Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx\",\"semantic_record_key\":[\"register:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)\",\"deldatamangd:A_LOVA_HOSP\",\"variable:YRKESKOD\"]}"]
+fields = ["classification_declared"]
+valid_from = "1995-01-01"
+valid_to = "9999-12-31"
+reason = "Retain this exact unresolved source classification declaration as a warning; no unsupported edition, dictionary or classification link is inferred."
+evidence = "User-approved source classification reference limitation, 2026-10-01 decision 1. Source-limitations42-user-review.md and SOS-classification29 complete original/coding receipts retain the declarations, all 33 native-family originals and zero attached coding associations. Exact Batch41 issue selector retained; state.classification remains unavailable."

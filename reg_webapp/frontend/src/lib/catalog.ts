@@ -2889,7 +2889,7 @@ function valueSetDedupKey(s: VariableStateModel): string {
 export function conformanceNeedsNotice(
   c: ClassificationConformanceModel,
 ): boolean {
-  return c.status === "severed" || c.nonconforming_code_count > 0;
+  return c.status === "extended" || c.nonconforming_code_count > 0;
 }
 
 /** A stored conformance verdict, the state its mismatch list is read by

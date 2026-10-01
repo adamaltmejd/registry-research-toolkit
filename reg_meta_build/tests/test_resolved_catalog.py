@@ -41,6 +41,8 @@ from reg_meta_build import resolved_catalog
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from reg_meta_build.source_scope import ScopeResolution
+
 
 def _state(year: int, *, column: str = "AmPolTyp") -> ResolvedState:
     return ResolvedState(
@@ -474,7 +476,7 @@ def test_sentinel_overlapping_canonical_code_is_refused() -> None:
     assert "'001'" in str(exc_info.value)
 
 
-@pytest.mark.parametrize("status", ["kept", "severed"])
+@pytest.mark.parametrize("status", ["extended"])
 def test_classifications_and_explicit_conformance_are_written_exactly(
     tmp_path: Path,
     status: str,
@@ -491,8 +493,11 @@ def test_classifications_and_explicit_conformance_are_written_exactly(
         {
             "declared_classification": classification.slug,
             "status": status,
-            "checked_codes": ("001", "missing"),
-            "nonconforming_members": (("missing", "Unlisted label"),),
+            "checked_codes": ("", "001", "missing"),
+            "nonconforming_members": (
+                ("", "Unspecified"),
+                ("missing", "Unlisted label"),
+            ),
         }
     )
     variable = _variable()
@@ -505,7 +510,7 @@ def test_classifications_and_explicit_conformance_are_written_exactly(
                     ("", "Unspecified"),
                 )
             ),
-            "classification": classification.slug if status == "kept" else None,
+            "classification": classification.slug,
             "conformance": conformance,
         }
     )
@@ -554,17 +559,31 @@ def test_classifications_and_explicit_conformance_are_written_exactly(
                 "SELECT c.slug, status, checked_code_count, matched_code_count, nonconforming_code_count, overlap "
                 "FROM classification_conformance cc JOIN classification c ON c.id=cc.declared_classification_id"
             ).fetchone()
-        ) == (classification.slug, status, 2, 1, 1, 0.5)
+        ) == (classification.slug, status, 3, 1, 2, 1 / 3)
         assert [
             tuple(row)
             for row in conn.execute(
-                "SELECT code, label FROM classification_conformance_code JOIN value_code USING(code_id)"
+                "SELECT code, label FROM classification_conformance_code JOIN value_code USING(code_id) ORDER BY code, label"
             )
-        ] == [("missing", "Unlisted label")]
+        ] == [("", "Unspecified"), ("missing", "Unlisted label")]
         assert conn.execute(
             "SELECT c.slug FROM variable_state s LEFT JOIN classification c ON c.id=s.classification_id"
-        ).fetchone()[0] == (classification.slug if status == "kept" else None)
+        ).fetchone()[0] == (classification.slug)
         assert conn.execute("SELECT count(*) FROM code_variable_map").fetchone()[0] == 3
+        from reg_meta.catalog import Catalog
+
+        state_id, value_set_id = conn.execute(
+            "SELECT state_id, value_set_id FROM variable_state"
+        ).fetchone()
+        catalog = Catalog(conn)
+        canonical = catalog.state_canonical_codes(state_id, value_set_id)
+        extensions = catalog.state_nonconforming_codes(state_id, value_set_id)
+        assert canonical is not None and extensions is not None
+        assert {m.code for m in canonical}.isdisjoint(m.code for m in extensions)
+        assert sorted((m.code, m.label) for m in (*canonical, *extensions)) == sorted(
+            state.value_set.members
+        )
+
     write_resolved_catalog(
         (variable,),
         output,
@@ -603,7 +622,7 @@ def test_bad_classification_references_or_membership_preserve_previous_catalog(
                             "value_set": ResolvedCodeSet(members=(("999", "Missing"),)),
                             "conformance": ResolvedConformance(
                                 declared_classification=classification.slug,
-                                status="kept",
+                                status="conforming",
                                 checked_codes=("999",),
                             ),
                         }
@@ -1365,7 +1384,7 @@ def _scoped_sentinel_variable():
     )
     conformance = ResolvedConformance(
         declared_classification=book.slug,
-        status="kept",
+        status="extended",
         checked_codes=("001", "09350"),
         sentinel_members=certificate.members,
         scoped_sentinels=(certificate,),
@@ -1393,7 +1412,7 @@ def test_scoped_sentinel_certificate_keeps_local_member_without_changing_book(
             conn.execute(
                 "SELECT status, checked_code_count, matched_code_count, nonconforming_code_count FROM classification_conformance"
             ).fetchone()
-        ) == ("kept", 2, 2, 0)
+        ) == ("extended", 2, 1, 1)
         assert (
             conn.execute(
                 "SELECT count(*) FROM classification_code WHERE code_id IN (SELECT code_id FROM value_code WHERE code='09350')"
@@ -1456,3 +1475,277 @@ def test_scoped_sentinel_certificate_requires_positive_source_and_case_evidence(
             type(certificate).model_validate(
                 {**certificate.model_dump(), field: invalid}
             )
+
+
+def test_data_warnings_persist_and_filter_without_inventing_scope(tmp_path: Path):
+    import sqlite3
+
+    from reg_meta.catalog import DataWarning
+    from reg_meta.source_evidence import canonical_sha256
+
+    payload = {
+        "register_fqid": "scb/example",
+        "variable_fqid": "scb/example/ampoltyp",
+        "variant": "individuals",
+        "delivery_column_name": "AmPolTyp",
+        "valid_from": "2000-01-01",
+        "valid_to": "2000-12-31",
+        "code": "missing_coding_period",
+        "severity": "warning",
+        "summary": "Historical codes unavailable",
+        "detail": "No source list for this window.",
+        "source_subject": "native:44",
+        "fields": [],
+        "refs": [],
+        "withheld_output": ["coding"],
+        "acknowledged_by": "review-44",
+        "case_id": None,
+    }
+    warning = DataWarning.model_validate(
+        {"warning_id": canonical_sha256(payload), **payload}
+    )
+    unscoped_payload = {
+        **payload,
+        "variable_fqid": None,
+        "variant": None,
+        "delivery_column_name": None,
+        "valid_from": None,
+        "valid_to": None,
+    }
+    unscoped = DataWarning.model_validate(
+        {"warning_id": canonical_sha256(unscoped_payload), **unscoped_payload}
+    )
+    output = tmp_path / "reg_meta.db"
+    write_resolved_catalog(
+        (_variable(),), output, manifest={}, data_warnings=(warning, unscoped)
+    )
+    with closing(sqlite3.connect(output)) as connection:
+        connection.execute(
+            "INSERT INTO variable_same_as VALUES (?, ?, ?, ?, ?, ?)",
+            ("scb", "historical", "old-name", "scb", "example", "ampoltyp"),
+        )
+        connection.commit()
+    with closing(open_db(output)) as conn:
+        catalog = Catalog(conn)
+        assert set(catalog.data_warnings("scb/historical/old-name")) == {
+            warning,
+            unscoped,
+        }
+        assert set(catalog.data_warnings("scb/example")) == {warning, unscoped}
+        assert catalog.data_warnings("scb/example/ampoltyp", period=2002) == (unscoped,)
+        assert catalog.data_warnings("scb/example/ampoltyp", variant="other") == (
+            unscoped,
+        )
+        assert catalog.data_warnings(
+            "scb/example/ampoltyp", representation="Other"
+        ) == (unscoped,)
+        variable = catalog.resolve("scb/example/ampoltyp")
+        assert set(variable.warnings) == {warning}
+        assert set(variable.states[0].warning_ids) == {warning.warning_id}
+        assert variable.states[1].warning_ids == ()
+        assert set(catalog.resolve("scb/example").warnings) == {unscoped}
+    independent = _variable().model_copy(
+        update={
+            "states": (
+                _state(2000).model_copy(
+                    update={
+                        "period_scope": "year_independent",
+                        "valid_from": None,
+                        "valid_to": None,
+                    }
+                ),
+            )
+        }
+    )
+    independent_output = tmp_path / "independent.db"
+    write_resolved_catalog(
+        (independent,),
+        independent_output,
+        manifest={},
+        data_warnings=(warning, unscoped),
+    )
+    with closing(open_db(independent_output)) as conn:
+        assert Catalog(conn).resolve("scb/example/ampoltyp").states[0].warning_ids == ()
+    with pytest.raises(ValidationError, match="identity"):
+        write_resolved_catalog(
+            (_variable(),),
+            tmp_path / "tampered.db",
+            manifest={},
+            data_warnings=(warning.model_copy(update={"detail": "Changed"}),),
+        )
+
+
+def test_warning_ownership_requires_complete_source_and_delivery_witnesses():
+    from types import SimpleNamespace
+    from typing import cast
+
+    from reg_meta.source_evidence import SourceRecordRef
+    from reg_meta_build.data_warnings import scope_data_warnings
+    from reg_meta_build.source_curation import ResolutionDiagnostic
+    from reg_meta_build.source_records import ScopeInterval, TemporalScope
+
+    variable = _variable()
+    ref = SourceRecordRef(source="fixture", semantic_record_key=("44",))
+    occurrence = SimpleNamespace(
+        variable_key=("44",),
+        variant_key=("v",),
+        corrections=(),
+        source_records=(),
+        column_key=None,
+        edition_scope=TemporalScope(kind="not_applicable"),
+        edition_period_scope=TemporalScope(
+            kind="intervals", intervals=(ScopeInterval(start="2000", end="2000"),)
+        ),
+        fields=SimpleNamespace(
+            column_name=SimpleNamespace(status="value", value="AmPolTyp")
+        ),
+        evidence=(
+            SimpleNamespace(
+                source="fixture",
+                locators=(SimpleNamespace(semantic_record_key=("44",)),),
+            ),
+        ),
+    )
+    issue = ResolutionDiagnostic(
+        code="missing_coding_period",
+        severity="warning",
+        subject="44",
+        detail="Domain unavailable",
+        refs=(ref,),
+        valid_from="2000-01-01",
+        valid_to="2000-12-31",
+        acknowledged_by="accepted",
+    )
+    scope = SimpleNamespace(
+        variables={("44",): variable},
+        corrections=SimpleNamespace(occurrences=(occurrence,)),
+        parents=SimpleNamespace(
+            registers={("r",): variable.register_ref},
+            variants={("v",): variable.states[0].variant},
+        ),
+        diagnostics=(issue,),
+        evaluations=(),
+    )
+    (warning,) = scope_data_warnings(cast("ScopeResolution", scope))
+    assert str(warning.variable_fqid) == "scb/example/ampoltyp"
+    assert warning.variant == "individuals"
+    assert warning.delivery_column_name == "AmPolTyp"
+    scope.diagnostics = (
+        issue.model_copy(
+            update={
+                "refs": (
+                    SourceRecordRef(source="fixture", semantic_record_key=("missing",)),
+                )
+            }
+        ),
+    )
+    (warning,) = scope_data_warnings(cast("ScopeResolution", scope))
+    assert warning.variable_fqid is None and warning.variant is None
+    scope.diagnostics = (
+        issue.model_copy(update={"valid_from": None, "valid_to": None}),
+    )
+    (warning,) = scope_data_warnings(cast("ScopeResolution", scope))
+    assert warning.variable_fqid is not None and warning.variant is None
+    scope.diagnostics = (
+        issue.model_copy(
+            update={"code": "metadata_projected", "acknowledged_by": None}
+        ),
+    )
+    assert scope_data_warnings(cast("ScopeResolution", scope)) == ()
+
+
+def test_storage_assumption_warns_on_added_physical_column_not_anchor_identity():
+    from types import SimpleNamespace
+    from typing import cast
+
+    from reg_meta_build.data_warnings import scope_data_warnings
+    from reg_meta_build.source_records import ScopeInterval, TemporalScope
+
+    variable = _variable()
+    scope = SimpleNamespace(
+        variables={("graft",): variable},
+        parents=SimpleNamespace(
+            registers={("r",): variable.register_ref},
+            variants={("v",): variable.states[0].variant},
+        ),
+        diagnostics=(),
+        evaluations=(
+            SimpleNamespace(
+                case_id="graft-case",
+                status="applicable",
+                decision=SimpleNamespace(
+                    kind="correct_occurrences",
+                    data_warning="Historical storage type is assumed",
+                    data_warning_refs=(),
+                    data_warning_fields=("data_type",),
+                    reason="Historical text assumption",
+                    provenance="Exact reviewed errata-column authority",
+                ),
+            ),
+        ),
+        corrections=SimpleNamespace(
+            occurrences=(
+                SimpleNamespace(
+                    variable_key=("graft",),
+                    variant_key=("v",),
+                    occurrence_key="added-column",
+                    column_key=None,
+                    edition_scope=TemporalScope(kind="not_applicable"),
+                    edition_period_scope=TemporalScope(
+                        kind="intervals",
+                        intervals=(ScopeInterval(start="2000", end="2000"),),
+                    ),
+                    fields=SimpleNamespace(
+                        column_name=SimpleNamespace(status="value", value="AmPolTyp")
+                    ),
+                    evidence=(),
+                    source_records=(),
+                    corrections=(
+                        SimpleNamespace(
+                            case_id="graft-case",
+                            provenance="maintainer-authorized storage-type assumption: historical text",
+                        ),
+                    ),
+                ),
+            )
+        ),
+    )
+    (warning,) = scope_data_warnings(cast("ScopeResolution", scope))
+    assert str(warning.variable_fqid) == "scb/example/ampoltyp"
+    assert warning.code == "assumed_storage_type" and warning.refs == ()
+    assert warning.source_subject == "graft-case" and warning.case_id == "graft-case"
+    assert (
+        warning.valid_from == "2000-01-01"
+        and warning.delivery_column_name == "AmPolTyp"
+    )
+
+
+def test_incomplete_classification_partition_preserves_previous_catalog(
+    tmp_path: Path,
+) -> None:
+    book = _classification()
+    variable = _variable()
+    conformance = ResolvedConformance(
+        declared_classification=book.slug,
+        status="conforming",
+        checked_codes=("001",),
+    )
+    state = variable.states[0].model_copy(
+        update={
+            "classification": book.slug,
+            "value_set": ResolvedCodeSet(
+                members=(("001", "Source label"), ("", "Source missing"))
+            ),
+            "conformance": conformance,
+        }
+    )
+    output = tmp_path / "reg_meta.db"
+    output.write_bytes(b"previous")
+    with pytest.raises(ValueError, match="conformance must check every distinct code"):
+        write_resolved_catalog(
+            (variable.model_copy(update={"states": (state,)}),),
+            output,
+            manifest={},
+            classifications=(book,),
+        )
+    assert output.read_bytes() == b"previous"

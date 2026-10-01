@@ -175,6 +175,7 @@ def build_catalog_fixture_db(db_path: Path) -> None:
     _seed_interrupted_delivery(src, add_variable, add_state)
     _seed_rename_chain(src, add_variable, add_state)
     _seed_many_state_binding(src, add_variable, add_state, add_value_set)
+    _seed_data_warnings(src)
     _rebuild_fts(src)
     _stamp_manifest(src)
 
@@ -184,6 +185,64 @@ def build_catalog_fixture_db(db_path: Path) -> None:
     finally:
         dst.close()
         src.close()
+
+
+def _seed_data_warnings(conn: sqlite3.Connection) -> None:
+    from reg_meta.catalog import DataWarning
+    from reg_meta.source_evidence import canonical_sha256
+
+    variable_id = conn.execute(
+        "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = 'forsamling'"
+    ).fetchone()[0]
+    for variable_scope in (False, True):
+        payload = {
+            "register_fqid": "scb/lisa",
+            "variable_fqid": "scb/lisa/forsamling" if variable_scope else None,
+            "variant": "_default" if variable_scope else None,
+            "delivery_column_name": "Forsamling" if variable_scope else None,
+            "valid_from": "2006-01-01" if variable_scope else None,
+            "valid_to": "2019-12-31" if variable_scope else None,
+            "code": "nonconforming_classification_codes"
+            if variable_scope
+            else "omitted_columnless_occurrence",
+            "severity": "warning",
+            "summary": "The delivered domain includes nonstandard classification codes."
+            if variable_scope
+            else "Some source records have no delivery column.",
+            "detail": "Source codes and labels are retained alongside the claimed classification."
+            if variable_scope
+            else "Unbound source records are retained; their identifier and sensitivity flags are not assigned to delivered variables.",
+            "source_subject": "synthetic fixture",
+            "fields": [],
+            "refs": [],
+            "withheld_output": [],
+            "acknowledged_by": None,
+            "case_id": None,
+        }
+        warning = DataWarning.model_validate(
+            {"warning_id": canonical_sha256(payload), **payload}
+        )
+        # The fixture variant's literal slug is read rather than assumed.
+        if variable_scope:
+            payload["variant"] = conn.execute(
+                "SELECT slug FROM register_variant WHERE register_variant_id = 10"
+            ).fetchone()[0]
+            warning = DataWarning.model_validate(
+                {"warning_id": canonical_sha256(payload), **payload}
+            )
+        conn.execute(
+            "INSERT INTO data_warning VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                warning.warning_id,
+                1,
+                variable_id if variable_scope else None,
+                10 if variable_scope else None,
+                warning.delivery_column_name,
+                warning.valid_from,
+                warning.valid_to,
+                warning.model_dump_json(),
+            ),
+        )
 
 
 def _seed_first_provider_register(
@@ -777,24 +836,23 @@ def _seed_many_state_binding(
         classification_id=sun2020,
     )
 
-    # Stored conformance: one SEVERED verdict on a plain coding and two KEPT
-    # verdicts on the classification-tagged era's two codings. Their mismatch code
+    # Stored source extensions on three classification-linked scopes. Their mismatch code
     # lists live in `classification_conformance_code` and are read per state on
     # demand.
     _seed_conformance(
         src,
         state_id=states[1995],
         classification_id=sun2020,
-        status="severed",
+        status="extended",
         checked=400,
-        matched=16,
+        matched=395,
         codes=[c for c, _ in _parish_codes(901)[:5]],
     )
     _seed_conformance(
         src,
         state_id=states[2010],
         classification_id=sun2020,
-        status="kept",
+        status="extended",
         checked=600,
         matched=597,
         codes=[c for c, _ in _parish_codes(902)[:3]],
@@ -803,7 +861,7 @@ def _seed_many_state_binding(
         src,
         state_id=parallel_state,
         classification_id=sun2020,
-        status="kept",
+        status="extended",
         checked=400,
         matched=396,
         codes=[c for c, _ in _parish_codes(900)[:4]],
@@ -820,6 +878,18 @@ def _seed_conformance(
     matched: int,
     codes: list[str],
 ) -> None:
+    src.execute(
+        "UPDATE variable_state SET classification_id=? WHERE state_id=?",
+        (classification_id, state_id),
+    )
+    src.execute(
+        "INSERT OR IGNORE INTO classification_code (classification_id, code_id) "
+        "SELECT ?, vsm.code_id FROM variable_state vs "
+        "JOIN value_set_member vsm ON vsm.value_set_id=vs.value_set_id "
+        "JOIN value_code vc ON vc.code_id=vsm.code_id "
+        "WHERE vs.state_id=? AND vc.code NOT IN (" + ",".join("?" for _ in codes) + ")",
+        (classification_id, state_id, *codes),
+    )
     src.execute(
         "INSERT INTO classification_conformance (state_id, "
         "declared_classification_id, status, checked_code_count, "

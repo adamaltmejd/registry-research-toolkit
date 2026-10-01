@@ -39,12 +39,13 @@ converter greedy-consumes any suffix. The catch-all MUST stay last.
 from __future__ import annotations
 
 import urllib.parse
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, Any, Literal, cast
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from reg_meta.catalog import (
     Catalog,
+    DataWarning,
     Period,
     RegisterCoverage,
     ResolvedProvider,
@@ -698,6 +699,7 @@ def _binding_node(
         # factored into the shared helper so the leaf embed and `/lineage` agree.
         lineage = _narrow_lineage_to_held(lineage, index, consumer_state_ids)
     return BindingNode(
+        warnings=tuple(w for w in resolved.warnings if w.variable_fqid is not None),
         fqid=str(resolved.fqid),
         variable_id=resolved.variable_id,
         register_id=resolved.register_id,
@@ -1076,6 +1078,7 @@ def _register_response(
         )
     children.append(VariantsRef(register_fqid=str(resolved.fqid)))
     return RegisterResponse(
+        warnings=tuple(w for w in resolved.warnings if w.variable_fqid is None),
         fqid=str(resolved.fqid),
         name=resolved.name,
         purpose=resolved.purpose,
@@ -1583,6 +1586,59 @@ def get_concept_group(
 # (→ 404) for an absent binding, both mapped by `_http_4xx_from_regmeta`.
 
 
+@router.get(
+    "/catalog/{fqid:path}/data_warnings", response_model=tuple[DataWarning, ...]
+)
+def get_data_warnings(
+    request: Request,
+    validated: ValidatedFqidPath = Depends(_validated_fqid),
+    period: list[Period] | None = Depends(_validated_period),
+    variant: str | None = Depends(_validated_variant),
+    representation: str | None = None,
+) -> tuple[DataWarning, ...] | RedirectResponse:
+    """Source limitations for a register or selected delivery of a binding."""
+    parsed = _parsed_binding(validated)
+    if parsed.kind not in (FqidKind.REGISTER, FqidKind.VARIABLE_BINDING):
+        raise HTTPException(
+            status_code=422, detail="Warnings require a register or binding"
+        )
+    if representation is not None and (
+        not representation.strip()
+        or len(representation) > 255
+        or any(ord(c) < 32 for c in representation)
+    ):
+        raise HTTPException(status_code=422, detail="Invalid representation column")
+    index = _index(request)
+    with _catalog_conn(request) as conn:
+        catalog = Catalog(conn)
+        if parsed.kind == FqidKind.VARIABLE_BINDING and index is not None:
+            redirect = _require_admitted(
+                catalog, parsed, index, request, suffix="/data_warnings"
+            )
+            if redirect is not None:
+                return redirect
+        try:
+            if parsed.kind == FqidKind.VARIABLE_BINDING:
+                catalog.resolve_binding(parsed, with_codes=False)
+            else:
+                catalog.resolve(parsed)
+            warnings = {
+                warning.warning_id: warning
+                for member in (period if period is not None else [None])
+                for warning in catalog.data_warnings(
+                    parsed,
+                    period=member,
+                    variant=variant,
+                    representation=representation,
+                )
+            }
+        except RegMetaError as exc:
+            return _redirect_or_4xx(
+                catalog, parsed, exc, request, suffix="/data_warnings"
+            )
+    return tuple(warnings[k] for k in sorted(warnings))
+
+
 @router.get("/catalog/{fqid:path}/states", response_model=StatesResponse)
 def get_binding_states(
     request: Request,
@@ -1846,6 +1902,7 @@ def get_value_set_codes(
     request: Request,
     value_set_id: int,
     state: int | None = None,
+    partition: Literal["source_extensions", "canonical"] = "source_extensions",
     q: str = "",
     offset: int = 0,
     limit: int = Depends(_validated_code_limit),
@@ -1872,7 +1929,11 @@ def get_value_set_codes(
             codes = catalog.value_set_codes(value_set_id)
             missing = f"no value set {value_set_id} in this catalog"
         else:
-            codes = catalog.state_nonconforming_codes(state, value_set_id)
+            codes = (
+                catalog.state_canonical_codes(state, value_set_id)
+                if partition == "canonical"
+                else catalog.state_nonconforming_codes(state, value_set_id)
+            )
             missing = f"state {state} does not carry value set {value_set_id}"
     if codes is None:
         raise HTTPException(status_code=404, detail=missing)

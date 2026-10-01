@@ -1092,7 +1092,7 @@ class TestResolveAt:
             "INSERT INTO classification_conformance (state_id, "
             "declared_classification_id, status, checked_code_count, "
             "matched_code_count, nonconforming_code_count, overlap) "
-            "VALUES (?, ?, 'kept', 2, 1, 1, 0.5)",
+            "VALUES (?, ?, 'extended', 2, 1, 1, 0.5)",
             (state_id, cls_id),
         )
         conn.execute(
@@ -2601,7 +2601,7 @@ class TestCodeSummaryHydration:
         # to the on-demand read, and the count is what says there is one.
         conformance = state.classification_conformance
         assert conformance is not None
-        assert conformance.status == "kept"
+        assert conformance.status == "extended"
         assert conformance.nonconforming_code_count == 1
         assert conformance.nonconforming_codes == ()
 

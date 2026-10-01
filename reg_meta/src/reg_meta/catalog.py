@@ -17,7 +17,7 @@ import json
 import re
 from collections import deque
 from datetime import date
-from typing import TYPE_CHECKING, Literal, Self, TypeVar, cast
+from typing import TYPE_CHECKING, Annotated, Literal, Self, TypeVar, cast
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -40,8 +40,10 @@ from .fqid import (
     parse,
     period_token_for_bounds,
     period_token_to_bounds,
+    validate_slug,
 )
 from .inventory import _merge
+from .source_evidence import SourceRecordRef, canonical_sha256
 
 if TYPE_CHECKING:
     import sqlite3
@@ -122,6 +124,67 @@ class _CatalogModel(BaseModel):
     )
 
 
+class DataWarning(_CatalogModel):
+    """Retained source limitation or interpretation assumption, not an editorial notice."""
+
+    warning_id: str = Field(pattern=r"^[0-9a-f]{64}$")
+    register_fqid: Fqid
+    variable_fqid: Fqid | None = None
+    variant: str | None = None
+    delivery_column_name: str | None = None
+    valid_from: str | None = None
+    valid_to: str | None = None
+    code: str
+    severity: Literal["warning", "error"]
+    summary: str
+    detail: str
+    source_subject: str
+    fields: tuple[str, ...] = ()
+    refs: tuple[SourceRecordRef, ...] = ()
+    withheld_output: tuple[str, ...] = ()
+    acknowledged_by: str | None = None
+    case_id: str | None = None
+
+    @model_validator(mode="after")
+    def _scope_and_identity(self) -> Self:
+        if self.register_fqid.kind != FqidKind.REGISTER:
+            raise ValueError("data warning requires an actual register coordinate")
+        if self.variable_fqid is not None and (
+            self.variable_fqid.kind != FqidKind.VARIABLE_BINDING
+            or self.variable_fqid.provider != self.register_fqid.provider
+            or self.variable_fqid.register != self.register_fqid.register
+        ):
+            raise ValueError("data warning variable must belong to its register")
+        if self.variant is not None:
+            validate_slug(self.variant, "variant", allow_default=True)
+            if self.variable_fqid is None:
+                raise ValueError("state-scoped warning requires a written variable")
+        if self.delivery_column_name is not None and (
+            self.variant is None or not self.delivery_column_name.strip()
+        ):
+            raise ValueError(
+                "a warning column requires an exact variant and nonempty literal"
+            )
+        for bound in (self.valid_from, self.valid_to):
+            if bound is not None and date.fromisoformat(bound).isoformat() != bound:
+                raise ValueError("warning bounds must be canonical ISO dates")
+        if (
+            self.valid_from is not None
+            and self.valid_to is not None
+            and self.valid_from > self.valid_to
+        ):
+            raise ValueError("data warning bounds are reversed")
+        if not all(v.strip() for v in (self.code, self.summary, self.detail)):
+            raise ValueError("data warning content must be nonempty")
+        if self.warning_id != canonical_sha256(
+            self.model_dump(mode="json", exclude={"warning_id"})
+        ):
+            raise ValueError(
+                "data warning identity does not match its complete content"
+            )
+        return self
+
+
 class ResolvedProvider(_CatalogModel):
     fqid: Fqid
     provider_id: int
@@ -138,6 +201,7 @@ class ResolvedRegister(_CatalogModel):
     purpose: str | None
     related_documents: tuple[RelatedDocument, ...] = ()
     tags: tuple[TagMembership, ...] = ()
+    warnings: tuple[DataWarning, ...] = ()
 
 
 class ResolvedClassification(_CatalogModel):
@@ -700,14 +764,13 @@ class ClassificationConformance(_CatalogModel):
     """Per-state value-set/classification conformance (#656).
 
     `declared_classification_*` names the classification asserted by the source
-    value-set label. When `status == "severed"`, `VariableState.classification_slug`
-    is already None; this object preserves the original declaration plus the
-    coverage evidence explaining why the link was cleared."""
+    value-set label. The known classification remains linked. `extended` means
+    the delivered domain also contains source-local codes outside that book."""
 
     declared_classification_slug: str
     declared_classification_short_name: str
     declared_classification_name: str
-    status: Literal["kept", "severed"]
+    status: Literal["conforming", "extended"]
     checked_code_count: int
     matched_code_count: int
     nonconforming_code_count: int
@@ -761,6 +824,7 @@ class VariableState(_CatalogModel):
     measurement_unit: str | None = None
     name: str | None = None
     description: str | None = None
+    warning_ids: tuple[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...] = ()
     provenance: str | None = Field(
         description="NULL for an ordinary provider-documented interval. SCB "
         "corrections use `errata:<class>\\n<evidence>`; when a corrected source "
@@ -1149,6 +1213,7 @@ class ResolvedVariable(_CatalogModel):
     # triple (like the edges), so a same_as alias reports its target's group.
     group: BindingGroupRef | None = None
     tags: tuple[TagMembership, ...] = ()
+    warnings: tuple[DataWarning, ...] = ()
     # Traversal path (3-segment binding FQIDs) when resolved via `same_as`; None
     # on a direct hit.
     via_same_as: tuple[Fqid, ...] | None = None
@@ -1304,6 +1369,63 @@ class Catalog:
         # summary needs runs once per DISTINCT value set for the life of this
         # Catalog rather than once per state.
         self._value_set_summaries: dict[int, ValueSetSummary] = {}
+
+    def data_warnings(
+        self,
+        fqid: str | Fqid,
+        *,
+        period: Period | None = None,
+        variant: str | None = None,
+        representation: str | None = None,
+    ) -> tuple[DataWarning, ...]:
+        """Return applicable source limitations, including unassigned register warnings.
+
+        Unscoped warnings remain visible under a delivery filter. Their coordinates
+        stay unscoped; filtering does not manufacture evidence of state ownership.
+        """
+        coordinate = parse(fqid) if isinstance(fqid, str) else fqid
+        if coordinate.kind not in (FqidKind.REGISTER, FqidKind.VARIABLE_BINDING):
+            raise ValueError("data warnings require a register or variable binding")
+        if coordinate.kind == FqidKind.VARIABLE_BINDING:
+            resolved = self._resolve_variable_identity(coordinate)
+            if resolved is None:
+                raise _not_found(coordinate)
+            meta = self._lookup_variable_meta(resolved[0]["variable_id"])
+            coordinate = Fqid.binding_fqid(
+                meta["provider_slug"], meta["register_slug"], meta["slug"]
+            )
+        clauses = ["p.slug = ?", "r.slug = ?"]
+        args: list[object] = [coordinate.provider, coordinate.register]
+        if coordinate.variable is not None:
+            clauses.append("(w.variable_id IS NULL OR v.slug = ?)")
+            args.append(coordinate.variable)
+        if variant is not None:
+            validate_slug(variant, "variant", allow_default=True)
+            clauses.append("(w.register_variant_id IS NULL OR rv.slug = ?)")
+            args.append(variant)
+        if representation is not None:
+            clauses.append(
+                "(w.delivery_column_name IS NULL OR w.delivery_column_name = ?)"
+            )
+            args.append(representation)
+        bounds = _period_bounds(period) if period is not None else None
+        if bounds is not None:
+            clauses.extend(
+                [
+                    "(w.valid_from IS NULL OR w.valid_from <= ?)",
+                    "(w.valid_to IS NULL OR w.valid_to >= ?)",
+                ]
+            )
+            args.extend([bounds[1], bounds[0]])
+        rows = self._conn.execute(
+            "SELECT w.warning_json FROM data_warning w "
+            "JOIN register r USING(register_id) JOIN provider p USING(provider_id) "
+            "LEFT JOIN variable v ON v.variable_id = w.variable_id "
+            "LEFT JOIN register_variant rv ON rv.register_variant_id = w.register_variant_id "
+            "WHERE " + " AND ".join(clauses) + " ORDER BY w.warning_id",
+            args,
+        )
+        return tuple(DataWarning.model_validate_json(row[0]) for row in rows)
 
     @classmethod
     def open(
@@ -2602,6 +2724,9 @@ class Catalog:
             purpose=row["purpose"],
             related_documents=self._related_documents_for_register(fqid.register),
             tags=tuple(self.tags_for_register(fqid)),
+            warnings=tuple(
+                w for w in self.data_warnings(fqid) if w.variable_fqid is None
+            ),
         )
 
     def resolve_binding(
@@ -2763,6 +2888,11 @@ class Catalog:
             group=group,
             tags=tuple(self.tags_for_variable(canonical_fqid)),
             via_same_as=via_same_as,
+            warnings=tuple(
+                w
+                for w in self.data_warnings(canonical_fqid)
+                if w.variable_fqid == canonical_fqid
+            ),
         )
 
     def _related_documents_for_register(
@@ -2983,6 +3113,36 @@ class Catalog:
             for r in self._nonconforming_code_rows(state_id)
         )
 
+    def state_canonical_codes(
+        self, state_id: int, value_set_id: int
+    ) -> tuple[ValueSetMember, ...] | None:
+        """Delivered source pairs whose literal codes occur in the declared book.
+
+        This never returns undelivered official codes or replaces source labels.
+        """
+        owned = self._conn.execute(
+            "SELECT 1 FROM variable_state vs "
+            "JOIN classification_conformance cc ON cc.state_id = vs.state_id "
+            "WHERE vs.state_id = ? AND vs.value_set_id = ?",
+            (state_id, value_set_id),
+        ).fetchone()
+        if owned is None:
+            return None
+        rows = self._conn.execute(
+            "SELECT vc.code, vc.label FROM value_set_member vsc "
+            "JOIN value_code vc ON vc.code_id = vsc.code_id "
+            "JOIN classification_conformance cf ON cf.state_id = ? "
+            "WHERE vsc.value_set_id = ? AND EXISTS ("
+            "SELECT 1 FROM classification_code cc "
+            "JOIN value_code canonical ON canonical.code_id = cc.code_id "
+            "WHERE cc.classification_id = cf.declared_classification_id "
+            "AND canonical.code = vc.code) ORDER BY vc.code, vc.label",
+            (state_id, value_set_id),
+        ).fetchall()
+        return tuple(
+            ValueSetMember(code=row["code"], label=row["label"]) for row in rows
+        )
+
     def _nonconforming_code_rows(self, state_id: int) -> list[sqlite3.Row]:
         return self._conn.execute(
             "SELECT vc.code, vc.label "
@@ -3058,7 +3218,36 @@ class Catalog:
                 remediation="Rebuild the reg_meta DB (slug population is incomplete).",
             )
         family = self._variant_family_for_variant_id(rvid)
+        owner = self._conn.execute(
+            "SELECT p.slug, r.slug, v.slug FROM variable_state s "
+            "JOIN variable v USING(variable_id) JOIN register r USING(register_id) "
+            "JOIN provider p USING(provider_id) WHERE s.state_id = ?",
+            (row["state_id"],),
+        ).fetchone()
+        warnings = self.data_warnings(
+            Fqid.binding_fqid(*owner),
+            variant=variant,
+            representation=row["delivery_column_name"],
+        )
+        warnings = tuple(
+            w
+            for w in warnings
+            if w.variable_fqid == Fqid.binding_fqid(*owner)
+            and (
+                w.delivery_column_name is None
+                or w.delivery_column_name == row["delivery_column_name"]
+            )
+            and (
+                w.valid_from is None
+                or (row["valid_to"] is not None and w.valid_from <= row["valid_to"])
+            )
+            and (
+                w.valid_to is None
+                or (row["valid_from"] is not None and w.valid_to >= row["valid_from"])
+            )
+        )
         return VariableState(
+            warning_ids=tuple(w.warning_id for w in warnings),
             state_id=row["state_id"],
             variant=variant,
             variant_label=row["variant_label"],

@@ -9,13 +9,15 @@ steward_table_prefixes = ["RTB_SaBo_InrFlyttFlode", "Doda_20241231"]
 # `evidence`, and holdings lists do not supply a source data type.
 
 [[errata.column]]
+data_warning = "Text storage is assumed from the field meaning and related source identifiers; the historical storage type and length are not independently documented."
 variant = "folkbokforda-personer"
 column = "Fodelseland"
+data_type = "text"
 name = "Födelseland, enskilda länder"
 definition = "Födelseland, enskilda länder"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). 2026-10-01 maintainer-authorized storage-type assumption: interpret this exact pooled 1990-2024 Fodelseland holdings declaration as text. The retained four 2020/2021/2022/2024 exact-column DDL snapshots use varchar, but do not independently prove the historical storage encoding. Do not infer a length, change the source period, alter country meanings or replace any original source field."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -2025,3 +2027,11 @@ evidence = "Complete accepted physical table header contains only DodDatum for t
 noted = "2026-10-01"
 field = "column_name"
 value = "DodDatum"
+
+[[acknowledge]]
+code = "unknown_support_key"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 2)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+fields = ["identifier", "sensitivity", "conditional_sensitivity"]
+refs = ["{\"semantic_record_key\":[\"summary\",\"417368858a952c5b895b971e7ba0a14f38af2011812e58278fed6c830e302942\"],\"source\":\"scb-unikaregisterochvariabler\"}", "{\"semantic_record_key\":[\"summary\",\"921482385ffce8bcdb75102a8309d036aada8e3d42f82475e908b009f2ab5d7b\"],\"source\":\"scb-unikaregisterochvariabler\"}", "{\"semantic_record_key\":[\"summary\",\"f8ae18f26b2c9f2c4a3868853fa97f27305a39f6a005917ea682869fcab8f1ca\"],\"source\":\"scb-unikaregisterochvariabler\"}", "{\"semantic_record_key\":[\"summary\",\"e15ecad0979f20f7c156bcb4831b1fc0f4dc63e996a664ce9b1e0e464dd4766c\"],\"source\":\"scb-unikaregisterochvariabler\"}", "{\"semantic_record_key\":[\"summary\",\"fab0e1afa42805fa62369f87c2f66170d12280e5fdc6c625eb65adb3a7ad019b\"],\"source\":\"scb-unikaregisterochvariabler\"}", "{\"semantic_record_key\":[\"summary\",\"1c7c6212522e67df1407c1ba2f9e71248b9fb1ccdea56a020771488775c3bf47\"],\"source\":\"scb-unikaregisterochvariabler\"}", "{\"semantic_record_key\":[\"summary\",\"37c4be06b17cdcf56415ddbf2594b4af4ce13752b6ce6fe15217334221086dbf\"],\"source\":\"scb-unikaregisterochvariabler\"}"]
+reason = "User-approved bounded source limitation,2026-10-01: Retain these exact blank-column summary source records without attaching their flags to guessed physical columns or deleting originals."
+evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."

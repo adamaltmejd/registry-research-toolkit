@@ -32,17 +32,33 @@ const CODES = new Map<string, ValueSetMemberModel[]>();
 function coding(
   valueSetId: number,
   codes: ValueSetMemberModel[],
-  opts: { stateId?: number; integerRange?: { min: number; max: number } } = {},
+  opts: {
+    stateId?: number;
+    partition?: "canonical" | "source_extensions";
+    integerRange?: { min: number; max: number };
+  } = {},
 ): VariableStateModel["value_set_summary"] {
-  CODES.set(`${valueSetId}:${opts.stateId ?? ""}`, codes);
+  CODES.set(
+    `${valueSetId}:${opts.stateId ?? ""}:${opts.partition ?? "source_extensions"}`,
+    codes,
+  );
   return { code_count: codes.length, integer_range: opts.integerRange ?? null };
 }
 
 beforeEach(() => {
   vi.mocked(getValueSetCodes).mockReset();
   vi.mocked(getValueSetCodes).mockImplementation(
-    async (valueSetId, { state = null, q = "", offset = 0, limit = 200 }) => {
-      const all = CODES.get(`${valueSetId}:${state ?? ""}`) ?? [];
+    async (
+      valueSetId,
+      {
+        state = null,
+        partition = "source_extensions",
+        q = "",
+        offset = 0,
+        limit = 200,
+      },
+    ) => {
+      const all = CODES.get(`${valueSetId}:${state ?? ""}:${partition}`) ?? [];
       const needle = q.trim().toLowerCase();
       const matched = all.filter(
         (c) =>
@@ -66,6 +82,7 @@ beforeEach(() => {
 // Minimal VariableStateModel — only the fields ValueSetView reads.
 function state(over: Partial<VariableStateModel>): VariableStateModel {
   return {
+    warning_ids: [],
     state_id: 1,
     period_scope: "intervals",
     variant: "v",
@@ -374,6 +391,14 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   });
 
   it("warns on nonconforming codes while keeping a classification link", async () => {
+    coding(
+      100,
+      [
+        { code: "01", label: "Original source meaning" },
+        { code: "02", label: "Another source meaning" },
+      ],
+      { stateId: 1, partition: "canonical" },
+    );
     await render(ValueSetView, {
       states: [
         state({
@@ -382,7 +407,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
             declared_classification_slug: "lkf2007",
             declared_classification_short_name: "LKF2007",
             declared_classification_name: "Kommun historisk",
-            status: "kept",
+            status: "extended",
             checked_code_count: 3,
             matched_code_count: 2,
             nonconforming_code_count: 1,
@@ -398,11 +423,23 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       narrowed: false,
     });
     expect(normalizedText(".conformance-notice")).toContain(
-      "kept, but 1 code is not part",
+      "2 source codes match this classification; 1 is a source extension.",
     );
-    const summary = page.getByText("Nonconforming codes (1)");
+    const summary = page.getByText("Source extensions (1)");
     await summary.click();
     await expect.element(page.getByText("Extra code")).toBeVisible();
+    await page.getByText("Matching source codes (2)").click();
+    await expect
+      .element(page.getByText("Original source meaning"))
+      .toBeVisible();
+    expect(
+      vi
+        .mocked(getValueSetCodes)
+        .mock.calls.some(
+          ([, options]) =>
+            options.partition === "canonical" && options.state === 1,
+        ),
+    ).toBe(true);
   });
 
   it("keeps EVERY warning state's mismatch list reachable after the collapse", async () => {
@@ -413,7 +450,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       declared_classification_slug: "lkf2007",
       declared_classification_short_name: "LKF2007",
       declared_classification_name: "Kommun historisk",
-      status: "kept" as const,
+      status: "extended" as const,
       checked_code_count: 3,
       matched_code_count: 2,
       nonconforming_code_count: 1,
@@ -481,11 +518,11 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     ]);
 
     // Both lists open, each from its own state — X here, Y and Z there.
-    await page.getByText("Nonconforming codes (1)").click();
+    await page.getByText("Source extensions (1)").click();
     await expect
       .element(page.getByText("Extra", { exact: true }))
       .toBeVisible();
-    await page.getByText("Nonconforming codes (2)").click();
+    await page.getByText("Source extensions (2)").click();
     await expect.element(page.getByText("Later extra")).toBeVisible();
     await expect.element(page.getByText("Later still")).toBeVisible();
     // Each list is read by ITS OWN state — no disclosure reads another's coding.
@@ -545,11 +582,12 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     expect(vi.mocked(getValueSetCodes)).not.toHaveBeenCalled();
   });
 
-  it("shows severed classification evidence on the plain value-set row", async () => {
+  it("shows the claimed classification alongside source extensions", async () => {
     await render(ValueSetView, {
       states: [
         state({
           value_set_id: 300,
+          classification_slug: "isced-f2013",
           value_set_version_label: "ISCED F 2013",
           value_set_summary: coding(300, [
             { code: "13", label: "Datavetenskap" },
@@ -559,7 +597,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
             declared_classification_slug: "isced-f2013",
             declared_classification_short_name: "ISCED-F 2013",
             declared_classification_name: "ISCED-F 2013",
-            status: "severed",
+            status: "extended",
             checked_code_count: 25,
             matched_code_count: 1,
             nonconforming_code_count: 24,
@@ -572,16 +610,17 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       narrowed: false,
     });
     expect(normalizedText(".conformance-notice")).toContain(
-      "severed: 4% of checked codes match",
+      "1 source code matches this classification; 24 are source extensions.",
     );
     await expect
-      .element(page.getByRole("link", { name: "= ISCED-F 2013" }))
-      .not.toBeInTheDocument();
-    expect(
-      [...document.querySelectorAll("summary")].filter(
-        (el) => el.textContent?.trim() === "Values (2)",
-      ).length,
-    ).toBeGreaterThanOrEqual(1);
+      .element(page.getByRole("link", { name: "= isced-f2013" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByText("Matching source codes (1)"))
+      .toBeVisible();
+    await expect
+      .element(page.getByText("Source extensions (24)"))
+      .toBeVisible();
   });
 
   it("a plain value set exposes its codes inline (expandable), not the classification link", async () => {

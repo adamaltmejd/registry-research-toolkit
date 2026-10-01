@@ -42,6 +42,7 @@ from reg_meta_build.curation_compile import (
     validate_sentinels,
 )
 from reg_meta_build.curation_tree import load_curation_tree
+from reg_meta_build.data_warnings import scope_data_warnings
 from reg_meta_build.db import _emit_timing, _paths_overlap
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
 from reg_meta_build.prepared_catalog import (
@@ -669,6 +670,7 @@ def _run_pipeline(
     coverage: list[CoverageObligation] = []
     parents, variant_registers, variables, withheld, evidence = {}, {}, {}, {}, {}
     books = {}
+    data_warnings = {}
     sibling_pairs, slice_keys = set(), set()
     build_result: dict[str, object] = {}
     with _retain_completed_artifact(build_result, report_dir), ExitStack() as stack:
@@ -1061,6 +1063,16 @@ def _run_pipeline(
                         )
 
                     resolution_started = time.perf_counter()
+                    scope_issues: list[ResolutionDiagnostic] = []
+
+                    def record_scope_issue(
+                        value: ResolutionDiagnostic,
+                        *,
+                        collected: list[ResolutionDiagnostic] = scope_issues,
+                    ) -> None:
+                        collected.append(value)
+                        issue(value)
+
                     result = resolve_source_scope(
                         originals,
                         source_diagnostics=tuple(
@@ -1085,7 +1097,7 @@ def _run_pipeline(
                         declared_variants=_unique_pairs(
                             scope.variants, "declared variant"
                         ),
-                        on_diagnostic=issue,
+                        on_diagnostic=record_scope_issue,
                         diagnostic=diagnostic,
                         coding_scope=scope,
                         coding_registers=scope_coding,
@@ -1094,6 +1106,10 @@ def _run_pipeline(
                     )
                     _emit_timing(f"pipeline: resolve {scope_key!r}", resolution_started)
                     seen_scopes.add(scope_key)
+                    for warning in scope_data_warnings(
+                        result, diagnostics=tuple(scope_issues)
+                    ):
+                        data_warnings[warning.warning_id] = warning
                     acknowledged.update(result.acknowledged)
                     coverage.extend(result.coverage)
                     sibling_pairs.update(result.siblings.pairs)
@@ -1531,6 +1547,9 @@ def _run_pipeline(
                         classifications=tuple(books.values()),
                         classification_successions=successions,
                         metadata=final_metadata,
+                        data_warnings=tuple(
+                            data_warnings[k] for k in sorted(data_warnings)
+                        ),
                     )
                     build_result.update(
                         status="diagnostic_complete" if diagnostic else "complete",

@@ -67584,7 +67584,7 @@ name = "INITPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadps"
+variable = "scb/innovation-foretag/processinnovation-utvecklad-av-foretaget"
 representation = "INITPS"
 
 [[table.column]]
@@ -67600,7 +67600,7 @@ name = "INOTHGD"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadgd"
+variable = "scb/innovation-foretag/varuinnovation-utvecklad-av-andra"
 representation = "INOTHGD"
 
 [[table.column]]
@@ -67608,7 +67608,7 @@ name = "INOTHPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadps"
+variable = "scb/innovation-foretag/processinnovation-utvecklad-av-andra"
 representation = "INOTHPS"
 
 [[table.column]]
@@ -67616,7 +67616,7 @@ name = "INOTHSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadsv"
+variable = "scb/innovation-foretag/tjansteinnovation-utvecklad-av-andra"
 representation = "INOTHSV"
 
 [[table.column]]
@@ -67672,7 +67672,7 @@ name = "INTOGD"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadgd"
+variable = "scb/innovation-foretag/varuinnovation-utvecklad-med-andra"
 representation = "INTOGD"
 
 [[table.column]]
@@ -67680,7 +67680,7 @@ name = "INTOPS"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadps"
+variable = "scb/innovation-foretag/processinnovation-utvecklad-med-andra"
 representation = "INTOPS"
 
 [[table.column]]
@@ -67688,7 +67688,7 @@ name = "INTOSV"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadsv"
+variable = "scb/innovation-foretag/tjansteinnovation-utvecklad-med-andra"
 representation = "INTOSV"
 
 [[table.column]]
@@ -67712,7 +67712,7 @@ name = "InItGd"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadgd"
+variable = "scb/innovation-foretag/varuinnovation-utvecklad-av-foretaget"
 representation = "INITGD"
 
 [[table.column]]
@@ -67720,7 +67720,7 @@ name = "InItSv"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/inadsv"
+variable = "scb/innovation-foretag/tjansteinnovation-utvecklad-av-foretaget"
 representation = "INITSV"
 
 [[table.column]]
@@ -67829,7 +67829,7 @@ name = "PBNOCT"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/pbinct"
+variable = "scb/innovation-foretag/innovation-ej-kravd-i-upphandlingsavtal"
 representation = "PBNOCT"
 
 [[table.column]]

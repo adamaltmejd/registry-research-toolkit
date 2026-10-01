@@ -42,6 +42,7 @@ import {
   windowsOverlapWindow,
   YEARLESS_VALID_FROM,
 } from "./catalog";
+import DataWarnings from "./DataWarnings.svelte";
 import FilterInput from "./FilterInput.svelte";
 import { clampYearWindow } from "./period";
 import { projectStore } from "./project_store.svelte";
@@ -1061,6 +1062,7 @@ async function addSelected(): Promise<void> {
       )}
       <h2>{nodeLabel(node)}</h2>
       {#if node.purpose}<p class="purpose-text">{node.purpose}</p>{/if}
+      <DataWarnings warnings={(node.warnings ?? []).filter(warning => !warning.variable_fqid)} title="Unassigned register data warnings" />
       {#if node.tags && node.tags.length > 0}
         <div class="tag-strip" aria-label="Thematic tags">
           {#each node.tags as tag (tag.slug)}

@@ -43,6 +43,7 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
+    getDataWarnings: vi.fn().mockResolvedValue([]),
     getCatalogNode: vi.fn(),
     getBindingGraph: vi.fn(),
     getBindingLineageWarnings: vi.fn(),
@@ -55,6 +56,7 @@ vi.mock("./api", async (importOriginal) => {
 /** A minimal VariableStateModel — only the fields the add planner reads. */
 function state(over: Partial<VariableStateModel>): VariableStateModel {
   return {
+    warning_ids: [],
     state_id: 1,
     period_scope: "intervals",
     variant: "v",
