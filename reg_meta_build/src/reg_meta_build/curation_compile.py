@@ -110,6 +110,7 @@ from .source_curation import (
     SearchAliasDecision,
     SourceRecordRef,
     _field_matches,
+    acknowledgement_evidence_sha256,
     capture_expectations,
     documented_labels_match,
     evaluate_cases,
@@ -1485,7 +1486,9 @@ def compile_parallel_representations(
             date.fromisoformat(entry.valid_to).toordinal(),
         )
         use_effective = any(
-            literal != _literal_field(record, "column_name")
+            native_variable_key(record) != variable_key
+            or native_variant_key(record) != variant_key
+            or literal != _literal_field(record, "column_name")
             or source_scope
             != (
                 record.edition_period_scope
@@ -4006,6 +4009,13 @@ def compile_edition_splits(
                         ),
                         reason=entry.evidence,
                         provenance=ref,
+                        data_warning=entry.data_warning,
+                        data_warning_refs=tuple(target.ref for target in targets)
+                        if entry.data_warning is not None
+                        else (),
+                        data_warning_fields=("availability",)
+                        if entry.data_warning is not None
+                        else (),
                     ),
                 )
             )
@@ -4554,6 +4564,7 @@ def compile_coding_register(
     }
     cases = []
     diagnostics = []
+    compact_evidence = {}
     for kind, entries in (
         ("choice", register.coding.choice),
         ("uncoded", register.coding.uncoded),
@@ -4669,6 +4680,37 @@ def compile_coding_register(
                     selection, status, detail = compile_coding_selection(
                         entry, kind, claims, start, end
                     )
+                evidence_digest = (
+                    entry.expected_evidence_sha256
+                    if isinstance(entry, (CodingChoiceEntry, CodingExtendEntry))
+                    else None
+                )
+                compact = evidence_digest is not None
+                if compact:
+                    if column not in compact_evidence:
+                        refs = {record_ref(record) for record in records}
+                        full_originals = tuple(
+                            record for record in originals if record_ref(record) in refs
+                        )
+                        raw_codings = tuple(coding_source_sha256(c) for c in claims)
+                        compact_evidence[column] = (
+                            full_originals,
+                            raw_codings,
+                            acknowledgement_evidence_sha256(
+                                full_originals, raw_codings
+                            ),
+                            capture_expectations(
+                                full_originals,
+                                fields=tuple(SourceFields.model_fields),
+                                parents=True,
+                                coding=True,
+                            ),
+                        )
+                    if compact_evidence[column][2] != evidence_digest:
+                        status, detail = (
+                            "stale",
+                            "complete source coding evidence changed",
+                        )
                 if (
                     isinstance(
                         entry,
@@ -4798,15 +4840,18 @@ def compile_coding_register(
                         )
                     )
                     continue
-                if (
-                    isinstance(entry, (CodingChoiceEntry, CodingExtendEntry))
-                    and entry.source_authority is not None
+                if isinstance(entry, (CodingChoiceEntry, CodingExtendEntry)) and (
+                    entry.source_authority is not None or compact
                 ):
                     assert selection is not None and not isinstance(selection, str)
                     selection = selection.model_copy(
                         update={
                             "expected_raw_codings": tuple(
-                                sorted(entry.source_authority.raw_codings or ())
+                                sorted(set(compact_evidence[column][1]))
+                                if compact
+                                else sorted(entry.source_authority.raw_codings or ())
+                                if entry.source_authority is not None
+                                else ()
                             )
                         }
                     )
@@ -4839,6 +4884,8 @@ def compile_coding_register(
                     and entry.source_authority is not None
                 ):
                     targets = tuple(entry.source_authority.records)
+                elif compact:
+                    targets = compact_evidence[column][3]
                 guard = PeerGuard(
                     guard_id=case_id,
                     source=scope.source,

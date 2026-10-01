@@ -3145,3 +3145,205 @@ def test_documented_period_block_intersects_known_delivery_scope(end):
     assert claim.members[0].associations[0].supplied_period == (
         "2019-2020" if end else "2019-"
     )
+
+
+def _compact_choice_fixture():
+    from reg_meta_build.source_coding import coding_source_sha256
+    from reg_meta_build.source_curation import acknowledgement_evidence_sha256
+
+    records = (_record(), _record(2021))
+    claims = (
+        _claim("keep", "01"),
+        _claim("other", "02"),
+        _claim("later", "03", "2021-01-01", "2021-12-31"),
+    )
+    values = {
+        "keep": "keep",
+        "over": ["other"],
+        "expected_evidence_sha256": acknowledgement_evidence_sha256(
+            records, (coding_source_sha256(c) for c in claims)
+        ),
+    }
+    _, _, register, scope, _, column = _compile_entry("choice", values, claims)
+    columns = {column: records}
+    cases, issues = compile_coding_register(
+        register,
+        scope,
+        originals=records,
+        columns=columns,
+        column_scopes=_column_scopes(columns),
+        coding={column: claims},
+    )
+    assert len(cases) == 1 and not issues
+    return records, claims, register, scope, column, cases
+
+
+def test_compact_choice_preserves_full_runtime_original_and_raw_coding_guards():
+    records, claims, _, _, column, cases = _compact_choice_fixture()
+    assert cases[0].targets == capture_expectations(
+        records, fields=tuple(SourceFields.model_fields), parents=True, coding=True
+    )
+    evidence = SourceEvidence(
+        records, effective_occurrences=tuple(source_occurrence(r) for r in records)
+    )
+    applied = apply_coding_choices(evidence, cases, coding={column: claims})
+    assert applied.accounting[0].status == "applied"
+    assert applied.coding[column].claims == claims
+    contrary = (*claims[:-1], replace(claims[-1], members=()))
+    rejected = apply_coding_choices(evidence, cases, coding={column: contrary})
+    assert rejected.accounting[0].status == "stale"
+
+
+@pytest.mark.parametrize(
+    "drift",
+    [
+        "field",
+        "parent",
+        "removed",
+        "duplicate",
+        "coding",
+        "outside_coding",
+        "duplicate_coding",
+    ],
+)
+def test_compact_choice_rejects_complete_history_evidence_drift(drift):
+    records, claims, register, scope, column, _ = _compact_choice_fixture()
+    if drift == "field":
+        records = (
+            records[0],
+            records[1].model_copy(
+                update={
+                    "fields": records[1].fields.model_copy(
+                        update={"definition": value_field("Changed")}
+                    )
+                }
+            ),
+        )
+    elif drift == "parent":
+        records = (records[0], records[1].model_copy(update={"parent_facts": ()}))
+    elif drift == "removed":
+        records = records[:1]
+    elif drift == "duplicate":
+        records += records[:1]
+    elif drift == "coding":
+        claims = (replace(claims[0], members=()), *claims[1:])
+    elif drift == "outside_coding":
+        claims = (*claims[:-1], replace(claims[-1], members=()))
+    else:
+        claims += claims[:1]
+    columns = {column: records}
+    cases, issues = compile_coding_register(
+        register,
+        scope,
+        originals=records,
+        columns=columns,
+        column_scopes=_column_scopes(columns),
+        coding={column: claims},
+    )
+    assert not cases and len(issues) == 1
+    assert issues[0].code == "stale_curation_entry"
+
+
+def test_compact_choice_rejects_digest_with_verbose_authority():
+    records, claims, register, _, _, _ = _compact_choice_fixture()
+    from reg_meta_build.curation_tree import CodingChoiceEntry
+
+    values = register.coding.choice[0].model_dump()
+    values["source_authority"] = _row_authority(records[0], claims)
+    with pytest.raises(ValidationError, match="exclusive"):
+        CodingChoiceEntry.model_validate(values)
+
+
+@pytest.mark.parametrize("drift", [None, "code", "label", "ambiguous_label"])
+def test_choice_member_digest_matches_verbose_exact_domain(drift):
+    from reg_meta.source_evidence import canonical_sha256
+
+    claims = (_claim("list", "01"), _claim("list", "02"))
+    values = {"keep": "list", "over": ["list"]}
+    verbose, issues, _, _, _, _ = _compile_entry(
+        "choice", {**values, "keep_members": [["01", "Label"]]}, claims
+    )
+    assert len(verbose) == 1 and not issues
+    digest = canonical_sha256([["01", "Label"]])
+    if drift in {"code", "label"}:
+        member = replace(claims[0].members[0], **{drift: "Changed"})
+        claims = (replace(claims[0], members=(member,)), claims[1])
+    if drift == "ambiguous_label":
+        # Without an exact selector, matching the shared label is still ambiguous.
+        _, issues, _, _, _, _ = _compile_entry("choice", values, claims)
+        assert issues[0].code == "overbroad_curation_entry"
+    compact, issues, _, _, _, _ = _compile_entry(
+        "choice", {**values, "keep_members_sha256": digest}, claims
+    )
+    if drift in {"code", "label"}:
+        assert not compact and issues[0].code == "stale_curation_entry"
+    else:
+        assert not issues and compact == verbose
+
+
+def test_choice_member_digest_rejects_verbose_selector_and_retains_duplicate_claims():
+    from reg_meta.source_evidence import canonical_sha256
+    from reg_meta_build.curation_tree import CodingChoiceEntry
+
+    claims = (_claim("keep", "01"), _claim("other", "02"))
+    digest = canonical_sha256([["01", "Label"]])
+    values = {"keep": "keep", "over": ["other"], "keep_members_sha256": digest}
+    cases, issues, register, _, _, column = _compile_entry("choice", values, claims)
+    assert not issues
+    duplicate = replace(claims[0], claim_id="duplicate")
+    applied = apply_coding_choices(
+        (_record(),), cases, coding={column: (*claims, duplicate)}
+    )
+    assert applied.accounting[0].status == "applied"
+    assert applied.coding[column].claims == (*claims, duplicate)
+    entry = register.coding.choice[0].model_dump()
+    entry["keep_members"] = [["01", "Label"]]
+    with pytest.raises(ValidationError, match="exclusive"):
+        CodingChoiceEntry.model_validate(entry)
+
+
+def test_raw_coding_fingerprints_are_shared_only_within_one_application(monkeypatch):
+    import reg_meta_build.source_coding_choices as choices
+
+    records, claims, register, scope, column, _ = _compact_choice_fixture()
+    entry = register.coding.choice[0].model_copy(
+        update={"periods": [["2020-01-01", "2020-06-30"], ["2020-07-01", "2020-12-31"]]}
+    )
+    register = register.model_copy(
+        update={"coding": register.coding.model_copy(update={"choice": [entry]})}
+    )
+    columns = {column: records}
+    cases, issues = compile_coding_register(
+        register,
+        scope,
+        originals=records,
+        columns=columns,
+        column_scopes=_column_scopes(columns),
+        coding={column: claims},
+    )
+    assert not issues and len(cases) == 2
+    expected = [choices._selection(case.decision, claims)[0] for case in cases]
+    original_hash = choices.coding_source_sha256
+    hashed = []
+
+    def count_hash(claim):
+        hashed.append(claim.claim_id)
+        return original_hash(claim)
+
+    monkeypatch.setattr(choices, "coding_source_sha256", count_hash)
+    evidence = SourceEvidence(
+        records, effective_occurrences=tuple(source_occurrence(r) for r in records)
+    )
+    applied = choices.apply_coding_choices(evidence, cases, coding={column: claims})
+    assert len(hashed) == len(claims)
+    assert all(item.status == "applied" for item in applied.accounting)
+    for result in expected:
+        assert (
+            result is not None
+            and result.segments[0].code_set
+            == applied.coding[column].segments[0].code_set
+        )
+    changed = (*claims[:-1], replace(claims[-1], members=()))
+    rejected = choices.apply_coding_choices(evidence, cases, coding={column: changed})
+    assert len(hashed) == 2 * len(claims)
+    assert all(item.status == "stale" for item in rejected.accounting)

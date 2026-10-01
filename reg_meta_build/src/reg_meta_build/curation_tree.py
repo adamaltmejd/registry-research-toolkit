@@ -1096,6 +1096,7 @@ class IdentityEditionSplitEntry(_CurationModel):
     source_editions: list[str]
     evidence: str
     noted: str
+    data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
 
     _text = field_validator("evidence")(_require_trimmed)
 
@@ -1376,6 +1377,9 @@ def _coding_members(
 class _CheckedCodingEntry(CodingEntry):
     data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
     source_authority: PreparedCodingAuthority | None = None
+    expected_evidence_sha256: str | None = Field(
+        default=None, pattern=r"^[0-9a-f]{64}$"
+    )
 
     @field_validator("source_authority", mode="before")
     @classmethod
@@ -1385,6 +1389,10 @@ class _CheckedCodingEntry(CodingEntry):
     @model_validator(mode="after")
     def _checked_authority(self) -> _CheckedCodingEntry:
         authority = self.source_authority
+        if authority is not None and self.expected_evidence_sha256 is not None:
+            raise ValueError(
+                "coding evidence digest and source authority are exclusive"
+            )
         if authority is not None and (
             authority.period_block is not None
             or authority.enumeration is not None
@@ -1401,6 +1409,7 @@ class _CheckedCodingEntry(CodingEntry):
 class CodingChoiceEntry(_CheckedCodingEntry):
     keep: str
     keep_members: list[list[str]] | None = None
+    keep_members_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
     over: list[str]
 
     _keep = field_validator("keep")(_require_trimmed)
@@ -1409,6 +1418,12 @@ class CodingChoiceEntry(_CheckedCodingEntry):
     @classmethod
     def _members(cls, value: list[list[str]] | None) -> list[list[str]] | None:
         return None if value is None else _coding_members(value, allow_empty_code=True)
+
+    @model_validator(mode="after")
+    def _exclusive_members(self) -> CodingChoiceEntry:
+        if self.keep_members is not None and self.keep_members_sha256 is not None:
+            raise ValueError("kept coding members and member digest are exclusive")
+        return self
 
     @field_validator("over")
     @classmethod

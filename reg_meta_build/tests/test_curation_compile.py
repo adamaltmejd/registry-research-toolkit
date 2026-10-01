@@ -2357,8 +2357,10 @@ def _scope_with_coding_names(
     )
 
 
+@pytest.mark.parametrize("warning", [None, "Range interpretation is unavailable"])
 def test_named_edition_split_rebinds_parents_and_is_order_independent(
     tmp_path: Path,
+    warning: str | None,
 ) -> None:
     root = tmp_path / "curation"
     path = root / "registers/scb/sample.toml"
@@ -2376,6 +2378,9 @@ def test_named_edition_split_rebinds_parents_and_is_order_independent(
         encoding="utf-8",
     )
     tree = load_curation_tree(root)
+    if warning is not None:
+        path.write_text(path.read_text() + f"data_warning = {json.dumps(warning)}\n")
+        tree = load_curation_tree(root)
     records = (
         _errata_record(column="SHARED", year="2007", edition_name="2007", edition_id=1),
         _errata_record(
@@ -2416,6 +2421,14 @@ def test_named_edition_split_rebinds_parents_and_is_order_independent(
     assert not issues and statuses["scb/sample"]["entries_matched"]
     assert first == second
     (case,) = first[scope.source, scope.register_key]
+    assert isinstance(case.decision, OccurrenceCorrectionDecision)
+    assert case.decision.data_warning == warning
+    assert case.decision.data_warning_refs == (
+        (record_ref(records[1]),) if warning is not None else ()
+    )
+    assert case.decision.data_warning_fields == (
+        ("availability",) if warning is not None else ()
+    )
     result = apply_occurrence_cases(records, (case,))
     assert result.diagnostics == ()
     flow, stock = result.occurrences
@@ -7903,3 +7916,104 @@ def test_field_correction_accepts_guarded_source_alternatives_without_losing_ori
     ):
         with pytest.raises(ValueError):
             ErrataFieldEntry.model_validate({**entry.model_dump(), **updates})
+
+
+def test_parallel_representation_selects_checked_owner_without_literal_changes(
+    tmp_path,
+):
+    from reg_meta_build.curation_compile import compile_parallel_representations
+    from reg_meta_build.source_curation import (
+        CheckedIdentityChange,
+        CurationCase,
+        OccurrenceCorrectionDecision,
+        capture_expectations,
+        evaluate_cases,
+    )
+
+    path, selected, naming = _pooled_parallel_fixture(tmp_path)
+    header = REGISTERINFORMATION_HEADER.split("|")
+    values = _var_row(
+        colname="Sibling",
+        cvid=102,
+        var_id=1,
+        varname="Income",
+        year="2022",
+        versionname="2022",
+        regver_id=112,
+    ).split("|")
+    sibling = clean_scb_row(
+        header,
+        3,
+        {
+            name: (True, value, value)
+            for name, value in zip(header, values, strict=True)
+        },
+        _revision("fixture"),
+    ).record
+    records = (*selected, sibling)
+    owner = naming[-1].target.source_key
+    targets = capture_expectations(
+        records, fields=tuple(SourceFields.model_fields), parents=True, coding=True
+    )
+    guards = tuple(
+        guard.model_copy(
+            update={"expected_members": tuple(record_ref(r) for r in records)}
+        )
+        for guard in naming[-1].target.peer_guards
+    )
+    naming = (
+        *naming[:-1],
+        naming[-1].model_copy(
+            update={
+                "target": naming[-1].target.model_copy(
+                    update={
+                        "expectations": targets,
+                        "peer_guards": guards,
+                    }
+                ),
+            }
+        ),
+    )
+    correction = CurationCase(
+        case_id="reviewed-complete-partition",
+        targets=targets,
+        peer_guards=guards,
+        decision=OccurrenceCorrectionDecision(
+            reviewed=True,
+            effects=tuple(
+                CheckedIdentityChange(
+                    ref=record_ref(r),
+                    variable_key=owner if r in selected else (*owner, "sibling"),
+                )
+                for r in records
+            ),
+            reason="Complete literal role partition",
+            provenance="fixture",
+        ),
+    )
+    (register,) = load_register_files(path.parents[2])
+    assert compile_parallel_representations(register, records, naming)[0] == ()
+    (case,), issues = compile_parallel_representations(
+        register, records, naming, ownership_cases=(correction,)
+    )
+    assert issues == ()
+    assert {target.ref for target in case.targets} == {record_ref(r) for r in selected}
+    assert record_ref(sibling) in {target.ref for target in case.support}
+    assert evaluate_cases((case,), records)[0].status == "applicable"
+    changed = (
+        *selected,
+        sibling.model_copy(
+            update={
+                "fields": sibling.fields.model_copy(
+                    update={"definition": value_field("Changed role")}
+                )
+            }
+        ),
+    )
+    assert evaluate_cases((case,), changed)[0].status == "stale"
+    assert (
+        compile_parallel_representations(
+            register, changed, naming, ownership_cases=(correction,)
+        )[0]
+        == ()
+    )

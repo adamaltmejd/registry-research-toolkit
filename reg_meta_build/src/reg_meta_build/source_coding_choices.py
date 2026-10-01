@@ -643,7 +643,14 @@ def compile_coding_selection(
         chosen = [
             digest
             for digest, label, claim_members in complete
-            if label == keep and (members is None or members == claim_members)
+            if label == keep
+            and (members is None or members == claim_members)
+            and (
+                choice.keep_members_sha256 is None
+                or claim_members is not None
+                and canonical_sha256(sorted(claim_members))
+                == choice.keep_members_sha256
+            )
         ]
         if not chosen:
             return None, "stale", "kept list no longer matches a complete list"
@@ -705,9 +712,17 @@ def compile_coding_selection(
 
 
 def _selection(
-    decision: CodingDecision, claims: tuple[CodeListClaim, ...]
+    decision: CodingDecision,
+    claims: tuple[CodeListClaim, ...],
+    *,
+    raw_codings: tuple[str, ...] | None = None,
 ) -> tuple[CodingResolution | None, str | None]:
     selection = decision.selection
+    if (
+        getattr(selection, "expected_raw_codings", None) is not None
+        and raw_codings is None
+    ):
+        raw_codings = tuple(coding_source_sha256(claim) for claim in claims)
     if isinstance(selection, SupportedCodingAssociation):
         return _supported_association(
             selection, claims, decision.valid_from, decision.valid_to
@@ -728,14 +743,12 @@ def _selection(
             return None, "documented_target_domain_changed"
         if (
             selection.expected_raw_codings is not None
-            and tuple(sorted({coding_source_sha256(claim) for claim in claims}))
-            != selection.expected_raw_codings
+            and tuple(sorted(set(raw_codings or ()))) != selection.expected_raw_codings
         ):
             return None, "documented_source_coding_changed"
         if selection.label_equivalences and (
             selection.expected_raw_codings is None
-            or tuple(sorted({coding_source_sha256(claim) for claim in claims}))
-            != selection.expected_raw_codings
+            or tuple(sorted(set(raw_codings or ()))) != selection.expected_raw_codings
             or not documented_labels_match(
                 documented_source_members(
                     claims,
@@ -815,8 +828,7 @@ def _selection(
         ), None
     if (
         selection.expected_raw_codings is not None
-        and tuple(sorted({coding_source_sha256(claim) for claim in claims}))
-        != selection.expected_raw_codings
+        and tuple(sorted(set(raw_codings or ()))) != selection.expected_raw_codings
     ):
         return None, "coding_source_evidence_changed"
     observed = coding_expectations(claims, selection.valid_from, selection.valid_to)
@@ -899,6 +911,7 @@ def apply_coding_choices(
     evaluations = evaluate_cases(ordered, records)
     resolved = {key: resolve_code_membership(claims) for key, claims in coding.items()}
     choices: dict[NativeKey, list[tuple[str, CodingResolution]]] = defaultdict(list)
+    raw_coding_cache: dict[NativeKey, tuple[str, ...]] = {}
     diagnostics = []
     accounting = []
     for case, evaluation in zip(ordered, evaluations, strict=True):
@@ -1023,7 +1036,14 @@ def apply_coding_choices(
             )
             status = "stale"
         else:
-            selected, problem = _selection(decision, claims)
+            raw_codings = None
+            if getattr(decision.selection, "expected_raw_codings", None) is not None:
+                if decision.column_key not in raw_coding_cache:
+                    raw_coding_cache[decision.column_key] = tuple(
+                        coding_source_sha256(claim) for claim in claims
+                    )
+                raw_codings = raw_coding_cache[decision.column_key]
+            selected, problem = _selection(decision, claims, raw_codings=raw_codings)
             if problem is not None:
                 report(
                     problem,

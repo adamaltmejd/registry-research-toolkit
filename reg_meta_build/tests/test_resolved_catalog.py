@@ -1744,7 +1744,16 @@ def test_warning_ownership_requires_complete_source_and_delivery_witnesses():
     assert scope_data_warnings(cast("ScopeResolution", scope)) == ()
 
 
-def test_storage_assumption_warns_on_added_physical_column_not_anchor_identity():
+@pytest.mark.parametrize(
+    ("fields", "code"),
+    [
+        (("data_type",), "assumed_storage_type"),
+        (("identity",), "source_identity_assumption"),
+        (("coding",), "response_domain_assumption"),
+        (("availability",), "source_availability_limitation"),
+    ],
+)
+def test_assumption_warns_on_added_physical_column_not_anchor_identity(fields, code):
     from types import SimpleNamespace
     from typing import cast
 
@@ -1767,7 +1776,7 @@ def test_storage_assumption_warns_on_added_physical_column_not_anchor_identity()
                     kind="correct_occurrences",
                     data_warning="Historical storage type is assumed",
                     data_warning_refs=(),
-                    data_warning_fields=("data_type",),
+                    data_warning_fields=fields,
                     reason="Historical text assumption",
                     provenance="Exact reviewed errata-column authority",
                 ),
@@ -1802,7 +1811,7 @@ def test_storage_assumption_warns_on_added_physical_column_not_anchor_identity()
     )
     (warning,) = scope_data_warnings(cast("ScopeResolution", scope))
     assert str(warning.variable_fqid) == "scb/example/ampoltyp"
-    assert warning.code == "assumed_storage_type" and warning.refs == ()
+    assert warning.code == code and warning.refs == ()
     assert warning.source_subject == "graft-case" and warning.case_id == "graft-case"
     assert (
         warning.valid_from == "2000-01-01"

@@ -366,7 +366,10 @@ split. Their edition and population parents move with them; edition name shape n
 implies a split. An errata addition naming a moved edition is stale until additions can
 be rebound under the split variant; corrections to native rows still move with the
 split. RTB's eight `Kvartal 1-3 fr.o.m.` editions use this surface to keep quarterly
-delivery lines separate from their annual parent variants.
+delivery lines separate from their annual parent variants. The same checked split can
+preserve a source-labelled range separately from annual editions, with a scoped
+`data_warning` when aggregation or physical delivery semantics are unverified; it never
+assigns annual availability to the range.
 
 An SCB `[[identity.column_owner]]` binds a literal column to an accepted owner within
 explicit source editions. Optional `expected_fields` pin reviewed source facts using the
@@ -538,8 +541,18 @@ memory for the current build.
 Coding register entries name finite ISO `periods = [[from, to], ...]` when a decision is
 window-grained. The compiler checks each window against that column's complete source
 lists; optional `keep_members` and `list_members` are literal `[code, label]` pairs when
-one list label has multiple meanings. It captures coding fingerprints in memory. Neither
-the fingerprints nor source-member pins are stored in tracked coding tables.
+one list label has multiple meanings. `coding.choice.keep_members_sha256` can select the
+same complete source domain by the canonical hash of its sorted code-label pairs,
+instead of repeating a large list; it is exclusive with `keep_members`. Neither form
+creates codes, chooses the largest list or supplies missing coverage.
+
+Checked choices and extensions may pin `expected_evidence_sha256` instead of verbose
+source-row authority. This digest covers every full original in the selected literal's
+complete history and all bound raw coding assertions, including out-of-window evidence
+and multiplicity. It is exclusive with `source_authority`. Compilation still captures
+full field, parent, coding and peer guards for runtime application. Source review and
+the decision's reason explain the meaning; the digest only guards that evidence. Raw
+coding fingerprints are shared within one application call, never cached across inputs.
 
 `source_curation.py` evaluates cases compiled in memory from tracked coordinates. Each
 case checks exact members, finite periods, fields and expected facts (`expected_*`),
@@ -941,6 +954,9 @@ When an existing checked omission correction supplies the effective column or ed
 scope, parallel compilation verifies that correction first and includes its complete
 source authority. It checks the exact corrected intersection while retaining the raw
 original fields and outer windows. A stale correction cannot supply a representation.
+Checked owner or variant changes also select the effective projection, so sibling
+originals stay fully guarded without being treated as representations of the selected
+owner.
 
 An explicit `column_metadata = "per_column"` retains physical type, width, operational
 definition and source attribution on each checked representation window. Each literal

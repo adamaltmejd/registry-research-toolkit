@@ -6021,3 +6021,354 @@ valid_from = "2023-07-01"
 valid_to = "2023-12-31"
 column = "Hemkommun"
 source_editions = ["2023 höstterminen"]
+
+[[coding.choice]]
+variable = "249.104"
+variant = "249.1107"
+column = "SkolKod"
+periods = [["2013-01-01", "2013-06-30"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "Skolkod Komvux 2013"
+over = ["Skolkod Komvux 2013"]
+expected_evidence_sha256 = "12f77fcc220b552957972d3542921787928512cc9989ec2009f27bd5319b690a"
+keep_members_sha256 = "e8bc815e85937ddc56f31c7cc8e87ccde8bfe855ab903b11b21ef760a0eb0fd5"
+
+[[coding.choice]]
+variable = "249.104"
+variant = "249.1215"
+column = "SkolKod"
+periods = [["2013-01-01", "2013-06-30"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "Skolkod Komvux 2013"
+over = ["Skolkod Komvux 2013"]
+expected_evidence_sha256 = "e01be6cf0dabd0f4bb544ff065f6bd71e6e049fbb59e21310d4cf3c241c4c3fc"
+keep_members_sha256 = "e8bc815e85937ddc56f31c7cc8e87ccde8bfe855ab903b11b21ef760a0eb0fd5"
+
+[[coding.choice]]
+variable = "249.104"
+variant = "249.498"
+column = "SkolKod"
+periods = [["2013-01-01", "2013-06-30"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "Skolkod Komvux 2013"
+over = ["Skolkod Komvux 2013"]
+expected_evidence_sha256 = "47748f697d42eb385df9fe6dafebb418d607d28bc4df35955db6fccb84615f6d"
+keep_members_sha256 = "2e66a9a3082f17f10d3b8000515765a9c6f9562c59738b1bf63f01297fa2fa15"
+
+[[coding.choice]]
+variable = "249.14658"
+variant = "249.498"
+column = "DagKvall"
+periods = [["1996-01-01", "1996-06-30"], ["1997-01-01", "1997-06-30"], ["1998-01-01", "1998-06-30"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "Förläggning av kursen t.o.m. 2015"
+over = ["Förläggning av kursen t.o.m. 2015"]
+expected_evidence_sha256 = "1c4059bd1e16e21a13760cc9459f983faf9acbae4d453ffca8929fa46ac6273b"
+keep_members_sha256 = "112d8d4adfc94d0190f4f0926beb532a0d2e5360fb4a08e80af7e56c9f3d5edd"
+
+[[coding.choice]]
+variable = "249.1993"
+variant = "249.498"
+column = "SkolId"
+periods = [["1997-07-01", "1997-12-31"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "Skolid alla skolformer t.o.m. maj 2013"
+over = ["Skolid alla skolformer t.o.m. maj 2013"]
+expected_evidence_sha256 = "820cb07e903b200d90a5322fc87c0e36612853190bd00a2f04b59b2b2902024d"
+keep_members_sha256 = "890c6976bba5314f8cdc3ef4ceddf43e3b98d568abae01aa62d33a78679f28ff"
+
+[[coding.choice]]
+variable = "249.1996"
+variant = "249.498"
+column = "SkolForm"
+periods = [["1997-07-01", "1997-12-31"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "Skolform"
+over = ["Skolform"]
+expected_evidence_sha256 = "91170a654416da48ba1d7d55b3aa3472c78e1c00348d79df2c72c156fffcc24c"
+keep_members_sha256 = "7f52bc5fc1167307ee50de29cced3cd8602e99690bd3f76e2da70c98345aebed"
+
+[[coding.choice]]
+variable = "249.241"
+variant = "249.1107"
+column = "Alder"
+periods = [["1998-07-01", "1998-12-31"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "Ålder"
+over = ["Ålder"]
+expected_evidence_sha256 = "e3d0f4de0e76f4b53232bf9aa48d51cd93a9d8d1c80111e725449ec54de01af8"
+keep_members_sha256 = "f29c8e0b9a4cb7230ca625ae04b1b6c1c51c5a98066752d881f3e825ea0b9170"
+
+[[coding.choice]]
+variable = "249.30366.skolenhetskod"
+variant = "249.1222"
+column = "Skolenhetskod"
+periods = [["2013-07-01", "2013-12-31"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "Skolenhetskod tom. 2014-10-15"
+over = ["Skolenhetskod tom. 2014-10-15"]
+expected_evidence_sha256 = "7f8fcb3b555a6afb5a20f04860ac29b232e7e317ede1d7e94ff5bc5801fcd148"
+keep_members_sha256 = "bc4c098b0617d36d771b2b62e4574a0e179259eb277a24863bcb09f0f842e918"
+
+[[coding.choice]]
+variable = "249.30366.skolenhetskod"
+variant = "249.1405"
+column = "SKOLENHETSKOD"
+periods = [["2017-07-01", "2017-12-31"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "Skolenhetskod 2017-10-15"
+over = ["Skolenhetskod 2017-10-15"]
+expected_evidence_sha256 = "7c3d5cde5518ee035fcfc5b4c09c6b8ccb5d9ce0b43197689fb26aaf4fbd9068"
+keep_members_sha256 = "28116125edc38eba26788f6e821cf950b766583052fdd46df2f8403a1e60f0ca"
+
+[[coding.choice]]
+variable = "249.30366.skolenhetskod"
+variant = "249.498"
+column = "Skolenhetskod"
+periods = [["2013-07-01", "2013-12-31"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "Skolenhetskod tom. 2014-10-15"
+over = ["Skolenhetskod tom. 2014-10-15"]
+expected_evidence_sha256 = "8d6e22a506709b7edaf2f271b2706c4f5f32215e7f62126d46bcb6e419725455"
+keep_members_sha256 = "69cac6caa1400007897e39eca6b76bd43f2d07155cef7b9a5697977b88966f7a"
+
+[[coding.choice]]
+variable = "249.30547"
+variant = "249.1405"
+column = "BetMU"
+periods = [["2024-01-01", "2024-06-30"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "Betyg_MU_Kursprov HT 2023-"
+over = ["Betyg_MU_Kursprov HT 2023-"]
+expected_evidence_sha256 = "f1674a661727b79724b3e81238706c08db61ab22f75d29d7c6e706d0a512ed76"
+keep_members_sha256 = "3a2d55af92ee057b857350e54993502b6aa47e0c8645d49066994d06912383c3"
+
+[[coding.choice]]
+variable = "249.30548"
+variant = "249.1405"
+column = "BetRL"
+periods = [["2024-01-01", "2024-06-30"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "Betyg_RL_Kursprov HT 2023-"
+over = ["Betyg_RL_Kursprov HT 2023-"]
+expected_evidence_sha256 = "e8c88f3e9fd92439097dd49eb93743a278273b4c0916072348674448e8039bad"
+keep_members_sha256 = "4f072fe8a87dba56b92aefb5de7ea89feeb372ecfaba8739f559485b3646d235"
+
+[[coding.choice]]
+variable = "249.30549"
+variant = "249.1405"
+column = "BetS"
+periods = [["2024-01-01", "2024-06-30"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "Betyg_S_Kursprov HT 2023-"
+over = ["Betyg_S_Kursprov HT 2023-"]
+expected_evidence_sha256 = "d101bbdf353212c2f49a7e1d207d943a7b157e8d1477efaf0355c2b60134e5dd"
+keep_members_sha256 = "18179aacc0786791920860afa1fa96d57f7a5f0348f159c1110983d007b9363c"
+
+[[coding.choice]]
+variable = "249.36.skom"
+variant = "249.1405"
+column = "SKOM"
+periods = [["2017-07-01", "2017-12-31"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "LKF 2017-01-01/ Län, kommuner och församlingar"
+over = ["LKF 2017-01-01/ Län, kommuner och församlingar"]
+expected_evidence_sha256 = "fda486035675c97e732aa9429d3bd4dd68c5171b2e2eac5be4c0f5b66c785152"
+keep_members_sha256 = "fe92048b22e06f606bbae37cd9bc537e0e6713fac02ba961981048107bab74e8"
+
+[[coding.choice]]
+variable = "249.40049"
+variant = "249.498"
+column = "Avslut"
+periods = [["1995-07-01", "1995-12-31"], ["1996-01-01", "1996-06-30"], ["1996-07-01", "1996-12-31"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "Komvux Avslutat kurs"
+over = ["Komvux Avslutat kurs"]
+expected_evidence_sha256 = "427027a86903bf9e4456d3dcc1cbf79f1f6ad18c7257bd31932267a12ec57b31"
+keep_members_sha256 = "3840b813e127ab8871f0f6bbffe85cae29fae75cd1eed1b656097d2f53087769"
+
+[[coding.choice]]
+variable = "249.42627.yrkespaketkod"
+variant = "249.498"
+column = "Yrkespaketkod"
+periods = [["2020-07-01", "2020-12-31"], ["2021-07-01", "2021-12-31"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "Yrkespaket"
+over = ["Yrkespaket"]
+expected_evidence_sha256 = "873232068f1f0b987deefd47f66c56d7195f4671107dc1bb56645e4215a9d654"
+keep_members_sha256 = "ccf236b236f189a1e5066ac7d76ca002daa6fbca2f1bd1bad981257e156d1fa2"
+
+[[coding.choice]]
+variable = "249.4693"
+variant = "249.1222"
+column = "Program"
+periods = [["2015-01-01", "2015-06-30"], ["2016-07-01", "2016-12-31"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "Gymnasieprogram Gy11"
+over = ["Gymnasieprogram Gy11"]
+expected_evidence_sha256 = "070a247ef3c28d6e2294d5e8f6c503110ff032440c3633efbbaefa7d7ec559a0"
+keep_members_sha256 = "03a3e5d420a4251acdc6a292e3ad799bb8de27bd0e4ffc77ffa3837c5a7dbdbd"
+
+[[coding.choice]]
+variable = "249.66.sun2000niva"
+variant = "249.1107"
+column = "SUN2000Niva"
+periods = [["2008-07-01", "2008-12-31"], ["2009-01-01", "2009-06-30"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "SUN 2000 - Utbildningsnivå"
+over = ["SUN 2000 - Utbildningsnivå"]
+expected_evidence_sha256 = "1c12341c8ed99cf065676b41e568e627c822ca342946c228e80aabc0ce8fd61c"
+keep_members_sha256 = "aaf8015cf3edc3108fd86686d7049c8aba7ac87dcade7bdf0578483404e65186"
+
+[[coding.choice]]
+variable = "249.66.sun2000niva"
+variant = "249.498"
+column = "SUN2000Niva"
+periods = [["2009-01-01", "2009-06-30"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "SUN 2000 - Utbildningsnivå"
+over = ["SUN 2000 - Utbildningsnivå"]
+expected_evidence_sha256 = "f13e2ffd679ba3b81669a915da0a062bbd1d43b3e6968ecb8ab35b2e86445ad0"
+keep_members_sha256 = "aaf8015cf3edc3108fd86686d7049c8aba7ac87dcade7bdf0578483404e65186"
+
+[[coding.choice]]
+variable = "249.66.sunniva"
+variant = "249.1107"
+column = "SUNNiva"
+periods = [["2004-07-01", "2004-12-31"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "SUN 2000 NivaOld"
+over = ["SUN 2000 NivaOld"]
+expected_evidence_sha256 = "51429382cfa16b9fe3da460db762f777352d63dfd583b8df281911937b305708"
+keep_members_sha256 = "78e373918a83e6e444be899c1a1571aeb2d9e5534b6149b3e4276e5933c836cd"
+
+[[coding.choice]]
+variable = "249.66.sunniva"
+variant = "249.498"
+column = "SUNNiva"
+periods = [["1999-07-01", "1999-12-31"], ["2000-07-01", "2000-12-31"], ["2001-07-01", "2001-12-31"], ["2002-07-01", "2002-12-31"], ["2003-07-01", "2003-12-31"], ["2004-07-01", "2004-12-31"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "SUN 2000 NivaOld"
+over = ["SUN 2000 NivaOld"]
+expected_evidence_sha256 = "4ee79b1f83b4e01e4ad1e27b33c927ebe9910c2cfd1409d052b78224141c1c6a"
+keep_members_sha256 = "65ffd2f6946d980abae6908fc3e1310ecbc15c70b53dd71579d611c8e6d666f6"
+
+[[coding.choice]]
+variable = "249.6809"
+variant = "249.1107"
+column = "HemKommun"
+periods = [["2003-07-01", "2003-12-31"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "LKF 2004-01-01/ Län, kommuner och församlingar"
+over = ["LKF 2004-01-01/ Län, kommuner och församlingar"]
+expected_evidence_sha256 = "689b830653ee08114ad0b9cdcd7f4d8cb317c257763ce1a3a75188df6017be00"
+keep_members_sha256 = "c02f0b75b4248e35e46cb77e75978eada8ca19fe617c24913d23a4a9b15d0724"
+
+[[coding.choice]]
+variable = "249.6809"
+variant = "249.1107"
+column = "HemKommun"
+periods = [["2004-01-01", "2004-06-30"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "LKF 2005-01-01/ Län, kommuner och församlingar"
+over = ["LKF 2004-01-01/ Län, kommuner och församlingar"]
+expected_evidence_sha256 = "689b830653ee08114ad0b9cdcd7f4d8cb317c257763ce1a3a75188df6017be00"
+keep_members_sha256 = "c02f0b75b4248e35e46cb77e75978eada8ca19fe617c24913d23a4a9b15d0724"
+
+[[coding.choice]]
+variable = "249.6809"
+variant = "249.1107"
+column = "HemKommun"
+periods = [["2007-07-01", "2007-12-31"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "LKF 2008-01-01/ Län, kommuner och församlingar"
+over = ["LKF 2008-01-01/ Län, kommuner och församlingar"]
+expected_evidence_sha256 = "689b830653ee08114ad0b9cdcd7f4d8cb317c257763ce1a3a75188df6017be00"
+keep_members_sha256 = "fe92048b22e06f606bbae37cd9bc537e0e6713fac02ba961981048107bab74e8"
+
+[[coding.choice]]
+variable = "249.6809"
+variant = "249.498"
+column = "HemKommun"
+periods = [["2003-07-01", "2003-12-31"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "LKF 2004-01-01/ Län, kommuner och församlingar"
+over = ["LKF 2004-01-01/ Län, kommuner och församlingar"]
+expected_evidence_sha256 = "90f275885c65df5571022d0dcc072c78b70593ec995e0211f4cda054d98f9a20"
+keep_members_sha256 = "c02f0b75b4248e35e46cb77e75978eada8ca19fe617c24913d23a4a9b15d0724"
+
+[[coding.choice]]
+variable = "249.6809"
+variant = "249.498"
+column = "HemKommun"
+periods = [["2004-01-01", "2004-06-30"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "LKF 2005-01-01/ Län, kommuner och församlingar"
+over = ["LKF 2004-01-01/ Län, kommuner och församlingar"]
+expected_evidence_sha256 = "90f275885c65df5571022d0dcc072c78b70593ec995e0211f4cda054d98f9a20"
+keep_members_sha256 = "c02f0b75b4248e35e46cb77e75978eada8ca19fe617c24913d23a4a9b15d0724"
+
+[[coding.choice]]
+variable = "249.6809"
+variant = "249.498"
+column = "HemKommun"
+periods = [["2007-07-01", "2007-12-31"]]
+reason = "Exact complete active source domains agree on every ordinary code and label and differ only by explicitly supplied missing/unknown or structurally absent-value tokens. Retain the existing source domain containing those tokens. Preserve all original lists, associations, dates and facts; no union, new code, recoding or wider availability. Other substantive or contrary label/domain alternatives are excluded."
+source = "Complete accepted Komvux/SFI35-family source audit; Batch48-Komvux320-current-source-census.json and Batch48-Komvux320-sentinel-source-proof.json. Maintainer approved source-selected missing-token alternatives."
+data_warning = "Competing source lists omit explicitly documented missing or unavailable-value encodings. The effective domain retains these tokens from a complete supplied list; ordinary codes and labels agree. Original alternatives and their dates remain available."
+keep = "LKF 2008-01-01/ Län, kommuner och församlingar"
+over = ["LKF 2008-01-01/ Län, kommuner och församlingar"]
+expected_evidence_sha256 = "90f275885c65df5571022d0dcc072c78b70593ec995e0211f4cda054d98f9a20"
+keep_members_sha256 = "fe92048b22e06f606bbae37cd9bc537e0e6713fac02ba961981048107bab74e8"

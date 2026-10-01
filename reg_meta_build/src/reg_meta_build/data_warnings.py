@@ -316,6 +316,8 @@ def scope_data_warnings(
                         if "data_type" in fields
                         else "source_identity_assumption"
                         if "identity" in fields
+                        else "source_availability_limitation"
+                        if "availability" in fields
                         else "response_domain_assumption",
                         "severity": "warning",
                         "summary": summary,
