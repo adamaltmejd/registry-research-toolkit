@@ -25,7 +25,7 @@ The same CLI option names select different artifacts at different stages:
 
   | Command                                                            | `--input-commit`                                           | `--input-manifest-sha256`                           |
   | ------------------------------------------------------------------ | ---------------------------------------------------------- | --------------------------------------------------- |
-  | `verify-input-bundle`, `prepare-sources`, `inspect-source-records` | Clean Git commit containing the raw input bundle           | Raw bundle's `manifest.json` digest                 |
+  | `verify-input-bundle`, `prepare-sources`, `inspect-source-records` | Clean Git commit containing the raw input bundle           | Raw bundle's `catalog-bundle.json` digest           |
   | `check-curation`, `build-db`                                       | Clean Git commit containing the accepted prepared artifact | Prepared catalog's top-level `manifest.json` digest |
 
 The prepared manifest's internal `input_commit` records the raw bundle commit. It is
