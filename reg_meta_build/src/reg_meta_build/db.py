@@ -362,7 +362,7 @@ CREATE TABLE variable (
     -- meaning, NOT merged into `description` (#892) — it survives the
     -- parallel-column split so each sibling keeps its own. `variabelreferenstid`,
     -- `variabelhamtadfran`, and `variabelextern_kommentar` are dropped.
-    -- `variabelregister_kalla` (raw attribution text) becomes `source_register_text`.
+    -- `variabelregister_kalla` becomes interpreted `source_register_text`; raw wording stays in source evidence.
     name TEXT,
     definition TEXT,
     description TEXT,

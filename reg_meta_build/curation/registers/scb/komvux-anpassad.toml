@@ -188,3 +188,25 @@ native_id = "250.8534.komgrupp17"
 slug = "kommungrupp-kod"
 
 # register 26
+
+[[acknowledge]]
+code = "conflicting_coding_labels"
+subject = "scb/komvux-anpassad/folkbokforingskommun"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:1758\",\"edition:19916\",\"variable:6809\",\"member:990377\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:1758\",\"edition:20029\",\"variable:6809\",\"member:997803\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:1758\",\"edition:20031\",\"variable:6809\",\"member:997974\"]}"]
+fields = ["coding"]
+valid_from = "2024-01-01"
+valid_to = "2024-06-30"
+reason = "The exact active source code-and-label memberships agree, but the supplied lists have different native titles or version names. Keep the known response domain and leave its common title empty. Preserve every original list title, classification declaration, coding association and date; this does not select a preferred book or normalize contrary categories."
+evidence = "Complete accepted native-family review with actual same-register primary/summary/integer-identifier support, production maintained naming and curation compilation, and pinned declared classification books. Exact full-original and bound-coding guard. Proof: Batch48-coding-title-current-source-proof.json."
+expected_evidence_sha256 = "f502a8195ec2b5a17364c24837f78f7040e796a7f1ff7d4fd28b972eff5be284"
+
+[[acknowledge]]
+code = "conflicting_coding_labels"
+subject = "scb/komvux-anpassad/folkbokforingskommun"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:19919\",\"variable:6809\",\"member:990482\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:20032\",\"variable:6809\",\"member:998080\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:20033\",\"variable:6809\",\"member:998111\"]}"]
+fields = ["coding"]
+valid_from = "2024-01-01"
+valid_to = "2024-06-30"
+reason = "The exact active source code-and-label memberships agree, but the supplied lists have different native titles or version names. Keep the known response domain and leave its common title empty. Preserve every original list title, classification declaration, coding association and date; this does not select a preferred book or normalize contrary categories."
+evidence = "Complete accepted native-family review with actual same-register primary/summary/integer-identifier support, production maintained naming and curation compilation, and pinned declared classification books. Exact full-original and bound-coding guard. Proof: Batch48-coding-title-current-source-proof.json."
+expected_evidence_sha256 = "898669a330172dcc7a3b83aaf3f437f44c2a16dddf61c65f4f2902942d1972b3"

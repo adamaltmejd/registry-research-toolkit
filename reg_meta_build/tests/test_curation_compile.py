@@ -8159,3 +8159,85 @@ def test_parallel_same_literal_nested_editions_preserve_exact_coverage(
         for r in (o.source_records if isinstance(o, EffectiveOccurrence) else (o,))
     } == {r.record_id for r in records}
     assert not formed.diagnostics and formed.variable is not None
+
+
+def test_source_attribution_correction_requires_complete_originals_and_preserves_raw(
+    tmp_path,
+):
+    tree, scope, source, _, base = _checked_correction_fixture(tmp_path)
+    source = source.model_copy(
+        update={
+            "fields": source.fields.model_copy(
+                update={"source_attribution": value_field("Register : Variant (FE)")}
+            )
+        }
+    )
+    peer = source.model_copy(
+        update={
+            "record_id": source.record_id + ":peer",
+            "subject": source.subject.model_copy(
+                update={
+                    "native": source.subject.native.model_copy(
+                        update={"member_id": 999}
+                    )
+                }
+            ),
+        }
+    )
+    expectations = list(
+        capture_expectations(
+            (source, peer),
+            fields=tuple(SourceFields.model_fields),
+            parents=True,
+            coding=True,
+        )
+    )
+    entry = ErrataFieldEntry(
+        **base.model_dump(
+            exclude={"field", "value", "expected_fields", "expected_records"}
+        ),
+        field="source_attribution",
+        value="Register : Variant (företagsenhet)",
+        expected_fields=list(expectations[0].alternatives[0].fields),
+        expected_records=expectations,
+    )
+    register = tree.registers[0]
+    tree = replace(
+        tree,
+        registers=(
+            register.model_copy(
+                update={"errata": register.errata.model_copy(update={"field": [entry]})}
+            ),
+        ),
+    )
+    cases, issues, _ = _run_checked_correction(tree, scope, (source, peer))
+    assert not issues
+    applied = apply_occurrence_cases((source, peer), cases[scope.source, None])
+    assert not applied.diagnostics
+    assert all(
+        o.fields.source_attribution.value == entry.value for o in applied.occurrences
+    )
+    assert {r for o in applied.occurrences for r in o.source_records} == {source, peer}
+    for records in (
+        (source,),
+        (
+            source,
+            peer.model_copy(
+                update={
+                    "fields": peer.fields.model_copy(
+                        update={"source_attribution": value_field("Different source")}
+                    )
+                }
+            ),
+        ),
+    ):
+        _, issues, _ = _run_checked_correction(tree, scope, records)
+        assert issues
+        assert apply_occurrence_cases(records, cases[scope.source, None]).diagnostics
+    for updates in (
+        {"expected_records": None},
+        {"edition": None},
+        {"expected_fields": entry.expected_fields[:-1]},
+    ):
+        with pytest.raises(ValueError):
+            ErrataFieldEntry.model_validate({**entry.model_dump(), **updates})

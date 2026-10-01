@@ -563,6 +563,7 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
         "measurement_unit",
         "column_name",
         "representation",
+        "source_attribution",
     ]
     value: str
 
@@ -578,9 +579,14 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
                 raise ValueError(
                     "column corrections require complete source fields and an exact edition"
                 )
+        elif self.field == "source_attribution":
+            if not full_fields or self.edition is None or self.expected_records is None:
+                raise ValueError(
+                    "source attribution corrections require complete original records and an exact edition"
+                )
         elif full_fields:
             raise ValueError(
-                "complete field guards are reserved for column corrections"
+                "complete field guards are reserved for column or source attribution corrections"
             )
         if self.field in {
             "classification_declared",
@@ -631,16 +637,21 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
                     all(field in p.fields for field in self.expected_fields)
                     for p in alternatives
                 )
-                or not any(
-                    field.name == self.field
-                    and field.status == "value"
-                    and field.value == self.value
-                    for p in alternatives
-                    for field in p.fields
+                or (
+                    self.field != "source_attribution"
+                    and not any(
+                        field.name == self.field
+                        and field.status == "value"
+                        and field.value == self.value
+                        for p in alternatives
+                        for field in p.fields
+                    )
                 )
             ):
                 raise ValueError(
-                    "alternative field corrections require complete original guards and an existing source replacement literal"
+                    "source attribution corrections require complete original guards"
+                    if self.field == "source_attribution"
+                    else "alternative field corrections require complete original guards and an existing source replacement literal"
                 )
         return self
 

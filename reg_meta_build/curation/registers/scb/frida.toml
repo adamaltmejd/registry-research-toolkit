@@ -31714,3 +31714,1260 @@ fields = ["identity"]
 reason = "These exact historical source rows give the broad native fuel/tax quantity but do not specify the physical delivery role. Preserve the original columns, fields, units, dates and coding associations as unmapped semantic evidence. Roles explicitly supplied in later editions are mapped only in those later exact scopes; their meanings are not assigned to these historical rows."
 evidence = "Maintainer retained-unmapped policy applied to a complete eight-native-family FRIDA audit (553 originals, 398 positively identified rows and 155 historical rows without operative role text). Actual primary/summary and integer identifier witnesses plus checked production naming/partition/formation replay. Entire applicable original contents and raw bound coding fingerprints are guarded. Proof: Batch48-FRIDA-fuel-partial-source-proof.json."
 expected_evidence_sha256 = "b98d9c271e6e6f278c43ad2e624033939ec2d396ad5f4fa451e42a0e5cf4d8fc"
+
+[[variable]]
+native_id = "121.4327.result-in"
+slug = "redovisat-resultat-avser-ingaende-varde-i-skattmassiga-justeringar-result-in"
+
+[[variable]]
+native_id = "121.4327.result-out"
+slug = "redovisat-resultat-avser-utgaende-varde-i-resultatrakningen-result-out"
+
+[[variable]]
+native_id = "121.16953.accounts"
+slug = "ersattning-under-beskattningsaret-for-avyttrade-eller-forlorade-accounts"
+
+[[variable]]
+native_id = "121.16953.remaining-value"
+slug = "ersattning-under-beskattningsaret-for-avyttrade-eller-forlorade-remaining-value"
+
+[[variable]]
+native_id = "121.47756.after-group"
+slug = "positivt-rantenetto-positivt-rantenetto-efter-koncernutjamning-after-group"
+
+[[variable]]
+native_id = "121.47756.block-b"
+slug = "positivt-rantenetto-positivt-rantenetto-fran-block-b-block-b"
+
+[[variable]]
+native_id = "121.47756.block-c"
+slug = "positivt-rantenetto-positivt-rantenetto-fran-block-c-block-c"
+
+[[variable]]
+native_id = "121.47756.block-d"
+slug = "positivt-rantenetto-positivt-rantenetto-i-block-d-block-d"
+
+[[variable]]
+native_id = "121.16959.end"
+slug = "aterstaende-avdragsutrymme-for-skogsavdrag-vid-beskattningsarets-end"
+
+[[variable]]
+native_id = "121.16959.start"
+slug = "aterstaende-avdragsutrymme-for-skogsavdrag-arets-ingang-start"
+
+[[variable]]
+native_id = "121.47769.ebitda"
+slug = "regel-regel-som-anvands-for-avdrag-i-punkt-2-ebitda-regeln-ebitda"
+
+[[variable]]
+native_id = "121.47769.simplification"
+slug = "regel-regel-som-anvands-for-avdrag-i-punkt-2-forenklingsregeln-simplification"
+
+[[variable]]
+native_id = "121.42261.no"
+slug = "omrakning-har-skett-av-poster-eller-delposter-i-balansrakningen-anger-no"
+
+[[variable]]
+native_id = "121.42261.yes"
+slug = "omrakning-har-skett-av-poster-eller-delposter-i-balansrakningen-anger-yes"
+
+[[identity.column_owner]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7600"
+owner = "121.4327.result-in"
+source_editions = ["2018", "2019", "2020", "2021", "2022", "2023"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V7600" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "20" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser ingående värde i skattmässiga justeringar" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7600"
+owner = "121.4327.result-in"
+source_editions = ["2015"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V7600" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "53" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser ingående värde i skattemässiga justeringar" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Räkenskapsutdrag  (SRU) : Bilaga NE" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7600"
+owner = "121.4327.result-in"
+source_editions = ["2016"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V7600" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "53" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser ingående värde i skattemässiga justeringar" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7440"
+owner = "121.4327.result-out"
+source_editions = ["2018", "2019", "2020", "2021", "2022", "2023"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V7440" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "20" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser utgående värde i resultaträkningen" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7440"
+owner = "121.4327.result-out"
+source_editions = ["2015"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V7440" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "53" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser utgående värde i resultaträkningen" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "FRIDA : Enskilda näringsidkare" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7440"
+owner = "121.4327.result-out"
+source_editions = ["2016"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V7440" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "53" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser utgående värde i resultaträkningen" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.16953"
+variant = "121.237"
+column = "V0759"
+owner = "121.16953.accounts"
+source_editions = ["2000", "2005", "2006"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V0759" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "53" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "name", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "operational_definition", status = "value", value = "Räkenskaplig avskrivning" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.16953"
+variant = "121.237"
+column = "V0753"
+owner = "121.16953.remaining-value"
+source_editions = ["2001", "2002", "2003"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V0753" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "53" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "name", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "operational_definition", status = "value", value = "Restvärdesavskrivning" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.16953"
+variant = "121.237"
+column = "V0753"
+owner = "121.16953.remaining-value"
+source_editions = ["2004"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V0753" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "53" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "name", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "operational_definition", status = "value", value = "Restvärdesavskrining" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8217"
+owner = "121.47756.after-group"
+source_editions = ["2019", "2020", "2021", "2022", "2023"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V8217" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "20" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8215"
+owner = "121.47756.block-b"
+source_editions = ["2019", "2020", "2021", "2022"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V8215" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "20" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto från block B" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8213"
+owner = "121.47756.block-b"
+source_editions = ["2023"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V8213" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "20" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto från block B" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8215"
+owner = "121.47756.block-c"
+source_editions = ["2023"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V8215" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "20" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto från block C" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8236"
+owner = "121.47756.block-d"
+source_editions = ["2019", "2020", "2021", "2022", "2023"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V8236" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "20" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto i block D" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.16959"
+variant = "121.237"
+column = "V0767"
+owner = "121.16959.end"
+source_editions = ["2000", "2001", "2002", "2003", "2004", "2005", "2006"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V0767" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "53" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "name", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "operational_definition", status = "value", value = "Årets utgång" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.16959"
+variant = "121.237"
+column = "V0763"
+owner = "121.16959.start"
+source_editions = ["2000", "2001", "2002", "2003", "2004", "2005", "2006"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V0763" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "53" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "name", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "operational_definition", status = "value", value = "Årets ingång" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+data_warning = "The source native definition says year end, while this exact column operation explicitly says year start. Catalog identity follows the supplied start role; both contradictory original statements remain available. No date or amount is corrected."
+
+[[identity.column_owner]]
+variable = "121.47769"
+variant = "121.1747"
+column = "V8327"
+owner = "121.47769.ebitda"
+source_editions = ["2021", "2022", "2023"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V8327" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "0" }, { name = "data_type", status = "value", value = "integer" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Regel" }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "name", status = "value", value = "Regel" }, { name = "operational_definition", status = "value", value = "Regel som används för avdrag i punkt 2 EBITDA-regeln" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.47769"
+variant = "121.1747"
+column = "V8326"
+owner = "121.47769.simplification"
+source_editions = ["2021", "2022", "2023"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V8326" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "0" }, { name = "data_type", status = "value", value = "integer" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Regel" }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Regel" }, { name = "operational_definition", status = "value", value = "Regel som används för avdrag i punkt 2 Förenklingsregeln" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.42261"
+variant = "121.237"
+column = "V0873"
+owner = "121.42261.no"
+source_editions = ["2000"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V0873" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "53" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "operational_definition", status = "value", value = "Anger nekande" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.42261"
+variant = "121.237"
+column = "V0873"
+owner = "121.42261.no"
+source_editions = ["2001", "2002", "2003", "2004"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V0873" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "53" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "operational_definition", status = "value", value = "Avser nekande" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.42261"
+variant = "121.237"
+column = "V0872"
+owner = "121.42261.yes"
+source_editions = ["2000"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V0872" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "53" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "operational_definition", status = "value", value = "Anger jakande" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[identity.column_owner]]
+variable = "121.42261"
+variant = "121.237"
+column = "V0872"
+owner = "121.42261.yes"
+source_editions = ["2001", "2002", "2003", "2004"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "V0872" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "53" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "operational_definition", status = "value", value = "Avser jakande" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+ref = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+
+[[errata.field]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7600"
+edition = "19339"
+expected_fields = [{ name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser ingående värde i skattmässiga justeringar" }]
+expected_period_text = "2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
+field = "name"
+value = "Redovisat resultat — Avser ingående värde i skattmässiga justeringar"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7600"
+edition = "20064"
+expected_fields = [{ name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser ingående värde i skattmässiga justeringar" }]
+expected_period_text = "2023"
+expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
+field = "name"
+value = "Redovisat resultat — Avser ingående värde i skattmässiga justeringar"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7600"
+edition = "8706"
+expected_fields = [{ name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser ingående värde i skattemässiga justeringar" }]
+expected_period_text = "2015"
+expected_scope = { kind = "intervals", intervals = [{ start = "2015", end = "2015" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2015-01-01", end = "2015-12-31" }] }
+field = "name"
+value = "Redovisat resultat — Avser ingående värde i skattmässiga justeringar"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7600"
+edition = "14822"
+expected_fields = [{ name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser ingående värde i skattmässiga justeringar" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+field = "name"
+value = "Redovisat resultat — Avser ingående värde i skattmässiga justeringar"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7600"
+edition = "16489"
+expected_fields = [{ name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser ingående värde i skattmässiga justeringar" }]
+expected_period_text = "2019"
+expected_scope = { kind = "intervals", intervals = [{ start = "2019", end = "2019" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2019-01-01", end = "2019-12-31" }] }
+field = "name"
+value = "Redovisat resultat — Avser ingående värde i skattmässiga justeringar"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7600"
+edition = "18302"
+expected_fields = [{ name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser ingående värde i skattmässiga justeringar" }]
+expected_period_text = "2020"
+expected_scope = { kind = "intervals", intervals = [{ start = "2020", end = "2020" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2020-01-01", end = "2020-12-31" }] }
+field = "name"
+value = "Redovisat resultat — Avser ingående värde i skattmässiga justeringar"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7600"
+edition = "18806"
+expected_fields = [{ name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser ingående värde i skattmässiga justeringar" }]
+expected_period_text = "2021"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
+field = "name"
+value = "Redovisat resultat — Avser ingående värde i skattmässiga justeringar"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7600"
+edition = "12118"
+expected_fields = [{ name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser ingående värde i skattemässiga justeringar" }]
+expected_period_text = "2016"
+expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
+field = "name"
+value = "Redovisat resultat — Avser ingående värde i skattmässiga justeringar"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7440"
+edition = "19339"
+expected_fields = [{ name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser utgående värde i resultaträkningen" }]
+expected_period_text = "2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
+field = "name"
+value = "Redovisat resultat — Avser utgående värde i resultaträkningen"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7440"
+edition = "20064"
+expected_fields = [{ name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser utgående värde i resultaträkningen" }]
+expected_period_text = "2023"
+expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
+field = "name"
+value = "Redovisat resultat — Avser utgående värde i resultaträkningen"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7440"
+edition = "8706"
+expected_fields = [{ name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser utgående värde i resultaträkningen" }]
+expected_period_text = "2015"
+expected_scope = { kind = "intervals", intervals = [{ start = "2015", end = "2015" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2015-01-01", end = "2015-12-31" }] }
+field = "name"
+value = "Redovisat resultat — Avser utgående värde i resultaträkningen"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7440"
+edition = "14822"
+expected_fields = [{ name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser utgående värde i resultaträkningen" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+field = "name"
+value = "Redovisat resultat — Avser utgående värde i resultaträkningen"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7440"
+edition = "16489"
+expected_fields = [{ name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser utgående värde i resultaträkningen" }]
+expected_period_text = "2019"
+expected_scope = { kind = "intervals", intervals = [{ start = "2019", end = "2019" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2019-01-01", end = "2019-12-31" }] }
+field = "name"
+value = "Redovisat resultat — Avser utgående värde i resultaträkningen"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7440"
+edition = "18302"
+expected_fields = [{ name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser utgående värde i resultaträkningen" }]
+expected_period_text = "2020"
+expected_scope = { kind = "intervals", intervals = [{ start = "2020", end = "2020" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2020-01-01", end = "2020-12-31" }] }
+field = "name"
+value = "Redovisat resultat — Avser utgående värde i resultaträkningen"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7440"
+edition = "18806"
+expected_fields = [{ name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser utgående värde i resultaträkningen" }]
+expected_period_text = "2021"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
+field = "name"
+value = "Redovisat resultat — Avser utgående värde i resultaträkningen"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.4327"
+variant = "121.237"
+column = "V7440"
+edition = "12118"
+expected_fields = [{ name = "definition", status = "value", value = "Redovisat resultat" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Redovisat resultat" }, { name = "operational_definition", status = "value", value = "Avser utgående värde i resultaträkningen" }]
+expected_period_text = "2016"
+expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
+field = "name"
+value = "Redovisat resultat — Avser utgående värde i resultaträkningen"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16953"
+variant = "121.237"
+column = "V0759"
+edition = "13726"
+expected_fields = [{ name = "definition", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "operational_definition", status = "value", value = "Räkenskaplig avskrivning" }]
+expected_period_text = "2000"
+expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+field = "name"
+value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början — Räkenskaplig avskrivning"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16953"
+variant = "121.237"
+column = "V0759"
+edition = "13721"
+expected_fields = [{ name = "definition", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "operational_definition", status = "value", value = "Räkenskaplig avskrivning" }]
+expected_period_text = "2005"
+expected_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2005" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2005-01-01", end = "2005-12-31" }] }
+field = "name"
+value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början — Räkenskaplig avskrivning"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16953"
+variant = "121.237"
+column = "V0759"
+edition = "11620"
+expected_fields = [{ name = "definition", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "operational_definition", status = "value", value = "Räkenskaplig avskrivning" }]
+expected_period_text = "2006"
+expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+field = "name"
+value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början — Räkenskaplig avskrivning"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16953"
+variant = "121.237"
+column = "V0753"
+edition = "13725"
+expected_fields = [{ name = "definition", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "operational_definition", status = "value", value = "Restvärdesavskrivning" }]
+expected_period_text = "2001"
+expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2001" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2001-01-01", end = "2001-12-31" }] }
+field = "name"
+value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början — Restvärdesavskrivning"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16953"
+variant = "121.237"
+column = "V0753"
+edition = "13724"
+expected_fields = [{ name = "definition", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "operational_definition", status = "value", value = "Restvärdesavskrivning" }]
+expected_period_text = "2002"
+expected_scope = { kind = "intervals", intervals = [{ start = "2002", end = "2002" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2002-01-01", end = "2002-12-31" }] }
+field = "name"
+value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början — Restvärdesavskrivning"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16953"
+variant = "121.237"
+column = "V0753"
+edition = "13723"
+expected_fields = [{ name = "definition", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "operational_definition", status = "value", value = "Restvärdesavskrivning" }]
+expected_period_text = "2003"
+expected_scope = { kind = "intervals", intervals = [{ start = "2003", end = "2003" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end = "2003-12-31" }] }
+field = "name"
+value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början — Restvärdesavskrivning"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16953"
+variant = "121.237"
+column = "V0753"
+edition = "13722"
+expected_fields = [{ name = "definition", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början" }, { name = "operational_definition", status = "value", value = "Restvärdesavskrining" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+field = "name"
+value = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner/inventarier m.m. som fanns vid årets början — Restvärdesavskrivning"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8217"
+edition = "19361"
+expected_fields = [{ name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto efter koncernutjämning" }]
+expected_period_text = "2019"
+expected_scope = { kind = "intervals", intervals = [{ start = "2019", end = "2019" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2019-01-01", end = "2019-12-31" }] }
+field = "name"
+value = "Positivt räntenetto — Positivt räntenetto efter koncernutjämning"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8217"
+edition = "19360"
+expected_fields = [{ name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto efter koncernutjämning" }]
+expected_period_text = "2020"
+expected_scope = { kind = "intervals", intervals = [{ start = "2020", end = "2020" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2020-01-01", end = "2020-12-31" }] }
+field = "name"
+value = "Positivt räntenetto — Positivt räntenetto efter koncernutjämning"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8217"
+edition = "19359"
+expected_fields = [{ name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto efter koncernutjämning" }]
+expected_period_text = "2021"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
+field = "name"
+value = "Positivt räntenetto — Positivt räntenetto efter koncernutjämning"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8217"
+edition = "20061"
+expected_fields = [{ name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto efter koncernutjämning" }]
+expected_period_text = "2023"
+expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
+field = "name"
+value = "Positivt räntenetto — Positivt räntenetto efter koncernutjämning"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8217"
+edition = "19358"
+expected_fields = [{ name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto efter koncernutjämning" }]
+expected_period_text = "2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
+field = "name"
+value = "Positivt räntenetto — Positivt räntenetto efter koncernutjämning"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8215"
+edition = "19361"
+expected_fields = [{ name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto från block B" }]
+expected_period_text = "2019"
+expected_scope = { kind = "intervals", intervals = [{ start = "2019", end = "2019" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2019-01-01", end = "2019-12-31" }] }
+field = "name"
+value = "Positivt räntenetto — Positivt räntenetto från block B"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8215"
+edition = "19360"
+expected_fields = [{ name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto från block B" }]
+expected_period_text = "2020"
+expected_scope = { kind = "intervals", intervals = [{ start = "2020", end = "2020" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2020-01-01", end = "2020-12-31" }] }
+field = "name"
+value = "Positivt räntenetto — Positivt räntenetto från block B"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8215"
+edition = "19359"
+expected_fields = [{ name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto från block B" }]
+expected_period_text = "2021"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
+field = "name"
+value = "Positivt räntenetto — Positivt räntenetto från block B"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8213"
+edition = "20061"
+expected_fields = [{ name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto från block B" }]
+expected_period_text = "2023"
+expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
+field = "name"
+value = "Positivt räntenetto — Positivt räntenetto från block B"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8215"
+edition = "19358"
+expected_fields = [{ name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto från block B" }]
+expected_period_text = "2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
+field = "name"
+value = "Positivt räntenetto — Positivt räntenetto från block B"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8215"
+edition = "20061"
+expected_fields = [{ name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto från block C" }]
+expected_period_text = "2023"
+expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
+field = "name"
+value = "Positivt räntenetto — Positivt räntenetto från block C"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8236"
+edition = "19361"
+expected_fields = [{ name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto i block D" }]
+expected_period_text = "2019"
+expected_scope = { kind = "intervals", intervals = [{ start = "2019", end = "2019" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2019-01-01", end = "2019-12-31" }] }
+field = "name"
+value = "Positivt räntenetto — Positivt räntenetto i block D"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8236"
+edition = "19360"
+expected_fields = [{ name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto i block D" }]
+expected_period_text = "2020"
+expected_scope = { kind = "intervals", intervals = [{ start = "2020", end = "2020" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2020-01-01", end = "2020-12-31" }] }
+field = "name"
+value = "Positivt räntenetto — Positivt räntenetto i block D"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8236"
+edition = "19359"
+expected_fields = [{ name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto i block D" }]
+expected_period_text = "2021"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
+field = "name"
+value = "Positivt räntenetto — Positivt räntenetto i block D"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8236"
+edition = "20061"
+expected_fields = [{ name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto i block D" }]
+expected_period_text = "2023"
+expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
+field = "name"
+value = "Positivt räntenetto — Positivt räntenetto i block D"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47756"
+variant = "121.1747"
+column = "V8236"
+edition = "19358"
+expected_fields = [{ name = "definition", status = "value", value = "Positivt räntenetto" }, { name = "description", status = "value", value = "Positivt räntenetto efter koncernutjämning" }, { name = "name", status = "value", value = "Positivt räntenetto" }, { name = "operational_definition", status = "value", value = "Positivt räntenetto i block D" }]
+expected_period_text = "2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
+field = "name"
+value = "Positivt räntenetto — Positivt räntenetto i block D"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16959"
+variant = "121.237"
+column = "V0767"
+edition = "13726"
+expected_fields = [{ name = "definition", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "operational_definition", status = "value", value = "Årets utgång" }]
+expected_period_text = "2000"
+expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+field = "name"
+value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång — Årets utgång"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16959"
+variant = "121.237"
+column = "V0767"
+edition = "13725"
+expected_fields = [{ name = "definition", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "operational_definition", status = "value", value = "Årets utgång" }]
+expected_period_text = "2001"
+expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2001" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2001-01-01", end = "2001-12-31" }] }
+field = "name"
+value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång — Årets utgång"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16959"
+variant = "121.237"
+column = "V0767"
+edition = "13724"
+expected_fields = [{ name = "definition", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "operational_definition", status = "value", value = "Årets utgång" }]
+expected_period_text = "2002"
+expected_scope = { kind = "intervals", intervals = [{ start = "2002", end = "2002" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2002-01-01", end = "2002-12-31" }] }
+field = "name"
+value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång — Årets utgång"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16959"
+variant = "121.237"
+column = "V0767"
+edition = "13723"
+expected_fields = [{ name = "definition", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "operational_definition", status = "value", value = "Årets utgång" }]
+expected_period_text = "2003"
+expected_scope = { kind = "intervals", intervals = [{ start = "2003", end = "2003" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end = "2003-12-31" }] }
+field = "name"
+value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång — Årets utgång"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16959"
+variant = "121.237"
+column = "V0767"
+edition = "13722"
+expected_fields = [{ name = "definition", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "operational_definition", status = "value", value = "Årets utgång" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+field = "name"
+value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång — Årets utgång"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16959"
+variant = "121.237"
+column = "V0767"
+edition = "13721"
+expected_fields = [{ name = "definition", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "operational_definition", status = "value", value = "Årets utgång" }]
+expected_period_text = "2005"
+expected_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2005" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2005-01-01", end = "2005-12-31" }] }
+field = "name"
+value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång — Årets utgång"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16959"
+variant = "121.237"
+column = "V0767"
+edition = "11620"
+expected_fields = [{ name = "definition", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "operational_definition", status = "value", value = "Årets utgång" }]
+expected_period_text = "2006"
+expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+field = "name"
+value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång — Årets utgång"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16959"
+variant = "121.237"
+column = "V0763"
+edition = "13726"
+expected_fields = [{ name = "definition", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "operational_definition", status = "value", value = "Årets ingång" }]
+expected_period_text = "2000"
+expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+field = "name"
+value = "Återstående avdragsutrymme för skogsavdrag — Årets ingång"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16959"
+variant = "121.237"
+column = "V0763"
+edition = "13725"
+expected_fields = [{ name = "definition", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "operational_definition", status = "value", value = "Årets ingång" }]
+expected_period_text = "2001"
+expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2001" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2001-01-01", end = "2001-12-31" }] }
+field = "name"
+value = "Återstående avdragsutrymme för skogsavdrag — Årets ingång"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16959"
+variant = "121.237"
+column = "V0763"
+edition = "13724"
+expected_fields = [{ name = "definition", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "operational_definition", status = "value", value = "Årets ingång" }]
+expected_period_text = "2002"
+expected_scope = { kind = "intervals", intervals = [{ start = "2002", end = "2002" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2002-01-01", end = "2002-12-31" }] }
+field = "name"
+value = "Återstående avdragsutrymme för skogsavdrag — Årets ingång"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16959"
+variant = "121.237"
+column = "V0763"
+edition = "13723"
+expected_fields = [{ name = "definition", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "operational_definition", status = "value", value = "Årets ingång" }]
+expected_period_text = "2003"
+expected_scope = { kind = "intervals", intervals = [{ start = "2003", end = "2003" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end = "2003-12-31" }] }
+field = "name"
+value = "Återstående avdragsutrymme för skogsavdrag — Årets ingång"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16959"
+variant = "121.237"
+column = "V0763"
+edition = "13722"
+expected_fields = [{ name = "definition", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "operational_definition", status = "value", value = "Årets ingång" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+field = "name"
+value = "Återstående avdragsutrymme för skogsavdrag — Årets ingång"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16959"
+variant = "121.237"
+column = "V0763"
+edition = "13721"
+expected_fields = [{ name = "definition", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "operational_definition", status = "value", value = "Årets ingång" }]
+expected_period_text = "2005"
+expected_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2005" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2005-01-01", end = "2005-12-31" }] }
+field = "name"
+value = "Återstående avdragsutrymme för skogsavdrag — Årets ingång"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.16959"
+variant = "121.237"
+column = "V0763"
+edition = "11620"
+expected_fields = [{ name = "definition", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Återstående avdragsutrymme för skogsavdrag vid beskattningsårets utgång" }, { name = "operational_definition", status = "value", value = "Årets ingång" }]
+expected_period_text = "2006"
+expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+field = "name"
+value = "Återstående avdragsutrymme för skogsavdrag — Årets ingång"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47769"
+variant = "121.1747"
+column = "V8327"
+edition = "19358"
+expected_fields = [{ name = "definition", status = "value", value = "Regel" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Regel" }, { name = "operational_definition", status = "value", value = "Regel som används för avdrag i punkt 2 EBITDA-regeln" }]
+expected_period_text = "2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
+field = "name"
+value = "Regel — Regel som används för avdrag i punkt 2 EBITDA-regeln"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47769"
+variant = "121.1747"
+column = "V8327"
+edition = "19359"
+expected_fields = [{ name = "definition", status = "value", value = "Regel" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Regel" }, { name = "operational_definition", status = "value", value = "Regel som används för avdrag i punkt 2 EBITDA-regeln" }]
+expected_period_text = "2021"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
+field = "name"
+value = "Regel — Regel som används för avdrag i punkt 2 EBITDA-regeln"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47769"
+variant = "121.1747"
+column = "V8327"
+edition = "20061"
+expected_fields = [{ name = "definition", status = "value", value = "Regel" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Regel" }, { name = "operational_definition", status = "value", value = "Regel som används för avdrag i punkt 2 EBITDA-regeln" }]
+expected_period_text = "2023"
+expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
+field = "name"
+value = "Regel — Regel som används för avdrag i punkt 2 EBITDA-regeln"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47769"
+variant = "121.1747"
+column = "V8326"
+edition = "19358"
+expected_fields = [{ name = "definition", status = "value", value = "Regel" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Regel" }, { name = "operational_definition", status = "value", value = "Regel som används för avdrag i punkt 2 Förenklingsregeln" }]
+expected_period_text = "2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
+field = "name"
+value = "Regel — Regel som används för avdrag i punkt 2 Förenklingsregeln"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47769"
+variant = "121.1747"
+column = "V8326"
+edition = "19359"
+expected_fields = [{ name = "definition", status = "value", value = "Regel" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Regel" }, { name = "operational_definition", status = "value", value = "Regel som används för avdrag i punkt 2 Förenklingsregeln" }]
+expected_period_text = "2021"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
+field = "name"
+value = "Regel — Regel som används för avdrag i punkt 2 Förenklingsregeln"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.47769"
+variant = "121.1747"
+column = "V8326"
+edition = "20061"
+expected_fields = [{ name = "definition", status = "value", value = "Regel" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Regel" }, { name = "operational_definition", status = "value", value = "Regel som används för avdrag i punkt 2 Förenklingsregeln" }]
+expected_period_text = "2023"
+expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
+field = "name"
+value = "Regel — Regel som används för avdrag i punkt 2 Förenklingsregeln"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.42261"
+variant = "121.237"
+column = "V0873"
+edition = "13726"
+expected_fields = [{ name = "definition", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "operational_definition", status = "value", value = "Anger nekande" }]
+expected_period_text = "2000"
+expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+field = "name"
+value = "Omräkning har skett av poster eller delposter i balansräkningen — Anger nekande"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.42261"
+variant = "121.237"
+column = "V0873"
+edition = "13725"
+expected_fields = [{ name = "definition", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "operational_definition", status = "value", value = "Avser nekande" }]
+expected_period_text = "2001"
+expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2001" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2001-01-01", end = "2001-12-31" }] }
+field = "name"
+value = "Omräkning har skett av poster eller delposter i balansräkningen — Anger nekande"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.42261"
+variant = "121.237"
+column = "V0873"
+edition = "13724"
+expected_fields = [{ name = "definition", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "operational_definition", status = "value", value = "Avser nekande" }]
+expected_period_text = "2002"
+expected_scope = { kind = "intervals", intervals = [{ start = "2002", end = "2002" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2002-01-01", end = "2002-12-31" }] }
+field = "name"
+value = "Omräkning har skett av poster eller delposter i balansräkningen — Anger nekande"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.42261"
+variant = "121.237"
+column = "V0873"
+edition = "13723"
+expected_fields = [{ name = "definition", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "operational_definition", status = "value", value = "Avser nekande" }]
+expected_period_text = "2003"
+expected_scope = { kind = "intervals", intervals = [{ start = "2003", end = "2003" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end = "2003-12-31" }] }
+field = "name"
+value = "Omräkning har skett av poster eller delposter i balansräkningen — Anger nekande"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.42261"
+variant = "121.237"
+column = "V0873"
+edition = "13722"
+expected_fields = [{ name = "definition", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "operational_definition", status = "value", value = "Avser nekande" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+field = "name"
+value = "Omräkning har skett av poster eller delposter i balansräkningen — Anger nekande"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.42261"
+variant = "121.237"
+column = "V0872"
+edition = "13726"
+expected_fields = [{ name = "definition", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "operational_definition", status = "value", value = "Anger jakande" }]
+expected_period_text = "2000"
+expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+field = "name"
+value = "Omräkning har skett av poster eller delposter i balansräkningen — Anger jakande"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.42261"
+variant = "121.237"
+column = "V0872"
+edition = "13725"
+expected_fields = [{ name = "definition", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "operational_definition", status = "value", value = "Avser jakande" }]
+expected_period_text = "2001"
+expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2001" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2001-01-01", end = "2001-12-31" }] }
+field = "name"
+value = "Omräkning har skett av poster eller delposter i balansräkningen — Anger jakande"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.42261"
+variant = "121.237"
+column = "V0872"
+edition = "13724"
+expected_fields = [{ name = "definition", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "operational_definition", status = "value", value = "Avser jakande" }]
+expected_period_text = "2002"
+expected_scope = { kind = "intervals", intervals = [{ start = "2002", end = "2002" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2002-01-01", end = "2002-12-31" }] }
+field = "name"
+value = "Omräkning har skett av poster eller delposter i balansräkningen — Anger jakande"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.42261"
+variant = "121.237"
+column = "V0872"
+edition = "13723"
+expected_fields = [{ name = "definition", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "operational_definition", status = "value", value = "Avser jakande" }]
+expected_period_text = "2003"
+expected_scope = { kind = "intervals", intervals = [{ start = "2003", end = "2003" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end = "2003-12-31" }] }
+field = "name"
+value = "Omräkning har skett av poster eller delposter i balansräkningen — Anger jakande"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[errata.field]]
+variable = "121.42261"
+variant = "121.237"
+column = "V0872"
+edition = "13722"
+expected_fields = [{ name = "definition", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Omräkning har skett av poster eller delposter i balansräkningen" }, { name = "operational_definition", status = "value", value = "Avser jakande" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+field = "name"
+value = "Omräkning har skett av poster eller delposter i balansräkningen — Anger jakande"
+evidence = "Complete six-family FRIDA financial source audit. Only exact positive edition rows with supplied operative delivery roles receive ownership. Missing historical roles remain unavailable and blank columns remain unattached. Preserve all original fields, units, code associations and periods. Proof: Batch49-FRIDA-financial-role-source-audit.json and Batch49-FRIDA-financial-role-source-proof.json."
+noted = "2026-10-01"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 121, 'variable', 'native-int', 16953)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:11620\",\"variable:16953\",\"member:536444\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13721\",\"variable:16953\",\"member:620695\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13722\",\"variable:16953\",\"member:750476\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13723\",\"variable:16953\",\"member:750504\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13724\",\"variable:16953\",\"member:750544\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13725\",\"variable:16953\",\"member:750575\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13726\",\"variable:16953\",\"member:622224\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:945\",\"edition:12214\",\"variable:16953\",\"member:518289\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:945\",\"edition:12221\",\"variable:16953\",\"member:518756\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:945\",\"edition:12222\",\"variable:16953\",\"member:519038\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:945\",\"edition:12223\",\"variable:16953\",\"member:519333\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:945\",\"edition:12224\",\"variable:16953\",\"member:519618\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:945\",\"edition:12225\",\"variable:16953\",\"member:519912\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:945\",\"edition:12226\",\"variable:16953\",\"member:520205\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12147\",\"variable:16953\",\"member:527414\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12277\",\"variable:16953\",\"member:527622\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12278\",\"variable:16953\",\"member:527839\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12279\",\"variable:16953\",\"member:528038\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12280\",\"variable:16953\",\"member:528337\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12281\",\"variable:16953\",\"member:528600\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12282\",\"variable:16953\",\"member:528847\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12283\",\"variable:16953\",\"member:529109\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12284\",\"variable:16953\",\"member:529344\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12285\",\"variable:16953\",\"member:529597\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12286\",\"variable:16953\",\"member:529840\"]}"]
+fields = ["identity"]
+reason = "These exact historical source rows give the broad native financial quantity but do not specify the physical delivery role. Preserve the original columns, fields, units, dates and coding associations as unmapped semantic evidence. Roles explicitly supplied in later editions are mapped only in those later exact scopes; their meanings are not assigned to these historical rows."
+evidence = "Maintainer retained-unmapped policy applied to a complete six-native-family FRIDA audit (132 originals, 69 positively identified physical rows, 61 physical rows without operative role text and two unattached blank-column originals). Actual primary/summary and integer identifier witnesses plus checked production naming/partition/formation replay. Entire applicable original contents and raw bound coding fingerprints are guarded. Proof: Batch49-FRIDA-financial-role-source-proof.json."
+expected_evidence_sha256 = "fbb5e00aba334faa31cc84ae65a0d0ee5db1351139e0c17ceca84c9968084255"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 121, 'variable', 'native-int', 16959)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:945\",\"edition:12214\",\"variable:16959\",\"member:518402\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:945\",\"edition:12221\",\"variable:16959\",\"member:518750\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:945\",\"edition:12222\",\"variable:16959\",\"member:519032\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:945\",\"edition:12223\",\"variable:16959\",\"member:519327\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:945\",\"edition:12224\",\"variable:16959\",\"member:519612\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:945\",\"edition:12225\",\"variable:16959\",\"member:519906\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:945\",\"edition:12226\",\"variable:16959\",\"member:520199\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12278\",\"variable:16959\",\"member:528203\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12279\",\"variable:16959\",\"member:528183\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12280\",\"variable:16959\",\"member:528209\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12281\",\"variable:16959\",\"member:528720\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12282\",\"variable:16959\",\"member:528731\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12283\",\"variable:16959\",\"member:529222\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12284\",\"variable:16959\",\"member:529233\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12285\",\"variable:16959\",\"member:529705\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12286\",\"variable:16959\",\"member:529733\"]}"]
+fields = ["identity"]
+reason = "These exact historical source rows give the broad native financial quantity but do not specify the physical delivery role. Preserve the original columns, fields, units, dates and coding associations as unmapped semantic evidence. Roles explicitly supplied in later editions are mapped only in those later exact scopes; their meanings are not assigned to these historical rows."
+evidence = "Maintainer retained-unmapped policy applied to a complete six-native-family FRIDA audit (132 originals, 69 positively identified physical rows, 61 physical rows without operative role text and two unattached blank-column originals). Actual primary/summary and integer identifier witnesses plus checked production naming/partition/formation replay. Entire applicable original contents and raw bound coding fingerprints are guarded. Proof: Batch49-FRIDA-financial-role-source-proof.json."
+expected_evidence_sha256 = "f5fdadacbadc5c22c9d80a0eadd419917e6cac8f4c813d25190be29cd4a941f2"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 121, 'variable', 'native-int', 4327)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13703\",\"variable:4327\",\"member:616840\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13703\",\"variable:4327\",\"member:669930\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:3781\",\"variable:4327\",\"member:244847\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:4228\",\"variable:4327\",\"member:268401\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:4229\",\"variable:4327\",\"member:268531\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:5087\",\"variable:4327\",\"member:315686\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:5088\",\"variable:4327\",\"member:315815\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:5481\",\"variable:4327\",\"member:337221\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:8671\",\"variable:4327\",\"member:422847\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:8671\",\"variable:4327\",\"member:423044\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:8672\",\"variable:4327\",\"member:423008\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:8672\",\"variable:4327\",\"member:423040\"]}"]
+fields = ["identity"]
+reason = "These exact historical source rows give the broad native financial quantity but do not specify the physical delivery role. Preserve the original columns, fields, units, dates and coding associations as unmapped semantic evidence. Roles explicitly supplied in later editions are mapped only in those later exact scopes; their meanings are not assigned to these historical rows."
+evidence = "Maintainer retained-unmapped policy applied to a complete six-native-family FRIDA audit (132 originals, 69 positively identified physical rows, 61 physical rows without operative role text and two unattached blank-column originals). Actual primary/summary and integer identifier witnesses plus checked production naming/partition/formation replay. Entire applicable original contents and raw bound coding fingerprints are guarded. Proof: Batch49-FRIDA-financial-role-source-proof.json."
+expected_evidence_sha256 = "98b63cafd9e3167616071ff49c60ee47c0959a3728b5f7af0a35bf3781ab3fdc"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 121, 'variable', 'native-int', 47756)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:1747\",\"edition:19358\",\"variable:47756\",\"member:934957\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:1747\",\"edition:19359\",\"variable:47756\",\"member:935211\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:1747\",\"edition:19360\",\"variable:47756\",\"member:935302\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:1747\",\"edition:19361\",\"variable:47756\",\"member:935531\"]}"]
+fields = ["identity"]
+reason = "These exact historical source rows give the broad native financial quantity but do not specify the physical delivery role. Preserve the original columns, fields, units, dates and coding associations as unmapped semantic evidence. Roles explicitly supplied in later editions are mapped only in those later exact scopes; their meanings are not assigned to these historical rows."
+evidence = "Maintainer retained-unmapped policy applied to a complete six-native-family FRIDA audit (132 originals, 69 positively identified physical rows, 61 physical rows without operative role text and two unattached blank-column originals). Actual primary/summary and integer identifier witnesses plus checked production naming/partition/formation replay. Entire applicable original contents and raw bound coding fingerprints are guarded. Proof: Batch49-FRIDA-financial-role-source-proof.json."
+expected_evidence_sha256 = "c5f44cbd3f7cd2a54063ff74d5c240d5f211f334be107a183773d15527b3d53f"
