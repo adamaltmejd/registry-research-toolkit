@@ -7,11 +7,12 @@ fixtures, not accepted curation decisions.
 from __future__ import annotations
 
 import hashlib
+import json
 from typing import Literal
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
-from pydantic import ValidationError
+from pydantic import TypeAdapter, ValidationError
 from reg_meta.source_evidence import (
     DeliveredCell,
     RecordLocator,
@@ -23,6 +24,7 @@ from reg_meta_build.source_curation import (
     CodingDecision,
     CurationCase,
     FieldExpectation,
+    GuardValidationContext,
     PeerGuard,
     RecordExpectation,
     RecordProjection,
@@ -42,6 +44,8 @@ from reg_meta_build.source_records import (
     value_field,
 )
 from reg_meta_build.sources.scb_records import clean_scb_row
+
+from reg_meta_build import source_curation
 
 
 def _revision(source: str, marker: str = "accepted") -> SourceRevision:
@@ -429,6 +433,320 @@ def test_projection_order_and_value_rules_reuse_the_common_source_contract() -> 
         FieldExpectation(name="availability", status="value", value=False)
     with pytest.raises(ValueError, match="name must carry a string value"):
         FieldExpectation(name="name", status="value", value=True)
+
+
+@pytest.mark.parametrize(
+    ("name", "status", "value"),
+    [
+        ("availability", "value", 1),
+        ("sensitivity", "value", 1),
+        ("sensitivity", "value", "true"),
+        ("identifier", "value", 0),
+        ("conditional_sensitivity", "value", "true"),
+        ("name", "value", True),
+        ("measurement_unit", "negative", None),
+        ("identifier", "negative", None),
+        ("name", "unknown", "unsupplied"),
+        ("name", "value", None),
+        ("unrecognized", "value", "text"),
+    ],
+)
+def test_projection_and_source_json_reject_the_same_invalid_named_field(
+    name: str, status: str, value: str | int | bool | None
+) -> None:
+    with pytest.raises(ValidationError):
+        FieldExpectation.model_validate_json(
+            json.dumps({"name": name, "status": status, "value": value})
+        )
+    with pytest.raises(ValidationError):
+        SourceFields.model_validate_json(
+            json.dumps({name: {"status": status, "value": value}})
+        )
+
+
+@pytest.mark.parametrize("intern", [False, True])
+@pytest.mark.parametrize(
+    "alternatives",
+    [
+        [{"fields": [{"name": "name", "status": "value", "value": 1}]}],
+        [{"edition_scope": {"kind": "unknown"}}],
+        [{}],
+        [
+            {"fields": [{"name": "name", "status": "value", "value": "text"}]},
+            {"fields": [{"name": "name", "status": "value", "value": "text"}]},
+        ],
+        [
+            {"fields": [{"name": "name", "status": "value", "value": "text"}]},
+            {"fields": [{"name": "definition", "status": "value", "value": "text"}]},
+        ],
+    ],
+    ids=["singleton-field", "singleton-scope", "singleton-empty", "duplicate", "shape"],
+)
+def test_record_expectation_json_keeps_nested_and_multiple_alternative_guards(
+    alternatives: list[dict[str, object]],
+    intern: bool,
+) -> None:
+    with pytest.raises(ValidationError):
+        RecordExpectation.model_validate_json(
+            json.dumps(
+                {
+                    "ref": {"source": "fixture", "semantic_record_key": ["member:1"]},
+                    "alternatives": alternatives,
+                }
+            ),
+            context=GuardValidationContext() if intern else None,
+        )
+
+
+def test_json_guard_interning_keeps_full_values_and_scope_isolation() -> None:
+    from reg_meta_build.source_curation import CodeSetExpectation, ParentFactProjection
+
+    field = _field("name", "value", "Literal")
+    parent = ParentFactProjection(
+        kind="register",
+        coordinate=SourceCoordinate(status="value", native_id=1),
+        register=SourceCoordinate(status="value", native_id=1),
+        fields=(field,),
+    )
+    projection = RecordProjection(
+        fields=(field,),
+        native=NativeCoordinates(variable_id=1),
+        edition_scope=_interval("2020", "2020"),
+        parent_facts=(parent,),
+        code_set_references=(
+            CodeSetExpectation(reference_id="book", content_sha256="a" * 64),
+        ),
+    )
+    expected = RecordExpectation(
+        ref=SourceRecordRef(source="fixture", semantic_record_key=("member:1",)),
+        alternatives=(projection,),
+    )
+    variants = (
+        expected.model_copy(
+            update={"ref": expected.ref.model_copy(update={"source": "other"})}
+        ),
+        *(
+            expected.model_copy(
+                update={"alternatives": (projection.model_copy(update=update),)}
+            )
+            for update in (
+                {"fields": (_field("name", "value", "Other"),)},
+                {"fields": (_field("definition", "value", "Literal"),)},
+                {"edition_scope": _interval("2021", "2021")},
+                {"native": NativeCoordinates(variable_id=2)},
+                {"parent_facts": ()},
+                {"code_set_references": ()},
+            )
+        ),
+    )
+    adapter = TypeAdapter(tuple[RecordExpectation, ...])
+    payload = adapter.dump_json((expected, expected, *variants))
+    context = GuardValidationContext()
+    parsed = adapter.validate_json(payload, context=context)
+    assert adapter.dump_json(parsed) == payload
+    assert parsed[0] is parsed[1]
+    assert parsed[0].alternatives[0] is parsed[1].alternatives[0]
+    assert all(item is not parsed[0] for item in parsed[2:])
+    assert parsed[2].alternatives[0] is parsed[0].alternatives[0]
+    assert all(
+        item.alternatives[0] is not parsed[0].alternatives[0] for item in parsed[3:]
+    )
+    fresh = adapter.validate_json(payload, context=GuardValidationContext())
+    assert fresh[0] is not parsed[0]
+    assert fresh[0].alternatives[0] is not parsed[0].alternatives[0]
+    assert adapter.dump_json(fresh) == payload
+
+
+def test_compiled_scope_json_read_shares_validated_guards_without_skipping_fields() -> (
+    None
+):
+    from reg_meta_build.curation_compile import CompiledCuration
+    from reg_meta_build.pipeline import CompiledScope, _compiled_scope
+    from reg_meta_build.source_curation import (
+        CheckedFieldChange,
+        OccurrenceCorrectionDecision,
+    )
+
+    ref = SourceRecordRef(source="fixture", semantic_record_key=("member:1",))
+    expected = RecordExpectation(
+        ref=ref,
+        alternatives=(RecordProjection(fields=(_field("name", "value", "Literal"),)),),
+    )
+    decision = OccurrenceCorrectionDecision(
+        reviewed=True,
+        effects=(
+            CheckedFieldChange(
+                ref=ref, replacement=_field("name", "value", "Reviewed")
+            ),
+        ),
+        reason="Fixture correction",
+        provenance="Fixture source",
+    )
+    cases = tuple(
+        CurationCase(case_id=f"case:{index}", targets=(expected,), decision=decision)
+        for index in range(2)
+    )
+    key = ("fixture", None)
+    compiled = CompiledCuration(fields={}, cases={key: cases}, report={})
+    result = _compiled_scope(key, compiled)
+    assert result.cases[0].targets[0] is result.cases[1].targets[0]
+    baseline = CompiledScope.model_validate_json(
+        CompiledScope(
+            source="fixture", register_key=None, cases=cases
+        ).model_dump_json()
+    )
+    assert result.model_dump_json() == baseline.model_dump_json()
+    invalid = expected.model_copy(
+        update={
+            "alternatives": (
+                expected.alternatives[0].model_copy(
+                    update={
+                        "fields": (
+                            FieldExpectation.model_construct(
+                                name="name", status="value", value=True
+                            ),
+                        )
+                    }
+                ),
+            )
+        }
+    )
+    broken = cases[1].model_copy(update={"targets": (invalid,)})
+    with pytest.raises(ValueError):
+        _compiled_scope(key, CompiledCuration({}, {key: (cases[0], broken)}, {}))
+
+    class ExtraCase(CurationCase):
+        unexpected: str = "not in the compiled contract"
+
+    extra = ExtraCase(**cases[0].model_dump())
+    with pytest.raises(ValidationError, match="unexpected"):
+        _compiled_scope(key, CompiledCuration({}, {key: (extra,)}, {}))
+    for value in (float("nan"), float("inf"), float("-inf")):
+        with pytest.raises(ValidationError):
+            _compiled_scope(("fixture", value), compiled)  # ty: ignore[invalid-argument-type]
+        absent = FieldExpectation(name="measurement_unit", status="absent")
+        projection = expected.alternatives[0].model_copy(
+            update={"fields": (absent.model_copy(update={"value": value}),)}
+        )
+        invalid = expected.model_copy(update={"alternatives": (projection,)})
+        broken = cases[0].model_copy(update={"targets": (invalid,)})
+        with pytest.raises(ValueError):
+            _compiled_scope(key, CompiledCuration({}, {key: (broken,)}, {}))
+
+
+def test_expected_projection_tokens_share_json_clones_but_keep_complete_values(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    original = _record(
+        source="fixture",
+        key=("member:1",),
+        register_name="Register",
+        member_name="Variable",
+        fields=SourceFields(name=value_field("Literal")),
+        edition_scope=_interval("2020", "2020"),
+    )
+    expected = _expectation(original, _field("name", "value", "Literal"))
+    cloned = RecordExpectation.model_validate_json(expected.model_dump_json())
+    projection = expected.alternatives[0]
+    different = (
+        RecordProjection(fields=(_field("name", "value", "Other"),)),
+        RecordProjection(fields=(_field("definition", "value", "Literal"),)),
+        RecordProjection(
+            fields=(FieldExpectation(name="sensitivity", status="value", value=True),)
+        ),
+        RecordProjection(
+            fields=(FieldExpectation(name="sensitivity", status="value", value=False),)
+        ),
+        RecordProjection(
+            subject=original.subject.model_copy(
+                update={"register_name": SourceCoordinate(status="value", native_id=1)}
+            )
+        ),
+        RecordProjection(
+            subject=original.subject.model_copy(
+                update={
+                    "register_name": SourceCoordinate(status="value", native_id="1")
+                }
+            )
+        ),
+    )
+    token = source_curation._model_token
+    calls: list[RecordProjection] = []
+
+    def counted(value: RecordProjection) -> str:
+        calls.append(value)
+        return token(value)
+
+    monkeypatch.setattr(source_curation, "_model_token", counted)
+    evidence = SourceEvidence((original,))
+    first = evidence.expected_projections(expected)
+    assert evidence.expected_projections(cloned) == first
+    assert calls == [projection]
+    for alternative in different:
+        differing = RecordExpectation(ref=expected.ref, alternatives=(alternative,))
+        assert evidence.expected_projections(differing) == {
+            token(alternative): alternative
+        }
+    assert len(calls) == 1 + len(different)
+    assert len(evidence.expected_tokens) == 1 + len(different)
+    fresh = SourceEvidence((original,))
+    assert fresh.expected_projections(cloned) == first
+    assert len(calls) == 2 + len(different)
+
+
+def test_repeated_guard_cache_preserves_issues_and_physical_alternatives() -> None:
+    original = _record(
+        source="fixture",
+        key=("member:1",),
+        register_name="Register",
+        member_name="Variable",
+        fields=SourceFields(name=value_field("First")),
+        edition_scope=_interval("2020", "2020"),
+    )
+    second = original.model_copy(
+        update={"fields": SourceFields(name=value_field("Second"))}
+    )
+    expectations = (
+        _expectation(original, _field("name", "value", "First")),
+        RecordExpectation(
+            ref=_ref(original),
+            alternatives=(
+                _projection(
+                    _field("name", "value", "First"),
+                    edition_scope=original.edition_scope,
+                    subject=original.subject,
+                ),
+                _projection(
+                    _field("name", "value", "Second"),
+                    edition_scope=original.edition_scope,
+                    subject=original.subject,
+                ),
+            ),
+        ),
+    )
+    cases = tuple(
+        CurationCase.model_validate_json(
+            CurationCase(
+                case_id=f"repeated:{i}",
+                targets=(expectations[i % 2],),
+                decision=_decision(),
+            ).model_dump_json()
+        )
+        for i in range(20)
+    )
+    records = (original, second, original)
+    shared = evaluate_cases(cases, SourceEvidence(records))
+    fresh = tuple(evaluate_case(case, records) for case in cases)
+    assert tuple(result.model_dump_json() for result in shared) == tuple(
+        result.model_dump_json() for result in fresh
+    )
+    assert {result.status for result in shared} == {"applicable", "stale"}
+    assert all(
+        result.issues[0].code == "target_projection_changed"
+        for result in shared
+        if result.status == "stale"
+    )
+    assert evaluate_cases(cases, SourceEvidence((original,)))[1].status == "stale"
 
 
 def test_raw_registerinformation_whitespace_does_not_stale_clean_projection() -> None:

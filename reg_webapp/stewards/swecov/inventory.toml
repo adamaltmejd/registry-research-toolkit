@@ -62216,7 +62216,7 @@ name = "Pmos"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/mest-vardefull-samarbetspartner"
-representation = "PMOS"
+representation = "Q14"
 
 [[table.column]]
 name = "Q15a"
@@ -64192,7 +64192,7 @@ name = "Pmos"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/mest-vardefull-samarbetspartner"
-representation = "PMOS"
+representation = "Q14"
 
 [[table.column]]
 name = "ProCp"
@@ -66136,7 +66136,7 @@ name = "Pmos"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/mest-vardefull-samarbetspartner"
-representation = "PMOS"
+representation = "F14"
 
 [[table.column]]
 name = "RMAC"

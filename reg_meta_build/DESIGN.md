@@ -418,10 +418,30 @@ source peers and facts; the context changes lookup cost, not evidence or guard b
 Complete field, parent and coding projections are captured once per immutable context;
 selecting refs retains all physical alternatives. Applicability checks likewise reuse
 actual projections only within one immutable `SourceEvidence`, keyed by semantic ref and
-every selected projection coordinate. New evidence requires a fresh context. No cached
-source state survives a build. An added delivery retains its own literal donor and
-negative native-base records as quantity evidence. Complete edition or variant support
-still guards the correction, but unrelated variables cannot become contributors to that
+every selected projection coordinate. Expected projection tokens use a separate cache in
+that same context, keyed by the entire immutable validated projection value. Different
+expected values, masks and native coordinate types remain independent. New evidence
+requires a fresh context. No cached source state survives a build.
+
+Compiled-scope JSON reads also share identical immutable `RecordProjection` and
+`RecordExpectation` objects within that read. Every nested value, projection shape and
+alternative is validated before interning. Keys contain the exact model class and
+complete normalized JSON value, including native coordinates, scopes, parents and coding
+references. Separate scopes receive separate contexts. This restores sharing lost by
+serialization without bypassing contract validation or changing garbage-collector
+settings; it avoids retaining a full duplicate guard graph for each reviewed case. Scope
+serialization passes existing model objects directly to Pydantic's JSON adapter,
+avoiding an intermediate nested Python dictionary tree. Serialization warnings are
+errors, and nonfinite raw numbers remain explicit tokens for strict rejection rather
+than becoming null. Final JSON validation still rejects unexpected subclass fields.
+
+Serialized scope contracts still validate all nested inputs. Field expectations reuse
+the source model's single-field type guard instead of constructing every absent field
+again. A singleton record alternative needs no uniqueness comparison; its nested
+projection still receives full validation. Multiple alternatives retain shape and
+canonical-token checks. An added delivery retains its own literal donor and negative
+native-base records as quantity evidence. Complete edition or variant support still
+guards the correction, but unrelated variables cannot become contributors to that
 quantity's metadata or coding authority.
 
 An explicitly reviewed `upstream = "additional-physical-column-in-version"` entry
@@ -722,22 +742,32 @@ explicit reviewed label-equivalence certificates for unchanged code keys, such a
 all exact observed labels and selects one label already supplied by the source. The
 exact authored version label identifies the positive book; complete original and raw
 coding guards still cover other historical books. Compilation and replay require the
-observed label set and code keys to match exactly. Missing, new or changed labels, books
-or associations invalidate the decision. Original labels remain in source evidence; no
-fuzzy matching or code reassignment occurs. PDF decisions retain the finite window
-requirement. A source-row decision instead may name its exact supplied `TemporalScope`,
-mutually exclusive with authored finite periods. That scope must match every effective
-occurrence and list claim exactly, including an open `end`. The authored scope and
-originals retain `end = None`; only the existing internal interval normalization reaches
-the maximum date. Complete original and list guards invalidate any source-scope change.
-This does not authorize future extrapolation or relax finite bounds for other coding
-decisions. Exact code strings, including an explicitly documented empty string, are
-preserved. The compiler captures original fields, scopes, coding references and complete
-column peers; changed finite claims invalidate application, and any supplied complete
-list in the window makes the entry stale. Contradictory documented assignments withhold
-only their overlap. Original claims and nonmembership associations stay in source
-accounting. Raw type-marker whitespace is not a finite-membership guard: those
-associations cannot establish a list and are retained in the documentary audit.
+observed label set and code keys to match exactly. An optional finite `witness` on a
+label certificate selects the quantity's own complete source book when one version label
+recurs with different missing-value tokens across years. Every witness claim must supply
+the exact code keys and reviewed labels throughout that window. Full raw coding and
+original guards still cover all years. Compilation and replay refuse any contrary
+positive target domain; the witness cannot replace its keys or meanings. Historical and
+later domains remain separate, without backfilling later NULL or blank tokens. This
+exception permits semantic label normalization of a supplied list, not algorithm
+equivalence or code reassignment. Missing, new or changed labels, books or associations
+invalidate the decision. Original labels remain in source evidence; no fuzzy matching or
+code reassignment occurs. PDF decisions retain the finite window requirement. A
+source-row decision instead may name its exact supplied `TemporalScope`, mutually
+exclusive with authored finite periods. That scope must match every effective occurrence
+and list claim exactly, including an open `end`. The authored scope and originals retain
+`end = None`; only the existing internal interval normalization reaches the maximum
+date. Complete original and list guards invalidate any source-scope change. This does
+not authorize future extrapolation or relax finite bounds for other coding decisions.
+Exact code strings, including an explicitly documented empty string, are preserved. The
+compiler captures original fields, scopes, coding references and complete column peers;
+changed finite claims invalidate application, and any supplied complete list in the
+window makes an ordinary documented entry stale. The guarded witness label certificate
+additionally requires every positive target domain to match after exact reviewed label
+normalization. Contradictory documented assignments withhold only their overlap.
+Original claims and nonmembership associations stay in source accounting. Raw
+type-marker whitespace is not a finite-membership guard: those associations cannot
+establish a list and are retained in the documentary audit.
 
 A finite source-row authority can also certify an explicit complete enumeration in a
 named prose field. It records the exact ASCII decimal-code-and-label lines and requires

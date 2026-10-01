@@ -13,7 +13,7 @@ from io import TextIOWrapper
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, TypeAdapter
 from reg_meta.source_evidence import canonical_sha256
 
 from reg_meta_build.catalog_dependencies import (
@@ -61,6 +61,7 @@ from reg_meta_build.source_classifications import resolve_canonical_codes
 from reg_meta_build.source_coordinates import NativeKey  # noqa: TC001
 from reg_meta_build.source_curation import (
     CurationCase,
+    GuardValidationContext,
     ResolutionDiagnostic,
     SourceRecordRef,
 )
@@ -178,28 +179,21 @@ def _compiled_scope(
 ) -> CompiledScope:
     """Validate one compiled scope through its serialized JSON contract."""
     return CompiledScope.model_validate_json(
-        json.dumps(
+        TypeAdapter(
+            dict[str, object], config=ConfigDict(ser_json_inf_nan="constants")
+        ).dump_json(
             {
                 "source": key[0],
                 "register_key": key[1],
-                "cases": [
-                    item.model_dump(mode="json") for item in compiled.cases.get(key, ())
-                ],
-                "naming": [
-                    item.model_dump(mode="json")
-                    for item in (compiled.naming or {}).get(key, ())
-                ],
-                "naming_ambiguities": [
-                    item.model_dump(mode="json")
-                    for item in (compiled.naming_ambiguities or {}).get(key, ())
-                ],
+                "cases": compiled.cases.get(key, ()),
+                "naming": (compiled.naming or {}).get(key, ()),
+                "naming_ambiguities": (compiled.naming_ambiguities or {}).get(key, ()),
                 "provider_keys": (compiled.provider_keys or {}).get(key, ()),
-                "variants": [
-                    (native_key, variant.model_dump(mode="json"))
-                    for native_key, variant in (compiled.variants or {}).get(key, ())
-                ],
-            }
-        )
+                "variants": (compiled.variants or {}).get(key, ()),
+            },
+            warnings="error",
+        ),
+        context=GuardValidationContext(),
     )
 
 
@@ -1056,7 +1050,8 @@ def _run_pipeline(
                             }
                         )
                         scopes[scope_key] = CompiledScope.model_validate_json(
-                            merged_scope.model_dump_json()
+                            merged_scope.model_dump_json(),
+                            context=GuardValidationContext(),
                         )
                         compiled.cases[scope_key] = tuple(
                             sorted(

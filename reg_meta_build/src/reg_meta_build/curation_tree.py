@@ -1306,12 +1306,17 @@ class PreparedCodingAuthority(_CurationModel):
     enumeration: SourceEnumeration | None = None
     raw_codings: list[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]] | None = None
     label_equivalences: list[CodeLabelEquivalence] = Field(default_factory=list)
+    witness: Annotated[tuple[str, str], Field(strict=False)] | None = None
     marker_bindings: list[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]] | None = (
         None
     )
 
     @model_validator(mode="after")
     def _complete(self) -> PreparedCodingAuthority:
+        if self.witness is not None:
+            if not self.label_equivalences:
+                raise ValueError("documented witness requires a label certificate")
+            FiniteCurationWindow(valid_from=self.witness[0], valid_to=self.witness[1])
         if self.label_equivalences and (
             self.enumeration is not None
             or self.source_scope is not None

@@ -12,7 +12,14 @@ from datetime import date
 from functools import cached_property
 from typing import TYPE_CHECKING, Annotated, Literal, Self
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    ValidationInfo,
+    field_validator,
+    model_validator,
+)
 from reg_meta.source_evidence import (
     FieldScalar,
     FieldState,
@@ -91,7 +98,7 @@ class FieldExpectation(_CurationModel):
             return self
         status: FieldState = self.status
         field = SourceField(status=status, value=self.value)
-        SourceFields.model_validate({self.name: field})
+        SourceFields.require_typed_field(self.name, field)
         return self
 
 
@@ -137,6 +144,18 @@ def parent_fact_projection(parent: SourceParentObservation) -> ParentFactProject
             if (field := getattr(parent.fields, name)) is not None
         ),
     )
+
+
+class GuardValidationContext:
+    """Share complete immutable guards only within one validated JSON scope."""
+
+    def __init__(self) -> None:
+        self.projections: dict[
+            tuple[type[RecordProjection], str], RecordProjection
+        ] = {}
+        self.expectations: dict[
+            tuple[type[RecordExpectation], str], RecordExpectation
+        ] = {}
 
 
 class RecordProjection(_CurationModel):
@@ -190,7 +209,7 @@ class RecordProjection(_CurationModel):
         return tuple(sorted(fields, key=lambda field: field.name))
 
     @model_validator(mode="after")
-    def _valid_projection(self) -> Self:
+    def _valid_projection(self, info: ValidationInfo) -> RecordProjection:
         if (
             not self.fields
             and self.edition_scope is None
@@ -201,6 +220,10 @@ class RecordProjection(_CurationModel):
             and self.parent_facts is None
         ):
             raise ValueError("a record projection must select at least one fact")
+        if isinstance(info.context, GuardValidationContext):
+            return info.context.projections.setdefault(
+                (type(self), self.model_dump_json()), self
+            )
         return self
 
 
@@ -234,15 +257,22 @@ class RecordExpectation(_CurationModel):
     alternatives: tuple[RecordProjection, ...]
 
     @model_validator(mode="after")
-    def _finite_consistent_alternatives(self) -> Self:
+    def _finite_consistent_alternatives(
+        self, info: ValidationInfo
+    ) -> RecordExpectation:
         if not self.alternatives:
             raise ValueError("a record expectation needs at least one alternative")
-        shapes = {_projection_shape(item) for item in self.alternatives}
-        if len(shapes) != 1:
-            raise ValueError("record alternatives must use one projection shape")
-        tokens = [_model_token(item) for item in self.alternatives]
-        if len(tokens) != len(set(tokens)):
-            raise ValueError("record alternatives must be unique")
+        if len(self.alternatives) > 1:
+            shapes = {_projection_shape(item) for item in self.alternatives}
+            if len(shapes) != 1:
+                raise ValueError("record alternatives must use one projection shape")
+            tokens = [_model_token(item) for item in self.alternatives]
+            if len(tokens) != len(set(tokens)):
+                raise ValueError("record alternatives must be unique")
+        if isinstance(info.context, GuardValidationContext):
+            return info.context.expectations.setdefault(
+                (type(self), self.model_dump_json()), self
+            )
         return self
 
 
@@ -968,6 +998,7 @@ class DocumentedCodingSelection(_CurationModel):
     label_equivalences: Annotated[
         tuple[CodeLabelEquivalence, ...], Field(strict=False)
     ] = ()
+    witness: Annotated[tuple[str, str], Field(strict=False)] | None = None
     version_label: str = Field(min_length=1)
     members: Annotated[
         tuple[Annotated[tuple[str, str], Field(strict=False)], ...], Field(strict=False)
@@ -975,6 +1006,16 @@ class DocumentedCodingSelection(_CurationModel):
 
     @model_validator(mode="after")
     def _finite_members(self) -> Self:
+        if self.witness is not None:
+            if (
+                not self.label_equivalences
+                or self.enumeration is not None
+                or self.source_scope is not None
+            ):
+                raise ValueError(
+                    "documented witness requires a finite label certificate"
+                )
+            FiniteCurationWindow(valid_from=self.witness[0], valid_to=self.witness[1])
         if not self.version_label.strip() or not self.members:
             raise ValueError("documented coding needs a label and finite members")
         # Empty-string codes are literal values; labels must still supply meaning.
@@ -1296,6 +1337,7 @@ def _compare_expectation(
     expected: RecordExpectation,
     records: list[SourceRecord],
     actual_by_token: dict[str, RecordProjection],
+    expected_by_token: dict[str, RecordProjection],
 ) -> ApplicabilityIssue | None:
     subject = "/".join((expected.ref.source, *expected.ref.semantic_record_key))
     if not records:
@@ -1308,9 +1350,6 @@ def _compare_expectation(
             detail="expected semantic source member is absent",
             missing_members=(expected.ref,),
         )
-    expected_by_token = {
-        _model_token(alternative): alternative for alternative in expected.alternatives
-    }
     actual_tokens = set(actual_by_token)
     expected_tokens = set(expected_by_token)
     if actual_tokens == expected_tokens:
@@ -1380,6 +1419,7 @@ class SourceEvidence:
         self.projections: dict[
             tuple[SourceRecordRef, tuple[object, ...]], dict[str, RecordProjection]
         ] = {}
+        self.expected_tokens: dict[RecordProjection, str] = {}
         self.grouped: dict[tuple[str, tuple[str, ...]], list[SourceRecord]] = (
             defaultdict(list)
         )
@@ -1465,6 +1505,19 @@ class SourceEvidence:
             for column in columns:
                 grouped[column].append(record)
         return {column: tuple(records) for column, records in grouped.items()}
+
+    def expected_projections(
+        self, expected: RecordExpectation
+    ) -> dict[str, RecordProjection]:
+        """Reuse complete immutable guard values, including equivalent JSON clones."""
+        tokens: dict[str, RecordProjection] = {}
+        for projection in expected.alternatives:
+            token = self.expected_tokens.get(projection)
+            if token is None:
+                token = _model_token(projection)
+                self.expected_tokens[projection] = token
+            tokens[token] = projection
+        return tokens
 
     def projected_records(
         self, expected: RecordExpectation
@@ -1586,6 +1639,7 @@ def _evaluate_source_expectations(
                 expected=expected,
                 records=evidence.grouped.get(_ref_key(expected.ref), []),
                 actual_by_token=evidence.projected_records(expected),
+                expected_by_token=evidence.expected_projections(expected),
             )
             if issue is not None:
                 issues.append(issue)

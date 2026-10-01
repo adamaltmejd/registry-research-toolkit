@@ -2668,3 +2668,178 @@ def test_closed_alpha_certificate_refuses_complete_source_evidence_drift(drift):
     assert apply_coding_choices(
         SourceEvidence(rows, value_bindings={}), cases, coding={column: claims}
     ).diagnostics
+
+
+@pytest.mark.parametrize(
+    "drift", [None, "label", "code", "missing", "outside", "wrong", "sibling"]
+)
+def test_documented_label_witness_preserves_period_specific_missing_tokens(drift):
+    from reg_meta_build.source_coding import coding_source_sha256
+    from reg_meta_build.source_curation import CodeLabelEquivalence
+
+    record = _record()
+    base = replace(
+        _claim("Status", "30", "2016-01-01", "2016-12-31"),
+        members=tuple(
+            CodeMembershipClaim(code, label, TemporalScope(kind="year_independent"))
+            for code, label in (
+                ("30", "Matrix imputation"),
+                ("30", "Model imputation"),
+                ("6", "Missing"),
+            )
+        ),
+    )
+    future = replace(
+        base,
+        claim_id="future",
+        scope=TemporalScope(
+            kind="intervals",
+            intervals=(ScopeInterval(start="2017-01-01", end="2017-12-31"),),
+        ),
+        members=(
+            *base.members,
+            CodeMembershipClaim(
+                "NULL", "Missing", TemporalScope(kind="year_independent")
+            ),
+        ),
+    )
+    claims = (base, future)
+    authority = _row_authority(record, claims).model_copy(
+        update={
+            "raw_codings": [coding_source_sha256(c) for c in claims],
+            "label_equivalences": [
+                CodeLabelEquivalence(
+                    code="30",
+                    labels=("Matrix imputation", "Model imputation"),
+                    selected_label="Model imputation",
+                )
+            ],
+            "witness": ("2016-01-01", "2016-12-31"),
+        }
+    )
+    values = {
+        "members": [["30", "Model imputation"], ["6", "Missing"]],
+        "version_label": "Status",
+        "source_authority": authority,
+    }
+    cases, diagnostics, _, _, _, column = _compile_entry(
+        "documented", values, claims, record=record
+    )
+    assert not diagnostics
+    changed = claims
+    if drift == "label":
+        changed = (
+            replace(
+                base,
+                members=(
+                    replace(base.members[0], label="Other method"),
+                    *base.members[1:],
+                ),
+            ),
+            future,
+        )
+    elif drift == "code":
+        changed = (
+            replace(base, members=(*base.members, replace(base.members[2], code="7"))),
+            future,
+        )
+    elif drift == "missing":
+        changed = (future,)
+    elif drift == "sibling":
+        changed = (
+            base,
+            replace(
+                future,
+                members=(*future.members, replace(future.members[-1], code="NEW")),
+            ),
+        )
+    elif drift == "wrong":
+        values = {
+            **values,
+            "source_authority": authority.model_copy(
+                update={"witness": ("2017-01-01", "2017-12-31")}
+            ),
+        }
+        assert _compile_entry("documented", values, claims, record=record)[1]
+        return
+    elif drift == "outside":
+        values = {
+            **values,
+            "source_authority": authority.model_copy(
+                update={"witness": ("2015-01-01", "2015-12-31")}
+            ),
+        }
+        assert _compile_entry("documented", values, claims, record=record)[1]
+        return
+    result = apply_coding_choices((record,), cases, coding={column: changed})
+    assert result.coding[column].claims == changed
+    if drift is None:
+        selected = next(
+            s for s in result.coding[column].segments if s.valid_from == "2020-01-01"
+        )
+        assert set(selected.code_set.members) == {
+            ("30", "Model imputation"),
+            ("6", "Missing"),
+        }
+        # A later witnessed domain keeps its actual missing token.
+        later = {
+            **values,
+            "members": [*values["members"], ["NULL", "Missing"]],
+            "source_authority": authority.model_copy(
+                update={"witness": ("2017-01-01", "2017-12-31")}
+            ),
+        }
+        assert not _compile_entry("documented", later, claims, record=record)[1]
+    else:
+        assert result.accounting[0].status == "stale"
+        assert _compile_entry("documented", values, changed, record=record)[1]
+
+
+@pytest.mark.parametrize("contrary", [None, "code", "label"])
+def test_documented_witness_refuses_contrary_complete_target_domain(contrary):
+    from reg_meta_build.source_coding import coding_source_sha256
+    from reg_meta_build.source_curation import CodeLabelEquivalence
+
+    record = _record()
+    members = tuple(
+        CodeMembershipClaim(code, label, TemporalScope(kind="year_independent"))
+        for code, label in (("30", "Matrix"), ("30", "Model"), ("6", "Missing"))
+    )
+    witness = replace(
+        _claim("Status", "30", "2016-01-01", "2016-12-31"), members=members
+    )
+    target_members = (members[1], members[2])
+    if contrary == "code":
+        target_members = (*target_members, replace(members[2], code="7"))
+    elif contrary == "label":
+        target_members = (replace(members[1], label="Directly observed"), members[2])
+    target = replace(_claim("Status", "30"), claim_id="target", members=target_members)
+    claims = (witness, target)
+    authority = _row_authority(record, claims).model_copy(
+        update={
+            "raw_codings": [coding_source_sha256(c) for c in claims],
+            "witness": ("2016-01-01", "2016-12-31"),
+            "label_equivalences": [
+                CodeLabelEquivalence(
+                    code="30", labels=("Matrix", "Model"), selected_label="Model"
+                )
+            ],
+        }
+    )
+    values = {
+        "members": [["30", "Model"], ["6", "Missing"]],
+        "version_label": "Status",
+        "source_authority": authority,
+    }
+    cases, diagnostics, _, _, _, column = _compile_entry(
+        "documented", values, claims, record=record
+    )
+    if contrary:
+        assert diagnostics and not cases
+    else:
+        assert not diagnostics
+        result = apply_coding_choices((record,), cases, coding={column: claims})
+        assert not result.diagnostics and result.coding[column].claims == claims
+        # Ordinary documentary entries still cannot overwrite a complete source list.
+        values["source_authority"] = authority.model_copy(update={"witness": None})
+        assert _compile_entry("documented", values, claims, record=record)[1]

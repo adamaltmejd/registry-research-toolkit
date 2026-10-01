@@ -335,15 +335,90 @@ def _supported_association(
 
 
 def documented_source_members(
-    claims: tuple[CodeListClaim, ...], version_label: str, *, reviewed_labels: bool
+    claims: tuple[CodeListClaim, ...],
+    version_label: str,
+    *,
+    reviewed_labels: bool,
+    witness: tuple[str, str] | None = None,
 ) -> tuple[tuple[str | None, str | None], ...]:
     """Bound reviewed label equivalence to one exact positively supplied book."""
+    if witness is not None:
+        claims = tuple(
+            c
+            for c in coding_for_period(claims, *witness)
+            if c.version_label == version_label
+        )
+        windows = [
+            (date.fromordinal(lo).isoformat(), date.fromordinal(hi).isoformat())
+            for c in claims
+            for lo, hi in (coding_scope_bounds(c.scope) or ())
+        ]
+        keys = [{m.code for m in c.members} for c in claims]
+        if (
+            not claims
+            or not covers_window(windows, *witness)
+            or not keys[0]
+            or any(k != keys[0] for k in keys)
+            or any(
+                m.label is None
+                or not m.label.strip()
+                or m.unknown_validity
+                or (
+                    m.scope.kind != "year_independent"
+                    and not covers_window(
+                        [
+                            (
+                                date.fromordinal(lo).isoformat(),
+                                date.fromordinal(hi).isoformat(),
+                            )
+                            for lo, hi in (coding_scope_bounds(m.scope) or ())
+                        ],
+                        *witness,
+                    )
+                )
+                for c in claims
+                for m in c.members
+            )
+        ):
+            return ()
     return tuple(
         (member.code, member.label)
         for claim in claims
         if not reviewed_labels or claim.version_label == version_label
         for member in claim.members
     )
+
+
+def _documented_targets_match(
+    claims: tuple[CodeListClaim, ...],
+    selection: DocumentedCodingSelection,
+    start: str,
+    end: str,
+) -> bool:
+    """A witnessed label certificate cannot replace a contrary target domain."""
+    selected = dict(selection.members)
+    aliases = {entry.code: entry for entry in selection.label_equivalences}
+    for claim in coding_for_period(claims, start, end):
+        if not claim.members:
+            continue
+        normalized = []
+        for member in claim.members:
+            alias = aliases.get(member.code)
+            if member.code not in selected or not (
+                member.label == selected[member.code]
+                or alias is not None
+                and member.label in alias.labels
+            ):
+                return False
+            normalized.append(replace(member, label=selected[member.code]))
+        resolved = resolve_code_membership((replace(claim, members=tuple(normalized)),))
+        if any(
+            segment.code_set is None
+            or set(segment.code_set.members) != set(selection.members)
+            for segment in resolved.segments
+        ):
+            return False
+    return True
 
 
 def compile_coding_selection(
@@ -375,45 +450,55 @@ def compile_coding_selection(
         )
     complete = _complete_lists(claims, start, end)
     if kind == "documented":
-        if any(
+        documented = cast("CodingDocumentedEntry", entry)
+        witnessed_labels = (
+            documented.source_authority is not None
+            and documented.source_authority.witness is not None
+        )
+        if not witnessed_labels and any(
             segment.code_set is not None and segment.code_set.members
             for claim in coding_for_period(claims, start, end)
             for segment in resolve_code_membership((claim,)).segments
         ):
             return None, "stale", "period already has a complete source list"
-        documented = cast("CodingDocumentedEntry", entry)
-        return (
-            DocumentedCodingSelection(
-                members=documented.members,
-                version_label=documented.version_label,
-                source_scope=documented.source_authority.source_scope
-                if documented.source_authority is not None
-                else None,
-                enumeration=documented.source_authority.enumeration
-                if documented.source_authority is not None
-                else None,
-                expected_marker_bindings=tuple(
-                    sorted(documented.source_authority.marker_bindings)
-                )
-                if documented.source_authority is not None
-                and documented.source_authority.marker_bindings is not None
-                else None,
-                expected_source_codings=tuple(documented.source_authority.codings)
-                if documented.source_authority is not None
-                else None,
-                expected_raw_codings=tuple(
-                    sorted(documented.source_authority.raw_codings)
-                )
-                if documented.source_authority is not None
-                and documented.source_authority.raw_codings is not None
-                else None,
-                label_equivalences=tuple(documented.source_authority.label_equivalences)
-                if documented.source_authority is not None
-                else (),
-            ),
-            "matched",
-            "",
+        selection = DocumentedCodingSelection(
+            members=documented.members,
+            version_label=documented.version_label,
+            source_scope=documented.source_authority.source_scope
+            if documented.source_authority is not None
+            else None,
+            enumeration=documented.source_authority.enumeration
+            if documented.source_authority is not None
+            else None,
+            expected_marker_bindings=tuple(
+                sorted(documented.source_authority.marker_bindings)
+            )
+            if documented.source_authority is not None
+            and documented.source_authority.marker_bindings is not None
+            else None,
+            expected_source_codings=tuple(documented.source_authority.codings)
+            if documented.source_authority is not None
+            else None,
+            expected_raw_codings=tuple(sorted(documented.source_authority.raw_codings))
+            if documented.source_authority is not None
+            and documented.source_authority.raw_codings is not None
+            else None,
+            witness=documented.source_authority.witness
+            if documented.source_authority is not None
+            else None,
+            label_equivalences=tuple(documented.source_authority.label_equivalences)
+            if documented.source_authority is not None
+            else (),
         )
+        if witnessed_labels and not _documented_targets_match(
+            claims, selection, start, end
+        ):
+            return (
+                None,
+                "stale",
+                "target source domain contradicts witnessed label certificate",
+            )
+        return selection, "matched", ""
     if kind in {"uncoded", "omit"}:
         if complete:
             return None, "stale", "period has a complete nonempty list"
@@ -501,6 +586,10 @@ def _selection(
             selection, claims, decision.valid_from, decision.valid_to
         )
     if isinstance(selection, DocumentedCodingSelection):
+        if selection.witness is not None and not _documented_targets_match(
+            claims, selection, decision.valid_from, decision.valid_to
+        ):
+            return None, "documented_target_domain_changed"
         if (
             selection.expected_raw_codings is not None
             and tuple(sorted({coding_source_sha256(claim) for claim in claims}))
@@ -513,7 +602,10 @@ def _selection(
             != selection.expected_raw_codings
             or not documented_labels_match(
                 documented_source_members(
-                    claims, selection.version_label, reviewed_labels=True
+                    claims,
+                    selection.version_label,
+                    reviewed_labels=True,
+                    witness=selection.witness,
                 ),
                 selection.members,
                 selection.label_equivalences,

@@ -167,54 +167,40 @@ class SourceFields(_SourceModel):
     first_approved_at: SourceField | None = None
     last_approved_at: SourceField | None = None
 
+    @staticmethod
+    def require_typed_field(field_name: str, observation: SourceField) -> None:
+        """Validate a known field's meaning after SourceField validates its shape."""
+        if observation.status == "value":
+            value = observation.value
+            if field_name == "availability":
+                if value is not True:
+                    raise ValueError(
+                        "availability values must be true; use negative status for "
+                        "explicit nonavailability"
+                    )
+            elif field_name == "sensitivity":
+                if type(value) is not bool and value != "conditional":
+                    raise ValueError(
+                        "sensitivity must carry a boolean or the conditional marker"
+                    )
+            elif field_name in {"identifier", "conditional_sensitivity"}:
+                if type(value) is not bool:
+                    raise ValueError(f"{field_name} must carry a boolean")
+            elif not isinstance(value, str):
+                raise ValueError(f"{field_name} must carry a string value")
+        if observation.status == "negative" and field_name not in {
+            "availability",
+            "column_name",
+        }:
+            raise ValueError(
+                "explicit negative is supported only for availability and column_name"
+            )
+
     @model_validator(mode="after")
     def _typed_fields(self) -> Self:
-        if (
-            self.availability is not None
-            and self.availability.status == "value"
-            and self.availability.value is not True
-        ):
-            raise ValueError(
-                "availability values must be true; use negative status for "
-                "explicit nonavailability"
-            )
-        if self.sensitivity is not None and self.sensitivity.status == "value":
-            value = self.sensitivity.value
-            if type(value) is not bool and value != "conditional":
-                raise ValueError(
-                    "sensitivity must carry a boolean or the conditional marker"
-                )
-        for field_name in ("identifier", "conditional_sensitivity"):
-            observation = getattr(self, field_name)
-            if (
-                observation is not None
-                and observation.status == "value"
-                and type(observation.value) is not bool
-            ):
-                raise ValueError(f"{field_name} must carry a boolean")
-        for field_name in type(self).model_fields.keys() - {
-            "availability",
-            "sensitivity",
-            "identifier",
-            "conditional_sensitivity",
-        }:
-            observation = getattr(self, field_name)
-            if (
-                observation is not None
-                and observation.status == "value"
-                and not isinstance(observation.value, str)
-            ):
-                raise ValueError(f"{field_name} must carry a string value")
         for field_name in type(self).model_fields:
-            observation = getattr(self, field_name)
-            if (
-                observation is not None
-                and observation.status == "negative"
-                and field_name not in {"availability", "column_name"}
-            ):
-                raise ValueError(
-                    "explicit negative is supported only for availability and column_name"
-                )
+            if (observation := getattr(self, field_name)) is not None:
+                self.require_typed_field(field_name, observation)
         return self
 
 

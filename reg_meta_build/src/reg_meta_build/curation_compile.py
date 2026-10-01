@@ -102,6 +102,7 @@ from .source_curation import (
     CurationCase,
     DeliveryMetadataDecision,
     FieldExpectation,
+    GuardValidationContext,
     OccurrenceCorrectionDecision,
     PeerGuard,
     RepresentationDecision,
@@ -4502,6 +4503,7 @@ def compile_coding_register(
                                     claims,
                                     entry.version_label,
                                     reviewed_labels=bool(authority.label_equivalences),
+                                    witness=authority.witness,
                                 ),
                                 entry.members,
                                 authority.label_equivalences,
@@ -6203,7 +6205,8 @@ def compile_deferred_naming(
         CompiledScope.model_validate_json(
             scope.model_copy(
                 update={"naming": naming.get((scope.source, scope.register_key), ())}
-            ).model_dump_json()
+            ).model_dump_json(),
+            context=GuardValidationContext(),
         )
         for scope in scopes
     )
@@ -6246,7 +6249,8 @@ def compile_curation(
         CompiledScope.model_validate_json(
             scope.model_copy(
                 update={"naming": naming.get((scope.source, scope.register_key), ())}
-            ).model_dump_json()
+            ).model_dump_json(),
+            context=GuardValidationContext(),
         )
         for scope in scopes
     )
