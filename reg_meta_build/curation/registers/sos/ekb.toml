@@ -1911,3 +1911,165 @@ slug = "tandvard-december"
 native_id = "5352018376318353790.UTLHH"
 slug = "utlanskt-hushall"
 # register 5369119272181688462
+
+# Batch47: exact unresolved dictionary links remain visible limitations.
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variable', 'native-str', 'AVSLUTHH01', 'variant-key', 'Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variant', 'name', 'EKB_AR', 'column', 'AVSLUTHH01')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:AVSLUTHH01\"],\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\"}"]
+valid_from = "2017-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx@sha256:5498215276150954903f0ff7c780c0d26d0c8b07f9f24043eddbc497218862cb. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variable', 'native-str', 'AVSLUTHH02', 'variant-key', 'Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variant', 'name', 'EKB_AR', 'column', 'AVSLUTHH02')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:AVSLUTHH02\"],\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\"}"]
+valid_from = "2017-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx@sha256:5498215276150954903f0ff7c780c0d26d0c8b07f9f24043eddbc497218862cb. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variable', 'native-str', 'AVSLUTHH03', 'variant-key', 'Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variant', 'name', 'EKB_AR', 'column', 'AVSLUTHH03')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:AVSLUTHH03\"],\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\"}"]
+valid_from = "2017-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx@sha256:5498215276150954903f0ff7c780c0d26d0c8b07f9f24043eddbc497218862cb. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variable', 'native-str', 'AVSLUTHH04', 'variant-key', 'Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variant', 'name', 'EKB_AR', 'column', 'AVSLUTHH04')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:AVSLUTHH04\"],\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\"}"]
+valid_from = "2017-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx@sha256:5498215276150954903f0ff7c780c0d26d0c8b07f9f24043eddbc497218862cb. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variable', 'native-str', 'AVSLUTHH05', 'variant-key', 'Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variant', 'name', 'EKB_AR', 'column', 'AVSLUTHH05')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:AVSLUTHH05\"],\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\"}"]
+valid_from = "2017-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx@sha256:5498215276150954903f0ff7c780c0d26d0c8b07f9f24043eddbc497218862cb. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variable', 'native-str', 'AVSLUTHH06', 'variant-key', 'Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variant', 'name', 'EKB_AR', 'column', 'AVSLUTHH06')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:AVSLUTHH06\"],\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\"}"]
+valid_from = "2017-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx@sha256:5498215276150954903f0ff7c780c0d26d0c8b07f9f24043eddbc497218862cb. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variable', 'native-str', 'AVSLUTHH07', 'variant-key', 'Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variant', 'name', 'EKB_AR', 'column', 'AVSLUTHH07')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:AVSLUTHH07\"],\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\"}"]
+valid_from = "2017-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx@sha256:5498215276150954903f0ff7c780c0d26d0c8b07f9f24043eddbc497218862cb. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variable', 'native-str', 'AVSLUTHH08', 'variant-key', 'Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variant', 'name', 'EKB_AR', 'column', 'AVSLUTHH08')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:AVSLUTHH08\"],\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\"}"]
+valid_from = "2017-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx@sha256:5498215276150954903f0ff7c780c0d26d0c8b07f9f24043eddbc497218862cb. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variable', 'native-str', 'AVSLUTHH09', 'variant-key', 'Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variant', 'name', 'EKB_AR', 'column', 'AVSLUTHH09')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:AVSLUTHH09\"],\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\"}"]
+valid_from = "2017-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx@sha256:5498215276150954903f0ff7c780c0d26d0c8b07f9f24043eddbc497218862cb. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variable', 'native-str', 'AVSLUTHH10', 'variant-key', 'Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variant', 'name', 'EKB_AR', 'column', 'AVSLUTHH10')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:AVSLUTHH10\"],\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\"}"]
+valid_from = "2017-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx@sha256:5498215276150954903f0ff7c780c0d26d0c8b07f9f24043eddbc497218862cb. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variable', 'native-str', 'AVSLUTHH11', 'variant-key', 'Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variant', 'name', 'EKB_AR', 'column', 'AVSLUTHH11')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:AVSLUTHH11\"],\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\"}"]
+valid_from = "2017-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx@sha256:5498215276150954903f0ff7c780c0d26d0c8b07f9f24043eddbc497218862cb. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variable', 'native-str', 'AVSLUTHH12', 'variant-key', 'Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variant', 'name', 'EKB_AR', 'column', 'AVSLUTHH12')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:AVSLUTHH12\"],\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\"}"]
+valid_from = "2017-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx@sha256:5498215276150954903f0ff7c780c0d26d0c8b07f9f24043eddbc497218862cb. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variable', 'native-str', 'HHAVSLUT', 'variant-key', 'Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variant', 'name', 'EKB_MANAD', 'column', 'HHAVSLUT')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_MANAD\",\"variable:HHAVSLUT\"],\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\"}"]
+valid_from = "2017-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx@sha256:5498215276150954903f0ff7c780c0d26d0c8b07f9f24043eddbc497218862cb. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variable', 'native-str', 'KOMMUN', 'variant-key', 'Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variant', 'name', 'EKB_MANAD', 'column', 'KOMMUN')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_MANAD\",\"variable:KOMMUN\"],\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\"}"]
+valid_from = "1990-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx@sha256:5498215276150954903f0ff7c780c0d26d0c8b07f9f24043eddbc497218862cb. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variant', 'name', 'EKB_AR', 'column', 'LK')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_AR\",\"variable:LK\"],\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\"}"]
+valid_from = "1990-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx@sha256:5498215276150954903f0ff7c780c0d26d0c8b07f9f24043eddbc497218862cb. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx', 'sos', 'register', 'name', 'Registret över ekonomiskt bistånd', 'variant', 'name', 'EKB_MANAD', 'column', 'LK')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över ekonomiskt bistånd\",\"deldatamangd:EKB_MANAD\",\"variable:LK\"],\"source\":\"Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx\"}"]
+valid_from = "1990-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx@sha256:5498215276150954903f0ff7c780c0d26d0c8b07f9f24043eddbc497218862cb. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."

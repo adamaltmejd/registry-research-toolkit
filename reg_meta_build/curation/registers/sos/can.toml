@@ -263,3 +263,175 @@ expected_representation = "1=höger 2=vänster 9=okänd"
 expected_description = "Sida. Vid pariga organ och kroppsdelar ska sida anges."
 evidence = "Metadata - Variabelnivå row:66: The source gives a local response domain or record-identifier construction; HSLF-FS 2016:7 is a reporting regulation, not the identity of an external classification book. Original link, representation, description and every source code remain in accepted evidence."
 noted = "2026-10-01"
+
+# Batch47: exact unresolved dictionary links remain visible limitations.
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variable', 'native-str', 'FIGO', 'variant-key', 'Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variant', 'name', 'CAN', 'column', 'FIGO')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Cancerregistret\",\"deldatamangd:CAN\",\"variable:FIGO\"],\"source\":\"Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx\"}"]
+valid_from = "2004-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx@sha256:c3c236d58f0225a99c44637cf9d2e7ff5bc50e627917f307b5faa9f95b9da09d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variable', 'native-str', 'HEMFR', 'variant-key', 'Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variant', 'name', 'CAN', 'column', 'HEMFR')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Cancerregistret\",\"deldatamangd:CAN\",\"variable:HEMFR\"],\"source\":\"Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx\"}"]
+valid_from = "1971-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx@sha256:c3c236d58f0225a99c44637cf9d2e7ff5bc50e627917f307b5faa9f95b9da09d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variable', 'native-str', 'ICD7', 'variant-key', 'Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variant', 'name', 'CAN', 'column', 'ICD7')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Cancerregistret\",\"deldatamangd:CAN\",\"variable:ICD7\"],\"source\":\"Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx\"}"]
+valid_from = "1958-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx@sha256:c3c236d58f0225a99c44637cf9d2e7ff5bc50e627917f307b5faa9f95b9da09d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variable', 'native-str', 'ICD9', 'variant-key', 'Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variant', 'name', 'CAN', 'column', 'ICD9')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Cancerregistret\",\"deldatamangd:CAN\",\"variable:ICD9\"],\"source\":\"Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx\"}"]
+valid_from = "1987-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx@sha256:c3c236d58f0225a99c44637cf9d2e7ff5bc50e627917f307b5faa9f95b9da09d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variable', 'native-str', 'ICDO10', 'variant-key', 'Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variant', 'name', 'CAN', 'column', 'ICDO10')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Cancerregistret\",\"deldatamangd:CAN\",\"variable:ICDO10\"],\"source\":\"Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx\"}"]
+valid_from = "1993-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx@sha256:c3c236d58f0225a99c44637cf9d2e7ff5bc50e627917f307b5faa9f95b9da09d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variable', 'native-str', 'ICDO3', 'variant-key', 'Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variant', 'name', 'CAN', 'column', 'ICDO3')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Cancerregistret\",\"deldatamangd:CAN\",\"variable:ICDO3\"],\"source\":\"Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx\"}"]
+valid_from = "2005-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx@sha256:c3c236d58f0225a99c44637cf9d2e7ff5bc50e627917f307b5faa9f95b9da09d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variable', 'native-str', 'KLINIK', 'variant-key', 'Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variant', 'name', 'CAN', 'column', 'KLINIK')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Cancerregistret\",\"deldatamangd:CAN\",\"variable:KLINIK\"],\"source\":\"Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx\"}"]
+valid_from = "1958-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx@sha256:c3c236d58f0225a99c44637cf9d2e7ff5bc50e627917f307b5faa9f95b9da09d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variable', 'native-str', 'LKF', 'variant-key', 'Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variant', 'name', 'CAN', 'column', 'LKF')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Cancerregistret\",\"deldatamangd:CAN\",\"variable:LKF\"],\"source\":\"Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx\"}"]
+valid_from = "1958-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx@sha256:c3c236d58f0225a99c44637cf9d2e7ff5bc50e627917f307b5faa9f95b9da09d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variable', 'native-str', 'M', 'variant-key', 'Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variant', 'name', 'CAN', 'column', 'M')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Cancerregistret\",\"deldatamangd:CAN\",\"variable:M\"],\"source\":\"Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx\"}"]
+valid_from = "2004-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx@sha256:c3c236d58f0225a99c44637cf9d2e7ff5bc50e627917f307b5faa9f95b9da09d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variable', 'native-str', 'N', 'variant-key', 'Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variant', 'name', 'CAN', 'column', 'N')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Cancerregistret\",\"deldatamangd:CAN\",\"variable:N\"],\"source\":\"Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx\"}"]
+valid_from = "2004-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx@sha256:c3c236d58f0225a99c44637cf9d2e7ff5bc50e627917f307b5faa9f95b9da09d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variable', 'native-str', 'PAD', 'variant-key', 'Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variant', 'name', 'CAN', 'column', 'PAD')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Cancerregistret\",\"deldatamangd:CAN\",\"variable:PAD\"],\"source\":\"Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx\"}"]
+valid_from = "1958-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx@sha256:c3c236d58f0225a99c44637cf9d2e7ff5bc50e627917f307b5faa9f95b9da09d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variable', 'native-str', 'PAT', 'variant-key', 'Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variant', 'name', 'CAN', 'column', 'PAT')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Cancerregistret\",\"deldatamangd:CAN\",\"variable:PAT\"],\"source\":\"Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx\"}"]
+valid_from = "1971-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx@sha256:c3c236d58f0225a99c44637cf9d2e7ff5bc50e627917f307b5faa9f95b9da09d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variable', 'native-str', 'PAT', 'variant-key', 'Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variant', 'name', 'CAN_BC', 'column', 'PAT')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Cancerregistret\",\"deldatamangd:CAN_BC\",\"variable:PAT\"],\"source\":\"Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx\"}"]
+valid_from = "2004-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx@sha256:c3c236d58f0225a99c44637cf9d2e7ff5bc50e627917f307b5faa9f95b9da09d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variable', 'native-str', 'SJUKHUS', 'variant-key', 'Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variant', 'name', 'CAN', 'column', 'SJUKHUS')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Cancerregistret\",\"deldatamangd:CAN\",\"variable:SJUKHUS\"],\"source\":\"Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx\"}"]
+valid_from = "1958-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx@sha256:c3c236d58f0225a99c44637cf9d2e7ff5bc50e627917f307b5faa9f95b9da09d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variable', 'native-str', 'SNOMED3', 'variant-key', 'Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variant', 'name', 'CAN', 'column', 'SNOMED3')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Cancerregistret\",\"deldatamangd:CAN\",\"variable:SNOMED3\"],\"source\":\"Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx\"}"]
+valid_from = "2005-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx@sha256:c3c236d58f0225a99c44637cf9d2e7ff5bc50e627917f307b5faa9f95b9da09d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variable', 'native-str', 'SNOMEDO10', 'variant-key', 'Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variant', 'name', 'CAN', 'column', 'SNOMEDO10')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Cancerregistret\",\"deldatamangd:CAN\",\"variable:SNOMEDO10\"],\"source\":\"Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx\"}"]
+valid_from = "1993-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx@sha256:c3c236d58f0225a99c44637cf9d2e7ff5bc50e627917f307b5faa9f95b9da09d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variable', 'native-str', 'T', 'variant-key', 'Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx', 'sos', 'register', 'name', 'Cancerregistret', 'variant', 'name', 'CAN', 'column', 'T')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Cancerregistret\",\"deldatamangd:CAN\",\"variable:T\"],\"source\":\"Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx\"}"]
+valid_from = "2004-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx@sha256:c3c236d58f0225a99c44637cf9d2e7ff5bc50e627917f307b5faa9f95b9da09d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."

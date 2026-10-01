@@ -133,3 +133,55 @@ slug = "yrkesbeteckning-4"
 native_id = "6512206290021964828.YRKESBET5"
 slug = "yrkesbeteckning-5"
 # register 7119586976865944958
+
+# Batch47: exact unresolved dictionary links remain visible limitations.
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx', 'sos', 'register', 'name', 'Insatser inom kommunal hälso- och sjukvård', 'variable', 'native-str', 'HKOM', 'variant-key', 'Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx', 'sos', 'register', 'name', 'Insatser inom kommunal hälso- och sjukvård', 'variant', 'name', 'HSL', 'column', 'HKOM')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Insatser inom kommunal hälso- och sjukvård\",\"deldatamangd:HSL\",\"variable:HKOM\"],\"source\":\"Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx\"}"]
+valid_from = "2007-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx@sha256:1d32122e7706ebc9e595871cd024de8286e80119ef52f62c8064e6c01fe995e9. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx', 'sos', 'register', 'name', 'Insatser inom kommunal hälso- och sjukvård', 'variable', 'native-str', 'HKOM_JANJUN', 'variant-key', 'Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx', 'sos', 'register', 'name', 'Insatser inom kommunal hälso- och sjukvård', 'variant', 'name', 'HSL', 'column', 'HKOM_JANJUN')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Insatser inom kommunal hälso- och sjukvård\",\"deldatamangd:HSL\",\"variable:HKOM_JANJUN\"],\"source\":\"Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx\"}"]
+valid_from = "2008-01-01"
+valid_to = "2013-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx@sha256:1d32122e7706ebc9e595871cd024de8286e80119ef52f62c8064e6c01fe995e9. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx', 'sos', 'register', 'name', 'Insatser inom kommunal hälso- och sjukvård', 'variable', 'native-str', 'HKOM_JULDEC', 'variant-key', 'Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx', 'sos', 'register', 'name', 'Insatser inom kommunal hälso- och sjukvård', 'variant', 'name', 'HSL', 'column', 'HKOM_JULDEC')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Insatser inom kommunal hälso- och sjukvård\",\"deldatamangd:HSL\",\"variable:HKOM_JULDEC\"],\"source\":\"Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx\"}"]
+valid_from = "2008-01-01"
+valid_to = "2013-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx@sha256:1d32122e7706ebc9e595871cd024de8286e80119ef52f62c8064e6c01fe995e9. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx', 'sos', 'register', 'name', 'Insatser inom kommunal hälso- och sjukvård', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx', 'sos', 'register', 'name', 'Insatser inom kommunal hälso- och sjukvård', 'variant', 'name', 'HSL', 'column', 'LK')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Insatser inom kommunal hälso- och sjukvård\",\"deldatamangd:HSL\",\"variable:LK\"],\"source\":\"Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx\"}"]
+valid_from = "2007-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx@sha256:1d32122e7706ebc9e595871cd024de8286e80119ef52f62c8064e6c01fe995e9. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx', 'sos', 'register', 'name', 'Insatser inom kommunal hälso- och sjukvård', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx', 'sos', 'register', 'name', 'Insatser inom kommunal hälso- och sjukvård', 'variant', 'name', 'HSL2', 'column', 'LK')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Insatser inom kommunal hälso- och sjukvård\",\"deldatamangd:HSL2\",\"variable:LK\"],\"source\":\"Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx\"}"]
+valid_from = "2019-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx@sha256:1d32122e7706ebc9e595871cd024de8286e80119ef52f62c8064e6c01fe995e9. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."

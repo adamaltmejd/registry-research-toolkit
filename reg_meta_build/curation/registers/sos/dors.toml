@@ -779,3 +779,655 @@ expected_representation = "1-99, GA, GK, eller Blank"
 expected_description = "Koden används för att styra vissa av de maskinella granskingarna vid databearbetningen"
 evidence = "Metadata - Variabelnivå row:51: The classification-link cell is the literal 0, while the source defines an internal review-code domain;0 is not a named external classification book. Original link, representation, description and every source code remain in accepted evidence."
 noted = "2026-10-01"
+
+# Batch47: exact unresolved dictionary links remain visible limitations.
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'DBGRUND1', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'DBGRUND1')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:DBGRUND1\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1952-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'DOD_KOMMUN', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'DOD_KOMMUN')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:DOD_KOMMUN\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "2015-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'FLAND', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'FLAND')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:FLAND\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'FODLAND', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'FODLAND')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:FODLAND\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1961-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'FOD_LAN', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'FOD_LAN')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:FOD_LAN\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1969-01-01"
+valid_to = "1996-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'KAP19', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'COV_DORS_HERMES', 'column', 'KAP19')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS-COV\",\"variable:KAP19\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "2020-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'KAP19', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'KAP19')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:KAP19\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'KAP22', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'KAP22')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:KAP22\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "2027-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'KBASIC', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'KBASIC')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:KBASIC\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1987-01-01"
+valid_to = "1996-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'COV_DORS_HERMES', 'column', 'LK')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS-COV\",\"variable:LK\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "2020-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'LK')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:LK\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1958-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'LKF', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'LKF')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:LKF\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1952-01-01"
+valid_to = "2015-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK1', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK1')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK1\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1960-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK10', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK10')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK10\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1987-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK11', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK11')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK11\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1987-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK12', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK12')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK12\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1987-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK13', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK13')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK13\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK14', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK14')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK14\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK15', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK15')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK15\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK16', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK16')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK16\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK17', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK17')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK17\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK18', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK18')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK18\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK19', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK19')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK19\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK2', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK2')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK2\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1960-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK20', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK20')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK20\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK21', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK21')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK21\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK22', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK22')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK22\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK23', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK23')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK23\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK24', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK24')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK24\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK25', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK25')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK25\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK26', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK26')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK26\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK27', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK27')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK27\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK28', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK28')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK28\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK29', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK29')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK29\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK3', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK3')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK3\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1960-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK30', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK30')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK30\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK31', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK31')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK31\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK32', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK32')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK32\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK33', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK33')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK33\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK34', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK34')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK34\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK35', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK35')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK35\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK36', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK36')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK36\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK37', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK37')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK37\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK38', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK38')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK38\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK39', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK39')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK39\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK4', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK4')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK4\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1961-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK40', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK40')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK40\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK41', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK41')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK41\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK42', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK42')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK42\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK43', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK43')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK43\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK44', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK44')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK44\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK45', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK45')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK45\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK46', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK46')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK46\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK47', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK47')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK47\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK48', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK48')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK48\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1997-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK5', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK5')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK5\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1961-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK6', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK6')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK6\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1961-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK7', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK7')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK7\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1987-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK8', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK8')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK8\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1987-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'MORSAK9', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'MORSAK9')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:MORSAK9\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1987-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'NATION', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'NATION')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:NATION\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1961-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'UBASIC', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'UBASIC')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:UBASIC\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1987-01-01"
+valid_to = "1996-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'ULORSAK', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'COV_DORS_HERMES', 'column', 'ULORSAK')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS-COV\",\"variable:ULORSAK\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "2020-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'ULORSAK', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'ULORSAK')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:ULORSAK\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1952-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares ICD coding with the edition and instructions applicable each year. Those exact historical dictionaries are not verified here. Original disease codes and declarations remain; no modern dictionary is substituted and no verified classification link is asserted."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variable', 'native-str', 'UNORDL', 'variant-key', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'sos', 'register', 'name', 'Dödsorsaksregistret', 'variant', 'name', 'DORS', 'column', 'UNORDL')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Dödsorsaksregistret\",\"deldatamangd:DORS\",\"variable:UNORDL\"],\"source\":\"Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx\"}"]
+valid_from = "1987-01-01"
+valid_to = "1996-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."

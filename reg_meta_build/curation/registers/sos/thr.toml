@@ -97,3 +97,125 @@ slug = "personnummerkvalitet"
 native_id = "8948214044434034899.SENINV"
 slug = "senaste-invandring"
 # register 9047831179457584381
+
+# Batch47: exact unresolved dictionary links remain visible limitations.
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variable', 'native-str', 'FODLAND', 'variant-key', 'Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variant', 'name', 'THR_BESOK', 'column', 'FODLAND')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Tandhälsoregistret\",\"deldatamangd:THR_BESOK\",\"variable:FODLAND\"],\"source\":\"Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx\"}"]
+valid_from = "2008-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx@sha256:705ac464374e2c475078bc40183690609fe797ed943ad52cc68b411a2db4dd0f. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variable', 'native-str', 'FODLAND', 'variant-key', 'Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variant', 'name', 'THR_BESOK_LANDSTING', 'column', 'FODLAND')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Tandhälsoregistret\",\"deldatamangd:THR_BESOK_LANDSTING\",\"variable:FODLAND\"],\"source\":\"Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx\"}"]
+valid_from = "2008-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx@sha256:705ac464374e2c475078bc40183690609fe797ed943ad52cc68b411a2db4dd0f. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variable', 'native-str', 'LKF', 'variant-key', 'Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variant', 'name', 'THR_BESOK', 'column', 'LKF')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Tandhälsoregistret\",\"deldatamangd:THR_BESOK\",\"variable:LKF\"],\"source\":\"Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx\"}"]
+valid_from = "2008-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx@sha256:705ac464374e2c475078bc40183690609fe797ed943ad52cc68b411a2db4dd0f. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variable', 'native-str', 'LKF', 'variant-key', 'Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variant', 'name', 'THR_BESOK_LANDSTING', 'column', 'LKF')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Tandhälsoregistret\",\"deldatamangd:THR_BESOK_LANDSTING\",\"variable:LKF\"],\"source\":\"Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx\"}"]
+valid_from = "2008-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx@sha256:705ac464374e2c475078bc40183690609fe797ed943ad52cc68b411a2db4dd0f. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variable', 'native-str', 'LKF', 'variant-key', 'Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variant', 'name', 'THR_TANDHALSA', 'column', 'LKF')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Tandhälsoregistret\",\"deldatamangd:THR_TANDHALSA\",\"variable:LKF\"],\"source\":\"Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx\"}"]
+valid_from = "2008-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx@sha256:705ac464374e2c475078bc40183690609fe797ed943ad52cc68b411a2db4dd0f. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variable', 'native-str', 'LKF', 'variant-key', 'Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variant', 'name', 'THR_TANDHALSA_LANDSTING', 'column', 'LKF')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Tandhälsoregistret\",\"deldatamangd:THR_TANDHALSA_LANDSTING\",\"variable:LKF\"],\"source\":\"Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx\"}"]
+valid_from = "2008-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx@sha256:705ac464374e2c475078bc40183690609fe797ed943ad52cc68b411a2db4dd0f. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variable', 'native-str', 'MEDBORG', 'variant-key', 'Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variant', 'name', 'THR_BESOK', 'column', 'MEDBORG')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Tandhälsoregistret\",\"deldatamangd:THR_BESOK\",\"variable:MEDBORG\"],\"source\":\"Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx\"}"]
+valid_from = "2008-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx@sha256:705ac464374e2c475078bc40183690609fe797ed943ad52cc68b411a2db4dd0f. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variable', 'native-str', 'MEDBORG', 'variant-key', 'Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variant', 'name', 'THR_BESOK_LANDSTING', 'column', 'MEDBORG')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Tandhälsoregistret\",\"deldatamangd:THR_BESOK_LANDSTING\",\"variable:MEDBORG\"],\"source\":\"Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx\"}"]
+valid_from = "2008-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx@sha256:705ac464374e2c475078bc40183690609fe797ed943ad52cc68b411a2db4dd0f. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variable', 'native-str', 'MEDBORG', 'variant-key', 'Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variant', 'name', 'THR_TANDHALSA', 'column', 'MEDBORG')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Tandhälsoregistret\",\"deldatamangd:THR_TANDHALSA\",\"variable:MEDBORG\"],\"source\":\"Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx\"}"]
+valid_from = "2008-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx@sha256:705ac464374e2c475078bc40183690609fe797ed943ad52cc68b411a2db4dd0f. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variable', 'native-str', 'MEDBORG', 'variant-key', 'Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variant', 'name', 'THR_TANDHALSA_LANDSTING', 'column', 'MEDBORG')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Tandhälsoregistret\",\"deldatamangd:THR_TANDHALSA_LANDSTING\",\"variable:MEDBORG\"],\"source\":\"Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx\"}"]
+valid_from = "2008-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx@sha256:705ac464374e2c475078bc40183690609fe797ed943ad52cc68b411a2db4dd0f. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variable', 'native-str', 'POSTKOD', 'variant-key', 'Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variant', 'name', 'THR_BESOK', 'column', 'POSTKOD')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Tandhälsoregistret\",\"deldatamangd:THR_BESOK\",\"variable:POSTKOD\"],\"source\":\"Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx\"}"]
+valid_from = "2008-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx@sha256:705ac464374e2c475078bc40183690609fe797ed943ad52cc68b411a2db4dd0f. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variable', 'native-str', 'POSTKOD', 'variant-key', 'Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx', 'sos', 'register', 'name', 'Tandhälsoregistret', 'variant', 'name', 'THR_BESOK_LANDSTING', 'column', 'POSTKOD')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Tandhälsoregistret\",\"deldatamangd:THR_BESOK_LANDSTING\",\"variable:POSTKOD\"],\"source\":\"Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx\"}"]
+valid_from = "2008-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx@sha256:705ac464374e2c475078bc40183690609fe797ed943ad52cc68b411a2db4dd0f. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."

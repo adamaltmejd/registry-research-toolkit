@@ -150,3 +150,135 @@ slug = "utforande-kommun-lss-9-9-sarskild"
 native_id = "5028920659479690770.UK92"
 slug = "utforande-kommun-lss-9-9-bostad"
 # register 5352018376318353790
+
+# Batch47: exact unresolved dictionary links remain visible limitations.
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variant', 'not-applicable', 'column', 'LK')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Insatser enligt lagen om stöd och service till vissa funktionshindrade\",\"deldatamangd:LSS\",\"variable:LK\"],\"source\":\"Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx\"}"]
+valid_from = "1999-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx@sha256:51efc49437d907ce15e3149ada931cfbe60c40ed6d43cc656c1c5d6d6bb2f07c. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variable', 'native-str', 'UK10', 'variant-key', 'Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variant', 'not-applicable', 'column', 'UK10')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Insatser enligt lagen om stöd och service till vissa funktionshindrade\",\"deldatamangd:LSS\",\"variable:UK10\"],\"source\":\"Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx\"}"]
+valid_from = "1999-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx@sha256:51efc49437d907ce15e3149ada931cfbe60c40ed6d43cc656c1c5d6d6bb2f07c. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variable', 'native-str', 'UK2', 'variant-key', 'Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variant', 'not-applicable', 'column', 'UK2')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Insatser enligt lagen om stöd och service till vissa funktionshindrade\",\"deldatamangd:LSS\",\"variable:UK2\"],\"source\":\"Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx\"}"]
+valid_from = "1999-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx@sha256:51efc49437d907ce15e3149ada931cfbe60c40ed6d43cc656c1c5d6d6bb2f07c. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variable', 'native-str', 'UK3', 'variant-key', 'Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variant', 'not-applicable', 'column', 'UK3')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Insatser enligt lagen om stöd och service till vissa funktionshindrade\",\"deldatamangd:LSS\",\"variable:UK3\"],\"source\":\"Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx\"}"]
+valid_from = "1999-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx@sha256:51efc49437d907ce15e3149ada931cfbe60c40ed6d43cc656c1c5d6d6bb2f07c. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variable', 'native-str', 'UK4', 'variant-key', 'Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variant', 'not-applicable', 'column', 'UK4')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Insatser enligt lagen om stöd och service till vissa funktionshindrade\",\"deldatamangd:LSS\",\"variable:UK4\"],\"source\":\"Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx\"}"]
+valid_from = "1999-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx@sha256:51efc49437d907ce15e3149ada931cfbe60c40ed6d43cc656c1c5d6d6bb2f07c. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variable', 'native-str', 'UK5', 'variant-key', 'Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variant', 'not-applicable', 'column', 'UK5')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Insatser enligt lagen om stöd och service till vissa funktionshindrade\",\"deldatamangd:LSS\",\"variable:UK5\"],\"source\":\"Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx\"}"]
+valid_from = "1999-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx@sha256:51efc49437d907ce15e3149ada931cfbe60c40ed6d43cc656c1c5d6d6bb2f07c. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variable', 'native-str', 'UK6', 'variant-key', 'Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variant', 'not-applicable', 'column', 'UK6')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Insatser enligt lagen om stöd och service till vissa funktionshindrade\",\"deldatamangd:LSS\",\"variable:UK6\"],\"source\":\"Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx\"}"]
+valid_from = "1999-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx@sha256:51efc49437d907ce15e3149ada931cfbe60c40ed6d43cc656c1c5d6d6bb2f07c. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variable', 'native-str', 'UK7', 'variant-key', 'Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variant', 'not-applicable', 'column', 'UK7')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Insatser enligt lagen om stöd och service till vissa funktionshindrade\",\"deldatamangd:LSS\",\"variable:UK7\"],\"source\":\"Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx\"}"]
+valid_from = "1999-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx@sha256:51efc49437d907ce15e3149ada931cfbe60c40ed6d43cc656c1c5d6d6bb2f07c. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variable', 'native-str', 'UK81', 'variant-key', 'Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variant', 'not-applicable', 'column', 'UK81')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Insatser enligt lagen om stöd och service till vissa funktionshindrade\",\"deldatamangd:LSS\",\"variable:UK81\"],\"source\":\"Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx\"}"]
+valid_from = "1999-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx@sha256:51efc49437d907ce15e3149ada931cfbe60c40ed6d43cc656c1c5d6d6bb2f07c. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variable', 'native-str', 'UK82', 'variant-key', 'Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variant', 'not-applicable', 'column', 'UK82')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Insatser enligt lagen om stöd och service till vissa funktionshindrade\",\"deldatamangd:LSS\",\"variable:UK82\"],\"source\":\"Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx\"}"]
+valid_from = "1999-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx@sha256:51efc49437d907ce15e3149ada931cfbe60c40ed6d43cc656c1c5d6d6bb2f07c. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variable', 'native-str', 'UK9', 'variant-key', 'Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variant', 'not-applicable', 'column', 'UK9')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Insatser enligt lagen om stöd och service till vissa funktionshindrade\",\"deldatamangd:LSS\",\"variable:UK9\"],\"source\":\"Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx\"}"]
+valid_from = "1999-01-01"
+valid_to = "2003-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx@sha256:51efc49437d907ce15e3149ada931cfbe60c40ed6d43cc656c1c5d6d6bb2f07c. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variable', 'native-str', 'UK91', 'variant-key', 'Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variant', 'not-applicable', 'column', 'UK91')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Insatser enligt lagen om stöd och service till vissa funktionshindrade\",\"deldatamangd:LSS\",\"variable:UK91\"],\"source\":\"Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx\"}"]
+valid_from = "2004-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx@sha256:51efc49437d907ce15e3149ada931cfbe60c40ed6d43cc656c1c5d6d6bb2f07c. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variable', 'native-str', 'UK92', 'variant-key', 'Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx', 'sos', 'register', 'name', 'Insatser enligt lagen om stöd och service till vissa funktionshindrade', 'variant', 'not-applicable', 'column', 'UK92')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Insatser enligt lagen om stöd och service till vissa funktionshindrade\",\"deldatamangd:LSS\",\"variable:UK92\"],\"source\":\"Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx\"}"]
+valid_from = "2004-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx@sha256:51efc49437d907ce15e3149ada931cfbe60c40ed6d43cc656c1c5d6d6bb2f07c. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."

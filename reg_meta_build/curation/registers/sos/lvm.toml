@@ -90,3 +90,75 @@ slug = "personnummerkvalitet"
 native_id = "6293204766641962219.PROVN"
 slug = "provningsbeslut"
 # register 6512206290021964828
+
+# Batch47: exact unresolved dictionary links remain visible limitations.
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx', 'sos', 'register', 'name', 'Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'variable', 'native-str', 'FODLAND', 'variant-key', 'Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx', 'sos', 'register', 'name', 'Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'variant', 'name', 'Ansökningar om tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'column', 'FODLAND')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM\",\"deldatamangd:lvm_ansok\",\"variable:FODLAND\"],\"source\":\"Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx\"}"]
+valid_from = "2005-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx@sha256:e92ddf3686050e8be48b9af844a8d0a1b5add3a1978d13dabb857aea3f4611ba. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx', 'sos', 'register', 'name', 'Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'variable', 'native-str', 'FODLAND', 'variant-key', 'Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx', 'sos', 'register', 'name', 'Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'variant', 'name', 'Beslut om omedelbart omhändertagande för tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'column', 'FODLAND')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM\",\"deldatamangd:lvm_omhtg\",\"variable:FODLAND\"],\"source\":\"Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx\"}"]
+valid_from = "1994-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx@sha256:e92ddf3686050e8be48b9af844a8d0a1b5add3a1978d13dabb857aea3f4611ba. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx', 'sos', 'register', 'name', 'Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'variable', 'native-str', 'FODLAND', 'variant-key', 'Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx', 'sos', 'register', 'name', 'Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'variant', 'name', 'Tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'column', 'FODLAND')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM\",\"deldatamangd:lvm_utskr\",\"variable:FODLAND\"],\"source\":\"Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx\"}"]
+valid_from = "1994-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx@sha256:e92ddf3686050e8be48b9af844a8d0a1b5add3a1978d13dabb857aea3f4611ba. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx', 'sos', 'register', 'name', 'Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'variable', 'native-str', 'INDIKAT', 'variant-key', 'Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx', 'sos', 'register', 'name', 'Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'variant', 'name', 'Ansökningar om tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'column', 'INDIKAT')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM\",\"deldatamangd:lvm_ansok\",\"variable:INDIKAT\"],\"source\":\"Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx\"}"]
+valid_from = "1994-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx@sha256:e92ddf3686050e8be48b9af844a8d0a1b5add3a1978d13dabb857aea3f4611ba. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx', 'sos', 'register', 'name', 'Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'variable', 'native-str', 'INDIKAT', 'variant-key', 'Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx', 'sos', 'register', 'name', 'Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'variant', 'name', 'Beslut om omedelbart omhändertagande för tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'column', 'INDIKAT')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM\",\"deldatamangd:lvm_omhtg\",\"variable:INDIKAT\"],\"source\":\"Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx\"}"]
+valid_from = "1994-01-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx@sha256:e92ddf3686050e8be48b9af844a8d0a1b5add3a1978d13dabb857aea3f4611ba. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx', 'sos', 'register', 'name', 'Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx', 'sos', 'register', 'name', 'Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'variant', 'name', 'Beslut om omedelbart omhändertagande för tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'column', 'LK')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM\",\"deldatamangd:lvm_omhtg\",\"variable:LK\"],\"source\":\"Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx\"}"]
+valid_from = "1994-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx@sha256:e92ddf3686050e8be48b9af844a8d0a1b5add3a1978d13dabb857aea3f4611ba. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx', 'sos', 'register', 'name', 'Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx', 'sos', 'register', 'name', 'Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'variant', 'name', 'Tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM', 'column', 'LK')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM\",\"deldatamangd:lvm_utskr\",\"variable:LK\"],\"source\":\"Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx\"}"]
+valid_from = "1994-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx@sha256:e92ddf3686050e8be48b9af844a8d0a1b5add3a1978d13dabb857aea3f4611ba. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."

@@ -209,3 +209,125 @@ expected_representation = "Y=Ja, N=Nej"
 expected_description = "Anger om produkten är ett särskilt läkemedel"
 evidence = "Metadata_variabler row:115: The source specifies a Y/N special-medicine presence indicator; the references explain its legal/product context rather than classify the stored response flag. Original link, representation, description and every source code remain in accepted evidence."
 noted = "2026-10-01"
+
+# Batch47: exact unresolved dictionary links remain visible limitations.
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variable', 'native-str', 'ARBLAN', 'variant-key', 'Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variant', 'name', 'LMED', 'column', 'ARBLAN')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Läkemedelsregistret\",\"deldatamangd:LMED\",\"variable:ARBLAN\"],\"source\":\"Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx\"}"]
+valid_from = "2005-07-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx@sha256:8c00d45c9c11cea741339c241629110d5bb2cbb5e9e4758ff90c8591929b6879. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variable', 'native-str', 'DDD', 'variant-key', 'Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variant', 'name', 'LMED VARA', 'column', 'DDD')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Läkemedelsregistret\",\"deldatamangd:LMED VARA\",\"variable:DDD\"],\"source\":\"Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx\"}"]
+valid_from = "2005-07-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx@sha256:8c00d45c9c11cea741339c241629110d5bb2cbb5e9e4758ff90c8591929b6879. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variable', 'native-str', 'EXPLAN', 'variant-key', 'Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variant', 'name', 'LMED', 'column', 'EXPLAN')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Läkemedelsregistret\",\"deldatamangd:LMED\",\"variable:EXPLAN\"],\"source\":\"Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx\"}"]
+valid_from = "2005-07-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx@sha256:8c00d45c9c11cea741339c241629110d5bb2cbb5e9e4758ff90c8591929b6879. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variant', 'name', 'LMED', 'column', 'LK')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Läkemedelsregistret\",\"deldatamangd:LMED\",\"variable:LK\"],\"source\":\"Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx\"}"]
+valid_from = "2005-07-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx@sha256:8c00d45c9c11cea741339c241629110d5bb2cbb5e9e4758ff90c8591929b6879. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variable', 'native-str', 'LKF', 'variant-key', 'Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variant', 'name', 'LMED', 'column', 'LKF')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Läkemedelsregistret\",\"deldatamangd:LMED\",\"variable:LKF\"],\"source\":\"Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx\"}"]
+valid_from = "2005-07-01"
+valid_to = "2015-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx@sha256:8c00d45c9c11cea741339c241629110d5bb2cbb5e9e4758ff90c8591929b6879. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variable', 'native-str', 'SARSKILDA_LAKEMEDEL', 'variant-key', 'Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variant', 'name', 'LMED VARA', 'column', 'SARSKILDA_LAKEMEDEL')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Läkemedelsregistret\",\"deldatamangd:LMED VARA\",\"variable:SARSKILDA_LAKEMEDEL\"],\"source\":\"Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx\"}"]
+valid_from = "2005-07-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx@sha256:8c00d45c9c11cea741339c241629110d5bb2cbb5e9e4758ff90c8591929b6879. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variable', 'native-str', 'SPKOD1', 'variant-key', 'Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variant', 'name', 'LMED', 'column', 'SPKOD1')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Läkemedelsregistret\",\"deldatamangd:LMED\",\"variable:SPKOD1\"],\"source\":\"Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx\"}"]
+valid_from = "2005-07-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx@sha256:8c00d45c9c11cea741339c241629110d5bb2cbb5e9e4758ff90c8591929b6879. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variable', 'native-str', 'SPKOD2', 'variant-key', 'Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variant', 'name', 'LMED', 'column', 'SPKOD2')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Läkemedelsregistret\",\"deldatamangd:LMED\",\"variable:SPKOD2\"],\"source\":\"Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx\"}"]
+valid_from = "2005-07-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx@sha256:8c00d45c9c11cea741339c241629110d5bb2cbb5e9e4758ff90c8591929b6879. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variable', 'native-str', 'SPKOD3', 'variant-key', 'Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variant', 'name', 'LMED', 'column', 'SPKOD3')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Läkemedelsregistret\",\"deldatamangd:LMED\",\"variable:SPKOD3\"],\"source\":\"Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx\"}"]
+valid_from = "2005-07-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx@sha256:8c00d45c9c11cea741339c241629110d5bb2cbb5e9e4758ff90c8591929b6879. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variable', 'native-str', 'UTBK', 'variant-key', 'Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variant', 'name', 'LMED', 'column', 'UTBK')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Läkemedelsregistret\",\"deldatamangd:LMED\",\"variable:UTBK\"],\"source\":\"Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx\"}"]
+valid_from = "2005-07-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx@sha256:8c00d45c9c11cea741339c241629110d5bb2cbb5e9e4758ff90c8591929b6879. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variable', 'native-str', 'VERKS', 'variant-key', 'Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variant', 'name', 'LMED', 'column', 'VERKS')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Läkemedelsregistret\",\"deldatamangd:LMED\",\"variable:VERKS\"],\"source\":\"Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx\"}"]
+valid_from = "2005-07-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx@sha256:8c00d45c9c11cea741339c241629110d5bb2cbb5e9e4758ff90c8591929b6879. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variable', 'native-str', 'VFORM', 'variant-key', 'Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx', 'sos', 'register', 'name', 'Läkemedelsregistret', 'variant', 'name', 'LMED', 'column', 'VFORM')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Läkemedelsregistret\",\"deldatamangd:LMED\",\"variable:VFORM\"],\"source\":\"Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx\"}"]
+valid_from = "2005-07-01"
+valid_to = "9999-12-31"
+reason = "The source names a classification or coding dictionary, but its exact applicable codebook cannot be verified from the supplied inputs. Original source domains and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx@sha256:8c00d45c9c11cea741339c241629110d5bb2cbb5e9e4758ff90c8591929b6879. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."

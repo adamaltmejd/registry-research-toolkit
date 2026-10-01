@@ -87,3 +87,185 @@ slug = "senaste-ar-med-insats"
 native_id = "7550156225339591583.SPEC"
 slug = "specifikation-insatsen"
 # register 7661979173609203267
+
+# Batch47: exact unresolved dictionary links remain visible limitations.
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FFODLAND', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'FFODLAND')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_19602013\",\"variable:FFODLAND\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
+valid_from = "1960-01-01"
+valid_to = "2013-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx@sha256:3ea799b1d4f75be47357a7ef70946bf95d1e6dca92786d353405bbae190cdd1d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FFODLAND_KOD', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'FFODLAND_KOD')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_pnrq0\",\"variable:FFODLAND_KOD\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
+valid_from = "1960-01-01"
+valid_to = "2016-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx@sha256:3ea799b1d4f75be47357a7ef70946bf95d1e6dca92786d353405bbae190cdd1d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FODELSELANDNAMN', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'FODELSELANDNAMN')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_pnrq0\",\"variable:FODELSELANDNAMN\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
+valid_from = "1960-01-01"
+valid_to = "2016-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx@sha256:3ea799b1d4f75be47357a7ef70946bf95d1e6dca92786d353405bbae190cdd1d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FODELSELANDNAMNFAR', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'FODELSELANDNAMNFAR')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_pnrq0\",\"variable:FODELSELANDNAMNFAR\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
+valid_from = "1960-01-01"
+valid_to = "2016-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx@sha256:3ea799b1d4f75be47357a7ef70946bf95d1e6dca92786d353405bbae190cdd1d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FODELSELANDNAMNMOR', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'FODELSELANDNAMNMOR')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_pnrq0\",\"variable:FODELSELANDNAMNMOR\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
+valid_from = "1960-01-01"
+valid_to = "2016-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx@sha256:3ea799b1d4f75be47357a7ef70946bf95d1e6dca92786d353405bbae190cdd1d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FODLAND', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'FODLAND')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_19602013\",\"variable:FODLAND\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
+valid_from = "1960-01-01"
+valid_to = "2013-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx@sha256:3ea799b1d4f75be47357a7ef70946bf95d1e6dca92786d353405bbae190cdd1d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'FODLAND_KOD', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'FODLAND_KOD')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_pnrq0\",\"variable:FODLAND_KOD\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
+valid_from = "1960-01-01"
+valid_to = "2016-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx@sha256:3ea799b1d4f75be47357a7ef70946bf95d1e6dca92786d353405bbae190cdd1d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'LK')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_insats_19602013\",\"variable:LK\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
+valid_from = "1960-01-01"
+valid_to = "2014-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx@sha256:3ea799b1d4f75be47357a7ef70946bf95d1e6dca92786d353405bbae190cdd1d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'LK')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_insats_endastxnr\",\"variable:LK\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
+valid_from = "2001-01-01"
+valid_to = "2014-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx@sha256:3ea799b1d4f75be47357a7ef70946bf95d1e6dca92786d353405bbae190cdd1d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'LK')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_insats_pnrq0\",\"variable:LK\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
+valid_from = "1960-01-01"
+valid_to = "2016-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx@sha256:3ea799b1d4f75be47357a7ef70946bf95d1e6dca92786d353405bbae190cdd1d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'LK', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'LK')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_plac\",\"variable:LK\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
+valid_from = "2018-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx@sha256:3ea799b1d4f75be47357a7ef70946bf95d1e6dca92786d353405bbae190cdd1d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'MFODLAND', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'MFODLAND')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_19602013\",\"variable:MFODLAND\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
+valid_from = "1960-01-01"
+valid_to = "2013-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx@sha256:3ea799b1d4f75be47357a7ef70946bf95d1e6dca92786d353405bbae190cdd1d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'MFODLAND_KOD', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'MFODLAND_KOD')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_19602013\",\"variable:MFODLAND_KOD\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
+valid_from = "1960-01-01"
+valid_to = "2013-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx@sha256:3ea799b1d4f75be47357a7ef70946bf95d1e6dca92786d353405bbae190cdd1d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'MFODLAND_KOD', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'MFODLAND_KOD')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_barn_pnrq0\",\"variable:MFODLAND_KOD\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
+valid_from = "1960-01-01"
+valid_to = "2016-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx@sha256:3ea799b1d4f75be47357a7ef70946bf95d1e6dca92786d353405bbae190cdd1d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'PLACKOM', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'PLACKOM')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_plac_19602013\",\"variable:PLACKOM\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
+valid_from = "1980-01-01"
+valid_to = "2014-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx@sha256:3ea799b1d4f75be47357a7ef70946bf95d1e6dca92786d353405bbae190cdd1d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'PLACKOM', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'PLACKOM')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_plac_endastxnr\",\"variable:PLACKOM\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
+valid_from = "2001-01-01"
+valid_to = "2014-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx@sha256:3ea799b1d4f75be47357a7ef70946bf95d1e6dca92786d353405bbae190cdd1d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'PLACKOM', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'PLACKOM')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_plac_pnrq0\",\"variable:PLACKOM\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
+valid_from = "1960-01-01"
+valid_to = "2016-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx@sha256:3ea799b1d4f75be47357a7ef70946bf95d1e6dca92786d353405bbae190cdd1d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variable', 'native-str', 'PLAC_LK', 'variant-key', 'Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx', 'sos', 'register', 'name', 'Registret över insatser till barn och unga', 'variant', 'not-applicable', 'column', 'PLAC_LK')"
+fields = ["classification_declared"]
+refs = ["{\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_plac\",\"variable:PLAC_LK\"],\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\"}"]
+valid_from = "2018-01-01"
+valid_to = "9999-12-31"
+reason = "The source declares a geographical, country or postal dictionary, but its exact applicable edition and coding cannot be verified for this window. Original source codes and declarations remain; the verified classification link stays unavailable."
+evidence = "Maintainer-authorized restoration applies the existing exact unavailable-dictionary/source-classification limitation policy. Accepted source revision Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx@sha256:3ea799b1d4f75be47357a7ef70946bf95d1e6dca92786d353405bbae190cdd1d. Preserve every original record, code, label, date and literal declaration; no replacement dictionary, code correction or coverage extension. Exact complete Batch47 diagnostic selector from the incomplete ledger snapshot is pinned below."
