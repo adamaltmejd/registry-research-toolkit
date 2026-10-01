@@ -2174,6 +2174,21 @@ def _partition_originals(
     return originals
 
 
+def _partition_family_relevant(
+    native: NativeKey,
+    register: RegisterCuration,
+    split_naming: tuple[AcceptedNamingEntry, ...],
+) -> bool:
+    source_id = f"{register.register_info.native_id}.{native[-1]}"
+    return (
+        any(item.entry.source_id.startswith(source_id + ".") for item in split_naming)
+        or any(item.variable == source_id for item in register.identity.partition)
+        or any(item.variable == source_id for item in register.identity.column_owner)
+        or any(item.variable == str(native[-1]) for item in register.identity.split)
+        or any(item.variable == str(native[-1]) for item in register.identity.rename)
+    )
+
+
 def compile_partitions(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
@@ -2236,8 +2251,17 @@ def compile_partitions(
         ):
             active_registers[source].add(native_register)
     for source in sorted({scope.source for scope in scopes}):
+
+        def relevant_family(
+            native: NativeKey, *, selected_source: str = source
+        ) -> bool:
+            location = registers.get((selected_source, native[:5]))
+            return location is not None and _partition_family_relevant(
+                native, location[1], entries_by_register[selected_source, native[:5]]
+            )
+
         for native, projected in prepared.records.iter_partition_families(
-            source, active_registers[source]
+            source, active_registers[source], select_family=relevant_family
         ):
             # The projection has exactly the source facts consumed below. The
             # existing conversion helpers are structural readers of those facts.
@@ -2806,29 +2830,8 @@ def compile_deferred_partitions(
             native: NativeKey, *, selected_source: str = source
         ) -> bool:
             location = registers.get((selected_source, native[:5]))
-            if location is None:
-                return False
-            _scope_key, register = location
-            source_id = f"{register.register_info.native_id}.{native[-1]}"
-            return (
-                any(
-                    item.entry.source_id.startswith(source_id + ".")
-                    for item in entries_by_register[selected_source, native[:5]]
-                )
-                or any(
-                    item.variable == source_id for item in register.identity.partition
-                )
-                or any(
-                    item.variable == source_id
-                    for item in register.identity.column_owner
-                )
-                or any(
-                    item.variable == str(native[-1]) for item in register.identity.split
-                )
-                or any(
-                    item.variable == str(native[-1])
-                    for item in register.identity.rename
-                )
+            return location is not None and _partition_family_relevant(
+                native, location[1], entries_by_register[selected_source, native[:5]]
             )
 
         for native, projected in prepared.records.iter_partition_families(

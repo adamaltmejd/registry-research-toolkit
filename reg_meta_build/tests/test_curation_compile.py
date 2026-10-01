@@ -208,7 +208,15 @@ def _scope() -> CompiledScope:
 
 def _naming_reader(reader: Any) -> Any:
     reader.iter_naming_families = reader.iter_native_families
-    reader.iter_partition_families = reader.iter_native_families
+
+    def partitions(source, registers=None, select_family=None):
+        return (
+            (key, members)
+            for key, members in reader.iter_native_families(source, registers)
+            if select_family is None or select_family(key)
+        )
+
+    reader.iter_partition_families = partitions
 
     def slices(source, registers):
         if None in registers:
@@ -1913,7 +1921,7 @@ def _compile_partition_fixture(
     native = native_variable_key(records[0])
     assert native is not None
     reader = SimpleNamespace(
-        iter_partition_families=lambda source, registers=None: iter(
+        iter_partition_families=lambda source, registers=None, select_family=None: iter(
             ((native, records),)
         )
     )
@@ -1970,7 +1978,7 @@ def test_partition_reads_only_registers_with_partition_work(tmp_path: Path) -> N
     requested = []
 
     class Reader:
-        def iter_partition_families(self, source, registers=None):
+        def iter_partition_families(self, source, registers=None, select_family=None):
             requested.append(set(registers))
             return iter(())
 
@@ -2038,10 +2046,10 @@ def test_partition_projection_preserves_compiled_declarations(
         return original_read_partition(payload, row)
 
     projected = cast("Any", SimpleNamespace(records=reader))
-    assert compile_partitions(tree, projected, (scope,)) == expected
     monkeypatch.setattr(
         prepared_sources, "_read_partition_record", read_needed_partition
     )
+    assert compile_partitions(tree, projected, (scope,)) == expected
     deferred = compile_deferred_partitions(tree, projected, (scope,))
     assert deferred == (
         expected[1],
@@ -4053,7 +4061,7 @@ def test_partition_ambiguity_does_not_depend_on_stored_inventory(tmp_path: Path)
         update={"naming_ambiguities": generated[3][key]}
     )
     reader = SimpleNamespace(
-        iter_partition_families=lambda source, registers=None: iter(
+        iter_partition_families=lambda source, registers=None, select_family=None: iter(
             ((native, records),)
         )
     )

@@ -572,25 +572,31 @@ Register `[[errata.field]]` entries correct reviewed source-backed text in `name
 variable/variant/column coordinates. Unit corrections additionally pin the supplied unit
 and both coverage fields. They reconcile literal wording only when the source definition
 positively establishes the same quantity; they do not convert values, merge differing
-scales or infer absent units. `[[errata.occurrence_period]]` entries require one exact
-native source edition for SCB. SOS rows lack that coordinate and instead require both
-literal supplied coverage fields alongside the exact native variable, subset and column.
-Both entry types guard the original edition text, both original scopes and all four
-supplied prose fields, including absent or unknown values. Complete native-family
-support and peer guards retain unrelated editions and coding references. Period entries
-carry explicit replacement `TemporalScope` values; omitting an interval's `end` in TOML
-means an open end, while unknown and pooled scopes retain their labels and bounds. These
-entries emit existing checked field/period effects and never rewrite the original source
-records. A finite scoped name correction selects exact original source scopes and
-carries those same scopes into its conditional replay effect. A monthly row sharing an
-annual row's semantic reference cannot inherit that name correction.
+scales or infer absent units. A `source_attribution` correction requires an exact
+edition, all supplied fields and complete original-record expectations, including
+parents and coding references. It can normalize an abbreviation explicitly defined in
+the source to the existing variant name; it does not introduce inferred aliases. The
+catalog stores the interpreted attribution while immutable source evidence retains the
+original text. `[[errata.occurrence_period]]` entries require one exact native source
+edition for SCB. SOS rows lack that coordinate and instead require both literal supplied
+coverage fields alongside the exact native variable, subset and column. Both entry types
+guard the original edition text, both original scopes and all four supplied prose
+fields, including absent or unknown values. Complete native-family support and peer
+guards retain unrelated editions and coding references. Period entries carry explicit
+replacement `TemporalScope` values; omitting an interval's `end` in TOML means an open
+end, while unknown and pooled scopes retain their labels and bounds. These entries emit
+existing checked field/period effects and never rewrite the original source records. A
+finite scoped name correction selects exact original source scopes and carries those
+same scopes into its conditional replay effect. A monthly row sharing an annual row's
+semantic reference cannot inherit that name correction.
 
 Field entries may pin duplicate observations with `expected_records`, using complete
-original `RecordExpectation` alternatives. Their replacement must already occur in a
-guarded source alternative. Exact fields, subjects, scopes, parents and coding
-references remain checked at compilation and replay; conditional field effects change
-only the matching original interpretation. This permits punctuation and reference-prose
-aliases without discarding either physical original or inventing a replacement value.
+original `RecordExpectation` alternatives. Except for the source-defined attribution
+normalization above, their replacement must already occur in a guarded source
+alternative. Exact fields, subjects, scopes, parents and coding references remain
+checked at compilation and replay; conditional field effects change only the matching
+original interpretation. This permits punctuation and reference-prose aliases without
+discarding either physical original or inventing a replacement value.
 
 Period entries may cite exact supplied subset metadata through `authority`. Compilation
 checks its full source projection, register and routed variant, positive coverage and
