@@ -22,10 +22,10 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _curation_fixtures import write_lisa_errata
-from reg_meta.db import SCHEMA_VERSION, open_db
 from reg_meta.errors import RegMetaError
 from reg_meta.inventory import edition_bounds, load_inventory as load_delivery_inventory
 from reg_meta.inventory_check import check_inventory, unresolved_message
+from reg_meta_build.db import SCHEMA_VERSION, open_built_db
 from reg_meta_build.edition_bounds import edition_claims
 from reg_meta_build.ir import (
     IRRegister,
@@ -564,11 +564,8 @@ def test_inventory_maps_every_spelling_of_a_co_delivered_column(
         ],
         "T_kolumn": [("inera/bestallda-prover/t-kolumn", "T_kolumn")],
     }
-    # §12's other half: every emitted mapping must resolve against the DB the
-    # deployment serves, or `stewards.check_delivery_inventory` refuses boot.
-    # `open_db` is the deployment's own read: `sqlite3.Row` and the `py_lower`
-    # SQL function the catalog resolves with.
-    conn = open_db(flavored_db)
+    # The produced holdings must have complete catalog coordinate coverage.
+    conn = open_built_db(flavored_db)
     try:
         findings = check_inventory(
             load_delivery_inventory(steward_dir / "inventory.toml"), conn
@@ -1865,14 +1862,12 @@ def test_inventory_shared_alias_cannot_use_invalid_or_curated_source_backing(
     "case",
     ["source_replacement", "curated_additive", "source_no_base", "year_independent"],
 )
-def test_inventory_column_windows_match_public_catalog_resolution(
+def test_inventory_column_windows_preserve_source_and_curated_scope(
     tmp_path: Path,
     flavored_db: Path,
     case: str,
 ) -> None:
     import shutil
-
-    from reg_meta.catalog import Catalog
 
     db = tmp_path / "public-resolution-parity.db"
     shutil.copyfile(flavored_db, db)
@@ -1898,17 +1893,18 @@ def test_inventory_column_windows_match_public_catalog_resolution(
             "VALUES (904,902,'Historic','2019-03-01','2019-08-31',?)",
             ("reviewed alias" if case == "curated_additive" else None,),
         )
-    with open_db(db) as conn:
-        public = Catalog(conn).states("inera/bestallda-prover/t-kolumn")
     expected = {
-        (
-            state.delivery_column_name,
-            state.valid_from,
-            state.valid_to,
-            state.period_scope,
-        )
-        for state in public
-    }
+        "source_replacement": {
+            ("T_kolumn", "2019-03-01", "2019-08-31", "intervals"),
+            ("Historic", "2019-03-01", "2019-08-31", "intervals"),
+        },
+        "curated_additive": {
+            ("T_kolumn", "2019-01-01", "2019-12-31", "intervals"),
+            ("Historic", "2019-03-01", "2019-08-31", "intervals"),
+        },
+        "source_no_base": {("T_kolumn", "2019-01-01", "2019-12-31", "intervals")},
+        "year_independent": {("T_kolumn", None, None, "year_independent")},
+    }[case]
     records = build_catalog._steward_load_db(db)
     actual = {
         (r["col"], r["valid_from"], r["valid_to"], r["period_scope"])

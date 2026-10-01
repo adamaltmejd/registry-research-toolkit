@@ -582,16 +582,20 @@ class TestValidateModule:
         conn.execute(
             "INSERT INTO variable_state "
             "(variable_id, register_variant_id, valid_from, valid_to, "
-            "value_set_version_label, classification_id) "
-            "VALUES (?, ?, '2002-01-01', '2006-12-31', '', ?)",
-            (pred_variable_id, variant_id, pred_class_id),
+            "value_set_version_label) "
+            "VALUES (?, ?, '2002-01-01', '2006-12-31', '')",
+            (pred_variable_id, variant_id),
         )
         conn.execute(
             "INSERT INTO variable_state "
             "(variable_id, register_variant_id, valid_from, valid_to, "
-            "value_set_version_label, classification_id) "
-            "VALUES (?, ?, '2007-01-01', '9999-12-31', '', ?)",
-            (succ_variable_id, variant_id, succ_class_id),
+            "value_set_version_label) "
+            "VALUES (?, ?, '2007-01-01', '9999-12-31', '')",
+            (succ_variable_id, variant_id),
+        )
+        conn.executemany(
+            "INSERT INTO state_classification SELECT state_id, ?, NULL FROM variable_state WHERE variable_id=?",
+            ((pred_class_id, pred_variable_id), (succ_class_id, succ_variable_id)),
         )
         conn.execute(
             "INSERT INTO variable_replaced_by ("
@@ -2681,7 +2685,9 @@ class TestVariableAliasWindowChecks:
             conn.execute(
                 "INSERT INTO classification (id, slug, short_name, name) VALUES (1, 'example', 'Example', 'Example')"
             )
-            conn.execute("UPDATE variable_state SET classification_id=1")
+            conn.execute(
+                "INSERT INTO state_classification SELECT state_id, 1, NULL FROM variable_state"
+            )
         elif damage == "unbacked":
             conn.execute("UPDATE variable_state SET valid_from='2019-01-01'")
         elif damage == "shared":

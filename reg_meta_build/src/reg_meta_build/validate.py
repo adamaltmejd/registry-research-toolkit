@@ -1713,32 +1713,37 @@ def _check_variable_alias_window(
     else:
         result.ok("every per-column metadata window has complete backing states")
 
-    invalid_coding = conn.execute(
-        "SELECT COUNT(*) FROM variable_alias_window w WHERE "
-        "(w.coding_metadata = 'shared' AND (w.value_set_id IS NOT NULL OR w.value_set_version_label != '')) "
-        "OR (w.coding_metadata = 'per_column' AND (w.value_set_id IS NULL "
-        "OR NOT EXISTS (SELECT 1 FROM value_set_member m WHERE m.value_set_id = w.value_set_id)))"
-    ).fetchone()[0]
-    if invalid_coding:
-        result.fail(
-            f"{invalid_coding:,} alias coding override(s) lack an exact positive finite domain"
-        )
+    if {"value_set_member", "state_classification"}.issubset(tables):
+        invalid_coding = conn.execute(
+            "SELECT COUNT(*) FROM variable_alias_window w WHERE "
+            "(w.coding_metadata = 'shared' AND (w.value_set_id IS NOT NULL OR w.value_set_version_label != '')) "
+            "OR (w.coding_metadata = 'per_column' AND (w.value_set_id IS NULL "
+            "OR NOT EXISTS (SELECT 1 FROM value_set_member m WHERE m.value_set_id = w.value_set_id)))"
+        ).fetchone()[0]
+        if invalid_coding:
+            result.fail(
+                f"{invalid_coding:,} alias coding override(s) lack an exact positive finite domain"
+            )
+        else:
+            result.ok("every alias coding override has an exact positive finite domain")
+        contaminated = conn.execute(
+            "SELECT COUNT(DISTINCT w.rowid) FROM variable_alias_window w JOIN variable_state vs "
+            "ON vs.variable_id = w.variable_id AND vs.register_variant_id = w.register_variant_id "
+            "AND vs.valid_from <= w.valid_to AND vs.valid_to >= w.valid_from "
+            "WHERE w.coding_metadata = 'per_column' AND (EXISTS (SELECT 1 FROM state_classification sc WHERE sc.state_id = vs.state_id) "
+            "OR vs.value_set_id IS NOT NULL OR vs.value_set_version_label != '')"
+        ).fetchone()[0]
+        if contaminated:
+            result.fail(
+                f"{contaminated:,} per-column coding window(s) have classified or common-coded backing states"
+            )
+        else:
+            result.ok(
+                "per-column coding windows have unclassified backing without common coding"
+            )
     else:
-        result.ok("every alias coding override has an exact positive finite domain")
-    contaminated = conn.execute(
-        "SELECT COUNT(DISTINCT w.rowid) FROM variable_alias_window w JOIN variable_state vs "
-        "ON vs.variable_id = w.variable_id AND vs.register_variant_id = w.register_variant_id "
-        "AND vs.valid_from <= w.valid_to AND vs.valid_to >= w.valid_from "
-        "WHERE w.coding_metadata = 'per_column' AND (EXISTS (SELECT 1 FROM state_classification sc WHERE sc.state_id = vs.state_id) "
-        "OR vs.value_set_id IS NOT NULL OR vs.value_set_version_label != '')"
-    ).fetchone()[0]
-    if contaminated:
         result.fail(
-            f"{contaminated:,} per-column coding window(s) have classified or common-coded backing states"
-        )
-    else:
-        result.ok(
-            "per-column coding windows have unclassified backing without common coding"
+            "alias coding validation requires value_set_member and state_classification tables"
         )
 
     if corpus:

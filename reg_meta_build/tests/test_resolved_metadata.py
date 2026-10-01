@@ -7,8 +7,8 @@ from typing import TYPE_CHECKING
 
 import pytest
 from pydantic import ValidationError
-from reg_meta.db import open_db
 from reg_meta.errors import RegMetaError
+from reg_meta_build.db import open_built_db
 from reg_meta_build.resolved_catalog import (
     ResolvedAlias,
     ResolvedClassification,
@@ -301,7 +301,7 @@ def test_all_explicit_metadata_surfaces_are_written_without_derivation(
 ) -> None:
     output = tmp_path / "catalog.db"
     _write(output, _metadata())
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         counts = {
             "concept_group": 2,
             "concept_group_axis": 3,
@@ -486,7 +486,7 @@ def test_group_members_preserve_case_distinct_declared_columns(tmp_path: Path) -
         manifest={},
         metadata=ResolvedMetadata(variable_groups=(group,)),
     )
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert [
             row[0]
             for row in conn.execute(
@@ -513,7 +513,7 @@ def test_multi_axis_group_can_attach_whole_variables(tmp_path: Path) -> None:
         manifest={},
         metadata=ResolvedMetadata(variable_groups=(group,)),
     )
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert [
             tuple(row)
             for row in conn.execute(
@@ -937,7 +937,7 @@ def test_variant_scoped_temporal_round_trip_is_explicit_and_validated(
     output = tmp_path / "catalog.db"
     _write(output, metadata)
     original = output.read_bytes()
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert (
             conn.execute("SELECT count(*) FROM representation_replaced_by").fetchone()[
                 0
@@ -993,7 +993,7 @@ def test_documented_historical_predecessor_creates_only_the_edge(
     output = tmp_path / "catalog.db"
     _write(output, metadata)
     original = output.read_bytes()
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert conn.execute("SELECT count(*) FROM register").fetchone()[0] == 2
         assert conn.execute("SELECT count(*) FROM variable").fetchone()[0] == 3
         assert (

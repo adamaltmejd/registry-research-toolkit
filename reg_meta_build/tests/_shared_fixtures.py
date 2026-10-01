@@ -57,8 +57,7 @@ def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """
     from contextlib import closing
 
-    from reg_meta.db import SCHEMA_VERSION
-    from reg_meta_build.db import DDL, _populate_fts, seed_providers
+    from reg_meta_build.db import DDL, SCHEMA_VERSION, _populate_fts, seed_providers
 
     db_dir = tmp_path_factory.mktemp("db")
     output = db_dir / "reg_meta.db"
@@ -121,9 +120,9 @@ def _build_stub_doc_db(db_dir: Path, tmp_path_factory: pytest.TempPathFactory) -
 @pytest.fixture()
 def db_conn(fixture_db: Path) -> Iterator[sqlite3.Connection]:
     """Read-only connection to the fixture database."""
-    from reg_meta.db import open_db
+    from reg_meta_build.db import open_built_db
 
-    conn = open_db(fixture_db)
+    conn = open_built_db(fixture_db)
     yield conn
     conn.close()
 

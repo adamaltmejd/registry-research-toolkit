@@ -8,9 +8,9 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
-from reg_meta.db import open_db
 from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.catalog_resolution import resolve_parents
+from reg_meta_build.db import open_built_db
 from reg_meta_build.resolved_catalog import write_resolved_catalog
 from reg_meta_build.source_coding import resolve_code_membership
 from reg_meta_build.source_coordinates import (
@@ -246,7 +246,7 @@ def test_parent_facts_feed_ordinary_formation_and_direct_catalog(
         manifest={"fixture": "parent-resolution"},
         editions=tuple(parents.editions.values()),
     )
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert conn.execute("SELECT COUNT(*) FROM register_version").fetchone()[0] == 1
         assert (
             conn.execute("SELECT delivery_column_name FROM variable_state").fetchone()[

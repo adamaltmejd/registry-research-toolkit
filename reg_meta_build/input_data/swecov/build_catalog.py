@@ -2752,8 +2752,8 @@ def cmd_inventory(args: argparse.Namespace) -> None:
 
 
 def cmd_errata(args: argparse.Namespace) -> None:
-    from reg_meta.db import open_db
     from reg_meta.inventory import load_inventory
+    from reg_meta_build.db import open_built_db
     from reg_meta_build.inventory_coverage import (
         coverage_misses,
         errata_worklist,
@@ -2764,7 +2764,7 @@ def cmd_errata(args: argparse.Namespace) -> None:
     repo_root = Path(__file__).resolve().parents[3]
     steward_dir = args.out or (repo_root / "reg_webapp" / "stewards" / "swecov")
     inventory = load_inventory(steward_dir / "inventory.toml")
-    conn = open_db(args.db)
+    conn = open_built_db(args.db)
     try:
         report = coverage_misses(conn, inventory)
     finally:

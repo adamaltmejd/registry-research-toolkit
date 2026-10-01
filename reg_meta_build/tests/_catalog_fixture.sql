@@ -81,17 +81,17 @@ INSERT INTO value_set_member (
     (2, 3);
 
 INSERT INTO variable_state (
-    state_id, variable_id, register_variant_id, valid_from, valid_to, data_type, data_length, delivery_column_name, source_register_text, operational_definition, provenance, value_set_id, value_set_version_label, classification_id
+    state_id, variable_id, register_variant_id, valid_from, valid_to, data_type, data_length, delivery_column_name, source_register_text, operational_definition, provenance, value_set_id, value_set_version_label
 ) VALUES
-    (1, 1, 10, '2020-01-01', '2021-12-31', 'int', '1', 'Kon', NULL, NULL, NULL, 1, 'Kön', NULL),
-    (2, 1, 10, '2022-01-01', '2022-12-31', 'int', '1', 'Kon', NULL, NULL, NULL, NULL, '', NULL),
-    (3, 2, 10, '2020-01-01', '2020-12-31', 'varchar', '10', 'TestCol', NULL, NULL, NULL, NULL, '', NULL),
-    (4, 3, 10, '2022-01-01', '2022-12-31', 'varchar', '5', 'AaoCol', NULL, NULL, NULL, NULL, '', NULL),
-    (5, 4, 20, '2021-01-01', '2021-12-31', 'int', '1', 'KON', 'TESTREG', NULL, NULL, 1, 'Kön', NULL),
-    (6, 5, 20, '2021-01-01', '2021-12-31', 'varchar', '20', 'UniqCol', NULL, NULL, NULL, 2, '2', NULL),
-    (7, 6, 20, '2021-01-01', '2021-12-31', 'varchar', '10', 'ParenCol', 'Testregistret (TESTREG) : Folkbokföringsuppgifter', NULL, NULL, 3, 'SSYK 2012', NULL),
-    (8, 7, 20, '2021-01-01', '2021-12-31', 'varchar', '10', 'ExtCol', 'Försäkringskassan', NULL, NULL, NULL, '', NULL),
-    (9, 8, 20, '2021-01-01', '2021-12-31', 'char', '12', 'LopNr', NULL, NULL, NULL, NULL, '', NULL);
+    (1, 1, 10, '2020-01-01', '2021-12-31', 'int', '1', 'Kon', NULL, NULL, NULL, 1, 'Kön'),
+    (2, 1, 10, '2022-01-01', '2022-12-31', 'int', '1', 'Kon', NULL, NULL, NULL, NULL, ''),
+    (3, 2, 10, '2020-01-01', '2020-12-31', 'varchar', '10', 'TestCol', NULL, NULL, NULL, NULL, ''),
+    (4, 3, 10, '2022-01-01', '2022-12-31', 'varchar', '5', 'AaoCol', NULL, NULL, NULL, NULL, ''),
+    (5, 4, 20, '2021-01-01', '2021-12-31', 'int', '1', 'KON', 'TESTREG', NULL, NULL, 1, 'Kön'),
+    (6, 5, 20, '2021-01-01', '2021-12-31', 'varchar', '20', 'UniqCol', NULL, NULL, NULL, 2, '2'),
+    (7, 6, 20, '2021-01-01', '2021-12-31', 'varchar', '10', 'ParenCol', 'Testregistret (TESTREG) : Folkbokföringsuppgifter', NULL, NULL, 3, 'SSYK 2012'),
+    (8, 7, 20, '2021-01-01', '2021-12-31', 'varchar', '10', 'ExtCol', 'Försäkringskassan', NULL, NULL, NULL, ''),
+    (9, 8, 20, '2021-01-01', '2021-12-31', 'char', '12', 'LopNr', NULL, NULL, NULL, NULL, '');
 
 INSERT INTO variable_alias (
     variable_id, register_variant_id, delivery_column_name

@@ -219,7 +219,7 @@ class _Graph:
 
     def tagged_classification(self, variable_id: int) -> int | None:
         row = self.conn.execute(
-            "SELECT classification_id FROM variable_state WHERE variable_id = ?",
+            "SELECT classification_id FROM state_classification JOIN variable_state USING(state_id) WHERE variable_id = ?",
             (variable_id,),
         ).fetchone()
         return row[0] if row else None
@@ -258,7 +258,7 @@ def _copyable_bindings(toml: str) -> list[tuple[str, str]]:
 class TestDumpClassificationResidue:
     """The #416 residue diagnostic: a read-only recompute of the multi-family,
     still-unclassified value sets the auto-detector leaves for curation. On a
-    `_Graph` a fresh value-set state has `classification_id IS NULL`, so a
+    `_Graph` a fresh value-set state has absence of a classification association, so a
     multi-family value set is residual until something tags its state."""
 
     def test_multi_family_unclassified_is_residual_with_evidence(self) -> None:
@@ -381,8 +381,8 @@ class TestDumpClassificationResidue:
 
     def test_classified_state_excludes_value_set_from_residue(self) -> None:
         """A multi-family value set whose ONLY state is already classified
-        (`classification_id` set — e.g. a curated/feed link) is NOT residual: the
-        residue signal is the SHIPPED `classification_id IS NULL`, not a build
+        (a declared book association — e.g. a curated/feed link) is NOT residual: the
+        residue signal is the SHIPPED absence of a classification association, not a build
         scratch table."""
         from reg_meta_build.classifications import dump_classification_residue
 
@@ -394,7 +394,7 @@ class TestDumpClassificationResidue:
         g.add_variable_state(903, 103, slug="famvar")
         # Tag the only state → no longer unclassified.
         g.conn.execute(
-            "UPDATE variable_state SET classification_id = 13 WHERE variable_id = 903"
+            "INSERT INTO state_classification SELECT state_id, 13, NULL FROM variable_state WHERE variable_id = 903"
         )
 
         result = dump_classification_residue(g.conn)
@@ -431,7 +431,7 @@ class TestDumpClassificationResidue:
         g.add_variable_state(983, 103, slug="varB")
         # Classify only varA's state.
         g.conn.execute(
-            "UPDATE variable_state SET classification_id = 13 WHERE variable_id = 982"
+            "INSERT INTO state_classification SELECT state_id, 13, NULL FROM variable_state WHERE variable_id = 982"
         )
 
         result = dump_classification_residue(g.conn)
@@ -619,7 +619,7 @@ class TestDumpClassificationResidue:
         g.add_variable_state(970, 202, slug="diffvar", valid_from="2015-01-01")
         # Classify diffvar's 202 state to FAM_E (different from the safe target FAM_A).
         g.conn.execute(
-            "UPDATE variable_state SET classification_id = 30 "
+            "INSERT INTO state_classification SELECT state_id, 30, NULL FROM variable_state "
             "WHERE variable_id = 970 AND value_set_id = 202"
         )
 
@@ -676,7 +676,7 @@ class TestClassificationResidueCli:
         other, FAM_B, shares the codes but RELABELED → label_agree 0). Built off the
         same DDL `_Graph` uses, plus the `import_manifest` schema_version `open_db`
         checks."""
-        from reg_meta.db import SCHEMA_VERSION
+        from reg_meta_build.db import SCHEMA_VERSION
 
         db_dir = tmp_path / "db"
         db_dir.mkdir()
@@ -856,6 +856,7 @@ def classification_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     from reg_meta_build.resolved_catalog import (
         ResolvedClassification,
         ResolvedClassificationCode,
+        ResolvedClassificationLink,
         ResolvedCodeSet,
         ResolvedRegister,
         ResolvedState,
@@ -912,7 +913,9 @@ def classification_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
                     data_length="2",
                     operational_definition=None,
                     provenance=None,
-                    classification=book.slug,
+                    classification_links=(
+                        ResolvedClassificationLink(classification=book.slug),
+                    ),
                     value_set=ResolvedCodeSet(
                         members=tuple((c.code, c.label) for c in book.codes)
                     ),
@@ -941,97 +944,46 @@ def classification_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     return db_dir
 
 
-class TestCli:
-    def test_list(self, classification_db: Path):
+class TestClassificationStorage:
+    def test_books_codes_and_state_associations(self, classification_db: Path):
+        from contextlib import closing
+
+        from reg_meta_build.db import open_built_db
+
+        with closing(open_built_db(classification_db / "reg_meta.db")) as conn:
+            assert {
+                tuple(row)
+                for row in conn.execute(
+                    "SELECT short_name, code_count FROM classification"
+                )
+            } == {("TESTKON", 2), ("TESTKON2", 3)}
+            assert {
+                tuple(row)
+                for row in conn.execute(
+                    "SELECT c.short_name, v.code, cc.level, cc.is_valid FROM classification_code cc JOIN classification c ON c.id=cc.classification_id JOIN value_code v USING(code_id)"
+                )
+            } == {
+                ("TESTKON", "1", 1, 1),
+                ("TESTKON", "2", 1, 1),
+                ("TESTKON2", "10", 2, 1),
+                ("TESTKON2", "20", 2, 1),
+                ("TESTKON2", "30", 2, 1),
+            }
+            assert {
+                tuple(row)
+                for row in conn.execute(
+                    "SELECT r.slug, s.valid_from, c.short_name FROM state_classification sc JOIN classification c ON c.id=sc.classification_id JOIN variable_state s USING(state_id) JOIN variable v USING(variable_id) JOIN register r USING(register_id)"
+                )
+            } == {
+                ("testreg", "2020-01-01", "TESTKON"),
+                ("testreg", "2022-01-01", "TESTKON2"),
+                ("otherreg", "2020-01-01", "TESTKON"),
+            }
+            assert conn.execute("PRAGMA foreign_key_check").fetchall() == []
+
+    def test_unadapted_reader_cli_refuses_new_producer_schema(
+        self, classification_db: Path
+    ):
         data, code = _run_json(classification_db, ["get", "classification", "--list"])
-        assert code == 0
-        names = {c["short_name"] for c in data["classifications"]}
-        assert names == {"TESTKON", "TESTKON2"}
-
-    def test_by_short_name(self, classification_db: Path):
-        data, code = _run_json(classification_db, ["get", "classification", "TESTKON"])
-        assert code == 0
-        assert data["short_name"] == "TESTKON"
-        assert data["code_count"] == 2
-
-    def test_codes(self, classification_db: Path):
-        data, code = _run_json(
-            classification_db, ["get", "classification", "TESTKON", "--codes"]
-        )
-        assert code == 0
-        codes = data["codes"]
-        assert [c["code"] for c in codes] == ["1", "2"]
-        assert all(c["level"] == 1 for c in codes)
-
-    def test_only_valid_requires_codes(self, classification_db: Path):
-        _data, code = _run_json(
-            classification_db,
-            ["get", "classification", "TESTKON", "--only-valid"],
-        )
-        assert code == 2  # EXIT_USAGE
-
-    def test_only_valid_returns_canonical_codes(self, classification_db: Path):
-        # TESTKON's CSV declares codes 1 and 2 as canonical (is_valid=1), so
-        # --only-valid returns both.
-        data, code = _run_json(
-            classification_db,
-            ["get", "classification", "TESTKON", "--codes", "--only-valid"],
-        )
-        assert code == 0
-        assert [c["code"] for c in data["codes"]] == ["1", "2"]
-
-    def test_codes_filtered_by_level(self, classification_db: Path):
-        data, code = _run_json(
-            classification_db,
-            ["get", "classification", "TESTKON", "--codes", "--level", "2"],
-        )
-        assert code == 0
-        # No level-2 codes in TESTKON (all are length 1).
-        assert data["codes"] == []
-
-    def test_variables(self, classification_db: Path):
-        data, code = _run_json(
-            classification_db, ["get", "classification", "TESTKON", "--variables"]
-        )
-        assert code == 0
-        variables = data["variables"]
-        # var_id 44 (Kön) appears in two registers in the fixture.
-        var_ids = {v["var_id"] for v in variables}
-        assert 44 in var_ids
-
-    def test_not_found(self, classification_db: Path):
-        data, code = _run_json(
-            classification_db, ["get", "classification", "NONEXISTENT"]
-        )
-        assert code == 16  # EXIT_NOT_FOUND
-        assert data["error"]["code"] == "not_found"
-
-    def test_level_requires_codes(self, classification_db: Path):
-        _data, code = _run_json(
-            classification_db,
-            ["get", "classification", "TESTKON", "--level", "1"],
-        )
-        assert code == 2  # EXIT_USAGE
-
-    def test_list_with_positional_fails(self, classification_db: Path):
-        _data, code = _run_json(
-            classification_db,
-            ["get", "classification", "TESTKON", "--list"],
-        )
-        assert code == 2  # EXIT_USAGE
-
-    def test_varinfo_includes_classifications(self, classification_db: Path):
-        data, code = _run_json(classification_db, ["get", "varinfo", "44"])
-        assert code == 0
-        variables = data.get("variables", [data])
-        # var_id 44 spans TESTKON (early years) and TESTKON2 (year 2022 in
-        # TESTREG) — exactly the multi-classification case the schema is
-        # designed to handle.
-        for v in variables:
-            assert "classifications" in v
-            names = {c["short_name"] for c in v["classifications"]}
-            assert names <= {"TESTKON", "TESTKON2"}
-            assert names  # at least one
-            for inst in v["instances"]:
-                if inst.get("classification"):
-                    assert inst["classification"] in {"TESTKON", "TESTKON2"}
+        assert code == 10
+        assert data["error"]["code"] == "schema_incompatible"

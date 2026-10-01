@@ -9,10 +9,9 @@ from typing import TYPE_CHECKING
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from pydantic import ValidationError
-from reg_meta.catalog import Catalog
-from reg_meta.db import open_db
 from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.catalog_dependencies import check_delivery_coverage
+from reg_meta_build.db import open_built_db
 from reg_meta_build.resolved_catalog import (
     ResolvedClassificationLink,
     ResolvedRegister,
@@ -317,10 +316,12 @@ def test_per_column_storage_survives_formation_coverage_and_catalog_read(
             }
         )
     write_resolved_catalog((variable,), tmp_path / "reg_meta.db", manifest={})
-    with closing(Catalog.open(tmp_path)) as catalog:
+    with closing(open_built_db(tmp_path / "reg_meta.db")) as conn:
         assert {
-            state.delivery_column_name: (state.data_type, state.data_length)
-            for state in catalog.resolve_at("scb/example/income", "2020")
+            row[0]: (row[1], row[2])
+            for row in conn.execute(
+                "SELECT delivery_column_name, data_type, data_length FROM variable_alias_window WHERE column_metadata='per_column'"
+            )
         } == expected
     assert (
         _form((tuple(reversed(setup[0])), tuple(reversed(setup[1])), *setup[2:]))[
@@ -390,23 +391,20 @@ def test_per_column_window_spans_coding_states_without_losing_storage(
     assert len(variable.states) == 2
     check_delivery_coverage((variable,), formed.coverage, withheld={})
     write_resolved_catalog((variable,), tmp_path / "reg_meta.db", manifest={})
-    with closing(Catalog.open(tmp_path)) as catalog:
-        states = catalog.resolve_at("scb/example/income", "2020")
+    with closing(open_built_db(tmp_path / "reg_meta.db")) as conn:
         assert {
-            (s.delivery_column_name, s.valid_from, s.valid_to, s.data_length)
-            for s in states
-        } == {
-            (col, start, end, width)
-            for col, width in (("First", "200"), ("Second", "18"))
-            for start, end in (
-                ("2020-01-01", "2020-06-30"),
-                ("2020-07-01", "2020-12-31"),
+            tuple(row)
+            for row in conn.execute("SELECT valid_from, valid_to FROM variable_state")
+        } == {("2020-01-01", "2020-06-30"), ("2020-07-01", "2020-12-31")}
+        assert {
+            tuple(row)
+            for row in conn.execute(
+                "SELECT delivery_column_name, valid_from, valid_to, data_length FROM variable_alias_window WHERE column_metadata='per_column'"
             )
+        } == {
+            ("First", "2020-01-01", "2020-12-31", "200"),
+            ("Second", "2020-01-01", "2020-12-31", "18"),
         }
-        assert {
-            s.delivery_column_name
-            for s in catalog.resolve_at("scb/example/income", "2020-10")
-        } == {"First", "Second"}
     from reg_meta.inventory_check import _expanded_columns
 
     assert _expanded_columns(
@@ -512,25 +510,22 @@ def test_shared_state_keeps_metadata_period_and_query_selects_precise_column(
     assert state.provenance is not None and "representations:" in state.provenance
     output = tmp_path / "reg_meta.db"
     write_resolved_catalog((variable,), output, manifest={})
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert conn.execute("SELECT count(*) FROM variable_state").fetchone()[0] == 1
         assert (
             conn.execute("SELECT count(*) FROM variable_alias_window").fetchone()[0]
             == 2
         )
-    catalog = Catalog.open(tmp_path)
-    try:
-        assert [
-            s.delivery_column_name
-            for s in catalog.resolve_at("scb/example/income", "2020-03")
-        ] == ["First"]
-        assert [
-            s.delivery_column_name
-            for s in catalog.resolve_at("scb/example/income", "2020-09")
-        ] == ["Second"]
-        assert catalog.resolve_at("scb/example/income", "2021-03") == []
-    finally:
-        catalog.close()
+    with closing(open_built_db(output)) as conn:
+        assert {
+            tuple(row)
+            for row in conn.execute(
+                "SELECT delivery_column_name, valid_from, valid_to FROM variable_alias_window"
+            )
+        } == {
+            ("First", "2020-01-01", "2020-06-30"),
+            ("Second", "2020-07-01", "2020-12-31"),
+        }
     reversed_setup = (tuple(reversed(setup[0])), tuple(reversed(setup[1])), *setup[2:])
     reversed_formed, _ = _form(reversed_setup)
     assert reversed_formed.variable == variable
@@ -582,21 +577,23 @@ def test_coding_cut_inside_alias_window_keeps_a_participating_base(
         "Second",
     ]
     write_resolved_catalog((formed.variable,), tmp_path / "reg_meta.db", manifest={})
-    catalog = Catalog.open(tmp_path)
-    try:
+    with closing(open_built_db(tmp_path / "reg_meta.db")) as conn:
         assert [
-            s.delivery_column_name
-            for s in catalog.resolve_at("scb/example/income", "2020-10")
-        ] == ["Second"]
-        september = catalog.resolve_at("scb/example/income", "2020-09")
-        assert len(september) == 2
-        assert {s.delivery_column_name for s in september} == {"Second"}
-        assert [(s.valid_from, s.valid_to) for s in september] == [
-            ("2020-07-01", "2020-09-14"),
-            ("2020-09-15", "2020-12-31"),
-        ]
-    finally:
-        catalog.close()
+            tuple(row)
+            for row in conn.execute(
+                "SELECT valid_from, valid_to FROM variable_state ORDER BY valid_from"
+            )
+        ] == [("2020-01-01", "2020-09-14"), ("2020-09-15", "2020-12-31")]
+        assert {
+            tuple(row)
+            for row in conn.execute(
+                "SELECT delivery_column_name, valid_from, valid_to FROM variable_alias_window"
+            )
+        } == {
+            ("First", "2020-01-01", "2020-06-30"),
+            ("Second", "2020-07-01", "2020-09-14"),
+            ("Second", "2020-09-15", "2020-12-31"),
+        }
 
 
 def _claim(name, code, year=2020):
@@ -877,7 +874,7 @@ def test_per_column_coding_preserves_native_domains_and_alias_only_index(
     check_delivery_coverage((variable,), formed.coverage, withheld={})
     output = tmp_path / "reg_meta.db"
     write_resolved_catalog((variable,), output, manifest={})
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert conn.execute("SELECT count(*) FROM value_set").fetchone()[0] == 2
         assert conn.execute("SELECT count(*) FROM code_variable_map").fetchone()[0] == 2
         assert (
@@ -989,7 +986,7 @@ def test_per_column_operation_and_attribution_do_not_borrow_sibling_facts(
     }
     check_delivery_coverage((variable,), formed.coverage, withheld={})
     write_resolved_catalog((variable,), tmp_path / "reg_meta.db", manifest={})
-    with closing(open_db(tmp_path / "reg_meta.db")) as conn:
+    with closing(open_built_db(tmp_path / "reg_meta.db")) as conn:
         assert {
             tuple(row)
             for row in conn.execute(
@@ -1171,7 +1168,7 @@ def test_checked_delivery_metadata_retain_literals_and_coverage(tmp_path):
     with pytest.raises(ValueError, match="literal delivery unit changed"):
         check_delivery_coverage((wrong,), formed.coverage, withheld={})
     write_resolved_catalog((formed.variable,), tmp_path / "reg_meta.db", manifest={})
-    with closing(open_db(tmp_path / "reg_meta.db")) as conn:
+    with closing(open_built_db(tmp_path / "reg_meta.db")) as conn:
         assert {
             row[0]
             for row in conn.execute("SELECT measurement_unit FROM variable_state")

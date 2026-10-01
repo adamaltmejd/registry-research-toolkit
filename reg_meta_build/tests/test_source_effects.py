@@ -8,10 +8,10 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
-from reg_meta.db import open_db
 from reg_meta.source_evidence import RecordLocator, SourceField, SourceRevision
 from reg_meta_build.catalog_resolution import resolve_parents
 from reg_meta_build.curation_compile import convert_column_partitions
+from reg_meta_build.db import open_built_db
 from reg_meta_build.resolved_catalog import (
     ResolvedAlias,
     ResolvedAliasWindow,
@@ -227,7 +227,7 @@ def test_search_alias_is_guarded_metadata_without_added_availability(
     ] == [("ALTERNATIVE", ())]
     output = tmp_path / "aliases.db"
     write_resolved_catalog((updated,), output, manifest={})
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert (
             conn.execute(
                 "SELECT delivery_column_name FROM variable_alias WHERE delivery_column_name='ALTERNATIVE'"
@@ -642,7 +642,7 @@ def test_holdings_period_converts_to_one_pooled_range(tmp_path: Path) -> None:
     assert state.pooled is True
     output = tmp_path / "catalog.db"
     write_resolved_catalog((formed.variable,), output, manifest={})
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert tuple(
             conn.execute(
                 "SELECT valid_from, valid_to, pooled FROM variable_state"
@@ -1278,7 +1278,7 @@ def test_explicit_identity_decision_keeps_exact_columns_and_periods(
     assert variable.variable is not None and variable.diagnostics == ()
     output = tmp_path / "catalog.db"
     write_resolved_catalog((variable.variable,), output, manifest={})
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert [
             tuple(row)
             for row in conn.execute(
@@ -1739,7 +1739,7 @@ def test_corrected_facts_and_provenance_reach_direct_materialization(
     write_resolved_catalog(
         (formed.variable,), output, manifest={"fixture": "checked-effects"}
     )
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert tuple(
             conn.execute(
                 "SELECT delivery_column_name, valid_from, valid_to, provenance FROM variable_state"
@@ -2262,7 +2262,7 @@ def test_alias_window_needs_owned_alias_and_does_not_expand_states(
     assert updated.aliases[0].windows[0].provenance is not None
     output = tmp_path / "window.db"
     write_resolved_catalog((updated,), output, manifest={})
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert conn.execute("SELECT count(*) FROM variable_state").fetchone()[0] == 1
         assert tuple(
             conn.execute(

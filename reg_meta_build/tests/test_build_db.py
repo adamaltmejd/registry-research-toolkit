@@ -10,13 +10,15 @@ import pytest
 from _csv_fixtures import (
     timeseries_row,
 )
-from reg_meta.db import SCHEMA_VERSION, get_manifest, open_db
+from reg_meta.db import SCHEMA_VERSION as READER_SCHEMA_VERSION, get_manifest, open_db
 from reg_meta.errors import RegMetaError
 from reg_meta.queries import extract_year
 from reg_meta_build.db import (
     _CP850_CANON,
+    SCHEMA_VERSION,
     _decode_cp1252,
     _value_set_hash,
+    open_built_db,
 )
 
 if TYPE_CHECKING:
@@ -82,7 +84,7 @@ class TestBuildDb:
         assert fixture_db.exists()
 
     def test_opens_read_only(self, fixture_db: Path):
-        conn = open_db(fixture_db)
+        conn = open_built_db(fixture_db)
         conn.close()
 
     def test_manifest(self, db_conn: sqlite3.Connection):
@@ -824,10 +826,10 @@ class TestBuildDbErrors:
 class TestSchemaCompat:
     """open_db rejects databases whose schema is incompatible with the code.
 
-    The check compares the major/minor components of SCHEMA_VERSION (in db.py)
+    The check compares the major/minor components of READER_SCHEMA_VERSION (in db.py)
     against the schema_version stored in the database's import_manifest table.
     Majors must match exactly, the DB minor must be >= the code minor, and
-    patch is ignored. Bump SCHEMA_VERSION's major for breaking changes and the
+    patch is ignored. Bump READER_SCHEMA_VERSION's major for breaking changes and the
     minor when the code starts reading a new column so that older DBs are
     rejected up front with a clear error instead of failing later with a
     cryptic SQL error.
@@ -848,26 +850,26 @@ class TestSchemaCompat:
         return db_path
 
     def test_compatible_same_version(self, tmp_path: Path):
-        db = self._make_db(tmp_path, SCHEMA_VERSION)
+        db = self._make_db(tmp_path, READER_SCHEMA_VERSION)
         conn = open_db(db)
         conn.close()
 
     def test_compatible_minor_bump(self, tmp_path: Path):
         """A minor version bump in the db is still compatible."""
-        major = SCHEMA_VERSION.split(".")[0]
+        major = READER_SCHEMA_VERSION.split(".")[0]
         db = self._make_db(tmp_path, f"{major}.99.0")
         conn = open_db(db)
         conn.close()
 
     def test_incompatible_major_mismatch(self, tmp_path: Path):
-        major = int(SCHEMA_VERSION.split(".")[0])
+        major = int(READER_SCHEMA_VERSION.split(".")[0])
         db = self._make_db(tmp_path, f"{major + 1}.0.0")
         with pytest.raises(RegMetaError) as exc_info:
             open_db(db)
         assert exc_info.value.code == "schema_incompatible"
 
     def test_incompatible_old_major(self, tmp_path: Path):
-        major = int(SCHEMA_VERSION.split(".")[0])
+        major = int(READER_SCHEMA_VERSION.split(".")[0])
         if major == 0:
             pytest.skip("major is already 0")
         db = self._make_db(tmp_path, f"{major - 1}.0.0")
@@ -883,7 +885,7 @@ class TestSchemaCompat:
         surfaced as a runtime `no such column` error instead of a clean
         schema_incompatible error.
         """
-        major, minor = (int(x) for x in SCHEMA_VERSION.split(".")[:2])
+        major, minor = (int(x) for x in READER_SCHEMA_VERSION.split(".")[:2])
         if minor == 0:
             pytest.skip("minor is already 0")
         db = self._make_db(tmp_path, f"{major}.{minor - 1}.0")
@@ -893,7 +895,7 @@ class TestSchemaCompat:
 
     def test_check_schema_false_skips(self, tmp_path: Path):
         """check_schema=False bypasses the compatibility check."""
-        major = int(SCHEMA_VERSION.split(".")[0])
+        major = int(READER_SCHEMA_VERSION.split(".")[0])
         db = self._make_db(tmp_path, f"{major + 1}.0.0")
         conn = open_db(db, check_schema=False)
         conn.close()

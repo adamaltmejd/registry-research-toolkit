@@ -27,8 +27,8 @@ import shutil
 from typing import TYPE_CHECKING
 
 import pytest
-from reg_meta.db import open_db
 from reg_meta.doc_db import open_doc_db
+from reg_meta_build.db import open_built_db
 from reg_meta_build.doc_coverage import (
     compute_doc_coverage,
     render_doc_coverage_toml,
@@ -148,7 +148,7 @@ def doc_db_dir(fixture_db: Path, tmp_path: Path) -> Path:
 
 
 def _catalog_conn(db_dir: Path) -> sqlite3.Connection:
-    return open_db(db_dir / "reg_meta.db")
+    return open_built_db(db_dir / "reg_meta.db")
 
 
 def _doc_conn(db_dir: Path) -> sqlite3.Connection:

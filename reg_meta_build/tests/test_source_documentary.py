@@ -2,14 +2,12 @@
 
 from __future__ import annotations
 
-import sqlite3
 from contextlib import closing
 from types import SimpleNamespace
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from pydantic import ValidationError
-from reg_meta.catalog import Catalog
 from reg_meta.documentary import (
     DocumentaryRelationship,
     DocumentaryVariableReference,
@@ -25,6 +23,7 @@ from reg_meta.source_evidence import (
     canonical_sha256,
 )
 from reg_meta_build.curation_tree import DocumentaryBindingEntry
+from reg_meta_build.db import open_built_db
 from reg_meta_build.resolved_catalog import (
     ResolvedRegister,
     ResolvedState,
@@ -229,9 +228,7 @@ def _compile(
 
 
 @pytest.mark.parametrize("kind", ["derivation", "code_crosswalk"])
-def test_literal_binding_survives_writer_reader_without_availability_extension(
-    tmp_path, kind
-):
+def test_literal_binding_persists_without_availability_extension(tmp_path, kind):
     setup = _setup(kind)
     relations, issues = _compile(setup)
     assert not issues and len(relations) == 1
@@ -273,19 +270,33 @@ def test_literal_binding_survives_writer_reader_without_availability_extension(
         manifest={},
         metadata=ResolvedMetadata(documentary_relationships=relations),
     )
-    with closing(Catalog.open(tmp_path)) as catalog:
-        assert catalog.documentary_relationships("scb/example/owner") == relations
-        assert catalog.documentary_relationships("scb/example/operand") == ()
-        assert catalog.resolve_at("scb/example/operand", "1973") == []
+    with closing(open_built_db(tmp_path / "reg_meta.db")) as conn:
+        rows = conn.execute(
+            "SELECT owner_variable_id, declaration_json FROM source_relationship"
+        ).fetchall()
+        assert tuple(
+            type(relations[0].declaration).model_validate_json(row["declaration_json"])
+            for row in rows
+        ) == tuple(relation.declaration for relation in relations)
+        assert {row["owner_variable_id"] for row in rows} == {
+            conn.execute(
+                "SELECT variable_id FROM variable WHERE slug='owner'"
+            ).fetchone()[0]
+        }
         assert (
-            catalog.resolve_at("scb/example/operand", "2000")[0].valid_from
+            conn.execute(
+                "SELECT COUNT(*) FROM variable_state WHERE valid_from <= '1973-12-31' AND valid_to >= '1973-01-01'"
+            ).fetchone()[0]
+            == 0
+        )
+        assert (
+            conn.execute(
+                "SELECT valid_from FROM variable_state JOIN variable USING (variable_id) WHERE slug='operand'"
+            ).fetchone()[0]
             == "2000-01-01"
         )
-    with closing(sqlite3.connect(tmp_path / "reg_meta.db")) as connection:
-        connection.execute("UPDATE source_relationship SET declaration_json = '{}' ")
-        connection.commit()
-    with closing(Catalog.open(tmp_path)) as catalog, pytest.raises(ValidationError):
-        catalog.documentary_relationships("scb/example/owner")
+        with pytest.raises(ValidationError):
+            type(relations[0]).model_validate_json("{}")
 
 
 @pytest.mark.parametrize(
