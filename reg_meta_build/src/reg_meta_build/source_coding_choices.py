@@ -501,6 +501,12 @@ def _selection(
             selection, claims, decision.valid_from, decision.valid_to
         )
     if isinstance(selection, DocumentedCodingSelection):
+        if (
+            selection.expected_raw_codings is not None
+            and tuple(sorted({coding_source_sha256(claim) for claim in claims}))
+            != selection.expected_raw_codings
+        ):
+            return None, "documented_source_coding_changed"
         if selection.label_equivalences and (
             selection.expected_raw_codings is None
             or tuple(sorted({coding_source_sha256(claim) for claim in claims}))
@@ -704,12 +710,20 @@ def apply_coding_choices(
                         (target.ref.source, target.ref.semantic_record_key), ()
                     )
                 )
-                or marker_binding_fingerprints(
-                    records.value_bindings.get(decision.column_key, ()),
-                    decision.valid_from,
-                    decision.valid_to,
+                or (
+                    not decision.selection.enumeration.matches_unlabelled_members(
+                        (member.code, member.label)
+                        for claim in coding.get(decision.column_key, ())
+                        for member in claim.members
+                    )
+                    if decision.selection.enumeration.syntax == "kategori-alpha-equals"
+                    else marker_binding_fingerprints(
+                        records.value_bindings.get(decision.column_key, ()),
+                        decision.valid_from,
+                        decision.valid_to,
+                    )
+                    != decision.selection.expected_marker_bindings
                 )
-                != decision.selection.expected_marker_bindings
             ):
                 report(
                     "coding_binding_changed",

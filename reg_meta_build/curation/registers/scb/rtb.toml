@@ -2,7 +2,7 @@
 provider = "scb"
 slug = "rtb"
 native_id = "2"
-steward_table_prefixes = ["RTB_SaBo_InrFlyttFlode"]
+steward_table_prefixes = ["RTB_SaBo_InrFlyttFlode", "Doda_20241231"]
 
 # SWECOV existing-register holdings for scb/rtb use pooled dataset-grain
 # `holdings_period` ranges; each entry preserves its delivery source in
@@ -2009,3 +2009,19 @@ witness = ["2008-12-31", "2008-12-31"]
 periods = [["2009-01-01", "2009-12-31"], ["2010-01-01", "2010-12-31"]]
 reason = "The complete same-native same-variant physical source column has explicit agreeing0/1 dictionaries before these years and on their exactyear-end witnesses. Use the user-approved explicit variable-to-codebook identity/validity policy for these finite annualmarker gaps. Preserve all sourceprose, including contradictorySärlag/NULL or1/NULL descriptions, allpositive0/1 labels, originalsourcevalidity and everyassociation. No inventedNULLliteral, missing-tokenencoding, statistical equivalence or observed-valueconversion."
 source = "Complete SCB same-native sourcecoding and user-approved explicit variable-to-codebook validity policy; reviewed2026-09-30"
+
+# Exact own physical holdings and source-column replacements reviewed 2026-10-01.
+
+[[errata.field]]
+variable = "2.283"
+variant = "2.57"
+column = "DodDat"
+edition = "19721"
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "DodDat" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "0" }, { name = "data_type", status = "value", value = "integer" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Datum när dödsfallet inträffade." }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Datum" }, { name = "name", status = "value", value = "Dödsdatum" }, { name = "operational_definition", status = "value", value = "Datum består av årtal, månad och dag. ÅÅÅÅMMDD" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+expected_period_text = "2024"
+expected_scope = { kind = "intervals", intervals = [{ start = "2024", end = "2024" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2024-01-01", end = "2024-12-31" }] }
+evidence = "Complete accepted physical table header contains only DodDatum for this exact own native quantity; exported DodDat is absent. Preserve original source fields; no type/coding/role borrowing."
+noted = "2026-10-01"
+field = "column_name"
+value = "DodDatum"

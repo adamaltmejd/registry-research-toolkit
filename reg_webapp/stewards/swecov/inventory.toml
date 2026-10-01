@@ -159622,7 +159622,7 @@ name = "KursKod"
 [[table.column.mapping]]
 register_variant = "scb/hreg/grundutbildning-poang"
 variable = "scb/hreg/kurskod"
-representation = "KursKod"
+representation = "Kurskod"
 
 [[table.column]]
 name = "LInr"
@@ -159693,7 +159693,7 @@ name = "linrben"
 
 [[table.column.mapping]]
 register_variant = "scb/hreg/grundutbildning-poang"
-variable = "scb/hreg/programinriktning"
+variable = "scb/hreg/hogskolans-programinriktning-linrben-kolumn"
 representation = "Linrben"
 
 [[table.column]]
@@ -159770,7 +159770,7 @@ name = "KursKod"
 [[table.column.mapping]]
 register_variant = "scb/hreg/grundutbildning-poang"
 variable = "scb/hreg/kurskod"
-representation = "KursKod"
+representation = "Kurskod"
 
 [[table.column]]
 name = "LInr"
@@ -159841,7 +159841,7 @@ name = "linrben"
 
 [[table.column.mapping]]
 register_variant = "scb/hreg/grundutbildning-poang"
-variable = "scb/hreg/programinriktning"
+variable = "scb/hreg/hogskolans-programinriktning-linrben-kolumn"
 representation = "Linrben"
 
 [[table.column]]
@@ -160164,7 +160164,7 @@ name = "KursKod"
 [[table.column.mapping]]
 register_variant = "scb/hreg/grundutbildning-1993"
 variable = "scb/hreg/kurskod"
-representation = "KursKod"
+representation = "Kurskod"
 
 [[table.column]]
 name = "KursLan"
@@ -160187,7 +160187,7 @@ name = "LInr"
 
 [[table.column.mapping]]
 register_variant = "scb/hreg/grundutbildning-1993"
-variable = "scb/hreg/programinriktning"
+variable = "scb/hreg/hogskolans-programinriktning-linr-kolumn"
 representation = "LInr"
 
 [[table.column]]
@@ -160441,7 +160441,7 @@ name = "KursKod"
 [[table.column.mapping]]
 register_variant = "scb/hreg/grundutbildning-1993"
 variable = "scb/hreg/kurskod"
-representation = "KursKod"
+representation = "Kurskod"
 
 [[table.column]]
 name = "KursLan"
@@ -160464,7 +160464,7 @@ name = "LInr"
 
 [[table.column.mapping]]
 register_variant = "scb/hreg/grundutbildning-1993"
-variable = "scb/hreg/programinriktning"
+variable = "scb/hreg/hogskolans-programinriktning-linr-kolumn"
 representation = "LInr"
 
 [[table.column]]
@@ -179109,7 +179109,7 @@ name = "SjukP_Bdag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-bruttodagar"
+variable = "scb/lisa/sjukpenning-bruttodagar-midas"
 representation = "SjukP_Bdag_MiDAS"
 
 [[table.column]]
@@ -179117,7 +179117,7 @@ name = "SjukP_Belopp_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-ersattningsbelopp"
+variable = "scb/lisa/sjukpenning-ersattningsbelopp-midas"
 representation = "SjukP_Belopp_MiDAS"
 
 [[table.column]]
@@ -179125,7 +179125,7 @@ name = "SjukP_Ndag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-nettodagar"
+variable = "scb/lisa/sjukpenning-nettodagar-midas"
 representation = "SjukP_Ndag_MiDAS"
 
 [[table.column]]
@@ -180081,7 +180081,7 @@ name = "SjukP_Bdag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-bruttodagar"
+variable = "scb/lisa/sjukpenning-bruttodagar-midas"
 representation = "SjukP_Bdag_MiDAS"
 
 [[table.column]]
@@ -180089,7 +180089,7 @@ name = "SjukP_Belopp_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-ersattningsbelopp"
+variable = "scb/lisa/sjukpenning-ersattningsbelopp-midas"
 representation = "SjukP_Belopp_MiDAS"
 
 [[table.column]]
@@ -180097,7 +180097,7 @@ name = "SjukP_Ndag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-nettodagar"
+variable = "scb/lisa/sjukpenning-nettodagar-midas"
 representation = "SjukP_Ndag_MiDAS"
 
 [[table.column]]
@@ -181077,7 +181077,7 @@ name = "SjukP_Bdag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-bruttodagar"
+variable = "scb/lisa/sjukpenning-bruttodagar-midas"
 representation = "SjukP_Bdag_MiDAS"
 
 [[table.column]]
@@ -181085,7 +181085,7 @@ name = "SjukP_Belopp_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-ersattningsbelopp"
+variable = "scb/lisa/sjukpenning-ersattningsbelopp-midas"
 representation = "SjukP_Belopp_MiDAS"
 
 [[table.column]]
@@ -181093,7 +181093,7 @@ name = "SjukP_Ndag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-nettodagar"
+variable = "scb/lisa/sjukpenning-nettodagar-midas"
 representation = "SjukP_Ndag_MiDAS"
 
 [[table.column]]
@@ -182081,7 +182081,7 @@ name = "SjukP_Bdag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-bruttodagar"
+variable = "scb/lisa/sjukpenning-bruttodagar-midas"
 representation = "SjukP_Bdag_MiDAS"
 
 [[table.column]]
@@ -182089,7 +182089,7 @@ name = "SjukP_Belopp_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-ersattningsbelopp"
+variable = "scb/lisa/sjukpenning-ersattningsbelopp-midas"
 representation = "SjukP_Belopp_MiDAS"
 
 [[table.column]]
@@ -182097,7 +182097,7 @@ name = "SjukP_Ndag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-nettodagar"
+variable = "scb/lisa/sjukpenning-nettodagar-midas"
 representation = "SjukP_Ndag_MiDAS"
 
 [[table.column]]
@@ -183109,7 +183109,7 @@ name = "SjukP_Bdag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-bruttodagar"
+variable = "scb/lisa/sjukpenning-bruttodagar-midas"
 representation = "SjukP_Bdag_MiDAS"
 
 [[table.column]]
@@ -183117,7 +183117,7 @@ name = "SjukP_Belopp_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-ersattningsbelopp"
+variable = "scb/lisa/sjukpenning-ersattningsbelopp-midas"
 representation = "SjukP_Belopp_MiDAS"
 
 [[table.column]]
@@ -183125,7 +183125,7 @@ name = "SjukP_Ndag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-nettodagar"
+variable = "scb/lisa/sjukpenning-nettodagar-midas"
 representation = "SjukP_Ndag_MiDAS"
 
 [[table.column]]
@@ -184121,7 +184121,7 @@ name = "SjukP_Bdag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-bruttodagar"
+variable = "scb/lisa/sjukpenning-bruttodagar-midas"
 representation = "SjukP_Bdag_MiDAS"
 
 [[table.column]]
@@ -184129,7 +184129,7 @@ name = "SjukP_Belopp_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-ersattningsbelopp"
+variable = "scb/lisa/sjukpenning-ersattningsbelopp-midas"
 representation = "SjukP_Belopp_MiDAS"
 
 [[table.column]]
@@ -184137,7 +184137,7 @@ name = "SjukP_Ndag_MiDAS"
 
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/sjukpenning-nettodagar"
+variable = "scb/lisa/sjukpenning-nettodagar-midas"
 representation = "SjukP_Ndag_MiDAS"
 
 [[table.column]]
@@ -194378,7 +194378,7 @@ name = "P1105_LopNr_Fastbet"
 [[table.column.mapping]]
 register_variant = "scb/rtb/inrikes-flyttningar"
 variable = "scb/rtb/fastighetsbeteckning"
-representation = "FastBet"
+representation = "Fastbet"
 
 [[table.column]]
 name = "P1105_LopNr_FastbetG"
@@ -194468,7 +194468,7 @@ name = "P1105_LopNr_Fastbet"
 [[table.column.mapping]]
 register_variant = "scb/rtb/inrikes-flyttningar"
 variable = "scb/rtb/fastighetsbeteckning"
-representation = "FastBet"
+representation = "Fastbet"
 
 [[table.column]]
 name = "P1105_LopNr_FastbetG"
@@ -194558,7 +194558,7 @@ name = "P1105_LopNr_Fastbet"
 [[table.column.mapping]]
 register_variant = "scb/rtb/inrikes-flyttningar"
 variable = "scb/rtb/fastighetsbeteckning"
-representation = "FastBet"
+representation = "Fastbet"
 
 [[table.column]]
 name = "P1105_LopNr_FastbetG"
@@ -194648,7 +194648,7 @@ name = "P1105_LopNr_Fastbet"
 [[table.column.mapping]]
 register_variant = "scb/rtb/inrikes-flyttningar"
 variable = "scb/rtb/fastighetsbeteckning"
-representation = "FastBet"
+representation = "Fastbet"
 
 [[table.column]]
 name = "P1105_LopNr_FastbetG"
@@ -194738,7 +194738,7 @@ name = "P1105_LopNr_Fastbet"
 [[table.column.mapping]]
 register_variant = "scb/rtb/inrikes-flyttningar"
 variable = "scb/rtb/fastighetsbeteckning"
-representation = "FastBet"
+representation = "Fastbet"
 
 [[table.column]]
 name = "P1105_LopNr_FastbetG"
@@ -194828,7 +194828,7 @@ name = "P1105_LopNr_Fastbet"
 [[table.column.mapping]]
 register_variant = "scb/rtb/inrikes-flyttningar"
 variable = "scb/rtb/fastighetsbeteckning"
-representation = "FastBet"
+representation = "Fastbet"
 
 [[table.column]]
 name = "P1105_LopNr_FastbetG"
@@ -194918,7 +194918,7 @@ name = "P1105_LopNr_Fastbet"
 [[table.column.mapping]]
 register_variant = "scb/rtb/inrikes-flyttningar"
 variable = "scb/rtb/fastighetsbeteckning"
-representation = "FastBet"
+representation = "Fastbet"
 
 [[table.column]]
 name = "P1105_LopNr_FastbetG"
@@ -195008,7 +195008,7 @@ name = "P1105_LopNr_Fastbet"
 [[table.column.mapping]]
 register_variant = "scb/rtb/inrikes-flyttningar"
 variable = "scb/rtb/fastighetsbeteckning"
-representation = "FastBet"
+representation = "Fastbet"
 
 [[table.column]]
 name = "P1105_LopNr_FastbetG"
@@ -195098,7 +195098,7 @@ name = "P1105_LopNr_Fastbet"
 [[table.column.mapping]]
 register_variant = "scb/rtb/inrikes-flyttningar"
 variable = "scb/rtb/fastighetsbeteckning"
-representation = "FastBet"
+representation = "Fastbet"
 
 [[table.column]]
 name = "P1105_LopNr_FastbetG"
@@ -195188,7 +195188,7 @@ name = "P1105_LopNr_Fastbet"
 [[table.column.mapping]]
 register_variant = "scb/rtb/inrikes-flyttningar"
 variable = "scb/rtb/fastighetsbeteckning"
-representation = "FastBet"
+representation = "Fastbet"
 
 [[table.column]]
 name = "P1105_LopNr_FastbetG"
@@ -287496,7 +287496,7 @@ name = "AR"
 
 [[table.column.mapping]]
 register_variant = "sos/par/par-ov"
-variable = "sos/par/ar"
+variable = "sos/par/besoksar"
 representation = "AR"
 
 [[table.column]]
@@ -287679,7 +287679,7 @@ name = "INDATUMA"
 
 [[table.column.mapping]]
 register_variant = "sos/par/par-ov"
-variable = "sos/par/indatuma"
+variable = "sos/par/besoksdatum-alfanumeriskt"
 representation = "INDATUMA"
 
 [[table.column]]
@@ -288017,7 +288017,7 @@ name = "AR"
 
 [[table.column.mapping]]
 register_variant = "sos/par/par-sv"
-variable = "sos/par/ar"
+variable = "sos/par/utskrivningsar"
 representation = "AR"
 
 [[table.column]]
@@ -288190,7 +288190,7 @@ name = "INDATUMA"
 
 [[table.column.mapping]]
 register_variant = "sos/par/par-sv"
-variable = "sos/par/indatuma"
+variable = "sos/par/inskrivningsdatum-alfanumeriskt"
 representation = "INDATUMA"
 
 [[table.column]]

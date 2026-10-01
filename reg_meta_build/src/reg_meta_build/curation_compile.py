@@ -34,6 +34,7 @@ from .curation_tree import (
     EnrichmentAliasEntry,
     EnrichmentDescriptionEntry,
     ErrataDataTypeEntry,
+    ErrataDeliveredEntry,
     ErrataFieldEntry,
     ErrataOccurrencePeriodEntry,
     ErrataSupportEntry,
@@ -1367,10 +1368,28 @@ def compile_parallel_representations(
     register: RegisterCuration,
     records: tuple[SourceRecord, ...],
     naming: tuple[NamingDeclaration, ...],
+    *,
+    ownership_cases: tuple[CurationCase, ...] = (),
 ) -> tuple[tuple[CurationCase, ...], tuple[ResolutionDiagnostic, ...]]:
     """Bind finite reviewed column windows without changing original scopes."""
+    if not register.representation.parallel:
+        return (), ()
     cases = []
     diagnostics = []
+    corrections = tuple(
+        case
+        for case in ownership_cases
+        if isinstance(case.decision, OccurrenceCorrectionDecision)
+    )
+    corrected = apply_occurrence_cases(records, corrections) if corrections else None
+    if corrected is not None and corrected.diagnostics:
+        return (), (
+            _stale_partition(
+                f"{register.source_file}#/representation.parallel",
+                register.register_info.slug,
+                "checked effective representation ownership is stale",
+            ),
+        )
     for index, entry in enumerate(register.representation.parallel, 1):
         ref = f"{register.source_file}#/representation.parallel/{index}"
         variable_names = tuple(
@@ -1408,13 +1427,72 @@ def compile_parallel_representations(
                 else native_variable_key(record) == variable_key
             )
         )
+        # Keep the uncorrected path byte-identical. A checked field/identity
+        # correction supplies effective coordinates, never replacement originals.
+        effective = (
+            tuple(
+                occurrence
+                for occurrence in corrected.occurrences
+                if occurrence.variable_key == variable_key
+                and occurrence.variant_key == variant_key
+                and occurrence.use == "catalog"
+            )
+            if corrected is not None
+            else ()
+        )
+        projected = tuple(
+            (
+                record,
+                occurrence.fields.column_name.value
+                if occurrence.fields.column_name is not None
+                and occurrence.fields.column_name.status == "value"
+                else None,
+                occurrence.edition_period_scope
+                if occurrence.edition_period_scope.kind != "not_applicable"
+                else occurrence.edition_scope,
+            )
+            for occurrence in effective
+            for record in occurrence.source_records
+        )
+        raw_projection = tuple(
+            (
+                record,
+                _literal_field(record, "column_name"),
+                record.edition_period_scope
+                if record.edition_period_scope.kind != "not_applicable"
+                else record.edition_scope,
+            )
+            for record in owned
+        )
+        lower, upper = (
+            date.fromisoformat(entry.valid_from).toordinal(),
+            date.fromisoformat(entry.valid_to).toordinal(),
+        )
+        use_effective = any(
+            literal != _literal_field(record, "column_name")
+            or source_scope
+            != (
+                record.edition_period_scope
+                if record.edition_period_scope.kind != "not_applicable"
+                else record.edition_scope
+            )
+            for record, literal, source_scope in projected
+            if any(
+                lo <= upper and hi >= lower
+                for lo, hi in (coding_scope_bounds(source_scope) or ())
+            )
+        )
+        projection = projected if use_effective else raw_projection
+        if use_effective:
+            owned = tuple(record for record, _, _ in projection)
         selected = []
+        selected_projection = []
         invalid = False
         for column in entry.columns:
             members = tuple(
-                record
-                for record in owned
-                if _literal_field(record, "column_name") == column.column
+                (record, literal, source_scope)
+                for record, literal, source_scope in projection
+                if literal == column.column
                 and _edition_label(record) in column.source_editions
             )
             bounds = (
@@ -1423,42 +1501,26 @@ def compile_parallel_representations(
             )
             if (
                 not members
-                or {_edition_label(r) for r in members} != set(column.source_editions)
+                or {_edition_label(r) for r, _, _ in members}
+                != set(column.source_editions)
                 or any(
-                    coding_scope_bounds(
-                        record.edition_period_scope
-                        if record.edition_period_scope.kind != "not_applicable"
-                        else record.edition_scope
-                    )
-                    != (bounds,)
-                    for record in members
+                    coding_scope_bounds(source_scope) != (bounds,)
+                    for _, _, source_scope in members
                 )
             ):
                 invalid = True
-            selected.extend(members)
+            selected.extend(record for record, _, _ in members)
+            selected_projection.extend(members)
         by_edition: dict[str | None, set[str | None]] = defaultdict(set)
-        for record in selected:
-            by_edition[_edition_label(record)].add(
-                _literal_field(record, "column_name")
-            )
-        lower, upper = (
-            date.fromisoformat(entry.valid_from).toordinal(),
-            date.fromisoformat(entry.valid_to).toordinal(),
-        )
+        for record, literal, _ in selected_projection:
+            by_edition[_edition_label(record)].add(literal)
         overlapping_refs = {
             record_ref(record)
-            for record in owned
-            if _literal_field(record, "column_name") is not None
+            for record, literal, source_scope in projection
+            if literal is not None
             and any(
                 lo <= upper and hi >= lower
-                for lo, hi in (
-                    coding_scope_bounds(
-                        record.edition_period_scope
-                        if record.edition_period_scope.kind != "not_applicable"
-                        else record.edition_scope
-                    )
-                    or ()
-                )
+                for lo, hi in (coding_scope_bounds(source_scope) or ())
             )
         }
         if (
@@ -1486,6 +1548,7 @@ def compile_parallel_representations(
             tuple(selected),
             fields=tuple(SourceFields.model_fields),
             coding=True,
+            parents=use_effective,
         )
         guard = PeerGuard(
             guard_id=ref,
@@ -1497,11 +1560,47 @@ def compile_parallel_representations(
             ),
             expected_members=tuple(sorted({record_ref(r) for r in peers}, key=repr)),
         )
+        owned_refs = {record_ref(record) for record in owned}
+        related_corrections = (
+            tuple(
+                case
+                for case in corrections
+                if {item.ref for item in case.targets} & owned_refs
+            )
+            if use_effective
+            else ()
+        )
+        support_refs = {
+            expectation.ref
+            for case in related_corrections
+            for expectation in (*case.targets, *case.support)
+        }
+        correction_support = tuple(
+            record for record in records if record_ref(record) in support_refs
+        )
         cases.append(
             CurationCase(
                 case_id=ref,
                 targets=targets,
-                peer_guards=(guard,),
+                support=capture_expectations(
+                    correction_support,
+                    fields=tuple(SourceFields.model_fields),
+                    parents=True,
+                    coding=True,
+                )
+                if use_effective
+                else (),
+                peer_guards=(
+                    guard,
+                    *_matrix_repr_guards(correction_support, ref + ":support"),
+                    *tuple(
+                        peer
+                        for case in related_corrections
+                        for peer in case.peer_guards
+                    ),
+                )
+                if use_effective
+                else (guard,),
                 decision=RepresentationDecision(
                     reviewed=True,
                     variable_key=variable_key,
@@ -1842,6 +1941,7 @@ def compile_matrix_repr(
                     register,
                     records,
                     (*naming.get(scope_key, ()), *names[scope_key]),
+                    ownership_cases=scope.cases,
                 )
                 cases[scope_key].extend(parallel_cases)
                 diagnostics.extend(parallel_issues)
@@ -4336,11 +4436,19 @@ def compile_coding_register(
                             authority.enumeration.matches_fields(record.fields)
                             for record in authority_records
                         )
-                        and value_bindings is not None
-                        and marker_binding_fingerprints(
-                            value_bindings.get(column, ()), start, end
+                        and (
+                            authority.enumeration.matches_unlabelled_members(
+                                (member.code, member.label)
+                                for claim in claims
+                                for member in claim.members
+                            )
+                            if authority.enumeration.syntax == "kategori-alpha-equals"
+                            else value_bindings is not None
+                            and marker_binding_fingerprints(
+                                value_bindings.get(column, ()), start, end
+                            )
+                            == tuple(sorted(authority.marker_bindings or ()))
                         )
-                        == tuple(sorted(authority.marker_bindings or ()))
                     )
                     if (
                         tuple(authority.records) != expected
@@ -4617,7 +4725,8 @@ def _select_occurrence_correction(
         and (
             not isinstance(entry, ErrataFieldEntry)
             or (
-                entry.field not in {"classification_declared", "measurement_unit"}
+                entry.field
+                not in {"classification_declared", "measurement_unit", "column_name"}
                 and not (
                     entry.field == "name" and entry.expected_scope.kind == "intervals"
                 )
@@ -4953,12 +5062,17 @@ def compile_occurrence_corrections(
                                 name="column_name", status="value", value=entry.column
                             ),
                             *(
-                                tuple(entry.expected_fields)
+                                tuple(
+                                    field
+                                    for field in entry.expected_fields
+                                    if field.name != "column_name"
+                                )
                                 if entry.field
                                 in {
                                     "classification_declared",
                                     "measurement_unit",
                                     "name",
+                                    "column_name",
                                 }
                                 else ()
                             ),
@@ -5018,8 +5132,14 @@ def compile_occurrence_corrections(
                             ),
                             fields=entry_guarded_fields,
                             coding=True,
-                            parents=isinstance(entry, ErrataSupportEntry)
-                            and entry.kind == "nonphysical_projection",
+                            parents=(
+                                isinstance(entry, ErrataSupportEntry)
+                                and entry.kind == "nonphysical_projection"
+                            )
+                            or (
+                                isinstance(entry, ErrataFieldEntry)
+                                and entry.field == "column_name"
+                            ),
                         )
                         + (
                             tuple(entry.authority)
@@ -5372,6 +5492,7 @@ def compile_errata(
                         )
                         variant_contexts[variant_id] = context
                     if table == "delivered":
+                        assert isinstance(row, ErrataDeliveredEntry)
                         assert row.versions is not None
                         entry = delivered[
                             register_id,
@@ -5379,12 +5500,63 @@ def compile_errata(
                             fold_column(row.column),
                             tuple(row.versions),
                         ]
+                        donor_keys = {
+                            native_variable_key(record)
+                            for record in context.by_column.get(
+                                fold_column(row.column), ()
+                            )
+                            if entry.native_variable_id is None
+                            or record.subject.native.variable_id
+                            == entry.native_variable_id
+                        }
+                        component_base_key = None
+                        if len(donor_keys) == 1 and None not in donor_keys:
+                            base = next(iter(donor_keys))
+                            assert base is not None
+                            native_id = next(
+                                record.subject.native.variable_id
+                                for record in context.by_column[fold_column(row.column)]
+                                if native_variable_key(record) == base
+                            )
+                            by_edition: dict[NativeKey, set[NativeKey]] = defaultdict(
+                                set
+                            )
+                            literal_owners = set()
+                            for owner, pairs in partition_members.get(
+                                scope_key, {}
+                            ).items():
+                                if owner[: len(base)] != base:
+                                    continue
+                                for record in context.by_variable.get(native_id, ()):
+                                    literal = _literal_field(record, "column_name")
+                                    if (
+                                        literal is None
+                                        or (record_ref(record), literal) not in pairs
+                                    ):
+                                        continue
+                                    occurrence = source_occurrence(record)
+                                    if occurrence.edition_key is None:
+                                        continue
+                                    by_edition[occurrence.edition_key].add(owner)
+                                    if fold_column(literal) == fold_column(row.column):
+                                        literal_owners.add(owner)
+                            # Simultaneous reviewed components cannot all rewrite
+                            # one negative omnibus row. Keep that row as evidence.
+                            if len(literal_owners) == 1 and any(
+                                len(owners) > 1 for owners in by_edition.values()
+                            ):
+                                component_base_key = base
                         result = convert_delivered_entry(
                             entry,
                             case_id=case_id,
                             context=context,
                             steward_table_prefixes=register.register_info.steward_table_prefixes,
                             storage_columns=register_storage_columns,
+                            preserve_blank_native_base=component_base_key is not None,
+                            additional_physical_column=(
+                                row.upstream == "additional-physical-column-in-version"
+                            ),
+                            storage_column=row.storage_column,
                         )
                         blockers, converted = result.blockers, result.case
                     else:
@@ -5447,6 +5619,12 @@ def compile_errata(
                         )
                         if isinstance(effect, CuratedOccurrenceAddition):
                             variable_key = effect.variable_key
+                            if component_base_key == variable_key:
+                                corrected_families[variable_key] = tuple(
+                                    record
+                                    for record in records
+                                    if native_variable_key(record) == variable_key
+                                )
                         elif blank_target:
                             assert isinstance(effect, CheckedFieldChange)
                             target_records = tuple(
@@ -6314,6 +6492,20 @@ def compile_curation(
         tree, prepared, scopes, subset=subset
     )
     preliminary_cases = compile_scb_preliminary(prepared, scopes)
+    (
+        errata_cases,
+        errata_naming,
+        errata_keys,
+        errata_diagnostics,
+        errata_report,
+    ) = compile_errata(
+        tree,
+        prepared,
+        scopes,
+        _partition_memberships(partition_cases),
+        subset=subset,
+        storage_columns=storage_columns,
+    )
     matrix_cases, matrix_names, matrix_keys, matrix_diagnostics = compile_matrix_repr(
         tree,
         prepared,
@@ -6326,6 +6518,7 @@ def compile_curation(
                         *correction_cases.get((scope.source, scope.register_key), ()),
                         *thin_cases.get((scope.source, scope.register_key), ()),
                         *preliminary_cases.get((scope.source, scope.register_key), ()),
+                        *errata_cases.get((scope.source, scope.register_key), ()),
                     )
                 }
             )
@@ -6342,20 +6535,6 @@ def compile_curation(
         key: (*values, *matrix_keys.get(key, ()))
         for key, values in provider_keys.items()
     }
-    (
-        errata_cases,
-        errata_naming,
-        errata_keys,
-        errata_diagnostics,
-        errata_report,
-    ) = compile_errata(
-        tree,
-        prepared,
-        scopes,
-        _partition_memberships(partition_cases),
-        subset=subset,
-        storage_columns=storage_columns,
-    )
     for key, extra in errata_cases.items():
         cases[key].extend(extra)
     for key, extra in errata_naming.items():

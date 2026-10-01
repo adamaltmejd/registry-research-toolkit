@@ -1761,6 +1761,8 @@ def _convert_delivered(
     native_variable_id: int | None = None,
     prefixes: tuple[str, ...] = (),
     storage_columns: dict[tuple[str, str], SourceColumnTypeDeclaration] | None = None,
+    additional_physical_column: bool = False,
+    storage_column: str | None = None,
 ):
     assert target_edition.original_period_text is not None
     target = source_occurrence(target_edition)
@@ -1792,7 +1794,82 @@ def _convert_delivered(
         ),
         steward_table_prefixes=prefixes,
         storage_columns=storage_columns,
+        additional_physical_column=additional_physical_column,
+        storage_column=storage_column,
     )
+
+
+@pytest.mark.parametrize("drift", ["field", "parent", "missing", "new"])
+def test_additional_delivery_preserves_siblings_and_checks_complete_family(
+    drift: str,
+) -> None:
+    donor = _record(cvid=10, column="VALUE", year="2022", data_type="integer")
+    target = _record(cvid=21, column="OTHER")
+    sibling = _record(cvid=22, column="SECOND")
+    outside = _record(cvid=23, column="EARLIER", year="2018")
+    records = donor, target, sibling, outside
+    converted = _convert_delivered(
+        records, target, native_variable_id=5, additional_physical_column=True
+    )
+    assert converted.case is not None and not converted.blockers
+    applied = apply_occurrence_cases(records, (converted.case,))
+    assert not applied.diagnostics
+    assert tuple(o.fields.column_name.value for o in applied.occurrences[:-1]) == (
+        "VALUE",
+        "OTHER",
+        "SECOND",
+        "EARLIER",
+    )
+    addition = applied.occurrences[-1]
+    assert addition.fields.column_name == value_field("VALUE")
+    assert addition.fields.data_type is None
+    assert addition.fields.operational_definition is None
+    assert tuple(r.record_id for r in addition.evidence) == (donor.record_id,)
+    if drift == "field":
+        changed = outside.model_copy(
+            update={
+                "fields": outside.fields.model_copy(
+                    update={"definition": value_field("Changed quantity")}
+                )
+            }
+        )
+        altered = donor, target, sibling, changed
+    elif drift == "parent":
+        altered = (
+            donor,
+            target,
+            sibling,
+            outside.model_copy(update={"parent_facts": ()}),
+        )
+    elif drift == "missing":
+        altered = donor, target, sibling
+    else:
+        altered = *records, _record(cvid=24, column="NEW", year="2017")
+    assert apply_occurrence_cases(altered, (converted.case,)).diagnostics
+
+
+def test_additional_delivery_requires_anchor_and_refuses_present_column() -> None:
+    from pydantic import ValidationError
+    from reg_meta_build.curation_tree import ErrataDeliveredEntry
+
+    with pytest.raises(ValidationError, match="requires native_variable_id"):
+        ErrataDeliveredEntry(
+            variant="people",
+            column="VALUE",
+            versions=["2020"],
+            evidence="Exact physical holding",
+            noted="2026-10-01",
+            upstream="additional-physical-column-in-version",
+        )
+    donor = _record(cvid=10, column="VALUE", year="2022")
+    present = _record(cvid=21, column="VALUE")
+    with pytest.raises(ValueError, match="requires native_variable_id"):
+        _convert_delivered((donor, present), present, additional_physical_column=True)
+    result = _convert_delivered(
+        (donor, present), present, native_variable_id=5, additional_physical_column=True
+    )
+    assert result.case is None
+    assert any(x.startswith("now_present:") for x in result.blockers)
 
 
 @pytest.mark.parametrize(
@@ -1845,6 +1922,23 @@ def test_errata_context_preserves_physical_alternatives_and_edition_names() -> N
     assert context.editions == (binding, binding)
     assert context.by_column["value"] == (first, second, first)
     assert context.records_for_refs({record_ref(first)}) == (first, second, first)
+    for references in ({record_ref(first)}, {record_ref(other)}, set(context.by_ref)):
+        assert context.expectations_for_refs(references) == capture_expectations(
+            context.records_for_refs(references),
+            fields=tuple(SourceFields.model_fields),
+            parents=True,
+            coding=True,
+        )
+    assert context.complete_expectations is context.complete_expectations
+    changed = second.model_copy(
+        update={
+            "fields": second.fields.model_copy(update={"name": value_field("changed")})
+        }
+    )
+    changed_context = ErrataVariantContext((first, other, changed), 1, 2, (binding,))
+    assert changed_context.expectations_for_refs({record_ref(first)}) != (
+        context.expectations_for_refs({record_ref(first)})
+    )
     for field_name in ("records", "editions"):
         with pytest.raises(FrozenInstanceError):
             setattr(context, field_name, ())
@@ -1909,6 +2003,7 @@ def test_delivery_statement_types_without_inheriting_flags_or_coding() -> None:
     assert applied.diagnostics == ()
     added = applied.occurrences[-1]
     assert added.source_records == ()
+    assert set(added.support_records) == {before, after}
     assert added.fields == SourceFields(
         availability=value_field(True),
         column_name=value_field("VALUE"),
@@ -1918,6 +2013,18 @@ def test_delivery_statement_types_without_inheriting_flags_or_coding() -> None:
     assert isinstance(addition, CuratedOccurrenceAddition)
     assert addition.donor is None and addition.copied_fields == ()
     assert added.edition_scope == _scope("2020")
+    assert record_ref(edition) in {item.ref for item in result.case.support}
+    changed_edition = edition.model_copy(
+        update={
+            "fields": edition.fields.model_copy(update={"name": value_field("changed")})
+        }
+    )
+    assert (
+        apply_occurrence_cases((before, after, changed_edition), (result.case,))
+        .accounting[0]
+        .disposition
+        == "stale"
+    )
     # New source members require review; they never become automatic donors.
     nearer = _record(cvid=40, column="vAlUe", year="2021")
     changed = apply_occurrence_cases((*records, nearer), (result.case,))
@@ -2383,3 +2490,41 @@ def test_dated_alias_window_cannot_annualize_independent_delivery():
     )
     assert result.variables[key] == independent
     assert [issue.code for issue in result.diagnostics] == ["unsupported_alias_scope"]
+
+
+@pytest.mark.parametrize("header", ["PHYSICAL", "WRONG", None, "", " PHYSICAL"])
+def test_additional_delivery_uses_only_explicit_own_storage_header(header):
+    donor = _record(cvid=10, column="VALUE", year="2022", data_type="integer")
+    target = _record(cvid=21, column="OTHER")
+    if header in {"", " PHYSICAL"}:
+        with pytest.raises(ValueError, match="trimmed nonempty header"):
+            _convert_delivered(
+                (donor, target),
+                target,
+                native_variable_id=5,
+                additional_physical_column=True,
+                storage_column=header,
+            )
+        return
+    converted = _convert_delivered(
+        (donor, target),
+        target,
+        native_variable_id=5,
+        additional_physical_column=True,
+        storage_column=header,
+        prefixes=("CIS",),
+        storage_columns=_storage_columns(("CIS2020", "varchar"), column="PHYSICAL"),
+    )
+    if header == "WRONG":
+        assert converted.case is None
+        assert converted.blockers == ("unsupported_storage_header",)
+    else:
+        assert converted.case is not None
+        added = apply_occurrence_cases((donor, target), (converted.case,)).occurrences[
+            -1
+        ]
+        assert (added.fields.data_type.value if added.fields.data_type else None) == (
+            "text" if header else None
+        )
+        assert added.fields.operational_definition is None
+        assert not added.coding_records

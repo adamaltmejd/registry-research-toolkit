@@ -732,8 +732,8 @@ def test_repo_coding_windows_are_ported() -> None:
         )
         for entry in kind
     ]
-    assert len(coding) == 215
-    assert sum(len(entry.periods) for entry in coding) == 373
+    assert len(coding) == 308
+    assert sum(len(entry.periods) for entry in coding) == 560
     assert (
         sum(
             entry.source_authority is not None
@@ -741,7 +741,7 @@ def test_repo_coding_windows_are_ported() -> None:
             for register in tree.registers
             for entry in register.coding.documented
         )
-        == 1
+        == 2
     )
     assert (
         sum(
@@ -1154,9 +1154,9 @@ def test_repo_scb_errata_parses() -> None:
     )
     assert errata  # the verified LISA DispInkKE case ships with the repo
     assert (len(errata.delivered), len(errata.columns), len(errata.versions)) == (
-        260,
+        387,
         1885,
-        4,
+        10,
     )
     # scb/lisa "Individer, 15 år och äldre"; pin the complete coordinates of
     # these named records without assuming the multi-register file contains
@@ -1288,7 +1288,7 @@ def test_repo_column_owning_splits_resolve_to_a_slug() -> None:
         sum(len(register.identity.split) for register in tree.registers),
         sum(len(register.identity.rename) for register in tree.registers),
         sum(len(register.identity.column_owner) for register in tree.registers),
-    ) == (20, 21, 1, 237)
+    ) == (20, 21, 1, 350)
     # Y-303 rev 2: six reused PAR native names each deliver distinct source
     # concepts. AR/INDATUM/INDATUMA/ALDER/IDNR split by Deldatamängd; FODDAT
     # splits by data type because its OV/SV text originals share one
@@ -2815,20 +2815,20 @@ def test_repo_reviewed_parallel_columns_keep_exact_wave_intersections() -> None:
     registers = {register.register_info.slug: register for register in tree.registers}
     innovation = registers["innovation-foretag"]
     hreg = registers["hreg"]
-    assert len(innovation.representation.parallel) == 95
+    assert len(innovation.representation.parallel) == 127
     assert (
         sum(
             e.column_metadata == "per_column"
             for e in innovation.representation.parallel
         )
-        == 65
+        == 97
     )
     assert (
         sum(
             e.coding_metadata == "per_column"
             for e in innovation.representation.parallel
         )
-        == 7
+        == 34
     )
     assert len(hreg.representation.parallel) == 1
     for register in (innovation, hreg):

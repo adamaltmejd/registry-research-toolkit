@@ -2099,18 +2099,6 @@ native_id = "25.49050"
 slug = "tetabj"  # source: kolumnnamn
 
 [[variable]]
-native_id = "25.102.divfrip"
-slug = "divfrip"  # source: kolumnnamn
-
-[[variable]]
-native_id = "25.102.isjuk"
-slug = "isjuk"  # source: kolumnnamn
-
-[[variable]]
-native_id = "25.102.sjukpf"
-slug = "sjukpf"  # source: kolumnnamn
-
-[[variable]]
 native_id = "25.105.sktot"
 slug = "sktot"  # source: kolumnnamn
 
@@ -2573,18 +2561,6 @@ slug = "fkuutftsek"  # source: kolumnnamn
 [[variable]]
 native_id = "25.33.binsta"
 slug = "binsta"  # source: kolumnnamn
-
-[[variable]]
-native_id = "25.35589.skslutf"
-slug = "skslutf"  # source: kolumnnamn
-
-[[variable]]
-native_id = "25.35589.sktotf"
-slug = "sktotf"  # source: kolumnnamn
-
-[[variable]]
-native_id = "25.35589.stotexh"
-slug = "stotexh"  # source: kolumnnamn
 
 [[variable]]
 native_id = "25.35594.bhmpnrt"

@@ -3251,6 +3251,117 @@ def test_checked_delivered_blank_column_uses_partition_atomically(tmp_path: Path
         assert untouched.variable_key == native
 
 
+def test_delivered_components_preserve_shared_negative_native_base(tmp_path: Path):
+    donors = tuple(
+        _errata_record(column=column, year="2020", member=20 + index)
+        for index, column in enumerate(("A", "B", "C"))
+    )
+    blank = _errata_record(column="", year="2021", member=30)
+    records = (*donors, blank)
+    fragment = "".join(
+        _DELIVERED.replace('column = "A"', f'column = "{c}"') for c in ("A", "B", "C")
+    )
+    tree, prepared, scope = _errata_fixture(tmp_path, records, fragment)
+    path = tmp_path / "curation/registers/scb/sample.toml"
+    path.write_text(
+        path.read_text()
+        + "".join(
+            f'\n[[variable]]\nnative_id="1.5.{c.lower()}"\nslug="{c.lower()}"\n'
+            for c in ("A", "B", "C")
+        )
+        + '\n[[identity.partition]]\nvariable="1.5"\ncolumns={A="1.5.a",B="1.5.b",C="1.5.c"}\ncolumns_ref="exact simultaneous components"\n'
+    )
+    tree = load_curation_tree(tmp_path / "curation")
+    native = native_variable_key(blank)
+    assert native is not None
+    prepared.records.iter_partition_families = lambda *args, **kwargs: iter(
+        ((native, records),)
+    )
+    direct = compile_partitions(tree, prepared, (scope,))
+    assert not direct[3]
+    deferred = compile_deferred_partitions(tree, prepared, (scope,))
+    key = scope.source, scope.register_key
+    first = compile_errata(
+        tree, prepared, (scope,), _partition_memberships(direct[0]), subset=False
+    )
+    second = compile_errata(tree, prepared, (scope,), deferred[3], subset=False)
+    assert repr(first).encode() == repr(second).encode()
+    assert not first[3]
+    cases = first[0][key]
+    assert len(cases) == 3
+    assert all(
+        len(c.decision.effects) == 1
+        and isinstance(c.decision.effects[0], CuratedOccurrenceAddition)
+        for c in cases
+    )
+    actual = apply_occurrence_cases(records, (*direct[0][key], *cases))
+    assert not actual.diagnostics
+    original = next(o for o in actual.occurrences if o.source_records == (blank,))
+    assert original.fields == blank.fields
+    assert original.variable_key == native
+    additions = [o for o in actual.occurrences if o.source_records == ()]
+    assert len(additions) == 3
+    assert {o.variable_key for o in additions} == {
+        (*native, "accepted-partition", f"1.5.{c.lower()}") for c in ("A", "B", "C")
+    }
+    assert all(
+        o.fields.data_length is None and o.fields.identifier is None for o in additions
+    )
+    assert all(not case.decision.effects[0].copy_coding for case in cases)
+    changed_prose = blank.model_copy(
+        update={
+            "fields": blank.fields.model_copy(
+                update={"definition": value_field("new meaning")}
+            )
+        }
+    )
+    changed_parent = blank.model_copy(update={"parent_facts": ()})
+    changed_codes = blank.model_copy(
+        update={
+            "code_set_references": (
+                CodeSetReference(
+                    reference_id="new",
+                    content_sha256="a" * 64,
+                    physical_locator="codes:1",
+                ),
+            )
+        }
+    )
+    unknown = blank.model_copy(
+        update={
+            "fields": blank.fields.model_copy(
+                update={"column_name": SourceField(status="unknown")}
+            )
+        }
+    )
+    positive = blank.model_copy(
+        update={
+            "fields": blank.fields.model_copy(
+                update={"column_name": value_field("OTHER")}
+            )
+        }
+    )
+    new_peer = _errata_record(column="", year="2021", member=31)
+    for changed in (changed_prose, changed_parent, changed_codes, unknown, positive):
+        stale = apply_occurrence_cases((*donors, changed), cases)
+        assert all(a.disposition == "stale" for a in stale.accounting)
+        assert not any(o.source_records == () for o in stale.occurrences)
+    for drifted in (donors, (*records, new_peer)):
+        stale = apply_occurrence_cases(drifted, cases)
+        assert all(a.disposition == "stale" for a in stale.accounting)
+        assert not any(o.source_records == () for o in stale.occurrences)
+    for drifted in ((*donors, unknown), (*donors, positive), (*records, new_peer)):
+        prepared.records.iter_register_slices = (
+            lambda *args, _records=drifted, **kwargs: iter(
+                ((scope.register_key, _records),)
+            )
+        )
+        refused = compile_errata(
+            tree, prepared, (scope,), _partition_memberships(direct[0]), subset=False
+        )
+        assert refused[0] == {} and refused[3]
+
+
 @pytest.mark.parametrize("mode", ["ambiguous", "new_literal"])
 def test_delivered_blank_partition_rejects_unproved_owner(tmp_path: Path, mode: str):
     donor = _errata_record(column="A", year="2020")
@@ -7007,3 +7118,152 @@ def test_scoped_partial_owner_withholds_unowned_shared_ref_projection(tmp_path, 
     )
     assert deferred[0] == compiled[1]
     assert deferred[3] == _partition_memberships(compiled[0])
+
+
+def test_parallel_representation_uses_checked_effective_literal_and_raw_guards(
+    tmp_path,
+):
+    from reg_meta_build.curation_compile import compile_parallel_representations
+    from reg_meta_build.source_curation import (
+        CheckedFieldChange,
+        CheckedIdentityChange,
+        CurationCase,
+        FieldExpectation,
+        OccurrenceCorrectionDecision,
+        capture_expectations,
+        evaluate_cases,
+    )
+
+    path, records, naming = _pooled_parallel_fixture(tmp_path)
+    (register,) = load_register_files(path.parents[2])
+    raw = (
+        records[0],
+        records[1].model_copy(
+            update={
+                "fields": records[1].fields.model_copy(
+                    update={"column_name": value_field("OldSecond")}
+                )
+            }
+        ),
+    )
+    owner = naming[-1].target.source_key
+    targets = capture_expectations(
+        raw, fields=tuple(SourceFields.model_fields), parents=True, coding=True
+    )
+    correction = CurationCase(
+        case_id="reviewed-column",
+        targets=targets,
+        peer_guards=naming[-1].target.peer_guards,
+        decision=OccurrenceCorrectionDecision(
+            reviewed=True,
+            effects=(
+                *(
+                    CheckedIdentityChange(ref=record_ref(r), variable_key=owner)
+                    for r in raw
+                ),
+                CheckedFieldChange(
+                    ref=record_ref(raw[1]),
+                    replacement=FieldExpectation(
+                        name="column_name", status="value", value="Second"
+                    ),
+                ),
+            ),
+            reason="Exact supplied literal correction",
+            provenance="fixture",
+        ),
+    )
+    assert compile_parallel_representations(register, raw, naming)[0] == ()
+    (case,), issues = compile_parallel_representations(
+        register, raw, naming, ownership_cases=(correction,)
+    )
+    assert issues == ()
+    assert evaluate_cases((case,), raw)[0].status == "applicable"
+    assert any(
+        field.value == "OldSecond"
+        for target in case.targets
+        for alternative in target.alternatives
+        for field in alternative.fields
+        if field.name == "column_name"
+    )
+    changed = (
+        raw[0],
+        raw[1].model_copy(
+            update={
+                "fields": raw[1].fields.model_copy(
+                    update={"definition": value_field("Changed meaning")}
+                )
+            }
+        ),
+    )
+    assert evaluate_cases((case,), changed)[0].status == "stale"
+    assert (
+        compile_parallel_representations(
+            register, changed, naming, ownership_cases=(correction,)
+        )[0]
+        == ()
+    )
+    empty = register.model_copy(
+        update={
+            "representation": register.representation.model_copy(
+                update={"parallel": []}
+            )
+        }
+    )
+    assert compile_parallel_representations(
+        empty, changed, naming, ownership_cases=(correction,)
+    ) == ((), ())
+    before = compile_parallel_representations(register, records, naming)
+    assert before == compile_parallel_representations(
+        register, records, naming, ownership_cases=()
+    )
+
+
+def test_column_correction_requires_complete_fields_and_preserves_original(tmp_path):
+    from reg_meta_build.source_records import SourceFields
+
+    tree, scope, source, _, base = _checked_correction_fixture(tmp_path)
+    guards = list(
+        capture_expectations((source,), fields=tuple(SourceFields.model_fields))[0]
+        .alternatives[0]
+        .fields
+    )
+    entry = ErrataFieldEntry(
+        **{
+            **base.model_dump(exclude={"field", "value", "expected_fields"}),
+            "expected_fields": guards,
+        },
+        field="column_name",
+        value="PHYSICAL",
+    )
+    register = tree.registers[0]
+    tree = replace(
+        tree,
+        registers=(
+            register.model_copy(
+                update={"errata": register.errata.model_copy(update={"field": [entry]})}
+            ),
+        ),
+    )
+    cases, issues, _ = _run_checked_correction(tree, scope, (source,))
+    assert not issues
+    applied = apply_occurrence_cases((source,), cases[scope.source, None])
+    assert not applied.diagnostics
+    assert applied.occurrences[0].fields.column_name.value == "PHYSICAL"
+    assert applied.occurrences[0].source_records == (source,)
+    changed = source.model_copy(
+        update={
+            "fields": source.fields.model_copy(
+                update={"data_length": value_field("17")}
+            )
+        }
+    )
+    assert apply_occurrence_cases((changed,), cases[scope.source, None]).diagnostics
+    _, stale, _ = _run_checked_correction(tree, scope, (changed,))
+    assert stale
+    for updates in (
+        {"expected_fields": guards[:-1]},
+        {"edition": None},
+        {"value": source.fields.column_name.value},
+    ):
+        with pytest.raises(ValueError):
+            ErrataFieldEntry.model_validate({**entry.model_dump(), **updates})

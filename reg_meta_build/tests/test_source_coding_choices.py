@@ -2508,3 +2508,163 @@ def test_label_equivalence_requires_exact_positive_source_alternatives(
 
     with pytest.raises(ValidationError):
         CodeLabelEquivalence(code="14", labels=labels, selected_label=selected)
+
+
+@pytest.mark.parametrize("three_codes", [False, True])
+def test_closed_alpha_own_name_certifies_bare_source_codes(three_codes):
+    from reg_meta_build.source_coding import coding_source_sha256
+    from reg_meta_build.source_curation import SourceEnumeration
+
+    pairs = (("LEG", "legitimation"), ("SPEC", "specialitet"))
+    if three_codes:
+        pairs += (("EXAM", "examen"),)
+    lines = tuple(f"{code} = {label}" for code, label in pairs)
+    prose = "Kategori " + ", ".join(lines[:-1]) + " eller " + lines[-1]
+    record = _record().model_copy(
+        update={
+            "fields": _record().fields.model_copy(update={"name": value_field(prose)})
+        }
+    )
+    claims = (
+        CodeListClaim(
+            "bare",
+            record.edition_scope,
+            tuple(
+                CodeMembershipClaim(code, None, TemporalScope(kind="year_independent"))
+                for code, _ in pairs
+            ),
+        ),
+    )
+    authority = _row_authority(record, claims).model_dump(mode="json")
+    authority.update(
+        enumeration={
+            "field": "name",
+            "syntax": "kategori-alpha-equals",
+            "lines": lines,
+        },
+        raw_codings=[coding_source_sha256(claims[0])],
+    )
+    cases, issues, register, scope, columns, column = _compile_entry(
+        "documented",
+        {
+            "members": pairs,
+            "version_label": "Own literal meanings",
+            "source_authority": authority,
+        },
+        claims,
+        record=record,
+    )
+    assert len(cases) == 1 and not issues
+    evidence = SourceEvidence((record,), value_bindings={})
+    applied = apply_coding_choices(evidence, cases, coding={column: claims})
+    assert not applied.diagnostics
+    assert set(applied.coding[column].segments[0].code_set.members) == set(pairs)
+    assert applied.coding[column].claims == claims
+    certificate = SourceEnumeration.model_validate(authority["enumeration"])
+    for changed in (
+        "Not " + prose,
+        prose + " or OTHER = other",
+        prose.replace("legitimation", "unknown"),
+        prose.replace("SPEC", "OTHER"),
+    ):
+        fields = record.fields.model_copy(update={"name": value_field(changed)})
+        assert not certificate.matches_fields(fields)
+        altered = record.model_copy(update={"fields": fields})
+        fresh, issues = compile_coding_register(
+            register,
+            scope,
+            originals=(altered,),
+            columns={column: (altered,)},
+            column_scopes=_column_scopes(columns),
+            coding={column: claims},
+        )
+        assert not fresh and issues
+        assert apply_coding_choices(
+            SourceEvidence((altered,), value_bindings={}),
+            cases,
+            coding={column: claims},
+        ).diagnostics
+    changed_claim = replace(
+        claims[0],
+        members=claims[0].members
+        + (CodeMembershipClaim("OTHER", None, TemporalScope(kind="year_independent")),),
+    )
+    assert apply_coding_choices(
+        evidence, cases, coding={column: (changed_claim,)}
+    ).diagnostics
+
+
+@pytest.mark.parametrize("drift", ["missing", "peer", "parent", "code_label"])
+def test_closed_alpha_certificate_refuses_complete_source_evidence_drift(drift):
+    from reg_meta_build.source_coding import coding_source_sha256
+
+    record = _record().model_copy(
+        update={
+            "fields": _record().fields.model_copy(
+                update={
+                    "name": value_field(
+                        "Kategori LEG = legitimation eller SPEC = specialitet"
+                    )
+                }
+            )
+        }
+    )
+    claims = (
+        CodeListClaim(
+            "bare",
+            record.edition_scope,
+            tuple(
+                CodeMembershipClaim(code, None, TemporalScope(kind="year_independent"))
+                for code in ("LEG", "SPEC")
+            ),
+        ),
+    )
+    authority = _row_authority(record, claims).model_dump(mode="json")
+    authority.update(
+        enumeration={
+            "field": "name",
+            "syntax": "kategori-alpha-equals",
+            "lines": ["LEG = legitimation", "SPEC = specialitet"],
+        },
+        raw_codings=[coding_source_sha256(claims[0])],
+    )
+    cases, issues, register, scope, columns, column = _compile_entry(
+        "documented",
+        {
+            "members": [["LEG", "legitimation"], ["SPEC", "specialitet"]],
+            "version_label": "Own literal meanings",
+            "source_authority": authority,
+        },
+        claims,
+        record=record,
+    )
+    assert len(cases) == 1 and not issues
+    rows = (record,)
+    if drift == "missing":
+        rows = ()
+    elif drift == "peer":
+        rows += (_record(2021),)
+    elif drift == "parent":
+        rows = (record.model_copy(update={"parent_facts": ()}),)
+    else:
+        claims = (
+            replace(
+                claims[0],
+                members=(
+                    replace(claims[0].members[0], label="Unreviewed"),
+                    claims[0].members[1],
+                ),
+            ),
+        )
+    fresh, issues = compile_coding_register(
+        register,
+        scope,
+        originals=rows,
+        columns={column: rows},
+        column_scopes=_column_scopes(columns),
+        coding={column: claims},
+    )
+    assert not fresh and issues
+    assert apply_coding_choices(
+        SourceEvidence(rows, value_bindings={}), cases, coding={column: claims}
+    ).diagnostics

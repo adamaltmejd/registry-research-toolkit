@@ -431,6 +431,7 @@ def _run_pipeline(
         raise ValueError(
             "build outputs must be separate from build inputs and each other"
         )
+    input_started = time.perf_counter()
     prepared = open_prepared_catalog_sources(
         prepared_path,
         input_commit=input_commit,
@@ -457,6 +458,8 @@ def _run_pipeline(
         raise ValueError(
             "curation scopes name a source outside the prepared occurrence-source selection"
         )
+    _emit_timing("pipeline: load prepared sources and scope indexes", input_started)
+    curation_started = time.perf_counter()
     tree = load_curation_tree(curation_dir)
     references, family_references = _classification_references(tree)
     label_rules = {
@@ -484,6 +487,8 @@ def _run_pipeline(
         subset=bool(registers),
         storage_columns=storage_columns,
     )
+    _emit_timing("pipeline: compile selected curation", curation_started)
+    contract_started = time.perf_counter()
     if "_classifications" in compiled.report:
         valid_overrides = set(compiled.report["_classifications"]["entries_matched"])
         classification_overrides = {
@@ -504,8 +509,10 @@ def _run_pipeline(
     )
     selected = CompiledGlobals.model_validate_json(global_json)
     scopes = {key: _compiled_scope(key, compiled) for key in visit}
+    _emit_timing("pipeline: validate compiled global contracts", contract_started)
     unselected_scopes: dict[tuple[str, NativeKey | None], CompiledScope] = {}
     if registers and not check:
+        deferred_started = time.perf_counter()
         outside_keys = scope_keys - visit
         outside = tuple(
             CompiledScope(source=source, register_key=register)
@@ -523,6 +530,7 @@ def _run_pipeline(
             )
             for key in sorted(outside_keys, key=repr)
         }
+        _emit_timing("pipeline: compile deferred naming", deferred_started)
     coding_registers = {
         f"{register.register_info.provider}/{register.register_info.slug}": register
         for register in tree.registers

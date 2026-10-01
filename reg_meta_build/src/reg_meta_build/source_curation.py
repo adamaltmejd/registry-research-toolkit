@@ -828,21 +828,31 @@ class SourceEnumeration(_CurationModel):
     """Reviewed complete literal lines under one explicitly named source syntax."""
 
     field: Literal[
-        "definition", "operational_definition", "description", "representation"
+        "name", "definition", "operational_definition", "description", "representation"
     ]
-    syntax: Literal["ascii-decimal-dot-space"]
+    syntax: Literal["ascii-decimal-dot-space", "kategori-alpha-equals"]
     lines: Annotated[tuple[str, ...], Field(strict=False, min_length=1)]
 
     @model_validator(mode="after")
     def _explicit_decimal_lines(self) -> Self:
         codes = []
         for line in self.lines:
-            code, separator, label = line.partition(". ")
+            code, separator, label = line.partition(
+                ". " if self.syntax == "ascii-decimal-dot-space" else " = "
+            )
             if (
                 not separator
                 or not code.isascii()
-                or not code.isdecimal()
+                or not (
+                    code.isdecimal()
+                    if self.syntax == "ascii-decimal-dot-space"
+                    else code.isalpha()
+                )
                 or not label.strip()
+                or (
+                    self.syntax == "kategori-alpha-equals"
+                    and any(token in label for token in ("\n", ", ", " eller ", " = "))
+                )
             ):
                 raise ValueError(
                     "enumeration requires literal ASCII decimal code and label lines"
@@ -853,12 +863,31 @@ class SourceEnumeration(_CurationModel):
         return self
 
     def matches_members(self, members: tuple[tuple[str, str], ...]) -> bool:
-        return self.lines == tuple(f"{code}. {label}" for code, label in members)
+        separator = ". " if self.syntax == "ascii-decimal-dot-space" else " = "
+        return self.lines == tuple(
+            f"{code}{separator}{label}" for code, label in members
+        )
+
+    def matches_unlabelled_members(
+        self, members: Iterable[tuple[str | None, str | None]]
+    ) -> bool:
+        """The closed alpha certificate labels exactly the supplied bare code keys."""
+        pairs = set(members)
+        return self.syntax == "kategori-alpha-equals" and pairs == {
+            (line.partition(" = ")[0], None) for line in self.lines
+        }
 
     def matches_fields(self, fields: SourceFields) -> bool:
         fact = getattr(fields, self.field)
         if fact is None or fact.status != "value" or not isinstance(fact.value, str):
             return False
+        if self.syntax == "kategori-alpha-equals":
+            clauses = (
+                ", ".join(self.lines[:-1]) + " eller " + self.lines[-1]
+                if len(self.lines) > 1
+                else self.lines[0]
+            )
+            return fact.value == "Kategori " + clauses
         lines = []
         for line in fact.value.splitlines():
             code, separator, _ = line.partition(". ")
@@ -957,17 +986,25 @@ class DocumentedCodingSelection(_CurationModel):
             self.label_equivalences
         ):
             raise ValueError("label equivalences must use distinct source codes")
-        if (self.enumeration is None) != (self.expected_marker_bindings is None):
+        if (
+            self.enumeration is None
+            or self.enumeration.syntax != "ascii-decimal-dot-space"
+        ) != (self.expected_marker_bindings is None):
             raise ValueError("enumerated authority needs exact marker bindings")
         if self.enumeration is not None and (
-            not self.expected_marker_bindings
+            (
+                not self.expected_marker_bindings
+                if self.enumeration.syntax == "ascii-decimal-dot-space"
+                else not self.expected_raw_codings
+            )
             or self.expected_source_codings is None
             or not self.enumeration.matches_members(self.members)
-            or self.source_scope is not None
-        ):
-            raise ValueError(
-                "enumerated authority requires complete finite literal members"
+            or (
+                self.enumeration.syntax == "ascii-decimal-dot-space"
+                and self.source_scope is not None
             )
+        ):
+            raise ValueError("enumerated authority requires complete literal members")
         return self
 
 
@@ -1258,6 +1295,7 @@ def _compare_expectation(
     role: Literal["target", "support"],
     expected: RecordExpectation,
     records: list[SourceRecord],
+    actual_by_token: dict[str, RecordProjection],
 ) -> ApplicabilityIssue | None:
     subject = "/".join((expected.ref.source, *expected.ref.semantic_record_key))
     if not records:
@@ -1270,11 +1308,6 @@ def _compare_expectation(
             detail="expected semantic source member is absent",
             missing_members=(expected.ref,),
         )
-    shape = expected.alternatives[0]
-    actual_by_token = {
-        _model_token(projected): projected
-        for projected in (_project_record(record, shape) for record in records)
-    }
     expected_by_token = {
         _model_token(alternative): alternative for alternative in expected.alternatives
     }
@@ -1344,6 +1377,9 @@ class SourceEvidence:
     ) -> None:
         self.records = tuple(records)
         self.value_bindings = value_bindings
+        self.projections: dict[
+            tuple[SourceRecordRef, tuple[object, ...]], dict[str, RecordProjection]
+        ] = {}
         self.grouped: dict[tuple[str, tuple[str, ...]], list[SourceRecord]] = (
             defaultdict(list)
         )
@@ -1429,6 +1465,38 @@ class SourceEvidence:
             for column in columns:
                 grouped[column].append(record)
         return {column: tuple(records) for column, records in grouped.items()}
+
+    def projected_records(
+        self, expected: RecordExpectation
+    ) -> dict[str, RecordProjection]:
+        shape = expected.alternatives[0]
+        key = (
+            expected.ref,
+            (
+                tuple(field.name for field in shape.fields),
+                shape.edition_scope is not None,
+                shape.edition_period_scope is not None,
+                shape.subject is not None,
+                tuple(
+                    name
+                    for name in NativeCoordinates.model_fields
+                    if getattr(shape.native, name) is not None
+                )
+                if shape.native is not None
+                else None,
+                shape.parent_facts is not None,
+                shape.code_set_references is not None,
+            ),
+        )
+        if key not in self.projections:
+            self.projections[key] = {
+                _model_token(projected): projected
+                for projected in (
+                    _project_record(record, shape)
+                    for record in self.grouped.get(_ref_key(expected.ref), [])
+                )
+            }
+        return self.projections[key]
 
     def peers(self, guard: PeerGuard) -> Iterable[SourceRecord]:
         # Column/variable selectors make the many finite correction checks cheap.
@@ -1517,6 +1585,7 @@ def _evaluate_source_expectations(
                 role=role,
                 expected=expected,
                 records=evidence.grouped.get(_ref_key(expected.ref), []),
+                actual_by_token=evidence.projected_records(expected),
             )
             if issue is not None:
                 issues.append(issue)

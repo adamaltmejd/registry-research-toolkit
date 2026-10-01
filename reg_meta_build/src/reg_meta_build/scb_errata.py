@@ -60,7 +60,7 @@ if TYPE_CHECKING:
 
     from .curation_tree import RegisterCuration
     from .source_coordinates import NativeKey
-    from .source_curation import OccurrenceEffect, SourceRecordRef
+    from .source_curation import OccurrenceEffect, RecordExpectation, SourceRecordRef
     from .source_records import SourceRecord
     from .source_reference_records import SourceColumnTypeDeclaration
 
@@ -906,6 +906,22 @@ class ErrataVariantContext:
             )
         )
 
+    @functools.cached_property
+    def complete_expectations(self) -> tuple[RecordExpectation, ...]:
+        return capture_expectations(
+            self.records,
+            fields=tuple(SourceFields.model_fields),
+            parents=True,
+            coding=True,
+        )
+
+    def expectations_for_refs(
+        self, references: set[SourceRecordRef]
+    ) -> tuple[RecordExpectation, ...]:
+        return tuple(
+            item for item in self.complete_expectations if item.ref in references
+        )
+
 
 def convert_delivered_entry(
     entry: ErrataDelivered,
@@ -914,14 +930,29 @@ def convert_delivered_entry(
     context: ErrataVariantContext,
     steward_table_prefixes: tuple[str, ...] = (),
     storage_columns: dict[tuple[str, str], SourceColumnTypeDeclaration] | None = None,
+    preserve_blank_native_base: bool = False,
+    additional_physical_column: bool = False,
+    storage_column: str | None = None,
 ) -> ErrataConversion:
     """Retain the availability stated by an accepted omission declaration.
 
     An elsewhere-documented column must identify one source-native variable.
     Its documented type and matching storage schemas supply widened type evidence.
     Proximity in time never proves flags or code membership.
+    A compiler-proved simultaneous component keeps the negative native base as
+    guarded support and uses the existing independent addition path instead.
     """
     context.require_coordinates(entry.register_id, entry.register_variant_id)
+    if additional_physical_column and entry.native_variable_id is None:
+        raise ValueError("additional physical delivery requires native_variable_id")
+    if storage_column is not None and (
+        not additional_physical_column
+        or not storage_column.strip()
+        or storage_column != storage_column.strip()
+    ):
+        raise ValueError(
+            "explicit storage header requires an additional physical delivery and a trimmed nonempty header"
+        )
     records, editions = context.records, context.editions
     for name in entry.versions:
         if not any(edition.name == name for edition in editions):
@@ -970,17 +1001,23 @@ def convert_delivered_entry(
         data_type_class(value) for _, value in documented_values if value is not None
     )
     storage_classes, storage_evidence = steward_column_storage_classes(
-        entry.column, steward_table_prefixes, storage_columns or {}
+        storage_column or entry.column, steward_table_prefixes, storage_columns or {}
     )
+    if storage_column is not None and not storage_classes:
+        return ErrataConversion(None, ("unsupported_storage_header",), references)
     inferred_type = (
-        widen_data_type_classes(
-            (
-                *storage_classes,
-                *(kind for kind in documented_classes if kind is not None),
+        widen_data_type_classes(storage_classes)
+        if additional_physical_column
+        else (
+            widen_data_type_classes(
+                (
+                    *storage_classes,
+                    *(kind for kind in documented_classes if kind is not None),
+                )
             )
+            if None not in documented_classes
+            else None
         )
-        if None not in documented_classes
-        else None
     )
     provenance = "\n".join(
         (
@@ -994,6 +1031,7 @@ def convert_delivered_entry(
     )
     effects: list[OccurrenceEffect] = []
     targets: set[SourceRecordRef] = set()
+    retained_blank_refs: set[SourceRecordRef] = set()
     blockers = []
     guards = [
         PeerGuard(
@@ -1008,6 +1046,22 @@ def convert_delivered_entry(
             expected_members=references,
         )
     ]
+    if additional_physical_column:
+        family = context.by_variable.get(native.variable_id, ())
+        guards.append(
+            PeerGuard(
+                guard_id=f"{case_id}:complete-native-family",
+                source=records[0].source,
+                native=NativeCoordinates(
+                    register_id=entry.register_id,
+                    register_variant_id=entry.register_variant_id,
+                    variable_id=native.variable_id,
+                ),
+                expected_members=tuple(
+                    sorted({record_ref(r) for r in family}, key=str)
+                ),
+            )
+        )
     for edition in (item for item in editions if item.name in entry.versions):
         if edition.native_id is not None and any(
             record.subject.native.edition_id == edition.native_id
@@ -1042,17 +1096,35 @@ def convert_delivered_entry(
                 ),
             )
         )
-        if len({record.subject.native.member_id for record in matching}) > 1:
+        if (
+            not additional_physical_column
+            and len({record.subject.native.member_id for record in matching}) > 1
+        ):
             blockers.append(
                 f"ambiguous_target:{edition.name}:variable:{native.variable_id}"
             )
             continue
-        if any(_text(record, "column_name") for record in matching):
+        if not additional_physical_column and any(
+            _text(record, "column_name") for record in matching
+        ):
             blockers.append(
                 f"target_under_other_column:{edition.name}:variable:{native.variable_id}"
             )
             continue
-        if matching:
+        if matching and additional_physical_column:
+            retained_blank_refs.update(record_ref(record) for record in matching)
+        elif matching and preserve_blank_native_base:
+            if any(
+                record.fields.column_name is None
+                or record.fields.column_name.status != "negative"
+                for record in matching
+            ):
+                blockers.append(
+                    f"unproved_negative_native_base:{edition.name}:variable:{native.variable_id}"
+                )
+                continue
+            retained_blank_refs.update(record_ref(record) for record in matching)
+        elif matching:
             for ref in sorted({record_ref(record) for record in matching}, key=str):
                 targets.add(ref)
                 effects.append(
@@ -1090,7 +1162,21 @@ def convert_delivered_entry(
                 ),
                 edition_scope=edition.edition_scope,
                 edition_period_scope=edition.edition_period_scope,
-                evidence=tuple(sorted({*references, *edition.support}, key=str)),
+                # Edition support guards the date assertion; unrelated variables
+                # are not contributors to this quantity's coding or metadata.
+                evidence=tuple(
+                    sorted(
+                        {
+                            *references,
+                            *(
+                                record_ref(record)
+                                for record in matching
+                                if not additional_physical_column
+                            ),
+                        },
+                        key=str,
+                    )
+                ),
             )
         )
     if blockers:
@@ -1098,6 +1184,7 @@ def convert_delivered_entry(
     required = (
         targets
         | set(references)
+        | retained_blank_refs
         | {
             ref
             for edition in editions
@@ -1105,14 +1192,13 @@ def convert_delivered_entry(
             for ref in edition.support
         }
     )
+    if additional_physical_column:
+        required.update(
+            record_ref(r) for r in context.by_variable.get(native.variable_id, ())
+        )
     # Ownership depends on the complete supplied meaning and source bindings.
     # Capturing flags/coding guards them; it does not copy them across editions.
-    expected = capture_expectations(
-        context.records_for_refs(required),
-        fields=tuple(SourceFields.model_fields),
-        parents=True,
-        coding=True,
-    )
+    expected = context.expectations_for_refs(required)
     case = CurationCase(
         case_id=case_id,
         targets=tuple(item for item in expected if item.ref in targets),

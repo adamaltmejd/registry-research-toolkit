@@ -415,7 +415,32 @@ source variant during compilation. It validates complete native coordinates and 
 references before indexing literal folded columns, native variables and semantic refs.
 Ordered physical duplicates remain in each index. Every entry still checks its exact
 source peers and facts; the context changes lookup cost, not evidence or guard behavior.
-It is local to the compiler invocation, so no cached source state survives a build.
+Complete field, parent and coding projections are captured once per immutable context;
+selecting refs retains all physical alternatives. Applicability checks likewise reuse
+actual projections only within one immutable `SourceEvidence`, keyed by semantic ref and
+every selected projection coordinate. New evidence requires a fresh context. No cached
+source state survives a build. An added delivery retains its own literal donor and
+negative native-base records as quantity evidence. Complete edition or variant support
+still guards the correction, but unrelated variables cannot become contributors to that
+quantity's metadata or coding authority.
+
+An explicitly reviewed `upstream = "additional-physical-column-in-version"` entry
+requires a native-variable anchor and adds the exact physical column alongside the
+edition's existing columns. It retains positive siblings and negative native bases
+unchanged. Complete native-family and edition peers guard the addition, including
+siblings outside the target period. An already supplied own literal refuses the entry.
+This mode takes storage type only from that physical column's storage evidence; it does
+not borrow predecessor metadata, flags, operation or coding. An optional
+`storage_column` names a reviewed physical header when it differs from the catalog
+literal. It is permitted only in this anchored mode and must have a supported storage
+declaration under the inspected table prefixes. Missing or unsupported headers refuse
+the addition; header suffixes never infer a mapping.
+
+An exact `errata.field` column-name correction can replace a positively supplied old
+label when complete holdings headers and documentation establish the same native
+quantity's physical replacement. It requires all source fields, exact edition and scope,
+complete family peers, parents and coding. Original cells remain intact; the correction
+does not assert simultaneous delivery of the old and replacement columns.
 
 SOS `[[errata.data_type]]` corrects one existing original record's interpreted
 `data_type` without changing its delivered cells. It names the original Deldatamängd
@@ -721,6 +746,12 @@ recognized type-marker bindings are fingerprinted separately, including their or
 raw associations; absent, changed or competing finite bindings invalidate the decision.
 The original type markers remain evidence. This route supplies only the exact stored
 codes and labels explicitly enumerated in the source, with all later coding unchanged.
+The separate own-name syntax accepts only a complete `Kategori` assignment of literal
+alphabetic codes to meanings separated by commas or `eller`. Exact incomplete source
+list tokens must agree with that enumeration. Complete original and raw-list guards
+remain required; arbitrary prose, negations and unlisted code tokens cannot supply a
+domain. This own-name route may use an exact supplied open source scope; the decimal
+marker route retains its finite-period requirement.
 
 `coding.support` retains one proven erroneous physical association as documentary
 support while excluding only that association from effective membership in a finite
@@ -797,6 +828,11 @@ separate evidence and are not inferred from a shared native identifier. Later so
 drift stales the checked case. Metadata and coding conflicts still pass through the
 existing reconciliation diagnostics.
 
+When an existing checked omission correction supplies the effective column or edition
+scope, parallel compilation verifies that correction first and includes its complete
+source authority. It checks the exact corrected intersection while retaining the raw
+original fields and outer windows. A stale correction cannot supply a representation.
+
 An explicit `column_metadata = "per_column"` retains physical type, width, operational
 definition and source attribution on each checked representation window. Each literal
 column is reconciled independently; a conflict within that column remains unknown and
@@ -843,7 +879,11 @@ Unknown names still withhold the quantity unless complete checked positive state
 are available. Unit permission requires positive quantity names and definitions, permits
 exact supplied absence alongside at least one positive unit, and writes NULL for that
 absence without interpreting it. Unknown units and contradictions within one column
-remain unresolved.
+remain unresolved. A checked added delivery with no supplied unit may retain NULL under
+that permission only when its exact column and period are covered and every own donor is
+a fully guarded target with positive quantity names and definitions. This does not
+transfer a donor's unit. Added positive or unknown units remain refused; name and
+description permissions do not receive this exception.
 
 Ordinary delivery-metadata windows remain finite. An explicitly authored `source_scope`
 may retain an open supplied delivery scope only when it exactly matches every effective

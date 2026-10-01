@@ -335,6 +335,24 @@ class ErrataDeliveredEntry(_CurationModel):
     noted: str
     upstream: str | None = None
     native_variable_id: int | None = None
+    storage_column: str | None = None
+
+    @model_validator(mode="after")
+    def _additional_delivery_anchor(self) -> ErrataDeliveredEntry:
+        if self.storage_column is not None and (
+            self.upstream != "additional-physical-column-in-version"
+            or not self.storage_column.strip()
+            or self.storage_column != self.storage_column.strip()
+        ):
+            raise ValueError(
+                "storage_column requires an anchored additional physical delivery and an exact header"
+            )
+        if (
+            self.upstream == "additional-physical-column-in-version"
+            and self.native_variable_id is None
+        ):
+            raise ValueError("additional physical delivery requires native_variable_id")
+        return self
 
 
 class ErrataColumnEntry(_CurationModel):
@@ -516,12 +534,22 @@ class _OccurrenceCorrectionEntry(_CurationModel):
 
 
 class ErrataFieldEntry(_OccurrenceCorrectionEntry):
+    @field_validator("expected_fields")
+    @classmethod
+    def _prose_guards(cls, value: list[FieldExpectation]) -> list[FieldExpectation]:
+        if {item.name for item in value} == set(SourceFields.model_fields) and len(
+            value
+        ) == len(SourceFields.model_fields):
+            return value
+        return _OccurrenceCorrectionEntry._prose_guards(value)
+
     field: Literal[
         "name",
         "definition",
         "description",
         "classification_declared",
         "measurement_unit",
+        "column_name",
     ]
     value: str
 
@@ -529,6 +557,18 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
 
     @model_validator(mode="after")
     def _changed_text(self) -> ErrataFieldEntry:
+        full_fields = {item.name for item in self.expected_fields} == set(
+            SourceFields.model_fields
+        )
+        if self.field == "column_name":
+            if not full_fields or self.edition is None:
+                raise ValueError(
+                    "column corrections require complete source fields and an exact edition"
+                )
+        elif full_fields:
+            raise ValueError(
+                "complete field guards are reserved for column corrections"
+            )
         if self.field in {"classification_declared", "measurement_unit"} and not {
             "classification_declared",
             "representation",
@@ -1285,8 +1325,15 @@ class PreparedCodingAuthority(_CurationModel):
         if self.enumeration is None:
             if not self.codings or self.marker_bindings is not None:
                 raise ValueError("source-row token authority requires supplied codings")
-        elif not self.marker_bindings or self.source_scope is not None:
-            raise ValueError("enumeration requires marker evidence and finite periods")
+        elif (
+            not self.marker_bindings
+            if self.enumeration.syntax == "ascii-decimal-dot-space"
+            else not self.raw_codings or self.marker_bindings is not None
+        ) or (
+            self.enumeration.syntax == "ascii-decimal-dot-space"
+            and self.source_scope is not None
+        ):
+            raise ValueError("enumeration requires checked binding evidence")
         if self.source_scope is not None:
             from .source_coding import coding_scope_bounds
 
@@ -1371,6 +1418,10 @@ class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
         elif (
             self.source_authority.raw_codings is not None
             and not self.source_authority.label_equivalences
+            and (
+                self.source_authority.enumeration is None
+                or self.source_authority.enumeration.syntax != "kategori-alpha-equals"
+            )
         ):
             raise ValueError(
                 "raw choice coding fingerprints belong to choice authority"

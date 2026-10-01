@@ -216,6 +216,49 @@ def test_native_identity_projection_ignores_unselected_metadata() -> None:
         RecordProjection(native=NativeCoordinates())
 
 
+def test_reused_evidence_keeps_distinct_projection_shapes_and_new_source_changes() -> (
+    None
+):
+    original = _record(
+        source="scb-source",
+        key=("member",),
+        register_name="Register",
+        member_name="Variable",
+        fields=SourceFields(data_type=value_field("text")),
+        edition_scope=_interval("2020", "2020"),
+        native=NativeCoordinates(register_id=1, variable_id=5),
+    )
+    cases = tuple(
+        CurationCase(
+            case_id=f"shape-{index}",
+            decision=_decision(),
+            targets=(RecordExpectation(ref=_ref(original), alternatives=(shape,)),),
+        )
+        for index, shape in enumerate(
+            (
+                RecordProjection(native=NativeCoordinates(register_id=1)),
+                RecordProjection(native=NativeCoordinates(variable_id=6)),
+                RecordProjection(fields=(_field("data_type", "value", "text"),)),
+                RecordProjection(fields=(_field("data_type", "value", "integer"),)),
+            )
+        )
+    )
+    evidence = SourceEvidence((original, original))
+    expected = evaluate_cases(cases, (original, original))
+    assert [result.status for result in expected] == [
+        "applicable",
+        "stale",
+        "applicable",
+        "stale",
+    ]
+    assert evaluate_cases(cases, evidence) == expected
+    assert evaluate_cases(tuple(reversed(cases)), evidence) == tuple(reversed(expected))
+    changed = original.model_copy(
+        update={"fields": SourceFields(data_type=value_field("integer"))}
+    )
+    assert evaluate_case(cases[2], SourceEvidence((changed,))).status == "stale"
+
+
 def test_peer_coordinates_match_native_identity_without_using_its_label() -> None:
     record = _record(
         source="provider-source",

@@ -592,16 +592,39 @@ def _checked_delivery_metadata(
             continue
         valid = True
         for occurrence in effective:
-            if (
-                occurrence.variable_key != decision.variable_key
-                or not occurrence.source_records
-                or occurrence.support_records
-                or occurrence.occurrence_key is not None
+            # Guarded additions have no supplied unit. Their checked own donors
+            # establish identity; their units must not become the added unit.
+            added_unit_absence = (
+                field == "measurement_unit"
+                and occurrence.identity_checked
+                and bool(occurrence.corrections)
+                and not occurrence.source_records
+                and bool(occurrence.support_records)
+                and occurrence.occurrence_key is not None
+                and occurrence.fields.measurement_unit is None
+            )
+            if occurrence.variable_key != decision.variable_key or (
+                not added_unit_absence
+                and (
+                    not occurrence.source_records
+                    or occurrence.support_records
+                    or occurrence.occurrence_key is not None
+                )
             ):
                 valid = False
                 break
+            contributors = (
+                occurrence.support_records
+                if added_unit_absence
+                else occurrence.source_records
+            )
             if field == "measurement_unit" and any(
-                not _text(occurrence.fields, required)
+                not _text(fields, required)
+                for fields in (
+                    tuple(source.fields for source in contributors)
+                    if added_unit_absence
+                    else (occurrence.fields,)
+                )
                 for required in ("name", "definition")
             ):
                 valid = False
@@ -635,7 +658,7 @@ def _checked_delivery_metadata(
             ):
                 valid = False
                 break
-            for source in occurrence.source_records:
+            for source in contributors:
                 target = targets[record_ref(source)]
                 if not any(
                     projection.edition_scope == source.edition_scope
@@ -644,9 +667,13 @@ def _checked_delivery_metadata(
                         _field_matches(source, expected)
                         for expected in projection.fields
                     )
-                    and any(
-                        expected.name == field and _field_matches(occurrence, expected)
-                        for expected in projection.fields
+                    and (
+                        added_unit_absence
+                        or any(
+                            expected.name == field
+                            and _field_matches(occurrence, expected)
+                            for expected in projection.fields
+                        )
                     )
                     for projection in target.alternatives
                 ):
