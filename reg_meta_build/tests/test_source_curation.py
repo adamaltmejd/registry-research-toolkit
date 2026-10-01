@@ -413,6 +413,13 @@ def test_an_acknowledgement_names_its_issue_and_pins_no_source_members() -> None
             ),
             decision=decision,
         )
+    with pytest.raises(ValidationError, match="not source pins"):
+        CurationCase(
+            case_id="fingerprinted",
+            targets=(),
+            decision=decision,
+            expected_evidence_sha256="0" * 64,
+        )
     with pytest.raises(ValidationError, match="reason and evidence"):
         AcknowledgeDecision.model_validate({**decision.model_dump(), "evidence": " "})
 

@@ -24,6 +24,7 @@ from reg_meta_build.source_curation import (
     RecordProjection,
     SourceEvidence,
     SourceRecordRef,
+    evaluate_cases,
 )
 from reg_meta_build.source_naming import (
     AcceptedNamingEntry,
@@ -38,7 +39,12 @@ from reg_meta_build.source_naming import (
     native_scb_naming_id,
     read_naming_selection,
 )
-from reg_meta_build.source_records import NativeCoordinates
+from reg_meta_build.source_records import (
+    CodeSetReference,
+    NativeCoordinates,
+    SourceFields,
+    value_field,
+)
 from reg_meta_build.sources.scb_records import clean_scb_row
 
 from reg_meta_build.fqid_slugs import SlugEntry, declared_column_ownership
@@ -421,6 +427,98 @@ def test_naming_selection_entries_feed_declared_partition_conversion(
     assert [binding.source_id for binding in converted.bindings] == list(_Y167_SPLITS)
     assert converted.case.decision.kind == "correct_occurrences"
     assert converted.case.decision.provenance.endswith(f"column ownership: {_Y167_REF}")
+
+
+def _native_with_annual_override(records, overrides):
+    return convert_column_partitions(
+        records,
+        source_id="1.101",
+        split_ids=("1.101", "1.101.annual"),
+        declared_columns={"COL": "1.101"},
+        declaration_reference="Explicit collection default and annual operation",
+        scoped_owners=overrides,
+        guard_fields=tuple(SourceFields.model_fields),
+    )
+
+
+def test_native_default_and_exact_annual_override_preserve_both_owners() -> None:
+    from reg_meta_build.source_effects import record_ref
+
+    records = (
+        _record(1001, description="Collection"),
+        _record(1002, description="Annual"),
+    )
+    converted = _native_with_annual_override(
+        records, {(record_ref(records[1]), "COL"): "1.101.annual"}
+    )
+    assert converted.diagnostics == () and converted.case is not None
+    assert {binding.source_id for binding in converted.bindings} == {
+        "1.101",
+        "1.101.annual",
+    }
+    assert (
+        evaluate_cases((converted.case,), SourceEvidence(records))[0].status
+        == "applicable"
+    )
+    effects = converted.case.decision.effects
+    assert effects[0].variable_key == native_variable_key(records[0])
+    assert effects[1].variable_key[-1] == "1.101.annual"
+
+
+@pytest.mark.parametrize("bad", ["missing", "ref", "literal", "owner"])
+def test_native_annual_override_rejects_missing_or_unmatched_ownership(
+    bad: str,
+) -> None:
+    from reg_meta_build.source_effects import record_ref
+
+    records = (_record(1001), _record(1002))
+    ref = record_ref(_record(1003)) if bad == "ref" else record_ref(records[1])
+    column = "FOREIGN" if bad == "literal" else "COL"
+    owner = "1.102.annual" if bad == "owner" else "1.101.annual"
+    overrides = {} if bad == "missing" else {(ref, column): owner}
+    with pytest.raises(
+        ValueError,
+        match="complete columns and split keys|unmatched|outside this family",
+    ):
+        _native_with_annual_override(records, overrides)
+
+
+@pytest.mark.parametrize("drift", ["field", "coding", "removed", "new_peer"])
+def test_native_annual_override_refuses_original_and_peer_drift(drift: str) -> None:
+    from reg_meta_build.source_effects import record_ref
+
+    records = (_record(1001), _record(1002))
+    case = _native_with_annual_override(
+        records, {(record_ref(records[1]), "COL"): "1.101.annual"}
+    ).case
+    assert case is not None
+    if drift == "field":
+        changed = records[1].model_copy(
+            update={
+                "fields": records[1].fields.model_copy(
+                    update={"description": value_field("Changed annual operation")}
+                )
+            }
+        )
+        evidence = (*records[:1], changed)
+    elif drift == "coding":
+        changed = records[1].model_copy(
+            update={
+                "code_set_references": (
+                    CodeSetReference(
+                        reference_id="changed",
+                        content_sha256="0" * 64,
+                        physical_locator="source-cell",
+                    ),
+                )
+            }
+        )
+        evidence = (*records[:1], changed)
+    elif drift == "removed":
+        evidence = records[:1]
+    else:
+        evidence = (*records, _record(1003))
+    assert evaluate_cases((case,), SourceEvidence(evidence))[0].status != "applicable"
 
 
 def test_nonidentical_duplicate_bindings_block_and_identical_duplicates_coalesce() -> (

@@ -540,8 +540,14 @@ class _OccurrenceCorrectionEntry(_CurationModel):
 
 class ErrataFieldEntry(_OccurrenceCorrectionEntry):
     expected_records: list[RecordExpectation] | None = Field(default=None, min_length=1)
+    authority_records: list[RecordExpectation] | None = Field(
+        default=None, min_length=1
+    )
+    expected_evidence_sha256: str | None = Field(
+        default=None, pattern=r"^[0-9a-f]{64}$"
+    )
 
-    @field_validator("expected_records", mode="before")
+    @field_validator("expected_records", "authority_records", mode="before")
     @classmethod
     def _original_shapes(cls, values):
         return None if values is None else _record_expectation_shapes(values)
@@ -571,6 +577,14 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
 
     @model_validator(mode="after")
     def _changed_text(self) -> ErrataFieldEntry:
+        if (self.authority_records is None) != (self.expected_evidence_sha256 is None):
+            raise ValueError("name authority requires complete peers and evidence hash")
+        if self.authority_records is not None and (
+            self.field != "name" or self.expected_records is None
+        ):
+            raise ValueError(
+                "same-family authority is reserved for guarded name corrections"
+            )
         full_fields = {item.name for item in self.expected_fields} == set(
             SourceFields.model_fields
         )
@@ -621,6 +635,11 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
             alternatives = tuple(
                 p for record in self.expected_records for p in record.alternatives
             )
+            authority = tuple(
+                p
+                for record in self.authority_records or ()
+                for p in record.alternatives
+            )
             if (
                 len({record.ref for record in self.expected_records})
                 != len(self.expected_records)
@@ -631,7 +650,7 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
                     or p.edition_period_scope is None
                     or p.parent_facts is None
                     or p.code_set_references is None
-                    for p in alternatives
+                    for p in (*alternatives, *authority)
                 )
                 or not any(
                     all(field in p.fields for field in self.expected_fields)
@@ -643,7 +662,11 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
                         field.name == self.field
                         and field.status == "value"
                         and field.value == self.value
-                        for p in alternatives
+                        for p in (
+                            authority
+                            if self.authority_records is not None
+                            else alternatives
+                        )
                         for field in p.fields
                     )
                 )
@@ -652,6 +675,27 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
                     "source attribution corrections require complete original guards"
                     if self.field == "source_attribution"
                     else "alternative field corrections require complete original guards and an existing source replacement literal"
+                )
+        if self.authority_records is not None:
+            assert self.expected_records is not None
+            originals = (*self.expected_records, *self.authority_records)
+            subjects = tuple(p.subject for e in originals for p in e.alternatives)
+            first = subjects[0]
+            if (
+                len({e.ref for e in originals}) != len(originals)
+                or len({e.ref.source for e in originals}) != 1
+                or first is None
+                or first.variable.native_id is None
+                or any(
+                    subject is None
+                    or subject.provider != first.provider
+                    or subject.register_name != first.register_name
+                    or subject.variable.native_id != first.variable.native_id
+                    for subject in subjects
+                )
+            ):
+                raise ValueError(
+                    "name authority must be disjoint peers in the same native family"
                 )
         return self
 
@@ -1191,6 +1235,16 @@ class IdentitySplitEntry(_CurationModel):
     variable: str
     by: Literal["data_type", "deldatamangd", "name", "description"]
     parts: list[IdentitySplitPart]
+    expected_records: list[RecordExpectation] | None = Field(default=None, min_length=1)
+    expected_evidence_sha256: str | None = Field(
+        default=None, pattern=r"^[0-9a-f]{64}$"
+    )
+    data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
+
+    @field_validator("expected_records", mode="before")
+    @classmethod
+    def _original_shapes(cls, values):
+        return None if values is None else _record_expectation_shapes(values)
 
     _variable = field_validator("variable")(_require_trimmed)
 
@@ -1198,6 +1252,30 @@ class IdentitySplitEntry(_CurationModel):
     def _matching_discriminator(self) -> IdentitySplitEntry:
         if any(getattr(part, self.by) is None for part in self.parts):
             raise ValueError(f"split parts must use {self.by} when by = {self.by!r}")
+        if (self.expected_records is None) != (self.expected_evidence_sha256 is None):
+            raise ValueError(
+                "guarded splits require original records and evidence hash"
+            )
+        if self.data_warning is not None and self.expected_records is None:
+            raise ValueError("split data warnings require complete original guards")
+        if self.expected_records is not None and (
+            len({record.ref for record in self.expected_records})
+            != len(self.expected_records)
+            or any(
+                {field.name for field in projection.fields}
+                != set(SourceFields.model_fields)
+                or projection.subject is None
+                or projection.edition_scope is None
+                or projection.edition_period_scope is None
+                or projection.parent_facts is None
+                or projection.code_set_references is None
+                for record in self.expected_records
+                for projection in record.alternatives
+            )
+        ):
+            raise ValueError(
+                "guarded splits require complete original source projections"
+            )
         return self
 
 
@@ -1529,7 +1607,6 @@ class PreparedCodingAuthority(_CurationModel):
                 self.codings
                 or self.raw_codings != []
                 or self.marker_bindings is not None
-                or self.source_scope is not None
             ):
                 raise ValueError(
                     "literal comma authority requires no existing source coding"

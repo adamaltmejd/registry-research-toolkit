@@ -378,7 +378,9 @@ unique known fields. Changed facts refuse fresh compilation; the compiled comple
 family also guards every supplied field during replay. This supports a reused column
 whose explicitly documented amount or rate role changes between editions without
 normalizing units or borrowing another owner's meaning. Physical source multiplicity
-remains governed by the prepared-source pins and ordered inventory.
+remains governed by the prepared-source pins and ordered inventory. A complete native
+default column map may retain that owner alongside exact guarded scoped overrides; only
+matched source members take a split owner, and all declared owners remain covered.
 
 SOS `[[identity.split]]` can partition a complete native family by literal supplied
 `data_type`, `deldatamangd`, `name`, or `description`. Supplied names distinguish reused
@@ -597,6 +599,14 @@ alternative. Exact fields, subjects, scopes, parents and coding references remai
 checked at compilation and replay; conditional field effects change only the matching
 original interpretation. This permits punctuation and reference-prose aliases without
 discarding either physical original or inventing a replacement value.
+
+A name correction may instead cite `authority_records` from the same native family. The
+replacement must occur literally in those complete remaining source peers. Full target
+and authority facts, parents and coding references, plus a combined raw-evidence
+fingerprint, are checked at compilation and application. The fingerprint retains
+physical multiplicity; removing an otherwise identical row invalidates the case. Guarded
+SOS identity splits use the same complete-family boundary and may emit an exact
+source-role warning while retaining each original quantity assertion and response list.
 
 Period entries may cite exact supplied subset metadata through `authority`. Compilation
 checks its full source projection, register and routed variant, positive coverage and
@@ -858,12 +868,17 @@ remain required; arbitrary prose, negations and unlisted code tokens cannot supp
 domain. This own-name route may use an exact supplied open source scope; the decimal
 marker route retains its finite-period requirement.
 
-An explicit decimal comma-assignment certificate can supply a complete finite source
-cell rejected by conservative generic parsing. It permits only the guarded literal
-decimal code-label pairs and requires no existing source coding claims. Changed source
-text, added codes or newly bound source lists invalidate it. The generic parser and
-original unresolved descriptor remain unchanged; any accepted descriptor limitation is
-acknowledged separately with its full-original fingerprint.
+An explicit decimal comma-assignment certificate can supply a complete source cell
+rejected by conservative generic parsing. It permits only the guarded literal decimal
+code-label pairs and requires no existing source coding claims. Changed source text,
+added codes or newly bound source lists invalidate it. The generic parser and original
+unresolved descriptor remain unchanged; any accepted descriptor limitation is
+acknowledged separately with its full-original fingerprint. Its `assignment_separators`
+may explicitly include comma and semicolon; this changes only the reviewed certificate,
+not generic SOS parsing. Own-source enumeration may use the existing exact
+`source_scope` mode, including a source-explicit open end. Source and application scopes
+must remain identical; authored finite historical windows cannot use a fabricated
+year-9999 bound.
 
 `coding.support` retains one proven erroneous physical association as documentary
 support while excluding only that association from effective membership in a finite

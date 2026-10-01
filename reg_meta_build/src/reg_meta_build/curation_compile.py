@@ -590,14 +590,6 @@ def _column_partition_plan(
         )
     ):
         raise ValueError("split keys must uniquely discriminate this source identity")
-    if source_id in split_ids and (
-        split_ids != (source_id,)
-        or declared_columns is None
-        or set(declared_columns.values()) != {source_id}
-    ):
-        raise ValueError(
-            "native ownership requires an explicit complete column map without split owners"
-        )
     columns: dict[str, list[SourceRecord]] = defaultdict(list)
     for record in records:
         column = record.fields.column_name
@@ -605,6 +597,19 @@ def _column_partition_plan(
             assert isinstance(column.value, str)
             columns[column.value].append(record)
     scoped_owners = scoped_owners or {}
+    actual_columns = {
+        (record_ref(record), column)
+        for column, members in columns.items()
+        for record in members
+    }
+    if set(scoped_owners) - actual_columns:
+        raise ValueError("scoped owner names an unmatched source ref or literal column")
+    if source_id in split_ids and (
+        declared_columns is None or set(declared_columns.values()) != {source_id}
+    ):
+        raise ValueError(
+            "native ownership requires an explicit complete native default column map"
+        )
     scoped_columns = {
         record.fields.column_name.value
         for record in records
@@ -625,12 +630,12 @@ def _column_partition_plan(
             raise ValueError(
                 "explicit column ownership needs its declaration reference"
             )
-        if set(declared_columns) != set(columns) or {
+        owners = {
             owner for owner in declared_columns.values() if owner is not None
-        } != set(split_ids):
+        } | set(scoped_owners.values())
+        if set(declared_columns) != set(columns) or owners != set(split_ids):
             missing = sorted(set(columns) - set(declared_columns))
             absent = sorted(set(declared_columns) - set(columns))
-            owners = {owner for owner in declared_columns.values() if owner is not None}
             raise ValueError(
                 "explicit column ownership must cover the complete columns and split keys; "
                 f"uncovered literals={missing!r}; absent literals={absent!r}; "
@@ -2314,15 +2319,23 @@ def compile_partitions(
                 native,
                 records,
                 guarded=source_id in {item.entry.source_id for item in entries}
-                or any(entry.expected_fields for _, entry in scoped_entries),
+                or any(entry.expected_fields for _, entry in scoped_entries)
+                or any(entry.expected_records is not None for _, entry in sos_splits),
+            )
+            guarded_sos_split = bool(
+                sos_splits and sos_splits[0][1].expected_records is not None
             )
             expectations = capture_expectations(
                 records,
-                fields=("column_name",)
+                fields=tuple(SourceFields.model_fields)
+                if guarded_sos_split
+                else ("column_name",)
                 if native[1] == "scb"
                 else ("column_name", "name", "data_type", "description")
                 if sos_splits and sos_splits[0][1].by == "description"
                 else ("column_name", "name", "data_type"),
+                parents=guarded_sos_split,
+                coding=guarded_sos_split,
             )
             guard = PeerGuard(
                 guard_id=f"accepted-partitions:{source}:{source_id}",
@@ -2513,6 +2526,18 @@ def compile_partitions(
                 if is_split:
                     declaration = cast("IdentitySplitEntry", declaration)
                     split_bases[scope_key].add(native)
+                    if declaration.expected_records is not None and (
+                        tuple(declaration.expected_records) != expectations
+                        or declaration.expected_evidence_sha256
+                        != acknowledgement_evidence_sha256(records)
+                    ):
+                        diagnostics.append(
+                            _stale_partition(
+                                ref, source_id, "complete split source evidence changed"
+                            )
+                        )
+                        null_bases[scope_key].add(native)
+                        continue
                     by = declaration.by
                     owners = {
                         cast("str", getattr(part, by)): part.owner
@@ -2642,11 +2667,25 @@ def compile_partitions(
                             if item.ref not in selected_refs
                         ),
                         peer_guards=(guard,),
+                        expected_evidence_sha256=sos_splits[0][
+                            1
+                        ].expected_evidence_sha256
+                        if sos_splits
+                        else None,
                         decision=OccurrenceCorrectionDecision(
                             reviewed=True,
                             effects=effects,
                             reason="Preserve the accepted SOS identity decision.",
                             provenance=ref,
+                            data_warning=sos_splits[0][1].data_warning
+                            if sos_splits
+                            else None,
+                            data_warning_refs=tuple(sorted(selected_refs, key=str))
+                            if sos_splits and sos_splits[0][1].data_warning is not None
+                            else (),
+                            data_warning_fields=("identity",)
+                            if sos_splits and sos_splits[0][1].data_warning is not None
+                            else (),
                         ),
                     )
                 )
@@ -5288,6 +5327,24 @@ def compile_occurrence_corrections(
                     and not overbroad
                     and _occurrence_correction_matches(entry, selected)
                 )
+                if (
+                    isinstance(entry, ErrataFieldEntry)
+                    and entry.authority_records is not None
+                ):
+                    authority_records = tuple(
+                        r for r in family if record_ref(r) not in chosen_refs
+                    )
+                    valid = valid and (
+                        tuple(entry.authority_records)
+                        == capture_expectations(
+                            authority_records,
+                            fields=tuple(SourceFields.model_fields),
+                            coding=True,
+                            parents=True,
+                        )
+                        and entry.expected_evidence_sha256
+                        == acknowledgement_evidence_sha256(family)
+                    )
                 period_authority: tuple[SourceRecord, ...] = ()
                 authority_guards: tuple[PeerGuard, ...] = ()
                 if (
@@ -5528,7 +5585,10 @@ def compile_occurrence_corrections(
                             )
                             or (
                                 isinstance(entry, ErrataFieldEntry)
-                                and entry.field == "column_name"
+                                and (
+                                    entry.field == "column_name"
+                                    or entry.authority_records is not None
+                                )
                             ),
                         )
                         + (
@@ -5536,6 +5596,9 @@ def compile_occurrence_corrections(
                             if isinstance(entry, ErrataOccurrencePeriodEntry)
                             else ()
                         ),
+                        expected_evidence_sha256=entry.expected_evidence_sha256
+                        if isinstance(entry, ErrataFieldEntry)
+                        else None,
                         peer_guards=tuple(
                             PeerGuard(
                                 guard_id=f"{case_id}:{guarded_family[0].subject.variable}",

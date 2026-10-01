@@ -850,9 +850,19 @@ class SourceEnumeration(_CurationModel):
         "ascii-decimal-dot-space", "kategori-alpha-equals", "ascii-decimal-comma-equals"
     ]
     lines: Annotated[tuple[str, ...], Field(strict=False, min_length=1)]
+    assignment_separators: Annotated[
+        tuple[Literal[",", ";"], ...], Field(strict=False, min_length=1, max_length=2)
+    ] = (",",)
 
     @model_validator(mode="after")
     def _explicit_decimal_lines(self) -> Self:
+        if len(set(self.assignment_separators)) != len(self.assignment_separators) or (
+            self.syntax != "ascii-decimal-comma-equals"
+            and self.assignment_separators != (",",)
+        ):
+            raise ValueError(
+                "assignment separators require literal decimal assignments"
+            )
         codes = []
         for line in self.lines:
             code, separator, label = line.partition(
@@ -877,7 +887,10 @@ class SourceEnumeration(_CurationModel):
                 )
                 or (
                     self.syntax == "ascii-decimal-comma-equals"
-                    and any(token in label for token in ("\n", ",", "="))
+                    and any(
+                        token in label
+                        for token in ("\n", "=", *self.assignment_separators)
+                    )
                 )
             ):
                 raise ValueError(
@@ -914,7 +927,16 @@ class SourceEnumeration(_CurationModel):
         if fact is None or fact.status != "value" or not isinstance(fact.value, str):
             return False
         if self.syntax == "ascii-decimal-comma-equals":
-            return tuple(part.strip() for part in fact.value.split(",")) == self.lines
+            clauses = fact.value
+            for separator in self.assignment_separators[1:]:
+                clauses = clauses.replace(separator, self.assignment_separators[0])
+            return (
+                tuple(
+                    part.strip()
+                    for part in clauses.split(self.assignment_separators[0])
+                )
+                == self.lines
+            )
         if self.syntax == "kategori-alpha-equals":
             clauses = (
                 ", ".join(self.lines[:-1]) + " eller " + self.lines[-1]
@@ -1069,11 +1091,7 @@ class DocumentedCodingSelection(_CurationModel):
         if (
             self.enumeration is not None
             and self.enumeration.syntax == "ascii-decimal-comma-equals"
-            and (
-                self.expected_raw_codings != ()
-                or self.expected_source_codings != ()
-                or self.source_scope is not None
-            )
+            and (self.expected_raw_codings != () or self.expected_source_codings != ())
         ):
             raise ValueError(
                 "literal comma authority requires no existing source coding"
@@ -1208,13 +1226,21 @@ class CurationCase(_CurationModel):
     decision: CurationDecision = Field(discriminator="kind")
     support: tuple[RecordExpectation, ...] = ()
     peer_guards: tuple[PeerGuard, ...] = ()
+    expected_evidence_sha256: str | None = Field(
+        default=None, pattern=r"^[0-9a-f]{64}$"
+    )
 
     @model_validator(mode="after")
     def _finite_membership(self) -> Self:
         if not self.case_id.strip():
             raise ValueError("curation case_id must be non-empty")
         if self.decision.kind == "acknowledge":
-            if self.targets or self.support or self.peer_guards:
+            if (
+                self.targets
+                or self.support
+                or self.peer_guards
+                or self.expected_evidence_sha256 is not None
+            ):
                 raise ValueError("an acknowledgement names its issue, not source pins")
         elif not self.targets:
             raise ValueError("a curation case needs exact targets")
@@ -1712,6 +1738,20 @@ def _evaluate_case(
     issues = _evaluate_source_expectations(
         case.targets, case.support, case.peer_guards, evidence
     )
+    if case.expected_evidence_sha256 is not None:
+        refs = {_ref_key(e.ref) for e in (*case.targets, *case.support)}
+        originals = tuple(
+            r for key in sorted(refs) for r in evidence.grouped.get(key, ())
+        )
+        if acknowledgement_evidence_sha256(originals) != case.expected_evidence_sha256:
+            issues = (
+                *issues,
+                ApplicabilityIssue(
+                    code="target_projection_changed",
+                    subject=case.case_id,
+                    detail="complete physical source evidence changed",
+                ),
+            )
 
     if issues:
         return CaseEvaluation(

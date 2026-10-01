@@ -508,7 +508,12 @@ def _run_pipeline(
         separators=(",", ":"),
     )
     selected = CompiledGlobals.model_validate_json(global_json)
-    scopes = {key: _compiled_scope(key, compiled) for key in visit}
+    scopes: dict[tuple[str, NativeKey | None], CompiledScope] = {}
+    for key in visit:
+        scopes[key] = _compiled_scope(key, compiled)
+        if dump_decisions is None:
+            # Release each raw graph as its validated replacement becomes available.
+            compiled.cases.pop(key, None)
     selected_coding_names = {
         name
         for scope in scopes.values()

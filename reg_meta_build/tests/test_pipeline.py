@@ -584,6 +584,18 @@ def test_completed_scope_contracts_are_released(
         'evidence = "Reviewed fixture source label"\nnoted = "2026-10-01"\n',
         encoding="utf-8",
     )
+    other = catalog.curation / "registers/scb/other.toml"
+    correction = register.read_text(encoding="utf-8").split("\n[[errata.field]]", 1)[1]
+    other.write_text(
+        other.read_text(encoding="utf-8")
+        + "\n[[errata.field]]"
+        + correction.replace('"1.101"', '"2.201"')
+        .replace('"1.10"', '"2.20"')
+        .replace('"VALUE"', '"OTHER"')
+        .replace('"GenericVar"', '"OtherVar"')
+        .replace('"Reviewed value"', '"Reviewed other"'),
+        encoding="utf-8",
+    )
     catalog.build(
         tmp_path / "reference.db",
         tmp_path / "reference-report",
@@ -594,20 +606,23 @@ def test_completed_scope_contracts_are_released(
     compile_scope = pipeline._compiled_scope
     finalize = pipeline.finalize_classification_bindings
     scopes = []
+    scope_keys = []
     guarded_cases = []
 
     def observed_compile(*args, **kwargs):
         compiled = compile_tree(*args, **kwargs)
         cases = [case for group in compiled.cases.values() for case in group]
-        assert len(cases) == 1
-        assert cases[0].targets and cases[0].peer_guards
-        assert cases[0].decision.kind == "correct_occurrences"
-        guarded_cases.append(cases[0].case_id)
+        assert len(cases) == 2
+        assert all(case.targets and case.peer_guards for case in cases)
+        assert all(case.decision.kind == "correct_occurrences" for case in cases)
+        guarded_cases.extend(case.case_id for case in cases)
         return compiled
 
-    def observe_scope(*args):
-        scope = compile_scope(*args)
+    def observe_scope(key, compiled):
+        assert all((prior in compiled.cases) == dump for prior in scope_keys)
+        scope = compile_scope(key, compiled)
         scopes.append(weakref.ref(scope))
+        scope_keys.append(key)
         return scope
 
     def observed_finalize(compiled, *args, **kwargs):
@@ -649,6 +664,7 @@ def test_completed_scope_contracts_are_released(
         invalid = cases[0].model_copy(update={"targets": ()})
         return replace(compiled, cases={**compiled.cases, key: (invalid, *cases[1:])})
 
+    scope_keys.clear()
     monkeypatch.setattr(pipeline, "compile_curation", invalid_compile)
     with pytest.raises(ValueError, match="curation case needs exact targets"):
         catalog.build(

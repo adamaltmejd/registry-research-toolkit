@@ -8249,3 +8249,219 @@ def test_source_attribution_correction_requires_complete_originals_and_preserves
     ):
         with pytest.raises(ValueError):
             ErrataFieldEntry.model_validate({**entry.model_dump(), **updates})
+
+
+@pytest.mark.parametrize("drift", [None, "description", "coding", "missing_duplicate"])
+def test_guarded_sos_split_checks_complete_physical_family(tmp_path: Path, drift):
+    from reg_meta_build.curation_tree import IdentitySplitEntry
+    from reg_meta_build.source_curation import (
+        acknowledgement_evidence_sha256,
+        capture_expectations,
+    )
+    from reg_meta_build.source_records import CodeSetReference
+
+    root = tmp_path / "curation"
+    _tree(root)
+    path = root / "registers/sos/par.toml"
+    path.parent.mkdir(parents=True)
+    path.write_text(
+        '[register]\nprovider = "sos"\nslug = "par"\n'
+        'native_id = "5891427617861710725"\nname = "Patientregistret"\n'
+        '[[identity.split]]\nvariable = "ATC"\nby = "deldatamangd"\n'
+        'parts = [{ deldatamangd = "PAR_OV", owner = "5891427617861710725.ATC.outpatient" },'
+        '{ deldatamangd = "PAR_SV", owner = "5891427617861710725.ATC.inpatient" }]\n'
+        '[[variable]]\nnative_id = "5891427617861710725.ATC.outpatient"\nslug = "outpatient"\n'
+        '[[variable]]\nnative_id = "5891427617861710725.ATC.inpatient"\nslug = "inpatient"\n'
+    )
+    original = _sos_partition_records(subsets=("PAR_OV", "PAR_SV"))
+    duplicate = original[0].model_copy(
+        update={
+            "record_id": original[0].record_id + "-duplicate",
+            "locators": (
+                original[0].locators[0].model_copy(update={"physical_record": "99"}),
+            ),
+        }
+    )
+    original = (*original, duplicate)
+    tree = load_curation_tree(root)
+    register = next(r for r in tree.registers if r.register_info.provider == "sos")
+    declaration = register.identity.split[0]
+    guarded = IdentitySplitEntry.model_validate_json(
+        json.dumps(
+            {
+                **declaration.model_dump(mode="json", exclude_none=True),
+                "expected_records": [
+                    e.model_dump(mode="json")
+                    for e in capture_expectations(
+                        original,
+                        fields=tuple(SourceFields.model_fields),
+                        parents=True,
+                        coding=True,
+                    )
+                ],
+                "expected_evidence_sha256": acknowledgement_evidence_sha256(original),
+                "data_warning": "Separate source-defined clinical contexts; no equivalence inferred.",
+            }
+        )
+    )
+    register = register.model_copy(
+        update={"identity": register.identity.model_copy(update={"split": [guarded]})}
+    )
+    tree = replace(tree, registers=(register,))
+    records = original
+    if drift == "missing_duplicate":
+        records = original[:-1]
+    elif drift is not None:
+        changed = original[0].model_copy(
+            update={
+                "fields": original[0].fields.model_copy(
+                    update={"description": value_field("different role")}
+                )
+            }
+            if drift == "description"
+            else {
+                "code_set_references": (
+                    CodeSetReference(
+                        reference_id="changed",
+                        content_sha256="0" * 64,
+                        physical_locator="changed",
+                    ),
+                )
+            }
+        )
+        records = (changed, *original[1:])
+    native = native_variable_key(records[0])
+    reader = SimpleNamespace(
+        iter_partition_families=lambda *a, **kw: iter(((native, records),))
+    )
+    scope = _partition_scope(records)
+    cases, names, _, _, _, diagnostics = compile_partitions(
+        tree, cast("Any", SimpleNamespace(records=reader)), (scope,)
+    )
+    key = (scope.source, None)
+    if drift is not None:
+        assert [d.code for d in diagnostics] == ["stale_curation_entry"]
+        assert not cases.get(key) and not names.get(key)
+    else:
+        assert not diagnostics
+        assert cases[key][0].decision.data_warning == guarded.data_warning
+        corrected = apply_occurrence_cases(records, cases[key])
+        assert not corrected.diagnostics
+        assert len(corrected.occurrences) == 3
+        assert evaluate_cases(cases[key], original[:-1])[0].status == "stale"
+        assert {o.variable_key[-1] for o in corrected.occurrences} == {
+            "PAR_OV",
+            "PAR_SV",
+        }
+
+
+def test_name_correction_uses_only_complete_same_family_witnesses(tmp_path):
+    from reg_meta_build.source_curation import acknowledgement_evidence_sha256
+
+    tree, scope, target, witness, base = _checked_correction_fixture(tmp_path)
+    witness = witness.model_copy(
+        update={
+            "fields": witness.fields.model_copy(
+                update={"name": value_field("Canonical source label")}
+            )
+        }
+    )
+    duplicate = witness.model_copy(
+        update={
+            "record_id": witness.record_id + "-duplicate",
+            "locators": (
+                witness.locators[0].model_copy(update={"physical_record": "99"}),
+            ),
+        }
+    )
+    originals = (target, witness, duplicate)
+    entry = ErrataFieldEntry(
+        **base.model_dump(
+            exclude={
+                "field",
+                "value",
+                "expected_records",
+                "authority_records",
+                "expected_evidence_sha256",
+            }
+        ),
+        field="name",
+        value="Canonical source label",
+        expected_records=list(
+            capture_expectations(
+                (target,),
+                fields=tuple(SourceFields.model_fields),
+                parents=True,
+                coding=True,
+            )
+        ),
+        authority_records=list(
+            capture_expectations(
+                (witness, duplicate),
+                fields=tuple(SourceFields.model_fields),
+                parents=True,
+                coding=True,
+            )
+        ),
+        expected_evidence_sha256=acknowledgement_evidence_sha256(originals),
+    )
+    register = tree.registers[0]
+    tree = replace(
+        tree,
+        registers=(
+            register.model_copy(
+                update={"errata": register.errata.model_copy(update={"field": [entry]})}
+            ),
+        ),
+    )
+    cases, issues, _ = _run_checked_correction(tree, scope, originals)
+    assert not issues
+    applied = apply_occurrence_cases(originals, cases[scope.source, None])
+    assert not applied.diagnostics
+    assert all(o.fields.name.value == entry.value for o in applied.occurrences)
+    assert {r for o in applied.occurrences for r in o.source_records} == set(originals)
+    for changed in (
+        (target,),
+        (target, witness),
+        (
+            target,
+            witness.model_copy(
+                update={
+                    "fields": witness.fields.model_copy(
+                        update={"description": value_field("Changed witness role")}
+                    )
+                }
+            ),
+            duplicate,
+        ),
+    ):
+        assert _run_checked_correction(tree, scope, changed)[1]
+        assert evaluate_cases(cases[scope.source, None], changed)[0].status == "stale"
+    foreign = witness.model_copy(
+        update={
+            "subject": witness.subject.model_copy(
+                update={
+                    "variable": witness.subject.variable.model_copy(
+                        update={"native_id": 999}
+                    )
+                }
+            )
+        }
+    )
+    with pytest.raises(ValueError, match="same native family"):
+        ErrataFieldEntry.model_validate_json(
+            json.dumps(
+                {
+                    **entry.model_dump(mode="json", exclude_none=True),
+                    "authority_records": [
+                        e.model_dump(mode="json")
+                        for e in capture_expectations(
+                            (foreign,),
+                            fields=tuple(SourceFields.model_fields),
+                            parents=True,
+                            coding=True,
+                        )
+                    ],
+                }
+            )
+        )

@@ -2882,12 +2882,22 @@ def test_documented_witness_refuses_contrary_complete_target_domain(contrary):
         assert _compile_entry("documented", values, claims, record=record)[1]
 
 
-def test_reviewed_decimal_comma_certificate_preserves_exact_source_and_no_claims():
+@pytest.mark.parametrize("mixed_separators", [False, True])
+def test_reviewed_decimal_comma_certificate_preserves_exact_source_and_no_claims(
+    mixed_separators,
+):
     from reg_meta_build.source_curation import SourceEnumeration
     from reg_meta_build.sources.sos import _classify_value_set_text
 
     pairs = (("0", "giltigt pnr"), ("8", "Ogiltigt pnr"))
     prose = "0=giltigt pnr,  8=Ogiltigt pnr"
+    if mixed_separators:
+        pairs = (
+            ("0", "(ogitligt)"),
+            ("1", "enbart trygghetslarm"),
+            ("9", "uppgift saknas"),
+        )
+        prose = "0=(ogitligt), 1=enbart trygghetslarm; 9=uppgift saknas"
     assert _classify_value_set_text(prose) == (None, True)
     record = _record().model_copy(
         update={
@@ -2896,6 +2906,13 @@ def test_reviewed_decimal_comma_certificate_preserves_exact_source_and_no_claims
             )
         }
     )
+    own_scope = TemporalScope(
+        kind="intervals", intervals=(ScopeInterval(start="2020", end=None),)
+    )
+    if mixed_separators:
+        record = record.model_copy(
+            update={"edition_scope": own_scope, "edition_period_scope": own_scope}
+        )
     placeholder = CodeListClaim("placeholder", record.edition_scope, ())
     authority = _row_authority(record, (placeholder,)).model_dump(mode="json")
     authority.update(
@@ -2907,17 +2924,74 @@ def test_reviewed_decimal_comma_certificate_preserves_exact_source_and_no_claims
             "lines": tuple(f"{code}={label}" for code, label in pairs),
         },
     )
+    if mixed_separators:
+        authority["enumeration"]["assignment_separators"] = (",", ";")
+        authority["source_scope"] = own_scope.model_dump(mode="json")
     cases, issues, register, scope, columns, column = _compile_entry(
         "documented",
         {
             "members": pairs,
             "version_label": "Exact source decimal meanings",
             "source_authority": authority,
+            "periods": [] if mixed_separators else [["2020-01-01", "2020-12-31"]],
         },
         (),
         record=record,
     )
     assert len(cases) == 1 and not issues
+    if mixed_separators:
+        assert cases[0].decision.selection.source_scope == own_scope
+        assert cases[0].decision.valid_to == "9999-12-31"
+        for changed_scope in (
+            TemporalScope(
+                kind="intervals", intervals=(ScopeInterval(start="2021", end=None),)
+            ),
+            TemporalScope(
+                kind="intervals", intervals=(ScopeInterval(start="2020", end="2024"),)
+            ),
+        ):
+            altered = record.model_copy(
+                update={
+                    "edition_scope": changed_scope,
+                    "edition_period_scope": changed_scope,
+                }
+            )
+            fresh, changed_issues = compile_coding_register(
+                register,
+                scope,
+                originals=(altered,),
+                columns={column: (altered,)},
+                column_scopes={column: frozenset((changed_scope,))},
+                coding={column: ()},
+            )
+            assert not fresh and changed_issues
+            assert apply_coding_choices(
+                SourceEvidence(
+                    (altered,),
+                    value_bindings={},
+                    effective_occurrences=(source_occurrence(altered),),
+                ),
+                cases,
+                coding={column: ()},
+            ).diagnostics
+        literal_end = TemporalScope(
+            kind="intervals", intervals=(ScopeInterval(start="2020", end="9999-12-31"),)
+        )
+        with pytest.raises(ValidationError):
+            _compile_entry(
+                "documented",
+                {
+                    "members": pairs,
+                    "version_label": "Own enumeration",
+                    "source_authority": {
+                        **authority,
+                        "source_scope": literal_end.model_dump(mode="json"),
+                    },
+                    "periods": [],
+                },
+                (),
+                record=record,
+            )
     evidence = SourceEvidence((record,), value_bindings={})
     applied = apply_coding_choices(evidence, cases, coding={column: ()})
     assert not applied.diagnostics
@@ -2926,8 +3000,12 @@ def test_reviewed_decimal_comma_certificate_preserves_exact_source_and_no_claims
     certificate = SourceEnumeration.model_validate(authority["enumeration"])
     for changed in (
         prose + ", 4=samordningsnummer",
-        prose.replace("8=", "9="),
-        prose.replace("Ogiltigt", "Annat"),
+        prose.replace("8=", "9=")
+        if not mixed_separators
+        else prose.replace("1=", "2="),
+        prose.replace("Ogiltigt", "Annat")
+        if not mixed_separators
+        else prose.replace("ogitligt", "ogiltigt"),
         "Prefix " + prose,
     ):
         altered = record.model_copy(
@@ -2963,6 +3041,16 @@ def test_reviewed_decimal_comma_certificate_preserves_exact_source_and_no_claims
                 field="representation",
                 syntax="ascii-decimal-comma-equals",
                 lines=bad_lines,
+            )
+    for bad_separators in ((",", ","), ("|",), ()):
+        with pytest.raises(ValidationError):
+            SourceEnumeration.model_validate(
+                {**certificate.model_dump(), "assignment_separators": bad_separators}
+            )
+    if mixed_separators:
+        with pytest.raises(ValidationError):
+            SourceEnumeration.model_validate(
+                {**certificate.model_dump(), "lines": ("0=label; another clause",)}
             )
 
 
