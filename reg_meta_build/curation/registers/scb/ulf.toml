@@ -4980,3 +4980,129 @@ keep = "Ja nej 1"
 over = ["Ja nej 3"]
 reason = "ULF TK0095 1978: 'Ja nej 1' (5 codes) over 'Ja nej 3' (1 code)."
 source = "codelivery.toml#/resolve/4"  # v18 accepted-coding:4:*, 1 case(s)
+
+[[errata.field]]
+variable = "237.9413"
+variant = "237.458"
+column = "SY0321"
+edition = "737"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Hur många gånger under de senaste 5 åren har Ni varit arbetslös/permitterad (förutom nuvarande\narbetslöshetsperiod)?\nKod = Antal gånger.\nVärden 88 och högre = Uppgift saknas.\nFrågan ställs till de som är arbetslösa (permitterade) enligt tablån." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Arbetslöshetstillfällen.arbetslösa" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = "1989_old"
+expected_scope = { kind = "intervals", intervals = [{ start = "1989", end = "1989" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1989-01-01", end = "1989-12-31" }] }
+evidence = "The source definition explicitly states Kod = Antal gånger. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal gånger"
+
+[[errata.field]]
+variable = "237.9414"
+variant = "237.458"
+column = "SY0311"
+edition = "737"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Hur många gånger under de senaste 5 åren har Du varit arbetslös ( eller fr år 1984-1993 permitterad)?\nKod = Antal gånger.\nVärden 88 och högre = Uppgift saknas.\nFrågan ställs till sysselsatta enligt tablån." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Arbetslöshetstillfällen.sysselsatta" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = "1989_old"
+expected_scope = { kind = "intervals", intervals = [{ start = "1989", end = "1989" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1989-01-01", end = "1989-12-31" }] }
+evidence = "The source definition explicitly states Kod = Antal gånger. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal gånger"
+
+[[errata.field]]
+variable = "237.9427"
+variant = "237.458"
+column = "SM1040"
+edition = "20238"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "definition", status = "value", value = "Till Up vars make/maka/sambo är sysselsatt (1980-83\nanställd) enligt tablån:Hur många timmar per vecka\narbetar han/hon vanligen i sitt huvudsakliga arbete?\nKod = Antal timmar per vecka" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Timmar" }, { name = "name", status = "value", value = "Arbetstid i huvudsakl arbete maka" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = "1989"
+expected_scope = { kind = "intervals", intervals = [{ start = "1989", end = "1989" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1989-01-01", end = "1989-12-31" }] }
+evidence = "The source defines hours per week in the main employment, Kod = Antal timmar per vecka. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal timmar"
+
+[[errata.field]]
+variable = "237.9428"
+variant = "237.458"
+column = "AT0040"
+edition = "20238"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "definition", status = "value", value = "Gäller anställda.\nHur många timmar arbetar Ni per vecka i Ert huvudsakliga arbete.\nKod = Antal timmar\nOm arbetstiden varierar från vecka till vecka anges\ngenomsnittlig veckoarbetstid." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Timmar" }, { name = "name", status = "value", value = "Arbetstid i huvudsakligt arbete" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = "1989"
+expected_scope = { kind = "intervals", intervals = [{ start = "1989", end = "1989" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1989-01-01", end = "1989-12-31" }] }
+evidence = "The source defines hours per week in the main employment, Kod = Antal timmar. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal timmar"
+
+[[errata.field]]
+variable = "237.13945"
+variant = "237.458"
+column = "UT0670"
+edition = "737"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Se var UT0650!" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Månad" }, { name = "name", status = "value", value = "Utbildning 3 antal mån" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = "1989_old"
+expected_scope = { kind = "intervals", intervals = [{ start = "1989", end = "1989" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1989-01-01", end = "1989-12-31" }] }
+evidence = "The source field is named Utbildning3 antal mån; its companion 1989 occurrence explicitly defines the number of months beyond the reported years of schooling. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal månader"
+
+[[errata.field]]
+variable = "237.13946"
+variant = "237.458"
+column = "UT0730"
+edition = "737"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Se var UT0710! Fr o m 1996 omvandlas 'antal brev' till ungefärligt antal timmar och i denna variabel ligger alltså både antal timmar och antal brev (omvandlat)" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Timmar" }, { name = "name", status = "value", value = "Utbildning 3 antal tim" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = "1989_old"
+expected_scope = { kind = "intervals", intervals = [{ start = "1989", end = "1989" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1989-01-01", end = "1989-12-31" }] }
+evidence = "The source field is named Utbildning3 antal tim and its companion 1989 occurrence declares Antal timmar. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal timmar"
+
+[[errata.field]]
+variable = "237.13947"
+variant = "237.458"
+column = "UT0640"
+edition = "737"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Se var UT0620!" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "År" }, { name = "name", status = "value", value = "Utbildning 3 antal år" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = "1989_old"
+expected_scope = { kind = "intervals", intervals = [{ start = "1989", end = "1989" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1989-01-01", end = "1989-12-31" }] }
+evidence = "The source field is named Utbildning3 antal år; its companion 1989 occurrence declares Antal år for the vocational training duration. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal år"
+
+[[errata.field]]
+variable = "237.14914"
+variant = "237.458"
+column = "SY0230"
+edition = "20238"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "definition", status = "value", value = "Enligt företagsregistret, endast privat anställda" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Arbetsställets storlek" }, { name = "operational_definition", status = "value", value = "Information om arbetsställe hämtas från Fr 83 a-b (1988-1989)  för att sedan hämta antal anställda från företagsregistret." }, { name = "representation", status = "absent" }]
+expected_period_text = "1989"
+expected_scope = { kind = "intervals", intervals = [{ start = "1989", end = "1989" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1989-01-01", end = "1989-12-31" }] }
+evidence = "The source field Arbetsställets storlek and its companion 1989 occurrence explicitly describe the number of employees from the business register. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal personer"
+
+[[errata.field]]
+variable = "237.9050"
+variant = "237.458"
+column = "SY0352"
+edition = "737"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Till företagare :\nHur många anställda har företaget?\nMedhjälpande familjemedlemmar räknas ej.\nMedhjälpande familjemedlem utan kontant lön räknas ej\n(detta gäller 1994,1995)\nKod = Antal anställda\n0 = Inga anställda (gäller 1975,1976,1977,1978,1979,\n                           1980,1981)\n996 = 996 anställda eller fler (gäller 1984,1985,\n                              1988,1989)\n997 = 997 anställda eller fler (gäller 1979)\n997 = Inga anställda (gäller 1982,1983,1984,1985,\n                             1986,1987,1988,1989,\n                             1990,1991,1992,19" }, { name = "description", status = "value", value = "93)" }, { name = "measurement_unit", status = "value", value = "antal personer" }, { name = "name", status = "value", value = "Antal anställda i företaget" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = "1989_old"
+expected_scope = { kind = "intervals", intervals = [{ start = "1989", end = "1989" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1989-01-01", end = "1989-12-31" }] }
+evidence = "The source defines Antal anställda i företaget and the units differ only by letter case. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
+noted = "2026-10-01"
+field = "measurement_unit"
+value = "Antal personer"

@@ -87,9 +87,13 @@ def _catalog(path: Path, *, offset: int = 0, split: bool = False) -> None:
         for index, (start, end) in enumerate(windows):
             conn.execute(
                 "INSERT INTO variable_state (state_id, variable_id, register_variant_id, valid_from, "
-                "valid_to, data_type, data_length, delivery_column_name, provenance, value_set_id, classification_id) "
-                "VALUES (?, ?, ?, ?, ?, NULL, NULL, 'Benefit', 'Reviewed declaration', ?, ?)",
-                (key(20 + index), key(5), key(3), start, end, key(9), key(7)),
+                "valid_to, data_type, data_length, delivery_column_name, provenance, value_set_id) "
+                "VALUES (?, ?, ?, ?, ?, NULL, NULL, 'Benefit', 'Reviewed declaration', ?)",
+                (key(20 + index), key(5), key(3), start, end, key(9)),
+            )
+            conn.execute(
+                "INSERT INTO state_classification VALUES (?, ?, 'Reviewed book')",
+                (key(20 + index), key(7)),
             )
         conn.execute(
             "INSERT INTO variable_alias VALUES (?, ?, 'Benefit')", (key(5), key(3))
@@ -163,9 +167,13 @@ def _linked_facts(path: Path, *, offset: int = 0, split_source: bool = False) ->
         for index, (start, end) in enumerate(windows):
             conn.execute(
                 "INSERT INTO variable_state (state_id, variable_id, register_variant_id, valid_from, "
-                "valid_to, delivery_column_name, provenance, value_set_id, classification_id) "
-                "VALUES (?, ?, ?, ?, ?, 'SourceBenefit', 'Source evidence', ?, ?)",
-                (key(30 + index), key(6), key(3), start, end, key(9), key(7)),
+                "valid_to, delivery_column_name, provenance, value_set_id) "
+                "VALUES (?, ?, ?, ?, ?, 'SourceBenefit', 'Source evidence', ?)",
+                (key(30 + index), key(6), key(3), start, end, key(9)),
+            )
+            conn.execute(
+                "INSERT INTO state_classification VALUES (?, ?, 'Reviewed book')",
+                (key(30 + index), key(7)),
             )
         conn.execute(
             "INSERT INTO classification_conformance "
@@ -173,8 +181,8 @@ def _linked_facts(path: Path, *, offset: int = 0, split_source: bool = False) ->
             (key(7),),
         )
         conn.execute(
-            "INSERT INTO classification_conformance_code SELECT state_id, ? FROM variable_state",
-            (key(13),),
+            "INSERT INTO classification_conformance_code SELECT state_id, ?, ? FROM variable_state",
+            (key(7), key(13)),
         )
         conn.execute(
             "INSERT INTO variable_state_lineage "
@@ -591,8 +599,9 @@ def test_per_column_alias_coding_semantics_resolve_value_set_ids(tmp_path, chang
     for path, offset in ((left, 0), (right, 100)):
         with closing(sqlite3.connect(path)) as conn:
             conn.execute(
-                "UPDATE variable_state SET value_set_id=NULL, value_set_version_label='', classification_id=NULL"
+                "UPDATE variable_state SET value_set_id=NULL, value_set_version_label=''"
             )
+            conn.execute("DELETE FROM state_classification")
             conn.execute(
                 "UPDATE variable_alias_window SET coding_metadata='per_column',value_set_id=?,value_set_version_label='Native coding'",
                 (offset + 9,),
@@ -622,3 +631,57 @@ def test_per_column_alias_coding_semantics_resolve_value_set_ids(tmp_path, chang
             if t.table == "variable_alias_window"
         )
         assert not difference.identical
+
+
+def test_plural_classification_links_keep_independent_checks_and_provenance(tmp_path):
+    left, right = tmp_path / "left.db", tmp_path / "right.db"
+    for path, offset, split in ((left, 0, False), (right, 1000, True)):
+        _catalog(path, offset=offset, split=split)
+        _linked_facts(path, offset=offset, split_source=split)
+        with closing(sqlite3.connect(path)) as conn:
+            conn.execute(
+                "INSERT INTO classification (id, short_name, name, slug, code_count) "
+                "VALUES (?, 'Other book', 'Other classification', 'other-book', 1)",
+                (offset + 14,),
+            )
+            conn.execute(
+                "INSERT INTO classification_code VALUES (?, ?, 1, 1)",
+                (offset + 14, offset + 13),
+            )
+            conn.execute(
+                "INSERT INTO state_classification SELECT state_id, ?, 'Second source declaration' FROM variable_state",
+                (offset + 14,),
+            )
+            conn.execute(
+                "INSERT INTO classification_conformance SELECT state_id, ?, 'extended', 2, 1, 1, 0.5 FROM variable_state",
+                (offset + 14,),
+            )
+            conn.execute(
+                "INSERT INTO classification_conformance_code SELECT state_id, ?, ? FROM variable_state",
+                (offset + 14, offset + 8),
+            )
+            conn.commit()
+    assert diff_catalog_semantics(left, right).identical
+    _change(
+        right,
+        "UPDATE state_classification SET provenance='Changed' WHERE classification_id=1014",
+    )
+    report = diff_catalog_semantics(left, right)
+    assert not report.identical
+    assert any(
+        r.table == "state_classification" and not r.identical
+        for r in report.content.table_results
+    )
+    _change(
+        right,
+        "UPDATE state_classification SET provenance='Second source declaration' WHERE classification_id=1014",
+    )
+    _change(
+        right,
+        "DELETE FROM classification_conformance_code WHERE declared_classification_id=1014",
+    )
+    report = diff_catalog_semantics(left, right)
+    assert any(
+        r.table == "classification_conformance_code" and not r.identical
+        for r in report.content.table_results
+    )

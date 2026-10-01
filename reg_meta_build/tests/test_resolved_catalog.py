@@ -7,17 +7,10 @@ from typing import TYPE_CHECKING
 
 import pytest
 from pydantic import ValidationError
-from reg_meta.catalog import (
-    Catalog,
-    ResolvedRegister as CatalogRegister,
-    ResolvedVariable as CatalogVariable,
-)
-from reg_meta.db import CLASSIFICATION_SUCCESSION_AS_OF_YEAR, open_db
+from reg_meta.db import CLASSIFICATION_SUCCESSION_AS_OF_YEAR
 from reg_meta.errors import RegMetaError
-from reg_meta.queries import search
-from reg_meta.search import CodeSearchResult, VariableSearchResult
 from reg_meta_build._curation import SentinelCode
-from reg_meta_build.db import publish_db
+from reg_meta_build.db import open_built_db, publish_db
 from reg_meta_build.resolved_catalog import (
     CURATION_TREE_SHA256_KEY,
     ResolvedAlias,
@@ -97,18 +90,23 @@ def test_delivery_names_and_descriptions_survive_without_common_text(tmp_path: P
     output = tmp_path / "catalog.db"
     write_resolved_catalog((variable,), output, manifest={})
     assert validate_built_db(output, corpus=False).passed
-    with closing(open_db(output)) as conn:
-        result = Catalog(conn).resolve("scb/example/ampoltyp")
-        assert isinstance(result, CatalogVariable)
-        assert result.name is result.description is None
-        assert [(s.name, s.description) for s in result.states] == [
-            (s.name, s.description) for s in states
-        ]
+    with closing(open_built_db(output)) as conn:
+        row = conn.execute("SELECT name, description FROM variable").fetchone()
+        assert tuple(row) == (None, None)
+        assert [
+            tuple(row)
+            for row in conn.execute(
+                "SELECT name, description FROM variable_state ORDER BY valid_from"
+            )
+        ] == [(state.name, state.description) for state in states]
         for text in ("Admission", "encounter"):
-            hits = search(conn, text, field="description", type="variable").results
-            assert len(hits) == 1
-            assert isinstance(hits[0], VariableSearchResult)
-            assert str(hits[0].fqid) == "scb/example/ampoltyp"
+            assert (
+                conn.execute(
+                    "SELECT COUNT(*) FROM variable_fts WHERE variable_fts MATCH ?",
+                    (text,),
+                ).fetchone()[0]
+                == 1
+            )
 
 
 def test_missing_common_name_still_requires_positive_delivery_names():
@@ -133,7 +131,7 @@ def test_independent_parent_metadata_survives_without_variables_or_editions(
         parent_registers=(other,),
         parent_variants=((register, variant),),
     )
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert {row[0] for row in conn.execute("SELECT slug FROM register")} == {
             "example",
             "independent",
@@ -182,7 +180,7 @@ def test_conflicting_independent_parents_fail_before_replacing_output(
 
 @pytest.mark.parametrize("provider", ["scb", "sos"])
 @pytest.mark.parametrize("variant", ["individuals", "_default"])
-def test_normal_catalog_api_search_and_structural_validation(
+def test_catalog_graph_fts_and_structural_validation(
     tmp_path: Path, provider: str, variant: str
 ) -> None:
     variable = _variable(provider)
@@ -206,38 +204,44 @@ def test_normal_catalog_api_search_and_structural_validation(
     validation = validate_built_db(output, corpus=False)
     assert validation.passed, validation.format_report()
 
-    fqid = f"{provider}/example/ampoltyp"
-    catalog = Catalog.open(output.parent)
-    try:
-        assert catalog.resolve(f"{provider}/example").name == "Example"
-        result = catalog.resolve(fqid)
-        assert isinstance(result, CatalogVariable)
-        assert result.name == variable.name
-        assert result.definition == variable.definition
-        assert result.is_sensitive is True
-        assert result.is_identifier is False
-        assert result.provider_key == "44"
-        assert len(result.states) == 2
-        assert catalog.resolve_at(fqid, 1999) == []
-        assert catalog.resolve_at(fqid, 2001) == []
-        assert catalog.resolve_at(fqid, 2003) == []
-        state = catalog.resolve_at(fqid, 2002, variant=variant)[0]
-        assert (state.valid_from, state.valid_to) == ("2002-01-01", "2002-12-31")
-        assert state.delivery_column_name == "AmPolTypUpdated"
-        assert (state.data_type, state.data_length) == ("integer", "8")
-        assert state.operational_definition == "State definition for 2002"
-        assert state.provenance == "curation:fixture:2002"
-        assert state.value_set_id is None
-    finally:
-        catalog.close()
-    with closing(open_db(output)) as conn:
-        results = search(conn, "searchable", field="description", type="variable")
-        assert len(results.results) == 1
-        hit = results.results[0]
-        assert isinstance(hit, VariableSearchResult)
-        assert str(hit.fqid) == fqid
-        columns = search(conn, "AmPolTypUpdated", field="datacolumn")
-        assert len(columns.results) == 1
+    with closing(open_built_db(output)) as conn:
+        assert conn.execute("SELECT name FROM register").fetchone()[0] == "Example"
+        row = conn.execute("SELECT * FROM variable").fetchone()
+        assert row["name"] == variable.name
+        assert row["definition"] == variable.definition
+        assert row["is_sensitive"] == 1
+        assert row["is_identifier"] == 0
+        assert row["provider_key"] == "44"
+        assert conn.execute("SELECT COUNT(*) FROM variable_state").fetchone()[0] == 2
+        for year in (1999, 2001, 2003):
+            assert (
+                conn.execute(
+                    "SELECT COUNT(*) FROM variable_state WHERE valid_from <= ? AND valid_to >= ?",
+                    (f"{year}-12-31", f"{year}-01-01"),
+                ).fetchone()[0]
+                == 0
+            )
+        state = conn.execute(
+            "SELECT s.* FROM variable_state s JOIN register_variant v USING (register_variant_id) WHERE valid_from='2002-01-01' AND v.slug=?",
+            (variant,),
+        ).fetchone()
+        assert (state["valid_from"], state["valid_to"]) == ("2002-01-01", "2002-12-31")
+        assert state["delivery_column_name"] == "AmPolTypUpdated"
+        assert (state["data_type"], state["data_length"]) == ("integer", "8")
+        assert state["operational_definition"] == "State definition for 2002"
+        assert state["provenance"] == "curation:fixture:2002"
+        assert state["value_set_id"] is None
+        for query in (
+            "description:searchable",
+            "delivery_column_names:AmPolTypUpdated",
+        ):
+            assert (
+                conn.execute(
+                    "SELECT COUNT(*) FROM variable_fts WHERE variable_fts MATCH ?",
+                    (query,),
+                ).fetchone()[0]
+                == 1
+            )
         assert conn.execute("SELECT count(*) FROM variable_alias").fetchone()[0] == 2
         assert (
             conn.execute("SELECT count(*) FROM variable_alias_window").fetchone()[0]
@@ -306,7 +310,7 @@ def test_resolved_metadata_is_written_without_source_inference(tmp_path: Path) -
     )
     output = tmp_path / "reg_meta.db"
     write_resolved_catalog((variable,), output, manifest={})
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert (
             conn.execute(
                 "SELECT purpose FROM register WHERE slug='example'"
@@ -363,7 +367,7 @@ def test_edition_prose_population_and_object_types_do_not_change_state_periods(
     output = tmp_path / "reg_meta.db"
     write_resolved_catalog((variable,), output, manifest={}, editions=(edition,))
     original = output.read_bytes()
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert tuple(
             conn.execute(
                 "SELECT registerversionnamn, registerversionbeskrivning, registerversionmatinformation, "
@@ -532,7 +536,7 @@ def test_classifications_and_explicit_conformance_are_written_exactly(
         classification_successions=(succession,),
     )
     original = output.read_bytes()
-    with closing(open_db(output, check_schema=False)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert tuple(
             conn.execute(
                 "SELECT c.short_name, c.name, c.name_en, c.publisher, c.valid_from, c.valid_to, "
@@ -719,7 +723,7 @@ def test_classification_predecessor_is_a_deterministic_projection_of_active_edge
         classification_successions=edges,
     )
     original = output.read_bytes()
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert [
             tuple(row)
             for row in conn.execute(
@@ -790,7 +794,7 @@ def test_alias_windows_and_historical_search_aliases_are_explicit(
     output = tmp_path / "reg_meta.db"
     write_resolved_catalog((variable,), output, manifest={})
     original = output.read_bytes()
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         rows = conn.execute(
             "SELECT delivery_column_name, valid_from, valid_to, provenance FROM variable_alias_window ORDER BY delivery_column_name"
         ).fetchall()
@@ -830,7 +834,7 @@ def test_parallel_resolved_columns_keep_distinct_coding_states(
     variable = variable.model_copy(update={"states": states})
     output = tmp_path / "reg_meta.db"
     write_resolved_catalog((variable,), output, manifest={})
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         rows = conn.execute(
             "SELECT value_set_version_label FROM variable_state ORDER BY value_set_version_label"
         ).fetchall()
@@ -933,7 +937,7 @@ def test_flags_preserve_explicit_booleans(
     )
     output = tmp_path / "reg_meta.db"
     write_resolved_catalog((variable,), output, manifest={})
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         row = conn.execute(
             "SELECT is_sensitive, is_identifier FROM variable"
         ).fetchone()
@@ -1051,33 +1055,37 @@ def test_documented_codes_do_not_require_known_physical_type(tmp_path: Path) -> 
     variable = _variable().model_copy(update={"states": (state, _state(2002))})
     output = tmp_path / "reg_meta.db"
     write_resolved_catalog((variable,), output, manifest={})
-    catalog = Catalog.open(output.parent)
-    try:
-        result = catalog.resolve_at("scb/example/ampoltyp", 2000)[0]
-        assert (result.data_type, result.data_length) == (None, None)
-        assert result.value_set_id is not None
-        assert result.value_set is not None
-        assert tuple((m.code, m.label) for m in result.value_set) == tuple(
-            sorted(set(members))
+    with closing(open_built_db(output)) as conn:
+        state = conn.execute(
+            "SELECT * FROM variable_state WHERE valid_from='2000-01-01'"
+        ).fetchone()
+        assert (state["data_type"], state["data_length"]) == (None, None)
+        assert state["value_set_id"] is not None
+        assert tuple(
+            tuple(row)
+            for row in conn.execute(
+                "SELECT code, label FROM value_set_member JOIN value_code USING (code_id) WHERE value_set_id=? ORDER BY code, label",
+                (state["value_set_id"],),
+            )
+        ) == tuple(sorted(set(members)))
+        assert (
+            conn.execute(
+                "SELECT COUNT(*) FROM variable_state WHERE valid_from='2001-01-01'"
+            ).fetchone()[0]
+            == 0
         )
-        assert catalog.value_set_codes(result.value_set_id) == result.value_set
-        # Membership belongs to this exact state; neither a missing year nor the
-        # next explicitly uncoded state inherits it.
-        assert catalog.resolve_at("scb/example/ampoltyp", 2001) == []
-        assert catalog.resolve_at("scb/example/ampoltyp", 2002)[0].value_set is None
-    finally:
-        catalog.close()
-    with closing(open_db(output)) as conn:
-        hits = search(conn, "Participation", field="value", type="value").results
+        assert (
+            conn.execute(
+                "SELECT value_set_id FROM variable_state WHERE valid_from='2002-01-01'"
+            ).fetchone()[0]
+            is None
+        )
+        hits = conn.execute(
+            "SELECT c.code, c.mapping_count FROM value_code_fts f JOIN value_code c ON c.code_id=f.rowid WHERE value_code_fts MATCH 'Participation'"
+        ).fetchall()
         assert len(hits) == 2
-        assert all(isinstance(hit, CodeSearchResult) for hit in hits)
-        assert {hit.code for hit in hits if isinstance(hit, CodeSearchResult)} == {
-            "01",
-            " 01",
-        }
-        assert all(
-            hit.variable_count == 1 for hit in hits if isinstance(hit, CodeSearchResult)
-        )
+        assert {row["code"] for row in hits} == {"01", " 01"}
+        assert all(row["mapping_count"] == 1 for row in hits)
 
 
 def test_shared_memberships_have_stable_ids_and_deterministic_replay(
@@ -1100,7 +1108,7 @@ def test_shared_memberships_have_stable_ids_and_deterministic_replay(
     output = tmp_path / "reg_meta.db"
     write_resolved_catalog(variables, output, manifest={})
     original = output.read_bytes()
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert conn.execute("SELECT count(*) FROM value_set").fetchone()[0] == 1
         assert conn.execute("SELECT count(*) FROM value_code").fetchone()[0] == 2
         assert conn.execute("SELECT count(*) FROM value_set_member").fetchone()[0] == 2
@@ -1145,7 +1153,7 @@ def test_shared_memberships_have_stable_ids_and_deterministic_replay(
         }
     )
     write_resolved_catalog((other, *variables), output, manifest={})
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         ids = conn.execute(
             "SELECT DISTINCT state.value_set_id FROM variable_state state "
             "JOIN variable USING (variable_id) WHERE slug = 'ampoltyp'"
@@ -1173,18 +1181,22 @@ def test_distinct_memberships_and_changed_labels_remain_distinct(
     )
     output = tmp_path / "reg_meta.db"
     write_resolved_catalog((variable,), output, manifest={})
-    catalog = Catalog.open(output.parent)
-    try:
-        states = tuple(
-            catalog.resolve_at("scb/example/ampoltyp", year)[0]
-            for year in range(2000, 2003)
-        )
-        assert len({state.value_set_id for state in states}) == 3
+    with closing(open_built_db(output)) as conn:
+        states = conn.execute(
+            "SELECT value_set_id FROM variable_state ORDER BY valid_from"
+        ).fetchall()
+        assert len({row[0] for row in states}) == 3
         for state, members in zip(states, memberships, strict=True):
-            assert state.value_set is not None
-            assert tuple((m.code, m.label) for m in state.value_set) == members
-    finally:
-        catalog.close()
+            assert (
+                tuple(
+                    tuple(row)
+                    for row in conn.execute(
+                        "SELECT code, label FROM value_set_member JOIN value_code USING (code_id) WHERE value_set_id=? ORDER BY code, label",
+                        (state[0],),
+                    )
+                )
+                == members
+            )
     assert validate_built_db(output, corpus=False).passed
 
 
@@ -1357,7 +1369,7 @@ def test_year_independent_writer_preserves_null_bounds_and_guards_scope_mixing(
     variable = _variable().model_copy(update={"states": (independent,)})
     output = tmp_path / "independent.db"
     write_resolved_catalog((variable,), output, manifest={})
-    with closing(open_db(output)) as connection:
+    with closing(open_built_db(output)) as connection:
         assert tuple(
             connection.execute(
                 "SELECT period_scope, valid_from, valid_to, pooled FROM variable_state"
@@ -1435,7 +1447,7 @@ def test_scoped_sentinel_certificate_keeps_local_member_without_changing_book(
     variable, book = _scoped_sentinel_variable()
     output = tmp_path / "reg_meta.db"
     write_resolved_catalog((variable,), output, manifest={}, classifications=(book,))
-    with closing(open_db(output)) as conn:
+    with closing(open_built_db(output)) as conn:
         assert tuple(
             conn.execute(
                 "SELECT status, checked_code_count, matched_code_count, nonconforming_code_count FROM classification_conformance"
@@ -1519,8 +1531,7 @@ def test_scoped_sentinel_certificate_requires_positive_source_and_case_evidence(
             )
 
 
-def test_data_warnings_persist_and_filter_without_inventing_scope(tmp_path: Path):
-    import sqlite3
+def test_data_warnings_persist_exact_ownership_without_inventing_scope(tmp_path: Path):
     from hashlib import sha256
 
     from reg_meta.catalog import DataWarning
@@ -1565,124 +1576,71 @@ def test_data_warnings_persist_and_filter_without_inventing_scope(tmp_path: Path
     write_resolved_catalog(
         (_variable(),), output, manifest={}, data_warnings=(warning, unscoped)
     )
-    with closing(sqlite3.connect(output)) as connection:
-        connection.execute(
-            "INSERT INTO variable_same_as VALUES (?, ?, ?, ?, ?, ?)",
-            ("scb", "historical", "old-name", "scb", "example", "ampoltyp"),
-        )
-        connection.commit()
-    with closing(sqlite3.connect(output)) as conn:
-        conn.row_factory = sqlite3.Row
-        catalog = Catalog(conn)
-        assert set(catalog.data_warnings("scb/historical/old-name")) == {
-            warning,
-            unscoped,
-        }
-        assert set(catalog.data_warnings("scb/example")) == {warning, unscoped}
-        assert catalog.data_warnings("scb/example/ampoltyp", period=2002) == (unscoped,)
-        assert catalog.data_warnings("scb/example/ampoltyp", variant="other") == (
-            unscoped,
-        )
-        assert catalog.data_warnings(
-            "scb/example/ampoltyp", representation="Other"
-        ) == (unscoped,)
-        variable = catalog.resolve_binding("scb/example/ampoltyp")
-        assert set(variable.warnings) == {warning}
-        assert set(variable.states[0].warning_ids) == {warning.warning_id}
-        assert variable.states[1].warning_ids == ()
-        register = catalog.resolve("scb/example")
-        assert isinstance(register, CatalogRegister)
-        assert set(register.warnings) == {unscoped}
-        with closing(sqlite3.connect(output)) as writer:
-            changed = warning.model_copy(
-                update={"detail": "Changed without content hash"}
-            )
-            writer.execute(
-                "UPDATE data_warning SET warning_json=? WHERE warning_id=?",
-                (changed.model_dump_json(), warning.warning_id),
-            )
-            writer.commit()
-        with pytest.raises(ValueError, match="content"):
-            catalog.data_warnings("scb/example")
-        with closing(sqlite3.connect(output)) as writer:
-            writer.execute(
-                "UPDATE data_warning SET warning_json=? WHERE warning_id=?",
-                (warning.model_dump_json(), warning.warning_id),
-            )
-            writer.commit()
-    with closing(sqlite3.connect(output)) as connection:
-        for column, lo, hi in (
-            ("Other", "2000-01-01", "2000-12-31"),
-            ("AmPolTyp", "2000-06-16", "2000-12-31"),
-        ):
-            connection.execute(
-                "INSERT INTO variable_alias_window (variable_id, register_variant_id, delivery_column_name, valid_from, valid_to, provenance) "
-                "SELECT variable_id, register_variant_id, ?, ?, ?, 'checked representation' FROM variable_state WHERE valid_from='2000-01-01'",
-                (column, lo, hi),
-            )
-        connection.commit()
-    with closing(open_db(output)) as conn:
-        catalog = Catalog(conn)
-        expanded = catalog.resolve_binding("scb/example/ampoltyp", with_codes=False)
-        for state in expanded.states:
-            assert state.valid_from is not None and state.valid_to is not None
-            exact = tuple(
-                w.warning_id
-                for w in catalog.data_warnings(
-                    expanded.fqid,
-                    period={"from": state.valid_from[:7], "to": state.valid_to[:7]},
-                    variant=state.variant,
-                    representation=state.delivery_column_name,
-                )
-                if w.variable_fqid == expanded.fqid
-                and (w.valid_from is None or w.valid_from <= state.valid_to)
-                and (w.valid_to is None or w.valid_to >= state.valid_from)
-            )
-            assert state.warning_ids == exact
-            if (
-                state.delivery_column_name == "Other"
-                or state.valid_from == "2000-06-16"
-            ):
-                assert state.warning_ids == ()
-    open_variable = _variable().model_copy(
-        update={"states": (_state(2000).model_copy(update={"valid_to": "9999-12-31"}),)}
-    )
-    open_output = tmp_path / "open.db"
-    write_resolved_catalog(
-        (open_variable,), open_output, manifest={}, data_warnings=(warning,)
-    )
-    with closing(open_db(open_output)) as connection:
-        (open_state,) = (
-            Catalog(connection)
-            .resolve_binding("scb/example/ampoltyp", with_codes=False)
-            .states
-        )
-        assert open_state.warning_ids == (warning.warning_id,)
-    independent = _variable().model_copy(
-        update={
-            "states": (
-                _state(2000).model_copy(
-                    update={
-                        "period_scope": "year_independent",
-                        "valid_from": None,
-                        "valid_to": None,
-                    }
-                ),
-            )
-        }
-    )
-    independent_output = tmp_path / "independent.db"
-    write_resolved_catalog(
-        (independent,),
-        independent_output,
-        manifest={},
-        data_warnings=(warning, unscoped),
-    )
-    with closing(open_db(independent_output)) as conn:
+    with closing(open_built_db(output)) as conn:
+        rows = conn.execute("SELECT * FROM data_warning ORDER BY warning_id").fetchall()
+        assert {
+            DataWarning.model_validate_json(row["warning_json"]) for row in rows
+        } == {warning, unscoped}
+        scoped = next(row for row in rows if row["warning_id"] == warning.warning_id)
         assert (
-            Catalog(conn).resolve_binding("scb/example/ampoltyp").states[0].warning_ids
-            == ()
+            scoped["valid_from"],
+            scoped["valid_to"],
+            scoped["delivery_column_name"],
+        ) == (warning.valid_from, warning.valid_to, warning.delivery_column_name)
+        assert (
+            scoped["variable_id"]
+            == conn.execute("SELECT variable_id FROM variable").fetchone()[0]
         )
+        assert (
+            scoped["register_variant_id"]
+            == conn.execute(
+                "SELECT register_variant_id FROM register_variant"
+            ).fetchone()[0]
+        )
+        global_row = next(
+            row for row in rows if row["warning_id"] == unscoped.warning_id
+        )
+        assert all(
+            global_row[field] is None
+            for field in (
+                "variable_id",
+                "register_variant_id",
+                "delivery_column_name",
+                "valid_from",
+                "valid_to",
+            )
+        )
+        assert global_row["register_id"] == scoped["register_id"]
+    for label, state in (
+        ("open", _state(2000).model_copy(update={"valid_to": "9999-12-31"})),
+        (
+            "independent",
+            _state(2000).model_copy(
+                update={
+                    "period_scope": "year_independent",
+                    "valid_from": None,
+                    "valid_to": None,
+                }
+            ),
+        ),
+    ):
+        candidate = tmp_path / f"{label}.db"
+        write_resolved_catalog(
+            (_variable().model_copy(update={"states": (state,)}),),
+            candidate,
+            manifest={},
+            data_warnings=(warning, unscoped),
+        )
+        with closing(open_built_db(candidate)) as conn:
+            assert {
+                DataWarning.model_validate_json(row[0])
+                for row in conn.execute("SELECT warning_json FROM data_warning")
+            } == {warning, unscoped}
+            assert tuple(
+                conn.execute(
+                    "SELECT valid_from, valid_to, period_scope FROM variable_state"
+                ).fetchone()
+            ) == (state.valid_from, state.valid_to, state.period_scope)
     with pytest.raises(ValidationError, match="identity"):
         write_resolved_catalog(
             (_variable(),),

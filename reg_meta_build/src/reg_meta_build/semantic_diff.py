@@ -85,6 +85,7 @@ _PLAIN_TABLES = frozenset(
         "source_column_type",
         "source_join_key",
         "import_manifest",
+        "state_classification",
         "classification_conformance",
         "classification_conformance_code",
         "variable_state_lineage",
@@ -161,6 +162,7 @@ _IDENTITIES: dict[str, tuple[str, str]] = {
 }
 
 _INHERITED_SCOPE = {
+    "state_classification": "state_id",
     "classification_conformance": "state_id",
     "classification_conformance_code": "state_id",
     "variable_state_lineage_warning": "consumer_state_id",
@@ -195,8 +197,14 @@ def _column_expression(
         if (parent, parent_column) in {
             ("variable_state", "state_id"),
             ("classification_conformance", "state_id"),
+            ("state_classification", "state_id"),
         }:
             return _reference("variable_state", expression)
+        if parent_column in {
+            "classification_id",
+            "declared_classification_id",
+        } and parent in {"state_classification", "classification_conformance"}:
+            return _reference("classification", expression)
         if table not in _EMPTY_ONLY:
             raise UnsupportedSemanticSurface(
                 f"unsupported reference {table}.{column} to {parent}.{parent_column}"
