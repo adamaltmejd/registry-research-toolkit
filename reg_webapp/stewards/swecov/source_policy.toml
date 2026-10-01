@@ -98,7 +98,8 @@ target = "scb/aku/aku-januari-2021"
 
 [[route.split]]
 selector = "stem:AKU_Corona_"
-note = "flavor: SWECOV covid add-on questions"
+target = "scb/aku/aku-januari-2021"
+note = "2021–2022 pandemic questions documented in the held master variable list; exact added columns retain unavailable response-code warnings"
 
 [[route]]
 category = "Elevregistret"

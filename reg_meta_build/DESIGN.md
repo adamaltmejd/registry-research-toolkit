@@ -590,28 +590,31 @@ original facts remain available and positive physical occurrences retain their r
 
 Ordinary variables form from an established native identity. Their names bind that exact
 source coordinate; additional deliveries do not require handwritten whole-variable
-cases. Column spellings that differ only by case or diacritics fold to one column by the
-shared column-identity key and need no partition or alias decision. Two spellings
-delivered side by side in one edition of one variant are two columns, so the fold
-applies only when no single edition co-delivers two spellings of one fold key. An
-accepted name alone cannot establish a partition across ambiguous column spellings. A
-partition, rename or parallel-column family requires checked ownership and complete
-relevant membership. An implicit split suffix binds case or diacritic twin literals only
-when their folded column key matches and no variant edition co-delivers them. A
-one-owner partition may list a spelling that recurs after an intervening rename (A→B→A).
-An explicitly reviewed complete literal map may retain the base source-native key when
-its named quantity and definition agree across deliveries. Such a map cannot mix split
-owners or unassigned literals. It preserves existing naming, guards all original fields,
-parent facts, coding references and complete family membership, and does not claim
-statistical equivalence across units, calculation methods or delivery levels. Exact
-source type spellings `numerisk`, `alfanumerisk` and `Character` classify as decimal,
-text and text during resolution, including already accepted prepared records. Original
-type declarations remain evidence; classification never uses substring guessing. Blank
-column records remain original evidence without manufacturing a delivered column; a
-literal claimed by two native variables in the same edition needs a split or
-`native_variable_id`, never a fold into one owner. Related but different variables
-remain connected through groups; a shared stem or suffix is not evidence that they are
-one variable.
+cases. A complete unchecked native family retains catalog identity across renamed
+columns when every original supplies the same positive exported name and definition
+(after whitespace normalization), physical columns, types and periods are explicit, and
+distinct columns never overlap within a native variant. Literal delivery metadata remain
+separate; this establishes source identity, not statistical equivalence. Explicit
+checked ownership takes precedence. Missing semantic or physical evidence and concurrent
+columns still require curation. Other case or diacritic twins use the shared
+column-identity fallback only when no edition co-delivers both spellings. An accepted
+name alone cannot establish a partition across ambiguous columns. A partition or
+parallel-column family requires checked ownership and complete relevant membership. An
+implicit split suffix binds case or diacritic twin literals only when their folded
+column key matches and no variant edition co-delivers them. A one-owner partition may
+list a spelling that recurs after an intervening rename (A→B→A). An explicitly reviewed
+complete literal map may retain the base source-native key when its named quantity and
+definition agree across deliveries. Such a map cannot mix split owners or unassigned
+literals. It preserves existing naming, guards all original fields, parent facts, coding
+references and complete family membership, and does not claim statistical equivalence
+across units, calculation methods or delivery levels. Exact source type spellings
+`numerisk`, `alfanumerisk` and `Character` classify as decimal, text and text during
+resolution, including already accepted prepared records. Original type declarations
+remain evidence; classification never uses substring guessing. Blank column records
+remain original evidence without manufacturing a delivered column; a literal claimed by
+two native variables in the same edition needs a split or `native_variable_id`, never a
+fold into one owner. Related but different variables remain connected through groups; a
+shared stem or suffix is not evidence that they are one variable.
 
 Variant-scoped column owners may select exact source edition labels when the source
 documents a change of measurement basis within one column. Every selected label must

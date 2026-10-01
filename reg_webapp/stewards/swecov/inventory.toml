@@ -285454,25 +285454,19 @@ edition = { from = 2007, to = 2021 }
 
 [[table.column]]
 name = "INSATS_BESLUT_DATUM"
+unmapped_reason = "The processed SWECOV tables combine historical BU deliveries. The supplied workbook documents separate source tables and periods but does not establish one source variant for the combined physical table. Retain every physical column and declared edition without a verified catalog mapping."
 
 [[table.column]]
 name = "INSATS_FORM"
-
-[[table.column.mapping]]
-register_variant = "sos/bu/_default"
-variable = "sos/bu/insats-form"
-representation = "INSATS_FORM"
+unmapped_reason = "The processed SWECOV tables combine historical BU deliveries. The supplied workbook documents separate source tables and periods but does not establish one source variant for the combined physical table. Retain every physical column and declared edition without a verified catalog mapping."
 
 [[table.column]]
 name = "P1105_LopNr_PersonNr"
+unmapped_reason = "The processed SWECOV tables combine historical BU deliveries. The supplied workbook documents separate source tables and periods but does not establish one source variant for the combined physical table. Retain every physical column and declared edition without a verified catalog mapping."
 
 [[table.column]]
 name = "PLACDAT1"
-
-[[table.column.mapping]]
-register_variant = "sos/bu/_default"
-variable = "sos/bu/datum-start-placering"
-representation = "PLACDAT1"
+unmapped_reason = "The processed SWECOV tables combine historical BU deliveries. The supplied workbook documents separate source tables and periods but does not establish one source variant for the combined physical table. Retain every physical column and declared edition without a verified catalog mapping."
 
 [[table]]
 id = "SWECOV_SOS_BARN_PLACERING"
@@ -285480,28 +285474,23 @@ edition = { from = 2008, to = 2021 }
 
 [[table.column]]
 name = "INSATS_BESLUT_DATUM"
+unmapped_reason = "The processed SWECOV tables combine historical BU deliveries. The supplied workbook documents separate source tables and periods but does not establish one source variant for the combined physical table. Retain every physical column and declared edition without a verified catalog mapping."
 
 [[table.column]]
 name = "INSTYP"
-
-[[table.column.mapping]]
-register_variant = "sos/bu/_default"
-variable = "sos/bu/instyp"
-representation = "INSTYP"
+unmapped_reason = "The processed SWECOV tables combine historical BU deliveries. The supplied workbook documents separate source tables and periods but does not establish one source variant for the combined physical table. Retain every physical column and declared edition without a verified catalog mapping."
 
 [[table.column]]
 name = "P1105_LopNr_PersonNr"
+unmapped_reason = "The processed SWECOV tables combine historical BU deliveries. The supplied workbook documents separate source tables and periods but does not establish one source variant for the combined physical table. Retain every physical column and declared edition without a verified catalog mapping."
 
 [[table.column]]
 name = "PLAC_FORM"
-
-[[table.column.mapping]]
-register_variant = "sos/bu/_default"
-variable = "sos/bu/plac-form"
-representation = "PLAC_FORM"
+unmapped_reason = "The processed SWECOV tables combine historical BU deliveries. The supplied workbook documents separate source tables and periods but does not establish one source variant for the combined physical table. Retain every physical column and declared edition without a verified catalog mapping."
 
 [[table.column]]
 name = "PLAC_START_DATUM"
+unmapped_reason = "The processed SWECOV tables combine historical BU deliveries. The supplied workbook documents separate source tables and periods but does not establish one source variant for the combined physical table. Retain every physical column and declared edition without a verified catalog mapping."
 
 [[table]]
 id = "SWECOV_SOS_CANCER"

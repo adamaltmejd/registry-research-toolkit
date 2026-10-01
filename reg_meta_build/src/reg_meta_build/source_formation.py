@@ -651,6 +651,55 @@ def _checked_delivery_metadata(
     return tuple(sorted(accepted))
 
 
+def _source_native_identity_supported(
+    occurrences: tuple[EffectiveOccurrence, ...],
+) -> bool:
+    """Keep a complete exported quantity across nonconcurrent column renames."""
+    if not occurrences or any(o.identity_checked for o in occurrences):
+        return False
+    if any(
+        o.variable_key is None
+        or o.variable_key[-2] not in {"native-int", "native-str"}
+        or not o.source_records
+        or o.support_records
+        or o.occurrence_key is not None
+        for o in occurrences
+    ):
+        return False
+    for field_name in ("name", "definition"):
+        texts = {
+            _text(source.fields, field_name)
+            for occurrence in occurrences
+            for source in occurrence.source_records
+        }
+        if None in texts or any(not text.strip() for text in texts if text is not None):
+            return False
+        if len({" ".join(text.split()) for text in texts if text is not None}) != 1:
+            return False
+    windows: dict[NativeKey, list[tuple[str, int, int]]] = defaultdict(list)
+    for occurrence in occurrences:
+        column = _text(occurrence.fields, "column_name")
+        kind = _text(occurrence.fields, "data_type")
+        bounds = occurrence_bounds(occurrence)
+        if not column or not column.strip() or not kind or not kind.strip():
+            return False
+        if occurrence.variant_key is None or not bounds:
+            return False
+        windows[occurrence.variant_key].extend(
+            (column, start, end) for start, end in bounds
+        )
+    for members in windows.values():
+        ordered = sorted(members, key=lambda item: (item[1], item[2], item[0]))
+        # simplify: scan active windows; index if a native family exceeds a few thousand.
+        active: list[tuple[str, int]] = []
+        for column, start, end in ordered:
+            active = [(other, stop) for other, stop in active if stop >= start]
+            if any(other != column for other, _ in active):
+                return False
+            active.append((column, end))
+    return True
+
+
 def form_native_variable(
     records: tuple[SourceRecord | EffectiveOccurrence, ...],
     *,
@@ -670,10 +719,10 @@ def form_native_variable(
     the selected source supplied no code list). An omitted mapping is an incomplete
     implementation/contract, not a curation issue. Flags are already reconciled
     source facts. Unknown flags cannot be represented by the current DB contract.
-    Multiple unassigned column names under one native variable require a checked
-    identity decision, unless they fold to one column-identity key
-    (case/diacritic twins share one physical column); the ordinary path does
-    not guess whether remaining spellings are renames or different questions.
+    A complete native family with stable positive exported quantity metadata and
+    nonconcurrent physical columns retains native identity. Explicit checked
+    ownership takes precedence. Other spellings require curation, apart from
+    the existing case/diacritic fold fallback.
     Each physical input occurrence remains in the result.
     A formed variable also returns the delivery its supported occurrences still
     claim after the explicit coding/representation outcomes that withhold periods.
@@ -729,7 +778,8 @@ def form_native_variable(
             continue
         assert isinstance(field.value, str)
         columns.add(field.value)
-    if len({fold_column(column) for column in columns}) > 1:
+    native_identity = len(columns) > 1 and _source_native_identity_supported(effective)
+    if len({fold_column(column) for column in columns}) > 1 and not native_identity:
         issue(
             "unresolved_native_identity",
             "The source-native variable has multiple column spellings; an exact partition or alias decision is required.",
@@ -738,7 +788,7 @@ def form_native_variable(
         )
         return VariableFormation(None, tuple(diagnostics), records, (), ())
     chosen_spelling: str | None = None
-    if len(columns) > 1:
+    if len(columns) > 1 and not native_identity:
         # Two spellings delivered side by side in one edition are two
         # columns, not one column spelled two ways: refuse the fold when a
         # single edition of one variant co-delivers two spellings of one
@@ -796,6 +846,14 @@ def form_native_variable(
             + chosen_spelling
             + ").",
             ("column_name",),
+            (),
+            severity="warning",
+        )
+    if native_identity:
+        issue(
+            "source_native_identity_retained",
+            "Stable exported name and definition establish this native catalog quantity across nonconcurrent columns. Literal delivery facts remain separate; statistical equivalence is not asserted.",
+            ("identity", "column_name"),
             (),
             severity="warning",
         )

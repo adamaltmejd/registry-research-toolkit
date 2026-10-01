@@ -359,19 +359,21 @@ def test_native_identity_is_scoped_and_preserves_native_primitive_type() -> None
         _form((integer, string))
 
 
-def test_source_native_multiple_columns_require_explicit_partition_or_alias_decision() -> (
-    None
-):
+def test_source_native_quantity_retains_sequential_literal_columns() -> None:
     records = (_record(2020, column="OLD"), _record(2021, column="NEW"))
     result = _form(records)
-    assert result.variable is None
-    assert [d.code for d in result.diagnostics] == ["unresolved_native_identity"]
+    assert result.variable is not None
+    assert {state.delivery_column_name for state in result.variable.states} == {
+        "OLD",
+        "NEW",
+    }
     assert result.occurrences == records
-    assert len(result.diagnostics[0].refs) == 2
+    assert not any(d.severity == "error" for d in result.diagnostics)
+    assert [d.code for d in result.diagnostics] == ["source_native_identity_retained"]
 
 
-def test_case_only_column_twins_fold_to_one_variable() -> None:
-    """Y-210: SRU `v0115`/`V0115` is one physical column needing no curation."""
+def test_case_only_native_quantity_preserves_literal_deliveries() -> None:
+    """Stable native quantity metadata retains each literal source column."""
     records = (
         _record(2004, column="v0115"),
         _record(2005, column="V0115"),
@@ -381,29 +383,24 @@ def test_case_only_column_twins_fold_to_one_variable() -> None:
     assert result.variable is not None
     assert not any(d.severity == "error" for d in result.diagnostics)
     assert [(s.valid_from, s.delivery_column_name) for s in result.variable.states] == [
-        ("2004-01-01", "V0115"),
+        ("2004-01-01", "v0115"),
         ("2005-01-01", "V0115"),
         ("2006-01-01", "V0115"),
     ]
-    (warning,) = [d for d in result.diagnostics if d.code == "column_spelling_folded"]
-    assert warning.severity == "warning"
-    assert (
-        "v0115" in warning.detail and "most recent spelling (V0115)" in warning.detail
-    )
+    assert [d.code for d in result.diagnostics] == ["source_native_identity_retained"]
     assert {r.fields.column_name.value for r in result.occurrences} == {
         "v0115",
         "V0115",
     }
 
 
-def test_diacritic_column_twins_fold_to_one_variable() -> None:
-    """Y-210: `Kön`/`Kon` fold by the shared column-identity key."""
+def test_diacritic_native_quantity_preserves_literal_deliveries() -> None:
+    """Name/definition identity does not rewrite diacritics in delivery columns."""
     result = _form((_record(2020, column="Kön"), _record(2021, column="Kon")))
     assert result.variable is not None
     assert not any(d.severity == "error" for d in result.diagnostics)
-    assert {s.delivery_column_name for s in result.variable.states} == {"Kon"}
-    (warning,) = [d for d in result.diagnostics if d.code == "column_spelling_folded"]
-    assert "Kön" in warning.detail and "most recent spelling (Kon)" in warning.detail
+    assert {s.delivery_column_name for s in result.variable.states} == {"Kön", "Kon"}
+    assert [d.code for d in result.diagnostics] == ["source_native_identity_retained"]
 
 
 def test_co_delivered_twins_keep_the_error_and_form_nothing() -> None:
@@ -436,17 +433,21 @@ def test_co_delivered_twins_keep_the_error_and_form_nothing() -> None:
     assert result.coverage == ()
     assert [d.code for d in result.diagnostics] == ["unresolved_native_identity"]
     assert result.diagnostics[0].severity == "error"
-    distinct = _form((_record(2020, column="OLD"), _record(2021, column="NEW")))
+    distinct = _form((_record(2020, column="OLD"), _record(2020, column="NEW")))
     assert result.diagnostics[0].detail == distinct.diagnostics[0].detail
     assert result.diagnostics[0].fields == distinct.diagnostics[0].fields
 
 
-def test_unfolded_columns_still_require_partition_or_alias() -> None:
-    """Y-210: distinct folds keep the error; no separator rule is added."""
+def test_source_native_quantity_does_not_require_spelling_similarity() -> None:
+    """Native quantity identity does not infer equivalence from column strings."""
     for old, new in (("BLK", "BLKFTG"), ("H56", "H5_6")):
         result = _form((_record(2020, column=old), _record(2021, column=new)))
-        assert result.variable is None
-        assert [d.code for d in result.diagnostics] == ["unresolved_native_identity"]
+        assert result.variable is not None
+        assert {state.delivery_column_name for state in result.variable.states} == {
+            old,
+            new,
+        }
+        assert not any(d.severity == "error" for d in result.diagnostics)
 
 
 def test_checked_column_keeps_its_literal_when_twins_fold() -> None:
@@ -484,9 +485,9 @@ def _fdb_record(year: int, *, column: str, variant: int) -> SourceRecord:
 def test_fdb_two_spelling_ownership_forms_both_partitions(tmp_path: Path) -> None:
     """Y-167: the tracked 1.830 ownership lets both partitions form.
 
-    Y-210: without the declaration the case-only twins fold to one column and
-    form with the most recent spelling (diagnostic by folding, not by curation);
-    with it, each partition forms with its exact literal delivery columns.
+    Without a declaration stable source-native quantity metadata preserves both
+    sequential literals. An explicit partition remains authoritative and forms
+    separate owners instead of being re-merged by that default.
     """
     pair = (
         _fdb_record(1999, column="GatuRest", variant=424),
@@ -514,12 +515,13 @@ def test_fdb_two_spelling_ownership_forms_both_partitions(tmp_path: Path) -> Non
     )
     assert folded.variable is not None
     assert [(s.valid_from, s.delivery_column_name) for s in folded.variable.states] == [
-        ("1999-01-01", "Gaturest"),
+        ("1999-01-01", "GatuRest"),
         ("2005-01-01", "Gaturest"),
     ]
-    (warning,) = [d for d in folded.diagnostics if d.code == "column_spelling_folded"]
+    (warning,) = [
+        d for d in folded.diagnostics if d.code == "source_native_identity_retained"
+    ]
     assert warning.severity == "warning"
-    assert "GatuRest" in warning.detail and "Gaturest" in warning.detail
     assert not any(d.severity == "error" for d in folded.diagnostics)
     # The register-scoped declaration feeds the production entry point.
     declaration = tmp_path / "scb.toml"
@@ -1138,3 +1140,111 @@ def test_missing_physical_unit_withholds_common_summary_without_filling_delivery
     } == {"2020-01-01": "SEK", "2021-01-01": None}
     assert any(d.code == "delivery_units_vary" for d in result.diagnostics)
     assert not any(d.severity == "error" for d in result.diagnostics)
+
+
+@pytest.mark.parametrize(
+    "missing", ["name", "definition", "column_name", "data_type", "period", "variant"]
+)
+def test_source_native_default_refuses_incomplete_complete_family(missing: str) -> None:
+    first = _record(2020, column="OLD")
+    second = _record(2021, column="NEW")
+    if missing in {"name", "definition", "column_name", "data_type"}:
+        second = second.model_copy(
+            update={
+                "fields": second.fields.model_copy(
+                    update={missing: SourceField(status="unknown")}
+                )
+            }
+        )
+    elif missing == "period":
+        second = second.model_copy(
+            update={
+                "edition_scope": TemporalScope(kind="unknown", label="Unknown"),
+                "edition_period_scope": TemporalScope(kind="unknown", label="Unknown"),
+            }
+        )
+    else:
+        second = second.model_copy(
+            update={
+                "subject": second.subject.model_copy(
+                    update={"variant": SourceCoordinate(status="unknown")}
+                )
+            }
+        )
+    third = _record(2022, column="THIRD")
+    result = _form((first, second, third))
+    assert result.variable is None
+    assert any(d.code == "unresolved_native_identity" for d in result.diagnostics)
+    assert result.occurrences == (first, second, third)
+
+
+@pytest.mark.parametrize("field", ["name", "definition"])
+def test_source_native_default_refuses_contrary_quantity_metadata(field: str) -> None:
+    first = _record(2020, column="OLD")
+    second = _record(2021, column="NEW")
+    second = second.model_copy(
+        update={
+            "fields": second.fields.model_copy(
+                update={field: value_field("Contrary quantity")}
+            )
+        }
+    )
+    result = _form((first, second))
+    assert result.variable is None
+    assert any(d.code == "unresolved_native_identity" for d in result.diagnostics)
+
+
+def test_source_native_default_keeps_operations_types_and_units_at_delivery_grain() -> (
+    None
+):
+    first = _record(2020, column="OLD", operational_definition="Survey formula")
+    second = _record(2021, column="NEW", operational_definition="Register formula")
+    first = first.model_copy(
+        update={
+            "fields": first.fields.model_copy(
+                update={
+                    "measurement_unit": value_field("SEK"),
+                    "data_type": value_field("integer"),
+                }
+            )
+        }
+    )
+    second = second.model_copy(
+        update={
+            "fields": second.fields.model_copy(
+                update={
+                    "measurement_unit": value_field("KSEK"),
+                    "data_type": value_field("decimal"),
+                }
+            )
+        }
+    )
+    result = _form((first, second))
+    assert result.variable is not None
+    assert result.variable.measurement_unit is None
+    assert result.variable.operational_definition is None
+    assert {
+        (
+            s.delivery_column_name,
+            s.data_type,
+            s.measurement_unit,
+            s.operational_definition,
+        )
+        for s in result.variable.states
+    } == {
+        ("OLD", "integer", "SEK", "Survey formula"),
+        ("NEW", "decimal", "KSEK", "Register formula"),
+    }
+    assert not any(d.severity == "error" for d in result.diagnostics)
+
+
+def test_source_native_default_never_treats_a_checked_owner_as_automatic() -> None:
+    checked = replace(
+        effective_occurrence(_record(2020, column="OLD")), identity_checked=True
+    )
+    result = _form((checked, _record(2021, column="NEW")))
+    assert result.variable is not None
+    assert not any(
+        d.code == "source_native_identity_retained" for d in result.diagnostics
+    )
+    assert {s.delivery_column_name for s in result.variable.states} == {"OLD", "NEW"}

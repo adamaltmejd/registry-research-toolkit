@@ -1713,3 +1713,166 @@ column = "ArSektor"
 periods = [["2007-01-01", "2007-12-31"], ["2008-01-01", "2008-12-31"], ["2010-01-01", "2010-12-31"], ["2011-01-01", "2011-12-31"], ["2012-01-01", "2012-12-31"]]
 reason = "Retain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
 source = "codeless_overlap.toml#/resolve/0"  # v18 accepted-codeless:0:*, 5 case(s)
+
+# Pandemic questions documented in the SWECOV delivery lists; response codes remain unavailable.
+[[errata.column]]
+variant = "aku-januari-2021"
+column = "COVIDA"
+name = "Du sa tidigare att du <<’har sökt arbete´ om Arbl3=1>><<kommer att börja arbeta inom 3 månader’ om Arbl2=1>><<’vill arbeta’ om Arbl4=1>> men inte kunde arbeta under <<vecka>> eller börja arbeta inom 14 dagar>>. Var anledningen till att du inte kunde börja arbeta på något sätt kopplat till coronapandemin?"
+definition = "Du sa tidigare att du <<’har sökt arbete´ om Arbl3=1>><<kommer att börja arbeta inom 3 månader’ om Arbl2=1>><<’vill arbeta’ om Arbl4=1>> men inte kunde arbeta under <<vecka>> eller börja arbeta inom 14 dagar>>. Var anledningen till att du inte kunde börja arbeta på något sätt kopplat till coronapandemin?"
+data_type = "decimal"
+is_sensitive = true
+is_identifier = false
+versions = ["2021", "2022"]
+source = "steward-holdings"
+evidence = "Exact AKU_Corona_2021 and AKU_Corona_2022 physical schemas contain COVIDA (float storage in both). Master variable list Utkast_P1105_Variabellista_uppd2025_v5.xlsx transcribes this exact question text under source AKU_Corona and years2021–2022. Accepted SCB AKU register122 contains no literal COVID* variable record. This documents the question and storage only; stored response codes and sensitivity are not independently established."
+noted = "2026-10-01"
+data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
+
+[[errata.column]]
+variant = "aku-januari-2021"
+column = "COVIDAEJ2"
+name = "Du sa tidigare också att du inte har sökt arbete. Var anledningen till att du inte sökte arbete på något sätt kopplat till coronapandemin?"
+definition = "Du sa tidigare också att du inte har sökt arbete. Var anledningen till att du inte sökte arbete på något sätt kopplat till coronapandemin?"
+data_type = "decimal"
+is_sensitive = true
+is_identifier = false
+versions = ["2021", "2022"]
+source = "steward-holdings"
+evidence = "Exact AKU_Corona_2021 and AKU_Corona_2022 physical schemas contain COVIDAEJ2 (float storage in both). Master variable list Utkast_P1105_Variabellista_uppd2025_v5.xlsx transcribes this exact question text under source AKU_Corona and years2021–2022. Accepted SCB AKU register122 contains no literal COVID* variable record. This documents the question and storage only; stored response codes and sensitivity are not independently established."
+noted = "2026-10-01"
+data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
+
+[[errata.column]]
+variant = "aku-januari-2021"
+column = "COVIDDEL"
+name = "Du var ju frånvarande från arbetet delar av vecka <<vecka>>.  Var anledningen till din frånvaro på något sätt kopplat till coronapandemin?"
+definition = "Du var ju frånvarande från arbetet delar av vecka <<vecka>>.  Var anledningen till din frånvaro på något sätt kopplat till coronapandemin?"
+data_type = "decimal"
+is_sensitive = true
+is_identifier = false
+versions = ["2021", "2022"]
+source = "steward-holdings"
+evidence = "Exact AKU_Corona_2021 and AKU_Corona_2022 physical schemas contain COVIDDEL (float storage in both). Master variable list Utkast_P1105_Variabellista_uppd2025_v5.xlsx transcribes this exact question text under source AKU_Corona and years2021–2022. Accepted SCB AKU register122 contains no literal COVID* variable record. This documents the question and storage only; stored response codes and sensitivity are not independently established."
+noted = "2026-10-01"
+data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
+
+[[errata.column]]
+variant = "aku-januari-2021"
+column = "COVIDE"
+name = "Du arbetade ju inte något under vecka <<vecka>>.  Var anledningen till att du inte arbetade alls på något sätt kopplat till coronapandemin?"
+definition = "Du arbetade ju inte något under vecka <<vecka>>.  Var anledningen till att du inte arbetade alls på något sätt kopplat till coronapandemin?"
+data_type = "decimal"
+is_sensitive = true
+is_identifier = false
+versions = ["2021", "2022"]
+source = "steward-holdings"
+evidence = "Exact AKU_Corona_2021 and AKU_Corona_2022 physical schemas contain COVIDE (float storage in both). Master variable list Utkast_P1105_Variabellista_uppd2025_v5.xlsx transcribes this exact question text under source AKU_Corona and years2021–2022. Accepted SCB AKU register122 contains no literal COVID* variable record. This documents the question and storage only; stored response codes and sensitivity are not independently established."
+noted = "2026-10-01"
+data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
+
+[[errata.column]]
+variant = "aku-januari-2021"
+column = "COVIDEJSOK"
+name = "Du sa tidigare att du hade kunnat arbeta under <<vecka>> (om du haft ett arbete) men att du inte har sökt arbete. Var anledningen till att du inte sökte arbete på något sätt kopplat till coronapandemin?"
+definition = "Du sa tidigare att du hade kunnat arbeta under <<vecka>> (om du haft ett arbete) men att du inte har sökt arbete. Var anledningen till att du inte sökte arbete på något sätt kopplat till coronapandemin?"
+data_type = "decimal"
+is_sensitive = true
+is_identifier = false
+versions = ["2021", "2022"]
+source = "steward-holdings"
+evidence = "Exact AKU_Corona_2021 and AKU_Corona_2022 physical schemas contain COVIDEJSOK (float storage in both). Master variable list Utkast_P1105_Variabellista_uppd2025_v5.xlsx transcribes this exact question text under source AKU_Corona and years2021–2022. Accepted SCB AKU register122 contains no literal COVID* variable record. This documents the question and storage only; stored response codes and sensitivity are not independently established."
+noted = "2026-10-01"
+data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
+
+[[errata.column]]
+variant = "aku-januari-2021"
+column = "COVIDFMH"
+name = "Du är ju <<Grad >>. Upplever du att du har fått mindre att göra på grund av coronapandemin?"
+definition = "Du är ju <<Grad >>. Upplever du att du har fått mindre att göra på grund av coronapandemin?"
+data_type = "decimal"
+is_sensitive = true
+is_identifier = false
+versions = ["2021", "2022"]
+source = "steward-holdings"
+evidence = "Exact AKU_Corona_2021 and AKU_Corona_2022 physical schemas contain COVIDFMH (float storage in both). Master variable list Utkast_P1105_Variabellista_uppd2025_v5.xlsx transcribes this exact question text under source AKU_Corona and years2021–2022. Accepted SCB AKU register122 contains no literal COVID* variable record. This documents the question and storage only; stored response codes and sensitivity are not independently established."
+noted = "2026-10-01"
+data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
+
+[[errata.column]]
+variant = "aku-januari-2021"
+column = "COVIDFMHB"
+name = "Under vecka <<vecka<< arbetade du ju mindre än vad du vanligtvis gör. Var anledningen till att du arbetade mindre på något sätt kopplat till coronapandemin?"
+definition = "Under vecka <<vecka<< arbetade du ju mindre än vad du vanligtvis gör. Var anledningen till att du arbetade mindre på något sätt kopplat till coronapandemin?"
+data_type = "decimal"
+is_sensitive = true
+is_identifier = false
+versions = ["2021", "2022"]
+source = "steward-holdings"
+evidence = "Exact AKU_Corona_2021 and AKU_Corona_2022 physical schemas contain COVIDFMHB (float storage in both). Master variable list Utkast_P1105_Variabellista_uppd2025_v5.xlsx transcribes this exact question text under source AKU_Corona and years2021–2022. Accepted SCB AKU register122 contains no literal COVID* variable record. This documents the question and storage only; stored response codes and sensitivity are not independently established."
+noted = "2026-10-01"
+data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
+
+[[errata.column]]
+variant = "aku-januari-2021"
+column = "COVIDHEM"
+name = "Just nu är det många som jobbar hemifrån på grund av coronapandemin. Under  vecka <<vecka>>, arbetade du hemma (helt eller delvis) på grund av corona?"
+definition = "Just nu är det många som jobbar hemifrån på grund av coronapandemin. Under  vecka <<vecka>>, arbetade du hemma (helt eller delvis) på grund av corona?"
+data_type = "decimal"
+is_sensitive = true
+is_identifier = false
+versions = ["2021", "2022"]
+source = "steward-holdings"
+evidence = "Exact AKU_Corona_2021 and AKU_Corona_2022 physical schemas contain COVIDHEM (float storage in both). Master variable list Utkast_P1105_Variabellista_uppd2025_v5.xlsx transcribes this exact question text under source AKU_Corona and years2021–2022. Accepted SCB AKU register122 contains no literal COVID* variable record. This documents the question and storage only; stored response codes and sensitivity are not independently established."
+noted = "2026-10-01"
+data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
+
+[[errata.column]]
+variant = "aku-januari-2021"
+column = "COVIDTARB"
+name = "Du har ju nyligen slutat ditt arbete. Var anledningen till att du slutade på något sätt kopplat till coronapandemin?"
+definition = "Du har ju nyligen slutat ditt arbete. Var anledningen till att du slutade på något sätt kopplat till coronapandemin?"
+data_type = "decimal"
+is_sensitive = true
+is_identifier = false
+versions = ["2021", "2022"]
+source = "steward-holdings"
+evidence = "Exact AKU_Corona_2021 and AKU_Corona_2022 physical schemas contain COVIDTARB (float storage in both). Master variable list Utkast_P1105_Variabellista_uppd2025_v5.xlsx transcribes this exact question text under source AKU_Corona and years2021–2022. Accepted SCB AKU register122 contains no literal COVID* variable record. This documents the question and storage only; stored response codes and sensitivity are not independently established."
+noted = "2026-10-01"
+data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
+
+[[variable]]
+native_id = "122.COVIDA"
+slug = "covida"
+
+[[variable]]
+native_id = "122.COVIDAEJ2"
+slug = "covidaej2"
+
+[[variable]]
+native_id = "122.COVIDDEL"
+slug = "coviddel"
+
+[[variable]]
+native_id = "122.COVIDE"
+slug = "covide"
+
+[[variable]]
+native_id = "122.COVIDEJSOK"
+slug = "covidejsok"
+
+[[variable]]
+native_id = "122.COVIDFMH"
+slug = "covidfmh"
+
+[[variable]]
+native_id = "122.COVIDFMHB"
+slug = "covidfmhb"
+
+[[variable]]
+native_id = "122.COVIDHEM"
+slug = "covidhem"
+
+[[variable]]
+native_id = "122.COVIDTARB"
+slug = "covidtarb"
