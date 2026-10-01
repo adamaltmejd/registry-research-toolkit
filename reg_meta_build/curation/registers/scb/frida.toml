@@ -6299,3 +6299,12 @@ list = "Elström"
 witness = ["2004-01-01", "2004-12-31"]
 reason = "Apply the explicitly named coding to the uncoded gap under the existing accepted time-stability decision; original decision awaits real-data verification #876."
 source = "codeless_overlap.toml#/resolve/23"  # v18 accepted-codeless:23:*, 2 case(s)
+
+[[acknowledge]]
+code = "unknown_support_key"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 121)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+fields = ["identifier", "sensitivity", "conditional_sensitivity"]
+refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"e909cb4b13240ce6b30405acafbf18a1eb8233950da20dc3b15e41e97965db8f\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"3349f49d1368164aabf89785462920baa9b637805f7e7ae30b93d408beb29872\"]}"]
+expected_evidence_sha256 = "e644a917ec7384e796fe958b7e78d9d2415c4415481ed64bf2e5fd7e83b5d892"
+reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
+evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."

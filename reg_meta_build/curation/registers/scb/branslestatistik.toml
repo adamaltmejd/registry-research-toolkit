@@ -177,3 +177,12 @@ native_id = "139.1641.ng2007"
 slug = "naringsgren-arbetsstalle"
 
 # register 140
+
+[[acknowledge]]
+code = "unknown_support_key"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 139)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+fields = ["identifier", "sensitivity", "conditional_sensitivity"]
+refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"dccc129d3bc1afa2d6bc1e7b66d6c1406c00e45deac2235afd5bfb3d7079f527\"]}"]
+expected_evidence_sha256 = "b6ad7107de83b94bfe8839d0e2c1065e5a36ac90e141b535ad4e09cbb074d139"
+reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
+evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."

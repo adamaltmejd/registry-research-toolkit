@@ -2376,3 +2376,106 @@ def test_ordinary_empty_reference_issue_cannot_use_source_ack_exception(monkeypa
     assert not result.acknowledged
     assert any(d == problem for d in result.diagnostics)
     assert any(d.code == "stale_curation_entry" for d in result.diagnostics)
+
+
+@pytest.mark.parametrize("change", ["flag", "column", "physical_duplicate"])
+def test_guarded_support_acknowledgement_pins_unattached_originals(change):
+    from reg_meta_build.source_curation import acknowledgement_evidence_sha256
+    from reg_meta_build.source_support import SourceSupportJoin
+
+    delivery = record()
+    revision = SourceRevision.create(
+        dataset="summary",
+        publisher="SCB",
+        purpose="Support scope fixture",
+        upstream_revision="1",
+        artifact_path="summary.csv",
+        artifact_size=1,
+        artifact_sha256="b" * 64,
+    )
+    original = SourceRecord.create(
+        revision=revision,
+        locators=delivery.locators,
+        subject=delivery.subject,
+        edition_scope=delivery.edition_scope,
+        edition_period_scope=delivery.edition_period_scope,
+        fields=SourceFields(
+            column_name=SourceField(status="unknown", raw_value=""),
+            identifier=value_field(False),
+        ),
+    )
+    peer = original.model_copy(
+        update={
+            "locators": (
+                original.locators[0].model_copy(update={"physical_record": "second"}),
+            )
+        }
+    )
+    join = SourceSupportJoin(
+        source="summary",
+        target_sources=(delivery.source,),
+        keys=("column_name",),
+        fields=("identifier",),
+        unique_variable=True,
+        rule="Exact physical column",
+        provenance=("fixture",),
+    )
+    register = source_register_key(delivery)
+
+    def replay(rows, cases=()):
+        support = SourceSupportBindings((join,), rows)
+        support.observe(delivery)
+        support.seal()
+        result = resolve_source_scope(
+            (delivery,),
+            cases=cases,
+            naming=names((delivery,)),
+            provider_keys={native_variable_key(delivery): "5"},
+            support=support,
+            source_diagnostics=tuple((register, d) for d in support.diagnostics),
+            value_sessions=(),
+            classifications={},
+            classification_references={},
+        )
+        assert support.bind(delivery) == ()
+        return result, support
+
+    before, support = replay((original, peer))
+    (issue,) = support.diagnostics
+    case = acknowledge(issue, delivery)
+    case = case.model_copy(
+        update={
+            "decision": case.decision.model_copy(
+                update={
+                    "expected_evidence_sha256": acknowledgement_evidence_sha256(
+                        (original, peer)
+                    ),
+                }
+            )
+        }
+    )
+    settled, unchanged = replay((original, peer), (case,))
+    assert settled.acknowledged == {"unknown_support_key": 1}
+    assert settled.variables == before.variables
+    assert unchanged.accounting == support.accounting
+    assert all(
+        a.disposition == "unknown_key" and not a.targets for a in unchanged.accounting
+    )
+    rows = (original, peer)
+    if change == "physical_duplicate":
+        rows = rows[:1]
+    else:
+        field, value = (
+            ("identifier", value_field(True))
+            if change == "flag"
+            else ("column_name", value_field("OTHER"))
+        )
+        rows = (
+            original.model_copy(
+                update={"fields": original.fields.model_copy(update={field: value})}
+            ),
+            peer,
+        )
+    rejected, _ = replay(rows, (case,))
+    assert rejected.acknowledged == {}
+    assert any(d.code == "stale_curation_entry" for d in rejected.diagnostics)

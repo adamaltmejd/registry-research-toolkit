@@ -611,3 +611,12 @@ native_id = "10.22627.areal1"
 slug = "areal-av-grodan-2"
 
 # register 102
+
+[[acknowledge]]
+code = "unknown_support_key"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 10)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+fields = ["identifier", "sensitivity", "conditional_sensitivity"]
+refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"d12b6668c0a7866610a23a4200a3e43b8594e3a0713f42265ed065f671e93705\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"4620c026c0e62e8f459f7d8e7f704334dad1968ef90cef3a65f4a3cf7a74a662\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"2ea9201a4c240f7663fd1387badbd29d3c8d630a62c28f596e1c5fc17f0c0289\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"5e3ed7a029cffb038d3db30780eec05f49c5c0a1a01af561d9ffb67d0f08157c\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"027766cfae06bb15744c02feb2881f4967179dd3d36e41643ddd64dbdb13cebe\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"c62f53ab4aa908a4f85b36a6c74a20027ef6c9d11dcad7308622ee91dce1543e\"]}"]
+expected_evidence_sha256 = "c27bc95938851c25e171f81e5ec2dbb98ada0e008ec4359fcc2d2b94b45f95e5"
+reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
+evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."

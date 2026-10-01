@@ -33,3 +33,12 @@ native_id = "284.19677"
 slug = "natpris-1-jan-industrikunder"
 
 # register 285 (nationalrakenskaper)
+
+[[acknowledge]]
+code = "unknown_support_key"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 284)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+fields = ["identifier", "sensitivity", "conditional_sensitivity"]
+refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"39d2bc215c4e8647e06394d001b000da25adaf1e12b256a07f317ac4aa322586\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"216601f31eceec393fddd6f9755ffc3c2a9c3f66de109065c45fcbdba1b2a1a4\"]}"]
+expected_evidence_sha256 = "1b38f1acded6dc50562240aa673bee749bdb6484e1c7a8351adfc12024c0909f"
+reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
+evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."

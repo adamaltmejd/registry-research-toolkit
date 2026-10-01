@@ -1684,3 +1684,12 @@ native_id = "264.4819.v8754"
 slug = "ovriga-kostnader-3"
 
 # register 270
+
+[[acknowledge]]
+code = "unknown_support_key"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 264)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+fields = ["identifier", "sensitivity", "conditional_sensitivity"]
+refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"29d5b8ff2f6a84801ffba0ca218dc63d275aeda59c4de77d2edcc11b6bb66078\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"9e8b0f61af2490552fe589a9711501a2cdda3eaad7bab72664b4d13a33140d6b\"]}"]
+expected_evidence_sha256 = "0e2fb7c7b8c058ecbeed3a997ef1fda6b524a29b53495e676c1801978148354d"
+reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
+evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."

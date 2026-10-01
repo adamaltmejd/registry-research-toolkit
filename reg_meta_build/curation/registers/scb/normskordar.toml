@@ -31,3 +31,12 @@ native_id = "209.7601"
 slug = "hektarskord"
 
 # register 211 (skord-slattervall)
+
+[[acknowledge]]
+code = "unknown_support_key"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 209)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+fields = ["identifier", "sensitivity", "conditional_sensitivity"]
+refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"e9c7f917597e8fa7b6a8d421b33f22714f1505dd7e58fb484483b8d3aba377f4\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"203d56aa895ac87a5c6f5cfbfc0b428d44f6fb36ef124f54fc75a3ef4f6559e4\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"4525292a401e1748a3bab2f94f0cb11dda370b22bc412a9a16bfb7dbe81828b4\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"84fe3f6dde4d36adb9f5f21d0e5a42392e6863bf94cef800bd2ce11319205636\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"5135bdbd2713e35e6858d6953a678243b1f025c613895efb11ea9c7292d335b0\"]}"]
+expected_evidence_sha256 = "af50aa1e4cec446986e62138277f1789e983baaa1eee047e856ab3aee6cb6140"
+reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
+evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."

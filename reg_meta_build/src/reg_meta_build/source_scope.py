@@ -210,6 +210,15 @@ def resolve_source_scope(
             ref = record_ref(original)
             if ref in guarded_refs:
                 guarded_originals[ref].append(original)
+        support_sources = {ref.source for ref in guarded_refs} & support.joins.keys()
+        if support_sources:
+            # External support diagnostics name actual support originals, not the
+            # delivery rows. Pin their full facts without joining their flags.
+            for item in support.accounting:
+                if item.record.source in support_sources:
+                    ref = record_ref(item.record)
+                    if ref in guarded_refs:
+                        guarded_originals[ref].append(item.record)
     guarded_coding: dict[SourceRecordRef, list[str]] = defaultdict(list)
     original_registers = (
         {record_ref(item): source_register_key(item) for item in originals}

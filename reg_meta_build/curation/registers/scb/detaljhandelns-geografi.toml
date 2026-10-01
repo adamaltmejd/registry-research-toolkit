@@ -35,3 +35,12 @@ native_id = "226.25367"
 slug = "antal-arbetsstallen"
 
 # register 228 (formogenhetsreg)
+
+[[acknowledge]]
+code = "unknown_support_key"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 226)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+fields = ["identifier", "sensitivity", "conditional_sensitivity"]
+refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"3aac339dcb0d02e96b47cb412300756619eec703137d0af0893979a580a12e3e\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"298e5d33786ebb6e9ed0195372e94a649436cfe1ed19005b971e74eaa0820a5f\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"4673f8d09e63bd2121d0e06f84e3a8dcd759987a3076ee670d94eb315f8f7911\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"4d5559f2d2072bb6d2874bd103c627d10b67f63d1e687c4b82c802a803886d2a\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"1818e3de4ec8cff9920c13dc3d9ead4061cdfc1c9d287e228457e29f585abeea\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"0164c62446cd7914f7883d5dc80451f66c22d1a69e85b47a0ce88d23a4619343\"]}"]
+expected_evidence_sha256 = "81c16dc840fda8c9b514e730f5d331284b6e80bd363b08c049823e7ca4223e78"
+reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
+evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
