@@ -11,6 +11,11 @@ extracts), never these originals. Two exceptions are force-tracked (`git add -f`
 decision 2026-09-02): this README and `build_catalog.py` — code and documentation, not
 data.
 
+The originals are also versioned in the separate, ignored local input Git repository
+at `.local/catalog-inputs/support/`. It has no remote. The machine-readable capture
+and its supporting source-document capture preserve original bytes and file hashes;
+local versioning does not publish the documents or select new catalog build inputs.
+
 Contents:
 
 - `SWECOV_variables_2025-12-11.csv` — the holdings inventory (one row per physical
