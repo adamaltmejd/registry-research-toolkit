@@ -1450,3 +1450,73 @@ list = "Bränslen för egna transporter"
 witness = ["2018-01-01", "2018-12-31"]
 reason = "Apply the explicitly named coding to the uncoded gap under the existing accepted time-stability decision; original decision awaits real-data verification #876."
 source = "codeless_overlap.toml#/resolve/3"  # v18 accepted-codeless:3:*, 2 case(s)
+
+[[identity.column_owner]]
+variable = "200.35302"
+variant = "200.802"
+column = "KNr"
+owner = "200.35302.knr"
+source_editions = ["2022"]
+ref = "Complete native 200.35302 family, exact variant802/edition18444/member861532. Existing accepted naming 200.35302.knr. Preserve both physical encodings and generator-power metadata without claiming their values agree."
+expected_fields = [{name = "availability", status = "value", value = true}, {name = "column_name", status = "value", value = "KNr"}, {name = "name", status = "value", value = "Sammanlagd generatoreffekt max netto"}, {name = "definition", status = "value", value = "Sammanlagd generatoreffekt max netto"}, {name = "operational_definition", status = "value", value = "Sammanlagd generatoreffekt för vatten-, vind- och  värmekraftstationer,\nMaxnethuv1=Maxnetto vid huvudbränsle\nMaxnetto=Maxnetto"}, {name = "data_type", status = "value", value = "decimal"}, {name = "data_length", status = "value", value = "11"}, {name = "source_attribution", status = "value", value = "Blankett Nät, N4"}, {name = "measurement_unit", status = "value", value = "kW"}, {name = "reference_period", status = "unknown"}]
+data_warning = "The 2022 source member861532 associates KNr and knr with generator-power wording and units. These literals resemble company identifiers; their meaning and mutual value equivalence have not been independently verified. Both source declarations and storage encodings are retained."
+
+[[identity.column_owner]]
+variable = "200.35302"
+variant = "200.802"
+column = "knr"
+owner = "200.35302.knr"
+source_editions = ["2022"]
+ref = "Complete native 200.35302 family, exact variant802/edition18444/member861532. Existing accepted naming 200.35302.knr. Preserve both physical encodings and generator-power metadata without claiming their values agree."
+expected_fields = [{name = "availability", status = "value", value = true}, {name = "column_name", status = "value", value = "knr"}, {name = "name", status = "value", value = "Sammanlagd generatoreffekt max netto"}, {name = "definition", status = "value", value = "Sammanlagd generatoreffekt max netto"}, {name = "operational_definition", status = "value", value = "Sammanlagd generatoreffekt för vatten-, vind- och  värmekraftstationer,\nMaxnethuv1=Maxnetto vid huvudbränsle\nMaxnetto=Maxnetto"}, {name = "data_type", status = "value", value = "integer"}, {name = "data_length", status = "value", value = "0"}, {name = "source_attribution", status = "value", value = "Blankett Nät, N4"}, {name = "measurement_unit", status = "value", value = "kW"}, {name = "reference_period", status = "unknown"}]
+data_warning = "The 2022 source member861532 associates KNr and knr with generator-power wording and units. These literals resemble company identifiers; their meaning and mutual value equivalence have not been independently verified. Both source declarations and storage encodings are retained."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/arlig-energistatistik/bransleforbrukning-transporter-kvant"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:801\",\"edition:15948\",\"variable:35301\",\"member:763698\"]}"]
+fields = ["coding"]
+valid_from = "2020-10-26"
+valid_to = "2020-12-31"
+reason = "The source does not establish a code domain for this exact fuel-quantity delivery. Preserve the quantity facts and leave its value set unavailable."
+evidence = "Approved bounded unavailable-coding policy. Complete native35301 family: the 2018 kvant member584906 describes Bränsleslag i klartext and links categorical codes1–5 (Bensin, Diesel, Övriga bränslen); the2020–2024 kvant members instead describe Kvantitet av bränslen för egna transporter and have no own positive code association. Preserve every original, the2018 categorical domain and its associations, and all other deliveries. Do not extend that categorical list to quantity states or suppress independent role/name/definition conflicts. Exact proof: Batch48-energy-fuel5-proof.json and Batch48-energy-35301-own-coding-claims.json."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/arlig-energistatistik/bransleforbrukning-transporter-kvant"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:801\",\"edition:18251\",\"variable:35301\",\"member:845944\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "The source does not establish a code domain for this exact fuel-quantity delivery. Preserve the quantity facts and leave its value set unavailable."
+evidence = "Approved bounded unavailable-coding policy. Complete native35301 family: the 2018 kvant member584906 describes Bränsleslag i klartext and links categorical codes1–5 (Bensin, Diesel, Övriga bränslen); the2020–2024 kvant members instead describe Kvantitet av bränslen för egna transporter and have no own positive code association. Preserve every original, the2018 categorical domain and its associations, and all other deliveries. Do not extend that categorical list to quantity states or suppress independent role/name/definition conflicts. Exact proof: Batch48-energy-fuel5-proof.json and Batch48-energy-35301-own-coding-claims.json."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/arlig-energistatistik/bransleforbrukning-transporter-kvant"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:801\",\"edition:18568\",\"variable:35301\",\"member:870223\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "The source does not establish a code domain for this exact fuel-quantity delivery. Preserve the quantity facts and leave its value set unavailable."
+evidence = "Approved bounded unavailable-coding policy. Complete native35301 family: the 2018 kvant member584906 describes Bränsleslag i klartext and links categorical codes1–5 (Bensin, Diesel, Övriga bränslen); the2020–2024 kvant members instead describe Kvantitet av bränslen för egna transporter and have no own positive code association. Preserve every original, the2018 categorical domain and its associations, and all other deliveries. Do not extend that categorical list to quantity states or suppress independent role/name/definition conflicts. Exact proof: Batch48-energy-fuel5-proof.json and Batch48-energy-35301-own-coding-claims.json."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/arlig-energistatistik/bransleforbrukning-transporter-kvant"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:801\",\"edition:19319\",\"variable:35301\",\"member:929484\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "The source does not establish a code domain for this exact fuel-quantity delivery. Preserve the quantity facts and leave its value set unavailable."
+evidence = "Approved bounded unavailable-coding policy. Complete native35301 family: the 2018 kvant member584906 describes Bränsleslag i klartext and links categorical codes1–5 (Bensin, Diesel, Övriga bränslen); the2020–2024 kvant members instead describe Kvantitet av bränslen för egna transporter and have no own positive code association. Preserve every original, the2018 categorical domain and its associations, and all other deliveries. Do not extend that categorical list to quantity states or suppress independent role/name/definition conflicts. Exact proof: Batch48-energy-fuel5-proof.json and Batch48-energy-35301-own-coding-claims.json."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/arlig-energistatistik/bransleforbrukning-transporter-kvant"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:801\",\"edition:20027\",\"variable:35301\",\"member:997667\"]}"]
+fields = ["coding"]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+reason = "The source does not establish a code domain for this exact fuel-quantity delivery. Preserve the quantity facts and leave its value set unavailable."
+evidence = "Approved bounded unavailable-coding policy. Complete native35301 family: the 2018 kvant member584906 describes Bränsleslag i klartext and links categorical codes1–5 (Bensin, Diesel, Övriga bränslen); the2020–2024 kvant members instead describe Kvantitet av bränslen för egna transporter and have no own positive code association. Preserve every original, the2018 categorical domain and its associations, and all other deliveries. Do not extend that categorical list to quantity states or suppress independent role/name/definition conflicts. Exact proof: Batch48-energy-fuel5-proof.json and Batch48-energy-35301-own-coding-claims.json."

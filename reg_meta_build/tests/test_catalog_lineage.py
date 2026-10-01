@@ -183,6 +183,58 @@ def test_disjoint_validity_keeps_identity_without_inventing_edges_or_errors():
     assert not result.metadata.state_lineage and not result.diagnostics
 
 
+def test_historical_source_variant_does_not_make_current_lineage_ambiguous():
+    variables, options = fixture(second_variant=True)
+    consumer, source = variables
+    current, historical = source.states
+    historical = historical.model_copy(
+        update={"valid_from": "1999-01-01", "valid_to": "1999-12-31"}
+    )
+    source = source.model_copy(update={"states": (current, historical)})
+    result = resolve_catalog_lineage((consumer, source), **options)
+    assert not result.diagnostics
+    (edge,) = result.metadata.state_lineage
+    assert edge.source.variant == "people"
+    assert (edge.valid_from, edge.valid_to) == ("2000-01-01", "2000-12-31")
+
+
+def test_multiple_disjoint_source_variants_preserve_attribution_without_edges():
+    variables, options = fixture(second_variant=True)
+    consumer, source = variables
+    source = source.model_copy(
+        update={
+            "states": tuple(
+                state.model_copy(
+                    update={"valid_from": "1999-01-01", "valid_to": "1999-12-31"}
+                )
+                for state in source.states
+            )
+        }
+    )
+    result = resolve_catalog_lineage((consumer, source), **options)
+    assert not result.diagnostics and not result.metadata.state_lineage
+    assert result.variables[0].source_register.slug == "origin"
+
+
+def test_independent_source_variant_cannot_be_filtered_as_disjoint():
+    variables, options = fixture(second_variant=True)
+    consumer, source = variables
+    dated, independent = source.states
+    independent = independent.model_copy(
+        update={
+            "period_scope": "year_independent",
+            "valid_from": None,
+            "valid_to": None,
+        }
+    )
+    source = source.model_copy(update={"states": (dated, independent)})
+    result = resolve_catalog_lineage((consumer, source), **options)
+    assert not result.metadata.state_lineage
+    assert [issue.code for issue in result.diagnostics] == [
+        "unresolved_lineage_ambiguous_source_variant"
+    ]
+
+
 @pytest.mark.parametrize("independent_endpoint", [0, 1])
 def test_independent_source_attribution_never_invents_dated_lineage(
     independent_endpoint,

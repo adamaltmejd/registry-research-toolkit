@@ -636,7 +636,7 @@ def test_repo_classification_files_count_and_stay_unique(
     ]
     assert len(list((_CURATION / "classifications").iterdir())) == len(books) == 83
     assert len({book.slug for book in books}) == 83
-    assert len(labels) == len(set(labels)) == 112
+    assert len(labels) == len(set(labels)) == 111
     assert sum(len(book.sentinel_codes) for book in books) == 543
     assert sum(1 for book in books if book.sentinel_codes) == 65
     assert len(bound) == len(set(bound)) == 10

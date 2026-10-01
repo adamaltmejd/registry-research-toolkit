@@ -54,8 +54,9 @@ def resolve_catalog_lineage(
     """Match literal source names and follow accepted variable identity edges.
 
     Equal slugs in different registers do not establish variable identity. The
-    accepted same-as graph supplies that identity. A single observed source
-    variant needs no choice; multiple variants require an explicit default.
+    accepted same-as graph supplies that identity. A single source variant
+    overlapping the consumer state needs no choice; multiple overlapping variants
+    require an explicit default.
     Unknown external source labels remain literal labels, not guessed registers.
     An attributed source with no supported source state withholds the edge as a
     warning; ambiguity is an error. A register-scoped build skips a lineage
@@ -206,6 +207,21 @@ def resolve_catalog_lineage(
                 if source_fqid not in usable_defaults
                 or item.variant.slug == usable_defaults[source_fqid]
             ]
+            if source_states and state.period_scope != "year_independent":
+                assert state.valid_from is not None and state.valid_to is not None
+                source_states = [
+                    (key, item)
+                    for key, item in source_states
+                    if item.period_scope == "year_independent"
+                    or (
+                        item.valid_from is not None
+                        and item.valid_to is not None
+                        and item.valid_from <= state.valid_to
+                        and item.valid_to >= state.valid_from
+                    )
+                ]
+                if not source_states:
+                    continue
             kinds = {item.variant.slug for _, item in source_states}
             if not source_states or len(kinds) > 1:
                 kind = (
