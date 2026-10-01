@@ -5764,10 +5764,13 @@ def test_compile_scoped_sentinel_requires_exact_members_and_preserves_guards(
         classifications={"fixture": book},
     )
     assert result.coding[column].claims == claims
-    assert result.coding[column].segments[0].classification == "fixture"
-    assert result.coding[column].segments[0].conformance.sentinel_members == (
-        ("99", "Unknown"),
-    )
+    assert tuple(
+        link.classification
+        for link in result.coding[column].segments[0].classification_links
+    ) == ("fixture",)
+    assert result.coding[column].segments[0].classification_links[
+        0
+    ].conformance.sentinel_members == (("99", "Unknown"),)
     changed = record.model_copy(
         update={
             "fields": record.fields.model_copy(
@@ -5783,7 +5786,7 @@ def test_compile_scoped_sentinel_requires_exact_members_and_preserves_guards(
     )
     assert stale.evaluations[0].status != "applicable"
     assert all(
-        segment.classification is None for segment in stale.coding[column].segments
+        not segment.classification_links for segment in stale.coding[column].segments
     )
 
 

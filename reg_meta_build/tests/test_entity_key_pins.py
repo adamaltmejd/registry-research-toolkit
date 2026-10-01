@@ -122,8 +122,8 @@ def _run_entity_key_pins_cli(
 ) -> tuple[dict, int]:
     """Drive `cli._cmd_entity_key_pins` against an in-memory fixture DB.
 
-    The handler opens its own DB via the schema-checked `open_db`; the synthetic
-    `build_slugged_db` conns carry no manifest, so we stub `cli.open_db` to return
+    The handler opens its own DB via the schema-checked `open_built_db`; the synthetic
+    `build_slugged_db` conns carry no manifest, so we stub `cli.open_built_db` to return
     the fixture conn. This exercises the handler's real `--out-dir` grouping,
     per-provider file writing, the `--out-dir`/`--output-toml` mutual-exclusion
     guard, and the `flavored=args.flavored` wiring — everything past the DB open."""
@@ -131,7 +131,7 @@ def _run_entity_key_pins_cli(
 
     from reg_meta_build import cli
 
-    monkeypatch.setattr(cli, "open_db", lambda _db: conn)
+    monkeypatch.setattr(cli, "open_built_db", lambda _db: conn)
     args = argparse.Namespace(
         db=None,
         slug_dir=str(slug_dir),
@@ -520,7 +520,7 @@ class TestGenerator:
         def _boom(_db):
             raise AssertionError("open_db must not run when the guard fires")
 
-        monkeypatch.setattr(cli, "open_db", _boom)
+        monkeypatch.setattr(cli, "open_built_db", _boom)
         args = argparse.Namespace(
             db=None,
             slug_dir=None,
@@ -550,7 +550,7 @@ class TestGenerator:
         def _boom(_db):
             raise AssertionError("open_db must not run when the guard fires")
 
-        monkeypatch.setattr(cli, "open_db", _boom)
+        monkeypatch.setattr(cli, "open_built_db", _boom)
         missing = tmp_path / "does-not-exist"
         args = argparse.Namespace(
             db=None,
@@ -592,7 +592,7 @@ class TestGenerator:
         def _boom(_db):
             raise AssertionError("open_db must not run when the guard fires")
 
-        monkeypatch.setattr(cli, "open_db", _boom)
+        monkeypatch.setattr(cli, "open_built_db", _boom)
         args = argparse.Namespace(
             db=None,
             slug_dir=str(global_root),
@@ -639,7 +639,7 @@ class TestGenerator:
         def _boom(_db):
             raise AssertionError("open_db must not run when the guard fires")
 
-        monkeypatch.setattr(cli, "open_db", _boom)
+        monkeypatch.setattr(cli, "open_built_db", _boom)
         args = argparse.Namespace(
             db=None,
             slug_dir=str(global_root),
@@ -679,7 +679,7 @@ class TestGenerator:
         def _boom(_db):
             raise AssertionError("open_db must not run when the guard fires")
 
-        monkeypatch.setattr(cli, "open_db", _boom)
+        monkeypatch.setattr(cli, "open_built_db", _boom)
         args = argparse.Namespace(
             db=None,
             slug_dir=str(steward_dir),

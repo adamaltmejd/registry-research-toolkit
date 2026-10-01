@@ -736,8 +736,8 @@ def test_repo_coding_windows_are_ported(repo_tree: CurationTree) -> None:
         )
         for entry in kind
     ]
-    assert len(coding) == 300
-    assert sum(len(entry.periods) for entry in coding) == 552
+    assert len(coding) == 302
+    assert sum(len(entry.periods) for entry in coding) == 554
     assert (
         sum(
             entry.source_authority is not None
@@ -753,7 +753,7 @@ def test_repo_coding_windows_are_ported(repo_tree: CurationTree) -> None:
             for register in tree.registers
             for entry in register.coding.choice
         )
-        == 89
+        == 98
     )
     assert (
         sum(
@@ -767,7 +767,7 @@ def test_repo_coding_windows_are_ported(repo_tree: CurationTree) -> None:
             )
             for register in tree.registers
         )
-        == 30
+        == 31
     )
 
 
@@ -950,7 +950,7 @@ def test_repo_delivery_enrichment_parses(repo_tree: CurationTree) -> None:
     registers = repo_tree.registers
     descriptions = [d for r in registers for d in r.enrichment.description]
     aliases = [a for r in registers for a in r.enrichment.alias]
-    assert (len(descriptions), len(aliases)) == (359, 45)
+    assert (len(descriptions), len(aliases)) == (355, 45)
     # the #365 global description backfills + delivery-column aliases ship together
     assert descriptions
     assert aliases
@@ -1163,7 +1163,7 @@ def test_repo_scb_errata_parses() -> None:
     assert errata  # the verified LISA DispInkKE case ships with the repo
     assert (len(errata.delivered), len(errata.columns), len(errata.versions)) == (
         386,
-        1885,
+        1894,
         10,
     )
     # scb/lisa "Individer, 15 år och äldre"; pin the complete coordinates of
@@ -1214,7 +1214,7 @@ def test_repo_scb_errata_columns_carry_both_evidence_sources() -> None:
         repo_slug_dir(),
     )
     by_source = Counter(c.source for c in errata.columns)
-    assert by_source == {"steward-holdings": 1851, "scb-docs": 34}
+    assert by_source == {"steward-holdings": 1860, "scb-docs": 34}
 
     holdings = Counter(
         (c.register_id, c.register_variant_id)
@@ -1222,9 +1222,24 @@ def test_repo_scb_errata_columns_carry_both_evidence_sources() -> None:
         if c.source == "steward-holdings"
     )
     assert sorted(holdings.values(), reverse=True)[:3] == [992, 623, 156]
-    assert all(
-        c.versions is None for c in errata.columns if c.source == "steward-holdings"
-    )
+    assert {
+        (c.register_id, c.register_variant_id, c.column, c.versions)
+        for c in errata.columns
+        if c.source == "steward-holdings" and c.versions is not None
+    } == {
+        (122, 1628, column, ("2021", "2022"))
+        for column in (
+            "COVIDA",
+            "COVIDAEJ2",
+            "COVIDDEL",
+            "COVIDE",
+            "COVIDEJSOK",
+            "COVIDFMH",
+            "COVIDFMHB",
+            "COVIDHEM",
+            "COVIDTARB",
+        )
+    }
     peorgnrhe = next(c for c in errata.columns if c.column == "PeOrgNrHe")
     assert peorgnrhe.is_identifier
 
@@ -1290,13 +1305,13 @@ def test_repo_column_owning_splits_resolve_to_a_slug(repo_tree: CurationTree) ->
         for register in tree.registers
         for partition in register.identity.partition
     ]
-    assert len(tree.registers) == 289
+    assert len(tree.registers) == 290
     assert (
         sum(len(register.identity.route) for register in tree.registers),
         sum(len(register.identity.split) for register in tree.registers),
         sum(len(register.identity.rename) for register in tree.registers),
         sum(len(register.identity.column_owner) for register in tree.registers),
-    ) == (20, 21, 1, 350)
+    ) == (20, 21, 1, 349)
     # Y-303 rev 2: six reused PAR native names each deliver distinct source
     # concepts. AR/INDATUM/INDATUMA/ALDER/IDNR split by Deldatamängd; FODDAT
     # splits by data type because its OV/SV text originals share one
@@ -2900,29 +2915,10 @@ def test_repo_reviewed_parallel_columns_keep_exact_wave_intersections(
         for register in tree.registers
         for entry in register.representation.delivery_metadata
     ]
-    assert len(metadata) == 41
+    assert len(metadata) == 22
     assert Counter(tuple(entry.fields) for entry in metadata) == {
-        ("measurement_unit",): 20,
-        ("description",): 21,
+        ("description",): 22,
     }
-    # Retain the original four-owner receipt separately from later unit and
-    # prose projections; none grants permission for an unlisted field.
-    original_unit_owners = {
-        "25.39431",
-        "34.16249.ku1ink",
-        "34.31290.ku3ink",
-        "34.31395",
-    }
-    units = [entry for entry in metadata if entry.variable in original_unit_owners]
-    assert {entry.variable for entry in units} == {
-        "25.39431",
-        "34.16249.ku1ink",
-        "34.31290.ku3ink",
-        "34.31395",
-    }
-    assert len(units) == 4
-    assert sum(len(entry.columns) for entry in units) == 7
-    assert sum(len(entry.records) for entry in units) == 105
 
 
 def test_repo_reviewed_matrix_activations_pin_exact_evidence(

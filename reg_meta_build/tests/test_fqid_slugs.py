@@ -3946,7 +3946,7 @@ class TestSeedSlugsCli:
         monkeypatch.setattr(
             cli, "db_path_from_args", lambda _x: tmp_path / "reg_meta.db"
         )
-        monkeypatch.setattr(cli, "open_db", lambda _path: conn)
+        monkeypatch.setattr(cli, "open_built_db", lambda _path: conn)
 
     def test_quiet_suppresses_hints(
         self,
@@ -4027,7 +4027,7 @@ class TestSeedSlugsCli:
         monkeypatch.setattr(
             cli, "db_path_from_args", lambda _x: tmp_path / "reg_meta.db"
         )
-        monkeypatch.setattr(cli, "open_db", lambda _path: _make_seedable_db())
+        monkeypatch.setattr(cli, "open_built_db", lambda _path: _make_seedable_db())
         out_quiet = tmp_path / "quiet"
         out_loud = tmp_path / "loud"
         cli._cmd_seed_slugs(

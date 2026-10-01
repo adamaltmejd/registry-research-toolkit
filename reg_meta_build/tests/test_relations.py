@@ -25,6 +25,7 @@ from reg_meta_build.relations import (
     reject_nonmonotone_representation_cycles,
 )
 from reg_meta_build.resolved_catalog import (
+    ResolvedClassificationLink,
     ResolvedClassificationSuccession,
     ResolvedRegister,
     ResolvedState,
@@ -1040,13 +1041,20 @@ def _resolve_vintage_fixture(conn: sqlite3.Connection) -> int:
                 data_length=None,
                 operational_definition=None,
                 provenance=None,
-                classification=state["classification_slug"],
+                classification_links=tuple(
+                    ResolvedClassificationLink(
+                        classification=link["slug"], provenance=link["provenance"]
+                    )
+                    for link in conn.execute(
+                        "SELECT c.slug, sc.provenance FROM state_classification sc JOIN classification c ON c.id=sc.classification_id WHERE sc.state_id=? ORDER BY c.slug",
+                        (state["state_id"],),
+                    )
+                ),
             )
             for state in conn.execute(
-                "SELECT s.*, rv.slug AS variant_slug, rv.name AS variant_name, "
-                "c.slug AS classification_slug FROM variable_state s "
+                "SELECT s.*, rv.slug AS variant_slug, rv.name AS variant_name "
+                "FROM variable_state s "
                 "JOIN register_variant rv USING (register_variant_id) "
-                "LEFT JOIN classification c ON c.id = s.classification_id "
                 "WHERE s.variable_id = ?",
                 (row["variable_id"],),
             )
