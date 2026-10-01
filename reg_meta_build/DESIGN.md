@@ -1117,7 +1117,10 @@ while an agreed edge survives. Literal event metadata remains separately inspect
 Source attribution matches register names and explicit abbreviations within a provider.
 Ambiguous matches are errors; unmatched external labels stay text. State lineage
 requires an accepted `same_as` path into that source register and exact endpoint period
-intersections. Equal slugs are insufficient. Explicit source-variant defaults resolve
+intersections. Equal slugs are insufficient. A literal `register : variant` attribution
+selects only that exact admitted variant, matching its resolved source name. An unknown
+or ambiguous explicit variant cannot fall back to a register default or another
+variant's states. Explicit source-variant defaults resolve unqualified claims with
 genuinely multiple variants and are checked even when unused. Missing evidence produces
 retained lineage warnings and blocking diagnostics: no supported source state withholds
 the edge as a warning; ambiguity is an error. Register attribution alone does not

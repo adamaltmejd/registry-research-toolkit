@@ -55,8 +55,9 @@ def resolve_catalog_lineage(
 
     Equal slugs in different registers do not establish variable identity. The
     accepted same-as graph supplies that identity. A single source variant
-    overlapping the consumer state needs no choice; multiple overlapping variants
-    require an explicit default.
+    overlapping the consumer state needs no choice; an explicit source variant
+    label selects that variant before dates are intersected. Unqualified claims
+    with multiple overlapping variants require an explicit default.
     Unknown external source labels remain literal labels, not guessed registers.
     An attributed source with no supported source state withholds the edge as a
     warning; ambiguity is an error. A register-scoped build skips a lineage
@@ -84,6 +85,10 @@ def resolve_catalog_lineage(
             names[provider, label.casefold()].add(fqid)
     available: set[DependencyKey] = {("register", fqid) for fqid in by_register}
     available.update(("variant", f"{r.provider}/{r.slug}", v.slug) for r, v in variants)
+    variant_names = defaultdict(set)
+    for register, variant in variants:
+        register_fqid = f"{register.provider}/{register.slug}"
+        variant_names[register_fqid, variant.name.casefold()].add(variant.slug)
     dependencies = CatalogDependencies(available, withheld, unselected, slice_registers)
     usable_defaults = {}
     for register, variant in sorted(defaults.items()):
@@ -191,10 +196,33 @@ def resolve_catalog_lineage(
             )
         )
         for state in variable.states:
-            origin = matches.get(state.source_register_text)
-            if origin is None or origin == variable.register_ref:
+            source_text = state.source_register_text
+            origin = matches.get(source_text)
+            if source_text is None or origin is None or origin == variable.register_ref:
                 continue
             source_fqid = f"{origin.provider}/{origin.slug}"
+            _, separator, source_variant_label = source_text.partition(" : ")
+            source_variant = usable_defaults.get(source_fqid)
+            unresolved_variant = None
+            ambiguous_variant = False
+            if separator:
+                named_variants = variant_names.get(
+                    (source_fqid, source_variant_label.strip().casefold()), set()
+                )
+                source_variant = (
+                    next(iter(named_variants)) if len(named_variants) == 1 else None
+                )
+                if source_variant is None:
+                    ambiguous_variant = len(named_variants) > 1
+                    unresolved_variant = (
+                        f"Explicit source variant {source_variant_label!r} "
+                        + (
+                            "matches multiple admitted source variants"
+                            if ambiguous_variant
+                            else "matches no admitted source variant"
+                        )
+                        + "; no default or other variant has been substituted."
+                    )
             identities = sorted(
                 key
                 for key in components.get(fqid, ())
@@ -204,8 +232,8 @@ def resolve_catalog_lineage(
                 (key, item)
                 for key in identities
                 for item in by_fqid[key].states
-                if source_fqid not in usable_defaults
-                or item.variant.slug == usable_defaults[source_fqid]
+                if unresolved_variant is None
+                and (source_variant is None or item.variant.slug == source_variant)
             ]
             if source_states and state.period_scope != "year_independent":
                 assert state.valid_from is not None and state.valid_to is not None
@@ -223,17 +251,25 @@ def resolve_catalog_lineage(
                 if not source_states:
                     continue
             kinds = {item.variant.slug for _, item in source_states}
-            if not source_states or len(kinds) > 1:
+            if unresolved_variant is not None or not source_states or len(kinds) > 1:
                 kind = (
                     "no_source_state"
-                    if not source_states
+                    if not source_states and not ambiguous_variant
                     else "ambiguous_source_variant"
                 )
-                detail = (
-                    "No source state is supported by accepted variable identity and variant declarations."
-                    if not source_states
-                    else "Multiple source variants need an explicit lineage choice."
-                )
+                if unresolved_variant is not None:
+                    detail = unresolved_variant
+                elif not source_states and separator:
+                    detail = (
+                        f"The explicitly named source variant {source_variant_label!r} "
+                        "has no source state supported by accepted variable identity."
+                    )
+                else:
+                    detail = (
+                        "No source state is supported by accepted variable identity and variant declarations."
+                        if not source_states
+                        else "Multiple source variants need an explicit lineage choice."
+                    )
                 warnings.append(
                     ResolvedLineageWarning(
                         consumer=state_ref(fqid, state), kind=kind, message=detail

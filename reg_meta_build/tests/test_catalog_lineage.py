@@ -153,7 +153,9 @@ def test_unknown_source_label_remains_unresolved():
 
 
 def test_variant_default_resolves_ambiguity_and_unused_dangling_pin_fails():
-    variables, options = fixture(second_variant=True)
+    variables, options = fixture(
+        second_variant=True, source_label="Original register (ORIG)"
+    )
     result = resolve_catalog_lineage(variables, **options)
     assert not result.metadata.state_lineage
     assert result.diagnostics[0].code == "unresolved_lineage_ambiguous_source_variant"
@@ -164,6 +166,67 @@ def test_variant_default_resolves_ambiguity_and_unused_dangling_pin_fails():
     options["defaults"] = {"scb/missing": "people"}
     with pytest.raises(CatalogDependencyError):
         resolve_catalog_lineage(variables, **options)
+
+
+def test_explicit_source_variant_selects_its_states_over_a_different_default():
+    variables, options = fixture(second_variant=True)
+    options["defaults"] = {"scb/origin": "other"}
+    result = resolve_catalog_lineage(variables, **options)
+    assert not result.diagnostics
+    (edge,) = result.metadata.state_lineage
+    assert edge.source.variant == "people"
+    assert edge.consumer.variable == "scb/example/value"
+    assert edge.source.variable == "scb/origin/value"
+    assert resolve_catalog_lineage(tuple(reversed(variables)), **options) == result
+
+
+def test_explicit_source_variant_without_identity_linked_states_stays_unavailable():
+    label = "Original register (ORIG) : Missing delivery"
+    variables, options = fixture(second_variant=True, source_label=label)
+    options["variants"] += (
+        (
+            variables[1].register_ref,
+            ResolvedVariant(slug="missing", name="Missing delivery"),
+        ),
+    )
+    options["defaults"] = {"scb/origin": "people"}
+    result = resolve_catalog_lineage(variables, **options)
+    assert not result.metadata.state_lineage
+    assert result.variables[0].source_register_text == label
+    assert [d.code for d in result.diagnostics] == [
+        "unresolved_lineage_no_source_state"
+    ]
+    assert result.diagnostics[0].severity == "warning"
+    assert "'Missing delivery'" in result.diagnostics[0].detail
+
+
+@pytest.mark.parametrize("suffix", ["Unknown delivery", "", "People"])
+def test_unresolved_explicit_variant_cannot_fall_back_to_a_default(suffix):
+    variables, options = fixture(
+        second_variant=True, source_label=f"Original register (ORIG) : {suffix}"
+    )
+    if suffix == "People":
+        options["variants"] += (
+            (
+                variables[1].register_ref,
+                ResolvedVariant(slug="duplicate", name="People"),
+            ),
+        )
+    options["defaults"] = {"scb/origin": "people"}
+    result = resolve_catalog_lineage(variables, **options)
+    assert not result.metadata.state_lineage
+    assert [d.code for d in result.diagnostics] == [
+        "unresolved_lineage_ambiguous_source_variant"
+        if suffix == "People"
+        else "unresolved_lineage_no_source_state"
+    ]
+    assert result.diagnostics[0].severity == (
+        "error" if suffix == "People" else "warning"
+    )
+    assert result.diagnostics[0].refs == options["evidence"]["scb/example/value"]
+    assert "no default or other variant has been substituted" in (
+        result.diagnostics[0].detail
+    )
 
 
 def test_disjoint_validity_keeps_identity_without_inventing_edges_or_errors():
@@ -184,7 +247,9 @@ def test_disjoint_validity_keeps_identity_without_inventing_edges_or_errors():
 
 
 def test_historical_source_variant_does_not_make_current_lineage_ambiguous():
-    variables, options = fixture(second_variant=True)
+    variables, options = fixture(
+        second_variant=True, source_label="Original register (ORIG)"
+    )
     consumer, source = variables
     current, historical = source.states
     historical = historical.model_copy(
@@ -199,7 +264,9 @@ def test_historical_source_variant_does_not_make_current_lineage_ambiguous():
 
 
 def test_multiple_disjoint_source_variants_preserve_attribution_without_edges():
-    variables, options = fixture(second_variant=True)
+    variables, options = fixture(
+        second_variant=True, source_label="Original register (ORIG)"
+    )
     consumer, source = variables
     source = source.model_copy(
         update={
@@ -217,7 +284,9 @@ def test_multiple_disjoint_source_variants_preserve_attribution_without_edges():
 
 
 def test_independent_source_variant_cannot_be_filtered_as_disjoint():
-    variables, options = fixture(second_variant=True)
+    variables, options = fixture(
+        second_variant=True, source_label="Original register (ORIG)"
+    )
     consumer, source = variables
     dated, independent = source.states
     independent = independent.model_copy(
