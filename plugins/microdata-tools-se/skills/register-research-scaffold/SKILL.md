@@ -23,7 +23,7 @@ Provide:
 - Concise project instructions recording actual boundaries, chosen tools and commands.
 - A documented source adapter, configured external real/mock input directories, and analysis/configuration files for one small batch.
 - Markdown question tickets with YAML frontmatter and dependency links; use filesystem search and metadata, not a separate database.
-- A way to upload committed code, inspect and run it manually on the server with persistent caches, and download only the current checked export after human review. Private local review before approval is an alternative. Use bounded current code/output locations rather than accumulating remote run directories.
+- A small operator-run `sync.sh up|down` for flexible servers: sync the project with shared exclusions, keep Git history local, and run/review remotely by hand. Only disclosure-checked, human-approved real aggregates may return to agent-readable storage or enter Git. Use bounded current code/output locations rather than accumulating remote run directories.
 - A simple local HTML view of tickets, batch state, tables and evidence. Paper and slides are researcher-facing build targets too; prototype outputs must be visibly labelled mock and need not imitate a completed manuscript.
 - A short runbook stating what was checked locally and what still requires restricted compute or the researcher.
 

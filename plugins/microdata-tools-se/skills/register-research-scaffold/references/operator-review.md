@@ -4,14 +4,14 @@ Keep transfer commands transparent: standard rsync and a short runbook with sepa
 
 ## Transfer contract
 
-For a flexible server, prepare these independent operator steps:
+For a flexible server, provide a small `sync.sh up|down [--dry-run]` around rsync. Both directions use the same simple root .gitignore exclusions and explicitly omit .git. Keep Git history local; approved real aggregate results may be tracked. Exclude mock results, caches, private intermediates, raw logs, environments and machine configuration. Raw and mock inputs live outside the project. Do not claim full Git-ignore support: use simple exclude patterns, or Git's file selection if advanced rules become necessary.
 
-1. Test the committed source snapshot locally on approved mock inputs. Upload that snapshot, or tracked files from a verified clean checkout, to the existing remote source location. Omit .git, inputs, caches, results and local environments. Remove obsolete source files only within the managed source scope; preserve remote state. Do not upload while a batch runs.
-2. Inspect the uploaded source on the server and run it manually. A small Python project can expose `uv run run.py` with an established build tool underneath. Configure external real/mock input paths and derive separate output/cache locations from the selected mode, as described in [execution.md](execution.md). Mocks need not exist remotely.
-3. The runner invalidates the old completion marker, builds requested outputs and automatically checks the entire newly assembled export. Failure leaves no current releasable export. A pipeline lock prevents concurrent runs; a deployment/transfer service or lock spanning all operator steps is unnecessary for this MVP.
-4. Review the completed export on the server, including the checker report and execution revision, and approve it for model access. Then explicitly rsync only the designated export into the local real-results destination. Never download caches, intermediates, logs or the whole project. Keep that export unchanged until transfer completes; a checksum can confirm it is the reviewed version. Receive into temporary storage and replace the current local export only after successful transfer and validation, without merging stale files.
+1. Test the committed source locally on approved mock inputs, then upload with `./sync.sh up`. The helper can record source hashes and the execution commit in a small ignored manifest for verification without remote Git. Do not upload during a run.
+2. Inspect uploaded code and run it manually with `uv run run.py`. External inputs select real or mock mode with separate output/cache paths; see [execution.md](execution.md). Mocks need not exist remotely.
+3. The runner invalidates old completion, builds requested outputs and automatically checks the entire fresh export. Failure blocks download. Keep unchecked data and detailed failure reports in excluded paths.
+4. Review the checked results, execution revision and all other transfer-eligible remote content. Approve real outputs for model access, then run `./sync.sh down`. Keep reviewed files unchanged until copying finishes. Transfer failure is not a completed handoff; wait for a successful retry before consuming results.
 
-Fixed locations overwrite current code/results; temporary staging is bounded. Git history and research records stay local. Runtime/native dependencies are provisioned separately. MONA retains its manual upload/export procedure and the same human-review boundary.
+The helper only copies files: no remote execution, automatic approval or deletion by default. Review and remove obsolete source/output files explicitly. A sync is not a merge; avoid concurrent runs or local edits that a download would overwrite. Fixed remote paths retain current data/cache only. MONA keeps its separate manual upload/export workflow.
 
 ## Alternative local review
 
