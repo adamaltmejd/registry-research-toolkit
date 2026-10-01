@@ -45,6 +45,9 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from pydantic import Field, model_validator
+from reg_meta.inventory import ColumnMapping, edition_bounds
+
 DEFAULT_CSV = max(
     Path(__file__).parent.glob("SWECOV_variables_full_*.csv"),
     key=lambda path: path.name,
@@ -2746,27 +2749,25 @@ def _steward_load_db(db_path: Path):
            JOIN register_variant rv USING(register_variant_id)
            WHERE vs.delivery_column_name IS NOT NULL
              AND trim(vs.delivery_column_name) != '' AND v.slug IS NOT NULL
-           UNION ALL
+           UNION
            SELECT p.slug, r.slug, p.slug||'/'||r.slug||'/'||rv.slug, v.slug,
                   w.delivery_column_name, vs.data_type, v.is_identifier,
-                  vs.value_set_id, w.valid_from, w.valid_to, 'intervals'
+                  vs.value_set_id, MAX(vs.valid_from, w.valid_from),
+                  MIN(vs.valid_to, w.valid_to), 'intervals'
            FROM variable_alias_window w JOIN variable v USING(variable_id)
            JOIN register r ON r.register_id=v.register_id
            JOIN provider p ON p.provider_id=r.provider_id
            JOIN register_variant rv USING(register_variant_id)
            JOIN variable_state vs ON vs.variable_id=w.variable_id
                 AND vs.register_variant_id=w.register_variant_id
-                AND vs.valid_from<=w.valid_from AND w.valid_to<=vs.valid_to
+                AND vs.period_scope='intervals'
+                AND vs.valid_from<=w.valid_to AND w.valid_from<=vs.valid_to
            WHERE trim(w.delivery_column_name) != '' AND v.slug IS NOT NULL
-             AND NOT EXISTS (SELECT 1 FROM variable_state s
-                             WHERE s.variable_id=w.variable_id
-                               AND s.register_variant_id=w.register_variant_id
-                               AND s.delivery_column_name=w.delivery_column_name)
              AND EXISTS (SELECT 1 FROM variable_alias_window b
                          WHERE b.variable_id=w.variable_id
                            AND b.register_variant_id=w.register_variant_id
-                           AND vs.valid_from<=b.valid_from
-                           AND b.valid_to<=vs.valid_to
+                           AND b.valid_from<=MAX(vs.valid_from,w.valid_from)
+                           AND MIN(vs.valid_to,w.valid_to)<=b.valid_to
                            AND py_lower(b.delivery_column_name)
                                =py_lower(vs.delivery_column_name))
            ORDER BY prov, reg, coord, vslug, col, vf, dtype"""
@@ -2867,6 +2868,9 @@ def _steward_scope(key: str, mapping: dict) -> tuple[set[str], set[str]]:
 #   [[exclude]]  table, reason      — discard a superseded delivery
 #   [[edition]]  table, edition     — explicit edition where the table name
 #                                     yields zero or several period tokens
+#   [[mapping]] table, column, edition, register_variant, variable, representation, reason
+#                                   — exact reviewed representation, guarded by
+#                                     physical coordinates and full catalog coverage
 #   [[assign]]   table, register_variant (str or list)
 #                                   — variant coordinate(s) where the curated
 #                                     MAPPING cannot place the table (residue
@@ -2897,6 +2901,39 @@ for _entry in _FLAVOR_DISPOSITION:
 _SCHOOL_YEAR_ANCHORS = ("spring", "autumn", "vt", "ht")
 
 
+class InventoryMappingOverride(ColumnMapping):
+    """One reviewed physical coordinate with a checked catalog representation."""
+
+    representation: str = Field(min_length=1)
+    table: str = Field(min_length=1)
+    column: str = Field(min_length=1)
+    edition: int | str
+    reason: str = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def _finite_edition(self) -> InventoryMappingOverride:
+        edition_bounds(str(self.edition))
+        return self
+
+
+def _inventory_mapping_records(
+    entry: InventoryMappingOverride,
+    records: list[dict],
+    edition: object,
+    coords: set[str],
+) -> tuple[list[dict], str | None]:
+    if entry.edition != edition or entry.register_variant not in coords:
+        return [], "stale_declared_mapping_scope"
+    selected = [
+        r
+        for r in records
+        if r["coord"] == entry.register_variant and r["col"] == entry.representation
+    ]
+    admitted, issue = _inventory_period_records(selected, edition)
+    owned = [r for r in admitted if r["vslug"] == entry.variable.variable]
+    return owned, "stale_declared_mapping_target" if issue or not owned else None
+
+
 def _load_overlay(path: Path) -> dict:
     import tomllib
 
@@ -2921,11 +2958,20 @@ def _load_overlay(path: Path) -> dict:
                 e["register"]: e["anchor"] for e in raw.get("school_year", [])
             },
             "assign": defaultdict(set),
+            "mapping": defaultdict(list),
         }
+        seen_mapping = set()
+        for e in raw.get("mapping", []):
+            entry = InventoryMappingOverride.model_validate(e, strict=True)
+            key = (entry.table, entry.column, entry.register_variant)
+            if key in seen_mapping:
+                raise ValueError(f"duplicate mapping override {key!r}")
+            seen_mapping.add(key)
+            overlay["mapping"][entry.table, entry.column].append(entry)
         for e in raw.get("assign", []):
             rv = e["register_variant"]
             overlay["assign"][e["table"]].update([rv] if isinstance(rv, str) else rv)
-    except (KeyError, TypeError) as exc:
+    except (KeyError, TypeError, ValueError) as exc:
         raise SystemExit(
             f"malformed overlay entry in {path}: {exc!r} — every [[exclude]] "
             "and [[edition]] needs `table` (+ `edition`), every [[partition]] "
@@ -3105,6 +3151,21 @@ def cmd_inventory(args: argparse.Namespace) -> None:
         "stale_overlay_entries": stale,
         "mapping_scope_needed": [],
     }
+    for table, column in overlay["mapping"]:
+        if (
+            table not in tables
+            or column not in tables[table]["columns"]
+            or table in excluded
+        ):
+            worklist["mapping_scope_needed"].append(
+                {
+                    "table": table,
+                    "column": column,
+                    "code": "stale_declared_mapping_physical_coordinate",
+                }
+            )
+        if (table, column) in overlay["unmap"]:
+            raise SystemExit(f"mapping override conflicts with unmap: {table}/{column}")
     n_cols = n_mapped = n_pivot = n_unresolved = n_auto_assigned = n_unmapped = 0
     # [[school_year]] bookkeeping: tables re-spelled per rule (printed) and the
     # registers emitted tables land on (a rule reaching none is stale).
@@ -3201,6 +3262,34 @@ def cmd_inventory(args: argparse.Namespace) -> None:
                 continue
             u = LOPNR_PREFIX.sub("", col).upper()
             recs = [r for coord in sorted(coords) for r in by_coordcol[(coord, u)]]
+            mapping_issue = None
+            for entry in overlay["mapping"].get((table, col), ()):
+                declared, mapping_issue = _inventory_mapping_records(
+                    entry,
+                    by_coordcol[(entry.register_variant, entry.representation.upper())],
+                    edition,
+                    coords,
+                )
+                if mapping_issue:
+                    break
+                recs = [
+                    r
+                    for r in recs
+                    if r["coord"] != entry.register_variant
+                    or r["vslug"] != entry.variable.variable
+                ] + declared
+            if mapping_issue:
+                worklist["mapping_scope_needed"].append(
+                    {
+                        "table": table,
+                        "column": col,
+                        "edition": edition,
+                        "code": mapping_issue,
+                    }
+                )
+                n_unresolved += 1
+                lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
+                continue
             if not recs:
                 base = _steward_pivot_base(LOPNR_PREFIX.sub("", col))
                 if base and base_counts[base] >= 2:

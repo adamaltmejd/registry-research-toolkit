@@ -1372,3 +1372,176 @@ def test_unavailable_inventory_owner_writes_worklist_without_replacing_inventory
         worklist["mapping_scope_needed"][0]["candidate_records"][0]["valid_to"]
         == "2018-12-31"
     )
+
+
+def _literal_mapping_overlay(**changes: object) -> str:
+    fields = {
+        "table": "T2019",
+        "column": "Physical",
+        "edition": 2019,
+        "register_variant": "inera/bestallda-prover/_default",
+        "variable": "inera/bestallda-prover/t-kolumn",
+        "representation": "T_kolumn",
+        "reason": "Exact reviewed source coordinate",
+        **changes,
+    }
+    return (
+        "[[mapping]]\n"
+        + "\n".join(f"{key} = {json.dumps(value)}" for key, value in fields.items())
+        + "\n"
+    )
+
+
+def test_inventory_overlay_preserves_physical_column_with_checked_representation(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    steward = _run_inventory(
+        tmp_path,
+        flavored_db,
+        _literal_mapping_overlay(),
+        "T2019",
+        ["Physical", "Unknown"],
+    )
+    table = load_delivery_inventory(steward / "inventory.toml").tables[0]
+    assert table.edition == "2019"
+    physical = next(c for c in table.columns if c.name == "Physical")
+    assert len(physical.mappings) == 1
+    assert physical.mappings[0].representation == "T_kolumn"
+    assert str(physical.mappings[0].variable) == "inera/bestallda-prover/t-kolumn"
+    assert next(c for c in table.columns if c.name == "Unknown").mappings == ()
+
+
+@pytest.mark.parametrize(
+    "changes",
+    [
+        {"edition": 2020},
+        {"column": "Missing"},
+        {"table": "Missing2019"},
+        {"variable": "inera/bestallda-prover/missing"},
+        {"representation": "Missing"},
+        {"register_variant": "inera/bestallda-prover/unknown"},
+    ],
+)
+def test_inventory_overlay_refuses_drift_without_replacing_inventory(
+    tmp_path: Path, flavored_db: Path, changes: dict[str, object]
+) -> None:
+    with pytest.raises(SystemExit, match="Inventory not replaced"):
+        _run_inventory(
+            tmp_path,
+            flavored_db,
+            _literal_mapping_overlay(**changes),
+            "T2019",
+            ["Physical"],
+        )
+    assert not (tmp_path / "steward/inventory.toml").exists()
+    worklist = json.loads((tmp_path / "derived/inventory_worklist.json").read_text())
+    assert worklist["mapping_scope_needed"]
+
+
+def test_inventory_overlay_requires_complete_catalog_coverage() -> None:
+    entry = build_catalog.InventoryMappingOverride.model_validate(
+        tomllib.loads(_literal_mapping_overlay())["mapping"][0], strict=True
+    )
+    records = [
+        {
+            "coord": entry.register_variant,
+            "vslug": entry.variable.variable,
+            "col": entry.representation,
+            "period_scope": "intervals",
+            "valid_from": "2019-01-01",
+            "valid_to": "2019-06-30",
+        }
+    ]
+    admitted, issue = build_catalog._inventory_mapping_records(
+        entry, records, 2019, {entry.register_variant}
+    )
+    assert admitted == []
+    assert issue == "stale_declared_mapping_target"
+
+
+def test_inventory_overlay_refuses_duplicate_declarations(
+    tmp_path: Path,
+) -> None:
+    overlay = tmp_path / "overlay.toml"
+    overlay.write_text(_literal_mapping_overlay() * 2)
+    with pytest.raises(SystemExit, match="duplicate mapping override"):
+        build_catalog._load_overlay(overlay)
+
+
+def test_inventory_overlay_does_not_hide_ambiguous_catalog_owners() -> None:
+    entry = build_catalog.InventoryMappingOverride.model_validate(
+        tomllib.loads(_literal_mapping_overlay())["mapping"][0], strict=True
+    )
+    record = {
+        "coord": entry.register_variant,
+        "vslug": entry.variable.variable,
+        "col": entry.representation,
+        "period_scope": "intervals",
+        "valid_from": "2019-01-01",
+        "valid_to": "2019-12-31",
+    }
+    admitted, issue = build_catalog._inventory_mapping_records(
+        entry,
+        [record, {**record, "vslug": "different-quantity"}],
+        2019,
+        {entry.register_variant},
+    )
+    assert admitted == []
+    assert issue == "stale_declared_mapping_target"
+
+
+def test_inventory_overlay_preserves_other_positive_owner_for_ambiguity_check(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    overlay = _literal_mapping_overlay(
+        column="T_kolumn",
+        variable="inera/bestallda-prover/covid-19-antikroppar",
+        representation="Covid_19_antikroppar",
+    )
+    with pytest.raises(SystemExit, match="Inventory not replaced"):
+        _run_inventory(tmp_path, flavored_db, overlay, "T2019", ["T_kolumn"])
+    worklist = json.loads((tmp_path / "derived/inventory_worklist.json").read_text())
+    assert worklist["mapping_scope_needed"][0]["code"] == "ambiguous_delivered_owners"
+
+
+def test_inventory_dated_alias_intersects_states_even_if_literal_was_canonical(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    import shutil
+
+    db = tmp_path / "alias-intersections.db"
+    shutil.copyfile(flavored_db, db)
+    conn = sqlite3.connect(db)
+    conn.execute("DELETE FROM variable_state WHERE variable_id=904")
+    conn.executemany(
+        "INSERT INTO variable_state (variable_id, register_variant_id, "
+        "valid_from, valid_to, data_type, delivery_column_name) "
+        "VALUES (904, 902, ?, ?, 'varchar', ?)",
+        [
+            ("2018-01-01", "2018-12-31", "Earlier"),
+            ("2019-01-01", "2019-06-30", "Current"),
+            ("2019-07-01", "2019-12-31", "Current"),
+            ("2020-01-01", "2020-12-31", "Current"),
+        ],
+    )
+    conn.executemany(
+        "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
+        "delivery_column_name, valid_from, valid_to) VALUES (904, 902, ?, ?, ?)",
+        [
+            ("Earlier", "2019-01-01", "2020-12-31"),
+            ("Current", "2019-01-01", "2019-12-31"),
+        ],
+    )
+    conn.commit()
+    conn.close()
+    records = build_catalog._steward_load_db(db)[("inera/bestallda-prover", "EARLIER")]
+    assert [(r["valid_from"], r["valid_to"]) for r in records] == [
+        ("2018-01-01", "2018-12-31"),
+        ("2019-01-01", "2019-06-30"),
+        ("2019-07-01", "2019-12-31"),
+    ]
+    # No positive current-column backing in2020: the spanning source alias
+    # must not create a temporal hull into that year.
+    admitted, issue = build_catalog._inventory_period_records(records, 2020)
+    assert admitted == []
+    assert issue == "no_covering_delivery_owner"

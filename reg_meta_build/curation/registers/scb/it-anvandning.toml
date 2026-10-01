@@ -12,9 +12,9 @@ steward_table_prefixes = ["ITftg_"]
 variant = "it-anvandning-i-foretag"
 column = "AWSVALPCT"
 versions = ["2014"]
-evidence = "Holdings579 positive complete native target and donor source audit; exact two SWECOV holding CSVs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; attach complete authority receipt Holdings579-positive37-complete-authority.json. Fill only the explicitly negative column cells in these exact source editions; preserve native quantity, raw originals, old code domains/associations, width and flags. Do not add adjacent editions."
+evidence = "Exact accepted Mikro and Stora2014 physical headers positively deliver this own native quantity and literal. Preserve the source2014 negative-column projections as metadata-only support; create a separate physical catalog occurrence with own accepted schemaText storage. Complete current11,980-original IT register, all769 existing checked occurrence cases, actual own coding binder and real quantity support flags prove the2014 catalog state. Do not fill the negative metadata cells, borrow another question, widen dates or copy predecessor coding/flags/width. Accepted own storage SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; finite formation and complete stored field/parent/coding/peer guard receipts Batch40-IT2014-two-ownphysical-formation-proof.json, reviewed2026-10-01."
 noted = "2026-10-01"
-upstream = "blank-column-name-in-version"
+upstream = "additional-physical-column-in-version"
 native_variable_id = 17575
 [[errata.delivered]]
 variant = "it-anvandning-i-foretag"
@@ -297,9 +297,9 @@ noted = "2026-09-12"
 variant = "it-anvandning-i-foretag"
 column = "UTVANTP"
 versions = ["2014"]
-evidence = "Holdings579 positive complete native target and donor source audit; exact two SWECOV holding CSVs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; attach complete authority receipt Holdings579-positive37-complete-authority.json. Fill only the explicitly negative column cells in these exact source editions; preserve native quantity, raw originals, old code domains/associations, width and flags. Do not add adjacent editions."
+evidence = "Exact accepted Mikro and Stora2014 physical headers positively deliver this own native quantity and literal. Preserve the source2014 negative-column projections as metadata-only support; create a separate physical catalog occurrence with own accepted schemaText storage. Complete current11,980-original IT register, all769 existing checked occurrence cases, actual own coding binder and real quantity support flags prove the2014 catalog state. Do not fill the negative metadata cells, borrow another question, widen dates or copy predecessor coding/flags/width. Accepted own storage SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; finite formation and complete stored field/parent/coding/peer guard receipts Batch40-IT2014-two-ownphysical-formation-proof.json, reviewed2026-10-01."
 noted = "2026-10-01"
-upstream = "blank-column-name-in-version"
+upstream = "additional-physical-column-in-version"
 native_variable_id = 17581
 [[errata.delivered]]
 variant = "it-anvandning-i-foretag"

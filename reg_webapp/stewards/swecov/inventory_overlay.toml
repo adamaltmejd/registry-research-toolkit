@@ -6083,3 +6083,527 @@ column = "co82"
 [[unmap]]
 table = "CIS2012"
 column = "co84"
+
+# Reviewed finite physical-to-catalog representations; raw holding names stay literal.
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/innovationssamarbete"
+representation = "Q12"
+table = "CIS2002"
+column = "CO"
+edition = 2002
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/koncernmarkering"
+representation = "Q1"
+table = "CIS2002"
+column = "GP"
+edition = 2002
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inna-forvarv-maskiner"
+representation = "Q10c"
+table = "CIS2002"
+column = "RMAC"
+edition = 2002
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inna-utlagd-fou"
+representation = "Q10b"
+table = "CIS2002"
+column = "RRDEX"
+edition = 2002
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/utgifter-for-utlagd-fou"
+representation = "Q11b"
+table = "CIS2002"
+column = "RRdExX"
+edition = 2002
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/utgifter-for-egen-fou"
+representation = "Q11a"
+table = "CIS2002"
+column = "RRdInX"
+edition = 2002
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/omsattningsandel-inno-ny-for-marknad"
+representation = "Q7a"
+table = "CIS2002"
+column = "TurnMar"
+edition = 2002
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inna-marknadsintroduktion"
+representation = "Q10f"
+table = "CIS2002"
+column = "rmar"
+edition = 2002
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inna-utbildning"
+representation = "Q10e"
+table = "CIS2002"
+column = "rtr"
+edition = 2002
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/innovationssamarbete"
+representation = "Q12"
+table = "CIS2004"
+column = "CO"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/koncernmarkering"
+representation = "Q1"
+table = "CIS2004"
+column = "GP"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/introduktion-av-leveransmetoder"
+representation = "Q8b"
+table = "CIS2004"
+column = "InPslg"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/introduktion-av-produktionsmetoder"
+representation = "Q8a"
+table = "CIS2004"
+column = "InPspd"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/introduktion-av-stodverksamheter"
+representation = "Q8c"
+table = "CIS2004"
+column = "InPssu"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/introduktion-av-varor"
+representation = "Q5a"
+table = "CIS2004"
+column = "Inpdgd"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/introduktion-av-tjanster"
+representation = "Q5b"
+table = "CIS2004"
+column = "Inpdsv"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/geografisk-marknad-eu-efta"
+representation = "Q2c"
+table = "CIS2004"
+column = "Mareur"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/geografisk-marknad-regional-lokal"
+representation = "Q2a"
+table = "CIS2004"
+column = "Marloc"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/geografisk-marknad-nationellt"
+representation = "Q2b"
+table = "CIS2004"
+column = "Marnat"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/geografisk-marknad-ovriga-lander"
+representation = "Q2d"
+table = "CIS2004"
+column = "Maroth"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/produktinnovation-ny-for-foretaget"
+representation = "Q6b"
+table = "CIS2004"
+column = "NewFrm"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/produktinnovation-ny-for-marknad"
+representation = "Q6a"
+table = "CIS2004"
+column = "NewMkt"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inna-forvarv-maskiner"
+representation = "Q10c"
+table = "CIS2004"
+column = "RMAC"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/utgifter-forvarv-existerande-kunskap"
+representation = "Q11d"
+table = "CIS2004"
+column = "ROEkX"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inna-utlagd-fou"
+representation = "Q10b"
+table = "CIS2004"
+column = "RRDEX"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/utgifter-for-utlagd-fou"
+representation = "Q11b"
+table = "CIS2004"
+column = "RRdExX"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/utgifter-for-egen-fou"
+representation = "Q11a"
+table = "CIS2004"
+column = "RRdInX"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/omsattningsandel-inno-ny-for-foretaget"
+representation = "Q7b"
+table = "CIS2004"
+column = "TurnIn"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/omsattningsandel-inno-ny-for-marknad"
+representation = "Q7a"
+table = "CIS2004"
+column = "TurnMar"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inna-marknadsintroduktion"
+representation = "Q10f"
+table = "CIS2004"
+column = "rmar"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inna-forvarv-existerande-kunskap"
+representation = "Q10d"
+table = "CIS2004"
+column = "roek"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inna-utbildning"
+representation = "Q10e"
+table = "CIS2004"
+column = "rtr"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/koncernmarkering"
+representation = "A1"
+table = "CIS2008"
+column = "GP"
+edition = 2008
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/mest-vardefull-samarbetspartner"
+representation = "Q14"
+table = "CIS2004"
+column = "Pmos"
+edition = 2004
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. PMOS printed-questionnaire/source-wave review (PMOS-three-inventory-rekey-retention-receipt.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/mest-vardefull-samarbetspartner"
+representation = "Q14"
+table = "CIS2006"
+column = "Pmos"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. PMOS printed-questionnaire/source-wave review (PMOS-three-inventory-rekey-retention-receipt.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/mest-vardefull-samarbetspartner"
+representation = "F14"
+table = "CIS2008"
+column = "Pmos"
+edition = 2008
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. PMOS printed-questionnaire/source-wave review (PMOS-three-inventory-rekey-retention-receipt.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/innovationssamarbete"
+representation = "Q12"
+table = "CIS2006"
+column = "CO"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/introduktion-av-leveransmetoder"
+representation = "Q8b"
+table = "CIS2006"
+column = "InPslg"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/introduktion-av-produktionsmetoder"
+representation = "Q8a"
+table = "CIS2006"
+column = "InPspd"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/introduktion-av-stodverksamheter"
+representation = "Q8c"
+table = "CIS2006"
+column = "InPssu"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/introduktion-av-varor"
+representation = "Q5a"
+table = "CIS2006"
+column = "Inpdgd"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/introduktion-av-tjanster"
+representation = "Q5b"
+table = "CIS2006"
+column = "Inpdsv"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/geografisk-marknad-eu-efta"
+representation = "Q2c"
+table = "CIS2006"
+column = "Mareur"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/geografisk-marknad-regional-lokal"
+representation = "Q2a"
+table = "CIS2006"
+column = "Marloc"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/geografisk-marknad-nationellt"
+representation = "Q2b"
+table = "CIS2006"
+column = "Marnat"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/geografisk-marknad-ovriga-lander"
+representation = "Q2d"
+table = "CIS2006"
+column = "Maroth"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/produktinnovation-ny-for-foretaget"
+representation = "Q6b"
+table = "CIS2006"
+column = "NewFrm"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/produktinnovation-ny-for-marknad"
+representation = "Q6a"
+table = "CIS2006"
+column = "NewMkt"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inna-forvarv-maskiner"
+representation = "Q10c"
+table = "CIS2006"
+column = "RMAC"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/utgifter-forvarv-existerande-kunskap"
+representation = "Q11d"
+table = "CIS2006"
+column = "ROEkX"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inna-utlagd-fou"
+representation = "Q10b"
+table = "CIS2006"
+column = "RRDEX"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/utgifter-for-utlagd-fou"
+representation = "Q11b"
+table = "CIS2006"
+column = "RRdExX"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/utgifter-for-egen-fou"
+representation = "Q11a"
+table = "CIS2006"
+column = "RRdInX"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/omsattningsandel-inno-ny-for-foretaget"
+representation = "Q7b"
+table = "CIS2006"
+column = "TurnIn"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/omsattningsandel-inno-ny-for-marknad"
+representation = "Q7a"
+table = "CIS2006"
+column = "TurnMar"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inna-marknadsintroduktion"
+representation = "Q10f"
+table = "CIS2006"
+column = "rmar"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inna-forvarv-existerande-kunskap"
+representation = "Q10d"
+table = "CIS2006"
+column = "roek"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[mapping]]
+register_variant = "scb/innovation-foretag/_default"
+variable = "scb/innovation-foretag/inna-utbildning"
+representation = "Q10e"
+table = "CIS2006"
+column = "rtr"
+edition = 2006
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"

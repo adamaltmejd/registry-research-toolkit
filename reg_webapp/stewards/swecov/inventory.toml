@@ -59530,7 +59530,7 @@ name = "CO"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/innovationssamarbete"
-representation = "CO"
+representation = "Q12"
 
 [[table.column]]
 name = "CO21"
@@ -60102,13 +60102,8 @@ name = "GP"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/koncernforetag"
-representation = "GP"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/koncernmarkering"
-representation = "GP"
+representation = "Q1"
 
 [[table.column]]
 name = "H1"
@@ -60641,7 +60636,7 @@ name = "RMAC"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inna-forvarv-maskiner"
-representation = "RMAC"
+representation = "Q10c"
 
 [[table.column]]
 name = "RMARX"
@@ -60697,7 +60692,7 @@ name = "RRDEX"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inna-utlagd-fou"
-representation = "RRDEX"
+representation = "Q10b"
 
 [[table.column]]
 name = "RRdExX"
@@ -60705,7 +60700,7 @@ name = "RRdExX"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/utgifter-for-utlagd-fou"
-representation = "RRDEXX"
+representation = "Q11b"
 
 [[table.column]]
 name = "RRdInX"
@@ -60713,7 +60708,7 @@ name = "RRdInX"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/utgifter-for-egen-fou"
-representation = "RRDINX"
+representation = "Q11a"
 
 [[table.column]]
 name = "RTRX"
@@ -60865,7 +60860,7 @@ name = "TurnMar"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/omsattningsandel-inno-ny-for-marknad"
-representation = "TURNMAR"
+representation = "Q7a"
 
 [[table.column]]
 name = "TurnUng"
@@ -60989,7 +60984,7 @@ name = "rmar"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inna-marknadsintroduktion"
-representation = "RMAR"
+representation = "Q10f"
 
 [[table.column]]
 name = "rrdin"
@@ -61005,7 +61000,7 @@ name = "rtr"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inna-utbildning"
-representation = "RTR"
+representation = "Q10e"
 
 [[table.column]]
 name = "scom"
@@ -61049,7 +61044,7 @@ name = "CO"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/innovationssamarbete"
-representation = "CO"
+representation = "Q12"
 
 [[table.column]]
 name = "CO21"
@@ -61850,13 +61845,8 @@ name = "GP"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/koncernforetag"
-representation = "GP"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/koncernmarkering"
-representation = "GP"
+representation = "Q1"
 
 [[table.column]]
 name = "Gp_o"
@@ -62008,7 +61998,7 @@ name = "InPslg"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/introduktion-av-leveransmetoder"
-representation = "INPSLG"
+representation = "Q8b"
 
 [[table.column]]
 name = "InPspd"
@@ -62016,7 +62006,7 @@ name = "InPspd"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/introduktion-av-produktionsmetoder"
-representation = "INPSPD"
+representation = "Q8a"
 
 [[table.column]]
 name = "InPssu"
@@ -62024,7 +62014,7 @@ name = "InPssu"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/introduktion-av-stodverksamheter"
-representation = "INPSSU"
+representation = "Q8c"
 
 [[table.column]]
 name = "Inonab_o"
@@ -62048,7 +62038,7 @@ name = "Inpdgd"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/introduktion-av-varor"
-representation = "INPDGD"
+representation = "Q5a"
 
 [[table.column]]
 name = "Inpdgd_o"
@@ -62064,7 +62054,7 @@ name = "Inpdsv"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/introduktion-av-tjanster"
-representation = "INPDSV"
+representation = "Q5b"
 
 [[table.column]]
 name = "Inpdsv_o"
@@ -62112,7 +62102,7 @@ name = "Mareur"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/geografisk-marknad-eu-efta"
-representation = "MAREUR"
+representation = "Q2c"
 
 [[table.column]]
 name = "Mareur_o"
@@ -62128,7 +62118,7 @@ name = "Marloc"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/geografisk-marknad-regional-lokal"
-representation = "MARLOC"
+representation = "Q2a"
 
 [[table.column]]
 name = "Marloc_o"
@@ -62144,7 +62134,7 @@ name = "Marnat"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/geografisk-marknad-nationellt"
-representation = "MARNAT"
+representation = "Q2b"
 
 [[table.column]]
 name = "Marnat_o"
@@ -62160,7 +62150,7 @@ name = "Maroth"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/geografisk-marknad-ovriga-lander"
-representation = "MAROTH"
+representation = "Q2d"
 
 [[table.column]]
 name = "Maroth_o"
@@ -62176,7 +62166,7 @@ name = "NewFrm"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/produktinnovation-ny-for-foretaget"
-representation = "NEWFRM"
+representation = "Q6b"
 
 [[table.column]]
 name = "NewFrm_o"
@@ -62192,7 +62182,7 @@ name = "NewMkt"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/produktinnovation-ny-for-marknad"
-representation = "NEWMKT"
+representation = "Q6a"
 
 [[table.column]]
 name = "NewMkt_o"
@@ -62296,7 +62286,7 @@ name = "RMAC"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inna-forvarv-maskiner"
-representation = "RMAC"
+representation = "Q10c"
 
 [[table.column]]
 name = "RMacX"
@@ -62312,7 +62302,7 @@ name = "ROEkX"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/utgifter-forvarv-existerande-kunskap"
-representation = "ROEKX"
+representation = "Q11d"
 
 [[table.column]]
 name = "RPRE"
@@ -62328,7 +62318,7 @@ name = "RRDEX"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inna-utlagd-fou"
-representation = "RRDEX"
+representation = "Q10b"
 
 [[table.column]]
 name = "RRdExX"
@@ -62336,7 +62326,7 @@ name = "RRdExX"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/utgifter-for-utlagd-fou"
-representation = "RRDEXX"
+representation = "Q11b"
 
 [[table.column]]
 name = "RRdInX"
@@ -62344,7 +62334,7 @@ name = "RRdInX"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/utgifter-for-egen-fou"
-representation = "RRDINX"
+representation = "Q11a"
 
 [[table.column]]
 name = "RRdIn_o"
@@ -62400,7 +62390,7 @@ name = "TurnIn"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/omsattningsandel-inno-ny-for-foretaget"
-representation = "TURNIN"
+representation = "Q7b"
 
 [[table.column]]
 name = "TurnIn_o"
@@ -62416,7 +62406,7 @@ name = "TurnMar"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/omsattningsandel-inno-ny-for-marknad"
-representation = "TURNMAR"
+representation = "Q7a"
 
 [[table.column]]
 name = "TurnMar_o"
@@ -62992,7 +62982,7 @@ name = "rmar"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inna-marknadsintroduktion"
-representation = "RMAR"
+representation = "Q10f"
 
 [[table.column]]
 name = "rmar_o"
@@ -63008,7 +62998,7 @@ name = "roek"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inna-forvarv-existerande-kunskap"
-representation = "ROEK"
+representation = "Q10d"
 
 [[table.column]]
 name = "roek_o"
@@ -63080,7 +63070,7 @@ name = "rtr"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inna-utbildning"
-representation = "RTR"
+representation = "Q10e"
 
 [[table.column]]
 name = "rtr_o"
@@ -63196,7 +63186,7 @@ name = "CO"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/innovationssamarbete"
-representation = "CO"
+representation = "Q12"
 
 [[table.column]]
 name = "CO21"
@@ -64011,7 +64001,7 @@ name = "InPslg"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/introduktion-av-leveransmetoder"
-representation = "INPSLG"
+representation = "Q8b"
 
 [[table.column]]
 name = "InPspd"
@@ -64019,7 +64009,7 @@ name = "InPspd"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/introduktion-av-produktionsmetoder"
-representation = "INPSPD"
+representation = "Q8a"
 
 [[table.column]]
 name = "InPssu"
@@ -64027,7 +64017,7 @@ name = "InPssu"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/introduktion-av-stodverksamheter"
-representation = "INPSSU"
+representation = "Q8c"
 
 [[table.column]]
 name = "Inpdgd"
@@ -64035,7 +64025,7 @@ name = "Inpdgd"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/introduktion-av-varor"
-representation = "INPDGD"
+representation = "Q5a"
 
 [[table.column]]
 name = "Inpdsv"
@@ -64043,7 +64033,7 @@ name = "Inpdsv"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/introduktion-av-tjanster"
-representation = "INPDSV"
+representation = "Q5b"
 
 [[table.column]]
 name = "Mareur"
@@ -64051,7 +64041,7 @@ name = "Mareur"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/geografisk-marknad-eu-efta"
-representation = "MAREUR"
+representation = "Q2c"
 
 [[table.column]]
 name = "Marloc"
@@ -64059,7 +64049,7 @@ name = "Marloc"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/geografisk-marknad-regional-lokal"
-representation = "MARLOC"
+representation = "Q2a"
 
 [[table.column]]
 name = "Marnat"
@@ -64067,7 +64057,7 @@ name = "Marnat"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/geografisk-marknad-nationellt"
-representation = "MARNAT"
+representation = "Q2b"
 
 [[table.column]]
 name = "Maroth"
@@ -64075,7 +64065,7 @@ name = "Maroth"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/geografisk-marknad-ovriga-lander"
-representation = "MAROTH"
+representation = "Q2d"
 
 [[table.column]]
 name = "MktDes"
@@ -64131,7 +64121,7 @@ name = "NewFrm"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/produktinnovation-ny-for-foretaget"
-representation = "NEWFRM"
+representation = "Q6b"
 
 [[table.column]]
 name = "NewMkt"
@@ -64139,7 +64129,7 @@ name = "NewMkt"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/produktinnovation-ny-for-marknad"
-representation = "NEWMKT"
+representation = "Q6a"
 
 [[table.column]]
 name = "Nuts"
@@ -64312,7 +64302,7 @@ name = "RMAC"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inna-forvarv-maskiner"
-representation = "RMAC"
+representation = "Q10c"
 
 [[table.column]]
 name = "RMacX"
@@ -64328,7 +64318,7 @@ name = "ROEkX"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/utgifter-forvarv-existerande-kunskap"
-representation = "ROEKX"
+representation = "Q11d"
 
 [[table.column]]
 name = "RPRE"
@@ -64344,7 +64334,7 @@ name = "RRDEX"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inna-utlagd-fou"
-representation = "RRDEX"
+representation = "Q10b"
 
 [[table.column]]
 name = "RRdExX"
@@ -64352,7 +64342,7 @@ name = "RRdExX"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/utgifter-for-utlagd-fou"
-representation = "RRDEXX"
+representation = "Q11b"
 
 [[table.column]]
 name = "RRdInX"
@@ -64360,7 +64350,7 @@ name = "RRdInX"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/utgifter-for-egen-fou"
-representation = "RRDINX"
+representation = "Q11a"
 
 [[table.column]]
 name = "RTot"
@@ -64464,7 +64454,7 @@ name = "TurnIn"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/omsattningsandel-inno-ny-for-foretaget"
-representation = "TURNIN"
+representation = "Q7b"
 
 [[table.column]]
 name = "TurnMar"
@@ -64472,7 +64462,7 @@ name = "TurnMar"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/omsattningsandel-inno-ny-for-marknad"
-representation = "TURNMAR"
+representation = "Q7a"
 
 [[table.column]]
 name = "TurnPdt"
@@ -64616,7 +64606,7 @@ name = "rmar"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inna-marknadsintroduktion"
-representation = "RMAR"
+representation = "Q10f"
 
 [[table.column]]
 name = "roek"
@@ -64624,7 +64614,7 @@ name = "roek"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inna-forvarv-existerande-kunskap"
-representation = "ROEK"
+representation = "Q10d"
 
 [[table.column]]
 name = "rrdin"
@@ -64640,7 +64630,7 @@ name = "rtr"
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/inna-utbildning"
-representation = "RTR"
+representation = "Q10e"
 
 [[table.column]]
 name = "scom"
@@ -65781,13 +65771,8 @@ name = "GP"
 
 [[table.column.mapping]]
 register_variant = "scb/innovation-foretag/_default"
-variable = "scb/innovation-foretag/koncernforetag"
-representation = "GP"
-
-[[table.column.mapping]]
-register_variant = "scb/innovation-foretag/_default"
 variable = "scb/innovation-foretag/koncernmarkering"
-representation = "GP"
+representation = "A1"
 
 [[table.column]]
 name = "H17c"

@@ -2821,7 +2821,7 @@ def test_repo_reviewed_parallel_columns_keep_exact_wave_intersections() -> None:
             e.column_metadata == "per_column"
             for e in innovation.representation.parallel
         )
-        == 97
+        == 117
     )
     assert (
         sum(
