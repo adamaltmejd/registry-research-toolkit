@@ -4297,3 +4297,245 @@ valid_to = "2011-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
 expected_evidence_sha256 = "3dab9512e37400ee8b714ef38a8d82d0020d1033e5be0a39bfad1d35ec431d35"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:8609\",\"variable:257\",\"member:420420\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "b6b6ee9347f0e9e33876e9fc31708f7d10eb7c6164fc88a4a0bcf34000074e48"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:6102\",\"variable:257\",\"member:377461\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "c61cb787c09eb57256721b69166e1d3019f7b03625cc2bb85e72e75b43f56b01"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3802\",\"variable:257\",\"member:233026\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "c60b908310921e3f31a9e7682ad8721d5722f109c05e3d80932f8debab425af1"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3100\",\"variable:257\",\"member:181997\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "ea1ac00dba70aadff8e112e1245c9f1a435fd89188d69d2aa6ccf4b98bc63d40"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3673\",\"variable:257\",\"member:225291\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "523fb5ca340816be55d3cddd9905930a7f27094a767b75b51e0833dcc3a4a1bd"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:4059\",\"variable:257\",\"member:253304\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "d5b8475f348d31da02e3ec4a307d047b60b046f42d4885f3d688e3357608e460"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:4512\",\"variable:257\",\"member:284944\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "fc05b7aee9253c923c94968b58de61ffa5198c257608a93bf0d866c34dd64fb1"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:8589\",\"variable:257\",\"member:418823\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "dfd7275c6b5a74b45948ce23eb2161cddb6ac8861a9fd9104d69a9e2a0e72bdc"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:6103\",\"variable:257\",\"member:378020\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "e5c69e4438818be7b797af0cbf29efa3b670e22d8d855e4ae43692529d7e2aef"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:3803\",\"variable:257\",\"member:233781\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "a4d9a587263ce2f929be8ba308d50a6df16e4b06eca2023ce05adb9a1b6a0881"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:3041\",\"variable:257\",\"member:179825\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "e64552e31eb82199be64092eaeeac84b81c9f11f7fa1ab21660f0a507c9bfed9"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:3674\",\"variable:257\",\"member:226046\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "1a221641003f5cfaaf190b76bdd2981f246ca642cf3108c4f14891cbaeabf408"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:4060\",\"variable:257\",\"member:254105\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "a03c5382d0fb907763b7245032441ef6822daf88dacb4a4151fc4d8939904c76"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:4513\",\"variable:257\",\"member:285702\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "f838122b193b2eb793e37b85f76b7aaa9d95afbd77983dee66f440bb6f518a98"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/blkfa"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:16300\",\"variable:5629\",\"member:786368\"]}"]
+fields = ["coding"]
+valid_from = "1994-01-01"
+valid_to = "1994-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "0059cfbaaaa791827741b48a668600aa1a20644263952baf7d28f9802a61e90e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/blkfa"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:16268\",\"variable:5629\",\"member:783838\"]}"]
+fields = ["coding"]
+valid_from = "1995-01-01"
+valid_to = "1995-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "b3cdb1ea9fb53a87d008b213b0fcbfb3cd77c5f444622bcf9383054d0c97e9a1"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/blkfa"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1613\",\"edition:16410\",\"variable:5629\",\"member:801057\"]}"]
+fields = ["coding"]
+valid_from = "1994-01-01"
+valid_to = "1994-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "bcabe3379f199eec16c3e149acb66f3e79f58fc544550a740a1c2f65392ad1c8"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/blkfa"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1613\",\"edition:16419\",\"variable:5629\",\"member:801530\"]}"]
+fields = ["coding"]
+valid_from = "1995-01-01"
+valid_to = "1995-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "43ade461a6416c470a5c247487cefe2c90d145bedffc6f9e8f1c9b2ba28288ed"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/blkfa"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1613\",\"edition:16420\",\"variable:5629\",\"member:801955\"]}"]
+fields = ["coding"]
+valid_from = "1996-01-01"
+valid_to = "1996-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "510a0a07237d0d0a2843c87c0e21dc5bf0d6a0179f55f6133856316956650229"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/blkfa"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1618\",\"edition:16363\",\"variable:5629\",\"member:796041\"]}"]
+fields = ["coding"]
+valid_from = "1994-01-01"
+valid_to = "1994-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "21e6d13c729542312d1ac4f5d85aa69cbd87198be1e2acf917c9a70e6d9eedb9"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/blkfa"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1618\",\"edition:16357\",\"variable:5629\",\"member:795304\"]}"]
+fields = ["coding"]
+valid_from = "1995-01-01"
+valid_to = "1995-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "7b808a0d86cf65ae03d97f71073dd753b8218b01ad63e836708a4927672a7c46"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/blkfa"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1618\",\"edition:16355\",\"variable:5629\",\"member:794808\"]}"]
+fields = ["coding"]
+valid_from = "1996-01-01"
+valid_to = "1996-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
+evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
+expected_evidence_sha256 = "abd8f6fca2cf6fe621b49a7759a6e2b2f6f39558d53bf322df06fbcf0eb975e9"
