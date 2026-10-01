@@ -95,6 +95,35 @@ def test_matching_slugs_are_not_identity_evidence():
     assert result.metadata.lineage_warnings[0].kind == "no_source_state"
 
 
+def test_duplicate_source_variant_label_without_variable_identity_stays_a_gap():
+    variables, options = fixture(same_as=False, second_variant=True)
+    options["variants"] += (
+        (
+            variables[1].register_ref,
+            ResolvedVariant(slug="duplicate", name="People"),
+        ),
+    )
+    options["defaults"] = {"scb/origin": "people"}
+    result = resolve_catalog_lineage(variables, **options)
+    assert not result.metadata.state_lineage
+    assert (
+        result.variables[0].source_register_text == "Original register (ORIG) : People"
+    )
+    assert [d.code for d in result.diagnostics] == [
+        "unresolved_lineage_no_source_state"
+    ]
+    assert result.diagnostics[0].severity == "warning"
+    assert result.diagnostics[0].refs == options["evidence"]["scb/example/value"]
+    assert "No source variable identity is established" in result.diagnostics[0].detail
+    assert "matches multiple admitted source variants" in result.diagnostics[0].detail
+    assert (
+        "no default or other variant has been substituted"
+        in result.diagnostics[0].detail
+    )
+    assert result.metadata.lineage_warnings[0].kind == "no_source_state"
+    assert resolve_catalog_lineage(tuple(reversed(variables)), **options) == result
+
+
 def test_ambiguous_register_label_does_not_pick_input_order():
     variables, options = fixture(duplicate_name=True)
     result = resolve_catalog_lineage(variables, **options)

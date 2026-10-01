@@ -205,3 +205,202 @@ native_id = "130.31094"
 slug = "antal-semesterdagar"
 
 # register 131
+
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/slk/lonepopulation"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:130\",\"variant:169\",\"edition:945\",\"variable:1834\",\"member:28156\"]}"]
+fields = ["coding"]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+reason = "The source supplies no own response coding association for this exact salary-population or full-/part-time window. Retain all original fields, dates and known source lists. The conceptual description does not establish the stored historical codes; neither a generic 0/1 assumption nor a later list is substituted. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "e86247c9b5b8c6f38110bc16dda12bd8b6db633e131a309aa18dc15bdd3d4af6"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/slk/lonepopulation"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:130\",\"variant:169\",\"edition:427\",\"variable:1834\",\"member:5604\"]}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+reason = "The source supplies no own response coding association for this exact salary-population or full-/part-time window. Retain all original fields, dates and known source lists. The conceptual description does not establish the stored historical codes; neither a generic 0/1 assumption nor a later list is substituted. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "9affa35d230fc2b8a5c74768c19ef63d632fd8f4d0c79e55c4b52c728838ba45"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/slk/lonepopulation"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:130\",\"variant:169\",\"edition:936\",\"variable:1834\",\"member:27792\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "The source supplies no own response coding association for this exact salary-population or full-/part-time window. Retain all original fields, dates and known source lists. The conceptual description does not establish the stored historical codes; neither a generic 0/1 assumption nor a later list is substituted. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "7cb125bd1004c7c2de0c96efe5bf4bf8eac3a09aa6daf956b539cfdfa8899048"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/slk/lonepopulation"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:130\",\"variant:169\",\"edition:938\",\"variable:1834\",\"member:27840\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "The source supplies no own response coding association for this exact salary-population or full-/part-time window. Retain all original fields, dates and known source lists. The conceptual description does not establish the stored historical codes; neither a generic 0/1 assumption nor a later list is substituted. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "f1c84bd0265576ea2dc2db521021b368fc9bf95590a9ac67967906563c55105e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/slk/lonepopulation"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:130\",\"variant:169\",\"edition:1222\",\"variable:1834\",\"member:99333\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "The source supplies no own response coding association for this exact salary-population or full-/part-time window. Retain all original fields, dates and known source lists. The conceptual description does not establish the stored historical codes; neither a generic 0/1 assumption nor a later list is substituted. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "8bbb3fbf39e1d8ffce58d7650496dc7116cce98ccda7aabb326bd6c849523e83"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/slk/lonepopulation"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:130\",\"variant:169\",\"edition:2170\",\"variable:1834\",\"member:138041\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "The source supplies no own response coding association for this exact salary-population or full-/part-time window. Retain all original fields, dates and known source lists. The conceptual description does not establish the stored historical codes; neither a generic 0/1 assumption nor a later list is substituted. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "f2d233549c38e690833012045111491aaf54dc5b3035abdd812cc8d4b815a320"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/slk/lonepopulation"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:130\",\"variant:169\",\"edition:2893\",\"variable:1834\",\"member:171576\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "The source supplies no own response coding association for this exact salary-population or full-/part-time window. Retain all original fields, dates and known source lists. The conceptual description does not establish the stored historical codes; neither a generic 0/1 assumption nor a later list is substituted. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "6ceda16cd74565d0096d06274b5bfca623d50c3941ff0fe336661e051d61308b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/slk/lonepopulation"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:130\",\"variant:169\",\"edition:3571\",\"variable:1834\",\"member:219666\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "The source supplies no own response coding association for this exact salary-population or full-/part-time window. Retain all original fields, dates and known source lists. The conceptual description does not establish the stored historical codes; neither a generic 0/1 assumption nor a later list is substituted. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "67fa65abb7e81b167cb98cca3eadb7c53b3351c1c0a731938b8a192cea11eaea"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/slk/lonepopulation"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:130\",\"variant:169\",\"edition:4118\",\"variable:1834\",\"member:257888\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "The source supplies no own response coding association for this exact salary-population or full-/part-time window. Retain all original fields, dates and known source lists. The conceptual description does not establish the stored historical codes; neither a generic 0/1 assumption nor a later list is substituted. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "11085dd593f614038e9d65a2554d4c9519e5086e78fdd24ac6306bbb085186d4"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/slk/lonepopulation"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:130\",\"variant:169\",\"edition:4603\",\"variable:1834\",\"member:288675\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "The source supplies no own response coding association for this exact salary-population or full-/part-time window. Retain all original fields, dates and known source lists. The conceptual description does not establish the stored historical codes; neither a generic 0/1 assumption nor a later list is substituted. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "3d17e3ffe2c8dc4db2c8e8c4d56ca9ac7d5252d1d5f9279f449bf902d17cc2bf"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/slk/lonepopulation"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:130\",\"variant:169\",\"edition:5343\",\"variable:1834\",\"member:329703\"]}"]
+fields = ["coding"]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+reason = "The source supplies no own response coding association for this exact salary-population or full-/part-time window. Retain all original fields, dates and known source lists. The conceptual description does not establish the stored historical codes; neither a generic 0/1 assumption nor a later list is substituted. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "eb4ced3a22923ea1985b4ccb4afa97ed8bd51c345bd85382cb08ae9626a3598e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/slk/lonepopulation"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:130\",\"variant:169\",\"edition:6027\",\"variable:1834\",\"member:373024\"]}"]
+fields = ["coding"]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+reason = "The source supplies no own response coding association for this exact salary-population or full-/part-time window. Retain all original fields, dates and known source lists. The conceptual description does not establish the stored historical codes; neither a generic 0/1 assumption nor a later list is substituted. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "181be5a767fd924008713bd9a10344ef64e318835a45939460032f296dbcdb8b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/slk/lonepopulation"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:130\",\"variant:169\",\"edition:7500\",\"variable:1834\",\"member:412784\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "The source supplies no own response coding association for this exact salary-population or full-/part-time window. Retain all original fields, dates and known source lists. The conceptual description does not establish the stored historical codes; neither a generic 0/1 assumption nor a later list is substituted. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "caf400bba7beb81d77b2671bc526382c0ffb7ac214124896e8b3db59f58872e9"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/slk/lonepopulation"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:130\",\"variant:169\",\"edition:11163\",\"variable:1834\",\"member:453909\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The source supplies no own response coding association for this exact salary-population or full-/part-time window. Retain all original fields, dates and known source lists. The conceptual description does not establish the stored historical codes; neither a generic 0/1 assumption nor a later list is substituted. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "343bde13e45ee46126603c86f7f9edc1ad27a1668a6e8c40a614b5057235f062"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/slk/heldel"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:130\",\"variant:169\",\"edition:4118\",\"variable:5767\",\"member:257929\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "The source supplies no own response coding association for this exact salary-population or full-/part-time window. Retain all original fields, dates and known source lists. The conceptual description does not establish the stored historical codes; neither a generic 0/1 assumption nor a later list is substituted. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "0af765ab8536b1e1d77efebdd64e5942f7632c706cbf1b7dbd21adf4cca6873b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/slk/heldel"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:130\",\"variant:169\",\"edition:4603\",\"variable:5767\",\"member:288700\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "The source supplies no own response coding association for this exact salary-population or full-/part-time window. Retain all original fields, dates and known source lists. The conceptual description does not establish the stored historical codes; neither a generic 0/1 assumption nor a later list is substituted. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "71c57609016b58576fe0a5ef37526a3b678264576c653cadde975c74944d98eb"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/slk/heldel"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:130\",\"variant:169\",\"edition:5343\",\"variable:5767\",\"member:329680\"]}"]
+fields = ["coding"]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+reason = "The source supplies no own response coding association for this exact salary-population or full-/part-time window. Retain all original fields, dates and known source lists. The conceptual description does not establish the stored historical codes; neither a generic 0/1 assumption nor a later list is substituted. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "b01dab338dbd3a6fa950e1c64aaa6e7036d8567d094a173466444e874c81028b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/slk/heldel"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:130\",\"variant:169\",\"edition:6027\",\"variable:5767\",\"member:373047\"]}"]
+fields = ["coding"]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+reason = "The source supplies no own response coding association for this exact salary-population or full-/part-time window. Retain all original fields, dates and known source lists. The conceptual description does not establish the stored historical codes; neither a generic 0/1 assumption nor a later list is substituted. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "82e7db5795e558d87a9eb65eaea85f333848dd2523c60a115ae6a1a4bea93e1d"

@@ -201,6 +201,11 @@ def resolve_catalog_lineage(
             if source_text is None or origin is None or origin == variable.register_ref:
                 continue
             source_fqid = f"{origin.provider}/{origin.slug}"
+            identities = sorted(
+                key
+                for key in components.get(fqid, ())
+                if by_fqid[key].register_ref == origin
+            )
             _, separator, source_variant_label = source_text.partition(" : ")
             source_variant = usable_defaults.get(source_fqid)
             unresolved_variant = None
@@ -213,21 +218,16 @@ def resolve_catalog_lineage(
                     next(iter(named_variants)) if len(named_variants) == 1 else None
                 )
                 if source_variant is None:
-                    ambiguous_variant = len(named_variants) > 1
+                    ambiguous_variant = bool(identities) and len(named_variants) > 1
                     unresolved_variant = (
                         f"Explicit source variant {source_variant_label!r} "
                         + (
                             "matches multiple admitted source variants"
-                            if ambiguous_variant
+                            if len(named_variants) > 1
                             else "matches no admitted source variant"
                         )
                         + "; no default or other variant has been substituted."
                     )
-            identities = sorted(
-                key
-                for key in components.get(fqid, ())
-                if by_fqid[key].register_ref == origin
-            )
             source_states = [
                 (key, item)
                 for key in identities
@@ -258,7 +258,11 @@ def resolve_catalog_lineage(
                     else "ambiguous_source_variant"
                 )
                 if unresolved_variant is not None:
-                    detail = unresolved_variant
+                    detail = (
+                        "No source variable identity is established. "
+                        if not identities
+                        else ""
+                    ) + unresolved_variant
                 elif not source_states and separator:
                     detail = (
                         f"The explicitly named source variant {source_variant_label!r} "
