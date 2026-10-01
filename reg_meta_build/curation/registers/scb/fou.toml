@@ -11669,7 +11669,7 @@ source = "codeless_overlap.toml#/resolve/21"  # v18 accepted-codeless:21:*, 2 ca
 variable = "182.7745"
 variant = "182.446"
 column = "FoUUtgKomAr"
-periods = [["2005-01-01", "2005-12-31"], ["2007-01-01", "2007-12-31"], ["2009-01-01", "2009-02-16"], ["2015-01-01", "2015-12-31"], ["2017-01-01", "2017-12-31"]]
+periods = [["2005-01-01", "2005-12-31"], ["2015-01-01", "2015-12-31"], ["2017-01-01", "2017-12-31"]]
 reason = "Omit the uncoded state under the existing accepted drop decision."
 source = "codeless_overlap.toml#/resolve/21"  # v18 accepted-codeless:21:*, 5 case(s)
 

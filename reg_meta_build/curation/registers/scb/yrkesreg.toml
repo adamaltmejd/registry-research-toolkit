@@ -342,18 +342,3 @@ slug = "arbetsmarknadsstatus-alt"
 # register 60
 
 # ==== registers/scb/yrkesreg.toml (register 55) ====
-[[coding.uncoded]]
-variable = "55.4944"
-variant = "55.162"
-column = "YrkVerksStat"
-periods = [["2009-01-01", "2009-10-01"]]
-reason = "Retain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
-source = "codeless_overlap.toml#/resolve/49"  # v18 accepted-codeless:49:*, 8 case(s)
-
-[[coding.uncoded]]
-variable = "55.4944"
-variant = "55.161"
-column = "YrkVerksStat"
-periods = [["2009-01-01", "2009-10-01"]]
-reason = "Retain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
-source = "codeless_overlap.toml#/resolve/49"  # v18 accepted-codeless:49:*, 9 case(s)

@@ -156,3 +156,56 @@ slug = "verksamhetsinriktning"
 native_id = "7661979173609203267.VFORM"
 slug = "vardform"
 # register 7847722537922273761
+
+# Batch47: guarded explanatory references describe local response meanings,
+# derivation inputs or delivery documentation, rather than an external codebook.
+
+[[errata.classification_reference]]
+deldatamangd = "LMED"
+variable = "BYTET"
+column = "BYTET"
+expected_reference = "Mer info om kvalitet av BYTET"
+expected_representation = "0 = Nej från förskrivare\n1 = Ja\n2 = Nej från apoteket\n3 = Nej från patienten"
+expected_description = "En flagga som anger om byte av den förskrivna varan, till ett medicinskt likvärdigt alternativ, på apoteket är tillåtet eller inte. Det är bara om periodens vara inte har expedierats som skälet till nekat utbyte anges (om periodens vara har expedierats så anges alltid 1=Ja/byte tillåtet, oavsett om bytet tillåtits av förskrivaren eller inte)."
+evidence = "Metadata_variabler row:8: The link is a quality-note caption about this field; the source separately supplies its 0/1/2/3 replacement-permission domain. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"
+
+[[errata.classification_reference]]
+deldatamangd = "LMED"
+variable = "EDATUM"
+column = "EDATUM"
+expected_reference = "Mer info om kvalitet av EDATUM"
+expected_representation = "YYYYMMDD (Format:YYMMDD10.)"
+expected_description = "Datum när patienten hämtade ut varan från apoteket"
+evidence = "Metadata_variabler row:10: The link is a quality-note caption about this field; the source specifies an expedition date, not a classification code. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"
+
+[[errata.classification_reference]]
+deldatamangd = "LMED VARA"
+variable = "FORPACKNING_TEXT"
+column = "FORPACKNING_TEXT"
+expected_reference = "https://samarbetsyta.ehalsomyndigheten.se/handboken/latest"
+expected_representation = "T.ex. Tvåkammarcylinderampull för GenotropinPen 12 , 1 x (I+II)"
+expected_description = "Beskrivande förpackningstext från Läkemedelsverket (LV) som innehåller viktiga detaljer för val av rätt artikel vid beställning och expedition.\nOBS! Elementet ska visas för användaren vid tjänsteanrop HämtaSubstitution, se VARA – bilaga till handboken för vård- och apoteksaktörer för mer information. (länk finns i kodverk kolumn)"
+evidence = "Metadata_variabler row:75: The source defines free packaging-description text and links general VARA user documentation, not an external classification book. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"
+
+[[errata.classification_reference]]
+deldatamangd = "LMED VARA"
+variable = "INTRESSENT_REF"
+column = "INTRESSENT_REF"
+expected_reference = "https://handbok-version17.ehalsomyndigheten.se/Handbok/VARA%20Export%20-%20Dokumentation%20av%20XML%20Schema%20version%206.0.aspx"
+expected_representation = "Attribut för referens-id och definierad ansvarsroll (roll) för legal organisation. Se kap 13.8 i länk som står i länk kodverk kolumn"
+expected_description = "Referens till en intressent med roll och elementets xml-id. Beskriver vilken roll intressenten har på den aktuella artikeln om sådan finns."
+evidence = "Metadata_variabler row:90: The source defines an XML organisation-reference id and role; the URL documents the XML schema rather than a classification book for the stored reference. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"
+
+[[errata.classification_reference]]
+deldatamangd = "LMED VARA"
+variable = "SARSKILT_LAKEMEDEL"
+column = "SARSKILT_LAKEMEDEL"
+expected_reference = "1. https://lakemedelsboken.se/generella-kapitel/receptforskrivning/lakemedel-och-andra-produktkategorier-som-kan-forskrivas/\n2. https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/forordning-19921554-om-kontroll-av-narkotika_sfs-1992-1554/"
+expected_representation = "Y=Ja, N=Nej"
+expected_description = "Anger om produkten är ett särskilt läkemedel"
+evidence = "Metadata_variabler row:115: The source specifies a Y/N special-medicine presence indicator; the references explain its legal/product context rather than classify the stored response flag. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"

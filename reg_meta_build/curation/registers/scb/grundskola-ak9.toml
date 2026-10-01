@@ -113,12 +113,6 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[enrichment.description]]
 register = "scb/grundskola-ak9"
-variable = "meritvarde-m2"
-description = "Meritvarde med betyg i moderna språk som språkval tillsammans med de 16 bästa betygen i övrigt"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[enrichment.description]]
-register = "scb/grundskola-ak9"
 variable = "moderna-sprak-elevens-val-sprak"
 description = "Moderna språk inom ramen för elevens val (språk)"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"

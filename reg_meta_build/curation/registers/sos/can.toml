@@ -140,3 +140,126 @@ slug = "tumornummer"
 native_id = "7119586976865944958.TOPO"
 slug = "topografisk-kod"
 # register 7550156225339591583
+
+# Batch47: guarded explanatory references describe local response meanings,
+# derivation inputs or delivery documentation, rather than an external codebook.
+
+[[errata.classification_reference]]
+deldatamangd = "CAN"
+variable = "BEN"
+column = "BEN"
+expected_reference = "HSLF-FS 2016:7"
+expected_representation = "blank\" = malign, 3 = benign."
+expected_description = "Indikator för malign eller benign tumör enligt morfologi."
+evidence = "Metadata - Variabelnivå row:4: The source gives a local response domain or record-identifier construction; HSLF-FS 2016:7 is a reporting regulation, not the identity of an external classification book. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"
+
+[[errata.classification_reference]]
+deldatamangd = "CAN"
+variable = "DIGR"
+column = "DIGR"
+expected_reference = "HSLF-FS 2016:7"
+expected_representation = "1 = klinisk undersökning; 2 = röntgen, scintigrafi, ultraljud, MR, CT eller motsvarande undersökning; 3 = provexcision eller operation med histopatologisk\nundersökning; 4 = obduktion med histopatologisk undersökning; 5 = cytologisk undersökning; 6 = operation utan histopatologisk undersökning; 7 = obduktion utan histopatologisk undersökning; 8 = annan diagnosgrund än 1–7"
+expected_description = "Typ av undersökning som låg till grund för diagnosen."
+evidence = "Metadata - Variabelnivå row:8: The source gives a local response domain or record-identifier construction; HSLF-FS 2016:7 is a reporting regulation, not the identity of an external classification book. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"
+
+[[errata.classification_reference]]
+deldatamangd = "CAN"
+variable = "IARCINC"
+column = "IARCINC"
+expected_reference = "https://www.encr.eu/sites/default/files/pdf/MPrules_july2004.pdf"
+expected_representation = "blank = ingår ej, 1 = tumör ingår vid incidensberäkning"
+expected_description = "Tumörer som ska ingå vid incidensberäkning enligt algoritm för hantering av multiple primary neoplasms framtagen av IARC/ENCR/IACR. Variabeln uppdateras årligen och finns i registret sedan 2025-01-01."
+evidence = "Metadata - Variabelnivå row:19: The source defines a blank/1 incidence-inclusion indicator derived by the referenced multiple-primary algorithm; the PDF describes its calculation rather than classifying the stored flag. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"
+
+[[errata.classification_reference]]
+deldatamangd = "CAN"
+variable = "KON"
+column = "KON"
+expected_reference = "HSLF-FS 2016:7"
+expected_representation = "1 = man, 2 = kvinna"
+expected_description = "Patientens kön"
+evidence = "Metadata - Variabelnivå row:26: The source gives a local response domain or record-identifier construction; HSLF-FS 2016:7 is a reporting regulation, not the identity of an external classification book. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"
+
+[[errata.classification_reference]]
+deldatamangd = "CAN"
+variable = "LOPNR"
+column = "LOPNR"
+expected_reference = "HSLF-FS 2016:7"
+expected_representation = "Från 1991 gäller: position 1= sjukvårdsregion,  2-3 = rapporteringsår, 4-8 räknare."
+expected_description = "Tumörens unika löpnummer"
+evidence = "Metadata - Variabelnivå row:28: The source gives a local response domain or record-identifier construction; HSLF-FS 2016:7 is a reporting regulation, not the identity of an external classification book. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"
+
+[[errata.classification_reference]]
+deldatamangd = "CAN"
+variable = "OBD1"
+column = "OBD1"
+expected_reference = "HSLF-FS 2016:7"
+expected_representation = "1 = tumör som inte var känd före dödsfallet; 2 = tumören känd före dödsfallet"
+expected_description = "Anger om tumören identifierades vid obduktion"
+evidence = "Metadata - Variabelnivå row:32: The source gives a local response domain or record-identifier construction; HSLF-FS 2016:7 is a reporting regulation, not the identity of an external classification book. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"
+
+[[errata.classification_reference]]
+deldatamangd = "CAN"
+variable = "REGION"
+column = "REGION"
+expected_reference = "HSLF-FS 2016:7"
+expected_representation = "1 = Stockholm/Gotland, 2 = Uppsala/Örebro, 3 = Sydöstra, 4 = Södra, 5 = Västra, 7 = Norra"
+expected_description = "Sjukvårdsregionen som är \"ansvarig\" för posten. Det bör motsvara den region där patienten var folkbokförd vid diagnostillfället."
+evidence = "Metadata - Variabelnivå row:39: The source gives a local response domain or record-identifier construction; HSLF-FS 2016:7 is a reporting regulation, not the identity of an external classification book. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"
+
+[[errata.classification_reference]]
+deldatamangd = "CAN"
+variable = "SIDA"
+column = "SIDA"
+expected_reference = "HSLF-FS 2016:7"
+expected_representation = "1=höger 2=vänster 9=okänd"
+expected_description = "Sida. Vid pariga organ och kroppsdelar ska sida anges."
+evidence = "Metadata - Variabelnivå row:43: The source gives a local response domain or record-identifier construction; HSLF-FS 2016:7 is a reporting regulation, not the identity of an external classification book. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"
+
+[[errata.classification_reference]]
+deldatamangd = "CAN"
+variable = "TNMGRUND"
+column = "TNMGRUND"
+expected_reference = "HSLF-FS 2016:7"
+expected_representation = "1 = patologisk, 2 = klinisk"
+expected_description = "Undersökning som låg till grund för TNM."
+evidence = "Metadata - Variabelnivå row:50: The source gives a local response domain or record-identifier construction; HSLF-FS 2016:7 is a reporting regulation, not the identity of an external classification book. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"
+
+[[errata.classification_reference]]
+deldatamangd = "CAN"
+variable = "TYP"
+column = "TYP"
+expected_reference = "HSLF-FS 2016:7"
+expected_representation = "1 = Ny post, 4 = Tidigare lämnad uppgift som senare inte visat sig föreligga, d v s borttagen post, 5 = Komplettering eller rättelse av tidigare lämnade uppgifter."
+expected_description = "Typ av post. Ny post, uppdaterad post etc."
+evidence = "Metadata - Variabelnivå row:53: The source gives a local response domain or record-identifier construction; HSLF-FS 2016:7 is a reporting regulation, not the identity of an external classification book. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"
+
+[[errata.classification_reference]]
+deldatamangd = "CAN_BC"
+variable = "KON"
+column = "KON"
+expected_reference = "HSLF-FS 2016:7"
+expected_representation = "1 = man, 2 = kvinna"
+expected_description = "Patientens kön"
+evidence = "Metadata - Variabelnivå row:60: The source gives a local response domain or record-identifier construction; HSLF-FS 2016:7 is a reporting regulation, not the identity of an external classification book. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"
+
+[[errata.classification_reference]]
+deldatamangd = "CAN_BC"
+variable = "SIDA"
+column = "SIDA"
+expected_reference = "HSLF-FS 2016:7"
+expected_representation = "1=höger 2=vänster 9=okänd"
+expected_description = "Sida. Vid pariga organ och kroppsdelar ska sida anges."
+evidence = "Metadata - Variabelnivå row:66: The source gives a local response domain or record-identifier construction; HSLF-FS 2016:7 is a reporting regulation, not the identity of an external classification book. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"

@@ -746,3 +746,36 @@ slug = "substans-8"
 native_id = "5369119272181688462.SUBSTANS9"
 slug = "substans-9"
 # register 5891427617861710725
+
+# Batch47: guarded explanatory references describe local response meanings,
+# derivation inputs or delivery documentation, rather than an external codebook.
+
+[[errata.classification_reference]]
+deldatamangd = "DORS"
+variable = "ALKOHOL"
+column = "ALKOHOL"
+expected_reference = "Se kodlista_ALKOHOL"
+expected_representation = "1=Ja, Blank=Nej"
+expected_description = "Alkoholrelaterad diagnos omnämnd på intyget. Markering för poster som har en alkoholrelaterad diagnos antingen som underliggande eller multipla dödsorsak"
+evidence = "Metadata - Variabelnivå row:20: The source stores a 1/blank presence indicator; the linked diagnostic list defines input diagnoses, not the response codes of this output flag. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"
+
+[[errata.classification_reference]]
+deldatamangd = "DORS"
+variable = "DIABETES"
+column = "DIABETES"
+expected_reference = "Se kodlista_DIABETES"
+expected_representation = "1=Ja, blank=Nej"
+expected_description = "Diabetes diagnos som antingen underliggande eller bland multipla dödsorsaker"
+evidence = "Metadata - Variabelnivå row:22: The source stores a 1/blank presence indicator; the linked diagnostic list defines input diagnoses, not the response codes of this output flag. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"
+
+[[errata.classification_reference]]
+deldatamangd = "DORS"
+variable = "GKOD"
+column = "GKOD"
+expected_reference = "0"
+expected_representation = "1-99, GA, GK, eller Blank"
+expected_description = "Koden används för att styra vissa av de maskinella granskingarna vid databearbetningen"
+evidence = "Metadata - Variabelnivå row:51: The classification-link cell is the literal 0, while the source defines an internal review-code domain;0 is not a named external classification book. Original link, representation, description and every source code remain in accepted evidence."
+noted = "2026-10-01"

@@ -6,12 +6,6 @@ native_id = "24"
 # Y-113..Y-120 UREG was reviewed against the SWECOV inventory and SCB's
 # 2026-03-09 Registerinformation export; the review produced no UREG errata.
 
-[[enrichment.description]]
-register = "scb/ureg"
-variable = "kallkod"
-description = "Källa för uppgift om högsta utbildning"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
 [[variant]]
 native_id = "24.78"
 slug = "personens-hogsta-utbildning-16-74"

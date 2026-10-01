@@ -4,6 +4,28 @@ slug = "ivp"
 native_id = "135"
 steward_table_prefixes = ["IVP_"]
 
+[[identity.partition]]
+variable = "135.1853"
+columns = { NgNr = "135.1853.ngnr", Ngnr = "135.1853.ngnr", ASNgnr = "135.1853.asngnr", VeNgnr = "135.1853.vengnr" }
+columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete accepted source family: 42 originals, NgNr (2003), Ngnr (2004), and co-delivered ASNgnr/VeNgnr (2005-2024). Later operational definitions explicitly distinguish workplace and activity-unit NR industries. The earlier NR spelling has no supplied unit attribution and remains a separate historical identity. Do not infer continuity with either later unit."
+
+[[identity.partition]]
+variable = "135.3307"
+columns = { MetLev = "135.3307.metlev", MetLev2 = "135.3307.metlev2", MetTot = "135.3307.mettot", MetTot2 = "135.3307.mettot2" }
+columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete accepted source family: 36 originals, four simultaneous physical columns in 2016-2024. Operational definitions distinguish delivered versus total production and quantity units 1/2. Exact literal owners retain conflicting yearly operational definitions instead of merging independently delivered fields."
+data_warning = "Some source operational definitions for MetLev and MetTot change the stated quantity unit while the same physical column remains. Literal ownership preserves these conflicting descriptions; historical quantity-unit equivalence is unverified."
+
+[[identity.partition]]
+variable = "135.4992"
+columns = { LevKvant = "135.4992.levkvant", Levkvant = "135.4992.levkvant", LevKvant2 = "135.4992.levkvant2", TotKvant = "135.4992.totkvant", TotKvant2 = "135.4992.totkvant2" }
+columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete accepted source family: 58 originals. TotKvant occurs in 2002-2024 (including Returråvara in 2022-2024); Levkvant in Returråvara 2020-2024 and LevKvant in Industrins varuproduktion 2016-2024 share the delivered-quantity definition. Co-delivered LevKvant2 and TotKvant2 in 2016-2024 explicitly refer to quantity unit 2. Retain the source statement that the second-unit fields are no longer collected; presence in metadata does not prove nonmissing observations."
+
+[[identity.partition]]
+variable = "135.5003"
+columns = { LevB = "135.5003.levb", LevB2 = "135.5003.levb2", TotB = "135.5003.totb", TotB2 = "135.5003.totb2" }
+columns_ref = "2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete accepted source family: 50 originals. LevB occurs in 2002-2024; LevB2, TotB and TotB2 are co-delivered in 2016-2024. Operational definitions distinguish missingness for delivered/total quantities and quantity units 1/2. Preserve contradictory yearly descriptions on their literal owners."
+data_warning = "Source operational definitions for LevB, LevB2 and TotB2 include conflicting quantity and unit assignments. Catalog identities follow the separately delivered physical columns; the conflicting source descriptions are retained and their equivalence is unverified."
+
 # SWECOV existing-register holdings for scb/ivp use pooled dataset-grain
 # `holdings_period` ranges; each entry preserves its delivery source in
 # `evidence`, and holdings lists do not supply a source data type.
@@ -53,7 +75,7 @@ native_id = "135.119"
 slug = "varukod-kn"
 
 [[variable]]
-native_id = "135.1853"
+native_id = "135.1853.ngnr"
 slug = "naringsgren-enligt-nr"
 
 [[variable]]
@@ -130,4 +152,38 @@ slug = "undersokningsar"
 native_id = "135.4992.totkvant"
 slug = "total-kvantitet"
 
-# register 139
+[[variable]]
+native_id = "135.1853.asngnr"
+slug = "naringsgren-arbetsstalle-enligt-nr"
+
+[[variable]]
+native_id = "135.1853.vengnr"
+slug = "naringsgren-verksamhetsenhet-enligt-nr"
+
+[[variable]]
+native_id = "135.3307.metlev2"
+slug = "imputeringsmetod-lev-enhet2"
+
+[[variable]]
+native_id = "135.3307.mettot2"
+slug = "imputeringsmetod-tot-enhet2"
+
+[[variable]]
+native_id = "135.4992.levkvant2"
+slug = "leverad-kvantitet-enhet2"
+
+[[variable]]
+native_id = "135.4992.totkvant2"
+slug = "total-kvantitet-enhet2"
+
+[[variable]]
+native_id = "135.5003.levb"
+slug = "bortfall-leverad-kvantitet-enhet1"
+
+[[variable]]
+native_id = "135.5003.levb2"
+slug = "bortfall-leverad-kvantitet-enhet2"
+
+[[variable]]
+native_id = "135.5003.totb2"
+slug = "bortfall-total-kvantitet-enhet2"

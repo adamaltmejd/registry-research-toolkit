@@ -35,12 +35,6 @@ provenance = "Bilaga 2 - Variabellista.xlsx"
 
 [[enrichment.description]]
 register = "scb/rams"
-variable = "cfar-nummer"
-description = "Arbetsställets CFAR-nummer (ersätts med löpnummer vid levererans)"
-provenance = "Bilaga 2 - Variabellista.xlsx"
-
-[[enrichment.description]]
-register = "scb/rams"
 variable = "institutionell-sektor"
 description = "Sektor"
 provenance = "Bilaga 2 - Variabellista.xlsx"
