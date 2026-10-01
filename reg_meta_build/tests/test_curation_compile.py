@@ -7528,6 +7528,9 @@ def test_authored_native_partition_rejects_foreign_or_partial_owners(
 
 
 def test_sos_named_topology_preserves_tables_without_variant_parent_sheet(tmp_path):
+    from reg_meta_build.source_scope import resolve_source_scope
+    from reg_meta_build.source_support import SourceSupportBindings
+
     root = tmp_path / "curation"
     _tree(root)
     path = root / "registers/sos/bu.toml"
@@ -7597,6 +7600,38 @@ def test_sos_named_topology_preserves_tables_without_variant_parent_sheet(tmp_pa
         native_variant_key(r): (r.subject.variant.name.lower(), r.subject.variant.name)
         for r in variables
     }
+    assert all(not check_naming_target(n.target, records) for n in named)
+    support = SourceSupportBindings((), ())
+    for record in records:
+        support.observe(record)
+    support.seal()
+    resolved = resolve_source_scope(
+        records,
+        cases=(),
+        naming=names[source, None],
+        provider_keys={
+            n.target.source_key: n.naming.source_id
+            for n in names[source, None]
+            if n.target.kind == "variable"
+        },
+        value_sessions=(),
+        support=support,
+        classifications={},
+        classification_references={},
+        declared_variants=dict(variants[source, None]),
+        diagnostic=True,
+    )
+    assert {v.slug for v in resolved.parents.variants.values()} == {"a", "b"}
+    assert not any(
+        d.code in {"naming_native_identity_missing", "withheld_variant_dependency"}
+        for d in resolved.diagnostics
+    )
+    extra = _case_record(
+        provider="sos", register="Book", variant="A", variable="NEW", source=source
+    )
+    a = next(n for n in named if n.naming.slug == "a")
+    assert check_naming_target(a.target, (*records, extra))
+    assert check_naming_target(a.target, (parent, variables[1]))
     drifted = variables[0].model_copy(
         update={
             "subject": variables[0].subject.model_copy(

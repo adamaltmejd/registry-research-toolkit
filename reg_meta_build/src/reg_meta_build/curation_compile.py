@@ -3152,6 +3152,27 @@ def compile_native_naming(
                     for parent in record.parent_facts
                 )
             )
+            subject_variant_members: dict[NativeKey, list[SourceRecord]] = defaultdict(
+                list
+            )
+            if missing_sos_variant_parents and any(
+                _naming_source_id("register", native_register) in named_sos_registers
+                for record in records
+                if (
+                    native_register := source_register_key(cast("SourceRecord", record))
+                )
+                is not None
+            ):
+                # The naming projection omits source refs for SOS parents. This
+                # authored parentless topology needs exact row-membership evidence.
+                for member in prepared.records.iter_records(source=source):
+                    if (
+                        register_key is None
+                        or source_register_key(member) == register_key
+                    ) and member.subject.variant.status == "value":
+                        native_key = native_variant_key(member)
+                        assert native_key is not None
+                        subject_variant_members[native_key].append(member)
             parents: dict[tuple[str, tuple[str | int, ...]], LegacyNamingBinding] = {}
             explicit_variants: set[tuple[str | int, ...]] = set()
             defaults: dict[
@@ -3207,16 +3228,35 @@ def compile_native_naming(
                     and _naming_source_id("register", native_register)
                     in named_sos_registers
                     and record.subject.variant.status == "value"
+                    and native_variant_key(cast("SourceRecord", record))
+                    not in subject_variant_keys
                 ):
                     native_key = native_variant_key(cast("SourceRecord", record))
                     assert native_key is not None
                     subject_variant_keys.add(native_key)
                     explicit_variants.add(native_register)
+                    expectations = capture_expectations(
+                        tuple(subject_variant_members[native_key]), fields=()
+                    )
                     target = NativeNamingTarget(
                         kind="register_variant",
                         provider="sos",
                         source_key=native_key,
                         register_key=native_register,
+                        expectations=expectations,
+                        peer_guards=(
+                            PeerGuard(
+                                guard_id=f"native-table:{source}:{native_key!r}",
+                                source=source,
+                                coordinates=(
+                                    ("register", record.subject.register_name),
+                                    ("variant", record.subject.variant),
+                                ),
+                                expected_members=tuple(
+                                    item.ref for item in expectations
+                                ),
+                            ),
+                        ),
                     )
                     parents["register_variant", native_key] = LegacyNamingBinding(
                         kind="register_variant",
