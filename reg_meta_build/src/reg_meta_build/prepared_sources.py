@@ -922,6 +922,14 @@ class PreparedSourceRecords:
         default_factory=dict, init=False, repr=False, compare=False
     )
 
+    def clear_decoded_records(self) -> None:
+        """Release decoded originals after a complete consumer phase.
+
+        Accepted files, coordinate indexes and callers' retained records stay intact;
+        later reads reconstruct the same complete originals from the pinned input.
+        """
+        self._record_cache.clear()
+
     @property
     def records(self) -> Iterator[SourceRecord]:
         return self.iter_records()

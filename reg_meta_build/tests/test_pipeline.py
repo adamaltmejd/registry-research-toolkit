@@ -35,6 +35,7 @@ from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
     prepare_catalog_sources,
 )
+from reg_meta_build.prepared_sources import PreparedSourceRecords
 from reg_meta_build.resolved_catalog import ResolvedCodeSet
 from reg_meta_build.source_naming import authored_naming_id
 from reg_meta_build.validate import validate_built_db
@@ -553,6 +554,56 @@ def test_rerun_is_byte_identical(catalog: CatalogFixture, tmp_path: Path) -> Non
     first_ledger = (tmp_path / "a-report/events.jsonl.gz").read_bytes()
     assert first_ledger == (tmp_path / "b-report/events.jsonl.gz").read_bytes()
     assert first_ledger[4:8] == bytes(4)
+
+
+@pytest.mark.parametrize("catalog", [True], indirect=True)
+def test_decoded_record_eviction_preserves_build_outputs(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    (catalog.curation / "relations.toml").write_text(
+        '[[edge]]\ntype = "same_as"\na = "scb/sample/value"\n'
+        'b = "scb/other/value"\n'
+        '[[edge]]\ntype = "replaced_by"\nfrom = "scb/sample/value"\n'
+        'to = "scb/other/value"\neffective_year = 2021\n',
+        encoding="utf-8",
+    )
+    clear = PreparedSourceRecords.clear_decoded_records
+    monkeypatch.setattr(
+        PreparedSourceRecords, "clear_decoded_records", lambda self: None
+    )
+    catalog.build(
+        tmp_path / "retained.db",
+        tmp_path / "retained-report",
+        registers=("1", "2"),
+        dump_decisions=tmp_path / "retained-decisions",
+    )
+    sizes: list[int] = []
+
+    def observed_clear(self: PreparedSourceRecords) -> None:
+        sizes.append(len(self._record_cache))
+        clear(self)
+        assert not self._record_cache
+
+    monkeypatch.setattr(PreparedSourceRecords, "clear_decoded_records", observed_clear)
+    catalog.build(
+        tmp_path / "released.db",
+        tmp_path / "released-report",
+        registers=("1", "2"),
+        dump_decisions=tmp_path / "released-decisions",
+    )
+    assert len(sizes) >= 3  # Compilation and both completed register scopes.
+    with sqlite3.connect(tmp_path / "released.db") as conn:
+        for table, count in (("variable_same_as", 2), ("variable_replaced_by", 1)):
+            assert conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone() == (count,)
+    assert (tmp_path / "retained.db").read_bytes() == (
+        tmp_path / "released.db"
+    ).read_bytes()
+    assert (tmp_path / "retained-report/events.jsonl.gz").read_bytes() == (
+        tmp_path / "released-report/events.jsonl.gz"
+    ).read_bytes()
+    assert {
+        p.name: p.read_bytes() for p in (tmp_path / "retained-decisions").iterdir()
+    } == {p.name: p.read_bytes() for p in (tmp_path / "released-decisions").iterdir()}
 
 
 @pytest.mark.parametrize("catalog", [True], indirect=True)

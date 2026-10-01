@@ -19,6 +19,7 @@ from reg_meta_build.prepared_sources import (
     prepared_source_paths,
 )
 from reg_meta_build.source_coordinates import native_variable_key, source_register_key
+from reg_meta_build.source_curation import acknowledgement_evidence_sha256
 from reg_meta_build.source_records import (
     CodeSetReference,
     NativeCoordinates,
@@ -366,6 +367,42 @@ def test_family_reads_child_rows_once_and_reuses_records_across_views(
     )
     assert not any(
         "FROM locator" in sql or "FROM delivered_cell" in sql for sql in statements
+    )
+
+    snapshot = tuple(record.model_dump_json() for record in family)
+    fingerprint = acknowledgement_evidence_sha256(family, ("coding evidence",))
+    coordinate_index = reader._register_cache.copy()
+    reader.clear_decoded_records()
+    assert not reader._record_cache
+    assert reader._register_cache == coordinate_index
+    statements.clear()
+    reread = next(reader.iter_native_families(revision.dataset))[1]
+    assert tuple(record.model_dump_json() for record in reread) == snapshot
+    assert acknowledgement_evidence_sha256(reread, ("coding evidence",)) == fingerprint
+    assert all(left is not right for left, right in zip(family, reread, strict=True))
+    assert next(reader.iter_register_slices(revision.dataset))[1] == reread
+    assert (
+        tuple(
+            reader.lookup(revision.dataset, records[0].locators[0].semantic_record_key)
+        )
+        == reread
+    )
+    assert sum("FROM delivered_cell" in sql for sql in statements) == 1
+    assert (
+        acknowledgement_evidence_sha256(reread[:-1], ("coding evidence",))
+        != fingerprint
+    )
+    assert acknowledgement_evidence_sha256(reread, ("changed coding",)) != fingerprint
+    changed = reread[0].model_copy(
+        update={
+            "fields": reread[0].fields.model_copy(
+                update={"name": value_field("changed")}
+            )
+        }
+    )
+    assert (
+        acknowledgement_evidence_sha256((changed, *reread[1:]), ("coding evidence",))
+        != fingerprint
     )
 
 

@@ -531,6 +531,7 @@ def _run_pipeline(
             for key in sorted(outside_keys, key=repr)
         }
         _emit_timing("pipeline: compile deferred naming", deferred_started)
+    prepared.records.clear_decoded_records()
     coding_registers = {
         f"{register.register_info.provider}/{register.register_info.slug}": register
         for register in tree.registers
@@ -1220,6 +1221,8 @@ def _run_pipeline(
                         },
                     )
                     _emit_timing(f"pipeline: scope {scope_key!r}", scope_started)
+                    prepared.records.clear_decoded_records()
+                    del result, originals, uses
             _emit_timing("pipeline: all source scopes", phase_started)
             for remaining in pending_source_issues.values():
                 for _, value in remaining:
