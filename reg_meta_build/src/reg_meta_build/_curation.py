@@ -139,11 +139,18 @@ _TEXT_DATA_TYPES = frozenset({"text", "char", "varchar", "nchar", "nvarchar", "n
 _DATE_DATA_TYPES = frozenset(
     {"date", "datetime", "datetime2", "smalldatetime", "datetimeoffset"}
 )
+SOURCE_DATA_TYPE_ALIASES = {
+    "numerisk": "decimal",
+    "alfanumerisk": "text",
+    "character": "text",
+}
 
 
 def data_type_class(value: str) -> str | None:
-    """Classify catalog and supported SQL type names without guessing from substrings."""
+    """Classify catalog, SQL and documented source type names by exact spelling."""
     kind = value.lower()
+    if kind in SOURCE_DATA_TYPE_ALIASES:
+        return SOURCE_DATA_TYPE_ALIASES[kind]
     if kind in _INTEGER_DATA_TYPES:
         return "integer"
     if kind in _DECIMAL_DATA_TYPES:

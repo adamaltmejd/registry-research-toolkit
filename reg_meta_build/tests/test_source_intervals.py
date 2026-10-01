@@ -264,6 +264,8 @@ def test_length_maximum_with_type_widening_and_canonical_integers(
         (("integer", "text"), "text", False),
         (("date", "integer"), None, True),
         (("uniqueidentifier", "integer"), None, True),
+        (("numerisk", "numeric"), "decimal", False),
+        (("alfanumerisk", "Character"), "text", False),
     ],
 )
 def test_declared_type_widening(
@@ -279,6 +281,23 @@ def test_declared_type_widening(
         assert [issue.fields for issue in result.issues] == (
             [("data_type",)] if conflict else []
         )
+
+
+@pytest.mark.parametrize(
+    ("literal", "expected"),
+    [("numerisk", "decimal"), ("alfanumerisk", "text"), ("Character", "text")],
+)
+def test_single_source_type_spelling_is_classified_without_changing_original(
+    literal: str, expected: str
+) -> None:
+    original = _record(1, data_type=literal)
+    result = resolve_occurrence_intervals((original,))
+    field = result.segments[0].fields.data_type
+    assert field is not None
+    assert field.value == expected
+    assert field.raw_value == f"Documented Datatyp: {literal}"
+    assert original.fields.data_type == value_field(literal)
+    assert not result.issues
 
 
 @pytest.mark.parametrize(

@@ -16,6 +16,7 @@ from typing import TYPE_CHECKING, Literal
 from reg_meta.source_evidence import SourceField
 
 from reg_meta_build._curation import (
+    SOURCE_DATA_TYPE_ALIASES,
     data_type_class,
     fold_column,
     widen_data_type_classes,
@@ -348,7 +349,19 @@ def reconcile_source_fields(
             and not explicitly_withheld
         ):
             resolved[name] = SourceField(status="value", value=published)
-        elif name == "data_type" and len(values) > 1 and not explicitly_withheld:
+        elif (
+            name == "data_type"
+            and not explicitly_withheld
+            and (
+                len(values) > 1
+                or any(
+                    status == "value"
+                    and isinstance(value, str)
+                    and value.lower() in SOURCE_DATA_TYPE_ALIASES
+                    for status, value in values
+                )
+            )
+        ):
             classes = tuple(
                 data_type_class(value)
                 if status == "value" and isinstance(value, str)
