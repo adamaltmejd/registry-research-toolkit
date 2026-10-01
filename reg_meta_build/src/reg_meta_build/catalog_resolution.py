@@ -130,6 +130,15 @@ def resolve_parents(
     other_language_refs = set()
     support_only_refs = set()
 
+    names = {}
+    for declaration in naming:
+        if declaration.target.kind not in {"register", "register_variant"}:
+            continue
+        key = declaration.target.source_key
+        if key in names and names[key] != declaration:
+            raise ValueError(f"multiple checked names for parent: {key!r}")
+        names[key] = declaration
+
     def catalog_records():
         for record in records:
             if isinstance(record, EffectiveOccurrence):
@@ -137,13 +146,14 @@ def resolve_parents(
                     support_only_refs.update(
                         record_ref(source) for source in record.source_records
                     )
-                # Support use withholds delivery states, not independently supplied
-                # parent facts. Naming, language and conflict guards still apply.
-                yield from record.source_records
+                yield from (
+                    (source, record.use == "support")
+                    for source in record.source_records
+                )
             else:
-                yield record
+                yield record, False
 
-    for record in catalog_records():
+    for record, support_only in catalog_records():
         # A supplied translation is not a competing assertion in the catalog's
         # requested language. Retain its role explicitly alongside the raw source.
         if record.parent_facts and record.language not in {None, language}:
@@ -152,6 +162,8 @@ def resolve_parents(
         for parent in record.parent_facts:
             key = native_parent_key(record.source, record.subject.provider, parent)
             if key is None:
+                if support_only:
+                    continue
                 # Empty population/object metadata is legitimately unspecified.
                 if any(
                     field is not None and field.status != "unknown"
@@ -179,9 +191,6 @@ def resolve_parents(
                 and key[: len(raw_variant_key)] == raw_variant_key
             ):
                 key = (*split_key, *key[len(raw_variant_key) :])
-            alternatives = claims[key]
-            if parent.fields not in alternatives:
-                alternatives[parent.fields] = parent, record_ref(record)
             register = _coordinate_key(parent.register_name)
             assert register is not None
             register_key = (
@@ -206,19 +215,24 @@ def resolve_parents(
                 if variant_key is not None and edition is not None
                 else None
             )
+            if support_only and (
+                register_key not in names
+                or register_key in withheld_naming
+                or (
+                    parent.kind != "register"
+                    and (variant_key not in names or variant_key in withheld_naming)
+                )
+            ):
+                # Lookup/support-only topology remains raw evidence. Independent
+                # parent facts survive only within already admitted catalog parents.
+                continue
+            alternatives = claims[key]
+            if parent.fields not in alternatives:
+                alternatives[parent.fields] = parent, record_ref(record)
             owner = parent.kind, register_key, variant_key, edition_key
             if key in ownership and ownership[key] != owner:
                 raise ValueError(f"inconsistent native parent topology: {key!r}")
             ownership[key] = owner
-    names = {}
-    for declaration in naming:
-        if declaration.target.kind not in {"register", "register_variant"}:
-            continue
-        key = declaration.target.source_key
-        if key in names and names[key] != declaration:
-            raise ValueError(f"multiple checked names for parent: {key!r}")
-        names[key] = declaration
-
     resolved_fields = {}
     for key, alternatives in claims.items():
         observations = tuple(item[0] for item in alternatives.values())

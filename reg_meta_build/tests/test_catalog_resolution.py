@@ -572,3 +572,15 @@ def test_support_parent_conflict_retains_existing_withholding_guard() -> None:
     assert replace(resolved, support_only_refs=()) == ordinary
     assert resolved.support_only_refs == (record_ref(second),)
     assert any(d.code == "conflicting_parent_metadata" for d in resolved.diagnostics)
+
+
+def test_support_lookup_parent_requires_admitted_variant_topology() -> None:
+    record = _record(Registervariantnamn="AGARKAT")
+    support = replace(source_occurrence(record), use="support")
+    register_name = tuple(n for n in _names(record) if n.target.kind == "register")
+    parents = resolve_parents((support,), register_name)
+    assert len(parents.registers) == 1
+    assert parents.variants == parents.editions == {}
+    assert all("variant" not in key for key in parents.fields)
+    assert parents.support_only_refs == (record_ref(record),)
+    assert parents.diagnostics == ()

@@ -1028,11 +1028,13 @@ Panel keys require supported states in the exact variant. Losing one composite-k
 member makes that entire key unknown; it never manufactures a shorter key. Other axes,
 time grain and independently supported parent metadata survive. A reviewed support
 occurrence excludes delivery states, not its independently supplied register, variant,
-edition, population or object-type facts. Parent resolution reconciles these facts with
-the same naming, language, coordinate and conflict guards as catalog occurrences;
-`support_only_refs` continues to account for the excluded deliveries. Superseded
-preliminary editions therefore retain their own parent prose without recreating
-preliminary states.
+edition, population or object-type facts within already checked catalog parent topology.
+Support-only lookup variants without admitted parent naming remain raw evidence and
+support accounting; they do not create public variants or orphan edition children.
+Parent resolution reconciles admitted facts with the same naming, language, coordinate
+and conflict guards as catalog occurrences; `support_only_refs` continues to account for
+the excluded deliveries. Superseded preliminary editions therefore retain their own
+parent prose without recreating preliminary states.
 
 ## Persistent data warnings
 

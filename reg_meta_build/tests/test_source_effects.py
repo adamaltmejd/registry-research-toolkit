@@ -1540,7 +1540,7 @@ def test_fdb_unassigned_spelling_diagnoses_without_blocking_owned_identity() -> 
     assert result.occurrences[2] == source_occurrence(records[2])
 
 
-def test_checked_lookup_role_keeps_evidence_and_requires_parent_naming() -> None:
+def test_checked_lookup_role_keeps_evidence_without_inventing_parent_topology() -> None:
     lookup = _record(column="CODE")
     other = _record(cvid=21, column="DATA", variable=6)
     case = _case(lookup, CheckedSourceUse(ref=record_ref(lookup)))
@@ -1553,8 +1553,9 @@ def test_checked_lookup_role_keeps_evidence_and_requires_parent_naming() -> None
     ]
     assert len(result.occurrences) == 4 and result.diagnostics == ()
     assert result.occurrences[0].source_records == (lookup,)
-    with pytest.raises(ValueError, match="missing checked parent naming binding"):
-        resolve_parents(result.occurrences[:2], ())
+    parents = resolve_parents(result.occurrences[:2], ())
+    assert parents.registers == parents.variants == parents.editions == {}
+    assert parents.support_only_refs == (record_ref(lookup),)
     with pytest.raises(ValueError, match="support-only"):
         form_native_variable(
             result.occurrences[:2],
