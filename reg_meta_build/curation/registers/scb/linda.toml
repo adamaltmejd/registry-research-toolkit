@@ -2856,3 +2856,1444 @@ column = "BINVAR"
 periods = [["2005-01-01", "2005-12-31"], ["2006-01-01", "2006-12-31"], ["2007-01-01", "2007-12-31"], ["2008-01-01", "2008-12-31"], ["2009-01-01", "2009-12-31"], ["2010-01-01", "2010-12-31"], ["2011-01-01", "2011-12-31"], ["2012-01-01", "2012-12-31"], ["2013-01-01", "2013-03-17"], ["2016-01-01", "2016-12-31"], ["2017-01-01", "2017-12-31"], ["2018-01-01", "2018-03-14"]]
 reason = "Retain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
 source = "codeless_overlap.toml#/resolve/35"  # v18 accepted-codeless:35:*, 12 case(s)
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bdebsed"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:11771\",\"variable:1227\",\"member:487167\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "2847a9ec920081ef48b4b9d316ba78e35d0aba648ca45e6145949ce26d274983"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bdebsed"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:13035\",\"variable:1227\",\"member:575895\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "cc6d655e3b5d72b78bb995b7f7a3365f2a3fc37ff4515d9fcaa74cdc995cc3fc"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bdebsed"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:13892\",\"variable:1227\",\"member:634148\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "10678752ff50dcb4181cdbb3b666136f80258c7268bc4088a28b7ca005f5b4d1"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bdebsed"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:11784\",\"variable:1227\",\"member:488297\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "bc563e76cca9103ce17fb6f1013aaa74ea574d664a4e2acb7fd982b0ad3dcf4e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bdebsed"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:13061\",\"variable:1227\",\"member:578942\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "667f58ec4f2f11e63e26ed56ee859724ff0f49999e996643466addf408d623f1"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bdebsed"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:13900\",\"variable:1227\",\"member:635530\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "c95be10b15c20e46740d7818f91444ed0ca86b276098ec956cad8d9f06991e5b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:8609\",\"variable:241\",\"member:420415\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "f251c4379541f35159458e9e6820d79bb0059b71ab34a12b4ded4bfbfb5deb99"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:6102\",\"variable:241\",\"member:377467\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "872dd4adaebaf32bead3ee8b8ccf123ae2dfd237ee4bc9e01eea6705a65a9680"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3802\",\"variable:241\",\"member:232968\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "c229286d88dd5ffd3a5f690f10be7ef6ab988aa596c3a29a57eff77f4989b745"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3100\",\"variable:241\",\"member:181939\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "8952f22e064fad5658c699fb13b0ad8bc5d6ede13a69e897bc35bcef6dd35101"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3673\",\"variable:241\",\"member:225233\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "42294606ce3cab21946de271f2917c7d05bb28941a669eacfa25c0397a456e87"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:4059\",\"variable:241\",\"member:253246\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "c582bf801c5f1963f8946d5404ef6e100d1f6439a2bf35795547b2b4a8c568c6"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:4512\",\"variable:241\",\"member:284890\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "cc044bf084168e5001966fc2d000ca063bd6018cf0f92b74ebe30c3f6d1750a5"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:5274\",\"variable:241\",\"member:325077\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "b3f7ddf5f73592c24ef81f97e338604a45c9444ce061c01c7b28dd2c02c45def"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:5901\",\"variable:241\",\"member:366541\"]}"]
+fields = ["coding"]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "65cbfb215bc558a44dd95a4e46288da56e5cc162d68c58aa53ecf2dd90200a5e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:7502\",\"variable:241\",\"member:413308\"]}"]
+fields = ["coding"]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "0d7065c340ff643c7772259d5ff0a9644da5def490cc69953ae07781397eec8d"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:9989\",\"variable:241\",\"member:444737\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "cc2a05baf2c19cf9d99c2d91f8dd62076d9c7f65e1827c569ee7b974f3e31bdf"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:11771\",\"variable:241\",\"member:487293\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "fcc84e689f94facf4501b759457eb850d93fa9feba58ecbeef4720815de529c5"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:13035\",\"variable:241\",\"member:575770\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "f0823a5e14e980d7c9f48fc577fe7bc911d6df0e9ad6b10e7d01633da3d29821"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:13892\",\"variable:241\",\"member:634272\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "7bf9835ed846b71c699d5ab4996f27d198b5005289ede47bae84659e087f05b5"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:8589\",\"variable:241\",\"member:418822\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "67024256579b2c244a04debeb345e28d2c6cda098a422694a6b50570aa5ab9e9"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:6103\",\"variable:241\",\"member:378021\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "1b9e7689836c7a59ca41710e3744e52f33f5850d89f7ff5240ed1b98b76d5b0e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:3803\",\"variable:241\",\"member:233780\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "c277ccab521517f5eaa007ce5092412a58cbd2b61df47abc8396316cec6417ce"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:3041\",\"variable:241\",\"member:179824\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "45137cdc3cf7fae60a1ee7c6728f0b3118bbbaeb7b81ae24db0ecae7cf159456"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:3674\",\"variable:241\",\"member:226045\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "007df18018db0786586a0bc61d89d36205a7d2d4fa2479c8c449e2d520ff8ab3"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:4060\",\"variable:241\",\"member:254104\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "97a449d57b14c997fc89ca161eb9d8f48fd17c28dc74e83d7f25bd40e61e3269"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:4513\",\"variable:241\",\"member:285701\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "6fe9a7dfb5ba014e272ea83a5f75508660868716125e2b5029daae93c505945b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:5275\",\"variable:241\",\"member:325393\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "e14c02404d18519445a9cf7fc753d78addcd8a1a0421abca215dfa203a80def4"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:5907\",\"variable:241\",\"member:368105\"]}"]
+fields = ["coding"]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "6a0d69f50c996e8fb2912d075ac71f3e05ddabe18c660f4eeed169248c6b2176"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:7508\",\"variable:241\",\"member:413728\"]}"]
+fields = ["coding"]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "fbb3abeb7692fc450f1ee22aab8f1b038d0f07568f8905f17b71b03cdf4f7fc1"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:9990\",\"variable:241\",\"member:445553\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "8240ef594de549b503dc5f7768ba165b954300648a257d2584c83c7381372542"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:11784\",\"variable:241\",\"member:488172\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "619d5f3975aaba72acbf0a9482fe7039b377f34f14bd59355227947e09b4a8cb"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:13061\",\"variable:241\",\"member:579066\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "9acb9c83f7551506dd39674a07ecb15bf4832c260b3dbe33ddcbe766ed75933c"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:13900\",\"variable:241\",\"member:635406\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "64c436c1067af5c4f21785b08ccf5253b3bbbd1c44825d200d86c84f6c997ac9"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/forsamling-den-1-11"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:16334\",\"variable:24373\",\"member:790624\"]}"]
+fields = ["coding"]
+valid_from = "1993-01-01"
+valid_to = "1993-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "9db1dcbfc126f03a093ee6f33bdc0d01bfed84d64140855f06b86ec8bafb4282"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/forsamling-den-1-11"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:16300\",\"variable:24373\",\"member:786153\"]}"]
+fields = ["coding"]
+valid_from = "1994-01-01"
+valid_to = "1994-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "171afef1bf11440805f4b40ef0b013f01c68a697426a8eecaf29b05e7362b854"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/forsamling-den-1-11"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:16268\",\"variable:24373\",\"member:785128\"]}"]
+fields = ["coding"]
+valid_from = "1995-01-01"
+valid_to = "1995-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "8e6600e807ca361b288389f7d9a2565f1ebbd479ceb540b8d3ac7f1e17377d1e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3802\",\"variable:2712\",\"member:233072\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "2447b2aa0a2be7778f6ecd3621364f9324fbdc0dbe389df074f4141b6eb8139a"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3100\",\"variable:2712\",\"member:182045\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "4b2ae4235fbbc7b244fa34ede789b2ad2fe2dad960490b9137fd2bbecb0cdae1"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3673\",\"variable:2712\",\"member:225337\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "eaff3adf0403b086bf464d11fae9fed4be2802d9c4095182a258e7ee6f0dc4e5"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:4059\",\"variable:2712\",\"member:253349\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "b6e72326b3d1aa64ddda2c47905d037184525d562ad4d92d5dabd0b126fd5e1b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:4512\",\"variable:2712\",\"member:284987\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "4c303611fbf71b2fd5ab1b5557fc5962851318d80bfaa681d130b4ed60b7cfbf"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:5274\",\"variable:2712\",\"member:324955\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "37c28e5986b80778b16ba6d3f0e94273ea501f9b7b16c7551afb85fd69db124b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:9989\",\"variable:2712\",\"member:444853\"]}"]
+fields = ["coding"]
+valid_from = "2015-08-17"
+valid_to = "2015-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "acde034da0e154238d3ed200a3b221fd317eaddd16967f65df8b9b5b15b58dd0"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:11771\",\"variable:2712\",\"member:487177\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "a0f512a4702de76381dc622a3331247ae9ed81f19388decc7767a9d8e319858e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:13035\",\"variable:2712\",\"member:575886\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "19bc6ee69bc1a1f879f4daafd5be49824d54735a5e95be83e3cf6f4f36bb74fd"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:13892\",\"variable:2712\",\"member:634157\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "3cf919acf9cfa660c8d41771a4fd8e313f8636cf19ab9c038aaad111748a3d93"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:3803\",\"variable:2712\",\"member:233679\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "8d3b8342b66510623223a62098710454447b6818b5fa0941f57ea3d7ec9b45c3"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:3041\",\"variable:2712\",\"member:179423\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "a3194a35377d8c8fe95f3311f485010f56ccfb26a7d095c7bc7f385f1afd494f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:3674\",\"variable:2712\",\"member:225944\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "a954b052551d3c6727829b07ac48e5ec7f33faca79318ab88923f7749acff5b5"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:4060\",\"variable:2712\",\"member:254006\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "8ea5e22e2a7acc85f879512ec3ea343cb398bff4ac814a32f2c4c5700cc1c11d"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:4513\",\"variable:2712\",\"member:285607\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "ad73fd304bdbe0ffb2b51917aa3025775a3cb0c390f3b59d32b4d233995d87e0"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:5275\",\"variable:2712\",\"member:325486\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "32f605862631d521e95667db7f0820e3843968e9d0a815810d016ea5aa293581"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:9990\",\"variable:2712\",\"member:445472\"]}"]
+fields = ["coding"]
+valid_from = "2015-08-17"
+valid_to = "2015-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "8cc14d15b9435b0de25890d15c9c63450e27417b8f1b68d0bea18e8f1c468ed1"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:11784\",\"variable:2712\",\"member:488288\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "2c8de06a16721a36efd4d80a9546e1c436bb8182c8eba8fcce9d7b290b9d58cc"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:13061\",\"variable:2712\",\"member:578951\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "b1f32f1754f4cd0f1ec7e2c28d9a730181d74a68c854323ddba04444ffe5c00e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/hogsta-utbildning-avslutningsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:13900\",\"variable:2712\",\"member:635521\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "3b584805fb8c75e08afead27e765e84b7fba650dac8acd979d8e097adf4cb030"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/populationsavgransningskod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1613\",\"edition:16342\",\"variable:39858\",\"member:792883\"]}"]
+fields = ["coding"]
+valid_from = "1990-01-01"
+valid_to = "1990-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "b61d06750ce148ecbae7ac22f219da760026348ab1ce9314dc5ae4c6c502a1fb"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/populationsavgransningskod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1613\",\"edition:16368\",\"variable:39858\",\"member:796664\"]}"]
+fields = ["coding"]
+valid_from = "1991-01-01"
+valid_to = "1991-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "c295aeab10da441ba503af66029f9c69bd51250b329a5b468bd4bcd9376107a6"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/populationsavgransningskod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1618\",\"edition:16347\",\"variable:39858\",\"member:793779\"]}"]
+fields = ["coding"]
+valid_from = "1990-01-01"
+valid_to = "1990-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "ccc354595dedd885b3c7dace6f584cb6e5b73684f0ee85ce50e4e5cd07af798b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/populationsavgransningskod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1618\",\"edition:16396\",\"variable:39858\",\"member:799390\"]}"]
+fields = ["coding"]
+valid_from = "1991-01-01"
+valid_to = "1991-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "86bbb67073d3ac0cba927b98907bf1a8b438b200b2a1702d5331938df2e918ee"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/stratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:815\",\"edition:16205\",\"variable:462\",\"member:776734\"]}"]
+fields = ["coding"]
+valid_from = "1996-01-01"
+valid_to = "1996-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "899abc63bd9dd41cc03f8c4116c84fe7a03c5a01e851390e588fca3c1cf58b5a"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/stratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:815\",\"edition:16200\",\"variable:462\",\"member:776387\"]}"]
+fields = ["coding"]
+valid_from = "1997-01-01"
+valid_to = "1997-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "282d4a73339dfba00c37020ee3e2088314a9a979a61cc30f34647dbd49c19f96"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/stratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:815\",\"edition:16194\",\"variable:462\",\"member:775738\"]}"]
+fields = ["coding"]
+valid_from = "1998-01-01"
+valid_to = "1998-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "30fcdbd076413ec0de280666f9b43a8c2fe9e82225ab4f4d4466b2c4980a0795"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/stratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:815\",\"edition:13478\",\"variable:462\",\"member:604958\"]}"]
+fields = ["coding"]
+valid_from = "1999-01-01"
+valid_to = "1999-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "7c7f6adb393d3c4e756fb51b1a75dd661cb895d7028214480f526d352ff23578"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/stratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:815\",\"edition:13435\",\"variable:462\",\"member:601520\"]}"]
+fields = ["coding"]
+valid_from = "2000-01-01"
+valid_to = "2000-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "6b71818cba8e55f15bff7a1e2d3c8a6e166684123fc06cb42dbb6b437b1db795"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/stratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:815\",\"edition:13432\",\"variable:462\",\"member:601208\"]}"]
+fields = ["coding"]
+valid_from = "2001-01-01"
+valid_to = "2001-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "dfb2ce91a35f3c8fe940d31752482a9c434aeae574fdf726e0bf722a470cdf5e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/stratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:815\",\"edition:13400\",\"variable:462\",\"member:599551\"]}"]
+fields = ["coding"]
+valid_from = "2002-01-01"
+valid_to = "2002-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "00bc5a77f22908f277d1f2a391fee07ae79e7e802c5a8743459fbb1649996131"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/stratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:815\",\"edition:11769\",\"variable:462\",\"member:486781\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "62c5f33dda94624caf612de2041d8227ddbdcf2690bdec5e0ab49e61f28c7ada"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/stratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:815\",\"edition:13034\",\"variable:462\",\"member:575676\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "4fccc533a4502ee86650ba5bcb26bb755d27be00655ef76fa4f21f5f69cb344b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/stratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:815\",\"edition:13891\",\"variable:462\",\"member:633782\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "bef9ffbd19e00b59f343ead60868c405817814deb7b6669fd7d36ece3e86cdd5"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/senaste-invandringsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3802\",\"variable:517\",\"member:232969\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "5bbeeed1cce91ea9cc4d9c89d6d52e80a3c1b929535ad7b8b99de4041dcbc2ad"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/senaste-invandringsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3100\",\"variable:517\",\"member:181940\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "3e1bbdc31cdaff800f438db8ce2ef80381d183dd8a84e9d953c70640a2dee2bd"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/senaste-invandringsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3673\",\"variable:517\",\"member:225234\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "a4df05c5bb4a9c2a254e3ab592d1abf941f8d04ea76907bdb0a0b3f95b441d02"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/senaste-invandringsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:4059\",\"variable:517\",\"member:253247\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "a67361991f8b385e20a8679285f8479c9b4a8e9b2ab9a6601d297d1f1eccbc72"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/senaste-invandringsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:4512\",\"variable:517\",\"member:284891\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "58bbae71dcb134260385d59793b57b5e6813c424046800dc5578cacf2983bc2c"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/senaste-invandringsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:5274\",\"variable:517\",\"member:325076\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "a358ee04ed9847f6e684ade3f51b0c7d2f18ea803f52ff53c63b7cb0b30b2ad5"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/senaste-invandringsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:9989\",\"variable:517\",\"member:444738\"]}"]
+fields = ["coding"]
+valid_from = "2015-08-17"
+valid_to = "2015-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "22a2870eb9ef095795959008bab0699cb617c231a7070b511e8722ad7960a3a1"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/senaste-invandringsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:13892\",\"variable:517\",\"member:634271\"]}"]
+fields = ["coding"]
+valid_from = "2018-03-15"
+valid_to = "2018-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "114d0e95e3fe50b0e0f6c8c5822209837fbacdc05d1d77d2f118a5fb51463fc7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/senaste-invandringsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:5907\",\"variable:517\",\"member:368129\"]}"]
+fields = ["coding"]
+valid_from = "2013-03-18"
+valid_to = "2013-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "286a8492b6566b0562c9816bba4711f1d48c2f653804fda01e13d5f4530c1a73"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/senaste-invandringsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:7508\",\"variable:517\",\"member:413706\"]}"]
+fields = ["coding"]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "cff48c9e50ed2d448c8f527b94b995012d33c57d273401dccb3264f06a47f440"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/senaste-invandringsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:9990\",\"variable:517\",\"member:445574\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "883d6e29eb82a2c4ed02c1563c89c5c25b6d09226d923ba0dc3704828cb045ac"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/senaste-invandringsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:13900\",\"variable:517\",\"member:635407\"]}"]
+fields = ["coding"]
+valid_from = "2018-03-15"
+valid_to = "2018-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "a78f36da4ef518814b73bb036cb68cd1abe13e1ead91b7f9d201b1f8df51b666"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:8609\",\"variable:5593\",\"member:420589\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "15875ac7e45545c45762dbf3e5c3bff449e194a4a0cc8b2ea18d797eae694907"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:6102\",\"variable:5593\",\"member:377282\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "e73442631c1733b2e1722e8f38d60593dbced649436625c53ff678346264e89c"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3802\",\"variable:5593\",\"member:233038\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "f3e2e34181929af718228c1894f0f3470e66c1ecc3d104239a4c1012d1edd1c4"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3100\",\"variable:5593\",\"member:182010\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "1a79ad3eedc10a31247a7dcbd2c3f7578b72fc1ed21a65b586fbf388e1a6bc03"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3673\",\"variable:5593\",\"member:225303\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "7fe531e5cdcb10255d2d69ed723cc94ed6f410070df15e1e34e5022181d73c6e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:4059\",\"variable:5593\",\"member:253316\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "124a2b1d86e9d688e5cff38de190a46976e60c44cfd696469f32527c30cc957b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:4512\",\"variable:5593\",\"member:284955\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "a73d9d61ac914c0f9bedfa24332578e16a4ba2cb5032357a9707aae4f0168395"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:5274\",\"variable:5593\",\"member:324988\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "5312697ed8b3f287cd6bf449087c61f87d5c445de8030961167a2b1f071c6cbf"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:5901\",\"variable:5593\",\"member:366627\"]}"]
+fields = ["coding"]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "b083cbedbd8837db73cd0dac71ccbc68373028842e9ec4b3c7d5fee2cc020289"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:7502\",\"variable:5593\",\"member:413223\"]}"]
+fields = ["coding"]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "6f7efed70c821ae17ec73a398ed6b739272dece15f7a326a4fed1b476c066b64"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:9989\",\"variable:5593\",\"member:444821\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "31e59d8e54a9832145f0cd8b62ab5db5e926766dd7b1a5fae6976338ffc76dc6"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:11771\",\"variable:5593\",\"member:487209\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "bfe7f0d91a5ee453fdf67f26cfc3635dcbc06372ef93d024a3c0e782d24a9b32"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:13035\",\"variable:5593\",\"member:575854\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "fe2956b23c64a6159f6e384bcaf2007c7a616aef95a8341929e1f1282d6aee8e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:13892\",\"variable:5593\",\"member:634189\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "f278f9778706de85c8ddd6623af5d3ab9cf09afaa05f8da72035bd0588e5ee65"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:8589\",\"variable:5593\",\"member:419164\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "d561dfa0d4761c0951c696d16a8f7dc0e1392ea336ff06d0a0bda8fcb22a9681"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:6103\",\"variable:5593\",\"member:377668\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "4043f2905e58b3d229621b661d7419b5642154bdfd3de92090c298cd3d3836e7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:3803\",\"variable:5593\",\"member:233795\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "e4b4407bc7f530ec0faf33b726016e67ee6227f8557d79fbc047eb44424c8111"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:3041\",\"variable:5593\",\"member:179870\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "3744713abc8d0348957ecb88458e936f60268429b5c5f8be84fbbef916926cff"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:3674\",\"variable:5593\",\"member:226060\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "616b0753e9e2f3a6f05761d56f70d100b561c3e5405478b7fef2afd49245e7b3"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:4060\",\"variable:5593\",\"member:254119\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "7655c55771b60bdbfe0c0ab358f185e2951e1ae6585043156940d481145ef4d2"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:4513\",\"variable:5593\",\"member:285715\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "23acfd6919b844359cbdaf21729ad894895a7541e898bb4bedae4f507206a653"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:5275\",\"variable:5593\",\"member:325379\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "c894fdfe36cd5fed3d8e9f20c27d8c5cb4f1ebc444cbcd5566497c9da2f526d6"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:5907\",\"variable:5593\",\"member:368118\"]}"]
+fields = ["coding"]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "edfe561b9c02a671959b7158979cdcf056790014e4407e67d6758d1211f2c3ac"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:7508\",\"variable:5593\",\"member:413715\"]}"]
+fields = ["coding"]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "157445a8ec06c37d01d15aaa7b143cf066dcd0bd4ae8fb026fbc512908103524"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:9990\",\"variable:5593\",\"member:445566\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "1cacd5fbafa65fdb38f84bc1b6af3c9d21807050e9b8f668b49d7f717f1e28b4"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:11784\",\"variable:5593\",\"member:488256\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "832e6928f1e164d980bbf383918565f7f2f14d751770cc5243e2714df33ee03b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:13061\",\"variable:5593\",\"member:578983\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "7b3c0b93a07761ca6c6d5ff2d5f5a3f3003648595fafaa52272b90141f73cb60"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:13900\",\"variable:5593\",\"member:635489\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "42bb51a960f9aa2b392baccf0110a02085a11d905c35f41c4c1def8f1dda5724"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/lan-kommun-och-forsamling"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1613\",\"edition:16420\",\"variable:5668\",\"member:801968\"]}"]
+fields = ["coding"]
+valid_from = "1996-01-01"
+valid_to = "1996-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "bc8a16e7f55ffa15e784a54f48fccf9da9d22eebf546fcae0a0aa11ee0b14db6"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/lan-kommun-och-forsamling"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1618\",\"edition:16355\",\"variable:5668\",\"member:794795\"]}"]
+fields = ["coding"]
+valid_from = "1996-01-01"
+valid_to = "1996-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "04b02daa8c38d9917560ecab7b7a0a0e401f2fe9ba04c666ab38d65388fce43f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/kostforman"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:13231\",\"variable:6095\",\"member:588253\"]}"]
+fields = ["coding"]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "1028e44d3c4496dd41fc33e4a70212609fe52343f22c78cb803f49f0832cadf3"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/kostforman"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:11584\",\"variable:6095\",\"member:472925\"]}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "2a4957bd3edef31006bff59ae978425074cf9372781fc59b6ee53fa3bda02004"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bannanf"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:13231\",\"variable:696\",\"member:588226\"]}"]
+fields = ["coding"]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "4f3c8344a1e9c5e9eb942bae89b70a3a2bcb6bd82f4f49f3de49a6385a6dfc7a"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bannanf"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:11584\",\"variable:696\",\"member:473231\"]}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "bc9791b6c7455e0a1917c4b3a369d485d02733ea1c765a62bf5384a32c5e4738"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bnat"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:8609\",\"variable:768\",\"member:420430\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "ed2f84394c8de2a475c2e464872280781815c1bee2d22d90f97466490758737f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bnat"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:6102\",\"variable:768\",\"member:377451\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "85f55052d539b3021e49f28df23aa20ee2b2838809083e77000a96608c1e1e50"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bnat"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3802\",\"variable:768\",\"member:233142\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "80417e30aa30d06986e4c1199883c960929b9207f1b6f6cefba19af3e78418ec"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bnat"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3100\",\"variable:768\",\"member:182118\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "d368f2b47b5355e61309503c2161360e25b1245d694bf9ed18a3a1cee5d5f7eb"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bnat"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3673\",\"variable:768\",\"member:225407\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "e4ba1b46bf4f818451ed23250ee110bbcff37886ec7bb0138a7f9924fd8fc77d"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bnat"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:4059\",\"variable:768\",\"member:253418\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "897f97efba3e7c7eac95dd9228d9dd5001243288f9ab4857a213b3c3082e30f8"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bnat"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:4512\",\"variable:768\",\"member:285051\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "155f55941fcbfe612ab7dc245cd587637d9f5a4ca2cfd25cdabaacdc5558236c"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bnat"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:8589\",\"variable:768\",\"member:418813\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "13c6436a66fb526db7dfeba9c4290d06d1c67743fb2f6be898f08d679958b923"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bnat"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:6103\",\"variable:768\",\"member:378030\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "af35cb6b333d70921720eb27610f727d7fd3598698ce892be6484d0a92b0bfac"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bnat"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:3803\",\"variable:768\",\"member:233650\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "d196c9f3c5af8603f005b1c51b4c7de61815bd5ac820c4fe8076823411fba7a2"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bnat"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:3041\",\"variable:768\",\"member:179285\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "5ae9a5d9854f56753c4d18d29eaabf5e663ec0f8fee23f706ca79b84aa08c268"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bnat"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:3674\",\"variable:768\",\"member:225915\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "9dd7b0fdef2e779a63e4b93393fd0f81c0f81fc49611c5c1767e40a3154b4017"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bnat"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:4060\",\"variable:768\",\"member:253977\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "2fdc6146f7ea00d58633966d70b9c9fa6a02679b894962052292e7c5ce3664d4"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bnat"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:4513\",\"variable:768\",\"member:285578\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
+evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
+expected_evidence_sha256 = "3dab9512e37400ee8b714ef38a8d82d0020d1033e5be0a39bfad1d35ec431d35"

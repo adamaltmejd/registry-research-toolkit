@@ -4901,3 +4901,1123 @@ valid_to = "2018-12-31"
 column = "GyfId"
 expected_codings = ["03ec31cc2f0d54733617c7a7d2eadf446606bb495a777559ad5020ad5bd18844"]
 source_editions = ["2018 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+variable = "249.14815.skolkommun"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+column = "SkolKommun"
+source_editions = ["2018"]
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+column = "Skolkommun"
+source_editions = ["2018 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2015-01-01"
+valid_to = "2015-06-30"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+column = "SkolKommun"
+source_editions = ["2015"]
+[[representation.parallel.columns]]
+valid_from = "2015-01-01"
+valid_to = "2015-06-30"
+column = "Skolkommun"
+source_editions = ["2015 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2015-07-01"
+valid_to = "2015-12-31"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+column = "SkolKommun"
+source_editions = ["2015"]
+[[representation.parallel.columns]]
+valid_from = "2015-07-01"
+valid_to = "2015-12-31"
+column = "Skolkommun"
+source_editions = ["2015 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2016-01-01"
+valid_to = "2016-06-30"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+column = "SkolKommun"
+source_editions = ["2016"]
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-06-30"
+column = "Skolkommun"
+source_editions = ["2016 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2016-07-01"
+valid_to = "2016-12-31"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+column = "SkolKommun"
+source_editions = ["2016"]
+[[representation.parallel.columns]]
+valid_from = "2016-07-01"
+valid_to = "2016-12-31"
+column = "Skolkommun"
+source_editions = ["2016 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2017-01-01"
+valid_to = "2017-06-30"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+column = "SkolKommun"
+source_editions = ["2017"]
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-06-30"
+column = "Skolkommun"
+source_editions = ["2017 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2017-07-01"
+valid_to = "2017-12-31"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+column = "SkolKommun"
+source_editions = ["2017"]
+[[representation.parallel.columns]]
+valid_from = "2017-07-01"
+valid_to = "2017-12-31"
+column = "Skolkommun"
+source_editions = ["2017 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+column = "SkolKommun"
+source_editions = ["2018"]
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+column = "Skolkommun"
+source_editions = ["2018 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2018-07-01"
+valid_to = "2018-12-31"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+column = "SkolKommun"
+source_editions = ["2018"]
+[[representation.parallel.columns]]
+valid_from = "2018-07-01"
+valid_to = "2018-12-31"
+column = "Skolkommun"
+source_editions = ["2018 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2019-01-01"
+valid_to = "2019-06-30"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+column = "SkolKommun"
+source_editions = ["2019"]
+[[representation.parallel.columns]]
+valid_from = "2019-01-01"
+valid_to = "2019-06-30"
+column = "Skolkommun"
+source_editions = ["2019 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2019-07-01"
+valid_to = "2019-12-31"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+column = "SkolKommun"
+source_editions = ["2019"]
+[[representation.parallel.columns]]
+valid_from = "2019-07-01"
+valid_to = "2019-12-31"
+column = "Skolkommun"
+source_editions = ["2019 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2020-01-01"
+valid_to = "2020-06-30"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+column = "SkolKommun"
+source_editions = ["2020"]
+[[representation.parallel.columns]]
+valid_from = "2020-01-01"
+valid_to = "2020-06-30"
+column = "Skolkommun"
+source_editions = ["2020 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2020-07-01"
+valid_to = "2020-12-31"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+column = "SkolKommun"
+source_editions = ["2020"]
+[[representation.parallel.columns]]
+valid_from = "2020-07-01"
+valid_to = "2020-12-31"
+column = "Skolkommun"
+source_editions = ["2020 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2021-01-01"
+valid_to = "2021-06-30"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+column = "SkolKommun"
+source_editions = ["2021"]
+[[representation.parallel.columns]]
+valid_from = "2021-01-01"
+valid_to = "2021-06-30"
+column = "Skolkommun"
+source_editions = ["2021 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2021-07-01"
+valid_to = "2021-12-31"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+column = "SkolKommun"
+source_editions = ["2021"]
+[[representation.parallel.columns]]
+valid_from = "2021-07-01"
+valid_to = "2021-12-31"
+column = "Skolkommun"
+source_editions = ["2021 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2022-01-01"
+valid_to = "2022-06-30"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+column = "SkolKommun"
+source_editions = ["2022"]
+[[representation.parallel.columns]]
+valid_from = "2022-01-01"
+valid_to = "2022-06-30"
+column = "Skolkommun"
+source_editions = ["2022 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2022-07-01"
+valid_to = "2022-12-31"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+column = "SkolKommun"
+source_editions = ["2022"]
+[[representation.parallel.columns]]
+valid_from = "2022-07-01"
+valid_to = "2022-12-31"
+column = "Skolkommun"
+source_editions = ["2022 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2023-01-01"
+valid_to = "2023-06-30"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+column = "SkolKommun"
+source_editions = ["2023"]
+[[representation.parallel.columns]]
+valid_from = "2023-01-01"
+valid_to = "2023-06-30"
+column = "Skolkommun"
+source_editions = ["2023 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2023-07-01"
+valid_to = "2023-12-31"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+column = "SkolKommun"
+source_editions = ["2023"]
+[[representation.parallel.columns]]
+valid_from = "2023-07-01"
+valid_to = "2023-12-31"
+column = "Skolkommun"
+source_editions = ["2023 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2024-01-01"
+valid_to = "2024-06-30"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+column = "SkolKommun"
+source_editions = ["2024"]
+[[representation.parallel.columns]]
+valid_from = "2024-01-01"
+valid_to = "2024-06-30"
+column = "Skolkommun"
+source_editions = ["2024 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2024-07-01"
+valid_to = "2024-12-31"
+variable = "249.14815.skolkommun"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+column = "SkolKommun"
+source_editions = ["2024"]
+[[representation.parallel.columns]]
+valid_from = "2024-07-01"
+valid_to = "2024-12-31"
+column = "Skolkommun"
+source_editions = ["2024 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "1998-01-01"
+valid_to = "1998-06-30"
+variable = "249.14815.skolkommun"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "1997-07-01"
+valid_to = "1998-06-30"
+column = "SkolKommun"
+source_editions = ["1997/1998"]
+[[representation.parallel.columns]]
+valid_from = "1998-01-01"
+valid_to = "1998-06-30"
+column = "Skolkommun"
+source_editions = ["1998 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+variable = "249.32738.skollan"
+variant = "249.1107"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+column = "SkolLan"
+source_editions = ["2018"]
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+column = "Skollan"
+source_editions = ["2018 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2015-01-01"
+valid_to = "2015-06-30"
+variable = "249.34"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+column = "JurForm"
+source_editions = ["2015"]
+[[representation.parallel.columns]]
+valid_from = "2015-01-01"
+valid_to = "2015-06-30"
+column = "Jurform"
+source_editions = ["2015 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2015-07-01"
+valid_to = "2015-12-31"
+variable = "249.34"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+column = "JurForm"
+source_editions = ["2015"]
+[[representation.parallel.columns]]
+valid_from = "2015-07-01"
+valid_to = "2015-12-31"
+column = "Jurform"
+source_editions = ["2015 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2016-01-01"
+valid_to = "2016-06-30"
+variable = "249.34"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+column = "JurForm"
+source_editions = ["2016"]
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-06-30"
+column = "Jurform"
+source_editions = ["2016 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2016-07-01"
+valid_to = "2016-12-31"
+variable = "249.34"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+column = "JurForm"
+source_editions = ["2016"]
+[[representation.parallel.columns]]
+valid_from = "2016-07-01"
+valid_to = "2016-12-31"
+column = "Jurform"
+source_editions = ["2016 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2017-01-01"
+valid_to = "2017-06-30"
+variable = "249.34"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+column = "JurForm"
+source_editions = ["2017"]
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-06-30"
+column = "Jurform"
+source_editions = ["2017 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2017-07-01"
+valid_to = "2017-12-31"
+variable = "249.34"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+column = "JurForm"
+source_editions = ["2017"]
+[[representation.parallel.columns]]
+valid_from = "2017-07-01"
+valid_to = "2017-12-31"
+column = "Jurform"
+source_editions = ["2017 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+variable = "249.34"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+column = "JurForm"
+source_editions = ["2018"]
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+column = "Jurform"
+source_editions = ["2018 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2018-07-01"
+valid_to = "2018-12-31"
+variable = "249.34"
+variant = "249.1215"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+column = "JurForm"
+source_editions = ["2018"]
+[[representation.parallel.columns]]
+valid_from = "2018-07-01"
+valid_to = "2018-12-31"
+column = "Jurform"
+source_editions = ["2018 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2015-01-01"
+valid_to = "2015-06-30"
+variable = "249.34"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+column = "JurForm"
+source_editions = ["2015"]
+[[representation.parallel.columns]]
+valid_from = "2015-01-01"
+valid_to = "2015-06-30"
+column = "Jurform"
+source_editions = ["2015 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2015-07-01"
+valid_to = "2015-12-31"
+variable = "249.34"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+column = "JurForm"
+source_editions = ["2015"]
+[[representation.parallel.columns]]
+valid_from = "2015-07-01"
+valid_to = "2015-12-31"
+column = "Jurform"
+source_editions = ["2015 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2016-01-01"
+valid_to = "2016-06-30"
+variable = "249.34"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+column = "JurForm"
+source_editions = ["2016"]
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-06-30"
+column = "Jurform"
+source_editions = ["2016 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2016-07-01"
+valid_to = "2016-12-31"
+variable = "249.34"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+column = "JurForm"
+source_editions = ["2016"]
+[[representation.parallel.columns]]
+valid_from = "2016-07-01"
+valid_to = "2016-12-31"
+column = "Jurform"
+source_editions = ["2016 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2017-01-01"
+valid_to = "2017-06-30"
+variable = "249.34"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+column = "JurForm"
+source_editions = ["2017"]
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-06-30"
+column = "Jurform"
+source_editions = ["2017 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2017-07-01"
+valid_to = "2017-12-31"
+variable = "249.34"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+column = "JurForm"
+source_editions = ["2017"]
+[[representation.parallel.columns]]
+valid_from = "2017-07-01"
+valid_to = "2017-12-31"
+column = "Jurform"
+source_editions = ["2017 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+variable = "249.34"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+column = "JurForm"
+source_editions = ["2018"]
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+column = "Jurform"
+source_editions = ["2018 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2018-07-01"
+valid_to = "2018-12-31"
+variable = "249.34"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+column = "JurForm"
+source_editions = ["2018"]
+[[representation.parallel.columns]]
+valid_from = "2018-07-01"
+valid_to = "2018-12-31"
+column = "Jurform"
+source_editions = ["2018 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2015-07-01"
+valid_to = "2015-12-31"
+variable = "249.34"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2015-07-01"
+valid_to = "2015-12-31"
+column = "JurForm"
+source_editions = ["2015 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+column = "Jurform"
+source_editions = ["2015"]
+
+[[representation.parallel]]
+valid_from = "2016-01-01"
+valid_to = "2016-06-30"
+variable = "249.34"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-06-30"
+column = "JurForm"
+source_editions = ["2016 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+column = "Jurform"
+source_editions = ["2016"]
+
+[[representation.parallel]]
+valid_from = "2016-07-01"
+valid_to = "2016-12-31"
+variable = "249.34"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2016-07-01"
+valid_to = "2016-12-31"
+column = "JurForm"
+source_editions = ["2016 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+column = "Jurform"
+source_editions = ["2016"]
+
+[[representation.parallel]]
+valid_from = "2017-01-01"
+valid_to = "2017-06-30"
+variable = "249.34"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-06-30"
+column = "JurForm"
+source_editions = ["2017 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+column = "Jurform"
+source_editions = ["2017"]
+
+[[representation.parallel]]
+valid_from = "2017-07-01"
+valid_to = "2017-12-31"
+variable = "249.34"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2017-07-01"
+valid_to = "2017-12-31"
+column = "JurForm"
+source_editions = ["2017 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+column = "Jurform"
+source_editions = ["2017"]
+
+[[representation.parallel]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+variable = "249.34"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-06-30"
+column = "JurForm"
+source_editions = ["2018 vårterminen"]
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+column = "Jurform"
+source_editions = ["2018"]
+
+[[representation.parallel]]
+valid_from = "2018-07-01"
+valid_to = "2018-12-31"
+variable = "249.34"
+variant = "249.498"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2018-07-01"
+valid_to = "2018-12-31"
+column = "JurForm"
+source_editions = ["2018 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+column = "Jurform"
+source_editions = ["2018"]
+
+[[representation.parallel]]
+valid_from = "2019-07-01"
+valid_to = "2019-12-31"
+variable = "249.66.sun2020niva"
+variant = "249.1405"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2019-07-01"
+valid_to = "2019-12-31"
+column = "SUN2020Niva"
+source_editions = ["2019 höstterminen"]
+[[representation.parallel.columns]]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+column = "Sun2020Niva"
+source_editions = ["2019"]
+
+[[representation.parallel]]
+valid_from = "2024-07-01"
+valid_to = "2024-12-31"
+variable = "249.66.sun2020niva-2"
+variant = "249.1405"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+column = "SUN2020Niva_2"
+source_editions = ["2024"]
+[[representation.parallel.columns]]
+valid_from = "2024-07-01"
+valid_to = "2024-12-31"
+column = "Sun2020Niva_2"
+source_editions = ["2024 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2019-07-01"
+valid_to = "2019-12-31"
+variable = "249.6809"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+column = "HemKommun"
+source_editions = ["2019"]
+[[representation.parallel.columns]]
+valid_from = "2019-07-01"
+valid_to = "2019-12-31"
+column = "Hemkommun"
+source_editions = ["2019 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2020-07-01"
+valid_to = "2020-12-31"
+variable = "249.6809"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+column = "HemKommun"
+source_editions = ["2020"]
+[[representation.parallel.columns]]
+valid_from = "2020-07-01"
+valid_to = "2020-12-31"
+column = "Hemkommun"
+source_editions = ["2020 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2021-01-01"
+valid_to = "2021-06-30"
+variable = "249.6809"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+column = "HemKommun"
+source_editions = ["2021"]
+[[representation.parallel.columns]]
+valid_from = "2021-01-01"
+valid_to = "2021-06-30"
+column = "Hemkommun"
+source_editions = ["2021 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2021-07-01"
+valid_to = "2021-12-31"
+variable = "249.6809"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+column = "HemKommun"
+source_editions = ["2021"]
+[[representation.parallel.columns]]
+valid_from = "2021-07-01"
+valid_to = "2021-12-31"
+column = "Hemkommun"
+source_editions = ["2021 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2022-01-01"
+valid_to = "2022-06-30"
+variable = "249.6809"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+column = "HemKommun"
+source_editions = ["2022"]
+[[representation.parallel.columns]]
+valid_from = "2022-01-01"
+valid_to = "2022-06-30"
+column = "Hemkommun"
+source_editions = ["2022 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2022-07-01"
+valid_to = "2022-12-31"
+variable = "249.6809"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+column = "HemKommun"
+source_editions = ["2022"]
+[[representation.parallel.columns]]
+valid_from = "2022-07-01"
+valid_to = "2022-12-31"
+column = "Hemkommun"
+source_editions = ["2022 höstterminen"]
+
+[[representation.parallel]]
+valid_from = "2023-01-01"
+valid_to = "2023-06-30"
+variable = "249.6809"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+column = "HemKommun"
+source_editions = ["2023"]
+[[representation.parallel.columns]]
+valid_from = "2023-01-01"
+valid_to = "2023-06-30"
+column = "Hemkommun"
+source_editions = ["2023 vårterminen"]
+
+[[representation.parallel]]
+valid_from = "2023-07-01"
+valid_to = "2023-12-31"
+variable = "249.6809"
+variant = "249.1222"
+column_metadata = "per_column"
+coding_metadata = "shared"
+evidence = "Accepted prepared SCB export: this maintained source-native quantity uses these exact literal columns in distinct annual, school-year or semester editions. The exported quantity name and definition agree. Each literal independently resolves to the same complete source domain, native list label and full set of declared classification books, conformance results and provenance over the reviewed intersection. Retain that agreed coding and every book association on the shared state; preserve per-column metadata, original source edition bounds and warnings for nonstandard or sentinel codes. This does not select a book version, union different domains or assert statistical equivalence."
+noted = "2026-10-01"
+[[representation.parallel.columns]]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+column = "HemKommun"
+source_editions = ["2023"]
+[[representation.parallel.columns]]
+valid_from = "2023-07-01"
+valid_to = "2023-12-31"
+column = "Hemkommun"
+source_editions = ["2023 höstterminen"]

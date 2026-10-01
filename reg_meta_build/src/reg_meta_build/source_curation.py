@@ -846,7 +846,9 @@ class SourceEnumeration(_CurationModel):
     field: Literal[
         "name", "definition", "operational_definition", "description", "representation"
     ]
-    syntax: Literal["ascii-decimal-dot-space", "kategori-alpha-equals"]
+    syntax: Literal[
+        "ascii-decimal-dot-space", "kategori-alpha-equals", "ascii-decimal-comma-equals"
+    ]
     lines: Annotated[tuple[str, ...], Field(strict=False, min_length=1)]
 
     @model_validator(mode="after")
@@ -854,20 +856,28 @@ class SourceEnumeration(_CurationModel):
         codes = []
         for line in self.lines:
             code, separator, label = line.partition(
-                ". " if self.syntax == "ascii-decimal-dot-space" else " = "
+                ". "
+                if self.syntax == "ascii-decimal-dot-space"
+                else " = "
+                if self.syntax == "kategori-alpha-equals"
+                else "="
             )
             if (
                 not separator
                 or not code.isascii()
                 or not (
-                    code.isdecimal()
-                    if self.syntax == "ascii-decimal-dot-space"
-                    else code.isalpha()
+                    code.isalpha()
+                    if self.syntax == "kategori-alpha-equals"
+                    else code.isdecimal()
                 )
                 or not label.strip()
                 or (
                     self.syntax == "kategori-alpha-equals"
                     and any(token in label for token in ("\n", ", ", " eller ", " = "))
+                )
+                or (
+                    self.syntax == "ascii-decimal-comma-equals"
+                    and any(token in label for token in ("\n", ",", "="))
                 )
             ):
                 raise ValueError(
@@ -879,7 +889,13 @@ class SourceEnumeration(_CurationModel):
         return self
 
     def matches_members(self, members: tuple[tuple[str, str], ...]) -> bool:
-        separator = ". " if self.syntax == "ascii-decimal-dot-space" else " = "
+        separator = (
+            ". "
+            if self.syntax == "ascii-decimal-dot-space"
+            else " = "
+            if self.syntax == "kategori-alpha-equals"
+            else "="
+        )
         return self.lines == tuple(
             f"{code}{separator}{label}" for code, label in members
         )
@@ -897,6 +913,8 @@ class SourceEnumeration(_CurationModel):
         fact = getattr(fields, self.field)
         if fact is None or fact.status != "value" or not isinstance(fact.value, str):
             return False
+        if self.syntax == "ascii-decimal-comma-equals":
+            return tuple(part.strip() for part in fact.value.split(",")) == self.lines
         if self.syntax == "kategori-alpha-equals":
             clauses = (
                 ", ".join(self.lines[:-1]) + " eller " + self.lines[-1]
@@ -1022,6 +1040,8 @@ class DocumentedCodingSelection(_CurationModel):
             (
                 not self.expected_marker_bindings
                 if self.enumeration.syntax == "ascii-decimal-dot-space"
+                else self.expected_raw_codings is None
+                if self.enumeration.syntax == "ascii-decimal-comma-equals"
                 else not self.expected_raw_codings
             )
             or self.expected_source_codings is None
@@ -1032,6 +1052,18 @@ class DocumentedCodingSelection(_CurationModel):
             )
         ):
             raise ValueError("enumerated authority requires complete literal members")
+        if (
+            self.enumeration is not None
+            and self.enumeration.syntax == "ascii-decimal-comma-equals"
+            and (
+                self.expected_raw_codings != ()
+                or self.expected_source_codings != ()
+                or self.source_scope is not None
+            )
+        ):
+            raise ValueError(
+                "literal comma authority requires no existing source coding"
+            )
         return self
 
 

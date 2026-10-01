@@ -4912,22 +4912,24 @@ def test_unmatched_global_entry_is_stale_only_in_complete_build(tmp_path):
     )
 
 
-def _pooled_parallel_fixture(tmp_path):
+def _pooled_parallel_fixture(tmp_path, *, co_delivered=False):
     from reg_meta_build.source_curation import PeerGuard, capture_expectations
 
     header = REGISTERINFORMATION_HEADER.split("|")
     records = []
     for i, (column, edition) in enumerate(
-        (("First", "2020-2022"), ("Second", "2022-2024"))
+        (("First", "2022"), ("Second", "2022"))
+        if co_delivered
+        else (("First", "2020-2022"), ("Second", "2022-2024"))
     ):
         values = _var_row(
             colname=column,
-            cvid=100 + i,
+            cvid=100 if co_delivered else 100 + i,
             var_id=1,
             varname="Income",
-            year="2020",
+            year="2022" if co_delivered else "2020",
             versionname=edition,
-            regver_id=110 + i,
+            regver_id=110 if co_delivered else 110 + i,
         ).split("|")
         records.append(
             clean_scb_row(
@@ -4949,7 +4951,7 @@ def _pooled_parallel_fixture(tmp_path):
         guard_id="fixture-parallel-family",
         source=records[0].source,
         native=NativeCoordinates(register_id=1, register_variant_id=10, variable_id=1),
-        expected_members=tuple(record_ref(r) for r in records),
+        expected_members=tuple(dict.fromkeys(record_ref(r) for r in records)),
     )
     naming = tuple(
         NamingDeclaration(
@@ -4988,6 +4990,15 @@ def _pooled_parallel_fixture(tmp_path):
         '{column = "Second", valid_from = "2022-01-01", '
         'valid_to = "2024-12-31", source_editions = ["2022-2024"]}]\n'
     )
+    if co_delivered:
+        path.write_text(
+            path.read_text()
+            .replace("2020-01-01", "2022-01-01")
+            .replace("2024-12-31", "2022-12-31")
+            .replace("2020-2022", "2022")
+            .replace("2022-2024", "2022")
+            + 'co_delivered = true\ncolumn_metadata = "per_column"\n'
+        )
     return path, records, naming
 
 
@@ -5009,6 +5020,93 @@ def _parallel_coding(case):
         ): resolve_code_membership(())
         for column in decision.columns
     }
+
+
+def test_co_delivered_parallel_requires_explicit_per_column_opt_in(tmp_path):
+    from reg_meta_build.source_representations import resolve_representation_cases
+
+    path, records, naming = _pooled_parallel_fixture(tmp_path, co_delivered=True)
+    records = (
+        records[0],
+        records[1].model_copy(
+            update={
+                "fields": records[1].fields.model_copy(
+                    update={"data_type": value_field("text")}
+                )
+            }
+        ),
+    )
+    cases, diagnostics = _compile_pooled_parallel(path, records, naming)
+    assert diagnostics == () and len(cases) == 1
+    proof = resolve_representation_cases(
+        records, cases, coding=_parallel_coding(cases[0])
+    )
+    assert proof.diagnostics == ()
+    path.write_text(
+        path.read_text().replace("co_delivered = true", "co_delivered = false")
+    )
+    assert _compile_pooled_parallel(path, records, naming)[0] == ()
+    path.write_text(
+        path.read_text()
+        .replace('column_metadata = "per_column"', 'column_metadata = "shared"')
+        .replace("co_delivered = false", "co_delivered = true")
+    )
+    with pytest.raises(RegMetaError) as failure:
+        _compile_pooled_parallel(path, records, naming)
+    assert "per-column metadata" in failure.value.message
+
+
+@pytest.mark.parametrize(
+    "defect", ["missing", "definition", "foreign_member", "identifier"]
+)
+def test_co_delivered_parallel_refuses_unsupported_common_quantity(tmp_path, defect):
+    path, records, naming = _pooled_parallel_fixture(tmp_path, co_delivered=True)
+    if defect == "missing":
+        records = records[:1]
+    elif defect == "definition":
+        records = (
+            records[0],
+            records[1].model_copy(
+                update={
+                    "fields": records[1].fields.model_copy(
+                        update={"definition": value_field("Different quantity")}
+                    )
+                }
+            ),
+        )
+    elif defect == "foreign_member":
+        records = (
+            records[0],
+            records[1].model_copy(
+                update={
+                    "locators": tuple(
+                        locator.model_copy(
+                            update={
+                                "semantic_record_key": (
+                                    *locator.semantic_record_key[:-1],
+                                    "member:999",
+                                )
+                            }
+                        )
+                        for locator in records[1].locators
+                    )
+                }
+            ),
+        )
+    else:
+        records = tuple(
+            record.model_copy(
+                update={
+                    "fields": record.fields.model_copy(
+                        update={"identifier": value_field(index == 1)}
+                    )
+                }
+            )
+            for index, record in enumerate(records)
+        )
+    cases, diagnostics = _compile_pooled_parallel(path, records, naming)
+    assert cases == ()
+    assert diagnostics and all(d.severity == "error" for d in diagnostics)
 
 
 @pytest.mark.parametrize("column_metadata", ["shared", "per_column"])
@@ -7703,3 +7801,105 @@ def test_delivery_metadata_rejects_redundant_unit_permission():
         )
     with pytest.raises(ValueError, match="name or description"):
         DeliveryMetadataDecision.require_fields(("measurement_unit",))
+
+
+def test_field_correction_accepts_guarded_source_alternatives_without_losing_originals(
+    tmp_path,
+):
+    tree, scope, source, _, base = _checked_correction_fixture(tmp_path)
+    source = source.model_copy(
+        update={
+            "fields": source.fields.model_copy(
+                update={"representation": value_field("Source reference")}
+            )
+        }
+    )
+    peer = source.model_copy(
+        update={
+            "record_id": source.record_id + ":peer",
+            "fields": source.fields.model_copy(
+                update={
+                    "representation": value_field(
+                        "Source reference https://example.org"
+                    )
+                }
+            ),
+        }
+    )
+    fields = (
+        "name",
+        "definition",
+        "description",
+        "operational_definition",
+        "classification_declared",
+        "representation",
+        "data_type",
+        "coverage_from",
+        "coverage_to",
+    )
+    entry = ErrataFieldEntry(
+        **base.model_dump(
+            exclude={"field", "value", "expected_fields", "expected_records"}
+        ),
+        field="representation",
+        value=peer.fields.representation.value,
+        expected_fields=list(
+            capture_expectations((source,), fields=fields)[0].alternatives[0].fields
+        ),
+        expected_records=list(
+            capture_expectations(
+                (source, peer),
+                fields=tuple(SourceFields.model_fields),
+                parents=True,
+                coding=True,
+            )
+        ),
+    )
+    register = tree.registers[0]
+    tree = replace(
+        tree,
+        registers=(
+            register.model_copy(
+                update={"errata": register.errata.model_copy(update={"field": [entry]})}
+            ),
+        ),
+    )
+    cases, issues, _ = _run_checked_correction(tree, scope, (source, peer))
+    assert not issues
+    applied = apply_occurrence_cases((source, peer), cases[scope.source, None])
+    assert not applied.diagnostics
+    assert all(
+        o.fields.representation.value == entry.value for o in applied.occurrences
+    )
+    assert {r for o in applied.occurrences for r in o.source_records} == {source, peer}
+    _, issues, _ = _run_checked_correction(tree, scope, (source,))
+    assert issues
+    for changed_field in ("representation", "description", "identifier"):
+        changed = peer.model_copy(
+            update={
+                "fields": peer.fields.model_copy(
+                    update={
+                        changed_field: value_field(False)
+                        if changed_field == "identifier"
+                        else value_field("CHANGED")
+                    }
+                )
+            }
+        )
+        _, issues, _ = _run_checked_correction(tree, scope, (source, changed))
+        assert issues
+        assert apply_occurrence_cases(
+            (source, changed), cases[scope.source, None]
+        ).diagnostics
+    changed = peer.model_copy(
+        update={"edition_scope": TemporalScope(kind="year_independent")}
+    )
+    _, issues, _ = _run_checked_correction(tree, scope, (source, changed))
+    assert issues
+    for updates in (
+        {"expected_records": entry.expected_records[:-1]},
+        {"value": "Unsupplied replacement"},
+        {"expected_fields": entry.expected_fields[:-1]},
+    ):
+        with pytest.raises(ValueError):
+            ErrataFieldEntry.model_validate({**entry.model_dump(), **updates})

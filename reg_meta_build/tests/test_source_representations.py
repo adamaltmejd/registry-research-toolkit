@@ -631,6 +631,50 @@ def test_coding_disagreement_is_withheld_without_a_representation_coding_pin() -
     )
 
 
+@pytest.mark.parametrize("agree", [True, False])
+def test_shared_classified_coding_requires_agreement_on_every_book(agree):
+    setup = _column_storage_setup(
+        "integer",
+        "0",
+        "integer",
+        "0",
+        claims={"First": (_claim("first", "01"),), "Second": (_claim("second", "01"),)},
+    )
+    records, occurrences, case, variants, coding = setup
+    links = (
+        ResolvedClassificationLink(classification="sni2002", provenance="source 2002"),
+        ResolvedClassificationLink(classification="sni2007", provenance="source 2007"),
+    )
+    coding = {
+        key: replace(
+            resolution,
+            segments=tuple(
+                replace(
+                    segment,
+                    classification_links=links
+                    if agree or key[-1] == "First"
+                    else links[:1],
+                )
+                for segment in resolution.segments
+            ),
+        )
+        for key, resolution in coding.items()
+    }
+    formed, resolution = _form((records, occurrences, case, variants, coding))
+    assert not resolution.diagnostics
+    assert formed.variable is not None
+    (state,) = formed.variable.states
+    if agree:
+        assert not formed.diagnostics
+        assert state.value_set is not None
+        assert state.classification_links == links
+    else:
+        assert state.value_set is None and state.classification_links == ()
+        assert [issue.code for issue in formed.diagnostics] == [
+            "conflicting_representation_coding"
+        ]
+
+
 def test_changed_source_membership_is_stale_and_missing_coding_binding_is_fatal() -> (
     None
 ):

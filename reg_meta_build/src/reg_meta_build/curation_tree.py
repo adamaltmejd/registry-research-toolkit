@@ -539,6 +539,13 @@ class _OccurrenceCorrectionEntry(_CurationModel):
 
 
 class ErrataFieldEntry(_OccurrenceCorrectionEntry):
+    expected_records: list[RecordExpectation] | None = Field(default=None, min_length=1)
+
+    @field_validator("expected_records", mode="before")
+    @classmethod
+    def _original_shapes(cls, values):
+        return None if values is None else _record_expectation_shapes(values)
+
     @field_validator("expected_fields")
     @classmethod
     def _prose_guards(cls, value: list[FieldExpectation]) -> list[FieldExpectation]:
@@ -555,6 +562,7 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
         "classification_declared",
         "measurement_unit",
         "column_name",
+        "representation",
     ]
     value: str
 
@@ -574,7 +582,11 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
             raise ValueError(
                 "complete field guards are reserved for column corrections"
             )
-        if self.field in {"classification_declared", "measurement_unit"} and not {
+        if self.field in {
+            "classification_declared",
+            "measurement_unit",
+            "representation",
+        } and not {
             "classification_declared",
             "representation",
             "data_type",
@@ -599,6 +611,37 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
             )
         if expected.value == self.value:
             raise ValueError("the replacement must differ from the original text")
+        if self.expected_records is not None:
+            alternatives = tuple(
+                p for record in self.expected_records for p in record.alternatives
+            )
+            if (
+                len({record.ref for record in self.expected_records})
+                != len(self.expected_records)
+                or any(
+                    {field.name for field in p.fields} != set(SourceFields.model_fields)
+                    or p.subject is None
+                    or p.edition_scope is None
+                    or p.edition_period_scope is None
+                    or p.parent_facts is None
+                    or p.code_set_references is None
+                    for p in alternatives
+                )
+                or not any(
+                    all(field in p.fields for field in self.expected_fields)
+                    for p in alternatives
+                )
+                or not any(
+                    field.name == self.field
+                    and field.status == "value"
+                    and field.value == self.value
+                    for p in alternatives
+                    for field in p.fields
+                )
+            ):
+                raise ValueError(
+                    "alternative field corrections require complete original guards and an existing source replacement literal"
+                )
         return self
 
 
@@ -856,6 +899,7 @@ class ParallelRepresentationColumn(ColumnRepresentation):
 
 
 class ParallelRepresentationEntry(FiniteCurationWindow):
+    co_delivered: bool = False
     variable: str
     variant: str
     column_metadata: Literal["shared", "per_column"] = "shared"
@@ -870,6 +914,8 @@ class ParallelRepresentationEntry(FiniteCurationWindow):
 
     @model_validator(mode="after")
     def _shared_window(self) -> ParallelRepresentationEntry:
+        if self.co_delivered and self.column_metadata != "per_column":
+            raise ValueError("co-delivered forms require per-column metadata")
         if any(
             (self.coding_metadata == "per_column") != bool(c.expected_codings)
             for c in self.columns
@@ -1437,6 +1483,16 @@ class PreparedCodingAuthority(_CurationModel):
         if self.enumeration is None:
             if not self.codings or self.marker_bindings is not None:
                 raise ValueError("source-row token authority requires supplied codings")
+        elif self.enumeration.syntax == "ascii-decimal-comma-equals":
+            if (
+                self.codings
+                or self.raw_codings != []
+                or self.marker_bindings is not None
+                or self.source_scope is not None
+            ):
+                raise ValueError(
+                    "literal comma authority requires no existing source coding"
+                )
         elif (
             not self.marker_bindings
             if self.enumeration.syntax == "ascii-decimal-dot-space"
@@ -1532,7 +1588,8 @@ class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
             and not self.source_authority.label_equivalences
             and (
                 self.source_authority.enumeration is None
-                or self.source_authority.enumeration.syntax != "kategori-alpha-equals"
+                or self.source_authority.enumeration.syntax
+                not in {"kategori-alpha-equals", "ascii-decimal-comma-equals"}
             )
         ):
             raise ValueError(

@@ -809,6 +809,9 @@ def apply_coding_choices(
                         for member in claim.members
                     )
                     if decision.selection.enumeration.syntax == "kategori-alpha-equals"
+                    else bool(coding.get(decision.column_key, ()))
+                    if decision.selection.enumeration.syntax
+                    == "ascii-decimal-comma-equals"
                     else marker_binding_fingerprints(
                         records.value_bindings.get(decision.column_key, ()),
                         decision.valid_from,

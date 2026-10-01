@@ -2880,3 +2880,87 @@ def test_documented_witness_refuses_contrary_complete_target_domain(contrary):
         # Ordinary documentary entries still cannot overwrite a complete source list.
         values["source_authority"] = authority.model_copy(update={"witness": None})
         assert _compile_entry("documented", values, claims, record=record)[1]
+
+
+def test_reviewed_decimal_comma_certificate_preserves_exact_source_and_no_claims():
+    from reg_meta_build.source_curation import SourceEnumeration
+    from reg_meta_build.sources.sos import _classify_value_set_text
+
+    pairs = (("0", "giltigt pnr"), ("8", "Ogiltigt pnr"))
+    prose = "0=giltigt pnr,  8=Ogiltigt pnr"
+    assert _classify_value_set_text(prose) == (None, True)
+    record = _record().model_copy(
+        update={
+            "fields": _record().fields.model_copy(
+                update={"representation": value_field(prose)}
+            )
+        }
+    )
+    placeholder = CodeListClaim("placeholder", record.edition_scope, ())
+    authority = _row_authority(record, (placeholder,)).model_dump(mode="json")
+    authority.update(
+        codings=[],
+        raw_codings=[],
+        enumeration={
+            "field": "representation",
+            "syntax": "ascii-decimal-comma-equals",
+            "lines": tuple(f"{code}={label}" for code, label in pairs),
+        },
+    )
+    cases, issues, register, scope, columns, column = _compile_entry(
+        "documented",
+        {
+            "members": pairs,
+            "version_label": "Exact source decimal meanings",
+            "source_authority": authority,
+        },
+        (),
+        record=record,
+    )
+    assert len(cases) == 1 and not issues
+    evidence = SourceEvidence((record,), value_bindings={})
+    applied = apply_coding_choices(evidence, cases, coding={column: ()})
+    assert not applied.diagnostics
+    assert set(applied.coding[column].segments[0].code_set.members) == set(pairs)
+    assert applied.coding[column].claims == ()
+    certificate = SourceEnumeration.model_validate(authority["enumeration"])
+    for changed in (
+        prose + ", 4=samordningsnummer",
+        prose.replace("8=", "9="),
+        prose.replace("Ogiltigt", "Annat"),
+        "Prefix " + prose,
+    ):
+        altered = record.model_copy(
+            update={
+                "fields": record.fields.model_copy(
+                    update={"representation": value_field(changed)}
+                )
+            }
+        )
+        assert not certificate.matches_fields(altered.fields)
+        fresh, issues = compile_coding_register(
+            register,
+            scope,
+            originals=(altered,),
+            columns={column: (altered,)},
+            column_scopes=_column_scopes(columns),
+            coding={column: ()},
+        )
+        assert not fresh and issues
+        assert apply_coding_choices(
+            SourceEvidence((altered,), value_bindings={}), cases, coding={column: ()}
+        ).diagnostics
+    assert apply_coding_choices(
+        evidence, cases, coding={column: (placeholder,)}
+    ).diagnostics
+    for bad_lines in (
+        ("0=giltigt pnr", "0=Ogiltigt pnr"),
+        ("0=giltigt pnr", "x=Ogiltigt pnr"),
+        ("0=giltigt pnr, annat", "8=Ogiltigt pnr"),
+    ):
+        with pytest.raises(ValidationError):
+            SourceEnumeration(
+                field="representation",
+                syntax="ascii-decimal-comma-equals",
+                lines=bad_lines,
+            )

@@ -555,7 +555,7 @@ contradictory assignments withhold the disputed aspect. No case reads another
 correction's output as its supporting source. Application order cannot choose a winner.
 
 Register `[[errata.field]]` entries correct reviewed source-backed text in `name`,
-`description`, `definition` or `measurement_unit` at exact original
+`description`, `definition`, `representation` or `measurement_unit` at exact original
 variable/variant/column coordinates. Unit corrections additionally pin the supplied unit
 and both coverage fields. They reconcile literal wording only when the source definition
 positively establishes the same quantity; they do not convert values, merge differing
@@ -571,6 +571,13 @@ entries emit existing checked field/period effects and never rewrite the origina
 records. A finite scoped name correction selects exact original source scopes and
 carries those same scopes into its conditional replay effect. A monthly row sharing an
 annual row's semantic reference cannot inherit that name correction.
+
+Field entries may pin duplicate observations with `expected_records`, using complete
+original `RecordExpectation` alternatives. Their replacement must already occur in a
+guarded source alternative. Exact fields, subjects, scopes, parents and coding
+references remain checked at compilation and replay; conditional field effects change
+only the matching original interpretation. This permits punctuation and reference-prose
+aliases without discarding either physical original or inventing a replacement value.
 
 Period entries may cite exact supplied subset metadata through `authority`. Compilation
 checks its full source projection, register and routed variant, positive coverage and
@@ -821,6 +828,13 @@ remain required; arbitrary prose, negations and unlisted code tokens cannot supp
 domain. This own-name route may use an exact supplied open source scope; the decimal
 marker route retains its finite-period requirement.
 
+An explicit decimal comma-assignment certificate can supply a complete finite source
+cell rejected by conservative generic parsing. It permits only the guarded literal
+decimal code-label pairs and requires no existing source coding claims. Changed source
+text, added codes or newly bound source lists invalidate it. The generic parser and
+original unresolved descriptor remain unchanged; any accepted descriptor limitation is
+acknowledged separately with its full-original fingerprint.
+
 `coding.support` retains one proven erroneous physical association as documentary
 support while excluding only that association from effective membership in a finite
 column window. It pins the complete ordered source claims and the exact target and
@@ -903,6 +917,14 @@ accepts one literal column per source edition; same-edition competing columns re
 separate evidence and are not inferred from a shared native identifier. Later source
 drift stales the checked case. Metadata and coding conflicts still pass through the
 existing reconciliation diagnostics.
+
+Same-edition co-delivery remains refused by default. A reviewed `co_delivered = true`
+entry requires per-column metadata, one positive stable native question name and
+definition, agreeing declared identifier roles, and complete same-member witnesses for
+every literal column. Existing exact source-window, field, coding-reference and family
+membership guards still apply. Each annual source edition needs its own exact window; a
+synthetic continuous window is not inferred. This admits separate physical forms without
+folding their names, converting their types or asserting equal values.
 
 When an existing checked omission correction supplies the effective column or edition
 scope, parallel compilation verifies that correction first and includes its complete

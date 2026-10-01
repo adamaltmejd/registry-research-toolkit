@@ -1539,9 +1539,46 @@ def compile_parallel_representations(
                 for lo, hi in (coding_scope_bounds(source_scope) or ())
             )
         }
+        if entry.co_delivered:
+            same_members: dict[SourceRecordRef, set[str | None]] = defaultdict(set)
+            for record, literal, _ in selected_projection:
+                same_members[record_ref(record)].add(literal)
+            declared_literals = {column.column for column in entry.columns}
+            common_quantity = (
+                len({native_variable_key(record) for record in selected}) == 1
+                and all(native_variable_key(record) is not None for record in selected)
+                and all(
+                    len(
+                        values := {_literal_field(record, field) for record in selected}
+                    )
+                    == 1
+                    and None not in values
+                    and all(value.strip() for value in values if value is not None)
+                    for field in ("name", "definition")
+                )
+                and len(
+                    {
+                        record.fields.identifier.value
+                        for record in selected
+                        if record.fields.identifier is not None
+                        and record.fields.identifier.status == "value"
+                    }
+                )
+                <= 1
+            )
+            invalid = (
+                invalid
+                or not common_quantity
+                or any(
+                    literals != declared_literals for literals in same_members.values()
+                )
+            )
         if (
             invalid
-            or any(len(columns) != 1 for columns in by_edition.values())
+            or (
+                not entry.co_delivered
+                and any(len(columns) != 1 for columns in by_edition.values())
+            )
             or (overlapping_refs != {record_ref(record) for record in selected})
         ):
             diagnostics.append(
@@ -4665,6 +4702,9 @@ def compile_coding_register(
                                 for member in claim.members
                             )
                             if authority.enumeration.syntax == "kategori-alpha-equals"
+                            else not claims
+                            if authority.enumeration.syntax
+                            == "ascii-decimal-comma-equals"
                             else value_bindings is not None
                             and marker_binding_fingerprints(
                                 value_bindings.get(column, ()), start, end
@@ -4950,7 +4990,12 @@ def _select_occurrence_correction(
             not isinstance(entry, ErrataFieldEntry)
             or (
                 entry.field
-                not in {"classification_declared", "measurement_unit", "column_name"}
+                not in {
+                    "classification_declared",
+                    "measurement_unit",
+                    "column_name",
+                    "representation",
+                }
                 and not (
                     entry.field == "name" and entry.expected_scope.kind == "intervals"
                 )
@@ -4984,12 +5029,20 @@ def _select_occurrence_correction(
 def _occurrence_correction_matches(
     entry: _OccurrenceCorrectionEntry, selected: tuple[SourceRecord, ...]
 ) -> bool:
+    if not selected or any(
+        record.original_period_text != entry.expected_period_text
+        or record.edition_scope != entry.expected_scope
+        or record.edition_period_scope != entry.expected_period
+        for record in selected
+    ):
+        return False
+    if isinstance(entry, ErrataFieldEntry) and entry.expected_records is not None:
+        return tuple(entry.expected_records) == capture_expectations(
+            selected, fields=tuple(SourceFields.model_fields), parents=True, coding=True
+        )
     expected = {field.name: field for field in entry.expected_fields}
-    return bool(selected) and all(
-        record.original_period_text == entry.expected_period_text
-        and record.edition_scope == entry.expected_scope
-        and record.edition_period_scope == entry.expected_period
-        and all(
+    return all(
+        all(
             (
                 FieldExpectation(name=field, status="absent")
                 if value is None
@@ -5297,7 +5350,9 @@ def compile_occurrence_corrections(
                                     "measurement_unit",
                                     "name",
                                     "column_name",
+                                    "representation",
                                 }
+                                or entry.expected_records is not None
                                 else ()
                             ),
                         ),
@@ -5330,8 +5385,12 @@ def compile_occurrence_corrections(
                     expected_names.update(
                         field.name for field in entry.authority.expected_fields
                     )
-                entry_guarded_fields = guarded_fields + tuple(
-                    sorted(expected_names - set(guarded_fields))
+                entry_guarded_fields = (
+                    tuple(SourceFields.model_fields)
+                    if isinstance(entry, ErrataFieldEntry)
+                    and entry.expected_records is not None
+                    else guarded_fields
+                    + tuple(sorted(expected_names - set(guarded_fields)))
                 )
                 cases[scope.source, scope.register_key].append(
                     CurationCase(
