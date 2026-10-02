@@ -143,6 +143,7 @@ class CompiledScope(_Model):
     source: str
     register_key: NativeKey | None
     cases: tuple[CurationCase, ...] = ()
+    source_diagnostics: tuple[tuple[NativeKey, ResolutionDiagnostic], ...] = ()
     naming: tuple[NamingDeclaration, ...] = ()
     naming_ambiguities: tuple[NamingAmbiguity, ...] = ()
     provider_keys: tuple[tuple[NativeKey, str | None], ...] = ()
@@ -195,6 +196,7 @@ def _compiled_scope(
                 "source": key[0],
                 "register_key": key[1],
                 "cases": compiled.cases.get(key, ()),
+                "source_diagnostics": (compiled.source_diagnostics or {}).get(key, ()),
                 "naming": (compiled.naming or {}).get(key, ()),
                 "naming_ambiguities": (compiled.naming_ambiguities or {}).get(key, ()),
                 "provider_keys": (compiled.provider_keys or {}).get(key, ()),
@@ -1119,8 +1121,9 @@ def _run_pipeline(
 
                     result = resolve_source_scope(
                         originals,
-                        source_diagnostics=tuple(
-                            pending_source_issues.pop(scope_key, ())
+                        source_diagnostics=(
+                            *scope.source_diagnostics,
+                            *pending_source_issues.pop(scope_key, ()),
                         ),
                         cases=scope.cases,
                         naming=scope.naming,

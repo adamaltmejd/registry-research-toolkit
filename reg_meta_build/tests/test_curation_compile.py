@@ -3940,7 +3940,7 @@ def test_unassigned_family_withholds_naming_and_checks_complete_source(tmp_path,
     scope = _partition_scope(records)
     tree = load_curation_tree(root)
     prepared = cast("Any", SimpleNamespace(records=reader))
-    cases, names, keys, ambiguities, bases, issues = compile_partitions(
+    cases, names, keys, ambiguities, bases, _, issues = compile_partitions(
         tree, prepared, (scope,)
     )
     key = scope.source, None
@@ -4028,7 +4028,7 @@ def test_tracked_partition_map_checks_every_literal(
         compiled[4],
         _partition_memberships(compiled[0]),
     )
-    cases, naming, keys, ambiguities, bases, issues = compiled
+    cases, naming, keys, ambiguities, bases, _, issues = compiled
     assert native in bases[key]
     assert (
         any(issue.code == "stale_curation_entry" for issue in issues) == expected_stale
@@ -4054,7 +4054,7 @@ def test_unassigned_and_partial_suffix_keep_base_identity(tmp_path: Path):
     )
     records = _scb_partition_records(("ANSWER", "LEFT"))
     compiled, key, native = _compile_partition_fixture(root, records)
-    cases, _, keys, _, _, _ = compiled
+    cases, _, keys, _, _, _, _ = compiled
     assert (native, None) in keys[key]
     corrected = apply_occurrence_cases(records, cases[key]).occurrences
     assert corrected[0].variable_key != native
@@ -4067,7 +4067,7 @@ def test_unassigned_and_partial_suffix_keep_base_identity(tmp_path: Path):
         encoding="utf-8",
     )
     compiled, key, native = _compile_partition_fixture(root, records)
-    cases, naming, keys, ambiguities, _, _ = compiled
+    cases, naming, keys, ambiguities, _, _, _ = compiled
     assert {item.naming.source_id for item in naming[key]} == {"1.5.answer"}
     assert (native, None) in keys[key]
     assert len(ambiguities[key]) == 1
@@ -4098,7 +4098,7 @@ def test_tracked_partition_compiles_without_stored_case(
         )
     records = _scb_partition_records(("ANSWER", "LEFT"), register_id=register_id)
     compiled, key, native = _compile_partition_fixture(root, records)
-    cases, naming, keys, ambiguities, bases, issues = compiled
+    cases, naming, keys, ambiguities, bases, retained, issues = compiled
     assert len(cases[key]) == 1
     assert cases[key][0].case_id == (
         f"accepted-column-partitions:scb-registerinformation:{register_id}.5"
@@ -4109,7 +4109,10 @@ def test_tracked_partition_compiles_without_stored_case(
     assert (native, None) in keys[key]
     assert not ambiguities.get(key)
     assert native in bases[key]
-    assert [issue.code for issue in issues] == ["unassigned_original_columns"]
+    assert not issues
+    assert [issue.code for _, issue in retained[key]] == ["unassigned_original_columns"]
+    assert retained[key][0][0] == source_register_key(records[0])
+    assert retained[key][0][1].refs == (record_ref(records[1]),)
 
 
 def test_partition_map_without_split_name_is_stale(tmp_path: Path):
@@ -4124,8 +4127,8 @@ def test_partition_map_without_split_name_is_stale(tmp_path: Path):
         root, _scb_partition_records(("ANSWER",))
     )
     assert not compiled[0].get(key)
-    assert [issue.code for issue in compiled[5]] == ["stale_curation_entry"]
-    assert "#/identity.partition/1" in compiled[5][0].detail
+    assert [issue.code for issue in compiled[-1]] == ["stale_curation_entry"]
+    assert "#/identity.partition/1" in compiled[-1][0].detail
 
 
 def test_partition_ambiguity_does_not_depend_on_stored_inventory(tmp_path: Path):
@@ -4311,7 +4314,7 @@ def test_variant_scoped_column_owner_only_binds_its_variant(tmp_path: Path):
         compiled[4],
         _partition_memberships(compiled[0]),
     )
-    cases, _, keys, _, _, _ = compiled
+    cases, _, keys, _, _, _, _ = compiled
     assert (native, None) in keys[key]
     corrected = apply_occurrence_cases(records, cases[key]).occurrences
     assert corrected[0].variable_key != native
@@ -4476,7 +4479,7 @@ def test_sos_type_split_and_name_rename(tmp_path: Path, rename: bool):
     path.write_text(base + extra, encoding="utf-8")
     records = _sos_partition_records(rename=rename)
     compiled, key, native = _compile_partition_fixture(root, records)
-    cases, naming, keys, _, bases, issues = compiled
+    cases, naming, keys, _, bases, _, issues = compiled
     deferred = compile_deferred_partitions(
         load_curation_tree(root),
         cast(
@@ -4558,7 +4561,7 @@ def test_sos_subdataset_split_routes_same_type_occurrences(tmp_path: Path):
             first = compiled
         else:
             assert compiled == first
-        cases, naming, keys, _, bases, issues = compiled
+        cases, naming, keys, _, bases, _, issues = compiled
         assert not issues
         assert len(cases[key]) == 1
         assert len(naming[key]) == 2
@@ -4690,7 +4693,7 @@ def test_sos_subdataset_split_requires_exact_partition(
     )
     records = _sos_partition_records(subsets=subsets)
     compiled, key, native = _compile_partition_fixture(root, records)
-    cases, _, _, _, bases, issues = compiled
+    cases, _, _, _, bases, _, issues = compiled
     assert not cases.get(key)
     assert native in bases[key]
     assert [issue.code for issue in issues] == ["stale_curation_entry"]
@@ -4713,7 +4716,7 @@ def test_partition_compile_is_byte_identical_on_rerun(tmp_path: Path):
     shuffled = _compile_partition_fixture(root, records, shuffled=True)[0]
 
     def encode(value):
-        cases, naming, keys, ambiguities, bases, diagnostics = value
+        cases, naming, keys, ambiguities, bases, retained, diagnostics = value
         compiled = CompiledCuration(
             fields={},
             cases=cases,
@@ -4722,6 +4725,7 @@ def test_partition_compile_is_byte_identical_on_rerun(tmp_path: Path):
             provider_keys=keys,
             naming_ambiguities=ambiguities,
             diagnostics=diagnostics,
+            source_diagnostics=retained,
         )
         return _bytes(compiled), bases
 
@@ -7470,7 +7474,7 @@ def test_scoped_partial_owner_withholds_unowned_shared_ref_projection(tmp_path, 
     if future:
         records += (_errata_record(column="CODE", year="2021", member=21),)
     compiled, key, native = _compile_partition_fixture(root, records)
-    cases, _, _, _, bases, _ = compiled
+    cases, _, _, _, bases, _, _ = compiled
     assert len(cases[key][0].support) == int(future)
     assert native in bases[key]
     result = apply_occurrence_cases(records, cases[key])
@@ -7772,7 +7776,7 @@ def test_checked_native_partition_keeps_base_naming_and_source_guards(
     )
     records = _scb_partition_records(("OLD", "NEW", "") if blank else ("OLD", "NEW"))
     compiled, key, native = _compile_partition_fixture(root, records)
-    cases, naming, keys, ambiguities, _, issues = compiled
+    cases, naming, keys, ambiguities, _, _, issues = compiled
     assert not issues and not ambiguities.get(key)
     assert [
         (n.target.source_key, n.naming.source_id, n.naming.slug) for n in naming[key]
@@ -7968,7 +7972,7 @@ def test_authored_native_partition_pins_complete_originals_on_fresh_compile(
         tree, cast("Any", SimpleNamespace(records=reader)), (scope,)
     )
     key = (scope.source, None)
-    cases, naming, keys, _, _, issues = compiled
+    cases, naming, keys, _, _, _, issues = compiled
     if drift is not None:
         assert {d.code for d in issues} == {"stale_curation_entry"}
         assert not cases.get(key) and not naming.get(key)
@@ -8660,7 +8664,7 @@ def test_guarded_sos_split_checks_complete_physical_family(tmp_path: Path, drift
         iter_partition_families=lambda *a, **kw: iter(((native, records),))
     )
     scope = _partition_scope(records)
-    cases, names, _, _, _, diagnostics = compile_partitions(
+    cases, names, _, _, _, _, diagnostics = compile_partitions(
         tree, cast("Any", SimpleNamespace(records=reader)), (scope,)
     )
     key = (scope.source, None)

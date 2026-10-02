@@ -160,3 +160,21 @@ list = "Blankettvarian, lager"
 witness = ["2007-01-01", "2007-12-31"]
 reason = "Apply the explicitly named coding to the uncoded gap under the existing accepted time-stability decision; original decision awaits real-data verification #876."
 source = "codeless_overlap.toml#/resolve/29"  # v18 accepted-codeless:29:*, 2 case(s)
+
+[[identity.partition]]
+variable = "131.1937"
+columns = { Kommentar = "131.1937", kommentar = "131.1937" }
+columns_ref = "Complete source-native family census verifies only literal casing differs: one exported native ID, common nonblank name and definition, and no identifier conflict. Retain every source field, parent, period and ordered own coding association. No semantic reformulation, value equality or co-delivery assertion. Batch53-owned-identity-family-review.json."
+expected_evidence_sha256 = "25aff72a059232bea5ecbd192a3765c25012bc98e2a19c143ced08069908e852"
+
+[[representation.parallel]]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+case_aliases = true
+variable = "131.1937"
+variant = "131.177"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2006-01-01", valid_to = "2006-12-31", column = "Kommentar", source_editions = ["2006"] }, { valid_from = "2006-01-01", valid_to = "2006-12-31", column = "kommentar", source_editions = ["2006"] }]
+evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
+noted = "2026-10-02"

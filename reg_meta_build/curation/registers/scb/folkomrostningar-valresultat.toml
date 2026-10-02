@@ -41,3 +41,21 @@ native_id = "244.25238"
 slug = "antal-avgivna-roster"
 
 # register 245
+
+[[identity.partition]]
+variable = "244.36"
+columns = { LLkk = "244.36", llkk = "244.36" }
+columns_ref = "Complete source-native family census verifies only literal casing differs: one exported native ID, common nonblank name and definition, and no identifier conflict. Retain every source field, parent, period and ordered own coding association. No semantic reformulation, value equality or co-delivery assertion. Batch53-owned-identity-family-review.json."
+expected_evidence_sha256 = "51f33330fe09bfb13000876ceb0d833a7da679987521fa1e0d6491cbbaa50d30"
+
+[[representation.parallel]]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+case_aliases = true
+variable = "244.36"
+variant = "244.473"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+columns = [{ valid_from = "2003-01-01", valid_to = "2003-12-31", column = "LLkk", expected_codings = ["dec5ccfaca7a9e57f00a05edeefb8424f69c3871c3bba110e3d2ca5f44df8749"], source_editions = ["2003 Euro"] }, { valid_from = "2003-01-01", valid_to = "2003-12-31", column = "llkk", expected_codings = ["dec5ccfaca7a9e57f00a05edeefb8424f69c3871c3bba110e3d2ca5f44df8749"], source_editions = ["2003 Euro"] }]
+evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
+noted = "2026-10-02"

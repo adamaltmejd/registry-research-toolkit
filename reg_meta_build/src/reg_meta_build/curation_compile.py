@@ -185,6 +185,13 @@ class CompiledCuration:
     cases: dict[tuple[str, tuple[str | int, ...] | None], tuple[CurationCase, ...]]
     report: dict[str, dict[str, list[str]]]
     diagnostics: tuple[ResolutionDiagnostic, ...] = ()
+    source_diagnostics: (
+        dict[
+            tuple[str, NativeKey | None],
+            tuple[tuple[NativeKey, ResolutionDiagnostic], ...],
+        ]
+        | None
+    ) = None
     naming: dict[tuple[str, tuple[str | int, ...] | None], tuple[Any, ...]] | None = (
         None
     )
@@ -2231,6 +2238,7 @@ def compile_partitions(
     dict[Any, tuple[Any, ...]],
     dict[Any, tuple[NamingAmbiguity, ...]],
     dict[Any, set[tuple[str | int, ...]]],
+    dict[Any, tuple[tuple[NativeKey, ResolutionDiagnostic], ...]],
     tuple[ResolutionDiagnostic, ...],
 ]:
     """Convert accepted native splits and SOS shape/name decisions."""
@@ -2270,6 +2278,7 @@ def compile_partitions(
     split_bases = defaultdict(set)
     null_bases = defaultdict(set)
     diagnostics = []
+    source_diagnostics = defaultdict(list)
     seen = set()
     named_rename_owners = set()
     active_registers: dict[str, set[tuple[str | int, ...]]] = defaultdict(set)
@@ -2505,7 +2514,16 @@ def compile_partitions(
                     null_bases[scope_key].add(native)
                     converted = ColumnPartitionConversion((), None, ())
                 if partitions:
-                    diagnostics.extend(converted.diagnostics)
+                    for diagnostic in converted.diagnostics:
+                        # Valid partial ownership retains source uncertainty. Only
+                        # this finding belongs under source-scoped exact ACKs;
+                        # invalid/stale curation contracts remain compiler errors.
+                        if diagnostic.code == "unassigned_original_columns":
+                            source_diagnostics[scope_key].append(
+                                (native[:5], diagnostic)
+                            )
+                        else:
+                            diagnostics.append(diagnostic)
                 if converted.case is not None:
                     if any(
                         entry.expected_evidence_sha256 is not None
@@ -2914,6 +2932,7 @@ def compile_partitions(
         provider_keys,
         {key: tuple(value) for key, value in ambiguities.items()},
         split_bases,
+        {key: tuple(value) for key, value in source_diagnostics.items()},
         tuple(diagnostics),
     )
 
@@ -7075,6 +7094,7 @@ def compile_curation(
         partition_keys,
         ambiguities,
         split_bases,
+        partition_source_diagnostics,
         partition_diagnostics,
     ) = compile_partitions(tree, prepared, scopes)
     for key, extra in partition_cases.items():
@@ -7269,6 +7289,7 @@ def compile_curation(
         provider_keys=provider_keys,
         naming_ambiguities=ambiguities,
         partition_bases={key: frozenset(value) for key, value in split_bases.items()},
+        source_diagnostics=partition_source_diagnostics,
     )
 
 

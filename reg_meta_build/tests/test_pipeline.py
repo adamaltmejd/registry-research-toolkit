@@ -1902,3 +1902,71 @@ def test_retained_unattached_relationship_persists_warning_and_literal_only(
         for e in events
         if e.get("revision_id") == declaration.revision.revision_id
     ] == ["retained_unattached"]
+
+
+@pytest.mark.parametrize("changed", [False, True])
+def test_compiled_retained_source_finding_reaches_exact_ack(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch, changed: bool
+) -> None:
+    from reg_meta_build.source_coordinates import source_register_key
+    from reg_meta_build.source_curation import (
+        AcknowledgeDecision,
+        CurationCase,
+        ResolutionDiagnostic,
+    )
+    from reg_meta_build.source_effects import record_ref
+
+    from reg_meta_build import pipeline
+
+    compile_tree = pipeline.compile_curation
+
+    def retained(*args, **kwargs):
+        compiled = compile_tree(*args, **kwargs)
+        prepared = args[1]
+        item = next(prepared.records.iter_records(source="scb-registerinformation"))
+        register_key = source_register_key(item)
+        assert register_key is not None
+        key = (item.source, register_key)
+        problem = ResolutionDiagnostic(
+            code="unassigned_original_columns",
+            severity="error",
+            subject="1.101",
+            refs=(record_ref(item),),
+            fields=("identity", "column_name"),
+            detail="Retained unassigned source column.",
+            withheld_output=("1.101",),
+        )
+        ack = CurationCase(
+            case_id="accepted-partial-owner",
+            targets=(),
+            decision=AcknowledgeDecision(
+                register_key=register_key,
+                code=problem.code,
+                subject=problem.subject,
+                refs=problem.refs,
+                fields=problem.fields,
+                reason="Preserve the unknown original column.",
+                evidence="Exact reviewed source finding.",
+            ),
+        )
+        if changed:
+            problem = problem.model_copy(update={"refs": ()})
+        return replace(
+            compiled,
+            cases={**compiled.cases, key: (*compiled.cases[key], ack)},
+            source_diagnostics={key: ((register_key, problem),)},
+        )
+
+    monkeypatch.setattr(pipeline, "compile_curation", retained)
+    catalog.build(
+        tmp_path / "catalog.db", tmp_path / "report", registers=("1",), diagnostic=True
+    )
+    with gzip.open(tmp_path / "report/events.jsonl.gz", "rt") as ledger:
+        issues = [json.loads(line) for line in ledger if '"kind": "issue"' in line]
+    findings = [i for i in issues if i["code"] == "unassigned_original_columns"]
+    assert len(findings) == 1
+    assert findings[0]["severity"] == ("error" if changed else "warning")
+    if changed:
+        assert any(i["code"] == "stale_curation_entry" for i in issues)
+    else:
+        assert findings[0]["acknowledged_by"] == "accepted-partial-owner"

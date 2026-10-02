@@ -518,3 +518,21 @@ valid_to = "2025-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
 expected_evidence_sha256 = "a23e9f75a501fa3b893d14d6da35e005a39316a1f6c5f733bdbb1e884cbaa65a"
+
+[[identity.partition]]
+variable = "89.2543"
+columns = { UtbRetro = "89.2543", Utbretro = "89.2543" }
+columns_ref = "Complete source-native family census verifies only literal casing differs: one exported native ID, common nonblank name and definition, and no identifier conflict. Retain every source field, parent, period and ordered own coding association. No semantic reformulation, value equality or co-delivery assertion. Batch53-owned-identity-family-review.json."
+expected_evidence_sha256 = "04504466ff1af3416182096e613a7d7b0e075b3736c8e3ddb462f474c1999000"
+
+[[representation.parallel]]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+case_aliases = true
+variable = "89.2543"
+variant = "89.164"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2009-01-01", valid_to = "2009-12-31", column = "UtbRetro", source_editions = ["2009"] }, { valid_from = "2009-01-01", valid_to = "2009-12-31", column = "Utbretro", source_editions = ["2009"] }]
+evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
+noted = "2026-10-02"
