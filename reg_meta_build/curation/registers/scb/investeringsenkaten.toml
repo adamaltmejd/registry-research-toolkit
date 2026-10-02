@@ -2600,3 +2600,51 @@ fields = ["identity"]
 reason = "These exact literal BKbyggm/BKelinst source associations simultaneously claim unrelated enterprise identifiers, industry and investment quantities in the same physical delivery coordinates. The complete register audit supplies no row/measure selector or supported owner. Retain every original field, native question, period and bound coding association, leave only these contradictory physical mappings unavailable, and retain the independently supported non-BK owners. Do not choose an owner or change the prepared export."
 evidence = "Complete accepted native families and full-register physical-coordinate collision review, actual source support and own bound coding multiplicity. No original or coding claim removed. Reviews: Batch51-Investment-FoU48-complete-role-review.json; Batch51-Investment-FoU-physical-coordinate-collision-census.json; Batch51-Investment-FoU48-own-bound-domain-review.json. Proof: Batch51-Investment-FoU48-source-proof.json."
 expected_evidence_sha256 = "6c0cf971b822e8a8507e2092e05c94cac3a5fb927623e41c6f7ac8b806df1418"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/investeringsenkaten/paminn"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:2646\",\"variable:2481\",\"member:156647\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain47-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "25b613c824ddcbf2aa26311f034659c95c25692a2076a422935a7fc92baeb0ca"
+expected_diagnostic_sha256 = "a38c7e76fb8ce4f9d02bc482a84df9c8f0247466f83007caa737fa6080a83f5e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/investeringsenkaten/paminn"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:7518\",\"variable:2481\",\"member:414363\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain47-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "41337d7450b10444aac4e68a962507ed4f157ff75f9b806fda1251d963606639"
+expected_diagnostic_sha256 = "af224d4e9399d9e84a861cd6f7de542280335929482dedd8a3daa5986ccc7742"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/investeringsenkaten/paminn"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:12024\",\"variable:2481\",\"member:501653\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain47-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "13d67a3e1aa16e69ed244ee0582ed6fe309de32400456d2e91742c516b7a695b"
+expected_diagnostic_sha256 = "20ec8d1ad3efe0b69ca47797ffd76277e99bcd52f83df9d5a3b40d675e9ebe7b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/investeringsenkaten/paminn"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:13323\",\"variable:2481\",\"member:593608\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain47-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "8e34d6a6e02e73e8443f8c1c27e6b96610497824a39555a0f670d2e73ba96b74"
+expected_diagnostic_sha256 = "8b91c333717f2ca274524c2de4e96bc573fbf0904b67ce9919ce92f74a7ab3d3"

@@ -31,3 +31,63 @@ native_id = "77.21087"
 slug = "hiss"
 
 # register 86
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/bpi/b-fantvaningsplan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:77\",\"variant:189\",\"edition:17811\",\"variable:21077\",\"member:826880\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain47-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "a3929d0584ed5b062113ec761001a06a272b8d508097098fc1a648113d19d6c5"
+expected_diagnostic_sha256 = "5178a16b374d10469ca64e39de6b0b1c439d422a40beeb7ea8569f701cba92cb"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/bpi/b-fantvaningsplan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:77\",\"variant:189\",\"edition:18489\",\"variable:21077\",\"member:864188\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain47-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "fec64aa9f489156bd40032f84587417cbd1884f91645924a5e284ff36c079892"
+expected_diagnostic_sha256 = "8a8cca2024b045f6e6faaa1d6c0d3af1aced028adc84c38c6d5bbc80a81a8aac"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/bpi/b-fantvaningsplan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:77\",\"variant:189\",\"edition:18935\",\"variable:21077\",\"member:906136\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain47-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "5f82cc603be8a91f97e68ffd98377b7a536f8a16df69ca80835ac2cd2fe61dca"
+expected_diagnostic_sha256 = "3b9cb9a4d60e7c40d5d2df122172737dc129e84d479bb24094d74b042c2ebc3e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/bpi/b-fantvaningsplan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:77\",\"variant:189\",\"edition:19578\",\"variable:21077\",\"member:967008\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain47-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "0d0e493f47d2acf1eba6826bf072e644dc1e191c4f19009dda6f7b12a0a9198b"
+expected_diagnostic_sha256 = "35757b962fbb1816c2daaf119cb644fcacbd1571d7a9f772a94dcdf89cca7241"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/bpi/b-fantvaningsplan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:77\",\"variant:189\",\"edition:20198\",\"variable:21077\",\"member:1021389\"]}"]
+fields = ["coding"]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain47-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "f230923eb3bee5248db0307f7a576b4d0ab7c8766cdeb260d1ba7ac200e03940"
+expected_diagnostic_sha256 = "c6e647681566529c6fc874c66b0d2f422bece8111ab070d52f3004f8fbf2cbbd"
