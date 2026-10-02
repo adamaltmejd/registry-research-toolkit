@@ -63,3 +63,162 @@ native_id = "361.35979"
 slug = "registreringsar"
 
 # register 366
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "361.267"
+columns = { RKon = "361.267.rkon", kon = "361.267.kon" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "ee51e2f3ee368eb4368e149f3edf2a93a93900bf520697e59d7596ba9fc1d001"
+
+[[identity.partition]]
+variable = "361.56"
+columns = { PeOrgNr = "361.56", peorgnr = "361.56" }
+columns_ref = "Complete source-native family census verifies only literal casing differs: one exported native ID, common nonblank name and definition, and no identifier conflict. Retain every source field, parent, period and ordered own coding association. No semantic reformulation, value equality or co-delivery assertion. Batch53-owned-identity-family-review.json."
+expected_evidence_sha256 = "7c7c7492498c4f3721ead8e734b6f48dacbb418526ddd426baf926067f31cf5e"
+
+[[identity.partition]]
+variable = "361.35979"
+columns = { Ar = "361.35979", ar = "361.35979" }
+columns_ref = "Complete source-native family census verifies only literal casing differs: one exported native ID, common nonblank name and definition, and no identifier conflict. Retain every source field, parent, period and ordered own coding association. No semantic reformulation, value equality or co-delivery assertion. Batch53-owned-identity-family-review.json."
+expected_evidence_sha256 = "979da40adf6cbc1611cbd4ba0ce559b78e58362767cdcb5443915948dc5c4ad9"
+
+[[variable]]
+native_id = "361.267.rkon"
+slug = "rkon"
+
+[[variable]]
+native_id = "361.267.kon"
+slug = "kon"
+
+[[representation.parallel]]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+case_aliases = true
+variable = "361.35979"
+variant = "361.1292"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+columns = [{ valid_from = "2013-01-01", valid_to = "2013-12-31", column = "Ar", expected_codings = ["0e1c583ba6c822b8487e250197ada73a0e121a4f57241d53052c2ef529db900b"], source_editions = ["2013"] }, { valid_from = "2013-01-01", valid_to = "2013-12-31", column = "ar", expected_codings = ["0e1c583ba6c822b8487e250197ada73a0e121a4f57241d53052c2ef529db900b"], source_editions = ["2013"] }]
+evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+case_aliases = true
+variable = "361.35979"
+variant = "361.1292"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "Ar", expected_codings = ["52f7cfba6ecb760e743448a338e69a99fd9729c54da35f7a2e1489e531984783"], source_editions = ["2014"] }, { valid_from = "2014-01-01", valid_to = "2014-12-31", column = "ar", expected_codings = ["52f7cfba6ecb760e743448a338e69a99fd9729c54da35f7a2e1489e531984783"], source_editions = ["2014"] }]
+evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+case_aliases = true
+variable = "361.35979"
+variant = "361.1292"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "Ar", expected_codings = ["4ac0e5f638dd58597d324bf5821ceb45178bf506dec3555ec6b3d324326f7ad5"], source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "ar", expected_codings = ["4ac0e5f638dd58597d324bf5821ceb45178bf506dec3555ec6b3d324326f7ad5"], source_editions = ["2015"] }]
+evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+case_aliases = true
+variable = "361.35979"
+variant = "361.1292"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+columns = [{ valid_from = "2016-01-01", valid_to = "2016-12-31", column = "Ar", expected_codings = ["68e897b8f6acd2ccb055616ef25c5f84a71be3f6ecef1d29a21756fbd7e13fe6"], source_editions = ["2016"] }, { valid_from = "2016-01-01", valid_to = "2016-12-31", column = "ar", expected_codings = ["68e897b8f6acd2ccb055616ef25c5f84a71be3f6ecef1d29a21756fbd7e13fe6"], source_editions = ["2016"] }]
+evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+case_aliases = true
+variable = "361.56"
+variant = "361.1292"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2013-01-01", valid_to = "2013-12-31", column = "PeOrgNr", source_editions = ["2013"] }, { valid_from = "2013-01-01", valid_to = "2013-12-31", column = "peorgnr", source_editions = ["2013"] }]
+evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+case_aliases = true
+variable = "361.56"
+variant = "361.1292"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "PeOrgNr", source_editions = ["2014"] }, { valid_from = "2014-01-01", valid_to = "2014-12-31", column = "peorgnr", source_editions = ["2014"] }]
+evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+case_aliases = true
+variable = "361.56"
+variant = "361.1292"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "PeOrgNr", source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "peorgnr", source_editions = ["2015"] }]
+evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+case_aliases = true
+variable = "361.56"
+variant = "361.1292"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2016-01-01", valid_to = "2016-12-31", column = "PeOrgNr", source_editions = ["2016"] }, { valid_from = "2016-01-01", valid_to = "2016-12-31", column = "peorgnr", source_editions = ["2016"] }]
+evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
+noted = "2026-10-02"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/nystartade-foretag-kvartal/registreringsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:361\",\"variant:1292\",\"edition:18865\",\"variable:35979\",\"member:900215\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "These exact 2023–2025 registration-year source windows have no own bound stored-code domain. Their original definition, operational definition, year unit and smallint storage are retained; neighbouring historical År-list members do not establish current encoding or special tokens. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-361-own-binding-review.json and Batch54-pin-361-source-fields.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "f03d8aeb7c4308fd55544ff6c367640b02cf833dc7035b71b73778499a8db0e2"
+expected_diagnostic_sha256 = "f1af736ef9b2d2d90808f7322669cc208fc7a39ab583238d88f1b419e7addbf5"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/nystartade-foretag-kvartal/registreringsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:361\",\"variant:1292\",\"edition:19146\",\"variable:35979\",\"member:918498\"]}"]
+fields = ["coding"]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+reason = "These exact 2023–2025 registration-year source windows have no own bound stored-code domain. Their original definition, operational definition, year unit and smallint storage are retained; neighbouring historical År-list members do not establish current encoding or special tokens. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-361-own-binding-review.json and Batch54-pin-361-source-fields.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "d6cffb9c2f17d7d057c7946ae9173c5d0babca4fcd122988cf1b13d1d4348b4d"
+expected_diagnostic_sha256 = "e48169d1e23f7ef3407f232a3d59c04c4d8eccc930dd4d699ffad03ee289985e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/nystartade-foretag-kvartal/registreringsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:361\",\"variant:1292\",\"edition:19859\",\"variable:35979\",\"member:985219\"]}"]
+fields = ["coding"]
+valid_from = "2025-01-01"
+valid_to = "2025-12-31"
+reason = "These exact 2023–2025 registration-year source windows have no own bound stored-code domain. Their original definition, operational definition, year unit and smallint storage are retained; neighbouring historical År-list members do not establish current encoding or special tokens. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-361-own-binding-review.json and Batch54-pin-361-source-fields.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "293edf566ef77f7bda6b2fd0a32eb103157890ac3b6bd559f6a27d914ebe459c"
+expected_diagnostic_sha256 = "583821afc072847221852c704cf7a81c1d582d727ee4e05542dbc8e1283825af"
