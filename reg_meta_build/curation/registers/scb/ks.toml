@@ -146,3 +146,395 @@ keep = "Enhetsindelning 2014"
 over = ["Standard för institutionell sektorindelning 2014"]
 reason = "Kortperiodisk syss., Inst 2015: the 2014 institutional standard."
 source = "codelivery.toml#/resolve/10"  # v18 accepted-coding:10:*, 1 case(s)
+
+[[identity.partition]]
+variable = "134.4898"
+columns = { FASTK = "134.4898", FastK = "134.4898", TillVidKv = "134.4898", fastk = "134.4898" }
+unassigned_columns = []
+columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
+expected_evidence_sha256 = "3dc1d619067ee1a36afafa92e715b4dcf8e379a03d516929eb787b42d6c04192"
+
+[[identity.partition]]
+variable = "134.4899"
+columns = { FASTM = "134.4899", FastM = "134.4899", TillVidMan = "134.4899", fastm = "134.4899" }
+unassigned_columns = []
+columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
+expected_evidence_sha256 = "893821456a94c6a43490e9e9188692c1ba9a7c5deb2dcac9d0977a83c43cfb5b"
+
+[[identity.partition]]
+variable = "134.4949"
+columns = { TILLK = "134.4949", TillK = "134.4949", VissTidKv = "134.4949", tillk = "134.4949" }
+unassigned_columns = []
+columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
+expected_evidence_sha256 = "04cbda454cd9a467b600ef682813e27738ff2dd8e10161c73068ae7d2051b691"
+
+[[identity.partition]]
+variable = "134.4950"
+columns = { TILLM = "134.4950", TillM = "134.4950", VissTidMan = "134.4950", tillm = "134.4950" }
+unassigned_columns = []
+columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
+expected_evidence_sha256 = "217c9f04351286f3e96f8f9c772fbd90c8359d50778b6b1612106c05d2a00c81"
+
+[[identity.partition]]
+variable = "134.5011"
+columns = { FrSjK = "134.5011", FrSjukKv = "134.5011", frsjk = "134.5011" }
+unassigned_columns = []
+columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
+expected_evidence_sha256 = "0ecb5d2d12958db7f3afe6b6fc814340e0ef53a342c3aa25b9a9aa838b84a7f5"
+
+[[identity.partition]]
+variable = "134.5012"
+columns = { FrSjM = "134.5012", FrSjukMan = "134.5012", frsjm = "134.5012" }
+unassigned_columns = []
+columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
+expected_evidence_sha256 = "fa0940de3a05bc5cefffe1f22ac87e445deed005faaf37a9418107e38fb3893e"
+
+[[representation.parallel]]
+valid_from = "2001-01-01"
+valid_to = "2001-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4898"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2001-01-01", valid_to = "2001-12-31", column = "FASTK", source_editions = ["2001"] }, { valid_from = "2001-01-01", valid_to = "2001-12-31", column = "fastk", source_editions = ["2001"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2002-01-01"
+valid_to = "2002-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4898"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2002-01-01", valid_to = "2002-12-31", column = "FastK", source_editions = ["2002"] }, { valid_from = "2002-01-01", valid_to = "2002-12-31", column = "fastk", source_editions = ["2002"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4898"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2003-01-01", valid_to = "2003-12-31", column = "FastK", source_editions = ["2003"] }, { valid_from = "2003-01-01", valid_to = "2003-12-31", column = "fastk", source_editions = ["2003"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4898"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2004-01-01", valid_to = "2004-12-31", column = "FastK", source_editions = ["2004"] }, { valid_from = "2004-01-01", valid_to = "2004-12-31", column = "fastk", source_editions = ["2004"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4898"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2005-01-01", valid_to = "2005-12-31", column = "FastK", source_editions = ["2005"] }, { valid_from = "2005-01-01", valid_to = "2005-12-31", column = "fastk", source_editions = ["2005"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2001-01-01"
+valid_to = "2001-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4899"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2001-01-01", valid_to = "2001-12-31", column = "FASTM", source_editions = ["2001"] }, { valid_from = "2001-01-01", valid_to = "2001-12-31", column = "fastm", source_editions = ["2001"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2002-01-01"
+valid_to = "2002-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4899"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2002-01-01", valid_to = "2002-12-31", column = "FastM", source_editions = ["2002"] }, { valid_from = "2002-01-01", valid_to = "2002-12-31", column = "fastm", source_editions = ["2002"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4899"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2003-01-01", valid_to = "2003-12-31", column = "FastM", source_editions = ["2003"] }, { valid_from = "2003-01-01", valid_to = "2003-12-31", column = "fastm", source_editions = ["2003"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4899"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2004-01-01", valid_to = "2004-12-31", column = "FastM", source_editions = ["2004"] }, { valid_from = "2004-01-01", valid_to = "2004-12-31", column = "fastm", source_editions = ["2004"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4899"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2005-01-01", valid_to = "2005-12-31", column = "FastM", source_editions = ["2005"] }, { valid_from = "2005-01-01", valid_to = "2005-12-31", column = "fastm", source_editions = ["2005"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2001-01-01"
+valid_to = "2001-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4949"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2001-01-01", valid_to = "2001-12-31", column = "TILLK", source_editions = ["2001"] }, { valid_from = "2001-01-01", valid_to = "2001-12-31", column = "tillk", source_editions = ["2001"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2002-01-01"
+valid_to = "2002-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4949"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2002-01-01", valid_to = "2002-12-31", column = "TillK", source_editions = ["2002"] }, { valid_from = "2002-01-01", valid_to = "2002-12-31", column = "tillk", source_editions = ["2002"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4949"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2003-01-01", valid_to = "2003-12-31", column = "TillK", source_editions = ["2003"] }, { valid_from = "2003-01-01", valid_to = "2003-12-31", column = "tillk", source_editions = ["2003"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4949"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2004-01-01", valid_to = "2004-12-31", column = "TillK", source_editions = ["2004"] }, { valid_from = "2004-01-01", valid_to = "2004-12-31", column = "tillk", source_editions = ["2004"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4949"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2005-01-01", valid_to = "2005-12-31", column = "TillK", source_editions = ["2005"] }, { valid_from = "2005-01-01", valid_to = "2005-12-31", column = "tillk", source_editions = ["2005"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2001-01-01"
+valid_to = "2001-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4950"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2001-01-01", valid_to = "2001-12-31", column = "TILLM", source_editions = ["2001"] }, { valid_from = "2001-01-01", valid_to = "2001-12-31", column = "tillm", source_editions = ["2001"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2002-01-01"
+valid_to = "2002-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4950"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2002-01-01", valid_to = "2002-12-31", column = "TillM", source_editions = ["2002"] }, { valid_from = "2002-01-01", valid_to = "2002-12-31", column = "tillm", source_editions = ["2002"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4950"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2003-01-01", valid_to = "2003-12-31", column = "TillM", source_editions = ["2003"] }, { valid_from = "2003-01-01", valid_to = "2003-12-31", column = "tillm", source_editions = ["2003"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4950"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2004-01-01", valid_to = "2004-12-31", column = "TillM", source_editions = ["2004"] }, { valid_from = "2004-01-01", valid_to = "2004-12-31", column = "tillm", source_editions = ["2004"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.4950"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2005-01-01", valid_to = "2005-12-31", column = "TillM", source_editions = ["2005"] }, { valid_from = "2005-01-01", valid_to = "2005-12-31", column = "tillm", source_editions = ["2005"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.5011"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2004-01-01", valid_to = "2004-12-31", column = "FrSjK", source_editions = ["2004"] }, { valid_from = "2004-01-01", valid_to = "2004-12-31", column = "frsjk", source_editions = ["2004"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.5011"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2005-01-01", valid_to = "2005-12-31", column = "FrSjK", source_editions = ["2005"] }, { valid_from = "2005-01-01", valid_to = "2005-12-31", column = "frsjk", source_editions = ["2005"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.5012"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2004-01-01", valid_to = "2004-12-31", column = "FrSjM", source_editions = ["2004"] }, { valid_from = "2004-01-01", valid_to = "2004-12-31", column = "frsjm", source_editions = ["2004"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+co_delivered = false
+case_aliases = true
+variable = "134.5012"
+variant = "134.185"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2005-01-01", valid_to = "2005-12-31", column = "FrSjM", source_editions = ["2005"] }, { valid_from = "2005-01-01", valid_to = "2005-12-31", column = "frsjm", source_editions = ["2005"] }]
+evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
+noted = "2026-10-02"
+
+[[coding.choice]]
+variable = "134.33"
+variant = "134.185"
+column = "InstF"
+periods = [["2002-01-01", "2002-12-31"]]
+reason = "Every exact2002 source operational definition specifies seven digits combining sector, ownership and legal form. Select the exact own seven-digit domain over the conflicting six-digit domain, preserving all supplied codes, labels, associations and dates."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Two differently sized institutional domains are linked in2002. The effective list follows the source operational definition explicitly specifying seven digits; the rejected own six-digit link remains evidence."
+expected_evidence_sha256 = "429d0706240a39cec1bd4032aa1a2d6e5e483f39071e71496a43174ef250bc38"
+keep = "Enhetsindelning 2000"
+keep_members_sha256 = "f386f0770df4a83cb8b23437756358295b1fb6e3b170b37478b91a6b7696099b"
+over = ["Enhetsindelning 1999"]
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ks/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:11834\",\"variable:4027\",\"member:492919\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:11922\",\"variable:4027\",\"member:496106\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:11923\",\"variable:4027\",\"member:496138\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:11924\",\"variable:4027\",\"member:496187\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:11924\",\"variable:4027\",\"member:496235\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:11926\",\"variable:4027\",\"member:496240\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:11928\",\"variable:4027\",\"member:496343\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:11929\",\"variable:4027\",\"member:496344\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:11930\",\"variable:4027\",\"member:496419\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:11932\",\"variable:4027\",\"member:496458\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:11933\",\"variable:4027\",\"member:496533\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:11934\",\"variable:4027\",\"member:496534\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:11935\",\"variable:4027\",\"member:496611\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:11936\",\"variable:4027\",\"member:496612\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:11996\",\"variable:4027\",\"member:499867\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:11998\",\"variable:4027\",\"member:499955\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:11998\",\"variable:4027\",\"member:499982\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:11999\",\"variable:4027\",\"member:499983\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:12002\",\"variable:4027\",\"member:500083\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:12003\",\"variable:4027\",\"member:500122\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:13319\",\"variable:4027\",\"member:593434\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:14193\",\"variable:4027\",\"member:646962\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:16408\",\"variable:4027\",\"member:800713\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:134\",\"variant:185\",\"edition:18269\",\"variable:4027\",\"member:846638\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "13711584004004399d4b9e5a3d1f50e3ca97027af1f72fb1574b23ff27452e7a"
+expected_diagnostic_sha256 = "651a4fc2f156caa18cadcfa31925fa52e8dae39946a9e2ccf976fea69945a36d"
+
+[[coding.choice]]
+variable = "134.4027"
+variant = "134.185"
+column = "Snia"
+periods = [["2003-01-01", "2003-12-31"]]
+reason = "The exact2003 Snia source operational definition explicitly states consistency withSNI2002. Select that complete existing own bound domain over the conflictingSNI92 association. Preserve every original code, label, association and date; no classification is inferred from timing alone."
+source = "Complete KS native4027 and physical-peer review Batch53-six-source-review.json. Exact original and ordered own-coding guards; source explicit classification statement, not newer-list preference."
+data_warning = "The2003 source also linksSNI92 to a field explicitly defined asSNI2002. The effective domain uses its exact suppliedSNI2002 list; both original links remain evidence."
+expected_evidence_sha256 = "e74e6a64fb29f9d1aa249ef93fbab7b5edb00a9b7c3264d187d8b7fcc0f2a688"
+keep = "Standard för svensk näringsgrensindelning, 2002 Branscher"
+keep_members_sha256 = "baa2f1df3e0cc706b30716d69369466404bbdd0329daf1506d3a291859c5ac1c"
+over = ["Svensk standard för näringsgrensindelning, brancher SNI 92"]

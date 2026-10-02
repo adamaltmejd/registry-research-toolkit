@@ -553,3 +553,207 @@ native_id = "333.775.sun2000niva-grov-mor"
 slug = "utbildningsniva-grov-mor"
 
 # register 339
+
+[[variable]]
+native_id = "333.385.current"
+slug = "personnrvard1"
+
+[[variable]]
+native_id = "333.385.later"
+slug = "personnrvard1-15-manader-senare"
+
+[[variable]]
+native_id = "333.386.current"
+slug = "personnrvard2"
+
+[[variable]]
+native_id = "333.386.later"
+slug = "personnrvard2-15-manader-senare"
+
+[[identity.partition]]
+variable = "333.24"
+columns = { FamStall = "333.24", FamStall_BarnReg = "333.24" }
+unassigned_columns = []
+columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
+expected_evidence_sha256 = "aded9f84ec259bd67c9d7826d5e1c74bbee77e21101bd17ec0a2dae399087f20"
+
+[[identity.partition]]
+data_warning = "The separately delivered2000-suffixed field has an explicit source operational definition locating the guardian15 months later. It is retained as a separate source-supported component, never asserted to be the current guardian identity."
+variable = "333.385"
+columns = { PersonNrVard1 = "333.385.current", PersonNrVard1_2000 = "333.385.later", personnrVard1 = "333.385.current" }
+unassigned_columns = []
+columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
+expected_evidence_sha256 = "6e476d3cd9791bb20ea76fcc1431a16b3478ed19e84284483d77f94c514d45a2"
+
+[[identity.partition]]
+data_warning = "The separately delivered2000-suffixed field has an explicit source operational definition locating the guardian15 months later. It is retained as a separate source-supported component, never asserted to be the current guardian identity."
+variable = "333.386"
+columns = { PersonNrVard2 = "333.386.current", PersonNrVard2_2000 = "333.386.later" }
+unassigned_columns = []
+columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
+expected_evidence_sha256 = "828ff371bf892da5a27660655060d74456eeb6495ca282fe265f4ff36f12f18a"
+
+[[identity.partition]]
+variable = "333.15154"
+columns = { Avlidna = "333.15154", AvlidnaForaldrar = "333.15154", avlidna = "333.15154" }
+unassigned_columns = []
+columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
+expected_evidence_sha256 = "6db5c2e27e0138830fb476eb0b23214b5836d2d50a679bdbc8f83bba8bebd430"
+
+[[identity.partition]]
+variable = "333.15158"
+columns = { AlderSlutAdFar = "333.15158", alderadfar = "333.15158" }
+unassigned_columns = []
+columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
+expected_evidence_sha256 = "2bd39d27a779daa1d726f1e5c5f17538733726a710fe985753c1e950a1feeba2"
+
+[[identity.partition]]
+variable = "333.15159"
+columns = { AlderSlutAdMor = "333.15159", alderadmor = "333.15159" }
+unassigned_columns = []
+columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
+expected_evidence_sha256 = "2dbfb43a23f10d92c9c159119ec5b1a6190b1899177b6dee9640b69c3d5f5248"
+
+[[identity.partition]]
+variable = "333.15160"
+columns = { AlderSlutFar = "333.15160", alderbiofar = "333.15160" }
+unassigned_columns = []
+columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
+expected_evidence_sha256 = "800b83d426e1eb5d5707e00f2398a1025601aac8a3b0e16cccaa83963449642d"
+
+[[identity.partition]]
+variable = "333.15161"
+columns = { AlderSlutMor = "333.15161", alderbiomor = "333.15161" }
+unassigned_columns = []
+columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
+expected_evidence_sha256 = "90865fe3aebc908f44d457b7ea7f20fa04cda18624fa4a9e768a120f43237681"
+
+[[identity.partition]]
+variable = "333.15162"
+columns = { AlderSlutBoFar = "333.15162", alderbofar = "333.15162" }
+unassigned_columns = []
+columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
+expected_evidence_sha256 = "81b705d109885ee5d9ca033908527c35ac960f60ceca40ef976c5b471f9e1f3d"
+
+[[identity.partition]]
+variable = "333.15163"
+columns = { AlderSlutBoMor = "333.15163", alderbomor = "333.15163" }
+unassigned_columns = []
+columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
+expected_evidence_sha256 = "9e8100fa532acf5899a41d0c880fd3654c3a422ececfcd08d0c969c6967807d1"
+
+[[representation.parallel]]
+valid_from = "2014-12-31"
+valid_to = "2014-12-31"
+co_delivered = false
+case_aliases = false
+variable = "333.15158"
+variant = "333.1077"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutAdFar", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderadfar", source_editions = ["2014-12-31"] }]
+evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2014-12-31"
+valid_to = "2014-12-31"
+co_delivered = false
+case_aliases = false
+variable = "333.15159"
+variant = "333.1077"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutAdMor", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderadmor", source_editions = ["2014-12-31"] }]
+evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2014-12-31"
+valid_to = "2014-12-31"
+co_delivered = false
+case_aliases = false
+variable = "333.15160"
+variant = "333.1077"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutFar", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderbiofar", source_editions = ["2014-12-31"] }]
+evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2014-12-31"
+valid_to = "2014-12-31"
+co_delivered = false
+case_aliases = false
+variable = "333.15161"
+variant = "333.1077"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutMor", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderbiomor", source_editions = ["2014-12-31"] }]
+evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2014-12-31"
+valid_to = "2014-12-31"
+co_delivered = false
+case_aliases = false
+variable = "333.15162"
+variant = "333.1077"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutBoFar", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderbofar", source_editions = ["2014-12-31"] }]
+evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2014-12-31"
+valid_to = "2014-12-31"
+co_delivered = false
+case_aliases = false
+variable = "333.15162"
+variant = "333.1079"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutBoFar", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderbofar", source_editions = ["2014-12-31"] }]
+evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2014-12-31"
+valid_to = "2014-12-31"
+co_delivered = false
+case_aliases = false
+variable = "333.15163"
+variant = "333.1077"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutBoMor", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderbomor", source_editions = ["2014-12-31"] }]
+evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2014-12-31"
+valid_to = "2014-12-31"
+co_delivered = false
+case_aliases = false
+variable = "333.15163"
+variant = "333.1079"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutBoMor", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderbomor", source_editions = ["2014-12-31"] }]
+evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
+noted = "2026-10-02"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/breg/adopterad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:11249\",\"variable:14610\",\"member:457282\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:12042\",\"variable:14610\",\"member:502906\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:13311\",\"variable:14610\",\"member:592872\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:14510\",\"variable:14610\",\"member:662192\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:14545\",\"variable:14610\",\"member:664372\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:14547\",\"variable:14610\",\"member:664462\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:14548\",\"variable:14610\",\"member:664581\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:14550\",\"variable:14610\",\"member:664663\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:14552\",\"variable:14610\",\"member:664801\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:14556\",\"variable:14610\",\"member:664924\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:14558\",\"variable:14610\",\"member:665008\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:16404\",\"variable:14610\",\"member:800244\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:18218\",\"variable:14610\",\"member:843985\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:18759\",\"variable:14610\",\"member:885081\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:19270\",\"variable:14610\",\"member:925582\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:19938\",\"variable:14610\",\"member:992410\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:3042\",\"variable:14610\",\"member:179649\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:3981\",\"variable:14610\",\"member:249157\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:4432\",\"variable:14610\",\"member:280310\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:4634\",\"variable:14610\",\"member:290779\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:4635\",\"variable:14610\",\"member:290888\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:4638\",\"variable:14610\",\"member:290991\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:4765\",\"variable:14610\",\"member:295471\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:5494\",\"variable:14610\",\"member:339053\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:6042\",\"variable:14610\",\"member:373593\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:7490\",\"variable:14610\",\"member:412449\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:9819\",\"variable:14610\",\"member:437155\"]}"]
+fields = ["coding"]
+valid_from = "2014-12-31"
+valid_to = "2014-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "2006bc3344d86cf872788e67b02e143728bc009c46aaf7887f3bdf43e074f5d0"
+expected_diagnostic_sha256 = "f7877e67492eb1a8b83bd1a69a54f9aaad21d140aeb9b7ed5b8366293aa85836"

@@ -55,14 +55,6 @@ native_id = "333.382"
 slug = "personnrap2"  # source: kolumnnamn
 
 [[variable]]
-native_id = "333.385"
-slug = "personnrvard1"  # source: fold
-
-[[variable]]
-native_id = "333.386"
-slug = "personnrvard2"  # source: fold
-
-[[variable]]
 native_id = "333.2748"
 slug = "andel-barnb"  # source: kolumnnamn
 

@@ -323,3 +323,18 @@ reason = "These exact source windows have no own bound stored-code domain. Prese
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
 expected_evidence_sha256 = "df44b9cfeb6c7736a73ad22078a21aa247fc80f45d9a4bc85b39eb73eca19f38"
 expected_diagnostic_sha256 = "86401597e07da9ff87175c4697b85bb52645b029bb4a48acdc7e2c0fb816a3a5"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "70.58"
+columns = { PostNrOmrade = "70.58.postnromrade", PostnrOmrade = "70.58.postnromrade", Postnromrade = "70.58.postnromrade", Postnromrade_Old = "70.58.postnromrade-old", postnromrade = "70.58.postnromrade" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "6f4f8efc24b15aed4d01a73846b94807ea6e2122ca67bb2d7bada147a057def0"
+
+[[variable]]
+native_id = "70.58.postnromrade"
+slug = "postnromrade-58"
+
+[[variable]]
+native_id = "70.58.postnromrade-old"
+slug = "postnromrade-old"

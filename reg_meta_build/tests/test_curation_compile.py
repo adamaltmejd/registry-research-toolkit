@@ -9046,3 +9046,28 @@ def test_column_owner_alternatives_require_complete_exclusive_guards(tmp_path):
     ):
         with pytest.raises(ValidationError):
             IdentityColumnOwnerEntry.model_validate(supplied | update)
+
+
+def test_partial_partition_finding_excludes_exact_scoped_owned_originals():
+    records = _scb_partition_records(("ID", "ID", "ID"), variants=(2, 3, 2))
+    supported = "1.5.supported"
+    converted = convert_column_partitions(
+        records,
+        source_id="1.5",
+        split_ids=(supported,),
+        declared_columns={"ID": None},
+        declaration_reference="Retain the contradictory delivery only as unresolved.",
+        scoped_owners={(record_ref(records[0]), "ID"): supported},
+    )
+    assert len(converted.diagnostics) == 1
+    assert converted.diagnostics[0].code == "unassigned_original_columns"
+    assert converted.diagnostics[0].refs == tuple(
+        sorted((record_ref(records[1]), record_ref(records[2])), key=str)
+    )
+    assert converted.case is not None
+    applied = apply_occurrence_cases(records, (converted.case,))
+    native = native_variable_key(records[0])
+    assert applied.occurrences[0].variable_key != native
+    assert [o.variable_key for o in applied.occurrences[1:]] == [native, native]
+    assert tuple(o.source_records[0] for o in applied.occurrences) == records
+    assert evaluate_cases((converted.case,), records[:-1])[0].status == "stale"

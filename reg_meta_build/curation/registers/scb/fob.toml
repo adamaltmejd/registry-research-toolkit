@@ -596,3 +596,118 @@ reason = "This exact historical window has no own bound stored-code domain. Pres
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
 expected_evidence_sha256 = "a7cf4b18c03312e90eb38f2fdaefd0a8dae4a951eca6f8f4fbfc67340b386e6f"
 expected_diagnostic_sha256 = "46639372c5d1cf843e47678ae35edeb115eb44b365f43d0e64a8d8400fa5e118"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "32.3188"
+columns = { HhTyp = "32.3188.hhtyp", HhTyp1 = "32.3188.hhtyp1", HhTyp2 = "32.3188.hhtyp2", HhTyp3 = "32.3188.hhtyp3", HhTyp4 = "32.3188.hhtyp4", HhTyp5 = "32.3188.hhtyp5", HhTyp6 = "32.3188.hhtyp6", HhTyp7 = "32.3188.hhtyp7" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "d6d4c5734924631af65e3449b91bbbf3f41dbcef1fe4fc53aaa3146d5fcd5de4"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "32.29137"
+columns = { SUN2 = "32.29137.sun2", SUN3 = "32.29137.sun3", SUN5 = "32.29137.sun5" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "25a89bc7687b79ce728ef386dd63c46c47e4b72cb92e3850acb86f5487ed69a2"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "32.42217"
+columns = { TrangBo = "32.42217.trangbo", TrangBo1 = "32.42217.trangbo1", TrangBo2 = "32.42217.trangbo2", TrangBo3 = "32.42217.trangbo3", TrangBo4 = "32.42217.trangbo4" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "789e43faf20859249af92c5dd735eaa312b5853fc6a9c19d69f13ee22f174e47"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "32.41534"
+columns = { Yrke = "32.41534.yrke", Yrke80 = "32.41534.yrke80", Yrke85 = "32.41534.yrke85" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "5c8d795a93817772353c65266012fe3aa2bbcebdedf579b57ab9cf426bf9bd4d"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "32.4027"
+columns = { Narg = "32.4027.narg", SNI2 = "32.4027.sni2", SNI4 = "32.4027.sni4", SNI5 = "32.4027.sni5" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "a3023e8ddd63302106854af4cbbf517b8a501eea6ad8fda54a89726165cbf122"
+
+[[variable]]
+native_id = "32.3188.hhtyp1"
+slug = "hhtyp"
+
+[[variable]]
+native_id = "32.3188.hhtyp2"
+slug = "hhtyp2"
+
+[[variable]]
+native_id = "32.3188.hhtyp3"
+slug = "hhtyp3"
+
+[[variable]]
+native_id = "32.3188.hhtyp4"
+slug = "hhtyp4"
+
+[[variable]]
+native_id = "32.3188.hhtyp5"
+slug = "hhtyp5"
+
+[[variable]]
+native_id = "32.3188.hhtyp6"
+slug = "hhtyp6"
+
+[[variable]]
+native_id = "32.3188.hhtyp7"
+slug = "hhtyp7"
+
+[[variable]]
+native_id = "32.29137.sun2"
+slug = "sun2"
+
+[[variable]]
+native_id = "32.29137.sun3"
+slug = "sun3"
+
+[[variable]]
+native_id = "32.29137.sun5"
+slug = "sun5"
+
+[[variable]]
+native_id = "32.42217.trangbo1"
+slug = "trangbo"
+
+[[variable]]
+native_id = "32.42217.trangbo2"
+slug = "trangbo2"
+
+[[variable]]
+native_id = "32.42217.trangbo3"
+slug = "trangbo3"
+
+[[variable]]
+native_id = "32.42217.trangbo4"
+slug = "trangbo4"
+
+[[variable]]
+native_id = "32.41534.yrke80"
+slug = "yrke8"
+
+[[variable]]
+native_id = "32.41534.yrke85"
+slug = "yrke85"
+
+[[variable]]
+native_id = "32.4027.narg"
+slug = "narg"
+
+[[variable]]
+native_id = "32.4027.sni2"
+slug = "sni2"
+
+[[variable]]
+native_id = "32.4027.sni4"
+slug = "sni"
+
+[[variable]]
+native_id = "32.4027.sni5"
+slug = "sni5"

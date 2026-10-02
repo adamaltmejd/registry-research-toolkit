@@ -376,3 +376,64 @@ data_warning = "Historical SNI2002 classification codes follow the same field’
 expected_evidence_sha256 = "46cde67c4c293d13c6d8d3cbf8f8a36355487ebfde2492aa6385f5289644c1ac"
 list = "Standard för svensk näringsgrensindelning, 2002 Branscher"
 witness = ["2010-01-01", "2010-12-31"]
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "55.66"
+columns = { SUN2020Niva = "55.66.sun2020niva", SUN2020Niva_Old = "55.66.sun2020niva-old", Sun2000Niva = "55.66.sun2000niva", Sun2000Niva_Old = "55.66.sun2000niva-old" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "1f07f8413abcc3dc95c41c50b9dd6293092e6a53bc04e90d0637c123a9814422"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "55.16221"
+columns = { KU1AstNgS07 = "55.16221.ku1astngs07", KU1AstSNI07 = "55.16221.ku1astsni07", KU1AstSni = "55.16221.ku1astsni", KU1AstSni02 = "55.16221.ku1astsni02", KU1AstSni07 = "55.16221.ku1astsni07" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "7f92ba493832a4c5e4070188e125be7999b2f31eba34f8b2ec6d428d73ce8881"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "55.1819"
+columns = { KU1SektorKod = "55.1819.ku1sektorkod", SektorKod = "55.1819.sektorkod" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "d1a16f5e6f8e026562f2db369090569c91c4b0b5a8e7e78b7320eb83f9babf57"
+
+[[variable]]
+native_id = "55.66.sun2020niva"
+slug = "sun2020niva"
+
+[[variable]]
+native_id = "55.66.sun2020niva-old"
+slug = "sun2020niva-old"
+
+[[variable]]
+native_id = "55.66.sun2000niva"
+slug = "sun2000niva"
+
+[[variable]]
+native_id = "55.66.sun2000niva-old"
+slug = "sun2000niva-old-66"
+
+[[variable]]
+native_id = "55.16221.ku1astngs07"
+slug = "ku1astngs07"
+
+[[variable]]
+native_id = "55.16221.ku1astsni07"
+slug = "ku1astsni07"
+
+[[variable]]
+native_id = "55.16221.ku1astsni"
+slug = "ku1astsni"
+
+[[variable]]
+native_id = "55.16221.ku1astsni02"
+slug = "ku1astsni0"
+
+[[variable]]
+native_id = "55.1819.ku1sektorkod"
+slug = "ku1sektorkod"
+
+[[variable]]
+native_id = "55.1819.sektorkod"
+slug = "sektorkod-1819"

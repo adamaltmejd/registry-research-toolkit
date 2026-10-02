@@ -89,3 +89,81 @@ native_id = "42.14653.f5g1"
 slug = "kurs-i-komvux-7"
 
 # register 47
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "42.2764"
+columns = { f3_1 = "42.2764.f3-1", f3_2 = "42.2764.f3-2", f3_3 = "42.2764.f3-3", f3_4 = "42.2764.f3-4", f3_5 = "42.2764.f3-5", f3a = "42.2764.f3a", f3b = "42.2764.f3b", f3c = "42.2764.f3c", f3d = "42.2764.f3d" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "32e37934ee04f8b7d51b2db7621718afd58762d60bfa6939d95e63226fdc15dd"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "42.14653"
+columns = { f5a1 = "42.14653.f5a1", f5a2 = "42.14653.f5a2", f5b1 = "42.14653.f5b1", f5b2 = "42.14653.f5b2", f5c1 = "42.14653.f5c1", f5c2 = "42.14653.f5c2", f5d1 = "42.14653.f5d1", f5d2 = "42.14653.f5d2", f5e1 = "42.14653.f5e1", f5e2 = "42.14653.f5e2", f5f1 = "42.14653.f5f1", f5f2 = "42.14653.f5f2", f5g1 = "42.14653.f5g1", f5g2 = "42.14653.f5g2" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "adf61120fa966cf5ffd7ddd14881bda041cb7b599b2725515004eb3896187baf"
+
+[[variable]]
+native_id = "42.2764.f3-1"
+slug = "f3"
+
+[[variable]]
+native_id = "42.2764.f3-2"
+slug = "f3-2"
+
+[[variable]]
+native_id = "42.2764.f3-3"
+slug = "f3-3"
+
+[[variable]]
+native_id = "42.2764.f3-4"
+slug = "f3-4"
+
+[[variable]]
+native_id = "42.2764.f3-5"
+slug = "f3-5"
+
+[[variable]]
+native_id = "42.2764.f3a"
+slug = "f3a"
+
+[[variable]]
+native_id = "42.2764.f3b"
+slug = "f3b"
+
+[[variable]]
+native_id = "42.2764.f3c"
+slug = "f3c"
+
+[[variable]]
+native_id = "42.2764.f3d"
+slug = "f3d"
+
+[[variable]]
+native_id = "42.14653.f5a2"
+slug = "f5a2"
+
+[[variable]]
+native_id = "42.14653.f5b2"
+slug = "f5b2"
+
+[[variable]]
+native_id = "42.14653.f5c2"
+slug = "f5c2"
+
+[[variable]]
+native_id = "42.14653.f5d2"
+slug = "f5d2"
+
+[[variable]]
+native_id = "42.14653.f5e2"
+slug = "f5e2"
+
+[[variable]]
+native_id = "42.14653.f5f2"
+slug = "f5f2"
+
+[[variable]]
+native_id = "42.14653.f5g2"
+slug = "f5g2"

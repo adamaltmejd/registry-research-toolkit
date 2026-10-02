@@ -9883,3 +9883,1453 @@ expected_evidence_sha256 = "30cddca13bc41726f19301936625e8a65fec58dc2c77c46febff
 keep = "Civilstånd i Levnadsförhållanden (ULF), 2"
 keep_members = [["0", "Okänt värde"], ["1", "Ogift person"], ["2", "Gift"], ["3", "Frånskild/hemskild"], ["4", "Änka/änkling"], ["9", "Uppgift saknas"]]
 over = ["Civilstånd i Levnadsförhållanden (ULF), 2"]
+
+[[coding.choice]]
+variable = "237.10128"
+variant = "237.458"
+column = "HA0423"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "6ff9d3743b7ab6eb056ea6957305628a4c8c08e7dfe07788636f5589420281a3"
+keep = "Tänder"
+keep_members_sha256 = "c001be0ab5a32c0e6490ccc5e5a99ac4022be1adbb2a55cfe2f5ecd1b917f72c"
+over = ["Tänder"]
+
+[[coding.choice]]
+variable = "237.10223"
+variant = "237.458"
+column = "UT0200"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "fb5320b0149f8ef00dae802e6befbdcad9024611c6530e3471511f61674c603e"
+keep = "Linje fackskolan"
+keep_members_sha256 = "5e342c7ae8f9d2c526496ff629ecaa6c91af110c0f78158a509cef2d491bfd79"
+over = ["Linje fackskolan"]
+
+[[coding.choice]]
+variable = "237.10232"
+variant = "237.458"
+column = "BA0071"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "7a49fe3e43c7d09e677b2396ad8497f5cf9db778aead605294a38695cef2b3ae"
+keep = "Medborgarskap 3"
+keep_members_sha256 = "209c8ec24a192194efa477ec8547a14544ca94ef2ff8b867d98b49d27d70d8eb"
+over = ["Medborgarskap 3"]
+
+[[coding.choice]]
+variable = "237.10654"
+variant = "237.458"
+column = "HA0320"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "c53548f4cf428f93dfe877aba878969c858d1b775967bb1e76228550f2592db7"
+keep = "Tillsyn"
+keep_members_sha256 = "f1d59a815264ba43f055f6700aa4d66d93c08130e870f1526c30c12bea419ff6"
+over = ["Tillsyn"]
+
+[[coding.choice]]
+variable = "237.10680"
+variant = "237.458"
+column = "BA0231"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "3c09d49a8f496f1bf9bdb7fae41cc3d8d2ca6799c5c8986ce4cde79a2592d973"
+keep = "Var 1"
+keep_members_sha256 = "d194c9848d00ce133c78d55ae8cdb7936b46526f0da0cc0a9faf5fe51c5c85fc"
+over = ["Var 1"]
+
+[[coding.choice]]
+variable = "237.10752"
+variant = "237.458"
+column = "BA0234"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "96e8b5f44ede8171d9abe387c24bbed15a88e3f34da558ba8e5fb16913032982"
+keep = "Kan svenska"
+keep_members_sha256 = "ab92c9acc33a705b51fed99845ce19b94a312633e3f3d16af0f7647a4941e2f3"
+over = ["Kan svenska"]
+
+[[coding.choice]]
+variable = "237.10810"
+variant = "237.458"
+column = "SO0031"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "e0fed0d0305052df2993f02cbaa53b54dc807aa6cac4115c69673513cea8ec85"
+keep = "Föräldrar 3"
+keep_members_sha256 = "4a757d56dc0710e2964fa6c69d3da4e2de4374d4ef8da46b5cdf3b2c3b48bff8"
+over = ["Föräldrar 3"]
+
+[[coding.choice]]
+variable = "237.10872"
+variant = "237.458"
+column = "UT0330"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "e12c7dba882ea54be81fea1a936de43901bee92bacf68eda49ea27e6e6a8af53"
+keep = "Gymnasielinje"
+keep_members_sha256 = "a18ce3bdaa05991813094956026dcde0910c2bf0ac20fb844f1785093b67e7a3"
+over = ["Gymnasielinje"]
+
+[[coding.choice]]
+variable = "237.11061"
+variant = "237.458"
+column = "HA0695"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "939c2311a9c82059067363383f18024e1644ed55e76782f37fc0e520e577c7d8"
+keep = "Hur länge 2"
+keep_members_sha256 = "d1675a27c9b2ab9eef74d9c08523320613b81b1b969f5afe93d220c9b82feb3c"
+over = ["Hur länge 2"]
+
+[[coding.choice]]
+variable = "237.11065"
+variant = "237.458"
+column = "HA0697"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "9f5f4513d63d08de5bce36c5a38b62d8bdef332ab58789cae004122b44e93bc2"
+keep = "Hjälpmedel 1"
+keep_members_sha256 = "61027176ba280996d29c944c6fe069fd1a0a2db8f101ddb456c6516c8ebe37de"
+over = ["Hjälpmedel 1"]
+
+[[coding.choice]]
+variable = "237.11098"
+variant = "237.458"
+column = "HA1245"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "d41427b4eecca4a5d9b27064712cb46c05262112c9c22c6bd415acd351535827"
+keep = "Hur fort smärtlindring"
+keep_members_sha256 = "4747aa27ffbd1e48ba2e67188e431fb60004995879a4200d63e3b4d19af574f0"
+over = ["Hur fort smärtlindring"]
+
+[[coding.choice]]
+variable = "237.11171"
+variant = "237.458"
+column = "AM0300"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "ed3956893d702436227de795dcf290f09c27c8fb6c2d83964de5f2b114a54a9a"
+keep = "Hur ofta 4"
+keep_members_sha256 = "812a1daeb9cfc209feb4502611a71d9339218f882fb27367d03d53614d0b15a6"
+over = ["Hur ofta 4"]
+
+[[coding.choice]]
+variable = "237.11352"
+variant = "237.458"
+column = "HA0206"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "e0d075a11b3a152fa7098cdc8dfff73ea419738e9dde14bab8ac7c335011f728"
+keep = "Hur länge 2"
+keep_members_sha256 = "c718a2b0924e798bfa8fe93d2c59e7fdfe9257d53bd717e812b4221759388deb"
+over = ["Hur länge 2"]
+
+[[coding.choice]]
+variable = "237.11436"
+variant = "237.458"
+column = "HA1010"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "8bee218c964ef1f625e0302948063f11337ecc23a7bb6bf10085af2f5435082d"
+keep = "Klarar själv"
+keep_members_sha256 = "66d8b0777c0cc26608c3cafb1bfaa065c3296746b5ff59efafd244264c63052d"
+over = ["Klarar själv"]
+
+[[coding.choice]]
+variable = "237.11524"
+variant = "237.458"
+column = "BA0232"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "48538f0c783423944499359336867e5427fcfa79ce3635f601290a129a5eeee2"
+keep = "Ålder vid ankomst"
+keep_members_sha256 = "da8544dde2285cf08e69853b54b830e3313d623cf72e727ec243ec0154d6ec5d"
+over = ["Ålder vid ankomst"]
+
+[[coding.choice]]
+variable = "237.11636"
+variant = "237.458"
+column = "AT0041"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "86ee7579d3c6ba822f3af010612c4b9100264a80929c9fb57a332b20a1610dbe"
+keep = "Arbetstidsönskemål 1"
+keep_members_sha256 = "cc67be94b6ac96526c1bc63c6e7b1b8894041345c9224d676937aab1276b46d9"
+over = ["Arbetstidsönskemål 1"]
+
+[[coding.choice]]
+variable = "237.11686"
+variant = "237.458"
+column = "UT1614"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "6e4b7d6c1b81e0a0b6f50b43f8df6f596cfc07036b8d47fb03e18a2ed52b3233"
+keep = "Kursarrangör 4"
+keep_members_sha256 = "6dc782dd821c77619ed5f3d9f6466192dad1e0172ec5c62810de949c308a2141"
+over = ["Kursarrangör 4"]
+
+[[coding.choice]]
+variable = "237.11960"
+variant = "237.458"
+column = "HA1017"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "fbd22d87576c853bc978add8baf7cd5a3eb6ef70bc9779cfd1c84eba6fb7abbc"
+keep = "Ja 9"
+keep_members_sha256 = "4d3e2fe0ea924dc0e789e7071d0064aadcc4f8812aff9b6ebd9966e7c9ad2fd0"
+over = ["Ja 9"]
+
+[[coding.choice]]
+variable = "237.11968"
+variant = "237.458"
+column = "HA1030"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "25b3404ecf6c99cd2061700737cd7edbbf98fb208bd8c2d3003c7f9c75e0ddaa"
+keep = "Klarar själv"
+keep_members_sha256 = "66d8b0777c0cc26608c3cafb1bfaa065c3296746b5ff59efafd244264c63052d"
+over = ["Klarar själv"]
+
+[[coding.choice]]
+variable = "237.11971"
+variant = "237.458"
+column = "HA1037"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "d4f0e02d9c6667916169a87fc0e0d3f0678843ddbd39b3d58ec052bb71f43ab9"
+keep = "Ja 9"
+keep_members_sha256 = "25948f3a3cc132cf8326469689790ad3212eb7ef3e8fcb9747a711ca38c3ba55"
+over = ["Ja 9"]
+
+[[coding.choice]]
+variable = "237.12153"
+variant = "237.458"
+column = "BA0072"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "ab6d3e95467e0ac5b5f4495b33691d0126c20d643d49c05bee251b3e74ac2619"
+keep = "Medborgarskap 3"
+keep_members_sha256 = "cc354a8ab891d8f24fb703014685d0aaa09264ac070207b6fd288a98f270f898"
+over = ["Medborgarskap 3"]
+
+[[coding.choice]]
+variable = "237.12169"
+variant = "237.458"
+column = "HA0395"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "fcf1b211c8b27e896d727bd0f4e3c4c877f22dea35d09d01925d74e624a2f84e"
+keep = "Motion 1"
+keep_members_sha256 = "1472d20d6c89a38689082ef2627614e5aaa10ee2641a6ba631ef00c70a762cc7"
+over = ["Motion 1"]
+
+[[coding.choice]]
+variable = "237.12289"
+variant = "237.458"
+column = "GO1305"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "0b33b25307d9dfaddee9f1d171d89d15eed3f95b880b505322c38f94b729cf48"
+keep = "Ja nej 1"
+keep_members_sha256 = "baf0dd7f89d82ac70cf9cf45a48ab6744215e12279429cdf358bcfe27e8d2269"
+over = ["Ja nej 1"]
+
+[[coding.choice]]
+variable = "237.12332"
+variant = "237.458"
+column = "BA0073"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "b53a28de1c5f91ee7d46a7ef7c33454d3a9b0da6aae7bf8afea08128059e5841"
+keep = "Landskod 2"
+keep_members_sha256 = "4d009ba7582548bf812a41ef568940a81209735e38f5d7bf7131199b15a39d5d"
+over = ["Landskod 2"]
+
+[[coding.choice]]
+variable = "237.12390"
+variant = "237.458"
+column = "GO1722"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "ef6453b4bf95d38245a6af1ac60cb29ab71d084fab1cb2539185ce2548d0ee5b"
+keep = "Nöjd med behandling"
+keep_members_sha256 = "5fee84e0d1bfd9ec830273e7f28a3a8a542e213832624cad2ac3394e62f86bb9"
+over = ["Nöjd med behandling"]
+
+[[coding.choice]]
+variable = "237.12650"
+variant = "237.458"
+column = "HA0749"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "600b187d7475148f9ecc808017e5edaef59b11f9916c41a55fb9fd288dc0692f"
+keep = "Besvär: Svåra, Lätta, Nej (1-3)"
+keep_members_sha256 = "cd2ae4f1625df0ef4dbae70f821c11aac702a86b965913a15cbe585e665e930d"
+over = ["Besvär: Svåra, Lätta, Nej (1-3)"]
+
+[[coding.choice]]
+variable = "237.13032"
+variant = "237.458"
+column = "HA0955"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "7dbe91a768e2fe55dd0947b430fe1cab87d7c50464152a3b53684caa878b38db"
+keep = "Skäl att bo kvar"
+keep_members_sha256 = "680ae34127ec4a0dd85a26e5b8ac4dd37c46296475b5aef55fdcb4289bee13b4"
+over = ["Skäl att bo kvar"]
+
+[[coding.choice]]
+variable = "237.13052"
+variant = "237.458"
+column = "HA0954"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "8ad5943e58eaf2dbfd7ca323f4f201258ba63557c05fbd61db9529557447a2d9"
+keep = "Skäl att flytta 2"
+keep_members_sha256 = "79186357b29a8e2ab0a065153c8937147ff65b95cb54373a47154b285b6122db"
+over = ["Skäl att flytta 2"]
+
+[[coding.choice]]
+variable = "237.13219"
+variant = "237.458"
+column = "BA2120"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "5283f90dbcfeab1eaf05caf43605d897d08e569df82af72c929e4d16816f3cf5"
+keep = "SEI, 2- o 3-siffrig"
+keep_members_sha256 = "b6cd6ee88e52bc3293704d47bbb1c5057587d27f09a38126502ca70b27ab0370"
+over = ["SEI, 2- o 3-siffrig"]
+
+[[coding.choice]]
+variable = "237.13343"
+variant = "237.458"
+column = "HA1070"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "0cbe4b3fbb7332f9ba2f15ee7876b6afe358249ffb9c2a85960e4bc3e659deec"
+keep = "Klarar själv"
+keep_members_sha256 = "66d8b0777c0cc26608c3cafb1bfaa065c3296746b5ff59efafd244264c63052d"
+over = ["Klarar själv"]
+
+[[coding.choice]]
+variable = "237.13344"
+variant = "237.458"
+column = "HA1078"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "6fbc81078b0acffe689faf92ddb29a2d9ea9d0fdb96e05adf6f58599cfab8e47"
+keep = "Får ingen hjälp 1"
+keep_members_sha256 = "099be74980835fb8f48c73fdee6bf5e24734859074d44691ffe347164750d64c"
+over = ["Får ingen hjälp 1"]
+
+[[coding.choice]]
+variable = "237.13405"
+variant = "237.458"
+column = "HA0193"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "3facf6b62588c4ff25890ad31fda26175504d8ca3441a7a6bcb25d05ec51be84"
+keep = "Syn 3"
+keep_members_sha256 = "f26d1eb27bc2b177bd587c7e57c1ed39134234b732bc65f6df2bd521672d2335"
+over = ["Syn 3"]
+
+[[coding.choice]]
+variable = "237.13428"
+variant = "237.458"
+column = "SO0051"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "2ba35e5f191ee9ba9f96acd838591f12e14e536fecef093966c5920d5dc8a4cb"
+keep = "Antal syskon"
+keep_members_sha256 = "1b85819b9b13431c06cbe016a1486cee4bce5d898a79d312cd583510989038e3"
+over = ["Antal syskon"]
+
+[[coding.choice]]
+variable = "237.13466"
+variant = "237.458"
+column = "BA0245"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "b6c2d744474a5334eccecda8c7528ab494d0f78e7e3d2066d614dc2c6c398581"
+keep = "Språk 4"
+keep_members_sha256 = "b48b10cf8d31558e0dbe351ed183d4119ce1627815c54f25659f656595a1b98b"
+over = ["Språk 4"]
+
+[[coding.choice]]
+variable = "237.13607"
+variant = "237.458"
+column = "HA0344"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "07d878cc3feb6e5323da864d7689636109bf1252b5bdd51e09845471eb76b6a7"
+keep = "Tillräcklig, behöver mer"
+keep_members_sha256 = "77fecce1f1bf11359389ec38c091b97b151117b6c142738b2b75dd7644ee8cae"
+over = ["Tillräcklig, behöver mer"]
+
+[[coding.choice]]
+variable = "237.13609"
+variant = "237.458"
+column = "GO0103"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "42cefcf579305145f394999d268044d09e2c943ab9f6a479ba95cdba5101498e"
+keep = "Barntillsyn 5"
+keep_members_sha256 = "d2a835f0eea830c7e3db89b98dfd36989d4dcfe949229c0aa420910d0d923848"
+over = ["Barntillsyn 5"]
+
+[[coding.choice]]
+variable = "237.13611"
+variant = "237.458"
+column = "GO0303"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "2f7c4ab3a192080144eb0c6ec1663505759fe5b1494977e09dfc085f19c90555"
+keep = "Barntillsyn 5"
+keep_members_sha256 = "55199e38645eeca32de9278944f1a7f51367f698d9977bdbdd5de4fc395a9f7b"
+over = ["Barntillsyn 5"]
+
+[[coding.choice]]
+variable = "237.13617"
+variant = "237.458"
+column = "GO0212"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "0dfc0578c41c2a4f0d9b9ccd6f373b48b12d086f80d3299c1cb0d3fb9707bfcd"
+keep = "Barntillsyn 5"
+keep_members_sha256 = "b584df96d3e7dfb947456c4a4ee076ca63b87be37975e958b5b53bdb718745cc"
+over = ["Barntillsyn 5"]
+
+[[coding.choice]]
+variable = "237.13618"
+variant = "237.458"
+column = "GO0312"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "229a8bc58229bf815734af393c175402520fb63cb3ed69d478f50c5d893bfce0"
+keep = "Barntillsyn 5"
+keep_members_sha256 = "3898845e9ed4310e6eee343e9bfe9d3bd8120003be32b5deb1461bdcc0a01c3c"
+over = ["Barntillsyn 5"]
+
+[[coding.choice]]
+variable = "237.13621"
+variant = "237.458"
+column = "GO0106"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "ee7da6f33da74c4bd78b91fe2ba3cce7a45b516c7c84118d3255a331567eee1d"
+keep = "Barntillsyn 5"
+keep_members_sha256 = "bec6d2f13812902015a74c61b35533bd40f107c23d1c8a88eb5299b1673c42df"
+over = ["Barntillsyn 5"]
+
+[[coding.choice]]
+variable = "237.13632"
+variant = "237.458"
+column = "GO0109"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "d45759f2e45fad951292590e17aa913d91f8c8013a0d8527be4c4750f1095874"
+keep = "Barntillsyn 5"
+keep_members_sha256 = "a4529ea783d1531fb7e6c90912ae7b425266097f16cd829b8c986ce8225e95d8"
+over = ["Barntillsyn 5"]
+
+[[coding.choice]]
+variable = "237.13642"
+variant = "237.458"
+column = "GO0518"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "5bf3d3404c860b5f0171ad789a6d1f1a96ff9534128db8a5856f83dd6a64f709"
+keep = "Barntillsyn 5"
+keep_members_sha256 = "4e00317f594c4de859cbcb3edc8c1be9d97ceb2ce4e9bbebcce8b9c610dc27f2"
+over = ["Barntillsyn 5"]
+
+[[coding.choice]]
+variable = "237.13765"
+variant = "237.458"
+column = "HA1058"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "e9496b557ef06c424c6e14cd96cf6a07346f65e68f533340d2d69743f1730207"
+keep = "Får ingen hjälp 1"
+keep_members_sha256 = "2b9d989131f3b9cfb16cdf42c3442ceab4b77dfcfa460a0192ddb2f82464e5c4"
+over = ["Får ingen hjälp 1"]
+
+[[coding.choice]]
+variable = "237.13933"
+variant = "237.458"
+column = "UT0590"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "163bf30262877a0702aca81bcbbb63b58e669204cc09bb122b5affc2e155ba5d"
+keep = "Nej ja"
+keep_members_sha256 = "f1618d4b66ec2a38be942d2f91f0e39552d676626a0df380e7f4f0a06cf03ce6"
+over = ["Nej ja"]
+
+[[coding.choice]]
+variable = "237.13943"
+variant = "237.458"
+column = "UT0600"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "fb98118a2b58cf15c6b17a87bc9df35d9811bc9a34ccb917db22372a37255ef0"
+keep = "Nej ja"
+keep_members_sha256 = "90842d22af20e84b8a4b6b97ccfeda980b5ec40f41d8f47a48e6f3ebeb887e74"
+over = ["Nej ja"]
+
+[[coding.choice]]
+variable = "237.13990"
+variant = "237.458"
+column = "UT3011"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "94e0cdb75ddfa09ca917d0d65452841a8723ec712dbaa5c5aceb869b3016ed53"
+keep = "Utbildningsnivå SUN 79"
+keep_members_sha256 = "8fa4db89b6e9abbcda3c03e7b6579bc4a16457d2a009f77a9b7af676c744737d"
+over = ["Utbildningsnivå SUN 79"]
+
+[[coding.choice]]
+variable = "237.14245"
+variant = "237.458"
+column = "HA0953"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "1df67d267c396bcedae188a85067396229f03eff5e9395a8153b53c65313de62"
+keep = "Vill flytta till"
+keep_members_sha256 = "42784ea838b44fa00279a5611c7369cd19987df87c21dcf6bbc79aa533883e97"
+over = ["Vill flytta till"]
+
+[[coding.choice]]
+variable = "237.14273"
+variant = "237.458"
+column = "HA0785"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "acab0f6362fcb4c463a7553585de145ab1752d38980e2ab2d6bd73f6622cbf1c"
+keep = "Vård av annan 2"
+keep_members_sha256 = "60a8270c81060954c0fe326b7a562b2dd1f7c255d89419ac970b9a258477695e"
+over = ["Vård av annan 2"]
+
+[[coding.choice]]
+variable = "237.14274"
+variant = "237.458"
+column = "HA0786"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "9a22ae7661c9cac3569e2a6d894726833fa041af3d931a29722d629aa262b49f"
+keep = "Vård av annan 3"
+keep_members_sha256 = "fc0c7a344f2d90be4744b438bfe736ac16084d760b744515d42cee7b657b972f"
+over = ["Vård av annan 3"]
+
+[[coding.choice]]
+variable = "237.14301"
+variant = "237.458"
+column = "BA0255"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "5dea1cc9ad2bde56eb81ffad8026f3d530001a5e882bebc5ca5a753889de0c81"
+keep = "Yrke 2"
+keep_members_sha256 = "78e848a1b3281fcb6a4a3fa9c10535f07bbde67b1922a7331306048bca516f7d"
+over = ["Yrke 2"]
+
+[[coding.choice]]
+variable = "237.14302"
+variant = "237.458"
+column = "BA0265"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "7fe1126764d00a8672022b8a0dbdd572bf0533fed04ebd137e08e89ea8b11a49"
+keep = "Yrke 2"
+keep_members_sha256 = "78e848a1b3281fcb6a4a3fa9c10535f07bbde67b1922a7331306048bca516f7d"
+over = ["Yrke 2"]
+
+[[coding.choice]]
+variable = "237.14472"
+variant = "237.458"
+column = "HA1243"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "aa67a7c3181bd5e72659bd3365fd1b539db24a162758a0f00de18d939a5e180d"
+keep = "Åtgärd smärtor i bröstet"
+keep_members_sha256 = "0ec8cdfa946e1604d01bc86a6647ca647db4841e4d200edcd2f374a89f46b5e4"
+over = ["Åtgärd smärtor i bröstet"]
+
+[[coding.choice]]
+variable = "237.14937"
+variant = "237.458"
+column = "SY0014"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "f977bcb2ddede610125a9f27e9bbea80a1c6a3b73f3a5ef9a4ea3eb0e232b436"
+keep = "Fackförbund 86-89"
+keep_members_sha256 = "9ef4f1d183d3da7f3f7655ccfc496fbb76db2a33d73041062e15c7846cc73eb6"
+over = ["Fackförbund 86-89"]
+
+[[coding.choice]]
+variable = "237.15005"
+variant = "237.458"
+column = "BA3101"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "5fd1fdca2ff813eca499361fc601422beb58b590bbe142749160cae46ed7aabb"
+keep = "Relation 3"
+keep_members_sha256 = "a5307de58c8fd3c36732d1b20b1e07e4f8a8325652ba33735e9d06d1a38238c6"
+over = ["Relation 3"]
+
+[[coding.choice]]
+variable = "237.1569"
+variant = "237.1657"
+column = "RB280"
+periods = [["2021-01-01", "2021-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "142a2f2e9facd792d7215b4a061b8f50558117a5caeef4620b8d47961b7b33e0"
+keep = "Land, 2-bostavskod"
+keep_members_sha256 = "5e0a156ab8c09c2ce20b2dda8958b0906e9a9daaef2af32c7121f95d95a4ab8e"
+over = ["Land, 2-bostavskod"]
+
+[[coding.choice]]
+variable = "237.1569"
+variant = "237.1657"
+column = "RB280"
+periods = [["2022-01-01", "2022-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "142a2f2e9facd792d7215b4a061b8f50558117a5caeef4620b8d47961b7b33e0"
+keep = "Land, 2-bostavskod"
+keep_members_sha256 = "5e0a156ab8c09c2ce20b2dda8958b0906e9a9daaef2af32c7121f95d95a4ab8e"
+over = ["Land, 2-bostavskod"]
+
+[[coding.choice]]
+variable = "237.1569"
+variant = "237.1657"
+column = "RB280"
+periods = [["2023-01-01", "2023-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "142a2f2e9facd792d7215b4a061b8f50558117a5caeef4620b8d47961b7b33e0"
+keep = "Land, 2-bostavskod"
+keep_members_sha256 = "5e0a156ab8c09c2ce20b2dda8958b0906e9a9daaef2af32c7121f95d95a4ab8e"
+over = ["Land, 2-bostavskod"]
+
+[[coding.choice]]
+variable = "237.1569"
+variant = "237.1657"
+column = "RB280"
+periods = [["2024-01-01", "2024-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "142a2f2e9facd792d7215b4a061b8f50558117a5caeef4620b8d47961b7b33e0"
+keep = "Land, 2-bostavskod"
+keep_members_sha256 = "5e0a156ab8c09c2ce20b2dda8958b0906e9a9daaef2af32c7121f95d95a4ab8e"
+over = ["Land, 2-bostavskod"]
+
+[[coding.choice]]
+variable = "237.1569"
+variant = "237.1657"
+column = "RB280"
+periods = [["2025-01-01", "2025-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "142a2f2e9facd792d7215b4a061b8f50558117a5caeef4620b8d47961b7b33e0"
+keep = "Land, 2-bostavskod"
+keep_members_sha256 = "5e0a156ab8c09c2ce20b2dda8958b0906e9a9daaef2af32c7121f95d95a4ab8e"
+over = ["Land, 2-bostavskod"]
+
+[[coding.choice]]
+variable = "237.18415"
+variant = "237.458"
+column = "HA0333"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "10dd2f6bd776985c9a48020f3f922019473bb02268d27c9c875a4d7acdd28220"
+keep = "Ja/nej 3 (kod 1,3)"
+keep_members_sha256 = "8ecd948c944b264504f08d76470203f49fb460779d1fd8ac99c2758190cd1f68"
+over = ["Ja/nej 3 (kod 1,3)"]
+
+[[coding.choice]]
+variable = "237.19786"
+variant = "237.458"
+column = "HA0339"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "229a03f79d15519867a690643f81aed0dd55841df74829c2f15c9bd36e80f6a3"
+keep = "Färdtjänst 1"
+keep_members_sha256 = "119cbd8efc53b722c8485328b72266ff3183901aca39a609a17b3229a52f0e68"
+over = ["Färdtjänst 1"]
+
+[[coding.choice]]
+variable = "237.8991"
+variant = "237.458"
+column = "HA1214"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "f9dad52bfa8d0743867237b0e8999b8cd5b7b8e5e3c9c66e8219ceeedac4f81f"
+keep = "Annat diabetes"
+keep_members_sha256 = "77b1aab7d930bda49d8506f564894cd3324ba27105ecbcef9f744ba81957a232"
+over = ["Annat diabetes"]
+
+[[coding.choice]]
+variable = "237.9393"
+variant = "237.458"
+column = "SY0102"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "d00d5e98231f599e6a7d640f53f2c0a9f9c24279464df4514dbc968312c6d09f"
+keep = "Sektor 1"
+keep_members_sha256 = "9bb4e329e8c69b4e6efbada87e8911a94fbaf92764d0cf2230ea26b4faed0458"
+over = ["Sektor 1"]
+
+[[coding.choice]]
+variable = "237.9429"
+variant = "237.458"
+column = "AT0020"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "f38d0d6c92b299a26298b7feedb08a6cb453907cc601c26bb7cd401478451bbc"
+keep = "Arbetstidsförläggning 1"
+keep_members_sha256 = "61fd365d82ad5ca80aa0263d36a17538cf31947341c00bb357428ff71dbb4a52"
+over = ["Arbetstidsförläggning 1"]
+
+[[coding.choice]]
+variable = "237.9537"
+variant = "237.458"
+column = "TK0084"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "1d07b7da044c080b54a62ed8ad0ec17101e0a449627bc47324863b63bb1f4702"
+keep = "Avstånd 6"
+keep_members_sha256 = "ed2b9732ae064c27f3f5207618c83568fbaa2e52d45cfc54bb207aa48fa250f9"
+over = ["Avstånd 6"]
+
+[[coding.choice]]
+variable = "237.9752"
+variant = "237.458"
+column = "HA1222"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "5ed4ab3abe763d1ca000d0298214c0be0820269dad1e1125bd04304fb7fb7aeb"
+keep = "Behandling psoriasis"
+keep_members_sha256 = "a9940217726386a215de83b648074c5f599043571612579926faa93cd41c7462"
+over = ["Behandling psoriasis"]
+
+[[coding.choice]]
+variable = "237.9770"
+variant = "237.458"
+column = "BO0111"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "3f929cda616e62a19b79897f9dff21c39088dcbfb23ba4aadedecff5ecb80294"
+keep = "Besittningsform 2"
+keep_members_sha256 = "73c92f308f6b8491789979479b5e303f23a74e2e0f7ef214e31c333409d3d6d2"
+over = ["Besittningsform 2"]
+
+[[coding.choice]]
+variable = "237.9819"
+variant = "237.458"
+column = "UT1640"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "daaea347934486b7643780ff0d452c823eb012df4f6e596c7ad45f13324c75e9"
+keep = "Ja nej 3"
+keep_members_sha256 = "77d9195d799b38faa5e148181e9e008f813af224fd92c794f82b244ccb2b9a18"
+over = ["Ja nej 3"]
+
+[[coding.choice]]
+variable = "237.9821"
+variant = "237.458"
+column = "UT1660"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "7ed12c24eec4c0a278069f28d3ab11b2d52b9a81bd48023f517613d1d7810d05"
+keep = "Ja nej 3"
+keep_members_sha256 = "18fab4ff69455c8c511c03b46ced97b22ab9aba99157aa5084dc5b7298a152df"
+over = ["Ja nej 3"]
+
+[[coding.choice]]
+variable = "237.9995"
+variant = "237.458"
+column = "UT2400"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "All substantive code-to-label assignments in these exact own bound lists agree. The selected existing source list is a strict superset; every extra code is explicitly labelled unknown, missing, or nonresponse. Preserve these source-declared special tokens and every ordered original claim. This selects an existing supplied list and creates no code, recoding, union or statistical-equivalence claim."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "Overlapping own source lists agree on substantive responses but differ in explicitly unknown/missing/nonresponse tokens. The effective domain retains the exact supplied superset. Historical applicability of those extra special tokens has not been independently verified; all original lists and dates remain evidence."
+expected_evidence_sha256 = "0f235d97475611ecb676ca098730b31a465aba07c74570fd52bd35c135002bf9"
+keep = "Syfte deltagande"
+keep_members_sha256 = "a4f72ed7a2abf353b4c04524bd3eb3301b59f1ab66b8739944944111bb9acaaf"
+over = ["Syfte deltagande"]
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/bo0920"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:18768\",\"variable:10239\",\"member:895571\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19128\",\"variable:10239\",\"member:917718\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19184\",\"variable:10239\",\"member:920871\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19219\",\"variable:10239\",\"member:921975\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19264\",\"variable:10239\",\"member:925196\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19289\",\"variable:10239\",\"member:927638\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19387\",\"variable:10239\",\"member:936674\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19392\",\"variable:10239\",\"member:937253\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19602\",\"variable:10239\",\"member:969273\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19811\",\"variable:10239\",\"member:981953\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19865\",\"variable:10239\",\"member:986195\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19891\",\"variable:10239\",\"member:989418\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20086\",\"variable:10239\",\"member:1008984\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20186\",\"variable:10239\",\"member:1019271\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:10239\",\"member:1023641\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:10239\",\"member:92591\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:10239\",\"member:90249\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:10239\",\"member:88779\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:10239\",\"member:70803\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "d0af3ad829127de3621c43b4847f3cc8eb0a1b06027527ebd90be59279d5eee1"
+expected_diagnostic_sha256 = "f6cd7037692911354a81c2c60524e818c2000b4cf00d2312f40ca84cc95de2c5"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/bo0900"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:18768\",\"variable:10240\",\"member:895572\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19128\",\"variable:10240\",\"member:917717\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19184\",\"variable:10240\",\"member:920872\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19219\",\"variable:10240\",\"member:921974\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19264\",\"variable:10240\",\"member:925197\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19289\",\"variable:10240\",\"member:927637\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19387\",\"variable:10240\",\"member:936675\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19392\",\"variable:10240\",\"member:937252\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19602\",\"variable:10240\",\"member:969272\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19811\",\"variable:10240\",\"member:981952\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19865\",\"variable:10240\",\"member:986194\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19891\",\"variable:10240\",\"member:989417\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20086\",\"variable:10240\",\"member:1008983\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20186\",\"variable:10240\",\"member:1019270\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:10240\",\"member:1024362\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:10240\",\"member:92592\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:10240\",\"member:90250\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:10240\",\"member:88780\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:10240\",\"member:70804\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "e799f4b3d527871578dcf0a6f59232f0279e82ad73ea97300001372434cec312"
+expected_diagnostic_sha256 = "3e289762dabb96f53f74b50a292cbdfafa50991a6e987388285fc5fee1c13c3b"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/bo0910"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:18768\",\"variable:10242\",\"member:895573\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19128\",\"variable:10242\",\"member:917716\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19184\",\"variable:10242\",\"member:920873\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19219\",\"variable:10242\",\"member:921973\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19264\",\"variable:10242\",\"member:925198\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19289\",\"variable:10242\",\"member:927636\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19387\",\"variable:10242\",\"member:936676\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19392\",\"variable:10242\",\"member:937251\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19602\",\"variable:10242\",\"member:969271\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19811\",\"variable:10242\",\"member:981951\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19865\",\"variable:10242\",\"member:986193\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19891\",\"variable:10242\",\"member:989416\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20086\",\"variable:10242\",\"member:1008982\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20186\",\"variable:10242\",\"member:1019269\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:10242\",\"member:1024304\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:10242\",\"member:92593\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:10242\",\"member:90030\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:10242\",\"member:88513\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:10242\",\"member:70805\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "486900930f914328279531a557e1da6015684a69082a138ca87ff5d096fd11ad"
+expected_diagnostic_sha256 = "09a3dc4eeeeada17741dc3e4445fabfbb274687084f32710ee0fa16bd118d22a"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/finns-hiss-vid-flerfamhus"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:10449\",\"member:1024329\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:10449\",\"member:91626\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:10449\",\"member:89851\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:10449\",\"member:88321\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:10449\",\"member:70502\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "0665cffecee74659fd4269c2f2678f86b04bb5dffc7107e89e12abe36ded4db2"
+expected_diagnostic_sha256 = "74b47c7205016b114d190f6f20364c8094770276cec75a10583a14fd424b4b15"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha0783"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11051\",\"member:1023612\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11051\",\"member:70662\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "0d2064c893df91717c2172fb888067e9a90dd745152b0e0cd036e4af785330f7"
+expected_diagnostic_sha256 = "6e5afff60616497b9ff42f46cb74e64f635a49bb5348749248b736a3e47b4082"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha0782"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11052\",\"member:1024220\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11052\",\"member:70663\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "67f06659228b0ca0ff91925ac2b702113f519fd5fda2ff53566c5be583f1ab8a"
+expected_diagnostic_sha256 = "9095fc0f544aa12f6201e50bbed43a9cba3e6f7246b883dc25ebcc1820fdb0f7"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha0781"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11053\",\"member:1023611\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11053\",\"member:70664\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "f2a3f8995ea94b2af5508c2135425f00c98c11ea2b4349d811722438e9829a63"
+expected_diagnostic_sha256 = "643c8386402e00683bf1b58f52d102fcf0e2e8cd5e462232b682d16cd7ef985b"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/i-arbetskraften"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11355\",\"member:1024207\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11355\",\"member:70830\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "eaf0ab94a386fec762390cfa68cce8f5b19bc20200243642f28bd0b9e7d44fd4"
+expected_diagnostic_sha256 = "967e6edebd94a0bd06df0d0e022f2855d8104e2a62f76651e63d47e27a47f7f0"
+
+[[acknowledge]]
+code = "conflicting_occurrence_facts"
+subject = "scb/ulf/intervjudatum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11458\",\"member:1024260\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11458\",\"member:69855\"]}"]
+fields = ["measurement_unit"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The same exact physical delivery window has conflicting source measurement_unit declarations: ['Datum', 'År och månad']. Preserve all original declarations and the mapped variable; leave only that common effective fact unavailable. No scaling, date precision or other factual equivalence is assumed."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "5d67605b56aa0c9f1e873617e9019022aabb2387af6cc6e7ddc894353ab7842d"
+expected_diagnostic_sha256 = "0acb4e7b305a48bef656122865c6be4d8975823fa60d5912e66b0c1f8bd5b883"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha1111"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11514\",\"member:1024156\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11514\",\"member:70497\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "d00998ebcc2d75b078c7d94c39bec7ee361ddbd55176042e6cd9b61dfbb9a080"
+expected_diagnostic_sha256 = "12720416daccd4c74d7a2dd31c49bc090ac4865ead0efbdf7b30a3f7b6180237"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha1119"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11517\",\"member:1023593\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11517\",\"member:70500\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "6ebe4b681dd1d0d7595a8a43302723d306a80acb64213f7ed97942fa775ac13d"
+expected_diagnostic_sha256 = "9ab0a55d1ea6d1e3696f2aa203bde9ec63a7baa4d5127b397242352be77f2d82"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/kon-person-1"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11727\",\"member:1024190\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:11727\",\"member:92487\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:11727\",\"member:89691\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:11727\",\"member:88160\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11727\",\"member:70341\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "ed3339cbbbabc159e055c92be205384420e15543ff52054ba4a0d133793e108f"
+expected_diagnostic_sha256 = "7396ef6f7f70d22bd55a937336c5c3d000cecb87cd6c0b934fadd926d52e242e"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/kon-person-2"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11731\",\"member:1023582\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:11731\",\"member:92491\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:11731\",\"member:89695\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:11731\",\"member:88164\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11731\",\"member:70342\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "f6345eb723896a45649893306479b03f29017c6c7e50d975fcbabd16259b94dc"
+expected_diagnostic_sha256 = "60b269eb6bd6766674f2285639debf6cc5bc2330790c17669f51aca1c20de8a8"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/kon-person-3"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11732\",\"member:1024173\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:11732\",\"member:92495\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:11732\",\"member:89696\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:11732\",\"member:88165\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11732\",\"member:70343\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "d25a19db48107d315a4d4063e4cbcfa812cacff68c051bc8a6c2dfdfd3150e63"
+expected_diagnostic_sha256 = "df04f65917f0c5935c4b109263cdd9c01c69045262f66f1bf45b51a9dfd1e586"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/kon-person-4"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11733\",\"member:1024189\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:11733\",\"member:92499\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:11733\",\"member:89697\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:11733\",\"member:88166\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11733\",\"member:70344\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "5eaee41520f1917eab0d467db402c722ffbec677d3304dc8887611c2dd0c29fa"
+expected_diagnostic_sha256 = "5a915eb9a0488fb96bdf69a41affb206653ae4173a8afb72120ed1073a0a82f9"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/kon-person-5"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11734\",\"member:1024172\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:11734\",\"member:92503\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:11734\",\"member:89698\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:11734\",\"member:88167\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11734\",\"member:70345\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "eb179b70e23c698e40d72734cee2d26ada4707a510a0c327adadcbbced75f983"
+expected_diagnostic_sha256 = "a53603d75426adc544495d834347f7ebf6af3e1c82e4b6184995844d1490732e"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/kon-person-6"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11735\",\"member:1024171\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:11735\",\"member:92507\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:11735\",\"member:89699\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:11735\",\"member:88168\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11735\",\"member:70346\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "77eeb9729abb5885628782cb7fb5b792f0adf5cce1ab419be1524b279ce5d4bb"
+expected_diagnostic_sha256 = "3d0c81762efb034cfef5ddd57ea04e3bc7817f6b3e9458299d580dd50cb3f0da"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/kon-person-7"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11736\",\"member:1024075\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:11736\",\"member:92511\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:11736\",\"member:89700\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:11736\",\"member:88169\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11736\",\"member:70347\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "8a911fdb0006f8a5737c744d23fb6f2b804cb82f69f066ff108bd6462fabcb5a"
+expected_diagnostic_sha256 = "50a5d46f7e294b58a75662bcd5f7028ca90fcd6386ba96c3ed7a225e2fe8179d"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/kon-person-8"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11737\",\"member:1024143\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:11737\",\"member:92515\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:11737\",\"member:89701\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:11737\",\"member:88170\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11737\",\"member:70348\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "dd0558c136ab325e851bd5d498165da08083ac12b20749b25292f21a7efe2bbe"
+expected_diagnostic_sha256 = "88a3cd89e6f4d38edbb80df0202af29a11e52b4db0510e3994c11e370ab495f9"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/make-i-arbetskraften"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11950\",\"member:1024137\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11950\",\"member:70848\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "08ef0fed6249c2a196bc07e15bf63b97baf7aabdf0eac67cb2d98ddcd7ddb002"
+expected_diagnostic_sha256 = "a96a0ede0ba04b3f672d97cc6e05cb274130731590e0534b8347730a5de72b58"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha1011"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11963\",\"member:1024134\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11963\",\"member:70447\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "e3ebe51f53535724c7e27ac45f07f00b2aba3b70f974d6c6ae91a5f90f8067bd"
+expected_diagnostic_sha256 = "89b8eda0472c38ecd6f3768171ab1ac44afc8005a427ef368bc9ecbe3f413a33"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha1019"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11966\",\"member:1024131\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11966\",\"member:70450\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "05fddae5f8440f82c25a44380f8fad32c4bde0c3d122d52b63f410b3f7907ef5"
+expected_diagnostic_sha256 = "3a175cd749cd881a0cdb07284416ef9f992cc0f2aa0950877347ca85e421c6d2"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha1031"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11974\",\"member:1023569\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11974\",\"member:70457\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "6433d119bbd88fb18348a0212157908835acba0f630695be8271c2b0a4dde652"
+expected_diagnostic_sha256 = "d3ddcd25dfaa3fcd63852f51866630061811244000a69cdac280855b99c15932"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha1039"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:11977\",\"member:1024126\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:11977\",\"member:70460\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "c4b8e47b79ee13b1a683e6976de5368e314ac372e7805a2d8596f2e57b5334b1"
+expected_diagnostic_sha256 = "f46fdd2cbe2686fd095a0d43615a9ffd0ec1de55fbde89c155b79db8948053a5"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/tr0070"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20186\",\"variable:12768\",\"member:1019049\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:12768\",\"member:1024014\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:12768\",\"member:92416\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:12768\",\"member:89668\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:12768\",\"member:88139\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:12768\",\"member:70151\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "98505c64652fe7abd10726f5d4f3d348228491dff863a58fc558a37626cacf1e"
+expected_diagnostic_sha256 = "f437c9b827b9d9b8155a95cc5d705c539a5314fe2a91dadfe7d27a06134e4563"
+
+[[acknowledge]]
+code = "conflicting_occurrence_facts"
+subject = "scb/ulf/km0630"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:12943\",\"member:1023512\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:12943\",\"member:71008\"]}"]
+fields = ["measurement_unit"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The same exact physical delivery window has conflicting source measurement_unit declarations: ['100-tal kronor', 'Kronor (SEK)']. Preserve all original declarations and the mapped variable; leave only that common effective fact unavailable. No scaling, date precision or other factual equivalence is assumed."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "8966fedbca9deabc11d28c711ed1219578b11165e38cc01f041898df2332d880"
+expected_diagnostic_sha256 = "78a7614cb007a0f4398db85473b4ccb508e66367038f9f00735cbd1e8fe582a1"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/stiga-upp"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:13308\",\"member:1023951\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:13308\",\"member:91722\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:13308\",\"member:89885\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:13308\",\"member:88355\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:13308\",\"member:70481\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "c2eb6c570b2cae8b024dfacc69a6072033c3415beeabacda20d59df0c5c62f87"
+expected_diagnostic_sha256 = "377a9e2e7a3750da0ebfab3a4ac85ffdacb55d68020c46cc9653b573919191b7"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha1091"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:13314\",\"member:1023501\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:13314\",\"member:70487\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "836af2cc36d2e9cd8a1512272651573abe100ed057645cac9d13e4e5805e5cc1"
+expected_diagnostic_sha256 = "14eaa265bb6135b5b5e67bc0ab84d7a04e6e9e91e46edffc84f25e31cd972d21"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha1099"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:13317\",\"member:1023893\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:13317\",\"member:70490\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "543b9f8370cf5d1a6eaba81d4a100639dc3a5022f5b73c9d6d6e4825333c0ccd"
+expected_diagnostic_sha256 = "b5cddca41d1143f49a9c96c9c5368fe125ac710c80c91d1c0e2fd8d8e8e42fc5"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha1071"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:13349\",\"member:1023889\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:13349\",\"member:70477\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "4126eee0e42653792840750a93cf26c1e8c5ecd48866884d913a733e7c896807"
+expected_diagnostic_sha256 = "9e6f6482758dbcbf85f30f203a93aa8f4294639f6db2054d042958a632aa0c83"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha1079"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:13352\",\"member:1023948\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:13352\",\"member:70480\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "c10c425a48883ff9c0c4b71a97932504a17cecf629386e925e775d0f6468825b"
+expected_diagnostic_sha256 = "4c5a641dd03a57be9ae00ac3a726758e3665d993f3a1780d9a97186243d1ae5b"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ut1800"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:13398\",\"member:1023885\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:13398\",\"member:92354\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:13398\",\"member:89596\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:13398\",\"member:88067\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:13398\",\"member:70080\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "fdc406b3e48a438e58d02bf1256025f6218649a889602dd98f18bfd933ceb975"
+expected_diagnostic_sha256 = "9ccbd81b0214617738c8a4c0f0124260957b459d7fc2dbcbb39609efa33e036e"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ut1810"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:13399\",\"member:1023884\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:13399\",\"member:92360\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:13399\",\"member:89602\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:13399\",\"member:88073\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:13399\",\"member:70081\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "653a773bcf5b244837ebe46ed6db79983dd9a43fec30aef6b99ad8b11db9de2b"
+expected_diagnostic_sha256 = "2adc6c2d9256d202d026ff61d01789d629b05d747ea6ff605b0240e4b6aab783"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ut1820"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:13400\",\"member:1023494\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:13400\",\"member:92366\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:13400\",\"member:89608\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:13400\",\"member:88079\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:13400\",\"member:70082\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "fa53435537d891904133ff297a34837831041f988fae2cb69cd1c3c6d4073418"
+expected_diagnostic_sha256 = "865f03ddc6fe3c006334bc02ee5c91fd9c23d381f260ae5ffeda70856003c066"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ut1830"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:13401\",\"member:1023493\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:13401\",\"member:92372\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:13401\",\"member:89614\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:13401\",\"member:88085\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:13401\",\"member:70083\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "3d5fb8034324bab2eb29e2e95123bbf85bfbfe4673291ebd7996023d84b9c0cf"
+expected_diagnostic_sha256 = "bb47027fb2f3b1ae4d38f04da98040bbba47e4700032e8fdb53a090015700f70"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha1130"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:13683\",\"member:1023904\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:13683\",\"member:70504\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "c8514c53a5b460c1fdc7eda84e62c48c04b8b1224cf6481c0db8178321a8033b"
+expected_diagnostic_sha256 = "640caac33d04c75e93fdfec153f842d4c222f4bb29e58df44f26be2e3d3e66c2"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha1131"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:13689\",\"member:1023901\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:13689\",\"member:70510\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "7d0685362fad074906aa084ffde899629752b4b43f4b9fc635aa5d9f1de968e0"
+expected_diagnostic_sha256 = "cb0ed4cd95fa35258752388b934ca7e04ec4cb3d35d4bb015de074a9ee2ef77a"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha1139"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:13692\",\"member:1023471\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:13692\",\"member:70513\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "ca9632250a9d6fd070639ba9a687a2c36a81284baee3a019441d83e2717bd6ee"
+expected_diagnostic_sha256 = "7e4b0c78c4e2354d8fa0cccb0e7e057d3fff93fd0ee5bcb3755d88c785d0e5bf"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha1051"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:13770\",\"member:1023860\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:13770\",\"member:70467\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "db96d0c48a9349fbc1f2489f76aa92332150b27ca3a36f0980852cacbfced70f"
+expected_diagnostic_sha256 = "b888ccceffca6a26558ca986e82aba338eaa0c32e78d8c20401c900b0a211d82"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha1059"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:13773\",\"member:1023816\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:13773\",\"member:70470\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "089ed069b693c1e653d5a58d2f141abb0369046a36e6c44a70bf0083c85cbe78"
+expected_diagnostic_sha256 = "18e7ada2f7c02a7179222dcc014406f87cb1e31d91921eec7f92599e9fdd0a34"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/av-och-pakladning"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:9465\",\"member:1024356\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:9465\",\"member:91723\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:9465\",\"member:89886\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:9465\",\"member:88356\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:9465\",\"member:70491\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "7d6967b410fdd93c3add3337df9b7748ca2db12bc8c2c5449a6819cf31326249"
+expected_diagnostic_sha256 = "df2d6f44db43875b1e964f2ac36730ad70678dd84257274a0e1ec8a0235353ce"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/bad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:9539\",\"member:1024429\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:9539\",\"member:91721\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:9539\",\"member:89884\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:9539\",\"member:88354\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:9539\",\"member:70514\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "fff245dacc9d707ab599314885bee31e34564db7c2775bb424b3f257a2247b01"
+expected_diagnostic_sha256 = "a8743b67c061777df8b214a9ead440448e9e49e1a080a52f92af785187e96ac4"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha1151"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:9545\",\"member:1024355\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:9545\",\"member:70520\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "698e6b56b698e9477f74a464951d6b4b138b815b9f2848afc262c23c49ad6374"
+expected_diagnostic_sha256 = "8c8914f303b6b4f97f230fd177a0e07d7907c61f3c2b8bbb125a4b18ce74d451"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/ha1159"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:9548\",\"member:1024353\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:9548\",\"member:70523\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "6aa1c11db13500570d5298c1b712fbd402198a32cf6ae57f63c7fc18a57ada10"
+expected_diagnostic_sha256 = "e797bfd2192f0d838b9b1160db20b6fe35b58ed42bdf5b29af33ed0df99fb2c6"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/ulf/am0160"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:20238\",\"variable:9926\",\"member:1024337\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:9926\",\"member:91988\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:9926\",\"member:89102\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:9926\",\"member:87576\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:737\",\"variable:9926\",\"member:70728\"]}"]
+fields = ["coding"]
+valid_from = "1989-01-01"
+valid_to = "1989-12-31"
+reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
+evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
+expected_evidence_sha256 = "301a07f4bccc33ba255b524210bce4d0dbbbb3bc328a71b3b517fa9da43a3cf7"
+expected_diagnostic_sha256 = "b6c8de3daae45cd2fb4056ca5c67effe01b812d5307d74892863759679771b07"

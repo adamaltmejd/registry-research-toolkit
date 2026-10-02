@@ -734,6 +734,7 @@ def convert_column_partitions(
                             record_ref(record)
                             for column in plan.unassigned
                             for record in columns[column]
+                            if (record_ref(record), column) not in scoped_owners
                         },
                         key=str,
                     )

@@ -513,3 +513,16 @@ reason = "These exact source windows have no own bound stored-code domain. Prese
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
 expected_evidence_sha256 = "1d62d4dcc0710f8e486fa0bff373d6a39b0fc74029c8badb047f0136476c17af"
 expected_diagnostic_sha256 = "8faf3311d4453eea4e695591de75c3b16a36ee4d7dec215559cff58336c7344e"
+
+[[coding.choice]]
+variable = "118.36"
+variant = "118.135"
+column = "Kommun"
+periods = [["2013-01-01", "2013-12-31"]]
+reason = "The native variable name and definition explicitly identify municipalities. The competing own bound domain contains only21 county codes; the selected exact own2013 list contains290 four-digit municipality codes. Preserve both supplied associations and their original dates; no modern book substitution."
+source = "Complete native family and physical-peer actual source census, own bound-list review Batch53-six-source-review.json. Maintainer-authorized source-faithful semantic curation; exact full-original and ordered coding guard."
+data_warning = "A county list is also linked to this municipality field in2013. The effective domain follows the explicitly supplied municipal definition and exact own municipality list; both original links remain evidence."
+expected_evidence_sha256 = "c0bb5e32d68657e743be654029f050dadcd6aeba80a62056d6deb238705e7c26"
+keep = "LKF 2013-01-01/ Län, kommuner och församlingar"
+keep_members_sha256 = "53c0760ecf4dcf1b9a106fc5d5aa2330334be00f12c973527196a24cc08882f8"
+over = ["LKF 2012-01-01/ Län, kommuner och församlingar"]

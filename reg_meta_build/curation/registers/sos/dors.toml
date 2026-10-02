@@ -1962,3 +1962,13 @@ valid_to = "9999-12-31"
 reason = "The two main DORS originals have the same native PNRQ, physical field and overlapping availability. One representation lists quality codes 0/4/8/9; the other lists 0/4/8 and omits 9. Preserve both exact source declarations. The supplied source does not determine whether code 9 belongs to the effective domain in this overlapping window; its coding and representation remain unavailable. No winner, code correction or complete value list is inferred."
 evidence = "Complete accepted DORS source register and actual inline coding sessions, no associated enumerated members. Exact ambiguous-domain retention policy. Proof: Batch51-SOS-final-proof.json."
 expected_evidence_sha256 = "b05d181a32a9d8fabe3907752d6e2c44a7a11dad92eb46dd414f2f88ba89ebe2"
+
+[[acknowledge]]
+code = "unresolved_list_reference"
+subject = "('Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx', 'Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx@sha256:51b8571f5dcfb779db753f7051008075f22670e181bbf182f000c6583de8d2fe', 'sheet:Kodlista_FODLAND', '73994b20f16c67cfd322db577c28f7d7421a2e23be9d08eff1cca5c21e9b825a', 158, ())"
+refs = []
+fields = ["coding"]
+reason = "The workbook contains an unattached158-member FODLAND dictionary with no explicit member reference or record target. Retain the complete dictionary, revision, descriptor and physical associations as source evidence; do not attach it to the differently declared FLAND free-text field."
+evidence = "Complete accepted workbook source and own value-join evidence. Exact full-original/ordered coding and diagnostic subject guard includes descriptor revision/hash/count for DORS. Batch53-SOS-final-source-proof.json; Batch53-DORS-unattached-descriptor-review.json."
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
+expected_diagnostic_sha256 = "fe472a789333ebbfe89b52b226ec9b10973f5c0d4828a0f8ac2b9d14247a2a84"

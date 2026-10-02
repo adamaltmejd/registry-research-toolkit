@@ -404,3 +404,49 @@ reason = "This exact historical window has no own bound stored-code domain. Pres
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
 expected_evidence_sha256 = "dac614e8767156c5e2b00a8e3c39ee2ab0b4bc0e5bf87fead96ca58c9cf26b15"
 expected_diagnostic_sha256 = "964f466ebe5827fa65803cd76966bba5d11a47c98157e62993830d7205507fc3"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "51.65"
+columns = { SUN2000Inr = "51.65.sun2000inr", SUN2000Inr1 = "51.65.sun2000inr1", SUN2020Inr = "51.65.sun2020inr", SUN2020Inr1 = "51.65.sun2020inr1", Sun2000inr = "51.65.sun2000inr", Sun96inr = "51.65.sun96inr", SunInr = "51.65.suninr", sun2000inr = "51.65.sun2000inr", sun2000inr1 = "51.65.sun2000inr1" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "20bf1baf9bf2181aaae7bbcafc6c075bb9e3751a5d2c976a3b5177798f373be7"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "51.749"
+columns = { agrupp = "51.749.agrupp", agrupp2 = "51.749.agrupp2" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "af2fe6d150935e5368396278820382104682ddcca685c74a1ddd19586eb34195"
+
+[[variable]]
+native_id = "51.65.sun2000inr"
+slug = "sun2000inr"
+
+[[variable]]
+native_id = "51.65.sun2000inr1"
+slug = "sun2000inr1"
+
+[[variable]]
+native_id = "51.65.sun2020inr"
+slug = "sun2020inr"
+
+[[variable]]
+native_id = "51.65.sun2020inr1"
+slug = "sun2020inr1"
+
+[[variable]]
+native_id = "51.65.sun96inr"
+slug = "sun96inr"
+
+[[variable]]
+native_id = "51.65.suninr"
+slug = "suninr"
+
+[[variable]]
+native_id = "51.749.agrupp"
+slug = "agrupp"
+
+[[variable]]
+native_id = "51.749.agrupp2"
+slug = "agrupp2"

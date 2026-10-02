@@ -135,3 +135,30 @@ fields = ["is_sensitive", "is_identifier"]
 reason = "The primary source leaves identifier and sensitivity flags unspecified for these exact source-owned records, and complete auxiliary joins supply no matching flag declaration. Preserve all quantity definitions, original fields, periods, physical evidence and existing own response domains. The named semantic role alone does not establish either boolean. Keep the affected quantity and its delivery states unavailable; do not default unknown flags to false."
 evidence = "Complete accepted full native-family and current source-owner review, all primary register originals, actual auxiliary joins, complete panel prerequisites and bound own coding. Exact full-original and bound-coding fingerprint. Proof: Batch51-flags-source-proof.json. Reviewed unavailable-flag policy; no boolean defaults or sensitivity inference."
 expected_evidence_sha256 = "3e8b27c3ecd0e9e82917c88c55116b163452e59d97281fd80a6206a94db0e732"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "52.66"
+columns = { SunNiva = "52.66.sunniva", sun2000niva = "52.66.sun2000niva", sun2000niva_old = "52.66.sun2000niva-old", sun2020niva = "52.66.sun2020niva", sun2020niva_old = "52.66.sun2020niva-old" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "3adac47f2caaa8b55ae9d63e322a9a0e1d690419e1acb24ebd601f7589cf2309"
+
+[[variable]]
+native_id = "52.66.sunniva"
+slug = "sunniva"
+
+[[variable]]
+native_id = "52.66.sun2000niva"
+slug = "sun2000niva"
+
+[[variable]]
+native_id = "52.66.sun2000niva-old"
+slug = "sun2000niva-old-66"
+
+[[variable]]
+native_id = "52.66.sun2020niva"
+slug = "sun2020niva"
+
+[[variable]]
+native_id = "52.66.sun2020niva-old"
+slug = "sun2020niva-old"
