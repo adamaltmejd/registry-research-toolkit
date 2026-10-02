@@ -4934,22 +4934,13 @@ type = "same_as"
 a = "scb/komvux-sfi/verksamhetsform-skolvasendet"
 b = "scb/komvux/verksamhetsform-skolvasendet"
 note = "curated:#737 verksamhetsform inom skolväsendet"
-# utbildningsinriktning (3 positioner) (3 vars)
-[[edge]]
-type = "same_as"
-a = "scb/hek/utbildningsinriktning-3-positioner"
-b = "scb/personalutbildningsstatistik/utbildningsinriktning-3-positioner"
-note = "curated:#737 utbildningsinriktning (3 positioner)"
+# utbildningsinriktning (3 positioner) (2 vars)
 [[edge]]
 type = "same_as"
 a = "scb/hek/utbildningsinriktning-3-positioner"
 b = "scb/utbildningsanalyser/utbildningsinriktning-3-positioner"
 note = "curated:#737 utbildningsinriktning (3 positioner)"
-[[edge]]
-type = "same_as"
-a = "scb/personalutbildningsstatistik/utbildningsinriktning-3-positioner"
-b = "scb/utbildningsanalyser/utbildningsinriktning-3-positioner"
-note = "curated:#737 utbildningsinriktning (3 positioner)"
+
 # yrke_mätveckan (2 vars)
 [[edge]]
 type = "same_as"
