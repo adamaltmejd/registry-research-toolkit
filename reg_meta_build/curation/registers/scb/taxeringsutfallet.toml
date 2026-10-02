@@ -301,3 +301,63 @@ native_id = "118.42254"
 slug = "public-service-avgift"
 
 # register 121
+
+[[identity.partition]]
+data_warning = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
+variable = "118.8217"
+columns = { AvgRomKat = "118.8217", AvgSyrOrt = "118.8217", AvgSyrOrtPat = "118.8217" }
+unassigned_columns = []
+columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
+expected_evidence_sha256 = "94d56cff825bca31831ae7676a9715b0d5eb60412b9cbcbe74e1b5dc3d9f25af"
+
+[[identity.partition]]
+data_warning = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
+variable = "118.8317"
+columns = { AntBeskInkRomKat = "118.8317", AntBeskInkSyrOrt = "118.8317", AntBeskInkSyrOrtPat = "118.8317" }
+unassigned_columns = []
+columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
+expected_evidence_sha256 = "e66c464679b9d93d9ac3f1edfb600edd2db43b2ee406d005267e726982d12279"
+
+[[identity.partition]]
+data_warning = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
+variable = "118.19778"
+columns = { AvkSk27 = "118.19778", AvkSk30 = "118.19778" }
+unassigned_columns = []
+columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
+expected_evidence_sha256 = "2064212b75503a773752e38616af20bad985f8a99c789abc6487b0402ae124e2"
+
+[[representation.parallel]]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+co_delivered = false
+variable = "118.19778"
+variant = "118.135"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2013-01-01", valid_to = "2013-12-31", column = "AvkSk27", source_editions = ["Taxeringsår 2013"] }, { valid_from = "2013-01-01", valid_to = "2013-12-31", column = "AvkSk30", source_editions = ["Deklarationsår 2014 (beskattningsår 2013)"] }]
+evidence = "Same complete reviewed source-native definition across distinct source editions with overlapping finite windows. This preserves each physical column, metadata, original period and own coding; it does not assert simultaneous co-delivery, value equality or storage conversion. The native identity follows exported IDs/definitions despite conflicting yearly literal labels under the accepted source-native policy."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+co_delivered = false
+variable = "118.8217"
+variant = "118.135"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2013-01-01", valid_to = "2013-12-31", column = "AvgSyrOrt", source_editions = ["Taxeringsår 2013"] }, { valid_from = "2013-01-01", valid_to = "2013-12-31", column = "AvgSyrOrtPat", source_editions = ["Deklarationsår 2014 (beskattningsår 2013)"] }]
+evidence = "Same complete reviewed source-native definition across distinct source editions with overlapping finite windows. This preserves each physical column, metadata, original period and own coding; it does not assert simultaneous co-delivery, value equality or storage conversion. The native identity follows exported IDs/definitions despite conflicting yearly literal labels under the accepted source-native policy."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+co_delivered = false
+variable = "118.8317"
+variant = "118.135"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2013-01-01", valid_to = "2013-12-31", column = "AntBeskInkSyrOrt", source_editions = ["Taxeringsår 2013"] }, { valid_from = "2013-01-01", valid_to = "2013-12-31", column = "AntBeskInkSyrOrtPat", source_editions = ["Deklarationsår 2014 (beskattningsår 2013)"] }]
+evidence = "Same complete reviewed source-native definition across distinct source editions with overlapping finite windows. This preserves each physical column, metadata, original period and own coding; it does not assert simultaneous co-delivery, value equality or storage conversion. The native identity follows exported IDs/definitions despite conflicting yearly literal labels under the accepted source-native policy."
+noted = "2026-10-02"

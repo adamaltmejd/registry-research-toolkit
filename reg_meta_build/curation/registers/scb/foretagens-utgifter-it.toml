@@ -98,3 +98,23 @@ refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[
 expected_evidence_sha256 = "4734f8e3a873b453383901f7a7bb01d68f66aaf114f3571ec97bb8d23290ad58"
 reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
 evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
+
+[[identity.partition]]
+data_warning = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
+variable = "259.4027"
+columns = { NgS1 = "259.4027", NgS2007 = "259.4027" }
+unassigned_columns = []
+columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
+expected_evidence_sha256 = "b87a24c2b00851ffc18c51043ea0d1b987bcc24d4b0637e29949872fb2e36214"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/foretagens-utgifter-it/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:259\",\"variant:530\",\"edition:3726\",\"variable:4027\",\"member:228915\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "The supplied2010 industry field has no bound source membership. Other own years carry a mixed SNI92/SNI2002/SNI2007 list, which does not establish an exact2010 classification edition or annual encoding. Retain the source-native industry identity and every original; leave only this exact value set unavailable, without borrowing a later domain or changing codes."
+evidence = "Complete own native259.4027 family, actual source/support and own-value bindings; Batch52-simple-native21-own-binding-review.json. Accepted policy retains known facts with exact unavailable-coding warnings instead of inventing historical membership."
+expected_evidence_sha256 = "c0e6aa345187d2047c4ae7721d743f7511fd9989e451fe47d4a5a0d640145514"
+expected_diagnostic_sha256 = "7a2ea1cb0f514f66ce97bbc993359873037e843a87d7e78c13305680dd346af4"

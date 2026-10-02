@@ -572,3 +572,23 @@ valid_to = "2025-12-31"
 reason = "This exact source window has no own associated response domain. Retain all source fields, original dates and known domains outside the window; keep only its stored encoding unavailable. No codes, special values or domain vintage are inferred from a neighbouring year or column."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
 expected_evidence_sha256 = "3b2f39792c37c59ba4a9977a73105ea7258e7510328960fa0a71d9f24b96483b"
+
+[[identity.partition]]
+data_warning = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
+variable = "296.30830"
+columns = { BeskrivnSv = "296.30830", NamnSV = "296.30830" }
+unassigned_columns = []
+columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
+expected_evidence_sha256 = "7cafb2ccebd37f0702ee32c6a58d0ae3c923e92bbf658ff1556c184901f02cb1"
+
+[[representation.parallel]]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+co_delivered = false
+variable = "296.30830"
+variant = "296.980"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "BeskrivnSv", expected_codings = ["6ba34515be72b12171971a715d54cd950ae6d682543905c970d6d967c67f8484"], source_editions = ["Indata 2014"] }, { valid_from = "2014-01-01", valid_to = "2014-12-31", column = "NamnSV", expected_codings = ["6ba34515be72b12171971a715d54cd950ae6d682543905c970d6d967c67f8484"], source_editions = ["Utdata 2014"] }]
+evidence = "Same complete reviewed source-native definition across distinct source editions with overlapping finite windows. This preserves each physical column, metadata, original period and own coding; it does not assert simultaneous co-delivery, value equality or storage conversion. The native identity follows exported IDs/definitions despite conflicting yearly literal labels under the accepted source-native policy."
+noted = "2026-10-02"
