@@ -91,10 +91,6 @@ native_id = "122.6435"
 slug = "arbl1k"  # source: kolumnnamn
 
 [[variable]]
-native_id = "122.6436"
-slug = "arbl20k"  # source: kolumnnamn
-
-[[variable]]
 native_id = "122.6437"
 slug = "arbl21k"  # source: kolumnnamn
 
@@ -387,10 +383,6 @@ native_id = "122.6617"
 slug = "hufranskal2"  # source: kolumnnamn
 
 [[variable]]
-native_id = "122.6619"
-slug = "hufrantimtotanst"  # source: kolumnnamn
-
-[[variable]]
 native_id = "122.6620"
 slug = "hufrantimtotfo"  # source: kolumnnamn
 
@@ -413,10 +405,6 @@ slug = "internbyte"  # source: kolumnnamn
 [[variable]]
 native_id = "122.6625"
 slug = "internbytform"  # source: kolumnnamn
-
-[[variable]]
-native_id = "122.6631"
-slug = "iveck"  # source: kolumnnamn
 
 [[variable]]
 native_id = "122.6632"
@@ -939,10 +927,6 @@ native_id = "122.6817"
 slug = "medborgarlandkod"  # source: kolumnnamn
 
 [[variable]]
-native_id = "122.6819"
-slug = "medborgarlandvdnamn1"  # source: kolumnnamn
-
-[[variable]]
 native_id = "122.6820"
 slug = "medborgarlandvdnamn2"  # source: kolumnnamn
 
@@ -973,10 +957,6 @@ slug = "stratum"  # source: kolumnnamn
 [[variable]]
 native_id = "122.6839"
 slug = "stratum-est"  # source: kolumnnamn
-
-[[variable]]
-native_id = "122.6841"
-slug = "studbet"  # source: kolumnnamn
 
 [[variable]]
 native_id = "122.6849"
@@ -1043,32 +1023,8 @@ native_id = "122.6872"
 slug = "uarbarbuppg"  # source: kolumnnamn
 
 [[variable]]
-native_id = "122.6873"
-slug = "uarbbenamn"  # source: kolumnnamn
-
-[[variable]]
-native_id = "122.6874"
-slug = "uarbbenamnku"  # source: kolumnnamn
-
-[[variable]]
 native_id = "122.6875"
 slug = "uarbejkanskal"  # source: kolumnnamn
-
-[[variable]]
-native_id = "122.6877"
-slug = "uarbejsokskal"  # source: kolumnnamn
-
-[[variable]]
-native_id = "122.6878"
-slug = "uarbejvillskal"  # source: kolumnnamn
-
-[[variable]]
-native_id = "122.6879"
-slug = "uarbforetag"  # source: kolumnnamn
-
-[[variable]]
-native_id = "122.6880"
-slug = "uarbforetagku"  # source: kolumnnamn
 
 [[variable]]
 native_id = "122.6881"
@@ -1157,10 +1113,6 @@ slug = "uarbvillarb"  # source: kolumnnamn
 [[variable]]
 native_id = "122.6907"
 slug = "uarbyrke"  # source: kolumnnamn
-
-[[variable]]
-native_id = "122.6908"
-slug = "uarbyrkstall"  # source: kolumnnamn
 
 [[variable]]
 native_id = "122.6909"
@@ -1559,10 +1511,6 @@ native_id = "122.19092"
 slug = "rekkanal"  # source: kolumnnamn
 
 [[variable]]
-native_id = "122.19095"
-slug = "bisni"  # source: fold
-
-[[variable]]
 native_id = "122.19105"
 slug = "hudelskal"  # source: kolumnnamn
 
@@ -1577,10 +1525,6 @@ slug = "utb14"  # source: kolumnnamn
 [[variable]]
 native_id = "122.19117"
 slug = "rekpassiv"  # source: kolumnnamn
-
-[[variable]]
-native_id = "122.19441"
-slug = "alsni"  # source: fold
 
 [[variable]]
 native_id = "122.21180"
@@ -1605,10 +1549,6 @@ slug = "kfack1a"  # source: kolumnnamn
 [[variable]]
 native_id = "122.21185"
 slug = "kfack1b"  # source: kolumnnamn
-
-[[variable]]
-native_id = "122.21190"
-slug = "omb10b"  # source: kolumnnamn
 
 [[variable]]
 native_id = "122.21196"
@@ -1749,10 +1689,6 @@ slug = "uarbisco08-4"  # source: kolumnnamn
 [[variable]]
 native_id = "122.25606"
 slug = "a0soksatt"  # source: kolumnnamn
-
-[[variable]]
-native_id = "122.25622"
-slug = "husni"  # source: fold
 
 [[variable]]
 native_id = "122.25630"
@@ -1993,10 +1929,6 @@ slug = "upprakar-ord"  # source: kolumnnamn
 [[variable]]
 native_id = "122.27149"
 slug = "viktvfat-ord"  # source: kolumnnamn
-
-[[variable]]
-native_id = "122.27170"
-slug = "ampp4bes"  # source: kolumnnamn
 
 [[variable]]
 native_id = "122.27177"
