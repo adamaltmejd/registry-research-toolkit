@@ -47,6 +47,7 @@ from reg_meta_build.resolved_metadata import (
     ResolvedStateRef,
     ResolvedSuccession,
     ResolvedVariableGroup,
+    RetainedDocumentaryRelationship,
     validate_metadata_structure,
 )
 from reg_meta_build.source_curation import ResolutionDiagnostic
@@ -1368,10 +1369,14 @@ def resolve_metadata_dependencies(
         "documentary_relationships": selected(
             metadata.documentary_relationships,
             "documentary_relationships",
-            lambda e, o: [
-                entity(fqid, o)
-                for fqid in (e.owner, *(a.variable for a in e.variables))
-            ],
+            lambda e, o: (
+                [
+                    entity(fqid, o)
+                    for fqid in (e.owner, *(a.variable for a in e.variables))
+                ]
+                if not isinstance(e, RetainedDocumentaryRelationship)
+                else [entity(e.register_ref, o)]
+            ),
         ),
         "source_join_keys": selected(
             metadata.source_join_keys,

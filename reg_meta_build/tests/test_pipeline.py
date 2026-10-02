@@ -1634,13 +1634,7 @@ def test_curation_wholly_outside_slice_is_skipped_without_claiming_proof(
     )
 
 
-@pytest.mark.parametrize("catalog", ["thin"], indirect=True)
-@pytest.mark.parametrize(
-    "source", ["scb-registerinformation", "Forsakringskassan/fk.toml", "unknown"]
-)
-def test_unbound_relationship_defers_only_known_unselected_occurrence_source(
-    catalog: CatalogFixture, tmp_path: Path, monkeypatch, source: str
-) -> None:
+def _unowned_crosswalk(source: str) -> SourceCodeCrosswalkDeclaration:
     revision = SourceRevision.create(
         dataset=source,
         publisher="fixture",
@@ -1650,7 +1644,7 @@ def test_unbound_relationship_defers_only_known_unselected_occurrence_source(
         artifact_size=1,
         artifact_sha256="a" * 64,
     )
-    declaration = SourceCodeCrosswalkDeclaration(
+    return SourceCodeCrosswalkDeclaration(
         revision=revision,
         locator=RecordLocator(
             semantic_record_key=("crosswalk",),
@@ -1667,6 +1661,17 @@ def test_unbound_relationship_defers_only_known_unselected_occurrence_source(
         description=None,
         operands=(),
     )
+
+
+@pytest.mark.parametrize("catalog", ["thin"], indirect=True)
+@pytest.mark.parametrize(
+    "source", ["scb-registerinformation", "Forsakringskassan/fk.toml", "unknown"]
+)
+def test_unbound_relationship_defers_only_known_unselected_occurrence_source(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch, source: str
+) -> None:
+    declaration = _unowned_crosswalk(source)
+    revision = declaration.revision
     evidence = ReferenceEvidence(
         revision_id=revision.revision_id, declaration=declaration
     )
@@ -1817,3 +1822,83 @@ def test_pipeline_routes_real_support_errors_without_dropping_source_event(
         assert {json.dumps(r, sort_keys=True) for i in relevant for r in i["refs"]} == {
             json.dumps(r, sort_keys=True) for r in raw[0]["refs"]
         }
+
+
+def test_retained_unattached_relationship_persists_warning_and_literal_only(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch
+) -> None:
+    from reg_meta.source_evidence import canonical_sha256
+    from reg_meta_build.source_records import SourceEvidenceRow, SourceEvidenceTable
+
+    source = "scb-registerinformation"
+    declaration = _unowned_crosswalk(source)
+    table = SourceEvidenceTable(
+        source=source,
+        source_revision_id=declaration.revision.revision_id,
+        name="crosswalk",
+        rows=(
+            SourceEvidenceRow(
+                locator=declaration.locator,
+                role="declaration",
+                cells=declaration.delivered_cells,
+            ),
+        ),
+    )
+    original_evidence = PreparedCatalogSources.iter_evidence
+    original_tables = PreparedSourceRecords.iter_tables
+
+    def with_crosswalk(prepared):
+        yield from original_evidence(prepared)
+        yield ReferenceEvidence(
+            revision_id=declaration.revision.revision_id, declaration=declaration
+        )
+
+    def with_table(records, **kwargs):
+        yield from original_tables(records, **kwargs)
+        if kwargs.get("source") in (None, source):
+            yield table
+
+    monkeypatch.setattr(PreparedCatalogSources, "iter_evidence", with_crosswalk)
+    monkeypatch.setattr(PreparedSourceRecords, "iter_tables", with_table)
+    register = catalog.curation / "registers/scb/sample.toml"
+    register.write_text(
+        register.read_text() + "\n[[documentary.retained]]\n"
+        'source = "scb-registerinformation"\ntable = "crosswalk"\nrow = "row:1"\n'
+        f'payload_sha256 = "{canonical_sha256(declaration.model_dump(mode="json"))}"\n'
+        f'table_sha256 = "{canonical_sha256(table.model_dump(mode="json"))}"\n'
+        'reason = "No supplied variable or encoding endpoint; retain literal codes unattached."\n'
+        'evidence = "Complete exact table reviewed."\nnoted = "2026-10-02"\n'
+    )
+    out, report = tmp_path / "retained.db", tmp_path / "retained-report"
+    catalog.build(out, report, diagnostic=True)
+    assert [(i["code"], i["severity"]) for i in _issues(report)] == [
+        ("retained_unattached_source_relationship", "warning")
+    ]
+    with sqlite3.connect(out) as conn:
+        owner, status, raw = conn.execute(
+            "SELECT owner_variable_id,binding_status,declaration_json FROM source_relationship"
+        ).fetchone()
+        assert owner is None and status == "retained_unattached"
+        assert SourceCodeCrosswalkDeclaration.model_validate_json(raw) == declaration
+        assert (
+            conn.execute(
+                "SELECT COUNT(*) FROM source_relationship_variable"
+            ).fetchone()[0]
+            == 0
+        )
+        warning = conn.execute(
+            "SELECT register_id, variable_id, json_extract(warning_json, '$.detail') FROM data_warning"
+        ).fetchone()
+        assert warning[0] is not None and warning[1] is None
+        assert (
+            warning[2]
+            == "No supplied variable or encoding endpoint; retain literal codes unattached."
+        )
+        assert not conn.execute("pragma foreign_key_check").fetchall()
+    with gzip.open(report / "events.jsonl.gz", "rt") as stream:
+        events = [json.loads(line) for line in stream]
+    assert [
+        e["disposition"]
+        for e in events
+        if e.get("revision_id") == declaration.revision.revision_id
+    ] == ["retained_unattached"]

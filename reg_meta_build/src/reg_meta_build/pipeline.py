@@ -57,7 +57,10 @@ from reg_meta_build.resolved_catalog import (
     ResolvedVariant,
     write_resolved_catalog,
 )
-from reg_meta_build.resolved_metadata import ResolvedMetadata
+from reg_meta_build.resolved_metadata import (
+    ResolvedMetadata,
+    RetainedDocumentaryRelationship,
+)
 from reg_meta_build.source_classifications import resolve_canonical_codes
 from reg_meta_build.source_coordinates import NativeKey  # noqa: TC001
 from reg_meta_build.source_curation import (
@@ -718,6 +721,9 @@ def _run_pipeline(
             for entry in prepared.manifest.inputs:
                 event("input", entry.model_dump(mode="json"))
             declarations = []
+            retained_relationship_issues: dict[str, list[ResolutionDiagnostic]] = (
+                defaultdict(list)
+            )
             documentary = {
                 (
                     r.declaration.revision.dataset,
@@ -758,28 +764,51 @@ def _run_pipeline(
                             )
                         )
                         if relationship is not None and not outside_slice:
-                            disposition = "owner_bound_literal"
-                            for unresolved in relationship.unresolved:
-                                coordinate = (
-                                    f"clause:{unresolved.clause_index}"
-                                    if unresolved.clause_index is not None
-                                    else f"operand:{unresolved.operand_index}"
-                                )
-                                issue(
-                                    ResolutionDiagnostic(
-                                        code="unresolved_documentary_operand",
-                                        severity="warning",
-                                        subject=f"{relationship.owner}:{declaration.locator.physical_table}:{declaration.locator.physical_record}:{coordinate}",
-                                        detail=f"{unresolved.token!r}: {unresolved.reason} The owner-bound literal is retained without claiming executable or fully bound semantics.",
-                                        refs=(
-                                            SourceRecordRef(
-                                                source=declaration.revision.dataset,
-                                                semantic_record_key=declaration.locator.semantic_record_key,
-                                            ),
+                            if isinstance(
+                                relationship, RetainedDocumentaryRelationship
+                            ):
+                                disposition = "retained_unattached"
+                                retained_issue = ResolutionDiagnostic(
+                                    code="retained_unattached_source_relationship",
+                                    severity="warning",
+                                    subject=f"{relationship.register_ref}:{declaration.locator.physical_table}:{declaration.locator.physical_record}",
+                                    detail=relationship.reason,
+                                    refs=(
+                                        SourceRecordRef(
+                                            source=declaration.revision.dataset,
+                                            semantic_record_key=declaration.locator.semantic_record_key,
                                         ),
-                                        withheld_output=("fully_bound_operands",),
-                                    )
+                                    ),
+                                    withheld_output=("catalog_relationship",),
+                                    case_id=relationship.provenance.split(": ", 1)[0],
                                 )
+                                retained_relationship_issues[
+                                    relationship.register_ref
+                                ].append(retained_issue)
+                                issue(retained_issue)
+                            else:
+                                disposition = "owner_bound_literal"
+                                for unresolved in relationship.unresolved:
+                                    coordinate = (
+                                        f"clause:{unresolved.clause_index}"
+                                        if unresolved.clause_index is not None
+                                        else f"operand:{unresolved.operand_index}"
+                                    )
+                                    issue(
+                                        ResolutionDiagnostic(
+                                            code="unresolved_documentary_operand",
+                                            severity="warning",
+                                            subject=f"{relationship.owner}:{declaration.locator.physical_table}:{declaration.locator.physical_record}:{coordinate}",
+                                            detail=f"{unresolved.token!r}: {unresolved.reason} The owner-bound literal is retained without claiming executable or fully bound semantics.",
+                                            refs=(
+                                                SourceRecordRef(
+                                                    source=declaration.revision.dataset,
+                                                    semantic_record_key=declaration.locator.semantic_record_key,
+                                                ),
+                                            ),
+                                            withheld_output=("fully_bound_operands",),
+                                        )
+                                    )
                         else:
                             disposition = (
                                 "out_of_slice_relationship"
@@ -1122,7 +1151,17 @@ def _run_pipeline(
                     _emit_timing(f"pipeline: resolve {scope_key!r}", resolution_started)
                     seen_scopes.add(scope_key)
                     for warning in scope_data_warnings(
-                        result, diagnostics=tuple(scope_issues)
+                        result,
+                        diagnostics=(
+                            *scope_issues,
+                            *(
+                                d
+                                for r in result.parents.registers.values()
+                                for d in retained_relationship_issues.get(
+                                    f"{r.provider}/{r.slug}", ()
+                                )
+                            ),
+                        ),
                     ):
                         data_warnings[warning.warning_id] = warning
                     acknowledged.update(result.acknowledged)

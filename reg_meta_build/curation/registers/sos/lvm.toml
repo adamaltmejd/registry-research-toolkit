@@ -343,3 +343,163 @@ support = []
 columns = [{"variant_key" = ["Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx", "sos", "register", "name", "Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM", "variant", "name", "Ansökningar om tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"], "column" = "MISSBM", "valid_from" = "1994-01-01", "valid_to" = "9999-12-31", "source_scope" = {"kind" = "intervals", "intervals" = [{"start" = "1994"}]}, "expected_codings" = ["cd40b6671974d3af11b8bbdf9b404ddbf33b7e42bae54a60de68d18ea46f1373"]}, {"variant_key" = ["Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx", "sos", "register", "name", "Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM", "variant", "name", "Beslut om omedelbart omhändertagande för tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"], "column" = "MISSBM", "valid_from" = "1994-01-01", "valid_to" = "9999-12-31", "source_scope" = {"kind" = "intervals", "intervals" = [{"start" = "1994"}]}, "expected_codings" = ["fc97d060ca70736b7cccb1684f5da0a32be12f3bfd73393d698df4fdb84837a4"]}, {"variant_key" = ["Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx", "sos", "register", "name", "Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM", "variant", "name", "Tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"], "column" = "MISSBM", "valid_from" = "1994-01-01", "valid_to" = "9999-12-31", "source_scope" = {"kind" = "intervals", "intervals" = [{"start" = "1994"}]}, "expected_codings" = ["944a13943f80d2b7b77f69fb85e98da1573796ab97ab1e3c212e7047321d3725"]}]
 evidence = "The complete own-source LVM family describes the same underlying named quantity, with variant-specific application/custody/discharge population or reporting wording. Keep the delivery descriptions and every original code/label/flag/date/storage fact. MISSBM keeps its literal source code6 label discrepancy and later8/9 additions in their own domains; no recoding or cross-domain equivalence. Batch51-LVM-residual-proof.json."
 noted = "2026-10-02"
+
+[[documentary.retained]]
+source = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx"
+table = "Kodlista_behandlingshem"
+row = "row:8"
+payload_sha256 = "649bd72bceb5eed0169455223ed197f04879b2f7b2eb33af5a9320e5a0cf2a85"
+table_sha256 = "b6a63b534d776edf29031fd9a70c43af44968c8d806dbf6c3929eeb3e17ba058"
+reason = "This supplied treatment-home crosswalk names SCB and SiS code systems, but does not identify a variable endpoint or establish which encoding FRANHEM stores. Preserve every literal institutional name, code pair and source period unattached; no code, meaning or namespace is inferred."
+evidence = "Complete LVM source and physical table reviewed:16 rows with SCBkod/SiSkod pairs,1994-open section, no supplied member_name. FRANHEM names this sheet while BHEM names another appendix. Exact complete declaration/raw-cell/revision/locator and physical-table multiplicity fingerprints are pinned. Batch52-LVM-unattached-treatment-crosswalk-review.json."
+noted = "2026-10-02"
+
+[[documentary.retained]]
+source = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx"
+table = "Kodlista_behandlingshem"
+row = "row:9"
+payload_sha256 = "e4067c188242c1e9c2e4f74898ae69fd9f4c5a07338749da03c18007cb14b787"
+table_sha256 = "b6a63b534d776edf29031fd9a70c43af44968c8d806dbf6c3929eeb3e17ba058"
+reason = "This supplied treatment-home crosswalk names SCB and SiS code systems, but does not identify a variable endpoint or establish which encoding FRANHEM stores. Preserve every literal institutional name, code pair and source period unattached; no code, meaning or namespace is inferred."
+evidence = "Complete LVM source and physical table reviewed:16 rows with SCBkod/SiSkod pairs,1994-open section, no supplied member_name. FRANHEM names this sheet while BHEM names another appendix. Exact complete declaration/raw-cell/revision/locator and physical-table multiplicity fingerprints are pinned. Batch52-LVM-unattached-treatment-crosswalk-review.json."
+noted = "2026-10-02"
+
+[[documentary.retained]]
+source = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx"
+table = "Kodlista_behandlingshem"
+row = "row:10"
+payload_sha256 = "c57d5dac9f70baa688f306a05b656eedee53c81a1f06a692c94ee38cd7f439b1"
+table_sha256 = "b6a63b534d776edf29031fd9a70c43af44968c8d806dbf6c3929eeb3e17ba058"
+reason = "This supplied treatment-home crosswalk names SCB and SiS code systems, but does not identify a variable endpoint or establish which encoding FRANHEM stores. Preserve every literal institutional name, code pair and source period unattached; no code, meaning or namespace is inferred."
+evidence = "Complete LVM source and physical table reviewed:16 rows with SCBkod/SiSkod pairs,1994-open section, no supplied member_name. FRANHEM names this sheet while BHEM names another appendix. Exact complete declaration/raw-cell/revision/locator and physical-table multiplicity fingerprints are pinned. Batch52-LVM-unattached-treatment-crosswalk-review.json."
+noted = "2026-10-02"
+
+[[documentary.retained]]
+source = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx"
+table = "Kodlista_behandlingshem"
+row = "row:11"
+payload_sha256 = "4e6d63345dde07dd5d2dd2d9a5e60109b2796808e56d9d53f7090afc0aca0d50"
+table_sha256 = "b6a63b534d776edf29031fd9a70c43af44968c8d806dbf6c3929eeb3e17ba058"
+reason = "This supplied treatment-home crosswalk names SCB and SiS code systems, but does not identify a variable endpoint or establish which encoding FRANHEM stores. Preserve every literal institutional name, code pair and source period unattached; no code, meaning or namespace is inferred."
+evidence = "Complete LVM source and physical table reviewed:16 rows with SCBkod/SiSkod pairs,1994-open section, no supplied member_name. FRANHEM names this sheet while BHEM names another appendix. Exact complete declaration/raw-cell/revision/locator and physical-table multiplicity fingerprints are pinned. Batch52-LVM-unattached-treatment-crosswalk-review.json."
+noted = "2026-10-02"
+
+[[documentary.retained]]
+source = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx"
+table = "Kodlista_behandlingshem"
+row = "row:12"
+payload_sha256 = "5cc73c84793fd5451ade3566fe58466dff0e995919611c5b689d2b27d4b8ce60"
+table_sha256 = "b6a63b534d776edf29031fd9a70c43af44968c8d806dbf6c3929eeb3e17ba058"
+reason = "This supplied treatment-home crosswalk names SCB and SiS code systems, but does not identify a variable endpoint or establish which encoding FRANHEM stores. Preserve every literal institutional name, code pair and source period unattached; no code, meaning or namespace is inferred."
+evidence = "Complete LVM source and physical table reviewed:16 rows with SCBkod/SiSkod pairs,1994-open section, no supplied member_name. FRANHEM names this sheet while BHEM names another appendix. Exact complete declaration/raw-cell/revision/locator and physical-table multiplicity fingerprints are pinned. Batch52-LVM-unattached-treatment-crosswalk-review.json."
+noted = "2026-10-02"
+
+[[documentary.retained]]
+source = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx"
+table = "Kodlista_behandlingshem"
+row = "row:13"
+payload_sha256 = "0f2732dbb96eaedb362ccbaccb7f33c1944460cbfef03a5c50e0e3a5f5a3a084"
+table_sha256 = "b6a63b534d776edf29031fd9a70c43af44968c8d806dbf6c3929eeb3e17ba058"
+reason = "This supplied treatment-home crosswalk names SCB and SiS code systems, but does not identify a variable endpoint or establish which encoding FRANHEM stores. Preserve every literal institutional name, code pair and source period unattached; no code, meaning or namespace is inferred."
+evidence = "Complete LVM source and physical table reviewed:16 rows with SCBkod/SiSkod pairs,1994-open section, no supplied member_name. FRANHEM names this sheet while BHEM names another appendix. Exact complete declaration/raw-cell/revision/locator and physical-table multiplicity fingerprints are pinned. Batch52-LVM-unattached-treatment-crosswalk-review.json."
+noted = "2026-10-02"
+
+[[documentary.retained]]
+source = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx"
+table = "Kodlista_behandlingshem"
+row = "row:14"
+payload_sha256 = "e5aab089c132c0c95a1435c75233b4c330b4c20fecee876ff22f889865b02a4b"
+table_sha256 = "b6a63b534d776edf29031fd9a70c43af44968c8d806dbf6c3929eeb3e17ba058"
+reason = "This supplied treatment-home crosswalk names SCB and SiS code systems, but does not identify a variable endpoint or establish which encoding FRANHEM stores. Preserve every literal institutional name, code pair and source period unattached; no code, meaning or namespace is inferred."
+evidence = "Complete LVM source and physical table reviewed:16 rows with SCBkod/SiSkod pairs,1994-open section, no supplied member_name. FRANHEM names this sheet while BHEM names another appendix. Exact complete declaration/raw-cell/revision/locator and physical-table multiplicity fingerprints are pinned. Batch52-LVM-unattached-treatment-crosswalk-review.json."
+noted = "2026-10-02"
+
+[[documentary.retained]]
+source = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx"
+table = "Kodlista_behandlingshem"
+row = "row:15"
+payload_sha256 = "0a957f234bd32b90c98ab9cbe3c2f2c8a21a599099b673585f2cffadd7780b5f"
+table_sha256 = "b6a63b534d776edf29031fd9a70c43af44968c8d806dbf6c3929eeb3e17ba058"
+reason = "This supplied treatment-home crosswalk names SCB and SiS code systems, but does not identify a variable endpoint or establish which encoding FRANHEM stores. Preserve every literal institutional name, code pair and source period unattached; no code, meaning or namespace is inferred."
+evidence = "Complete LVM source and physical table reviewed:16 rows with SCBkod/SiSkod pairs,1994-open section, no supplied member_name. FRANHEM names this sheet while BHEM names another appendix. Exact complete declaration/raw-cell/revision/locator and physical-table multiplicity fingerprints are pinned. Batch52-LVM-unattached-treatment-crosswalk-review.json."
+noted = "2026-10-02"
+
+[[documentary.retained]]
+source = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx"
+table = "Kodlista_behandlingshem"
+row = "row:16"
+payload_sha256 = "7850835a345d51fae287b2f2ac4740c78548a26dc96d4a06a315c3c0c2428390"
+table_sha256 = "b6a63b534d776edf29031fd9a70c43af44968c8d806dbf6c3929eeb3e17ba058"
+reason = "This supplied treatment-home crosswalk names SCB and SiS code systems, but does not identify a variable endpoint or establish which encoding FRANHEM stores. Preserve every literal institutional name, code pair and source period unattached; no code, meaning or namespace is inferred."
+evidence = "Complete LVM source and physical table reviewed:16 rows with SCBkod/SiSkod pairs,1994-open section, no supplied member_name. FRANHEM names this sheet while BHEM names another appendix. Exact complete declaration/raw-cell/revision/locator and physical-table multiplicity fingerprints are pinned. Batch52-LVM-unattached-treatment-crosswalk-review.json."
+noted = "2026-10-02"
+
+[[documentary.retained]]
+source = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx"
+table = "Kodlista_behandlingshem"
+row = "row:17"
+payload_sha256 = "ce22204c3565e79e0b9edf50dc73f333c080354787df9b7b5976dd3328a4d2e5"
+table_sha256 = "b6a63b534d776edf29031fd9a70c43af44968c8d806dbf6c3929eeb3e17ba058"
+reason = "This supplied treatment-home crosswalk names SCB and SiS code systems, but does not identify a variable endpoint or establish which encoding FRANHEM stores. Preserve every literal institutional name, code pair and source period unattached; no code, meaning or namespace is inferred."
+evidence = "Complete LVM source and physical table reviewed:16 rows with SCBkod/SiSkod pairs,1994-open section, no supplied member_name. FRANHEM names this sheet while BHEM names another appendix. Exact complete declaration/raw-cell/revision/locator and physical-table multiplicity fingerprints are pinned. Batch52-LVM-unattached-treatment-crosswalk-review.json."
+noted = "2026-10-02"
+
+[[documentary.retained]]
+source = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx"
+table = "Kodlista_behandlingshem"
+row = "row:18"
+payload_sha256 = "76aaaf0a7e4268eba1fd7da52eae761570d95a32f4e652b1cdc0b01edb8a39f7"
+table_sha256 = "b6a63b534d776edf29031fd9a70c43af44968c8d806dbf6c3929eeb3e17ba058"
+reason = "This supplied treatment-home crosswalk names SCB and SiS code systems, but does not identify a variable endpoint or establish which encoding FRANHEM stores. Preserve every literal institutional name, code pair and source period unattached; no code, meaning or namespace is inferred."
+evidence = "Complete LVM source and physical table reviewed:16 rows with SCBkod/SiSkod pairs,1994-open section, no supplied member_name. FRANHEM names this sheet while BHEM names another appendix. Exact complete declaration/raw-cell/revision/locator and physical-table multiplicity fingerprints are pinned. Batch52-LVM-unattached-treatment-crosswalk-review.json."
+noted = "2026-10-02"
+
+[[documentary.retained]]
+source = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx"
+table = "Kodlista_behandlingshem"
+row = "row:19"
+payload_sha256 = "6dd0289321308b5f0eba99dde3a78f8131f38330043a65fa664677be374935fa"
+table_sha256 = "b6a63b534d776edf29031fd9a70c43af44968c8d806dbf6c3929eeb3e17ba058"
+reason = "This supplied treatment-home crosswalk names SCB and SiS code systems, but does not identify a variable endpoint or establish which encoding FRANHEM stores. Preserve every literal institutional name, code pair and source period unattached; no code, meaning or namespace is inferred."
+evidence = "Complete LVM source and physical table reviewed:16 rows with SCBkod/SiSkod pairs,1994-open section, no supplied member_name. FRANHEM names this sheet while BHEM names another appendix. Exact complete declaration/raw-cell/revision/locator and physical-table multiplicity fingerprints are pinned. Batch52-LVM-unattached-treatment-crosswalk-review.json."
+noted = "2026-10-02"
+
+[[documentary.retained]]
+source = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx"
+table = "Kodlista_behandlingshem"
+row = "row:20"
+payload_sha256 = "b224211f50c6c9b2d213060be18d037fa9c53d0e84b58e9d71cc41d5a8bfda2c"
+table_sha256 = "b6a63b534d776edf29031fd9a70c43af44968c8d806dbf6c3929eeb3e17ba058"
+reason = "This supplied treatment-home crosswalk names SCB and SiS code systems, but does not identify a variable endpoint or establish which encoding FRANHEM stores. Preserve every literal institutional name, code pair and source period unattached; no code, meaning or namespace is inferred."
+evidence = "Complete LVM source and physical table reviewed:16 rows with SCBkod/SiSkod pairs,1994-open section, no supplied member_name. FRANHEM names this sheet while BHEM names another appendix. Exact complete declaration/raw-cell/revision/locator and physical-table multiplicity fingerprints are pinned. Batch52-LVM-unattached-treatment-crosswalk-review.json."
+noted = "2026-10-02"
+
+[[documentary.retained]]
+source = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx"
+table = "Kodlista_behandlingshem"
+row = "row:21"
+payload_sha256 = "f515876c73ee059640a3c7b52c1054aeaa5ff90f13fda04f79b6abcb5495bfa5"
+table_sha256 = "b6a63b534d776edf29031fd9a70c43af44968c8d806dbf6c3929eeb3e17ba058"
+reason = "This supplied treatment-home crosswalk names SCB and SiS code systems, but does not identify a variable endpoint or establish which encoding FRANHEM stores. Preserve every literal institutional name, code pair and source period unattached; no code, meaning or namespace is inferred."
+evidence = "Complete LVM source and physical table reviewed:16 rows with SCBkod/SiSkod pairs,1994-open section, no supplied member_name. FRANHEM names this sheet while BHEM names another appendix. Exact complete declaration/raw-cell/revision/locator and physical-table multiplicity fingerprints are pinned. Batch52-LVM-unattached-treatment-crosswalk-review.json."
+noted = "2026-10-02"
+
+[[documentary.retained]]
+source = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx"
+table = "Kodlista_behandlingshem"
+row = "row:22"
+payload_sha256 = "8c988040c1a2d8ed1c1cfdf6f2679ec6b8ffd4b2b6f26f44a897519a764998d1"
+table_sha256 = "b6a63b534d776edf29031fd9a70c43af44968c8d806dbf6c3929eeb3e17ba058"
+reason = "This supplied treatment-home crosswalk names SCB and SiS code systems, but does not identify a variable endpoint or establish which encoding FRANHEM stores. Preserve every literal institutional name, code pair and source period unattached; no code, meaning or namespace is inferred."
+evidence = "Complete LVM source and physical table reviewed:16 rows with SCBkod/SiSkod pairs,1994-open section, no supplied member_name. FRANHEM names this sheet while BHEM names another appendix. Exact complete declaration/raw-cell/revision/locator and physical-table multiplicity fingerprints are pinned. Batch52-LVM-unattached-treatment-crosswalk-review.json."
+noted = "2026-10-02"
+
+[[documentary.retained]]
+source = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx"
+table = "Kodlista_behandlingshem"
+row = "row:23"
+payload_sha256 = "8c1fe0b8d358db981c8651b56c5e4dc33ab129245f9b9432bf509077ca906df4"
+table_sha256 = "b6a63b534d776edf29031fd9a70c43af44968c8d806dbf6c3929eeb3e17ba058"
+reason = "This supplied treatment-home crosswalk names SCB and SiS code systems, but does not identify a variable endpoint or establish which encoding FRANHEM stores. Preserve every literal institutional name, code pair and source period unattached; no code, meaning or namespace is inferred."
+evidence = "Complete LVM source and physical table reviewed:16 rows with SCBkod/SiSkod pairs,1994-open section, no supplied member_name. FRANHEM names this sheet while BHEM names another appendix. Exact complete declaration/raw-cell/revision/locator and physical-table multiplicity fingerprints are pinned. Batch52-LVM-unattached-treatment-crosswalk-review.json."
+noted = "2026-10-02"

@@ -1899,8 +1899,24 @@ class DocumentaryBindingEntry(_CurationModel):
     )
 
 
+class DocumentaryRetainedEntry(_CurationModel):
+    source: str
+    table: str
+    row: str
+    payload_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    table_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    reason: str
+    evidence: str
+    noted: str
+
+    _text = field_validator("source", "table", "row", "reason", "evidence", "noted")(
+        _require_trimmed
+    )
+
+
 class DocumentaryCuration(_CurationModel):
     binding: list[DocumentaryBindingEntry] = Field(default_factory=list)
+    retained: list[DocumentaryRetainedEntry] = Field(default_factory=list)
 
 
 class RegisterCuration(_CurationModel):

@@ -4,6 +4,11 @@ Maintainer-only builder for `reg_meta.db` and the separate `reg_meta_docs.db` do
 index. End users install [`reg_meta`](../reg_meta/) and fetch published databases with
 `reg-meta update`.
 
+The current builder output uses schema `8.0.0`. Exact reviewed source crosswalks without
+established variable endpoints remain in `source_relationship` as `retained_unattached`,
+with raw declarations and register-scoped warnings. This builder format is separate from
+the unchanged reader schema; publication requires the coordinated consumer adaptation.
+
 ## Catalog workflow
 
 1. Capture an exact machine-readable input bundle. Raw archives can remain compressed

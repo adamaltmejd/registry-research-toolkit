@@ -167,7 +167,7 @@ def _setup(kind="derivation"):
         noted="2026-09-30",
     )
     register = SimpleNamespace(
-        documentary=SimpleNamespace(binding=[entry]),
+        documentary=SimpleNamespace(binding=[entry], retained=[]),
         source_file="registers/scb/example.toml",
     )
     tree = SimpleNamespace(registers=[register])
@@ -397,3 +397,140 @@ def test_owner_name_and_negative_native_guards_remain_checked_with_matching_payl
     tree.registers[0].documentary.binding = [entry, entry]
     relations, issues = _compile(setup)
     assert not relations and len(issues) == 2
+
+
+def _retained_setup():
+    from reg_meta_build.curation_tree import DocumentaryRetainedEntry
+
+    tree, declaration, table, records, names = _setup("code_crosswalk")
+    declaration = declaration.model_copy(update={"member_name": None})
+    tree.registers[0].register_info = SimpleNamespace(provider="scb", slug="example")
+    tree.registers[0].documentary.binding = []
+    tree.registers[0].documentary.retained = [
+        DocumentaryRetainedEntry(
+            source="fixture",
+            table="literal",
+            row="row:2",
+            payload_sha256=canonical_sha256(declaration.model_dump(mode="json")),
+            table_sha256=canonical_sha256(table.model_dump(mode="json")),
+            reason="Neither code namespace has an established variable endpoint.",
+            evidence="Complete literal table reviewed.",
+            noted="2026-10-02",
+        )
+    ]
+    return tree, declaration, table, records, names
+
+
+@pytest.mark.parametrize(
+    "change", ["payload", "missing", "duplicate", "removed_peer", "duplicate_peer"]
+)
+def test_retained_declaration_requires_complete_exact_physical_evidence(change):
+    setup = _retained_setup()
+    _, declaration, table, _, _ = setup
+    kwargs = {}
+    if change == "payload":
+        kwargs["declarations"] = (
+            declaration.model_copy(update={"description": value_field("changed")}),
+        )
+    elif change == "missing":
+        kwargs["declarations"] = ()
+    elif change == "duplicate":
+        kwargs["declarations"] = (declaration, declaration)
+    elif change == "removed_peer":
+        kwargs["tables"] = (table.model_copy(update={"rows": ()}),)
+    else:
+        kwargs["tables"] = (
+            table.model_copy(update={"rows": (*table.rows, table.rows[0])}),
+        )
+    relations, issues = _compile(setup, **kwargs)
+    assert not relations
+    assert [issue.code for issue in issues] == ["stale_curation_entry"]
+
+
+@pytest.mark.parametrize(
+    "change", ["wrong_register", "wrong_source", "duplicate_entry"]
+)
+def test_retained_literal_requires_one_admitted_source_register_disposition(change):
+    setup = _retained_setup()
+    tree, _, _, _, names = setup
+    if change == "wrong_register":
+        tree.registers[0].register_info.slug = "other"
+    elif change == "wrong_source":
+        names = {
+            fqid: {("other", key) for _, key in families}
+            for fqid, families in names.items()
+        }
+    else:
+        entry = tree.registers[0].documentary.retained[0]
+        tree.registers[0].documentary.retained = [entry, entry]
+    relations, issues = _compile(setup, names=names)
+    assert not relations
+    assert issues and all(issue.code == "stale_curation_entry" for issue in issues)
+
+
+def test_retained_literal_writer_preserves_raw_evidence_without_endpoints(tmp_path):
+    from reg_meta_build.resolved_metadata import RetainedDocumentaryRelationship
+
+    setup = _retained_setup()
+    relations, issues = _compile(setup)
+    assert not issues
+    assert len(relations) == 1 and isinstance(
+        relations[0], RetainedDocumentaryRelationship
+    )
+    relation = relations[0]
+    assert relation.declaration == setup[1]
+    with pytest.raises(ValidationError):
+        RetainedDocumentaryRelationship.model_validate_json(
+            relation.model_dump_json()[:-1] + ',"owner":"scb/example/owner"}'
+        )
+    with pytest.raises(ValidationError):
+        DocumentaryRelationship(
+            relationship_id=1,
+            owner="scb/example/owner",
+            declaration=setup[1],
+            provenance="Must not attach an owner to a declaration without a member.",
+        )
+    from reg_meta_build.catalog_dependencies import resolve_metadata_dependencies
+
+    register = ResolvedRegister(provider="scb", slug="example", name="Example")
+    resolved = resolve_metadata_dependencies(
+        ResolvedMetadata(documentary_relationships=relations),
+        (),
+        registers=(register,),
+        variants=(),
+        classifications=(),
+        withheld={},
+    )
+    assert not resolved.diagnostics
+    assert resolved.metadata.documentary_relationships == relations
+    out = tmp_path / "retained.db"
+    write_resolved_catalog(
+        (),
+        out,
+        manifest={},
+        diagnostic=True,
+        parent_registers=(register,),
+        metadata=ResolvedMetadata(documentary_relationships=relations),
+    )
+    with closing(open_built_db(out)) as conn:
+        row = conn.execute("SELECT * FROM source_relationship").fetchone()
+        assert row["owner_variable_id"] is None
+        assert row["binding_status"] == "retained_unattached"
+        assert (
+            SourceCodeCrosswalkDeclaration.model_validate_json(row["declaration_json"])
+            == setup[1]
+        )
+        assert (
+            conn.execute(
+                "SELECT COUNT(*) FROM source_relationship_variable"
+            ).fetchone()[0]
+            == 0
+        )
+        assert conn.execute("pragma integrity_check").fetchone()[0] == "ok"
+        assert not conn.execute("pragma foreign_key_check").fetchall()
+    import sqlite3
+
+    with sqlite3.connect(out) as conn, pytest.raises(sqlite3.IntegrityError):
+        conn.execute(
+            "UPDATE source_relationship SET binding_status='owner_bound_literal'"
+        )

@@ -13,12 +13,17 @@ from reg_meta.documentary import (
 )
 from reg_meta.source_evidence import canonical_sha256
 
+from reg_meta_build.curation_tree import (
+    DocumentaryBindingEntry,
+    DocumentaryRetainedEntry,
+)
 from reg_meta_build.id import mint
 from reg_meta_build.prepared_catalog import ReferenceEvidence
+from reg_meta_build.resolved_metadata import RetainedDocumentaryRelationship
 from reg_meta_build.source_curation import ResolutionDiagnostic, SourceRecordRef
 
 if TYPE_CHECKING:
-    from reg_meta_build.curation_tree import CurationTree
+    from reg_meta_build.curation_tree import CurationTree, RegisterCuration
     from reg_meta_build.pipeline import CompiledScope
     from reg_meta_build.prepared_catalog import PreparedCatalogSources
     from reg_meta_build.source_records import SourceRecord
@@ -29,12 +34,22 @@ def compile_documentary_bindings(
     prepared: PreparedCatalogSources,
     scopes: tuple[CompiledScope, ...],
     variable_families: dict[str, set[tuple[str, tuple[str | int, ...]]]],
-) -> tuple[tuple[DocumentaryRelationship, ...], tuple[ResolutionDiagnostic, ...]]:
-    entries = [
+) -> tuple[
+    tuple[DocumentaryRelationship | RetainedDocumentaryRelationship, ...],
+    tuple[ResolutionDiagnostic, ...],
+]:
+    entries: list[
+        tuple[RegisterCuration, int, DocumentaryBindingEntry | DocumentaryRetainedEntry]
+    ] = [
         (register, index, entry)
         for register in tree.registers
         for index, entry in enumerate(register.documentary.binding, 1)
     ]
+    entries.extend(
+        (register, index, entry)
+        for register in tree.registers
+        for index, entry in enumerate(register.documentary.retained, 1)
+    )
     if not entries:
         return (), ()
     selected_sources = {s.source for s in scopes}
@@ -56,6 +71,8 @@ def compile_documentary_bindings(
                 tables[source, table.name].append(table)
     needed = defaultdict(set)
     for _, _, e in entries:
+        if isinstance(e, DocumentaryRetainedEntry):
+            continue
         needed[e.source].update(
             (
                 e.member,
@@ -75,7 +92,9 @@ def compile_documentary_bindings(
     result, issues = [], []
     counts = Counter((e.source, e.table, e.row) for _, _, e in entries)
     for register, index, entry in entries:
-        case_id = f"{register.source_file}#/documentary/binding/{index}"
+        retained = isinstance(entry, DocumentaryRetainedEntry)
+        section = "retained" if retained else "binding"
+        case_id = f"{register.source_file}#/documentary/{section}/{index}"
         if entry.source not in selected_sources:
             # Existing pipeline evidence disposition reports the out-of-slice deferral.
             continue
@@ -96,7 +115,19 @@ def compile_documentary_bindings(
             errors.append(
                 "complete physical table peers are missing, ambiguous or changed"
             )
-        if len(matches) == 1:
+        if isinstance(entry, DocumentaryRetainedEntry):
+            register_ref = (
+                f"{register.register_info.provider}/{register.register_info.slug}"
+            )
+            if not any(
+                fqid.startswith(register_ref + "/")
+                and any(source == entry.source for source, _ in families)
+                for fqid, families in variable_families.items()
+            ):
+                errors.append(
+                    "retained declaration has no admitted source/register scope"
+                )
+        if len(matches) == 1 and not isinstance(entry, DocumentaryRetainedEntry):
             member = matches[0].member_name
             if (
                 member is None
@@ -104,10 +135,14 @@ def compile_documentary_bindings(
                 or member.value != entry.member
             ):
                 errors.append("supplied owner name disagrees with the authored member")
-        endpoints = [
-            (entry.member, entry.owner, entry.owner_originals_sha256),
-            *((a.token, a.variable, a.originals_sha256) for a in entry.anchors),
-        ]
+        endpoints = (
+            []
+            if isinstance(entry, DocumentaryRetainedEntry)
+            else [
+                (entry.member, entry.owner, entry.owner_originals_sha256),
+                *((a.token, a.variable, a.originals_sha256) for a in entry.anchors),
+            ]
+        )
         for native, fqid, expected in sorted(set(endpoints)):
             found = families[entry.source, native]
             if len(found) != 1:
@@ -125,7 +160,11 @@ def compile_documentary_bindings(
                 errors.append(
                     f"exact native endpoint {native!r} no longer has owner {fqid!r}"
                 )
-        for guard in entry.negative_native_guards:
+        for guard in (
+            ()
+            if isinstance(entry, DocumentaryRetainedEntry)
+            else entry.negative_native_guards
+        ):
             records = [
                 r
                 for _, members in families[entry.source, guard.native]
@@ -160,6 +199,23 @@ def compile_documentary_bindings(
             )
             continue
         declaration = matches[0]
+        if isinstance(entry, DocumentaryRetainedEntry):
+            result.append(
+                RetainedDocumentaryRelationship(
+                    relationship_id=mint(
+                        "source_relationship",
+                        entry.source,
+                        entry.table,
+                        entry.row,
+                        "retained_unattached",
+                    ),
+                    register_ref=f"{register.register_info.provider}/{register.register_info.slug}",
+                    declaration=declaration,
+                    reason=entry.reason,
+                    provenance=f"{case_id}: {entry.reason}\n{entry.evidence}",
+                )
+            )
+            continue
         result.append(
             DocumentaryRelationship(
                 relationship_id=mint(

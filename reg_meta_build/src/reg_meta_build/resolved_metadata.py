@@ -11,7 +11,7 @@ from collections import defaultdict
 from typing import TYPE_CHECKING, Any, Literal, Self
 
 from pydantic import Field, field_validator, model_validator
-from reg_meta.documentary import DocumentaryRelationship
+from reg_meta.documentary import DocumentaryRelationship, LiteralSourceRelationship
 from reg_meta.fqid import FqidKind, parse, validate_slug
 
 from reg_meta_build._resolved_common import (
@@ -40,6 +40,26 @@ if TYPE_CHECKING:
         ResolvedVariable,
         ResolvedVariant,
     )
+
+
+class RetainedDocumentaryRelationship(_ResolvedModel):
+    """An exact source declaration without an established catalog endpoint."""
+
+    relationship_id: int = Field(gt=0)
+    register_ref: str
+    declaration: LiteralSourceRelationship
+    binding_status: Literal["retained_unattached"] = "retained_unattached"
+    reason: str
+    provenance: str
+
+    _text = field_validator("reason", "provenance")(_require_trimmed)
+
+    @field_validator("register_ref")
+    @classmethod
+    def _register_ref(cls, value: str) -> str:
+        if parse(value).kind != FqidKind.REGISTER:
+            raise ValueError("retained documentary scope must be a register")
+        return value
 
 
 def _fqid(value: str, *kinds: FqidKind) -> str:
@@ -404,7 +424,9 @@ class ResolvedMetadata(_ResolvedModel):
     source_join_keys: tuple[ResolvedSourceJoinKey, ...] = ()
     identifiers: tuple[ResolvedIdentifierMetadata, ...] = ()
     timeseries_events: tuple[ResolvedTimeseriesEvent, ...] = ()
-    documentary_relationships: tuple[DocumentaryRelationship, ...] = ()
+    documentary_relationships: tuple[
+        DocumentaryRelationship | RetainedDocumentaryRelationship, ...
+    ] = ()
 
 
 def _unique(values: Any, label: str) -> None:
@@ -833,20 +855,28 @@ def prepare_resolved_metadata(
         for item in metadata.timeseries_events
     )
     for relationship in metadata.documentary_relationships:
-        relationship = DocumentaryRelationship.model_validate_json(
+        relationship = type(relationship).model_validate_json(
             relationship.model_dump_json()
         )
+        if isinstance(relationship, RetainedDocumentaryRelationship):
+            require(
+                register_ids, relationship.register_ref, "retained documentary register"
+            )
         rows["source_relationship"].append(
             (
                 relationship.relationship_id,
-                variable_ids[relationship.owner],
+                variable_ids[relationship.owner]
+                if isinstance(relationship, DocumentaryRelationship)
+                else None,
                 relationship.declaration.kind,
                 relationship.declaration.revision.dataset,
                 relationship.declaration.revision.revision_id,
                 relationship.declaration.model_dump_json(),
                 relationship.binding_status,
                 json.dumps(
-                    [u.model_dump(mode="json") for u in relationship.unresolved],
+                    [u.model_dump(mode="json") for u in relationship.unresolved]
+                    if isinstance(relationship, DocumentaryRelationship)
+                    else [],
                     ensure_ascii=False,
                     separators=(",", ":"),
                 ),
@@ -862,7 +892,11 @@ def prepare_resolved_metadata(
                 anchor.token,
                 variable_ids[anchor.variable],
             )
-            for ordinal, anchor in enumerate(relationship.variables)
+            for ordinal, anchor in enumerate(
+                relationship.variables
+                if isinstance(relationship, DocumentaryRelationship)
+                else ()
+            )
         )
     return rows
 

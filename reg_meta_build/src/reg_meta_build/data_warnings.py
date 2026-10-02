@@ -38,11 +38,13 @@ QUALITY_CODES = frozenset(
         "missing_data_type",
         "unresolved_data_type",
         "omitted_columnless_occurrence",
+        "retained_unattached_source_relationship",
     }
 )
 
 
 WARNING_SUMMARIES = {
+    "retained_unattached_source_relationship": "A source code crosswalk has no established variable link",
     "unknown_support_key": "Some source metadata cannot be linked to a delivered column",
     "unknown_code_membership": "Source codes are retained without established response labels",
     "unresolved_list_reference": "The source response dictionary is unavailable",
@@ -194,7 +196,9 @@ def scope_data_warnings(
             "summary": WARNING_SUMMARIES.get(
                 issue.code, "The source has an acknowledged data limitation"
             ),
-            "detail": reviewed_reasons.get(issue.acknowledged_by)
+            "detail": issue.detail
+            if issue.code == "retained_unattached_source_relationship"
+            else reviewed_reasons.get(issue.acknowledged_by)
             or WARNING_DETAILS.get(
                 issue.code,
                 "An exact reviewed source limitation is acknowledged; the original diagnostic remains in the build report.",

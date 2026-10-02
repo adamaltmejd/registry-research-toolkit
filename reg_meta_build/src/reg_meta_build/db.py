@@ -24,7 +24,7 @@ from reg_meta.db import (
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
 # Produced catalog schema; readers gate their independently supported version.
-SCHEMA_VERSION = "7.0.0"
+SCHEMA_VERSION = "8.0.0"
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
@@ -650,14 +650,16 @@ CREATE TABLE variable_alias (
 -- Literal source metadata, with documentary references rather than availability edges.
 CREATE TABLE source_relationship (
     relationship_id INTEGER PRIMARY KEY,
-    owner_variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
+    owner_variable_id INTEGER REFERENCES variable(variable_id),
     kind TEXT NOT NULL CHECK (kind IN ('code_crosswalk', 'derivation')),
     source_dataset TEXT NOT NULL,
     source_revision_id TEXT NOT NULL,
     declaration_json TEXT NOT NULL CHECK (json_valid(declaration_json)),
-    binding_status TEXT NOT NULL CHECK (binding_status = 'owner_bound_literal'),
+    binding_status TEXT NOT NULL CHECK (binding_status IN ('owner_bound_literal', 'retained_unattached')),
     unresolved_json TEXT NOT NULL CHECK (json_valid(unresolved_json)),
-    provenance TEXT NOT NULL
+    provenance TEXT NOT NULL,
+    CHECK ((binding_status = 'owner_bound_literal' AND owner_variable_id IS NOT NULL)
+        OR (binding_status = 'retained_unattached' AND owner_variable_id IS NULL AND unresolved_json = '[]'))
 );
 CREATE INDEX idx_source_relationship_owner ON source_relationship(owner_variable_id);
 CREATE TABLE source_relationship_variable (

@@ -1503,6 +1503,15 @@ resolution withholds a relation if its exact catalog endpoints are unsupported. 
 source relationship tables preserve the literal document and ordered catalog references
 without adding state or coding edges.
 
+`documentary.retained` is the exact guarded disposition for a supplied declaration whose
+catalog endpoints are not established. Full declaration and physical-table digests
+retain raw cells, provenance, periods and row multiplicity. An admitted source/register
+scope is required, but no variable owner or code namespace is invented. The builder-only
+resolved record persists under `retained_unattached` with a null owner and no endpoint
+rows; its reviewed reason becomes a register data warning. Missing, changed or
+duplicated evidence still fails compilation. Builder schema `8.0.0` admits this explicit
+status; reader models remain unchanged.
+
 The shared evidence primitives and crosswalk/derivation declarations live in
 `reg_meta.source_evidence` and `reg_meta.documentary`. Build ingestion and catalog
 reading use the same strict models and validators. Source occurrence, temporal and
