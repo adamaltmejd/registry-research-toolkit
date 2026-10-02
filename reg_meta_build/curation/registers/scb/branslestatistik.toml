@@ -3,10 +3,6 @@ provider = "scb"
 slug = "branslestatistik"
 native_id = "139"
 
-[[code_label_pair]]
-code = "scb/branslestatistik/land-for-import-export"
-label = "scb/branslestatistik/lnamn"
-
 [[variant]]
 native_id = "139.203"
 slug = "industrins-bransleforbrukning"
@@ -49,10 +45,6 @@ slug = "bransleslag-maxi-kvbr"
 [[variable]]
 native_id = "139.2586"
 slug = "bransleslag-mini-kvbr"
-
-[[variable]]
-native_id = "139.2601"
-slug = "bransleslag-koder"
 
 [[variable]]
 native_id = "139.2953"
@@ -431,105 +423,6 @@ expected_evidence_sha256 = "8ddfbb9cd9af5ce25fa11c78c0f75fbaafd2fcc3ce8adb47ba11
 
 [[acknowledge]]
 code = "missing_coding_period"
-subject = "scb/branslestatistik/lnamn"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:12581\",\"variable:16721\",\"member:559596\"]}"]
-fields = ["coding"]
-valid_from = "2017-01-01"
-valid_to = "2017-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "85c97a9c61b41ea8d37e4ce11137c16d17fda8c590cd93c236be98c4e8303c1f"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/lnamn"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:13294\",\"variable:16721\",\"member:592177\"]}"]
-fields = ["coding"]
-valid_from = "2018-01-01"
-valid_to = "2018-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "f0eb74bdbd2bb809979ab23a9e7878571ffcced8f40483c38965e47fb78fe42c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/lnamn"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:14715\",\"variable:16721\",\"member:673656\"]}"]
-fields = ["coding"]
-valid_from = "2019-01-01"
-valid_to = "2019-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "1c986f7afcff17da7185a5dab6fda7dad454cf51248df0593b126d5eeafff38c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/lnamn"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:16472\",\"variable:16721\",\"member:804937\"]}"]
-fields = ["coding"]
-valid_from = "2020-01-01"
-valid_to = "2020-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "fc418e2baa165b97eaffa3b0cffe2c824394c21618fb581b229c180813dc705a"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/lnamn"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:16500\",\"variable:16721\",\"member:808401\"]}"]
-fields = ["coding"]
-valid_from = "2021-01-01"
-valid_to = "2021-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "1959722fee52f65f8700ad5e355ef3a8722a77af2018b993c34ca96668979929"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/lnamn"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:18438\",\"variable:16721\",\"member:860953\"]}"]
-fields = ["coding"]
-valid_from = "2022-01-01"
-valid_to = "2022-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "837faddfecea5936767a75292c3be660057cfd6c4ec4ef2ad1d4923c15aef285"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/lnamn"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:18879\",\"variable:16721\",\"member:901388\"]}"]
-fields = ["coding"]
-valid_from = "2023-01-01"
-valid_to = "2023-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "54313b2c0986437c191cd0efbfa34380bb43275f4d2e79473ca6a14b6d1dd5ff"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/lnamn"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:19323\",\"variable:16721\",\"member:930150\"]}"]
-fields = ["coding"]
-valid_from = "2024-01-01"
-valid_to = "2024-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "075c467e6b8b1a7b5a4f7480a928b6f328f9cac5a995cbb91c1ba2538534c3dd"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/lnamn"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:19854\",\"variable:16721\",\"member:984930\"]}"]
-fields = ["coding"]
-valid_from = "2025-01-01"
-valid_to = "2025-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "be489f23be8b0bc05858d3c870a8a1f90ce7de8d655b8afabef8277175d2f8f0"
-
-[[acknowledge]]
-code = "missing_coding_period"
 subject = "scb/branslestatistik/fid"
 refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:11662\",\"variable:19508\",\"member:479436\"]}"]
 fields = ["coding"]
@@ -890,3 +783,425 @@ valid_to = "2012-12-31"
 reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
 evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
 expected_evidence_sha256 = "932c2d6e004ea09df38bde1852e76715b72eafb53812c164f4d720881799e492"
+
+[[variable]]
+native_id = "139.19494.import"
+slug = "import-19494"
+
+[[variable]]
+native_id = "139.19494.kvant"
+slug = "kvant"
+
+[[variable]]
+native_id = "139.145.reknr"
+slug = "reknr"
+
+[[variable]]
+native_id = "139.1641.ng"
+slug = "ng"
+
+[[variable]]
+native_id = "139.1641.ng2002"
+slug = "ng2002"
+
+[[variable]]
+native_id = "139.83.text1"
+slug = "text1"
+
+[[variable]]
+native_id = "139.2581.text1"
+slug = "text1-2581"
+
+[[variable]]
+native_id = "139.2601.source-positive"
+slug = "bransleslag-koder"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/branslestatistik/ng2002"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:2801\",\"variable:1641\",\"member:167591\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "5d7312f9d9ea990d65be310e27c63db1e6b1a05c51986f4cde3b6c966bee0fcf"
+expected_diagnostic_sha256 = "aefe80f56230e460560bff514d61cfd84dea4a42f52da5dd7b4fcba26db817c6"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/branslestatistik/ng2002"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:3312\",\"variable:1641\",\"member:203419\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "a9d1b050bfab25e1bad47a8a377a669798fd0867aee64f85e28062518e06fff2"
+expected_diagnostic_sha256 = "00e4999c552eaeff9458cd6ab7146ce6bdb68437301e6403467e454f4d90b4b1"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/branslestatistik/ng2002"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:4030\",\"variable:1641\",\"member:252215\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "a457ed8b0a6d4ee5e57ff8171ba87d8400db668b6ad6922d284052b51d16f4c7"
+expected_diagnostic_sha256 = "9b963cfee5a8b0f0326606c635c5a2888af6b397ad484a9352aeb054aa870bd2"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/branslestatistik/ng2002"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:5280\",\"variable:1641\",\"member:325948\"]}"]
+fields = ["coding"]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "589e4ebf8f041d22394eb4902a85c5c0ac392b4223c3d7c87b337e627d64afe2"
+expected_diagnostic_sha256 = "fa55b938a7d279575a704a2a81e8dc6dcbb713912bec9d2441522212231fd007"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/branslestatistik/ng2002"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:7446\",\"variable:1641\",\"member:409465\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "44a1b8282f230bd665c0901cda4e728e97ed2b8d16c1fc5c31ae07af6f90e531"
+expected_diagnostic_sha256 = "5a1910f3939eb5161b89fbb28cbae67644c07224692ac176e5eaf4a6194324c0"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/branslestatistik/ng2002"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:11165\",\"variable:1641\",\"member:454025\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "091693acc83f877032044c3d7205f6cb1b543e1a56d5c073c7a596e22b44f185"
+expected_diagnostic_sha256 = "6aba78171a68059c26aedb0560cccbe9b647c2d87caeef20b8e81381c5abd160"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/branslestatistik/ng2002"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:11997\",\"variable:1641\",\"member:499906\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "7bec442eb2197b04ed58f7445e70c88a33e418cfb1de3e482aa43ddae76cc37b"
+expected_diagnostic_sha256 = "2601cb4225e2b0133b973266399691277995364ea5d2e9f83172dcb4a12f5458"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/branslestatistik/ng2002"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:13244\",\"variable:1641\",\"member:588794\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "96e016088cd8936e7ffd5d957c24f62ac50f03dfde2ed869bf6e827fd2ac9fb9"
+expected_diagnostic_sha256 = "9fe052b74834f8f3165e24cecb68c22c91392c7c2c4ea68f585bf449b7c16ee2"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/branslestatistik/ng2002"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2800\",\"variable:1641\",\"member:167534\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "044da5ba6f8e664270430cd3287b9fdc92930e546d88fd2dbbf7d1d3ff6a5e4d"
+expected_diagnostic_sha256 = "4b5ec3b2ed6309351ac8450097d89eb66b7117a0f25a6c8f9b92116c4138e4a8"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/branslestatistik/ng2002"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:3310\",\"variable:1641\",\"member:203362\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "3557c4267ffec9b26e33947752cdc765cf8de2cec531772a6e35f46b68a68552"
+expected_diagnostic_sha256 = "7a5a8c6858f63030a61e4630ae986d0f55fb00837c72f2a1c51882347adf1733"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/branslestatistik/ng2002"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4032\",\"variable:1641\",\"member:252287\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "4f4171d9588c095dd2eefcc23336deaf312e2aa1f3477bbb8a2572ba70c88c5f"
+expected_diagnostic_sha256 = "61b19a32f9c4a19a2fc676530e3cf5982cc98403cd275a1105b7a4f983f2b348"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/branslestatistik/ng2002"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:5281\",\"variable:1641\",\"member:326005\"]}"]
+fields = ["coding"]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "61a4070df5c1b24ae27e86fed08bcf087f75bd1d0339130d71386be0851d1d64"
+expected_diagnostic_sha256 = "fb54828baf2beba388df4e841f38343e01024295480f64dce1b02d63201e76aa"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/branslestatistik/ng2002"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:7443\",\"variable:1641\",\"member:409396\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "60595d77cd55eb16f3fbd25379ef2f2a279b2e22dc7dda431dc81b93488bb46f"
+expected_diagnostic_sha256 = "1c1e421a18bee6c725117717f15735963f6828c6e9f5cf5e33b0ad065de506d8"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/branslestatistik/ng2002"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:11164\",\"variable:1641\",\"member:453968\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "0935a61e61efacc5ba3ce19cc20de660eb3b7265d3a135940a7ddbde2df8d200"
+expected_diagnostic_sha256 = "1d2aafe838ac2e92fe2e312272f807b92187662fa61132ce680615584a1df186"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/branslestatistik/ng2002"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:12581\",\"variable:1641\",\"member:553050\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "f05ca90b9d782dbda72d475ae279226ba5f5ef9c450a22c7c012955ccd0f51ed"
+expected_diagnostic_sha256 = "69fa6c9d6dc93059a5c87c55e8cf1833c91406e119e40dcec2c1d7f73a4df7d2"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/branslestatistik/ng2002"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:13294\",\"variable:1641\",\"member:592184\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "4a374bf958e85b68a33dda63b7d0511c91f1b321fb125346a79e884a4855e3c3"
+expected_diagnostic_sha256 = "428bcec6a591de8d3b0b5da9c93d88d61852fa86c0d4a23e0829df4532969c67"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 139, 'variable', 'native-int', 19509)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:11164\",\"variable:19509\",\"member:453972\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:11662\",\"variable:19509\",\"member:479435\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:12581\",\"variable:19509\",\"member:553046\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:13294\",\"variable:19509\",\"member:592188\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:14715\",\"variable:19509\",\"member:673645\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:16472\",\"variable:19509\",\"member:804948\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:16500\",\"variable:19509\",\"member:808391\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:18438\",\"variable:19509\",\"member:860963\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:18879\",\"variable:19509\",\"member:901378\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:19323\",\"variable:19509\",\"member:930160\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:19854\",\"variable:19509\",\"member:984922\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:212\",\"variable:19509\",\"member:143507\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2339\",\"variable:19509\",\"member:143674\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2357\",\"variable:19509\",\"member:144318\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2800\",\"variable:19509\",\"member:167538\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:3310\",\"variable:19509\",\"member:203366\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4032\",\"variable:19509\",\"member:252291\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4575\",\"variable:19509\",\"member:287787\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:5281\",\"variable:19509\",\"member:326001\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:6012\",\"variable:19509\",\"member:371065\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:7443\",\"variable:19509\",\"member:409392\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "684e1b3eb6d66f034de4263beaa897295b99f5765dc8f0d2ee6b785a3511d336"
+expected_diagnostic_sha256 = "49e2afd3962d47b3949b10a166ec44e8c24fef0172aaad65fc4582508eb4ad5c"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 139, 'variable', 'native-int', 2581)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:11164\",\"variable:2581\",\"member:453991\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:11662\",\"variable:2581\",\"member:479428\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:12581\",\"variable:2581\",\"member:553027\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:13294\",\"variable:2581\",\"member:592207\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:14715\",\"variable:2581\",\"member:673626\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:212\",\"variable:2581\",\"member:143722\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2339\",\"variable:2581\",\"member:143726\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2357\",\"variable:2581\",\"member:144297\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2800\",\"variable:2581\",\"member:167557\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:3310\",\"variable:2581\",\"member:203385\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4032\",\"variable:2581\",\"member:252310\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4575\",\"variable:2581\",\"member:287806\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:5281\",\"variable:2581\",\"member:325982\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:6012\",\"variable:2581\",\"member:371084\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:7443\",\"variable:2581\",\"member:409373\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "046f2a3254b724c98b4ade76bae41bce9742fb9eebd7cac5a9d4a870be1f4244"
+expected_diagnostic_sha256 = "255b71831e36ee46525d350c0f56df014ea84c2c211281441fa79f46182d1031"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 139, 'variable', 'native-int', 2601)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:11165\",\"variable:2601\",\"member:454038\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:11997\",\"variable:2601\",\"member:499894\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:13244\",\"variable:2601\",\"member:588806\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "60a47b3008ba78b63613a19d277ebe5fd54999555e866c8761b0ebfc87a5251c"
+expected_diagnostic_sha256 = "5d7957b53f335593588dde95ec3d52d023026878c803e46232364ee97f1a2f8b"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 139, 'variable', 'native-int', 83)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:11165\",\"variable:83\",\"member:455363\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:11997\",\"variable:83\",\"member:499891\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:13244\",\"variable:83\",\"member:588809\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:11164\",\"variable:83\",\"member:455364\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:12581\",\"variable:83\",\"member:553016\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:13294\",\"variable:83\",\"member:592217\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:14715\",\"variable:83\",\"member:673616\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:16472\",\"variable:83\",\"member:804977\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:16500\",\"variable:83\",\"member:808362\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:18438\",\"variable:83\",\"member:860992\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:18879\",\"variable:83\",\"member:901349\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:19323\",\"variable:83\",\"member:930189\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:19854\",\"variable:83\",\"member:984949\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "6ac93bbf6235527cbc2b61560733d644008066af07fc36b28f7eb05b1fd6b0be"
+expected_diagnostic_sha256 = "cec830f69c162a0cb7ce65ae2965077cd54ed8cd5521fab3128d78aa279577b8"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "139.19494"
+columns = { Import = "139.19494.import", Kvant = "139.19494.kvant" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "adc7fd24a2bb296b79b48d60c6976290ce5f2fc087a52c098f1672f792a92c8a"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "139.145"
+columns = { IdNr = "139.145.idnr", ReKnr = "139.145.reknr", SCBid = "139.145.scbid" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "5cc35c7f802ee406e62c610bc35803844fed5588c61280e929505c75dc652a9c"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "139.1641"
+columns = { Ng = "139.1641.ng", Ng2002 = "139.1641.ng2002", Ng2007 = "139.1641.ng2007" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "288c5f7130b67f424f12129f05ad1cc8f8e3d801bdde9c106a24928cf4ce9538"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "139.83"
+variant = "139.203"
+column = "Bid"
+owner = "139.83.bid"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2019", "2020", "2021", "2022", "2023", "2024", "2025"]
+expected_evidence_sha256 = "22c3b0f91243998c78ad226ff3219906423d9c013571a285eeafe3e21accfe70"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "139.83"
+variant = "139.203"
+column = "BrSlag"
+owner = "139.83.brslag"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2012"]
+expected_evidence_sha256 = "d19696a9d357e6fdeeb84218efe7e6c41df81a4b3b215f4a089134fffe732d1b"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "139.83"
+variant = "139.203"
+column = "Text"
+owner = "139.83.text"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"]
+expected_evidence_sha256 = "f4a017affa96aa9c35e2a18de26d47908d724398a04a9808cb03711821d590eb"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "139.83"
+variant = "139.203"
+column = "Text1"
+owner = "139.83.text1"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"]
+expected_evidence_sha256 = "9b10df52719ac4c3c0e508dccbe184e64337fdabb4f24f13e97c64267fa0129c"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "139.83"
+variant = "139.204"
+column = "Bid"
+owner = "139.83.bid"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"]
+expected_evidence_sha256 = "f523907d647036b7e1cd960bf0c65dca18f17ca64ba0597d4e14b99d0143c890"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "139.2581"
+variant = "139.203"
+column = "Text"
+owner = "139.2581.text"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015"]
+expected_evidence_sha256 = "85bf458692dfb4d169a782450f19ae3ec724fd46bf92714414cfa2d0b42ebb3a"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "139.2581"
+variant = "139.203"
+column = "Text1"
+owner = "139.2581.text1"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2012"]
+expected_evidence_sha256 = "7d4babcbe1ac4fe5ec5cfd21152fe33789d33f978d99b954a18bff697be8f5c9"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "139.2581"
+variant = "139.204"
+column = "BrSlag"
+owner = "139.2581.brslag"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2012"]
+expected_evidence_sha256 = "98909d1b59632bef7a645e235c416298abd6ee059a8bdad1fba1642851214feb"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "139.2581"
+variant = "139.204"
+column = "Text1"
+owner = "139.2581.text1"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2020", "2021", "2022", "2023", "2024", "2025"]
+expected_evidence_sha256 = "d1fd3698673cb71c48af18ff787ccf84cfccbe989b7a2066662fddf33042bb83"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "139.2601"
+variant = "139.203"
+column = "Bid"
+owner = "139.2601.source-positive"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015"]
+expected_evidence_sha256 = "0851e1c8e0b28d92d0031092bfcb82b3ae261b9353539d82d9c50ab15ce42406"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "139.2601"
+variant = "139.204"
+column = "Bid"
+owner = "139.2601.source-positive"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015"]
+expected_evidence_sha256 = "4aff3e2c0c1f8891a1edaa5dbcaf5f7e352c20713f02d40e9db750d71f74ca9a"
+
+[[identity.unassigned]]
+variable = "139.19509"
+expected_evidence_sha256 = "684e1b3eb6d66f034de4263beaa897295b99f5765dc8f0d2ee6b785a3511d336"
+evidence = "Complete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[coding.uncoded]]
+variable = "139.16721"
+variant = "139.203"
+column = "LNamn"
+periods = [["2017-01-01", "2017-12-31"], ["2018-01-01", "2018-12-31"], ["2019-01-01", "2019-12-31"], ["2020-01-01", "2020-12-31"], ["2021-01-01", "2021-12-31"], ["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"], ["2024-01-01", "2024-12-31"], ["2025-01-01", "2025-12-31"]]
+reason = "Only both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+source = "Complete 46-original LNamn family audit and actual attached source code claims; 18 explicit name originals, seven Landkod originals and 21 blank-operation originals."
+data_warning = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+expected_evidence_sha256 = "12b27445d244818f9a6ae0c8f84cc2effcf994717a9afeb2616eecec8e8f80fe"
+stored_role = "label"
+
+[[coding.uncoded]]
+variable = "139.16721"
+variant = "139.204"
+column = "LNamn"
+periods = [["2017-01-01", "2017-12-31"], ["2018-01-01", "2018-12-31"], ["2019-01-01", "2019-12-31"], ["2020-01-01", "2020-12-31"], ["2021-01-01", "2021-12-31"], ["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"], ["2024-01-01", "2024-12-31"], ["2025-01-01", "2025-12-31"]]
+reason = "Only both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+source = "Complete 46-original LNamn family audit and actual attached source code claims; 18 explicit name originals, seven Landkod originals and 21 blank-operation originals."
+data_warning = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+expected_evidence_sha256 = "7f0ae22cd0e1e9408da18349ae2624c36e5aa23507d3da02dca559f8ff768ad1"
+stored_role = "label"

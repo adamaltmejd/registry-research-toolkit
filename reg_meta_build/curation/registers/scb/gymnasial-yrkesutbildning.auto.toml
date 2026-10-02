@@ -11,10 +11,6 @@ native_id = "352.44"
 slug = "kon"  # source: kolumnnamn
 
 [[variable]]
-native_id = "352.462"
-slug = "stratum"  # source: fold
-
-[[variable]]
 native_id = "352.25103"
 slug = "uenr-int"  # source: kolumnnamn
 

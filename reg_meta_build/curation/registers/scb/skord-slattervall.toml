@@ -37,3 +37,18 @@ native_id = "211.15390"
 slug = "ej-utnyttjad-vallareal"
 
 # register 215
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "211.467"
+columns = { telefon1 = "211.467.telefon1", telefon2 = "211.467.telefon2" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "75ed29a9780a89c9f0ce2aad6f339c6ac79bf9587b1f2748ba89fe215ce3fbee"
+
+[[variable]]
+native_id = "211.467.telefon1"
+slug = "telefon1"
+
+[[variable]]
+native_id = "211.467.telefon2"
+slug = "telefon2"

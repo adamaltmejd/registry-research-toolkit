@@ -249,3 +249,45 @@ reason = "These exact source windows have no own bound stored-code domain. Prese
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
 expected_evidence_sha256 = "84f71aea361356b3437633c0fb8a4c36ab66da46082e3d91136f0c6fb9324405"
 expected_diagnostic_sha256 = "eec9fa78c0aacbd9c53e7a867c3c18c8dc3c0e8b299dfb8710fc9102a23a1087"
+
+[[acknowledge]]
+code = "unknown_code_validity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 235, 'variable', 'native-int', 48529, 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 235, 'variant', 'native-int', 431, 'column', 'Typ')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:235\",\"variant:431\",\"edition:3522\",\"variable:48529\",\"member:971903\"]}"]
+fields = ["coding"]
+reason = "The source list has23named letter-combination codes and one literal empty-code/empty-label row, with unknown member validity. Keep every member and association as evidence, without inventing a meaning for the blank or admitting an unproved effective domain."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "40c74db6cc6bc9395235f40c532d777b8ead3c508da6ebbfd4dcad0dda3059c1"
+expected_diagnostic_sha256 = "e0b0e71a591d66295b0562563ab8d5045f0f7d7040537b40375840ec409542e1"
+
+[[acknowledge]]
+code = "unknown_code_validity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 235, 'variable', 'native-int', 48529, 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 235, 'variant', 'native-int', 431, 'column', 'Typ')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:235\",\"variant:431\",\"edition:3522\",\"variable:48529\",\"member:971903\"]}"]
+fields = ["coding"]
+reason = "The source list has23named letter-combination codes and one literal empty-code/empty-label row, with unknown member validity. Keep every member and association as evidence, without inventing a meaning for the blank or admitting an unproved effective domain."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "40c74db6cc6bc9395235f40c532d777b8ead3c508da6ebbfd4dcad0dda3059c1"
+expected_diagnostic_sha256 = "ed14cb79f1fe3240bcbf11d716a8745b99ae34a07272e6f2f449b0317ee24e3b"
+
+[[acknowledge]]
+code = "unknown_code_validity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 235, 'variable', 'native-int', 48529, 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 235, 'variant', 'native-int', 431, 'column', 'Typ')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:235\",\"variant:431\",\"edition:3522\",\"variable:48529\",\"member:971903\"]}"]
+fields = ["coding"]
+reason = "The source list has23named letter-combination codes and one literal empty-code/empty-label row, with unknown member validity. Keep every member and association as evidence, without inventing a meaning for the blank or admitting an unproved effective domain."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "40c74db6cc6bc9395235f40c532d777b8ead3c508da6ebbfd4dcad0dda3059c1"
+expected_diagnostic_sha256 = "7d44133340d8333be58aa6805f64a6e79f2fda7518d3af317040d03b25d3f21c"
+
+[[acknowledge]]
+code = "unknown_code_membership"
+subject = "scb/vaxtskyddsmedel/undersokningar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:235\",\"variant:431\",\"edition:3522\",\"variable:48529\",\"member:971903\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "The source list has23named letter-combination codes and one literal empty-code/empty-label row, with unknown member validity. Keep every member and association as evidence, without inventing a meaning for the blank or admitting an unproved effective domain."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "40c74db6cc6bc9395235f40c532d777b8ead3c508da6ebbfd4dcad0dda3059c1"
+expected_diagnostic_sha256 = "a577bf947dcca20e82ff6cc9819fd5eb1f8f6b7646cbb0764024b317cb2543ef"

@@ -539,3 +539,30 @@ reason = "The exact overlapping own source lists have substantively different co
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
 expected_evidence_sha256 = "4605cf0af0e84da72ff50de34dfe2ccd1381f7b692479f9847fd46d5aadf4e27"
 expected_diagnostic_sha256 = "77ef14060d9fd4493b60b028c5595cc1de7de22db4a94f3f68ac3dbb5dc63102"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "251.1280"
+columns = { Poang = "251.1280.poang", Poang1 = "251.1280.poang1", Poang2 = "251.1280.poang2", Poang3 = "251.1280.poang3", TPoang = "251.1280.tpoang" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "eb4da88b18b661305ef9bf8a6b4e3e997d3267551219e8685698ea7a8263b609"
+
+[[variable]]
+native_id = "251.1280.poang"
+slug = "poang"
+
+[[variable]]
+native_id = "251.1280.poang1"
+slug = "poang1"
+
+[[variable]]
+native_id = "251.1280.poang2"
+slug = "poang2"
+
+[[variable]]
+native_id = "251.1280.poang3"
+slug = "poang3"
+
+[[variable]]
+native_id = "251.1280.tpoang"
+slug = "tpoang"

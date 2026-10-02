@@ -650,7 +650,14 @@ def compile_coding_selection(
             )
         return selection, "matched", ""
     if kind in {"uncoded", "omit"}:
-        if complete:
+        if complete and not (
+            kind == "uncoded"
+            and getattr(entry, "stored_role", None) is not None
+            and (
+                getattr(entry, "expected_evidence_sha256", None) is not None
+                or getattr(entry, "source_authority", None) is not None
+            )
+        ):
             return None, "stale", "period has a complete nonempty list"
         return ("uncoded" if kind == "uncoded" else "omit_state"), "matched", ""
     if kind == "choice":

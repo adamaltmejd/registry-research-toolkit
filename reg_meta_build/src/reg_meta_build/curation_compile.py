@@ -31,6 +31,7 @@ from .curation_tree import (
     CodingEntry,
     CodingExtendEntry,
     CodingSentinelEntry,
+    CodingUncodedEntry,
     EnrichmentAliasEntry,
     EnrichmentDescriptionEntry,
     ErrataColumnEntry,
@@ -1693,8 +1694,9 @@ def compile_parallel_representations(
             and native_variable_key(record) == native_variable_key(first)
             and native_variant_key(record) == variant_key
         )
+        selected_refs = {record_ref(record) for record in selected}
         targets = capture_expectations(
-            tuple(selected),
+            tuple(record for record in records if record_ref(record) in selected_refs),
             fields=tuple(SourceFields.model_fields),
             coding=True,
             parents=use_effective,
@@ -4931,7 +4933,10 @@ def compile_coding_register(
                     )
                 evidence_digest = (
                     entry.expected_evidence_sha256
-                    if isinstance(entry, (CodingChoiceEntry, CodingExtendEntry))
+                    if isinstance(
+                        entry,
+                        (CodingChoiceEntry, CodingExtendEntry, CodingUncodedEntry),
+                    )
                     else None
                 )
                 compact = evidence_digest is not None
@@ -4963,7 +4968,12 @@ def compile_coding_register(
                 if (
                     isinstance(
                         entry,
-                        (CodingDocumentedEntry, CodingChoiceEntry, CodingExtendEntry),
+                        (
+                            CodingDocumentedEntry,
+                            CodingChoiceEntry,
+                            CodingExtendEntry,
+                            CodingUncodedEntry,
+                        ),
                     )
                     and entry.source_authority is not None
                 ):
@@ -5108,7 +5118,10 @@ def compile_coding_register(
                 target_refs = {record_ref(record) for record in records}
                 target_records = (
                     authority_records
-                    if isinstance(entry, (CodingChoiceEntry, CodingExtendEntry))
+                    if isinstance(
+                        entry,
+                        (CodingChoiceEntry, CodingExtendEntry, CodingUncodedEntry),
+                    )
                     and entry.source_authority is not None
                     else tuple(
                         record
@@ -5128,7 +5141,12 @@ def compile_coding_register(
                 if (
                     isinstance(
                         entry,
-                        (CodingDocumentedEntry, CodingChoiceEntry, CodingExtendEntry),
+                        (
+                            CodingDocumentedEntry,
+                            CodingChoiceEntry,
+                            CodingExtendEntry,
+                            CodingUncodedEntry,
+                        ),
                     )
                     and entry.source_authority is not None
                 ):
@@ -5199,6 +5217,7 @@ def compile_coding_register(
                                         CodingDocumentedEntry,
                                         CodingChoiceEntry,
                                         CodingExtendEntry,
+                                        CodingUncodedEntry,
                                     ),
                                 )
                                 and entry.source_authority is not None

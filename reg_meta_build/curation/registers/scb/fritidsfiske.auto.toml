@@ -19,14 +19,6 @@ native_id = "390.462"
 slug = "strata-fas1"  # source: kolumnnamn
 
 [[variable]]
-native_id = "390.3573"
-slug = "lillan-fas"  # source: fold
-
-[[variable]]
-native_id = "390.3582"
-slug = "storan-fas"  # source: fold
-
-[[variable]]
 native_id = "390.6267"
 slug = "alderslut"  # source: kolumnnamn
 
@@ -61,18 +53,6 @@ slug = "f02b"  # source: kolumnnamn
 [[variable]]
 native_id = "390.42504"
 slug = "f02c"  # source: kolumnnamn
-
-[[variable]]
-native_id = "390.43177"
-slug = "f17"  # source: fold
-
-[[variable]]
-native_id = "390.43178"
-slug = "f18"  # source: fold
-
-[[variable]]
-native_id = "390.45533"
-slug = "f03-0"  # source: fold
 
 [[variable]]
 native_id = "390.45534"

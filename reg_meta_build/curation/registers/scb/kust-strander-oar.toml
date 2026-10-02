@@ -242,3 +242,18 @@ reason = "These exact source windows have no own bound stored-code domain. Prese
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
 expected_evidence_sha256 = "a80db02c4014dda9564c03552ff7803528011d6bf9aa5be45d11a31431ba318d"
 expected_diagnostic_sha256 = "cde571c5aca7d5e70cab7bd30ba00b790a9bb5456823fe5a30a913cb30445cf1"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "219.392"
+columns = { BefAdr = "219.392.befadr", BefFast = "219.392.beffast" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "50cd077770dc061a45280b7514b044a0551134ad49fd4d981d92dd07075dd3fb"
+
+[[variable]]
+native_id = "219.392.befadr"
+slug = "befadr"
+
+[[variable]]
+native_id = "219.392.beffast"
+slug = "beffast"

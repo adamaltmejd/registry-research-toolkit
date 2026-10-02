@@ -999,3 +999,22 @@ reason = "These exact source windows have no own bound stored-code domain. Prese
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
 expected_evidence_sha256 = "46148a846ce66ca835cfb40ae973ccddd4af22a560d946207257f4d7ea5b8ce7"
 expected_diagnostic_sha256 = "d0c1addb6c91a69c0a0b10350c8cec659ee5726da6aa9e8274502e762bc81b1b"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "102.67"
+columns = { Invbakgr = "102.67.invbakgr", UtlBakGr = "102.67.utlbakgr", UtlBakGr2 = "102.67.utlbakgr2", Utlbakgr = "102.67.utlbakgr", invbakgr = "102.67.invbakgr", utlbakgr = "102.67.utlbakgr" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "0f54ccf65836f2d19f67c2b8fdd4c0d22798332c21bcfa8eed827355f84c16aa"
+
+[[variable]]
+native_id = "102.67.invbakgr"
+slug = "invbakgr"
+
+[[variable]]
+native_id = "102.67.utlbakgr"
+slug = "utlbakgr"
+
+[[variable]]
+native_id = "102.67.utlbakgr2"
+slug = "utlbakgr2"

@@ -142,3 +142,49 @@ native_id = "76.17899"
 slug = "telefonnummer-1"
 
 # register 77
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "76.5092"
+columns = { HusKat = "76.5092.huskat", HusTyp = "76.5092.hustyp", HusTypNS = "76.5092.hustypns", Hustyp2 = "76.5092.hustyp2", HustypNS = "76.5092.hustypns" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "7480b0eac451f9b5e24583c99a76bc5bb76cc0d39e4f96871854089296ff93e5"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "76.17376"
+columns = { ArManPabEg = "76.17376.armanpabeg", ArManPabFaktisk = "76.17376.armanpabfaktisk", DatPabBA = "76.17376.datpabba", DatPabEg = "76.17376.datpabeg" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "09321dc66afa8543e30b12d3d61e044b7f9ad11f0e18cb5bc2fc4b63d5667fa1"
+
+[[variable]]
+native_id = "76.5092.huskat"
+slug = "huskat"
+
+[[variable]]
+native_id = "76.5092.hustyp"
+slug = "hustyp-5092"
+
+[[variable]]
+native_id = "76.5092.hustypns"
+slug = "hustypns"
+
+[[variable]]
+native_id = "76.5092.hustyp2"
+slug = "hustyp"
+
+[[variable]]
+native_id = "76.17376.armanpabeg"
+slug = "armanpabeg"
+
+[[variable]]
+native_id = "76.17376.armanpabfaktisk"
+slug = "armanpabfaktisk"
+
+[[variable]]
+native_id = "76.17376.datpabba"
+slug = "datpabba"
+
+[[variable]]
+native_id = "76.17376.datpabeg"
+slug = "datpabeg"

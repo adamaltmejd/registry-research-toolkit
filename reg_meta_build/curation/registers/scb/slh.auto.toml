@@ -31,10 +31,6 @@ native_id = "186.462"
 slug = "stratum"  # source: kolumnnamn
 
 [[variable]]
-native_id = "186.774"
-slug = "sun2000niva-old"  # source: kolumnnamn
-
-[[variable]]
 native_id = "186.3757"
 slug = "grlon"  # source: kolumnnamn
 

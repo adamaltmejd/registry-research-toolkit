@@ -628,3 +628,147 @@ valid_to = "1997-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
 expected_evidence_sha256 = "4e2b7f9fa7428595dbde6c9b36bf77673659e50cd11b9536a3d07bb10717ef93"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "189.3614"
+columns = { MeritVarde = "189.3614.meritvarde", MeritVarde_M2 = "189.3614.meritvarde-m2", Meritvarde = "189.3614.meritvarde" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "6c61cbf7ef8cbd81be4111c1ec3d7beaac8c90251ddba69f772e43e0946524f5"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "189.67"
+columns = { UtlBakGr = "189.67.utlbakgr", UtlBakGr2 = "189.67.utlbakgr2", UtlSvBakg = "189.67.utlsvbakg" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "345aa69bee6c77d0ecf730021048fd9a873cc90d5374fac1d2631b9e28ec488a"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "189.30636"
+columns = { HT7 = "189.30636.ht7", HT8 = "189.30636.ht8", HT9 = "189.30636.ht9", TV1_HT7 = "189.30636.tv1-ht7", TV1_HT8 = "189.30636.tv1-ht8", TV1_HT9 = "189.30636.tv1-ht9", TV1_VT7 = "189.30636.tv1-vt7", TV1_VT8 = "189.30636.tv1-vt8", TV1_VT9 = "189.30636.tv1-vt9", VT7 = "189.30636.vt7", VT8 = "189.30636.vt8", VT9 = "189.30636.vt9" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "83c07c0465e712cda7ef724606a8ebf40aa7bd4fc5ec02e61890d10b3f9ba7e3"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "189.30638"
+columns = { TV2_HT7 = "189.30638.tv2-ht7", TV2_HT8 = "189.30638.tv2-ht8", TV2_HT9 = "189.30638.tv2-ht9", TV2_VT7 = "189.30638.tv2-vt7", TV2_VT8 = "189.30638.tv2-vt8", TV2_VT9 = "189.30638.tv2-vt9" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "6f1a2c49ba673500ac5a0699f0c65f699cafff104551d40e5b9c4caeda86f432"
+
+[[variable]]
+native_id = "189.3614.meritvarde"
+slug = "meritvarde"
+
+[[variable]]
+native_id = "189.3614.meritvarde-m2"
+slug = "meritvarde-m2"
+
+[[variable]]
+native_id = "189.67.utlbakgr"
+slug = "utlbakgr"
+
+[[variable]]
+native_id = "189.67.utlbakgr2"
+slug = "utlbakgr2"
+
+[[variable]]
+native_id = "189.67.utlsvbakg"
+slug = "utlsvbakg"
+
+[[variable]]
+native_id = "189.30636.ht7"
+slug = "ht7"
+
+[[variable]]
+native_id = "189.30636.ht8"
+slug = "ht8"
+
+[[variable]]
+native_id = "189.30636.ht9"
+slug = "ht9"
+
+[[variable]]
+native_id = "189.30636.tv1-ht7"
+slug = "tv1-ht"
+
+[[variable]]
+native_id = "189.30636.tv1-ht8"
+slug = "tv1-ht8"
+
+[[variable]]
+native_id = "189.30636.tv1-ht9"
+slug = "tv1-ht9"
+
+[[variable]]
+native_id = "189.30636.tv1-vt7"
+slug = "tv1-vt"
+
+[[variable]]
+native_id = "189.30636.tv1-vt8"
+slug = "tv1-vt8"
+
+[[variable]]
+native_id = "189.30636.tv1-vt9"
+slug = "tv1-vt9"
+
+[[variable]]
+native_id = "189.30636.vt7"
+slug = "vt7"
+
+[[variable]]
+native_id = "189.30636.vt8"
+slug = "vt8"
+
+[[variable]]
+native_id = "189.30636.vt9"
+slug = "vt9"
+
+[[variable]]
+native_id = "189.30638.tv2-ht7"
+slug = "tv2-ht"
+
+[[variable]]
+native_id = "189.30638.tv2-ht8"
+slug = "tv2-ht8"
+
+[[variable]]
+native_id = "189.30638.tv2-ht9"
+slug = "tv2-ht9"
+
+[[variable]]
+native_id = "189.30638.tv2-vt7"
+slug = "tv2-vt"
+
+[[variable]]
+native_id = "189.30638.tv2-vt8"
+slug = "tv2-vt8"
+
+[[variable]]
+native_id = "189.30638.tv2-vt9"
+slug = "tv2-vt9"
+
+[[representation.parallel]]
+valid_from = "2003-07-01"
+valid_to = "2004-06-30"
+case_aliases = true
+variable = "189.3614.meritvarde"
+variant = "189.265"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2003-07-01", valid_to = "2004-06-30", column = "MeritVarde", source_editions = ["Läsåret 2003/2004"] }, { valid_from = "2003-07-01", valid_to = "2004-06-30", column = "Meritvarde", source_editions = ["Läsåret 2003/2004"] }]
+evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2004-07-01"
+valid_to = "2005-06-30"
+case_aliases = true
+variable = "189.3614.meritvarde"
+variant = "189.265"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2004-07-01", valid_to = "2005-06-30", column = "MeritVarde", source_editions = ["Läsåret 2004/2005"] }, { valid_from = "2004-07-01", valid_to = "2005-06-30", column = "Meritvarde", source_editions = ["Läsåret 2004/2005"] }]
+evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
+noted = "2026-10-02"

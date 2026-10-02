@@ -287,9 +287,5 @@ native_id = "296.119.stat-id"
 slug = "stat-id"  # source: kolumnnamn
 
 [[variable]]
-native_id = "296.45455.prodgrpkod"
-slug = "prodgrpkod"  # source: kolumnnamn
-
-[[variable]]
 native_id = "296.47652.prodnamn"
 slug = "prodnamn"  # source: kolumnnamn

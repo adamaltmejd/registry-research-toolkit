@@ -19,14 +19,6 @@ slug = "identitet"
 
 
 [[variable]]
-native_id = "156.412"
-slug = "postort"
-
-[[variable]]
-native_id = "156.453"
-slug = "namn-kontaktperson"
-
-[[variable]]
 native_id = "156.1666"
 slug = "antal-anstallda-foretag"
 
@@ -37,10 +29,6 @@ slug = "miljoskyddsinvestering-allt"
 [[variable]]
 native_id = "156.6335"
 slug = "lopande-externa-drift"
-
-[[variable]]
-native_id = "156.15937"
-slug = "datum-for-svar"
 
 [[variable]]
 native_id = "156.15938"
@@ -57,38 +45,6 @@ native_id = "156.6345.hus113b"
 slug = "hushallsinvestering"
 
 # register 168 (fek)
-
-[[variable]]
-native_id = "156.58"
-slug = "postnromrade"
-
-[[variable]]
-native_id = "156.467"
-slug = "telefonnummer"
-
-[[variable]]
-native_id = "156.814"
-slug = "faxnummer"
-
-[[variable]]
-native_id = "156.1724"
-slug = "e-postadress-kontaktperson"
-
-[[variable]]
-native_id = "156.2014"
-slug = "foretagsnamn"
-
-# register 157
-
-[[variable]]
-native_id = "156.4989.adress"
-slug = "foretagets-adress"
-
-[[variable]]
-native_id = "156.4989.gatunr"
-slug = "gata-2"
-
-# register 164
 
 [[acknowledge]]
 code = "unknown_support_key"
@@ -122,3 +78,685 @@ columns = { NgS1 = "156.15938", Verksamhet = "156.15938", verksamhet = "156.1593
 unassigned_columns = []
 columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
 expected_evidence_sha256 = "d8a9a7b472965b41087ad501430427b5755249edfcde3f6832a3ce6e62a69256"
+
+[[variable]]
+native_id = "156.6331.invbelopp"
+slug = "invbelopp"
+deprecated = false
+
+[[variable]]
+native_id = "156.6331.invbelopp101"
+slug = "invbelopp101"
+deprecated = false
+
+[[variable]]
+native_id = "156.6331.invbelopp102"
+slug = "invbelopp102"
+deprecated = false
+
+[[variable]]
+native_id = "156.6331.invbelopp103"
+slug = "invbelopp103"
+deprecated = false
+
+[[variable]]
+native_id = "156.6331.invbelopp104"
+slug = "invbelopp104"
+deprecated = false
+
+[[variable]]
+native_id = "156.6331.invbelopp105"
+slug = "invbelopp105"
+deprecated = false
+
+[[variable]]
+native_id = "156.6331.invbelopp106"
+slug = "invbelopp106"
+deprecated = false
+
+[[variable]]
+native_id = "156.6331.invbelopp107"
+slug = "invbelopp107"
+deprecated = false
+
+[[variable]]
+native_id = "156.6331.invbelopp108"
+slug = "invbelopp108"
+deprecated = false
+
+[[variable]]
+native_id = "156.6331.invbelopp109"
+slug = "invbelopp109"
+deprecated = false
+
+[[variable]]
+native_id = "156.6331.invbelopp110"
+slug = "invbelopp110"
+deprecated = false
+
+[[variable]]
+native_id = "156.6331.invtyp"
+slug = "invtyp"
+deprecated = false
+
+[[variable]]
+native_id = "156.6331.miljoomra"
+slug = "miljoomra"
+deprecated = false
+
+[[variable]]
+native_id = "156.6331.miljoomrb"
+slug = "miljoomrb"
+deprecated = false
+
+[[variable]]
+native_id = "156.6331.radnr"
+slug = "radnr"
+deprecated = false
+
+[[variable]]
+native_id = "156.6335.kost311k"
+slug = "kost311k"
+deprecated = false
+
+[[variable]]
+native_id = "156.6335.kost312a"
+slug = "kost312a"
+deprecated = false
+
+[[variable]]
+native_id = "156.6335.kost312l"
+slug = "kost312l"
+deprecated = false
+
+[[variable]]
+native_id = "156.6335.kost312o"
+slug = "kost312o"
+deprecated = false
+
+[[variable]]
+native_id = "156.6335.kost312q"
+slug = "kost312q"
+deprecated = false
+
+[[variable]]
+native_id = "156.6335.kost312v"
+slug = "kost312v"
+deprecated = false
+
+[[variable]]
+native_id = "156.6345.hus113b-kontroll"
+slug = "hus113b-kontroll"
+deprecated = false
+
+[[variable]]
+native_id = "156.6345.hus113e"
+slug = "hus113e"
+deprecated = false
+
+[[variable]]
+native_id = "156.6345.hus113v"
+slug = "hus113v"
+deprecated = false
+
+[[variable]]
+native_id = "156.6345.husbeskr"
+slug = "husbeskr"
+deprecated = false
+
+[[variable]]
+native_id = "156.6332.inv111a"
+slug = "inv111a-6332"
+deprecated = false
+
+[[variable]]
+native_id = "156.6332.inv111komm"
+slug = "inv111komm"
+deprecated = false
+
+[[variable]]
+native_id = "156.6332.inv111l"
+slug = "inv111l"
+deprecated = false
+
+[[variable]]
+native_id = "156.6332.inv111o"
+slug = "inv111o"
+deprecated = false
+
+[[variable]]
+native_id = "156.6332.inv111q"
+slug = "inv111q"
+deprecated = false
+
+[[variable]]
+native_id = "156.6332.inv111t"
+slug = "inv111t"
+deprecated = false
+
+[[variable]]
+native_id = "156.6332.inv111v"
+slug = "inv111v"
+deprecated = false
+
+[[variable]]
+native_id = "156.6333.inv112a"
+slug = "inv112a-6333"
+deprecated = false
+
+[[variable]]
+native_id = "156.6333.inv112komm"
+slug = "inv112komm"
+deprecated = false
+
+[[variable]]
+native_id = "156.6333.inv112l"
+slug = "inv112l"
+deprecated = false
+
+[[variable]]
+native_id = "156.6333.inv112o"
+slug = "inv112o"
+deprecated = false
+
+[[variable]]
+native_id = "156.6333.inv112q"
+slug = "inv112q"
+deprecated = false
+
+[[variable]]
+native_id = "156.6333.inv112t"
+slug = "inv112t"
+deprecated = false
+
+[[variable]]
+native_id = "156.6333.inv112v"
+slug = "inv112v"
+deprecated = false
+
+[[variable]]
+native_id = "156.6253.invtyp101"
+slug = "invtyp101-6253"
+deprecated = false
+
+[[variable]]
+native_id = "156.6253.invtyp102"
+slug = "invtyp102"
+deprecated = false
+
+[[variable]]
+native_id = "156.6253.invtyp103"
+slug = "invtyp103"
+deprecated = false
+
+[[variable]]
+native_id = "156.6253.invtyp104"
+slug = "invtyp104"
+deprecated = false
+
+[[variable]]
+native_id = "156.6253.invtyp105"
+slug = "invtyp105"
+deprecated = false
+
+[[variable]]
+native_id = "156.6253.invtyp106"
+slug = "invtyp106"
+deprecated = false
+
+[[variable]]
+native_id = "156.6253.invtyp107"
+slug = "invtyp107"
+deprecated = false
+
+[[variable]]
+native_id = "156.6253.invtyp108"
+slug = "invtyp108"
+deprecated = false
+
+[[variable]]
+native_id = "156.6253.invtyp109"
+slug = "invtyp109"
+deprecated = false
+
+[[variable]]
+native_id = "156.6253.invtyp110"
+slug = "invtyp110"
+deprecated = false
+
+[[variable]]
+native_id = "156.1682.miljoomra101"
+slug = "miljoomra101-1682"
+deprecated = false
+
+[[variable]]
+native_id = "156.1682.miljoomra102"
+slug = "miljoomra102"
+deprecated = false
+
+[[variable]]
+native_id = "156.1682.miljoomra103"
+slug = "miljoomra103"
+deprecated = false
+
+[[variable]]
+native_id = "156.1682.miljoomra104"
+slug = "miljoomra104"
+deprecated = false
+
+[[variable]]
+native_id = "156.1682.miljoomra105"
+slug = "miljoomra105"
+deprecated = false
+
+[[variable]]
+native_id = "156.1682.miljoomra106"
+slug = "miljoomra106"
+deprecated = false
+
+[[variable]]
+native_id = "156.1682.miljoomra107"
+slug = "miljoomra107"
+deprecated = false
+
+[[variable]]
+native_id = "156.1682.miljoomra108"
+slug = "miljoomra108"
+deprecated = false
+
+[[variable]]
+native_id = "156.1682.miljoomra109"
+slug = "miljoomra109"
+deprecated = false
+
+[[variable]]
+native_id = "156.1682.miljoomra110"
+slug = "miljoomra110"
+deprecated = false
+
+[[variable]]
+native_id = "156.28430.beskrivkost302a"
+slug = "beskrivkost302a"
+deprecated = false
+
+[[variable]]
+native_id = "156.28430.beskrivkost302l"
+slug = "beskrivkost302l"
+deprecated = false
+
+[[variable]]
+native_id = "156.28430.beskrivkost302o"
+slug = "beskrivkost302o"
+deprecated = false
+
+[[variable]]
+native_id = "156.28430.beskrivkost302v"
+slug = "beskrivkost302v"
+deprecated = false
+
+[[variable]]
+native_id = "156.28430.beskrivkost303t"
+slug = "beskrivkost303t"
+deprecated = false
+
+[[variable]]
+native_id = "156.28430.beskrivkost304t"
+slug = "beskrivkost304t"
+deprecated = false
+
+[[variable]]
+native_id = "156.28430.beskrivkost305t"
+slug = "beskrivkost305t"
+deprecated = false
+
+[[variable]]
+native_id = "156.28430.beskrivkost312a"
+slug = "beskrivkost312a"
+deprecated = false
+
+[[variable]]
+native_id = "156.28430.beskrivkost312l"
+slug = "beskrivkost312l"
+deprecated = false
+
+[[variable]]
+native_id = "156.28430.beskrivkost312o"
+slug = "beskrivkost312o"
+deprecated = false
+
+[[variable]]
+native_id = "156.28430.beskrivkost312v"
+slug = "beskrivkost312v"
+deprecated = false
+
+[[variable]]
+native_id = "156.28430.beskrivkost313k"
+slug = "beskrivkost313k"
+deprecated = false
+
+[[variable]]
+native_id = "156.28430.beskrivkost314k"
+slug = "beskrivkost314k"
+deprecated = false
+
+[[variable]]
+native_id = "156.28430.beskrivkost315t"
+slug = "beskrivkost315t"
+deprecated = false
+
+[[variable]]
+native_id = "156.28430.inv111komm"
+slug = "inv111komm-28430"
+deprecated = false
+
+[[variable]]
+native_id = "156.28430.inv112komm"
+slug = "inv112komm-28430"
+deprecated = false
+
+[[variable]]
+native_id = "156.28427.beskrivinv101"
+slug = "beskrivinv101-28427"
+deprecated = false
+
+[[variable]]
+native_id = "156.28427.beskrivinv102"
+slug = "beskrivinv102"
+deprecated = false
+
+[[variable]]
+native_id = "156.28427.beskrivinv103"
+slug = "beskrivinv103"
+deprecated = false
+
+[[variable]]
+native_id = "156.28427.beskrivinv104"
+slug = "beskrivinv104"
+deprecated = false
+
+[[variable]]
+native_id = "156.28427.beskrivinv105"
+slug = "beskrivinv105"
+deprecated = false
+
+[[variable]]
+native_id = "156.28427.beskrivinv106"
+slug = "beskrivinv106"
+deprecated = false
+
+[[variable]]
+native_id = "156.28427.beskrivinv107"
+slug = "beskrivinv107"
+deprecated = false
+
+[[variable]]
+native_id = "156.28427.beskrivinv108"
+slug = "beskrivinv108"
+deprecated = false
+
+[[variable]]
+native_id = "156.28427.beskrivinv109"
+slug = "beskrivinv109"
+deprecated = false
+
+[[variable]]
+native_id = "156.28427.beskrivinv110"
+slug = "beskrivinv110"
+deprecated = false
+
+[[variable]]
+native_id = "156.6334.kost301t"
+slug = "kost301t"
+deprecated = false
+
+[[variable]]
+native_id = "156.6334.kost302a"
+slug = "kost302a-6334"
+deprecated = false
+
+[[variable]]
+native_id = "156.6334.kost302l"
+slug = "kost302l"
+deprecated = false
+
+[[variable]]
+native_id = "156.6334.kost302o"
+slug = "kost302o"
+deprecated = false
+
+[[variable]]
+native_id = "156.6334.kost302q"
+slug = "kost302q"
+deprecated = false
+
+[[variable]]
+native_id = "156.6334.kost302v"
+slug = "kost302v"
+deprecated = false
+
+[[variable]]
+native_id = "156.6338.source-positive"
+slug = "kost303t"
+deprecated = false
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "156.6331"
+columns = { InvBelopp = "156.6331.invbelopp", InvBelopp101 = "156.6331.invbelopp101", InvBelopp102 = "156.6331.invbelopp102", InvBelopp103 = "156.6331.invbelopp103", InvBelopp104 = "156.6331.invbelopp104", InvBelopp105 = "156.6331.invbelopp105", InvBelopp106 = "156.6331.invbelopp106", InvBelopp107 = "156.6331.invbelopp107", InvBelopp108 = "156.6331.invbelopp108", InvBelopp109 = "156.6331.invbelopp109", InvBelopp110 = "156.6331.invbelopp110", InvTyp = "156.6331.invtyp", MiljoOmrA = "156.6331.miljoomra", MiljoOmrB = "156.6331.miljoomrb", RadNr = "156.6331.radnr" }
+unassigned_columns = []
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "8981bd04d91a58084dd17fdfab94dce4ced314d4c1e549673b9df79e84003c82"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "156.6335"
+columns = { Kost311K = "156.6335.kost311k", Kost312A = "156.6335.kost312a", Kost312L = "156.6335.kost312l", Kost312O = "156.6335.kost312o", Kost312Q = "156.6335.kost312q", Kost312V = "156.6335.kost312v" }
+unassigned_columns = []
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "4eaca069d26eaf1ccd56649e744ab210c3ac4602eff7a8835ba7ad276e07f59c"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "156.6345"
+columns = { Hus113B = "156.6345.hus113b", Hus113B_Kontroll = "156.6345.hus113b-kontroll", Hus113E = "156.6345.hus113e", Hus113V = "156.6345.hus113v", HusBeskr = "156.6345.husbeskr" }
+unassigned_columns = []
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "ff2f1bc7acbd8cd1abd66bea442e71ca34b5a5bb76312bcf568c0dc8b6974e53"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "156.6332"
+columns = { Inv111A = "156.6332.inv111a", Inv111Komm = "156.6332.inv111komm", Inv111L = "156.6332.inv111l", Inv111O = "156.6332.inv111o", Inv111Q = "156.6332.inv111q", Inv111T = "156.6332.inv111t", Inv111V = "156.6332.inv111v" }
+unassigned_columns = []
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "fd02377e87eafa65ccef62fc10326e8d2e2f55e80a7fa7ca6b3d9f4ad766d82a"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "156.6333"
+columns = { Inv112A = "156.6333.inv112a", Inv112Komm = "156.6333.inv112komm", Inv112L = "156.6333.inv112l", Inv112O = "156.6333.inv112o", Inv112Q = "156.6333.inv112q", Inv112T = "156.6333.inv112t", Inv112V = "156.6333.inv112v" }
+unassigned_columns = []
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "913a37b2834c9a3d8ac1c0ba194e194065960001443dfd246f1436b29b435bbe"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "156.6253"
+columns = { InvTyp101 = "156.6253.invtyp101", InvTyp102 = "156.6253.invtyp102", InvTyp103 = "156.6253.invtyp103", InvTyp104 = "156.6253.invtyp104", InvTyp105 = "156.6253.invtyp105", InvTyp106 = "156.6253.invtyp106", InvTyp107 = "156.6253.invtyp107", InvTyp108 = "156.6253.invtyp108", InvTyp109 = "156.6253.invtyp109", InvTyp110 = "156.6253.invtyp110" }
+unassigned_columns = []
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "a2ec816fdb50d6b82cf5b7e9ca3a350cf3a6b04dfa20b8553b8c50d48655c066"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "156.1682"
+columns = { MiljoOmrA101 = "156.1682.miljoomra101", MiljoOmrA102 = "156.1682.miljoomra102", MiljoOmrA103 = "156.1682.miljoomra103", MiljoOmrA104 = "156.1682.miljoomra104", MiljoOmrA105 = "156.1682.miljoomra105", MiljoOmrA106 = "156.1682.miljoomra106", MiljoOmrA107 = "156.1682.miljoomra107", MiljoOmrA108 = "156.1682.miljoomra108", MiljoOmrA109 = "156.1682.miljoomra109", MiljoOmrA110 = "156.1682.miljoomra110" }
+unassigned_columns = []
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "36b251f4ec5ee01d9efc125c0572bc02cc4c167fccefb7177da9c5a1e69c191f"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "156.28430"
+columns = { BeskrivKost302A = "156.28430.beskrivkost302a", BeskrivKost302L = "156.28430.beskrivkost302l", BeskrivKost302O = "156.28430.beskrivkost302o", BeskrivKost302V = "156.28430.beskrivkost302v", BeskrivKost303T = "156.28430.beskrivkost303t", BeskrivKost304T = "156.28430.beskrivkost304t", BeskrivKost305T = "156.28430.beskrivkost305t", BeskrivKost312A = "156.28430.beskrivkost312a", BeskrivKost312L = "156.28430.beskrivkost312l", BeskrivKost312O = "156.28430.beskrivkost312o", BeskrivKost312V = "156.28430.beskrivkost312v", BeskrivKost313K = "156.28430.beskrivkost313k", BeskrivKost314K = "156.28430.beskrivkost314k", BeskrivKost315T = "156.28430.beskrivkost315t", Inv111Komm = "156.28430.inv111komm", Inv112Komm = "156.28430.inv112komm" }
+unassigned_columns = []
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "67387f50a0aa3f29f1226c094f8732cee6a10ef0699db5c615d66a03cbac4525"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "156.28427"
+columns = { BeskrivInv101 = "156.28427.beskrivinv101", BeskrivInv102 = "156.28427.beskrivinv102", BeskrivInv103 = "156.28427.beskrivinv103", BeskrivInv104 = "156.28427.beskrivinv104", BeskrivInv105 = "156.28427.beskrivinv105", BeskrivInv106 = "156.28427.beskrivinv106", BeskrivInv107 = "156.28427.beskrivinv107", BeskrivInv108 = "156.28427.beskrivinv108", BeskrivInv109 = "156.28427.beskrivinv109", BeskrivInv110 = "156.28427.beskrivinv110" }
+unassigned_columns = []
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "395937599bb519c02c5b51740e6836769b22b0bd8737a53f81c65fc5891951c2"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "156.6334"
+variant = "156.223"
+column = "Kost301T"
+owner = "156.6334.kost301t"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2006", "2007", "2008", "2009", "2010"]
+expected_fields = []
+expected_evidence_sha256 = "64b6e4ce705ea4eecda68a77a7282c5198f7aa88100333ceeb458577c30b449b"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "156.6334"
+variant = "156.223"
+column = "Kost302A"
+owner = "156.6334.kost302a"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013"]
+expected_fields = []
+expected_evidence_sha256 = "13b7e398cc8b3cf9f4a319cedbf19c78acbe43607ca8f5abfb336f842e2f4316"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "156.6334"
+variant = "156.223"
+column = "Kost302L"
+owner = "156.6334.kost302l"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013"]
+expected_fields = []
+expected_evidence_sha256 = "6c38069d4356ce41631a7224fc5d4c8ad2b9374b34c0ff5cdda75936c0aa0abe"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "156.6334"
+variant = "156.223"
+column = "Kost302O"
+owner = "156.6334.kost302o"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013"]
+expected_fields = []
+expected_evidence_sha256 = "8f29896aa99ea46d444f3ff3987cee7b0ba4c6e0f5e6aa9e0d80eeb21466f0b9"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "156.6334"
+variant = "156.223"
+column = "Kost302Q"
+owner = "156.6334.kost302q"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2006", "2007", "2008", "2009", "2010"]
+expected_fields = []
+expected_evidence_sha256 = "77afeccea0b30e3030203330ca493e3d5743acdaa912dc1f72e6320ee0e62bc3"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "156.6334"
+variant = "156.223"
+column = "Kost302V"
+owner = "156.6334.kost302v"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013"]
+expected_fields = []
+expected_evidence_sha256 = "cfa56ec9d92c9bf726449c09a36b971bf80567ff597c1c0a8891c9db7394f615"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "156.6338"
+variant = "156.223"
+column = "Kost303T"
+owner = "156.6338.source-positive"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2006", "2007", "2008", "2009", "2010", "2012", "2013"]
+expected_fields = []
+expected_evidence_sha256 = "dfe250231a23d57828d1910edcdcab9d55b82beb05c491be87709ced86e714b2"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 156, 'variable', 'native-int', 6334)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:156\",\"variant:223\",\"edition:11523\",\"variable:6334\",\"member:469232\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:156\",\"variant:223\",\"edition:12544\",\"variable:6334\",\"member:550115\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:156\",\"variant:223\",\"edition:13582\",\"variable:6334\",\"member:612413\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:156\",\"variant:223\",\"edition:15070\",\"variable:6334\",\"member:703436\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:156\",\"variant:223\",\"edition:17694\",\"variable:6334\",\"member:822159\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:156\",\"variant:223\",\"edition:18410\",\"variable:6334\",\"member:859633\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:156\",\"variant:223\",\"edition:18897\",\"variable:6334\",\"member:903158\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:156\",\"variant:223\",\"edition:19427\",\"variable:6334\",\"member:946870\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:156\",\"variant:223\",\"edition:20122\",\"variable:6334\",\"member:1012343\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:156\",\"variant:223\",\"edition:4337\",\"variable:6334\",\"member:276118\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:156\",\"variant:223\",\"edition:6191\",\"variable:6334\",\"member:392714\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:156\",\"variant:223\",\"edition:9883\",\"variable:6334\",\"member:439324\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "6378f32f3fcab58662cb303fbfb8181e32175e72c919db001404e2c841f64487"
+expected_diagnostic_sha256 = "c57c9ff95828fa7636e888b0e258dd9e18c218a115c92174a3421eae3208b626"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 156, 'variable', 'native-int', 6338)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:156\",\"variant:223\",\"edition:4337\",\"variable:6338\",\"member:276122\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:156\",\"variant:223\",\"edition:6191\",\"variable:6338\",\"member:392718\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:156\",\"variant:223\",\"edition:9883\",\"variable:6338\",\"member:439320\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "2dbe0a1c42df417a6d0cc7d7a892a97c5a47103955deb91178409ffb0336fedb"
+expected_diagnostic_sha256 = "bc95722b9e401b1164c2ba82fb420a956e0dfef4932851db39a89d1c88b82f7e"
+
+[[variable]]
+native_id = "156.412"
+slug = "postort"
+
+
+[[variable]]
+native_id = "156.453"
+slug = "namn-kontaktperson"
+
+
+[[variable]]
+native_id = "156.15937"
+slug = "datum-for-svar"
+
+
+[[variable]]
+native_id = "156.58"
+slug = "postnromrade"
+
+
+[[variable]]
+native_id = "156.467"
+slug = "telefonnummer"
+
+
+[[variable]]
+native_id = "156.814"
+slug = "faxnummer"
+
+
+[[variable]]
+native_id = "156.1724"
+slug = "e-postadress-kontaktperson"
+
+
+[[variable]]
+native_id = "156.2014"
+slug = "foretagsnamn"
+
+# register 157
+
+
+[[variable]]
+native_id = "156.4989.adress"
+slug = "foretagets-adress"
+
+
+[[variable]]
+native_id = "156.4989.gatunr"
+slug = "gata-2"
+
+# register 164

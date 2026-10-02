@@ -52,10 +52,6 @@ native_id = "296.73"
 slug = "ar"
 
 [[variable]]
-native_id = "296.1814"
-slug = "coicop"
-
-[[variable]]
 native_id = "296.7561"
 slug = "baspris"
 
@@ -132,16 +128,8 @@ native_id = "296.27203"
 slug = "arsforandring-tpi"
 
 [[variable]]
-native_id = "296.27318"
-slug = "berakningsperiod"
-
-[[variable]]
 native_id = "296.27326"
 slug = "indexbas2005"
-
-[[variable]]
-native_id = "296.27358"
-slug = "produkterbjudande"
 
 [[variable]]
 native_id = "296.28085"
@@ -166,10 +154,6 @@ slug = "index-med-bas-2005"
 [[variable]]
 native_id = "296.29270"
 slug = "prisindex"
-
-[[variable]]
-native_id = "296.29392"
-slug = "period-ppi"
 
 [[variable]]
 native_id = "296.30808"
@@ -216,10 +200,6 @@ native_id = "296.14"
 slug = "cfar-nummer"
 
 [[variable]]
-native_id = "296.145"
-slug = "identitet"
-
-[[variable]]
 native_id = "296.45"
 slug = "land"
 
@@ -253,72 +233,6 @@ refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[
 expected_evidence_sha256 = "828040c701f27e215fd3547466c86510f09e69c4890a72e0a531a0b4274ab87b"
 reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
 evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/prisindex/kn8beskrivning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16114\",\"variable:119\",\"member:770611\"]}"]
-fields = ["coding"]
-valid_from = "2021-01-01"
-valid_to = "2021-12-31"
-reason = "This exact KN description-text delivery has no own associated historical response list. The full source history contains different annual KN vintages and code/description fields. Preserve its literal description role, original text/type/periods and all other known associations; do not substitute a code column’s domain or another annual KN dictionary. This exact response domain remains unavailable."
-evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "eeb2e84fe50ba10a79748f26380493cf6682e8d56ec3d70d9782f0dad9482310"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/prisindex/kn8beskrivning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18103\",\"variable:119\",\"member:837995\"]}"]
-fields = ["coding"]
-valid_from = "2022-01-01"
-valid_to = "2022-12-31"
-reason = "This exact KN description-text delivery has no own associated historical response list. The full source history contains different annual KN vintages and code/description fields. Preserve its literal description role, original text/type/periods and all other known associations; do not substitute a code column’s domain or another annual KN dictionary. This exact response domain remains unavailable."
-evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "d0900257808a2ec14a27299e1ff4de12d790d33ef283883098a553a47b9588ed"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/prisindex/kn8beskrivning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19325\",\"variable:119\",\"member:930206\"]}"]
-fields = ["coding"]
-valid_from = "2023-01-01"
-valid_to = "2023-12-31"
-reason = "This exact KN description-text delivery has no own associated historical response list. The full source history contains different annual KN vintages and code/description fields. Preserve its literal description role, original text/type/periods and all other known associations; do not substitute a code column’s domain or another annual KN dictionary. This exact response domain remains unavailable."
-evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "ff6b8d149ae75f0ca539327f8671ffc9e86dc1f373bd50998d6c6a13edb03ebc"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/prisindex/kn8beskrivning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19326\",\"variable:119\",\"member:930237\"]}"]
-fields = ["coding"]
-valid_from = "2024-01-01"
-valid_to = "2024-12-31"
-reason = "This exact KN description-text delivery has no own associated historical response list. The full source history contains different annual KN vintages and code/description fields. Preserve its literal description role, original text/type/periods and all other known associations; do not substitute a code column’s domain or another annual KN dictionary. This exact response domain remains unavailable."
-evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "97192055fe58669dda5e61fcd63cbcca6bab81f9c0b9b848355a6dd4c84c9bb2"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/prisindex/kn8beskrivning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19704\",\"variable:119\",\"member:975570\"]}"]
-fields = ["coding"]
-valid_from = "2025-01-01"
-valid_to = "2025-12-31"
-reason = "This exact KN description-text delivery has no own associated historical response list. The full source history contains different annual KN vintages and code/description fields. Preserve its literal description role, original text/type/periods and all other known associations; do not substitute a code column’s domain or another annual KN dictionary. This exact response domain remains unavailable."
-evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "08c894fff64d9dfcfd105df989920c0f2b98d5f7c250e8b9891c766bd8ed5a71"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/prisindex/kn8beskrivning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:20327\",\"variable:119\",\"member:1047070\"]}"]
-fields = ["coding"]
-valid_from = "2026-01-01"
-valid_to = "2026-12-31"
-reason = "This exact KN description-text delivery has no own associated historical response list. The full source history contains different annual KN vintages and code/description fields. Preserve its literal description role, original text/type/periods and all other known associations; do not substitute a code column’s domain or another annual KN dictionary. This exact response domain remains unavailable."
-evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "aa2dec57dd707c6323770d91f18cd705ae94639db1c13ff93bb923dc92c176e4"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -592,3 +506,655 @@ coding_metadata = "per_column"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "BeskrivnSv", expected_codings = ["6ba34515be72b12171971a715d54cd950ae6d682543905c970d6d967c67f8484"], source_editions = ["Indata 2014"] }, { valid_from = "2014-01-01", valid_to = "2014-12-31", column = "NamnSV", expected_codings = ["6ba34515be72b12171971a715d54cd950ae6d682543905c970d6d967c67f8484"], source_editions = ["Utdata 2014"] }]
 evidence = "Same complete reviewed source-native definition across distinct source editions with overlapping finite windows. This preserves each physical column, metadata, original period and own coding; it does not assert simultaneous co-delivery, value equality or storage conversion. The native identity follows exported IDs/definitions despite conflicting yearly literal labels under the accepted source-native policy."
 noted = "2026-10-02"
+
+[[variable]]
+native_id = "296.119.kn4kod"
+slug = "kn4kod"
+
+[[variable]]
+native_id = "296.119.kn4namn"
+slug = "kn4namn"
+
+[[variable]]
+native_id = "296.119.kn8beskrivning"
+slug = "kn8beskrivning"
+
+[[variable]]
+native_id = "296.119.kn8kod"
+slug = "kn8kod-2"
+
+[[variable]]
+native_id = "296.119.stat-id"
+slug = "stat-id"
+
+[[variable]]
+native_id = "296.145.ftgid"
+slug = "identitet-ftgid"
+
+[[variable]]
+native_id = "296.145.insmetodid"
+slug = "identitet-insmetodid"
+
+[[variable]]
+native_id = "296.145.kodid"
+slug = "identitet-kodid"
+
+[[variable]]
+native_id = "296.145.landid"
+slug = "identitet-landid"
+
+[[variable]]
+native_id = "296.145.marknprodgrparid"
+slug = "identitet-marknprodgrparid"
+
+[[variable]]
+native_id = "296.145.personid"
+slug = "identitet-personid"
+
+[[variable]]
+native_id = "296.145.prisnotid"
+slug = "identitet-prisnotid"
+
+[[variable]]
+native_id = "296.145.prisnotkodid"
+slug = "identitet-prisnotkodid"
+
+[[variable]]
+native_id = "296.145.proderbjid"
+slug = "identitet-proderbjid"
+
+[[variable]]
+native_id = "296.145.proderbjixid"
+slug = "identitet-proderbjixid"
+
+[[variable]]
+native_id = "296.145.prodgrpid"
+slug = "identitet-prodgrpid"
+
+[[variable]]
+native_id = "296.145.valutaid"
+slug = "identitet-valutaid"
+
+[[variable]]
+native_id = "296.145.valutanotid"
+slug = "identitet-valutanotid"
+
+[[variable]]
+native_id = "296.145.varvardeid"
+slug = "identitet-varvardeid"
+
+[[variable]]
+native_id = "296.27318.period"
+slug = "berakningsperiod-period"
+
+[[variable]]
+native_id = "296.27318.periodid"
+slug = "berakningsperiod-periodid"
+
+[[variable]]
+native_id = "296.27318.undersokningskvartal"
+slug = "berakningsperiod-undersokningskvartal"
+
+[[variable]]
+native_id = "296.27358.beskrivn"
+slug = "produkterbjudande-beskrivn"
+
+[[variable]]
+native_id = "296.27358.proderbjid"
+slug = "produkterbjudande-proderbjid"
+
+[[variable]]
+native_id = "296.27358.variant"
+slug = "produkterbjudande-variant"
+
+[[variable]]
+native_id = "296.29261.kod"
+slug = "marknad-kod"
+
+[[variable]]
+native_id = "296.29261.kortnamn"
+slug = "marknad-kortnamn"
+
+[[variable]]
+native_id = "296.29261.marknid"
+slug = "marknad-marknid"
+
+[[variable]]
+native_id = "296.1814.source-positive"
+slug = "coicop"
+
+[[variable]]
+native_id = "296.23614.kpi-prodgrpkod"
+slug = "produktgrupp-kpi-prodgrpkod"
+
+[[variable]]
+native_id = "296.23614.kpi-varukod"
+slug = "produktgrupp-kpi-varukod"
+
+[[variable]]
+native_id = "296.23614.tpi-prodgrpkod"
+slug = "produktgrupp-tpi-prodgrpkod"
+
+[[variable]]
+native_id = "296.23614.tpi-pg"
+slug = "produktgrupp-tpi-pg"
+
+[[variable]]
+native_id = "296.23614.ppi-beskrivnsv"
+slug = "produktgrupp-ppi-beskrivnsv"
+
+[[variable]]
+native_id = "296.23614.ppi-namn"
+slug = "produktgrupp-ppi-namn"
+
+[[variable]]
+native_id = "296.23614.ppi-namnsv"
+slug = "produktgrupp-ppi-namnsv"
+
+[[variable]]
+native_id = "296.23614.ppi-prodgrpkod"
+slug = "produktgrupp-ppi-prodgrpkod"
+
+[[variable]]
+native_id = "296.29392.source-positive"
+slug = "period-ppi"
+
+[[identity.partition]]
+data_warning = "The source-native family covers several physical fields or code/clear-text components. The catalog retains distinct literal components and all delivery-specific metadata. No equality of stored values or unstated semantic role is assumed."
+variable = "296.119"
+columns = { KN4Kod = "296.119.kn4kod", KN4Namn = "296.119.kn4namn", KN8Beskrivning = "296.119.kn8beskrivning", KN8Kod = "296.119.kn8kod", stat_id = "296.119.stat-id" }
+columns_ref = "Complete actual native family and every same-register physical peer: Batch53-six-source-review.json. Each finite component follows its exact supplied literal and source definition/operation. KN4/KN8 code and clear-text roles are explicit in the source; the stat_id product offering is separately defined. Generic identity fields remain opaque source identifiers, never a guessed substantive entity. Distinct literals are retained as separate components without value equivalence."
+expected_evidence_sha256 = "2d59c1b3d81f5a57ae2cb42c4f6e5720a834449b75e047760ad558aaef42ab91"
+
+[[identity.partition]]
+data_warning = "The source-native family covers several physical fields or code/clear-text components. The catalog retains distinct literal components and all delivery-specific metadata. No equality of stored values or unstated semantic role is assumed."
+variable = "296.145"
+columns = { FtgId = "296.145.ftgid", InsMetodId = "296.145.insmetodid", KodId = "296.145.kodid", LandId = "296.145.landid", MarknProdGrpArId = "296.145.marknprodgrparid", PersonId = "296.145.personid", PrisNotId = "296.145.prisnotid", PrisNotKodId = "296.145.prisnotkodid", ProdErbjId = "296.145.proderbjid", ProdErbjIxId = "296.145.proderbjixid", ProdGrpId = "296.145.prodgrpid", ValutaId = "296.145.valutaid", ValutaNotId = "296.145.valutanotid", VarVardeId = "296.145.varvardeid" }
+columns_ref = "Complete actual native family and every same-register physical peer: Batch53-six-source-review.json. Each finite component follows its exact supplied literal and source definition/operation. KN4/KN8 code and clear-text roles are explicit in the source; the stat_id product offering is separately defined. Generic identity fields remain opaque source identifiers, never a guessed substantive entity. Distinct literals are retained as separate components without value equivalence."
+expected_evidence_sha256 = "087820a15bf561df3786f1fa732fbdd2e0ee9410d8d4026ba0730006849d003f"
+
+[[identity.partition]]
+data_warning = "The source-native family covers several physical fields or code/clear-text components. The catalog retains distinct literal components and all delivery-specific metadata. No equality of stored values or unstated semantic role is assumed."
+variable = "296.27318"
+columns = { Period = "296.27318.period", PeriodId = "296.27318.periodid", UndersokningsKvartal = "296.27318.undersokningskvartal" }
+columns_ref = "Complete actual native family and every same-register physical peer: Batch53-six-source-review.json. Each finite component follows its exact supplied literal and source definition/operation. KN4/KN8 code and clear-text roles are explicit in the source; the stat_id product offering is separately defined. Generic identity fields remain opaque source identifiers, never a guessed substantive entity. Distinct literals are retained as separate components without value equivalence."
+expected_evidence_sha256 = "1408560f49380858e517ced60ea69de933aefbf38037a1bbf0e090b5b650d16b"
+
+[[identity.partition]]
+data_warning = "The source-native family covers several physical fields or code/clear-text components. The catalog retains distinct literal components and all delivery-specific metadata. No equality of stored values or unstated semantic role is assumed."
+variable = "296.27358"
+columns = { Beskrivn = "296.27358.beskrivn", ProdErbjId = "296.27358.proderbjid", Variant = "296.27358.variant" }
+columns_ref = "Complete actual native family and every same-register physical peer: Batch53-six-source-review.json. Each finite component follows its exact supplied literal and source definition/operation. KN4/KN8 code and clear-text roles are explicit in the source; the stat_id product offering is separately defined. Generic identity fields remain opaque source identifiers, never a guessed substantive entity. Distinct literals are retained as separate components without value equivalence."
+expected_evidence_sha256 = "25e85de4f13fa348bc7b421dc2ffbfef174dd6f8c2f36e04c87ec7c22af1594b"
+
+[[identity.partition]]
+data_warning = "The source-native family covers several physical fields or code/clear-text components. The catalog retains distinct literal components and all delivery-specific metadata. No equality of stored values or unstated semantic role is assumed."
+variable = "296.29261"
+columns = { Kod = "296.29261.kod", KortNamn = "296.29261.kortnamn", MarknId = "296.29261.marknid" }
+columns_ref = "Complete actual native family and every same-register physical peer: Batch53-six-source-review.json. Each finite component follows its exact supplied literal and source definition/operation. KN4/KN8 code and clear-text roles are explicit in the source; the stat_id product offering is separately defined. Generic identity fields remain opaque source identifiers, never a guessed substantive entity. Distinct literals are retained as separate components without value equivalence."
+expected_evidence_sha256 = "012574b66e858725745e624659de81e66d08d6d0f64ad8b6b29c2563bb874dbb"
+
+[[identity.partition]]
+data_warning = "The register export also contains physically indistinguishable coordinates with competing source meanings or stored domains. Only these exact uncontested source histories are admitted; every competing original remains evidence and no delivery/table discriminator is invented."
+variable = "296.45455"
+columns = { Namn = "296.45455.namn" }
+unassigned_columns = ["ProdGrpKod"]
+columns_ref = "Every exact ProdGrpKod coordinate for the combined-class family simultaneously carries native23614’s different ownSPIN domain, without a table discriminator. The explicitly retainedNamn histories remain positively sourced. Withhold only both sides of those exact code-column collisions, retaining every original, ordered code claim and name history."
+expected_evidence_sha256 = "a49ff9bf3d87a1570d482e91d94273ea63848d0dbbf12b38df5a96939e4eec17"
+
+[[identity.column_owner]]
+data_warning = "The register export also contains physically indistinguishable coordinates with competing source meanings or stored domains. Only these exact uncontested source histories are admitted; every competing original remains evidence and no delivery/table discriminator is invented."
+variable = "296.1814"
+variant = "296.828"
+column = "CoiKod"
+owner = "296.1814.source-positive"
+ref = "Complete source-native family and exact variant/edition/literal physical-peer closure. Only coordinates with affirmative unique native source support are mapped. KPI custom-product vs dottedCOICOP domains, PPI product vs combined-class domains, and monthly vsquarterly period meanings collide without a delivered table discriminator; both sides of those exact collisions remain unassigned."
+source_editions = ["2007", "2008", "2009"]
+expected_evidence_sha256 = "921482f40b2bce6936c6e3efe28ee66b5acb628d5bc0c7945aa647afd2e59a14"
+
+[[identity.column_owner]]
+data_warning = "The register export also contains physically indistinguishable coordinates with competing source meanings or stored domains. Only these exact uncontested source histories are admitted; every competing original remains evidence and no delivery/table discriminator is invented."
+variable = "296.1814"
+variant = "296.828"
+column = "Klass"
+owner = "296.1814.source-positive"
+ref = "Complete source-native family and exact variant/edition/literal physical-peer closure. Only coordinates with affirmative unique native source support are mapped. KPI custom-product vs dottedCOICOP domains, PPI product vs combined-class domains, and monthly vsquarterly period meanings collide without a delivered table discriminator; both sides of those exact collisions remain unassigned."
+source_editions = ["2022", "2023", "2024", "2025", "2026"]
+expected_evidence_sha256 = "adb45084a07befc105dd94e264a2896459f0e3bd1f65b563dc299c3b30431407"
+
+[[identity.column_owner]]
+data_warning = "The register export also contains physically indistinguishable coordinates with competing source meanings or stored domains. Only these exact uncontested source histories are admitted; every competing original remains evidence and no delivery/table discriminator is invented."
+variable = "296.23614"
+variant = "296.828"
+column = "ProdGrpKod"
+owner = "296.23614.kpi-prodgrpkod"
+ref = "Complete source-native family and exact variant/edition/literal physical-peer closure. Only coordinates with affirmative unique native source support are mapped. KPI custom-product vs dottedCOICOP domains, PPI product vs combined-class domains, and monthly vsquarterly period meanings collide without a delivered table discriminator; both sides of those exact collisions remain unassigned."
+source_editions = ["2022", "2023", "2024", "2025", "2026"]
+expected_evidence_sha256 = "195149e6a0956bc124f4ec277d2d291de8ce4dae0b81aea14cd42470b9dc1e3f"
+
+[[identity.column_owner]]
+data_warning = "The register export also contains physically indistinguishable coordinates with competing source meanings or stored domains. Only these exact uncontested source histories are admitted; every competing original remains evidence and no delivery/table discriminator is invented."
+variable = "296.23614"
+variant = "296.828"
+column = "varukod"
+owner = "296.23614.kpi-varukod"
+ref = "Complete source-native family and exact variant/edition/literal physical-peer closure. Only coordinates with affirmative unique native source support are mapped. KPI custom-product vs dottedCOICOP domains, PPI product vs combined-class domains, and monthly vsquarterly period meanings collide without a delivered table discriminator; both sides of those exact collisions remain unassigned."
+source_editions = ["2007", "2008", "2009"]
+expected_evidence_sha256 = "bf1743dfd48772ab9e37421c1a0b0df5274be82258ddbcef439e56e32e9d66a0"
+
+[[identity.column_owner]]
+data_warning = "The register export also contains physically indistinguishable coordinates with competing source meanings or stored domains. Only these exact uncontested source histories are admitted; every competing original remains evidence and no delivery/table discriminator is invented."
+variable = "296.23614"
+variant = "296.980"
+column = "ProdGrpKod"
+owner = "296.23614.tpi-prodgrpkod"
+ref = "Complete source-native family and exact variant/edition/literal physical-peer closure. Only coordinates with affirmative unique native source support are mapped. KPI custom-product vs dottedCOICOP domains, PPI product vs combined-class domains, and monthly vsquarterly period meanings collide without a delivered table discriminator; both sides of those exact collisions remain unassigned."
+source_editions = ["2012", "2013", "Indata 2014", "Utdata 2014"]
+expected_evidence_sha256 = "5e112fb14ee232737a1210d3d84f0a3428dc625dfb9fb5388616c96ea8dd03fe"
+
+[[identity.column_owner]]
+data_warning = "The register export also contains physically indistinguishable coordinates with competing source meanings or stored domains. Only these exact uncontested source histories are admitted; every competing original remains evidence and no delivery/table discriminator is invented."
+variable = "296.23614"
+variant = "296.980"
+column = "pg"
+owner = "296.23614.tpi-pg"
+ref = "Complete source-native family and exact variant/edition/literal physical-peer closure. Only coordinates with affirmative unique native source support are mapped. KPI custom-product vs dottedCOICOP domains, PPI product vs combined-class domains, and monthly vsquarterly period meanings collide without a delivered table discriminator; both sides of those exact collisions remain unassigned."
+source_editions = ["2007", "2008", "2009", "2010", "2011"]
+expected_evidence_sha256 = "150e8499f824ae0d62240bb4780d90d2ad6f77c9d3205dbce678d57eac74a05e"
+
+[[identity.column_owner]]
+data_warning = "The register export also contains physically indistinguishable coordinates with competing source meanings or stored domains. Only these exact uncontested source histories are admitted; every competing original remains evidence and no delivery/table discriminator is invented."
+variable = "296.23614"
+variant = "296.1085"
+column = "BeskrivnSV"
+owner = "296.23614.ppi-beskrivnsv"
+ref = "Complete source-native family and exact variant/edition/literal physical-peer closure. Only coordinates with affirmative unique native source support are mapped. KPI custom-product vs dottedCOICOP domains, PPI product vs combined-class domains, and monthly vsquarterly period meanings collide without a delivered table discriminator; both sides of those exact collisions remain unassigned."
+source_editions = ["Utdata 2017", "Utdata 2018", "Utdata 2019", "Utdata 2020", "Utdata 2021", "Utdata 2022", "Utdata 2023", "Utdata 2024", "Utdata 2025", "Utdata 2026"]
+expected_evidence_sha256 = "8e407760b0c266693cd20dee2b43f9e4f4695f3781ef3ef36e9885e7bd9d595d"
+
+[[identity.column_owner]]
+data_warning = "The register export also contains physically indistinguishable coordinates with competing source meanings or stored domains. Only these exact uncontested source histories are admitted; every competing original remains evidence and no delivery/table discriminator is invented."
+variable = "296.23614"
+variant = "296.1085"
+column = "BeskrivnSv"
+owner = "296.23614.ppi-beskrivnsv"
+ref = "Complete source-native family and exact variant/edition/literal physical-peer closure. Only coordinates with affirmative unique native source support are mapped. KPI custom-product vs dottedCOICOP domains, PPI product vs combined-class domains, and monthly vsquarterly period meanings collide without a delivered table discriminator; both sides of those exact collisions remain unassigned."
+source_editions = ["Indata 2013", "Indata 2014", "Indata 2015", "Indata 2016", "Indata 2017", "Indata 2018", "Indata 2019", "Indata 2020", "Indata 2021", "Indata 2022", "Indata 2023", "Indata 2024", "Indata 2025"]
+expected_evidence_sha256 = "b4e583f81ebec52214c925caf7de74fca46cd3ab3207c01e6b5638066b68755c"
+
+[[identity.column_owner]]
+data_warning = "The register export also contains physically indistinguishable coordinates with competing source meanings or stored domains. Only these exact uncontested source histories are admitted; every competing original remains evidence and no delivery/table discriminator is invented."
+variable = "296.23614"
+variant = "296.1085"
+column = "Namn"
+owner = "296.23614.ppi-namn"
+ref = "Complete source-native family and exact variant/edition/literal physical-peer closure. Only coordinates with affirmative unique native source support are mapped. KPI custom-product vs dottedCOICOP domains, PPI product vs combined-class domains, and monthly vsquarterly period meanings collide without a delivered table discriminator; both sides of those exact collisions remain unassigned."
+source_editions = ["Utdata 2013", "Utdata 2014", "Utdata 2015", "Utdata 2016", "Utdata 2017", "Utdata 2018", "Utdata 2019", "Utdata 2020", "Utdata 2021"]
+expected_evidence_sha256 = "6e5af93fb027da6ad049ef659aa50087b190c6d6b194f3d36a25ffff636ef1a0"
+
+[[identity.column_owner]]
+data_warning = "The register export also contains physically indistinguishable coordinates with competing source meanings or stored domains. Only these exact uncontested source histories are admitted; every competing original remains evidence and no delivery/table discriminator is invented."
+variable = "296.23614"
+variant = "296.1085"
+column = "NamnSV"
+owner = "296.23614.ppi-namnsv"
+ref = "Complete source-native family and exact variant/edition/literal physical-peer closure. Only coordinates with affirmative unique native source support are mapped. KPI custom-product vs dottedCOICOP domains, PPI product vs combined-class domains, and monthly vsquarterly period meanings collide without a delivered table discriminator; both sides of those exact collisions remain unassigned."
+source_editions = ["Utdata 2013", "Utdata 2014", "Utdata 2015", "Utdata 2016"]
+expected_evidence_sha256 = "82f0c8694010d5509fb204e8e007952800d21d127bbdcf4668c1eff99110f8e8"
+
+[[identity.column_owner]]
+data_warning = "The register export also contains physically indistinguishable coordinates with competing source meanings or stored domains. Only these exact uncontested source histories are admitted; every competing original remains evidence and no delivery/table discriminator is invented."
+variable = "296.23614"
+variant = "296.1085"
+column = "ProdGrpKod"
+owner = "296.23614.ppi-prodgrpkod"
+ref = "Complete source-native family and exact variant/edition/literal physical-peer closure. Only coordinates with affirmative unique native source support are mapped. KPI custom-product vs dottedCOICOP domains, PPI product vs combined-class domains, and monthly vsquarterly period meanings collide without a delivered table discriminator; both sides of those exact collisions remain unassigned."
+source_editions = ["Indata 2013", "Indata 2014", "Indata 2015", "Indata 2016", "Indata 2017", "Indata 2018", "Indata 2019", "Indata 2020", "Indata 2021", "Indata 2022", "Indata 2023", "Indata 2024", "Indata 2025", "Utdata 2013", "Utdata 2014", "Utdata 2015", "Utdata 2016", "Utdata 2017", "Utdata 2018", "Utdata 2019", "Utdata 2020", "Utdata 2021"]
+expected_evidence_sha256 = "8704dfb5d287ec9415927790a421351be902749abd2674d21a00bd5ac605acd6"
+
+[[identity.column_owner]]
+data_warning = "The register export also contains physically indistinguishable coordinates with competing source meanings or stored domains. Only these exact uncontested source histories are admitted; every competing original remains evidence and no delivery/table discriminator is invented."
+variable = "296.29392"
+variant = "296.1085"
+column = "PeriodId"
+owner = "296.29392.source-positive"
+ref = "Complete source-native family and exact variant/edition/literal physical-peer closure. Only coordinates with affirmative unique native source support are mapped. KPI custom-product vs dottedCOICOP domains, PPI product vs combined-class domains, and monthly vsquarterly period meanings collide without a delivered table discriminator; both sides of those exact collisions remain unassigned."
+source_editions = ["Indata 2013", "Indata 2014", "Indata 2015", "Indata 2016"]
+expected_evidence_sha256 = "d2de8bae2c1e4e9ac114940461794b3f7ecd6cb0d8e5249686c10053ccf96827"
+
+[[identity.column_owner]]
+data_warning = "The register export also contains physically indistinguishable coordinates with competing source meanings or stored domains. Only these exact uncontested source histories are admitted; every competing original remains evidence and no delivery/table discriminator is invented."
+variable = "296.45455"
+variant = "296.1085"
+column = "Namn"
+owner = "296.45455.namn"
+ref = "Complete source-native family and exact variant/edition/literal physical-peer closure. Only coordinates with affirmative unique native source support are mapped. KPI custom-product vs dottedCOICOP domains, PPI product vs combined-class domains, and monthly vsquarterly period meanings collide without a delivered table discriminator; both sides of those exact collisions remain unassigned."
+source_editions = ["Utdata 2022", "Utdata 2023", "Utdata 2024", "Utdata 2025", "Utdata 2026"]
+expected_evidence_sha256 = "9445756175863ffa0577672aba00869c1ac71689807d18c4de8ad17940e66afd"
+
+[[identity.unassigned]]
+variable = "296.35935"
+expected_evidence_sha256 = "d2151a165bf239fda7f46370d44272b3e1aa479152f94872882601c43cfa22f8"
+evidence = "Every exact variant/edition/literal coordinate for this quarterlyTPI source family simultaneously carries a monthlyPPI native source definition, with no physical table discriminator. The meanings and13-month vs5-quarter encodings are contradictory. Retain the complete family, dates, wording and ordered coding without an invented semantic owner."
+
+[[representation.parallel]]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+case_aliases = true
+variable = "296.23614.ppi-beskrivnsv"
+variant = "296.1085"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2017-01-01", valid_to = "2017-12-31", column = "BeskrivnSV", source_editions = ["Utdata 2017"] }, { valid_from = "2017-01-01", valid_to = "2017-12-31", column = "BeskrivnSv", source_editions = ["Indata 2017"] }]
+evidence = "The finite case-onlyBeskrivnSV/Sv literals share the same native name and definition and identify source descriptions of the product-group code. Retain all per-column wording, periods and distinct original attached coding fingerprints, without same-member co-delivery or equality of observed values. Both documented text components are uncoded; raw books remain source evidence."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+case_aliases = true
+variable = "296.23614.ppi-beskrivnsv"
+variant = "296.1085"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2020-01-01", valid_to = "2020-12-31", column = "BeskrivnSV", source_editions = ["Utdata 2020"] }, { valid_from = "2020-01-01", valid_to = "2020-12-31", column = "BeskrivnSv", source_editions = ["Indata 2020"] }]
+evidence = "The finite case-onlyBeskrivnSV/Sv literals share the same native name and definition and identify source descriptions of the product-group code. Retain all per-column wording, periods and distinct original attached coding fingerprints, without same-member co-delivery or equality of observed values. Both documented text components are uncoded; raw books remain source evidence."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+case_aliases = true
+variable = "296.23614.ppi-beskrivnsv"
+variant = "296.1085"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2021-01-01", valid_to = "2021-12-31", column = "BeskrivnSV", source_editions = ["Utdata 2021"] }, { valid_from = "2021-01-01", valid_to = "2021-12-31", column = "BeskrivnSv", source_editions = ["Indata 2021"] }]
+evidence = "The finite case-onlyBeskrivnSV/Sv literals share the same native name and definition and identify source descriptions of the product-group code. Retain all per-column wording, periods and distinct original attached coding fingerprints, without same-member co-delivery or equality of observed values. Both documented text components are uncoded; raw books remain source evidence."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+case_aliases = true
+variable = "296.23614.ppi-beskrivnsv"
+variant = "296.1085"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2022-01-01", valid_to = "2022-12-31", column = "BeskrivnSV", source_editions = ["Utdata 2022"] }, { valid_from = "2022-01-01", valid_to = "2022-12-31", column = "BeskrivnSv", source_editions = ["Indata 2022"] }]
+evidence = "The finite case-onlyBeskrivnSV/Sv literals share the same native name and definition and identify source descriptions of the product-group code. Retain all per-column wording, periods and distinct original attached coding fingerprints, without same-member co-delivery or equality of observed values. Both documented text components are uncoded; raw books remain source evidence."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+case_aliases = true
+variable = "296.23614.ppi-beskrivnsv"
+variant = "296.1085"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2023-01-01", valid_to = "2023-12-31", column = "BeskrivnSV", source_editions = ["Utdata 2023"] }, { valid_from = "2023-01-01", valid_to = "2023-12-31", column = "BeskrivnSv", source_editions = ["Indata 2023"] }]
+evidence = "The finite case-onlyBeskrivnSV/Sv literals share the same native name and definition and identify source descriptions of the product-group code. Retain all per-column wording, periods and distinct original attached coding fingerprints, without same-member co-delivery or equality of observed values. Both documented text components are uncoded; raw books remain source evidence."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+case_aliases = true
+variable = "296.23614.ppi-beskrivnsv"
+variant = "296.1085"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2024-01-01", valid_to = "2024-12-31", column = "BeskrivnSV", source_editions = ["Utdata 2024"] }, { valid_from = "2024-01-01", valid_to = "2024-12-31", column = "BeskrivnSv", source_editions = ["Indata 2024"] }]
+evidence = "The finite case-onlyBeskrivnSV/Sv literals share the same native name and definition and identify source descriptions of the product-group code. Retain all per-column wording, periods and distinct original attached coding fingerprints, without same-member co-delivery or equality of observed values. Both documented text components are uncoded; raw books remain source evidence."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2025-01-01"
+valid_to = "2025-12-31"
+case_aliases = true
+variable = "296.23614.ppi-beskrivnsv"
+variant = "296.1085"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2025-01-01", valid_to = "2025-12-31", column = "BeskrivnSV", source_editions = ["Utdata 2025"] }, { valid_from = "2025-01-01", valid_to = "2025-12-31", column = "BeskrivnSv", source_editions = ["Indata 2025"] }]
+evidence = "The finite case-onlyBeskrivnSV/Sv literals share the same native name and definition and identify source descriptions of the product-group code. Retain all per-column wording, periods and distinct original attached coding fingerprints, without same-member co-delivery or equality of observed values. Both documented text components are uncoded; raw books remain source evidence."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+case_aliases = true
+variable = "296.23614.ppi-beskrivnsv"
+variant = "296.1085"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2018-01-01", valid_to = "2018-12-31", column = "BeskrivnSV", source_editions = ["Utdata 2018"] }, { valid_from = "2018-01-01", valid_to = "2018-12-31", column = "BeskrivnSv", source_editions = ["Indata 2018"] }]
+evidence = "The finite case-onlyBeskrivnSV/Sv literals share the same native name and definition and identify source descriptions of the product-group code. Retain all per-column wording, periods and distinct original attached coding fingerprints, without same-member co-delivery or equality of observed values. Both documented text components are uncoded; raw books remain source evidence."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+case_aliases = true
+variable = "296.23614.ppi-beskrivnsv"
+variant = "296.1085"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2019-01-01", valid_to = "2019-12-31", column = "BeskrivnSV", source_editions = ["Utdata 2019"] }, { valid_from = "2019-01-01", valid_to = "2019-12-31", column = "BeskrivnSv", source_editions = ["Indata 2019"] }]
+evidence = "The finite case-onlyBeskrivnSV/Sv literals share the same native name and definition and identify source descriptions of the product-group code. Retain all per-column wording, periods and distinct original attached coding fingerprints, without same-member co-delivery or equality of observed values. Both documented text components are uncoded; raw books remain source evidence."
+noted = "2026-10-02"
+
+[[coding.uncoded]]
+variable = "296.119.kn4namn"
+variant = "296.1085"
+column = "KN4Namn"
+periods = [["2013-01-01", "2013-12-31"], ["2014-01-01", "2014-12-31"], ["2015-01-01", "2015-12-31"], ["2016-01-01", "2016-12-31"], ["2017-01-01", "2017-12-31"], ["2018-01-01", "2018-12-31"], ["2019-01-01", "2019-12-31"], ["2020-01-01", "2020-12-31"], ["2021-01-01", "2021-12-31"], ["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"], ["2024-01-01", "2024-12-31"], ["2025-01-01", "2025-12-31"], ["2026-01-01", "2026-12-31"]]
+reason = "The source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+source = "Complete original native family and physical-peer review Batch53-six-source-review.json; explicit source operational descriptions of four/eight-digit clear texts or product-group-code descriptions. No response codes are copied into a text field, and no statistical/value equality is asserted."
+data_warning = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+expected_evidence_sha256 = "4d8578f1a3b3afb419e0ceddc4784c635aebae373728bd64cdcaa884d648fe7f"
+stored_role = "label"
+
+[[coding.uncoded]]
+variable = "296.119.kn8beskrivning"
+variant = "296.1085"
+column = "KN8Beskrivning"
+periods = [["2013-01-01", "2013-12-31"], ["2014-01-01", "2014-12-31"], ["2015-01-01", "2015-12-31"], ["2016-01-01", "2016-12-31"], ["2017-01-01", "2017-12-31"], ["2018-01-01", "2018-12-31"], ["2019-01-01", "2019-12-31"], ["2020-01-01", "2020-12-31"], ["2021-01-01", "2021-12-31"], ["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"], ["2024-01-01", "2024-12-31"], ["2025-01-01", "2025-12-31"], ["2026-01-01", "2026-12-31"]]
+reason = "The source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+source = "Complete original native family and physical-peer review Batch53-six-source-review.json; explicit source operational descriptions of four/eight-digit clear texts or product-group-code descriptions. No response codes are copied into a text field, and no statistical/value equality is asserted."
+data_warning = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+expected_evidence_sha256 = "906a7b3a63bdcfefc20b512ab2e4eea567cbe72c2fd91144f6734f41d4530ac5"
+stored_role = "label"
+
+[[coding.uncoded]]
+variable = "296.23614.ppi-beskrivnsv"
+variant = "296.1085"
+column = "BeskrivnSV"
+periods = [["2017-01-01", "2017-12-31"], ["2018-01-01", "2018-12-31"], ["2019-01-01", "2019-12-31"], ["2020-01-01", "2020-12-31"], ["2021-01-01", "2021-12-31"], ["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"], ["2024-01-01", "2024-12-31"], ["2025-01-01", "2025-12-31"], ["2026-01-01", "2026-12-31"]]
+reason = "The source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+source = "Complete original native family and physical-peer review Batch53-six-source-review.json; explicit source operational descriptions of four/eight-digit clear texts or product-group-code descriptions. No response codes are copied into a text field, and no statistical/value equality is asserted."
+data_warning = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+expected_evidence_sha256 = "6a29e07bb1726844d50b1d233aa7221a7b5ea01597107e11f0046e7691560815"
+stored_role = "label"
+
+[[coding.uncoded]]
+variable = "296.23614.ppi-beskrivnsv"
+variant = "296.1085"
+column = "BeskrivnSv"
+periods = [["2013-01-01", "2013-12-31"], ["2014-01-01", "2014-12-31"], ["2015-01-01", "2015-12-31"], ["2016-01-01", "2016-12-31"], ["2017-01-01", "2017-12-31"], ["2018-01-01", "2018-12-31"], ["2019-01-01", "2019-12-31"], ["2020-01-01", "2020-12-31"], ["2021-01-01", "2021-12-31"], ["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"], ["2024-01-01", "2024-12-31"], ["2025-01-01", "2025-12-31"]]
+reason = "The source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+source = "Complete original native family and physical-peer review Batch53-six-source-review.json; explicit source operational descriptions of four/eight-digit clear texts or product-group-code descriptions. No response codes are copied into a text field, and no statistical/value equality is asserted."
+data_warning = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+expected_evidence_sha256 = "205830fce1e3c7f09c501a8eec0fe11db0fdb7b643d5b26edbae65abcb48be8d"
+stored_role = "label"
+
+[[errata.field]]
+variable = "296.73"
+variant = "296.1085"
+column = "Ar"
+edition = "11108"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "definition", status = "value", value = "Kalenderår." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Period" }, { name = "name", status = "value", value = "År" }, { name = "operational_definition", status = "value", value = "Anger det kalenderår som statistiken avser." }, { name = "representation", status = "absent" }]
+expected_period_text = "Utdata 2017"
+expected_scope = { kind = "intervals", intervals = [{ start = "2017", end = "2017" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end = "2017-12-31" }] }
+evidence = "The exact exported name and definition identify calendar year, and the operational definition explicitly states the calendar year represented by the statistics. Its2017 input-delivery peer saysÅr while its output-delivery unit says genericPeriod. Normalize only this exact generic period wording to the supported calendar-year unit; preserve both complete originals, source periods and all source coding. No month/quarter/year conversion or date-precision equivalence is claimed."
+noted = "2026-10-02"
+field = "measurement_unit"
+value = "År"
+
+[[acknowledge]]
+code = "unassigned_original_columns"
+subject = "296.45455"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18103\",\"variable:45455\",\"member:875923\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19325\",\"variable:45455\",\"member:930195\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19326\",\"variable:45455\",\"member:930226\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19704\",\"variable:45455\",\"member:975548\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:20327\",\"variable:45455\",\"member:1047048\"]}"]
+fields = ["identity", "column_name"]
+reason = "The exact supplied variant/edition/literal coordinates simultaneously identify contrary native source meanings or code domains without a physical table discriminator. Neither source owner is privileged. Keep all originals, dates, wording, ordered own lists and declared classification evidence, while leaving only these exact conflicting histories unavailable for semantic catalog ordering. Independently supported source histories remain available."
+evidence = "Complete original-family and same-register physical-peer closure, exact own codebook review Batch53-six-source-review.json and finite positive ownership dispositions. Maintainer-authorized retained-unknown policy; complete original and ordered coding plus exact diagnostic replay guards."
+expected_evidence_sha256 = "f4a6cd270fedd9f31848e1e5c90f1c734b439f95fdab384b741632ff3483f285"
+expected_diagnostic_sha256 = "b59ce56e57033feb4742c3989164d24d8c6985098daa921f42e6db14a008f6ae"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/prisindex/kn8kod-2"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11108\",\"variable:119\",\"member:451951\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11705\",\"variable:119\",\"member:482146\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11707\",\"variable:119\",\"member:482201\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:12977\",\"variable:119\",\"member:572108\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:12978\",\"variable:119\",\"member:572134\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:13761\",\"variable:119\",\"member:625284\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:13763\",\"variable:119\",\"member:625511\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16114\",\"variable:119\",\"member:770397\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16115\",\"variable:119\",\"member:770425\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18078\",\"variable:119\",\"member:836414\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18103\",\"variable:119\",\"member:837977\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18104\",\"variable:119\",\"member:838006\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19325\",\"variable:119\",\"member:930222\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19326\",\"variable:119\",\"member:930253\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19704\",\"variable:119\",\"member:975568\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19910\",\"variable:119\",\"member:990148\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19952\",\"variable:119\",\"member:993376\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:20327\",\"variable:119\",\"member:1047068\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:4620\",\"variable:119\",\"member:296426\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:5205\",\"variable:119\",\"member:320356\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:5791\",\"variable:119\",\"member:352925\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:6243\",\"variable:119\",\"member:395512\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "The exact own attached lists contain contradictory stored code memberships or code-to-label assignments. No independently supported unique vintage establishes this window. Preserve every raw domain, ordered association and original date; leave only this ambiguous response domain unavailable, without copying modern codes or merging competing books."
+evidence = "Complete original-family and same-register physical-peer closure, exact own codebook review Batch53-six-source-review.json and finite positive ownership dispositions. Maintainer-authorized retained-unknown policy; complete original and ordered coding plus exact diagnostic replay guards."
+expected_evidence_sha256 = "a825b3220015cea4ffadc654ffb23cff2c68f35bbd23daff2bd6e41a70f1de99"
+expected_diagnostic_sha256 = "d20aa3c62e91437542a11013380ecc502891ad530d589342fe0e12c195706692"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/prisindex/kn8kod-2"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11108\",\"variable:119\",\"member:451951\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11705\",\"variable:119\",\"member:482146\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11707\",\"variable:119\",\"member:482201\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:12977\",\"variable:119\",\"member:572108\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:12978\",\"variable:119\",\"member:572134\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:13761\",\"variable:119\",\"member:625284\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:13763\",\"variable:119\",\"member:625511\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16114\",\"variable:119\",\"member:770397\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16115\",\"variable:119\",\"member:770425\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18078\",\"variable:119\",\"member:836414\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18103\",\"variable:119\",\"member:837977\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18104\",\"variable:119\",\"member:838006\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19325\",\"variable:119\",\"member:930222\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19326\",\"variable:119\",\"member:930253\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19704\",\"variable:119\",\"member:975568\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19910\",\"variable:119\",\"member:990148\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19952\",\"variable:119\",\"member:993376\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:20327\",\"variable:119\",\"member:1047068\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:4620\",\"variable:119\",\"member:296426\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:5205\",\"variable:119\",\"member:320356\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:5791\",\"variable:119\",\"member:352925\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:6243\",\"variable:119\",\"member:395512\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "The exact own attached lists contain contradictory stored code memberships or code-to-label assignments. No independently supported unique vintage establishes this window. Preserve every raw domain, ordered association and original date; leave only this ambiguous response domain unavailable, without copying modern codes or merging competing books."
+evidence = "Complete original-family and same-register physical-peer closure, exact own codebook review Batch53-six-source-review.json and finite positive ownership dispositions. Maintainer-authorized retained-unknown policy; complete original and ordered coding plus exact diagnostic replay guards."
+expected_evidence_sha256 = "a825b3220015cea4ffadc654ffb23cff2c68f35bbd23daff2bd6e41a70f1de99"
+expected_diagnostic_sha256 = "b3052b98bc86b5402fa4397a5f5fb974de708d0424d0f4bbe5c00aebc96b7131"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/prisindex/kn8kod-2"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11108\",\"variable:119\",\"member:451951\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11705\",\"variable:119\",\"member:482146\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11707\",\"variable:119\",\"member:482201\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:12977\",\"variable:119\",\"member:572108\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:12978\",\"variable:119\",\"member:572134\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:13761\",\"variable:119\",\"member:625284\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:13763\",\"variable:119\",\"member:625511\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16114\",\"variable:119\",\"member:770397\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16115\",\"variable:119\",\"member:770425\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18078\",\"variable:119\",\"member:836414\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18103\",\"variable:119\",\"member:837977\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18104\",\"variable:119\",\"member:838006\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19325\",\"variable:119\",\"member:930222\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19326\",\"variable:119\",\"member:930253\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19704\",\"variable:119\",\"member:975568\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19910\",\"variable:119\",\"member:990148\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19952\",\"variable:119\",\"member:993376\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:20327\",\"variable:119\",\"member:1047068\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:4620\",\"variable:119\",\"member:296426\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:5205\",\"variable:119\",\"member:320356\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:5791\",\"variable:119\",\"member:352925\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:6243\",\"variable:119\",\"member:395512\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "The exact own attached lists contain contradictory stored code memberships or code-to-label assignments. No independently supported unique vintage establishes this window. Preserve every raw domain, ordered association and original date; leave only this ambiguous response domain unavailable, without copying modern codes or merging competing books."
+evidence = "Complete original-family and same-register physical-peer closure, exact own codebook review Batch53-six-source-review.json and finite positive ownership dispositions. Maintainer-authorized retained-unknown policy; complete original and ordered coding plus exact diagnostic replay guards."
+expected_evidence_sha256 = "a825b3220015cea4ffadc654ffb23cff2c68f35bbd23daff2bd6e41a70f1de99"
+expected_diagnostic_sha256 = "0192db009b65410c312d74aa569a7c8ac71ff659d245a067a16cec82155d8b2a"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/prisindex/kn8kod-2"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11108\",\"variable:119\",\"member:451951\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11705\",\"variable:119\",\"member:482146\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11707\",\"variable:119\",\"member:482201\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:12977\",\"variable:119\",\"member:572108\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:12978\",\"variable:119\",\"member:572134\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:13761\",\"variable:119\",\"member:625284\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:13763\",\"variable:119\",\"member:625511\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16114\",\"variable:119\",\"member:770397\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16115\",\"variable:119\",\"member:770425\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18078\",\"variable:119\",\"member:836414\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18103\",\"variable:119\",\"member:837977\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18104\",\"variable:119\",\"member:838006\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19325\",\"variable:119\",\"member:930222\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19326\",\"variable:119\",\"member:930253\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19704\",\"variable:119\",\"member:975568\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19910\",\"variable:119\",\"member:990148\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19952\",\"variable:119\",\"member:993376\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:20327\",\"variable:119\",\"member:1047068\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:4620\",\"variable:119\",\"member:296426\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:5205\",\"variable:119\",\"member:320356\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:5791\",\"variable:119\",\"member:352925\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:6243\",\"variable:119\",\"member:395512\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "The exact own attached lists contain contradictory stored code memberships or code-to-label assignments. No independently supported unique vintage establishes this window. Preserve every raw domain, ordered association and original date; leave only this ambiguous response domain unavailable, without copying modern codes or merging competing books."
+evidence = "Complete original-family and same-register physical-peer closure, exact own codebook review Batch53-six-source-review.json and finite positive ownership dispositions. Maintainer-authorized retained-unknown policy; complete original and ordered coding plus exact diagnostic replay guards."
+expected_evidence_sha256 = "a825b3220015cea4ffadc654ffb23cff2c68f35bbd23daff2bd6e41a70f1de99"
+expected_diagnostic_sha256 = "a20cf5eb073d0d75bf6e43598810e385eea57f91952b5bec5872768b0428b9e2"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 296, 'variable', 'native-int', 1814)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:11111\",\"variable:1814\",\"member:452022\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:11821\",\"variable:1814\",\"member:491959\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:13179\",\"variable:1814\",\"member:586359\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:14336\",\"variable:1814\",\"member:652804\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:15864\",\"variable:1814\",\"member:760516\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:3276\",\"variable:1814\",\"member:202362\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:4048\",\"variable:1814\",\"member:252950\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:4157\",\"variable:1814\",\"member:261599\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:4533\",\"variable:1814\",\"member:286530\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:5250\",\"variable:1814\",\"member:323013\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:5885\",\"variable:1814\",\"member:365038\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:7339\",\"variable:1814\",\"member:405835\"]}"]
+fields = ["identity"]
+reason = "The exact supplied variant/edition/literal coordinates simultaneously identify contrary native source meanings or code domains without a physical table discriminator. Neither source owner is privileged. Keep all originals, dates, wording, ordered own lists and declared classification evidence, while leaving only these exact conflicting histories unavailable for semantic catalog ordering. Independently supported source histories remain available."
+evidence = "Complete original-family and same-register physical-peer closure, exact own codebook review Batch53-six-source-review.json and finite positive ownership dispositions. Maintainer-authorized retained-unknown policy; complete original and ordered coding plus exact diagnostic replay guards."
+expected_evidence_sha256 = "9d1e36ce463babb3cc15261038dbae104d90fc60c816afc4cbf99745ce23bcb1"
+expected_diagnostic_sha256 = "23edb6e3ac5825927d2e60eb186802f02cc78964bbd99cfa170e8f2db9aae9b3"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 296, 'variable', 'native-int', 23614)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18103\",\"variable:23614\",\"member:875349\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19325\",\"variable:23614\",\"member:930196\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19326\",\"variable:23614\",\"member:930227\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19704\",\"variable:23614\",\"member:975564\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:20327\",\"variable:23614\",\"member:1047064\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:11111\",\"variable:23614\",\"member:452027\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:11821\",\"variable:23614\",\"member:491954\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:13179\",\"variable:23614\",\"member:586364\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:14336\",\"variable:23614\",\"member:652799\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:15864\",\"variable:23614\",\"member:760521\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:3276\",\"variable:23614\",\"member:202349\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:4048\",\"variable:23614\",\"member:252945\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:4157\",\"variable:23614\",\"member:261594\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:4533\",\"variable:23614\",\"member:286525\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:5250\",\"variable:23614\",\"member:323008\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:5885\",\"variable:23614\",\"member:365043\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:7339\",\"variable:23614\",\"member:405830\"]}"]
+fields = ["identity"]
+reason = "The exact supplied variant/edition/literal coordinates simultaneously identify contrary native source meanings or code domains without a physical table discriminator. Neither source owner is privileged. Keep all originals, dates, wording, ordered own lists and declared classification evidence, while leaving only these exact conflicting histories unavailable for semantic catalog ordering. Independently supported source histories remain available."
+evidence = "Complete original-family and same-register physical-peer closure, exact own codebook review Batch53-six-source-review.json and finite positive ownership dispositions. Maintainer-authorized retained-unknown policy; complete original and ordered coding plus exact diagnostic replay guards."
+expected_evidence_sha256 = "0951ec1058d7c8cf1d0c77917ba77c51090d43ed8892d8f189e87b6d85876611"
+expected_diagnostic_sha256 = "520a15bc7675d1ebdb368d5f627b89a6af5248bfee571228e603916d241fcc3c"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/produktgrupp-ppi-namn"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16114\",\"variable:23614\",\"member:770614\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "The supplied physical field and definition remain available, but neither the original own coding links nor captured historical documentation establishes the stored responses for this exact window. Preserve every original and attached classification declaration; leave the response domain unavailable rather than copy a later or other field’s list."
+evidence = "Complete original-family and same-register physical-peer closure, exact own codebook review Batch53-six-source-review.json and finite positive ownership dispositions. Maintainer-authorized retained-unknown policy; complete original and ordered coding plus exact diagnostic replay guards."
+expected_evidence_sha256 = "0175a9b7025799e91cf07eaea504bc36795d26637b419f8ad70b414dc1d0c12b"
+expected_diagnostic_sha256 = "cd15c063014701fba46d89c73b28fda820ad519afc2b12fc9d21c7c9c9ac10fb"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/prisindex/produktgrupp-ppi-prodgrpkod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11106\",\"variable:23614\",\"member:451904\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11108\",\"variable:23614\",\"member:451967\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11705\",\"variable:23614\",\"member:482134\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11707\",\"variable:23614\",\"member:482203\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:12977\",\"variable:23614\",\"member:572120\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:12978\",\"variable:23614\",\"member:572132\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:13761\",\"variable:23614\",\"member:625272\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:13763\",\"variable:23614\",\"member:625513\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16114\",\"variable:23614\",\"member:770613\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16114\",\"variable:23614\",\"member:770616\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16114\",\"variable:23614\",\"member:770617\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16115\",\"variable:23614\",\"member:770423\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18078\",\"variable:23614\",\"member:836416\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18104\",\"variable:23614\",\"member:838004\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19910\",\"variable:23614\",\"member:990136\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19952\",\"variable:23614\",\"member:993364\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:4618\",\"variable:23614\",\"member:290519\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:4620\",\"variable:23614\",\"member:290524\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:5205\",\"variable:23614\",\"member:320339\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:5206\",\"variable:23614\",\"member:320379\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:5790\",\"variable:23614\",\"member:352902\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:5791\",\"variable:23614\",\"member:352941\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:6243\",\"variable:23614\",\"member:395496\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:6244\",\"variable:23614\",\"member:395535\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "The exact own attached lists contain contradictory stored code memberships or code-to-label assignments. No independently supported unique vintage establishes this window. Preserve every raw domain, ordered association and original date; leave only this ambiguous response domain unavailable, without copying modern codes or merging competing books."
+evidence = "Complete original-family and same-register physical-peer closure, exact own codebook review Batch53-six-source-review.json and finite positive ownership dispositions. Maintainer-authorized retained-unknown policy; complete original and ordered coding plus exact diagnostic replay guards."
+expected_evidence_sha256 = "7b297a1e3b8f0190e2003813cc46f858d24fb78dce20c79ad261aa5b3d872e0e"
+expected_diagnostic_sha256 = "2d349a2a8f695a8e7f68e35f38e48fea8fd0029dd05a3b8c84561929ac6d9df4"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/prisindex/produktgrupp-ppi-prodgrpkod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11106\",\"variable:23614\",\"member:451904\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11108\",\"variable:23614\",\"member:451967\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11705\",\"variable:23614\",\"member:482134\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11707\",\"variable:23614\",\"member:482203\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:12977\",\"variable:23614\",\"member:572120\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:12978\",\"variable:23614\",\"member:572132\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:13761\",\"variable:23614\",\"member:625272\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:13763\",\"variable:23614\",\"member:625513\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16114\",\"variable:23614\",\"member:770613\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16114\",\"variable:23614\",\"member:770616\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16114\",\"variable:23614\",\"member:770617\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16115\",\"variable:23614\",\"member:770423\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18078\",\"variable:23614\",\"member:836416\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18104\",\"variable:23614\",\"member:838004\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19910\",\"variable:23614\",\"member:990136\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19952\",\"variable:23614\",\"member:993364\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:4618\",\"variable:23614\",\"member:290519\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:4620\",\"variable:23614\",\"member:290524\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:5205\",\"variable:23614\",\"member:320339\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:5206\",\"variable:23614\",\"member:320379\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:5790\",\"variable:23614\",\"member:352902\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:5791\",\"variable:23614\",\"member:352941\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:6243\",\"variable:23614\",\"member:395496\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:6244\",\"variable:23614\",\"member:395535\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "The exact own attached lists contain contradictory stored code memberships or code-to-label assignments. No independently supported unique vintage establishes this window. Preserve every raw domain, ordered association and original date; leave only this ambiguous response domain unavailable, without copying modern codes or merging competing books."
+evidence = "Complete original-family and same-register physical-peer closure, exact own codebook review Batch53-six-source-review.json and finite positive ownership dispositions. Maintainer-authorized retained-unknown policy; complete original and ordered coding plus exact diagnostic replay guards."
+expected_evidence_sha256 = "7b297a1e3b8f0190e2003813cc46f858d24fb78dce20c79ad261aa5b3d872e0e"
+expected_diagnostic_sha256 = "5df1e83211e3cd2ceb1ffe6be0d3f6f4238874dd36a453a0ef1621220b78060e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/produktgrupp-ppi-prodgrpkod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18078\",\"variable:23614\",\"member:836416\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "The supplied physical field and definition remain available, but neither the original own coding links nor captured historical documentation establishes the stored responses for this exact window. Preserve every original and attached classification declaration; leave the response domain unavailable rather than copy a later or other field’s list."
+evidence = "Complete original-family and same-register physical-peer closure, exact own codebook review Batch53-six-source-review.json and finite positive ownership dispositions. Maintainer-authorized retained-unknown policy; complete original and ordered coding plus exact diagnostic replay guards."
+expected_evidence_sha256 = "738fb65c27694f6b0ccb4ce1f44a2e0d98ea8bbe20b82ffe1c65ae077286c263"
+expected_diagnostic_sha256 = "1708a6d7ab3061f36c81331e376f521d913efddbb40bcd53fa33ae0a5dcb28d7"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 296, 'variable', 'native-int', 29392)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11106\",\"variable:29392\",\"member:451913\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11108\",\"variable:29392\",\"member:452708\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11705\",\"variable:29392\",\"member:482147\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11707\",\"variable:29392\",\"member:482194\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:12977\",\"variable:29392\",\"member:572107\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:12978\",\"variable:29392\",\"member:572141\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:13761\",\"variable:29392\",\"member:625285\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:13763\",\"variable:29392\",\"member:625504\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16114\",\"variable:29392\",\"member:770396\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16115\",\"variable:29392\",\"member:770432\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18078\",\"variable:29392\",\"member:836407\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18103\",\"variable:29392\",\"member:837976\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18104\",\"variable:29392\",\"member:838011\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19325\",\"variable:29392\",\"member:930223\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19326\",\"variable:29392\",\"member:930254\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19704\",\"variable:29392\",\"member:975554\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19910\",\"variable:29392\",\"member:990130\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19952\",\"variable:29392\",\"member:993358\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:20327\",\"variable:29392\",\"member:1047054\"]}"]
+fields = ["identity"]
+reason = "The exact supplied variant/edition/literal coordinates simultaneously identify contrary native source meanings or code domains without a physical table discriminator. Neither source owner is privileged. Keep all originals, dates, wording, ordered own lists and declared classification evidence, while leaving only these exact conflicting histories unavailable for semantic catalog ordering. Independently supported source histories remain available."
+evidence = "Complete original-family and same-register physical-peer closure, exact own codebook review Batch53-six-source-review.json and finite positive ownership dispositions. Maintainer-authorized retained-unknown policy; complete original and ordered coding plus exact diagnostic replay guards."
+expected_evidence_sha256 = "0c5b0a792d56f11765a859deb0444f022f9a3c253ffeb077e203e1e393ede467"
+expected_diagnostic_sha256 = "2c20d9984d023cc3da184defa5b8e4cb131fdcb9d18017e4598387b76b52210b"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 296, 'variable', 'native-int', 35935)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11106\",\"variable:35935\",\"member:452050\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11108\",\"variable:35935\",\"member:452709\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11705\",\"variable:35935\",\"member:482133\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11707\",\"variable:35935\",\"member:482179\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:12977\",\"variable:35935\",\"member:572121\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:12978\",\"variable:35935\",\"member:572154\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:13761\",\"variable:35935\",\"member:625271\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:13763\",\"variable:35935\",\"member:625492\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16114\",\"variable:35935\",\"member:770410\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16115\",\"variable:35935\",\"member:770444\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18078\",\"variable:35935\",\"member:836395\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18103\",\"variable:35935\",\"member:837975\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18104\",\"variable:35935\",\"member:838023\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19325\",\"variable:35935\",\"member:930224\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19326\",\"variable:35935\",\"member:930255\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19704\",\"variable:35935\",\"member:975553\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19910\",\"variable:35935\",\"member:990125\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19952\",\"variable:35935\",\"member:993353\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:20327\",\"variable:35935\",\"member:1047053\"]}"]
+fields = ["identity"]
+reason = "The exact supplied variant/edition/literal coordinates simultaneously identify contrary native source meanings or code domains without a physical table discriminator. Neither source owner is privileged. Keep all originals, dates, wording, ordered own lists and declared classification evidence, while leaving only these exact conflicting histories unavailable for semantic catalog ordering. Independently supported source histories remain available."
+evidence = "Complete original-family and same-register physical-peer closure, exact own codebook review Batch53-six-source-review.json and finite positive ownership dispositions. Maintainer-authorized retained-unknown policy; complete original and ordered coding plus exact diagnostic replay guards."
+expected_evidence_sha256 = "b67de2a91deda643d171559693bdbd76c1006e2afcb240e7c993aefa8c69a2b4"
+expected_diagnostic_sha256 = "6fede1b5d101f0d025dafaa3e79e5ba8f34b635b16921046b5df4fd1955e77a3"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 296, 'variable', 'native-int', 45455)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18103\",\"variable:45455\",\"member:875923\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19325\",\"variable:45455\",\"member:930195\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19326\",\"variable:45455\",\"member:930226\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19704\",\"variable:45455\",\"member:975548\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:20327\",\"variable:45455\",\"member:1047048\"]}"]
+fields = ["identity"]
+reason = "The exact supplied variant/edition/literal coordinates simultaneously identify contrary native source meanings or code domains without a physical table discriminator. Neither source owner is privileged. Keep all originals, dates, wording, ordered own lists and declared classification evidence, while leaving only these exact conflicting histories unavailable for semantic catalog ordering. Independently supported source histories remain available."
+evidence = "Complete original-family and same-register physical-peer closure, exact own codebook review Batch53-six-source-review.json and finite positive ownership dispositions. Maintainer-authorized retained-unknown policy; complete original and ordered coding plus exact diagnostic replay guards."
+expected_evidence_sha256 = "f4a6cd270fedd9f31848e1e5c90f1c734b439f95fdab384b741632ff3483f285"
+expected_diagnostic_sha256 = "dbe1bc0a0f7e7af4c2e1997a1f2e4c1a5f204c6fc9ef9c28a7013e78a9ed02b7"

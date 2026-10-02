@@ -404,3 +404,18 @@ valid_to = "2014-12-31"
 reason = "The source supplies no own response coding association for this exact salary-population or full-/part-time window. Retain all original fields, dates and known source lists. The conceptual description does not establish the stored historical codes; neither a generic 0/1 assumption nor a later list is substituted. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
 expected_evidence_sha256 = "82e7db5795e558d87a9eb65eaea85f333848dd2523c60a115ae6a1a4bea93e1d"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "130.749"
+columns = { agrupp = "130.749.agrupp", agrupp2 = "130.749.agrupp2" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "672619bc64b3efb4237f269e4cad0d12574edc70bf920f9e629dde77dc6dbd06"
+
+[[variable]]
+native_id = "130.749.agrupp"
+slug = "agrupp"
+
+[[variable]]
+native_id = "130.749.agrupp2"
+slug = "agrupp2"

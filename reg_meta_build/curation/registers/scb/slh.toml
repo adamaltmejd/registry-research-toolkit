@@ -112,3 +112,52 @@ columns = { SUN2000Inr = "186.784", SUN2020Inr = "186.784" }
 unassigned_columns = []
 columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
 expected_evidence_sha256 = "3ba5f1381a80498fd30791d5aee81c2ada3570805cb9f110337ba79b69eab725"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "186.66"
+columns = { SUN2000Niva = "186.66.sun2000niva", SUN2020Niva = "186.66.sun2020niva", Sun2000Niva_old = "186.66.sun2000niva-old", utbnv = "186.66.utbnv" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "54b094b21fa149caccc7545b8f210c4696cddecf2f9204a1d961a47d35cb9841"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "186.774"
+columns = { SUN2000Grp = "186.774.sun2000grp", SUN2000Niva_old = "186.774.sun2000niva-old", Sun2000Niva_old = "186.774.sun2000niva-old" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "756ff6b3e8dc6f0dc89c9b6e36688d81ab1422b5b7bdd099af0ec305d8dee577"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "186.120"
+columns = { ssyk12_3 = "186.120.ssyk12-3", ssyk12_4 = "186.120.ssyk12-4" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "b40f16e1dd3b92110e3f21b0fadee79348c236f2ae3a0353f25f4d7c7ce41e30"
+
+[[variable]]
+native_id = "186.66.sun2000niva"
+slug = "sun2000niva"
+
+[[variable]]
+native_id = "186.66.sun2020niva"
+slug = "sun2020niva"
+
+[[variable]]
+native_id = "186.66.sun2000niva-old"
+slug = "sun2000niva-old-66"
+
+[[variable]]
+native_id = "186.774.sun2000grp"
+slug = "sun2000grp"
+
+[[variable]]
+native_id = "186.774.sun2000niva-old"
+slug = "sun2000niva-old-774"
+
+[[variable]]
+native_id = "186.120.ssyk12-3"
+slug = "ssyk12-3"
+
+[[variable]]
+native_id = "186.120.ssyk12-4"
+slug = "ssyk12-4"

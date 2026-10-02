@@ -207,3 +207,151 @@ reason = "These exact source windows have no own bound stored-code domain. Prese
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
 expected_evidence_sha256 = "f9d243f64c93efbd83a8ea38456845208a1c7486bb56816bd921c58a40a7c35a"
 expected_diagnostic_sha256 = "9afab5e720dd7e2ddca7a321d0c0be7171d1b63d5235afbc3db670f8aa702475"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "72.2187"
+columns = { AgarKat = "72.2187.agarkat", AgareKat = "72.2187.agarekat", Agarkategori = "72.2187.agarkategori" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "a818bb80fc46289a0014bf7a3fbce94737f9dcbb3afa0c0e0e12db69ecab69a6"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "72.2299"
+columns = { Lagenhetstyp = "72.2299.lagenhetstyp", LghKod = "72.2299.lghkod", LghTyp = "72.2299.lghtyp", Lghtyp = "72.2299.lghtyp" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "48324b3fa0b9661f4205a2ee18cfad227be3db572a8da2752e2e5e268b4346c9"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "72.17490"
+columns = { RivOrs = "72.17490.rivors", RivningsOrsak = "72.17490.rivningsorsak", Rivningsorsak = "72.17490.rivningsorsak" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "e5dd37ee3ae1a37ec6b5c1723a555a8f71149a6c3510db0270d723c61cf74678"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "72.17046"
+columns = { AntLgh = "72.17046.antlgh", PaborjadeLgh = "72.17046.paborjadelgh", TotAntLgh = "72.17046.totantlgh", TotLgh = "72.17046.totlgh" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "2848f18bc447930c2bfbffcf6e5e2170296ef9ff6653d723abbf5acf9eec561b"
+
+[[variable]]
+native_id = "72.2187.agarkat"
+slug = "agarkat"
+
+[[variable]]
+native_id = "72.2187.agarekat"
+slug = "agarekat"
+
+[[variable]]
+native_id = "72.2187.agarkategori"
+slug = "agarkategori-2187"
+
+[[variable]]
+native_id = "72.2299.lagenhetstyp"
+slug = "lagenhetstyp-2299"
+
+[[variable]]
+native_id = "72.2299.lghkod"
+slug = "lghkod"
+
+[[variable]]
+native_id = "72.2299.lghtyp"
+slug = "lghtyp"
+
+[[variable]]
+native_id = "72.17490.rivors"
+slug = "rivors"
+
+[[variable]]
+native_id = "72.17490.rivningsorsak"
+slug = "rivningsorsak-17490"
+
+[[variable]]
+native_id = "72.17046.antlgh"
+slug = "antlgh"
+
+[[variable]]
+native_id = "72.17046.paborjadelgh"
+slug = "paborjadelgh"
+
+[[variable]]
+native_id = "72.17046.totantlgh"
+slug = "totantlgh"
+
+[[variable]]
+native_id = "72.17046.totlgh"
+slug = "totlgh"
+
+[[representation.parallel]]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+case_aliases = true
+variable = "72.17490.rivningsorsak"
+variant = "72.199"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+columns = [{ valid_from = "2012-01-01", valid_to = "2012-12-31", column = "RivningsOrsak", expected_codings = ["fa101426ab7f0a7bc62bdbd8ad3646c25d90d5b9b09b9300fe0845624d52f262"], source_editions = ["2012"] }, { valid_from = "2012-01-01", valid_to = "2012-12-31", column = "Rivningsorsak", expected_codings = ["fa101426ab7f0a7bc62bdbd8ad3646c25d90d5b9b09b9300fe0845624d52f262"], source_editions = ["2012"] }]
+evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+case_aliases = true
+variable = "72.17490.rivningsorsak"
+variant = "72.199"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+columns = [{ valid_from = "2013-01-01", valid_to = "2013-12-31", column = "RivningsOrsak", expected_codings = ["a8c0fce75673003145c3e97becc50ce3cd91d6492238fc896d2e2f28abbfd87d"], source_editions = ["2013"] }, { valid_from = "2013-01-01", valid_to = "2013-12-31", column = "Rivningsorsak", expected_codings = ["a8c0fce75673003145c3e97becc50ce3cd91d6492238fc896d2e2f28abbfd87d"], source_editions = ["2013"] }]
+evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+case_aliases = true
+variable = "72.17490.rivningsorsak"
+variant = "72.199"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "RivningsOrsak", expected_codings = ["59b5aabebd10df6b85d2bbd92830444f06c1751e234db4ba1a82dfb965b7eead"], source_editions = ["2014"] }, { valid_from = "2014-01-01", valid_to = "2014-12-31", column = "Rivningsorsak", expected_codings = ["59b5aabebd10df6b85d2bbd92830444f06c1751e234db4ba1a82dfb965b7eead"], source_editions = ["2014"] }]
+evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+case_aliases = true
+variable = "72.17490.rivningsorsak"
+variant = "72.199"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "RivningsOrsak", expected_codings = ["224acd03acc34b8d139bf7906f39f1b12b35753cd80636b95e71c4f69397f266"], source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "Rivningsorsak", expected_codings = ["224acd03acc34b8d139bf7906f39f1b12b35753cd80636b95e71c4f69397f266"], source_editions = ["2015"] }]
+evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+case_aliases = true
+variable = "72.17490.rivningsorsak"
+variant = "72.199"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+columns = [{ valid_from = "2016-01-01", valid_to = "2016-12-31", column = "RivningsOrsak", expected_codings = ["46a4ee4888830a1eb920cb6c23e739b028ec09214b7659b397b16bbaa787d7b9"], source_editions = ["2016"] }, { valid_from = "2016-01-01", valid_to = "2016-12-31", column = "Rivningsorsak", expected_codings = ["46a4ee4888830a1eb920cb6c23e739b028ec09214b7659b397b16bbaa787d7b9"], source_editions = ["2016"] }]
+evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+case_aliases = true
+variable = "72.17490.rivningsorsak"
+variant = "72.199"
+column_metadata = "per_column"
+coding_metadata = "per_column"
+columns = [{ valid_from = "2017-01-01", valid_to = "2017-12-31", column = "RivningsOrsak", expected_codings = ["b3ee69f5baf556f48dd8211c7e147476a4b230bdf9323b456ce2d256ec0c49c8"], source_editions = ["2017"] }, { valid_from = "2017-01-01", valid_to = "2017-12-31", column = "Rivningsorsak", expected_codings = ["b3ee69f5baf556f48dd8211c7e147476a4b230bdf9323b456ce2d256ec0c49c8"], source_editions = ["2017"] }]
+evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
+noted = "2026-10-02"

@@ -229,3 +229,75 @@ native_id = "233.8552.gyfid"
 slug = "gymnasieforbund-id"
 
 # register 234
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "233.1536"
+columns = { STVKod = "233.1536.stvkod", StvKod = "233.1536.stvkod", StvKod2 = "233.1536.stvkod2", Stvkod = "233.1536.stvkod", Stvkod_Start = "233.1536.stvkod-start" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "3a2391c8080a22160828263d3379faa95929bfbc1171aed5d81a60c633220594"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "233.16306"
+columns = { Utbild = "233.16306.utbild", Utbild2 = "233.16306.utbild2", Utbild_Start = "233.16306.utbild-start" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "ee184bea2b20f88b7fd50da976adb0abd0b4a869a3a3835205f613209150f707"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "233.30471"
+columns = { Direkt = "233.30471.direkt", Direkt9 = "233.30471.direkt9" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "2a6745eb8c57e64632c2d7a010b23c55e9aeb73a0a2bbcaf11dbb890d244d8b8"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "233.67"
+columns = { UtlBakGr = "233.67.utlbakgr", UtlBakGr2 = "233.67.utlbakgr2", UtlSvBakg = "233.67.utlsvbakg", Utl_BakG = "233.67.utl-bakg" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "556ca850a22b250a9d57fe3f1be17b46efb10ee475b734004c2f22140e4b7f5c"
+
+[[variable]]
+native_id = "233.1536.stvkod2"
+slug = "stvkod2"
+
+[[variable]]
+native_id = "233.1536.stvkod-start"
+slug = "stvkod-start"
+
+[[variable]]
+native_id = "233.16306.utbild"
+slug = "utbild"
+
+[[variable]]
+native_id = "233.16306.utbild2"
+slug = "utbild2"
+
+[[variable]]
+native_id = "233.16306.utbild-start"
+slug = "utbild-start"
+
+[[variable]]
+native_id = "233.30471.direkt"
+slug = "direkt"
+
+[[variable]]
+native_id = "233.30471.direkt9"
+slug = "direkt9"
+
+[[variable]]
+native_id = "233.67.utlbakgr"
+slug = "utlbakgr-67"
+
+[[variable]]
+native_id = "233.67.utlbakgr2"
+slug = "utlbakgr"
+
+[[variable]]
+native_id = "233.67.utlsvbakg"
+slug = "utlsvbakg"
+
+[[variable]]
+native_id = "233.67.utl-bakg"
+slug = "utl-bakg"

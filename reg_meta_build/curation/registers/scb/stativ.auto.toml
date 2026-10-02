@@ -371,10 +371,6 @@ native_id = "273.30998"
 slug = "epa-sumtimhinder"  # source: kolumnnamn
 
 [[variable]]
-native_id = "273.30999"
-slug = "etabl-status"  # source: fold
-
-[[variable]]
 native_id = "273.31000"
 slug = "etabl-utbniva"  # source: kolumnnamn
 

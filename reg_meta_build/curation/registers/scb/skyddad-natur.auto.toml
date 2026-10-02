@@ -35,10 +35,6 @@ native_id = "158.43153"
 slug = "registrerande-myndighet"  # source: kolumnnamn
 
 [[variable]]
-native_id = "158.43154"
-slug = "beslutsstatus"  # source: kolumnnamn
-
-[[variable]]
 native_id = "158.43155"
 slug = "beslutstyp"  # source: kolumnnamn
 

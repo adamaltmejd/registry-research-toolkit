@@ -147,3 +147,18 @@ native_id = "326.8073.sun2000niva-3-mor"
 slug = "sun-niva-3-mor"
 
 # register 333
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "326.66"
+columns = { SUN2000Niva_1 = "326.66.sun2000niva-1", SUN2000Niva_3 = "326.66.sun2000niva-3", Sun2000Niva = "326.66.sun2000niva" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "0e4b6a39e75b0e9218aa177cb94a78369d27db20254aed684ad0eb483de75ede"
+
+[[variable]]
+native_id = "326.66.sun2000niva-1"
+slug = "sun2000niva"
+
+[[variable]]
+native_id = "326.66.sun2000niva-3"
+slug = "sun2000niva-3"

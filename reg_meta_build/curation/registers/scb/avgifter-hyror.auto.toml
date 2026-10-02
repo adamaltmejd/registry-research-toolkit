@@ -51,10 +51,6 @@ native_id = "198.5480"
 slug = "garage"  # source: kolumnnamn
 
 [[variable]]
-native_id = "198.6290"
-slug = "nuts0"  # source: fold
-
-[[variable]]
 native_id = "198.7783"
 slug = "bokod"  # source: kolumnnamn
 

@@ -590,6 +590,13 @@ full field, parent, coding and peer guards for runtime application. Source revie
 the decision's reason explain the meaning; the digest only guards that evidence. Raw
 coding fingerprints are shared within one application call, never cached across inputs.
 
+`coding.uncoded` may explicitly declare `stored_role = "label"` or `"free_text"` when
+reviewed source metadata identifies a stored text component whose attached numeric books
+describe a related code field. This requires the same complete original and own coding
+digest or prepared-row authority, plus a data warning. The effective text field has no
+inferred finite response domain; every attached claim and declared classification
+remains source evidence. Ordinary uncoded entries still reject a complete nonempty list.
+
 `source_curation.py` evaluates cases compiled in memory from tracked coordinates. Each
 case checks exact members, finite periods, fields and expected facts (`expected_*`),
 with peer guards that check completeness without selecting targets. Changed relevant

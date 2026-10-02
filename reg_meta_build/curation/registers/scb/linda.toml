@@ -17842,3 +17842,179 @@ evidence = "Complete accepted LINDA native1304 family:448originals, own disposab
 noted = "2026-10-02"
 field = "name"
 value = "Delkomponent till disponibel inkomst, källfält CDISP"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "29.39924"
+columns = { INDTJ1 = "29.39924.indtj1", INDTJ2 = "29.39924.indtj2" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "a7caca5cd36b1e1fd8546a2840964186a7c352d4adc38ab6e1601663f7085fdf"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "29.4027"
+columns = { BKUNGR = "29.4027.bkungr", BKUNGR07 = "29.4027.bkungr07" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "3564389ae8b1c4a6429219502ebb542701f3c4dd4eb21db60d29c35a804d6994"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "29.1075"
+columns = { CFTAG = "29.1075.cftag", CFTAG03 = "29.1075.cftag03" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "f138c75b0eb1de1d73599dd9c73af58edc6c1ce45b0c104a4d9183bbc27e7d3d"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "29.1080"
+columns = { CMIX = "29.1080.cmix", CMIX03 = "29.1080.cmix03" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "3f506237e1a723eeb0118e3d6faf8982c9b28fbcd732a2ff9a0488a10c3440c4"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "29.85"
+columns = { CFAKT = "29.85.cfakt", CFAKT03 = "29.85.cfakt03" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "2562f78d59812ea8cad85dcb8ba0a69e874b3805b82efc763011cc6d76d19d2b"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "29.5629"
+columns = { AKBF = "29.5629.akbf", BLKFA = "29.5629.blkfa", BLKFF = "29.5629.blkff" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "e12f2b4cc8706aa5f1d077704f463f95577e7159fcccede9f2249d4f1564b745"
+
+[[variable]]
+native_id = "29.39924.indtj1"
+slug = "indtj1"
+
+[[variable]]
+native_id = "29.39924.indtj2"
+slug = "indtj2"
+
+[[variable]]
+native_id = "29.4027.bkungr"
+slug = "bkungr-4027"
+
+[[variable]]
+native_id = "29.4027.bkungr07"
+slug = "bkungr07"
+
+[[variable]]
+native_id = "29.1075.cftag"
+slug = "cftag"
+
+[[variable]]
+native_id = "29.1075.cftag03"
+slug = "cftag03"
+
+[[variable]]
+native_id = "29.1080.cmix"
+slug = "cmix"
+
+[[variable]]
+native_id = "29.1080.cmix03"
+slug = "cmix03"
+
+[[variable]]
+native_id = "29.85.cfakt"
+slug = "cfakt"
+
+[[variable]]
+native_id = "29.85.cfakt03"
+slug = "cfakt03"
+
+[[variable]]
+native_id = "29.5629.akbf"
+slug = "akbf"
+
+[[variable]]
+native_id = "29.5629.blkfa"
+slug = "blkfa"
+
+[[variable]]
+native_id = "29.5629.blkff"
+slug = "blkff"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bkungr-4027"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:8609\",\"variable:4027\",\"member:420437\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "22bb71ef3f5bc8a2fac7e9ff5624dd571b59e77179d8434ce5e93158832a6ee0"
+expected_diagnostic_sha256 = "2e804252dce8534a24124d975c5a678d915f3bec695298b60c73081751b00eb5"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bkungr-4027"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:6102\",\"variable:4027\",\"member:377444\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "ae2a8f7012e3b189b5e5b7f01a542e4b540f3f47a8157feeda98a1e7d069de15"
+expected_diagnostic_sha256 = "e445af819793a12ab9a20ef0e1bba18ab81b0a2174aa66a0b4dbf92802c2178e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bkungr-4027"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3802\",\"variable:4027\",\"member:233216\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "4f7061bac7dee85050bf393c91d1c176ee4157f68bfd2c9264f6ba8a5a58fd2c"
+expected_diagnostic_sha256 = "71604fdbe1e478ac0270540d66bb0c8eea937e967169deeced7be00bbe8e45aa"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bkungr-4027"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:8589\",\"variable:4027\",\"member:418827\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "b386baacd44d21edad29efbf6c1b8a90e4006b5a301ff1e69c6b27b3b9a98cc6"
+expected_diagnostic_sha256 = "b89a7c3cf92bceb810eec4cc24437d92388f2bc787e8a607b7f5056b31c26677"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bkungr-4027"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:6103\",\"variable:4027\",\"member:378016\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "e999c8ce64c5bd6419068b9fc88e7cbf1f3865ea8a74048d6f7f202359cbf977"
+expected_diagnostic_sha256 = "9e30cc3a8c856fb6464ee4a3d912b4c8036fdcc8161ac87b5f1c4f452e0f2812"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/linda/bkungr-4027"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:3803\",\"variable:4027\",\"member:233804\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "6fdf557e59e1ab309deae0961f4803618cfa7335220e3e17acb72e614ec8be73"
+expected_diagnostic_sha256 = "453d464e7bd7808f509891c94cd8ff7cc98070088f12766ba1439257bd0277e1"
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/linda/blkfa:scb/linda/blkff"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:11771\",\"variable:5629\",\"member:487067\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:13103\",\"variable:5629\",\"member:582853\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:14845\",\"variable:5629\",\"member:688222\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:15395\",\"variable:5629\",\"member:723424\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:15753\",\"variable:5629\",\"member:752301\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:16006\",\"variable:5629\",\"member:765618\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:16197\",\"variable:5629\",\"member:776273\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:16235\",\"variable:5629\",\"member:779378\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:16247\",\"variable:5629\",\"member:781886\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:16247\",\"variable:5629\",\"member:784966\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:16268\",\"variable:5629\",\"member:783838\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:16268\",\"variable:5629\",\"member:784967\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:16300\",\"variable:5629\",\"member:786175\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:16300\",\"variable:5629\",\"member:786368\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:16334\",\"variable:5629\",\"member:790605\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3100\",\"variable:5629\",\"member:182182\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3673\",\"variable:5629\",\"member:225464\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:3802\",\"variable:5629\",\"member:233199\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:4059\",\"variable:5629\",\"member:253475\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:4512\",\"variable:5629\",\"member:285108\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:472\",\"variable:5629\",\"member:14155\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:5274\",\"variable:5629\",\"member:324835\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:5901\",\"variable:5629\",\"member:366775\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:6102\",\"variable:5629\",\"member:377132\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:7502\",\"variable:5629\",\"member:413079\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:8609\",\"variable:5629\",\"member:420739\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:102\",\"edition:9989\",\"variable:5629\",\"member:444963\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:11584\",\"variable:5629\",\"member:473139\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:11784\",\"variable:5629\",\"member:488393\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:13231\",\"variable:5629\",\"member:588327\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:16035\",\"variable:5629\",\"member:768242\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:16335\",\"variable:5629\",\"member:790919\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:16336\",\"variable:5629\",\"member:791111\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:16337\",\"variable:5629\",\"member:791706\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:3041\",\"variable:5629\",\"member:179883\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:3674\",\"variable:5629\",\"member:226072\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:3803\",\"variable:5629\",\"member:233807\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:4060\",\"variable:5629\",\"member:254131\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:4513\",\"variable:5629\",\"member:285727\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:5275\",\"variable:5629\",\"member:325367\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:5907\",\"variable:5629\",\"member:368130\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:6103\",\"variable:5629\",\"member:377660\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:7508\",\"variable:5629\",\"member:413705\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:8589\",\"variable:5629\",\"member:419172\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:103\",\"edition:9990\",\"variable:5629\",\"member:445575\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1613\",\"edition:16407\",\"variable:5629\",\"member:800664\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1613\",\"edition:16410\",\"variable:5629\",\"member:800886\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1613\",\"edition:16410\",\"variable:5629\",\"member:801057\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1613\",\"edition:16419\",\"variable:5629\",\"member:801530\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1613\",\"edition:16419\",\"variable:5629\",\"member:801720\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1613\",\"edition:16420\",\"variable:5629\",\"member:801955\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1613\",\"edition:16420\",\"variable:5629\",\"member:802023\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1613\",\"edition:16421\",\"variable:5629\",\"member:802097\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1613\",\"edition:16422\",\"variable:5629\",\"member:802596\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1618\",\"edition:16339\",\"variable:5629\",\"member:792062\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1618\",\"edition:16350\",\"variable:5629\",\"member:794453\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1618\",\"edition:16355\",\"variable:5629\",\"member:794739\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1618\",\"edition:16355\",\"variable:5629\",\"member:794808\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1618\",\"edition:16357\",\"variable:5629\",\"member:795111\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1618\",\"edition:16357\",\"variable:5629\",\"member:795304\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1618\",\"edition:16363\",\"variable:5629\",\"member:796041\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1618\",\"edition:16363\",\"variable:5629\",\"member:796215\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:29\",\"variant:1618\",\"edition:16383\",\"variable:5629\",\"member:798700\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Retain both exact physical/catalog fields, all source facts and their own coding. The derived shared-definition sibling group lacks safe shape evidence and stays unavailable; a shared description does not establish compatible stored values or roles. No ordering field or source membership is withdrawn."
+evidence = "Complete native-family and physical-peer census, source-supported literal partitions and actual source replay Batch53-hard-family-source-review.json; finite original-fact and diagnostic guards. Standing retained-unavailable policy for unproven derived relations."
+expected_evidence_sha256 = "b70f080bb09b0c122204b9b1af2aa24a72a134e41fd12df552d7130adf4ee12c"
+expected_diagnostic_sha256 = "f1e9aac83763abdb27d3d2fcd97b6730ec8fe68d49ffc89c3f9553330a6c87df"

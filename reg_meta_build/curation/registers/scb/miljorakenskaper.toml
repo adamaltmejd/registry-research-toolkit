@@ -68,3 +68,15 @@ refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[
 expected_evidence_sha256 = "5c0c8257c80260d2ab857b6467ba9d63672c90dc84742e5cb35941156b0397c4"
 reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
 evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
+
+[[acknowledge]]
+code = "unresolved_column_representation"
+subject = "scb/miljorakenskaper/lan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:295\",\"variant:1547\",\"edition:14965\",\"variable:49\",\"member:724584\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:295\",\"variant:1547\",\"edition:14965\",\"variable:49\",\"member:724585\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:295\",\"variant:1547\",\"edition:14965\",\"variable:49\",\"member:724586\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:295\",\"variant:1547\",\"edition:17598\",\"variable:49\",\"member:817595\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:295\",\"variant:1547\",\"edition:17598\",\"variable:49\",\"member:817605\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:295\",\"variant:1547\",\"edition:17598\",\"variable:49\",\"member:817617\"]}"]
+fields = ["column_name"]
+valid_from = "2003-01-01"
+valid_to = "2018-12-31"
+reason = "Within the same exact physical/edition context, the county field has separate source operations for legal-unit location, workplace location and estimated geographic allocation from NR data/forestry. Preserve every original context and own dictionary. An interchangeable common physical representation cannot be asserted without a supplied discriminator."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "24d103601529927774510dded4bce3959f846ce65257f5d2fa2f63e8bef69523"
+expected_diagnostic_sha256 = "45b1b32e201aca2328c0151ba615adf16822db5a67be46e8ea0a7c3d687ad558"

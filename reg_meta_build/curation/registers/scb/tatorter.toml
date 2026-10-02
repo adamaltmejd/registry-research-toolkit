@@ -39,3 +39,18 @@ native_id = "159.39462"
 slug = "objekt-id"
 
 # register 161
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "159.39462"
+columns = { OBJECTID = "159.39462.objectid", UUID = "159.39462.uuid" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "740181d47c341a56a1e57b83ba9f9005047b5d14f0639ebd448e0fbdbe559d14"
+
+[[variable]]
+native_id = "159.39462.objectid"
+slug = "objectid"
+
+[[variable]]
+native_id = "159.39462.uuid"
+slug = "uuid"

@@ -1623,3 +1623,18 @@ reason = "These exact source windows have no own bound stored-code domain. Prese
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain47-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
 expected_evidence_sha256 = "f20ac5afe934496ee9966875084555ca0c3f323f5d30e00ad32a32b4cfec3f13"
 expected_diagnostic_sha256 = "df5b29c4eb5a3ed51d47a2df29bfd6400ba190b04bc708ebd63d72f565182900"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "248.8534"
+columns = { Komgrupp17 = "248.8534.komgrupp17", Komgrupp23 = "248.8534.komgrupp23", Kommungrupp_text = "248.8534.kommungrupp-text", komgrupp17 = "248.8534.komgrupp17" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "64b065d2d760b8bd26062d25c62df19d98b227b16d47cefb00cb12b6d12e7b1a"
+
+[[variable]]
+native_id = "248.8534.komgrupp23"
+slug = "komgrupp23"
+
+[[variable]]
+native_id = "248.8534.kommungrupp-text"
+slug = "kommungrupp-text"

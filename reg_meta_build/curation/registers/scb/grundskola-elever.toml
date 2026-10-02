@@ -326,3 +326,26 @@ native_id = "193.MSPR2_SPRAK"
 slug = "moderna-sprak-sprakval-sprak"
 
 # register 194
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "193.67"
+columns = { UtlBakGr = "193.67.utlbakgr", UtlBakGr2 = "193.67.utlbakgr2", UtlSvBakg = "193.67.utlsvbakg", Utl_BakG = "193.67.utl-bakg" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "13b398fba73385136c94fff15ed6ae0851547592eaccbeb776e29d7b4e2a53a2"
+
+[[variable]]
+native_id = "193.67.utlbakgr"
+slug = "utlbakgr"
+
+[[variable]]
+native_id = "193.67.utlbakgr2"
+slug = "utlbakgr2"
+
+[[variable]]
+native_id = "193.67.utlsvbakg"
+slug = "utlsvbakg"
+
+[[variable]]
+native_id = "193.67.utl-bakg"
+slug = "utl-bakg"

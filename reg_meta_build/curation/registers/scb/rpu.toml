@@ -434,3 +434,61 @@ native_id = "103.8635.fhkurstypvt"
 slug = "kurstyp-folkhogskolan-vt"
 
 # register 104
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "103.66"
+columns = { RPUSUNNiva = "103.66.rpusunniva", RPUSUNNiva_VT = "103.66.rpusunniva-vt", SUN2000Niva = "103.66.sun2000niva", SUN2000Niva_Det = "103.66.sun2000niva-det", SUN2000Niva_Old = "103.66.sun2000niva-old", SUN2000Niva_old = "103.66.sun2000niva-old", SUN2020Niva = "103.66.sun2020niva", SUN2020Niva_old = "103.66.sun2020niva-old", StudNivaISCED = "103.66.studnivaisced", Univa = "103.66.univa", sun2000Niva = "103.66.sun2000niva" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "5ba07df3a9fcc1be3093a3a2557b02b3705d51f45f34b0af207fe0f0aa14ba0c"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "103.17509"
+columns = { AstSni = "103.17509.astsni", AstSni07 = "103.17509.astsni07", Astsni = "103.17509.astsni", Astsni2 = "103.17509.astsni2", AstsniG = "103.17509.astsnig", AstsniG07 = "103.17509.astsnig07", astsni = "103.17509.astsni" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "d01233860d1c8ba4ee5863aaf7d731f586a9ad508cb1a2f2dbca2bcd1d8063fc"
+
+[[variable]]
+native_id = "103.66.sun2000niva"
+slug = "sun2000niva-66"
+
+[[variable]]
+native_id = "103.66.sun2000niva-det"
+slug = "sun2000niva-det"
+
+[[variable]]
+native_id = "103.66.sun2000niva-old"
+slug = "sun2000niva"
+
+[[variable]]
+native_id = "103.66.sun2020niva"
+slug = "sun2020niva"
+
+[[variable]]
+native_id = "103.66.sun2020niva-old"
+slug = "sun2020niva-old"
+
+[[variable]]
+native_id = "103.66.studnivaisced"
+slug = "studnivaisced"
+
+[[variable]]
+native_id = "103.66.univa"
+slug = "univa"
+
+[[variable]]
+native_id = "103.17509.astsni"
+slug = "astsni-17509"
+
+[[variable]]
+native_id = "103.17509.astsni07"
+slug = "astsni07"
+
+[[variable]]
+native_id = "103.17509.astsnig"
+slug = "astsnig"
+
+[[variable]]
+native_id = "103.17509.astsnig07"
+slug = "astsnig07"

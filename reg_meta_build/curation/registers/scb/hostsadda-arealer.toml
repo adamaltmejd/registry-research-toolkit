@@ -95,3 +95,14 @@ native_id = "145.2437.ordsko"
 slug = "skordeomrade"
 
 # register 156
+
+[[representation.parallel]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+case_aliases = true
+variable = "145.20010"
+variant = "145.212"
+column_metadata = "per_column"
+columns = [{ valid_from = "2016-01-01", valid_to = "2016-12-31", column = "AddId", source_editions = ["2016"] }, { valid_from = "2016-01-01", valid_to = "2016-12-31", column = "addid", source_editions = ["2016 Ekologiska arealer"] }]
+evidence = "Complete native and physical-peer census: these supplied columns differ only by letter case and declare the same native member and definition. Keep each source field and coding, without manufacturing observations or correcting storage. Exact original edition witnesses bound only this alias overlap. Batch53-case-alias-proof.json."
+noted = "2026-10-02"

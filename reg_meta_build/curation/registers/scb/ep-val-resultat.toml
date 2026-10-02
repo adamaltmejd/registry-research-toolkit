@@ -55,10 +55,6 @@ slug = "antal-giltiga-roster-liberalerna"
 # register 242 (allmanna-val-valdeltagande)
 
 [[variable]]
-native_id = "240.15145.x"
-slug = "antal-rostberattigade"
-
-[[variable]]
 native_id = "240.69.llkkdddd"
 slug = "valdistrikt"
 
@@ -176,3 +172,14 @@ refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[
 expected_evidence_sha256 = "98f5205f053e22ce2cdd150fb908947e15fcee6b297f6ba1b693dfb1b7c9cb86"
 reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
 evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "240.15145"
+columns = { rostbrsv = "240.15145.rostbrsv", rostbrutl = "240.15145.rostbrutl" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "968b8656b3c74fac472cb8a6af5a09e0948874e90c38567bc61b5cd60508c746"
+
+[[variable]]
+native_id = "240.15145.rostbrsv"
+slug = "rostbrsv"

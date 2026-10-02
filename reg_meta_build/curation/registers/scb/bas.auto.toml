@@ -23,10 +23,6 @@ native_id = "404.65"
 slug = "sun2020inr"  # source: kolumnnamn
 
 [[variable]]
-native_id = "404.66"
-slug = "sun2020niva"  # source: fold
-
-[[variable]]
 native_id = "404.67"
 slug = "utlsvbakg"  # source: kolumnnamn
 

@@ -27,20 +27,12 @@ native_id = "156.6333"
 slug = "inv112a"  # source: kolumnnamn
 
 [[variable]]
-native_id = "156.6334"
-slug = "kost302a"  # source: kolumnnamn
-
-[[variable]]
 native_id = "156.6336"
 slug = "kost304t"  # source: kolumnnamn
 
 [[variable]]
 native_id = "156.6337"
 slug = "kost314k"  # source: kolumnnamn
-
-[[variable]]
-native_id = "156.6338"
-slug = "kost303t"  # source: kolumnnamn
 
 [[variable]]
 native_id = "156.6339"

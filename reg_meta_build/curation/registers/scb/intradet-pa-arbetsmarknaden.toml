@@ -4780,3 +4780,181 @@ reason = "These exact source windows have no own bound stored-code domain. Prese
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
 expected_evidence_sha256 = "418793b28ea5cfd9350012db5105222247859d24da4d61af5334922a959b3179"
 expected_diagnostic_sha256 = "58b0e6630edbf37d2377dddd8d7350d112c981facb0e7127db645f099cdec01a"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "111.41084"
+columns = { F1b_01 = "111.41084.f1b-01", F1b_02 = "111.41084.f1b-02", F1b_03 = "111.41084.f1b-03", F1b_04 = "111.41084.f1b-04", F1b_05 = "111.41084.f1b-05", F1b_06 = "111.41084.f1b-06" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "b628d4845c676e816477c40aa7c7444dde0db62c3c51af5f0851318c68e0948a"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "111.5083"
+columns = { AnstForm = "111.5083.anstform", F10 = "111.5083.f10", F11 = "111.5083.f11", F12 = "111.5083.f12", F16 = "111.5083.f16", F3 = "111.5083.f3", F3_ny = "111.5083.f3-ny", F3_txt = "111.5083.f3-txt", F6 = "111.5083.f6", fr6 = "111.5083.fr6" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "051321000a6ea68ea64113ddbc2ce409a13c51d91d666b1091a1af2f54e2c328"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "111.37057"
+columns = { F11 = "111.37057.f11", F11_ny = "111.37057.f11-ny" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "ceca59d6fac5c3b427a770d8ccbeb687fcc2354045e09e06ef7c898ae91541e1"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "111.37061"
+columns = { F16_01 = "111.37061.f16-01", F16_02 = "111.37061.f16-02", F16_03 = "111.37061.f16-03", F16_04 = "111.37061.f16-04" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "6850be6fd5c5ef7d2abdc335237571c31c6d5557a803a040b07b2880cb8cbb95"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "111.37060"
+columns = { F15_01 = "111.37060.f15-01", F15_02 = "111.37060.f15-02", F15_03 = "111.37060.f15-03", F15_04 = "111.37060.f15-04", F15_05 = "111.37060.f15-05" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "294164a29dbc41ead2c83d57d981c350062c6d3dfbb31601cb3f8dd6d7c194e9"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "111.37051"
+columns = { F3_02 = "111.37051.f3-02", F3_03 = "111.37051.f3-03", F3_06 = "111.37051.f3-06", F3_09 = "111.37051.f3-09" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "ca86bbed3a99b66e679f68df054d2f2776f01be46979ff1f4d43e5e7832e0971"
+
+[[variable]]
+native_id = "111.41084.f1b-01"
+slug = "f1b-01"
+
+[[variable]]
+native_id = "111.41084.f1b-02"
+slug = "f1b-02"
+
+[[variable]]
+native_id = "111.41084.f1b-03"
+slug = "f1b-03"
+
+[[variable]]
+native_id = "111.41084.f1b-04"
+slug = "f1b-04"
+
+[[variable]]
+native_id = "111.41084.f1b-05"
+slug = "f1b-05"
+
+[[variable]]
+native_id = "111.41084.f1b-06"
+slug = "f1b-06"
+
+[[variable]]
+native_id = "111.5083.anstform"
+slug = "anstform"
+
+[[variable]]
+native_id = "111.5083.f10"
+slug = "f10-5083"
+
+[[variable]]
+native_id = "111.5083.f11"
+slug = "f11-5083"
+
+[[variable]]
+native_id = "111.5083.f12"
+slug = "f12-5083"
+
+[[variable]]
+native_id = "111.5083.f16"
+slug = "f16"
+
+[[variable]]
+native_id = "111.5083.f3"
+slug = "f3-5083"
+
+[[variable]]
+native_id = "111.5083.f3-ny"
+slug = "f3-ny"
+
+[[variable]]
+native_id = "111.5083.f3-txt"
+slug = "f3-txt"
+
+[[variable]]
+native_id = "111.5083.f6"
+slug = "f6-5083"
+
+[[variable]]
+native_id = "111.5083.fr6"
+slug = "fr6"
+
+[[variable]]
+native_id = "111.37057.f11"
+slug = "f11-37057"
+
+[[variable]]
+native_id = "111.37057.f11-ny"
+slug = "f11-ny"
+
+[[variable]]
+native_id = "111.37061.f16-01"
+slug = "f16-01"
+
+[[variable]]
+native_id = "111.37061.f16-02"
+slug = "f16-02"
+
+[[variable]]
+native_id = "111.37061.f16-03"
+slug = "f16-03"
+
+[[variable]]
+native_id = "111.37061.f16-04"
+slug = "f16-04"
+
+[[variable]]
+native_id = "111.37060.f15-01"
+slug = "f15-01"
+
+[[variable]]
+native_id = "111.37060.f15-02"
+slug = "f15-02"
+
+[[variable]]
+native_id = "111.37060.f15-03"
+slug = "f15-03"
+
+[[variable]]
+native_id = "111.37060.f15-04"
+slug = "f15-04"
+
+[[variable]]
+native_id = "111.37060.f15-05"
+slug = "f15-05"
+
+[[variable]]
+native_id = "111.37051.f3-02"
+slug = "f3-02"
+
+[[variable]]
+native_id = "111.37051.f3-03"
+slug = "f3-03"
+
+[[variable]]
+native_id = "111.37051.f3-06"
+slug = "f3-06"
+
+[[variable]]
+native_id = "111.37051.f3-09"
+slug = "f3-09"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/intradet-pa-arbetsmarknaden/f3-5083"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:111\",\"variant:123\",\"edition:18866\",\"variable:5083\",\"member:900234\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "701938d93bfda57184d49730e379ce0854dd4ffa7bb4575065bf0b21bd50fa25"
+expected_diagnostic_sha256 = "1e8a7995662d7bd4405a01750427df18ccac049c515541c2318f0a0ad5b0bac4"

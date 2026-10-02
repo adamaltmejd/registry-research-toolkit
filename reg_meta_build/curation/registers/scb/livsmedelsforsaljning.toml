@@ -579,3 +579,99 @@ coding_metadata = "shared"
 columns = [{ valid_from = "2020-01-01", valid_to = "2020-12-31", column = "Stratum", source_editions = ["2020"] }, { valid_from = "2020-01-01", valid_to = "2020-12-31", column = "stratum", source_editions = ["2020"] }]
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "176.1814"
+columns = { COICOP4 = "176.1814.coicop4", COICOP5 = "176.1814.coicop5" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "b923e9ff005e0e207379eb509f522ed66fbfc6b3b0552158dbc8c29849600e13"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "176.1801"
+columns = { RedPerSlut = "176.1801.redperslut", V2Tom = "176.1801.v2tom", redperslut = "176.1801.redperslut" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "64b9e865e9d9f85d09e58e22a624ab325d63648aa9a3fe8b754039914afc2cde"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "176.19052"
+columns = { NgS1Je = "176.19052.ngs1je", ngs = "176.19052.ngs" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "e266eb75218ccc42896bf9c30229577d6fe898736b29f5049cbd6b95846a70da"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "176.1653"
+columns = { Kommentar = "176.1653.kommentar", uppgiftkommentar = "176.1653.uppgiftkommentar" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "66c8abcffc55ad37957a7ca96e6d0873cbecad2dbc545fbd6f07f7c3e4605306"
+
+[[variable]]
+native_id = "176.1814.coicop4"
+slug = "coicop4"
+
+[[variable]]
+native_id = "176.1814.coicop5"
+slug = "coicop5"
+
+[[variable]]
+native_id = "176.1801.redperslut"
+slug = "redperslut"
+
+[[variable]]
+native_id = "176.1801.v2tom"
+slug = "v2tom"
+
+[[variable]]
+native_id = "176.19052.ngs1je"
+slug = "ngs1je"
+
+[[variable]]
+native_id = "176.19052.ngs"
+slug = "ngs"
+
+[[variable]]
+native_id = "176.1653.kommentar"
+slug = "kommentar-1653"
+
+[[variable]]
+native_id = "176.1653.uppgiftkommentar"
+slug = "uppgiftkommentar"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/livsmedelsforsaljning/ngs"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:2233\",\"variable:19052\",\"member:139898\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "6acbccee1cc1ba7d35f5886ce283b6237723ca3d0fbae99523709d47fd878467"
+expected_diagnostic_sha256 = "6e889096cb59a7ce13b0c43b545039b4b9ee89b9979b796da92ebb374aafcab5"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/livsmedelsforsaljning/ngs"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:15480\",\"variable:19052\",\"member:732127\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "cde806bb92c69202f0ac44fe5ecc759b9c99587f9dfbbc0dfa900c865ff9a260"
+expected_diagnostic_sha256 = "e6992846356db3deb6d5396161b03345154f6761414fecf1a12ec98451ffdfe4"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/livsmedelsforsaljning/ngs"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:15481\",\"variable:19052\",\"member:732194\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "aec7acf581dc73488e7d34d9015893a93cb567072960425e4e2c11f94c92c41e"
+expected_diagnostic_sha256 = "d0673df6c12f7be5f5f6849d116c88cc0fc2eddeba51845d021838a110fcc261"

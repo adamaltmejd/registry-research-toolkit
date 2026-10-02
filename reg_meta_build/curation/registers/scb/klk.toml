@@ -536,3 +536,18 @@ coding_metadata = "shared"
 columns = [{ valid_from = "2009-01-01", valid_to = "2009-12-31", column = "UtbRetro", source_editions = ["2009"] }, { valid_from = "2009-01-01", valid_to = "2009-12-31", column = "Utbretro", source_editions = ["2009"] }]
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "89.19066"
+columns = { AvtTArM = "89.19066.avttarm", AvtTArML = "89.19066.avttarml" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "8aca90e29c29fddce04323b7b81ad89532686a2e84e66675e651843f87c66b61"
+
+[[variable]]
+native_id = "89.19066.avttarm"
+slug = "avttarm"
+
+[[variable]]
+native_id = "89.19066.avttarml"
+slug = "avttarml"

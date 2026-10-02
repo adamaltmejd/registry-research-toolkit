@@ -488,3 +488,41 @@ native_id = "405.47165"
 slug = "inlamningsdatum"
 
 # register 407
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "405.19145"
+columns = { room = "405.19145.room", room_H = "405.19145.room-h", room_alt = "405.19145.room-alt", room_alt2 = "405.19145.room-alt2" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "471d4522775de7d81becfa3e1ac3211bd79a5560a64aad3a3d6143e26c61c351"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "405.19198"
+columns = { cash4a = "405.19198.cash4a", cash4b = "405.19198.cash4b" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "fa717f1d1d609fc3c60300e79fef5844834b7d7a4ed2eec8ea2bf07785f3aca6"
+
+[[variable]]
+native_id = "405.19145.room"
+slug = "room"
+
+[[variable]]
+native_id = "405.19145.room-h"
+slug = "room-h"
+
+[[variable]]
+native_id = "405.19145.room-alt"
+slug = "room-alt"
+
+[[variable]]
+native_id = "405.19145.room-alt2"
+slug = "room-alt2"
+
+[[variable]]
+native_id = "405.19198.cash4a"
+slug = "cash4a-19198"
+
+[[variable]]
+native_id = "405.19198.cash4b"
+slug = "cash4b"

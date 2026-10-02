@@ -151,3 +151,18 @@ native_id = "353.8137.hmannamn"
 slug = "huvudman-namn"
 
 # register 355
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "353.30471"
+columns = { Direkt = "353.30471.direkt", Direkt9 = "353.30471.direkt9" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "ea6dc2450a070da520e4f83579ae9eef1e552f934f1f21b5a6dde269bdbff976"
+
+[[variable]]
+native_id = "353.30471.direkt"
+slug = "direkt"
+
+[[variable]]
+native_id = "353.30471.direkt9"
+slug = "direkt9"

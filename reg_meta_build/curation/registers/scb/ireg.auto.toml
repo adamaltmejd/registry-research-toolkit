@@ -39,10 +39,6 @@ native_id = "131.1937"
 slug = "kommentar"  # source: kolumnnamn
 
 [[variable]]
-native_id = "131.2613"
-slug = "urvalsnr"  # source: kolumnnamn
-
-[[variable]]
 native_id = "131.3752"
 slug = "kontaktperson"  # source: kolumnnamn
 

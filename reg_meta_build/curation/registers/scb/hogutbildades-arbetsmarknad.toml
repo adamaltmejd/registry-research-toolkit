@@ -51,3 +51,97 @@ native_id = "302.25163"
 slug = "utbildningsomrade-grov"
 
 # register 304
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "302.25307"
+columns = { F16 = "302.25307.f16", F16_01 = "302.25307.f16-01", F16_02 = "302.25307.f16-02", F16_03 = "302.25307.f16-03", F16_04 = "302.25307.f16-04", F16_05 = "302.25307.f16-05", F16_07 = "302.25307.f16-07", F16_08 = "302.25307.f16-08", F16_09 = "302.25307.f16-09", F16_10 = "302.25307.f16-10", F16_11 = "302.25307.f16-11", F16forts = "302.25307.f16forts" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "052011b87182367da08832b93e8c1b1526c2eaf2b993823035f9a5fba7e29778"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "302.5068"
+columns = { F01 = "302.5068.f01", F18a_1 = "302.5068.f18a-1", F18a_2 = "302.5068.f18a-2", F18a_3 = "302.5068.f18a-3", F18a_4 = "302.5068.f18a-4", F18a_5 = "302.5068.f18a-5", F18a_6 = "302.5068.f18a-6", F18a_7 = "302.5068.f18a-7" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "c340adb4eeca8751b6b913ecbf8591d0ad6f0c45b198fb12f2969661836f8004"
+
+[[variable]]
+native_id = "302.25307.f16"
+slug = "f16"
+
+[[variable]]
+native_id = "302.25307.f16-01"
+slug = "f16-01"
+
+[[variable]]
+native_id = "302.25307.f16-02"
+slug = "f16-02"
+
+[[variable]]
+native_id = "302.25307.f16-03"
+slug = "f16-03"
+
+[[variable]]
+native_id = "302.25307.f16-04"
+slug = "f16-04"
+
+[[variable]]
+native_id = "302.25307.f16-05"
+slug = "f16-05"
+
+[[variable]]
+native_id = "302.25307.f16-07"
+slug = "f16-07"
+
+[[variable]]
+native_id = "302.25307.f16-08"
+slug = "f16-08"
+
+[[variable]]
+native_id = "302.25307.f16-09"
+slug = "f16-09"
+
+[[variable]]
+native_id = "302.25307.f16-10"
+slug = "f16-10"
+
+[[variable]]
+native_id = "302.25307.f16-11"
+slug = "f16-11"
+
+[[variable]]
+native_id = "302.25307.f16forts"
+slug = "f16forts"
+
+[[variable]]
+native_id = "302.5068.f01"
+slug = "f01"
+
+[[variable]]
+native_id = "302.5068.f18a-1"
+slug = "f18a"
+
+[[variable]]
+native_id = "302.5068.f18a-2"
+slug = "f18a-2"
+
+[[variable]]
+native_id = "302.5068.f18a-3"
+slug = "f18a-3"
+
+[[variable]]
+native_id = "302.5068.f18a-4"
+slug = "f18a-4"
+
+[[variable]]
+native_id = "302.5068.f18a-5"
+slug = "f18a-5"
+
+[[variable]]
+native_id = "302.5068.f18a-6"
+slug = "f18a-6"
+
+[[variable]]
+native_id = "302.5068.f18a-7"
+slug = "f18a-7"

@@ -99,10 +99,6 @@ native_id = "123.3850"
 slug = "annat"  # source: kolumnnamn
 
 [[variable]]
-native_id = "123.3851"
-slug = "annatarb"  # source: kolumnnamn
-
-[[variable]]
 native_id = "123.3853"
 slug = "arbepens"  # source: kolumnnamn
 
@@ -309,10 +305,6 @@ slug = "overvaka"  # source: kolumnnamn
 [[variable]]
 native_id = "123.3919"
 slug = "overvarb"  # source: kolumnnamn
-
-[[variable]]
-native_id = "123.3922"
-slug = "permitte"  # source: kolumnnamn
 
 [[variable]]
 native_id = "123.3924"

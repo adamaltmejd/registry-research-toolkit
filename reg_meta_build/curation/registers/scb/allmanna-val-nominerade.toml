@@ -168,29 +168,8 @@ slug = "parti-kort"
 # register 24
 
 # ==== registers/scb/allmanna-val-nominerade.toml (register 239) ====
-[[coding.uncoded]]
-variable = "239.7942.ripartikod"
-variant = "239.466"
-column = "Ripartikod"
-periods = [["2010-01-01", "2010-09-18"]]
-reason = "Retain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
-source = "codeless_overlap.toml#/resolve/1"  # v18 accepted-codeless:1:*, 5 case(s)
 
-[[coding.uncoded]]
-variable = "239.7942.ripartikod"
-variant = "239.477"
-column = "Ripartikod"
-periods = [["2010-01-01", "2010-09-18"]]
-reason = "Retain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
-source = "codeless_overlap.toml#/resolve/1"  # v18 accepted-codeless:1:*, 6 case(s)
 
-[[coding.uncoded]]
-variable = "239.7942.ripartikod"
-variant = "239.476"
-column = "Ripartikod"
-periods = [["2010-01-01", "2010-09-18"]]
-reason = "Retain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
-source = "codeless_overlap.toml#/resolve/1"  # v18 accepted-codeless:1:*, 6 case(s)
 
 [[acknowledge]]
 code = "unknown_support_key"
@@ -208,3 +187,37 @@ columns = { CDISPH = "239.22348", CDISPHB = "239.22348" }
 unassigned_columns = []
 columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
 expected_evidence_sha256 = "6a899b666d8cf06ca66cef4662e0906d3dc40d50722dfdd70cd49866e4e6f5dd"
+
+[[identity.partition]]
+variable = "239.14775"
+columns = { valkretsnamn = "239.14775.valkretsnamn", Valkretsnamn = "239.14775.valkretsnamn", RI_valkretskod = "239.14775.ri-valkretskod", riksdagsvalkrets = "239.14775.ri-valkretskod" }
+columns_ref = "Complete original native family and physical-peer closure. Roles follow explicit source definition, operation and own code-list vintage. SUN2000/SUN2020/group/detail/old levels are kept separate; constituency code and literal name stay separate; electricity components and address fields preserve distinct source roles and prior public paths. KNr collision remains separately reviewed, not accepted by this default mapping. All original types, units, periods and contradictory text remain unchanged. Batch53-native-role-proof.json."
+expected_evidence_sha256 = "3c6d622717003e6e13f30e8ff6c4c3f6312bf7f0bed8b584dcdaf92a146ea0df"
+
+[[identity.partition]]
+variable = "239.16239"
+columns = { Valkretsnamn = "239.16239.valkretsnamn", KO_valkretskod = "239.16239.ko-valkretskod", kommunvalkrets = "239.16239.ko-valkretskod" }
+columns_ref = "Complete original native family and physical-peer closure. Roles follow explicit source definition, operation and own code-list vintage. SUN2000/SUN2020/group/detail/old levels are kept separate; constituency code and literal name stay separate; electricity components and address fields preserve distinct source roles and prior public paths. KNr collision remains separately reviewed, not accepted by this default mapping. All original types, units, periods and contradictory text remain unchanged. Batch53-native-role-proof.json."
+expected_evidence_sha256 = "217cb893327b93b6c59eaae712800165d5c4da819b6827b76d1d1e181ce1818d"
+
+[[representation.parallel]]
+valid_from = "1998-01-01"
+valid_to = "1998-12-31"
+co_delivered = true
+variable = "239.14775.ri-valkretskod"
+variant = "239.466"
+column_metadata = "per_column"
+columns = [{ valid_from = "1998-01-01", valid_to = "1998-12-31", column = "RI_valkretskod", source_editions = ["1998"] }, { valid_from = "1998-01-01", valid_to = "1998-12-31", column = "riksdagsvalkrets", source_editions = ["1998"] }]
+evidence = "The same exact1998 source record is already explicitly projected to both physical constituency-code names by maintained checked delivery curation. Source definition positively identifies a code; both representations retain their own literal names and metadata and any own list. No equality of observed values or extension of a domain is asserted. All original raw fields and exact projection are guarded. Batch53-SCB-finish-source-proof.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "1998-01-01"
+valid_to = "1998-12-31"
+co_delivered = true
+variable = "239.16239.ko-valkretskod"
+variant = "239.477"
+column_metadata = "per_column"
+columns = [{ valid_from = "1998-01-01", valid_to = "1998-12-31", column = "KO_valkretskod", source_editions = ["1998"] }, { valid_from = "1998-01-01", valid_to = "1998-12-31", column = "kommunvalkrets", source_editions = ["1998"] }]
+evidence = "The same exact1998 source record is already explicitly projected to both physical constituency-code names by maintained checked delivery curation. Source definition positively identifies a code; both representations retain their own literal names and metadata and any own list. No equality of observed values or extension of a domain is asserted. All original raw fields and exact projection are guarded. Batch53-SCB-finish-source-proof.json."
+noted = "2026-10-02"

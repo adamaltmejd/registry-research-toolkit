@@ -146,3 +146,58 @@ columns = { BYGGTYP = "217.22523", TYPBEBYGG = "217.22523" }
 unassigned_columns = []
 columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
 expected_evidence_sha256 = "49b9a69e38064240fe58341f0c7640038cede082454ae170e5944b33dd531d2c"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "217.42764"
+columns = { E2014 = "217.42764.e2014", E2015 = "217.42764.e2015", E2016 = "217.42764.e2016", E2017 = "217.42764.e2017", E2018 = "217.42764.e2018", E2019 = "217.42764.e2019", E2020 = "217.42764.e2020", E2021 = "217.42764.e2021", E2022 = "217.42764.e2022", E2023 = "217.42764.e2023", ETOM2013 = "217.42764.etom2013", ETOM2020 = "217.42764.etom2020" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "390244d1722c7f794571b88b147583fc6770380055171e2db72dd246e68e9615"
+
+[[variable]]
+native_id = "217.42764.e2014"
+slug = "e20"
+
+[[variable]]
+native_id = "217.42764.e2015"
+slug = "e2015"
+
+[[variable]]
+native_id = "217.42764.e2016"
+slug = "e2016"
+
+[[variable]]
+native_id = "217.42764.e2017"
+slug = "e2017"
+
+[[variable]]
+native_id = "217.42764.e2018"
+slug = "e2018"
+
+[[variable]]
+native_id = "217.42764.e2019"
+slug = "e2019"
+
+[[variable]]
+native_id = "217.42764.e2020"
+slug = "e2020"
+
+[[variable]]
+native_id = "217.42764.e2021"
+slug = "e2021"
+
+[[variable]]
+native_id = "217.42764.e2022"
+slug = "e2022"
+
+[[variable]]
+native_id = "217.42764.e2023"
+slug = "e2023"
+
+[[variable]]
+native_id = "217.42764.etom2013"
+slug = "etom20"
+
+[[variable]]
+native_id = "217.42764.etom2020"
+slug = "etom2020"

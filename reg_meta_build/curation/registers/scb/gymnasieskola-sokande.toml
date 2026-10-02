@@ -6503,3 +6503,257 @@ valid_to = "1993-12-31"
 reason = "The1993 source identifies this ranked school-region field but explicitly states that code explanations are unavailable. Retain its original field and all source facts; the response domain stays unavailable rather than borrowing a different year or region dictionary."
 evidence = "Standing maintainer-authorized missing-domain preservation policy, applied only to this exact1993 source window. Complete own-native family and actual source support reviewed; no coding continuity or stored encoding is inferred. Proof: Batch49-Gymnasieskola-sokande7-source-proof.json."
 expected_evidence_sha256 = "dc4cf66f5137c5acc436357f33e8e6aa701aeed28b3434a15a553ce82f0e5b2a"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "260.104"
+columns = { ISKENH = "260.104.iskenh", SKOLA1 = "260.104.skola1", SKOLA2 = "260.104.skola2", SKOLA3 = "260.104.skola3", SKOLA4 = "260.104.skola4", SKOLA5 = "260.104.skola5", SKOLA6 = "260.104.skola6", SkolKod = "260.104.skolkod", Skol_Ar9 = "260.104.skol-ar9", Skolkod = "260.104.skolkod", Skolkod_Ak9 = "260.104.skolkod-ak9", Vy_Skolkod = "260.104.vy-skolkod" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "59c5f415c51249d945b4236126e0dbf5be6a77c28352b9c749cd6524ee9d75ec"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "260.36734"
+columns = { JMFT1 = "260.36734.jmft1", JMFT2 = "260.36734.jmft2", JMFT3 = "260.36734.jmft3", JMFT4 = "260.36734.jmft4", JMFT5 = "260.36734.jmft5", JMFT6 = "260.36734.jmft6", JmfTal = "260.36734.jmftal", U_JTal = "260.36734.u-jtal", U_Jtal = "260.36734.u-jtal" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "9b522ec8927200469f2614e1e80a7456ecb7a9cbab3d3406c12080b35da83656"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "260.1536"
+columns = { GREN1 = "260.1536.gren1", GREN2 = "260.1536.gren2", GREN3 = "260.1536.gren3", GREN4 = "260.1536.gren4", GREN5 = "260.1536.gren5", GREN6 = "260.1536.gren6", IGREN = "260.1536.igren", StvKod = "260.1536.stvkod", StvKod_Ans = "260.1536.stvkod-ans", StvKod_HT = "260.1536.stvkod-ht", StvKod_Utb = "260.1536.stvkod-utb", U_STV = "260.1536.u-stv", U_Stv = "260.1536.u-stv" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "ac21274e7aee6080419655c7811d89c9612f51d4873f4c153197752f9e9629b7"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "260.35158"
+columns = { GRUPP1 = "260.35158.grupp1", GRUPP2 = "260.35158.grupp2", GRUPP3 = "260.35158.grupp3", GRUPP4 = "260.35158.grupp4", GRUPP5 = "260.35158.grupp5", GRUPP6 = "260.35158.grupp6", SGRUPP1 = "260.35158.sgrupp1", SGRUPP2 = "260.35158.sgrupp2", SGRUPP3 = "260.35158.sgrupp3", SGRUPP4 = "260.35158.sgrupp4", SGRUPP5 = "260.35158.sgrupp5", SGRUPP6 = "260.35158.sgrupp6", SGrupp = "260.35158.sgrupp", Sgrupp = "260.35158.sgrupp", U_SGrupp = "260.35158.u-sgrupp", U_Sgrupp = "260.35158.u-sgrupp" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "fbaf0e9efa2033242e80c5309954a49da3bb7d17badd1399f319aaa3ea749459"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "260.38272"
+columns = { VERKSAMH1 = "260.38272.verksamh1", VERKSAMH2 = "260.38272.verksamh2", VERKSAMH3 = "260.38272.verksamh3", VERKSAMH4 = "260.38272.verksamh4", VERKSAMH5 = "260.38272.verksamh5", VERKSAMH6 = "260.38272.verksamh6" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "8145589905570572d223a2c83623decab80236fe5549499fa44c6005be4a3ed8"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "260.36625"
+columns = { BEH1 = "260.36625.beh1", BEH2 = "260.36625.beh2", BEH3 = "260.36625.beh3", BEH4 = "260.36625.beh4", BEH5 = "260.36625.beh5", BEH6 = "260.36625.beh6" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "6010e9d6a3b156a002eded7539102e589736f7d75050fc9f912ab96b03877823"
+
+[[variable]]
+native_id = "260.104.iskenh"
+slug = "iskenh"
+
+[[variable]]
+native_id = "260.104.skola1"
+slug = "skola"
+
+[[variable]]
+native_id = "260.104.skola2"
+slug = "skola2"
+
+[[variable]]
+native_id = "260.104.skola3"
+slug = "skola3"
+
+[[variable]]
+native_id = "260.104.skola4"
+slug = "skola4"
+
+[[variable]]
+native_id = "260.104.skola5"
+slug = "skola5"
+
+[[variable]]
+native_id = "260.104.skola6"
+slug = "skola6"
+
+[[variable]]
+native_id = "260.104.skolkod-ak9"
+slug = "skolkod-ak9"
+
+[[variable]]
+native_id = "260.104.vy-skolkod"
+slug = "vy-skolkod"
+
+[[variable]]
+native_id = "260.36734.jmft1"
+slug = "jmft"
+
+[[variable]]
+native_id = "260.36734.jmft2"
+slug = "jmft2"
+
+[[variable]]
+native_id = "260.36734.jmft3"
+slug = "jmft3"
+
+[[variable]]
+native_id = "260.36734.jmft4"
+slug = "jmft4"
+
+[[variable]]
+native_id = "260.36734.jmft5"
+slug = "jmft5"
+
+[[variable]]
+native_id = "260.36734.jmft6"
+slug = "jmft6"
+
+[[variable]]
+native_id = "260.36734.jmftal"
+slug = "jmftal"
+
+[[variable]]
+native_id = "260.36734.u-jtal"
+slug = "u-jtal"
+
+[[variable]]
+native_id = "260.1536.gren1"
+slug = "gren"
+
+[[variable]]
+native_id = "260.1536.gren2"
+slug = "gren2"
+
+[[variable]]
+native_id = "260.1536.gren3"
+slug = "gren3"
+
+[[variable]]
+native_id = "260.1536.gren4"
+slug = "gren4"
+
+[[variable]]
+native_id = "260.1536.gren5"
+slug = "gren5"
+
+[[variable]]
+native_id = "260.1536.gren6"
+slug = "gren6"
+
+[[variable]]
+native_id = "260.1536.igren"
+slug = "igren"
+
+[[variable]]
+native_id = "260.1536.stvkod-ans"
+slug = "stvkod-ans"
+
+[[variable]]
+native_id = "260.1536.stvkod-ht"
+slug = "stvkod-ht"
+
+[[variable]]
+native_id = "260.1536.stvkod-utb"
+slug = "stvkod-utb"
+
+[[variable]]
+native_id = "260.1536.u-stv"
+slug = "u-stv"
+
+[[variable]]
+native_id = "260.35158.grupp1"
+slug = "grupp"
+
+[[variable]]
+native_id = "260.35158.grupp2"
+slug = "grupp2"
+
+[[variable]]
+native_id = "260.35158.grupp3"
+slug = "grupp3"
+
+[[variable]]
+native_id = "260.35158.grupp4"
+slug = "grupp4"
+
+[[variable]]
+native_id = "260.35158.grupp5"
+slug = "grupp5"
+
+[[variable]]
+native_id = "260.35158.grupp6"
+slug = "grupp6"
+
+[[variable]]
+native_id = "260.35158.sgrupp2"
+slug = "sgrupp2"
+
+[[variable]]
+native_id = "260.35158.sgrupp3"
+slug = "sgrupp3"
+
+[[variable]]
+native_id = "260.35158.sgrupp4"
+slug = "sgrupp4"
+
+[[variable]]
+native_id = "260.35158.sgrupp5"
+slug = "sgrupp5"
+
+[[variable]]
+native_id = "260.35158.sgrupp6"
+slug = "sgrupp6"
+
+[[variable]]
+native_id = "260.35158.sgrupp"
+slug = "sgrupp"
+
+[[variable]]
+native_id = "260.35158.u-sgrupp"
+slug = "u-sgrupp"
+
+[[variable]]
+native_id = "260.38272.verksamh1"
+slug = "verksamh1"
+
+[[variable]]
+native_id = "260.38272.verksamh2"
+slug = "verksamh2"
+
+[[variable]]
+native_id = "260.38272.verksamh3"
+slug = "verksamh3"
+
+[[variable]]
+native_id = "260.38272.verksamh4"
+slug = "verksamh4"
+
+[[variable]]
+native_id = "260.38272.verksamh5"
+slug = "verksamh5"
+
+[[variable]]
+native_id = "260.38272.verksamh6"
+slug = "verksamh6"
+
+[[variable]]
+native_id = "260.36625.beh1"
+slug = "beh1"
+
+[[variable]]
+native_id = "260.36625.beh2"
+slug = "beh2"
+
+[[variable]]
+native_id = "260.36625.beh3"
+slug = "beh3"
+
+[[variable]]
+native_id = "260.36625.beh4"
+slug = "beh4"
+
+[[variable]]
+native_id = "260.36625.beh5"
+slug = "beh5"
+
+[[variable]]
+native_id = "260.36625.beh6"
+slug = "beh6"

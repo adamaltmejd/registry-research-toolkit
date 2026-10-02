@@ -447,3 +447,22 @@ native_id = "190.8073.sunniva-old-mor"
 slug = "sun-niva-old-mor"
 
 # register 193
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "190.67"
+columns = { UTLBAKGR = "190.67.utlbakgr", UTLBAKGR2 = "190.67.utlbakgr2", UTL_BAKG_SV = "190.67.utl-bakg-sv", UtlSvBakg = "190.67.utlsvbakg", Utlbakgr = "190.67.utlbakgr" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "38553d4afb34509807f76fcda59b89a06fcc5d27fb93755e907ed42da147e269"
+
+[[variable]]
+native_id = "190.67.utlbakgr2"
+slug = "utlbakgr2"
+
+[[variable]]
+native_id = "190.67.utl-bakg-sv"
+slug = "utl-bakg-sv"
+
+[[variable]]
+native_id = "190.67.utlsvbakg"
+slug = "utlsvbakg"

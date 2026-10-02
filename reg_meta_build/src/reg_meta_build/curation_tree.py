@@ -1546,6 +1546,22 @@ class _CheckedCodingEntry(CodingEntry):
         return self
 
 
+class CodingUncodedEntry(_CheckedCodingEntry):
+    stored_role: Literal["label", "free_text"] | None = None
+
+    @model_validator(mode="after")
+    def _checked_text_role(self) -> CodingUncodedEntry:
+        if self.stored_role is not None and (
+            self.expected_evidence_sha256 is None
+            and self.source_authority is None
+            or self.data_warning is None
+        ):
+            raise ValueError(
+                "stored text role requires complete source coding guards and a data warning"
+            )
+        return self
+
+
 class CodingChoiceEntry(_CheckedCodingEntry):
     keep: str
     keep_members: list[list[str]] | None = None
@@ -1829,7 +1845,7 @@ class CodingSentinelEntry(CodingEntry):
 
 class CodingCuration(_CurationModel):
     choice: list[CodingChoiceEntry] = Field(default_factory=list)
-    uncoded: list[CodingEntry] = Field(default_factory=list)
+    uncoded: list[CodingUncodedEntry] = Field(default_factory=list)
     omit: list[CodingEntry] = Field(default_factory=list)
     extend: list[CodingExtendEntry] = Field(default_factory=list)
     documented: list[CodingDocumentedEntry] = Field(default_factory=list)

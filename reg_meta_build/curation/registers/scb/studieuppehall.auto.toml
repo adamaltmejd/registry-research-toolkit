@@ -143,10 +143,6 @@ native_id = "317.28675"
 slug = "f08"  # source: kolumnnamn
 
 [[variable]]
-native_id = "317.28683"
-slug = "f10-0"  # source: fold
-
-[[variable]]
 native_id = "317.28684"
 slug = "f11"  # source: kolumnnamn
 

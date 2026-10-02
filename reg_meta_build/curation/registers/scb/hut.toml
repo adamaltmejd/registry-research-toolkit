@@ -1151,3 +1151,260 @@ coding_metadata = "shared"
 columns = [{ valid_from = "2021-01-01", valid_to = "2021-12-31", column = "HUT_del", source_editions = ["2021"] }, { valid_from = "2021-01-01", valid_to = "2021-12-31", column = "UNDNR", source_editions = ["2021"] }]
 evidence = "Both supplied fields explicitly mean collection part, with the same six own supplied codes/labels and operation. Preserve both literal columns and source associations; shared coding is justified by complete own-domain equality. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
 noted = "2026-10-02"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "86.40955"
+columns = { U0722 = "86.40955.u0722", VK2524 = "86.40955.vk2524", VK2627 = "86.40955.vk2627" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "46f48f655e8423abd6448b94daddb2375f56f10cdb942878a1185efea945ac4e"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "86.40446"
+columns = { RAD106 = "86.40446.rad106", VK2773 = "86.40446.vk2773", VK2777 = "86.40446.vk2777" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "a5b5f74daf91deb88c1c06561d9d15f96ea61ad16b7af37ac2477f03301802ca"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "86.44"
+columns = { BKON = "86.44.bkon", BKONZ = "86.44.bkonz", PKOEN2 = "86.44.pkoen2", PKOEN3 = "86.44.pkoen3", PKOEN4 = "86.44.pkoen4", PKOEN5 = "86.44.pkoen5", PKOEN6 = "86.44.pkoen6", PKOEN7 = "86.44.pkoen7", PKOEN8 = "86.44.pkoen8", UBKOEN = "86.44.ubkoen", pkoen2 = "86.44.pkoen2", pkoen3 = "86.44.pkoen3", pkoen4 = "86.44.pkoen4", pkoen5 = "86.44.pkoen5", pkoen6 = "86.44.pkoen6", pkoen7 = "86.44.pkoen7", pkoen8 = "86.44.pkoen8", ubkoen = "86.44.ubkoen" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "0925a35cb540da979b55b5a6e9a10a9b41c8e26a8a23620a4a30f3c78757d896"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "86.6267"
+columns = { BALD = "86.6267.bald", PALD2 = "86.6267.pald2", PALD3 = "86.6267.pald3", PALD4 = "86.6267.pald4", PALD5 = "86.6267.pald5", PALD6 = "86.6267.pald6", PALD7 = "86.6267.pald7", PALD8 = "86.6267.pald8", UBALD = "86.6267.ubald", pald2 = "86.6267.pald2", pald3 = "86.6267.pald3", pald4 = "86.6267.pald4", pald5 = "86.6267.pald5", pald6 = "86.6267.pald6", pald7 = "86.6267.pald7", pald8 = "86.6267.pald8", ubald = "86.6267.ubald" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "db3b2eb03bdd0ecbb9db528aebcf806e7ea97a7791ff3c51527c47144741a73e"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "86.75"
+columns = { CARB1 = "86.75.carb1", CARB2 = "86.75.carb2", CARB3 = "86.75.carb3", CARB4 = "86.75.carb4", CARB5 = "86.75.carb5", CARB6 = "86.75.carb6", CARB7 = "86.75.carb7", CARB8 = "86.75.carb8", scarb00 = "86.75.scarb00", scarb01 = "86.75.scarb01", scarb02 = "86.75.scarb02" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "2c45af3fd36e0f4c20145c2e2e91b329c730fa46647fb982ab1be4b358797cb1"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "86.11193"
+columns = { HVIKTES = "86.11193.hviktes", WVIKT00 = "86.11193.wvikt00", WVIKT01 = "86.11193.wvikt01", WVIKT99 = "86.11193.wvikt99", hviktes = "86.11193.hviktes" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "c72f6df8888fee5707be3e71d0ac2d26be180e54f232c7d2b5cbca70112c4536"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "86.4545"
+columns = { P2SEI = "86.4545.p2sei", P3SEI = "86.4545.p3sei", P4SEI = "86.4545.p4sei", P5SEI = "86.4545.p5sei", P6SEI = "86.4545.p6sei", P7SEI = "86.4545.p7sei", P8SEI = "86.4545.p8sei", SOCEK1 = "86.4545.socek1", SOCEK2 = "86.4545.socek2", SOCEK3 = "86.4545.socek3", SOCEK4 = "86.4545.socek4", SOCEK5 = "86.4545.socek5", UPSEI = "86.4545.upsei", p2sei = "86.4545.p2sei", p3sei = "86.4545.p3sei", p4sei = "86.4545.p4sei", p5sei = "86.4545.p5sei", p6sei = "86.4545.p6sei", p7sei = "86.4545.p7sei", socek1 = "86.4545.socek1", socek2 = "86.4545.socek2", socek3 = "86.4545.socek3", socek4 = "86.4545.socek4", socek5 = "86.4545.socek5", upsei = "86.4545.upsei" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "9880f57fb28a8bba46227d50743db3e72951a2a576b75a0a08abb98fe7e86e21"
+
+[[variable]]
+native_id = "86.40955.u0722"
+slug = "u0722"
+
+[[variable]]
+native_id = "86.40955.vk2524"
+slug = "vk2"
+
+[[variable]]
+native_id = "86.40955.vk2627"
+slug = "vk2627"
+
+[[variable]]
+native_id = "86.40446.rad106"
+slug = "rad106"
+
+[[variable]]
+native_id = "86.40446.vk2773"
+slug = "vk277"
+
+[[variable]]
+native_id = "86.40446.vk2777"
+slug = "vk2777"
+
+[[variable]]
+native_id = "86.44.bkon"
+slug = "bkon"
+
+[[variable]]
+native_id = "86.44.bkonz"
+slug = "bkonz"
+
+[[variable]]
+native_id = "86.44.pkoen2"
+slug = "pkoen"
+
+[[variable]]
+native_id = "86.44.pkoen3"
+slug = "pkoen3"
+
+[[variable]]
+native_id = "86.44.pkoen4"
+slug = "pkoen4"
+
+[[variable]]
+native_id = "86.44.pkoen5"
+slug = "pkoen5"
+
+[[variable]]
+native_id = "86.44.pkoen6"
+slug = "pkoen6"
+
+[[variable]]
+native_id = "86.44.pkoen7"
+slug = "pkoen7"
+
+[[variable]]
+native_id = "86.44.pkoen8"
+slug = "pkoen8"
+
+[[variable]]
+native_id = "86.44.ubkoen"
+slug = "ubkoen"
+
+[[variable]]
+native_id = "86.6267.bald"
+slug = "bald"
+
+[[variable]]
+native_id = "86.6267.pald2"
+slug = "pald"
+
+[[variable]]
+native_id = "86.6267.pald3"
+slug = "pald3"
+
+[[variable]]
+native_id = "86.6267.pald4"
+slug = "pald4"
+
+[[variable]]
+native_id = "86.6267.pald5"
+slug = "pald5"
+
+[[variable]]
+native_id = "86.6267.pald6"
+slug = "pald6"
+
+[[variable]]
+native_id = "86.6267.pald7"
+slug = "pald7"
+
+[[variable]]
+native_id = "86.6267.pald8"
+slug = "pald8"
+
+[[variable]]
+native_id = "86.6267.ubald"
+slug = "ubald"
+
+[[variable]]
+native_id = "86.75.carb2"
+slug = "carb2"
+
+[[variable]]
+native_id = "86.75.carb3"
+slug = "carb3"
+
+[[variable]]
+native_id = "86.75.carb4"
+slug = "carb4"
+
+[[variable]]
+native_id = "86.75.carb5"
+slug = "carb5"
+
+[[variable]]
+native_id = "86.75.carb6"
+slug = "carb6"
+
+[[variable]]
+native_id = "86.75.carb7"
+slug = "carb7"
+
+[[variable]]
+native_id = "86.75.carb8"
+slug = "carb8"
+
+[[variable]]
+native_id = "86.75.scarb00"
+slug = "scarb0"
+
+[[variable]]
+native_id = "86.75.scarb01"
+slug = "scarb01"
+
+[[variable]]
+native_id = "86.75.scarb02"
+slug = "scarb02"
+
+[[variable]]
+native_id = "86.11193.hviktes"
+slug = "hviktes"
+
+[[variable]]
+native_id = "86.11193.wvikt00"
+slug = "wvikt00"
+
+[[variable]]
+native_id = "86.11193.wvikt01"
+slug = "wvikt01"
+
+[[variable]]
+native_id = "86.11193.wvikt99"
+slug = "wvikt"
+
+[[variable]]
+native_id = "86.4545.p2sei"
+slug = "p2sei"
+
+[[variable]]
+native_id = "86.4545.p3sei"
+slug = "p3sei"
+
+[[variable]]
+native_id = "86.4545.p4sei"
+slug = "p4sei"
+
+[[variable]]
+native_id = "86.4545.p5sei"
+slug = "p5sei"
+
+[[variable]]
+native_id = "86.4545.p6sei"
+slug = "p6sei"
+
+[[variable]]
+native_id = "86.4545.p7sei"
+slug = "p7sei"
+
+[[variable]]
+native_id = "86.4545.p8sei"
+slug = "p8sei"
+
+[[variable]]
+native_id = "86.4545.socek1"
+slug = "socek"
+
+[[variable]]
+native_id = "86.4545.socek2"
+slug = "socek2"
+
+[[variable]]
+native_id = "86.4545.socek3"
+slug = "socek3"
+
+[[variable]]
+native_id = "86.4545.socek4"
+slug = "socek4"
+
+[[variable]]
+native_id = "86.4545.socek5"
+slug = "socek5"
+
+[[variable]]
+native_id = "86.4545.upsei"
+slug = "upsei"

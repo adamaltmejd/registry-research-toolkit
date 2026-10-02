@@ -8545,3 +8545,491 @@ reason = "The exact historical window has no own bound stored-code list. Retain 
 evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
 expected_evidence_sha256 = "66f57b6cbb6bb287f555c14147248296db1367db0678a0f1c207facf6f4eb0fe"
 expected_diagnostic_sha256 = "2ab5e835ffd8f2071a83362e819c8ec2dc0f564823e54bd4a0dbdc145e146d82"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "301.8700"
+columns = { LANGMOTH1 = "301.8700.langmoth1", LANGMOTH2 = "301.8700.langmoth2", LANGMOTHER1 = "301.8700.langmother1", LANGMOTHER2 = "301.8700.langmother2", modersmal = "301.8700.modersmal" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "a8916b99cc435e7552dbefab058d9c9f3d674512036909efc3360c0785576f8e"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "301.24959"
+columns = { LANGBEST1 = "301.24959.langbest1", LANGBEST2 = "301.24959.langbest2", LANGUSED = "301.24959.langused", LANGUSED_1 = "301.24959.langused-1", LANGUSED_2 = "301.24959.langused-2", LANGUSED_3 = "301.24959.langused-3", LANGUSED_4 = "301.24959.langused-4", LANGUSED_5 = "301.24959.langused-5", LANGUSED_6 = "301.24959.langused-6", LANGUSED_7 = "301.24959.langused-7", frsprak1 = "301.24959.frsprak1", frsprak2 = "301.24959.frsprak2", langbest1 = "301.24959.langbest1", langbest2 = "301.24959.langbest2", langlevel1 = "301.24959.langlevel1", langlevel2 = "301.24959.langlevel2", sprak1 = "301.24959.sprak1", sprak2 = "301.24959.sprak2", sprak3 = "301.24959.sprak3", sprak4 = "301.24959.sprak4", sprak5 = "301.24959.sprak5" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "06ebe7a7649164e11ce622d823addc0854f1ada9abe261c9469b8925e0975531"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "301.24811"
+columns = { FEDFIELD = "301.24811.fedfield", finr1 = "301.24811.finr1", finr2 = "301.24811.finr2" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "5aed6c9d9a95fc6278f1ea726f5756c0bcc99035a18f8352230de6e49082082c"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "301.24821"
+columns = { FEDWORKTIME = "301.24821.fedworktime", farbtid1 = "301.24821.farbtid1", farbtid2 = "301.24821.farbtid2", fedworktime = "301.24821.fedworktime" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "63dea68ccd61a5626402240d7e19327bbbb822c256c3b07f2145541e9515a4fc"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "301.32789"
+columns = { NFEACT01_PAIDBY = "301.32789.nfeact01-paidby", NFEACT02_PAIDBY = "301.32789.nfeact02-paidby", NFEACT03_PAIDBY = "301.32789.nfeact03-paidby", NFEACT04_PAIDBY = "301.32789.nfeact04-paidby", NFEACT05_PAIDBY = "301.32789.nfeact05-paidby", NFEACT06_PAIDBY = "301.32789.nfeact06-paidby", NFEACT07_PAIDBY = "301.32789.nfeact07-paidby", NFEPAIDBY1 = "301.32789.nfepaidby1", NFEPAIDBY1_1 = "301.32789.nfepaidby1-1", NFEPAIDBY1_2 = "301.32789.nfepaidby1-2", NFEPAIDBY1_3 = "301.32789.nfepaidby1-3", NFEPAIDBY1_4 = "301.32789.nfepaidby1-4", NFEPAIDBY1_5 = "301.32789.nfepaidby1-5", NFEPAIDBY2 = "301.32789.nfepaidby2", NFEPAIDBY2_1 = "301.32789.nfepaidby2-1", NFEPAIDBY2_2 = "301.32789.nfepaidby2-2", NFEPAIDBY2_3 = "301.32789.nfepaidby2-3", NFEPAIDBY2_4 = "301.32789.nfepaidby2-4", NFEPAIDBY2_5 = "301.32789.nfepaidby2-5", NFEPAIDBY3_1 = "301.32789.nfepaidby3-1", NFEPAIDBY3_2 = "301.32789.nfepaidby3-2", NFEPAIDBY3_3 = "301.32789.nfepaidby3-3", NFEPAIDBY3_4 = "301.32789.nfepaidby3-4", NFEPAIDBY3_5 = "301.32789.nfepaidby3-5" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "fb905be914ffd47e6d0253e39fba9db174b4064cc92fbefb9d8dca7d9ee78a86"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "301.32879"
+columns = { NFEOERA1 = "301.32879.nfeoera1", NFEOERA2 = "301.32879.nfeoera2", NFEOERB1 = "301.32879.nfeoerb1", NFEOERB2 = "301.32879.nfeoerb2" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "0eda6238c7f63f21bb47d9612d6409e22d2155dbc38ceb7043b0bc03cbc56dd2"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "301.24809"
+columns = { FEDLEVEL = "301.24809.fedlevel", fniva1 = "301.24809.fniva1", fniva2 = "301.24809.fniva2" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "9d99fc367873cb249f1e25e6be786a7e3561a4d8b01bf784dcecbbed145aaa20"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "301.24835"
+columns = { NFEACT01_WORKTIME = "301.24835.nfeact01-worktime", NFEACT02_WORKTIME = "301.24835.nfeact02-worktime", NFEACT03_WORKTIME = "301.24835.nfeact03-worktime", NFEACT04_WORKTIME = "301.24835.nfeact04-worktime", NFEACT05_WORKTIME = "301.24835.nfeact05-worktime", NFEACT06_WORKTIME = "301.24835.nfeact06-worktime", NFEACT07_WORKTIME = "301.24835.nfeact07-worktime", NFEWORKTIME1 = "301.24835.nfeworktime1", NFEWORKTIME2 = "301.24835.nfeworktime2", NFEWORKTIME3 = "301.24835.nfeworktime3", ifarbtid1 = "301.24835.ifarbtid1", ifarbtid2 = "301.24835.ifarbtid2", ifarbtid3 = "301.24835.ifarbtid3" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "0077f348f76be683c707103dcb576d8cd22d2eaf076bc00c51bde8a415ada4f5"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "301.35126"
+columns = { GUIDEINST_1 = "301.35126.guideinst-1", GUIDEINST_2 = "301.35126.guideinst-2", GUIDEINST_3 = "301.35126.guideinst-3", seekfound = "301.35126.seekfound" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "fd366d9766ab70d2dd86071ad1aa7bd53a5f80ec4d017e91c206e03f58d59a5c"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "301.24832"
+columns = { INFPURP = "301.24832.infpurp", NFEACT01_PURP = "301.24832.nfeact01-purp", NFEACT02_PURP = "301.24832.nfeact02-purp", NFEACT03_PURP = "301.24832.nfeact03-purp", NFEACT04_PURP = "301.24832.nfeact04-purp", NFEACT05_PURP = "301.24832.nfeact05-purp", NFEACT06_PURP = "301.24832.nfeact06-purp", NFEACT07_PURP = "301.24832.nfeact07-purp", NFEPURP1 = "301.24832.nfepurp1", NFEPURP2 = "301.24832.nfepurp2", NFEPURP3 = "301.24832.nfepurp3", ifsyfte1 = "301.24832.ifsyfte1", ifsyfte2 = "301.24832.ifsyfte2", ifsyfte3 = "301.24832.ifsyfte3" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "1ff6c799aecfda01687323da0aa3d3b3ebf8771e6be2586b9403c9b2cb7255ea"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "301.24829"
+columns = { NFEFIELD1 = "301.24829.nfefield1", NFEFIELD2 = "301.24829.nfefield2", NFEFIELD3 = "301.24829.nfefield3", ifinr1 = "301.24829.ifinr1", ifinr2 = "301.24829.ifinr2", ifinr3 = "301.24829.ifinr3" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "ce4863000b2ae14f6b77739614ffa29a847f2ef880f8d67c12786f8b8e195e36"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "301.24960"
+columns = { INFFIELD1 = "301.24960.inffield1", INFFIELD2 = "301.24960.inffield2", infinr1 = "301.24960.infinr1", infinr2 = "301.24960.infinr2", infinr3 = "301.24960.infinr3" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "3925dba707633801e2b9ee8296efc8d78170cfd57abb536f64d1fc5ce648eb68"
+
+[[variable]]
+native_id = "301.8700.langmoth1"
+slug = "langmoth"
+
+[[variable]]
+native_id = "301.8700.langmoth2"
+slug = "langmoth2"
+
+[[variable]]
+native_id = "301.8700.langmother1"
+slug = "langmother"
+
+[[variable]]
+native_id = "301.8700.langmother2"
+slug = "langmother2"
+
+[[variable]]
+native_id = "301.8700.modersmal"
+slug = "modersmal"
+
+[[variable]]
+native_id = "301.24959.langbest1"
+slug = "langbest"
+
+[[variable]]
+native_id = "301.24959.langbest2"
+slug = "langbest2"
+
+[[variable]]
+native_id = "301.24959.langused"
+slug = "langused"
+
+[[variable]]
+native_id = "301.24959.langused-1"
+slug = "langused-1"
+
+[[variable]]
+native_id = "301.24959.langused-2"
+slug = "langused-2"
+
+[[variable]]
+native_id = "301.24959.langused-3"
+slug = "langused-3"
+
+[[variable]]
+native_id = "301.24959.langused-4"
+slug = "langused-4"
+
+[[variable]]
+native_id = "301.24959.langused-5"
+slug = "langused-5"
+
+[[variable]]
+native_id = "301.24959.langused-6"
+slug = "langused-6"
+
+[[variable]]
+native_id = "301.24959.langused-7"
+slug = "langused-7"
+
+[[variable]]
+native_id = "301.24959.frsprak1"
+slug = "frsprak"
+
+[[variable]]
+native_id = "301.24959.frsprak2"
+slug = "frsprak2"
+
+[[variable]]
+native_id = "301.24959.langlevel2"
+slug = "langlevel2-24959"
+
+[[variable]]
+native_id = "301.24959.sprak1"
+slug = "sprak"
+
+[[variable]]
+native_id = "301.24959.sprak2"
+slug = "sprak2"
+
+[[variable]]
+native_id = "301.24959.sprak3"
+slug = "sprak3"
+
+[[variable]]
+native_id = "301.24959.sprak4"
+slug = "sprak4"
+
+[[variable]]
+native_id = "301.24959.sprak5"
+slug = "sprak5"
+
+[[variable]]
+native_id = "301.24811.fedfield"
+slug = "fedfield"
+
+[[variable]]
+native_id = "301.24811.finr1"
+slug = "finr"
+
+[[variable]]
+native_id = "301.24811.finr2"
+slug = "finr2"
+
+[[variable]]
+native_id = "301.24821.fedworktime"
+slug = "fedworktime"
+
+[[variable]]
+native_id = "301.24821.farbtid1"
+slug = "farbtid"
+
+[[variable]]
+native_id = "301.24821.farbtid2"
+slug = "farbtid2"
+
+[[variable]]
+native_id = "301.32789.nfeact01-paidby"
+slug = "nfeact01-paidby"
+
+[[variable]]
+native_id = "301.32789.nfeact02-paidby"
+slug = "nfeact02-paidby"
+
+[[variable]]
+native_id = "301.32789.nfeact03-paidby"
+slug = "nfeact03-paidby"
+
+[[variable]]
+native_id = "301.32789.nfeact04-paidby"
+slug = "nfeact04-paidby"
+
+[[variable]]
+native_id = "301.32789.nfeact05-paidby"
+slug = "nfeact05-paidby"
+
+[[variable]]
+native_id = "301.32789.nfeact06-paidby"
+slug = "nfeact06-paidby"
+
+[[variable]]
+native_id = "301.32789.nfeact07-paidby"
+slug = "nfeact07-paidby"
+
+[[variable]]
+native_id = "301.32789.nfepaidby1"
+slug = "nfepaidby1"
+
+[[variable]]
+native_id = "301.32789.nfepaidby1-1"
+slug = "nfepaidby1-1"
+
+[[variable]]
+native_id = "301.32789.nfepaidby1-2"
+slug = "nfepaidby1-2"
+
+[[variable]]
+native_id = "301.32789.nfepaidby1-3"
+slug = "nfepaidby1-3"
+
+[[variable]]
+native_id = "301.32789.nfepaidby1-4"
+slug = "nfepaidby1-4"
+
+[[variable]]
+native_id = "301.32789.nfepaidby1-5"
+slug = "nfepaidby1-5"
+
+[[variable]]
+native_id = "301.32789.nfepaidby2"
+slug = "nfepaidby2"
+
+[[variable]]
+native_id = "301.32789.nfepaidby2-1"
+slug = "nfepaidby2-1"
+
+[[variable]]
+native_id = "301.32789.nfepaidby2-2"
+slug = "nfepaidby2-2"
+
+[[variable]]
+native_id = "301.32789.nfepaidby2-3"
+slug = "nfepaidby2-3"
+
+[[variable]]
+native_id = "301.32789.nfepaidby2-4"
+slug = "nfepaidby2-4"
+
+[[variable]]
+native_id = "301.32789.nfepaidby2-5"
+slug = "nfepaidby2-5"
+
+[[variable]]
+native_id = "301.32789.nfepaidby3-1"
+slug = "nfepaidby3"
+
+[[variable]]
+native_id = "301.32789.nfepaidby3-2"
+slug = "nfepaidby3-2"
+
+[[variable]]
+native_id = "301.32789.nfepaidby3-3"
+slug = "nfepaidby3-3"
+
+[[variable]]
+native_id = "301.32789.nfepaidby3-4"
+slug = "nfepaidby3-4"
+
+[[variable]]
+native_id = "301.32789.nfepaidby3-5"
+slug = "nfepaidby3-5"
+
+[[variable]]
+native_id = "301.32879.nfeoera1"
+slug = "nfeoera"
+
+[[variable]]
+native_id = "301.32879.nfeoera2"
+slug = "nfeoera2"
+
+[[variable]]
+native_id = "301.32879.nfeoerb1"
+slug = "nfeoerb"
+
+[[variable]]
+native_id = "301.32879.nfeoerb2"
+slug = "nfeoerb2"
+
+[[variable]]
+native_id = "301.24809.fedlevel"
+slug = "fedlevel"
+
+[[variable]]
+native_id = "301.24809.fniva1"
+slug = "fniva"
+
+[[variable]]
+native_id = "301.24809.fniva2"
+slug = "fniva2"
+
+[[variable]]
+native_id = "301.24835.nfeact01-worktime"
+slug = "nfeact01-worktime"
+
+[[variable]]
+native_id = "301.24835.nfeact02-worktime"
+slug = "nfeact02-worktime"
+
+[[variable]]
+native_id = "301.24835.nfeact03-worktime"
+slug = "nfeact03-worktime"
+
+[[variable]]
+native_id = "301.24835.nfeact04-worktime"
+slug = "nfeact04-worktime"
+
+[[variable]]
+native_id = "301.24835.nfeact05-worktime"
+slug = "nfeact05-worktime"
+
+[[variable]]
+native_id = "301.24835.nfeact06-worktime"
+slug = "nfeact06-worktime"
+
+[[variable]]
+native_id = "301.24835.nfeact07-worktime"
+slug = "nfeact07-worktime"
+
+[[variable]]
+native_id = "301.24835.nfeworktime1"
+slug = "nfeworktime"
+
+[[variable]]
+native_id = "301.24835.nfeworktime2"
+slug = "nfeworktime2"
+
+[[variable]]
+native_id = "301.24835.nfeworktime3"
+slug = "nfeworktime3"
+
+[[variable]]
+native_id = "301.24835.ifarbtid1"
+slug = "ifarbtid"
+
+[[variable]]
+native_id = "301.24835.ifarbtid2"
+slug = "ifarbtid2"
+
+[[variable]]
+native_id = "301.24835.ifarbtid3"
+slug = "ifarbtid3"
+
+[[variable]]
+native_id = "301.35126.guideinst-1"
+slug = "guideinst"
+
+[[variable]]
+native_id = "301.35126.guideinst-2"
+slug = "guideinst-2"
+
+[[variable]]
+native_id = "301.35126.guideinst-3"
+slug = "guideinst-3"
+
+[[variable]]
+native_id = "301.35126.seekfound"
+slug = "seekfound"
+
+[[variable]]
+native_id = "301.24832.nfeact01-purp"
+slug = "nfeact01-purp"
+
+[[variable]]
+native_id = "301.24832.nfeact02-purp"
+slug = "nfeact02-purp"
+
+[[variable]]
+native_id = "301.24832.nfeact03-purp"
+slug = "nfeact03-purp"
+
+[[variable]]
+native_id = "301.24832.nfeact04-purp"
+slug = "nfeact04-purp"
+
+[[variable]]
+native_id = "301.24832.nfeact05-purp"
+slug = "nfeact05-purp"
+
+[[variable]]
+native_id = "301.24832.nfeact06-purp"
+slug = "nfeact06-purp"
+
+[[variable]]
+native_id = "301.24832.nfeact07-purp"
+slug = "nfeact07-purp"
+
+[[variable]]
+native_id = "301.24832.nfepurp1"
+slug = "nfepurp"
+
+[[variable]]
+native_id = "301.24832.nfepurp2"
+slug = "nfepurp2"
+
+[[variable]]
+native_id = "301.24832.nfepurp3"
+slug = "nfepurp3"
+
+[[variable]]
+native_id = "301.24832.ifsyfte1"
+slug = "ifsyfte"
+
+[[variable]]
+native_id = "301.24832.ifsyfte2"
+slug = "ifsyfte2"
+
+[[variable]]
+native_id = "301.24832.ifsyfte3"
+slug = "ifsyfte3"
+
+[[variable]]
+native_id = "301.24829.nfefield1"
+slug = "nfefield"
+
+[[variable]]
+native_id = "301.24829.nfefield2"
+slug = "nfefield2"
+
+[[variable]]
+native_id = "301.24829.nfefield3"
+slug = "nfefield3"
+
+[[variable]]
+native_id = "301.24829.ifinr1"
+slug = "ifinr"
+
+[[variable]]
+native_id = "301.24829.ifinr2"
+slug = "ifinr2"
+
+[[variable]]
+native_id = "301.24829.ifinr3"
+slug = "ifinr3"
+
+[[variable]]
+native_id = "301.24960.inffield1"
+slug = "inffield"
+
+[[variable]]
+native_id = "301.24960.inffield2"
+slug = "inffield2"
+
+[[variable]]
+native_id = "301.24960.infinr1"
+slug = "infinr"
+
+[[variable]]
+native_id = "301.24960.infinr2"
+slug = "infinr2"
+
+[[variable]]
+native_id = "301.24960.infinr3"
+slug = "infinr3"

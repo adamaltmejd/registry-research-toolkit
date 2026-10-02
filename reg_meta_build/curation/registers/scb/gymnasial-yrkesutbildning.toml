@@ -75,3 +75,18 @@ native_id = "352.32873"
 slug = "larling"
 
 # register 353
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "352.462"
+columns = { Stratum_2 = "352.462.stratum-2", stratum = "352.462.stratum" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "fc39c784ac814c333b82f1abc2ca5ad9f3be3e5b979b6ed1bec3230c63a255e2"
+
+[[variable]]
+native_id = "352.462.stratum-2"
+slug = "stratum-2"
+
+[[variable]]
+native_id = "352.462.stratum"
+slug = "stratum-462"

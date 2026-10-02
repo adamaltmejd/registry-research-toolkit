@@ -11,164 +11,8 @@ display_group = "Skyddad natur"
 # Tätorter
 
 [[variable]]
-native_id = "158.36"
-slug = "kommun"
-
-[[variable]]
-native_id = "158.49"
-slug = "lan"
-
-[[variable]]
-native_id = "158.2870"
-slug = "avstand-till-skyddad-natur"
-
-[[variable]]
-native_id = "158.2874"
-slug = "naturtyp-skyddade-omraden-areal"
-
-[[variable]]
-native_id = "158.2875"
-slug = "skyddade-omraden-miljobalken-areal"
-
-[[variable]]
-native_id = "158.3818"
-slug = "kostnader-for-sakrade-omraden"
-
-[[variable]]
-native_id = "158.19070"
-slug = "typ-av-skyddad-kulturmiljo"
-
-[[variable]]
-native_id = "158.19071"
-slug = "fridlyst-vaxt-djurart-antal"
-
-[[variable]]
-native_id = "158.19072"
-slug = "beslutsdatum-for-skyddad-natur"
-
-[[variable]]
-native_id = "158.25491"
-slug = "brottsmisstankar-brottskod-8015"
-
-[[variable]]
-native_id = "158.28060"
-slug = "skyddade-omraden-miljobalken-antal"
-
-[[variable]]
-native_id = "158.28061"
-slug = "skyddade-alvar-areal"
-
-[[variable]]
-native_id = "158.29316"
-slug = "andel-skyddad-areal-omkring-tatort"
-
-[[variable]]
-native_id = "158.29317"
-slug = "folkmangd-inom-skyddat-omrade"
-
-[[variable]]
-native_id = "158.29318"
-slug = "typ-av-kostnad"
-
-[[variable]]
-native_id = "158.29322"
-slug = "typ-av-beslut-skyddade-omraden"
-
-[[variable]]
-native_id = "158.29508"
-slug = "nationalparker"
-
-[[variable]]
-native_id = "158.29511"
-slug = "nationalparker-naturreservat-marin"
-
-[[variable]]
-native_id = "158.29521"
-slug = "kulturreservat"
-
-[[variable]]
-native_id = "158.29523"
-slug = "skyddade-alvar"
-
-[[variable]]
-native_id = "158.29529"
-slug = "fridlyst-vaxt-djurart"
-
-[[variable]]
-native_id = "158.29530"
-slug = "naturtyp-skyddade-omraden"
-
-[[variable]]
-native_id = "158.29543"
-slug = "produktiv-skogsmark-skyddade-omraden"
-
-[[variable]]
-native_id = "158.30393"
-slug = "skyddade-omraden-lander-areal"
-
-[[variable]]
-native_id = "158.30394"
-slug = "skyddad-natur-i-varlden-andel"
-
-[[variable]]
-native_id = "158.30401"
-slug = "skyddad-areal-per-land"
-
-[[variable]]
-native_id = "158.31178"
-slug = "produktiv-skogsmark-per-region-areal"
-
-[[variable]]
-native_id = "158.31179"
-slug = "produktiv-skyddad-skog-region-andel"
-
-[[variable]]
-native_id = "158.31180"
-slug = "andel-hyggen-ungskogar-areal-skogsmark"
-
-[[variable]]
-native_id = "158.31181"
-slug = "produktiv-skog-nyttjande-areal"
-
-[[variable]]
-native_id = "158.31182"
-slug = "markagare-i-naturreservat"
-
-[[variable]]
-native_id = "158.35114"
-slug = "skyddade-gronomraden-andel"
-
-[[variable]]
-native_id = "158.37766"
-slug = "naturvardsavtal-areal"
-
-[[variable]]
-native_id = "158.37767"
-slug = "markersattningar-areal"
-
-[[variable]]
 native_id = "158.39597"
 slug = "namn-pa-geografiskt-objekt"
-
-[[variable]]
-native_id = "158.40422"
-slug = "tatort-2018"
-
-[[variable]]
-native_id = "158.40423"
-slug = "regionala-havsomraden"
-
-[[variable]]
-native_id = "158.43152"
-slug = "gallandedatum-for-skyddad-natur"
-
-# register 162 (lastbilstrafik)
-
-[[variable]]
-native_id = "158.39461"
-slug = "datatyp-for-geometri"
-
-# register 159
 
 [[acknowledge]]
 code = "unknown_support_key"
@@ -196,3 +40,614 @@ coding_metadata = "shared"
 columns = [{ valid_from = "2024-12-31", valid_to = "2024-12-31", column = "SKYDDSTYP", source_editions = ["2024-12-31"] }, { valid_from = "2024-12-31", valid_to = "2024-12-31", column = "Skyddstyp", source_editions = ["2024-12-31"] }]
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
+
+[[variable]]
+native_id = "158.3817.ansvarig-skotsel"
+slug = "ansvarig-skotsel"
+deprecated = false
+
+[[variable]]
+native_id = "158.3817.forvaltare-namn"
+slug = "forvaltare-namn-3817"
+deprecated = false
+
+[[variable]]
+native_id = "158.35327.area-ha"
+slug = "area-ha"
+deprecated = false
+
+[[variable]]
+native_id = "158.35327.areaha-scb"
+slug = "areaha-scb"
+deprecated = false
+
+[[variable]]
+native_id = "158.35327.areaprod"
+slug = "areaprod"
+deprecated = false
+
+[[variable]]
+native_id = "158.35327.areatot"
+slug = "areatot"
+deprecated = false
+
+[[variable]]
+native_id = "158.35327.total-areal"
+slug = "total-areal"
+deprecated = false
+
+[[variable]]
+native_id = "158.35327.totarea-scb"
+slug = "totarea-scb"
+deprecated = false
+
+[[variable]]
+native_id = "158.39597.beteckn"
+slug = "beteckn"
+deprecated = false
+
+[[variable]]
+native_id = "158.39597.namn"
+slug = "namn"
+deprecated = false
+
+[[variable]]
+native_id = "158.39597.namn-1"
+slug = "namn-1"
+deprecated = false
+
+[[variable]]
+native_id = "158.39597.namn-12"
+slug = "namn-12"
+deprecated = false
+
+[[variable]]
+native_id = "158.39597.objektnamn"
+slug = "objektnamn"
+deprecated = false
+
+[[variable]]
+native_id = "158.39597.site-name"
+slug = "site-name"
+deprecated = false
+
+[[variable]]
+native_id = "158.43151.sci"
+slug = "sci-43151"
+deprecated = false
+
+[[variable]]
+native_id = "158.43151.spa"
+slug = "spa"
+deprecated = false
+
+[[variable]]
+native_id = "158.43151.typ"
+slug = "typ"
+deprecated = false
+
+[[variable]]
+native_id = "158.43151.typ-1"
+slug = "typ-1"
+deprecated = false
+
+[[variable]]
+native_id = "158.43151.typ-12"
+slug = "typ-12"
+deprecated = false
+
+[[variable]]
+native_id = "158.43153.ansvarig-databas"
+slug = "ansvarig-databas"
+deprecated = false
+
+[[variable]]
+native_id = "158.43153.registrerande-myndighet"
+slug = "registrerande-myndighet-43153"
+deprecated = false
+
+[[variable]]
+native_id = "158.43145.sitecode"
+slug = "sitecode-43145"
+deprecated = false
+
+[[variable]]
+native_id = "158.43145.sitecode-1"
+slug = "sitecode-1"
+deprecated = false
+
+[[variable]]
+native_id = "158.43145.sitecode-12"
+slug = "sitecode-12"
+deprecated = false
+
+[[variable]]
+native_id = "158.19072.datbeslut"
+slug = "datbeslut"
+deprecated = false
+
+[[variable]]
+native_id = "158.19072.eu-besl-bevarandeomr-datum"
+slug = "eu-besl-bevarandeomr-datum"
+deprecated = false
+
+[[variable]]
+native_id = "158.19072.eu-besl-skyddsomr-datum"
+slug = "eu-besl-skyddsomr-datum"
+deprecated = false
+
+[[variable]]
+native_id = "158.19072.inlamn-datum"
+slug = "inlamn-datum"
+deprecated = false
+
+[[variable]]
+native_id = "158.19072.senaste-beslutsdat"
+slug = "senaste-beslutsdat"
+deprecated = false
+
+[[variable]]
+native_id = "158.19072.uppd-datum"
+slug = "uppd-datum"
+deprecated = false
+
+[[variable]]
+native_id = "158.19072.urspr-beslutsdatum"
+slug = "urspr-beslutsdatum"
+deprecated = false
+
+[[variable]]
+native_id = "158.43152.urspr-gallandedatum"
+slug = "urspr-gallandedatum"
+deprecated = false
+
+[[variable]]
+native_id = "158.43154.source-positive"
+slug = "beslutsstatus"
+deprecated = false
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "158.3817"
+columns = { ANSVARIG_SKOTSEL = "158.3817.ansvarig-skotsel", FORVALTARE__NAMN = "158.3817.forvaltare-namn" }
+unassigned_columns = []
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "b750750447f2fb5806b48a70b4018c7d59a64028154ada8e1344be0630c9b53d"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "158.35327"
+columns = { AREA_HA = "158.35327.area-ha", AreaHa_SCB = "158.35327.areaha-scb", AreaProd = "158.35327.areaprod", AreaTot = "158.35327.areatot", TOTAL_AREAL = "158.35327.total-areal", TotArea_SCB = "158.35327.totarea-scb" }
+unassigned_columns = []
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "c4bb3836afaeccbd64f3b30fba6811ec32aebeb7e31cd0680f05bfe9673bca82"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "158.39597"
+columns = { Beteckn = "158.39597.beteckn", NAMN = "158.39597.namn", NAMN_1 = "158.39597.namn-1", NAMN_12 = "158.39597.namn-12", OBJEKTNAMN = "158.39597.objektnamn", SITE_NAME = "158.39597.site-name" }
+unassigned_columns = []
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "2495a1776f84e9294787e54279c69f116d8ed994c110b1ffef820228697e6963"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "158.43151"
+columns = { SCI = "158.43151.sci", SPA = "158.43151.spa", TYP = "158.43151.typ", TYP_1 = "158.43151.typ-1", TYP_12 = "158.43151.typ-12" }
+unassigned_columns = []
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "1588ab797dd099a8b357696c171ada689372eb1b32539cf289154344b0c17825"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "158.43153"
+columns = { ANSVARIG_DATABAS = "158.43153.ansvarig-databas", REGISTRERANDE_MYNDIGHET = "158.43153.registrerande-myndighet" }
+unassigned_columns = []
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "b5d23bd43a41d328998bc13f4986a342369780d71dc2909f6512207876bc8e0b"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "158.43145"
+columns = { SITECODE = "158.43145.sitecode", SITECODE_1 = "158.43145.sitecode-1", SITECODE_12 = "158.43145.sitecode-12" }
+unassigned_columns = []
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "29f8a4b31b52b0aaf23cbf0ee37739c757caf5da35d6606bfe1706a5ce015557"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "158.19072"
+variant = "158.225"
+column = "Datbeslut"
+owner = "158.19072.datbeslut"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2024-12-31"]
+expected_fields = []
+expected_evidence_sha256 = "7e888c4347ea865bb2aa5ddc60126ee6b20302c7521d6ebd12b904a2ff866951"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "158.19072"
+variant = "158.225"
+column = "EU_BESL_BEVARANDEOMR_DATUM"
+owner = "158.19072.eu-besl-bevarandeomr-datum"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2020-12-31"]
+expected_fields = []
+expected_evidence_sha256 = "f6b13ab565f754f9e1b2e5a53826b5ebd81e6d49ac0b512370d4c2f82e62cf35"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "158.19072"
+variant = "158.225"
+column = "EU_BESL_SKYDDSOMR_DATUM"
+owner = "158.19072.eu-besl-skyddsomr-datum"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2020-12-31"]
+expected_fields = []
+expected_evidence_sha256 = "de8d4f9326f216ad27a502c748aac321e3462f8df1c39e950fe0c37d9e196f26"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "158.19072"
+variant = "158.225"
+column = "INLAMN_DATUM"
+owner = "158.19072.inlamn-datum"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2020-12-31"]
+expected_fields = []
+expected_evidence_sha256 = "6c6084d79163539cbee95da04a4532b64d16bde9ba64e5876c50d9d710077b9f"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "158.19072"
+variant = "158.225"
+column = "SENASTE_BESLUTSDAT"
+owner = "158.19072.senaste-beslutsdat"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2020-12-31", "2021-12-31", "2022-12-31", "2023-12-31", "2024-12-31"]
+expected_fields = []
+expected_evidence_sha256 = "93b348e13f0c9301898979cdd4e70f7494f96801a03ebc8729db8034b8347b00"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "158.19072"
+variant = "158.225"
+column = "UPPD_DATUM"
+owner = "158.19072.uppd-datum"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2020-12-31"]
+expected_fields = []
+expected_evidence_sha256 = "bebead4783da712cfb28d3d37b882325b6414e664582e9cd7c197ee6a450c782"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "158.19072"
+variant = "158.225"
+column = "URSPR_BESLUTSDATUM"
+owner = "158.19072.urspr-beslutsdatum"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2020-12-31", "2021-12-31", "2022-12-31", "2023-12-31", "2024-12-31"]
+expected_fields = []
+expected_evidence_sha256 = "c367786e87845b922494e83813b97a8c4dc8d941b90e2b8344e7c51a0d5ac40f"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "158.43152"
+variant = "158.225"
+column = "URSPR_GALLANDEDATUM"
+owner = "158.43152.urspr-gallandedatum"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2020-12-31", "2021-12-31", "2022-12-31", "2023-12-31", "2024-12-31"]
+expected_fields = []
+expected_evidence_sha256 = "7c16e96c0e0496ee154d4d3b06f690c1755fa99de7d8acba2bd75e3f0342325f"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "158.43154"
+variant = "158.225"
+column = "BESLUTSSTATUS"
+owner = "158.43154.source-positive"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2020-12-31", "2024-12-31"]
+expected_fields = []
+expected_evidence_sha256 = "05bdab1a7c1f28608b012ce19547958cfacbff014000c32649f7b5a43e8c22ca"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 158, 'variable', 'native-int', 19072)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:11266\",\"variable:19072\",\"member:457984\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:12014\",\"variable:19072\",\"member:500195\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:13302\",\"variable:19072\",\"member:592598\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:14517\",\"variable:19072\",\"member:663269\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:16403\",\"variable:19072\",\"member:803186\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:18210\",\"variable:19072\",\"member:843586\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:18753\",\"variable:19072\",\"member:884785\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:19249\",\"variable:19072\",\"member:924537\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:2114\",\"variable:19072\",\"member:139614\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:2872\",\"variable:19072\",\"member:170655\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:3784\",\"variable:19072\",\"member:231852\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:4185\",\"variable:19072\",\"member:262889\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:4819\",\"variable:19072\",\"member:297746\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:5354\",\"variable:19072\",\"member:330029\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:6084\",\"variable:19072\",\"member:374759\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:7567\",\"variable:19072\",\"member:416239\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "ba3f2a81c2e1dbdf6169daa47c4277a29a2a3be047461aa79fb32469d4f43e83"
+expected_diagnostic_sha256 = "6206d218ac5a602bdfd2d66817709e7ae0ec873e5d6f4d6052235d2672560179"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/skyddad-natur/sci-43151"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:18210\",\"variable:43151\",\"member:843587\"]}"]
+fields = ["coding"]
+valid_from = "2021-12-31"
+valid_to = "2021-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "0fe8f22f061e11808563c346774c0566771ce7d361e9419309bc2e75ae5b451e"
+expected_diagnostic_sha256 = "1efb138335081a7ff7440634c5dca5d1bf841f78454f895dc48adcf6b7930e81"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/skyddad-natur/sci-43151"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:18753\",\"variable:43151\",\"member:884784\"]}"]
+fields = ["coding"]
+valid_from = "2022-12-31"
+valid_to = "2022-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "ecac881b9553b8d701b971111b2005f6844ecd9fe613d7d1f350d7c8cdaaa696"
+expected_diagnostic_sha256 = "5767507c7ec4c1e580cfdbcbdce287d2ae4402424114a8f89147938486281d98"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/skyddad-natur/spa"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:18210\",\"variable:43151\",\"member:845400\"]}"]
+fields = ["coding"]
+valid_from = "2021-12-31"
+valid_to = "2021-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "388ecc3756386f13197085523a62ed68df23614c9881b3c97a6a5477ead813b8"
+expected_diagnostic_sha256 = "1cc15b251651856b87c2ea0c1efcaebe12e358c4912a4069dfa911ba54949b51"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/skyddad-natur/spa"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:18753\",\"variable:43151\",\"member:884778\"]}"]
+fields = ["coding"]
+valid_from = "2022-12-31"
+valid_to = "2022-12-31"
+reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "78fbf3afc2dfa0c33203f473bcfb1f6dff8ad170f3e025247f68099b85f04050"
+expected_diagnostic_sha256 = "ecc1986afb411cbdcf06784e7884f31257cf0eaa81d48da8dfd6c5f13d1a49bc"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 158, 'variable', 'native-int', 43152)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:16403\",\"variable:43152\",\"member:803187\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "e7e659295ac9450a23a4205892e3a7feffe803ec4f406c3dfe868d7977cdaa85"
+expected_diagnostic_sha256 = "e6bf5c9158d371b87ee8759a61c2c9b4595f879e72ac8ddf28875c924668ef5f"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 158, 'variable', 'native-int', 43154)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:18210\",\"variable:43154\",\"member:843582\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:18753\",\"variable:43154\",\"member:884789\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:19249\",\"variable:43154\",\"member:924533\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "4eebe2784760ddb7b6c6290788d6c6a6542bcc46c2a3d2f1cfb40fe59a2d3c38"
+expected_diagnostic_sha256 = "0363acd031f8b1c9b8ba7453f6fb049432040c35ae8cc3d435279bcce8ba540e"
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/skyddad-natur/areaha-scb:scb/skyddad-natur/totarea-scb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:19913\",\"variable:35327\",\"member:990259\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Shared wording does not establish a reliable sibling group when the supplied component shape is disputed. Keep the individually supported physical fields and all source facts; do not assert this ambiguous group relationship."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "e26dc574cdf2aca46706f8a18e160a8a696b81245e188605ba3b14d5b33a66d8"
+expected_diagnostic_sha256 = "fe7dfbe468ceb2592d63d72f18e4b80f1356d8056eb17a05594edb9e4f91ff91"
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/skyddad-natur/areaprod:scb/skyddad-natur/totarea-scb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:19913\",\"variable:35327\",\"member:990248\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:19913\",\"variable:35327\",\"member:990259\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Shared wording does not establish a reliable sibling group when the supplied component shape is disputed. Keep the individually supported physical fields and all source facts; do not assert this ambiguous group relationship."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "2742e6b0574e83791c290158f941d60fb0a605e8ceca14cae1ac1312df2241de"
+expected_diagnostic_sha256 = "b6433bc83d5b47e15191fd82b20e6233c58487deffc8dcccfc22f579345e62eb"
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/skyddad-natur/areatot:scb/skyddad-natur/totarea-scb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:19913\",\"variable:35327\",\"member:990248\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:19913\",\"variable:35327\",\"member:990259\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Shared wording does not establish a reliable sibling group when the supplied component shape is disputed. Keep the individually supported physical fields and all source facts; do not assert this ambiguous group relationship."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "2742e6b0574e83791c290158f941d60fb0a605e8ceca14cae1ac1312df2241de"
+expected_diagnostic_sha256 = "4b596528f8ea77495ba25438a64c7a90f5a2ce261742e45920e4e99421bc0238"
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/skyddad-natur/total-areal:scb/skyddad-natur/totarea-scb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:16403\",\"variable:35327\",\"member:803189\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:18210\",\"variable:35327\",\"member:843583\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:18753\",\"variable:35327\",\"member:884788\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:19249\",\"variable:35327\",\"member:924534\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:19913\",\"variable:35327\",\"member:990248\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:158\",\"variant:225\",\"edition:19913\",\"variable:35327\",\"member:990259\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Shared wording does not establish a reliable sibling group when the supplied component shape is disputed. Keep the individually supported physical fields and all source facts; do not assert this ambiguous group relationship."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "c4bb3836afaeccbd64f3b30fba6811ec32aebeb7e31cd0680f05bfe9673bca82"
+expected_diagnostic_sha256 = "f34d10b6b01c52bf2675aa616acadb8fac179b1b4b763cb3eb494485d8dbc4d9"
+
+[[variable]]
+native_id = "158.36"
+slug = "kommun"
+
+
+[[variable]]
+native_id = "158.49"
+slug = "lan"
+
+
+[[variable]]
+native_id = "158.2870"
+slug = "avstand-till-skyddad-natur"
+
+
+[[variable]]
+native_id = "158.2874"
+slug = "naturtyp-skyddade-omraden-areal"
+
+
+[[variable]]
+native_id = "158.2875"
+slug = "skyddade-omraden-miljobalken-areal"
+
+
+[[variable]]
+native_id = "158.3818"
+slug = "kostnader-for-sakrade-omraden"
+
+
+[[variable]]
+native_id = "158.19070"
+slug = "typ-av-skyddad-kulturmiljo"
+
+
+[[variable]]
+native_id = "158.19071"
+slug = "fridlyst-vaxt-djurart-antal"
+
+
+[[variable]]
+native_id = "158.25491"
+slug = "brottsmisstankar-brottskod-8015"
+
+
+[[variable]]
+native_id = "158.28060"
+slug = "skyddade-omraden-miljobalken-antal"
+
+
+[[variable]]
+native_id = "158.28061"
+slug = "skyddade-alvar-areal"
+
+
+[[variable]]
+native_id = "158.29316"
+slug = "andel-skyddad-areal-omkring-tatort"
+
+
+[[variable]]
+native_id = "158.29317"
+slug = "folkmangd-inom-skyddat-omrade"
+
+
+[[variable]]
+native_id = "158.29318"
+slug = "typ-av-kostnad"
+
+
+[[variable]]
+native_id = "158.29322"
+slug = "typ-av-beslut-skyddade-omraden"
+
+
+[[variable]]
+native_id = "158.29508"
+slug = "nationalparker"
+
+
+[[variable]]
+native_id = "158.29511"
+slug = "nationalparker-naturreservat-marin"
+
+
+[[variable]]
+native_id = "158.29521"
+slug = "kulturreservat"
+
+
+[[variable]]
+native_id = "158.29523"
+slug = "skyddade-alvar"
+
+
+[[variable]]
+native_id = "158.29529"
+slug = "fridlyst-vaxt-djurart"
+
+
+[[variable]]
+native_id = "158.29530"
+slug = "naturtyp-skyddade-omraden"
+
+
+[[variable]]
+native_id = "158.29543"
+slug = "produktiv-skogsmark-skyddade-omraden"
+
+
+[[variable]]
+native_id = "158.30393"
+slug = "skyddade-omraden-lander-areal"
+
+
+[[variable]]
+native_id = "158.30394"
+slug = "skyddad-natur-i-varlden-andel"
+
+
+[[variable]]
+native_id = "158.30401"
+slug = "skyddad-areal-per-land"
+
+
+[[variable]]
+native_id = "158.31178"
+slug = "produktiv-skogsmark-per-region-areal"
+
+
+[[variable]]
+native_id = "158.31179"
+slug = "produktiv-skyddad-skog-region-andel"
+
+
+[[variable]]
+native_id = "158.31180"
+slug = "andel-hyggen-ungskogar-areal-skogsmark"
+
+
+[[variable]]
+native_id = "158.31181"
+slug = "produktiv-skog-nyttjande-areal"
+
+
+[[variable]]
+native_id = "158.31182"
+slug = "markagare-i-naturreservat"
+
+
+[[variable]]
+native_id = "158.35114"
+slug = "skyddade-gronomraden-andel"
+
+
+[[variable]]
+native_id = "158.37766"
+slug = "naturvardsavtal-areal"
+
+
+[[variable]]
+native_id = "158.37767"
+slug = "markersattningar-areal"
+
+
+[[variable]]
+native_id = "158.40422"
+slug = "tatort-2018"
+
+
+[[variable]]
+native_id = "158.40423"
+slug = "regionala-havsomraden"
+
+
+[[variable]]
+native_id = "158.39461"
+slug = "datatyp-for-geometri"
+
+# register 159

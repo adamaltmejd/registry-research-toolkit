@@ -31,14 +31,6 @@ native_id = "106.5124"
 slug = "f16"  # source: kolumnnamn
 
 [[variable]]
-native_id = "106.37062"
-slug = "f9"  # source: fold
-
-[[variable]]
-native_id = "106.40779"
-slug = "f6"  # source: fold
-
-[[variable]]
 native_id = "106.40807"
 slug = "f15"  # source: kolumnnamn
 
@@ -69,10 +61,6 @@ slug = "f23-1"  # source: kolumnnamn
 [[variable]]
 native_id = "106.40814"
 slug = "f23-2"  # source: kolumnnamn
-
-[[variable]]
-native_id = "106.40815"
-slug = "f24"  # source: fold
 
 [[variable]]
 native_id = "106.40816"

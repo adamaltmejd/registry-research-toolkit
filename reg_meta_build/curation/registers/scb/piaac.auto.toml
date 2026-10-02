@@ -7,10 +7,6 @@
 # (A4.4a) for the name-fallback curation seam; tomllib ignores it.
 
 [[variable]]
-native_id = "351.32010"
-slug = "c-q03"  # source: fold
-
-[[variable]]
 native_id = "351.32012"
 slug = "c301c05s"  # source: kolumnnamn
 

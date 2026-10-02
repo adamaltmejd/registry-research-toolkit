@@ -51,16 +51,8 @@ native_id = "260.35245"
 slug = "utb-form-ht"  # source: kolumnnamn
 
 [[variable]]
-native_id = "260.36625"
-slug = "beh"  # source: fold
-
-[[variable]]
 native_id = "260.36735"
 slug = "kval"  # source: kolumnnamn
-
-[[variable]]
-native_id = "260.38272"
-slug = "verksamh"  # source: fold
 
 [[variable]]
 native_id = "260.104.iskenh"

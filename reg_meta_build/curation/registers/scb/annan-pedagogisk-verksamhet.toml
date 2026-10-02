@@ -150,3 +150,81 @@ native_id = "379.8137.hmannamn"
 slug = "huvudman-namn"
 
 # register 382
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "379.65"
+columns = { SUN2000Inr = "379.65.sun2000inr", SUN2000Inr_prio1 = "379.65.sun2000inr-prio1", SUN2000Inr_prio2 = "379.65.sun2000inr-prio2", SUN2000Inr_prio3 = "379.65.sun2000inr-prio3", SUN2020Inr = "379.65.sun2020inr", SUN2020Inr_prio1 = "379.65.sun2020inr-prio1", SUN2020Inr_prio2 = "379.65.sun2020inr-prio2", SUN2020Inr_prio3 = "379.65.sun2020inr-prio3" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "e7897cf09ba42f16ae0f691fd2bcefe83d330c50e50491acfc7f5aaa99814bab"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "379.66"
+columns = { SUN2000Niva = "379.66.sun2000niva", SUN2000Niva_prio1 = "379.66.sun2000niva-prio1", SUN2000Niva_prio2 = "379.66.sun2000niva-prio2", SUN2000Niva_prio3 = "379.66.sun2000niva-prio3", SUN2020Niva = "379.66.sun2020niva", SUN2020Niva_prio1 = "379.66.sun2020niva-prio1", SUN2020Niva_prio2 = "379.66.sun2020niva-prio2", SUN2020Niva_prio3 = "379.66.sun2020niva-prio3" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "4c1c58465eac724f6d5e7284e9b6e5700a7b71d6e5c9198bedfdc64e7c828027"
+
+[[variable]]
+native_id = "379.65.sun2000inr"
+slug = "sun2000inr"
+
+[[variable]]
+native_id = "379.65.sun2000inr-prio1"
+slug = "sun2000inr-prio"
+
+[[variable]]
+native_id = "379.65.sun2000inr-prio2"
+slug = "sun2000inr-prio2"
+
+[[variable]]
+native_id = "379.65.sun2000inr-prio3"
+slug = "sun2000inr-prio3"
+
+[[variable]]
+native_id = "379.65.sun2020inr"
+slug = "sun2020inr"
+
+[[variable]]
+native_id = "379.65.sun2020inr-prio1"
+slug = "sun2020inr-prio"
+
+[[variable]]
+native_id = "379.65.sun2020inr-prio2"
+slug = "sun2020inr-prio2"
+
+[[variable]]
+native_id = "379.65.sun2020inr-prio3"
+slug = "sun2020inr-prio3"
+
+[[variable]]
+native_id = "379.66.sun2000niva"
+slug = "sun2000niva"
+
+[[variable]]
+native_id = "379.66.sun2000niva-prio1"
+slug = "sun2000niva-prio"
+
+[[variable]]
+native_id = "379.66.sun2000niva-prio2"
+slug = "sun2000niva-prio2"
+
+[[variable]]
+native_id = "379.66.sun2000niva-prio3"
+slug = "sun2000niva-prio3"
+
+[[variable]]
+native_id = "379.66.sun2020niva"
+slug = "sun2020niva"
+
+[[variable]]
+native_id = "379.66.sun2020niva-prio1"
+slug = "sun2020niva-prio"
+
+[[variable]]
+native_id = "379.66.sun2020niva-prio2"
+slug = "sun2020niva-prio2"
+
+[[variable]]
+native_id = "379.66.sun2020niva-prio3"
+slug = "sun2020niva-prio3"

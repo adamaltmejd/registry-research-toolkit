@@ -35,3 +35,26 @@ native_id = "396.17256"
 slug = "vistelsetid"
 
 # register 397
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "396.1573"
+columns = { Ald1 = "396.1573.ald1", Ald2 = "396.1573.ald2", Ald3 = "396.1573.ald3", Ald4 = "396.1573.ald4" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "ec338c8c2413748b47cdafc0cbe183893db5db576f20ab394bb3af63f41d31b0"
+
+[[variable]]
+native_id = "396.1573.ald1"
+slug = "ald1"
+
+[[variable]]
+native_id = "396.1573.ald2"
+slug = "ald2"
+
+[[variable]]
+native_id = "396.1573.ald3"
+slug = "ald3"
+
+[[variable]]
+native_id = "396.1573.ald4"
+slug = "ald4"

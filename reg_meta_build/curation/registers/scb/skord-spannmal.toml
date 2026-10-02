@@ -91,3 +91,583 @@ native_id = "208.44256.karnfrototalskord-40"
 slug = "oljelin"
 
 # register 217
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-1"
+slug = "gronfodertshalt"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-12"
+slug = "gronfodertshalt-12"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-16"
+slug = "gronfodertshalt-16"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-2"
+slug = "gronfodertshalt-2"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-20"
+slug = "gronfodertshalt-20"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-21"
+slug = "gronfodertshalt-21"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-22"
+slug = "gronfodertshalt-22"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-23"
+slug = "gronfodertshalt-23"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-29"
+slug = "gronfodertshalt-29"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-3"
+slug = "gronfodertshalt-3"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-30"
+slug = "gronfodertshalt-30"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-32"
+slug = "gronfodertshalt-32"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-4"
+slug = "gronfodertshalt-4"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-40"
+slug = "gronfodertshalt-40"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-5"
+slug = "gronfodertshalt-5"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-501"
+slug = "gronfodertshalt-501"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-7"
+slug = "gronfodertshalt-7"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-8"
+slug = "gronfodertshalt-8"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-80"
+slug = "gronfodertshalt-80"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-9"
+slug = "gronfodertshalt-9"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-1"
+slug = "gronfodertshalt-dar"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-12"
+slug = "gronfodertshalt-dar-12"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-16"
+slug = "gronfodertshalt-dar-16"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-2"
+slug = "gronfodertshalt-dar-2"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-20"
+slug = "gronfodertshalt-dar-20"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-21"
+slug = "gronfodertshalt-dar-21"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-22"
+slug = "gronfodertshalt-dar-22"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-23"
+slug = "gronfodertshalt-dar-23"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-29"
+slug = "gronfodertshalt-dar-29"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-3"
+slug = "gronfodertshalt-dar-3"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-30"
+slug = "gronfodertshalt-dar-30"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-32"
+slug = "gronfodertshalt-dar-32"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-4"
+slug = "gronfodertshalt-dar-4"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-40"
+slug = "gronfodertshalt-dar-40"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-5"
+slug = "gronfodertshalt-dar-5"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-501"
+slug = "gronfodertshalt-dar-501"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-7"
+slug = "gronfodertshalt-dar-7"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-8"
+slug = "gronfodertshalt-dar-8"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-80"
+slug = "gronfodertshalt-dar-80"
+
+[[variable]]
+native_id = "208.45719.gronfodertshalt-dar-9"
+slug = "gronfodertshalt-dar-9"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-1"
+slug = "karnfrovattenhalt"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-12"
+slug = "karnfrovattenhalt-12"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-2"
+slug = "karnfrovattenhalt-2"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-20"
+slug = "karnfrovattenhalt-20"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-21"
+slug = "karnfrovattenhalt-21"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-22"
+slug = "karnfrovattenhalt-22"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-23"
+slug = "karnfrovattenhalt-23"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-29"
+slug = "karnfrovattenhalt-29"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-3"
+slug = "karnfrovattenhalt-3"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-30"
+slug = "karnfrovattenhalt-30"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-32"
+slug = "karnfrovattenhalt-32"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-4"
+slug = "karnfrovattenhalt-4"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-40"
+slug = "karnfrovattenhalt-40"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-5"
+slug = "karnfrovattenhalt-5"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-501"
+slug = "karnfrovattenhalt-501"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-7"
+slug = "karnfrovattenhalt-7"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-8"
+slug = "karnfrovattenhalt-8"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-9"
+slug = "karnfrovattenhalt-9"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-dar-1"
+slug = "karnfrovattenhalt-dar"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-dar-12"
+slug = "karnfrovattenhalt-dar-12"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-dar-2"
+slug = "karnfrovattenhalt-dar-2"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-dar-20"
+slug = "karnfrovattenhalt-dar-20"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-dar-21"
+slug = "karnfrovattenhalt-dar-21"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-dar-22"
+slug = "karnfrovattenhalt-dar-22"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-dar-23"
+slug = "karnfrovattenhalt-dar-23"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-dar-29"
+slug = "karnfrovattenhalt-dar-29"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-dar-3"
+slug = "karnfrovattenhalt-dar-3"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-dar-30"
+slug = "karnfrovattenhalt-dar-30"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-dar-32"
+slug = "karnfrovattenhalt-dar-32"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-dar-4"
+slug = "karnfrovattenhalt-dar-4"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-dar-40"
+slug = "karnfrovattenhalt-dar-40"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-dar-5"
+slug = "karnfrovattenhalt-dar-5"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-dar-501"
+slug = "karnfrovattenhalt-dar-501"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-dar-7"
+slug = "karnfrovattenhalt-dar-7"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-dar-8"
+slug = "karnfrovattenhalt-dar-8"
+
+[[variable]]
+native_id = "208.3147.karnfrovattenhalt-dar-9"
+slug = "karnfrovattenhalt-dar-9"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-1"
+slug = "partielltbortfall"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-12"
+slug = "partielltbortfall-12"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-16"
+slug = "partielltbortfall-16"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-2"
+slug = "partielltbortfall-2"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-20"
+slug = "partielltbortfall-20"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-21"
+slug = "partielltbortfall-21"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-22"
+slug = "partielltbortfall-22"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-23"
+slug = "partielltbortfall-23"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-29"
+slug = "partielltbortfall-29"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-3"
+slug = "partielltbortfall-3"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-30"
+slug = "partielltbortfall-30"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-32"
+slug = "partielltbortfall-32"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-4"
+slug = "partielltbortfall-4"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-40"
+slug = "partielltbortfall-40"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-5"
+slug = "partielltbortfall-5"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-501"
+slug = "partielltbortfall-501"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-7"
+slug = "partielltbortfall-7"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-8"
+slug = "partielltbortfall-8"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-9"
+slug = "partielltbortfall-9"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-1"
+slug = "partielltbortfall-dar"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-12"
+slug = "partielltbortfall-dar-12"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-16"
+slug = "partielltbortfall-dar-16"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-2"
+slug = "partielltbortfall-dar-2"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-20"
+slug = "partielltbortfall-dar-20"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-21"
+slug = "partielltbortfall-dar-21"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-22"
+slug = "partielltbortfall-dar-22"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-23"
+slug = "partielltbortfall-dar-23"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-29"
+slug = "partielltbortfall-dar-29"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-3"
+slug = "partielltbortfall-dar-3"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-30"
+slug = "partielltbortfall-dar-30"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-32"
+slug = "partielltbortfall-dar-32"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-4"
+slug = "partielltbortfall-dar-4"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-40"
+slug = "partielltbortfall-dar-40"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-5"
+slug = "partielltbortfall-dar-5"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-501"
+slug = "partielltbortfall-dar-501"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-7"
+slug = "partielltbortfall-dar-7"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-8"
+slug = "partielltbortfall-dar-8"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-80"
+slug = "partielltbortfall-dar-80"
+
+[[variable]]
+native_id = "208.2975.partielltbortfall-dar-9"
+slug = "partielltbortfall-dar-9"
+
+[[variable]]
+native_id = "208.44310.gronfoderobargadareal-21"
+slug = "gronfoderobargadareal-21"
+
+[[variable]]
+native_id = "208.44310.gronfoderobargadareal-dar-21"
+slug = "gronfoderobargadareal-dar-21"
+
+[[variable]]
+native_id = "208.44310.karnfroobargadareal-21"
+slug = "karnfroobargadareal-21"
+
+[[variable]]
+native_id = "208.44310.karnfroobargadareal-dar-21"
+slug = "karnfroobargadareal-dar-21"
+
+[[variable]]
+native_id = "208.44313.gronfoderobargadareal-40"
+slug = "gronfoderobargadareal-40"
+
+[[variable]]
+native_id = "208.44313.gronfoderobargadareal-dar-40"
+slug = "gronfoderobargadareal-dar"
+
+[[variable]]
+native_id = "208.44313.karnfroobargadareal-40"
+slug = "karnfroobargadareal-40"
+
+[[variable]]
+native_id = "208.44313.karnfroobargadareal-dar-40"
+slug = "karnfroobargadareal-dar-40"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "208.45719"
+columns = { "GronfoderTsHalt_1" = "208.45719.gronfodertshalt-1", "GronfoderTsHalt_12" = "208.45719.gronfodertshalt-12", "GronfoderTsHalt_16" = "208.45719.gronfodertshalt-16", "GronfoderTsHalt_2" = "208.45719.gronfodertshalt-2", "GronfoderTsHalt_20" = "208.45719.gronfodertshalt-20", "GronfoderTsHalt_21" = "208.45719.gronfodertshalt-21", "GronfoderTsHalt_22" = "208.45719.gronfodertshalt-22", "GronfoderTsHalt_23" = "208.45719.gronfodertshalt-23", "GronfoderTsHalt_29" = "208.45719.gronfodertshalt-29", "GronfoderTsHalt_3" = "208.45719.gronfodertshalt-3", "GronfoderTsHalt_30" = "208.45719.gronfodertshalt-30", "GronfoderTsHalt_32" = "208.45719.gronfodertshalt-32", "GronfoderTsHalt_4" = "208.45719.gronfodertshalt-4", "GronfoderTsHalt_40" = "208.45719.gronfodertshalt-40", "GronfoderTsHalt_5" = "208.45719.gronfodertshalt-5", "GronfoderTsHalt_501" = "208.45719.gronfodertshalt-501", "GronfoderTsHalt_7" = "208.45719.gronfodertshalt-7", "GronfoderTsHalt_8" = "208.45719.gronfodertshalt-8", "GronfoderTsHalt_80" = "208.45719.gronfodertshalt-80", "GronfoderTsHalt_9" = "208.45719.gronfodertshalt-9", "GronfoderTsHalt_Dar_1" = "208.45719.gronfodertshalt-dar-1", "GronfoderTsHalt_Dar_12" = "208.45719.gronfodertshalt-dar-12", "GronfoderTsHalt_Dar_16" = "208.45719.gronfodertshalt-dar-16", "GronfoderTsHalt_Dar_2" = "208.45719.gronfodertshalt-dar-2", "GronfoderTsHalt_Dar_20" = "208.45719.gronfodertshalt-dar-20", "GronfoderTsHalt_Dar_21" = "208.45719.gronfodertshalt-dar-21", "GronfoderTsHalt_Dar_22" = "208.45719.gronfodertshalt-dar-22", "GronfoderTsHalt_Dar_23" = "208.45719.gronfodertshalt-dar-23", "GronfoderTsHalt_Dar_29" = "208.45719.gronfodertshalt-dar-29", "GronfoderTsHalt_Dar_3" = "208.45719.gronfodertshalt-dar-3", "GronfoderTsHalt_Dar_30" = "208.45719.gronfodertshalt-dar-30", "GronfoderTsHalt_Dar_32" = "208.45719.gronfodertshalt-dar-32", "GronfoderTsHalt_Dar_4" = "208.45719.gronfodertshalt-dar-4", "GronfoderTsHalt_Dar_40" = "208.45719.gronfodertshalt-dar-40", "GronfoderTsHalt_Dar_5" = "208.45719.gronfodertshalt-dar-5", "GronfoderTsHalt_Dar_501" = "208.45719.gronfodertshalt-dar-501", "GronfoderTsHalt_Dar_7" = "208.45719.gronfodertshalt-dar-7", "GronfoderTsHalt_Dar_8" = "208.45719.gronfodertshalt-dar-8", "GronfoderTsHalt_Dar_80" = "208.45719.gronfodertshalt-dar-80", "GronfoderTsHalt_Dar_9" = "208.45719.gronfodertshalt-dar-9" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "2e0aff2fa619f544b0e7edcfc6e92934aa0b5157b4adc44461195d61ea81b64e"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "208.3147"
+columns = { "KarnfroVattenhalt_1" = "208.3147.karnfrovattenhalt-1", "KarnfroVattenhalt_12" = "208.3147.karnfrovattenhalt-12", "KarnfroVattenhalt_2" = "208.3147.karnfrovattenhalt-2", "KarnfroVattenhalt_20" = "208.3147.karnfrovattenhalt-20", "KarnfroVattenhalt_21" = "208.3147.karnfrovattenhalt-21", "KarnfroVattenhalt_22" = "208.3147.karnfrovattenhalt-22", "KarnfroVattenhalt_23" = "208.3147.karnfrovattenhalt-23", "KarnfroVattenhalt_29" = "208.3147.karnfrovattenhalt-29", "KarnfroVattenhalt_3" = "208.3147.karnfrovattenhalt-3", "KarnfroVattenhalt_30" = "208.3147.karnfrovattenhalt-30", "KarnfroVattenhalt_32" = "208.3147.karnfrovattenhalt-32", "KarnfroVattenhalt_4" = "208.3147.karnfrovattenhalt-4", "KarnfroVattenhalt_40" = "208.3147.karnfrovattenhalt-40", "KarnfroVattenhalt_5" = "208.3147.karnfrovattenhalt-5", "KarnfroVattenhalt_501" = "208.3147.karnfrovattenhalt-501", "KarnfroVattenhalt_7" = "208.3147.karnfrovattenhalt-7", "KarnfroVattenhalt_8" = "208.3147.karnfrovattenhalt-8", "KarnfroVattenhalt_9" = "208.3147.karnfrovattenhalt-9", "KarnfroVattenhalt_Dar_1" = "208.3147.karnfrovattenhalt-dar-1", "KarnfroVattenhalt_Dar_12" = "208.3147.karnfrovattenhalt-dar-12", "KarnfroVattenhalt_Dar_2" = "208.3147.karnfrovattenhalt-dar-2", "KarnfroVattenhalt_Dar_20" = "208.3147.karnfrovattenhalt-dar-20", "KarnfroVattenhalt_Dar_21" = "208.3147.karnfrovattenhalt-dar-21", "KarnfroVattenhalt_Dar_22" = "208.3147.karnfrovattenhalt-dar-22", "KarnfroVattenhalt_Dar_23" = "208.3147.karnfrovattenhalt-dar-23", "KarnfroVattenhalt_Dar_29" = "208.3147.karnfrovattenhalt-dar-29", "KarnfroVattenhalt_Dar_3" = "208.3147.karnfrovattenhalt-dar-3", "KarnfroVattenhalt_Dar_30" = "208.3147.karnfrovattenhalt-dar-30", "KarnfroVattenhalt_Dar_32" = "208.3147.karnfrovattenhalt-dar-32", "KarnfroVattenhalt_Dar_4" = "208.3147.karnfrovattenhalt-dar-4", "KarnfroVattenhalt_Dar_40" = "208.3147.karnfrovattenhalt-dar-40", "KarnfroVattenhalt_Dar_5" = "208.3147.karnfrovattenhalt-dar-5", "KarnfroVattenhalt_Dar_501" = "208.3147.karnfrovattenhalt-dar-501", "KarnfroVattenhalt_Dar_7" = "208.3147.karnfrovattenhalt-dar-7", "KarnfroVattenhalt_Dar_8" = "208.3147.karnfrovattenhalt-dar-8", "KarnfroVattenhalt_Dar_9" = "208.3147.karnfrovattenhalt-dar-9" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "784e707cbdef9faf7b822b6e1afaca0d6308e43dff7bc1d462485731495553c6"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "208.2975"
+columns = { "PartielltBortfall_1" = "208.2975.partielltbortfall-1", "PartielltBortfall_12" = "208.2975.partielltbortfall-12", "PartielltBortfall_16" = "208.2975.partielltbortfall-16", "PartielltBortfall_2" = "208.2975.partielltbortfall-2", "PartielltBortfall_20" = "208.2975.partielltbortfall-20", "PartielltBortfall_21" = "208.2975.partielltbortfall-21", "PartielltBortfall_22" = "208.2975.partielltbortfall-22", "PartielltBortfall_23" = "208.2975.partielltbortfall-23", "PartielltBortfall_29" = "208.2975.partielltbortfall-29", "PartielltBortfall_3" = "208.2975.partielltbortfall-3", "PartielltBortfall_30" = "208.2975.partielltbortfall-30", "PartielltBortfall_32" = "208.2975.partielltbortfall-32", "PartielltBortfall_4" = "208.2975.partielltbortfall-4", "PartielltBortfall_40" = "208.2975.partielltbortfall-40", "PartielltBortfall_5" = "208.2975.partielltbortfall-5", "PartielltBortfall_501" = "208.2975.partielltbortfall-501", "PartielltBortfall_7" = "208.2975.partielltbortfall-7", "PartielltBortfall_8" = "208.2975.partielltbortfall-8", "PartielltBortfall_9" = "208.2975.partielltbortfall-9", "PartielltBortfall_Dar_1" = "208.2975.partielltbortfall-dar-1", "PartielltBortfall_Dar_12" = "208.2975.partielltbortfall-dar-12", "PartielltBortfall_Dar_16" = "208.2975.partielltbortfall-dar-16", "PartielltBortfall_Dar_2" = "208.2975.partielltbortfall-dar-2", "PartielltBortfall_Dar_20" = "208.2975.partielltbortfall-dar-20", "PartielltBortfall_Dar_21" = "208.2975.partielltbortfall-dar-21", "PartielltBortfall_Dar_22" = "208.2975.partielltbortfall-dar-22", "PartielltBortfall_Dar_23" = "208.2975.partielltbortfall-dar-23", "PartielltBortfall_Dar_29" = "208.2975.partielltbortfall-dar-29", "PartielltBortfall_Dar_3" = "208.2975.partielltbortfall-dar-3", "PartielltBortfall_Dar_30" = "208.2975.partielltbortfall-dar-30", "PartielltBortfall_Dar_32" = "208.2975.partielltbortfall-dar-32", "PartielltBortfall_Dar_4" = "208.2975.partielltbortfall-dar-4", "PartielltBortfall_Dar_40" = "208.2975.partielltbortfall-dar-40", "PartielltBortfall_Dar_5" = "208.2975.partielltbortfall-dar-5", "PartielltBortfall_Dar_501" = "208.2975.partielltbortfall-dar-501", "PartielltBortfall_Dar_7" = "208.2975.partielltbortfall-dar-7", "PartielltBortfall_Dar_8" = "208.2975.partielltbortfall-dar-8", "PartielltBortfall_Dar_80" = "208.2975.partielltbortfall-dar-80", "PartielltBortfall_Dar_9" = "208.2975.partielltbortfall-dar-9" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "db57c5b7950c60f21f7f55dae3d9ea51125dc56fac2aec1a75cc818081ad72ea"
+
+[[identity.partition]]
+data_warning = "The exact same delivered literal has contradictory simultaneous native owners. Retain every original assertion and ordered own coding; no winning meaning is inferred. Only witnessed contested variant/edition/literal windows remain unavailable, and supported other histories retain their original availability."
+variable = "208.44310"
+columns = { "GronfoderObargadAreal_21" = "208.44310.gronfoderobargadareal-21", "KarnfroObargadAreal_21" = "208.44310.karnfroobargadareal-21", "KarnfroObargadAreal_Dar_21" = "208.44310.karnfroobargadareal-dar-21" }
+unassigned_columns = ["GronfoderObargadAreal_Dar_21"]
+columns_ref = "Complete family and physical peers. Distinct literal fields preserve their own source name, definition, operation, coding, scope and variant; no shared source text establishes interchangeable meanings. Exact contrary literals are separately retained and only finite supported editions are owned. Batch54-five-collision-source-proof.json."
+expected_evidence_sha256 = "9724558e563efec40e6e2cb7627714cd544c4704bf234381734a18de4b713ab0"
+
+[[identity.partition]]
+data_warning = "The exact same delivered literal has contradictory simultaneous native owners. Retain every original assertion and ordered own coding; no winning meaning is inferred. Only witnessed contested variant/edition/literal windows remain unavailable, and supported other histories retain their original availability."
+variable = "208.44313"
+columns = { "GronfoderObargadAreal_40" = "208.44313.gronfoderobargadareal-40", "GronfoderObargadAreal_Dar_40" = "208.44313.gronfoderobargadareal-dar-40", "KarnfroObargadAreal_40" = "208.44313.karnfroobargadareal-40", "KarnfroObargadAreal_Dar_40" = "208.44313.karnfroobargadareal-dar-40" }
+unassigned_columns = ["GronfoderObargadAreal_Dar_21"]
+columns_ref = "Complete family and physical peers. Distinct literal fields preserve their own source name, definition, operation, coding, scope and variant; no shared source text establishes interchangeable meanings. Exact contrary literals are separately retained and only finite supported editions are owned. Batch54-five-collision-source-proof.json."
+expected_evidence_sha256 = "8d82cae9fbd477e4f25941200f56b8c2cc8a44c787976480de09761368aee822"
+
+[[identity.column_owner]]
+data_warning = "The exact same delivered literal has contradictory simultaneous native owners. Retain every original assertion and ordered own coding; no winning meaning is inferred. Only witnessed contested variant/edition/literal windows remain unavailable, and supported other histories retain their original availability."
+variable = "208.44310"
+variant = "208.309"
+column = "GronfoderObargadAreal_Dar_21"
+owner = "208.44310.gronfoderobargadareal-dar-21"
+ref = "The exact same delivered literal has contradictory simultaneous native owners. Retain every original assertion and ordered own coding; no winning meaning is inferred. Only witnessed contested variant/edition/literal windows remain unavailable, and supported other histories retain their original availability. Finite positive original alternatives, excluding exact contrary coordinates. Batch54-five-collision-source-proof.json."
+source_editions = ["2016", "2017", "2019", "2020"]
+expected_records = [{ "ref" = { "source" = "scb-registerinformation", "semantic_record_key" = ["register:208", "variant:309", "edition:17533", "variable:44310", "member:813934"] }, "alternatives" = [{ "fields" = [{ "name" = "access_rights", "status" = "absent" }, { "name" = "access_url", "status" = "absent" }, { "name" = "aggregation_level", "status" = "absent" }, { "name" = "availability", "status" = "value", "value" = true }, { "name" = "base_register", "status" = "absent" }, { "name" = "classification_declared", "status" = "absent" }, { "name" = "column_name", "status" = "value", "value" = "GronfoderObargadAreal_Dar_21" }, { "name" = "conditional_sensitivity", "status" = "absent" }, { "name" = "coverage", "status" = "absent" }, { "name" = "coverage_from", "status" = "absent" }, { "name" = "coverage_to", "status" = "absent" }, { "name" = "data_length", "status" = "value", "value" = "8" }, { "name" = "data_type", "status" = "value", "value" = "decimal" }, { "name" = "dataset_label", "status" = "absent" }, { "name" = "definition", "status" = "value", "value" = "Obärgad areal vårraps" }, { "name" = "description", "status" = "absent" }, { "name" = "documentation_status", "status" = "absent" }, { "name" = "documentation_url", "status" = "absent" }, { "name" = "first_approved_at", "status" = "absent" }, { "name" = "geographic_coverage", "status" = "absent" }, { "name" = "identifier", "status" = "absent" }, { "name" = "landing_page", "status" = "absent" }, { "name" = "last_approved_at", "status" = "absent" }, { "name" = "legislation", "status" = "absent" }, { "name" = "measurement_information", "status" = "absent" }, { "name" = "measurement_unit", "status" = "value", "value" = "Hektar" }, { "name" = "name", "status" = "value", "value" = "Obärgad areal vårraps" }, { "name" = "operational_definition", "status" = "value", "value" = "Därav ekologisk obärgad areal som är en delmängd av obärgad areal till grönfoder." }, { "name" = "population_comment", "status" = "absent" }, { "name" = "population_date", "status" = "absent" }, { "name" = "population_definition", "status" = "absent" }, { "name" = "purpose", "status" = "absent" }, { "name" = "reference_period", "status" = "unknown" }, { "name" = "representation", "status" = "absent" }, { "name" = "sensitivity", "status" = "absent" }, { "name" = "source_attribution", "status" = "absent" }, { "name" = "source_date", "status" = "absent" }, { "name" = "source_version", "status" = "absent" }, { "name" = "update_frequency", "status" = "absent" }, { "name" = "value_set_declared", "status" = "absent" }], "edition_scope" = { "kind" = "intervals", "intervals" = [{ "start" = "2019", "end" = "2019" }] }, "edition_period_scope" = { "kind" = "intervals", "intervals" = [{ "start" = "2019-01-01", "end" = "2019-12-31" }] }, "subject" = { "provider" = "scb", "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant_references" = [], "population" = { "status" = "unknown" }, "variable" = { "status" = "value", "native_id" = 44310, "name" = "Obärgad areal vårraps" }, "member" = { "status" = "value", "native_id" = 813934, "name" = "Obärgad areal vårraps" }, "native" = { "register_id" = 208, "register_variant_id" = 309, "edition_id" = 17533, "variable_id" = 44310, "member_id" = 813934 } }, "code_set_references" = [], "parent_facts" = [{ "kind" = "variant", "coordinate" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "fields" = [{ "name" = "description", "status" = "value", "value" = "Årlig undersökning baserad på insamling av uppgifter från ett urval av jordbruksföretag från Jordbruksverkets administrativa register för arealbaserade stöd." }, { "name" = "name", "status" = "value", "value" = "Skörd av spannmål, trindsäd och oljeväxter" }] }, { "kind" = "register", "coordinate" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "fields" = [{ "name" = "name", "status" = "value", "value" = "Skörd av spannmål, trindsäd och oljeväxter" }, { "name" = "purpose", "status" = "value", "value" = "Skördestatistiken används av myndigheter och näringsliv inom områdena jordbruk, ekonomi och miljö. Den ger information om utvecklingstendenser inom jordbrukssektorn, tillgodoser EU-kraven på statistik och ger underlag för politiska beslut." }] }, { "kind" = "population", "coordinate" = { "status" = "value", "name" = "Jordbruksföretag i urvalet för skörd av spannmål, trindsäd och oljeväxter" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "edition" = { "status" = "value", "native_id" = 17533, "name" = "2019" }, "fields" = [{ "name" = "name", "status" = "value", "value" = "Jordbruksföretag i urvalet för skörd av spannmål, trindsäd och oljeväxter" }, { "name" = "population_comment", "status" = "value", "value" = "Urvalsramen skapades 2019-08-06 och baserades på aktuellt registerutdrag för grödarealer från Jordbruksverkets register över sökta stöd." }, { "name" = "population_date", "status" = "value", "value" = "2019-01-01 - 2019-12-31" }, { "name" = "population_definition", "status" = "value", "value" = "Undersökningspopulationen utgörs av jordbruksföretag som har mer än 5,0 hektar åkermark enligt Jordbruksverkets administrativa register för arealbaserade stöd. Målpopulationen utgörs av jordbruksföretag med odling av spannmål, trindsäd eller oljeväxter som under undersökningsåret brukade mer än 2,0 hektar åkermark." }] }, { "kind" = "edition", "coordinate" = { "status" = "value", "native_id" = 17533, "name" = "2019" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "edition" = { "status" = "value", "native_id" = 17533, "name" = "2019" }, "fields" = [{ "name" = "description", "status" = "value", "value" = "Slutlig statistik om skörd av spannmål, trindsäd och oljeväxter 2019. Statistikens huvudsyfte är att vara grundkälla för beräkning av vegetabilieproduktionens storlek i Sverige." }, { "name" = "documentation_status", "status" = "value", "value" = "Offentlig" }, { "name" = "first_approved_at", "status" = "unknown" }, { "name" = "last_approved_at", "status" = "value", "value" = "2022-12-14" }, { "name" = "measurement_information", "status" = "value", "value" = "Statistiken bygger på uppgifter som samlas in årligen från ett urval av jordbruksföretag som sökt arealersättning för odling av spannmål, trindsäd och oljeväxter." }, { "name" = "name", "status" = "value", "value" = "2019" }] }, { "kind" = "object_type", "coordinate" = { "status" = "value", "name" = "Mark och vatten" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "edition" = { "status" = "value", "native_id" = 17533, "name" = "2019" }, "fields" = [{ "name" = "definition", "status" = "value", "value" = "Används då objektet är ett fast objekt som entydigt inte kan hänföras till en enskild fastighet eller en underliggande objekttyp." }, { "name" = "name", "status" = "value", "value" = "Mark och vatten" }] }] }] }, { "ref" = { "source" = "scb-registerinformation", "semantic_record_key" = ["register:208", "variant:309", "edition:18589", "variable:44310", "member:872553"] }, "alternatives" = [{ "fields" = [{ "name" = "access_rights", "status" = "absent" }, { "name" = "access_url", "status" = "absent" }, { "name" = "aggregation_level", "status" = "absent" }, { "name" = "availability", "status" = "value", "value" = true }, { "name" = "base_register", "status" = "absent" }, { "name" = "classification_declared", "status" = "absent" }, { "name" = "column_name", "status" = "value", "value" = "GronfoderObargadAreal_Dar_21" }, { "name" = "conditional_sensitivity", "status" = "absent" }, { "name" = "coverage", "status" = "absent" }, { "name" = "coverage_from", "status" = "absent" }, { "name" = "coverage_to", "status" = "absent" }, { "name" = "data_length", "status" = "value", "value" = "53" }, { "name" = "data_type", "status" = "value", "value" = "decimal" }, { "name" = "dataset_label", "status" = "absent" }, { "name" = "definition", "status" = "value", "value" = "Obärgad areal vårraps" }, { "name" = "description", "status" = "absent" }, { "name" = "documentation_status", "status" = "absent" }, { "name" = "documentation_url", "status" = "absent" }, { "name" = "first_approved_at", "status" = "absent" }, { "name" = "geographic_coverage", "status" = "absent" }, { "name" = "identifier", "status" = "absent" }, { "name" = "landing_page", "status" = "absent" }, { "name" = "last_approved_at", "status" = "absent" }, { "name" = "legislation", "status" = "absent" }, { "name" = "measurement_information", "status" = "absent" }, { "name" = "measurement_unit", "status" = "value", "value" = "Hektar" }, { "name" = "name", "status" = "value", "value" = "Obärgad areal vårraps" }, { "name" = "operational_definition", "status" = "value", "value" = "Därav ekologisk obärgad areal som är en delmängd av obärgad areal till grönfoder." }, { "name" = "population_comment", "status" = "absent" }, { "name" = "population_date", "status" = "absent" }, { "name" = "population_definition", "status" = "absent" }, { "name" = "purpose", "status" = "absent" }, { "name" = "reference_period", "status" = "unknown" }, { "name" = "representation", "status" = "absent" }, { "name" = "sensitivity", "status" = "absent" }, { "name" = "source_attribution", "status" = "absent" }, { "name" = "source_date", "status" = "absent" }, { "name" = "source_version", "status" = "absent" }, { "name" = "update_frequency", "status" = "absent" }, { "name" = "value_set_declared", "status" = "absent" }], "edition_scope" = { "kind" = "intervals", "intervals" = [{ "start" = "2017", "end" = "2017" }] }, "edition_period_scope" = { "kind" = "intervals", "intervals" = [{ "start" = "2017-01-01", "end" = "2017-12-31" }] }, "subject" = { "provider" = "scb", "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant_references" = [], "population" = { "status" = "unknown" }, "variable" = { "status" = "value", "native_id" = 44310, "name" = "Obärgad areal vårraps" }, "member" = { "status" = "value", "native_id" = 872553, "name" = "Obärgad areal vårraps" }, "native" = { "register_id" = 208, "register_variant_id" = 309, "edition_id" = 18589, "variable_id" = 44310, "member_id" = 872553 } }, "code_set_references" = [], "parent_facts" = [{ "kind" = "variant", "coordinate" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "fields" = [{ "name" = "description", "status" = "value", "value" = "Årlig undersökning baserad på insamling av uppgifter från ett urval av jordbruksföretag från Jordbruksverkets administrativa register för arealbaserade stöd." }, { "name" = "name", "status" = "value", "value" = "Skörd av spannmål, trindsäd och oljeväxter" }] }, { "kind" = "register", "coordinate" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "fields" = [{ "name" = "name", "status" = "value", "value" = "Skörd av spannmål, trindsäd och oljeväxter" }, { "name" = "purpose", "status" = "value", "value" = "Skördestatistiken används av myndigheter och näringsliv inom områdena jordbruk, ekonomi och miljö. Den ger information om utvecklingstendenser inom jordbrukssektorn, tillgodoser EU-kraven på statistik och ger underlag för politiska beslut." }] }, { "kind" = "population", "coordinate" = { "status" = "value", "name" = "Jordbruksföretag i urvalet för skörd av spannmål, trindsäd och oljeväxter" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "edition" = { "status" = "value", "native_id" = 18589, "name" = "2017" }, "fields" = [{ "name" = "name", "status" = "value", "value" = "Jordbruksföretag i urvalet för skörd av spannmål, trindsäd och oljeväxter" }, { "name" = "population_comment", "status" = "value", "value" = "Urvalsramen skapades 2017-08-21 och baserades på aktuellt registerutdrag för grödarealer från Jordbruksverkets register över sökta stöd." }, { "name" = "population_date", "status" = "value", "value" = "2017-01-01 - 2017-12-31" }, { "name" = "population_definition", "status" = "value", "value" = "Undersökningspopulationen utgörs av jordbruksföretag som har mer än 5,0 hektar åkermark enligt Jordbruksverkets administrativa register för arealbaserade stöd. Målpopulationen utgörs av jordbruksföretag med odling av spannmål, trindsäd eller oljeväxter som under undersökningsåret brukade mer än 2,0 hektar åkermark." }] }, { "kind" = "edition", "coordinate" = { "status" = "value", "native_id" = 18589, "name" = "2017" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "edition" = { "status" = "value", "native_id" = 18589, "name" = "2017" }, "fields" = [{ "name" = "description", "status" = "value", "value" = "Slutlig statistik om skörd av spannmål, trindsäd och oljeväxter 2017. Statistikens huvudsyfte är att vara grundkälla för beräkning av vegetabilieproduktionens storlek i Sverige." }, { "name" = "documentation_status", "status" = "value", "value" = "Offentlig" }, { "name" = "first_approved_at", "status" = "unknown" }, { "name" = "last_approved_at", "status" = "value", "value" = "2024-01-30" }, { "name" = "measurement_information", "status" = "value", "value" = "Statistiken bygger på uppgifter som samlas in årligen från ett urval av jordbruksföretag som sökt arealersättning för odling av spannmål, trindsäd och oljeväxter." }, { "name" = "name", "status" = "value", "value" = "2017" }] }, { "kind" = "object_type", "coordinate" = { "status" = "value", "name" = "Mark och vatten" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "edition" = { "status" = "value", "native_id" = 18589, "name" = "2017" }, "fields" = [{ "name" = "definition", "status" = "value", "value" = "Används då objektet är ett fast objekt som entydigt inte kan hänföras till en enskild fastighet eller en underliggande objekttyp." }, { "name" = "name", "status" = "value", "value" = "Mark och vatten" }] }] }] }, { "ref" = { "source" = "scb-registerinformation", "semantic_record_key" = ["register:208", "variant:309", "edition:18590", "variable:44310", "member:873070"] }, "alternatives" = [{ "fields" = [{ "name" = "access_rights", "status" = "absent" }, { "name" = "access_url", "status" = "absent" }, { "name" = "aggregation_level", "status" = "absent" }, { "name" = "availability", "status" = "value", "value" = true }, { "name" = "base_register", "status" = "absent" }, { "name" = "classification_declared", "status" = "absent" }, { "name" = "column_name", "status" = "value", "value" = "GronfoderObargadAreal_Dar_21" }, { "name" = "conditional_sensitivity", "status" = "absent" }, { "name" = "coverage", "status" = "absent" }, { "name" = "coverage_from", "status" = "absent" }, { "name" = "coverage_to", "status" = "absent" }, { "name" = "data_length", "status" = "value", "value" = "53" }, { "name" = "data_type", "status" = "value", "value" = "decimal" }, { "name" = "dataset_label", "status" = "absent" }, { "name" = "definition", "status" = "value", "value" = "Obärgad areal vårraps" }, { "name" = "description", "status" = "absent" }, { "name" = "documentation_status", "status" = "absent" }, { "name" = "documentation_url", "status" = "absent" }, { "name" = "first_approved_at", "status" = "absent" }, { "name" = "geographic_coverage", "status" = "absent" }, { "name" = "identifier", "status" = "absent" }, { "name" = "landing_page", "status" = "absent" }, { "name" = "last_approved_at", "status" = "absent" }, { "name" = "legislation", "status" = "absent" }, { "name" = "measurement_information", "status" = "absent" }, { "name" = "measurement_unit", "status" = "value", "value" = "Hektar" }, { "name" = "name", "status" = "value", "value" = "Obärgad areal vårraps" }, { "name" = "operational_definition", "status" = "value", "value" = "Därav ekologisk obärgad areal som är en delmängd av obärgad areal till grönfoder." }, { "name" = "population_comment", "status" = "absent" }, { "name" = "population_date", "status" = "absent" }, { "name" = "population_definition", "status" = "absent" }, { "name" = "purpose", "status" = "absent" }, { "name" = "reference_period", "status" = "unknown" }, { "name" = "representation", "status" = "absent" }, { "name" = "sensitivity", "status" = "absent" }, { "name" = "source_attribution", "status" = "absent" }, { "name" = "source_date", "status" = "absent" }, { "name" = "source_version", "status" = "absent" }, { "name" = "update_frequency", "status" = "absent" }, { "name" = "value_set_declared", "status" = "absent" }], "edition_scope" = { "kind" = "intervals", "intervals" = [{ "start" = "2016", "end" = "2016" }] }, "edition_period_scope" = { "kind" = "intervals", "intervals" = [{ "start" = "2016-01-01", "end" = "2016-12-31" }] }, "subject" = { "provider" = "scb", "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant_references" = [], "population" = { "status" = "unknown" }, "variable" = { "status" = "value", "native_id" = 44310, "name" = "Obärgad areal vårraps" }, "member" = { "status" = "value", "native_id" = 873070, "name" = "Obärgad areal vårraps" }, "native" = { "register_id" = 208, "register_variant_id" = 309, "edition_id" = 18590, "variable_id" = 44310, "member_id" = 873070 } }, "code_set_references" = [], "parent_facts" = [{ "kind" = "variant", "coordinate" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "fields" = [{ "name" = "description", "status" = "value", "value" = "Årlig undersökning baserad på insamling av uppgifter från ett urval av jordbruksföretag från Jordbruksverkets administrativa register för arealbaserade stöd." }, { "name" = "name", "status" = "value", "value" = "Skörd av spannmål, trindsäd och oljeväxter" }] }, { "kind" = "register", "coordinate" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "fields" = [{ "name" = "name", "status" = "value", "value" = "Skörd av spannmål, trindsäd och oljeväxter" }, { "name" = "purpose", "status" = "value", "value" = "Skördestatistiken används av myndigheter och näringsliv inom områdena jordbruk, ekonomi och miljö. Den ger information om utvecklingstendenser inom jordbrukssektorn, tillgodoser EU-kraven på statistik och ger underlag för politiska beslut." }] }, { "kind" = "object_type", "coordinate" = { "status" = "value", "name" = "Mark och vatten" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "edition" = { "status" = "value", "native_id" = 18590, "name" = "2016" }, "fields" = [{ "name" = "definition", "status" = "value", "value" = "Används då objektet är ett fast objekt som entydigt inte kan hänföras till en enskild fastighet eller en underliggande objekttyp." }, { "name" = "name", "status" = "value", "value" = "Mark och vatten" }] }, { "kind" = "population", "coordinate" = { "status" = "value", "name" = "Jordbruksföretag i urvalet för skörd av spannmål, trindsäd och oljeväxter" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "edition" = { "status" = "value", "native_id" = 18590, "name" = "2016" }, "fields" = [{ "name" = "name", "status" = "value", "value" = "Jordbruksföretag i urvalet för skörd av spannmål, trindsäd och oljeväxter" }, { "name" = "population_comment", "status" = "value", "value" = "Urvalsramen skapades 2016-08-02 och baserades på aktuellt registerutdrag för grödarealer från Jordbruksverkets register över sökta stöd." }, { "name" = "population_date", "status" = "value", "value" = "2016-01-01 - 2016-12-31" }, { "name" = "population_definition", "status" = "value", "value" = "Undersökningspopulationen utgörs av jordbruksföretag som har mer än 5,0 hektar åkermark enligt Jordbruksverkets administrativa register för arealbaserade stöd. Målpopulationen utgörs av jordbruksföretag med odling av spannmål, trindsäd eller oljeväxter som under undersökningsåret brukade mer än 2,0 hektar åkermark." }] }, { "kind" = "edition", "coordinate" = { "status" = "value", "native_id" = 18590, "name" = "2016" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "edition" = { "status" = "value", "native_id" = 18590, "name" = "2016" }, "fields" = [{ "name" = "description", "status" = "value", "value" = "Slutlig statistik om skörd av spannmål, trindsäd och oljeväxter 2016. Statistikens huvudsyfte är att vara grundkälla för beräkning av vegetabilieproduktionens storlek i Sverige." }, { "name" = "documentation_status", "status" = "value", "value" = "Offentlig" }, { "name" = "first_approved_at", "status" = "unknown" }, { "name" = "last_approved_at", "status" = "value", "value" = "2024-02-08" }, { "name" = "measurement_information", "status" = "value", "value" = "Statistiken bygger på uppgifter som samlas in årligen från ett urval av jordbruksföretag som sökt arealersättning för odling av spannmål, trindsäd och oljeväxter." }, { "name" = "name", "status" = "value", "value" = "2016" }] }] }] }, { "ref" = { "source" = "scb-registerinformation", "semantic_record_key" = ["register:208", "variant:309", "edition:18591", "variable:44310", "member:873587"] }, "alternatives" = [{ "fields" = [{ "name" = "access_rights", "status" = "absent" }, { "name" = "access_url", "status" = "absent" }, { "name" = "aggregation_level", "status" = "absent" }, { "name" = "availability", "status" = "value", "value" = true }, { "name" = "base_register", "status" = "absent" }, { "name" = "classification_declared", "status" = "absent" }, { "name" = "column_name", "status" = "value", "value" = "GronfoderObargadAreal_Dar_21" }, { "name" = "conditional_sensitivity", "status" = "absent" }, { "name" = "coverage", "status" = "absent" }, { "name" = "coverage_from", "status" = "absent" }, { "name" = "coverage_to", "status" = "absent" }, { "name" = "data_length", "status" = "value", "value" = "19" }, { "name" = "data_type", "status" = "value", "value" = "decimal" }, { "name" = "dataset_label", "status" = "absent" }, { "name" = "definition", "status" = "value", "value" = "Obärgad areal vårraps" }, { "name" = "description", "status" = "absent" }, { "name" = "documentation_status", "status" = "absent" }, { "name" = "documentation_url", "status" = "absent" }, { "name" = "first_approved_at", "status" = "absent" }, { "name" = "geographic_coverage", "status" = "absent" }, { "name" = "identifier", "status" = "absent" }, { "name" = "landing_page", "status" = "absent" }, { "name" = "last_approved_at", "status" = "absent" }, { "name" = "legislation", "status" = "absent" }, { "name" = "measurement_information", "status" = "absent" }, { "name" = "measurement_unit", "status" = "value", "value" = "Hektar" }, { "name" = "name", "status" = "value", "value" = "Obärgad areal vårraps" }, { "name" = "operational_definition", "status" = "value", "value" = "Därav ekologisk obärgad areal som är en delmängd av obärgad areal till grönfoder." }, { "name" = "population_comment", "status" = "absent" }, { "name" = "population_date", "status" = "absent" }, { "name" = "population_definition", "status" = "absent" }, { "name" = "purpose", "status" = "absent" }, { "name" = "reference_period", "status" = "unknown" }, { "name" = "representation", "status" = "absent" }, { "name" = "sensitivity", "status" = "absent" }, { "name" = "source_attribution", "status" = "absent" }, { "name" = "source_date", "status" = "absent" }, { "name" = "source_version", "status" = "absent" }, { "name" = "update_frequency", "status" = "absent" }, { "name" = "value_set_declared", "status" = "absent" }], "edition_scope" = { "kind" = "intervals", "intervals" = [{ "start" = "2020", "end" = "2020" }] }, "edition_period_scope" = { "kind" = "intervals", "intervals" = [{ "start" = "2020-01-01", "end" = "2020-12-31" }] }, "subject" = { "provider" = "scb", "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant_references" = [], "population" = { "status" = "unknown" }, "variable" = { "status" = "value", "native_id" = 44310, "name" = "Obärgad areal vårraps" }, "member" = { "status" = "value", "native_id" = 873587, "name" = "Obärgad areal vårraps" }, "native" = { "register_id" = 208, "register_variant_id" = 309, "edition_id" = 18591, "variable_id" = 44310, "member_id" = 873587 } }, "code_set_references" = [], "parent_facts" = [{ "kind" = "variant", "coordinate" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "fields" = [{ "name" = "description", "status" = "value", "value" = "Årlig undersökning baserad på insamling av uppgifter från ett urval av jordbruksföretag från Jordbruksverkets administrativa register för arealbaserade stöd." }, { "name" = "name", "status" = "value", "value" = "Skörd av spannmål, trindsäd och oljeväxter" }] }, { "kind" = "register", "coordinate" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "fields" = [{ "name" = "name", "status" = "value", "value" = "Skörd av spannmål, trindsäd och oljeväxter" }, { "name" = "purpose", "status" = "value", "value" = "Skördestatistiken används av myndigheter och näringsliv inom områdena jordbruk, ekonomi och miljö. Den ger information om utvecklingstendenser inom jordbrukssektorn, tillgodoser EU-kraven på statistik och ger underlag för politiska beslut." }] }, { "kind" = "edition", "coordinate" = { "status" = "value", "native_id" = 18591, "name" = "2020" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "edition" = { "status" = "value", "native_id" = 18591, "name" = "2020" }, "fields" = [{ "name" = "description", "status" = "value", "value" = "Slutlig statistik om skörd av spannmål, trindsäd och oljeväxter 2020. Statistikens huvudsyfte är att vara grundkälla för beräkning av vegetabilieproduktionens storlek i Sverige." }, { "name" = "documentation_status", "status" = "value", "value" = "Offentlig" }, { "name" = "first_approved_at", "status" = "unknown" }, { "name" = "last_approved_at", "status" = "value", "value" = "2024-01-30" }, { "name" = "measurement_information", "status" = "value", "value" = "Statistiken bygger på uppgifter som samlas in årligen från ett urval av jordbruksföretag som sökt arealersättning för odling av spannmål, trindsäd och oljeväxter." }, { "name" = "name", "status" = "value", "value" = "2020" }] }, { "kind" = "population", "coordinate" = { "status" = "value", "name" = "Jordbruksföretag i urvalet för skörd av spannmål, trindsäd och oljeväxter" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "edition" = { "status" = "value", "native_id" = 18591, "name" = "2020" }, "fields" = [{ "name" = "name", "status" = "value", "value" = "Jordbruksföretag i urvalet för skörd av spannmål, trindsäd och oljeväxter" }, { "name" = "population_comment", "status" = "value", "value" = "Urvalsramen skapades 2020-07-29 och baserades på aktuellt registerutdrag för grödarealer från Jordbruksverkets register över sökta stöd." }, { "name" = "population_date", "status" = "value", "value" = "2020-01-01 - 2020-12-31" }, { "name" = "population_definition", "status" = "value", "value" = "Undersökningspopulationen utgörs av jordbruksföretag som har mer än 5,0 hektar åkermark enligt Jordbruksverkets administrativa register för arealbaserade stöd. Målpopulationen utgörs av jordbruksföretag med odling av spannmål, trindsäd eller oljeväxter som under undersökningsåret brukade mer än 2,0 hektar åkermark." }] }, { "kind" = "object_type", "coordinate" = { "status" = "value", "name" = "Mark och vatten" }, "register" = { "status" = "value", "native_id" = 208, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "variant" = { "status" = "value", "native_id" = 309, "name" = "Skörd av spannmål, trindsäd och oljeväxter" }, "edition" = { "status" = "value", "native_id" = 18591, "name" = "2020" }, "fields" = [{ "name" = "definition", "status" = "value", "value" = "Används då objektet är ett fast objekt som entydigt inte kan hänföras till en enskild fastighet eller en underliggande objekttyp." }, { "name" = "name", "status" = "value", "value" = "Mark och vatten" }] }] }] }]
+expected_evidence_sha256 = "451e2fe25c1641686b683d5ec5174a3094c2f4a228290ceec59ff6d4aa40000f"
+
+[[acknowledge]]
+code = "unassigned_original_columns"
+subject = "208.44310"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:208\",\"variant:309\",\"edition:18588\",\"variable:44310\",\"member:872036\"]}"]
+fields = ["identity", "column_name"]
+reason = "These exact literal fields have contrary simultaneous native meanings. Retain all original alternatives and ordered own coding while withholding only their unsupported semantic mappings. Supported other histories remain admitted."
+evidence = "Complete native families, full physical-peer closure and recursive prerequisites; exact original and ordered own-coding plus diagnostic fingerprints. Batch54-five-collision-source-proof.json."
+expected_evidence_sha256 = "5a72e3dff14b247babf70fcc2d363ace76703c4b181b762bbfb37428ac930960"
+expected_diagnostic_sha256 = "9b9e4a8a03a331ffc54c9cb712bf7177e7660b93c95fb7297c7d9ad8a1fab9b5"
+
+[[acknowledge]]
+code = "unassigned_original_columns"
+subject = "208.44313"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:208\",\"variant:309\",\"edition:18588\",\"variable:44313\",\"member:872039\"]}"]
+fields = ["identity", "column_name"]
+reason = "These exact literal fields have contrary simultaneous native meanings. Retain all original alternatives and ordered own coding while withholding only their unsupported semantic mappings. Supported other histories remain admitted."
+evidence = "Complete native families, full physical-peer closure and recursive prerequisites; exact original and ordered own-coding plus diagnostic fingerprints. Batch54-five-collision-source-proof.json."
+expected_evidence_sha256 = "73337c3bcafc337b4b938d593076ecb3b2363d16ba6e1ce897a718c3e5a3ff4a"
+expected_diagnostic_sha256 = "1dc3d44728e503bd9430ce816c3aba82e4a8d9d528759e2c32e6379369177666"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 208, 'variable', 'native-int', 44310)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:208\",\"variant:309\",\"edition:18588\",\"variable:44310\",\"member:872036\"]}"]
+fields = ["identity"]
+reason = "These exact literal fields have contrary simultaneous native meanings. Retain all original alternatives and ordered own coding while withholding only their unsupported semantic mappings. Supported other histories remain admitted."
+evidence = "Complete native families, full physical-peer closure and recursive prerequisites; exact original and ordered own-coding plus diagnostic fingerprints. Batch54-five-collision-source-proof.json."
+expected_evidence_sha256 = "5a72e3dff14b247babf70fcc2d363ace76703c4b181b762bbfb37428ac930960"
+expected_diagnostic_sha256 = "659e89ae1447db9051915dfe04db8d2526a69d44d0f9010011886f074c71689d"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 208, 'variable', 'native-int', 44313)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:208\",\"variant:309\",\"edition:18588\",\"variable:44313\",\"member:872039\"]}"]
+fields = ["identity"]
+reason = "These exact literal fields have contrary simultaneous native meanings. Retain all original alternatives and ordered own coding while withholding only their unsupported semantic mappings. Supported other histories remain admitted."
+evidence = "Complete native families, full physical-peer closure and recursive prerequisites; exact original and ordered own-coding plus diagnostic fingerprints. Batch54-five-collision-source-proof.json."
+expected_evidence_sha256 = "73337c3bcafc337b4b938d593076ecb3b2363d16ba6e1ce897a718c3e5a3ff4a"
+expected_diagnostic_sha256 = "a9cfd985f0f8351ff51f7c8ce5ba5ce2a1d51694eb9fd4670ff51e9a0c258b92"

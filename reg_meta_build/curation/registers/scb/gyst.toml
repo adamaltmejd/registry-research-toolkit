@@ -473,3 +473,30 @@ reason = "These exact source windows have no own bound stored-code domain. Prese
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
 expected_evidence_sha256 = "867ead0bafb7606cff6690621c37e1870798996eb87625631d657a30f6459dda"
 expected_diagnostic_sha256 = "76d029dcac1a5a13e88a83f0a8793b31aac6679b27b3392c3d97191efc01c602"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "108.14645"
+columns = { PGMgrp = "108.14645.pgmgrp", PgrGrp = "108.14645.pgrgrp", PrgGrp = "108.14645.prggrp", pgm = "108.14645.pgm", pgm2 = "108.14645.pgm2", typpgm = "108.14645.typpgm" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "cc1e94496f4cfa9d838f03c718abf312d04152db16e16a1eace5b4622b795fc9"
+
+[[variable]]
+native_id = "108.14645.pgmgrp"
+slug = "pgmgrp"
+
+[[variable]]
+native_id = "108.14645.pgrgrp"
+slug = "pgrgrp"
+
+[[variable]]
+native_id = "108.14645.prggrp"
+slug = "prggrp"
+
+[[variable]]
+native_id = "108.14645.pgm"
+slug = "pgm"
+
+[[variable]]
+native_id = "108.14645.pgm2"
+slug = "pgm2"

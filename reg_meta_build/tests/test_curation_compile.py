@@ -8248,9 +8248,11 @@ def test_field_correction_accepts_guarded_source_alternatives_without_losing_ori
 
 
 @pytest.mark.parametrize("native_base", [False, True])
+@pytest.mark.parametrize("shared_ref", [False, True])
 def test_parallel_representation_selects_checked_owner_without_literal_changes(
     tmp_path,
     native_base,
+    shared_ref,
 ):
     from reg_meta_build.curation_compile import compile_parallel_representations
     from reg_meta_build.source_curation import (
@@ -8281,6 +8283,8 @@ def test_parallel_representation_selects_checked_owner_without_literal_changes(
         },
         _revision("fixture"),
     ).record
+    if shared_ref:
+        sibling = sibling.model_copy(update={"locators": selected[0].locators})
     records = (*selected, sibling)
     owner = (
         native_variable_key(selected[0])
@@ -8293,7 +8297,9 @@ def test_parallel_representation_selects_checked_owner_without_literal_changes(
     )
     guards = tuple(
         guard.model_copy(
-            update={"expected_members": tuple(record_ref(r) for r in records)}
+            update={
+                "expected_members": tuple(dict.fromkeys(record_ref(r) for r in records))
+            }
         )
         for guard in naming[-1].target.peer_guards
     )
@@ -8321,6 +8327,9 @@ def test_parallel_representation_selects_checked_owner_without_literal_changes(
                 CheckedIdentityChange(
                     ref=record_ref(r),
                     variable_key=owner if r in selected else (*owner, "sibling"),
+                    when=capture_expectations((r,), fields=("column_name",))[0]
+                    .alternatives[0]
+                    .fields,
                 )
                 for r in records
             ),
@@ -8329,14 +8338,33 @@ def test_parallel_representation_selects_checked_owner_without_literal_changes(
         ),
     )
     (register,) = load_register_files(path.parents[2])
-    assert compile_parallel_representations(register, records, naming)[0] == ()
+    if not shared_ref:
+        assert compile_parallel_representations(register, records, naming)[0] == ()
     (case,), issues = compile_parallel_representations(
         register, records, naming, ownership_cases=(correction,)
     )
     assert issues == ()
+    if shared_ref:
+        assert (
+            len(
+                next(
+                    target
+                    for target in case.targets
+                    if target.ref == record_ref(sibling)
+                ).alternatives
+            )
+            == 2
+        )
     assert {target.ref for target in case.targets} == {record_ref(r) for r in selected}
     assert record_ref(sibling) in {target.ref for target in case.support}
     assert evaluate_cases((case,), records)[0].status == "applicable"
+    assert evaluate_cases((case,), selected)[0].status == "stale"
+    assert (
+        compile_parallel_representations(
+            register, selected, naming, ownership_cases=(correction,)
+        )[0]
+        == ()
+    )
     changed = (
         *selected,
         sibling.model_copy(
@@ -9071,3 +9099,111 @@ def test_partial_partition_finding_excludes_exact_scoped_owned_originals():
     assert [o.variable_key for o in applied.occurrences[1:]] == [native, native]
     assert tuple(o.source_records[0] for o in applied.occurrences) == records
     assert evaluate_cases((converted.case,), records[:-1])[0].status == "stale"
+
+
+@pytest.mark.parametrize("stored_role", ["label", "free_text"])
+def test_guarded_uncoded_text_role_preserves_attached_book_and_refuses_drift(
+    tmp_path, stored_role
+):
+    from reg_meta_build.curation_tree import CodingUncodedEntry
+    from reg_meta_build.source_coding import coding_source_sha256
+    from reg_meta_build.source_curation import acknowledgement_evidence_sha256
+
+    original = _errata_record(column="ANSWER", year="2020", member=20)
+    originals = (original,)
+    tree, _, scope = _errata_fixture(tmp_path, originals, "")
+    scope = _scope_with_coding_names(scope, original)
+    occurrence = source_occurrence(original)
+    column = occurrence.column_key
+    assert column is not None
+    claims = (
+        CodeListClaim(
+            "attached-book",
+            original.edition_scope,
+            (
+                CodeMembershipClaim(
+                    "1", "Description", TemporalScope(kind="year_independent")
+                ),
+            ),
+            version_label="Reference classification",
+        ),
+    )
+    register = next(r for r in tree.registers if r.register_info.slug == "sample")
+    entry = CodingUncodedEntry(
+        variable="1.5",
+        variant="people",
+        column="ANSWER",
+        periods=[["2020-01-01", "2020-12-31"]],
+        stored_role=stored_role,
+        expected_evidence_sha256=acknowledgement_evidence_sha256(
+            originals, tuple(coding_source_sha256(q) for q in claims)
+        ),
+        reason="The reviewed source documents a stored text component.",
+        source="Exact original source and reference-book review",
+        data_warning="The attached numeric book is reference evidence, not the text response domain.",
+    )
+    register = register.model_copy(
+        update={"coding": register.coding.model_copy(update={"uncoded": [entry]})}
+    )
+
+    def compile_rows(rows, source_claims):
+        return compile_coding_register(
+            register,
+            scope,
+            originals=rows,
+            columns={column: rows},
+            column_scopes={column: frozenset((original.edition_scope,))},
+            coding={column: source_claims},
+        )
+
+    cases, issues = compile_rows(originals, claims)
+    assert not issues and len(cases) == 1
+    applied = apply_coding_choices(originals, cases, coding={column: claims})
+    assert not applied.diagnostics
+    assert applied.coding[column].claims == claims
+    assert all(segment.code_set is None for segment in applied.coding[column].segments)
+    for rows, source_claims in (
+        (
+            (
+                original.model_copy(
+                    update={
+                        "fields": original.fields.model_copy(
+                            update={
+                                "description": value_field("Changed source meaning")
+                            }
+                        )
+                    }
+                ),
+            ),
+            claims,
+        ),
+        ((), claims),
+        (
+            originals,
+            (
+                replace(
+                    claims[0],
+                    members=(
+                        CodeMembershipClaim(
+                            "1", "Changed label", TemporalScope(kind="year_independent")
+                        ),
+                    ),
+                ),
+            ),
+        ),
+    ):
+        assert compile_rows(rows, source_claims)[0] == ()
+        assert apply_coding_choices(
+            rows, cases, coding={column: source_claims}
+        ).diagnostics
+    with pytest.raises(ValueError, match="complete source coding guards"):
+        CodingUncodedEntry.model_validate(
+            {**entry.model_dump(), "expected_evidence_sha256": None}
+        )
+    ordinary = CodingUncodedEntry.model_validate(
+        {**entry.model_dump(), "stored_role": None, "expected_evidence_sha256": None}
+    )
+    register = register.model_copy(
+        update={"coding": register.coding.model_copy(update={"uncoded": [ordinary]})}
+    )
+    assert compile_rows(originals, claims)[0] == ()

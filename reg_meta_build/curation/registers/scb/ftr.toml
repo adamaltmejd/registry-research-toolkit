@@ -2519,3 +2519,232 @@ fields = ["identity"]
 reason = "Exactly the2008/2009ArTillbygg physical coordinates simultaneously claim native14660 extension-year and native637 om-/tillbyggnad-year meanings. Both originals lack an operation selecting the interpretation. Preserve both complete source families, every raw period/type/unit/coding association, the artillbygg public quantity and its24 other states. These exact collided coordinates remain unavailable for both native owners; do not choose a winning question or assert semantic equivalence. Approved exact source-specific withdrawal of artillbygg2008-01-01/2009-01-01 states."
 evidence = "Complete78-original accepted peer family and full-register physical collision audit. Exact full-original and bound-coding multiplicity guards. Batch51-FTR14660-complete-peer-source-review.json; Batch51-Fordons-FTR-physical-coordinate-collisions.json; Batch51-Fordons-FTR41-source-proof.json."
 expected_evidence_sha256 = "3ce6ff2ace78ed9c18f3aba8f4ce83fd453bb74dd9b27654d2b6e264d1d115d8"
+
+[[coding.choice]]
+variable = "7.49"
+variant = "7.195"
+column = "Lan"
+periods = [["2020-01-01", "2020-01-01"]]
+reason = "All21county codes agree. Active own labels differ only by county suffix län and grammatical genitive s (for example Stockholm versus Stockholms län). Select the exact source-bound2020 list for the2020 point; retain all labels, original list dates and ordered associations. No code union, missing token or historical classification is invented."
+source = "Complete actual own active-list/native/physical-peer review, Batch53-SCB-finish-source-proof.json."
+data_warning = "Own source lists use equivalent county labels with and without län; the effective2020 domain follows the exact supplied2020 list. Every source alternative remains evidence."
+expected_evidence_sha256 = "769d10b545f676ddd3972d8ed536af584308e2264e58fabbe03c7d8f79d2a08f"
+keep = "2020-01-01/ Län, kommuner och församlingar"
+keep_members = [["01", "Stockholm"], ["03", "Uppsala"], ["04", "Södermanland"], ["05", "Östergötland"], ["06", "Jönköping"], ["07", "Kronoberg"], ["08", "Kalmar"], ["09", "Gotland"], ["10", "Blekinge"], ["12", "Skåne"], ["13", "Halland"], ["14", "Västra Götaland"], ["17", "Värmland"], ["18", "Örebro"], ["19", "Västmanland"], ["20", "Dalarna"], ["21", "Gävleborg"], ["22", "Västernorrland"], ["23", "Jämtland"], ["24", "Västerbotten"], ["25", "Norrbotten"]]
+over = ["2021-01-01/ Län, kommuner och församlingar"]
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ftr/kodjustbost"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:7\",\"variant:195\",\"edition:11099\",\"variable:3417\",\"member:451612\"]}"]
+fields = ["coding"]
+valid_from = "2013-01-01"
+valid_to = "2013-01-01"
+reason = "The exact supplied delivery has no own supported stored-code domain; other years and modern classifications do not prove this window. Keep the value set unavailable and preserve all original facts."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "7c1d6efa97481e4e36df740ef0460692d89be225bb4ec5eca767aa8b9a0168f7"
+expected_diagnostic_sha256 = "69bd63d70fab674975527c02de8b00a8ae9fdc149f7dc4a9a6b049200ae5cc2c"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ftr/kodjustbost"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:7\",\"variant:195\",\"edition:13500\",\"variable:3417\",\"member:607298\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-01-01"
+reason = "The exact supplied delivery has no own supported stored-code domain; other years and modern classifications do not prove this window. Keep the value set unavailable and preserve all original facts."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "234176ed149b84f01d6a36e38fa9a18a1d65dbed4c3119209c3e2e7861f6c4f2"
+expected_diagnostic_sha256 = "d62cfe1dc41196db6cd5ef03e529674700daab42c5e3ac17175129dbcc773dd4"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ftr/kodjustbost"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:7\",\"variant:195\",\"edition:15520\",\"variable:3417\",\"member:736251\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-01-01"
+reason = "The exact supplied delivery has no own supported stored-code domain; other years and modern classifications do not prove this window. Keep the value set unavailable and preserve all original facts."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "882c480dca1a416431c3fd2efd27b2ed02551bad7a56300d6236b71c1a802113"
+expected_diagnostic_sha256 = "d8d34c7ef5ca0dd67f06bf571d6eaa90ab05fa7af976b6e9aad2b0debddf24f9"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ftr/kodjustbost"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:7\",\"variant:195\",\"edition:17893\",\"variable:3417\",\"member:828758\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-01-01"
+reason = "The exact supplied delivery has no own supported stored-code domain; other years and modern classifications do not prove this window. Keep the value set unavailable and preserve all original facts."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "f780345a24361c06d6edaffb49f6220fa17d808089446ec2f211c7803e8f96c8"
+expected_diagnostic_sha256 = "c57c4d34d06c0cb3dba3157cf77dad6fb4a4fc1591e665691579c6d696a961eb"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ftr/kodjustbost"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:7\",\"variant:195\",\"edition:18562\",\"variable:3417\",\"member:869776\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-01-01"
+reason = "The exact supplied delivery has no own supported stored-code domain; other years and modern classifications do not prove this window. Keep the value set unavailable and preserve all original facts."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "f0df420110bd20f108cafd1281745446fadd78461221c3937cf67d49254941d7"
+expected_diagnostic_sha256 = "c36fe801dc2798ae57dffaeef1de2507aedc93618a4988f939c422ed91992bcc"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ftr/kodjustbost"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:7\",\"variant:195\",\"edition:19224\",\"variable:3417\",\"member:922476\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-01-01"
+reason = "The exact supplied delivery has no own supported stored-code domain; other years and modern classifications do not prove this window. Keep the value set unavailable and preserve all original facts."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "9f4d9232f6f432cf9ea0037605d87ab7f660af7b47c4f017d6efacf85d30976d"
+expected_diagnostic_sha256 = "dba18d24e1a43d0028637e740a68f3a92d67f3d283f47e524a2163ff8c241dec"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ftr/kodjustlokal"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:7\",\"variant:195\",\"edition:11099\",\"variable:3418\",\"member:451613\"]}"]
+fields = ["coding"]
+valid_from = "2013-01-01"
+valid_to = "2013-01-01"
+reason = "The exact supplied delivery has no own supported stored-code domain; other years and modern classifications do not prove this window. Keep the value set unavailable and preserve all original facts."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "6323faee538999212752f61cb19dc5deaa174765b7c0861e6c49b38f85940812"
+expected_diagnostic_sha256 = "7599cc96aeb5220bc4e41b09bf5864bfd11b9a97fcc91b31a7197aaa7edd3775"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ftr/kodjustlokal"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:7\",\"variant:195\",\"edition:13500\",\"variable:3418\",\"member:607299\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-01-01"
+reason = "The exact supplied delivery has no own supported stored-code domain; other years and modern classifications do not prove this window. Keep the value set unavailable and preserve all original facts."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "43897bdd89d7805eb0e20401ee91535d8ff2d745305f6525491e7ab11c230f45"
+expected_diagnostic_sha256 = "8a7fdf4af2762afa12654344b0cff3a6f0ad5c0ad517486109552abd36d044fc"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ftr/kodjustlokal"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:7\",\"variant:195\",\"edition:15520\",\"variable:3418\",\"member:736250\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-01-01"
+reason = "The exact supplied delivery has no own supported stored-code domain; other years and modern classifications do not prove this window. Keep the value set unavailable and preserve all original facts."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "2e288b78db519c5199c87dace414fa8ecdfd2b7d82f9361f81951804d5ed6452"
+expected_diagnostic_sha256 = "aa76e9d4d41167badf05f4f124d0dbe3f1e6be10971214f7463807894531f078"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ftr/kodjustlokal"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:7\",\"variant:195\",\"edition:17893\",\"variable:3418\",\"member:828759\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-01-01"
+reason = "The exact supplied delivery has no own supported stored-code domain; other years and modern classifications do not prove this window. Keep the value set unavailable and preserve all original facts."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "b6f87bda26d34639b2ecb8fc6b1f93b9649036aea728ce4bf86fa453edac8c68"
+expected_diagnostic_sha256 = "ccfc7cb3405de861b9c9a2b406bdcc9021b0d56e6772ec347760dc3d5da51cda"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ftr/kodjustlokal"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:7\",\"variant:195\",\"edition:18562\",\"variable:3418\",\"member:869775\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-01-01"
+reason = "The exact supplied delivery has no own supported stored-code domain; other years and modern classifications do not prove this window. Keep the value set unavailable and preserve all original facts."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "fdde159bcbf2ab11f7f95f5cee11ad27aa0b652d912423134514335b91454401"
+expected_diagnostic_sha256 = "0936ad8cd23396face8aee320c68e3af1932fb83b15f4789845e2768a130005b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ftr/kodjustlokal"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:7\",\"variant:195\",\"edition:19224\",\"variable:3418\",\"member:922477\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-01-01"
+reason = "The exact supplied delivery has no own supported stored-code domain; other years and modern classifications do not prove this window. Keep the value set unavailable and preserve all original facts."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "54fec945442a02df0f6fa7a965b13c1804610a512565ab348f4bc3299551c57b"
+expected_diagnostic_sha256 = "0ebf19489ebf364046b2c535557ac762159cbc3f265e4d8f9a35d6d61306787f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ftr/kodjust"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:7\",\"variant:195\",\"edition:11099\",\"variable:3671\",\"member:451587\"]}"]
+fields = ["coding"]
+valid_from = "2013-01-01"
+valid_to = "2013-01-01"
+reason = "The exact supplied delivery has no own supported stored-code domain; other years and modern classifications do not prove this window. Keep the value set unavailable and preserve all original facts."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "ea950b85222789f294840952b520bdd7553707f9208027185abba365314e7901"
+expected_diagnostic_sha256 = "12a1e277a8aecf66f1b109ad6e3bbf3bb8e7578818a7734a705613da1707b100"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ftr/kodjust"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:7\",\"variant:195\",\"edition:13500\",\"variable:3671\",\"member:607275\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-01-01"
+reason = "The exact supplied delivery has no own supported stored-code domain; other years and modern classifications do not prove this window. Keep the value set unavailable and preserve all original facts."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "0432640e3971d6b25a6a02c4f8164359f6118b3be82b4ac408045eb74eef1cb1"
+expected_diagnostic_sha256 = "24f87d9ce1c01d71db8a6fd343e54c9b0e9d7a03d9eaf44715a58dd45eab7d87"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ftr/kodjust"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:7\",\"variant:195\",\"edition:15520\",\"variable:3671\",\"member:736274\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-01-01"
+reason = "The exact supplied delivery has no own supported stored-code domain; other years and modern classifications do not prove this window. Keep the value set unavailable and preserve all original facts."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "25dad2aee6e31784f936aa096ff0ea7588384438bf4e57750492d7a6becf34ca"
+expected_diagnostic_sha256 = "5b80b26907fd1736cd2c30ed11160c57b49d8db3efb95d404737dd1ab20cb02a"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ftr/kodjust"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:7\",\"variant:195\",\"edition:17893\",\"variable:3671\",\"member:828735\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-01-01"
+reason = "The exact supplied delivery has no own supported stored-code domain; other years and modern classifications do not prove this window. Keep the value set unavailable and preserve all original facts."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "5814ce1040bd36f94815c20d94630df74f32f4cd4cf7841a9f9c6e32a1862bd6"
+expected_diagnostic_sha256 = "0f6eca1402a6a7d400ae848640ed2535a7aea70259c4bc03bb24f54ec40ffdc8"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ftr/kodjust"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:7\",\"variant:195\",\"edition:18562\",\"variable:3671\",\"member:869799\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-01-01"
+reason = "The exact supplied delivery has no own supported stored-code domain; other years and modern classifications do not prove this window. Keep the value set unavailable and preserve all original facts."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "e5ee58fec4e797078c18c31deb718ae6ef083d9fce36ab6a2c2262b8b120206f"
+expected_diagnostic_sha256 = "0d28d51114bd64e4a8a1e45dbe970b5391652ea8b48532f5418f4f8e2b081af9"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ftr/kodjust"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:7\",\"variant:195\",\"edition:19224\",\"variable:3671\",\"member:922453\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-01-01"
+reason = "The exact supplied delivery has no own supported stored-code domain; other years and modern classifications do not prove this window. Keep the value set unavailable and preserve all original facts."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "2610e2c8b1d2a71cb95bdd817637a0ad04390e9fbbba9177a26838fe9eae167a"
+expected_diagnostic_sha256 = "dd0242785335170245c6f57a76ced905b6d3e929c1bb7dbe040bc029d54449e4"

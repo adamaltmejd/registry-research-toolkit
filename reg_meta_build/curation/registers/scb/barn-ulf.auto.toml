@@ -135,10 +135,6 @@ native_id = "405.19197"
 slug = "consert"  # source: kolumnnamn
 
 [[variable]]
-native_id = "405.19198"
-slug = "cash4a"  # source: kolumnnamn
-
-[[variable]]
 native_id = "405.19201"
 slug = "girl-boy"  # source: kolumnnamn
 

@@ -141,3 +141,150 @@ reason = "These exact source windows have no own bound stored-code domain. Prese
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
 expected_evidence_sha256 = "118cd24244840948b509c5d37f904360e0ccabf030320ea267ae32d6cf57df8a"
 expected_diagnostic_sha256 = "dbc9e2f97c0be00affbc3af3d1df82d0194167aa34e9fcfd5ced70bfa8172733"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "269.462"
+columns = { BGrStratum = "269.462.bgrstratum", SGrStratum = "269.462.sgrstratum" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "214df35cbc6cccd572918ade699d790561f267119919dc64fc4e76961a3384ac"
+
+[[variable]]
+native_id = "269.462.bgrstratum"
+slug = "bgrstratum"
+
+[[variable]]
+native_id = "269.462.sgrstratum"
+slug = "sgrstratum"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/bonus-oregelbundna/sgrstratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:269\",\"variant:637\",\"edition:2976\",\"variable:462\",\"member:174569\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "fc720738721a5c3d7e542f853e545aaa4d2acccc7522d2d347b44c83a77d1194"
+expected_diagnostic_sha256 = "a42fd448c1d4d4c1332802450f316562d1dcd3788ec8bf7cd798f49d5bc25f59"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/bonus-oregelbundna/sgrstratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:269\",\"variant:637\",\"edition:1379\",\"variable:462\",\"member:106879\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "ca2ed2d090049e65493b5f43abfabd689a4741e776e5239f534353f667564aed"
+expected_diagnostic_sha256 = "1afbf790a4ba8776db1aca6b4253f75bf13bd030ce1506d8234fd94f4bc1b462"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/bonus-oregelbundna/sgrstratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:269\",\"variant:637\",\"edition:2267\",\"variable:462\",\"member:141606\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "f1d3866aca8cabfba2afb84e941093e5166b593922265dd4f2b4f64f6a3f2bb8"
+expected_diagnostic_sha256 = "c13b852e00364c2fce5a13460ae7fe349a55dfacbb728d7c842f85d91c4d0abc"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/bonus-oregelbundna/sgrstratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:269\",\"variant:637\",\"edition:3060\",\"variable:462\",\"member:180401\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "e844d00145bd9367f8a4b84fd8bc822669374ee1ae72649dc4ce9f74fad23493"
+expected_diagnostic_sha256 = "0caebfe6e80c08ed2507ca78315cab2cad51cfc3b14c801ae59de945332652b8"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/bonus-oregelbundna/sgrstratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:269\",\"variant:637\",\"edition:3778\",\"variable:462\",\"member:231675\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "2d1425fb29c1e6ea6e5b58a2c90dfd472f3441f7442abb3a4100eabc747d7c53"
+expected_diagnostic_sha256 = "75c23d55b247df9629af8d58ae4824164df7bce090d404decdae7340a001b5c9"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/bonus-oregelbundna/sgrstratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:269\",\"variant:637\",\"edition:4286\",\"variable:462\",\"member:272245\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "c90d222745e85b9b22834b385e8d92febf705f32e6d99cf06caa3d18a3492cd2"
+expected_diagnostic_sha256 = "5c3b38a9c0a63c11f7bb79d914557bec6784dd7ddc404ee4e05d7ecf1d5de5ed"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/bonus-oregelbundna/sgrstratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:269\",\"variant:637\",\"edition:4971\",\"variable:462\",\"member:305384\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "1c96631f3dbc7ad5bbd022aca1480a0f71276db5fe9854893d3255ca04bb6103"
+expected_diagnostic_sha256 = "ad6c39de4f55e006057f92a4c2b40fefd8e408a08410af47f8c0fe2621e5b5f9"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/bonus-oregelbundna/sgrstratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:269\",\"variant:637\",\"edition:5514\",\"variable:462\",\"member:340538\"]}"]
+fields = ["coding"]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "ae7bfedb72aa4fa65de4dc9db91e6da48e29e82e9c7bb4311408dfd4c4a02a98"
+expected_diagnostic_sha256 = "63ea06582279298478d0a433195ba4f934822eb4db07290ad25c8f7efc7df79d"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/bonus-oregelbundna/sgrstratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:269\",\"variant:637\",\"edition:6153\",\"variable:462\",\"member:384042\"]}"]
+fields = ["coding"]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "08bb0e23dbf043f8898d8a0245e680f376a006e52fa0b1b04433f462c735097e"
+expected_diagnostic_sha256 = "fbc47e7b1e23d7c71d1e64bdb2232b3bc9666eedcfc0c770cc6c5212ecf71d2a"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/bonus-oregelbundna/sgrstratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:269\",\"variant:637\",\"edition:8756\",\"variable:462\",\"member:435509\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "095fb35fab0065128be6abc91141e6db6ab5e50694f28d53bf40de8acac685b6"
+expected_diagnostic_sha256 = "346eaa2417e6104c92db0cd809ae82657c7dd33ecc670a6a47e1991a4de2fe77"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/bonus-oregelbundna/sgrstratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:269\",\"variant:637\",\"edition:11465\",\"variable:462\",\"member:465847\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "48217e62cb9cab566df211f9eb1dd7ed372a173703cba52f28e98d76a8748d34"
+expected_diagnostic_sha256 = "a8652bb9b747dc6f8178e89fda71b734274beb0ff504afe0990064e95aa4be5d"

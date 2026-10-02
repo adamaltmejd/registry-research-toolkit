@@ -176,3 +176,234 @@ native_id = "408.3310.bgr-priv"
 slug = "branschgrupp-privat"
 
 # register 4171412747617845054
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "408.47454"
+columns = { IndMan = "408.47454.indman", IndMan0 = "408.47454.indman0", IndMan1 = "408.47454.indman1", IndMan2 = "408.47454.indman2", IndMan202001 = "408.47454.indman202001", IndMan202002 = "408.47454.indman202002", IndMan202003 = "408.47454.indman202003", IndMan202004 = "408.47454.indman202004", IndMan202005 = "408.47454.indman202005", IndMan202006 = "408.47454.indman202006", IndMan202007 = "408.47454.indman202007", IndMan202008 = "408.47454.indman202008", IndMan202009 = "408.47454.indman202009", IndMan202010 = "408.47454.indman202010", IndMan202011 = "408.47454.indman202011", IndMan202012 = "408.47454.indman202012", IndMan202101 = "408.47454.indman202101", IndMan202102 = "408.47454.indman202102", IndMan202103 = "408.47454.indman202103", IndMan202104 = "408.47454.indman202104", IndMan202105 = "408.47454.indman202105", IndMan202106 = "408.47454.indman202106", IndMan202107 = "408.47454.indman202107", IndMan202108 = "408.47454.indman202108", IndMan202109 = "408.47454.indman202109", IndMan202110 = "408.47454.indman202110", IndMan202111 = "408.47454.indman202111", IndMan202112 = "408.47454.indman202112", IndMan202201 = "408.47454.indman202201", IndMan202202 = "408.47454.indman202202", IndMan202203 = "408.47454.indman202203", IndMan202204 = "408.47454.indman202204", IndMan202205 = "408.47454.indman202205", IndMan202206 = "408.47454.indman202206", IndMan202207 = "408.47454.indman202207", IndMan202208 = "408.47454.indman202208", IndMan202209 = "408.47454.indman202209", IndMan202210 = "408.47454.indman202210", IndMan202211 = "408.47454.indman202211", IndMan202212 = "408.47454.indman202212", IndMan202301 = "408.47454.indman202301", IndMan202302 = "408.47454.indman202302", IndMan202303 = "408.47454.indman202303", IndMan202304 = "408.47454.indman202304", IndMan202305 = "408.47454.indman202305", IndMan202306 = "408.47454.indman202306", IndMan202307 = "408.47454.indman202307", IndMan202308 = "408.47454.indman202308", IndMan202309 = "408.47454.indman202309", IndMan202310 = "408.47454.indman202310", IndMan202311 = "408.47454.indman202311", IndMan202312 = "408.47454.indman202312", IndMan3 = "408.47454.indman3", IndMan4 = "408.47454.indman4", IndMan5 = "408.47454.indman5", IndMan6 = "408.47454.indman6", anstallningar = "408.47454.anstallningar" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "25d76c37bce7ee16d56258929860494d71fb40ffe4193f6c0a25fa3b5deec5b9"
+
+[[variable]]
+native_id = "408.47454.indman0"
+slug = "indman"
+
+[[variable]]
+native_id = "408.47454.indman1"
+slug = "indman1"
+
+[[variable]]
+native_id = "408.47454.indman2"
+slug = "indman2"
+
+[[variable]]
+native_id = "408.47454.indman202001"
+slug = "indman202001"
+
+[[variable]]
+native_id = "408.47454.indman202002"
+slug = "indman202002"
+
+[[variable]]
+native_id = "408.47454.indman202003"
+slug = "indman202003"
+
+[[variable]]
+native_id = "408.47454.indman202004"
+slug = "indman202004"
+
+[[variable]]
+native_id = "408.47454.indman202005"
+slug = "indman202005"
+
+[[variable]]
+native_id = "408.47454.indman202006"
+slug = "indman202006"
+
+[[variable]]
+native_id = "408.47454.indman202007"
+slug = "indman202007"
+
+[[variable]]
+native_id = "408.47454.indman202008"
+slug = "indman202008"
+
+[[variable]]
+native_id = "408.47454.indman202009"
+slug = "indman202009"
+
+[[variable]]
+native_id = "408.47454.indman202010"
+slug = "indman202010"
+
+[[variable]]
+native_id = "408.47454.indman202011"
+slug = "indman202011"
+
+[[variable]]
+native_id = "408.47454.indman202012"
+slug = "indman202012"
+
+[[variable]]
+native_id = "408.47454.indman202101"
+slug = "indman202101"
+
+[[variable]]
+native_id = "408.47454.indman202102"
+slug = "indman202102"
+
+[[variable]]
+native_id = "408.47454.indman202103"
+slug = "indman202103"
+
+[[variable]]
+native_id = "408.47454.indman202104"
+slug = "indman202104"
+
+[[variable]]
+native_id = "408.47454.indman202105"
+slug = "indman202105"
+
+[[variable]]
+native_id = "408.47454.indman202106"
+slug = "indman202106"
+
+[[variable]]
+native_id = "408.47454.indman202107"
+slug = "indman202107"
+
+[[variable]]
+native_id = "408.47454.indman202108"
+slug = "indman202108"
+
+[[variable]]
+native_id = "408.47454.indman202109"
+slug = "indman202109"
+
+[[variable]]
+native_id = "408.47454.indman202110"
+slug = "indman202110"
+
+[[variable]]
+native_id = "408.47454.indman202111"
+slug = "indman202111"
+
+[[variable]]
+native_id = "408.47454.indman202112"
+slug = "indman202112"
+
+[[variable]]
+native_id = "408.47454.indman202201"
+slug = "indman202201"
+
+[[variable]]
+native_id = "408.47454.indman202202"
+slug = "indman202202"
+
+[[variable]]
+native_id = "408.47454.indman202203"
+slug = "indman202203"
+
+[[variable]]
+native_id = "408.47454.indman202204"
+slug = "indman202204"
+
+[[variable]]
+native_id = "408.47454.indman202205"
+slug = "indman202205"
+
+[[variable]]
+native_id = "408.47454.indman202206"
+slug = "indman202206"
+
+[[variable]]
+native_id = "408.47454.indman202207"
+slug = "indman202207"
+
+[[variable]]
+native_id = "408.47454.indman202208"
+slug = "indman202208"
+
+[[variable]]
+native_id = "408.47454.indman202209"
+slug = "indman202209"
+
+[[variable]]
+native_id = "408.47454.indman202210"
+slug = "indman202210"
+
+[[variable]]
+native_id = "408.47454.indman202211"
+slug = "indman202211"
+
+[[variable]]
+native_id = "408.47454.indman202212"
+slug = "indman202212"
+
+[[variable]]
+native_id = "408.47454.indman202301"
+slug = "indman202301"
+
+[[variable]]
+native_id = "408.47454.indman202302"
+slug = "indman202302"
+
+[[variable]]
+native_id = "408.47454.indman202303"
+slug = "indman202303"
+
+[[variable]]
+native_id = "408.47454.indman202304"
+slug = "indman202304"
+
+[[variable]]
+native_id = "408.47454.indman202305"
+slug = "indman202305"
+
+[[variable]]
+native_id = "408.47454.indman202306"
+slug = "indman202306"
+
+[[variable]]
+native_id = "408.47454.indman202307"
+slug = "indman202307"
+
+[[variable]]
+native_id = "408.47454.indman202308"
+slug = "indman202308"
+
+[[variable]]
+native_id = "408.47454.indman202309"
+slug = "indman202309"
+
+[[variable]]
+native_id = "408.47454.indman202310"
+slug = "indman202310"
+
+[[variable]]
+native_id = "408.47454.indman202311"
+slug = "indman202311"
+
+[[variable]]
+native_id = "408.47454.indman202312"
+slug = "indman202312"
+
+[[variable]]
+native_id = "408.47454.indman3"
+slug = "indman3"
+
+[[variable]]
+native_id = "408.47454.indman4"
+slug = "indman4"
+
+[[variable]]
+native_id = "408.47454.indman5"
+slug = "indman5"
+
+[[variable]]
+native_id = "408.47454.indman6"
+slug = "indman6"
+
+[[variable]]
+native_id = "408.47454.anstallningar"
+slug = "anstallningar"

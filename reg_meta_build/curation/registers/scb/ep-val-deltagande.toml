@@ -215,3 +215,26 @@ reason = "These exact source windows have no own bound stored-code domain. Prese
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
 expected_evidence_sha256 = "7e973d731b9e271804a19dbb1900ef0e17ec9e4f0d673bd78b901637c0ae0480"
 expected_diagnostic_sha256 = "be83333f2745fe6acb81c860b5aa75b0ab109246a0a5763a349667022adb9953"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "245.8534"
+columns = { Kgruppnamn = "245.8534.kgruppnamn", Kgruppnamn2011 = "245.8534.kgruppnamn2011", Kgruppnr = "245.8534.kgruppnr", Kgruppnr2011 = "245.8534.kgruppnr2011", Kommungrupp_2017_namn = "245.8534.kommungrupp-2017-namn", Kommungrupp_klartext = "245.8534.kommungrupp-klartext" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "f4562be5ef01dd16f6c7548527342be8c372f082e80b8803482d319ccefe79ed"
+
+[[variable]]
+native_id = "245.8534.kgruppnamn2011"
+slug = "kgruppnamn2011"
+
+[[variable]]
+native_id = "245.8534.kgruppnr2011"
+slug = "kgruppnr2011"
+
+[[variable]]
+native_id = "245.8534.kommungrupp-2017-namn"
+slug = "kommungrupp-2017-namn"
+
+[[variable]]
+native_id = "245.8534.kommungrupp-klartext"
+slug = "kommungrupp-klartext"

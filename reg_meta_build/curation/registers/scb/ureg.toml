@@ -7977,3 +7977,203 @@ reason = "The source establishes this distinct student-background role but suppl
 evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
 expected_evidence_sha256 = "a36e78b3a95a45cb79a2a265cf840ff7764374d4686088feae89906e6bf23e63"
 expected_diagnostic_sha256 = "4c128909fbdb474857a9497733e7a06e131507831ebf5ca4c63b51750350849d"
+
+[[variable]]
+native_id = "24.6416.sun2020grp-detalj"
+slug = "sun2020grp-detalj"
+
+[[identity.partition]]
+variable = "24.6416"
+columns = { SUN2000Grp = "24.6416.sun2000grp", SUNGrp = "24.6416.sungrp", SUN2020Grp = "24.6416.sun2020grp", SUN2020Grp_Detalj = "24.6416.sun2020grp-detalj" }
+columns_ref = "Complete original native family and physical-peer closure. Roles follow explicit source definition, operation and own code-list vintage. SUN2000/SUN2020/group/detail/old levels are kept separate; constituency code and literal name stay separate; electricity components and address fields preserve distinct source roles and prior public paths. KNr collision remains separately reviewed, not accepted by this default mapping. All original types, units, periods and contradictory text remain unchanged. Batch53-native-role-proof.json."
+expected_evidence_sha256 = "ee928356e1259a7dd1baef880a3ea7d61fb2aba22d0b31422d77db32a9ae4beb"
+
+[[acknowledge]]
+code = "unsupported_coding_scope"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variable', 'native-int', 15062, 'accepted-partition', '24.15062.hutcsun2000niva-old', 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variant', 'native-int', 1225, 'column', 'Hutcsun2000Niva_old')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:15062\",\"member:406972\"]}"]
+fields = ["coding"]
+reason = "Preserve exact source facts and every own code/label/association. The source scope is unknown or pooled text, so code applicability cannot establish annual admission; no sentinel dates or year independence are inferred."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "cf5673dd8539a0b0509f23e4964ce6a92b81e53fe4deac98ecac0d91c106fe0f"
+expected_diagnostic_sha256 = "89880999bf9da132857955eb03d4217a7e2c8105c6ef457176a8d64335ea823f"
+
+[[acknowledge]]
+code = "unsupported_coding_scope"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variable', 'native-int', 15062, 'accepted-partition', '24.15062.hutxsun2000niva-old', 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variant', 'native-int', 1225, 'column', 'HutXsun2000Niva_old')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:15062\",\"member:406973\"]}"]
+fields = ["coding"]
+reason = "Preserve exact source facts and every own code/label/association. The source scope is unknown or pooled text, so code applicability cannot establish annual admission; no sentinel dates or year independence are inferred."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "ba05519c56c75178bc8ea520aef5ca828ed4bf6d0606984bae70de88bc94ef32"
+expected_diagnostic_sha256 = "5c1c10b34a1bfbc77e77a58ebbe1a40fd08357d93ce119359c7c69396a63d8bb"
+
+[[acknowledge]]
+code = "unsupported_coding_scope"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variable', 'native-int', 1536, 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variant', 'native-int', 1630, 'column', 'STVKod')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1630\",\"edition:17540\",\"variable:1536\",\"member:824751\"]}"]
+fields = ["coding"]
+reason = "Preserve exact source facts and every own code/label/association. The source scope is unknown or pooled text, so code applicability cannot establish annual admission; no sentinel dates or year independence are inferred."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "b6fc72a3260922fce1a58ada5633c4b92f84f7bbc133776a77cd9ee0ddfc9caa"
+expected_diagnostic_sha256 = "07a018fefe075d991a0484ba90ccd0ab2fd4ca797f95daf0747be7d3c6413b9c"
+
+[[acknowledge]]
+code = "unsupported_coding_scope"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variable', 'native-int', 31017, 'accepted-partition', '24.31017.fblakomigar', 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variant', 'native-int', 1225, 'column', 'FBLaKoMIGAR')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:31017\",\"member:407423\"]}"]
+fields = ["coding"]
+reason = "Preserve exact source facts and every own code/label/association. The source scope is unknown or pooled text, so code applicability cannot establish annual admission; no sentinel dates or year independence are inferred."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "f8061e528396a588be951949d356a91e027353910beffe6a1018719759866794"
+expected_diagnostic_sha256 = "4ef7ac1b58e75acd588fbe0ec3550fdf7cefa10543f859b7409ca62bf89b5dad"
+
+[[acknowledge]]
+code = "unsupported_coding_scope"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variable', 'native-int', 31017, 'accepted-partition', '24.31017.fblakomigarplus1', 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variant', 'native-int', 1225, 'column', 'FBLaKoMIGARPlus1')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:31017\",\"member:407424\"]}"]
+fields = ["coding"]
+reason = "Preserve exact source facts and every own code/label/association. The source scope is unknown or pooled text, so code applicability cannot establish annual admission; no sentinel dates or year independence are inferred."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "0d90acb2f660c0d57a0243bd4239952e1d50cc27b8c50223a486240f950990a3"
+expected_diagnostic_sha256 = "45df3e2d20be3bfb84e9cec5f2d773ad45011639b58286e3d619b1d15bde6c27"
+
+[[acknowledge]]
+code = "unsupported_coding_scope"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variable', 'native-int', 31017, 'accepted-partition', '24.31017.fblakomigarplus2', 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variant', 'native-int', 1225, 'column', 'FBLaKoMIGARPlus2')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:31017\",\"member:407425\"]}"]
+fields = ["coding"]
+reason = "Preserve exact source facts and every own code/label/association. The source scope is unknown or pooled text, so code applicability cannot establish annual admission; no sentinel dates or year independence are inferred."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "ce92098c7d24c67053e3039d319e9fb4b768e49b5fecb53f672795654339c6d7"
+expected_diagnostic_sha256 = "c18d35b77e84cddaeaf24da58d05442aa9ef85c7427de5aa944e6a19d5624363"
+
+[[acknowledge]]
+code = "unsupported_coding_scope"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variable', 'native-int', 7062, 'accepted-partition', '24.7062.fblanmigar', 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variant', 'native-int', 1225, 'column', 'FBLanMIGAR')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:7062\",\"member:407420\"]}"]
+fields = ["coding"]
+reason = "Preserve exact source facts and every own code/label/association. The source scope is unknown or pooled text, so code applicability cannot establish annual admission; no sentinel dates or year independence are inferred."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "540ba2caddec1d6263781cac22372a0cb163b73cf482cb8f8f11382cc612c39b"
+expected_diagnostic_sha256 = "c6a1904bc1c0a7c873e2dde22034220c855330bda92da4694c22ce412e248b6d"
+
+[[acknowledge]]
+code = "unsupported_coding_scope"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variable', 'native-int', 7062, 'accepted-partition', '24.7062.fblanmigarplus1', 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variant', 'native-int', 1225, 'column', 'FBLanMIGARPlus1')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:7062\",\"member:407421\"]}"]
+fields = ["coding"]
+reason = "Preserve exact source facts and every own code/label/association. The source scope is unknown or pooled text, so code applicability cannot establish annual admission; no sentinel dates or year independence are inferred."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "1cff08f4e7c1143b87fb0defd36aa74a78aaf442db07152888e3ba14c2815659"
+expected_diagnostic_sha256 = "67f5fb20d82131f6b895fab43921cd66048d6f1f429d1b2bb0687f52d649324c"
+
+[[acknowledge]]
+code = "unsupported_coding_scope"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variable', 'native-int', 7062, 'accepted-partition', '24.7062.fblanmigarplus2', 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variant', 'native-int', 1225, 'column', 'FBLanMIGARPlus2')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:7062\",\"member:407422\"]}"]
+fields = ["coding"]
+reason = "Preserve exact source facts and every own code/label/association. The source scope is unknown or pooled text, so code applicability cannot establish annual admission; no sentinel dates or year independence are inferred."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "63ad369265502adedb3a32b1436590665b19080d7f6c5835dc5894309c6a26ed"
+expected_diagnostic_sha256 = "61f9947adb084e1875b284f4a6aea5da6612c47b6d0083b3178395f979f30483"
+
+[[acknowledge]]
+code = "unsupported_coding_scope"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variable', 'native-int', 754, 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variant', 'native-int', 1634, 'column', 'ExamKommun')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1634\",\"edition:17563\",\"variable:754\",\"member:815752\"]}"]
+fields = ["coding"]
+reason = "Preserve exact source facts and every own code/label/association. The source scope is unknown or pooled text, so code applicability cannot establish annual admission; no sentinel dates or year independence are inferred."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "f9cbeea33fc85522e217b9613ba231212134ea8ea55438528ea4d7d45bb50c32"
+expected_diagnostic_sha256 = "fe3928e49ed49cd4260c5b2b25c5508b17bd78dc80ae2b1b649c0f5e4f3aad42"
+
+[[acknowledge]]
+code = "unsupported_coding_scope"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variable', 'native-int', 755, 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variant', 'native-int', 1634, 'column', 'ExamLan')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1634\",\"edition:17563\",\"variable:755\",\"member:815753\"]}"]
+fields = ["coding"]
+reason = "Preserve exact source facts and every own code/label/association. The source scope is unknown or pooled text, so code applicability cannot establish annual admission; no sentinel dates or year independence are inferred."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "017489a72f91df3482cfd3a32404c8de0763f59632ef21237f77525fb94890d4"
+expected_diagnostic_sha256 = "9f8f810e6372850757d34b086f2e37db15e737b2999a36bf395f80a410316a65"
+
+[[acknowledge]]
+code = "unsupported_coding_scope"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variable', 'native-int', 763, 'accepted-partition', '24.763.hutckallkod', 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variant', 'native-int', 1225, 'column', 'hutCKallkod')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:763\",\"member:406939\"]}"]
+fields = ["coding"]
+reason = "Preserve exact source facts and every own code/label/association. The source scope is unknown or pooled text, so code applicability cannot establish annual admission; no sentinel dates or year independence are inferred."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "38aa5df971c5b8439c94d46cc1f09f865bd6da9bd6126da739efef6768576d33"
+expected_diagnostic_sha256 = "52f4fd0c33376fa7e894541a8711c6663831c793ceadae1af6cd49140313a259"
+
+[[acknowledge]]
+code = "unsupported_coding_scope"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variable', 'native-int', 763, 'accepted-partition', '24.763.hutxkallkod', 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variant', 'native-int', 1225, 'column', 'hutxKallkod')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:763\",\"member:406940\"]}"]
+fields = ["coding"]
+reason = "Preserve exact source facts and every own code/label/association. The source scope is unknown or pooled text, so code applicability cannot establish annual admission; no sentinel dates or year independence are inferred."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "95a9221844b5d134d7dbfd5f810b6ee5e516f4ef753436bf942365f52b7fc7fa"
+expected_diagnostic_sha256 = "ff99100642be83a8ad97670126004d8e6c9156b74ac6e4cc8e7ec253ddafa242"
+
+[[acknowledge]]
+code = "unsupported_coding_scope"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variable', 'native-int', 763, 'accepted-partition', '24.763.kallkod', 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variant', 'native-int', 1634, 'column', 'KallKod')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1634\",\"edition:17563\",\"variable:763\",\"member:815750\"]}"]
+fields = ["coding"]
+reason = "Preserve exact source facts and every own code/label/association. The source scope is unknown or pooled text, so code applicability cannot establish annual admission; no sentinel dates or year independence are inferred."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "2dcdb59e642ac58ff7e2c2d8a5af7f77873df8ad5df9061eb2f525879c01be0b"
+expected_diagnostic_sha256 = "83b673c636826e6a0f4a4aca2f9b0951dbef8d555fb02c288cc2e97763a3612d"
+
+[[acknowledge]]
+code = "unsupported_coding_scope"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variable', 'native-int', 763, 'accepted-partition', '24.763.kallkod', 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variant', 'native-int', 1630, 'column', 'kallkod')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1630\",\"edition:17564\",\"variable:763\",\"member:824955\"]}"]
+fields = ["coding"]
+reason = "Preserve exact source facts and every own code/label/association. The source scope is unknown or pooled text, so code applicability cannot establish annual admission; no sentinel dates or year independence are inferred."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "461e236364c4dc90ea13e38add3d34e04c60ababaa83b59ed389bac99ddbdf55"
+expected_diagnostic_sha256 = "5d124dc62578809bd6199dd92c65291eb390a1d3784c6c4f7ba8fb4de0b29d11"
+
+[[acknowledge]]
+code = "unsupported_coding_scope"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variable', 'native-int', 785, 'accepted-partition', '24.785.hutcsun2000inr1', 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variant', 'native-int', 1225, 'column', 'hutcsun2000Inr1')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:785\",\"member:406958\"]}"]
+fields = ["coding"]
+reason = "Preserve exact source facts and every own code/label/association. The source scope is unknown or pooled text, so code applicability cannot establish annual admission; no sentinel dates or year independence are inferred."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "d5a9d341a53f443159abf176417023e1bebd2c5bc71251ac69ed58c9b2cf2dfc"
+expected_diagnostic_sha256 = "0b5287e0b5b7b1c48c7bbfc0afed73aa0ce12ad7a571ca16545f969cf383f42c"
+
+[[acknowledge]]
+code = "unsupported_coding_scope"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variable', 'native-int', 785, 'accepted-partition', '24.785.hutxsun2000inr1', 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variant', 'native-int', 1225, 'column', 'hutxsun2000Inr1')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:785\",\"member:406965\"]}"]
+fields = ["coding"]
+reason = "Preserve exact source facts and every own code/label/association. The source scope is unknown or pooled text, so code applicability cannot establish annual admission; no sentinel dates or year independence are inferred."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "293d64add659e01d56d9369ab7099dc3e910d9d72791f548347f5fa2d953f3f5"
+expected_diagnostic_sha256 = "258486239f6cfec6d36dfb8e177ebed69d0c5753a47eaa3f2f89644afd69b7e0"
+
+[[acknowledge]]
+code = "unsupported_coding_scope"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variable', 'native-int', 7924, 'accepted-partition', '24.7924.studdelthtmigarin', 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variant', 'native-int', 1225, 'column', 'StuddeltHTMigArIn')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:7924\",\"member:407426\"]}"]
+fields = ["coding"]
+reason = "Preserve exact source facts and every own code/label/association. The source scope is unknown or pooled text, so code applicability cannot establish annual admission; no sentinel dates or year independence are inferred."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "b745b1a9f291e183d5793e6381d971870596b70c387a5af280a852befcdc6fb4"
+expected_diagnostic_sha256 = "24f26a614d01ffb3ed97ebad430a5c25486e4135d6d37a6604ccda21b2906606"
+
+[[acknowledge]]
+code = "unsupported_coding_scope"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variable', 'native-int', 7924, 'accepted-partition', '24.7924.studdelthtmigarinplus1', 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 24, 'variant', 'native-int', 1225, 'column', 'StuddeltHTMigArInPlus1')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:7924\",\"member:407427\"]}"]
+fields = ["coding"]
+reason = "Preserve exact source facts and every own code/label/association. The source scope is unknown or pooled text, so code applicability cannot establish annual admission; no sentinel dates or year independence are inferred."
+evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
+expected_evidence_sha256 = "6db02a68b2cd6ef4567fdf20150ad630769cda4108475c091fc474c0a541261f"
+expected_diagnostic_sha256 = "f226310f92e88edcd4809b6771eeb2e4ff2d59d38fed5a14318979cce81eabb7"

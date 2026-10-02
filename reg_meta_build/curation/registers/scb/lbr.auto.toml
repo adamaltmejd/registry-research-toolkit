@@ -155,10 +155,6 @@ native_id = "10.42419"
 slug = "kvigkalv"  # source: kolumnnamn
 
 [[variable]]
-native_id = "10.42420"
-slug = "lamm"  # source: kolumnnamn
-
-[[variable]]
 native_id = "10.42427"
 slug = "njo"  # source: kolumnnamn
 

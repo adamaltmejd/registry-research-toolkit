@@ -39,14 +39,6 @@ native_id = "179.7161"
 slug = "kavgaldersp"  # source: kolumnnamn
 
 [[variable]]
-native_id = "179.7163"
-slug = "kavgambassad"  # source: kolumnnamn
-
-[[variable]]
-native_id = "179.7165"
-slug = "kavgusakanada"  # source: kolumnnamn
-
-[[variable]]
 native_id = "179.8161"
 slug = "ngs1ng1"  # source: kolumnnamn
 

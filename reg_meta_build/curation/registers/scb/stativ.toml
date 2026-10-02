@@ -834,3 +834,82 @@ reason = "This exact historical window has no own bound stored-code domain. Pres
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
 expected_evidence_sha256 = "3326474438b1f3087f75e34cc31d404b11d2b73bd72358ec5003188df73a78c4"
 expected_diagnostic_sha256 = "1a9d0d685c0dcfcfc97e5a026699fc055735424ca9b5a9ea59275dfc308f7f61"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "273.18538"
+columns = { OvrInk = "273.18538.ovrink", SumOvrInk = "273.18538.sumovrink", SumOvrInk04 = "273.18538.sumovrink04" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "014e2fe958bf5ccba64b340352269d838457e7fd4871d24f50dd048eb386129a"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "273.30999"
+columns = { Etabl_Status1 = "273.30999.etabl-status1", Etabl_Status90 = "273.30999.etabl-status90" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "ed918dd45e5ff79a14934ba24ea1268350bda8094b1ed1760e94e45ce70e27cc"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "273.19054"
+columns = { AstNgS07 = "273.19054.astngs07", AstSNI2002 = "273.19054.astsni2002", AstSNI2002NyMet = "273.19054.astsni2002nymet", AstSNI2007 = "273.19054.astsni2007", AstSni2002 = "273.19054.astsni2002", AstSni92 = "273.19054.astsni92" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "05cf9f3e0612000307761b7bc09edd36448a4aebc6484269f76b0dc590c2aafd"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "273.372"
+columns = { FamId = "273.372.famid", FamId1 = "273.372.famid1" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "caa3cafffcf4d11298f0e04b7f0af2d91a41cf4fe7b229f51ac9850351cfc61a"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "273.66"
+columns = { Sun2000Niva = "273.66.sun2000niva", Sun2000Niva_old = "273.66.sun2000niva-old", Sun2020Niva = "273.66.sun2020niva", Sun2020Niva_old = "273.66.sun2020niva-old" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "e8c8d7939a10726cf4cb92dfe3ae5a672c2737cdf9256c3b43147b948b5667e6"
+
+[[variable]]
+native_id = "273.18538.ovrink"
+slug = "ovrink"
+
+[[variable]]
+native_id = "273.18538.sumovrink"
+slug = "sumovrink"
+
+[[variable]]
+native_id = "273.18538.sumovrink04"
+slug = "sumovrink04"
+
+[[variable]]
+native_id = "273.30999.etabl-status1"
+slug = "etabl-status1"
+
+[[variable]]
+native_id = "273.30999.etabl-status90"
+slug = "etabl-status90"
+
+[[variable]]
+native_id = "273.19054.astsni2007"
+slug = "astsni2007"
+
+[[variable]]
+native_id = "273.372.famid"
+slug = "famid"
+
+[[variable]]
+native_id = "273.372.famid1"
+slug = "famid1"
+
+[[variable]]
+native_id = "273.66.sun2000niva-old"
+slug = "sun2000niva-old-66"
+
+[[variable]]
+native_id = "273.66.sun2020niva"
+slug = "sun2020niva"
+
+[[variable]]
+native_id = "273.66.sun2020niva-old"
+slug = "sun2020niva-old"

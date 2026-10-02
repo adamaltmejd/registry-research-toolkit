@@ -117,3 +117,69 @@ coding_metadata = "shared"
 columns = [{ valid_from = "2021-01-01", valid_to = "2021-12-31", column = "PeOrgNr", source_editions = ["2021"] }, { valid_from = "2021-01-01", valid_to = "2021-12-31", column = "peorgnr", source_editions = ["2021"] }]
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "358.39651"
+columns = { Prod_1 = "358.39651.prod-1", Prod_2 = "358.39651.prod-2" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "e02b46c79d0bf8dbfffc6b6c1a214b9f566b7b5459bca569e43fa0a4007f7f47"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "358.4027"
+columns = { NG2007 = "358.4027.ng2007", Ng1 = "358.4027.ng1" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "7e5aff57feab469120357f6e6755acbe22a7d42eaa76be23420543188074bc7c"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "358.83"
+columns = { Bid = "358.83.bid", Ravarakat = "358.83.ravarakat" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "48e03557b56d7b75acab531400a1c08ffd8352d8f32f9760a270fb0e130ba21e"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "358.4600"
+columns = { ID = "358.4600.id", SCBid = "358.4600.scbid", id = "358.4600.id" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "9992c99919daa8a071efbc59b20765d9074efebf157d0a1eb953fdc316b8fe26"
+
+[[variable]]
+native_id = "358.39651.prod-1"
+slug = "prod-1"
+
+[[variable]]
+native_id = "358.39651.prod-2"
+slug = "prod-2"
+
+[[variable]]
+native_id = "358.4027.ng2007"
+slug = "ng2007"
+
+[[variable]]
+native_id = "358.4027.ng1"
+slug = "ng1"
+
+[[variable]]
+native_id = "358.83.ravarakat"
+slug = "ravarakat"
+
+[[variable]]
+native_id = "358.4600.id"
+slug = "id"
+
+[[variable]]
+native_id = "358.4600.scbid"
+slug = "scbid-4600"
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/tradbransle-produktion/bransleslag:scb/tradbransle-produktion/ravarakat"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:358\",\"variant:1286\",\"edition:10002\",\"variable:83\",\"member:821142\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:358\",\"variant:1286\",\"edition:10002\",\"variable:83\",\"member:821943\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:358\",\"variant:1286\",\"edition:17698\",\"variable:83\",\"member:823001\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:358\",\"variant:1286\",\"edition:17698\",\"variable:83\",\"member:823021\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:358\",\"variant:1286\",\"edition:17699\",\"variable:83\",\"member:823030\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:358\",\"variant:1286\",\"edition:17699\",\"variable:83\",\"member:823050\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:358\",\"variant:1286\",\"edition:17700\",\"variable:83\",\"member:823067\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:358\",\"variant:1286\",\"edition:17700\",\"variable:83\",\"member:823087\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:358\",\"variant:1286\",\"edition:17732\",\"variable:83\",\"member:824071\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:358\",\"variant:1286\",\"edition:17732\",\"variable:83\",\"member:824087\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:358\",\"variant:1286\",\"edition:17733\",\"variable:83\",\"member:824119\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:358\",\"variant:1286\",\"edition:17734\",\"variable:83\",\"member:824130\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:358\",\"variant:1286\",\"edition:17735\",\"variable:83\",\"member:824159\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:358\",\"variant:1286\",\"edition:19739\",\"variable:83\",\"member:977125\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:358\",\"variant:1286\",\"edition:19739\",\"variable:83\",\"member:977126\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:358\",\"variant:1286\",\"edition:19742\",\"variable:83\",\"member:977202\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:358\",\"variant:1286\",\"edition:19742\",\"variable:83\",\"member:977203\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:358\",\"variant:1286\",\"edition:19743\",\"variable:83\",\"member:977292\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:358\",\"variant:1286\",\"edition:19743\",\"variable:83\",\"member:977293\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Retain both exact physical/catalog fields, all source facts and their own coding. The derived shared-definition sibling group lacks safe shape evidence and stays unavailable; a shared description does not establish compatible stored values or roles. No ordering field or source membership is withdrawn."
+evidence = "Complete native-family and physical-peer census, source-supported literal partitions and actual source replay Batch53-hard-family-source-review.json; finite original-fact and diagnostic guards. Standing retained-unavailable policy for unproven derived relations."
+expected_evidence_sha256 = "b9667d64c663d39078f91730c7096ddca89b537ff4d9f5e4fbe8e6e089ce5875"
+expected_diagnostic_sha256 = "bbe5bd710aa2fa3e9e80810a7c1a42714938ff9920a6a57a3c171800b9128299"

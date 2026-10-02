@@ -55,10 +55,6 @@ native_id = "139.19508"
 slug = "fid"  # source: kolumnnamn
 
 [[variable]]
-native_id = "139.19509"
-slug = "text"  # source: kolumnnamn
-
-[[variable]]
 native_id = "139.19510"
 slug = "mangd"  # source: kolumnnamn
 

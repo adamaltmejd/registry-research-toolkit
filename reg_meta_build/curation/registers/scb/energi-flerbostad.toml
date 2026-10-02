@@ -19,126 +19,8 @@ slug = "fastighetsbeteckning"
 
 
 [[variable]]
-native_id = "75.31"
-slug = "forsamling"
-
-[[variable]]
-native_id = "75.36"
-slug = "kommun"
-
-[[variable]]
-native_id = "75.49"
-slug = "lan"
-
-[[variable]]
-native_id = "75.2330"
-slug = "vedanvandning"
-
-[[variable]]
-native_id = "75.4019"
-slug = "anvant-uppvarmningssatt"
-
-[[variable]]
-native_id = "75.4235"
-slug = "gasanvandning"
-
-[[variable]]
-native_id = "75.7748"
-slug = "total-elanvandning"
-
-[[variable]]
-native_id = "75.7865"
-slug = "franluftsvarmepump"
-
-[[variable]]
-native_id = "75.7868"
-slug = "utevarmepump"
-
-[[variable]]
-native_id = "75.7869"
-slug = "bergvarmepump"
-
-[[variable]]
-native_id = "75.7876"
-slug = "andel-lokal-garageyta"
-
-[[variable]]
-native_id = "75.7891"
-slug = "elvvarme-inkl-varmvatten"
-
-[[variable]]
 native_id = "75.7900"
 slug = "byggnadsar"
-
-[[variable]]
-native_id = "75.7905"
-slug = "fjarrvarme-anvandning"
-
-[[variable]]
-native_id = "75.7906"
-slug = "fjarrkyla-anvandning"
-
-[[variable]]
-native_id = "75.7950"
-slug = "eldningsolja-1"
-
-[[variable]]
-native_id = "75.7969"
-slug = "eldningsolja-2"
-
-[[variable]]
-native_id = "75.7998"
-slug = "varmvattenforbrukning"
-
-[[variable]]
-native_id = "75.8034"
-slug = "totalarea"
-
-[[variable]]
-native_id = "75.8051"
-slug = "uppvarmningssatt-taxenhet"
-
-# register 76 (bylbbs)
-
-[[variable]]
-native_id = "75.145"
-slug = "identitet"
-
-[[variable]]
-native_id = "75.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "75.3020"
-slug = "avregistreringskod-flerhus"
-
-[[variable]]
-native_id = "75.7860"
-slug = "taxeringsid"
-
-[[variable]]
-native_id = "75.8162"
-slug = "antal-svarande-enheter"
-
-[[variable]]
-native_id = "75.19579"
-slug = "varmeeffekt-luft-luftvarmepump"
-
-[[variable]]
-native_id = "75.19580"
-slug = "varmeeffekt-franluft-vattenvarmepump"
-
-[[variable]]
-native_id = "75.19581"
-slug = "varmeeffekt-berg-jord-sjovarmepump"
-
-# register 76
-
-[[variable]]
-native_id = "75.7838.gdakt"
-slug = "graddagar"
-
-# register 8
 
 [[acknowledge]]
 code = "unknown_support_key"
@@ -156,3 +38,301 @@ columns = { ArFTR = "75.7900", ByggarFTR = "75.7900" }
 unassigned_columns = []
 columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
 expected_evidence_sha256 = "53be2f53a7e82d9d6419e57d53943ac76634a046be0573e09ee2cd52e6a32b9d"
+
+[[variable]]
+native_id = "75.7873.varmkall"
+slug = "varmkall-7873"
+deprecated = false
+
+[[variable]]
+native_id = "75.7873.varmtot"
+slug = "varmtot"
+deprecated = false
+
+[[variable]]
+native_id = "75.145.source-positive"
+slug = "identitet"
+deprecated = false
+
+[[variable]]
+native_id = "75.7998.varmvm3"
+slug = "varmvm3"
+deprecated = false
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "75.7873"
+columns = { VarmKall = "75.7873.varmkall", VarmTot = "75.7873.varmtot", Varmtot = "75.7873.varmtot" }
+unassigned_columns = []
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "56c8e26b0a3e7edf99f719b19a2834989c030fca2642fea69532aadcf2e57841"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "75.145"
+variant = "75.201"
+column = "SCBid"
+owner = "75.145.source-positive"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2007", "2008"]
+expected_fields = []
+expected_evidence_sha256 = "aba02bcaf886263b4f5a9287e3dbb694d0da018a9c9d05c39a896884e755d80e"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "75.7998"
+variant = "75.201"
+column = "VarmvM3"
+owner = "75.7998.varmvm3"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2007", "2008"]
+expected_fields = []
+expected_evidence_sha256 = "cce2ba5373107dd4d5e2be9a8f172f19e763de647095ca1f679d3f4806214a6d"
+
+[[identity.unassigned]]
+variable = "75.2330"
+expected_evidence_sha256 = "54f1600f240c65eb1e5bd4112472bf09da34d4ffbed59b84b1da9412dd83510b"
+evidence = "Complete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[identity.unassigned]]
+variable = "75.4019"
+expected_evidence_sha256 = "ecbceeeaf78f955c123f4457698af75301a74634050cabd6ff6298fea17fb8ed"
+evidence = "Complete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[identity.unassigned]]
+variable = "75.4235"
+expected_evidence_sha256 = "9ebbff59f789e00467af4cbd48576848d7673976e861dcd90484516ec7950df1"
+evidence = "Complete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[identity.unassigned]]
+variable = "75.7877"
+expected_evidence_sha256 = "03ea87845161a2f0d8e60fc0376d86f1865851a69462bca4da7fc616557b3859"
+evidence = "Complete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[identity.unassigned]]
+variable = "75.7905"
+expected_evidence_sha256 = "c879d6d5be67579f8babbf1638084cb6b6acd511f785ef09682945dc24549c5d"
+evidence = "Complete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[identity.unassigned]]
+variable = "75.7906"
+expected_evidence_sha256 = "829f649281a2ebbca2c04fb3ac8f06c8481e227eca38b3a257e34fe2e583ba1c"
+evidence = "Complete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[identity.unassigned]]
+variable = "75.7950"
+expected_evidence_sha256 = "0ae9732fe6be50e48af52c25126e67178950bb03ccfd5670f637775a3f3cc3de"
+evidence = "Complete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[identity.unassigned]]
+variable = "75.7969"
+expected_evidence_sha256 = "9eb23b101dd7c4075509bd1ee805710186318513b6e149aff05477b6bb0b84f8"
+evidence = "Complete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[identity.unassigned]]
+variable = "75.8051"
+expected_evidence_sha256 = "8d12194e43450b56f351e47320f4ffe709caf2004d3b654368cce621ee20336a"
+evidence = "Complete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 75, 'variable', 'native-int', 145)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:2120\",\"variable:145\",\"member:131753\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:282\",\"variable:145\",\"member:26309\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "af7bed623bd20fafd8e68542433d8a28a15eea46f43d0542c23c75ae9db9e0c0"
+expected_diagnostic_sha256 = "4c6bf79e9dab8d371eed6bb385d898ec5295a5a71f41611c4ae1a43f0fd4e962"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 75, 'variable', 'native-int', 2330)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:2120\",\"variable:2330\",\"member:131740\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:282\",\"variable:2330\",\"member:30435\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "54f1600f240c65eb1e5bd4112472bf09da34d4ffbed59b84b1da9412dd83510b"
+expected_diagnostic_sha256 = "1df72e29382accf7e32d2a1f17fb01b431c46c47adad7e7cdf36be6d3c8b373c"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 75, 'variable', 'native-int', 4019)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:2120\",\"variable:4019\",\"member:131752\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:2121\",\"variable:4019\",\"member:131798\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:2753\",\"variable:4019\",\"member:162739\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:282\",\"variable:4019\",\"member:26301\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "1ec5f4d1b28b746caebebe2c42d80594e1a90d24c89d046596f4abf9519d19e9"
+expected_diagnostic_sha256 = "5bc2b49ad087583153fd494a2b856c62624f6718205734d086575dde4b02d9ae"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 75, 'variable', 'native-int', 4235)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:2120\",\"variable:4235\",\"member:131741\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:282\",\"variable:4235\",\"member:30437\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "9ebbff59f789e00467af4cbd48576848d7673976e861dcd90484516ec7950df1"
+expected_diagnostic_sha256 = "f76293a2d6455ec1cc465ea66b88233fbe9fbb47da1cbbfc3ad76661ca2df560"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 75, 'variable', 'native-int', 7877)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:2120\",\"variable:7877\",\"member:131727\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:282\",\"variable:7877\",\"member:27134\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "03ea87845161a2f0d8e60fc0376d86f1865851a69462bca4da7fc616557b3859"
+expected_diagnostic_sha256 = "69215c168161cf85b5a6c5780236b3bb671acf49fe2cdc547817c75cd842d823"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 75, 'variable', 'native-int', 7905)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:2120\",\"variable:7905\",\"member:131730\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:282\",\"variable:7905\",\"member:27195\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "c879d6d5be67579f8babbf1638084cb6b6acd511f785ef09682945dc24549c5d"
+expected_diagnostic_sha256 = "38cb26aaba0ebd1a0336fd7610c2e405d536e258407338cc6fb5fbc712987ca4"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 75, 'variable', 'native-int', 7906)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:2120\",\"variable:7906\",\"member:131731\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:282\",\"variable:7906\",\"member:27196\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "829f649281a2ebbca2c04fb3ac8f06c8481e227eca38b3a257e34fe2e583ba1c"
+expected_diagnostic_sha256 = "dfad09a45d12e03f723e639b6abde13e3c7879664478e4e343b7a1e2869e8fe5"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 75, 'variable', 'native-int', 7950)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:2120\",\"variable:7950\",\"member:131732\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:282\",\"variable:7950\",\"member:27387\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "0ae9732fe6be50e48af52c25126e67178950bb03ccfd5670f637775a3f3cc3de"
+expected_diagnostic_sha256 = "a1180fdbd4bc083e09d4624c28d821b35f5c1abf63ad8d686b4a1d15719adf2e"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 75, 'variable', 'native-int', 7969)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:2120\",\"variable:7969\",\"member:131733\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:282\",\"variable:7969\",\"member:27407\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "9eb23b101dd7c4075509bd1ee805710186318513b6e149aff05477b6bb0b84f8"
+expected_diagnostic_sha256 = "2af7e15765d458a681957d480567f5a8ef78d63d9375360b871ecfcd40a3433f"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 75, 'variable', 'native-int', 7998)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:2120\",\"variable:7998\",\"member:131734\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:282\",\"variable:7998\",\"member:27437\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "22d924e38eb318eba24c7d70322bf888a5f56bcfe70b26d459baac9b163ab400"
+expected_diagnostic_sha256 = "fb50a67d01c5c06e9e3ab0842a73f1d4eacd88c935420720d613c0840859dd06"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 75, 'variable', 'native-int', 8051)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:2120\",\"variable:8051\",\"member:131736\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:2121\",\"variable:8051\",\"member:131782\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:2753\",\"variable:8051\",\"member:162726\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:75\",\"variant:201\",\"edition:282\",\"variable:8051\",\"member:27492\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "c1cdeefcfd7a82e37d7c713ea76984e4b3f512119aad67d20473178c331f8b32"
+expected_diagnostic_sha256 = "83fa0339b4d882e094e49abdadcd9695fa182d8bb7eefdd0ee322643b9391854"
+
+[[variable]]
+native_id = "75.31"
+slug = "forsamling"
+
+
+[[variable]]
+native_id = "75.36"
+slug = "kommun"
+
+
+[[variable]]
+native_id = "75.49"
+slug = "lan"
+
+
+[[variable]]
+native_id = "75.7748"
+slug = "total-elanvandning"
+
+
+[[variable]]
+native_id = "75.7865"
+slug = "franluftsvarmepump"
+
+
+[[variable]]
+native_id = "75.7868"
+slug = "utevarmepump"
+
+
+[[variable]]
+native_id = "75.7869"
+slug = "bergvarmepump"
+
+
+[[variable]]
+native_id = "75.7876"
+slug = "andel-lokal-garageyta"
+
+
+[[variable]]
+native_id = "75.7891"
+slug = "elvvarme-inkl-varmvatten"
+
+
+[[variable]]
+native_id = "75.8034"
+slug = "totalarea"
+
+
+[[variable]]
+native_id = "75.34"
+slug = "juridisk-form"
+
+
+[[variable]]
+native_id = "75.3020"
+slug = "avregistreringskod-flerhus"
+
+
+[[variable]]
+native_id = "75.7860"
+slug = "taxeringsid"
+
+
+[[variable]]
+native_id = "75.8162"
+slug = "antal-svarande-enheter"
+
+
+[[variable]]
+native_id = "75.19579"
+slug = "varmeeffekt-luft-luftvarmepump"
+
+
+[[variable]]
+native_id = "75.19580"
+slug = "varmeeffekt-franluft-vattenvarmepump"
+
+
+[[variable]]
+native_id = "75.19581"
+slug = "varmeeffekt-berg-jord-sjovarmepump"
+
+# register 76
+
+
+[[variable]]
+native_id = "75.7838.gdakt"
+slug = "graddagar"
+
+# register 8

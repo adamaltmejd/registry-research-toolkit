@@ -298,3 +298,22 @@ native_id = "344.8137.hmannamn"
 slug = "huvudman-namn"
 
 # register 351
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "344.67"
+columns = { UtlBakGr = "344.67.utlbakgr", UtlBakGr2 = "344.67.utlbakgr2", UtlSvBakg = "344.67.utlsvbakg" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "4b2a9a46ba6fff9e53d7a09b79e282555437db935872f7287415b1b608e6541c"
+
+[[variable]]
+native_id = "344.67.utlbakgr"
+slug = "utlbakgr"
+
+[[variable]]
+native_id = "344.67.utlbakgr2"
+slug = "utlbakgr2"
+
+[[variable]]
+native_id = "344.67.utlsvbakg"
+slug = "utlsvbakg"

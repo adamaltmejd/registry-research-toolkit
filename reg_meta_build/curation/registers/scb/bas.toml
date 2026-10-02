@@ -471,3 +471,18 @@ native_id = "404.46222.arbinkniva1m"
 slug = "arbetsrelaterad-inkomstniva-1m"
 
 # register 408
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "404.66"
+columns = { SUN2020Niva = "404.66.sun2020niva", SUN2020Niva_Old = "404.66.sun2020niva-old" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "d323bc58b7881c7bc997485b6ce416eb78d7695d121ea3c946dca717879f9083"
+
+[[variable]]
+native_id = "404.66.sun2020niva"
+slug = "sun2020niva-66"
+
+[[variable]]
+native_id = "404.66.sun2020niva-old"
+slug = "sun2020niva-old"

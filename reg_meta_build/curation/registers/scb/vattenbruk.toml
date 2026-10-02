@@ -138,10 +138,6 @@ native_id = "215.40018.ryovrf-salt"
 slug = "forsaljning-rom-yngel-ovrig-art-1-salt"
 
 [[variable]]
-native_id = "215.41234.lan1"
-slug = "antal-odlingar-lan"
-
-[[variable]]
 native_id = "215.49.lan1"
 slug = "lan3"
 
@@ -196,3 +192,211 @@ native_id = "215.38074"
 slug = "energikostnader"
 
 # register 216
+
+[[variable]]
+native_id = "215.49.lan"
+slug = "lan"
+deprecated = false
+
+[[variable]]
+native_id = "215.49.lan2"
+slug = "lan2"
+deprecated = false
+
+[[variable]]
+native_id = "215.49.lan3"
+slug = "lan3-49"
+deprecated = false
+
+[[variable]]
+native_id = "215.49.mlannamn"
+slug = "mlannamn"
+deprecated = false
+
+[[variable]]
+native_id = "215.49.rylannamn"
+slug = "rylannamn"
+deprecated = false
+
+[[variable]]
+native_id = "215.49.slannamn"
+slug = "slannamn"
+deprecated = false
+
+[[variable]]
+native_id = "215.41234.odling-lan1"
+slug = "odling-lan"
+deprecated = false
+
+[[variable]]
+native_id = "215.41234.odling-lan2"
+slug = "odling-lan2"
+deprecated = false
+
+[[variable]]
+native_id = "215.41234.odling-lan3"
+slug = "odling-lan3"
+deprecated = false
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "215.49"
+variant = "215.316"
+column = "Lan"
+owner = "215.49.lan"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2017", "2018"]
+expected_fields = []
+expected_evidence_sha256 = "698290b83e689cfd16728a9a5b4e5b2cf8e4518cc806510941830ed2847cc996"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "215.49"
+variant = "215.316"
+column = "Lan1"
+owner = "215.49.lan1"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2019", "2020", "2021", "2022", "2023"]
+expected_fields = []
+expected_evidence_sha256 = "4d5b63ad0e15ca66619d31e7d36205109c251c852a2989ad13532ac054f6f1bb"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "215.49"
+variant = "215.316"
+column = "Lan2"
+owner = "215.49.lan2"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2019", "2020", "2021", "2022", "2023"]
+expected_fields = []
+expected_evidence_sha256 = "9b65134f21db111ced502f98608b64b7dcf44329b2e1f7dedb21c50eaf6d1be4"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "215.49"
+variant = "215.316"
+column = "Lan3"
+owner = "215.49.lan3"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2019", "2020", "2021", "2022", "2023"]
+expected_fields = []
+expected_evidence_sha256 = "f77071fc6345aa1dbf89d9046e1afee792cd75934657be9643c64bba2ebc7dc6"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "215.49"
+variant = "215.316"
+column = "MLanNamn"
+owner = "215.49.mlannamn"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2015"]
+expected_fields = []
+expected_evidence_sha256 = "ee711ea0b47d3e5b61f5ae1c10e235184224ac6153c1400b9dc202e3ecfaf9c8"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "215.49"
+variant = "215.316"
+column = "Mlannamn"
+owner = "215.49.mlannamn"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2016"]
+expected_fields = []
+expected_evidence_sha256 = "240569d0cc5b2cc450f612eec5b3b47902ab0369ec3890bf19c864d2cdb892d9"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "215.49"
+variant = "215.316"
+column = "RYLanNamn"
+owner = "215.49.rylannamn"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2015"]
+expected_fields = []
+expected_evidence_sha256 = "d1ba3e9e52d22587b998bcbf6c930218f021db64c33d0da1a0e6f4df38271d87"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "215.49"
+variant = "215.316"
+column = "RYlannamn"
+owner = "215.49.rylannamn"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2016"]
+expected_fields = []
+expected_evidence_sha256 = "b3463087d339dbbfa31d5b1d015eb931b4e11d19a4d9564e4d59deb0dc05bf23"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "215.49"
+variant = "215.316"
+column = "SLanNamn"
+owner = "215.49.slannamn"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2015"]
+expected_fields = []
+expected_evidence_sha256 = "23a5b92a25c2aa52dfe6d96a00f46882e0e589464c6b21b0e66438028867b81a"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "215.49"
+variant = "215.316"
+column = "Slannamn"
+owner = "215.49.slannamn"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2016"]
+expected_fields = []
+expected_evidence_sha256 = "ec1dc52401b339aa57dfced41e045b29c891c0f329c9c2c7dc07eb7bc00405f7"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "215.41234"
+variant = "215.316"
+column = "odling_lan1"
+owner = "215.41234.odling-lan1"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2019", "2020", "2021", "2022", "2023"]
+expected_fields = []
+expected_evidence_sha256 = "8ca35705bfc94546da1f71793e6281ecf6a0b6755cf78c610c7e29d5a751ad55"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "215.41234"
+variant = "215.316"
+column = "odling_lan2"
+owner = "215.41234.odling-lan2"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2019", "2020", "2021", "2022", "2023"]
+expected_fields = []
+expected_evidence_sha256 = "01f61af0ad1466fc67d35f697edc0bf55c3068d8fa0ccb07d16869e8b23ab6e2"
+
+[[identity.column_owner]]
+data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
+variable = "215.41234"
+variant = "215.316"
+column = "odling_lan3"
+owner = "215.41234.odling-lan3"
+ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
+source_editions = ["2019", "2020", "2021", "2022", "2023"]
+expected_fields = []
+expected_evidence_sha256 = "43b01417b96b07885288aaf771fd5360c7b7f15c66cefce9178e806079e55a19"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 215, 'variable', 'native-int', 41234)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:215\",\"variant:316\",\"edition:20107\",\"variable:41234\",\"member:1010398\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:215\",\"variant:316\",\"edition:20107\",\"variable:41234\",\"member:1010399\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:215\",\"variant:316\",\"edition:20107\",\"variable:41234\",\"member:1010400\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "8c3f16d51718d071cc4a187fee930142fba3c882ad74ddaa961559e6ee46bcfe"
+expected_diagnostic_sha256 = "086c0efc248bcad43ff0ebf65bbd5b2521562f4b8b13a018201f47e0e9dd5a4d"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 215, 'variable', 'native-int', 49)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:215\",\"variant:316\",\"edition:20107\",\"variable:49\",\"member:1010635\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:215\",\"variant:316\",\"edition:20107\",\"variable:49\",\"member:1010636\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:215\",\"variant:316\",\"edition:20107\",\"variable:49\",\"member:1010637\"]}"]
+fields = ["identity"]
+reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
+evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
+expected_evidence_sha256 = "826fd315d4df40ed863b0c51e3d0d12d5eb5f9718078468030aab8ebd2c7343a"
+expected_diagnostic_sha256 = "c4faa5107ef5d92afd3ea4894afeee44a2ce2652b548e5296b95b3a27c8c417e"

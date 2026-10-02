@@ -1002,3 +1002,18 @@ coding_metadata = "shared"
 columns = [{ valid_from = "2025-01-01", valid_to = "2025-12-31", column = "Stratum", source_editions = ["2025"] }, { valid_from = "2025-01-01", valid_to = "2025-12-31", column = "stratum", source_editions = ["2025"] }]
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
+
+[[identity.partition]]
+data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+variable = "165.1937"
+columns = { Komm = "165.1937.komm", Kommentar = "165.1937.kommentar" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+expected_evidence_sha256 = "aeb0e3e87825e8cec5bff805bc54bf85fac610a762f874ccb98a367e0c08914c"
+
+[[variable]]
+native_id = "165.1937.komm"
+slug = "komm"
+
+[[variable]]
+native_id = "165.1937.kommentar"
+slug = "kommentar-1937"

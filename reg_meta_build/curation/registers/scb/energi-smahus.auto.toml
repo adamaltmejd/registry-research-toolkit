@@ -7,16 +7,8 @@
 # (A4.4a) for the name-fallback curation seam; tomllib ignores it.
 
 [[variable]]
-native_id = "74.36"
-slug = "kommun"  # source: kolumnnamn
-
-[[variable]]
 native_id = "74.49"
 slug = "lan"  # source: kolumnnamn
-
-[[variable]]
-native_id = "74.262"
-slug = "barnklass"  # source: kolumnnamn
 
 [[variable]]
 native_id = "74.462"
