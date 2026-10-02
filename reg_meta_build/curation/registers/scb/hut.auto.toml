@@ -15,10 +15,6 @@ native_id = "86.36"
 slug = "kommun"  # source: kolumnnamn
 
 [[variable]]
-native_id = "86.66"
-slug = "utbp"  # source: fold
-
-[[variable]]
 native_id = "86.412"
 slug = "postort"  # source: kolumnnamn
 
@@ -639,10 +635,6 @@ native_id = "86.40945"
 slug = "vk2503"  # source: kolumnnamn
 
 [[variable]]
-native_id = "86.40946"
-slug = "vk25"  # source: fold
-
-[[variable]]
 native_id = "86.40947"
 slug = "vk2505"  # source: kolumnnamn
 
@@ -1223,10 +1215,6 @@ native_id = "86.45372"
 slug = "u0969"  # source: kolumnnamn
 
 [[variable]]
-native_id = "86.45373"
-slug = "u10"  # source: fold
-
-[[variable]]
 native_id = "86.45374"
 slug = "u0814b"  # source: kolumnnamn
 
@@ -1289,14 +1277,6 @@ slug = "u13909a"  # source: kolumnnamn
 [[variable]]
 native_id = "86.45389"
 slug = "u13909c"  # source: kolumnnamn
-
-[[variable]]
-native_id = "86.45390"
-slug = "u22"  # source: fold
-
-[[variable]]
-native_id = "86.45391"
-slug = "u24"  # source: fold
 
 [[variable]]
 native_id = "86.45392"
@@ -1693,10 +1673,6 @@ slug = "u13291"  # source: kolumnnamn
 [[variable]]
 native_id = "86.46206"
 slug = "u13909"  # source: kolumnnamn
-
-[[variable]]
-native_id = "86.46210"
-slug = "hut-del"  # source: kolumnnamn
 
 [[variable]]
 native_id = "86.46211"

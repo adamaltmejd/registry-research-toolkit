@@ -193,14 +193,6 @@ native_id = "86.40897"
 slug = "utgift-for-utemobler"
 
 [[variable]]
-native_id = "86.40903"
-slug = "utgift-ovriga-tillbehor"
-
-[[variable]]
-native_id = "86.40904"
-slug = "utgift-sanglinne"
-
-[[variable]]
 native_id = "86.40909"
 slug = "utgift-for-spis"
 
@@ -215,10 +207,6 @@ slug = "utgift-for-diskmaskin"
 [[variable]]
 native_id = "86.40915"
 slug = "utgift-tvattmaskin-tork"
-
-[[variable]]
-native_id = "86.40919"
-slug = "utgift-reparation-hyra-tillbehor"
 
 [[variable]]
 native_id = "86.40922"
@@ -299,10 +287,6 @@ native_id = "86.49"
 slug = "lan"
 
 [[variable]]
-native_id = "86.302"
-slug = "fodelsedatum"
-
-[[variable]]
 native_id = "86.388"
 slug = "antal-barn"
 
@@ -369,10 +353,6 @@ slug = "rantebidrag"
 [[variable]]
 native_id = "86.17411"
 slug = "boarea"
-
-[[variable]]
-native_id = "86.18187"
-slug = "skuldranta-m-m"
 
 [[variable]]
 native_id = "86.21273"
@@ -510,3 +490,664 @@ refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[
 expected_evidence_sha256 = "87504c4cc227419f06a64427aaf5a13f0c6b0c75c1cb42494cd038f2e9542621"
 reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
 evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
+
+[[variable]]
+native_id = "86.66.person-2"
+slug = "utbp-person-2"
+
+[[variable]]
+native_id = "86.66.person-3"
+slug = "utbp-person-3"
+
+[[variable]]
+native_id = "86.66.person-4"
+slug = "utbp-person-4"
+
+[[variable]]
+native_id = "86.66.person-5"
+slug = "utbp-person-5"
+
+[[variable]]
+native_id = "86.66.person-6"
+slug = "utbp-person-6"
+
+[[variable]]
+native_id = "86.66.person-7"
+slug = "utbp-person-7"
+
+[[variable]]
+native_id = "86.66.person-8"
+slug = "utbp-person-8"
+
+[[variable]]
+native_id = "86.66.person-1"
+slug = "utbp"
+
+[[variable]]
+native_id = "86.302.person-2"
+slug = "fodelsedatum-person-2"
+
+[[variable]]
+native_id = "86.302.person-4"
+slug = "fodelsedatum-person-4"
+
+[[variable]]
+native_id = "86.302.person-5"
+slug = "fodelsedatum-person-5"
+
+[[variable]]
+native_id = "86.302.person-6"
+slug = "fodelsedatum-person-6"
+
+[[variable]]
+native_id = "86.302.person-7"
+slug = "fodelsedatum-person-7"
+
+[[variable]]
+native_id = "86.302.person-8"
+slug = "fodelsedatum-person-8"
+
+[[variable]]
+native_id = "86.302.person-1"
+slug = "fodelsedatum"
+
+[[variable]]
+native_id = "86.302.person-3"
+slug = "fodelsedatum-person-3"
+
+[[variable]]
+native_id = "86.18187.person-2"
+slug = "skuldranta-m-m-person-2"
+
+[[variable]]
+native_id = "86.18187.person-3"
+slug = "skuldranta-m-m-person-3"
+
+[[variable]]
+native_id = "86.18187.person-4"
+slug = "skuldranta-m-m-person-4"
+
+[[variable]]
+native_id = "86.18187.person-5"
+slug = "skuldranta-m-m-person-5"
+
+[[variable]]
+native_id = "86.18187.person-6"
+slug = "skuldranta-m-m-person-6"
+
+[[variable]]
+native_id = "86.18187.person-7"
+slug = "skuldranta-m-m-person-7"
+
+[[variable]]
+native_id = "86.18187.person-8"
+slug = "skuldranta-m-m-person-8"
+
+[[variable]]
+native_id = "86.18187.person-1"
+slug = "skuldranta-m-m"
+
+[[variable]]
+native_id = "86.40903.literal-vk2506"
+slug = "utgift-ovriga-tillbehor-literal-vk2506"
+
+[[variable]]
+native_id = "86.40903.literal-vk2321"
+slug = "utgift-ovriga-tillbehor"
+
+[[variable]]
+native_id = "86.40904.literal-vk2127"
+slug = "utgift-sanglinne"
+
+[[variable]]
+native_id = "86.40904.literal-vk2331"
+slug = "utgift-sanglinne-literal-vk2331"
+
+[[variable]]
+native_id = "86.40919.literal-vk2362"
+slug = "utgift-reparation-hyra-tillbehor"
+
+[[variable]]
+native_id = "86.40919.literal-vk2645"
+slug = "utgift-reparation-hyra-tillbehor-literal-vk2645"
+
+[[variable]]
+native_id = "86.40919.literal-vk2605"
+slug = "utgift-reparation-hyra-tillbehor-literal-vk2605"
+
+[[variable]]
+native_id = "86.40946.literal-vk2525"
+slug = "vk25-literal-vk2525"
+
+[[variable]]
+native_id = "86.40946.literal-vk2504"
+slug = "vk25"
+
+[[variable]]
+native_id = "86.45373.literal-u105"
+slug = "u10-literal-u105"
+
+[[variable]]
+native_id = "86.45373.aggregation-copy"
+slug = "u10"
+
+[[variable]]
+native_id = "86.45390.vehicle-loans"
+slug = "u22-vehicle-loans"
+
+[[variable]]
+native_id = "86.45390.other-loans"
+slug = "u22-other-loans"
+
+[[variable]]
+native_id = "86.45390.total-excluding-mortgages"
+slug = "u22"
+
+[[variable]]
+native_id = "86.45391.organisations"
+slug = "u24-organisations"
+
+[[variable]]
+native_id = "86.45391.private-persons"
+slug = "u24-private-persons"
+
+[[variable]]
+native_id = "86.45391.total"
+slug = "u24"
+
+[[variable]]
+native_id = "86.46210.source-native-question"
+slug = "hut-del"
+
+[[identity.partition]]
+variable = "86.66"
+columns = { UTBP2 = "86.66.person-2", UTBP3 = "86.66.person-3", UTBP4 = "86.66.person-4", UTBP5 = "86.66.person-5", UTBP6 = "86.66.person-6", UTBP7 = "86.66.person-7", UTBP8 = "86.66.person-8", UTBP1 = "86.66.person-1" }
+unassigned_columns = []
+columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+expected_evidence_sha256 = "8a265b76fd6ac1f0682594ded57d7382a15b8d5454c502c4fe2e66ca3ffc613d"
+
+[[identity.partition]]
+variable = "86.302"
+columns = { pnumd2 = "86.302.person-2", pnumd4 = "86.302.person-4", pnumd5 = "86.302.person-5", pnumd6 = "86.302.person-6", pnumd7 = "86.302.person-7", pnumd8 = "86.302.person-8", pnumd1 = "86.302.person-1", pnumd3 = "86.302.person-3" }
+unassigned_columns = []
+columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+expected_evidence_sha256 = "af4bc4881338c72d7d1d1ba7dced5bdfd552b69e9a45b0d1396d123ca4a2a5c2"
+
+[[identity.partition]]
+variable = "86.18187"
+columns = { kasku2 = "86.18187.person-2", kasku3 = "86.18187.person-3", kasku4 = "86.18187.person-4", kasku5 = "86.18187.person-5", kasku6 = "86.18187.person-6", kasku7 = "86.18187.person-7", kasku8 = "86.18187.person-8", kasku1 = "86.18187.person-1" }
+unassigned_columns = []
+columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+expected_evidence_sha256 = "685f73e0d2526de548a6266ef9702f2e627b36c388766d8d2ef76e9881e0f5fe"
+
+[[identity.partition]]
+variable = "86.40903"
+columns = { VK2506 = "86.40903.literal-vk2506", VK2321 = "86.40903.literal-vk2321" }
+unassigned_columns = []
+columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+expected_evidence_sha256 = "b2d4761b59655737dfc7025e55a3ef9c72f82231f79737c1012b045832c9e945"
+
+[[identity.partition]]
+variable = "86.40904"
+columns = { VK2127 = "86.40904.literal-vk2127", VK2331 = "86.40904.literal-vk2331" }
+unassigned_columns = []
+columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+expected_evidence_sha256 = "19f4c419dc80db31306c538e96f50ce15ef06647e2830f969302071a0e426251"
+
+[[identity.partition]]
+variable = "86.40919"
+columns = { VK2362 = "86.40919.literal-vk2362", VK2645 = "86.40919.literal-vk2645", VK2605 = "86.40919.literal-vk2605" }
+unassigned_columns = []
+columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+expected_evidence_sha256 = "ea354884e99b6ca887b2080068ceff7de74c35493e93e8ad419e02a504f0c053"
+
+[[identity.partition]]
+variable = "86.40946"
+columns = { VK2525 = "86.40946.literal-vk2525", VK2504 = "86.40946.literal-vk2504" }
+unassigned_columns = []
+columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+expected_evidence_sha256 = "9ddace2c039a9a4336b9911e3cb283cadd585712f402c171415e8601779a1c66"
+
+[[identity.partition]]
+variable = "86.45373"
+columns = { U105 = "86.45373.literal-u105", U10 = "86.45373.aggregation-copy" }
+unassigned_columns = []
+columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+expected_evidence_sha256 = "8e8a971a16f711476c1f0489c00f9fcd67d52f99ab47dff36190a784afd40342"
+
+[[identity.partition]]
+variable = "86.45390"
+columns = { U2221 = "86.45390.vehicle-loans", U224 = "86.45390.other-loans", U22 = "86.45390.total-excluding-mortgages" }
+unassigned_columns = []
+columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+expected_evidence_sha256 = "a10077225d5e7f580fdd956d9c787f0f2fb68816c524041ba0400e877905215d"
+
+[[identity.partition]]
+variable = "86.45391"
+columns = { U242 = "86.45391.organisations", U241 = "86.45391.private-persons", U24 = "86.45391.total" }
+unassigned_columns = []
+columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+expected_evidence_sha256 = "5da08eae7179589f2f8d326aed895dd61257b1d9d7af128341d012d69757d841"
+
+[[identity.partition]]
+variable = "86.46210"
+columns = { HUT_del = "86.46210.source-native-question", UNDNR = "86.46210.source-native-question" }
+unassigned_columns = []
+columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+expected_evidence_sha256 = "559ae1e977476022b3bf27b4c44d4040c5a0084913d55b1820181363fc3d4e23"
+
+[[identity.column_owner]]
+variable = "86.66"
+variant = "86.1500"
+column = "UTBP2"
+owner = "86.66.person-2"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.66"
+variant = "86.1500"
+column = "UTBP3"
+owner = "86.66.person-3"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.66"
+variant = "86.1500"
+column = "UTBP4"
+owner = "86.66.person-4"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.66"
+variant = "86.1500"
+column = "UTBP5"
+owner = "86.66.person-5"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.66"
+variant = "86.1500"
+column = "UTBP6"
+owner = "86.66.person-6"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.66"
+variant = "86.1500"
+column = "UTBP7"
+owner = "86.66.person-7"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.66"
+variant = "86.1500"
+column = "UTBP8"
+owner = "86.66.person-8"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.66"
+variant = "86.1500"
+column = "UTBP1"
+owner = "86.66.person-1"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999"]
+expected_fields = []
+
+[[identity.column_owner]]
+data_warning = "The source calls this birth date year-month-day, but its own operation/unit records year and month. Preserve all three supplied descriptions and raw storage; day precision is not established."
+variable = "86.302"
+variant = "86.1500"
+column = "pnumd2"
+owner = "86.302.person-2"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["2000", "2001"]
+expected_fields = []
+
+[[identity.column_owner]]
+data_warning = "The source calls this birth date year-month-day, but its own operation/unit records year and month. Preserve all three supplied descriptions and raw storage; day precision is not established."
+variable = "86.302"
+variant = "86.1500"
+column = "pnumd4"
+owner = "86.302.person-4"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["2000", "2001"]
+expected_fields = []
+
+[[identity.column_owner]]
+data_warning = "The source calls this birth date year-month-day, but its own operation/unit records year and month. Preserve all three supplied descriptions and raw storage; day precision is not established."
+variable = "86.302"
+variant = "86.1500"
+column = "pnumd5"
+owner = "86.302.person-5"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["2000", "2001"]
+expected_fields = []
+
+[[identity.column_owner]]
+data_warning = "The source calls this birth date year-month-day, but its own operation/unit records year and month. Preserve all three supplied descriptions and raw storage; day precision is not established."
+variable = "86.302"
+variant = "86.1500"
+column = "pnumd6"
+owner = "86.302.person-6"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["2000", "2001"]
+expected_fields = []
+
+[[identity.column_owner]]
+data_warning = "The source calls this birth date year-month-day, but its own operation/unit records year and month. Preserve all three supplied descriptions and raw storage; day precision is not established."
+variable = "86.302"
+variant = "86.1500"
+column = "pnumd7"
+owner = "86.302.person-7"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["2000", "2001"]
+expected_fields = []
+
+[[identity.column_owner]]
+data_warning = "The source calls this birth date year-month-day, but its own operation/unit records year and month. Preserve all three supplied descriptions and raw storage; day precision is not established."
+variable = "86.302"
+variant = "86.1500"
+column = "pnumd8"
+owner = "86.302.person-8"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["2000", "2001"]
+expected_fields = []
+
+[[identity.column_owner]]
+data_warning = "The source calls this birth date year-month-day, but its own operation/unit records year and month. Preserve all three supplied descriptions and raw storage; day precision is not established."
+variable = "86.302"
+variant = "86.1500"
+column = "pnumd1"
+owner = "86.302.person-1"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["2000", "2001"]
+expected_fields = []
+
+[[identity.column_owner]]
+data_warning = "The source calls this birth date year-month-day, but its own operation/unit records year and month. Preserve all three supplied descriptions and raw storage; day precision is not established."
+variable = "86.302"
+variant = "86.1500"
+column = "pnumd3"
+owner = "86.302.person-3"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["2000", "2001"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.18187"
+variant = "86.1500"
+column = "kasku2"
+owner = "86.18187.person-2"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.18187"
+variant = "86.1500"
+column = "kasku3"
+owner = "86.18187.person-3"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.18187"
+variant = "86.1500"
+column = "kasku4"
+owner = "86.18187.person-4"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.18187"
+variant = "86.1500"
+column = "kasku5"
+owner = "86.18187.person-5"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.18187"
+variant = "86.1500"
+column = "kasku6"
+owner = "86.18187.person-6"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.18187"
+variant = "86.1500"
+column = "kasku7"
+owner = "86.18187.person-7"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.18187"
+variant = "86.1500"
+column = "kasku8"
+owner = "86.18187.person-8"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.18187"
+variant = "86.1500"
+column = "kasku1"
+owner = "86.18187.person-1"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999"]
+expected_fields = []
+
+[[identity.column_owner]]
+data_warning = "The source explicitly says these simultaneous expense columns have an unclear distinction. Each literal field retains only the exported generic expense meaning, original unit/type/period/operation and own coding. No category distinction, formula, value equality or statistical equivalence is inferred."
+variable = "86.40903"
+variant = "86.1500"
+column = "VK2506"
+owner = "86.40903.literal-vk2506"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999", "2000", "2001"]
+expected_fields = []
+
+[[identity.column_owner]]
+data_warning = "The source explicitly says these simultaneous expense columns have an unclear distinction. Each literal field retains only the exported generic expense meaning, original unit/type/period/operation and own coding. No category distinction, formula, value equality or statistical equivalence is inferred."
+variable = "86.40903"
+variant = "86.1500"
+column = "VK2321"
+owner = "86.40903.literal-vk2321"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999", "2000", "2001"]
+expected_fields = []
+
+[[identity.column_owner]]
+data_warning = "The source explicitly says these simultaneous expense columns have an unclear distinction. Each literal field retains only the exported generic expense meaning, original unit/type/period/operation and own coding. No category distinction, formula, value equality or statistical equivalence is inferred."
+variable = "86.40904"
+variant = "86.1500"
+column = "VK2127"
+owner = "86.40904.literal-vk2127"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999", "2000", "2001"]
+expected_fields = []
+
+[[identity.column_owner]]
+data_warning = "The source explicitly says these simultaneous expense columns have an unclear distinction. Each literal field retains only the exported generic expense meaning, original unit/type/period/operation and own coding. No category distinction, formula, value equality or statistical equivalence is inferred."
+variable = "86.40904"
+variant = "86.1500"
+column = "VK2331"
+owner = "86.40904.literal-vk2331"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999", "2000", "2001"]
+expected_fields = []
+
+[[identity.column_owner]]
+data_warning = "The source explicitly says these simultaneous expense columns have an unclear distinction. Each literal field retains only the exported generic expense meaning, original unit/type/period/operation and own coding. No category distinction, formula, value equality or statistical equivalence is inferred."
+variable = "86.40919"
+variant = "86.1500"
+column = "VK2362"
+owner = "86.40919.literal-vk2362"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999", "2000", "2001"]
+expected_fields = []
+
+[[identity.column_owner]]
+data_warning = "The source explicitly says these simultaneous expense columns have an unclear distinction. Each literal field retains only the exported generic expense meaning, original unit/type/period/operation and own coding. No category distinction, formula, value equality or statistical equivalence is inferred."
+variable = "86.40919"
+variant = "86.1500"
+column = "VK2645"
+owner = "86.40919.literal-vk2645"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999", "2000", "2001"]
+expected_fields = []
+
+[[identity.column_owner]]
+data_warning = "The source explicitly says these simultaneous expense columns have an unclear distinction. Each literal field retains only the exported generic expense meaning, original unit/type/period/operation and own coding. No category distinction, formula, value equality or statistical equivalence is inferred."
+variable = "86.40919"
+variant = "86.1500"
+column = "VK2605"
+owner = "86.40919.literal-vk2605"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999", "2000", "2001"]
+expected_fields = []
+
+[[identity.column_owner]]
+data_warning = "The source explicitly says these simultaneous expense columns have an unclear distinction. Each literal field retains only the exported generic expense meaning, original unit/type/period/operation and own coding. No category distinction, formula, value equality or statistical equivalence is inferred."
+variable = "86.40946"
+variant = "86.1500"
+column = "VK2525"
+owner = "86.40946.literal-vk2525"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999", "2000", "2001"]
+expected_fields = []
+
+[[identity.column_owner]]
+data_warning = "The source explicitly says these simultaneous expense columns have an unclear distinction. Each literal field retains only the exported generic expense meaning, original unit/type/period/operation and own coding. No category distinction, formula, value equality or statistical equivalence is inferred."
+variable = "86.40946"
+variant = "86.1500"
+column = "VK2504"
+owner = "86.40946.literal-vk2504"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["1999", "2000", "2001"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.45373"
+variant = "86.1664"
+column = "U105"
+owner = "86.45373.literal-u105"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["2021"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.45373"
+variant = "86.1664"
+column = "U10"
+owner = "86.45373.aggregation-copy"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["2021"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.45390"
+variant = "86.1664"
+column = "U2221"
+owner = "86.45390.vehicle-loans"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["2021"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.45390"
+variant = "86.1664"
+column = "U224"
+owner = "86.45390.other-loans"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["2021"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.45390"
+variant = "86.1664"
+column = "U22"
+owner = "86.45390.total-excluding-mortgages"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["2021"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.45391"
+variant = "86.1664"
+column = "U242"
+owner = "86.45391.organisations"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["2021"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.45391"
+variant = "86.1664"
+column = "U241"
+owner = "86.45391.private-persons"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["2021"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.45391"
+variant = "86.1664"
+column = "U24"
+owner = "86.45391.total"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["2021"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.46210"
+variant = "86.1664"
+column = "HUT_del"
+owner = "86.46210.source-native-question"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["2021"]
+expected_fields = []
+
+[[identity.column_owner]]
+variable = "86.46210"
+variant = "86.1664"
+column = "UNDNR"
+owner = "86.46210.source-native-question"
+ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+source_editions = ["2021"]
+expected_fields = []
+
+[[representation.parallel]]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+co_delivered = true
+variable = "86.46210.source-native-question"
+variant = "86.1664"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2021-01-01", valid_to = "2021-12-31", column = "HUT_del", source_editions = ["2021"] }, { valid_from = "2021-01-01", valid_to = "2021-12-31", column = "UNDNR", source_editions = ["2021"] }]
+evidence = "Both supplied fields explicitly mean collection part, with the same six own supplied codes/labels and operation. Preserve both literal columns and source associations; shared coding is justified by complete own-domain equality. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+noted = "2026-10-02"
