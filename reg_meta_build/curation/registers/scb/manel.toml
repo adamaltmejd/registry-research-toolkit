@@ -51,3 +51,279 @@ native_id = "142.1641.ng2007"
 slug = "naringsgren-arbetsstalle"
 
 # register 145
+
+[[variable]]
+native_id = "142.48271.elomrade-1"
+slug = "kraftvarme-industri-se-elomrade-1"
+
+[[variable]]
+native_id = "142.48271.elomrade-2"
+slug = "kraftvarme-industri-se-elomrade-2"
+
+[[variable]]
+native_id = "142.48271.elomrade-3"
+slug = "kraftvarme-industri-se-elomrade-3"
+
+[[variable]]
+native_id = "142.48271.elomrade-4"
+slug = "kraftvarme-industri-se-elomrade-4"
+
+[[variable]]
+native_id = "142.48272.elomrade-1"
+slug = "kraftvarme-fjarrvarme-se-elomrade-1"
+
+[[variable]]
+native_id = "142.48272.elomrade-2"
+slug = "kraftvarme-fjarrvarme-se-elomrade-2"
+
+[[variable]]
+native_id = "142.48272.elomrade-3"
+slug = "kraftvarme-fjarrvarme-se-elomrade-3"
+
+[[variable]]
+native_id = "142.48272.elomrade-4"
+slug = "kraftvarme-fjarrvarme-se-elomrade-4"
+
+[[variable]]
+native_id = "142.48268.elomrade-1"
+slug = "solareo-elomrade-1"
+
+[[variable]]
+native_id = "142.48268.elomrade-2"
+slug = "solareo-elomrade-2"
+
+[[variable]]
+native_id = "142.48268.elomrade-3"
+slug = "solareo-elomrade-3"
+
+[[variable]]
+native_id = "142.48268.elomrade-4"
+slug = "solareo-elomrade-4"
+
+[[variable]]
+native_id = "142.48265.elomrade-1"
+slug = "hydroeo-elomrade-1"
+
+[[variable]]
+native_id = "142.48265.elomrade-2"
+slug = "hydroeo-elomrade-2"
+
+[[variable]]
+native_id = "142.48265.elomrade-3"
+slug = "hydroeo-elomrade-3"
+
+[[variable]]
+native_id = "142.48265.elomrade-4"
+slug = "hydroeo-elomrade-4"
+
+[[variable]]
+native_id = "142.48267.elomrade-1"
+slug = "windeo-elomrade-1"
+
+[[variable]]
+native_id = "142.48267.elomrade-2"
+slug = "windeo-elomrade-2"
+
+[[variable]]
+native_id = "142.48267.elomrade-3"
+slug = "windeo-elomrade-3"
+
+[[variable]]
+native_id = "142.48267.elomrade-4"
+slug = "windeo-elomrade-4"
+
+[[variable]]
+native_id = "142.48274.elomrade-3"
+slug = "gasturbinkraft-se-elomrade-3"
+
+[[variable]]
+native_id = "142.48274.elomrade-4"
+slug = "gasturbinkraft-se-elomrade-4"
+
+[[variable]]
+native_id = "142.48273.elomrade-3"
+slug = "kondenskraft-se-elomrade-3"
+
+[[variable]]
+native_id = "142.48273.elomrade-4"
+slug = "kondenskraft-se-elomrade-4"
+
+[[variable]]
+native_id = "142.7578.producteo"
+slug = "redovisningsmanad-producteo"
+
+[[identity.partition]]
+variable = "142.48271"
+columns = { "Kraftvärme, industri SE2" = "142.48271.elomrade-2", "Kraftvärme, industri SE3" = "142.48271.elomrade-3", "Kraftvärme, industri SE4" = "142.48271.elomrade-4", "Kraftvärme, industri SE1" = "142.48271.elomrade-1" }
+columns_ref = "The exact own source operational definition positively states each electricity area. Preserve distinct SE1–SE4 measured populations, production methods, source periods and raw physical columns; do not combine their values. Batch52-MANEL-source-positive-proof.json."
+expected_evidence_sha256 = "d8e12f591065048971d89530e7ebcc3dee70ea68af08b7c3f4e3ecbb6bdae3af"
+
+[[identity.partition]]
+variable = "142.48272"
+columns = { "Kraftvärme, fjärrvärme SE2" = "142.48272.elomrade-2", "Kraftvärme, fjärrvärme SE3" = "142.48272.elomrade-3", "Kraftvärme, fjärrvärme SE4" = "142.48272.elomrade-4", "Kraftvärme, fjärrvärme SE1" = "142.48272.elomrade-1" }
+columns_ref = "The exact own source operational definition positively states each electricity area. Preserve distinct SE1–SE4 measured populations, production methods, source periods and raw physical columns; do not combine their values. Batch52-MANEL-source-positive-proof.json."
+expected_evidence_sha256 = "df704847afe2fb10ac032c4eb2f3d5d3232d72045e17d68efee44c80e7c2ea3d"
+
+[[identity.partition]]
+variable = "142.48268"
+columns = { "SolarEO2" = "142.48268.elomrade-2", "SolarEO3" = "142.48268.elomrade-3", "SolarEO4" = "142.48268.elomrade-4", "SolarEO1" = "142.48268.elomrade-1" }
+columns_ref = "The exact own source operational definition positively states each electricity area. Preserve distinct SE1–SE4 measured populations, production methods, source periods and raw physical columns; do not combine their values. Batch52-MANEL-source-positive-proof.json."
+expected_evidence_sha256 = "2e5682e134d2f030dfc59068bbb5198028795d963a184c8e858c72b8233e365b"
+
+[[identity.partition]]
+variable = "142.48265"
+columns = { "HydroEO2" = "142.48265.elomrade-2", "HydroEO3" = "142.48265.elomrade-3", "HydroEO4" = "142.48265.elomrade-4", "HydroEO1" = "142.48265.elomrade-1" }
+columns_ref = "The exact own source operational definition positively states each electricity area. Preserve distinct SE1–SE4 measured populations, production methods, source periods and raw physical columns; do not combine their values. Batch52-MANEL-source-positive-proof.json."
+expected_evidence_sha256 = "2d2a71945dbf05fde0b6fdbdbf7e508c9aab08e3bb7251c45222d7ba44be5d6d"
+
+[[identity.partition]]
+variable = "142.48267"
+columns = { "WindEO2" = "142.48267.elomrade-2", "WindEO3" = "142.48267.elomrade-3", "WindEO4" = "142.48267.elomrade-4", "WindEO1" = "142.48267.elomrade-1" }
+columns_ref = "The exact own source operational definition positively states each electricity area. Preserve distinct SE1–SE4 measured populations, production methods, source periods and raw physical columns; do not combine their values. Batch52-MANEL-source-positive-proof.json."
+expected_evidence_sha256 = "37731698b5b34a1cb44ffb6f138a7353a97d811299735529432094583f6cd512"
+
+[[identity.partition]]
+variable = "142.48274"
+columns = { "Gasturbinkraft SE3" = "142.48274.elomrade-3", "Gasturbinkraft SE4" = "142.48274.elomrade-4" }
+columns_ref = "The exact own source operational definition positively states each electricity area. Preserve distinct SE1–SE4 measured populations, production methods, source periods and raw physical columns; do not combine their values. Batch52-MANEL-source-positive-proof.json."
+expected_evidence_sha256 = "9b161799e4899b6f1022c7063c2b745d963586e5b17e3d12647f7b710c3d6231"
+
+[[identity.partition]]
+variable = "142.48273"
+columns = { "Kondenskraft SE3" = "142.48273.elomrade-3", "Kondenskraft SE4" = "142.48273.elomrade-4" }
+columns_ref = "The exact own source operational definition positively states each electricity area. Preserve distinct SE1–SE4 measured populations, production methods, source periods and raw physical columns; do not combine their values. Batch52-MANEL-source-positive-proof.json."
+expected_evidence_sha256 = "7f8ffcf71d5597c4d1eaa0641ac0da33cd1ffee71834564d75dd265ddca0fc10"
+
+[[identity.partition]]
+variable = "142.7578"
+columns = { "Period" = "142.7578", "ProductEO" = "142.7578" }
+columns_ref = "The complete own source native name, definition and year/month unit define reporting month for both literal fields. Preserve all source types and per-column measurement acquisition contexts. No concrete storage format or value equivalence is inferred."
+expected_evidence_sha256 = "28d0fddc86c2c34c6324ed3c3462c89c37975a44e91e2b6fe0b807ab98697e1b"
+
+[[identity.column_owner]]
+data_warning = "The source describes ProductEO as reporting month and gives year/month units, but supplies decimal storage with no concrete month encoding. This is a separately supplied physical field, with a different source-member identity from Period. Keep its literal column, type and acquisition context; storage interpretation, value equivalence and its relationship to Period are unproved."
+variable = "142.7578"
+variant = "142.208"
+column = "ProductEO"
+owner = "142.7578.producteo"
+ref = "Exact positively supplied source-native reporting-month physical field, distinct source members from Period. The native complete-family digest guards every raw field, parent, period, coding reference and duplicate; this finite owner selects only the exact authored literal, editions and full substantive fields."
+source_editions = ["2024", "2025"]
+expected_fields = [{ "name" = "access_rights", "status" = "absent" }, { "name" = "access_url", "status" = "absent" }, { "name" = "aggregation_level", "status" = "absent" }, { "name" = "availability", "status" = "value", "value" = true }, { "name" = "base_register", "status" = "absent" }, { "name" = "classification_declared", "status" = "absent" }, { "name" = "column_name", "status" = "value", "value" = "ProductEO" }, { "name" = "conditional_sensitivity", "status" = "absent" }, { "name" = "coverage", "status" = "absent" }, { "name" = "coverage_from", "status" = "absent" }, { "name" = "coverage_to", "status" = "absent" }, { "name" = "data_length", "status" = "value", "value" = "53" }, { "name" = "data_type", "status" = "value", "value" = "decimal" }, { "name" = "dataset_label", "status" = "absent" }, { "name" = "definition", "status" = "value", "value" = "Redovisningsmånad är den månad som statistiken avser (referensmånad)" }, { "name" = "description", "status" = "absent" }, { "name" = "documentation_status", "status" = "absent" }, { "name" = "documentation_url", "status" = "absent" }, { "name" = "first_approved_at", "status" = "absent" }, { "name" = "geographic_coverage", "status" = "absent" }, { "name" = "identifier", "status" = "absent" }, { "name" = "landing_page", "status" = "absent" }, { "name" = "last_approved_at", "status" = "absent" }, { "name" = "legislation", "status" = "absent" }, { "name" = "measurement_information", "status" = "absent" }, { "name" = "measurement_unit", "status" = "value", "value" = "År och månad" }, { "name" = "name", "status" = "value", "value" = "Redovisningsmånad Månatlig elstatistik" }, { "name" = "operational_definition", "status" = "value", "value" = "Excelfiler fås från Energiföretagen Sverige." }, { "name" = "population_comment", "status" = "absent" }, { "name" = "population_date", "status" = "absent" }, { "name" = "population_definition", "status" = "absent" }, { "name" = "purpose", "status" = "absent" }, { "name" = "reference_period", "status" = "unknown" }, { "name" = "representation", "status" = "absent" }, { "name" = "sensitivity", "status" = "absent" }, { "name" = "source_attribution", "status" = "absent" }, { "name" = "source_date", "status" = "absent" }, { "name" = "source_version", "status" = "absent" }, { "name" = "update_frequency", "status" = "absent" }, { "name" = "value_set_declared", "status" = "absent" }]
+
+[[identity.column_owner]]
+data_warning = "The source describes ProductEO as reporting month and gives year/month units, but supplies decimal storage with no concrete month encoding. This is a separately supplied physical field, with a different source-member identity from Period. Keep its literal column, type and acquisition context; storage interpretation, value equivalence and its relationship to Period are unproved."
+variable = "142.7578"
+variant = "142.208"
+column = "ProductEO"
+owner = "142.7578.producteo"
+ref = "Exact positively supplied source-native reporting-month physical field, distinct source members from Period. The native complete-family digest guards every raw field, parent, period, coding reference and duplicate; this finite owner selects only the exact authored literal, editions and full substantive fields."
+source_editions = ["2023"]
+expected_fields = [{ "name" = "access_rights", "status" = "absent" }, { "name" = "access_url", "status" = "absent" }, { "name" = "aggregation_level", "status" = "absent" }, { "name" = "availability", "status" = "value", "value" = true }, { "name" = "base_register", "status" = "absent" }, { "name" = "classification_declared", "status" = "absent" }, { "name" = "column_name", "status" = "value", "value" = "ProductEO" }, { "name" = "conditional_sensitivity", "status" = "absent" }, { "name" = "coverage", "status" = "absent" }, { "name" = "coverage_from", "status" = "absent" }, { "name" = "coverage_to", "status" = "absent" }, { "name" = "data_length", "status" = "value", "value" = "53" }, { "name" = "data_type", "status" = "value", "value" = "decimal" }, { "name" = "dataset_label", "status" = "absent" }, { "name" = "definition", "status" = "value", "value" = "Redovisningsmånad är den månad som statistiken avser (referensmånad)" }, { "name" = "description", "status" = "absent" }, { "name" = "documentation_status", "status" = "absent" }, { "name" = "documentation_url", "status" = "absent" }, { "name" = "first_approved_at", "status" = "absent" }, { "name" = "geographic_coverage", "status" = "absent" }, { "name" = "identifier", "status" = "absent" }, { "name" = "landing_page", "status" = "absent" }, { "name" = "last_approved_at", "status" = "absent" }, { "name" = "legislation", "status" = "absent" }, { "name" = "measurement_information", "status" = "absent" }, { "name" = "measurement_unit", "status" = "value", "value" = "År och månad" }, { "name" = "name", "status" = "value", "value" = "Redovisningsmånad Månatlig elstatistik" }, { "name" = "operational_definition", "status" = "absent" }, { "name" = "population_comment", "status" = "absent" }, { "name" = "population_date", "status" = "absent" }, { "name" = "population_definition", "status" = "absent" }, { "name" = "purpose", "status" = "absent" }, { "name" = "reference_period", "status" = "unknown" }, { "name" = "representation", "status" = "absent" }, { "name" = "sensitivity", "status" = "absent" }, { "name" = "source_attribution", "status" = "absent" }, { "name" = "source_date", "status" = "absent" }, { "name" = "source_version", "status" = "absent" }, { "name" = "update_frequency", "status" = "absent" }, { "name" = "value_set_declared", "status" = "absent" }]
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/manel/ng"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:142\",\"variant:208\",\"edition:284\",\"variable:1641\",\"member:29653\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "The supplied source does not establish the code domain for this exact Ng window. Historical operational text varies between SNI2002, an SCB-assigned control number and unspecified meaning. Retain the native quantity and all original fields, but leave these values unavailable; do not borrow the separately coded Ng2007 domain or infer a historical classification/encoding."
+evidence = "Maintainer-approved exact unavailable-domain policy. Complete MANEL1641 family, actual support and all native Ng/Ng2007 associations retained, with no historical SNI continuity assumed. Batch52-MANEL-source-positive-proof.json."
+expected_evidence_sha256 = "63cffd9083c3a835df62dab8303b3b784c2414114025c6b276d3983a96b80866"
+expected_diagnostic_sha256 = "7a8c4a09bc5f83998dd66991342b3d5c814b2fc35638347da48461d0ef02596a"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/manel/ng"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:142\",\"variant:208\",\"edition:1002\",\"variable:1641\",\"member:30524\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "The supplied source does not establish the code domain for this exact Ng window. Historical operational text varies between SNI2002, an SCB-assigned control number and unspecified meaning. Retain the native quantity and all original fields, but leave these values unavailable; do not borrow the separately coded Ng2007 domain or infer a historical classification/encoding."
+evidence = "Maintainer-approved exact unavailable-domain policy. Complete MANEL1641 family, actual support and all native Ng/Ng2007 associations retained, with no historical SNI continuity assumed. Batch52-MANEL-source-positive-proof.json."
+expected_evidence_sha256 = "0b4133d44e5d2a6dc7689b1b90395edfdb7f3edbac4979d1c2023d5266c72ed3"
+expected_diagnostic_sha256 = "ebb77932011aa7f29419657c5ed60d31ca83841c17d22a62fe03cb58f53a15eb"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/manel/ng"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:142\",\"variant:208\",\"edition:1450\",\"variable:1641\",\"member:108602\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "The supplied source does not establish the code domain for this exact Ng window. Historical operational text varies between SNI2002, an SCB-assigned control number and unspecified meaning. Retain the native quantity and all original fields, but leave these values unavailable; do not borrow the separately coded Ng2007 domain or infer a historical classification/encoding."
+evidence = "Maintainer-approved exact unavailable-domain policy. Complete MANEL1641 family, actual support and all native Ng/Ng2007 associations retained, with no historical SNI continuity assumed. Batch52-MANEL-source-positive-proof.json."
+expected_evidence_sha256 = "37d554f32f474bc3b49f2b4dffd7a6e2dd014552b0ffc5a8fe44300777a71802"
+expected_diagnostic_sha256 = "5637aa40a6486f90ac58b915836c07b87d69c7b1176c9b1eba0663100612b339"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/manel/ng"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:142\",\"variant:208\",\"edition:2912\",\"variable:1641\",\"member:172229\"]}"]
+fields = ["coding"]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+reason = "The supplied source does not establish the code domain for this exact Ng window. Historical operational text varies between SNI2002, an SCB-assigned control number and unspecified meaning. Retain the native quantity and all original fields, but leave these values unavailable; do not borrow the separately coded Ng2007 domain or infer a historical classification/encoding."
+evidence = "Maintainer-approved exact unavailable-domain policy. Complete MANEL1641 family, actual support and all native Ng/Ng2007 associations retained, with no historical SNI continuity assumed. Batch52-MANEL-source-positive-proof.json."
+expected_evidence_sha256 = "d277b92487a21d894ec078a442a1ef8c195a649c9875a72c5372e2970f14e877"
+expected_diagnostic_sha256 = "e288513d3a27bf6231a05f82e556134bbd6ea425c6b6710931944a79f465efb6"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/manel/ng"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:142\",\"variant:208\",\"edition:3779\",\"variable:1641\",\"member:231724\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "The supplied source does not establish the code domain for this exact Ng window. Historical operational text varies between SNI2002, an SCB-assigned control number and unspecified meaning. Retain the native quantity and all original fields, but leave these values unavailable; do not borrow the separately coded Ng2007 domain or infer a historical classification/encoding."
+evidence = "Maintainer-approved exact unavailable-domain policy. Complete MANEL1641 family, actual support and all native Ng/Ng2007 associations retained, with no historical SNI continuity assumed. Batch52-MANEL-source-positive-proof.json."
+expected_evidence_sha256 = "be28847a17028da7bb907e8c8018218abae111ffc15228ec649876fc8179d5f1"
+expected_diagnostic_sha256 = "646052b6628c61c755b83db1f5742168a126f5d6a13977c939797edfd5077e63"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/manel/ng"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:142\",\"variant:208\",\"edition:3780\",\"variable:1641\",\"member:231742\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "The supplied source does not establish the code domain for this exact Ng window. Historical operational text varies between SNI2002, an SCB-assigned control number and unspecified meaning. Retain the native quantity and all original fields, but leave these values unavailable; do not borrow the separately coded Ng2007 domain or infer a historical classification/encoding."
+evidence = "Maintainer-approved exact unavailable-domain policy. Complete MANEL1641 family, actual support and all native Ng/Ng2007 associations retained, with no historical SNI continuity assumed. Batch52-MANEL-source-positive-proof.json."
+expected_evidence_sha256 = "6384db636abcdd3cc5afd5446a243dc84220e259789ce5b0f7ed6f19d43e36e4"
+expected_diagnostic_sha256 = "6100209916ee44a462c15d87471f7a23e5c1e378f36df4c317005bed22c8e993"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/manel/ng"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:142\",\"variant:208\",\"edition:4061\",\"variable:1641\",\"member:254429\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "The supplied source does not establish the code domain for this exact Ng window. Historical operational text varies between SNI2002, an SCB-assigned control number and unspecified meaning. Retain the native quantity and all original fields, but leave these values unavailable; do not borrow the separately coded Ng2007 domain or infer a historical classification/encoding."
+evidence = "Maintainer-approved exact unavailable-domain policy. Complete MANEL1641 family, actual support and all native Ng/Ng2007 associations retained, with no historical SNI continuity assumed. Batch52-MANEL-source-positive-proof.json."
+expected_evidence_sha256 = "b7b17fea123a1464f4d315ba8242548427072c5b1e4a4ead6dac7fa93ea7d380"
+expected_diagnostic_sha256 = "1e8c7a4fe74ad3d0f20ea1fe849afeed8c73557a4a0ebceae1430089dd0d43f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/manel/ng"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:142\",\"variant:208\",\"edition:4652\",\"variable:1641\",\"member:291251\"]}"]
+fields = ["coding"]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+reason = "The supplied source does not establish the code domain for this exact Ng window. Historical operational text varies between SNI2002, an SCB-assigned control number and unspecified meaning. Retain the native quantity and all original fields, but leave these values unavailable; do not borrow the separately coded Ng2007 domain or infer a historical classification/encoding."
+evidence = "Maintainer-approved exact unavailable-domain policy. Complete MANEL1641 family, actual support and all native Ng/Ng2007 associations retained, with no historical SNI continuity assumed. Batch52-MANEL-source-positive-proof.json."
+expected_evidence_sha256 = "557518686b695620acae4cf77a41a464d7d6506df2be9a402a27547c5f10815e"
+expected_diagnostic_sha256 = "ed079709aaaa25ebcb0538ef821a8caaaa8c63b481e54f3665f1d6543e22b98a"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/manel/ng"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:142\",\"variant:208\",\"edition:5646\",\"variable:1641\",\"member:348162\"]}"]
+fields = ["coding"]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+reason = "The supplied source does not establish the code domain for this exact Ng window. Historical operational text varies between SNI2002, an SCB-assigned control number and unspecified meaning. Retain the native quantity and all original fields, but leave these values unavailable; do not borrow the separately coded Ng2007 domain or infer a historical classification/encoding."
+evidence = "Maintainer-approved exact unavailable-domain policy. Complete MANEL1641 family, actual support and all native Ng/Ng2007 associations retained, with no historical SNI continuity assumed. Batch52-MANEL-source-positive-proof.json."
+expected_evidence_sha256 = "2ab00b5cfaa9358290207e3c21c0add8e213e64ccf81332376313ff41f3205b6"
+expected_diagnostic_sha256 = "61f0204f5165a2fa0e54c7e58dcd2b08a12ec1b12a303726bf086e8f5664b3d9"

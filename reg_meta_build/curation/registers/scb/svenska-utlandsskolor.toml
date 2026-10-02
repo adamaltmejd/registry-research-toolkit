@@ -130,3 +130,147 @@ refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[
 expected_evidence_sha256 = "db860d4dc5e9b2b049640151e8723e5014fc4ca94b066f28f088334213dea240"
 reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
 evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/svenska-utlandsskolor/arskurs"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:192\",\"variant:268\",\"edition:534\",\"variable:7914\",\"member:27227\"]}"]
+fields = ["coding"]
+valid_from = "2004-10-15"
+valid_to = "2004-10-15"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "3a21b238f5bf0b39593f8a73ad65834b17984fbdc2391f1dc09158fad1d3ee59"
+expected_diagnostic_sha256 = "d69f9d6bfc181b61c642a5cf01ac824421b9147dddcc2a644b2a576522a9b121"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/svenska-utlandsskolor/arskurs"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:192\",\"variant:268\",\"edition:1031\",\"variable:7914\",\"member:31258\"]}"]
+fields = ["coding"]
+valid_from = "2005-10-15"
+valid_to = "2005-10-15"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "53d367874b7a6f867a67a3fcc3c6faa84a9165d8e85ccacf0591020b83b21c23"
+expected_diagnostic_sha256 = "a43c35b182e73caa69fa82a17e6c154073b25774735effd542783631ce3ea7da"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/svenska-utlandsskolor/arskurs"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:192\",\"variant:268\",\"edition:1035\",\"variable:7914\",\"member:31282\"]}"]
+fields = ["coding"]
+valid_from = "2006-10-15"
+valid_to = "2006-10-15"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "671126857680289c586bf63430d58f2fcf77a70cadaa0f05427052b1e6f2faeb"
+expected_diagnostic_sha256 = "2ed9d68cca6b0382e397d8c118bb34bc5bb6f28a24bd662b9a16a7ff346b6da5"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/svenska-utlandsskolor/arskurs"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:192\",\"variant:268\",\"edition:2015\",\"variable:7914\",\"member:126037\"]}"]
+fields = ["coding"]
+valid_from = "2007-10-15"
+valid_to = "2007-10-15"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "c9f0ff29d5386729fdaa87371b86fabb21fee429bec27413574630314786037b"
+expected_diagnostic_sha256 = "012a54bff7542df1e144bf0141c3178f9c8970a34ea3e4085075d2953bb1d8d0"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/svenska-utlandsskolor/arskurs"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:192\",\"variant:268\",\"edition:2638\",\"variable:7914\",\"member:155961\"]}"]
+fields = ["coding"]
+valid_from = "2008-10-15"
+valid_to = "2008-10-15"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "4f7244f7a754133630726e352e7c7c68ebfff2659738d1648d7548c1f705e319"
+expected_diagnostic_sha256 = "d49f9d9a3e39de4c8da54d2b3661f14e7dc9b0a4a99b98c7af2b61da4a7c00f1"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/svenska-utlandsskolor/arskurs"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:192\",\"variant:268\",\"edition:5558\",\"variable:7914\",\"member:344299\"]}"]
+fields = ["coding"]
+valid_from = "2009-10-15"
+valid_to = "2009-10-15"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "2aaebbba0a38fe7e3c6ccb8897822b27f9d0be946c009f46f04250b2b59b91ae"
+expected_diagnostic_sha256 = "38fca2d9dd13850cf8430bdc8710a3b256e5a1f3069ea9eb024af0507b76b4c1"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/svenska-utlandsskolor/arskurs"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:192\",\"variant:404\",\"edition:543\",\"variable:7914\",\"member:27275\"]}"]
+fields = ["coding"]
+valid_from = "2004-10-15"
+valid_to = "2004-10-15"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "15bfa97d48401d945bbabd098a6af363e101c053afbd3fe2484c97ce833aa6a7"
+expected_diagnostic_sha256 = "1c7e040285889a2199463b7dc3633aebd1da9cabb0fe31604cb464fc961d95ac"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/svenska-utlandsskolor/arskurs"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:192\",\"variant:404\",\"edition:931\",\"variable:7914\",\"member:27510\"]}"]
+fields = ["coding"]
+valid_from = "2005-10-15"
+valid_to = "2005-10-15"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "099751acd15b6b3f79fe5f4241d193d9c9a33175fd66af451549a4cf73064f06"
+expected_diagnostic_sha256 = "cc8efaa98b8118bd93a82ef4088b00aba002ccf763b553af4a28cd23215f7f85"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/svenska-utlandsskolor/arskurs"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:192\",\"variant:404\",\"edition:1038\",\"variable:7914\",\"member:31298\"]}"]
+fields = ["coding"]
+valid_from = "2006-10-15"
+valid_to = "2006-10-15"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "f57eb3b17ccc4e27fdb3558d686d74dc1cb2870eb615c14e68bf87ad61d14a0a"
+expected_diagnostic_sha256 = "b510b2441cb380ebc3a8bb9daed84ad7c743e82669125b34ec34858492c7da67"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/svenska-utlandsskolor/arskurs"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:192\",\"variant:404\",\"edition:2019\",\"variable:7914\",\"member:126066\"]}"]
+fields = ["coding"]
+valid_from = "2007-10-15"
+valid_to = "2007-10-15"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "2a3b2eafe81d07925ed0caa1e9a85413d39fd8c56e48a74f1b25658c170fd087"
+expected_diagnostic_sha256 = "8b4cb59b5d2a530dedfc0f00387d243544c032ff4baf66ceddf3d86f92e9f210"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/svenska-utlandsskolor/arskurs"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:192\",\"variant:404\",\"edition:2637\",\"variable:7914\",\"member:155953\"]}"]
+fields = ["coding"]
+valid_from = "2008-10-15"
+valid_to = "2008-10-15"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "a6319bc5c06b733d59e059a9283ae0b9efb6eaaefa0a0280d98b42fb3f3a6227"
+expected_diagnostic_sha256 = "2a25216203e737c21631d4da3d38268f9dc126c4f34bc66953e27b31782cd26a"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/svenska-utlandsskolor/arskurs"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:192\",\"variant:404\",\"edition:5557\",\"variable:7914\",\"member:344292\"]}"]
+fields = ["coding"]
+valid_from = "2009-10-15"
+valid_to = "2009-10-15"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "0fd26d3e659f954b960574cfcd5d968f8cc93e630a577d5f77c7150d7699695d"
+expected_diagnostic_sha256 = "4d879c5c8b149079ed9575d0b5347c7b21dfb5ecbf17dce132790b443a4ca78e"
