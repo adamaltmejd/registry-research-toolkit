@@ -3903,6 +3903,80 @@ def test_compiled_alias_for_declared_column_has_checked_anchor(tmp_path: Path):
     assert alias.targets[0].ref in alias.peer_guards[0].expected_members
 
 
+@pytest.mark.parametrize("drift", [None, "definition", "missing", "added"])
+def test_unassigned_family_withholds_naming_and_checks_complete_source(tmp_path, drift):
+    from reg_meta_build.source_curation import acknowledgement_evidence_sha256
+
+    root = tmp_path / "curation"
+    originals = _scb_partition_records(("ANSWER", "OTHER"))
+    _scb_partition_tree(
+        root,
+        '\n[[variable]]\nnative_id = "1.5"\nslug = "quantity"\n'
+        '[[identity.unassigned]]\nvariable = "1.5"\n'
+        f'expected_evidence_sha256 = "{acknowledgement_evidence_sha256(originals)}"\n'
+        'evidence = "complete source review: no supported owner"\n',
+    )
+    records = originals
+    if drift == "definition":
+        records = (
+            originals[0].model_copy(
+                update={
+                    "fields": originals[0].fields.model_copy(
+                        update={"definition": value_field("changed source meaning")}
+                    )
+                }
+            ),
+            originals[1],
+        )
+    elif drift == "missing":
+        records = originals[:1]
+    elif drift == "added":
+        records = (*originals, _scb_partition_records(("ANSWER", "OTHER", "NEW"))[-1])
+    native = native_variable_key(records[0])
+    reader = SimpleNamespace(
+        iter_partition_families=lambda *a, **k: iter(((native, records),)),
+        iter_native_families=lambda *a, **k: iter(((native, records),)),
+    )
+    scope = _partition_scope(records)
+    tree = load_curation_tree(root)
+    prepared = cast("Any", SimpleNamespace(records=reader))
+    cases, names, keys, ambiguities, bases, issues = compile_partitions(
+        tree, prepared, (scope,)
+    )
+    key = scope.source, None
+    assert not cases.get(key) and not names[key] and not ambiguities.get(key)
+    assert keys[key] == ((native, None),)
+    assert bases[key] == {native}
+    assert {d.code for d in issues} == ({"stale_curation_entry"} if drift else set())
+    # No identity correction or synthetic owner changes any original fact.
+    applied = apply_occurrence_cases(records, cases.get(key, ()))
+    assert tuple(o.source_records[0] for o in applied.occurrences) == records
+    deferred = compile_deferred_partitions(tree, prepared, (scope,))
+    assert deferred[2][key] == {native} and not deferred[0][key]
+
+
+@pytest.mark.parametrize(
+    "extra",
+    [
+        '\n[[variable]]\nnative_id = "1.5.answer"\nslug = "answer"\n',
+        '\n[[identity.partition]]\nvariable = "1.5"\ncolumns = { ANSWER = "1.5" }\ncolumns_ref = "competing owner"\n',
+    ],
+)
+def test_unassigned_family_rejects_competing_identity(tmp_path, extra):
+    from reg_meta_build.source_curation import acknowledgement_evidence_sha256
+
+    root = tmp_path / "curation"
+    records = _scb_partition_records(("ANSWER",))
+    _scb_partition_tree(
+        root,
+        '[[identity.unassigned]]\nvariable = "1.5"\n'
+        f'expected_evidence_sha256 = "{acknowledgement_evidence_sha256(records)}"\n'
+        'evidence = "complete source review"\n' + extra,
+    )
+    with pytest.raises(ValueError, match="competing ownership"):
+        _compile_partition_fixture(root, records)
+
+
 def _scb_partition_tree(root: Path, extra: str):
     tree = _tree(root)
     path = root / "registers" / "scb" / "sample.toml"
@@ -5047,6 +5121,103 @@ def _parallel_coding(case):
         ): resolve_code_membership(())
         for column in decision.columns
     }
+
+
+@pytest.mark.parametrize("defect", [None, "definition", "missing", "new_member"])
+def test_case_aliases_keep_distinct_members_and_refuse_source_drift(tmp_path, defect):
+    from reg_meta_build.source_representations import resolve_representation_cases
+
+    path, records, naming = _pooled_parallel_fixture(tmp_path, co_delivered=True)
+    path.write_text(
+        path.read_text()
+        .replace('column = "Second"', 'column = "first"')
+        .replace("co_delivered = true", "case_aliases = true")
+    )
+    peer = records[1].model_copy(
+        update={
+            "fields": records[1].fields.model_copy(
+                update={"column_name": value_field("first")}
+            ),
+            "locators": tuple(
+                locator.model_copy(
+                    update={
+                        "semantic_record_key": (
+                            *locator.semantic_record_key,
+                            "independent-member",
+                        )
+                    }
+                )
+                for locator in records[1].locators
+            ),
+        }
+    )
+    originals = (records[0], peer)
+    # Naming membership covers both distinct source members, without claiming paired delivery.
+    naming = tuple(
+        name.model_copy(
+            update={
+                "target": name.target.model_copy(
+                    update={
+                        "expectations": capture_expectations(
+                            originals, fields=("column_name",), coding=True
+                        )
+                    }
+                )
+            }
+        )
+        if name.target.kind == "variable"
+        else name
+        for name in naming
+    )
+    cases, diagnostics = _compile_pooled_parallel(path, originals, naming)
+    assert not diagnostics and len(cases) == 1
+    proof = resolve_representation_cases(
+        originals, cases, coding=_parallel_coding(cases[0])
+    )
+    assert not proof.diagnostics
+    changed = originals
+    if defect == "definition":
+        changed = (
+            originals[0],
+            peer.model_copy(
+                update={
+                    "fields": peer.fields.model_copy(
+                        update={"definition": value_field("different quantity")}
+                    )
+                }
+            ),
+        )
+    elif defect == "missing":
+        changed = originals[:1]
+    elif defect == "new_member":
+        changed = (
+            *originals,
+            peer.model_copy(
+                update={
+                    "locators": tuple(
+                        locator.model_copy(
+                            update={
+                                "semantic_record_key": (
+                                    *locator.semantic_record_key,
+                                    "extra",
+                                )
+                            }
+                        )
+                        for locator in peer.locators
+                    )
+                }
+            ),
+        )
+    if defect:
+        assert resolve_representation_cases(
+            changed, cases, coding=_parallel_coding(cases[0])
+        ).diagnostics
+        if defect != "new_member":
+            assert _compile_pooled_parallel(path, changed, naming)[1]
+    path.write_text(
+        path.read_text().replace("case_aliases = true", "co_delivered = true")
+    )
+    assert _compile_pooled_parallel(path, originals, naming)[1]
 
 
 def test_co_delivered_parallel_requires_explicit_per_column_opt_in(tmp_path):
@@ -7970,8 +8141,10 @@ def test_delivery_metadata_rejects_redundant_unit_permission():
         DeliveryMetadataDecision.require_fields(("measurement_unit",))
 
 
+@pytest.mark.parametrize("distinct_ref", [False, True])
 def test_field_correction_accepts_guarded_source_alternatives_without_losing_originals(
     tmp_path,
+    distinct_ref,
 ):
     tree, scope, source, _, base = _checked_correction_fixture(tmp_path)
     source = source.model_copy(
@@ -7993,6 +8166,22 @@ def test_field_correction_accepts_guarded_source_alternatives_without_losing_ori
             ),
         }
     )
+    if distinct_ref:
+        peer = peer.model_copy(
+            update={
+                "locators": tuple(
+                    locator.model_copy(
+                        update={
+                            "semantic_record_key": (
+                                *locator.semantic_record_key,
+                                "peer",
+                            )
+                        }
+                    )
+                    for locator in peer.locators
+                )
+            }
+        )
     fields = (
         "name",
         "definition",
@@ -8033,6 +8222,26 @@ def test_field_correction_accepts_guarded_source_alternatives_without_losing_ori
     )
     cases, issues, _ = _run_checked_correction(tree, scope, (source, peer))
     assert not issues
+    if distinct_ref:
+        unguarded = replace(
+            tree,
+            registers=(
+                register.model_copy(
+                    update={
+                        "errata": register.errata.model_copy(
+                            update={
+                                "field": [
+                                    entry.model_copy(update={"expected_records": None})
+                                ]
+                            }
+                        )
+                    }
+                ),
+            ),
+        )
+        assert {
+            d.code for d in _run_checked_correction(unguarded, scope, (source, peer))[1]
+        } == {"overbroad_curation_entry"}
     applied = apply_occurrence_cases((source, peer), cases[scope.source, None])
     assert not applied.diagnostics
     assert all(

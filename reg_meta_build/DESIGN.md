@@ -398,6 +398,22 @@ remains governed by the prepared-source pins and ordered inventory. A complete n
 default column map may retain that owner alongside exact guarded scoped overrides; only
 matched source members take a split owner, and all declared owners remain covered.
 
+An SCB `[[identity.unassigned]]` withholds an entire native family's catalog ownership
+when none of its physical fields has a supported owner. It requires the complete
+original-family `expected_evidence_sha256` and an evidence reference, and cannot coexist
+with partition ownership or split naming. Original records and coding are still
+evaluated and retained. It does not acknowledge any error: the resulting source identity
+diagnostic requires a separate exact acknowledgement. Changed, added or missing
+originals invalidate the declaration. Outside-slice naming also excludes this family.
+
+Finite `[[representation.parallel]]` declarations may use `case_aliases = true` for
+case-equivalent column spellings under one source-native identity with equal nonblank
+names and definitions. This requires per-column metadata and makes no co-delivery claim;
+source members may export either spelling. Literal metadata, source coding, windows and
+replay membership remain guarded. Other literal changes need their own identity
+evidence. Complete-record `[[errata.field]]` guards can cover multiple source members at
+an exact coordinate; each effect checks that original's field conditions.
+
 SOS `[[identity.split]]` can partition a complete native family by literal supplied
 `data_type`, `deldatamangd`, `name`, or `description`. Supplied names distinguish reused
 columns whose clinical code, flag, or event-file meaning differs despite equal data

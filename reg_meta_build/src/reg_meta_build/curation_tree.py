@@ -968,6 +968,7 @@ class ParallelRepresentationColumn(ColumnRepresentation):
 
 class ParallelRepresentationEntry(FiniteCurationWindow):
     co_delivered: bool = False
+    case_aliases: bool = False
     variable: str
     variant: str
     column_metadata: Literal["shared", "per_column"] = "shared"
@@ -982,6 +983,15 @@ class ParallelRepresentationEntry(FiniteCurationWindow):
 
     @model_validator(mode="after")
     def _shared_window(self) -> ParallelRepresentationEntry:
+        if self.case_aliases and (
+            self.co_delivered
+            or self.column_metadata != "per_column"
+            or len({column.column.casefold() for column in self.columns}) != 1
+        ):
+            raise ValueError(
+                "case aliases require case-equivalent literals, per-column metadata "
+                "and no co-delivery claim"
+            )
         if self.co_delivered and self.column_metadata != "per_column":
             raise ValueError("co-delivered forms require per-column metadata")
         if any(
@@ -1088,6 +1098,17 @@ class IdentityPartitionEntry(_CurationModel):
         if len(set(self.unassigned_columns)) != len(self.unassigned_columns):
             raise ValueError("unassigned_columns contains duplicate literals")
         return self
+
+
+class IdentityUnassignedEntry(_CurationModel):
+    variable: str
+    expected_evidence_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    evidence: str
+
+    _variable = field_validator("variable")(
+        IdentityPartitionEntry._family_variable.__func__
+    )
+    _evidence = field_validator("evidence")(_require_trimmed)
 
 
 class IdentityColumnOwnerEntry(_CurationModel):
@@ -1317,6 +1338,7 @@ class IdentityRenameEntry(_CurationModel):
 
 class IdentityCuration(_CurationModel):
     partition: list[IdentityPartitionEntry] = Field(default_factory=list)
+    unassigned: list[IdentityUnassignedEntry] = Field(default_factory=list)
     column_owner: list[IdentityColumnOwnerEntry] = Field(default_factory=list)
     route: list[IdentityRouteEntry] = Field(default_factory=list)
     edition_split: list[IdentityEditionSplitEntry] = Field(default_factory=list)
@@ -2122,6 +2144,7 @@ def _register_arrays(
         ("representation.parallel", entry.representation.parallel),
         ("representation.delivery_metadata", entry.representation.delivery_metadata),
         ("identity.partition", entry.identity.partition),
+        ("identity.unassigned", entry.identity.unassigned),
         ("identity.column_owner", entry.identity.column_owner),
         ("identity.route", entry.identity.route),
         ("identity.edition_split", entry.identity.edition_split),
@@ -2175,6 +2198,17 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
 
     identity = entry.register_info
     expected = f"{identity.provider}/{identity.slug}"
+    for index, item in enumerate(entry.identity.unassigned, 1):
+        if (
+            identity.provider != "scb"
+            or item.variable.split(".")[0] != identity.native_id
+        ):
+            raise curation_error(
+                _CODE,
+                f"{file} [[identity.unassigned]] entry {index}: "
+                "unassigned family must belong to this SCB register.",
+                "Use the owning register's canonical native variable key.",
+            )
     edition_owners: set[tuple[str, str]] = set()
     variant_ids = {variant.native_id for variant in entry.variant}
     native_variant_slugs = {

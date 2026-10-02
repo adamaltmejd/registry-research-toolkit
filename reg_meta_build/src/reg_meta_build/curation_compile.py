@@ -1619,7 +1619,7 @@ def compile_parallel_representations(
                 for lo, hi in (coding_scope_bounds(source_scope) or ())
             )
         }
-        if entry.co_delivered:
+        if entry.co_delivered or entry.case_aliases:
             same_members: dict[SourceRecordRef, set[str | None]] = defaultdict(set)
             for record, literal, _ in selected_projection:
                 same_members[record_ref(record)].add(literal)
@@ -1649,14 +1649,19 @@ def compile_parallel_representations(
             invalid = (
                 invalid
                 or not common_quantity
-                or any(
-                    literals != declared_literals for literals in same_members.values()
+                or (
+                    entry.co_delivered
+                    and any(
+                        literals != declared_literals
+                        for literals in same_members.values()
+                    )
                 )
             )
         if (
             invalid
             or (
                 not entry.co_delivered
+                and not entry.case_aliases
                 and any(len(columns) != 1 for columns in by_edition.values())
             )
             or (overlapping_refs != {record_ref(record) for record in selected})
@@ -2206,6 +2211,7 @@ def _partition_family_relevant(
     return (
         any(item.entry.source_id.startswith(source_id + ".") for item in split_naming)
         or any(item.variable == source_id for item in register.identity.partition)
+        or any(item.variable == source_id for item in register.identity.unassigned)
         or any(item.variable == source_id for item in register.identity.column_owner)
         or any(item.variable == str(native[-1]) for item in register.identity.split)
         or any(item.variable == str(native[-1]) for item in register.identity.rename)
@@ -2268,6 +2274,7 @@ def compile_partitions(
         if (
             entries_by_register[source, native_register]
             or register.identity.partition
+            or register.identity.unassigned
             or register.identity.column_owner
             or register.identity.split
             or register.identity.rename
@@ -2319,6 +2326,40 @@ def compile_partitions(
                 for i, item in enumerate(register.identity.rename, 1)
                 if item.variable == str(native[-1])
             ]
+            unassigned = [
+                (i, item)
+                for i, item in enumerate(register.identity.unassigned, 1)
+                if item.variable == source_id
+            ]
+            if unassigned:
+                if len(unassigned) != 1 or any(
+                    (partitions, scoped_entries, sos_splits, sos_renames, entries)
+                ):
+                    raise ValueError(
+                        f"{register.source_file}: unassigned identity {source_id} "
+                        "must not have competing ownership or split naming"
+                    )
+                index, declaration = unassigned[0]
+                seen.add((source, native[:5], source_id))
+                split_bases[scope_key].add(native)
+                null_bases[scope_key].add(native)
+                records = _partition_originals(
+                    prepared, source, native, records, guarded=True
+                )
+                if (
+                    declaration.expected_evidence_sha256
+                    != acknowledgement_evidence_sha256(records)
+                ):
+                    diagnostics.append(
+                        _stale_partition(
+                            f"{register.source_file}#/identity.unassigned/{index}",
+                            source_id,
+                            "complete unassigned source evidence changed",
+                        )
+                    )
+                # Withholding ownership does not waive source or coding diagnostics.
+                # SourceScope evaluates them before an exact acknowledgement applies.
+                continue
             if any(source_id in item.columns.values() for _, item in partitions):
                 entries = tuple(
                     item
@@ -2802,6 +2843,7 @@ def compile_partitions(
     for (source, register_key), (_scope_key, register) in registers.items():
         for table, items in (
             ("identity.partition", register.identity.partition),
+            ("identity.unassigned", register.identity.unassigned),
             ("identity.column_owner", register.identity.column_owner),
             ("identity.split", register.identity.split),
             ("identity.rename", register.identity.rename),
@@ -2809,7 +2851,12 @@ def compile_partitions(
             for index, item in enumerate(items, 1):
                 source_id = (
                     item.variable
-                    if table in {"identity.partition", "identity.column_owner"}
+                    if table
+                    in {
+                        "identity.partition",
+                        "identity.column_owner",
+                        "identity.unassigned",
+                    }
                     else f"{register.register_info.native_id}.{item.variable}"
                 )
                 if (source, register_key, source_id) not in seen:
@@ -2913,6 +2960,7 @@ def compile_deferred_partitions(
             if (
                 entries_by_register[key]
                 or register.identity.partition
+                or register.identity.unassigned
                 or register.identity.column_owner
                 or register.identity.split
                 or register.identity.rename
@@ -2945,6 +2993,9 @@ def compile_deferred_partitions(
             records = cast("tuple[SourceRecord, ...]", projected)
             scope_key, register = location
             source_id = f"{register.register_info.native_id}.{native[-1]}"
+            if any(item.variable == source_id for item in register.identity.unassigned):
+                split_bases[scope_key].add(native)
+                continue
             entries = tuple(
                 item
                 for item in entries_by_register[source, native[:5]]
@@ -5377,7 +5428,13 @@ def compile_occurrence_corrections(
                     by_edition[record.subject.native.edition_id].add(record_ref(record))
                 overbroad = (
                     len(matches) > 1
-                    or any(len(refs) > 1 for refs in by_edition.values())
+                    or (
+                        any(len(refs) > 1 for refs in by_edition.values())
+                        and not (
+                            isinstance(entry, ErrataFieldEntry)
+                            and entry.expected_records is not None
+                        )
+                    )
                     or (
                         isinstance(entry, ErrataOccurrencePeriodEntry)
                         and any(
@@ -5580,7 +5637,19 @@ def compile_occurrence_corrections(
                             *(
                                 tuple(
                                     field
-                                    for field in entry.expected_fields
+                                    for field in (
+                                        capture_expectations(
+                                            (record,),
+                                            fields=tuple(
+                                                field.name
+                                                for field in entry.expected_fields
+                                            ),
+                                        )[0]
+                                        .alternatives[0]
+                                        .fields
+                                        if entry.expected_records is not None
+                                        else entry.expected_fields
+                                    )
                                     if field.name != "column_name"
                                 )
                                 if entry.field

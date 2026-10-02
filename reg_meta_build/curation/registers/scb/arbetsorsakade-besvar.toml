@@ -402,3 +402,182 @@ reason = "These exact source windows have no own bound stored-code domain. Prese
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual-eight-gap-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
 expected_evidence_sha256 = "bd11d32626980996824df94c97895fc4e12996cddda6e30e38c7605ac4c215d5"
 expected_diagnostic_sha256 = "9805ba8500674e9c5265b81e2bd8b5554e4cc6c0fe5a18a946f610904025855f"
+
+[[identity.partition]]
+data_warning = "Literal simultaneous source components are separate catalog variables; their numeric suffixes have no independently verified ordinal meaning. Every original label, definition and coding association is retained."
+variable = "124.38415"
+columns = { OLAR1 = "124.38415.olar1", OLAR2 = "124.38415.olar2", OLAR3 = "124.38415.olar3", OLAR4 = "124.38415.olar4", OLAR5 = "124.38415.olar5", OLAR6 = "124.38415.olar6", OLAR7 = "124.38415.olar7", OLAR8 = "124.38415.olar8", OLAR9 = "124.38415.olar9" }
+columns_ref = "Complete native families, actual primary physical peers and auxiliary joins reviewed. Repeated simultaneous accident fields remain distinct by literal column spelling. Exported definitions establish occurrence year, cause, report indicator and report year, but do not establish ordinal slot meanings. No ordinal interpretation or storage equivalence is asserted. Native7965 retains the stable exported question16_1 across non-simultaneous labels; its blank original remains unattached. Complete own-binding review: Batch52-workplace-nongap-current-own-binding-review.json."
+expected_evidence_sha256 = "a50ad75f594503ccebc67067a87c4785ae2371da746f9c36504cbd3ad000129b"
+
+[[identity.partition]]
+data_warning = "Literal simultaneous source components are separate catalog variables; their numeric suffixes have no independently verified ordinal meaning. Every original label, definition and coding association is retained."
+variable = "124.38443"
+columns = { OLORSAK1 = "124.38443.olorsak1", OLORSAK2 = "124.38443.olorsak2", OLORSAK3 = "124.38443.olorsak3", OLORSAK4 = "124.38443.olorsak4", OLORSAK5 = "124.38443.olorsak5", OLORSAK6 = "124.38443.olorsak6", OLORSAK7 = "124.38443.olorsak7", OLORSAK8 = "124.38443.olorsak8", OLORSAK9 = "124.38443.olorsak9" }
+columns_ref = "Complete native families, actual primary physical peers and auxiliary joins reviewed. Repeated simultaneous accident fields remain distinct by literal column spelling. Exported definitions establish occurrence year, cause, report indicator and report year, but do not establish ordinal slot meanings. No ordinal interpretation or storage equivalence is asserted. Native7965 retains the stable exported question16_1 across non-simultaneous labels; its blank original remains unattached. Complete own-binding review: Batch52-workplace-nongap-current-own-binding-review.json."
+expected_evidence_sha256 = "fed60e8f0f839be7a66db0f6751ccc9fc8904326e07cd966fa451d519746c52b"
+
+[[identity.partition]]
+data_warning = "Literal simultaneous source components are separate catalog variables; their numeric suffixes have no independently verified ordinal meaning. Every original label, definition and coding association is retained."
+variable = "124.38444"
+columns = { OLANM1 = "124.38444.olanm1", OLANM2 = "124.38444.olanm2", OLANM3 = "124.38444.olanm3", OLANM4 = "124.38444.olanm4", OLANM5 = "124.38444.olanm5", OLANM6 = "124.38444.olanm6", OLANM7 = "124.38444.olanm7", OLANM8 = "124.38444.olanm8", OLANM9 = "124.38444.olanm9" }
+columns_ref = "Complete native families, actual primary physical peers and auxiliary joins reviewed. Repeated simultaneous accident fields remain distinct by literal column spelling. Exported definitions establish occurrence year, cause, report indicator and report year, but do not establish ordinal slot meanings. No ordinal interpretation or storage equivalence is asserted. Native7965 retains the stable exported question16_1 across non-simultaneous labels; its blank original remains unattached. Complete own-binding review: Batch52-workplace-nongap-current-own-binding-review.json."
+expected_evidence_sha256 = "71df21861725332592e74260caa56e74aa27a5b73af0c5a73d3b3b19aff47d0f"
+
+[[identity.partition]]
+data_warning = "Literal simultaneous source components are separate catalog variables; their numeric suffixes have no independently verified ordinal meaning. Every original label, definition and coding association is retained."
+variable = "124.44350"
+columns = { OLARANM1 = "124.44350.olaranm1", OLARANM2 = "124.44350.olaranm2", OLARANM3 = "124.44350.olaranm3", OLARANM4 = "124.44350.olaranm4", OLARANM5 = "124.44350.olaranm5", OLARANM6 = "124.44350.olaranm6", OLARANM7 = "124.44350.olaranm7", OLARANM8 = "124.44350.olaranm8", OLARANM9 = "124.44350.olaranm9" }
+columns_ref = "Complete native families, actual primary physical peers and auxiliary joins reviewed. Repeated simultaneous accident fields remain distinct by literal column spelling. Exported definitions establish occurrence year, cause, report indicator and report year, but do not establish ordinal slot meanings. No ordinal interpretation or storage equivalence is asserted. Native7965 retains the stable exported question16_1 across non-simultaneous labels; its blank original remains unattached. Complete own-binding review: Batch52-workplace-nongap-current-own-binding-review.json."
+expected_evidence_sha256 = "bb2e60a954048933576b4b4871f1c177bca2a2987bdfd52858f8c7a1f6a961ed"
+
+[[identity.partition]]
+data_warning = "Identity follows the stable exported native question across changing column labels; original wording and annual coding remain intact."
+variable = "124.7965"
+columns = { ATGARBUPP = "124.7965", AndraUppg = "124.7965", FORANDRA = "124.7965", ForAndra = "124.7965", Forandra = "124.7965" }
+columns_ref = "Complete native families, actual primary physical peers and auxiliary joins reviewed. Repeated simultaneous accident fields remain distinct by literal column spelling. Exported definitions establish occurrence year, cause, report indicator and report year, but do not establish ordinal slot meanings. No ordinal interpretation or storage equivalence is asserted. Native7965 retains the stable exported question16_1 across non-simultaneous labels; its blank original remains unattached. Complete own-binding review: Batch52-workplace-nongap-current-own-binding-review.json."
+expected_evidence_sha256 = "6edfe5e0cb3d61d0633afa0e64cc4b8d2e02f60b3ef329c2c8449203e2877329"
+
+[[variable]]
+native_id = "124.38415.olar1"
+slug = "olar1"
+
+[[variable]]
+native_id = "124.38415.olar2"
+slug = "olar2"
+
+[[variable]]
+native_id = "124.38415.olar3"
+slug = "olar3"
+
+[[variable]]
+native_id = "124.38415.olar4"
+slug = "olar4"
+
+[[variable]]
+native_id = "124.38415.olar5"
+slug = "olar5"
+
+[[variable]]
+native_id = "124.38415.olar6"
+slug = "olar6"
+
+[[variable]]
+native_id = "124.38415.olar7"
+slug = "olar7"
+
+[[variable]]
+native_id = "124.38415.olar8"
+slug = "olar8"
+
+[[variable]]
+native_id = "124.38415.olar9"
+slug = "olar9"
+
+[[variable]]
+native_id = "124.38443.olorsak1"
+slug = "olorsak1"
+
+[[variable]]
+native_id = "124.38443.olorsak2"
+slug = "olorsak2"
+
+[[variable]]
+native_id = "124.38443.olorsak3"
+slug = "olorsak3"
+
+[[variable]]
+native_id = "124.38443.olorsak4"
+slug = "olorsak4"
+
+[[variable]]
+native_id = "124.38443.olorsak5"
+slug = "olorsak5"
+
+[[variable]]
+native_id = "124.38443.olorsak6"
+slug = "olorsak6"
+
+[[variable]]
+native_id = "124.38443.olorsak7"
+slug = "olorsak7"
+
+[[variable]]
+native_id = "124.38443.olorsak8"
+slug = "olorsak8"
+
+[[variable]]
+native_id = "124.38443.olorsak9"
+slug = "olorsak9"
+
+[[variable]]
+native_id = "124.38444.olanm1"
+slug = "olanm1"
+
+[[variable]]
+native_id = "124.38444.olanm2"
+slug = "olanm2"
+
+[[variable]]
+native_id = "124.38444.olanm3"
+slug = "olanm3"
+
+[[variable]]
+native_id = "124.38444.olanm4"
+slug = "olanm4"
+
+[[variable]]
+native_id = "124.38444.olanm5"
+slug = "olanm5"
+
+[[variable]]
+native_id = "124.38444.olanm6"
+slug = "olanm6"
+
+[[variable]]
+native_id = "124.38444.olanm7"
+slug = "olanm7"
+
+[[variable]]
+native_id = "124.38444.olanm8"
+slug = "olanm8"
+
+[[variable]]
+native_id = "124.38444.olanm9"
+slug = "olanm9"
+
+[[variable]]
+native_id = "124.44350.olaranm1"
+slug = "olaranm1"
+
+[[variable]]
+native_id = "124.44350.olaranm2"
+slug = "olaranm2"
+
+[[variable]]
+native_id = "124.44350.olaranm3"
+slug = "olaranm3"
+
+[[variable]]
+native_id = "124.44350.olaranm4"
+slug = "olaranm4"
+
+[[variable]]
+native_id = "124.44350.olaranm5"
+slug = "olaranm5"
+
+[[variable]]
+native_id = "124.44350.olaranm6"
+slug = "olaranm6"
+
+[[variable]]
+native_id = "124.44350.olaranm7"
+slug = "olaranm7"
+
+[[variable]]
+native_id = "124.44350.olaranm8"
+slug = "olaranm8"
+
+[[variable]]
+native_id = "124.44350.olaranm9"
+slug = "olaranm9"
