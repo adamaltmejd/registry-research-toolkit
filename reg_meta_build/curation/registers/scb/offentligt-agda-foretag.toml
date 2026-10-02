@@ -297,3 +297,15 @@ reason = "OrgNr in2011/2012 is simultaneously attributed to person/legal-entity 
 evidence = "Maintainer-approved ambiguous-source/retained-unmapped policy. Complete family, physical collision, actual support, own coding and positive scope proof: Batch52-two-source-coordinate-collisions-source-proof.json. No inferred common population, stored encoding or table discriminator."
 expected_evidence_sha256 = "e555e4a1d568b4e20d045abd821b5dee96de3d02b05db8d0bf54aebef21d8f5d"
 expected_diagnostic_sha256 = "868dd287dd27a34c3a00a54d67b17df08552dfe6e28fdbf197a5adf3fd43a0b3"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/offentligt-agda-foretag/ngs1"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:114\",\"variant:129\",\"edition:2338\",\"variable:19054\",\"member:148492\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "a5af35b45a965aa4f9b44582aba97f64470717fdea7609e05bfb3f22b5a4be07"
+expected_diagnostic_sha256 = "47580c51147467fb260909d854ddad342ced3f4351fd81020075b8a558d1d050"

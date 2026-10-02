@@ -87,3 +87,27 @@ native_id = "374.690.a2tot"
 slug = "antal-anstallda"
 
 # register 377
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/cvts/b2a"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:374\",\"variant:1356\",\"edition:14841\",\"variable:8989\",\"member:687472\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "bda622beda4977770497b29b85b4ea376d753dc89ab7b04f616e0dbbb058474a"
+expected_diagnostic_sha256 = "d19e80f341e54118cc8a159a79bf60d2dcbeb661db29ce578e0b3169ab3076e1"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/cvts/b2b"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:374\",\"variant:1356\",\"edition:14841\",\"variable:8989\",\"member:687471\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "2e46bde2e493a290f044f3cecbc0910ee0534eb2dced4f7215c96efea04898e0"
+expected_diagnostic_sha256 = "71ae6132a711a0b48fc1e76af4784ff8eaa90c3acf17b316d6dfee78dabc27b3"

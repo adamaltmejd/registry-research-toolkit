@@ -117,3 +117,27 @@ native_id = "269.16336"
 slug = "organisationsidentitet"
 
 # register 270
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/bonus-oregelbundna/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:269\",\"variant:637\",\"edition:2976\",\"variable:4027\",\"member:174577\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "eb6fd6d9d3aacf85c3a3b22dd09fc1ce43fe157045cb58de7f48c45dbac9e4c3"
+expected_diagnostic_sha256 = "76e8af2bb1c31f4103741e53692a11523c5337eea53c9c229c210b75913fa7a2"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/bonus-oregelbundna/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:269\",\"variant:637\",\"edition:1379\",\"variable:4027\",\"member:106753\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "118cd24244840948b509c5d37f904360e0ccabf030320ea267ae32d6cf57df8a"
+expected_diagnostic_sha256 = "dbc9e2f97c0be00affbc3af3d1df82d0194167aa34e9fcfd5ced70bfa8172733"

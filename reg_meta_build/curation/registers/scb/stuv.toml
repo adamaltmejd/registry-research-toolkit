@@ -101,3 +101,15 @@ native_id = "397.36.lankom"
 slug = "lan-kommun-kod"
 
 # register 400
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/stuv/avd-unik"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:397\",\"variant:1558\",\"edition:15113\",\"variable:41568\",\"member:706418\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "ace5cdc7323936d50b6174c92dc07a4014700579653b2939be28303683117044"
+expected_diagnostic_sha256 = "0aca8ac423a5d973a7e7564ad1f1219f146a72e82f7ebf6e2ac083c9b2a2c8f6"

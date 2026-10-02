@@ -206,3 +206,15 @@ column = "SNI"
 periods = [["2003-01-01", "2003-12-31"], ["2005-01-01", "2007-12-31"]]
 reason = "Retain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
 source = "codeless_overlap.toml#/resolve/32"  # v18 accepted-codeless:32:*, 2 case(s)
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/lastbilstrafik/varukod-sandning"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:162\",\"variant:233\",\"edition:696\",\"variable:2061\",\"member:15489\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "1c0b52e4c3c4e6539d4afba43150426fa1354bdb823bed3ba8f0ed686f8db95b"
+expected_diagnostic_sha256 = "a718ddb9eef35a9cb44f61a04ffc9b957991c12a6448a1963ed41b22040ad171"

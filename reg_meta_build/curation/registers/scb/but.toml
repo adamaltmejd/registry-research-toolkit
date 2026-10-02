@@ -199,3 +199,15 @@ native_id = "357.45856"
 slug = "urvalskvartal"
 
 # register 358
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/but/mbkontrz"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:357\",\"variant:1267\",\"edition:9859\",\"variable:35989\",\"member:438342\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "450b594bc20c2ea0c30b752d39f5afa391ca33a9b5c75a2ab57ae98737e3fd8f"
+expected_diagnostic_sha256 = "feb0738bd4461ab942331bf0af1eb8fdf25e5c57e624d3782dd4ab3a6f1bfa45"

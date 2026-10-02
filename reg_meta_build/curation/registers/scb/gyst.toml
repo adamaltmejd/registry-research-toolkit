@@ -461,3 +461,15 @@ native_id = "108.5697.lillan"
 slug = "lilla-n-per-stratum"
 
 # register 111
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/gyst/stratum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:108\",\"variant:120\",\"edition:11161\",\"variable:462\",\"member:453829\"]}"]
+fields = ["coding"]
+valid_from = "2003-07-01"
+valid_to = "2004-06-30"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "867ead0bafb7606cff6690621c37e1870798996eb87625631d657a30f6459dda"
+expected_diagnostic_sha256 = "76d029dcac1a5a13e88a83f0a8793b31aac6679b27b3392c3d97191efc01c602"
