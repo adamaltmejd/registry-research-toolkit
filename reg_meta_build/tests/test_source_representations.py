@@ -10,7 +10,10 @@ import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
 from pydantic import ValidationError
 from reg_meta.source_evidence import SourceRevision
-from reg_meta_build.catalog_dependencies import check_delivery_coverage
+from reg_meta_build.catalog_dependencies import (
+    CoverageObligation,
+    check_delivery_coverage,
+)
 from reg_meta_build.db import open_built_db
 from reg_meta_build.resolved_catalog import (
     ResolvedClassificationLink,
@@ -964,11 +967,40 @@ def test_per_column_coding_withholds_unsupported_domain_without_shared_fallback(
         states[0] = states[0].model_copy(update={"value_set": None})
     else:
         states.append(states[0].model_copy(update={"value_set": states[1].value_set}))
-    result, aliases, issues, _, _ = form_representations(
-        states, (setup[2],), variable_key=KEY, variants=setup[3], subject="fixture"
+    later = states[1].model_copy(
+        update={"valid_from": "2021-01-01", "valid_to": "2021-12-31"}
     )
-    assert result == [] and aliases == ()
+    result, aliases, issues, withheld, _ = form_representations(
+        [*states, later],
+        (setup[2],),
+        variable_key=KEY,
+        variants=setup[3],
+        subject="fixture",
+    )
+    assert result == [later] and aliases == ()
     assert [issue.code for issue in issues] == ["unsupported_representation_coding"]
+    assert set(withheld) == {
+        ("people", "First", "2020-01-01", "2020-12-31"),
+        ("people", "Second", "2020-01-01", "2020-12-31"),
+    }
+    retained = variable.model_copy(update={"states": tuple(result), "aliases": ()})
+    nearby = CoverageObligation(
+        "scb/example/income",
+        "people",
+        "Second",
+        "2021-01-01",
+        "2021-12-31",
+        (record_ref(setup[0][1]),),
+    )
+    check_delivery_coverage((retained,), (nearby,), withheld={})
+    missing = retained.model_copy(update={"states": ()})
+    with pytest.raises(ValueError, match="supported delivery coverage was lost"):
+        check_delivery_coverage((missing,), (nearby,), withheld={})
+    unrelated = replace(
+        nearby, column="Other", valid_from="2020-01-01", valid_to="2020-12-31"
+    )
+    with pytest.raises(ValueError, match="supported delivery coverage was lost"):
+        check_delivery_coverage((retained,), (unrelated,), withheld={})
 
 
 @pytest.mark.parametrize("second_source", [None, "Question 2 in another edition"])

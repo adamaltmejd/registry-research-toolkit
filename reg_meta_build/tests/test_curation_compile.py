@@ -9210,14 +9210,20 @@ def test_guarded_uncoded_text_role_preserves_attached_book_and_refuses_drift(
 
 
 @pytest.mark.parametrize("guarded", [True, False])
-def test_global_event_acknowledgement_is_routed_out_of_local_scope(tmp_path, guarded):
+@pytest.mark.parametrize(
+    "code",
+    ["unresolved_source_event_endpoint", "unresolved_lineage_ambiguous_source_variant"],
+)
+def test_global_event_acknowledgement_is_routed_out_of_local_scope(
+    tmp_path, guarded, code
+):
     root = tmp_path / "curation"
     _tree(root)
     source_ref = json.dumps(
         {"source": "scb-timeseries", "semantic_record_key": ["event", "exact"]}
     )
     fragment = (
-        '\n[[acknowledge]]\ncode = "unresolved_source_event_endpoint"\n'
+        f'\n[[acknowledge]]\ncode = "{code}"\n'
         'subject = "exact"\nreason = "Source endpoint is absent"\n'
         'evidence = "Complete accepted evidence reviewed"\n'
         f"refs = [{json.dumps(source_ref)}]\n"
@@ -9235,7 +9241,14 @@ def test_global_event_acknowledgement_is_routed_out_of_local_scope(tmp_path, gua
             compile_curation(tree, _prepared(), (_scope(),), subset=True)
         return
     compiled = compile_curation(tree, _prepared(), (_scope(),), subset=True)
-    assert len(compiled.event_acknowledgements) == 1
+    assert (
+        len(
+            compiled.event_acknowledgements
+            if code == "unresolved_source_event_endpoint"
+            else compiled.lineage_acknowledgements
+        )
+        == 1
+    )
     assert not any(
         case.decision.kind == "acknowledge"
         for cases in compiled.cases.values()

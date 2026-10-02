@@ -1825,6 +1825,43 @@ def acknowledged_diagnostic(
     return issue.model_copy(update={"severity": "warning", "acknowledged_by": case_id})
 
 
+def settle_acknowledgements(
+    diagnostics: tuple[ResolutionDiagnostic, ...],
+    cases: tuple[CurationCase, ...],
+    evidence_sha256: Mapping[str, str | None],
+) -> tuple[ResolutionDiagnostic, ...]:
+    """Settle guarded global issues without restoring any withheld output."""
+    result = list(diagnostics)
+    for case in cases:
+        decision = case.decision
+        assert isinstance(decision, AcknowledgeDecision)
+        matches = {
+            issue: warning
+            for issue in result
+            if (warning := acknowledged_diagnostic(issue, decision, case.case_id))
+            is not None
+        }
+        if len(matches) == 1 and (
+            decision.expected_evidence_sha256 is not None
+            and evidence_sha256.get(case.case_id) == decision.expected_evidence_sha256
+        ):
+            result = [matches.get(issue, issue) for issue in result]
+        else:
+            result.append(
+                ResolutionDiagnostic(
+                    code="stale_curation_entry",
+                    severity="error",
+                    case_id=case.case_id,
+                    subject=decision.subject,
+                    detail="The exact global acknowledgement no longer matches one issue with unchanged complete evidence and owner.",
+                    refs=decision.refs,
+                    fields=decision.fields,
+                    withheld_output=(case.case_id,),
+                )
+            )
+    return tuple(result)
+
+
 __all__ = [
     "AcknowledgeDecision",
     "ApplicabilityIssue",

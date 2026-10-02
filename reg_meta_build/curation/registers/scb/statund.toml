@@ -130,3 +130,15 @@ native_id = "400.558.nykoprefix"
 slug = "forsamling-stockholm"
 
 # register 404
+
+[[acknowledge]]
+code = "unresolved_lineage_ambiguous_source_variant"
+subject = "scb/statund/fodelselanmor"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:400\",\"variant:1579\",\"edition:19827\",\"variable:307\",\"member:983213\"]}"]
+fields = []
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+expected_evidence_sha256 = "30f2ca5105d13557fe4eafe7fcddaade6a111e1757a8436ebcd5662c7e413447"
+expected_diagnostic_sha256 = "03bd73f28db14f6b54b1bcc91e02a7695c12b7220d5bbe4146d5757bb0030471"
+reason = "The literal RTB source variant label is shared by its annual and quarterly admitted variants. Retain the exact source attribution and accepted variable identity without selecting a delivery variant or manufacturing a lineage edge. The source declaration does not establish which variant supplied this consumer window."
+evidence = "Complete current six-node accepted identity closure reviewed using maintained curation and accepted source originals (prepared commit cdd343ba8a61e6d2e44a2f057ae6677e579db32d; manifest650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa). Batch56-lineage-source-proof.json retains the consumer original, complete source candidate variable states, both annual/quarterly named variants and exact identity edges. Any changed original, candidate, parent distinction or identity edge invalidates this acknowledgement."

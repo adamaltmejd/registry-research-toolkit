@@ -187,6 +187,7 @@ class CompiledCuration:
     report: dict[str, dict[str, list[str]]]
     diagnostics: tuple[ResolutionDiagnostic, ...] = ()
     event_acknowledgements: tuple[CurationCase, ...] = ()
+    lineage_acknowledgements: tuple[CurationCase, ...] = ()
     source_diagnostics: (
         dict[
             tuple[str, NativeKey | None],
@@ -6928,6 +6929,7 @@ def compile_curation(
     pairs = []
     seen_pairs: set[tuple[str, str]] = set()
     event_acknowledgements: list[CurationCase] = []
+    lineage_acknowledgements: list[CurationCase] = []
     for register in sorted(tree.registers, key=lambda item: item.source_file):
         for index, pair in enumerate(register.code_label_pair, 1):
             case_id = f"{register.source_file}#/code_label_pair/{index}"
@@ -7096,15 +7098,21 @@ def compile_curation(
                     ),
                 )
 
-                if ack.code == "unresolved_source_event_endpoint":
+                if ack.code in {
+                    "unresolved_source_event_endpoint",
+                    "unresolved_lineage_ambiguous_source_variant",
+                }:
                     if (
                         ack.expected_evidence_sha256 is None
                         or ack.expected_diagnostic_sha256 is None
                     ):
                         raise ValueError(
-                            f"{case_id}: global event acknowledgements need full evidence and diagnostic guards"
+                            f"{case_id}: global acknowledgements need full evidence and diagnostic guards"
                         )
-                    event_acknowledgements.append(case)
+                    if ack.code == "unresolved_source_event_endpoint":
+                        event_acknowledgements.append(case)
+                    else:
+                        lineage_acknowledgements.append(case)
                 else:
                     cases[scope_key].append(case)
     # The scoped resolver records what it actually skipped in this list.
@@ -7317,6 +7325,7 @@ def compile_curation(
             *split_diagnostics,
         ),
         event_acknowledgements=tuple(event_acknowledgements),
+        lineage_acknowledgements=tuple(lineage_acknowledgements),
         naming=naming,
         variants=variants,
         provider_keys=provider_keys,

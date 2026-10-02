@@ -558,6 +558,10 @@ def form_representations(
                         assert domain is not None
                         column_coding[column] = (domain, native_label, links)
                 if invalid_coding:
+                    # Per-column aliases require finite domains. This unresolved
+                    # shared slice delivers no state, so account for its exact
+                    # withheld windows just like other representation failures.
+                    withheld_windows.extend(unresolved)
                     continue
                 codes, label, classification_links = None, "", ()
             elif len(code_values) == 1:

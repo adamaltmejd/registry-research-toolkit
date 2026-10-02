@@ -42,7 +42,7 @@ from reg_meta_build.curation_compile import (
     validate_sentinels,
 )
 from reg_meta_build.curation_tree import load_curation_tree
-from reg_meta_build.data_warnings import scope_data_warnings, source_event_data_warnings
+from reg_meta_build.data_warnings import acknowledged_data_warnings, scope_data_warnings
 from reg_meta_build.db import _emit_timing, _paths_overlap
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
 from reg_meta_build.prepared_catalog import (
@@ -62,13 +62,18 @@ from reg_meta_build.resolved_metadata import (
     RetainedDocumentaryRelationship,
 )
 from reg_meta_build.source_classifications import resolve_canonical_codes
-from reg_meta_build.source_coordinates import NativeKey  # noqa: TC001
+from reg_meta_build.source_coordinates import (
+    NativeKey,
+    source_register_key,
+)
 from reg_meta_build.source_curation import (
+    AcknowledgeDecision,
     CurationCase,
     GuardValidationContext,
     ResolutionDiagnostic,
     SourceRecordRef,
 )
+from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_event_resolution import SourceEventBindings
 from reg_meta_build.source_naming import (  # noqa: TC001
     NamingAmbiguity,
@@ -695,6 +700,13 @@ def _run_pipeline(
     parents, variant_registers, variables, withheld, evidence = {}, {}, {}, {}, {}
     books = {}
     data_warnings = {}
+    lineage_originals = {
+        ref: []
+        for case in compiled.lineage_acknowledgements
+        if isinstance(case.decision, AcknowledgeDecision)
+        for ref in case.decision.refs
+    }
+    lineage_registers = {}
     sibling_pairs, slice_keys = set(), set()
     build_result: dict[str, object] = {}
     with _retain_completed_artifact(build_result, report_dir), ExitStack() as stack:
@@ -1262,6 +1274,16 @@ def _run_pipeline(
                             "physical source occurrence accounting is incomplete"
                         )
                     event_bindings.observe_scope(originals, result, uses)
+                    if lineage_originals:
+                        for original in originals:
+                            ref = record_ref(original)
+                            if ref in lineage_originals:
+                                lineage_originals[ref].append(original)
+                                owner = source_register_key(original)
+                                if owner in result.parents.registers:
+                                    lineage_registers[owner] = result.parents.registers[
+                                        owner
+                                    ]
                     for record_id, dispositions in uses.items():
                         event(
                             "source_occurrence",
@@ -1508,7 +1530,7 @@ def _run_pipeline(
                     if value.acknowledged_by is not None:
                         acknowledged[value.code] += 1
                     issue(value)
-                for warning in source_event_data_warnings(
+                for warning in acknowledged_data_warnings(
                     source_events.diagnostics,
                     compiled.event_acknowledgements,
                     event_bindings.guarded_registers,
@@ -1544,9 +1566,21 @@ def _run_pipeline(
                         if register.register_info.source_labels
                     },
                     slice_registers=slice_registers,
+                    acknowledgements=compiled.lineage_acknowledgements,
+                    acknowledgement_originals={
+                        ref: tuple(rows) for ref, rows in lineage_originals.items()
+                    },
                 )
                 for value in lineage.diagnostics:
+                    if value.acknowledged_by is not None:
+                        acknowledged[value.code] += 1
                     issue(value)
+                for warning in acknowledged_data_warnings(
+                    lineage.diagnostics,
+                    compiled.lineage_acknowledgements,
+                    lineage_registers,
+                ):
+                    data_warnings[warning.warning_id] = warning
                 if registers:
                     counts["skipped_curation"] = sum(
                         part.skipped

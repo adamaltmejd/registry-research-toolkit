@@ -1273,6 +1273,15 @@ event declarations and every physical endpoint occurrence, including duplicates;
 observed endpoint owner must match the declaring register. Missing successors remain
 unavailable, and source events remain documentary evidence without fabricated entities.
 
+Exact lineage-ambiguity acknowledgements settle at the same guarded global boundary.
+Their fingerprints pin the consumer originals, complete identity-linked source
+variables, every variant matching each literal source label, and connected identity
+declarations. Different source origins or labels on one consumer retain separate
+candidate contexts. Attribution text and ambiguous lineage rows survive; no source
+variant is selected. Positively unselected sources defer these acknowledgements only in
+scoped builds; full builds still refuse missing or changed evidence. Settled global
+warnings use the same catalog warning projection and writer as scoped limitations.
+
 Diagnostic mode resolves exactly the same facts and issues. It scans the complete
 prepared scope set and writes only independently supported output to a separate new
 path. It never aborts on a per-variable or per-family inconsistency: it withholds the

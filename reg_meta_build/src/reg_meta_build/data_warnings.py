@@ -141,12 +141,12 @@ def diagnostic_data_warning(
     )
 
 
-def source_event_data_warnings(
+def acknowledged_data_warnings(
     diagnostics: tuple[ResolutionDiagnostic, ...],
     cases: tuple[CurationCase, ...],
     registers: Mapping[NativeKey, ResolvedRegister],
 ) -> tuple[DataWarning, ...]:
-    """Keep missing succession endpoints as register warnings, never SQL targets."""
+    """Project guarded global limitations at their observed owner registers."""
     reviewed = {case.case_id: case.decision for case in cases}
     warnings = {}
     for issue in diagnostics:

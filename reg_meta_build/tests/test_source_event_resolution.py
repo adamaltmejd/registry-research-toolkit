@@ -206,7 +206,7 @@ def test_exact_missing_event_acknowledgement_keeps_originals_and_withheld_edge(
     import json
     import sqlite3
 
-    from reg_meta_build.data_warnings import source_event_data_warnings
+    from reg_meta_build.data_warnings import acknowledged_data_warnings
     from reg_meta_build.resolved_catalog import write_resolved_catalog
 
     event, originals, scope, uses, case = _missing_endpoint_acknowledgement()
@@ -226,7 +226,7 @@ def test_exact_missing_event_acknowledgement_keeps_originals_and_withheld_edge(
     )
     assert not result.metadata.successions
     assert bindings.events == (event,)
-    (warning,) = source_event_data_warnings(
+    (warning,) = acknowledged_data_warnings(
         result.diagnostics, (case,), bindings.guarded_registers
     )
     assert warning.variable_fqid is None and warning.variant is None

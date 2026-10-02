@@ -757,3 +757,27 @@ reason = "The exact own source coding associations contain competing stored doma
 evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
 expected_evidence_sha256 = "2006bc3344d86cf872788e67b02e143728bc009c46aaf7887f3bdf43e074f5d0"
 expected_diagnostic_sha256 = "f7877e67492eb1a8b83bd1a69a54f9aaad21d140aeb9b7ed5b8366293aa85836"
+
+[[acknowledge]]
+code = "unresolved_lineage_ambiguous_source_variant"
+subject = "scb/breg/forsamlingfar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:14552\",\"variable:310\",\"member:664836\"]}"]
+fields = []
+valid_from = "2001-12-31"
+valid_to = "2001-12-31"
+expected_evidence_sha256 = "0e32223a71c825e39f6e37a15d8df9dae50b92b99398a68411c7d88b284cc7f1"
+expected_diagnostic_sha256 = "a70325608097611760d0528af82b72615ee439df922e0227349c006366f2a075"
+reason = "The literal RTB source variant label is shared by its annual and quarterly admitted variants. Retain the exact source attribution and accepted variable identity without selecting a delivery variant or manufacturing a lineage edge. The source declaration does not establish which variant supplied this consumer window."
+evidence = "Complete current six-node accepted identity closure reviewed using maintained curation and accepted source originals (prepared commit cdd343ba8a61e6d2e44a2f057ae6677e579db32d; manifest650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa). Batch56-lineage-source-proof.json retains the consumer original, complete source candidate variable states, both annual/quarterly named variants and exact identity edges. Any changed original, candidate, parent distinction or identity edge invalidates this acknowledgement."
+
+[[acknowledge]]
+code = "unresolved_lineage_ambiguous_source_variant"
+subject = "scb/breg/forsamlingmor"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:333\",\"variant:1077\",\"edition:14552\",\"variable:311\",\"member:664837\"]}"]
+fields = []
+valid_from = "2001-12-31"
+valid_to = "2001-12-31"
+expected_evidence_sha256 = "4d952ed19b62e5d949e5473cb7167e71ea1f2c5e578003ef441fdea42c1fab09"
+expected_diagnostic_sha256 = "8e7aa3135ae516b7cffcf05e80e8e8c3eb43ad6c7ccf76aade53d482df4c888c"
+reason = "The literal RTB source variant label is shared by its annual and quarterly admitted variants. Retain the exact source attribution and accepted variable identity without selecting a delivery variant or manufacturing a lineage edge. The source declaration does not establish which variant supplied this consumer window."
+evidence = "Complete current six-node accepted identity closure reviewed using maintained curation and accepted source originals (prepared commit cdd343ba8a61e6d2e44a2f057ae6677e579db32d; manifest650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa). Batch56-lineage-source-proof.json retains the consumer original, complete source candidate variable states, both annual/quarterly named variants and exact identity edges. Any changed original, candidate, parent distinction or identity edge invalidates this acknowledgement."

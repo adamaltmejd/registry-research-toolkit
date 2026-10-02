@@ -392,3 +392,234 @@ def test_independent_register_only_attribution_retains_missing_endpoint_warning(
     assert warning.kind == "no_source_state"
     assert warning.consumer.period_scope == "year_independent"
     assert warning.consumer.valid_from is warning.consumer.valid_to is None
+
+
+def _guarded_ambiguous_lineage():
+    from reg_meta.source_evidence import canonical_sha256
+    from reg_meta_build.catalog_lineage import lineage_acknowledgement_sha256
+    from reg_meta_build.source_coordinates import source_register_key
+    from reg_meta_build.source_curation import AcknowledgeDecision, CurationCase
+    from test_source_scope import record
+
+    variables, options = fixture(second_variant=True)
+    options["variants"] += (
+        (variables[1].register_ref, ResolvedVariant(slug="duplicate", name="People")),
+    )
+    result = resolve_catalog_lineage(variables, **options)
+    (issue,) = result.diagnostics
+    original = record(1, 5, 2)
+    case = CurationCase(
+        case_id="registers/scb/example.toml#/acknowledge/1",
+        targets=(),
+        decision=AcknowledgeDecision(
+            code=issue.code,
+            subject=issue.subject,
+            refs=issue.refs,
+            valid_from=issue.valid_from,
+            valid_to=issue.valid_to,
+            register_key=source_register_key(original),
+            reason="The literal source variant label identifies multiple admitted deliveries.",
+            evidence="Exact source declaration and complete candidate closure reviewed.",
+            expected_diagnostic_sha256=canonical_sha256(issue.model_dump(mode="json")),
+            expected_evidence_sha256=lineage_acknowledgement_sha256(
+                (original,),
+                variables[0],
+                (variables[1],),
+                tuple(
+                    (r, v)
+                    for r, v in options["variants"]
+                    if r == variables[1].register_ref and v.name == "People"
+                ),
+                options["metadata"],
+            ),
+        ),
+    )
+    options.update(
+        acknowledgements=(case,), acknowledgement_originals={issue.refs[0]: (original,)}
+    )
+    return variables, options, case
+
+
+def test_exact_lineage_acknowledgement_keeps_source_text_and_persists_warning(tmp_path):
+    import json
+    import sqlite3
+
+    from reg_meta_build.data_warnings import acknowledged_data_warnings
+    from reg_meta_build.resolved_catalog import write_resolved_catalog
+
+    variables, options, case = _guarded_ambiguous_lineage()
+    result = resolve_catalog_lineage(variables, **options)
+    (issue,) = result.diagnostics
+    assert issue.severity == "warning" and issue.acknowledged_by == case.case_id
+    assert not result.metadata.state_lineage
+    assert result.metadata.lineage_warnings[0].kind == "ambiguous_source_variant"
+    assert [v.source_register_text for v in result.variables] == [
+        v.source_register_text for v in variables
+    ]
+    (warning,) = acknowledged_data_warnings(
+        result.diagnostics,
+        (case,),
+        {case.decision.register_key: variables[0].register_ref},
+    )
+    output = tmp_path / "lineage.db"
+    write_resolved_catalog(
+        result.variables,
+        output,
+        manifest={},
+        metadata=result.metadata,
+        data_warnings=(warning,),
+    )
+    with sqlite3.connect(f"file:{output}?mode=ro", uri=True) as conn:
+        assert conn.execute("PRAGMA foreign_key_check").fetchall() == []
+        (stored,) = conn.execute("SELECT warning_json FROM data_warning").fetchone()
+        assert json.loads(stored) == json.loads(warning.model_dump_json())
+        assert conn.execute(
+            "SELECT COUNT(*) FROM variable_state_lineage_warning"
+        ).fetchone() == (1,)
+
+
+@pytest.mark.parametrize(
+    "change", ["original", "new_candidate", "changed_candidate", "identity_edge"]
+)
+def test_lineage_acknowledgement_refuses_changed_source_or_candidate_distinction(
+    change,
+):
+    from reg_meta_build.resolved_metadata import ResolvedVariableSameAs
+
+    variables, options, case = _guarded_ambiguous_lineage()
+    if change == "original":
+        ref = case.decision.refs[0]
+        options["acknowledgement_originals"][ref] = (
+            options["acknowledgement_originals"][ref][0].model_copy(
+                update={"original_period_text": "Changed"}
+            ),
+        )
+    elif change == "new_candidate":
+        options["variants"] += (
+            (variables[1].register_ref, ResolvedVariant(slug="another", name="People")),
+        )
+    elif change == "changed_candidate":
+        source = variables[1].model_copy(
+            update={"definition": "Changed source candidate"}
+        )
+        variables = (variables[0], source)
+    else:
+        other = variables[1].model_copy(update={"slug": "new-source"})
+        variables = (*variables, other)
+        options["metadata"] = options["metadata"].model_copy(
+            update={
+                "variable_same_as": (
+                    *options["metadata"].variable_same_as,
+                    ResolvedVariableSameAs(
+                        a="scb/example/value", b="scb/origin/new-source"
+                    ),
+                )
+            }
+        )
+    result = resolve_catalog_lineage(variables, **options)
+    assert not any(d.acknowledged_by for d in result.diagnostics)
+    assert any(d.code == "stale_curation_entry" for d in result.diagnostics)
+    assert not result.metadata.state_lineage
+
+
+def test_scoped_lineage_acknowledgement_defers_only_positively_unselected_source():
+    from reg_meta_build.catalog_dependencies import DEFERRED_REFERENCE
+
+    variables, options, _ = _guarded_ambiguous_lineage()
+    source = variables[1].register_ref
+    options.update(
+        registers=(variables[0].register_ref,),
+        variants=tuple((r, v) for r, v in options["variants"] if r != source),
+        metadata=ResolvedMetadata(),
+        unselected={("register", "scb/origin")},
+        unselected_names={"scb/origin": (source.name,)},
+        slice_registers={"scb/example"},
+    )
+    result = resolve_catalog_lineage((variables[0],), **options)
+    assert all(d.code == DEFERRED_REFERENCE for d in result.diagnostics)
+    assert not any(d.acknowledged_by for d in result.diagnostics)
+    assert result.skipped == 1
+    options["slice_registers"] = None
+    complete = resolve_catalog_lineage((variables[0],), **options)
+    assert any(d.code == "stale_curation_entry" for d in complete.diagnostics)
+
+
+def test_lineage_guard_retains_earlier_context_when_later_source_origin_differs():
+    from reg_meta.source_evidence import canonical_sha256
+    from reg_meta_build.catalog_lineage import lineage_acknowledgement_sha256
+    from reg_meta_build.resolved_metadata import ResolvedVariableSameAs
+
+    variables, options, case = _guarded_ambiguous_lineage()
+    consumer, first = variables
+    second_register = ResolvedRegister(
+        provider="scb", slug="second", name="Second origin"
+    )
+    second = first.model_copy(update={"register_ref": second_register})
+    a, b = consumer.states[0], consumer.states[0]
+    consumer = consumer.model_copy(
+        update={
+            "states": (
+                a.model_copy(update={"valid_to": "2000-06-30"}),
+                b.model_copy(
+                    update={
+                        "valid_from": "2000-07-01",
+                        "source_register_text": "Second origin : People",
+                    }
+                ),
+            )
+        }
+    )
+    variables = (consumer, first, second)
+    options["registers"] += (second_register,)
+    second_variants = tuple(
+        (second_register, v) for r, v in options["variants"] if r == first.register_ref
+    )
+    options["variants"] += second_variants
+    options["metadata"] = options["metadata"].model_copy(
+        update={
+            "variable_same_as": (
+                *options["metadata"].variable_same_as,
+                ResolvedVariableSameAs(a="scb/example/value", b="scb/second/value"),
+            )
+        }
+    )
+    options["evidence"]["scb/second/value"] = ()
+    base = resolve_catalog_lineage(
+        variables,
+        **{
+            k: v
+            for k, v in options.items()
+            if k not in {"acknowledgements", "acknowledgement_originals"}
+        },
+    )
+    issue = next(d for d in base.diagnostics if d.valid_from == "2000-01-01")
+    raw = options["acknowledgement_originals"][case.decision.refs[0]]
+    decision = case.decision.model_copy(
+        update={
+            "valid_to": issue.valid_to,
+            "expected_diagnostic_sha256": canonical_sha256(
+                issue.model_dump(mode="json")
+            ),
+            "expected_evidence_sha256": lineage_acknowledgement_sha256(
+                raw,
+                consumer,
+                (first, second),
+                tuple(
+                    (r, v)
+                    for r, v in options["variants"]
+                    if r in {first.register_ref, second_register} and v.name == "People"
+                ),
+                options["metadata"],
+            ),
+        }
+    )
+    case = case.model_copy(update={"decision": decision})
+    options["acknowledgements"] = (case,)
+    accepted = resolve_catalog_lineage(variables, **options)
+    assert any(d.acknowledged_by == case.case_id for d in accepted.diagnostics)
+    changed = first.model_copy(
+        update={"definition": "Changed earlier source candidate"}
+    )
+    rejected = resolve_catalog_lineage((consumer, changed, second), **options)
+    assert not any(d.acknowledged_by for d in rejected.diagnostics)
+    assert any(d.code == "stale_curation_entry" for d in rejected.diagnostics)

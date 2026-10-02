@@ -20,8 +20,8 @@ from reg_meta_build.source_curation import (
     CurationCase,
     ResolutionDiagnostic,
     SourceRecordRef,
-    acknowledged_diagnostic,
     acknowledgement_hashes_sha256,
+    settle_acknowledgements,
 )
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_reference_resolution import ReferenceMetadataResolution
@@ -313,43 +313,26 @@ class SourceEventBindings:
             }
         )
         validate_metadata_structure(combined)
+        evidence_hashes = {}
         for case in self.acknowledgements:
             decision = case.decision
             assert isinstance(decision, AcknowledgeDecision)
-            matches = {
-                issue: warning
-                for issue in diagnostics
-                if (warning := acknowledged_diagnostic(issue, decision, case.case_id))
-                is not None
-            }
             owners = {
                 self.guarded_owners[ref]
                 for ref in decision.refs
                 if ref in self.guarded_owners
             }
-            evidence_matches = (
-                owners == {decision.register_key}
-                and all(self.guarded_hashes[ref] for ref in decision.refs)
-                and decision.expected_evidence_sha256
-                == acknowledgement_hashes_sha256(
+            evidence_hashes[case.case_id] = (
+                acknowledgement_hashes_sha256(
                     token for ref in decision.refs for token in self.guarded_hashes[ref]
                 )
+                if owners == {decision.register_key}
+                and all(self.guarded_hashes[ref] for ref in decision.refs)
+                else None
             )
-            if len(matches) == 1 and evidence_matches:
-                diagnostics = [matches.get(issue, issue) for issue in diagnostics]
-            else:
-                diagnostics.append(
-                    ResolutionDiagnostic(
-                        code="stale_curation_entry",
-                        severity="error",
-                        case_id=case.case_id,
-                        subject=decision.subject,
-                        detail="The exact source-event acknowledgement no longer matches one issue with unchanged complete evidence and owner.",
-                        refs=decision.refs,
-                        fields=decision.fields,
-                        withheld_output=(case.case_id,),
-                    )
-                )
+        diagnostics = settle_acknowledgements(
+            tuple(diagnostics), self.acknowledgements, evidence_hashes
+        )
         return ReferenceMetadataResolution(
             combined, tuple(diagnostics), tuple(sorted(withheld, key=repr)), skipped
         )

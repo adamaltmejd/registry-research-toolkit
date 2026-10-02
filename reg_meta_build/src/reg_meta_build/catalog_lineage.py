@@ -7,13 +7,21 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from reg_meta.source_evidence import canonical_sha256
+
 from reg_meta_build.catalog_dependencies import DEFERRED_REFERENCE, CatalogDependencies
 from reg_meta_build.resolved_metadata import (
     ResolvedLineageWarning,
     ResolvedStateLineage,
     ResolvedStateRef,
 )
-from reg_meta_build.source_curation import ResolutionDiagnostic
+from reg_meta_build.source_coordinates import source_register_key
+from reg_meta_build.source_curation import (
+    AcknowledgeDecision,
+    ResolutionDiagnostic,
+    acknowledgement_hashes_sha256,
+    settle_acknowledgements,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Collection, Mapping
@@ -26,7 +34,8 @@ if TYPE_CHECKING:
         ResolvedVariant,
     )
     from reg_meta_build.resolved_metadata import ResolvedMetadata
-    from reg_meta_build.source_curation import SourceRecordRef
+    from reg_meta_build.source_curation import CurationCase, SourceRecordRef
+    from reg_meta_build.source_records import SourceRecord
 
 
 @dataclass(frozen=True)
@@ -35,6 +44,48 @@ class LineageResolution:
     metadata: ResolvedMetadata
     diagnostics: tuple[ResolutionDiagnostic, ...]
     skipped: int
+
+
+def lineage_acknowledgement_sha256(
+    originals: tuple[SourceRecord, ...],
+    consumer: ResolvedVariable,
+    candidates: tuple[ResolvedVariable, ...],
+    variants: tuple[tuple[ResolvedRegister, ResolvedVariant], ...],
+    metadata: ResolvedMetadata,
+) -> str:
+    """Pin originals and the complete candidate distinction, not only its error text."""
+    related = {
+        f"{v.register_ref.provider}/{v.register_ref.slug}/{v.slug}"
+        for v in (consumer, *candidates)
+    }
+    context = {
+        "consumer": consumer.model_dump(mode="json"),
+        "candidates": sorted(
+            (v.model_dump(mode="json") for v in candidates), key=canonical_sha256
+        ),
+        "variants": sorted(
+            (
+                {
+                    "register": r.model_dump(mode="json"),
+                    "variant": v.model_dump(mode="json"),
+                }
+                for r, v in variants
+            ),
+            key=canonical_sha256,
+        ),
+        "identity_edges": sorted(
+            (
+                e.model_dump(mode="json")
+                for e in metadata.variable_same_as
+                if e.a in related or e.b in related
+            ),
+            key=canonical_sha256,
+        ),
+    }
+    return acknowledgement_hashes_sha256(
+        (canonical_sha256(r.model_dump(mode="json")) for r in originals),
+        (canonical_sha256(context),),
+    )
 
 
 def resolve_catalog_lineage(
@@ -50,6 +101,9 @@ def resolve_catalog_lineage(
     unselected_names: Mapping[str, Collection[str]] | None = None,
     source_labels: Mapping[str, Collection[str]] | None = None,
     slice_registers: Collection[str] | None = None,
+    acknowledgements: tuple[CurationCase, ...] = (),
+    acknowledgement_originals: Mapping[SourceRecordRef, tuple[SourceRecord, ...]]
+    | None = None,
 ) -> LineageResolution:
     """Match literal source names and follow accepted variable identity edges.
 
@@ -70,6 +124,13 @@ def resolve_catalog_lineage(
         raise ValueError("lineage must be resolved once from current catalog states")
     unselected_names = unselected_names or {}
     source_labels = source_labels or {}
+    acknowledgement_originals = acknowledgement_originals or {}
+    guarded = {
+        case.decision.subject
+        for case in acknowledgements
+        if isinstance(case.decision, AcknowledgeDecision)
+    }
+    guarded_candidates = {}
     by_register = {f"{r.provider}/{r.slug}": r for r in registers}
     names, abbreviations = defaultdict(set), defaultdict(set)
     for fqid, labels in {
@@ -207,6 +268,22 @@ def resolve_catalog_lineage(
                 if by_fqid[key].register_ref == origin
             )
             _, separator, source_variant_label = source_text.partition(" : ")
+            if fqid in guarded:
+                guarded_candidates.setdefault(fqid, {})[
+                    (source_fqid, source_variant_label if separator else None)
+                ] = (
+                    tuple(by_fqid[key] for key in identities),
+                    tuple(
+                        (r, v)
+                        for r, v in variants
+                        if r == origin
+                        and (
+                            not separator
+                            or v.name.casefold()
+                            == source_variant_label.strip().casefold()
+                        )
+                    ),
+                )
             source_variant = usable_defaults.get(source_fqid)
             unresolved_variant = None
             ambiguous_variant = False
@@ -324,6 +401,43 @@ def resolve_catalog_lineage(
                             valid_to=end,
                         )
                     )
+    evidence_hashes = {}
+    active_acknowledgements = []
+    skipped_acknowledgements = 0
+    for case in acknowledgements:
+        decision = case.decision
+        assert isinstance(decision, AcknowledgeDecision)
+        if slice_registers is not None and any(
+            issue.code == DEFERRED_REFERENCE
+            and issue.subject == decision.subject
+            and issue.refs == decision.refs
+            and issue.withheld_output == (decision.subject + ":source_register",)
+            for issue in diagnostics
+        ):
+            skipped_acknowledgements += 1
+            continue
+        active_acknowledgements.append(case)
+        originals = tuple(
+            r for ref in decision.refs for r in acknowledgement_originals.get(ref, ())
+        )
+        if (
+            decision.subject in guarded_candidates
+            and all(acknowledgement_originals.get(ref) for ref in decision.refs)
+            and {source_register_key(r) for r in originals} == {decision.register_key}
+        ):
+            contexts = guarded_candidates[decision.subject].values()
+            candidates = tuple(v for rows, _ in contexts for v in rows)
+            source_variants = tuple(pair for _, pairs in contexts for pair in pairs)
+            evidence_hashes[case.case_id] = lineage_acknowledgement_sha256(
+                originals,
+                by_fqid[decision.subject],
+                candidates,
+                source_variants,
+                metadata,
+            )
+    diagnostics = settle_acknowledgements(
+        tuple(diagnostics), tuple(active_acknowledgements), evidence_hashes
+    )
     return LineageResolution(
         tuple(result),
         metadata.model_copy(
@@ -335,5 +449,5 @@ def resolve_catalog_lineage(
             }
         ),
         tuple(diagnostics),
-        dependencies.skipped,
+        dependencies.skipped + skipped_acknowledgements,
     )
