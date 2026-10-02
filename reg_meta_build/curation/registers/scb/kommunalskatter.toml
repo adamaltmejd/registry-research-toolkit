@@ -135,3 +135,179 @@ refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[
 expected_evidence_sha256 = "d600cad986f19987265121695055a20792a5c861a47c363ae652074a0f019f4c"
 reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
 evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
+
+[[identity.partition]]
+variable = "115.16829"
+columns = { "BeAvgSats" = "115.16829", "Begavg" = "115.16829", "Begravningsavgift" = "115.16829" }
+unassigned_columns = []
+columns_ref = "Complete stable native heading/definition and own-operation review, exact all-register physical collision scan finds no competing owner. Own coding, raw datatype alternatives, units, periods and blank-column originals retained. Batch52-115-OHA-native-identity-disposition-proposal.json; Batch52-Kommunalskatter7-source-proof.json."
+expected_evidence_sha256 = "cf573b60f0f496c7baf957aad003bbae32e8a92310cff62e25a7476704e95685"
+
+[[identity.partition]]
+variable = "115.16827"
+columns = { "Kyrko" = "115.16827", "Kyrkoavgift" = "115.16827", "TKyAvgSats" = "115.16827" }
+unassigned_columns = []
+columns_ref = "Complete stable native heading/definition and own-operation review, exact all-register physical collision scan finds no competing owner. Own coding, raw datatype alternatives, units, periods and blank-column originals retained. Batch52-115-OHA-native-identity-disposition-proposal.json; Batch52-Kommunalskatter7-source-proof.json."
+expected_evidence_sha256 = "7ec00f4ab86faa641654c8401f5e1b8ae832af9da15f1681e194602e5d650fab"
+
+[[identity.partition]]
+variable = "115.16808"
+columns = { "Befolkning" = "115.16808", "Folkm1231_2" = "115.16808", "Folkmangd" = "115.16808" }
+unassigned_columns = []
+columns_ref = "Complete stable native heading/definition and own-operation review, exact all-register physical collision scan finds no competing owner. Own coding, raw datatype alternatives, units, periods and blank-column originals retained. Batch52-115-OHA-native-identity-disposition-proposal.json; Batch52-Kommunalskatter7-source-proof.json."
+expected_evidence_sha256 = "248a2da14e8626251ae7c989d8177986ca9d0b02f2ab9b38759e31b8bee89eae"
+
+[[identity.partition]]
+variable = "115.16824"
+columns = { "LandSkatt" = "115.16824", "Lskatt" = "115.16824", "LtSkSats" = "115.16824" }
+unassigned_columns = []
+columns_ref = "Complete stable native heading/definition and own-operation review, exact all-register physical collision scan finds no competing owner. Own coding, raw datatype alternatives, units, periods and blank-column originals retained. Batch52-115-OHA-native-identity-disposition-proposal.json; Batch52-Kommunalskatter7-source-proof.json."
+expected_evidence_sha256 = "9c9d5e0bcac1669a6910e82d1ccd2053d97d7521f6ad60c43ed34f58738ce616"
+
+[[identity.partition]]
+variable = "115.16821"
+columns = { "KSkSats" = "115.16821", "KomSkatt" = "115.16821", "Kskatt" = "115.16821" }
+unassigned_columns = []
+columns_ref = "Complete stable native heading/definition and own-operation review, exact all-register physical collision scan finds no competing owner. Own coding, raw datatype alternatives, units, periods and blank-column originals retained. Batch52-115-OHA-native-identity-disposition-proposal.json; Batch52-Kommunalskatter7-source-proof.json."
+expected_evidence_sha256 = "48f81ba34afa409bfb6db44a8cd00743d7a5964abdb2f5923e30815452443982"
+
+[[identity.partition]]
+variable = "115.16819"
+columns = { "TSkSats" = "115.16819", "Total skatt" = "115.16819", "Tskatt" = "115.16819" }
+unassigned_columns = []
+columns_ref = "Complete stable native heading/definition and own-operation review, exact all-register physical collision scan finds no competing owner. Own coding, raw datatype alternatives, units, periods and blank-column originals retained. Batch52-115-OHA-native-identity-disposition-proposal.json; Batch52-Kommunalskatter7-source-proof.json."
+expected_evidence_sha256 = "ae0290d927f38e767a83bcf72c604a1142c065674fa110682029674c092f48f8"
+
+[[identity.partition]]
+variable = "115.16805"
+columns = { "Kommunnamn" = "115.16805", "Namn" = "115.16805" }
+unassigned_columns = []
+columns_ref = "Complete stable native heading/definition and own-operation review, exact all-register physical collision scan finds no competing owner. Own coding, raw datatype alternatives, units, periods and blank-column originals retained. Batch52-115-OHA-native-identity-disposition-proposal.json; Batch52-Kommunalskatter7-source-proof.json."
+expected_evidence_sha256 = "152aa14f750486460667d44f048d8fe9fb4d4761974e71c6766ab15bc5d13a69"
+
+[[errata.field]]
+variable = "115.16808"
+variant = "115.130"
+column = "Folkm1231_2"
+edition = "1483"
+expected_fields = [{ "name" = "classification_declared", "status" = "absent" }, { "name" = "coverage_from", "status" = "absent" }, { "name" = "coverage_to", "status" = "absent" }, { "name" = "data_type", "status" = "value", "value" = "decimal" }, { "name" = "definition", "status" = "value", "value" = "Folkmängden den 31 dec år t-2" }, { "name" = "description", "status" = "absent" }, { "name" = "measurement_unit", "status" = "value", "value" = "Antal" }, { "name" = "name", "status" = "value", "value" = "Folkmängden den 31 dec år t-2" }, { "name" = "operational_definition", "status" = "absent" }, { "name" = "representation", "status" = "absent" }]
+expected_period_text = "2008"
+expected_scope = { "kind" = "intervals", "intervals" = [{ "start" = "2008", "end" = "2008" }] }
+expected_period = { "kind" = "intervals", "intervals" = [{ "start" = "2008-01-01", "end" = "2008-12-31" }] }
+evidence = "This source explicitly defines Folkmängden den 31 dec år t-2. Antal and the supplied Antal personer both count persons for this same quantity; the wording adds no different measurement or scale. Complete native-family partition guards pin every original, field, parent and coding reference. Preserve the original unit spelling and every yearly fact. Batch52-Kommunalskatter7-source-proof.json."
+noted = "2026-10-02"
+field = "measurement_unit"
+value = "Antal personer"
+
+[[errata.field]]
+variable = "115.16808"
+variant = "115.130"
+column = "Folkm1231_2"
+edition = "2993"
+expected_fields = [{ "name" = "classification_declared", "status" = "absent" }, { "name" = "coverage_from", "status" = "absent" }, { "name" = "coverage_to", "status" = "absent" }, { "name" = "data_type", "status" = "value", "value" = "decimal" }, { "name" = "definition", "status" = "value", "value" = "Folkmängden den 31 dec år t-2" }, { "name" = "description", "status" = "absent" }, { "name" = "measurement_unit", "status" = "value", "value" = "Antal" }, { "name" = "name", "status" = "value", "value" = "Folkmängden den 31 dec år t-2" }, { "name" = "operational_definition", "status" = "absent" }, { "name" = "representation", "status" = "absent" }]
+expected_period_text = "2009"
+expected_scope = { "kind" = "intervals", "intervals" = [{ "start" = "2009", "end" = "2009" }] }
+expected_period = { "kind" = "intervals", "intervals" = [{ "start" = "2009-01-01", "end" = "2009-12-31" }] }
+evidence = "This source explicitly defines Folkmängden den 31 dec år t-2. Antal and the supplied Antal personer both count persons for this same quantity; the wording adds no different measurement or scale. Complete native-family partition guards pin every original, field, parent and coding reference. Preserve the original unit spelling and every yearly fact. Batch52-Kommunalskatter7-source-proof.json."
+noted = "2026-10-02"
+field = "measurement_unit"
+value = "Antal personer"
+
+[[errata.field]]
+variable = "115.16808"
+variant = "115.130"
+column = "Folkm1231_2"
+edition = "3213"
+expected_fields = [{ "name" = "classification_declared", "status" = "absent" }, { "name" = "coverage_from", "status" = "absent" }, { "name" = "coverage_to", "status" = "absent" }, { "name" = "data_type", "status" = "value", "value" = "decimal" }, { "name" = "definition", "status" = "value", "value" = "Folkmängden den 31 dec år t-2" }, { "name" = "description", "status" = "absent" }, { "name" = "measurement_unit", "status" = "value", "value" = "Antal" }, { "name" = "name", "status" = "value", "value" = "Folkmängden den 31 dec år t-2" }, { "name" = "operational_definition", "status" = "absent" }, { "name" = "representation", "status" = "absent" }]
+expected_period_text = "2010"
+expected_scope = { "kind" = "intervals", "intervals" = [{ "start" = "2010", "end" = "2010" }] }
+expected_period = { "kind" = "intervals", "intervals" = [{ "start" = "2010-01-01", "end" = "2010-12-31" }] }
+evidence = "This source explicitly defines Folkmängden den 31 dec år t-2. Antal and the supplied Antal personer both count persons for this same quantity; the wording adds no different measurement or scale. Complete native-family partition guards pin every original, field, parent and coding reference. Preserve the original unit spelling and every yearly fact. Batch52-Kommunalskatter7-source-proof.json."
+noted = "2026-10-02"
+field = "measurement_unit"
+value = "Antal personer"
+
+[[errata.field]]
+variable = "115.16808"
+variant = "115.130"
+column = "Folkm1231_2"
+edition = "3214"
+expected_fields = [{ "name" = "classification_declared", "status" = "absent" }, { "name" = "coverage_from", "status" = "absent" }, { "name" = "coverage_to", "status" = "absent" }, { "name" = "data_type", "status" = "value", "value" = "decimal" }, { "name" = "definition", "status" = "value", "value" = "Folkmängden den 31 dec år t-2" }, { "name" = "description", "status" = "absent" }, { "name" = "measurement_unit", "status" = "value", "value" = "Antal" }, { "name" = "name", "status" = "value", "value" = "Folkmängden den 31 dec år t-2" }, { "name" = "operational_definition", "status" = "absent" }, { "name" = "representation", "status" = "absent" }]
+expected_period_text = "2011"
+expected_scope = { "kind" = "intervals", "intervals" = [{ "start" = "2011", "end" = "2011" }] }
+expected_period = { "kind" = "intervals", "intervals" = [{ "start" = "2011-01-01", "end" = "2011-12-31" }] }
+evidence = "This source explicitly defines Folkmängden den 31 dec år t-2. Antal and the supplied Antal personer both count persons for this same quantity; the wording adds no different measurement or scale. Complete native-family partition guards pin every original, field, parent and coding reference. Preserve the original unit spelling and every yearly fact. Batch52-Kommunalskatter7-source-proof.json."
+noted = "2026-10-02"
+field = "measurement_unit"
+value = "Antal personer"
+
+[[errata.field]]
+variable = "115.16808"
+variant = "115.646"
+column = "Folkm1231_2"
+edition = "2012"
+expected_fields = [{ "name" = "classification_declared", "status" = "absent" }, { "name" = "coverage_from", "status" = "absent" }, { "name" = "coverage_to", "status" = "absent" }, { "name" = "data_type", "status" = "value", "value" = "decimal" }, { "name" = "definition", "status" = "value", "value" = "Folkmängden den 31 dec år t-2" }, { "name" = "description", "status" = "absent" }, { "name" = "measurement_unit", "status" = "value", "value" = "Antal" }, { "name" = "name", "status" = "value", "value" = "Folkmängden den 31 dec år t-2" }, { "name" = "operational_definition", "status" = "absent" }, { "name" = "representation", "status" = "absent" }]
+expected_period_text = "2008"
+expected_scope = { "kind" = "intervals", "intervals" = [{ "start" = "2008", "end" = "2008" }] }
+expected_period = { "kind" = "intervals", "intervals" = [{ "start" = "2008-01-01", "end" = "2008-12-31" }] }
+evidence = "This source explicitly defines Folkmängden den 31 dec år t-2. Antal and the supplied Antal personer both count persons for this same quantity; the wording adds no different measurement or scale. Complete native-family partition guards pin every original, field, parent and coding reference. Preserve the original unit spelling and every yearly fact. Batch52-Kommunalskatter7-source-proof.json."
+noted = "2026-10-02"
+field = "measurement_unit"
+value = "Antal personer"
+
+[[errata.field]]
+variable = "115.16808"
+variant = "115.130"
+column = "Folkm1231_2"
+edition = "5224"
+expected_fields = [{ "name" = "classification_declared", "status" = "absent" }, { "name" = "coverage_from", "status" = "absent" }, { "name" = "coverage_to", "status" = "absent" }, { "name" = "data_type", "status" = "value", "value" = "<undefined>" }, { "name" = "definition", "status" = "value", "value" = "Folkmängden den 31 dec år t-2" }, { "name" = "description", "status" = "absent" }, { "name" = "measurement_unit", "status" = "value", "value" = "Antal" }, { "name" = "name", "status" = "value", "value" = "Folkmängden den 31 dec år t-2" }, { "name" = "operational_definition", "status" = "absent" }, { "name" = "representation", "status" = "absent" }]
+expected_period_text = "2007"
+expected_scope = { "kind" = "intervals", "intervals" = [{ "start" = "2007", "end" = "2007" }] }
+expected_period = { "kind" = "intervals", "intervals" = [{ "start" = "2007-01-01", "end" = "2007-12-31" }] }
+evidence = "This source explicitly defines Folkmängden den 31 dec år t-2. Antal and the supplied Antal personer both count persons for this same quantity; the wording adds no different measurement or scale. Complete native-family partition guards pin every original, field, parent and coding reference. Preserve the original unit spelling and every yearly fact. Batch52-Kommunalskatter7-source-proof.json."
+noted = "2026-10-02"
+field = "measurement_unit"
+value = "Antal personer"
+
+[[errata.field]]
+variable = "115.16808"
+variant = "115.646"
+column = "Folkm1231_2"
+edition = "2992"
+expected_fields = [{ "name" = "classification_declared", "status" = "absent" }, { "name" = "coverage_from", "status" = "absent" }, { "name" = "coverage_to", "status" = "absent" }, { "name" = "data_type", "status" = "value", "value" = "decimal" }, { "name" = "definition", "status" = "value", "value" = "Folkmängden den 31 dec år t-2" }, { "name" = "description", "status" = "absent" }, { "name" = "measurement_unit", "status" = "value", "value" = "Antal" }, { "name" = "name", "status" = "value", "value" = "Folkmängden den 31 dec år t-2" }, { "name" = "operational_definition", "status" = "absent" }, { "name" = "representation", "status" = "absent" }]
+expected_period_text = "2009"
+expected_scope = { "kind" = "intervals", "intervals" = [{ "start" = "2009", "end" = "2009" }] }
+expected_period = { "kind" = "intervals", "intervals" = [{ "start" = "2009-01-01", "end" = "2009-12-31" }] }
+evidence = "This source explicitly defines Folkmängden den 31 dec år t-2. Antal and the supplied Antal personer both count persons for this same quantity; the wording adds no different measurement or scale. Complete native-family partition guards pin every original, field, parent and coding reference. Preserve the original unit spelling and every yearly fact. Batch52-Kommunalskatter7-source-proof.json."
+noted = "2026-10-02"
+field = "measurement_unit"
+value = "Antal personer"
+
+[[errata.field]]
+variable = "115.16808"
+variant = "115.646"
+column = "Folkm1231_2"
+edition = "3215"
+expected_fields = [{ "name" = "classification_declared", "status" = "absent" }, { "name" = "coverage_from", "status" = "absent" }, { "name" = "coverage_to", "status" = "absent" }, { "name" = "data_type", "status" = "value", "value" = "decimal" }, { "name" = "definition", "status" = "value", "value" = "Folkmängden den 31 dec år t-2" }, { "name" = "description", "status" = "absent" }, { "name" = "measurement_unit", "status" = "value", "value" = "Antal" }, { "name" = "name", "status" = "value", "value" = "Folkmängden den 31 dec år t-2" }, { "name" = "operational_definition", "status" = "absent" }, { "name" = "representation", "status" = "absent" }]
+expected_period_text = "2010"
+expected_scope = { "kind" = "intervals", "intervals" = [{ "start" = "2010", "end" = "2010" }] }
+expected_period = { "kind" = "intervals", "intervals" = [{ "start" = "2010-01-01", "end" = "2010-12-31" }] }
+evidence = "This source explicitly defines Folkmängden den 31 dec år t-2. Antal and the supplied Antal personer both count persons for this same quantity; the wording adds no different measurement or scale. Complete native-family partition guards pin every original, field, parent and coding reference. Preserve the original unit spelling and every yearly fact. Batch52-Kommunalskatter7-source-proof.json."
+noted = "2026-10-02"
+field = "measurement_unit"
+value = "Antal personer"
+
+[[errata.field]]
+variable = "115.16808"
+variant = "115.646"
+column = "Folkm1231_2"
+edition = "3216"
+expected_fields = [{ "name" = "classification_declared", "status" = "absent" }, { "name" = "coverage_from", "status" = "absent" }, { "name" = "coverage_to", "status" = "absent" }, { "name" = "data_type", "status" = "value", "value" = "decimal" }, { "name" = "definition", "status" = "value", "value" = "Folkmängden den 31 dec år t-2" }, { "name" = "description", "status" = "absent" }, { "name" = "measurement_unit", "status" = "value", "value" = "Antal" }, { "name" = "name", "status" = "value", "value" = "Folkmängden den 31 dec år t-2" }, { "name" = "operational_definition", "status" = "absent" }, { "name" = "representation", "status" = "absent" }]
+expected_period_text = "2011"
+expected_scope = { "kind" = "intervals", "intervals" = [{ "start" = "2011", "end" = "2011" }] }
+expected_period = { "kind" = "intervals", "intervals" = [{ "start" = "2011-01-01", "end" = "2011-12-31" }] }
+evidence = "This source explicitly defines Folkmängden den 31 dec år t-2. Antal and the supplied Antal personer both count persons for this same quantity; the wording adds no different measurement or scale. Complete native-family partition guards pin every original, field, parent and coding reference. Preserve the original unit spelling and every yearly fact. Batch52-Kommunalskatter7-source-proof.json."
+noted = "2026-10-02"
+field = "measurement_unit"
+value = "Antal personer"
+

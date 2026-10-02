@@ -111,3 +111,27 @@ refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[
 expected_evidence_sha256 = "b4d1bfdcd72e078142e1a9eb35872ee7a4916706927211da960f3fe379a7f78d"
 reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
 evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
+
+[[identity.partition]]
+data_warning = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
+variable = "72.26"
+columns = { FastBet = "72.26", FastbetTv = "72.26" }
+unassigned_columns = []
+columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
+expected_evidence_sha256 = "f8cb478c56663a7ad88f2fb5c91e7b3c594e7e6c3b32f57622d5d4c822c9ba2f"
+
+[[identity.partition]]
+data_warning = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
+variable = "72.17488"
+columns = { ArManPab = "72.17488", datpab = "72.17488" }
+unassigned_columns = []
+columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
+expected_evidence_sha256 = "88f837d9d1d01ad89ba8349aacbc7ba3b432daa8811cc93edfd72cba437a28bf"
+
+[[identity.partition]]
+data_warning = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
+variable = "72.17489"
+columns = { ArManPabPrel = "72.17489", datpabprel = "72.17489" }
+unassigned_columns = []
+columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
+expected_evidence_sha256 = "45a502f3f6228c1ec8fa0dbee1b0213c1c53765cfd82844cb125e52d4f0ef759"

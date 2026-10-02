@@ -2338,6 +2338,10 @@ def compile_partitions(
                 records,
                 guarded=source_id in {item.entry.source_id for item in entries}
                 or any(
+                    entry.expected_evidence_sha256 is not None
+                    for _, entry in partitions
+                )
+                or any(
                     entry.expected_fields or entry.expected_records is not None
                     for _, entry in scoped_entries
                 )
@@ -2405,6 +2409,20 @@ def compile_partitions(
                 reference = None
                 if partitions:
                     declaration = partitions[0][1]
+                    if (
+                        declaration.expected_evidence_sha256 is not None
+                        and declaration.expected_evidence_sha256
+                        != acknowledgement_evidence_sha256(records)
+                    ):
+                        diagnostics.append(
+                            _stale_partition(
+                                f"{register.source_file}#/identity.partition/{partitions[0][0]}",
+                                source_id,
+                                "complete partition source evidence changed",
+                            )
+                        )
+                        null_bases[scope_key].add(native)
+                        continue
                     declared = {
                         **declaration.columns,
                         **dict.fromkeys(declaration.unassigned_columns),
@@ -2421,6 +2439,10 @@ def compile_partitions(
                         guard_fields=(
                             tuple(SourceFields.model_fields)
                             if source_id in split_ids
+                            or any(
+                                entry.expected_evidence_sha256 is not None
+                                for _, entry in partitions
+                            )
                             or any(
                                 entry.expected_fields
                                 or entry.expected_records is not None
@@ -2442,8 +2464,8 @@ def compile_partitions(
                     diagnostics.extend(converted.diagnostics)
                 if converted.case is not None:
                     if any(
-                        entry.expected_records is not None
-                        for _, entry in scoped_entries
+                        entry.expected_evidence_sha256 is not None
+                        for _, entry in (*partitions, *scoped_entries)
                     ):
                         converted = ColumnPartitionConversion(
                             converted.bindings,

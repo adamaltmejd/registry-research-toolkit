@@ -7691,6 +7691,146 @@ def test_authored_native_partition_rejects_foreign_or_partial_owners(
         )
 
 
+@pytest.mark.parametrize(
+    "drift",
+    [
+        None,
+        "field",
+        "parent",
+        "coding",
+        "missing_duplicate",
+        "partial_digest",
+        "added_duplicate",
+    ],
+)
+def test_authored_native_partition_pins_complete_originals_on_fresh_compile(
+    tmp_path: Path, drift: str | None
+):
+    from reg_meta_build.curation_tree import IdentityPartitionEntry
+    from reg_meta_build.source_curation import acknowledgement_evidence_sha256
+    from reg_meta_build.source_records import CodeSetReference
+
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root,
+        '\n[[variable]]\nnative_id = "1.5"\nslug = "quantity"\n'
+        '[[identity.partition]]\nvariable = "1.5"\n'
+        'columns = { OLD = "1.5", NEW = "1.5" }\n'
+        'columns_ref = "complete source-native quantity review"\n',
+    )
+    original = _scb_partition_records(("OLD", "NEW"))
+    duplicate = original[0].model_copy(
+        update={
+            "record_id": original[0].record_id + "-duplicate",
+            "locators": (
+                original[0].locators[0].model_copy(update={"physical_record": "99"}),
+            ),
+        }
+    )
+    original = (*original, duplicate)
+    tree = load_curation_tree(root)
+    register = next(r for r in tree.registers if r.identity.partition)
+    declaration = register.identity.partition[0]
+    guarded = IdentityPartitionEntry.model_validate_json(
+        json.dumps(
+            {
+                **declaration.model_dump(mode="json", exclude_none=True),
+                "expected_evidence_sha256": acknowledgement_evidence_sha256(
+                    original[:1] if drift == "partial_digest" else original
+                ),
+            }
+        )
+    )
+    register = register.model_copy(
+        update={
+            "identity": register.identity.model_copy(update={"partition": [guarded]})
+        }
+    )
+    tree = replace(tree, registers=(register,))
+    records = original
+    if drift == "missing_duplicate":
+        records = original[:-1]
+    elif drift == "added_duplicate":
+        records = (
+            *original,
+            duplicate.model_copy(update={"record_id": "new-duplicate"}),
+        )
+    elif drift in {"field", "parent", "coding"}:
+        first = original[0]
+        if drift == "field":
+            change = {
+                "fields": first.fields.model_copy(
+                    update={"definition": value_field("different source quantity")}
+                )
+            }
+        elif drift == "parent":
+            parent = first.parent_facts[0]
+            change = {
+                "parent_facts": (
+                    parent.model_copy(
+                        update={
+                            "fields": parent.fields.model_copy(
+                                update={"name": value_field("different source parent")}
+                            )
+                        }
+                    ),
+                    *first.parent_facts[1:],
+                )
+            }
+        else:
+            change = {
+                "code_set_references": (
+                    CodeSetReference(
+                        reference_id="different-source-list",
+                        content_sha256="0" * 64,
+                        physical_locator="different source list cell",
+                    ),
+                )
+            }
+        records = (first.model_copy(update=change), *original[1:])
+    native = native_variable_key(records[0])
+    reader = SimpleNamespace(
+        iter_partition_families=lambda *a, **k: iter(((native, records),))
+    )
+    scope = _partition_scope(records)
+    compiled = compile_partitions(
+        tree, cast("Any", SimpleNamespace(records=reader)), (scope,)
+    )
+    key = (scope.source, None)
+    cases, naming, keys, _, _, issues = compiled
+    if drift is not None:
+        assert {d.code for d in issues} == {"stale_curation_entry"}
+        assert not cases.get(key) and not naming.get(key)
+        assert keys[key] == ((native, None),)
+    else:
+        assert not issues
+        assert (
+            cases[key][0].expected_evidence_sha256 == guarded.expected_evidence_sha256
+        )
+        result = apply_occurrence_cases(records, cases[key])
+        assert not result.diagnostics and len(result.occurrences) == len(original)
+        assert all(
+            o.identity_checked and o.variable_key == native for o in result.occurrences
+        )
+        stale = apply_occurrence_cases(original[:-1], cases[key])
+        assert stale.diagnostics and not any(
+            o.identity_checked for o in stale.occurrences
+        )
+
+
+@pytest.mark.parametrize("digest", ["not-a-sha", "A" * 64, "a" * 63])
+def test_authored_partition_requires_a_complete_digest(digest: str):
+    from reg_meta_build.curation_tree import IdentityPartitionEntry
+
+    with pytest.raises(ValueError):
+        IdentityPartitionEntry(
+            variable="1.5",
+            columns={"OLD": "1.5", "NEW": "1.5"},
+            columns_ref="reviewed complete family",
+            expected_evidence_sha256=digest,
+        )
+
+
 def test_sos_named_topology_preserves_tables_without_variant_parent_sheet(tmp_path):
     from reg_meta_build.source_scope import resolve_source_scope
     from reg_meta_build.source_support import SourceSupportBindings

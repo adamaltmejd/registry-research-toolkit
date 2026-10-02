@@ -375,6 +375,13 @@ preserve a source-labelled range separately from annual editions, with a scoped
 `data_warning` when aggregation or physical delivery semantics are unverified; it never
 assigns annual availability to the range.
 
+An SCB `[[identity.partition]]` may use `expected_evidence_sha256` to pin the entire
+reviewed native family, including blank columns, every source field, parent fact, coding
+reference and physical multiplicity. Its native key selects the complete family; a
+second projection selector is unnecessary. Fresh compilation and replay refuse changed,
+added or missing originals. A finite map can retain the native owner and public key
+without introducing an artificial split.
+
 An SCB `[[identity.column_owner]]` binds a literal column to an accepted owner within
 explicit source editions. Optional `expected_fields` pin reviewed source facts using the
 existing field-expectation contract. An entry may instead pin complete

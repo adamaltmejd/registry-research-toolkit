@@ -1012,6 +1012,9 @@ class IdentityPartitionEntry(_CurationModel):
     columns: dict[str, str]
     unassigned_columns: list[str] = Field(default_factory=list)
     columns_ref: str
+    expected_evidence_sha256: str | None = Field(
+        default=None, pattern=r"^[0-9a-f]{64}$"
+    )
 
     @field_validator("variable")
     @classmethod
