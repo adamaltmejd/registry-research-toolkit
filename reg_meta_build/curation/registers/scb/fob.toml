@@ -487,3 +487,112 @@ keep = "UpplFormFoB75Lgh"
 over = ["UpplFormFoB75Hh"]
 reason = "FoB75 UpplForm: SCB's legacy catalog splits this by population — dwellings → Lgh (12), households → Hh (5) — but our mikrodata feed flattens both onto one (variant 82, version 1975, UpplForm) slot, cross-linked to both populations, so the split isn't recoverable from input. Keep the Lgh superset (Lgh ⊇ Hh) as the lossless interim; keeping Hh would drop dwelling-occupancy codes 5–9. SPLIT candidate by population — see comment."
 source = "codelivery.toml#/resolve/12"  # v18 accepted-coding:12:*, 1 case(s)
+
+[[coding.choice]]
+variable = "32.35992"
+variant = "32.82"
+column = "AntRumLgh"
+periods = [["1975-01-01", "1975-12-31"]]
+reason = "The two complete own active 1975 source domains agree on all 58 shared literal codes and labels. The larger supplied domain explicitly adds only 0 and NULL as Uppgift saknas. Use that exact supplied superset, preserving both alternatives and every association. Do not infer a blank-to-zero conversion, manufacture codes or borrow another census vintage."
+source = "Complete original family and active own lists: Batch52-residual53-own-binding-review.json; exact source-superset review Batch52-residual53-source-choice-review.json."
+data_warning = "The supplied 1975 room-count lists differ by two explicit missing-value tokens. The catalog uses the complete own source superset; both original lists remain evidence."
+expected_evidence_sha256 = "42d97ca115a50b359add224f37b956bca4195804e44cbe41465ac0014530210f"
+keep = "AntRumLghFoB75Hh"
+keep_members = [["", "Uppgift saknas"], ["0", "Uppgift saknas"], ["00", "Rum saknas"], ["01", "Ett rum"], ["02", "Två rum"], ["03", "Tre rum"], ["04", "Fyra rum"], ["05", "Fem rum"], ["06", "Sex rum"], ["07", "Sju rum"], ["08", "Åtta rum"], ["09", "Nio rum"], ["10", "Tio rum"], ["11", "Elva rum"], ["12", "Tolv rum"], ["13", "Tretton"], ["14", "Fjorton rum"], ["15", "Femton rum"], ["16", "Sexton rum"], ["17", "Sjutton rum"], ["18", "Arton rum"], ["19", "Nitton rum"], ["20", "Tjugo rum"], ["21", "Tjugoen rum"], ["22", "Tjugotvå rum"], ["23", "Tjugotre rum"], ["24", "Tjugofyra rum"], ["25", "Tjugofem rum"], ["26", "Tjugosex rum"], ["27", "Tjugosju rum"], ["28", "Tjugoåtta rum"], ["29", "Tjugonio rum"], ["30", "Trettio rum"], ["31", "Trettioen rum"], ["32", "Trettiotvå rum"], ["33", "Trettiotre rum"], ["34", "Trettiofyra rum"], ["35", "Trettiofem rum"], ["36", "Trettiosex rum"], ["37", "Trettiosju rum"], ["38", "Trettioåtta rum"], ["39", "Trettionio rum"], ["40", "Fyrtio rum"], ["41", "Fyrtioen rum"], ["42", "Fyrtiotvå rum"], ["43", "Fyrtiotre rum"], ["44", "Fyrtiofyra rum"], ["45", "Fyrtiofem rum"], ["46", "Fyrtiosex rum"], ["47", "Fyrtiosju rum"], ["48", "Fyrtioåtta rum"], ["49", "Fyrtionio rum"], ["50", "Femtio rum"], ["51", "Femtioen rum"], ["52", "Femtiotvå rum"], ["53", "Femtiotre rum"], ["54", "Femtiofyra rum"], ["60", "Sextio rum"], ["96", "Nittiosex rum"], ["NULL", "Uppgift saknas"]]
+over = ["AntRumLghFoB75Hh"]
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fob/forsamling-arbetsstallet"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:32\",\"variant:81\",\"edition:15791\",\"variable:17561\",\"member:757099\"]}"]
+fields = ["coding"]
+valid_from = "1985-01-01"
+valid_to = "1985-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "da75da6038204a591833541c10b25abd288246adb6dd463244c8dc88b7294cfc"
+expected_diagnostic_sha256 = "fb8b01957e2d100b0e7808974bd22ce81c347cfd9bb917143b7691b9414a771a"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fob/forsamling-arbetsstallet"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:32\",\"variant:83\",\"edition:19241\",\"variable:17561\",\"member:923196\"]}"]
+fields = ["coding"]
+valid_from = "1980-01-01"
+valid_to = "1980-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "bc0b6a5a9ea8fa3eb3ef19d66e2392d3302171e6856bd59243fdb9e0f8b7962b"
+expected_diagnostic_sha256 = "015c3009425c43aa14dd51ea990e8b001d16452b818a4a8ce3f1e55a4c3f272e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fob/forsamling-arbetsstallet"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:32\",\"variant:83\",\"edition:18279\",\"variable:17561\",\"member:854017\"]}"]
+fields = ["coding"]
+valid_from = "1985-01-01"
+valid_to = "1985-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "08de919b4e72fa5791df2b244d14d395df80c7d1ba88966c67bc68cee6a4e8b3"
+expected_diagnostic_sha256 = "6df2c915a5a24cf90445ad873c948ae50b0a9608f925bbfc2febb6ce1fbfc37f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fob/antal-rum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:32\",\"variant:82\",\"edition:15751\",\"variable:35992\",\"member:751919\"]}"]
+fields = ["coding"]
+valid_from = "1990-01-01"
+valid_to = "1990-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "e384fa8c74572e7241d092c77d9dd521493c61364a19d6ab63beab5880126c9d"
+expected_diagnostic_sha256 = "9179d45508074bb72a3973acca36de462db17d5dd9cf9bfcef6cdfa2fc0ca55d"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fob/antal-bilar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:32\",\"variant:81\",\"edition:15458\",\"variable:41495\",\"member:729522\"]}"]
+fields = ["coding"]
+valid_from = "1975-01-01"
+valid_to = "1975-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "d3a072a14b976c373810725867c59c9d080e12aaf59fb3753260204c25d4f7f2"
+expected_diagnostic_sha256 = "1e671f8da7d1fcb6cb76fa562aeaf40cd8d9d1b6996f067f8f9644876a8d9a6c"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fob/antal-bilar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:32\",\"variant:83\",\"edition:19272\",\"variable:41495\",\"member:928163\"]}"]
+fields = ["coding"]
+valid_from = "1975-01-01"
+valid_to = "1975-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "eb6e080b5283b939d4953c2c4d31e6fc2bda944989ec2be0678be21736173b46"
+expected_diagnostic_sha256 = "228cea2fbd5a17637f9d847f91cb9265206bce44a2578a77f146cd9e7afd7de6"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fob/antejborum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:32\",\"variant:82\",\"edition:15856\",\"variable:42552\",\"member:759956\"]}"]
+fields = ["coding"]
+valid_from = "1965-01-01"
+valid_to = "1965-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "8184fd69dd0768274d1298f4abdab7cefb456176ce2ea9b55cc0a73bf2139e43"
+expected_diagnostic_sha256 = "7b6b0701d7f241bb16dd610ae45076e00f454a124ecc07f3ad8ef0a14c836f8c"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fob/antejborum"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:32\",\"variant:83\",\"edition:19647\",\"variable:42552\",\"member:971324\"]}"]
+fields = ["coding"]
+valid_from = "1965-01-01"
+valid_to = "1965-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "a7cf4b18c03312e90eb38f2fdaefd0a8dae4a951eca6f8f4fbfc67340b386e6f"
+expected_diagnostic_sha256 = "46639372c5d1cf843e47678ae35edeb115eb44b365f43d0e64a8d8400fa5e118"

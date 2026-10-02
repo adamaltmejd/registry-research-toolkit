@@ -726,3 +726,111 @@ native_id = "273.667.astkommun"
 slug = "kommun-for-arbetsstalle"
 
 # register 276
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/stativ/ssyk-version-arbetstillstand"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:7512\",\"variable:30883\",\"member:416210\"]}"]
+fields = ["coding"]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "0f368df5339dc5c1c19500824ed0665b3cba2799a4c2502f64c18dbb0ba63b8c"
+expected_diagnostic_sha256 = "51c35b5a6b36cb6b8c1e899ac35e189d9945bfbeb122ce756b77f5099e6da92a"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/stativ/ssyk-version-arbetstillstand"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:10009\",\"variable:30883\",\"member:445928\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "4c3269b53b2cb20828a6d0acce94a8bfa55f71892d996052fa716b59f1ff3a51"
+expected_diagnostic_sha256 = "fd51d199755c1796ad0032ebc6687852e96aa61bcb4e3b4ce759274cc12424e5"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/stativ/ssyk-version-arbetstillstand"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:11288\",\"variable:30883\",\"member:460351\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "60edca5e23c8d8aecca10d874357d5a564b12e82affaa507529c815261644b43"
+expected_diagnostic_sha256 = "1c7da005640a236a6de880013f53d16751d17c9fe576c2e68ebcbc3eae4dd550"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/stativ/ssyk-version-arbetstillstand"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:13318\",\"variable:30883\",\"member:593227\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "b4863ce150ff655cd8fa230341480c3f4736434adac68d953552f1bcd49b0a8b"
+expected_diagnostic_sha256 = "db5ad32f2400b419b992d1e8a8b53f6c4ea8d9ca60e7c89eca44d09a60829a46"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/stativ/ssyk-version-arbetstillstand"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:14487\",\"variable:30883\",\"member:660587\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "0eddf14ff0544490ed45875f6cf9b735f69243f62cc21f18000ac8ed203b541c"
+expected_diagnostic_sha256 = "38da58ba55ae047acf0658a4346ece01bb39dd9d9b45b345d8344c85be1d26fd"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/stativ/ssyk-version-arbetstillstand"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:16473\",\"variable:30883\",\"member:805004\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "55c44a8e7d8c18d4a69ad4181364e6c99df105b890c7a4986b1fca350d7522b3"
+expected_diagnostic_sha256 = "9f22167a5e3a75221db788fe928299543aa966086e2cf2a693597b61d4eff2e3"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/stativ/ssyk-version-arbetstillstand"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:18154\",\"variable:30883\",\"member:840855\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "195a8634206c433b3c1b48af70890adf45be368529c6efacf5416730705ebfa1"
+expected_diagnostic_sha256 = "5bdb67fd5bae3ece56f3efa76b612e70eddb16245b0b6617b9e918d4a4d09d90"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/stativ/ssyk-version-arbetstillstand"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:18699\",\"variable:30883\",\"member:882702\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "2257c48a5cf61aadbfbbcc2c02d33707c7a4717145b7c952e73e209c61e0a8c8"
+expected_diagnostic_sha256 = "bbc8589f98d03e55860b2de79e8279354bc483de3f260af0ad3084077f3c53a2"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/stativ/examensar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:18746\",\"variable:753\",\"member:914772\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "3326474438b1f3087f75e34cc31d404b11d2b73bd72358ec5003188df73a78c4"
+expected_diagnostic_sha256 = "1a9d0d685c0dcfcfc97e5a026699fc055735424ca9b5a9ea59275dfc308f7f61"

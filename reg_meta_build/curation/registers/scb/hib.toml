@@ -1292,3 +1292,167 @@ source_editions = ["2007"]
 expected_fields = []
 expected_records = [{ ref = { source = "scb-registerinformation", semantic_record_key = ["register:199", "variant:301", "edition:1448", "variable:20911", "member:160491"] }, alternatives = [{ fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "HYRASEPT0" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "0" }, { name = "data_type", status = "value", value = "integer" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Hyran anges inklusive kostnader för bränsle men exklusive hyra för avgiftsbelagd bilplats." }, { name = "description", status = "value", value = "Se Definition ovan" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "name", status = "value", value = "Hyror i bostadslägenheter" }, { name = "operational_definition", status = "absent" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "absent" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }], edition_scope = { kind = "intervals", intervals = [{ start = "2007", end = "2007" }] }, edition_period_scope = { kind = "intervals", intervals = [{ start = "2007-01-01", end = "2007-12-31" }] }, subject = { provider = "scb", register = { status = "value", native_id = 199, name = "Hyror i bostadslägenheter (HIB)" }, variant = { status = "value", native_id = 301, name = "Hyror i bostadslägenheter" }, variant_references = [], population = { status = "unknown" }, variable = { status = "value", native_id = 20911, name = "Hyror i bostadslägenheter" }, member = { status = "value", native_id = 160491, name = "Hyror i bostadslägenheter" }, native = { register_id = 199, register_variant_id = 301, edition_id = 1448, variable_id = 20911, member_id = 160491 } }, code_set_references = [], parent_facts = [{ kind = "edition", coordinate = { status = "value", native_id = 1448, name = "2007" }, register = { status = "value", native_id = 199, name = "Hyror i bostadslägenheter (HIB)" }, variant = { status = "value", native_id = 301, name = "Hyror i bostadslägenheter" }, edition = { status = "value", native_id = 1448, name = "2007" }, fields = [{ name = "description", status = "unknown" }, { name = "documentation_status", status = "value", value = "Offentlig" }, { name = "first_approved_at", status = "value", value = "2010-02-22" }, { name = "last_approved_at", status = "value", value = "2010-03-19" }, { name = "measurement_information", status = "value", value = "Populationen enl FOB90 samt nybyggda t.o.m.20061231." }, { name = "name", status = "value", value = "2007" }] }, { kind = "register", coordinate = { status = "value", native_id = 199, name = "Hyror i bostadslägenheter (HIB)" }, register = { status = "value", native_id = 199, name = "Hyror i bostadslägenheter (HIB)" }, fields = [{ name = "name", status = "value", value = "Hyror i bostadslägenheter (HIB)" }, { name = "purpose", status = "value", value = "Huvudsyftet med HiB är att ge information om hyresnivåer och hyresförändringar i lägenheter som upplåts med hyresrätt." }] }, { kind = "object_type", coordinate = { status = "value", name = "Bostad" }, register = { status = "value", native_id = 199, name = "Hyror i bostadslägenheter (HIB)" }, variant = { status = "value", native_id = 301, name = "Hyror i bostadslägenheter" }, edition = { status = "value", native_id = 1448, name = "2007" }, fields = [{ name = "definition", status = "value", value = "Bostad är ett rum, en lägenhet, ett hus eller liknande där man bor en längre tid" }, { name = "name", status = "value", value = "Bostad" }] }, { kind = "variant", coordinate = { status = "value", native_id = 301, name = "Hyror i bostadslägenheter" }, register = { status = "value", native_id = 199, name = "Hyror i bostadslägenheter (HIB)" }, variant = { status = "value", native_id = 301, name = "Hyror i bostadslägenheter" }, fields = [{ name = "description", status = "value", value = "Huvudsyftet med HiB är att ge information om hyresnivåer och hyresförändringar i lägenheter som upplåts med hyresrätt. För att underlätta jämförelsen mellan olika grupper av lägenheter eller utvecklingen över tiden exkluderas vissa lägenheter vars hyra påverkas av speciella förhållanden, t.ex. att de är möblerade." }, { name = "name", status = "value", value = "Hyror i bostadslägenheter" }] }, { kind = "population", coordinate = { status = "value", name = "Bostadslägenheter upplåtna med hyresrätt" }, register = { status = "value", native_id = 199, name = "Hyror i bostadslägenheter (HIB)" }, variant = { status = "value", native_id = 301, name = "Hyror i bostadslägenheter" }, edition = { status = "value", native_id = 1448, name = "2007" }, fields = [{ name = "name", status = "value", value = "Bostadslägenheter upplåtna med hyresrätt" }, { name = "population_comment", status = "unknown" }, { name = "population_date", status = "value", value = "2007-01-01 - 2008-01-31" }, { name = "population_definition", status = "value", value = "Bostadslägenheter upplåtna med hyresrätt där en för undersökningen relevant hyresuppgift kan mätas, dvs. en hyra som kan jämföras för olika typer av bostadslägenheter." }] }] }] }]
 expected_evidence_sha256 = "496f6144d1cdb87d32eb5c0eb9698830162cd324d54c3ef210eb6f13a8b9cc7b"
+
+[[acknowledge]]
+code = "unknown_code_validity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 199, 'variable', 'native-int', 412, 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 199, 'variant', 'native-int', 301, 'column', 'PostOrt')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:9810\",\"variable:412\",\"member:438146\"]}"]
+fields = ["coding"]
+reason = "The PostOrt source names an Alfanumerisk list, but its supplied evidence does not establish complete stored post-town codes or usable item-validity coordinates for this exact finding. PostOrt remains free text with its original definition, width, delivery years and raw dictionary associations. Retain the incomplete list and validity facts; do not treat an alphanumeric placeholder as an enumerated town domain or substitute another postal directory."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "1401cb0280f3fe65309041003f0ed390fe028060f539b52aecd42034c08c0bc6"
+expected_diagnostic_sha256 = "dfc7bf74f3e7a34f5ca867eba9998c1d6c9b35a8363d865587adf275231b31ed"
+
+[[acknowledge]]
+code = "unknown_code_validity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 199, 'variable', 'native-int', 412, 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 199, 'variant', 'native-int', 301, 'column', 'PostOrt')"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:11350\",\"variable:412\",\"member:462662\"]}"]
+fields = ["coding"]
+reason = "The PostOrt source names an Alfanumerisk list, but its supplied evidence does not establish complete stored post-town codes or usable item-validity coordinates for this exact finding. PostOrt remains free text with its original definition, width, delivery years and raw dictionary associations. Retain the incomplete list and validity facts; do not treat an alphanumeric placeholder as an enumerated town domain or substitute another postal directory."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "e3ade8cee455d354a3042844379a0e05b2ea04d923f554a7ee5f2b3694d4f1ee"
+expected_diagnostic_sha256 = "5fd3460d48486b2646d5283d50624fe8c325f7bc317f7bc4dd293e8230b11689"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/hib/vardear-klassindelat"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:1448\",\"variable:14753\",\"member:108551\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "98b07fd6620fd62cdafc102a38966d2740332ee097410770bbac727ce751d58b"
+expected_diagnostic_sha256 = "afbf5853f447aa53aa75220ba50aaf963ea546a9d9f073190a621442187adcb5"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/hib/agarkategori"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:1448\",\"variable:2296\",\"member:108550\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "a844b88896b073ba423ec1560ee1b4969200b3cab5770a4d61059fbdd565d6c2"
+expected_diagnostic_sha256 = "700e31e97f3215f374e03202c1055291dfb8562e0818e66952d84f8eec906897"
+
+[[acknowledge]]
+code = "unknown_code_membership"
+subject = "scb/hib/postort"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:11350\",\"variable:412\",\"member:462662\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:12458\",\"variable:412\",\"member:546359\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:13573\",\"variable:412\",\"member:612009\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:14729\",\"variable:412\",\"member:674743\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:17549\",\"variable:412\",\"member:814481\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:18354\",\"variable:412\",\"member:854050\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:18857\",\"variable:412\",\"member:899591\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:19362\",\"variable:412\",\"member:935607\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:20085\",\"variable:412\",\"member:1008137\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:9810\",\"variable:412\",\"member:438146\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The PostOrt source names an Alfanumerisk list, but its supplied evidence does not establish complete stored post-town codes or usable item-validity coordinates for this exact finding. PostOrt remains free text with its original definition, width, delivery years and raw dictionary associations. Retain the incomplete list and validity facts; do not treat an alphanumeric placeholder as an enumerated town domain or substitute another postal directory."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "eefb838057dc8f17d97b629bbc14f71a77e0b7f4d17eaa2d243c5729c0764624"
+expected_diagnostic_sha256 = "dcf2bde850e8e9e0523e0f0b8f471baea262713920fabbf0cccb26bae1faae86"
+
+[[acknowledge]]
+code = "unknown_code_membership"
+subject = "scb/hib/postort"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:11350\",\"variable:412\",\"member:462662\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:12458\",\"variable:412\",\"member:546359\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:13573\",\"variable:412\",\"member:612009\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:14729\",\"variable:412\",\"member:674743\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:17549\",\"variable:412\",\"member:814481\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:18354\",\"variable:412\",\"member:854050\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:18857\",\"variable:412\",\"member:899591\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:19362\",\"variable:412\",\"member:935607\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:20085\",\"variable:412\",\"member:1008137\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:9810\",\"variable:412\",\"member:438146\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "The PostOrt source names an Alfanumerisk list, but its supplied evidence does not establish complete stored post-town codes or usable item-validity coordinates for this exact finding. PostOrt remains free text with its original definition, width, delivery years and raw dictionary associations. Retain the incomplete list and validity facts; do not treat an alphanumeric placeholder as an enumerated town domain or substitute another postal directory."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "eefb838057dc8f17d97b629bbc14f71a77e0b7f4d17eaa2d243c5729c0764624"
+expected_diagnostic_sha256 = "7dfa94c0ffcbe1c226202d552eeaa82cd804db269ae48a0da30427db119b5cc2"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/hib/postort"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:12458\",\"variable:412\",\"member:546359\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "16018ee7e19822409cf09e8870796bde8c5481797764006f229199dfb9a0249d"
+expected_diagnostic_sha256 = "aeb220a733e94545f5170a7bdfb970293e92fe89206a1655525d3439c17aca28"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/hib/postort"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:13573\",\"variable:412\",\"member:612009\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "ff8dc0a556a3060be8f11aebd17b3eb32fe93080a406d2679f79e70238588857"
+expected_diagnostic_sha256 = "45f7a397d9ec9a0bde2d9b557a18fa2785b1b6f4cd9e577e7523e8022ee2961a"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/hib/postort"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:14729\",\"variable:412\",\"member:674743\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "3442e221bb84dca97615791d87323ea762d9c7b38be54019e8f2f8a746a6c963"
+expected_diagnostic_sha256 = "9c80d9a6cd56a049d0facd42630dc2d7cdcbc740793612ba2b5466b83387a554"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/hib/postort"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:17549\",\"variable:412\",\"member:814481\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "42a0fe08744458bfe7f1ee3bbf330cafbb6a49eac651a29dddcb3c4d4345c4ce"
+expected_diagnostic_sha256 = "72d3f411d2f571f8d910e5ae19c9fcc356d3ffe7e456abc53ed7689eb5b13ca6"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/hib/postort"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:18354\",\"variable:412\",\"member:854050\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "37ed15e6c66f93ae37f2934d51faef33fd6f5fc319c6a37190c089895c0ee793"
+expected_diagnostic_sha256 = "60d0dc233a37507cf55162246fa9ca50f3e24307c45e192b5237b47995bdd135"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/hib/postort"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:18857\",\"variable:412\",\"member:899591\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "5438253f468ac4f614d39b7e1bc7678da13868329df53e282426b9175b6e8ee8"
+expected_diagnostic_sha256 = "1b12f8184c272e31e9cb534b2d0642432de4c13bc9c4050bc8ca60c0f5f7dc59"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/hib/postort"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:19362\",\"variable:412\",\"member:935607\"]}"]
+fields = ["coding"]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "cee594b6812ff7fb3b4b96863c67d1b785191c64e5f628745063933b14e3ab29"
+expected_diagnostic_sha256 = "17b694df244c12bcc0fd3f46df5a398d49823519a86bca93486f3be341f64332"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/hib/postort"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:199\",\"variant:301\",\"edition:20085\",\"variable:412\",\"member:1008137\"]}"]
+fields = ["coding"]
+valid_from = "2025-01-01"
+valid_to = "2025-12-31"
+reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
+expected_evidence_sha256 = "3172c01587c595ac158e73219449bb265d384622cc710ea7a8ae874e43ec740b"
+expected_diagnostic_sha256 = "911aa67b247e663ae9c93f10d91d160c9ca3c95b6d27a775ebccb5fa704d778b"
