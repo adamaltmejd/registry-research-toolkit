@@ -59,10 +59,6 @@ native_id = "196.1661"
 slug = "signal4"  # source: kolumnnamn
 
 [[variable]]
-native_id = "196.1662"
-slug = "signal"  # source: fold
-
-[[variable]]
 native_id = "196.1716"
 slug = "signal2"  # source: kolumnnamn
 
@@ -81,14 +77,6 @@ slug = "scbid"  # source: kolumnnamn
 [[variable]]
 native_id = "196.44383"
 slug = "enhet"  # source: kolumnnamn
-
-[[variable]]
-native_id = "196.44395"
-slug = "euton"  # source: fold
-
-[[variable]]
-native_id = "196.44396"
-slug = "langd"  # source: fold
 
 [[variable]]
 native_id = "196.1721.value"

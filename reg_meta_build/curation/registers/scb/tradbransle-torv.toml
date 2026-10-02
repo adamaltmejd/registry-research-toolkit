@@ -50,14 +50,6 @@ slug = "arbstallnamn"
 native_id = "355.22863"
 slug = "lansregion"
 
-[[variable]]
-native_id = "355.23859"
-slug = "kvartal-och-ar"
-
-[[variable]]
-native_id = "355.35270"
-slug = "anlaggningens-namn"
-
 # register 356
 
 [[variable]]
@@ -65,3 +57,243 @@ native_id = "355.83.brslag"
 slug = "bransleslag"
 
 # register 356
+
+[[identity.partition]]
+variable = "355.145"
+columns = { SCBid = "355.145", scbid = "355.145" }
+columns_ref = "Complete native source family and all physical peers reviewed. Literal-case spellings retain the same explicitly supplied definition and identifier. Vessel positions follow source operational definitions Fartyg1–5, never suffix inference. Delivery-specific roles and every raw type, date, unit, name and coding association remain evidence; observed-value equivalence is not asserted. Batch52-directfacts4-source-review.json."
+expected_evidence_sha256 = "81dacc3eaec360b6b035353642280e90691fb83fa5657177c8a74c73d32207e0"
+
+[[identity.partition]]
+variable = "355.1839"
+columns = { PeOrgNr = "355.1839.peorgnr", PeorgNr = "355.1839.peorgnr", orgnr = "355.1839.orgnr" }
+columns_ref = "Complete native source family and all physical peers reviewed. Literal-case spellings retain the same explicitly supplied definition and identifier. Vessel positions follow source operational definitions Fartyg1–5, never suffix inference. Delivery-specific roles and every raw type, date, unit, name and coding association remain evidence; observed-value equivalence is not asserted. Batch52-directfacts4-source-review.json."
+expected_evidence_sha256 = "807d0ae07f79181965cb546e2e306be5d910ddeec5e28fabaa3cc59e4a27b718"
+
+[[identity.partition]]
+data_warning = "Literal source components are retained separately. Original operational definitions distinguish fuel versus waste questionnaires or industry versus heating-plant populations; these source contexts remain documentary evidence and are not asserted to be equivalent observed quantities."
+variable = "355.23859"
+columns = { period = "355.23859.fuel", Period = "355.23859.waste" }
+columns_ref = "Complete native source family and all physical peers reviewed. Literal-case spellings retain the same explicitly supplied definition and identifier. Vessel positions follow source operational definitions Fartyg1–5, never suffix inference. Delivery-specific roles and every raw type, date, unit, name and coding association remain evidence; observed-value equivalence is not asserted. Batch52-directfacts4-source-review.json."
+expected_evidence_sha256 = "e3b7493e7acfb01aac57b36ec2a92ef84daea4f7012594deae5df1936141c2f4"
+
+[[identity.partition]]
+data_warning = "Literal source components are retained separately. Original operational definitions distinguish fuel versus waste questionnaires or industry versus heating-plant populations; these source contexts remain documentary evidence and are not asserted to be equivalent observed quantities."
+variable = "355.35270"
+columns = { Anl = "355.35270.anl", ArbNamn = "355.35270.arbnamn" }
+columns_ref = "Complete native source family and all physical peers reviewed. Literal-case spellings retain the same explicitly supplied definition and identifier. Vessel positions follow source operational definitions Fartyg1–5, never suffix inference. Delivery-specific roles and every raw type, date, unit, name and coding association remain evidence; observed-value equivalence is not asserted. Batch52-directfacts4-source-review.json."
+expected_evidence_sha256 = "a3e49090acac7210668ae2ba26a9df7715cfa7a22e365f7993bd2a2e9366b8c5"
+
+[[identity.column_owner]]
+data_warning = "Only independently supported literal delivery windows are mapped. Conflicting school-column ownership or indistinguishable waste cost/revenue definitions remain explicitly unavailable; every original source fact is retained."
+variable = "355.35334"
+variant = "355.1229"
+column = "Pris"
+owner = "355.35334.waste"
+ref = "Exact positive native-family/physical-peer review Batch52-directfacts4-source-review.json; every original projection is guarded. School2015 SForm has simultaneous competing general/special source questions and no chosen owner. Uppercase waste Pris2021–2025 has contrary cost/revenue roles and no chosen owner. All other exact positive source literals/windows retain their source-supported identities."
+source_editions = ["2014"]
+expected_evidence_sha256 = "fcb6c95bebd8f10cb38e4d4f3f84913d0f06843e69af87b490403109996bb6b4"
+
+[[identity.column_owner]]
+data_warning = "Only independently supported literal delivery windows are mapped. Conflicting school-column ownership or indistinguishable waste cost/revenue definitions remain explicitly unavailable; every original source fact is retained."
+variable = "355.35334"
+variant = "355.1229"
+column = "pris"
+owner = "355.35334.fuel"
+ref = "Exact positive native-family/physical-peer review Batch52-directfacts4-source-review.json; every original projection is guarded. School2015 SForm has simultaneous competing general/special source questions and no chosen owner. Uppercase waste Pris2021–2025 has contrary cost/revenue roles and no chosen owner. All other exact positive source literals/windows retain their source-supported identities."
+source_editions = ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"]
+expected_evidence_sha256 = "eef9d929c02d750b16955ba1afdcfdba217fa4a650331ed563cb9f49559ab2fc"
+
+[[variable]]
+native_id = "355.23859.fuel"
+slug = "kvartal-och-ar"
+
+[[variable]]
+native_id = "355.23859.waste"
+slug = "kvartal-och-ar-avfall"
+
+[[variable]]
+native_id = "355.35270.anl"
+slug = "anlaggningens-namn-2"
+
+[[variable]]
+native_id = "355.35270.arbnamn"
+slug = "anlaggningens-namn"
+
+[[variable]]
+native_id = "355.35334.fuel"
+slug = "pris"
+
+[[variable]]
+native_id = "355.35334.waste"
+slug = "pris-avfall"
+
+[[representation.parallel]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+case_aliases = true
+variable = "355.145"
+variant = "355.1229"
+column_metadata = "per_column"
+columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "SCBid", source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "scbid", source_editions = ["2015"] }]
+evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+case_aliases = true
+variable = "355.145"
+variant = "355.1229"
+column_metadata = "per_column"
+columns = [{ valid_from = "2016-01-01", valid_to = "2016-12-31", column = "SCBid", source_editions = ["2016"] }, { valid_from = "2016-01-01", valid_to = "2016-12-31", column = "scbid", source_editions = ["2016"] }]
+evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+case_aliases = true
+variable = "355.145"
+variant = "355.1229"
+column_metadata = "per_column"
+columns = [{ valid_from = "2017-01-01", valid_to = "2017-12-31", column = "SCBid", source_editions = ["2017"] }, { valid_from = "2017-01-01", valid_to = "2017-12-31", column = "scbid", source_editions = ["2017"] }]
+evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+case_aliases = true
+variable = "355.145"
+variant = "355.1229"
+column_metadata = "per_column"
+columns = [{ valid_from = "2018-01-01", valid_to = "2018-12-31", column = "SCBid", source_editions = ["2018"] }, { valid_from = "2018-01-01", valid_to = "2018-12-31", column = "scbid", source_editions = ["2018"] }]
+evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+case_aliases = true
+variable = "355.145"
+variant = "355.1229"
+column_metadata = "per_column"
+columns = [{ valid_from = "2019-01-01", valid_to = "2019-12-31", column = "SCBid", source_editions = ["2019"] }, { valid_from = "2019-01-01", valid_to = "2019-12-31", column = "scbid", source_editions = ["2019"] }]
+evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+case_aliases = true
+variable = "355.1839.peorgnr"
+variant = "355.1229"
+column_metadata = "per_column"
+columns = [{ valid_from = "2020-01-01", valid_to = "2020-12-31", column = "PeOrgNr", source_editions = ["2020"] }, { valid_from = "2020-01-01", valid_to = "2020-12-31", column = "PeorgNr", source_editions = ["2020"] }]
+evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+case_aliases = true
+variable = "355.1839.peorgnr"
+variant = "355.1229"
+column_metadata = "per_column"
+columns = [{ valid_from = "2021-01-01", valid_to = "2021-12-31", column = "PeOrgNr", source_editions = ["2021"] }, { valid_from = "2021-01-01", valid_to = "2021-12-31", column = "PeorgNr", source_editions = ["2021"] }]
+evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+case_aliases = true
+variable = "355.1839.peorgnr"
+variant = "355.1229"
+column_metadata = "per_column"
+columns = [{ valid_from = "2022-01-01", valid_to = "2022-12-31", column = "PeOrgNr", source_editions = ["2022"] }, { valid_from = "2022-01-01", valid_to = "2022-12-31", column = "PeorgNr", source_editions = ["2022"] }]
+evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+case_aliases = true
+variable = "355.1839.peorgnr"
+variant = "355.1229"
+column_metadata = "per_column"
+columns = [{ valid_from = "2023-01-01", valid_to = "2023-12-31", column = "PeOrgNr", source_editions = ["2023"] }, { valid_from = "2023-01-01", valid_to = "2023-12-31", column = "PeorgNr", source_editions = ["2023"] }]
+evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+case_aliases = true
+variable = "355.1839.peorgnr"
+variant = "355.1229"
+column_metadata = "per_column"
+columns = [{ valid_from = "2024-01-01", valid_to = "2024-12-31", column = "PeOrgNr", source_editions = ["2024"] }, { valid_from = "2024-01-01", valid_to = "2024-12-31", column = "PeorgNr", source_editions = ["2024"] }]
+evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2025-01-01"
+valid_to = "2025-12-31"
+case_aliases = true
+variable = "355.1839.peorgnr"
+variant = "355.1229"
+column_metadata = "per_column"
+columns = [{ valid_from = "2025-01-01", valid_to = "2025-12-31", column = "PeOrgNr", source_editions = ["2025"] }, { valid_from = "2025-01-01", valid_to = "2025-12-31", column = "PeorgNr", source_editions = ["2025"] }]
+evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
+noted = "2026-10-02"
+
+[[coding.choice]]
+variable = "355.36"
+variant = "355.1229"
+column = "Kommun"
+periods = [["2021-01-01", "2021-12-31"]]
+reason = "Complete own active municipality lists agree on all 290 ordinary source code/label pairs. One exact supplied domain adds only explicitly labelled unknown values (1917,580,781 and, in 2021–2022, a blank code). Retain that supplied domain and all original alternatives; no union, recoding, zero-padding or invented classification membership."
+source = "Batch52-directfacts4-source-review.json; complete own native36 membership review and exact source-superset comparison."
+data_warning = "The source municipality domain adds non-standard unknown-value encodings alongside the official municipal codes. They remain distinct source codes; classification membership is verified separately. The blank 2021 source token has a blank label and its original facts remain unchanged."
+expected_evidence_sha256 = "1b67ec67428c89de30f3867dc5c730ff49a9cac61e3fb9e71ff0ba640d84caab"
+keep = "2021-01-01/ Län, kommuner och församlingar"
+keep_members_sha256 = "95e4421d6dbbdfd4d4c2ed47a9a572787dd0c392f8718612b880ebb20e3f3857"
+over = ["2021-01-01/ Län, kommuner och församlingar"]
+
+[[coding.choice]]
+variable = "355.36"
+variant = "355.1229"
+column = "Kommun"
+periods = [["2022-01-01", "2022-12-31"]]
+reason = "Complete own active municipality lists agree on all 290 ordinary source code/label pairs. One exact supplied domain adds only explicitly labelled unknown values (1917,580,781 and, in 2021–2022, a blank code). Retain that supplied domain and all original alternatives; no union, recoding, zero-padding or invented classification membership."
+source = "Batch52-directfacts4-source-review.json; complete own native36 membership review and exact source-superset comparison."
+data_warning = "The source municipality domain adds non-standard unknown-value encodings alongside the official municipal codes. They remain distinct source codes; classification membership is verified separately. The blank 2021 source token has a blank label and its original facts remain unchanged."
+expected_evidence_sha256 = "1b67ec67428c89de30f3867dc5c730ff49a9cac61e3fb9e71ff0ba640d84caab"
+keep = "2022-01-01/ Län, kommuner och församlingar"
+keep_members_sha256 = "dbfa678fcf8ba800c16f32ce0f83b75a039b964be77d7efdf576dbcb518185a3"
+over = ["2022-01-01/ Län, kommuner och församlingar"]
+
+[[coding.choice]]
+variable = "355.36"
+variant = "355.1229"
+column = "Kommun"
+periods = [["2023-01-01", "2023-12-31"]]
+reason = "Complete own active municipality lists agree on all 290 ordinary source code/label pairs. One exact supplied domain adds only explicitly labelled unknown values (1917,580,781 and, in 2021–2022, a blank code). Retain that supplied domain and all original alternatives; no union, recoding, zero-padding or invented classification membership."
+source = "Batch52-directfacts4-source-review.json; complete own native36 membership review and exact source-superset comparison."
+data_warning = "The source municipality domain adds non-standard unknown-value encodings alongside the official municipal codes. They remain distinct source codes; classification membership is verified separately. The blank 2021 source token has a blank label and its original facts remain unchanged."
+expected_evidence_sha256 = "1b67ec67428c89de30f3867dc5c730ff49a9cac61e3fb9e71ff0ba640d84caab"
+keep = "2023-01-01 /Län, kommuner och församlingar"
+keep_members_sha256 = "fd6ba923d114d794d9a5f10a3ccd1c5431d90e362dd84893ec59ad071aa15e8f"
+over = ["2023-01-01 /Län, kommuner och församlingar"]
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 355, 'variable', 'native-int', 35334)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:17951\",\"variable:35334\",\"member:833453\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:17951\",\"variable:35334\",\"member:833466\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:17951\",\"variable:35334\",\"member:836914\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:17951\",\"variable:35334\",\"member:837011\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:18579\",\"variable:35334\",\"member:870609\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:18579\",\"variable:35334\",\"member:870615\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:18579\",\"variable:35334\",\"member:870625\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:18579\",\"variable:35334\",\"member:870638\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:19088\",\"variable:35334\",\"member:916225\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:19088\",\"variable:35334\",\"member:916231\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:19088\",\"variable:35334\",\"member:916250\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:19088\",\"variable:35334\",\"member:916263\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:19682\",\"variable:35334\",\"member:973839\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:19682\",\"variable:35334\",\"member:973840\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:19682\",\"variable:35334\",\"member:973863\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:19682\",\"variable:35334\",\"member:973864\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:20136\",\"variable:35334\",\"member:1014347\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:20136\",\"variable:35334\",\"member:1014348\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:20136\",\"variable:35334\",\"member:1014372\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:355\",\"variant:1229\",\"edition:20136\",\"variable:35334\",\"member:1014373\"]}"]
+fields = ["identity"]
+reason = "Only the exact source groups without a supported semantic owner are unavailable. School SkElev and2015 SForm have simultaneous competing source questions; waste Pris2021–2025 has indistinguishable cost versus revenue definitions. Preserve all original facts and own coding, all positive source-owned windows, and explicit physical inventory warnings. No owner, values or statistical equivalence is invented."
+evidence = "Complete native family and physical-peer review Batch52-directfacts4-source-review.json; positive source roles guarded independently, unassigned source groups and ordered own coding guarded here."
+expected_evidence_sha256 = "8a9ac779cd34279b10337347c45311f824791b7326ad59d43ebaef7c7d542e70"
+expected_diagnostic_sha256 = "9afca27b0797b053ee5491599ba8b0ea4d2f119e1e550b30fff639697d7aa535"

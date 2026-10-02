@@ -104,3 +104,93 @@ native_id = "196.83.btext"
 slug = "bransleslag-text"
 
 # register 199
+
+[[identity.partition]]
+variable = "196.1662"
+columns = { Signal1 = "196.1662.signal1", Signal2 = "196.1662.signal2", Signal3 = "196.1662.signal3", Signal4 = "196.1662.signal4", Signal5 = "196.1662.signal5" }
+columns_ref = "Complete native source family and all physical peers reviewed. Literal-case spellings retain the same explicitly supplied definition and identifier. Vessel positions follow source operational definitions Fartyg1–5, never suffix inference. Delivery-specific roles and every raw type, date, unit, name and coding association remain evidence; observed-value equivalence is not asserted. Batch52-directfacts4-source-review.json."
+expected_evidence_sha256 = "dc2c1577aac5c7d63c46ef6a732f153a9407e15320cc94a30f605b71fbb51c81"
+
+[[identity.partition]]
+variable = "196.44395"
+columns = { EUton1 = "196.44395.euton1", EUton2 = "196.44395.euton2", EUton3 = "196.44395.euton3", EUton4 = "196.44395.euton4", EUton5 = "196.44395.euton5" }
+columns_ref = "Complete native source family and all physical peers reviewed. Literal-case spellings retain the same explicitly supplied definition and identifier. Vessel positions follow source operational definitions Fartyg1–5, never suffix inference. Delivery-specific roles and every raw type, date, unit, name and coding association remain evidence; observed-value equivalence is not asserted. Batch52-directfacts4-source-review.json."
+expected_evidence_sha256 = "5aac0b33f401880f182b99137fb88f449dae9709a5eaa5cb3aa58a4d76ac8d03"
+
+[[identity.partition]]
+variable = "196.44396"
+columns = { Langd1 = "196.44396.langd1", Langd2 = "196.44396.langd2", Langd3 = "196.44396.langd3", Langd4 = "196.44396.langd4", Langd5 = "196.44396.langd5", "Längd1" = "196.44396.langd1", "Längd2" = "196.44396.langd2", "Längd3" = "196.44396.langd3", "Längd4" = "196.44396.langd4", "Längd5" = "196.44396.langd5" }
+columns_ref = "Complete native source family and all physical peers reviewed. Literal-case spellings retain the same explicitly supplied definition and identifier. Vessel positions follow source operational definitions Fartyg1–5, never suffix inference. Delivery-specific roles and every raw type, date, unit, name and coding association remain evidence; observed-value equivalence is not asserted. Batch52-directfacts4-source-review.json."
+expected_evidence_sha256 = "4b8e4176bf24b823f593b3e6094a587666aa62b493ebb0c69617264ea3d79a07"
+
+[[variable]]
+native_id = "196.1662.signal5"
+slug = "signal"
+
+[[variable]]
+native_id = "196.1662.signal1"
+slug = "signal1-2"
+
+[[variable]]
+native_id = "196.1662.signal2"
+slug = "signal2-2"
+
+[[variable]]
+native_id = "196.1662.signal3"
+slug = "signal3-2"
+
+[[variable]]
+native_id = "196.1662.signal4"
+slug = "signal4-2"
+
+[[variable]]
+native_id = "196.44395.euton1"
+slug = "euton1"
+
+[[variable]]
+native_id = "196.44395.euton2"
+slug = "euton2"
+
+[[variable]]
+native_id = "196.44395.euton3"
+slug = "euton3"
+
+[[variable]]
+native_id = "196.44395.euton4"
+slug = "euton4"
+
+[[variable]]
+native_id = "196.44395.euton5"
+slug = "euton5"
+
+[[variable]]
+native_id = "196.44396.langd1"
+slug = "langd1"
+
+[[variable]]
+native_id = "196.44396.langd2"
+slug = "langd2"
+
+[[variable]]
+native_id = "196.44396.langd3"
+slug = "langd3"
+
+[[variable]]
+native_id = "196.44396.langd4"
+slug = "langd4"
+
+[[variable]]
+native_id = "196.44396.langd5"
+slug = "langd5"
+
+[[acknowledge]]
+code = "conflicting_occurrence_facts"
+subject = "scb/energianvandning-fiske/value-num"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:196\",\"variant:276\",\"edition:18867\",\"variable:1721\",\"member:900361\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:196\",\"variant:276\",\"edition:18867\",\"variable:1721\",\"member:900373\"]}"]
+fields = ["measurement_unit"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "The source supplies contrary effective units for this exact physical field and window. Retain its mapped economic quantity and physical state, but leave the conflicted unit unavailable. Preserve both original unit/operation statements; do not choose currency, convert values or claim storage equivalence."
+evidence = "Complete native family and physical-peer source review Batch52-directfacts4-source-review.json. The resolver withholds only measurement_unit, not the delivered state."
+expected_evidence_sha256 = "46583edd0ed83df210f4efbe136c5b814cce47aa4a8afbb84c20b0f8bb8c55b8"
+expected_diagnostic_sha256 = "8bf20ffd36d46c076bca28760e52716436075520286b63618cbf7690757c914a"

@@ -65,6 +65,7 @@ from .doc_coverage import compute_doc_coverage, render_doc_coverage_toml
 from .doc_db import build_doc_db, repo_docs_dir
 from .extend_db import (
     extend_db,
+    load_private_holdings_warnings,
     resolve_delivery_inventory,
     resolve_steward_providers_dir,
     resolve_steward_slug_dir,
@@ -394,6 +395,13 @@ def _build_parser() -> argparse.ArgumentParser:
             "absent, the run FAILS rather than shipping unchecked)."
         ),
     )
+    extend_db_p.add_argument(
+        "--holdings-input",
+        default=None,
+        help="Accepted local-only private input candidate retaining undated holdings.",
+    )
+    extend_db_p.add_argument("--input-commit", default=None)
+    extend_db_p.add_argument("--input-manifest-sha256", default=None)
     extend_db_p.add_argument(
         "--skip-holdings-gate",
         action="store_true",
@@ -1390,6 +1398,46 @@ def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             if inventory_path
             else HoldingsGate.SKIPPED,
         )
+    holdings_input = getattr(args, "holdings_input", None)
+    input_commit = getattr(args, "input_commit", None)
+    input_manifest_sha256 = getattr(args, "input_manifest_sha256", None)
+    data_warnings = ()
+    if any((holdings_input, input_commit, input_manifest_sha256)):
+        if not (holdings_input and input_commit and input_manifest_sha256):
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="private_holdings_pins_required",
+                error_class="configuration",
+                message="Private holdings require --holdings-input and both exact input pins.",
+                remediation="Select the clean accepted private input candidate and its full pins.",
+            )
+        candidate = Path(holdings_input).expanduser().resolve()
+        if (
+            providers_dir != candidate / "providers"
+            or slug_dir != candidate / "slugs"
+            or inventory_path != candidate / "policy" / "inventory.toml"
+        ):
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="private_holdings_paths_mismatch",
+                error_class="configuration",
+                message="Private providers, slugs and delivery inventory must come from the accepted holdings candidate.",
+                remediation="Select its providers/, slugs/ and policy/inventory.toml; regenerate and accept a fresh candidate if needed.",
+            )
+        try:
+            data_warnings = load_private_holdings_warnings(
+                Path(holdings_input),
+                input_commit=input_commit,
+                input_manifest_sha256=input_manifest_sha256,
+            )
+        except ValueError as exc:
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="private_holdings_invalid",
+                error_class="configuration",
+                message=str(exc),
+                remediation="Restore the accepted private evidence and exact policy guards.",
+            ) from exc
     result = extend_db(
         base_db=Path(args.base_db),
         providers_dir=providers_dir,
@@ -1398,6 +1446,7 @@ def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         slug_dir=slug_dir,
         skip_slugs=args.skip_slugs,
         pre_rename_hook=pre_rename_hook,
+        data_warnings=data_warnings,
     )
     duration_ms = int((time.perf_counter() - start) * 1000)
     return success_envelope(
@@ -1410,6 +1459,9 @@ def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             # against, and `skip_holdings_gate` is the only reason it can be null
             # on a validated run (Y-124).
             "delivery_inventory": str(inventory_path) if inventory_path else None,
+            "holdings_input": holdings_input,
+            "input_commit": input_commit,
+            "input_manifest_sha256": input_manifest_sha256,
             "steward": args.steward,
             "skip_slugs": args.skip_slugs,
             "skip_holdings_gate": args.skip_holdings_gate,

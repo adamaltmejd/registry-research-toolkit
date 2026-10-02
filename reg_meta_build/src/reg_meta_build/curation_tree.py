@@ -1133,14 +1133,18 @@ class IdentityColumnOwnerEntry(_CurationModel):
 
     @model_validator(mode="after")
     def _guarded_editions(self) -> IdentityColumnOwnerEntry:
-        if (self.expected_records is None) != (self.expected_evidence_sha256 is None):
+        if self.expected_records is not None and self.expected_evidence_sha256 is None:
             raise ValueError(
                 "guarded owner alternatives require original records and evidence hash"
             )
+        if self.expected_evidence_sha256 is not None and (
+            self.expected_fields or not self.source_editions
+        ):
+            raise ValueError(
+                "digest-guarded owners require finite editions and no expected_fields"
+            )
         if self.expected_records is not None and (
-            self.expected_fields
-            or not self.source_editions
-            or not _complete_original_expectations(self.expected_records)
+            not _complete_original_expectations(self.expected_records)
         ):
             raise ValueError(
                 "owner alternatives require finite editions, complete original projections and no expected_fields"

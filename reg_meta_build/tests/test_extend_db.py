@@ -715,3 +715,182 @@ def test_section_12_holdings_gate_still_checks_provider_windows(
         assert "held 2017" in exc.value.message
     else:
         hook(out)
+
+
+def _undated_warning(tmp_path: Path):
+    import hashlib
+    import json
+
+    from reg_meta.source_evidence import canonical_sha256
+    from reg_meta_build.extend_db import load_undated_holdings
+
+    source = tmp_path / "holdings.csv"
+    source.write_text(
+        "Category,Detail,Table,V1,V2,V3\nBank,,Undated,PersonNr,,Amount\n"
+    )
+    rows = [{"line": 2, "cells": ["Bank", "", "Undated", "PersonNr", "", "Amount"]}]
+    policy = tmp_path / "policy.toml"
+    policy.write_text(
+        f'source_sha256 = "{hashlib.sha256(source.read_bytes()).hexdigest()}"\n'
+        '[[retain_unknown]]\ntable = "Undated"\n'
+        'register = "swedbank/transaktioner"\n'
+        f'rows_sha256 = "{canonical_sha256(rows)}"\n'
+        'reason = "Calendar coverage is undocumented."\n'
+    )
+    warning = load_undated_holdings(
+        policy, source, input_commit="a" * 40, input_manifest_sha256="b" * 64
+    )[0]
+    assert json.loads(warning.detail)["rows"] == rows
+    return policy, source, warning
+
+
+def test_undated_holdings_preserve_cells_and_withhold_calendar_links(
+    tmp_path: Path,
+) -> None:
+    import json
+
+    from reg_meta_build.extend_db import load_undated_holdings
+
+    policy, source, warning = _undated_warning(tmp_path)
+    assert (
+        warning
+        == load_undated_holdings(
+            policy, source, input_commit="a" * 40, input_manifest_sha256="b" * 64
+        )[0]
+    )
+    assert json.loads(warning.detail)["temporal_scope"]["kind"] == "unknown"
+    assert (
+        warning.variable_fqid,
+        warning.variant,
+        warning.delivery_column_name,
+        warning.valid_from,
+        warning.valid_to,
+    ) == (None,) * 5
+    source.write_text(source.read_text().replace("Amount", "Changed"))
+    with pytest.raises(ValueError, match="source SHA"):
+        load_undated_holdings(
+            policy, source, input_commit="a" * 40, input_manifest_sha256="b" * 64
+        )
+
+
+def test_undated_holding_rows_are_guarded_even_after_repinning_csv(
+    tmp_path: Path,
+) -> None:
+    import hashlib
+
+    from reg_meta_build.extend_db import load_undated_holdings
+
+    policy, source, _ = _undated_warning(tmp_path)
+    old = hashlib.sha256(source.read_bytes()).hexdigest()
+    source.write_text(source.read_text().replace("Amount", "Changed"))
+    policy.write_text(
+        policy.read_text().replace(old, hashlib.sha256(source.read_bytes()).hexdigest())
+    )
+    with pytest.raises(ValueError, match="row guard"):
+        load_undated_holdings(
+            policy, source, input_commit="a" * 40, input_manifest_sha256="b" * 64
+        )
+
+
+def test_extension_writes_unknown_holdings_using_actual_private_ids(
+    tmp_path: Path, global_db: Path
+) -> None:
+    from reg_meta_build.db import open_built_db
+
+    _, _, warning = _undated_warning(tmp_path)
+    providers = _providers(tmp_path, _BASE_TOML)
+    slugs = tmp_path / "slugs"
+    _write_slug_dir(slugs)
+    out = tmp_path / "out"
+    extend_db(
+        global_db,
+        providers,
+        out,
+        steward=_STEWARD,
+        slug_dir=slugs,
+        data_warnings=(warning,),
+    )
+    conn = open_built_db(out / "reg_meta.db")
+    try:
+        row = conn.execute(
+            "SELECT register_id, variable_id, register_variant_id, delivery_column_name, valid_from, valid_to FROM data_warning"
+        ).fetchone()
+        assert tuple(row) == (_ids()["register"], None, None, None, None, None)
+        assert conn.execute("PRAGMA foreign_key_check").fetchall() == []
+    finally:
+        conn.close()
+
+
+def test_warning_writer_rejects_missing_register_and_demotes_only_explicitly(
+    tmp_path: Path, global_db: Path
+) -> None:
+    import json
+
+    from reg_meta.catalog import DataWarning
+    from reg_meta.source_evidence import canonical_sha256
+    from reg_meta_build.data_warnings import write_data_warnings
+
+    _, _, warning = _undated_warning(tmp_path)
+    conn = sqlite3.connect(global_db)
+    try:
+        with pytest.raises(ValueError, match="register is not written"):
+            write_data_warnings(conn, (warning,))
+        provider, register = conn.execute(
+            "SELECT p.slug,r.slug FROM register r JOIN provider p USING(provider_id) LIMIT 1"
+        ).fetchone()
+        payload = warning.model_dump(mode="json", exclude={"warning_id"})
+        payload.update(
+            register_fqid=f"{provider}/{register}",
+            variable_fqid=f"{provider}/{register}/unwritten",
+            variant="_default",
+            delivery_column_name="X",
+        )
+        missing = DataWarning.model_validate_json(
+            json.dumps({"warning_id": canonical_sha256(payload), **payload})
+        )
+        with pytest.raises(ValueError, match="variable is not written"):
+            write_data_warnings(conn, (missing,))
+        write_data_warnings(conn, (missing,), demote_missing_variables=True)
+        raw = conn.execute("SELECT warning_json FROM data_warning").fetchone()[0]
+        demoted = DataWarning.model_validate_json(raw)
+        assert demoted.variable_fqid is None and demoted.variant is None
+        assert demoted.warning_id != missing.warning_id
+    finally:
+        conn.close()
+
+
+def test_private_validity_warnings_keep_authored_absence_and_delivery_witnesses(
+    tmp_path: Path,
+) -> None:
+    import json
+
+    from reg_meta_build.extend_db import _private_unknown_validity_warnings
+
+    _providers(tmp_path)
+    _write_slug_dir(tmp_path / "slugs")
+    policy = tmp_path / "policy"
+    policy.mkdir()
+    (policy / "inventory.toml").write_text(
+        'version = 1\nsteward = "swecov"\n[[table]]\nid = "Bank_2020"\nedition = 2020\n'
+        '[[table.column]]\nname = "BELOPP"\n[[table.column.mapping]]\n'
+        'register_variant = "swedbank/transaktioner/transaktioner-default"\n'
+        'variable = "swedbank/transaktioner/belopp"\n'
+    )
+    warnings = _private_unknown_validity_warnings(
+        tmp_path, input_commit="a" * 40, input_manifest_sha256="b" * 64
+    )
+    assert warnings == _private_unknown_validity_warnings(
+        tmp_path, input_commit="a" * 40, input_manifest_sha256="b" * 64
+    )
+    warning = next(
+        value
+        for value in warnings
+        if str(value.register_fqid) == "swedbank/transaktioner"
+    )
+    evidence = json.loads(warning.detail)
+    assert evidence["holding_table_witnesses"][0]["edition"] == "2020"
+    assert any(state["valid_from"] is None for state in evidence["states"])
+    assert all(state["valid_to"] is None for state in evidence["states"])
+    assert evidence["storage_sentinels"]["missing_start"] == "0001-01-01"
+    assert warning.valid_from is None and warning.valid_to is None
+    assert evidence["aliases"]

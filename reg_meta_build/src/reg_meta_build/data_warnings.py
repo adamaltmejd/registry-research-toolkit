@@ -8,6 +8,7 @@ from datetime import date
 from hashlib import sha256
 from typing import TYPE_CHECKING
 
+from pydantic import TypeAdapter
 from reg_meta.catalog import DataWarning
 from reg_meta.fqid import Fqid
 from reg_meta.source_evidence import canonical_sha256
@@ -15,6 +16,8 @@ from reg_meta.source_evidence import canonical_sha256
 from reg_meta_build.source_intervals import occurrence_bounds
 
 if TYPE_CHECKING:
+    import sqlite3
+
     from reg_meta_build.source_curation import ResolutionDiagnostic
     from reg_meta_build.source_scope import ScopeResolution
 
@@ -354,3 +357,77 @@ def scope_data_warnings(
         )
         warnings[warning.warning_id] = warning
     return tuple(warnings[k] for k in sorted(warnings))
+
+
+def write_data_warnings(
+    conn: sqlite3.Connection,
+    data_warnings: tuple[DataWarning, ...],
+    *,
+    demote_missing_variables: bool = False,
+) -> None:
+    """Write validated warnings using actual named database IDs in either writer."""
+    warnings = TypeAdapter(tuple[DataWarning, ...]).validate_python(
+        data_warnings, strict=True
+    )
+    if not warnings:
+        return
+    registers = {
+        (provider, register): register_id
+        for provider, register, register_id in conn.execute(
+            "SELECT p.slug, r.slug, r.register_id FROM register r "
+            "JOIN provider p USING(provider_id)"
+        )
+    }
+    variables = {
+        (register_id, slug): variable_id
+        for register_id, slug, variable_id in conn.execute(
+            "SELECT register_id, slug, variable_id FROM variable"
+        )
+    }
+    variants = {
+        (register_id, slug): variant_id
+        for register_id, slug, variant_id in conn.execute(
+            "SELECT register_id, slug, register_variant_id FROM register_variant"
+        )
+    }
+    for value in sorted(warnings, key=lambda w: w.warning_id):
+        warning = DataWarning.model_validate_json(value.model_dump_json())
+        register = warning.register_fqid
+        register_id = registers.get((register.provider, register.register))
+        if register_id is None:
+            raise ValueError(f"Data warning register is not written: {register}")
+        variable_id = None
+        if warning.variable_fqid is not None:
+            variable_id = variables.get((register_id, warning.variable_fqid.variable))
+            if variable_id is None:
+                if not demote_missing_variables:
+                    raise ValueError(
+                        f"Data warning variable is not written: {warning.variable_fqid}"
+                    )
+                payload = warning.model_dump(mode="json", exclude={"warning_id"})
+                payload.update(
+                    variable_fqid=None, variant=None, delivery_column_name=None
+                )
+                warning = DataWarning.model_validate_json(
+                    json.dumps({"warning_id": canonical_sha256(payload), **payload})
+                )
+        variant_id = None
+        if warning.variant is not None:
+            variant_id = variants.get((register_id, warning.variant))
+            if variant_id is None:
+                raise ValueError(
+                    f"Data warning variant is not written: {register}/{warning.variant}"
+                )
+        conn.execute(
+            "INSERT INTO data_warning VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                warning.warning_id,
+                register_id,
+                variable_id,
+                variant_id,
+                warning.delivery_column_name,
+                warning.valid_from,
+                warning.valid_to,
+                warning.model_dump_json(),
+            ),
+        )

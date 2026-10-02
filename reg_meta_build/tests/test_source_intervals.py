@@ -151,6 +151,7 @@ def test_descriptive_text_disagreement_is_unknown_without_occurrence_issue(
 @pytest.mark.parametrize(
     ("published", "other"),
     [
+        ("MWh", "Megawattimmar"),
         ("Kronor", "kronor"),
         ("Kronor (SEK)", "kronor"),
         ("Antal månader", "Månader"),
@@ -158,6 +159,7 @@ def test_descriptive_text_disagreement_is_unknown_without_occurrence_issue(
         ("Antal veckor", "Veckor"),
         ("Antal minuter", "Minuter"),
         ("Antal barn", "Antal"),
+        ("Antal", "Antal elever"),
         ("Dagar", "Antal"),
         ("Årtal", "År"),
     ],

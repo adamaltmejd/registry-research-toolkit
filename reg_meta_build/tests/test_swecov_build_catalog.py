@@ -1985,3 +1985,47 @@ def test_inventory_unmapped_route_retains_holdings_without_inferred_assignment(
         assert build_catalog._steward_scope(
             "Inera/1177/Ordered tests", policy.mapping()[(route.category, route.detail)]
         ) == (set(), set())
+
+
+def test_inventory_retains_guarded_undated_tables_separately_from_lookups(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    import hashlib
+
+    from reg_meta.inventory import load_inventory
+    from reg_meta.source_evidence import canonical_sha256
+
+    steward = tmp_path / "steward"
+    steward.mkdir()
+    (steward / "inventory_overlay.toml").write_text("")
+    source = tmp_path / "holdings.csv"
+    source.write_text(
+        "Category,Detail,Table,V1,V2\n"
+        "Inera/1177,Ordered tests,Known_2020,T_kolumn,\n"
+        "Inera/1177,Ordered tests,Undated,T_kolumn,Unknown\n"
+        "Inera/1177,Ordered tests,Lookup,Code,Name\n"
+    )
+    rows = [
+        {
+            "line": 3,
+            "cells": ["Inera/1177", "Ordered tests", "Undated", "T_kolumn", "Unknown"],
+        }
+    ]
+    policy = tmp_path / "holdings_policy.toml"
+    policy.write_text(
+        f'source_sha256 = "{hashlib.sha256(source.read_bytes()).hexdigest()}"\n'
+        '[[exclude]]\ntable = "Lookup"\nreason = "Code/name dictionary."\n'
+        '[[retain_unknown]]\ntable = "Undated"\nregister = "inera/bestallda-prover"\n'
+        f'rows_sha256 = "{canonical_sha256(rows)}"\nreason = "No calendar coverage."\n'
+    )
+    build_catalog.cmd_inventory(
+        argparse.Namespace(
+            csv=source, db=flavored_db, out=steward, holdings_policy=policy
+        )
+    )
+    inventory = load_inventory(steward / "inventory.toml")
+    assert [table.id for table in inventory.tables] == ["Known_2020"]
+    worklist = json.loads((tmp_path / "derived/inventory_worklist.json").read_text())
+    assert worklist["edition_needed"] == []
+    assert worklist["retained_unknown"][0]["table"] == "Undated"
+    assert worklist["retained_unknown"][0]["columns"] == ["T_kolumn", "Unknown"]

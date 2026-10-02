@@ -8141,10 +8141,8 @@ def test_delivery_metadata_rejects_redundant_unit_permission():
         DeliveryMetadataDecision.require_fields(("measurement_unit",))
 
 
-@pytest.mark.parametrize("distinct_ref", [False, True])
 def test_field_correction_accepts_guarded_source_alternatives_without_losing_originals(
     tmp_path,
-    distinct_ref,
 ):
     tree, scope, source, _, base = _checked_correction_fixture(tmp_path)
     source = source.model_copy(
@@ -8166,22 +8164,6 @@ def test_field_correction_accepts_guarded_source_alternatives_without_losing_ori
             ),
         }
     )
-    if distinct_ref:
-        peer = peer.model_copy(
-            update={
-                "locators": tuple(
-                    locator.model_copy(
-                        update={
-                            "semantic_record_key": (
-                                *locator.semantic_record_key,
-                                "peer",
-                            )
-                        }
-                    )
-                    for locator in peer.locators
-                )
-            }
-        )
     fields = (
         "name",
         "definition",
@@ -8222,26 +8204,6 @@ def test_field_correction_accepts_guarded_source_alternatives_without_losing_ori
     )
     cases, issues, _ = _run_checked_correction(tree, scope, (source, peer))
     assert not issues
-    if distinct_ref:
-        unguarded = replace(
-            tree,
-            registers=(
-                register.model_copy(
-                    update={
-                        "errata": register.errata.model_copy(
-                            update={
-                                "field": [
-                                    entry.model_copy(update={"expected_records": None})
-                                ]
-                            }
-                        )
-                    }
-                ),
-            ),
-        )
-        assert {
-            d.code for d in _run_checked_correction(unguarded, scope, (source, peer))[1]
-        } == {"overbroad_curation_entry"}
     applied = apply_occurrence_cases((source, peer), cases[scope.source, None])
     assert not applied.diagnostics
     assert all(
@@ -8830,7 +8792,7 @@ def test_name_correction_uses_only_complete_same_family_witnesses(tmp_path):
         )
 
 
-def _column_owner_alternatives_fixture(tmp_path):
+def _column_owner_alternatives_fixture(tmp_path, *, digest_only=False):
     from reg_meta_build.curation_tree import IdentityColumnOwnerEntry
     from reg_meta_build.source_curation import acknowledgement_evidence_sha256
     from reg_meta_build.source_records import CodeSetReference, SourceFields
@@ -8866,7 +8828,9 @@ def _column_owner_alternatives_fixture(tmp_path):
         owner="1.5.amount",
         ref="Same physical amount, retain both source operations",
         source_editions=["2020"],
-        expected_records=list(
+        expected_records=None
+        if digest_only
+        else list(
             capture_expectations(
                 rows, fields=tuple(SourceFields.model_fields), parents=True, coding=True
             )
@@ -8889,21 +8853,56 @@ def _column_owner_alternatives_fixture(tmp_path):
     )
     scope = _partition_scope(rows)
 
-    def compile_rows(records):
+    def compile_rows(records, *, projected=False, deferred=False):
+        partition_records = (
+            tuple(
+                PreparedPartitionRecord(
+                    source=r.source,
+                    subject=r.subject,
+                    parent_facts=r.parent_facts,
+                    edition_scope=r.edition_scope,
+                    edition_period_scope=r.edition_period_scope,
+                    locators=r.locators,
+                    fields=r.fields.model_copy(update={"operational_definition": None}),
+                )
+                for r in records
+            )
+            if projected
+            else records
+        )
         reader = SimpleNamespace(
             iter_partition_families=lambda *args, **kwargs: iter(
+                ((native_variable_key(rows[0]), partition_records),)
+            ),
+            iter_native_families=lambda *args, **kwargs: iter(
                 ((native_variable_key(rows[0]), records),)
-            )
+            ),
         )
-        return compile_partitions(tree, SimpleNamespace(records=reader), (scope,))
+        compiler = compile_deferred_partitions if deferred else compile_partitions
+        return compiler(tree, SimpleNamespace(records=reader), (scope,))
 
     compiled = compile_rows(rows)
     assert not compiled[-1]
     return rows, owner, compiled[0][scope.source, None], compile_rows
 
 
-def test_column_owner_alternatives_retain_same_literal_originals(tmp_path):
-    rows, owner, cases, _ = _column_owner_alternatives_fixture(tmp_path)
+@pytest.mark.parametrize("digest_only", [False, True])
+def test_column_owner_alternatives_retain_same_literal_originals(tmp_path, digest_only):
+    rows, owner, cases, compile_rows = _column_owner_alternatives_fixture(
+        tmp_path, digest_only=digest_only
+    )
+    compiled = compile_rows(rows)
+    assert compile_rows(rows, projected=True) == compiled
+    deferred = compile_rows(rows, projected=True, deferred=True)
+    assert deferred[0] == compiled[1]
+    assert deferred[3] == _partition_memberships(compiled[0])
+    assert compile_rows(rows, deferred=True) == deferred
+    if digest_only:
+        full_rows, _, _, compile_full = _column_owner_alternatives_fixture(
+            tmp_path / "full"
+        )
+        assert compiled == compile_full(full_rows)
+        assert deferred == compile_full(full_rows, deferred=True)
     result = apply_occurrence_cases(rows, cases)
     assert not result.diagnostics
     assert {r.record_id: r for o in result.occurrences for r in o.source_records} == {
@@ -8918,10 +8917,13 @@ def test_column_owner_alternatives_retain_same_literal_originals(tmp_path):
 
 
 @pytest.mark.parametrize(
-    "change", ["operation", "remove", "add", "duplicate", "parent", "coding"]
+    "change", ["operation", "remove", "add", "duplicate", "parent", "scope", "coding"]
 )
-def test_column_owner_alternatives_refuse_original_drift(tmp_path, change):
-    rows, _, cases, compile_rows = _column_owner_alternatives_fixture(tmp_path)
+@pytest.mark.parametrize("digest_only", [False, True])
+def test_column_owner_alternatives_refuse_original_drift(tmp_path, change, digest_only):
+    rows, _, cases, compile_rows = _column_owner_alternatives_fixture(
+        tmp_path, digest_only=digest_only
+    )
     first = rows[0]
     if change == "operation":
         changed = (
@@ -8964,6 +8966,18 @@ def test_column_owner_alternatives_refuse_original_drift(tmp_path, change):
             ),
             rows[1],
         )
+    elif change == "scope":
+        changed = (
+            first.model_copy(
+                update={
+                    "edition_scope": TemporalScope(
+                        kind="intervals",
+                        intervals=(ScopeInterval(start="2019", end="2019"),),
+                    )
+                }
+            ),
+            rows[1],
+        )
     else:
         changed = (
             first.model_copy(
@@ -8979,7 +8993,30 @@ def test_column_owner_alternatives_refuse_original_drift(tmp_path, change):
         )
     refreshed = compile_rows(changed)
     assert any(d.code == "stale_curation_entry" for d in refreshed[-1])
+    assert compile_rows(changed, projected=True) == refreshed
+    assert not any(compile_rows(changed, projected=True, deferred=True)[0].values())
     assert apply_occurrence_cases(changed, cases).diagnostics
+
+
+@pytest.mark.parametrize(
+    "update",
+    [
+        {"source_editions": []},
+        {"expected_evidence_sha256": "invalid"},
+        {
+            "expected_fields": [
+                {"name": "column_name", "status": "value", "value": "ANSWER"}
+            ]
+        },
+    ],
+)
+def test_digest_column_owner_requires_finite_exclusive_guards(tmp_path, update):
+    from pydantic import ValidationError
+    from reg_meta_build.curation_tree import IdentityColumnOwnerEntry
+
+    _, owner, _, _ = _column_owner_alternatives_fixture(tmp_path, digest_only=True)
+    with pytest.raises(ValidationError):
+        IdentityColumnOwnerEntry.model_validate(owner.model_dump(mode="json") | update)
 
 
 def test_column_owner_alternatives_require_complete_exclusive_guards(tmp_path):

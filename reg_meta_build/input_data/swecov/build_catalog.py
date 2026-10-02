@@ -2416,6 +2416,24 @@ def cmd_inventory(args: argparse.Namespace) -> None:
     repo_root = Path(__file__).resolve().parents[3]
     steward_dir = args.out or (repo_root / "reg_webapp" / "stewards" / "swecov")
     overlay = _load_overlay(steward_dir / "inventory_overlay.toml")
+    retained_unknown = {}
+    holdings_policy = getattr(args, "holdings_policy", None)
+    if holdings_policy is not None:
+        from reg_meta_build.extend_db import load_holdings_retention_policy
+
+        entries, _, _ = load_holdings_retention_policy(holdings_policy, args.csv)
+        additions = _load_overlay(holdings_policy)
+        overlap = set(overlay["exclude"]) & set(additions["exclude"])
+        if overlap:
+            raise SystemExit(f"Duplicate holdings policy exclusions: {sorted(overlap)}")
+        overlay["exclude"].update(additions["exclude"])
+        unmap_overlap = set(overlay["unmap"]) & set(additions["unmap"])
+        if unmap_overlap:
+            raise SystemExit(
+                f"Duplicate holdings policy unmaps: {sorted(unmap_overlap)}"
+            )
+        overlay["unmap"].update(additions["unmap"])
+        retained_unknown = {entry.table: entry for entry in entries}
     by_regcol = _steward_load_db(args.db)
     # coord -> {UPPER(col): [(coord, vslug, canonical col)]} narrowed per lookup.
     by_coordcol: dict[tuple[str, str], list] = defaultdict(list)
@@ -2462,6 +2480,7 @@ def cmd_inventory(args: argparse.Namespace) -> None:
 
     worklist: dict[str, list] = {
         "edition_needed": [],
+        "retained_unknown": [],
         "assignment_needed": [],
         "stale_overlay_entries": stale,
         "mapping_scope_needed": [],
@@ -2498,6 +2517,20 @@ def cmd_inventory(args: argparse.Namespace) -> None:
         if table in excluded:
             continue
         entry = tables[table]
+        if table in retained_unknown:
+            if table in overlay["edition"] or extract_periods(table):
+                raise SystemExit(f"Unknown holding has an edition declaration: {table}")
+            retention = retained_unknown[table]
+            worklist["retained_unknown"].append(
+                {
+                    "table": table,
+                    "columns": sorted(entry["columns"]),
+                    "register": retention.register_fqid,
+                    "rows_sha256": retention.rows_sha256,
+                    "reason": retention.reason,
+                }
+            )
+            continue
         edition = _table_edition(table, overlay)
         if edition is None:
             worklist["edition_needed"].append(
@@ -2695,6 +2728,7 @@ def cmd_inventory(args: argparse.Namespace) -> None:
         len(tables)
         - len(excluded)
         - len(worklist["edition_needed"])
+        - len(worklist["retained_unknown"])
         - len(worklist["assignment_needed"])
     )
     print(f"wrote {dest}")
@@ -2880,6 +2914,12 @@ def main() -> None:
         type=Path,
         default=None,
         help="stewards/swecov output dir (default: <repo>/reg_webapp/stewards/swecov)",
+    )
+    inventory_p.add_argument(
+        "--holdings-policy",
+        type=Path,
+        default=None,
+        help="Builder-owned exact lookup exclusions and unknown-edition retentions.",
     )
     errata_p = sub.add_parser(
         "errata",

@@ -960,9 +960,12 @@ def _scoped_column_owners(
                         parents=True,
                         coding=True,
                     )
-                    or entry.expected_evidence_sha256
-                    != acknowledgement_evidence_sha256(matched)
                 )
+            )
+            or (
+                entry.expected_evidence_sha256 is not None
+                and entry.expected_evidence_sha256
+                != acknowledgement_evidence_sha256(matched)
             )
             or entry.owner not in split_ids
             or (
@@ -2383,7 +2386,7 @@ def compile_partitions(
                     for _, entry in partitions
                 )
                 or any(
-                    entry.expected_fields or entry.expected_records is not None
+                    entry.expected_fields or entry.expected_evidence_sha256 is not None
                     for _, entry in scoped_entries
                 )
                 or any(entry.expected_records is not None for _, entry in sos_splits),
@@ -2486,7 +2489,7 @@ def compile_partitions(
                             )
                             or any(
                                 entry.expected_fields
-                                or entry.expected_records is not None
+                                or entry.expected_evidence_sha256 is not None
                                 for _, entry in scoped_entries
                             )
                             else ()
@@ -3043,7 +3046,8 @@ def compile_deferred_partitions(
                     records,
                     guarded=source_id in {item.entry.source_id for item in entries}
                     or any(
-                        entry.expected_fields or entry.expected_records is not None
+                        entry.expected_fields
+                        or entry.expected_evidence_sha256 is not None
                         for _, entry in scoped_entries
                     ),
                 )
@@ -3092,19 +3096,22 @@ def compile_deferred_partitions(
                         tuple(SourceFields.model_fields)
                         if source_id in split_ids
                         or any(
-                            entry.expected_fields or entry.expected_records is not None
+                            entry.expected_fields
+                            or entry.expected_evidence_sha256 is not None
                             for _, entry in scoped_entries
                         )
                         else ("column_name",)
                     ),
                     parents=source_id in split_ids
                     or any(
-                        entry.expected_fields or entry.expected_records is not None
+                        entry.expected_fields
+                        or entry.expected_evidence_sha256 is not None
                         for _, entry in scoped_entries
                     ),
                     coding=source_id in split_ids
                     or any(
-                        entry.expected_fields or entry.expected_records is not None
+                        entry.expected_fields
+                        or entry.expected_evidence_sha256 is not None
                         for _, entry in scoped_entries
                     ),
                 )
@@ -5428,13 +5435,7 @@ def compile_occurrence_corrections(
                     by_edition[record.subject.native.edition_id].add(record_ref(record))
                 overbroad = (
                     len(matches) > 1
-                    or (
-                        any(len(refs) > 1 for refs in by_edition.values())
-                        and not (
-                            isinstance(entry, ErrataFieldEntry)
-                            and entry.expected_records is not None
-                        )
-                    )
+                    or any(len(refs) > 1 for refs in by_edition.values())
                     or (
                         isinstance(entry, ErrataOccurrencePeriodEntry)
                         and any(
@@ -5637,19 +5638,7 @@ def compile_occurrence_corrections(
                             *(
                                 tuple(
                                     field
-                                    for field in (
-                                        capture_expectations(
-                                            (record,),
-                                            fields=tuple(
-                                                field.name
-                                                for field in entry.expected_fields
-                                            ),
-                                        )[0]
-                                        .alternatives[0]
-                                        .fields
-                                        if entry.expected_records is not None
-                                        else entry.expected_fields
-                                    )
+                                    for field in entry.expected_fields
                                     if field.name != "column_name"
                                 )
                                 if entry.field

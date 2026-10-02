@@ -22,7 +22,7 @@ from pydantic import (
     field_validator,
     model_validator,
 )
-from reg_meta.catalog import DataWarning
+from reg_meta.catalog import DataWarning  # noqa: TC002
 from reg_meta.db import (
     CLASSIFICATION_SUCCESSION_AS_OF_YEAR,
     CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY,
@@ -42,6 +42,7 @@ from reg_meta_build._resolved_common import (
     _ResolvedWindow,
     _storage_id,
 )
+from reg_meta_build.data_warnings import write_data_warnings
 from reg_meta_build.db import (
     DDL,
     SCHEMA_VERSION,
@@ -1337,66 +1338,7 @@ def write_resolved_catalog(
                                     else None,
                                 ),
                             )
-            validated_warnings = TypeAdapter(tuple[DataWarning, ...]).validate_python(
-                data_warnings, strict=True
-            )
-            written_variables = {
-                str(
-                    Fqid.binding_fqid(
-                        v.register_ref.provider, v.register_ref.slug, v.slug
-                    )
-                )
-                for v in variables
-            }
-            for value in sorted(validated_warnings, key=lambda w: w.warning_id):
-                warning = DataWarning.model_validate_json(value.model_dump_json())
-                if (
-                    warning.variable_fqid is not None
-                    and str(warning.variable_fqid) not in written_variables
-                ):
-                    payload = warning.model_dump(mode="json", exclude={"warning_id"})
-                    payload.update(
-                        variable_fqid=None, variant=None, delivery_column_name=None
-                    )
-                    warning = DataWarning.model_validate_json(
-                        json.dumps({"warning_id": canonical_sha256(payload), **payload})
-                    )
-                register = warning.register_fqid
-                variable = warning.variable_fqid
-                assert register.provider is not None and register.register is not None
-                warning_variable_id = None
-                if variable is not None:
-                    assert (
-                        variable.provider is not None
-                        and variable.register is not None
-                        and variable.variable is not None
-                    )
-                    warning_variable_id = _storage_id(
-                        variable.provider,
-                        "variable",
-                        variable.register,
-                        variable.variable,
-                    )
-                conn.execute(
-                    "INSERT INTO data_warning VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                    (
-                        warning.warning_id,
-                        _storage_id(register.provider, "register", register.register),
-                        warning_variable_id,
-                        _storage_id(
-                            register.provider,
-                            "variant",
-                            register.register,
-                            warning.variant,
-                        )
-                        if warning.variant
-                        else None,
-                        warning.delivery_column_name,
-                        warning.valid_from,
-                        warning.valid_to,
-                        warning.model_dump_json(),
-                    ),
-                )
+            write_data_warnings(conn, data_warnings, demote_missing_variables=True)
             write_resolved_metadata(conn, metadata_rows)
             conn.execute(
                 "INSERT INTO code_variable_map (code_id, variable_id) "

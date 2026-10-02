@@ -9,6 +9,15 @@ established variable endpoints remain in `source_relationship` as `retained_unat
 with raw declarations and register-scoped warnings. This builder format is separate from
 the unchanged reader schema; publication requires the coordinated consumer adaptation.
 
+Private extension inputs can be selected with `extend-db --holdings-input` and exact
+`--input-commit` / `--input-manifest-sha256` pins. Providers, slugs and delivery
+inventory must come from that accepted local-only candidate. Its builder-owned
+`policy/holdings_policy.toml` records exact lookup exclusions and row-guarded undated
+holdings. Undated tables remain register-scoped warning evidence, without annual
+availability or catalog ordering links. Separate warnings retain authored source states
+whose validity bounds are absent: `0001-01-01` / `9999-12-31` are storage sentinels, not
+observed coverage. Inventory editions witness delivered availability independently.
+
 ## Catalog workflow
 
 1. Capture an exact machine-readable input bundle. Raw archives can remain compressed

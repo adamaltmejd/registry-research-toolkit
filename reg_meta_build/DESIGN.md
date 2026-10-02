@@ -384,19 +384,22 @@ without introducing an artificial split.
 
 An SCB `[[identity.column_owner]]` binds a literal column to an accepted owner within
 explicit source editions. Optional `expected_fields` pin reviewed source facts using the
-existing field-expectation contract. An entry may instead pin complete
-`expected_records` and `expected_evidence_sha256`. This admits multiple original prose
-claims for one exact physical column and edition under one owner without selecting or
-correcting either claim. The two guard forms are exclusive. Guarded entries require a
-finite edition list. Complete-record guards retain all fields, parent facts, coding
-references and original multiplicity; missing, added or changed originals refuse both
-compilation and replay. Field guards require unique known fields, and the compiled
-complete family also guards every supplied field during replay. This supports a reused
-column whose explicitly documented amount or rate role changes between editions without
-normalizing units or borrowing another owner's meaning. Physical source multiplicity
-remains governed by the prepared-source pins and ordered inventory. A complete native
-default column map may retain that owner alongside exact guarded scoped overrides; only
-matched source members take a split owner, and all declared owners remain covered.
+existing field-expectation contract. An entry may instead pin the complete selected
+originals with `expected_evidence_sha256`, optionally retaining exact `expected_records`
+projections. Digest-only entries require finite editions and no field guards; fresh
+compilation hydrates full originals and replay checks every original fact. This admits
+multiple original prose claims for one exact physical column and edition under one owner
+without selecting or correcting either claim. The two guard forms are exclusive. Guarded
+entries require a finite edition list. Complete-record guards retain all fields, parent
+facts, coding references and original multiplicity; missing, added or changed originals
+refuse both compilation and replay. Field guards require unique known fields, and the
+compiled complete family also guards every supplied field during replay. This supports a
+reused column whose explicitly documented amount or rate role changes between editions
+without normalizing units or borrowing another owner's meaning. Physical source
+multiplicity remains governed by the prepared-source pins and ordered inventory. A
+complete native default column map may retain that owner alongside exact guarded scoped
+overrides; only matched source members take a split owner, and all declared owners
+remain covered.
 
 An SCB `[[identity.unassigned]]` withholds an entire native family's catalog ownership
 when none of its physical fields has a supported owner. It requires the complete
@@ -411,8 +414,7 @@ case-equivalent column spellings under one source-native identity with equal non
 names and definitions. This requires per-column metadata and makes no co-delivery claim;
 source members may export either spelling. Literal metadata, source coding, windows and
 replay membership remain guarded. Other literal changes need their own identity
-evidence. Complete-record `[[errata.field]]` guards can cover multiple source members at
-an exact coordinate; each effect checks that original's field conditions.
+evidence.
 
 SOS `[[identity.split]]` can partition a complete native family by literal supplied
 `data_type`, `deldatamangd`, `name`, or `description`. Supplied names distinguish reused

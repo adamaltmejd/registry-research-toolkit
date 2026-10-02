@@ -19,10 +19,6 @@ native_id = "355.537"
 slug = "postnr"  # source: kolumnnamn
 
 [[variable]]
-native_id = "355.35334"
-slug = "pris"  # source: fold
-
-[[variable]]
 native_id = "355.44824"
 slug = "intakt"  # source: kolumnnamn
 

@@ -194,6 +194,7 @@ _ABSORBED_OCCURRENCE_CONFLICT_FIELDS = frozenset(
 
 # Closed list of observed unit spellings: (published value, other value).
 _UNIT_PAIRS = (
+    ("MWh", "Megawattimmar"),
     ("SEK", "kr"),
     ("Kronor", "kronor"),
     ("Kronor (SEK)", "kronor"),
@@ -202,6 +203,7 @@ _UNIT_PAIRS = (
     ("Antal veckor", "Veckor"),
     ("Antal minuter", "Minuter"),
     ("Antal barn", "Antal"),
+    ("Antal", "Antal elever"),
     ("Dagar", "Antal"),
     ("Årtal", "År"),
 )

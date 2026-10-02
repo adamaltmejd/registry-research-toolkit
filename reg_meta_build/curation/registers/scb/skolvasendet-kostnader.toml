@@ -40,22 +40,10 @@ slug = "fsg-till-kommun"
 
 # register 195 (ksju)
 
-[[variable]]
-native_id = "194.30485.skelev"
-slug = "antal-elever"
-
-[[variable]]
-native_id = "194.8702.sform"
-slug = "sarskoleform-2"
-
 # register 195 (ksju)
 # var 4027 näringsgren 2009-only predecessor: the `lgrp` sibling of the #845
 # split (see the `195.4027.ng1-2007` entry above). It's the 2009 grouped-SNI
 # member of the näringsgren group (concept_groups.toml key `naringsgren`).
-
-[[variable]]
-native_id = "194.1996"
-slug = "skolform"
 
 [[variable]]
 native_id = "194.4819"
@@ -96,3 +84,174 @@ native_id = "194.8702.sarform"
 slug = "sarskoleform"
 
 # register 195
+
+[[identity.partition]]
+variable = "194.30480"
+columns = { ElevHem = "194.30480", Elevhem = "194.30480" }
+columns_ref = "Complete native source family and all physical peers reviewed. Literal-case spellings retain the same explicitly supplied definition and identifier. Vessel positions follow source operational definitions Fartyg1–5, never suffix inference. Delivery-specific roles and every raw type, date, unit, name and coding association remain evidence; observed-value equivalence is not asserted. Batch52-directfacts4-source-review.json."
+expected_evidence_sha256 = "76f539490d57fece87f4789ce456b4f8e08b9d318a101a7776b8aa7749e8366e"
+
+[[identity.column_owner]]
+data_warning = "Only independently supported literal delivery windows are mapped. Conflicting school-column ownership or indistinguishable waste cost/revenue definitions remain explicitly unavailable; every original source fact is retained."
+variable = "194.1996"
+variant = "194.512"
+column = "SForm"
+owner = "194.1996.schoolform"
+ref = "Exact positive native-family/physical-peer review Batch52-directfacts4-source-review.json; every original projection is guarded. School2015 SForm has simultaneous competing general/special source questions and no chosen owner. Uppercase waste Pris2021–2025 has contrary cost/revenue roles and no chosen owner. All other exact positive source literals/windows retain their source-supported identities."
+source_editions = ["2013", "2014"]
+expected_evidence_sha256 = "2010ec294b43a723690622e0f62a40fd0985a6b31f6cb8ea13390bab20a433b8"
+
+[[identity.column_owner]]
+data_warning = "Only independently supported literal delivery windows are mapped. Conflicting school-column ownership or indistinguishable waste cost/revenue definitions remain explicitly unavailable; every original source fact is retained."
+variable = "194.1996"
+variant = "194.512"
+column = "Sform"
+owner = "194.1996.schoolform"
+ref = "Exact positive native-family/physical-peer review Batch52-directfacts4-source-review.json; every original projection is guarded. School2015 SForm has simultaneous competing general/special source questions and no chosen owner. Uppercase waste Pris2021–2025 has contrary cost/revenue roles and no chosen owner. All other exact positive source literals/windows retain their source-supported identities."
+source_editions = ["2013", "2014", "2015"]
+expected_evidence_sha256 = "176502367729d9d4b0e0d46e63c22fe9f92170ba1348d32f8f5030eb94e05454"
+
+[[identity.column_owner]]
+data_warning = "Only independently supported literal delivery windows are mapped. Conflicting school-column ownership or indistinguishable waste cost/revenue definitions remain explicitly unavailable; every original source fact is retained."
+variable = "194.8702"
+variant = "194.512"
+column = "SarForm"
+owner = "194.8702.sarform"
+ref = "Exact positive native-family/physical-peer review Batch52-directfacts4-source-review.json; every original projection is guarded. School2015 SForm has simultaneous competing general/special source questions and no chosen owner. Uppercase waste Pris2021–2025 has contrary cost/revenue roles and no chosen owner. All other exact positive source literals/windows retain their source-supported identities."
+source_editions = ["2013", "2014", "2015"]
+expected_evidence_sha256 = "90adab75e757fdc3490100f91c3ccbe06431eb1ddd63af791bb7bf89a453d49f"
+
+[[identity.column_owner]]
+data_warning = "Only independently supported literal delivery windows are mapped. Conflicting school-column ownership or indistinguishable waste cost/revenue definitions remain explicitly unavailable; every original source fact is retained."
+variable = "194.8702"
+variant = "194.512"
+column = "Sarform"
+owner = "194.8702.sarform"
+ref = "Exact positive native-family/physical-peer review Batch52-directfacts4-source-review.json; every original projection is guarded. School2015 SForm has simultaneous competing general/special source questions and no chosen owner. Uppercase waste Pris2021–2025 has contrary cost/revenue roles and no chosen owner. All other exact positive source literals/windows retain their source-supported identities."
+source_editions = ["2014"]
+expected_evidence_sha256 = "77b086f00a4b3296842972670b3bc61dd9c48b0767c7a066466fc927a3f889be"
+
+[[identity.column_owner]]
+data_warning = "Only independently supported literal delivery windows are mapped. Conflicting school-column ownership or indistinguishable waste cost/revenue definitions remain explicitly unavailable; every original source fact is retained."
+variable = "194.30485"
+variant = "194.512"
+column = "ElevFgAr"
+owner = "194.30485.elevfgar"
+ref = "Exact positive native-family/physical-peer review Batch52-directfacts4-source-review.json; every original projection is guarded. School2015 SForm has simultaneous competing general/special source questions and no chosen owner. Uppercase waste Pris2021–2025 has contrary cost/revenue roles and no chosen owner. All other exact positive source literals/windows retain their source-supported identities."
+source_editions = ["2013", "2014", "2015"]
+expected_evidence_sha256 = "b3e8fc19318d019f8c9c6891c776735f368e713137d293c01b5b558a26f14053"
+
+[[identity.unassigned]]
+variable = "194.14871"
+expected_evidence_sha256 = "00c68de7986e9db4c95aa148d8835e4c24b322e341556b6541de80dce1900aff"
+evidence = "All supplied SkElev coordinates also bind native30485 with a different generic pupil-count definition. Retain the full native14871 municipality-specific family without an invented semantic owner. Full physical-peer closure and 32 complete originals: Batch52-directfacts4-source-review.json."
+
+[[variable]]
+native_id = "194.1996.schoolform"
+slug = "skolform"
+
+[[representation.parallel]]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+case_aliases = true
+variable = "194.30480"
+variant = "194.512"
+column_metadata = "per_column"
+columns = [{ valid_from = "2013-01-01", valid_to = "2013-12-31", column = "ElevHem", source_editions = ["2013"] }, { valid_from = "2013-01-01", valid_to = "2013-12-31", column = "Elevhem", source_editions = ["2013"] }]
+evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+case_aliases = true
+variable = "194.30480"
+variant = "194.512"
+column_metadata = "per_column"
+columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "ElevHem", source_editions = ["2014"] }, { valid_from = "2014-01-01", valid_to = "2014-12-31", column = "Elevhem", source_editions = ["2014"] }]
+evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+case_aliases = true
+variable = "194.30480"
+variant = "194.512"
+column_metadata = "per_column"
+columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "ElevHem", source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "Elevhem", source_editions = ["2015"] }]
+evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+case_aliases = true
+variable = "194.1996.schoolform"
+variant = "194.512"
+column_metadata = "per_column"
+columns = [{ valid_from = "2013-01-01", valid_to = "2013-12-31", column = "SForm", source_editions = ["2013"] }, { valid_from = "2013-01-01", valid_to = "2013-12-31", column = "Sform", source_editions = ["2013"] }]
+evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+case_aliases = true
+variable = "194.1996.schoolform"
+variant = "194.512"
+column_metadata = "per_column"
+columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "SForm", source_editions = ["2014"] }, { valid_from = "2014-01-01", valid_to = "2014-12-31", column = "Sform", source_editions = ["2014"] }]
+evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
+noted = "2026-10-02"
+
+[[representation.parallel]]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+case_aliases = true
+variable = "194.8702.sarform"
+variant = "194.512"
+column_metadata = "per_column"
+columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "SarForm", source_editions = ["2014"] }, { valid_from = "2014-01-01", valid_to = "2014-12-31", column = "Sarform", source_editions = ["2014"] }]
+evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
+noted = "2026-10-02"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 194, 'variable', 'native-int', 14871)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:5516\",\"variable:14871\",\"member:340599\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:5516\",\"variable:14871\",\"member:340810\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:6190\",\"variable:14871\",\"member:392276\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:8744\",\"variable:14871\",\"member:434131\"]}"]
+fields = ["identity"]
+reason = "Only the exact source groups without a supported semantic owner are unavailable. School SkElev and2015 SForm have simultaneous competing source questions; waste Pris2021–2025 has indistinguishable cost versus revenue definitions. Preserve all original facts and own coding, all positive source-owned windows, and explicit physical inventory warnings. No owner, values or statistical equivalence is invented."
+evidence = "Complete native family and physical-peer review Batch52-directfacts4-source-review.json; positive source roles guarded independently, unassigned source groups and ordered own coding guarded here."
+expected_evidence_sha256 = "00c68de7986e9db4c95aa148d8835e4c24b322e341556b6541de80dce1900aff"
+expected_diagnostic_sha256 = "1bb2a1d22c99da344988b2ad14fce0efcd29a9abee2a90ae61d9b43fe61bfed3"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 194, 'variable', 'native-int', 1996)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:8744\",\"variable:1996\",\"member:434083\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:8744\",\"variable:1996\",\"member:434084\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:8744\",\"variable:1996\",\"member:434144\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:8744\",\"variable:1996\",\"member:434161\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:8744\",\"variable:1996\",\"member:434187\"]}"]
+fields = ["identity"]
+reason = "Only the exact source groups without a supported semantic owner are unavailable. School SkElev and2015 SForm have simultaneous competing source questions; waste Pris2021–2025 has indistinguishable cost versus revenue definitions. Preserve all original facts and own coding, all positive source-owned windows, and explicit physical inventory warnings. No owner, values or statistical equivalence is invented."
+evidence = "Complete native family and physical-peer review Batch52-directfacts4-source-review.json; positive source roles guarded independently, unassigned source groups and ordered own coding guarded here."
+expected_evidence_sha256 = "639ce06c9678cb2ecb1a61f18c303b8f480d99a44b4a1b8f166b1f21529212c2"
+expected_diagnostic_sha256 = "af7da1236bed241f480e738fcc7f151063862971e1ab380debb482a4a2f51257"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 194, 'variable', 'native-int', 30485)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:5516\",\"variable:30485\",\"member:340710\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:5516\",\"variable:30485\",\"member:340712\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:5516\",\"variable:30485\",\"member:340718\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:5516\",\"variable:30485\",\"member:340831\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:5516\",\"variable:30485\",\"member:340843\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:6190\",\"variable:30485\",\"member:392226\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:6190\",\"variable:30485\",\"member:392227\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:6190\",\"variable:30485\",\"member:392261\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:6190\",\"variable:30485\",\"member:392339\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:6190\",\"variable:30485\",\"member:392340\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:8744\",\"variable:30485\",\"member:434075\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:8744\",\"variable:30485\",\"member:434076\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:8744\",\"variable:30485\",\"member:434092\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:8744\",\"variable:30485\",\"member:434158\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:8744\",\"variable:30485\",\"member:434182\"]}"]
+fields = ["identity"]
+reason = "Only the exact source groups without a supported semantic owner are unavailable. School SkElev and2015 SForm have simultaneous competing source questions; waste Pris2021–2025 has indistinguishable cost versus revenue definitions. Preserve all original facts and own coding, all positive source-owned windows, and explicit physical inventory warnings. No owner, values or statistical equivalence is invented."
+evidence = "Complete native family and physical-peer review Batch52-directfacts4-source-review.json; positive source roles guarded independently, unassigned source groups and ordered own coding guarded here."
+expected_evidence_sha256 = "1abeb807a197c7ddb0326f93f8e38a1b50c3372f2980a9aa5069cd2d54d5ea0e"
+expected_diagnostic_sha256 = "0f86fe066d962898d832dd6e9bfa948a990faab2f08cffb15ec81e3e1caea208"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 194, 'variable', 'native-int', 8702)"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:194\",\"variant:512\",\"edition:8744\",\"variable:8702\",\"member:434183\"]}"]
+fields = ["identity"]
+reason = "Only the exact source groups without a supported semantic owner are unavailable. School SkElev and2015 SForm have simultaneous competing source questions; waste Pris2021–2025 has indistinguishable cost versus revenue definitions. Preserve all original facts and own coding, all positive source-owned windows, and explicit physical inventory warnings. No owner, values or statistical equivalence is invented."
+evidence = "Complete native family and physical-peer review Batch52-directfacts4-source-review.json; positive source roles guarded independently, unassigned source groups and ordered own coding guarded here."
+expected_evidence_sha256 = "488c6ea5f3d7d523af4e9faad54ec7af3c7570347e01a1cb1c0d1f60de3eccb8"
+expected_diagnostic_sha256 = "68b989e03f1e1f40c65db8438c9577b62ce9da0c28170f4dbfab6a3fffbcc683"

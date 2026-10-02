@@ -147,6 +147,22 @@ process and compare database bytes and decompressed event-ledger bytes. Keep tim
 conditions explicit: overlapping builds or audits are not isolated performance
 benchmarks.
 
+## Private SWECOV extension
+
+Extend only the new complete strict base. A private input candidate is a separate
+local-only Git acceptance from the public prepared sources. Pass its exact root through
+`extend-db --holdings-input`, with its full `--input-commit` and manifest digest. Select
+that same candidate's `providers/`, `slugs/` and `policy/inventory.toml`; loose overlays
+are refused. Regenerate and accept a fresh candidate when inventory changes.
+
+The builder's `holdings_policy.toml` retains exact undated tables through register
+warnings and identifies genuine lookups. Inventory generation takes it through
+`inventory --holdings-policy`. Require complete raw-table/column accounting across dated
+inventory, retained-unknown evidence and explicit lookup/exclusion dispositions.
+Retained unknown tables do not become annual or year-independent holdings. Authored
+source-validity bounds can also remain unknown; storage sentinels are not observation
+coverage. Keep reader and UI adaptation deferred.
+
 ## Report
 
 Report the code revision, exact input pins and curation digest, output/report/log paths,

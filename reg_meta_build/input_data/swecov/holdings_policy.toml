@@ -1,0 +1,59 @@
+# Exact holdings dispositions; source rows remain in the accepted private input.
+source_sha256 = "ff306a9f449b312f10da72d918cd33ae5aa3894ad0257cc96a9d2a620552947a"
+
+[[exclude]]
+table = "Hreg_H_Utbniva"
+reason = "Education code/name reference lookup; no observation holdings."
+
+[[exclude]]
+table = "Hreg_H_amnegrupp"
+reason = "Education code/name reference lookup; no observation holdings."
+
+[[exclude]]
+table = "Hreg_H_djup"
+reason = "Education code/name reference lookup; no observation holdings."
+
+[[exclude]]
+table = "Hreg_H_niva"
+reason = "Education code/name reference lookup; no observation holdings."
+
+[[exclude]]
+table = "Hreg_H_omr"
+reason = "Education code/name reference lookup; no observation holdings."
+
+[[exclude]]
+table = "klartext_utbildning"
+reason = "Education code/name reference lookup; no observation holdings."
+
+[[exclude]]
+table = "IFA_Kassakod_Lev3"
+reason = "Unemployment fund code/name/validity lookup; no person observations."
+
+[[retain_unknown]]
+table = "NDR_heredity"
+register = "ndr/nationella-diabetesregistret"
+rows_sha256 = "825c108e5dc90a5c207281b80dd44d2ad4ddea139198e7fc71d9b81c74f04ac3"
+reason = "Registration at disease onset or before age 18 does not establish calendar coverage."
+
+[[retain_unknown]]
+table = "UMU_HogskoleprovRes"
+register = "umu/hogskoleprovet"
+rows_sha256 = "484707fad48ea909a6e20316218e95363262eddec32171709cb92b3dea6e31a4"
+reason = "Year and test-occasion columns exist, but delivered coverage is undocumented."
+
+[[retain_unknown]]
+table = "SaBo_P1105_LopNr_PersonNr"
+register = "swecov/population"
+rows_sha256 = "7cf93fe7709950026113ed94d07fe71041b66375b03a2fe9ba2c70b60dadfbef"
+reason = "Source population view does not establish this membership table calendar coverage."
+
+[[retain_unknown]]
+table = "SWECOV_Fodelseland_grupperat"
+register = "scb/rtb"
+rows_sha256 = "08859112fe6a117d8e5f15921aaafa5c241b4e74ae399675c301a1541df13eac"
+reason = "EU classification labels are not delivery dates; calendar coverage is undocumented."
+
+[[unmap]]
+table = "Population_PersonNr_20241231"
+column = "FodelseArManDag"
+reason = "Literal source field retained; enriched delivery documentation does not establish a semantic owner."
