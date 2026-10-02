@@ -332,13 +332,18 @@ def acknowledgement_evidence_sha256(
     Content ordering is immaterial; multiplicity is not. Coding tokens come from
     coding_source_sha256, which retains raw associations and validity evidence.
     """
+    return acknowledgement_hashes_sha256(
+        (canonical_sha256(record.model_dump(mode="json")) for record in records),
+        coding_sha256,
+    )
+
+
+def acknowledgement_hashes_sha256(
+    originals_sha256: Iterable[str], coding_sha256: Iterable[str] = ()
+) -> str:
+    """The same evidence guard without retaining decoded source originals."""
     return canonical_sha256(
-        {
-            "originals": sorted(
-                canonical_sha256(record.model_dump(mode="json")) for record in records
-            ),
-            "coding": sorted(coding_sha256),
-        }
+        {"originals": sorted(originals_sha256), "coding": sorted(coding_sha256)}
     )
 
 
@@ -1786,6 +1791,38 @@ class ResolutionDiagnostic(_CurationModel):
     valid_to: str | None = None
     # The acknowledging case of an error re-emitted as a counted warning.
     acknowledged_by: str | None = None
+
+
+def acknowledged_diagnostic(
+    issue: ResolutionDiagnostic, decision: AcknowledgeDecision, case_id: str
+) -> ResolutionDiagnostic | None:
+    """Match one exact issue; a warning never restores its withheld output."""
+    if (
+        issue.severity != "error"
+        or (
+            issue.code,
+            issue.subject,
+            issue.refs,
+            issue.fields,
+            issue.valid_from,
+            issue.valid_to,
+        )
+        != (
+            decision.code,
+            decision.subject,
+            decision.refs,
+            decision.fields,
+            decision.valid_from,
+            decision.valid_to,
+        )
+        or (
+            decision.expected_diagnostic_sha256 is not None
+            and canonical_sha256(issue.model_dump(mode="json"))
+            != decision.expected_diagnostic_sha256
+        )
+    ):
+        return None
+    return issue.model_copy(update={"severity": "warning", "acknowledged_by": case_id})
 
 
 __all__ = [

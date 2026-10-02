@@ -186,6 +186,7 @@ class CompiledCuration:
     cases: dict[tuple[str, tuple[str | int, ...] | None], tuple[CurationCase, ...]]
     report: dict[str, dict[str, list[str]]]
     diagnostics: tuple[ResolutionDiagnostic, ...] = ()
+    event_acknowledgements: tuple[CurationCase, ...] = ()
     source_diagnostics: (
         dict[
             tuple[str, NativeKey | None],
@@ -6926,6 +6927,7 @@ def compile_curation(
     )
     pairs = []
     seen_pairs: set[tuple[str, str]] = set()
+    event_acknowledgements: list[CurationCase] = []
     for register in sorted(tree.registers, key=lambda item: item.source_file):
         for index, pair in enumerate(register.code_label_pair, 1):
             case_id = f"{register.source_file}#/code_label_pair/{index}"
@@ -7076,25 +7078,35 @@ def compile_curation(
             else:
                 statuses["entries_matched"].append(case_id)
                 scope_key, register_key = matched[0]
-                cases[scope_key].append(
-                    CurationCase(
-                        case_id=case_id,
-                        targets=(),
-                        decision=AcknowledgeDecision(
-                            code=ack.code,
-                            subject=ack.subject,
-                            refs=refs,
-                            fields=tuple(ack.fields),
-                            valid_from=ack.valid_from,
-                            valid_to=ack.valid_to,
-                            register_key=register_key,
-                            reason=ack.reason,
-                            evidence=ack.evidence,
-                            expected_evidence_sha256=ack.expected_evidence_sha256,
-                            expected_diagnostic_sha256=ack.expected_diagnostic_sha256,
-                        ),
-                    )
+                case = CurationCase(
+                    case_id=case_id,
+                    targets=(),
+                    decision=AcknowledgeDecision(
+                        code=ack.code,
+                        subject=ack.subject,
+                        refs=refs,
+                        fields=tuple(ack.fields),
+                        valid_from=ack.valid_from,
+                        valid_to=ack.valid_to,
+                        register_key=register_key,
+                        reason=ack.reason,
+                        evidence=ack.evidence,
+                        expected_evidence_sha256=ack.expected_evidence_sha256,
+                        expected_diagnostic_sha256=ack.expected_diagnostic_sha256,
+                    ),
                 )
+
+                if ack.code == "unresolved_source_event_endpoint":
+                    if (
+                        ack.expected_evidence_sha256 is None
+                        or ack.expected_diagnostic_sha256 is None
+                    ):
+                        raise ValueError(
+                            f"{case_id}: global event acknowledgements need full evidence and diagnostic guards"
+                        )
+                    event_acknowledgements.append(case)
+                else:
+                    cases[scope_key].append(case)
     # The scoped resolver records what it actually skipped in this list.
     report["_subset"] = {"dropped": []}
     if not subset:
@@ -7304,6 +7316,7 @@ def compile_curation(
             *thin_diagnostics,
             *split_diagnostics,
         ),
+        event_acknowledgements=tuple(event_acknowledgements),
         naming=naming,
         variants=variants,
         provider_keys=provider_keys,

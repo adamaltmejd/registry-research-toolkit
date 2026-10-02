@@ -5,6 +5,8 @@ from __future__ import annotations
 from collections import defaultdict
 from typing import TYPE_CHECKING
 
+from reg_meta.source_evidence import canonical_sha256
+
 from reg_meta_build.catalog_dependencies import DEFERRED_REFERENCE
 from reg_meta_build.resolved_metadata import (
     ResolvedSuccession,
@@ -13,7 +15,14 @@ from reg_meta_build.resolved_metadata import (
     validate_metadata_structure,
 )
 from reg_meta_build.source_coordinates import native_variant_key, source_register_key
-from reg_meta_build.source_curation import ResolutionDiagnostic, SourceRecordRef
+from reg_meta_build.source_curation import (
+    AcknowledgeDecision,
+    CurationCase,
+    ResolutionDiagnostic,
+    SourceRecordRef,
+    acknowledged_diagnostic,
+    acknowledgement_hashes_sha256,
+)
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_reference_resolution import ReferenceMetadataResolution
 
@@ -21,6 +30,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator, Mapping, Sequence
 
     from reg_meta_build.catalog_dependencies import DependencyKey
+    from reg_meta_build.resolved_catalog import ResolvedRegister
     from reg_meta_build.resolved_metadata import ResolvedMetadata
     from reg_meta_build.source_records import NativeCoordinates, SourceRecord
     from reg_meta_build.source_reference_records import SourceEventDeclaration
@@ -47,16 +57,34 @@ class SourceEventBindings:
         self,
         events: Iterable[SourceEventDeclaration],
         target_sources: Mapping[str, str],
+        acknowledgements: tuple[CurationCase, ...] = (),
     ) -> None:
         self.events = tuple(
             e for e in events if e.action in {"replaced_by", "replaces"}
         )
         self.sources = dict(target_sources)
+        self.acknowledgements = acknowledgements
+        self.guarded_hashes: dict[SourceRecordRef, list[str]] = {
+            ref: []
+            for case in acknowledgements
+            if isinstance(case.decision, AcknowledgeDecision)
+            for ref in case.decision.refs
+        }
+        self.guarded_owners: dict[SourceRecordRef, object] = {}
+        self.guarded_registers: dict[tuple[str | int, ...], ResolvedRegister] = {}
         self.targets: dict[NativeEventKey, set[DependencyKey | None]] = {}
         self.refs: dict[NativeEventKey, set[SourceRecordRef]] = {}
         self.unselected: set[NativeEventKey] = set()
         self.skipped_events: list[SourceRecordRef] = []
         for event in self.events:
+            event_ref = SourceRecordRef(
+                source=event.revision.dataset,
+                semantic_record_key=event.locator.semantic_record_key,
+            )
+            if event_ref in self.guarded_hashes:
+                self.guarded_hashes[event_ref].append(
+                    canonical_sha256(event.model_dump(mode="json"))
+                )
             if event.revision.dataset not in self.sources:
                 raise ValueError(
                     "succession event source needs an explicit occurrence-source "
@@ -96,6 +124,17 @@ class SourceEventBindings:
         if not originals or originals[0].source not in self.sources.values():
             return
         for record in originals:
+            ref = record_ref(record)
+            if ref in self.guarded_hashes:
+                self.guarded_hashes[ref].append(
+                    canonical_sha256(record.model_dump(mode="json"))
+                )
+                self.guarded_owners[ref] = source_register_key(record)
+                register_key = source_register_key(record)
+                if register_key in result.parents.registers:
+                    self.guarded_registers[register_key] = result.parents.registers[
+                        register_key
+                    ]
             for kind, key in self._endpoints(record.source, record.subject.native):
                 self.refs[key].add(record_ref(record))
                 targets = self.targets[key]
@@ -274,6 +313,43 @@ class SourceEventBindings:
             }
         )
         validate_metadata_structure(combined)
+        for case in self.acknowledgements:
+            decision = case.decision
+            assert isinstance(decision, AcknowledgeDecision)
+            matches = {
+                issue: warning
+                for issue in diagnostics
+                if (warning := acknowledged_diagnostic(issue, decision, case.case_id))
+                is not None
+            }
+            owners = {
+                self.guarded_owners[ref]
+                for ref in decision.refs
+                if ref in self.guarded_owners
+            }
+            evidence_matches = (
+                owners == {decision.register_key}
+                and all(self.guarded_hashes[ref] for ref in decision.refs)
+                and decision.expected_evidence_sha256
+                == acknowledgement_hashes_sha256(
+                    token for ref in decision.refs for token in self.guarded_hashes[ref]
+                )
+            )
+            if len(matches) == 1 and evidence_matches:
+                diagnostics = [matches.get(issue, issue) for issue in diagnostics]
+            else:
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code="stale_curation_entry",
+                        severity="error",
+                        case_id=case.case_id,
+                        subject=decision.subject,
+                        detail="The exact source-event acknowledgement no longer matches one issue with unchanged complete evidence and owner.",
+                        refs=decision.refs,
+                        fields=decision.fields,
+                        withheld_output=(case.case_id,),
+                    )
+                )
         return ReferenceMetadataResolution(
             combined, tuple(diagnostics), tuple(sorted(withheld, key=repr)), skipped
         )

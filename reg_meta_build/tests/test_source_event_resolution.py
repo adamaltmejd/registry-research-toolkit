@@ -6,10 +6,17 @@ from dataclasses import replace
 
 import pytest
 from reg_meta.errors import RegMetaError
-from reg_meta.source_evidence import DeliveredCell
+from reg_meta.source_evidence import DeliveredCell, canonical_sha256
 from reg_meta_build.resolved_catalog import ResolvedRegister
 from reg_meta_build.resolved_metadata import ResolvedMetadata, ResolvedSuccession
 from reg_meta_build.source_coordinates import source_register_key
+from reg_meta_build.source_curation import (
+    AcknowledgeDecision,
+    CurationCase,
+    SourceRecordRef,
+    acknowledgement_hashes_sha256,
+)
+from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_event_resolution import SourceEventBindings
 from reg_meta_build.source_records import NativeCoordinates, value_field
 from reg_meta_build.source_reference_records import SourceEventDeclaration
@@ -163,6 +170,137 @@ def test_competing_descriptions_withhold_prose_but_preserve_the_explicit_edge():
     assert len(result.diagnostics[0].refs) == 2
     assert {ref.source for ref in result.diagnostics[0].refs} == {REVISION.dataset}
     assert result.diagnostics[0].withheld_output == ("catalog_succession.description",)
+
+
+def _missing_endpoint_acknowledgement():
+    event = _event(first="1", second="missing")
+    bindings, originals, scope, uses = _observe((event,))
+    bindings.observe_scope(originals, scope, uses)
+    (issue,) = bindings.resolve(ResolvedMetadata()).diagnostics
+    evidence = (
+        event,
+        *(r for r in originals if record_ref(r) in issue.refs),
+    )
+    case = CurationCase(
+        case_id="registers/scb/example.toml#/acknowledge/1",
+        targets=(),
+        decision=AcknowledgeDecision(
+            code=issue.code,
+            subject=issue.subject,
+            refs=issue.refs,
+            register_key=source_register_key(originals[0]),
+            reason="The named successor is absent from the supplied occurrences.",
+            evidence="Exact source event and complete positively observed endpoint.",
+            expected_evidence_sha256=acknowledgement_hashes_sha256(
+                canonical_sha256(r.model_dump(mode="json")) for r in evidence
+            ),
+            expected_diagnostic_sha256=canonical_sha256(issue.model_dump(mode="json")),
+        ),
+    )
+    return event, originals, scope, uses, case
+
+
+def test_exact_missing_event_acknowledgement_keeps_originals_and_withheld_edge(
+    tmp_path,
+):
+    import json
+    import sqlite3
+
+    from reg_meta_build.data_warnings import source_event_data_warnings
+    from reg_meta_build.resolved_catalog import write_resolved_catalog
+
+    event, originals, scope, uses, case = _missing_endpoint_acknowledgement()
+    bindings = SourceEventBindings(
+        (event,), {REVISION.dataset: originals[0].source}, (case,)
+    )
+    bindings.observe_scope(originals, scope, uses)
+    result = bindings.resolve(ResolvedMetadata())
+    (issue,) = result.diagnostics
+    assert (issue.severity, issue.acknowledged_by) == ("warning", case.case_id)
+    assert issue.withheld_output == ("catalog_succession",)
+    assert result.withheld == (
+        SourceRecordRef(
+            source=event.revision.dataset,
+            semantic_record_key=event.locator.semantic_record_key,
+        ),
+    )
+    assert not result.metadata.successions
+    assert bindings.events == (event,)
+    (warning,) = source_event_data_warnings(
+        result.diagnostics, (case,), bindings.guarded_registers
+    )
+    assert warning.variable_fqid is None and warning.variant is None
+    assert warning.detail == case.decision.reason
+    assert warning.refs == issue.refs
+    output = tmp_path / "catalog.db"
+    write_resolved_catalog(
+        (),
+        output,
+        manifest={},
+        diagnostic=True,
+        parent_registers=tuple(bindings.guarded_registers.values()),
+        data_warnings=(warning,),
+    )
+    with sqlite3.connect(f"file:{output}?mode=ro", uri=True) as conn:
+        (stored,) = conn.execute("SELECT warning_json FROM data_warning").fetchone()
+        assert json.loads(stored) == json.loads(warning.model_dump_json())
+        assert conn.execute("PRAGMA foreign_key_check").fetchall() == []
+        assert conn.execute("SELECT COUNT(*) FROM register_variant").fetchone() == (0,)
+
+
+@pytest.mark.parametrize(
+    "change", ["original", "event", "endpoint", "owner", "duplicate"]
+)
+def test_missing_event_acknowledgement_refuses_changed_source_or_resolution(change):
+    event, originals, scope, uses, case = _missing_endpoint_acknowledgement()
+    if change == "original":
+        originals = (
+            originals[0].model_copy(update={"original_period_text": "Changed source"}),
+            originals[1],
+        )
+    elif change == "event":
+        event = event.model_copy(update={"description": value_field("Changed source")})
+    elif change == "endpoint":
+        uses[originals[0].record_id] = [{"variable": "scb/example/different"}]
+    elif change == "owner":
+        case = case.model_copy(
+            update={
+                "decision": case.decision.model_copy(
+                    update={"register_key": ("different",)}
+                )
+            }
+        )
+    else:
+        originals = (originals[0], *originals)
+    bindings = SourceEventBindings(
+        (event,), {REVISION.dataset: originals[0].source}, (case,)
+    )
+    bindings.observe_scope(originals, scope, uses)
+    result = bindings.resolve(ResolvedMetadata())
+    assert not any(issue.acknowledged_by for issue in result.diagnostics)
+    assert any(issue.code == "stale_curation_entry" for issue in result.diagnostics)
+    assert not result.metadata.successions
+
+
+def test_identical_event_copies_retain_counted_diagnostics_and_evidence_multiplicity():
+    event, originals, scope, uses, case = _missing_endpoint_acknowledgement()
+    evidence = (event, event, originals[0])
+    decision = case.decision.model_copy(
+        update={
+            "expected_evidence_sha256": acknowledgement_hashes_sha256(
+                canonical_sha256(r.model_dump(mode="json")) for r in evidence
+            )
+        }
+    )
+    case = case.model_copy(update={"decision": decision})
+    bindings = SourceEventBindings(
+        (event, event), {REVISION.dataset: originals[0].source}, (case,)
+    )
+    bindings.observe_scope(originals, scope, uses)
+    result = bindings.resolve(ResolvedMetadata())
+    assert len(result.diagnostics) == 2
+    assert all(d.acknowledged_by == case.case_id for d in result.diagnostics)
+    assert not result.metadata.successions
 
 
 def test_explicit_edge_keeps_its_provenance_and_combined_cycles_fail():

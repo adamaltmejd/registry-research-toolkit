@@ -152,3 +152,20 @@ variable = "90.5074"
 columns = { AntTim = "90.5074.anttim", Timanst = "90.5074.timanst" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "8dc6fd066f55c90de1de5661e5fa5cbbd655d8e79b525f12f554d39b426462b3"
+
+[[identity.partition]]
+variable = "90.2543"
+columns = { UtbRetro = "90.2543", Utbretro = "90.2543" }
+columns_ref = "Batch55: complete native family has 84 physical originals with identical native ID, name and definition. Column names differ only in case. Keep the existing utbretro catalog identity and every delivery's original spelling and integer/decimal storage type."
+expected_evidence_sha256 = "8c9c8e7213509b71f8b02d810765164b95e67c226e49b8d5c2659b896fef9d0d"
+
+[[representation.parallel]]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+case_aliases = true
+variable = "90.2543"
+variant = "90.165"
+column_metadata = "per_column"
+columns = [{ valid_from = "2009-01-01", valid_to = "2009-12-31", column = "UtbRetro", source_editions = ["2009"] }, { valid_from = "2009-01-01", valid_to = "2009-12-31", column = "Utbretro", source_editions = ["2009"] }]
+evidence = "The complete SHA-guarded native family has case-equivalent spellings with identical name and definition. Edition 2009 repeats the same native member with both numeric and integer storage declarations. Retain each literal spelling and its storage facts as alternative case aliases; do not assert co-delivery, value equality or one preferred storage type."
+noted = "2026-10-02"

@@ -2178,24 +2178,18 @@ a = "scb/iot/naringsgren-enskild-naringsidkare"
 b = "scb/linda/naringsgren-enskild-naringsidkare"
 note = "curated:#508 tier-1 SNI cross-register identity"
 
-# 'näringsgren för företag' — industry (SNI), 3 variables (SNI2007)
+# 'näringsgren för företag' — industry (SNI), ANST and BAS
+# RAMS has separate simultaneous SNI-vintage fields; the retired aggregate
+# identity does not establish which component is equivalent to these variables.
 [[edge]]
 type = "same_as"
 a = "scb/anst/naringsgren-foretag"
 b = "scb/bas/naringsgren-foretag"
 note = "curated:#508 tier-1 SNI cross-register identity"
-[[edge]]
-type = "same_as"
-a = "scb/anst/naringsgren-foretag"
-b = "scb/rams/naringsgren-foretag"
-note = "curated:#508 tier-1 SNI cross-register identity"
-[[edge]]
-type = "same_as"
-a = "scb/bas/naringsgren-foretag"
-b = "scb/rams/naringsgren-foretag"
-note = "curated:#508 tier-1 SNI cross-register identity"
 
-# 'näringsgren för statistiken' — industry (SNI), 7 variables (SNI2007, SNI92)
+# 'näringsgren för statistiken' — industry (SNI), 6 variables (SNI2007, SNI92)
+# Livsmedelsförsäljning has simultaneous NgS1Je and ngs components. Shared
+# native wording does not establish either component's cross-register identity.
 [[edge]]
 type = "same_as"
 a = "scb/fek/naringsgren-for-statistiken"
@@ -2214,11 +2208,6 @@ note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/fek/naringsgren-for-statistiken"
-b = "scb/livsmedelsforsaljning/naringsgren-for-statistiken"
-note = "curated:#508 tier-1 SNI cross-register identity"
-[[edge]]
-type = "same_as"
-a = "scb/fek/naringsgren-for-statistiken"
 b = "scb/lor/naringsgren-for-statistiken"
 note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
@@ -2239,11 +2228,6 @@ note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/infi/naringsgren-for-statistiken"
-b = "scb/livsmedelsforsaljning/naringsgren-for-statistiken"
-note = "curated:#508 tier-1 SNI cross-register identity"
-[[edge]]
-type = "same_as"
-a = "scb/infi/naringsgren-for-statistiken"
 b = "scb/lor/naringsgren-for-statistiken"
 note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
@@ -2259,11 +2243,6 @@ note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/investeringsenkaten/naringsgren-for-statistiken"
-b = "scb/livsmedelsforsaljning/naringsgren-for-statistiken"
-note = "curated:#508 tier-1 SNI cross-register identity"
-[[edge]]
-type = "same_as"
-a = "scb/investeringsenkaten/naringsgren-for-statistiken"
 b = "scb/lor/naringsgren-for-statistiken"
 note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
@@ -2274,26 +2253,11 @@ note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/laps/naringsgren-for-statistiken"
-b = "scb/livsmedelsforsaljning/naringsgren-for-statistiken"
-note = "curated:#508 tier-1 SNI cross-register identity"
-[[edge]]
-type = "same_as"
-a = "scb/laps/naringsgren-for-statistiken"
 b = "scb/lor/naringsgren-for-statistiken"
 note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/laps/naringsgren-for-statistiken"
-b = "scb/tjansteforetagens-forbrukning/naringsgren-for-statistiken"
-note = "curated:#508 tier-1 SNI cross-register identity"
-[[edge]]
-type = "same_as"
-a = "scb/livsmedelsforsaljning/naringsgren-for-statistiken"
-b = "scb/lor/naringsgren-for-statistiken"
-note = "curated:#508 tier-1 SNI cross-register identity"
-[[edge]]
-type = "same_as"
-a = "scb/livsmedelsforsaljning/naringsgren-for-statistiken"
 b = "scb/tjansteforetagens-forbrukning/naringsgren-for-statistiken"
 note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
@@ -2465,12 +2429,9 @@ a = "scb/lisa/ssyk4-storsta"
 b = "scb/yrkesreg/ssyk4-storsta"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 
-# 'yrkesuppgift' — occupation (SSYK), 6 variables (SSYK2012, SSYK96)
-[[edge]]
-type = "same_as"
-a = "scb/bonus-oregelbundna/yrkesuppgift"
-b = "scb/slh/yrkesuppgift"
-note = "curated:#508 tier-1 SSYK cross-register identity"
+# 'yrkesuppgift' — occupation (SSYK), 5 variables (SSYK2012, SSYK96)
+# SLH has simultaneous three- and four-digit SSYK components. An aggregate
+# same_as assertion would erase the reviewed distinction between those fields.
 [[edge]]
 type = "same_as"
 a = "scb/bonus-oregelbundna/yrkesuppgift"
@@ -2489,26 +2450,6 @@ note = "curated:#508 tier-1 SSYK cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/bonus-oregelbundna/yrkesuppgift"
-b = "scb/sls/yrkesuppgift"
-note = "curated:#508 tier-1 SSYK cross-register identity"
-[[edge]]
-type = "same_as"
-a = "scb/slh/yrkesuppgift"
-b = "scb/slk/yrkesuppgift"
-note = "curated:#508 tier-1 SSYK cross-register identity"
-[[edge]]
-type = "same_as"
-a = "scb/slh/yrkesuppgift"
-b = "scb/slp/yrkesuppgift"
-note = "curated:#508 tier-1 SSYK cross-register identity"
-[[edge]]
-type = "same_as"
-a = "scb/slh/yrkesuppgift"
-b = "scb/slr/yrkesuppgift"
-note = "curated:#508 tier-1 SSYK cross-register identity"
-[[edge]]
-type = "same_as"
-a = "scb/slh/yrkesuppgift"
 b = "scb/sls/yrkesuppgift"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 [[edge]]
@@ -5109,3 +5050,12 @@ a = "scb/slk/utbildningens-niva-och-inriktning"
 b = "scb/slr/sun"
 note = "curated:#737 utbildningens nivå och inriktning (sun)"
 # Result: 61 components, 232 edges, 179 variables (max component 7 FQIDs, well under the _SAME_AS_MAX_COMPONENT cap).
+
+# Reciprocal ULF event rows agree on the widened frame; retain the additional deidentification note.
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf"
+from_variant = "individer-16-74-ar-ulf"
+to = "scb/ulf"
+to_variant = "individer-16-84-ar-ulf"
+note = "Urvalsramen utökades med äldre personer 75-84 år.\n\n1975-1977 års registerversioner är avidentifierade"

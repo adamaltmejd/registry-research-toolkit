@@ -779,10 +779,21 @@ class TestMovedEdges:
         # register_variant succession edge + 3 #1122 LISA FÅMANS KU→AGI source
         # succession edges + 8 Y-88 curated LISA succession edges.
         assert len(rel.replaced_by) == 63
-        # #508 (615) + #737 (232) - 6 mixed SUN peer edges = 841 same_as edges; all
+        # #508 (615) + #737 (232) - 6 mixed SUN peer edges - 2 stale course
+        # relations - 13 retired aggregate identities = 826 same_as edges; all
         # variable-grain with a non-empty note; max connected component stays
         # ≤32 FQIDs.
-        assert len(rel.same_as) == 841
+        assert len(rel.same_as) == 826
+        retired_aggregates = {
+            "scb/rams/naringsgren-foretag",
+            "scb/livsmedelsforsaljning/naringsgren-for-statistiken",
+            "scb/slh/yrkesuppgift",
+        }
+        assert not retired_aggregates.intersection(
+            endpoint
+            for edge in rel.same_as
+            for endpoint in (edge.a_fqid(), edge.b_fqid())
+        )
         assert len(rel.derived_from) == 1
         assert (str(rel.derived_from[0].derived), str(rel.derived_from[0].source)) == (
             "class/ks87-p",

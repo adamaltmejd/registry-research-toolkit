@@ -42,7 +42,7 @@ from reg_meta_build.curation_compile import (
     validate_sentinels,
 )
 from reg_meta_build.curation_tree import load_curation_tree
-from reg_meta_build.data_warnings import scope_data_warnings
+from reg_meta_build.data_warnings import scope_data_warnings, source_event_data_warnings
 from reg_meta_build.db import _emit_timing, _paths_overlap
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
 from reg_meta_build.prepared_catalog import (
@@ -865,6 +865,7 @@ def _run_pipeline(
                     and d.revision.dataset in event_sources
                 ),
                 event_sources,
+                compiled.event_acknowledgements,
             )
             exports = resolve_export_metadata(declarations)
             identifiers = resolve_identifier_metadata(
@@ -1504,7 +1505,15 @@ def _run_pipeline(
                             encoding="utf-8",
                         )
                 for value in source_events.diagnostics:
+                    if value.acknowledged_by is not None:
+                        acknowledged[value.code] += 1
                     issue(value)
+                for warning in source_event_data_warnings(
+                    source_events.diagnostics,
+                    compiled.event_acknowledgements,
+                    event_bindings.guarded_registers,
+                ):
+                    data_warnings[warning.warning_id] = warning
                 resolved_metadata = resolve_metadata_dependencies(
                     source_events.metadata,
                     panel.variables,

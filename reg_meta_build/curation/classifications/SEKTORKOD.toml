@@ -61,9 +61,9 @@ note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label c
 variable = "scb/yrkesreg/sektor-ku1"
 note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
 
-[[binding.variable]]
-variable = "scb/yrkesreg/sektorkod"
-note = "curated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)"
+# Both literal components of native family 55.1819 use the source's "Sektor
+# 2000" label. The exact label binding above already preserves their verified
+# classification links; the retired aggregate "sektorkod" has no binding.
 
 [[binding.variable]]
 variable = "scb/yrkesreg/sektorkod-2"

@@ -17,8 +17,11 @@ from reg_meta_build.source_intervals import occurrence_bounds
 
 if TYPE_CHECKING:
     import sqlite3
+    from collections.abc import Mapping
 
-    from reg_meta_build.source_curation import ResolutionDiagnostic
+    from reg_meta_build.resolved_catalog import ResolvedRegister
+    from reg_meta_build.source_coordinates import NativeKey
+    from reg_meta_build.source_curation import CurationCase, ResolutionDiagnostic
     from reg_meta_build.source_scope import ScopeResolution
 
 # Editorial projection notices do not describe a problem fetching or using data.
@@ -48,6 +51,7 @@ QUALITY_CODES = frozenset(
 
 WARNING_SUMMARIES = {
     "retained_unattached_source_relationship": "A source code crosswalk has no established variable link",
+    "unresolved_source_event_endpoint": "A source succession refers to an unavailable catalog endpoint",
     "unknown_support_key": "Some source metadata cannot be linked to a delivered column",
     "unknown_code_membership": "Source codes are retained without established response labels",
     "unresolved_list_reference": "The source response dictionary is unavailable",
@@ -93,6 +97,71 @@ WARNING_DETAILS = {
     "unresolved_data_type": "The source data type could not be resolved safely. No unsupported storage type has been selected.",
     "omitted_columnless_occurrence": "The original source records have no usable physical column identity and are retained without attachment to a delivered column.",
 }
+
+
+def diagnostic_data_warning(
+    issue: ResolutionDiagnostic,
+    *,
+    register: tuple[str, str],
+    owner: tuple[str, str, str] | None = None,
+    variant: str | None = None,
+    column: str | None = None,
+    reason: str | None = None,
+) -> DataWarning:
+    """Project a settled diagnostic at a positively established catalog coordinate."""
+    payload = {
+        "register_fqid": str(Fqid.register_fqid(*register)),
+        "variable_fqid": str(Fqid.binding_fqid(*owner)) if owner else None,
+        "variant": variant,
+        "delivery_column_name": column,
+        "valid_from": issue.valid_from,
+        "valid_to": issue.valid_to,
+        "code": issue.code,
+        "severity": issue.severity,
+        "summary": WARNING_SUMMARIES.get(
+            issue.code, "The source has an acknowledged data limitation"
+        ),
+        "detail": issue.detail
+        if issue.code == "retained_unattached_source_relationship"
+        else reason
+        or WARNING_DETAILS.get(
+            issue.code,
+            "An exact reviewed source limitation is acknowledged; the original diagnostic remains in the build report.",
+        ),
+        "diagnostic_detail_sha256": sha256(issue.detail.encode("utf-8")).hexdigest(),
+        "source_subject": issue.subject,
+        "fields": list(issue.fields),
+        "refs": [r.model_dump(mode="json") for r in issue.refs],
+        "withheld_output": list(issue.withheld_output),
+        "acknowledged_by": issue.acknowledged_by,
+        "case_id": issue.case_id,
+    }
+    return DataWarning.model_validate_json(
+        json.dumps({"warning_id": canonical_sha256(payload), **payload})
+    )
+
+
+def source_event_data_warnings(
+    diagnostics: tuple[ResolutionDiagnostic, ...],
+    cases: tuple[CurationCase, ...],
+    registers: Mapping[NativeKey, ResolvedRegister],
+) -> tuple[DataWarning, ...]:
+    """Keep missing succession endpoints as register warnings, never SQL targets."""
+    reviewed = {case.case_id: case.decision for case in cases}
+    warnings = {}
+    for issue in diagnostics:
+        if issue.acknowledged_by is None:
+            continue
+        decision = reviewed[issue.acknowledged_by]
+        assert decision.kind == "acknowledge"
+        register = registers[decision.register_key]
+        warning = diagnostic_data_warning(
+            issue,
+            register=(register.provider, register.slug),
+            reason=decision.reason,
+        )
+        warnings[warning.warning_id] = warning
+    return tuple(warnings[k] for k in sorted(warnings))
 
 
 def scope_data_warnings(
@@ -187,37 +256,13 @@ def scope_data_warnings(
             }
             if len(witnesses) == 1 and witnesses == observed:
                 variant, column = next(iter(witnesses))
-        payload = {
-            "register_fqid": str(Fqid.register_fqid(*register)),
-            "variable_fqid": str(Fqid.binding_fqid(*owner)) if owner else None,
-            "variant": variant,
-            "delivery_column_name": column,
-            "valid_from": issue.valid_from,
-            "valid_to": issue.valid_to,
-            "code": issue.code,
-            "severity": issue.severity,
-            "summary": WARNING_SUMMARIES.get(
-                issue.code, "The source has an acknowledged data limitation"
-            ),
-            "detail": issue.detail
-            if issue.code == "retained_unattached_source_relationship"
-            else reviewed_reasons.get(issue.acknowledged_by)
-            or WARNING_DETAILS.get(
-                issue.code,
-                "An exact reviewed source limitation is acknowledged; the original diagnostic remains in the build report.",
-            ),
-            "diagnostic_detail_sha256": sha256(
-                issue.detail.encode("utf-8")
-            ).hexdigest(),
-            "source_subject": issue.subject,
-            "fields": list(issue.fields),
-            "refs": [r.model_dump(mode="json") for r in issue.refs],
-            "withheld_output": list(issue.withheld_output),
-            "acknowledged_by": issue.acknowledged_by,
-            "case_id": issue.case_id,
-        }
-        warning = DataWarning.model_validate_json(
-            json.dumps({"warning_id": canonical_sha256(payload), **payload})
+        warning = diagnostic_data_warning(
+            issue,
+            register=register,
+            owner=owner,
+            variant=variant,
+            column=column,
+            reason=reviewed_reasons.get(issue.acknowledged_by),
         )
         warnings[warning.warning_id] = warning
     assumption_payloads = {}

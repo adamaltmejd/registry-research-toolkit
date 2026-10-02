@@ -37,6 +37,7 @@ from reg_meta_build.source_curation import (
     RepresentationDecision,
     ResolutionDiagnostic,
     SourceEvidence,
+    acknowledged_diagnostic,
     acknowledgement_evidence_sha256,
     evaluate_cases,
 )
@@ -892,9 +893,8 @@ def resolve_source_scope(
         )
         if len(distinct) == 1 and evidence_matches:
             issue = distinct[0]
-            warning = issue.model_copy(
-                update={"severity": "warning", "acknowledged_by": case.case_id}
-            )
+            warning = acknowledged_diagnostic(issue, decision, case.case_id)
+            assert warning is not None
             acknowledged[issue] = warning
             for _ in matched:
                 record(warning)

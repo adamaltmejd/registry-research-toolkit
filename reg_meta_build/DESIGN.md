@@ -1266,6 +1266,13 @@ facts, physical delivered cells, coding references, and raw coding associations 
 validity evidence. A changed fingerprint leaves the original error intact and adds a
 stale acknowledgement error. Unguarded entries retain exact issue matching.
 
+Source-event endpoint acknowledgements use the same register-local declarations and
+exact matcher at the global event boundary, after all selected scopes are observed. Both
+evidence and diagnostic fingerprints are mandatory there. The evidence retains complete
+event declarations and every physical endpoint occurrence, including duplicates; the
+observed endpoint owner must match the declaring register. Missing successors remain
+unavailable, and source events remain documentary evidence without fabricated entities.
+
 Diagnostic mode resolves exactly the same facts and issues. It scans the complete
 prepared scope set and writes only independently supported output to a separate new
 path. It never aborts on a per-variable or per-family inconsistency: it withholds the
