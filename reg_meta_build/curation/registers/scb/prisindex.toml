@@ -253,3 +253,322 @@ refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[
 expected_evidence_sha256 = "828040c701f27e215fd3547466c86510f09e69c4890a72e0a531a0b4274ab87b"
 reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
 evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/kn8beskrivning"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16114\",\"variable:119\",\"member:770611\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "This exact KN description-text delivery has no own associated historical response list. The full source history contains different annual KN vintages and code/description fields. Preserve its literal description role, original text/type/periods and all other known associations; do not substitute a code column’s domain or another annual KN dictionary. This exact response domain remains unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "eeb2e84fe50ba10a79748f26380493cf6682e8d56ec3d70d9782f0dad9482310"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/kn8beskrivning"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18103\",\"variable:119\",\"member:837995\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "This exact KN description-text delivery has no own associated historical response list. The full source history contains different annual KN vintages and code/description fields. Preserve its literal description role, original text/type/periods and all other known associations; do not substitute a code column’s domain or another annual KN dictionary. This exact response domain remains unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "d0900257808a2ec14a27299e1ff4de12d790d33ef283883098a553a47b9588ed"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/kn8beskrivning"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19325\",\"variable:119\",\"member:930206\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "This exact KN description-text delivery has no own associated historical response list. The full source history contains different annual KN vintages and code/description fields. Preserve its literal description role, original text/type/periods and all other known associations; do not substitute a code column’s domain or another annual KN dictionary. This exact response domain remains unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "ff6b8d149ae75f0ca539327f8671ffc9e86dc1f373bd50998d6c6a13edb03ebc"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/kn8beskrivning"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19326\",\"variable:119\",\"member:930237\"]}"]
+fields = ["coding"]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+reason = "This exact KN description-text delivery has no own associated historical response list. The full source history contains different annual KN vintages and code/description fields. Preserve its literal description role, original text/type/periods and all other known associations; do not substitute a code column’s domain or another annual KN dictionary. This exact response domain remains unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "97192055fe58669dda5e61fcd63cbcca6bab81f9c0b9b848355a6dd4c84c9bb2"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/kn8beskrivning"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19704\",\"variable:119\",\"member:975570\"]}"]
+fields = ["coding"]
+valid_from = "2025-01-01"
+valid_to = "2025-12-31"
+reason = "This exact KN description-text delivery has no own associated historical response list. The full source history contains different annual KN vintages and code/description fields. Preserve its literal description role, original text/type/periods and all other known associations; do not substitute a code column’s domain or another annual KN dictionary. This exact response domain remains unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "08c894fff64d9dfcfd105df989920c0f2b98d5f7c250e8b9891c766bd8ed5a71"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/kn8beskrivning"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:20327\",\"variable:119\",\"member:1047070\"]}"]
+fields = ["coding"]
+valid_from = "2026-01-01"
+valid_to = "2026-12-31"
+reason = "This exact KN description-text delivery has no own associated historical response list. The full source history contains different annual KN vintages and code/description fields. Preserve its literal description role, original text/type/periods and all other known associations; do not substitute a code column’s domain or another annual KN dictionary. This exact response domain remains unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "aa2dec57dd707c6323770d91f18cd705ae94639db1c13ff93bb923dc92c176e4"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/prissignal"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18078\",\"variable:30808\",\"member:836396\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "The 2022 KodNamn originals supply no own response list or operational enumeration. Other source editions name six or seven different price-status categories, which do not establish this exact field’s stored encoding. Preserve all original wording, dates and known domains; leave this exact response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "c4b6ff80b81c460982e93f69cba0597450ddd575f115166beb6980b2e8fe8e00"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/urvalssannolikhet"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:5790\",\"variable:6415\",\"member:352924\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "This exact source window has no own associated response domain. Retain all source fields, original dates and known domains outside the window; keep only its stored encoding unavailable. No codes, special values or domain vintage are inferred from a neighbouring year or column."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "acfda2fcd075044e5829d5ffb319547581ab374b244cc07af4558969f9b78495"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/urvalssannolikhet"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:6244\",\"variable:6415\",\"member:395513\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "This exact source window has no own associated response domain. Retain all source fields, original dates and known domains outside the window; keep only its stored encoding unavailable. No codes, special values or domain vintage are inferred from a neighbouring year or column."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "929e7b421ada86cdacd5f224c562bece786d6f1bad1f59d6672d5dfc4317a05b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/ar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11106\",\"variable:73\",\"member:451912\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11108\",\"variable:73\",\"member:451958\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "82af68b3cf82894421c5cfee9c29b310f2b6ab10f9895fa1c950fa9d2e0045b9"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/ar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11705\",\"variable:73\",\"member:482141\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:11707\",\"variable:73\",\"member:482195\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "338dccd6eff9578c9d146ab0080d9be474b93beac56b1359cc302ae5091cd3ea"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/ar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:12977\",\"variable:73\",\"member:572113\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:12978\",\"variable:73\",\"member:572140\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "8c429826dbcd71bdc44c79cc9567174aa31058cd582a5ada5c4afe3008ab8363"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/ar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:13761\",\"variable:73\",\"member:625279\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:13763\",\"variable:73\",\"member:625505\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "121dc1ad13d1f0204ecbcfa961631298acafc5f3a483f27a793c237027c61b53"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/ar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16114\",\"variable:73\",\"member:770402\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16115\",\"variable:73\",\"member:770431\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "b99a915797406c38b4e8676df3b86d949318946cfb2a4b1e5a18f81d4fdd932b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/ar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18078\",\"variable:73\",\"member:836408\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18103\",\"variable:73\",\"member:837982\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "49c990d1d73f8d45b1e9b0d78d8ea5a25cadcbd7db2489dedd50b911ebf1ba7b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/ar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18104\",\"variable:73\",\"member:838010\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19325\",\"variable:73\",\"member:930217\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "e0770e6b5d75c2a6be622447d9dcfd0a3a5b284ee19e386eebe2408990808cbc"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/ar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19326\",\"variable:73\",\"member:930248\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19910\",\"variable:73\",\"member:990149\"]}"]
+fields = ["coding"]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "67cdda27988623290ed83170eccc6b014d981faa08e0ace287a2f5333aed27f9"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/ar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19704\",\"variable:73\",\"member:975572\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19952\",\"variable:73\",\"member:993377\"]}"]
+fields = ["coding"]
+valid_from = "2025-01-01"
+valid_to = "2025-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "bf1b3d88a3fba9b6d2d3d9699e8c0dd61e5ac5fd84989d71bbd59f84ead0d6c3"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/ar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:20327\",\"variable:73\",\"member:1047072\"]}"]
+fields = ["coding"]
+valid_from = "2026-01-01"
+valid_to = "2026-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "7d0425a6cd58ac42d8df9b2379a372b9f03d645458d95a934cc3bd57ca1e74c8"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/ar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:17947\",\"variable:73\",\"member:833409\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "97b2ab4d9cc0f66161d20971fae6488fad4166f48cc4e5a682fa111f643da421"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/ar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:18607\",\"variable:73\",\"member:874769\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "3e3df118faae4470f4ab951f8ac1f31f75d7bf2beb4f8475ede2511c0a07ff9a"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/ar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:19021\",\"variable:73\",\"member:911732\"]}"]
+fields = ["coding"]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "9aba33ee2bbd6020cd6376df9be255675f5c9db26103fb2767bd6fce1fff1123"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/ar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:19701\",\"variable:73\",\"member:975461\"]}"]
+fields = ["coding"]
+valid_from = "2025-01-01"
+valid_to = "2025-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "d939a707a33a1367b700ae50df982f01dc8b62ccaec5091a2c60d0634b20415b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/ar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:828\",\"edition:20346\",\"variable:73\",\"member:1048483\"]}"]
+fields = ["coding"]
+valid_from = "2026-01-01"
+valid_to = "2026-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "61735eb6c4e89c55ed60952ae6dd9d160273cff61dcacb7eb0b8282123b6d279"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/kvantitet"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:16115\",\"variable:7714\",\"member:770441\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "This exact source window has no own associated response domain. Retain all source fields, original dates and known domains outside the window; keep only its stored encoding unavailable. No codes, special values or domain vintage are inferred from a neighbouring year or column."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "a6e11857d2b24ef69d5d272ecf537407a6f0c255212431470c81cc9ba5a88b09"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/kvantitet"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18078\",\"variable:7714\",\"member:836398\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "This exact source window has no own associated response domain. Retain all source fields, original dates and known domains outside the window; keep only its stored encoding unavailable. No codes, special values or domain vintage are inferred from a neighbouring year or column."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "610e2c2d7aaaee8c6ab15716948331e9c46da00d080adf7d601ddce2305832c7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/kvantitet"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:18104\",\"variable:7714\",\"member:838020\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "This exact source window has no own associated response domain. Retain all source fields, original dates and known domains outside the window; keep only its stored encoding unavailable. No codes, special values or domain vintage are inferred from a neighbouring year or column."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "572d6440182715e4cce65112e3dcab4b97a7835f50edcc693b6b415df4d1d43f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/kvantitet"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19910\",\"variable:7714\",\"member:990144\"]}"]
+fields = ["coding"]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+reason = "This exact source window has no own associated response domain. Retain all source fields, original dates and known domains outside the window; keep only its stored encoding unavailable. No codes, special values or domain vintage are inferred from a neighbouring year or column."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "b497b5e023edb1ac44d13a38ae108ad3a819edab46b071709aeafb9d70d8ca54"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/prisindex/kvantitet"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:296\",\"variant:1085\",\"edition:19952\",\"variable:7714\",\"member:993372\"]}"]
+fields = ["coding"]
+valid_from = "2025-01-01"
+valid_to = "2025-12-31"
+reason = "This exact source window has no own associated response domain. Retain all source fields, original dates and known domains outside the window; keep only its stored encoding unavailable. No codes, special values or domain vintage are inferred from a neighbouring year or column."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "3b2f39792c37c59ba4a9977a73105ea7258e7510328960fa0a71d9f24b96483b"

@@ -324,3 +324,421 @@ native_id = "1.29697"
 slug = "antal-arbetsstallen-aeant"
 
 # register 2
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren-for-statistiken"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:424\",\"edition:12551\",\"variable:19052\",\"member:550839\"]}"]
+fields = ["coding"]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "cf6cebf5a3ac2e26a57018ce049f0336dadd62fada306b18543c2940d6958b3a"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren-for-statistiken"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:424\",\"edition:12550\",\"variable:19052\",\"member:550788\"]}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "95c7051addedee7b5f611e485176a8bf243446457d04f4bdbd6e1a5d8484761f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren-for-statistiken"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:424\",\"edition:12549\",\"variable:19052\",\"member:550575\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "5c409fad889625d49debf518a5f663bf9a7abd3e93fd2e2650032299d2eb432e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren-for-statistiken"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:424\",\"edition:12548\",\"variable:19052\",\"member:550524\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "1ca3afaf0ae6903686a5ce08074bf6192ec9d20826bf00a42a1120e628430363"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren-for-statistiken"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:424\",\"edition:12547\",\"variable:19052\",\"member:550311\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "576b85dc57e4e6afb49b5258ec3f79df4c9c18baf1ef49ba390f629985de6904"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/ng1"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:424\",\"edition:12551\",\"variable:19053\",\"member:550841\"]}"]
+fields = ["coding"]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "9a5211c82ebd4f4d8d5da02913510588ef5736aac299fd0bb5b5e100f64a75fd"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/ng1"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:424\",\"edition:12550\",\"variable:19053\",\"member:550786\"]}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "8ca30e730574d03c5540a90f073878bbe453f8bd64af1cc8cb2f0883525faffc"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/ng1"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:424\",\"edition:12549\",\"variable:19053\",\"member:550577\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "18d2646cd7e3f3e0ae449ea46427e90394f025db92c64b49e6fe4b7feca7d027"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/ng1"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:424\",\"edition:12548\",\"variable:19053\",\"member:550522\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "e5122d330d5c916253b4cdce5a896fa52c6b06d73657df1703900e8b53118e98"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/ng1"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:424\",\"edition:12547\",\"variable:19053\",\"member:550313\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "ebd6b481af20ece0a389b8428fb462762bafd3a907524e9c12ca2a86279a00a0"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/ng1"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:427\",\"edition:17928\",\"variable:19053\",\"member:831487\"]}"]
+fields = ["coding"]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "061ded6786ae21f333b0a995f77542e0f850344084d3bba83b5478226f4adfb3"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/ng1"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:427\",\"edition:17927\",\"variable:19053\",\"member:831352\"]}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "7762b40218cbdc2f6b1378b55394425219c14e5d97283075888747f03741f742"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/ng1"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:427\",\"edition:17926\",\"variable:19053\",\"member:831235\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "1b162c7c3caee3a06e4f6fe36ea31f3ed2a7daba77fcb6584d8ad78fa3245539"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/ng1"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:427\",\"edition:17925\",\"variable:19053\",\"member:831100\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "b1513a7bec593ed0776c1c9fa951cae6d7146cb4509c9e1efe2d282ec93ca500"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/ng1"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:427\",\"edition:17922\",\"variable:19053\",\"member:830804\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "385041fa9ad1fb0999945ff7ecb5f55d9a09ba1376e56a5e74b178b562685ece"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:424\",\"edition:12551\",\"variable:4027\",\"member:550840\"]}"]
+fields = ["coding"]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "3b51909c51cc40f6a102d40e92ec16e4239b7ed48a9a3561a547108d61ba2eee"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:424\",\"edition:12550\",\"variable:4027\",\"member:550787\"]}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "be39b4707f6f1445c09b52f57128a400d48416d420b8adfa12b7e1c29f8082b9"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:424\",\"edition:12549\",\"variable:4027\",\"member:550576\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "bcd002614809ffa76ecf3bb4100a43717ed5d194d3c343f0cbc25d8f1ea2bd45"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:424\",\"edition:12548\",\"variable:4027\",\"member:550523\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "4d01b033c46de75056e25c5c81115da67256c47f9338ed662ff9d49eb78779ac"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:424\",\"edition:12547\",\"variable:4027\",\"member:550312\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "fab26476e9a82bdf323b56adaa89fb533db91dd1d207b16c5075e3d60f418869"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:425\",\"edition:12568\",\"variable:4027\",\"member:551592\"]}"]
+fields = ["coding"]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "9a30e10d22cdea9386956252f425d570676efd057a56f9286de07c9b4faa8f6a"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:425\",\"edition:12567\",\"variable:4027\",\"member:551555\"]}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "9172d0ef5ed194693fc275f42c0cca411f12b284bd851fa16afa1f2bba69fa40"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:425\",\"edition:12566\",\"variable:4027\",\"member:551540\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "b26990530a9f86b14539ffadc1a416d45326a1e0ab7d3694a0c8e1dd77c6ff62"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:425\",\"edition:12565\",\"variable:4027\",\"member:551503\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "209f0cc61669c86b0fb0e1a67b370054570711671dee7c25fed020322edf372c"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:425\",\"edition:12564\",\"variable:4027\",\"member:551488\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "a67b0f4a501d7dffe806404bbb785f39ed987b50e67a154c1b6a608f79b5d5bf"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:427\",\"edition:17928\",\"variable:4027\",\"member:831509\"]}"]
+fields = ["coding"]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "f7ce70d8c3651cdc2c1e3184bc5c2feea8220972a57c42cb6d2ad5b06d4b991d"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:427\",\"edition:17927\",\"variable:4027\",\"member:831330\"]}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "342e8f3b041a670cce2b8dbb3f7bc20bac43218534c7d7fa9e70b405690ba088"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:427\",\"edition:17926\",\"variable:4027\",\"member:831257\"]}"]
+fields = ["coding"]
+valid_from = "2005-01-01"
+valid_to = "2005-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "8fd7797a1cfcbdcbc486f46807d4382ad1b3df44c221be3510359fc2760d8dcb"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:427\",\"edition:17925\",\"variable:4027\",\"member:831078\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "0a132a7663a083d261b5dfc5d6453e78d2560be2c9781b70520940bca6e8b69d"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/naringsgren"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:427\",\"edition:17922\",\"variable:4027\",\"member:830826\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "347df5a4ac2bfe4174596ecad27de28f35511986d19eec709f52c5812c2b6fdf"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/kuar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:425\",\"edition:18892\",\"variable:904\",\"member:902701\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "e4b09ebb93eeb8983f0471368288a67399b04b4a136b85bfc4a35078119550cc"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/kuar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:425\",\"edition:18987\",\"variable:904\",\"member:909497\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "69c4a9787165533d23fd0b25e5211cc757a4787c97e2a8496977cef9ab8eb8e8"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/kuar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:425\",\"edition:19690\",\"variable:904\",\"member:974783\"]}"]
+fields = ["coding"]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "95fc71f7123a934d16e1c6862108ef0be1863311b38858f403acc9bb5697b610"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/kuar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:425\",\"edition:20269\",\"variable:904\",\"member:1034570\"]}"]
+fields = ["coding"]
+valid_from = "2025-01-01"
+valid_to = "2025-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "8bde26485a1b268448daf298fbe85616f1736ec5574e4622beff22a1ce86dcad"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/omsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:426\",\"edition:18896\",\"variable:934\",\"member:903116\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "b8cf0bc0b82afb2ab2c0ee9dfea6361501bdcf2282afbda340d643df27d8fcec"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/omsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:426\",\"edition:18988\",\"variable:934\",\"member:909526\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "591ac3dc27e31f32326f882fc016a8443d49d4ca312199cfe6438837cae0d2d1"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/omsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:426\",\"edition:19691\",\"variable:934\",\"member:974836\"]}"]
+fields = ["coding"]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "242e81fb09de0124c4983535b62854507007cb9c2c8b3f7c28d706d6bb182075"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fdb/omsar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:1\",\"variant:426\",\"edition:20270\",\"variable:934\",\"member:1034630\"]}"]
+fields = ["coding"]
+valid_from = "2025-01-01"
+valid_to = "2025-12-31"
+reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
+evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
+expected_evidence_sha256 = "4469e96c7a6d14ff373e71f0b9e1549829dbc548149222e3e9c04ac469948373"
