@@ -342,3 +342,37 @@ slug = "arbetsmarknadsstatus-alt"
 # register 60
 
 # ==== registers/scb/yrkesreg.toml (register 55) ====
+
+[[identity.partition]]
+variable = "55.17509"
+columns = { AstSni02 = "55.17509.astsni02", AstSni = "55.17509.astsni", AstSni07 = "55.17509.astsni07", AstSNi07 = "55.17509.astsni07", AstNgS07 = "55.17509.astngs07" }
+columns_ref = "Complete native family and full physical-column peer census reviewed. Yrkesreg keeps source SNI histories and literal-case SNI2007 variants; Företagsreg separates explicitly named Avdelning, Underavdelning and Detaljgrupp operations; Livsmedelsförsäljning retains the same explicitly identified legal-unit identity across literal case spellings. No suffix-only semantics or storage/coding equivalence is inferred. Batch52-native3-source-review.json."
+expected_evidence_sha256 = "55edc9ceb58539d6e5a82b45b5d6bfba870ef6a14466ae559a6e6e61b4e30c28"
+
+[[variable]]
+native_id = "55.17509.astsni07"
+slug = "astsni07"
+
+[[coding.extend]]
+variable = "55.17509.astsni02"
+variant = "55.162"
+column = "AstSni02"
+periods = [["2002-01-01", "2002-12-31"], ["2003-01-01", "2003-12-31"], ["2004-01-01", "2004-12-31"], ["2005-01-01", "2005-12-31"], ["2006-01-01", "2006-12-31"], ["2007-01-01", "2007-12-31"], ["2008-01-01", "2008-12-31"]]
+reason = "Every exact missing delivery explicitly specifies the five-character SNI2002 classification. All supplied own domains agree on its 777 substantive code-label pairs. Extend this same native field’s 2010 classification domain under the approved same-version continuity policy. The Grundregister 2009 source additionally supplies 00000 (Uppgift saknas); keep that original domain, but its applicability in the earlier missing windows is unknown, so no earlier missing token is invented. Retain every original date, operation and raw coding association; statistical equivalence is not asserted."
+source = "Complete same-native SNI2002 witness2010; Batch52-native3-source-review.json; user classification continuity policy"
+data_warning = "Historical SNI2002 classification codes follow the same field’s own 777-code 2010 list. Grundregister 2009 additionally declares 00000 (Uppgift saknas); historical applicability of that missing token is unknown. Original domains and coding gaps remain source evidence."
+expected_evidence_sha256 = "5f66384fb119bc5aa404472ce2d37195ba90c38e55245ce780197fbc8cd9bc19"
+list = "Standard för svensk näringsgrensindelning, 2002 Branscher"
+witness = ["2010-01-01", "2010-12-31"]
+
+[[coding.extend]]
+variable = "55.17509.astsni02"
+variant = "55.160"
+column = "AstSni02"
+periods = [["2002-01-01", "2002-12-31"], ["2003-01-01", "2003-12-31"], ["2004-01-01", "2004-12-31"], ["2005-01-01", "2005-12-31"], ["2006-01-01", "2006-12-31"], ["2007-01-01", "2007-12-31"], ["2008-01-01", "2008-12-31"]]
+reason = "Every exact missing delivery explicitly specifies the five-character SNI2002 classification. All supplied own domains agree on its 777 substantive code-label pairs. Extend this same native field’s 2010 classification domain under the approved same-version continuity policy. The Grundregister 2009 source additionally supplies 00000 (Uppgift saknas); keep that original domain, but its applicability in the earlier missing windows is unknown, so no earlier missing token is invented. Retain every original date, operation and raw coding association; statistical equivalence is not asserted."
+source = "Complete same-native SNI2002 witness2010; Batch52-native3-source-review.json; user classification continuity policy"
+data_warning = "Historical SNI2002 classification codes follow the same field’s own 777-code 2010 list. Grundregister 2009 additionally declares 00000 (Uppgift saknas); historical applicability of that missing token is unknown. Original domains and coding gaps remain source evidence."
+expected_evidence_sha256 = "46cde67c4c293d13c6d8d3cbf8f8a36355487ebfde2492aa6385f5289644c1ac"
+list = "Standard för svensk näringsgrensindelning, 2002 Branscher"
+witness = ["2010-01-01", "2010-12-31"]

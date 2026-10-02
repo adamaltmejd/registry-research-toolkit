@@ -8208,3 +8208,340 @@ fields = ["is_sensitive", "is_identifier"]
 reason = "These exact source response-component originals omit sensitivity and identifier flags and have no actual matching auxiliary support row. Both flags remain unknown; the current boolean catalog contract therefore withholds the entire quantity and its dependent output. Exact source-positive identity, physical column, every original field, scope and original bound coding remain. No false flag is inferred."
 evidence = "Complete AES20 accepted source-native-family audit:636 originals, explicit operation roles, real664primary/198summary/1identifier witnesses and actual panel prerequisites. Exact entire-original and complete raw bound-coding multiplicity guarded. Maintainer approved the same unknown-flag limitation policy as FRIDA. Proof Batch49-AES20-source-proof.json."
 expected_evidence_sha256 = "07d62edbf3bc49c44dcde7224b034f266d10370db69928c635214ed980009682"
+
+[[identity.partition]]
+data_warning = "Concurrent source columns are retained as separate physical histories. Their own yearly definitions, operations and coding remain authoritative; unspecified earlier component roles are not inferred from later labels."
+variable = "301.8557"
+columns = { NFEPROVIDER1 = "301.8557.nfeprovider1", NFEPROVIDER2 = "301.8557.nfeprovider2", NFEPROVIDER3 = "301.8557.nfeprovider3" }
+columns_ref = "Complete source-native family and physical-coordinate review. Concurrent columns are separate source-explicit activity, outcome, purpose, provider, payment or education-selection roles. Literal physical histories remain separate; suffixes do not supply meanings absent from the source. Reviewed source evidence: Batch52-AES-UREG-source-review.json."
+expected_evidence_sha256 = "88ab05f3962400c46dd8482de0c07994f086648aa42b2a0264532c966f6530ae"
+
+[[identity.partition]]
+data_warning = "Concurrent source columns are retained as separate physical histories. Their own yearly definitions, operations and coding remain authoritative; unspecified earlier component roles are not inferred from later labels."
+variable = "301.24819"
+columns = { fsyfte1 = "301.24819.fsyfte1", fsyfte2 = "301.24819.fsyfte2" }
+columns_ref = "Complete source-native family and physical-coordinate review. Concurrent columns are separate source-explicit activity, outcome, purpose, provider, payment or education-selection roles. Literal physical histories remain separate; suffixes do not supply meanings absent from the source. Reviewed source evidence: Batch52-AES-UREG-source-review.json."
+expected_evidence_sha256 = "dc9d78860c8362434950955a9a8e1fd2d27b65c0a5042fc4e0bb4299045072a7"
+
+[[identity.partition]]
+data_warning = "Concurrent source columns are retained as separate physical histories. Their own yearly definitions, operations and coding remain authoritative; unspecified earlier component roles are not inferred from later labels."
+variable = "301.24825"
+columns = { feurohjalp1 = "301.24825.feurohjalp1", feurohjalp2 = "301.24825.feurohjalp2" }
+columns_ref = "Complete source-native family and physical-coordinate review. Concurrent columns are separate source-explicit activity, outcome, purpose, provider, payment or education-selection roles. Literal physical histories remain separate; suffixes do not supply meanings absent from the source. Reviewed source evidence: Batch52-AES-UREG-source-review.json."
+expected_evidence_sha256 = "e5163aad21993f408713a7af25e0ee77a85d2d4446d356141dcecabc14234ebc"
+
+[[identity.partition]]
+data_warning = "Concurrent source columns are retained as separate physical histories. Their own yearly definitions, operations and coding remain authoritative; unspecified earlier component roles are not inferred from later labels."
+variable = "301.24939"
+columns = { ifeurohjalp1 = "301.24939.ifeurohjalp1", ifeurohjalp2 = "301.24939.ifeurohjalp2", ifeurohjalp3 = "301.24939.ifeurohjalp3" }
+columns_ref = "Complete source-native family and physical-coordinate review. Concurrent columns are separate source-explicit activity, outcome, purpose, provider, payment or education-selection roles. Literal physical histories remain separate; suffixes do not supply meanings absent from the source. Reviewed source evidence: Batch52-AES-UREG-source-review.json."
+expected_evidence_sha256 = "e9315bbe2391ef2468bfc5df53e4d0b23077346ec1b69e3e267faeb8caf2c013"
+
+[[identity.partition]]
+data_warning = "Concurrent source columns are retained as separate physical histories. Their own yearly definitions, operations and coding remain authoritative; unspecified earlier component roles are not inferred from later labels."
+variable = "301.32783"
+columns = { FEDPAIDBY_1 = "301.32783.fedpaidby-1", FEDPAIDBY_2 = "301.32783.fedpaidby-2", FEDPAIDBY_3 = "301.32783.fedpaidby-3", FEDPAIDBY_4 = "301.32783.fedpaidby-4", fedpaidby_1 = "301.32783.fedpaidby-1", fedpaidby_2 = "301.32783.fedpaidby-2", fedpaidby_3 = "301.32783.fedpaidby-3", fedpaidby_4 = "301.32783.fedpaidby-4", fedpaidby_5 = "301.32783.fedpaidby-5" }
+columns_ref = "Complete source-native family and physical-coordinate review. Concurrent columns are separate source-explicit activity, outcome, purpose, provider, payment or education-selection roles. Literal physical histories remain separate; suffixes do not supply meanings absent from the source. Reviewed source evidence: Batch52-AES-UREG-source-review.json."
+expected_evidence_sha256 = "295ac2461a4d91a26f651b0c33808d0ed68ab22bf34971a0ee5cf618ea6cb3c1"
+
+[[identity.partition]]
+data_warning = "Concurrent source columns are retained as separate physical histories. Their own yearly definitions, operations and coding remain authoritative; unspecified earlier component roles are not inferred from later labels."
+variable = "301.35116"
+columns = { NFECERT1 = "301.35116.nfecert1", NFECERT2 = "301.35116.nfecert2", nfecert1 = "301.35116.nfecert1", nfecert2 = "301.35116.nfecert2", nfecert3 = "301.35116.nfecert3" }
+columns_ref = "Complete source-native family and physical-coordinate review. Concurrent columns are separate source-explicit activity, outcome, purpose, provider, payment or education-selection roles. Literal physical histories remain separate; suffixes do not supply meanings absent from the source. Reviewed source evidence: Batch52-AES-UREG-source-review.json."
+expected_evidence_sha256 = "53305d7cb400592f52fa047266499d3c04c7b70c7a43178c72d71baa6fc4769c"
+
+[[identity.partition]]
+data_warning = "Concurrent source columns are retained as separate physical histories. Their own yearly definitions, operations and coding remain authoritative; unspecified earlier component roles are not inferred from later labels."
+variable = "301.35172"
+columns = { infpurp1 = "301.35172.infpurp1", infpurp2 = "301.35172.infpurp2" }
+columns_ref = "Complete source-native family and physical-coordinate review. Concurrent columns are separate source-explicit activity, outcome, purpose, provider, payment or education-selection roles. Literal physical histories remain separate; suffixes do not supply meanings absent from the source. Reviewed source evidence: Batch52-AES-UREG-source-review.json."
+expected_evidence_sha256 = "c94837437b9c5f91956e0047fa06c1849b7be0d98ca94118c22b3a1890a239a5"
+
+[[identity.partition]]
+data_warning = "Concurrent source columns are retained as separate physical histories. Their own yearly definitions, operations and coding remain authoritative; unspecified earlier component roles are not inferred from later labels."
+variable = "301.35191"
+columns = { fedunsatreason_1 = "301.35191.fedunsatreason-1", fedunsatreason_2 = "301.35191.fedunsatreason-2", fedunsatreason_3 = "301.35191.fedunsatreason-3", fedunsatreason_4 = "301.35191.fedunsatreason-4", fedunsatreason_5 = "301.35191.fedunsatreason-5" }
+columns_ref = "Complete source-native family and physical-coordinate review. Concurrent columns are separate source-explicit activity, outcome, purpose, provider, payment or education-selection roles. Literal physical histories remain separate; suffixes do not supply meanings absent from the source. Reviewed source evidence: Batch52-AES-UREG-source-review.json."
+expected_evidence_sha256 = "c09ad5a9a0a62055d97a4782984f04f27df7bbf628f13160a96bd97ceee1f36b"
+
+[[identity.partition]]
+data_warning = "Concurrent source columns are retained as separate physical histories. Their own yearly definitions, operations and coding remain authoritative; unspecified earlier component roles are not inferred from later labels."
+variable = "301.35193"
+columns = { NFEREASON1 = "301.35193.nfereason1", NFEREASON2 = "301.35193.nfereason2", NFEREASON3 = "301.35193.nfereason3" }
+columns_ref = "Complete source-native family and physical-coordinate review. Concurrent columns are separate source-explicit activity, outcome, purpose, provider, payment or education-selection roles. Literal physical histories remain separate; suffixes do not supply meanings absent from the source. Reviewed source evidence: Batch52-AES-UREG-source-review.json."
+expected_evidence_sha256 = "909d78ea228e512c7ca0b2945e77afa64ea9ce770df31da2720683e8719117f1"
+
+[[identity.partition]]
+data_warning = "Concurrent source columns are retained as separate physical histories. Their own yearly definitions, operations and coding remain authoritative; unspecified earlier component roles are not inferred from later labels."
+variable = "301.35195"
+columns = { NFEOUTCOME1 = "301.35195.nfeoutcome1", NFEOUTCOME2 = "301.35195.nfeoutcome2", NFEOUTCOME3 = "301.35195.nfeoutcome3" }
+columns_ref = "Complete source-native family and physical-coordinate review. Concurrent columns are separate source-explicit activity, outcome, purpose, provider, payment or education-selection roles. Literal physical histories remain separate; suffixes do not supply meanings absent from the source. Reviewed source evidence: Batch52-AES-UREG-source-review.json."
+expected_evidence_sha256 = "c47e8d0fc80e83be68d829b18f081848fc5f8bc4e3c96aff182670b947f97958"
+
+[[identity.partition]]
+data_warning = "Concurrent source columns are retained as separate physical histories. Their own yearly definitions, operations and coding remain authoritative; unspecified earlier component roles are not inferred from later labels."
+variable = "301.35200"
+columns = { ICTCOMPUTER_1 = "301.35200.ictcomputer-1", ICTCOMPUTER_10 = "301.35200.ictcomputer-10", ICTCOMPUTER_2 = "301.35200.ictcomputer-2", ICTCOMPUTER_3 = "301.35200.ictcomputer-3", ICTCOMPUTER_4 = "301.35200.ictcomputer-4", ICTCOMPUTER_5 = "301.35200.ictcomputer-5", ICTCOMPUTER_6 = "301.35200.ictcomputer-6", ICTCOMPUTER_7 = "301.35200.ictcomputer-7", ICTCOMPUTER_8 = "301.35200.ictcomputer-8", ICTCOMPUTER_9 = "301.35200.ictcomputer-9" }
+columns_ref = "Complete source-native family and physical-coordinate review. Concurrent columns are separate source-explicit activity, outcome, purpose, provider, payment or education-selection roles. Literal physical histories remain separate; suffixes do not supply meanings absent from the source. Reviewed source evidence: Batch52-AES-UREG-source-review.json."
+expected_evidence_sha256 = "5ee681c6bf86e02d884ab7bdf31395eb4dc605cb64612d755acae8062df84745"
+
+[[identity.partition]]
+data_warning = "Concurrent source columns are retained as separate physical histories. Their own yearly definitions, operations and coding remain authoritative; unspecified earlier component roles are not inferred from later labels."
+variable = "301.35202"
+columns = { ictinternet_1 = "301.35202.ictinternet-1", ictinternet_2 = "301.35202.ictinternet-2", ictinternet_3 = "301.35202.ictinternet-3", ictinternet_4 = "301.35202.ictinternet-4", ictinternet_5 = "301.35202.ictinternet-5", ictinternet_6 = "301.35202.ictinternet-6", ictinternet_7 = "301.35202.ictinternet-7", ictinternet_8 = "301.35202.ictinternet-8" }
+columns_ref = "Complete source-native family and physical-coordinate review. Concurrent columns are separate source-explicit activity, outcome, purpose, provider, payment or education-selection roles. Literal physical histories remain separate; suffixes do not supply meanings absent from the source. Reviewed source evidence: Batch52-AES-UREG-source-review.json."
+expected_evidence_sha256 = "67095b50323065f8c1242a2bd28aedc5815727a8204cf9400ea4d7637467e1b6"
+
+[[identity.partition]]
+data_warning = "Concurrent source columns are retained as separate physical histories. Their own yearly definitions, operations and coding remain authoritative; unspecified earlier component roles are not inferred from later labels."
+variable = "301.37531"
+columns = { LANGLEVEL1 = "301.37531.langlevel1", LANGLEVEL2 = "301.37531.langlevel2" }
+columns_ref = "Complete source-native family and physical-coordinate review. Concurrent columns are separate source-explicit activity, outcome, purpose, provider, payment or education-selection roles. Literal physical histories remain separate; suffixes do not supply meanings absent from the source. Reviewed source evidence: Batch52-AES-UREG-source-review.json."
+expected_evidence_sha256 = "5e26f0b4eeb42799f63f110317e12784c3ece19a3f536562998a369de3406691"
+
+[[identity.partition]]
+data_warning = "Concurrent source columns are retained as separate physical histories. Their own yearly definitions, operations and coding remain authoritative; unspecified earlier component roles are not inferred from later labels."
+variable = "301.46939"
+columns = { NFESKILLSMAIN1 = "301.46939.nfeskillsmain1", NFESKILLSMAIN2 = "301.46939.nfeskillsmain2" }
+columns_ref = "Complete source-native family and physical-coordinate review. Concurrent columns are separate source-explicit activity, outcome, purpose, provider, payment or education-selection roles. Literal physical histories remain separate; suffixes do not supply meanings absent from the source. Reviewed source evidence: Batch52-AES-UREG-source-review.json."
+expected_evidence_sha256 = "b290bb3f92ca81f7e347d41fa9126bf5095097c1227b4608301fb07a38c65484"
+
+[[identity.partition]]
+data_warning = "Concurrent source columns are retained as separate physical histories. Their own yearly definitions, operations and coding remain authoritative; unspecified earlier component roles are not inferred from later labels."
+variable = "301.46955"
+columns = { NFEINITIA1 = "301.46955.nfeinitia1", NFEINITIA2 = "301.46955.nfeinitia2" }
+columns_ref = "Complete source-native family and physical-coordinate review. Concurrent columns are separate source-explicit activity, outcome, purpose, provider, payment or education-selection roles. Literal physical histories remain separate; suffixes do not supply meanings absent from the source. Reviewed source evidence: Batch52-AES-UREG-source-review.json."
+expected_evidence_sha256 = "6be6cbf86ebb34e17813c2ae2b44afff362eda202faf2400cbdcee7938eb13bc"
+
+[[variable]]
+native_id = "301.8557.nfeprovider1"
+slug = "nfeprovider1"
+
+[[variable]]
+native_id = "301.8557.nfeprovider2"
+slug = "nfeprovider2"
+
+[[variable]]
+native_id = "301.8557.nfeprovider3"
+slug = "nfeprovider3"
+
+[[variable]]
+native_id = "301.24819.fsyfte1"
+slug = "fsyfte1"
+
+[[variable]]
+native_id = "301.24819.fsyfte2"
+slug = "fsyfte2"
+
+[[variable]]
+native_id = "301.24825.feurohjalp1"
+slug = "feurohjalp1"
+
+[[variable]]
+native_id = "301.24825.feurohjalp2"
+slug = "feurohjalp2"
+
+[[variable]]
+native_id = "301.24939.ifeurohjalp1"
+slug = "ifeurohjalp1"
+
+[[variable]]
+native_id = "301.24939.ifeurohjalp2"
+slug = "ifeurohjalp2"
+
+[[variable]]
+native_id = "301.24939.ifeurohjalp3"
+slug = "ifeurohjalp3"
+
+[[variable]]
+native_id = "301.32783.fedpaidby-1"
+slug = "fedpaidby-1"
+
+[[variable]]
+native_id = "301.32783.fedpaidby-2"
+slug = "fedpaidby-2"
+
+[[variable]]
+native_id = "301.32783.fedpaidby-3"
+slug = "fedpaidby-3"
+
+[[variable]]
+native_id = "301.32783.fedpaidby-4"
+slug = "fedpaidby-4"
+
+[[variable]]
+native_id = "301.32783.fedpaidby-5"
+slug = "fedpaidby-5"
+
+[[variable]]
+native_id = "301.35116.nfecert1"
+slug = "nfecert1"
+
+[[variable]]
+native_id = "301.35116.nfecert2"
+slug = "nfecert2"
+
+[[variable]]
+native_id = "301.35116.nfecert3"
+slug = "nfecert3"
+
+[[variable]]
+native_id = "301.35172.infpurp1"
+slug = "infpurp1"
+
+[[variable]]
+native_id = "301.35172.infpurp2"
+slug = "infpurp2"
+
+[[variable]]
+native_id = "301.35191.fedunsatreason-1"
+slug = "fedunsatreason-1"
+
+[[variable]]
+native_id = "301.35191.fedunsatreason-2"
+slug = "fedunsatreason-2"
+
+[[variable]]
+native_id = "301.35191.fedunsatreason-3"
+slug = "fedunsatreason-3"
+
+[[variable]]
+native_id = "301.35191.fedunsatreason-4"
+slug = "fedunsatreason-4"
+
+[[variable]]
+native_id = "301.35191.fedunsatreason-5"
+slug = "fedunsatreason-5"
+
+[[variable]]
+native_id = "301.35193.nfereason1"
+slug = "nfereason1"
+
+[[variable]]
+native_id = "301.35193.nfereason2"
+slug = "nfereason2"
+
+[[variable]]
+native_id = "301.35193.nfereason3"
+slug = "nfereason3"
+
+[[variable]]
+native_id = "301.35195.nfeoutcome1"
+slug = "nfeoutcome1-antal"
+
+[[variable]]
+native_id = "301.35195.nfeoutcome2"
+slug = "nfeoutcome2-antal"
+
+[[variable]]
+native_id = "301.35195.nfeoutcome3"
+slug = "nfeoutcome3-antal"
+
+[[variable]]
+native_id = "301.35200.ictcomputer-1"
+slug = "ictcomputer-1"
+
+[[variable]]
+native_id = "301.35200.ictcomputer-10"
+slug = "ictcomputer-10"
+
+[[variable]]
+native_id = "301.35200.ictcomputer-2"
+slug = "ictcomputer-2"
+
+[[variable]]
+native_id = "301.35200.ictcomputer-3"
+slug = "ictcomputer-3"
+
+[[variable]]
+native_id = "301.35200.ictcomputer-4"
+slug = "ictcomputer-4"
+
+[[variable]]
+native_id = "301.35200.ictcomputer-5"
+slug = "ictcomputer-5"
+
+[[variable]]
+native_id = "301.35200.ictcomputer-6"
+slug = "ictcomputer-6"
+
+[[variable]]
+native_id = "301.35200.ictcomputer-7"
+slug = "ictcomputer-7"
+
+[[variable]]
+native_id = "301.35200.ictcomputer-8"
+slug = "ictcomputer-8"
+
+[[variable]]
+native_id = "301.35200.ictcomputer-9"
+slug = "ictcomputer-9"
+
+[[variable]]
+native_id = "301.35202.ictinternet-1"
+slug = "ictinternet-1"
+
+[[variable]]
+native_id = "301.35202.ictinternet-2"
+slug = "ictinternet-2"
+
+[[variable]]
+native_id = "301.35202.ictinternet-3"
+slug = "ictinternet-3"
+
+[[variable]]
+native_id = "301.35202.ictinternet-4"
+slug = "ictinternet-4"
+
+[[variable]]
+native_id = "301.35202.ictinternet-5"
+slug = "ictinternet-5"
+
+[[variable]]
+native_id = "301.35202.ictinternet-6"
+slug = "ictinternet-6"
+
+[[variable]]
+native_id = "301.35202.ictinternet-7"
+slug = "ictinternet-7"
+
+[[variable]]
+native_id = "301.35202.ictinternet-8"
+slug = "ictinternet-8"
+
+[[variable]]
+native_id = "301.37531.langlevel1"
+slug = "langlevel1"
+
+[[variable]]
+native_id = "301.37531.langlevel2"
+slug = "langlevel2"
+
+[[variable]]
+native_id = "301.46939.nfeskillsmain1"
+slug = "nfeskillsmain1"
+
+[[variable]]
+native_id = "301.46939.nfeskillsmain2"
+slug = "nfeskillsmain2"
+
+[[variable]]
+native_id = "301.46955.nfeinitia1"
+slug = "nfeinitia1"
+
+[[variable]]
+native_id = "301.46955.nfeinitia2"
+slug = "nfeinitia2"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/aes/fodelsemanad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:301\",\"variant:849\",\"edition:11748\",\"variable:5593\",\"member:485196\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The exact historical window has no own bound stored-code list. Retain every original column, definition, operation, scope and coding association outside the window. Leave only this historical value set unavailable; no later country or month domain is borrowed."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "66f57b6cbb6bb287f555c14147248296db1367db0678a0f1c207facf6f4eb0fe"
+expected_diagnostic_sha256 = "2ab5e835ffd8f2071a83362e819c8ec2dc0f564823e54bd4a0dbdc145e146d82"

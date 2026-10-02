@@ -7703,3 +7703,277 @@ fields = ["availability", "period"]
 reason = "The exact source-positive physical role has no safely representable delivery availability. Preserve every source field, unknown or semester-precision pooled scope and raw coding association; keep this quantity unavailable where no supported state exists. No year inferred from population metadata, cohort wording or semester labels."
 evidence = "Complete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 expected_evidence_sha256 = "63ad369265502adedb3a32b1436590665b19080d7f6c5835dc5894309c6a26ed"
+
+[[identity.partition]]
+data_warning = "Concurrent source columns are retained as separate physical histories. Their own yearly definitions, operations and coding remain authoritative; unspecified earlier component roles are not inferred from later labels."
+variable = "24.32924"
+columns = { UTLBakKodAr1 = "24.32924.utlbakkodar1", UTLBakKodAr12 = "24.32924.utlbakkodar12", UTLBakKodAr2 = "24.32924.utlbakkodar2" }
+columns_ref = "Complete source-native family and physical-coordinate review. Concurrent columns are separate source-explicit activity, outcome, purpose, provider, payment or education-selection roles. Literal physical histories remain separate; suffixes do not supply meanings absent from the source. Reviewed source evidence: Batch52-AES-UREG-source-review.json."
+expected_evidence_sha256 = "3268b82bba6bcf95539543df45c07a0c1671ef800428cf278c7183749ac9c03a"
+
+[[identity.partition]]
+data_warning = "Concurrent source columns are retained as separate physical histories. Their own yearly definitions, operations and coding remain authoritative; unspecified earlier component roles are not inferred from later labels."
+variable = "24.37993"
+columns = { Vald = "24.37993.vald", Vald_ny = "24.37993.vald-ny" }
+columns_ref = "Complete source-native family and physical-coordinate review. Concurrent columns are separate source-explicit activity, outcome, purpose, provider, payment or education-selection roles. Literal physical histories remain separate; suffixes do not supply meanings absent from the source. Reviewed source evidence: Batch52-AES-UREG-source-review.json."
+expected_evidence_sha256 = "e9ba228e5132bffb0ae8b64cf97d4125768b440620e6d0e196995f262021abe8"
+
+[[variable]]
+native_id = "24.32924.utlbakkodar1"
+slug = "utlbakkodar1"
+
+[[variable]]
+native_id = "24.32924.utlbakkodar12"
+slug = "utlbakkodar12"
+
+[[variable]]
+native_id = "24.32924.utlbakkodar2"
+slug = "utlbakkodar2"
+
+[[variable]]
+native_id = "24.37993.vald"
+slug = "vald"
+
+[[variable]]
+native_id = "24.37993.vald-ny"
+slug = "vald-ny"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:709\",\"edition:3314\",\"variable:271\",\"member:203494\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "The exact historical window has no own bound stored-code list. Retain every original column, definition, operation, scope and coding association outside the window. Leave only this historical value set unavailable; no later country or month domain is borrowed."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "411646ab77d97fac5eef07d75cac73d32b6a0a5209cfecff8ba4bfb89f28298c"
+expected_diagnostic_sha256 = "a6a97c2eefcfaace462ed7da835b2990eb2e4925297ec55e85317bfcf78cb9ab"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:709\",\"edition:4082\",\"variable:271\",\"member:255595\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "The exact historical window has no own bound stored-code list. Retain every original column, definition, operation, scope and coding association outside the window. Leave only this historical value set unavailable; no later country or month domain is borrowed."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "e4d9b3925baf1110e89382a8e8255ba7cde452ea696ad1763c2518bb3bf76823"
+expected_diagnostic_sha256 = "2c44701948bf8161f8570f3e268c6c05329e7d0ee04306826d28b55f76d518a7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:709\",\"edition:4580\",\"variable:271\",\"member:287974\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "The exact historical window has no own bound stored-code list. Retain every original column, definition, operation, scope and coding association outside the window. Leave only this historical value set unavailable; no later country or month domain is borrowed."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "4411edf580b7d17984f526e46898058d5883262f0e2b19fc974a37abc5da6a20"
+expected_diagnostic_sha256 = "04bb2f0c541e8656ca7e6bf7cff4f29145772c596cd927f66673145e09d901f0"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:709\",\"edition:5287\",\"variable:271\",\"member:326145\"]}"]
+fields = ["coding"]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+reason = "The exact historical window has no own bound stored-code list. Retain every original column, definition, operation, scope and coding association outside the window. Leave only this historical value set unavailable; no later country or month domain is borrowed."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "55e97278e20ad5f986c1f8544caae67bf114ecbec643fec5fc14876cad406c1e"
+expected_diagnostic_sha256 = "d7ee95dd80ec760dc46ae0a04f6fdb78e08028ec0eed1bbc1d3f090445ca1cee"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:709\",\"edition:5932\",\"variable:271\",\"member:369200\"]}"]
+fields = ["coding"]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+reason = "The exact historical window has no own bound stored-code list. Retain every original column, definition, operation, scope and coding association outside the window. Leave only this historical value set unavailable; no later country or month domain is borrowed."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "c110bd31b1cf61af9fc6ae5216c8965091c54a2efd1c7954e04c62e1587296ec"
+expected_diagnostic_sha256 = "8bea1be16767a8fdb4749b976722434961f02d82fff4c39d7807b186e07b4a50"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:709\",\"edition:7455\",\"variable:271\",\"member:409842\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "The exact historical window has no own bound stored-code list. Retain every original column, definition, operation, scope and coding association outside the window. Leave only this historical value set unavailable; no later country or month domain is borrowed."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "6063eea5b46db1aed160235b95d2593500816dafdea223a2505b404f9d9a3e9b"
+expected_diagnostic_sha256 = "8effbdbaaf2b6736a2aaaca45e3dbbd917283c2fd1d73f0e6ce4b2ce40587773"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:709\",\"edition:10097\",\"variable:271\",\"member:450542\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The exact historical window has no own bound stored-code list. Retain every original column, definition, operation, scope and coding association outside the window. Leave only this historical value set unavailable; no later country or month domain is borrowed."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "7b59b0cfbbbf2231d5ca44b75028e771c08f64683d2d162bb77ad5a3d3bde9a0"
+expected_diagnostic_sha256 = "1b9692bd0244558f50c5fe4fae9022a7672d29eddcc525d88fa3ba2f49180d62"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:709\",\"edition:11830\",\"variable:271\",\"member:492721\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "The exact historical window has no own bound stored-code list. Retain every original column, definition, operation, scope and coding association outside the window. Leave only this historical value set unavailable; no later country or month domain is borrowed."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "3a6372d796bd5c0711fc0453df63e6018918fd827b973aef7402311abaf8dcc6"
+expected_diagnostic_sha256 = "8379be653df2d84bef89de99b53d0485ea248b699d035fb09fabdcb01c79e944"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:709\",\"edition:13174\",\"variable:271\",\"member:586243\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "The exact historical window has no own bound stored-code list. Retain every original column, definition, operation, scope and coding association outside the window. Leave only this historical value set unavailable; no later country or month domain is borrowed."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "334824c852e72eedb2f5b938c7a98c8fa5db086c208d3aa87685f2fe05ca91d9"
+expected_diagnostic_sha256 = "607b770966af3cb72aee9e4a4659be9247b319e99e1da10adc533cc05db69cd0"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:709\",\"edition:14369\",\"variable:271\",\"member:654026\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "The exact historical window has no own bound stored-code list. Retain every original column, definition, operation, scope and coding association outside the window. Leave only this historical value set unavailable; no later country or month domain is borrowed."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "04540948aa6c4b833ce74163ddef0e0d22ab32702a5b742524ba26644b520e93"
+expected_diagnostic_sha256 = "036562fee5e530f8ee85bef1dc34c76d223c5d05ddee89c3b67212d5b2092ee3"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:709\",\"edition:16245\",\"variable:271\",\"member:781497\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "The exact historical window has no own bound stored-code list. Retain every original column, definition, operation, scope and coding association outside the window. Leave only this historical value set unavailable; no later country or month domain is borrowed."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "b1dd7ed4d152ff09623f879b3e627d3a69520aea65d166402ce3fbf66deea0ac"
+expected_diagnostic_sha256 = "98a28d6ddbf5707d93053f6ab9b7b8c08d7faa2ead19d571c66693394e62a0cf"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:709\",\"edition:18162\",\"variable:271\",\"member:841552\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "The exact historical window has no own bound stored-code list. Retain every original column, definition, operation, scope and coding association outside the window. Leave only this historical value set unavailable; no later country or month domain is borrowed."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "588e12702e22627b01e02237e809bc9097cd8b46877c3645efdd488c28068fc1"
+expected_diagnostic_sha256 = "2fb05f2a40eca2d36903e74a10c4655d6c7e19ef4015c827b8d50d606b96a521"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:709\",\"edition:18726\",\"variable:271\",\"member:883492\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "The exact historical window has no own bound stored-code list. Retain every original column, definition, operation, scope and coding association outside the window. Leave only this historical value set unavailable; no later country or month domain is borrowed."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "46fdb93997d94a11b8cec9aa333446b47966568b38821bd72e66216c28f5b0af"
+expected_diagnostic_sha256 = "a0cb5a5f8f074cb68ed2a6d460a18a264147b15880db0a49f59ca077de249f71"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:709\",\"edition:19153\",\"variable:271\",\"member:918626\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "The exact historical window has no own bound stored-code list. Retain every original column, definition, operation, scope and coding association outside the window. Leave only this historical value set unavailable; no later country or month domain is borrowed."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "d77e6b60f346596ef758faa45b69b8483ba67fa475eb524103d3538a28401249"
+expected_diagnostic_sha256 = "71c272cf88ae8ea3f8db89e0d5930f2f77e80f1824ff5a78556b4aff08167cb5"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:709\",\"edition:19869\",\"variable:271\",\"member:986462\"]}"]
+fields = ["coding"]
+valid_from = "2024-01-01"
+valid_to = "2024-12-31"
+reason = "The exact historical window has no own bound stored-code list. Retain every original column, definition, operation, scope and coding association outside the window. Leave only this historical value set unavailable; no later country or month domain is borrowed."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "1dd8de643f93d50a2589d9d05cfb4c91b9f34fc3bc464596ec6a958141b735ce"
+expected_diagnostic_sha256 = "cb42cf7a2b52d90e1d60e5d1de5e1c02ef7bc16427f3c3f474e394d2e7053873"
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "scb/ureg/utlbakkodar1"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:32924\",\"member:407469\"]}"]
+fields = ["period"]
+reason = "The source establishes this distinct student-background role but supplies no safely representable delivery period. Retain the original source scope, operational definition and physical column, with availability unknown. No year or year-independent availability is inferred from migration-year wording or other deliveries."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "46ea2a16c492bd899a520f1fa9d74fd64f11d3e624be82502c0842ac45b0b193"
+expected_diagnostic_sha256 = "7cf9377a841d4a983f9eb6ccd6ab928994c78c6fb6858c914724df4bfb6fb83b"
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "scb/ureg/utlbakkodar1"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:32924\",\"member:407469\"]}"]
+fields = ["availability", "period"]
+reason = "The source establishes this distinct student-background role but supplies no safely representable delivery period. Retain the original source scope, operational definition and physical column, with availability unknown. No year or year-independent availability is inferred from migration-year wording or other deliveries."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "46ea2a16c492bd899a520f1fa9d74fd64f11d3e624be82502c0842ac45b0b193"
+expected_diagnostic_sha256 = "9d77ef6cfc63e1ec8ac39a60dc9b07fb1d7fc6b61bdae525ee08e9e45fc11223"
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "scb/ureg/utlbakkodar12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:32924\",\"member:407471\"]}"]
+fields = ["period"]
+reason = "The source establishes this distinct student-background role but supplies no safely representable delivery period. Retain the original source scope, operational definition and physical column, with availability unknown. No year or year-independent availability is inferred from migration-year wording or other deliveries."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "868c8b5fe1cf62906c5cfa402a3a4a54e9340151002c77835dfe2a98bbb134c4"
+expected_diagnostic_sha256 = "37874167e9a11d20b525f1af5580ce067da692c1b72d591bffd036af648e5418"
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "scb/ureg/utlbakkodar12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:32924\",\"member:407471\"]}"]
+fields = ["availability", "period"]
+reason = "The source establishes this distinct student-background role but supplies no safely representable delivery period. Retain the original source scope, operational definition and physical column, with availability unknown. No year or year-independent availability is inferred from migration-year wording or other deliveries."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "868c8b5fe1cf62906c5cfa402a3a4a54e9340151002c77835dfe2a98bbb134c4"
+expected_diagnostic_sha256 = "d8b13ab796d6cdc2f5ff5e187c513ee5bdea544a9f0cf27ecaa30ebef2284d4d"
+
+[[acknowledge]]
+code = "unsupported_occurrence"
+subject = "scb/ureg/utlbakkodar2"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:32924\",\"member:407470\"]}"]
+fields = ["period"]
+reason = "The source establishes this distinct student-background role but supplies no safely representable delivery period. Retain the original source scope, operational definition and physical column, with availability unknown. No year or year-independent availability is inferred from migration-year wording or other deliveries."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "a36e78b3a95a45cb79a2a265cf840ff7764374d4686088feae89906e6bf23e63"
+expected_diagnostic_sha256 = "8121b7719060bbdfa0e2bf52d690989a8896b5fae86cf66b4b934ea4382d38dc"
+
+[[acknowledge]]
+code = "no_supported_states"
+subject = "scb/ureg/utlbakkodar2"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:1225\",\"edition:7368\",\"variable:32924\",\"member:407470\"]}"]
+fields = ["availability", "period"]
+reason = "The source establishes this distinct student-background role but supplies no safely representable delivery period. Retain the original source scope, operational definition and physical column, with availability unknown. No year or year-independent availability is inferred from migration-year wording or other deliveries."
+evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
+expected_evidence_sha256 = "a36e78b3a95a45cb79a2a265cf840ff7764374d4686088feae89906e6bf23e63"
+expected_diagnostic_sha256 = "4c128909fbdb474857a9497733e7a06e131507831ebf5ca4c63b51750350849d"

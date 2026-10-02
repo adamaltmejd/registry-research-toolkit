@@ -391,10 +391,6 @@ native_id = "382.50220"
 slug = "classid13mr-imputed"  # source: kolumnnamn
 
 [[variable]]
-native_id = "382.15169.branschgr"
-slug = "branschgr"  # source: kolumnnamn
-
-[[variable]]
 native_id = "382.15169.sni92"
 slug = "sni"  # source: fold
 
