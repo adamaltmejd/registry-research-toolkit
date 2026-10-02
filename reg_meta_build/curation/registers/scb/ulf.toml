@@ -9855,3 +9855,31 @@ reason = "These exact overlapping own source lists disagree about effective stor
 evidence = "Complete selected87 native families5838originals plus257Person prerequisites, actual307summary and1integer-identifier support, own5602bound claims and canonical SUN2000 book. Full original/coding fingerprint retains multiplicity; exact retained-unavailable policy, not a blanket ULF acknowledgment. Batch51-ULF87-identity-proof.json."
 expected_evidence_sha256 = "29849568d2d80d0a473e16025bc5ad5f35e0c41d4a36ceb391e8603b02497b4f"
 expected_diagnostic_sha256 = "7fb39c74b1b2f6ca4a2f1f54bc13daa506fb85b6855bfd9f0294fda46a8e2417"
+
+[[identity.partition]]
+variable = "237.15"
+columns = { BA0021 = "237.15.ba0021", BA0019 = "237.15.ba0021", BA0170 = "237.15.ba0170", PB190 = "237.15.pb190" }
+columns_ref = "Complete404-original source-member/field/domain audit: Batch51-ULF15-complete-source-review.json. BA0021 and BA0019 never coexist in the same variant/edition; BA0170 is independently co-present with either register field in24 contexts, with own source members and contrary code assignments. Do not infer equality of stored values."
+data_warning = "The provider links these independent literal source fields to its civil-state question. BA0021 and BA0019 form a nonsimultaneous register-category history, retaining every own annual domain. Simultaneous BA0170 has its own source members and materially different category assignments; retain its literal field identity without claiming value equivalence or expanded questionnaire semantics. PB190 retains its own later categories, including separated status. No codes are converted; source attribution, all domains and original metadata remain evidence."
+expected_evidence_sha256 = "03b229a4672c2a21ae06cd674e9900f86b460cd13097dd479d78aa54f60e59c2"
+
+[[variable]]
+native_id = "237.15.ba0170"
+slug = "civilstand-ba0170"
+
+[[variable]]
+native_id = "237.15.pb190"
+slug = "pb190"
+
+[[coding.choice]]
+variable = "237.15.ba0170"
+variant = "237.458"
+column = "BA0170"
+periods = [["1989-01-01", "1989-12-31"]]
+reason = "The complete own current1989 and1989_old supplied lists agree exactly on every ordinary1/2/3/4/9 code-label pair. Keep the source-supplied superset that additionally declares0=Okänt värde for this exact overlapping window. No recoding, presumed statistical equivalence or list borrowed from another field/year."
+source = "Complete404-original own family and exact bound membership review: Batch51-ULF15-complete-source-review.json."
+data_warning = "The current1989 and1989_old own source bindings differ only by the explicit0=Okänt värde token. The reviewed supplied six-code list is retained for this overlapping window; both original lists and their exact source scopes remain evidence. This does not convert or equate values across physical fields."
+expected_evidence_sha256 = "30cddca13bc41726f19301936625e8a65fec58dc2c77c46febff4d5557dec1ed"
+keep = "Civilstånd i Levnadsförhållanden (ULF), 2"
+keep_members = [["0", "Okänt värde"], ["1", "Ogift person"], ["2", "Gift"], ["3", "Frånskild/hemskild"], ["4", "Änka/änkling"], ["9", "Uppgift saknas"]]
+over = ["Civilstånd i Levnadsförhållanden (ULF), 2"]

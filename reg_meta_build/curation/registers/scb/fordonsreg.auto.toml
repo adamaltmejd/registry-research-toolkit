@@ -23,10 +23,6 @@ native_id = "8.2008"
 slug = "regnr"  # source: kolumnnamn
 
 [[variable]]
-native_id = "8.2969"
-slug = "agnr"  # source: fold
-
-[[variable]]
 native_id = "8.2970"
 slug = "antag"  # source: kolumnnamn
 
@@ -191,10 +187,6 @@ native_id = "8.20693"
 slug = "yuthyr"  # source: kolumnnamn
 
 [[variable]]
-native_id = "8.20695"
-slug = "buller"  # source: fold
-
-[[variable]]
 native_id = "8.25336"
 slug = "mklasseuro"  # source: kolumnnamn
 
@@ -235,60 +227,12 @@ native_id = "8.37296"
 slug = "agare"  # source: kolumnnamn
 
 [[variable]]
-native_id = "8.37297"
-slug = "brforblwltpdriv"  # source: fold
-
-[[variable]]
-native_id = "8.37298"
-slug = "brforvikblwltpdriv"  # source: fold
-
-[[variable]]
-native_id = "8.37311"
-slug = "co2blwltpdriv"  # source: fold
-
-[[variable]]
-native_id = "8.37314"
-slug = "co2landnedcdriv"  # source: fold
-
-[[variable]]
-native_id = "8.37315"
-slug = "co2stadnedcdriv"  # source: fold
-
-[[variable]]
-native_id = "8.37335"
-slug = "co2vikblwltpdriv"  # source: fold
-
-[[variable]]
-native_id = "8.37380"
-slug = "effekt"  # source: fold
-
-[[variable]]
 native_id = "8.37390"
 slug = "energik"  # source: kolumnnamn
 
 [[variable]]
-native_id = "8.37391"
-slug = "energik-wltp-driv"  # source: fold
-
-[[variable]]
-native_id = "8.37392"
-slug = "energik-vikt-wltp-driv"  # source: fold
-
-[[variable]]
 native_id = "8.37853"
 slug = "emissionsvardeenh"  # source: kolumnnamn
-
-[[variable]]
-native_id = "8.37897"
-slug = "noxhcdrivm"  # source: fold
-
-[[variable]]
-native_id = "8.37898"
-slug = "noxwltpdriv"  # source: fold
-
-[[variable]]
-native_id = "8.37901"
-slug = "rackvidd-wltp-driv"  # source: fold
 
 [[variable]]
 native_id = "8.37902"
@@ -297,10 +241,6 @@ slug = "regnranv"  # source: kolumnnamn
 [[variable]]
 native_id = "8.37903"
 slug = "supermiljobil"  # source: kolumnnamn
-
-[[variable]]
-native_id = "8.37904"
-slug = "tankvol"  # source: fold
 
 [[variable]]
 native_id = "8.37907"
@@ -353,10 +293,6 @@ slug = "bussklass"  # source: kolumnnamn
 [[variable]]
 native_id = "8.2187.agkat-ag"
 slug = "agkat-ag"  # source: kolumnnamn
-
-[[variable]]
-native_id = "8.25764.effekt3"
-slug = "effekt3"  # source: kolumnnamn
 
 [[variable]]
 native_id = "8.25764.effektenh"

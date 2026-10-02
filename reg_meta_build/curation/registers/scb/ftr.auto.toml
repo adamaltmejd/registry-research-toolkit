@@ -11,10 +11,6 @@ native_id = "7.4"
 slug = "datfrom"  # source: kolumnnamn
 
 [[variable]]
-native_id = "7.27"
-slug = "fastlopnr"  # source: fold
-
-[[variable]]
 native_id = "7.30"
 slug = "fstat"  # source: kolumnnamn
 
@@ -45,10 +41,6 @@ slug = "sams"  # source: kolumnnamn
 [[variable]]
 native_id = "7.62"
 slug = "smaort"  # source: kolumnnamn
-
-[[variable]]
-native_id = "7.81"
-slug = "arealfast"  # source: fold
 
 [[variable]]
 native_id = "7.430"
@@ -231,10 +223,6 @@ native_id = "7.3665"
 slug = "exttakbytts"  # source: kolumnnamn
 
 [[variable]]
-native_id = "7.3666"
-slug = "idvo"  # source: kolumnnamn
-
-[[variable]]
 native_id = "7.3669"
 slug = "intjamkning"  # source: kolumnnamn
 
@@ -359,10 +347,6 @@ native_id = "7.3718"
 slug = "sanwcs"  # source: kolumnnamn
 
 [[variable]]
-native_id = "7.3729"
-slug = "befolkning"  # source: fold
-
-[[variable]]
 native_id = "7.3731"
 slug = "igm"  # source: kolumnnamn
 
@@ -389,10 +373,6 @@ slug = "delareal"  # source: kolumnnamn
 [[variable]]
 native_id = "7.8602"
 slug = "idve"  # source: kolumnnamn
-
-[[variable]]
-native_id = "7.14660"
-slug = "artillbygg"  # source: kolumnnamn
 
 [[variable]]
 native_id = "7.15649"
@@ -433,10 +413,6 @@ slug = "skalytaovrigbost"  # source: kolumnnamn
 [[variable]]
 native_id = "7.16163"
 slug = "skalytaovriglok"  # source: kolumnnamn
-
-[[variable]]
-native_id = "7.16164"
-slug = "typhyraovrigbost"  # source: kolumnnamn
 
 [[variable]]
 native_id = "7.16201"
