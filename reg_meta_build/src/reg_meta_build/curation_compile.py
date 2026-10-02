@@ -6,7 +6,7 @@ import hashlib
 import json
 import re
 from calendar import monthrange
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import dataclass
 from datetime import date
 from itertools import combinations
@@ -1510,7 +1510,11 @@ def compile_parallel_representations(
             date.fromisoformat(entry.valid_from).toordinal(),
             date.fromisoformat(entry.valid_to).toordinal(),
         )
-        use_effective = any(
+        use_effective = (
+            corrected is not None
+            and Counter(record.record_id for record, _, _ in projected)
+            != Counter(record.record_id for record, _, _ in raw_projection)
+        ) or any(
             native_variable_key(record) != variable_key
             or native_variant_key(record) != variant_key
             or literal != _literal_field(record, "column_name")

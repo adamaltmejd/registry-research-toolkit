@@ -7926,8 +7926,10 @@ def test_field_correction_accepts_guarded_source_alternatives_without_losing_ori
             ErrataFieldEntry.model_validate({**entry.model_dump(), **updates})
 
 
+@pytest.mark.parametrize("native_base", [False, True])
 def test_parallel_representation_selects_checked_owner_without_literal_changes(
     tmp_path,
+    native_base,
 ):
     from reg_meta_build.curation_compile import compile_parallel_representations
     from reg_meta_build.source_curation import (
@@ -7959,7 +7961,12 @@ def test_parallel_representation_selects_checked_owner_without_literal_changes(
         _revision("fixture"),
     ).record
     records = (*selected, sibling)
-    owner = naming[-1].target.source_key
+    owner = (
+        native_variable_key(selected[0])
+        if native_base
+        else naming[-1].target.source_key
+    )
+    assert owner is not None
     targets = capture_expectations(
         records, fields=tuple(SourceFields.model_fields), parents=True, coding=True
     )
@@ -7975,6 +7982,7 @@ def test_parallel_representation_selects_checked_owner_without_literal_changes(
             update={
                 "target": naming[-1].target.model_copy(
                     update={
+                        "source_key": owner,
                         "expectations": targets,
                         "peer_guards": guards,
                     }
