@@ -4708,3 +4708,75 @@ evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/2
 noted = "2026-10-02"
 field = "name"
 value = "Orsaker till ej överenstämmande arbete — Vilken/vilka är orsakerna till att du har ett arbete som inte överensstämmer med det område som din utbildning var inriktad mot? - Annan/andra anledningar"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/intradet-pa-arbetsmarknaden/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:111\",\"variant:123\",\"edition:15321\",\"variable:241\",\"member:718861\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "4c491c2b4254a0ad7e09b3a29cd719d40727cbde3b2f5f6e3c4bfc51970e1177"
+expected_diagnostic_sha256 = "561a768fe56e7f4c403d7cc3e56aefce1b765d5b7889812ac770b76b269fda08"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/intradet-pa-arbetsmarknaden/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:111\",\"variant:123\",\"edition:18866\",\"variable:241\",\"member:900249\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "2c093e72045867a11191ddd7b487a7aa02f2ca2c8134c568a485783345f7d62b"
+expected_diagnostic_sha256 = "cfd5d9fe6e5a8212d03e5359b38b4265bbab1f09da2bf41712fcffa7525262c4"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/intradet-pa-arbetsmarknaden/program"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:111\",\"variant:123\",\"edition:4417\",\"variable:4693\",\"member:280212\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "65dbb94080fc40817d22a05eb1b21a9c3d6c1e32db473b5e5f783fe1df377444"
+expected_diagnostic_sha256 = "24ae62d24ccb27f63c0523585cb2bf53e0bd8ef6047cafe34cfec709ca0d7f23"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/intradet-pa-arbetsmarknaden/program"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:111\",\"variant:123\",\"edition:5632\",\"variable:4693\",\"member:347700\"]}"]
+fields = ["coding"]
+valid_from = "2014-01-01"
+valid_to = "2014-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "80cb4c01272a860cb2f6abdc340009e3c3a329ac6a9bea0299fcf198459947fd"
+expected_diagnostic_sha256 = "4eedcf379fa697dff499ed91afd21879fc50778538da6b2da6b6cd2b5402abcc"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/intradet-pa-arbetsmarknaden/manader-forsta-arbete"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:111\",\"variant:123\",\"edition:2248\",\"variable:4893\",\"member:140717\"]}"]
+fields = ["coding"]
+valid_from = "2008-01-01"
+valid_to = "2008-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "27a5ea3daff59ed0109e53deddded3785fa2f8d29eb09edb76ca100b97932082"
+expected_diagnostic_sha256 = "310155d6042b29c2d53a1bbffd324ee0f204c601683d0675653c99a839d900c3"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/intradet-pa-arbetsmarknaden/huvudsaklig-sysselsattning"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:111\",\"variant:123\",\"edition:18866\",\"variable:5068\",\"member:900250\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "418793b28ea5cfd9350012db5105222247859d24da4d61af5334922a959b3179"
+expected_diagnostic_sha256 = "58b0e6630edbf37d2377dddd8d7350d112c981facb0e7127db645f099cdec01a"

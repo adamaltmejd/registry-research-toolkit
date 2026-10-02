@@ -144,3 +144,39 @@ columns = { Byggherre = "198.5113", FNamn = "198.5113" }
 unassigned_columns = []
 columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
 expected_evidence_sha256 = "269673409ce1034e5b126661943f6bce22379964b2949b220753568d4ee09731"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/avgifter-hyror/hustyp"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:198\",\"variant:300\",\"edition:634\",\"variable:5092\",\"member:11548\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "56aa275faa19a41f6a678a74c0c96acc7b6c1525c98cdb42f9ca0ad75baca6c5"
+expected_diagnostic_sha256 = "c9111fbf0c5e80a715285d1ac6f03a30ed0d19d173c25cd7d221e4174b1101d3"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/avgifter-hyror/lagenhetstyp"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:198\",\"variant:300\",\"edition:634\",\"variable:5105\",\"member:11566\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "06520dd10e798f96dcb171f13e0c642104633a8b0a2c3f0be4ed16afed5570e7"
+expected_diagnostic_sha256 = "8266a7f545c9e78c2ba7dc3df50ded032586307a3eeff7e8ba134d5216c9af83"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/avgifter-hyror/omr"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:198\",\"variant:300\",\"edition:634\",\"variable:5116\",\"member:11584\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "3dda69990d3e3c1c4b1f0f1635a927d3bc3306dddcc7ba1e522bca63ac1984df"
+expected_diagnostic_sha256 = "1c8e6542604e3b3f73cb4d21ea925d4624692694f6cb0ed2172f72a9d269e970"

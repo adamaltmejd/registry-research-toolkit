@@ -378,3 +378,27 @@ columns = { astar20 = "124.25604", astar22 = "124.25604" }
 unassigned_columns = []
 columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
 expected_evidence_sha256 = "2d9c5fb4ddb0881cff4afb4f16f8e12919580b77ccad03d117660351d24e96f1"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/arbetsorsakade-besvar/nagotann"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:124\",\"variant:145\",\"edition:14121\",\"variable:7992\",\"member:643842\"]}"]
+fields = ["coding"]
+valid_from = "2004-01-01"
+valid_to = "2004-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual-eight-gap-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "34a6d3ed5e6222c40f917cc0942ee569b59874c12de7f72bcaa216d33ae6ed16"
+expected_diagnostic_sha256 = "a841a2f61b6247f0c0ce069182e3bda1d51e0c50dd8f41e53a21e021e5587b88"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/arbetsorsakade-besvar/annators"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:124\",\"variant:145\",\"edition:15509\",\"variable:8035\",\"member:735145\"]}"]
+fields = ["coding"]
+valid_from = "2001-01-01"
+valid_to = "2001-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual-eight-gap-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "bd11d32626980996824df94c97895fc4e12996cddda6e30e38c7605ac4c215d5"
+expected_diagnostic_sha256 = "9805ba8500674e9c5265b81e2bd8b5554e4cc6c0fe5a18a946f610904025855f"

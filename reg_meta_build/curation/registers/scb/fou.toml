@@ -14073,3 +14073,92 @@ fields = ["data_type", "data_length"]
 reason = "This exact sibling shape comparison depends on the source industry-group evidence whose flags/shape are withheld or disputed. Preserve that original and the known independent physical owners; acknowledge only the unavailable grouping comparison. Do not manufacture source types, lengths, flags or a sibling equivalence, and do not make the withheld quantity orderable."
 evidence = "Complete accepted native families and full-register physical-coordinate collision review, actual source support and own bound coding multiplicity. No original or coding claim removed. Reviews: Batch51-Investment-FoU48-complete-role-review.json; Batch51-Investment-FoU-physical-coordinate-collision-census.json; Batch51-Investment-FoU48-own-bound-domain-review.json. Proof: Batch51-Investment-FoU48-source-proof.json."
 expected_evidence_sha256 = "d1f67bc7d9fb50aa6ef8af1717288af24df2cba7992c4039fd3a0e7ef2c262c5"
+
+[[errata.field]]
+variable = "182.109"
+variant = "182.441"
+column = "EMPLOY_SCOPE_NET"
+edition = "18421"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Faktisk tjänstgöringstid i förhållande till heltidstjänst." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Tjänstgöringsomfattning" }, { name = "operational_definition", status = "value", value = "Variabeln hämtas från registret över högskolans personal." }, { name = "representation", status = "absent" }]
+expected_period_text = "2021"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
+evidence = "Same native109, exact EMPLOY_SCOPE_NET calendar-year delivery and source definition; another explicitly supplied source edition for this same year states Procent. Replace only the generic placeholder värde, antal eller % with that precise contemporaneous unit. Raw placeholder and all original metadata remain evidence; no stored magnitude or scaling is changed. Complete peer/family review: Batch52-domain42b-role-review.json."
+noted = "2026-10-02"
+field = "measurement_unit"
+value = "Procent"
+
+[[errata.field]]
+variable = "182.109"
+variant = "182.441"
+column = "EMPLOY_SCOPE_NET"
+edition = "19474"
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Faktisk tjänstgöringstid i förhållande till heltidstjänst." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Tjänstgöringsomfattning" }, { name = "operational_definition", status = "value", value = "Variabeln hämtas från registret över högskolans personal." }, { name = "representation", status = "absent" }]
+expected_period_text = "2023"
+expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
+evidence = "Same native109, exact EMPLOY_SCOPE_NET calendar-year delivery and source definition; another explicitly supplied source edition for this same year states Procent. Replace only the generic placeholder värde, antal eller % with that precise contemporaneous unit. Raw placeholder and all original metadata remain evidence; no stored magnitude or scaling is changed. Complete peer/family review: Batch52-domain42b-role-review.json."
+noted = "2026-10-02"
+field = "measurement_unit"
+value = "Procent"
+
+[[coding.extend]]
+variable = "182.666"
+variant = "182.373"
+column = "AnstS"
+periods = [["2015-01-01", "2015-12-31"], ["2017-01-01", "2017-12-31"]]
+reason = "The supplied source explicitly binds this exact native field to the complete selected stored-code list. Its descriptor period does not cover these delivery windows, but no contrary stored encoding is supplied. Reuse only the exact bound domain under the approved explicit-association/validity policy; retain all original descriptor periods, codes, labels and associations."
+source = "Complete native-family, actual source/support and ordered own-binding review: Batch52-domain42b-own-binding-review.json; standing user explicit-association/domain-continuity policy. Exact original and complete raw coding fingerprints are guarded."
+data_warning = "The effective coding uses the exact source-bound domain outside its declared descriptor period, under the reviewed association-continuity assumption; original periods remain unchanged."
+expected_evidence_sha256 = "b181d1a35cfce82d5fcf3764c7cd9054b532700d0269b8f9bb7767748c5a93dc"
+list = "Antal anställda, storleksklass"
+list_members = [["0", "Uppgift saknas"], ["1", "0 anställda"], ["10", "1 000-1 499 anställda"], ["11", "1 500-1 999 anställda"], ["12", "2 000-2 999 anställda"], ["13", "3 000-3 999 anställda"], ["14", "4 000-4 999 anställda"], ["15", "5 000-9 999 anställda"], ["16", "10 000 eller fler anställda"], ["2", "1-4 anställda"], ["3", "5-9 anställda"], ["4", "10-19 anställda"], ["5", "20-49 anställda"], ["6", "50-99 anställda"], ["7", "100-199 anställda"], ["8", "200-499 anställda"], ["9", "500-999 anställda"]]
+witness = ["2003-01-01", "2003-12-31"]
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fou/typ-av-utgift-kostnad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:358\",\"edition:4471\",\"variable:29326\",\"member:298061\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "7f5ba4909feadff3266c2bdda01894c11f348aa44cbb551e61ba904351cd9c6c"
+expected_diagnostic_sha256 = "e6db76fd9fc331e2d87f605d7a29a011505318ad1896a319c9b0ada129934dcb"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fou/typ-av-utgift-kostnad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:358\",\"edition:5764\",\"variable:29326\",\"member:351914\"]}"]
+fields = ["coding"]
+valid_from = "2013-01-01"
+valid_to = "2013-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "0fe9f19b10102d51abb0f2d8fab5f5364afc9c7f00df6d07a9d314660df5c8a7"
+expected_diagnostic_sha256 = "68d66bfd267911c7d9d58499227601cbf9a84e7c48886103e061417047e0a310"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fou/typ-av-utgift-kostnad"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:358\",\"edition:9841\",\"variable:29326\",\"member:437777\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "ee3158fc14460072a3affaf09d169f3407fcfcef1c9e54964c13ea0c32b842c3"
+expected_diagnostic_sha256 = "695c0492bc497c24edf9e61c347476d2e6b38ebf4d5a6a70806c0486161157b1"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fou/sjukskriven-hela-aret"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:441\",\"edition:18421\",\"variable:38243\",\"member:860139\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "dfb20de3c261c0d9da72eb56c85881107421a26561cb5058217a8a2a55a1a791"
+expected_diagnostic_sha256 = "a9a8395227d63b8c9649dc995036cc20762fa44f55e327d87fd0eef123342991"

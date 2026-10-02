@@ -207,3 +207,27 @@ native_id = "242.8534.kgruppnr"
 slug = "kommungrupp-kod"
 
 # register 243
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/allmanna-val-valdeltagande/fodelseland-varldsdel-2"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:242\",\"variant:471\",\"edition:3440\",\"variable:6556\",\"member:212701\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual-eight-gap-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "7c2a6cbf5fe939b1e191947fa9c62495ea4095d851df80a5ad4c1ac4e6dce923"
+expected_diagnostic_sha256 = "cfe8560336049b85f195ae55b8265550f1d802bc9a7dc08bd789860be5c92d77"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/allmanna-val-valdeltagande/medborgarland-varldsdel-2"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:242\",\"variant:471\",\"edition:3440\",\"variable:6818\",\"member:212702\"]}"]
+fields = ["coding"]
+valid_from = "2006-01-01"
+valid_to = "2006-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual-eight-gap-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "57175d9e012934528dfef82867b8aaf8f44f79f108056a41a66c452fba45be1d"
+expected_diagnostic_sha256 = "51aa73b2548ff6acb4f45792887fc8057e6d2b6605d3e381ebcbb39698e97e26"

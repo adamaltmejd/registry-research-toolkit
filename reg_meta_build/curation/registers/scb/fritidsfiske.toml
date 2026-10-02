@@ -107,3 +107,75 @@ native_id = "390.99.csfvi"
 slug = "sammanraknad-forvarvsinkomst-2"
 
 # register 397
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fritidsfiske/f02b"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:390\",\"variant:1503\",\"edition:13934\",\"variable:42503\",\"member:757480\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "c345a4343103cb7e44abecc89e495748631b42082cca7628d22d2d12196dadb9"
+expected_diagnostic_sha256 = "15164b8f9cf0dba939feb5f8599fb33bfa1fd117a5f63bf3b77496be7abee31c"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fritidsfiske/f02b"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:390\",\"variant:1503\",\"edition:15814\",\"variable:42503\",\"member:758165\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "3b56316ababeb3c500c61eef1bce447db302d26fcd11c86a3ae24fd1afa124ff"
+expected_diagnostic_sha256 = "3b4d3a0e1935ae9ee5cf3b913456eda325018ffe94b207de309a2a1a6a30a9a4"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fritidsfiske/f02b"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:390\",\"variant:1503\",\"edition:16498\",\"variable:42503\",\"member:808303\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "aed58f2f384cb61863ad1201305c730b9d866e41f04f85b29417355d4fb4b10c"
+expected_diagnostic_sha256 = "fd1a5bb58ccfbf47452277fbb1e244e3ff91b9970b2297e6328623d5f892ce5f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fritidsfiske/f02c"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:390\",\"variant:1503\",\"edition:13934\",\"variable:42504\",\"member:757481\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "9192fb9392ff24befd48b538bd0fad722c09357aaca1bee5a667e2db7cc05683"
+expected_diagnostic_sha256 = "6661beb88b3dc3b944f6f598b42fe932b572caa353c92fa48a27537f7029d625"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fritidsfiske/f02c"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:390\",\"variant:1503\",\"edition:15814\",\"variable:42504\",\"member:758164\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "4dcccdaa4b3d4bc2d930bbae3ad28c7bca535e3ae27fde48d488ae565875cc1a"
+expected_diagnostic_sha256 = "7a54b7130a630142403e4339ba3edf97417f797dfe80c9f913f6d0d2cb26a830"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fritidsfiske/f02c"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:390\",\"variant:1503\",\"edition:16498\",\"variable:42504\",\"member:808304\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "79f5619dfea1b0c140f4b6a8c7d25d58ed21229279856e3738ee16752f5b9e7e"
+expected_diagnostic_sha256 = "25ed39ad7426e13208858e0517b19669fea1fdb4ba0052ec49aedbefd134efaa"

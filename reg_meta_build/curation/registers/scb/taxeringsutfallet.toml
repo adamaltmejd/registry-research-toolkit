@@ -429,3 +429,87 @@ reason = "The2018 physical UlagAvkSkUtlKap30 column is attributed both to explic
 evidence = "Maintainer-approved ambiguous-source/retained-unmapped policy. Complete family, physical collision, actual support, own coding and positive scope proof: Batch52-two-source-coordinate-collisions-source-proof.json. No inferred common population, stored encoding or table discriminator."
 expected_evidence_sha256 = "7781d89af56fdacdc039734c8b4155b3ff427fc9d3c72e31bc1aaa4925f967b9"
 expected_diagnostic_sha256 = "1f1d1029738105ecfb0810a741fff27678ce106ba6150f2b7bdaed82a7b291c0"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/taxeringsutfallet/inkomstar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:118\",\"variant:135\",\"edition:11606\",\"variable:8242\",\"member:476416\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "1f1620238927eb02390d979782bb78c213526611d47d24943ccfcbc0c2be4059"
+expected_diagnostic_sha256 = "ba552a1072acc48b75d97cf2306cf04f5a424773557bbab2f5cbd7cc31f5e7e9"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/taxeringsutfallet/inkomstar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:118\",\"variant:135\",\"edition:12687\",\"variable:8242\",\"member:559702\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "b50c90f16fc65ca2ce39eaeb648bb2a56d9dbe49bb51602efd22d68122710d9f"
+expected_diagnostic_sha256 = "ea59c4f2a4ef7d9e75c75e69ea38e433c8c7d1a0e3d0347c2f7e0f3121727cbc"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/taxeringsutfallet/inkomstar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:118\",\"variant:135\",\"edition:13728\",\"variable:8242\",\"member:622672\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "64df773226ba270060a64588fd3dc1c861e165e6f5c6b6a48f4c856414950b1f"
+expected_diagnostic_sha256 = "3b0b63f1ccb6aa60f0ee66dccb946078ec83d55d21d5d29f275a0a51b2dabf37"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/taxeringsutfallet/inkomstar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:118\",\"variant:135\",\"edition:15710\",\"variable:8242\",\"member:747692\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "3c61aad103b6e3c44cb65dbae666d230f41a48ecfa1702e5933ba12aad9cec32"
+expected_diagnostic_sha256 = "2f7d10c3af5b0789887fd37291f0de55aedaa365203fed0734f68bb72ed6d809"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/taxeringsutfallet/katkod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:118\",\"variant:135\",\"edition:3141\",\"variable:8243\",\"member:185763\"]}"]
+fields = ["coding"]
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "b531ec5bd57ce3b99b308a1913b54c042bd437f847852fc8fe5fb1f7bf0eca4b"
+expected_diagnostic_sha256 = "4eb8a77d7d2efae6c416ce705ef9fd50e87e92779fe59ce6f12a6d060b681028"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/taxeringsutfallet/katkod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:118\",\"variant:135\",\"edition:3686\",\"variable:8243\",\"member:226599\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "d457930b0f6c9857d075e2ac935998d7956b888c72adbcda40f67d3bbb845b08"
+expected_diagnostic_sha256 = "1df1bd65514f7af9bba10ca453eeb037584ff252ac113a3ebfcfc65d9ffb7b36"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/taxeringsutfallet/katkod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:118\",\"variant:135\",\"edition:4288\",\"variable:8243\",\"member:272292\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
+evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "1d62d4dcc0710f8e486fa0bff373d6a39b0fc74029c8badb047f0136476c17af"
+expected_diagnostic_sha256 = "8faf3311d4453eea4e695591de75c3b16a36ee4d7dec215559cff58336c7344e"
