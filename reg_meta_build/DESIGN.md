@@ -300,7 +300,11 @@ flags and storage version. They do not rehash the entire prepared database, reco
 source record identities, parse original workbooks, expand raw archives or repeat
 cleaning. Full verification belongs at preparation/acceptance. The accepted immutable
 revision is the trust boundary; decoding uses bounded caches and indexed semantic-key
-lookups.
+lookups. The decoded-record cache keeps at most 8,192 recent originals, including during
+compilation; callers still receive complete ordered batches and retain their own
+records. Eviction reconstructs the same pinned originals and does not change guards,
+source fingerprints or output. Phase-end clearing additionally releases the remaining
+cache.
 
 Support target cardinality uses a distinct native-coordinate projection before attaching
 facts. It avoids hydrating unrelated prose and cells but includes unknown/ambiguous
@@ -373,10 +377,15 @@ assigns annual availability to the range.
 
 An SCB `[[identity.column_owner]]` binds a literal column to an accepted owner within
 explicit source editions. Optional `expected_fields` pin reviewed source facts using the
-existing field-expectation contract. Guarded entries require a finite edition list and
-unique known fields. Changed facts refuse fresh compilation; the compiled complete
-family also guards every supplied field during replay. This supports a reused column
-whose explicitly documented amount or rate role changes between editions without
+existing field-expectation contract. An entry may instead pin complete
+`expected_records` and `expected_evidence_sha256`. This admits multiple original prose
+claims for one exact physical column and edition under one owner without selecting or
+correcting either claim. The two guard forms are exclusive. Guarded entries require a
+finite edition list. Complete-record guards retain all fields, parent facts, coding
+references and original multiplicity; missing, added or changed originals refuse both
+compilation and replay. Field guards require unique known fields, and the compiled
+complete family also guards every supplied field during replay. This supports a reused
+column whose explicitly documented amount or rate role changes between editions without
 normalizing units or borrowing another owner's meaning. Physical source multiplicity
 remains governed by the prepared-source pins and ordered inventory. A complete native
 default column map may retain that owner alongside exact guarded scoped overrides; only

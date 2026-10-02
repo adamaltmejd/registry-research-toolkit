@@ -210,3 +210,312 @@ native_id = "270.99.csfvi"
 slug = "sammanraknad-forvarvsinkomst-2"
 
 # register 273
+
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/position"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:15095\",\"variable:17647\",\"member:704813\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "f05bca9df979e65680cb0adeb24440a142c41ecdd353e5a0a2aeb7461edbf90c"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/position"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:19124\",\"variable:17647\",\"member:917404\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "8469189bf1333ebadc20d15249e65f7028bcaaed8caf8336eaaeb437002b0b1b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/position"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:14432\",\"variable:17647\",\"member:656737\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "71c9465be022da3a46cf716af95695973f56a43c12e8026b7f3d256028d4b922"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/position"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:19122\",\"variable:17647\",\"member:917295\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "4426f8911dd7a9a401d852e1580cc9c4798b9277f4b628b17fffa13aa82dcce4"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:5164\",\"variable:241\",\"member:318890\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:5164\",\"variable:241\",\"member:318907\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "df8a6caeb78249622ee45734badfa4c8fdcca7798c5aaaa13d8be942f15b209e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:8594\",\"variable:241\",\"member:419413\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:8594\",\"variable:241\",\"member:419417\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "344c2eda28fa82f9a66b3bae7e35402deac0b64b4ee9c05db766ee267e091cd2"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:15095\",\"variable:241\",\"member:704823\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:15095\",\"variable:241\",\"member:704843\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "285aec17009fa7ebe3c20cc909f0c9c013ec0b301b07bdcef739dcd8b23ebf11"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:19124\",\"variable:241\",\"member:917377\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:19124\",\"variable:241\",\"member:917395\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "199e24ca91137c06d58d910adf367413be47ea9e497afad209cb021f06e81a59"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:4427\",\"variable:241\",\"member:280126\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:4427\",\"variable:241\",\"member:281197\"]}"]
+fields = ["coding"]
+valid_from = "2011-01-01"
+valid_to = "2011-12-31"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "5dd58d7c9c6214247c510a4b824752ba6a1035428bc12b55bd6fb3bcb8bb0f73"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:8587\",\"variable:241\",\"member:418738\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:8587\",\"variable:241\",\"member:418743\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "7dbb4ad319b0c29fbe0b3519aab1efcc0e0d0e899972f5d9e5bace394a4a67b9"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:14432\",\"variable:241\",\"member:656726\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:14432\",\"variable:241\",\"member:656762\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "bf5ffd7c7617aec8c3fd4890b55386dd2e42d160573290dae23338fceac15e4a"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:19122\",\"variable:241\",\"member:917317\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:19122\",\"variable:241\",\"member:917337\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "28bbe76570f3f87b770c66300d345782efa0510734f707254992383669aa2758"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:15028\",\"variable:257\",\"member:700818\"]}"]
+fields = ["coding"]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "273e13d9fbddbbaf9679fb6d280687cf856ab3201cf3fe7b9c02a7905cf59e9c"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:15029\",\"variable:257\",\"member:700860\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "3bb04fb7e6a42ebeb8c8da2188ed5b193b47564933ba6ea5cb43e4729727c112"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:15095\",\"variable:257\",\"member:704815\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:15095\",\"variable:257\",\"member:704842\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "2c53ad7259388b61c7fe57bf67d9aa143e1faf2511016e2dd8b8764b82fe6382"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:19124\",\"variable:257\",\"member:917378\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:19124\",\"variable:257\",\"member:917402\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "2dc70574d2ecf140eb76b4c55279dd5b26c1ac2f6d32e2f16f2ab4761efdd4c0"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:3447\",\"variable:257\",\"member:214782\"]}"]
+fields = ["coding"]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "113bd36324de6339f788d008eafec842a316a1ce8e06ffb7606f95eb51046a69"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:5001\",\"variable:257\",\"member:309002\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "b90f1d20d6e7abf52e662094672c5f06a289453cfb98f7fafd15db0070d03b01"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:14432\",\"variable:257\",\"member:656735\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:14432\",\"variable:257\",\"member:656763\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "efe9f2968be1e0f847f59a1c5436212e88f6453c24e81f87b2bbc932b5d694eb"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/fodelseland-rtb"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:19122\",\"variable:257\",\"member:917309\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:19122\",\"variable:257\",\"member:917336\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "42839aee21c7c3e40f95e6201d822256cac7538e6980988d4c23a02ac623ee4b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:15028\",\"variable:271\",\"member:700816\"]}"]
+fields = ["coding"]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "221a1c8d5209281780369ac5415efcf0cc7d7cad7741a7a53ff3d7b741d772ca"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:15029\",\"variable:271\",\"member:700858\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "634f99ab5f0f45cb696f823c2755ba73bee7aeada5d2f7a5effcc512e96f591b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:15095\",\"variable:271\",\"member:704814\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:15095\",\"variable:271\",\"member:704841\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "4d267c1a14e2d68edbd31787ee6eaeda786e88c0b4df2dcd2e125ba77ccef299"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:19124\",\"variable:271\",\"member:917379\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:19124\",\"variable:271\",\"member:917403\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "cd1013de97e1ae4396554696e8412c3a3a5b631b3ba2cdc302b5df53a44b2623"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:3447\",\"variable:271\",\"member:214784\"]}"]
+fields = ["coding"]
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "41ee9f0fa0ef04c4200e92016d26bef0fbff9b90a43abe638e28e8fe72b444f5"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:5001\",\"variable:271\",\"member:309004\"]}"]
+fields = ["coding"]
+valid_from = "2007-01-01"
+valid_to = "2007-12-31"
+reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "4e1c154b66b0b7edc3c7a7762d2987e2de8f6a65c052707c979644550175d6eb"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:14432\",\"variable:271\",\"member:656736\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:14432\",\"variable:271\",\"member:656765\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "bbc4982db73206764cce65b318d9aaf19317d1ad0b367ba85f97b6de19eedfb7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/fortroendevalda/medborgarskapsland"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:19122\",\"variable:271\",\"member:917308\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:19122\",\"variable:271\",\"member:917335\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "d800ffe526406ac698aa1410b12e89e656bb139c7baa7e8c43ed10b2267512d1"

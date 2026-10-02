@@ -974,3 +974,67 @@ valid_to = "2023-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
 expected_evidence_sha256 = "c1a2f816a7b2ae0021a05315f3be2b3f6bcf14224cc4d25d4d4e2526b71c9f70"
+
+
+[[acknowledge]]
+code = "unresolved_flag"
+subject = "scb/ksju/naringsgren-ng1-2007"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1586\",\"variable:4027\",\"member:114095\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1636\",\"variable:4027\",\"member:116717\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3776\",\"variable:4027\",\"member:231606\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3777\",\"variable:4027\",\"member:231636\"]}"]
+fields = ["is_sensitive", "is_identifier"]
+reason = "The primary source leaves identifier and sensitivity flags unspecified for these exact source-owned records, and complete auxiliary joins supply no matching flag declaration. Preserve all quantity definitions, original fields, periods, physical evidence and existing own response domains. The named semantic role alone does not establish either boolean. Keep the affected quantity and its delivery states unavailable; do not default unknown flags to false."
+evidence = "Complete accepted full native-family and current source-owner review, all primary register originals, actual auxiliary joins, complete panel prerequisites and bound own coding. Exact full-original and bound-coding fingerprint. Proof: Batch51-flags-source-proof.json. Reviewed unavailable-flag policy; no boolean defaults or sensitivity inference."
+expected_evidence_sha256 = "d9ca8a300d1d0eea3b99c8892f834b10305eb69399cd701d26de54be11037427"
+
+[[acknowledge]]
+code = "unresolved_flag"
+subject = "scb/ksju/naringsgren-ngs1-2002-2008"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1636\",\"variable:4027\",\"member:116717\"]}"]
+fields = ["is_sensitive", "is_identifier"]
+reason = "The primary source leaves identifier and sensitivity flags unspecified for these exact source-owned records, and complete auxiliary joins supply no matching flag declaration. Preserve all quantity definitions, original fields, periods, physical evidence and existing own response domains. The named semantic role alone does not establish either boolean. Keep the affected quantity and its delivery states unavailable; do not default unknown flags to false."
+evidence = "Complete accepted full native-family and current source-owner review, all primary register originals, actual auxiliary joins, complete panel prerequisites and bound own coding. Exact full-original and bound-coding fingerprint. Proof: Batch51-flags-source-proof.json. Reviewed unavailable-flag policy; no boolean defaults or sensitivity inference."
+expected_evidence_sha256 = "831ae65bee02f6f8bb3436aec9276e37e5a0e89a53524516a95a51179893c206"
+
+[[acknowledge]]
+code = "unresolved_flag"
+subject = "scb/ksju/naringsgren-ngs1-2006"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:563\",\"variable:4027\",\"member:21655\"]}"]
+fields = ["is_sensitive", "is_identifier"]
+reason = "The primary source leaves identifier and sensitivity flags unspecified for these exact source-owned records, and complete auxiliary joins supply no matching flag declaration. Preserve all quantity definitions, original fields, periods, physical evidence and existing own response domains. The named semantic role alone does not establish either boolean. Keep the affected quantity and its delivery states unavailable; do not default unknown flags to false."
+evidence = "Complete accepted full native-family and current source-owner review, all primary register originals, actual auxiliary joins, complete panel prerequisites and bound own coding. Exact full-original and bound-coding fingerprint. Proof: Batch51-flags-source-proof.json. Reviewed unavailable-flag policy; no boolean defaults or sensitivity inference."
+expected_evidence_sha256 = "3774f6594a8dd22e54e4788882ccd09f603c7dcfdbf19fbed02836ec8e8c2d82"
+
+[[acknowledge]]
+code = "unresolved_flag"
+subject = "scb/ksju/naringsgren-ngs1-2007"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1586\",\"variable:4027\",\"member:114095\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3776\",\"variable:4027\",\"member:231606\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3777\",\"variable:4027\",\"member:231636\"]}"]
+fields = ["is_sensitive", "is_identifier"]
+reason = "The primary source leaves identifier and sensitivity flags unspecified for these exact source-owned records, and complete auxiliary joins supply no matching flag declaration. Preserve all quantity definitions, original fields, periods, physical evidence and existing own response domains. The named semantic role alone does not establish either boolean. Keep the affected quantity and its delivery states unavailable; do not default unknown flags to false."
+evidence = "Complete accepted full native-family and current source-owner review, all primary register originals, actual auxiliary joins, complete panel prerequisites and bound own coding. Exact full-original and bound-coding fingerprint. Proof: Batch51-flags-source-proof.json. Reviewed unavailable-flag policy; no boolean defaults or sensitivity inference."
+expected_evidence_sha256 = "bcd1e800f879c718f67b83c709dbb2aa87d1eaef57ae10203b5800a428cc5520"
+
+[[acknowledge]]
+code = "unresolved_flag"
+subject = "scb/ksju/naringsgren-sni2-2006"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:563\",\"variable:4027\",\"member:21655\"]}"]
+fields = ["is_sensitive", "is_identifier"]
+reason = "The primary source leaves identifier and sensitivity flags unspecified for these exact source-owned records, and complete auxiliary joins supply no matching flag declaration. Preserve all quantity definitions, original fields, periods, physical evidence and existing own response domains. The named semantic role alone does not establish either boolean. Keep the affected quantity and its delivery states unavailable; do not default unknown flags to false."
+evidence = "Complete accepted full native-family and current source-owner review, all primary register originals, actual auxiliary joins, complete panel prerequisites and bound own coding. Exact full-original and bound-coding fingerprint. Proof: Batch51-flags-source-proof.json. Reviewed unavailable-flag policy; no boolean defaults or sensitivity inference."
+expected_evidence_sha256 = "3774f6594a8dd22e54e4788882ccd09f603c7dcfdbf19fbed02836ec8e8c2d82"
+
+[[acknowledge]]
+code = "unresolved_flag"
+subject = "scb/ksju/delantdagar-2015"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12641\",\"variable:8152\",\"member:557199\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12793\",\"variable:8152\",\"member:563050\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12969\",\"variable:8152\",\"member:571925\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12970\",\"variable:8152\",\"member:571944\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:13382\",\"variable:8152\",\"member:598754\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:14524\",\"variable:8152\",\"member:663525\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:16440\",\"variable:8152\",\"member:803132\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:18253\",\"variable:8152\",\"member:846077\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:18751\",\"variable:8152\",\"member:884714\"]}"]
+fields = ["is_sensitive", "is_identifier"]
+reason = "The primary source leaves identifier and sensitivity flags unspecified for these exact source-owned records, and complete auxiliary joins supply no matching flag declaration. Preserve all quantity definitions, original fields, periods, physical evidence and existing own response domains. The named semantic role alone does not establish either boolean. Keep the affected quantity and its delivery states unavailable; do not default unknown flags to false."
+evidence = "Complete accepted full native-family and current source-owner review, all primary register originals, actual auxiliary joins, complete panel prerequisites and bound own coding. Exact full-original and bound-coding fingerprint. Proof: Batch51-flags-source-proof.json. Reviewed unavailable-flag policy; no boolean defaults or sensitivity inference."
+expected_evidence_sha256 = "213e2edc31fd56d551a01a9b18d3e265874f877fe4b25344f95b0bda677c6bde"
+
+[[acknowledge]]
+code = "unresolved_flag"
+subject = "scb/ksju/helantdagar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:8152\",\"member:464742\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12636\",\"variable:8152\",\"member:556983\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12639\",\"variable:8152\",\"member:557119\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12640\",\"variable:8152\",\"member:557132\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12641\",\"variable:8152\",\"member:557201\"]}"]
+fields = ["is_sensitive", "is_identifier"]
+reason = "The primary source leaves identifier and sensitivity flags unspecified for these exact source-owned records, and complete auxiliary joins supply no matching flag declaration. Preserve all quantity definitions, original fields, periods, physical evidence and existing own response domains. The named semantic role alone does not establish either boolean. Keep the affected quantity and its delivery states unavailable; do not default unknown flags to false."
+evidence = "Complete accepted full native-family and current source-owner review, all primary register originals, actual auxiliary joins, complete panel prerequisites and bound own coding. Exact full-original and bound-coding fingerprint. Proof: Batch51-flags-source-proof.json. Reviewed unavailable-flag policy; no boolean defaults or sensitivity inference."
+expected_evidence_sha256 = "12ae59edc9faffe7fd2e300476f360f22670bb94679dade36595065f2ad5ca62"

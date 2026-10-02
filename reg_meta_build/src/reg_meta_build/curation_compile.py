@@ -950,6 +950,20 @@ def _scoped_column_owners(
                 for record in matched
                 for field in entry.expected_fields
             )
+            or (
+                entry.expected_records is not None
+                and (
+                    tuple(entry.expected_records)
+                    != capture_expectations(
+                        matched,
+                        fields=tuple(SourceFields.model_fields),
+                        parents=True,
+                        coding=True,
+                    )
+                    or entry.expected_evidence_sha256
+                    != acknowledgement_evidence_sha256(matched)
+                )
+            )
             or entry.owner not in split_ids
             or (
                 entry.source_editions
@@ -2319,7 +2333,10 @@ def compile_partitions(
                 native,
                 records,
                 guarded=source_id in {item.entry.source_id for item in entries}
-                or any(entry.expected_fields for _, entry in scoped_entries)
+                or any(
+                    entry.expected_fields or entry.expected_records is not None
+                    for _, entry in scoped_entries
+                )
                 or any(entry.expected_records is not None for _, entry in sos_splits),
             )
             guarded_sos_split = bool(
@@ -2400,7 +2417,11 @@ def compile_partitions(
                         guard_fields=(
                             tuple(SourceFields.model_fields)
                             if source_id in split_ids
-                            or any(entry.expected_fields for _, entry in scoped_entries)
+                            or any(
+                                entry.expected_fields
+                                or entry.expected_records is not None
+                                for _, entry in scoped_entries
+                            )
                             else ()
                         ),
                     )
@@ -2416,6 +2437,22 @@ def compile_partitions(
                 if partitions:
                     diagnostics.extend(converted.diagnostics)
                 if converted.case is not None:
+                    if any(
+                        entry.expected_records is not None
+                        for _, entry in scoped_entries
+                    ):
+                        converted = ColumnPartitionConversion(
+                            converted.bindings,
+                            converted.case.model_copy(
+                                update={
+                                    "expected_evidence_sha256": acknowledgement_evidence_sha256(
+                                        records
+                                    )
+                                }
+                            ),
+                            converted.diagnostics,
+                        )
+                    assert converted.case is not None
                     annotated_partitions = [
                         entry
                         for _, entry in partitions
@@ -2928,7 +2965,10 @@ def compile_deferred_partitions(
                     native,
                     records,
                     guarded=source_id in {item.entry.source_id for item in entries}
-                    or any(entry.expected_fields for _, entry in scoped_entries),
+                    or any(
+                        entry.expected_fields or entry.expected_records is not None
+                        for _, entry in scoped_entries
+                    ),
                 )
                 split_bases[scope_key].add(native)
                 scoped, scoped_issues = _scoped_column_owners(
@@ -2974,13 +3014,22 @@ def compile_deferred_partitions(
                     fields=(
                         tuple(SourceFields.model_fields)
                         if source_id in split_ids
-                        or any(entry.expected_fields for _, entry in scoped_entries)
+                        or any(
+                            entry.expected_fields or entry.expected_records is not None
+                            for _, entry in scoped_entries
+                        )
                         else ("column_name",)
                     ),
                     parents=source_id in split_ids
-                    or any(entry.expected_fields for _, entry in scoped_entries),
+                    or any(
+                        entry.expected_fields or entry.expected_records is not None
+                        for _, entry in scoped_entries
+                    ),
                     coding=source_id in split_ids
-                    or any(entry.expected_fields for _, entry in scoped_entries),
+                    or any(
+                        entry.expected_fields or entry.expected_records is not None
+                        for _, entry in scoped_entries
+                    ),
                 )
                 guard = PeerGuard(
                     guard_id=f"accepted-partitions:{source}:{source_id}",

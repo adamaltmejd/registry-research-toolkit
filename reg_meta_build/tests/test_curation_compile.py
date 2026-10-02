@@ -8465,3 +8465,180 @@ def test_name_correction_uses_only_complete_same_family_witnesses(tmp_path):
                 }
             )
         )
+
+
+def _column_owner_alternatives_fixture(tmp_path):
+    from reg_meta_build.curation_tree import IdentityColumnOwnerEntry
+    from reg_meta_build.source_curation import acknowledgement_evidence_sha256
+    from reg_meta_build.source_records import CodeSetReference, SourceFields
+
+    root = tmp_path / "curation"
+    _scb_partition_tree(
+        root,
+        '\n[[variable]]\nnative_id = "1.5.amount"\nslug = "amount"\n',
+    )
+    rows = tuple(
+        _errata_record(column="ANSWER", year="2020", member=member).model_copy(
+            update={
+                "fields": _errata_record(
+                    column="ANSWER", year="2020", member=member
+                ).fields.model_copy(
+                    update={"operational_definition": value_field(text)}
+                ),
+                "code_set_references": (
+                    CodeSetReference(
+                        reference_id="source-list",
+                        content_sha256="a" * 64,
+                        physical_locator="source-list.csv",
+                    ),
+                ),
+            }
+        )
+        for member, text in ((20, "Derived amount"), (21, "Sum of components"))
+    )
+    owner = IdentityColumnOwnerEntry(
+        variable="1.5",
+        variant="1.2",
+        column="ANSWER",
+        owner="1.5.amount",
+        ref="Same physical amount, retain both source operations",
+        source_editions=["2020"],
+        expected_records=list(
+            capture_expectations(
+                rows, fields=tuple(SourceFields.model_fields), parents=True, coding=True
+            )
+        ),
+        expected_evidence_sha256=acknowledgement_evidence_sha256(rows),
+    )
+    tree = load_curation_tree(root)
+    register = next(r for r in tree.registers if r.register_info.native_id == "1")
+    tree = replace(
+        tree,
+        registers=(
+            register.model_copy(
+                update={
+                    "identity": register.identity.model_copy(
+                        update={"column_owner": [owner]}
+                    )
+                }
+            ),
+        ),
+    )
+    scope = _partition_scope(rows)
+
+    def compile_rows(records):
+        reader = SimpleNamespace(
+            iter_partition_families=lambda *args, **kwargs: iter(
+                ((native_variable_key(rows[0]), records),)
+            )
+        )
+        return compile_partitions(tree, SimpleNamespace(records=reader), (scope,))
+
+    compiled = compile_rows(rows)
+    assert not compiled[-1]
+    return rows, owner, compiled[0][scope.source, None], compile_rows
+
+
+def test_column_owner_alternatives_retain_same_literal_originals(tmp_path):
+    rows, owner, cases, _ = _column_owner_alternatives_fixture(tmp_path)
+    result = apply_occurrence_cases(rows, cases)
+    assert not result.diagnostics
+    assert {r.record_id: r for o in result.occurrences for r in o.source_records} == {
+        r.record_id: r for r in rows
+    }
+    assert {o.fields.operational_definition.value for o in result.occurrences} == {
+        "Derived amount",
+        "Sum of components",
+    }
+    assert {o.variable_key[-1] for o in result.occurrences} == {owner.owner}
+    assert cases[0].expected_evidence_sha256 is not None
+
+
+@pytest.mark.parametrize(
+    "change", ["operation", "remove", "add", "duplicate", "parent", "coding"]
+)
+def test_column_owner_alternatives_refuse_original_drift(tmp_path, change):
+    rows, _, cases, compile_rows = _column_owner_alternatives_fixture(tmp_path)
+    first = rows[0]
+    if change == "operation":
+        changed = (
+            first.model_copy(
+                update={
+                    "fields": first.fields.model_copy(
+                        update={
+                            "operational_definition": value_field("Changed formula")
+                        }
+                    )
+                }
+            ),
+            rows[1],
+        )
+    elif change == "remove":
+        changed = rows[1:]
+    elif change == "add":
+        changed = (*rows, _errata_record(column="ANSWER", year="2020", member=22))
+    elif change == "duplicate":
+        changed = (
+            *rows,
+            first.model_copy(update={"record_id": first.record_id + "-copy"}),
+        )
+    elif change == "parent":
+        parent = first.parent_facts[0]
+        changed = (
+            first.model_copy(
+                update={
+                    "parent_facts": (
+                        parent.model_copy(
+                            update={
+                                "fields": parent.fields.model_copy(
+                                    update={"name": value_field("Changed parent name")}
+                                )
+                            }
+                        ),
+                        *first.parent_facts[1:],
+                    )
+                }
+            ),
+            rows[1],
+        )
+    else:
+        changed = (
+            first.model_copy(
+                update={
+                    "code_set_references": (
+                        first.code_set_references[0].model_copy(
+                            update={"content_sha256": "b" * 64}
+                        ),
+                    )
+                }
+            ),
+            rows[1],
+        )
+    refreshed = compile_rows(changed)
+    assert any(d.code == "stale_curation_entry" for d in refreshed[-1])
+    assert apply_occurrence_cases(changed, cases).diagnostics
+
+
+def test_column_owner_alternatives_require_complete_exclusive_guards(tmp_path):
+    from pydantic import ValidationError
+    from reg_meta_build.curation_tree import IdentityColumnOwnerEntry
+
+    _, owner, _, _ = _column_owner_alternatives_fixture(tmp_path)
+    supplied = owner.model_dump(mode="json")
+    for update in (
+        {"expected_evidence_sha256": None},
+        {"source_editions": []},
+        {
+            "expected_fields": [
+                {"name": "column_name", "status": "value", "value": "ANSWER"}
+            ]
+        },
+        {
+            "expected_records": [
+                owner.expected_records[0].model_dump(mode="json")
+                | {"alternatives": [{"fields": []}]}
+            ]
+        },
+    ):
+        with pytest.raises(ValidationError):
+            IdentityColumnOwnerEntry.model_validate(supplied | update)

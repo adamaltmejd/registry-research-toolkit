@@ -406,6 +406,41 @@ def test_family_reads_child_rows_once_and_reuses_records_across_views(
     )
 
 
+def test_decoded_record_eviction_preserves_complete_originals_and_fingerprints(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    revision = _revision("source-a", "a")
+    records = tuple(
+        _record(revision, row=row, member="Same", raw_value=f"value {row}")
+        for row in (1, 2, 3)
+    )
+    root = tmp_path / "inputs" / "records"
+    manifest = prepare_source_records(
+        root, records=records, revisions=(revision,), scope="bounded decoded records"
+    )
+    reader = open_prepared_source_records(
+        root, expected_sha256=manifest.sha256, input_commit=accept_prepared(root)
+    )
+    monkeypatch.setattr(prepared_sources, "_DECODED_RECORD_CACHE_LIMIT", 2)
+    family = next(reader.iter_native_families(revision.dataset))[1]
+    assert family == records
+    snapshot = tuple(record.model_dump_json() for record in family)
+    fingerprint = acknowledgement_evidence_sha256(family, ("coding evidence",))
+    for reread in (
+        next(reader.iter_register_slices(revision.dataset))[1],
+        tuple(reader.iter_records(source=revision.dataset)),
+        tuple(
+            reader.lookup(revision.dataset, records[0].locators[0].semantic_record_key)
+        ),
+    ):
+        assert tuple(record.model_dump_json() for record in reread) == snapshot
+        assert (
+            acknowledgement_evidence_sha256(reread, ("coding evidence",)) == fingerprint
+        )
+        assert len(reader._record_cache) <= 2
+    assert tuple(record.model_dump_json() for record in family) == snapshot
+
+
 def test_native_family_register_filter_preserves_grouping_and_order(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

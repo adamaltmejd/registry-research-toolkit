@@ -125,3 +125,13 @@ native_id = "52.27263"
 slug = "avtalad-grundlon"
 
 # register 55
+
+
+[[acknowledge]]
+code = "unresolved_flag"
+subject = "scb/sls/tim-dag-och-veckolon-ny"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:52\",\"variant:174\",\"edition:11160\",\"variable:36015\",\"member:454597\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:52\",\"variant:174\",\"edition:11911\",\"variable:36015\",\"member:495205\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:52\",\"variant:174\",\"edition:13299\",\"variable:36015\",\"member:592555\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:52\",\"variant:174\",\"edition:14458\",\"variable:36015\",\"member:658920\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:52\",\"variant:174\",\"edition:16310\",\"variable:36015\",\"member:787471\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:52\",\"variant:174\",\"edition:18173\",\"variable:36015\",\"member:841871\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:52\",\"variant:174\",\"edition:18730\",\"variable:36015\",\"member:883676\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:52\",\"variant:174\",\"edition:19185\",\"variable:36015\",\"member:920923\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:52\",\"variant:174\",\"edition:19861\",\"variable:36015\",\"member:985257\"]}"]
+fields = ["is_sensitive", "is_identifier"]
+reason = "The primary source leaves identifier and sensitivity flags unspecified for these exact source-owned records, and complete auxiliary joins supply no matching flag declaration. Preserve all quantity definitions, original fields, periods, physical evidence and existing own response domains. The named semantic role alone does not establish either boolean. Keep the affected quantity and its delivery states unavailable; do not default unknown flags to false."
+evidence = "Complete accepted full native-family and current source-owner review, all primary register originals, actual auxiliary joins, complete panel prerequisites and bound own coding. Exact full-original and bound-coding fingerprint. Proof: Batch51-flags-source-proof.json. Reviewed unavailable-flag policy; no boolean defaults or sensitivity inference."
+expected_evidence_sha256 = "3e8b27c3ecd0e9e82917c88c55116b163452e59d97281fd80a6206a94db0e732"

@@ -677,9 +677,15 @@ def test_completed_scope_contracts_are_released(
 
 
 @pytest.mark.parametrize("catalog", [True], indirect=True)
+@pytest.mark.parametrize("cache_limit", [2, 8192])
 def test_decoded_record_eviction_preserves_build_outputs(
-    catalog: CatalogFixture, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    catalog: CatalogFixture,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    cache_limit: int,
 ) -> None:
+    from reg_meta_build import prepared_sources
+
     (catalog.curation / "relations.toml").write_text(
         '[[edge]]\ntype = "same_as"\na = "scb/sample/value"\n'
         'b = "scb/other/value"\n'
@@ -705,6 +711,7 @@ def test_decoded_record_eviction_preserves_build_outputs(
         assert not self._record_cache
 
     monkeypatch.setattr(PreparedSourceRecords, "clear_decoded_records", observed_clear)
+    monkeypatch.setattr(prepared_sources, "_DECODED_RECORD_CACHE_LIMIT", cache_limit)
     catalog.build(
         tmp_path / "released.db",
         tmp_path / "released-report",

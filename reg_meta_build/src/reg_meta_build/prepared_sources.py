@@ -734,6 +734,9 @@ def _read_record(
     )
 
 
+_DECODED_RECORD_CACHE_LIMIT = 8192
+
+
 def _read_record_batch(
     conn: sqlite3.Connection,
     payload: Callable[[int, str], Any],
@@ -777,7 +780,18 @@ def _read_record_batch(
                 tuple(locators.pop(ordinal, ())),
                 tuple(cells.pop(ordinal, ())),
             )
-    return tuple(cache[row["ordinal"]] for row in rows)
+    records = tuple(cache[row["ordinal"]] for row in rows)
+    if len(cache) > _DECODED_RECORD_CACHE_LIMIT:
+        cache.clear()
+        cache.update(
+            (row["ordinal"], record)
+            for row, record in zip(
+                rows[-_DECODED_RECORD_CACHE_LIMIT:],
+                records[-_DECODED_RECORD_CACHE_LIMIT:],
+                strict=True,
+            )
+        )
+    return records
 
 
 @dataclass(frozen=True)

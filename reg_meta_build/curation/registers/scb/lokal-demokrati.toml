@@ -473,3 +473,125 @@ native_id = "321.38417"
 slug = "kommunalforbund-antal"
 
 # register 322
+
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/lokal-demokrati/fr1a-10"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:16180\",\"variable:28585\",\"member:773564\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "34741a21238d584faa3e90e14d09a12f06a5996cbab581217c4398fff4c3bd40"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/lokal-demokrati/majlp"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:5127\",\"variable:28585\",\"member:317318\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "c84cfd7fa4d4ef86ff14658a0443df2fa1dfb2ed68ec356e6c77b895c92b5b16"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/lokal-demokrati/brukarsys-utover-delegering"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:4657\",\"variable:28613\",\"member:291546\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "e3d805a91951a7ef7001a1430fffe3e5a8455a15402d528326429bf405e02345"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/lokal-demokrati/brukarsys-utover-delegering"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:5127\",\"variable:28613\",\"member:317309\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "76fb75788a9db58d22e1f3eafa8fc9ebc1b0464bfe5a95d4855d9530718f0069"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/lokal-demokrati/fr39"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:16181\",\"variable:28613\",\"member:773797\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "9d33211d19ad435bae90d83e0773b7b51ac019c69abceedc44490ddc42ba4802"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/lokal-demokrati/fr41"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:16181\",\"variable:28617\",\"member:773749\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "881d8e2a181a2dd0e34bc1a2df916aa2a018f99bb9e68c604e205cd63e3c9d4b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/lokal-demokrati/medbkont"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:4657\",\"variable:28617\",\"member:317083\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "d8cc451773d4e9b3e30f2f97f01e59a29c70d09dd19ddbaafa4ecf220187383d"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/lokal-demokrati/medbkont"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:5127\",\"variable:28617\",\"member:317197\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "5021e5ee9774e1a43f00e7d3e6d077ab4a914f7ee166fd6d5cbc630906086717"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/lokal-demokrati/kommun"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:4657\",\"variable:36\",\"member:300290\"]}"]
+fields = ["coding"]
+valid_from = "2012-01-01"
+valid_to = "2012-12-31"
+reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "573b5ba55017b42e94cd1a83fd67507d18ec06413237f91fdc640f7a5fa3aefb"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/lokal-demokrati/fr6"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:16181\",\"variable:42789\",\"member:773817\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "8604e125a00b0557738c4b9e4a07097042063ae999d5fc5ce24a5ef0b58bf3d7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/lokal-demokrati/fr7"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:16180\",\"variable:42789\",\"member:773714\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "0f2bf5e703d7d1f16a5aede1f733967f0fee93dd4c2a233cb95409c3f7cc912d"

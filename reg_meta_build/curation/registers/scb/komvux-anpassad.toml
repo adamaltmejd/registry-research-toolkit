@@ -210,3 +210,235 @@ valid_to = "2024-06-30"
 reason = "The exact active source code-and-label memberships agree, but the supplied lists have different native titles or version names. Keep the known response domain and leave its common title empty. Preserve every original list title, classification declaration, coding association and date; this does not select a preferred book or normalize contrary categories."
 evidence = "Complete accepted native-family review with actual same-register primary/summary/integer-identifier support, production maintained naming and curation compilation, and pinned declared classification books. Exact full-original and bound-coding guard. Proof: Batch48-coding-title-current-source-proof.json."
 expected_evidence_sha256 = "898669a330172dcc7a3b83aaf3f437f44c2a16dddf61c65f4f2902942d1972b3"
+
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:13267\",\"variable:241\",\"member:589189\"]}"]
+fields = ["coding"]
+valid_from = "1999-10-15"
+valid_to = "1999-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "e5f6c6c80f9a7b11fd134967155028baa10b2878e234184e437126fc86358321"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:13266\",\"variable:241\",\"member:589176\"]}"]
+fields = ["coding"]
+valid_from = "2000-10-15"
+valid_to = "2000-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "1110f492db984520a6dd366a6e138a7b0b5783a7383ae94267690c1bebb19ec0"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:13265\",\"variable:241\",\"member:589167\"]}"]
+fields = ["coding"]
+valid_from = "2001-10-15"
+valid_to = "2001-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "e76c1aecaeb9b637a6c61edba8d9a642db983639b70c267312bfddd1bfadc23f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:13264\",\"variable:241\",\"member:589154\"]}"]
+fields = ["coding"]
+valid_from = "2002-10-15"
+valid_to = "2002-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "8afca8a1c29f1657e3571d3565e03fca7ea3f54710863f995ff5608041770f36"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:13263\",\"variable:241\",\"member:589145\"]}"]
+fields = ["coding"]
+valid_from = "2003-10-15"
+valid_to = "2003-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "77d732a8c3fd7cca3c78bb78ad55b382d6d18dd96070778673fbc1d4a286326a"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:13262\",\"variable:241\",\"member:589132\"]}"]
+fields = ["coding"]
+valid_from = "2004-10-15"
+valid_to = "2004-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "15b09f118d1d2a2b1c77d2252bb42d58b5e55153da24ca43f93534601db35f59"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:13261\",\"variable:241\",\"member:589123\"]}"]
+fields = ["coding"]
+valid_from = "2005-10-15"
+valid_to = "2005-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "b104f39c99d838bdb392fbd091bb03b84637b576698feb5d3a8612d253f6f370"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:1020\",\"variable:241\",\"member:31180\"]}"]
+fields = ["coding"]
+valid_from = "2006-10-15"
+valid_to = "2006-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "ba909f2a7759dd700d84728ce8f5a7ef758222fa9edae64f4d98b2249db64b70"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:13259\",\"variable:241\",\"member:589094\"]}"]
+fields = ["coding"]
+valid_from = "2007-10-15"
+valid_to = "2007-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "0664dc768070dd39452dcfe52756ae5de91b65061fd171befdf798f2748f1131"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:13257\",\"variable:241\",\"member:589022\"]}"]
+fields = ["coding"]
+valid_from = "2008-10-15"
+valid_to = "2008-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "a25d043b60a22cfc22ee6ef0e728971be252206751278d5637d9383d766739f6"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:13256\",\"variable:241\",\"member:589009\"]}"]
+fields = ["coding"]
+valid_from = "2009-10-15"
+valid_to = "2009-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "995fdfe06ef1969865c3f7bf382e6457126b7ce64d319a7b3e61ed7d4f07cf97"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:13255\",\"variable:241\",\"member:588997\"]}"]
+fields = ["coding"]
+valid_from = "2010-10-15"
+valid_to = "2010-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "e57c258abd6626a9aa8fd44eac101ad6b6208e4e9989fae470a95665b3e15abf"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:4498\",\"variable:241\",\"member:283139\"]}"]
+fields = ["coding"]
+valid_from = "2011-10-15"
+valid_to = "2011-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "4f7565818cd39fb6397363aeb88b836786c41ecb312a8af688e2f7e822904fcd"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:4993\",\"variable:241\",\"member:308297\"]}"]
+fields = ["coding"]
+valid_from = "2012-10-15"
+valid_to = "2012-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "8640090ae31f8f221157bc876da9d569604e3394149588c3df14e1e55e2ccff4"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:5278\",\"variable:241\",\"member:327685\"]}"]
+fields = ["coding"]
+valid_from = "2013-10-15"
+valid_to = "2013-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "d7393de7b334e48bbe4e8a5bb83fc50336811d8e2dc51d7bf3c85fc56f9f7992"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:5937\",\"variable:241\",\"member:369481\"]}"]
+fields = ["coding"]
+valid_from = "2014-10-15"
+valid_to = "2014-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "83e277a7a1fcdba657257bbde583bc842a0f719bae4c0ad9547cb5994ae1e55f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:9905\",\"variable:241\",\"member:440526\"]}"]
+fields = ["coding"]
+valid_from = "2015-10-15"
+valid_to = "2015-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "63ec9bcb95b6bdc5556b5aec9760037c256780c52195f2c6faf5dcdf86c67141"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:11117\",\"variable:241\",\"member:452196\"]}"]
+fields = ["coding"]
+valid_from = "2016-10-15"
+valid_to = "2016-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "30ef113a5ce3d51cc1ec47e4484b433ee3502eca1ee44e72a3018564e6d1ae7b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:11822\",\"variable:241\",\"member:491971\"]}"]
+fields = ["coding"]
+valid_from = "2017-10-15"
+valid_to = "2017-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "44ef5b0b87071ffe6ce38fb835a9dce51f6ece0b2e1eac7a916c47032a1facc6"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:13254\",\"variable:241\",\"member:588986\"]}"]
+fields = ["coding"]
+valid_from = "2018-10-15"
+valid_to = "2018-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "bb4f87cce1c8193ca82d545904f58b17c86479525919df2dd28339617ae90cae"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/komvux-anpassad/alder-31-12"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:250\",\"variant:499\",\"edition:14810\",\"variable:241\",\"member:683577\"]}"]
+fields = ["coding"]
+valid_from = "2019-10-15"
+valid_to = "2019-10-15"
+reason = "The source defines age in years at year end, but supplies no own response-domain association for this exact window. Preserve that known meaning, all original fields/dates and every known source list. The conceptual age definition does not establish stored sentinel codes or the complete finite value set. Keep only this exact window’s value set unavailable."
+evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
+expected_evidence_sha256 = "a2cca01677a7278b2c6bf94ba881e5c72840de9b5d019807342f0fea73d7be91"

@@ -485,6 +485,19 @@ def _record_expectation_shapes(values):
     ]
 
 
+def _complete_original_expectations(records: list[RecordExpectation]) -> bool:
+    return len({record.ref for record in records}) == len(records) and all(
+        {field.name for field in projection.fields} == set(SourceFields.model_fields)
+        and projection.subject is not None
+        and projection.edition_scope is not None
+        and projection.edition_period_scope is not None
+        and projection.parent_facts is not None
+        and projection.code_set_references is not None
+        for record in records
+        for projection in record.alternatives
+    )
+
+
 class _OccurrenceCorrectionEntry(_CurationModel):
     variable: str
     variant: str
@@ -1084,9 +1097,30 @@ class IdentityColumnOwnerEntry(_CurationModel):
     source_editions: list[str] = Field(default_factory=list)
 
     expected_fields: list[FieldExpectation] = Field(default_factory=list)
+    expected_records: list[RecordExpectation] | None = Field(default=None, min_length=1)
+    expected_evidence_sha256: str | None = Field(
+        default=None, pattern=r"^[0-9a-f]{64}$"
+    )
+
+    @field_validator("expected_records", mode="before")
+    @classmethod
+    def _original_shapes(cls, values):
+        return None if values is None else _record_expectation_shapes(values)
 
     @model_validator(mode="after")
     def _guarded_editions(self) -> IdentityColumnOwnerEntry:
+        if (self.expected_records is None) != (self.expected_evidence_sha256 is None):
+            raise ValueError(
+                "guarded owner alternatives require original records and evidence hash"
+            )
+        if self.expected_records is not None and (
+            self.expected_fields
+            or not self.source_editions
+            or not _complete_original_expectations(self.expected_records)
+        ):
+            raise ValueError(
+                "owner alternatives require finite editions, complete original projections and no expected_fields"
+            )
         if self.expected_fields:
             names = [field.name for field in self.expected_fields]
             if not self.source_editions or len(names) != len(set(names)):
@@ -1258,20 +1292,8 @@ class IdentitySplitEntry(_CurationModel):
             )
         if self.data_warning is not None and self.expected_records is None:
             raise ValueError("split data warnings require complete original guards")
-        if self.expected_records is not None and (
-            len({record.ref for record in self.expected_records})
-            != len(self.expected_records)
-            or any(
-                {field.name for field in projection.fields}
-                != set(SourceFields.model_fields)
-                or projection.subject is None
-                or projection.edition_scope is None
-                or projection.edition_period_scope is None
-                or projection.parent_facts is None
-                or projection.code_set_references is None
-                for record in self.expected_records
-                for projection in record.alternatives
-            )
+        if self.expected_records is not None and not _complete_original_expectations(
+            self.expected_records
         ):
             raise ValueError(
                 "guarded splits require complete original source projections"

@@ -203,3 +203,13 @@ native_id = "235.48867"
 slug = "urval-vaxtskyddsmedel"
 
 # register 237
+
+
+[[acknowledge]]
+code = "unresolved_flag"
+subject = "scb/vaxtskyddsmedel/glyfosat-behandlad-areal"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:235\",\"variant:431\",\"edition:3522\",\"variable:48824\",\"member:977303\"]}"]
+fields = ["is_sensitive", "is_identifier"]
+reason = "The primary source leaves identifier and sensitivity flags unspecified for these exact source-owned records, and complete auxiliary joins supply no matching flag declaration. Preserve all quantity definitions, original fields, periods, physical evidence and existing own response domains. The named semantic role alone does not establish either boolean. Keep the affected quantity and its delivery states unavailable; do not default unknown flags to false."
+evidence = "Complete accepted full native-family and current source-owner review, all primary register originals, actual auxiliary joins, complete panel prerequisites and bound own coding. Exact full-original and bound-coding fingerprint. Proof: Batch51-flags-source-proof.json. Reviewed unavailable-flag policy; no boolean defaults or sensitivity inference."
+expected_evidence_sha256 = "2b557c298c52a4b7a7967536daa9f5e19492e101778758273a6441cf9ec86d77"
