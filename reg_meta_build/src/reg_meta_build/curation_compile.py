@@ -6972,6 +6972,7 @@ def compile_curation(
                             reason=ack.reason,
                             evidence=ack.evidence,
                             expected_evidence_sha256=ack.expected_evidence_sha256,
+                            expected_diagnostic_sha256=ack.expected_diagnostic_sha256,
                         ),
                     )
                 )

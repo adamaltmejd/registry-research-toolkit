@@ -12,6 +12,8 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from reg_meta.source_evidence import canonical_sha256
+
 from reg_meta_build.catalog_dependencies import variable_dependency_keys
 from reg_meta_build.catalog_resolution import ParentResolution, resolve_parents
 from reg_meta_build.curation_compile import compile_coding_register
@@ -234,6 +236,7 @@ def resolve_source_scope(
             tuple[str, ...],
             str | None,
             str | None,
+            str | None,
         ],
         tuple[CurationCase, AcknowledgeDecision, list[ResolutionDiagnostic]],
     ] = {}
@@ -247,10 +250,12 @@ def resolve_source_scope(
             decision.fields,
             decision.valid_from,
             decision.valid_to,
+            decision.expected_diagnostic_sha256,
         )
         if issue_key in held:
             raise ValueError(f"one issue is acknowledged twice: {case.case_id}")
         held[issue_key] = case, decision, []
+    guarded_diagnostics = {key[:-1] for key in held if key[-1] is not None}
 
     def record(issue: ResolutionDiagnostic) -> None:
         counts[issue.severity] += 1
@@ -263,16 +268,20 @@ def resolve_source_scope(
         issue: ResolutionDiagnostic, *, source_register: NativeKey | None = None
     ) -> None:
         if held and issue.severity == "error":
-            match = held.get(
-                (
-                    issue.code,
-                    issue.subject,
-                    issue.refs,
-                    issue.fields,
-                    issue.valid_from,
-                    issue.valid_to,
-                )
+            key = (
+                issue.code,
+                issue.subject,
+                issue.refs,
+                issue.fields,
+                issue.valid_from,
+                issue.valid_to,
             )
+            digest = (
+                canonical_sha256(issue.model_dump(mode="json"))
+                if key in guarded_diagnostics
+                else None
+            )
+            match = held.get((*key, digest)) or held.get((*key, None))
             if match is not None and (
                 source_register == match[1].register_key
                 if source_register is not None
@@ -872,6 +881,7 @@ def resolve_source_scope(
         emit(issue)
     acknowledged: dict[ResolutionDiagnostic, ResolutionDiagnostic] = {}
     for case, decision, matched in held.values():
+        distinct = tuple(dict.fromkeys(matched))
         evidence_matches = (
             decision.expected_evidence_sha256 is None
             or decision.expected_evidence_sha256
@@ -880,20 +890,21 @@ def resolve_source_scope(
                 (token for ref in decision.refs for token in guarded_coding[ref]),
             )
         )
-        if len(matched) == 1 and evidence_matches:
-            issue = matched[0]
+        if len(distinct) == 1 and evidence_matches:
+            issue = distinct[0]
             warning = issue.model_copy(
                 update={"severity": "warning", "acknowledged_by": case.case_id}
             )
             acknowledged[issue] = warning
-            record(warning)
+            for _ in matched:
+                record(warning)
             continue
         for issue in matched:
             record(issue)
         record(
             ResolutionDiagnostic(
                 code="overbroad_curation_entry"
-                if len(matched) > 1 and evidence_matches
+                if len(distinct) > 1 and evidence_matches
                 else "stale_curation_entry",
                 severity="error",
                 case_id=case.case_id,
@@ -901,7 +912,7 @@ def resolve_source_scope(
                 detail=(
                     f"The acknowledgement of {decision.code!r} has changed original or coding evidence."
                     if not evidence_matches
-                    else f"The acknowledgement of {decision.code!r} matches {len(matched)} issues; it must name exactly one."
+                    else f"The acknowledgement of {decision.code!r} matches {len(distinct)} distinct issues; it must name exactly one."
                 ),
                 refs=decision.refs,
                 fields=decision.fields,

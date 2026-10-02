@@ -364,6 +364,9 @@ class AcknowledgeDecision(_CurationModel):
     expected_evidence_sha256: str | None = Field(
         default=None, pattern=r"^[0-9a-f]{64}$"
     )
+    expected_diagnostic_sha256: str | None = Field(
+        default=None, pattern=r"^[0-9a-f]{64}$"
+    )
 
     @model_validator(mode="after")
     def _exact(self) -> Self:

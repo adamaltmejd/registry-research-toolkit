@@ -819,6 +819,12 @@ prepared workbook rows themselves, when their prose supplies the meanings of alr
 supplied finite code tokens. This form pins the source revision, physical locators,
 complete original fields, scopes, parent facts and all coding fingerprints. Changed,
 missing or new rows and changed incomplete lists invalidate compilation and application.
+
+The same finite authority can certify an already complete own source domain when code
+labels establish a reviewed role. Exact raw and copied fingerprints, complete original
+rows, unchanged code/label membership and existing coverage are required; this form
+returns the original domain without replacement or extension.
+
 Source rows cannot be mixed with PDF authority. A finite source-row decision may carry
 explicit reviewed label-equivalence certificates for unchanged code keys, such as
 `Landsting` and `Region` for the same county-government sector. Each certificate names
@@ -1215,14 +1221,17 @@ resolved, the one matching error is re-emitted as a warning that keeps its code 
 names the acknowledging entry (`acknowledged_by`). The affected output stays withheld,
 and output withheld through it inherits the warning. The build summary counts
 acknowledgements per code. An entry that matches no error is stale, and one that matches
-more than one is over-broad; both are errors. Strict publication accepts acknowledged
-issues. A warning is either defined by a rule, such as `omitted_columnless_occurrence`,
-or a counted acknowledgement. The compiled `AcknowledgeDecision` reaches issues raised
-while its source scope resolves. An optional `expected_evidence_sha256` pins the full
-original records named by its refs and their bound physical coding assertions. The
-canonical fingerprint ignores content ordering but retains multiplicity, source fields,
-parent facts, physical delivered cells, coding references, and raw coding associations
-and validity evidence. A changed fingerprint leaves the original error intact and adds a
+more than one distinct complete diagnostic is over-broad; both are errors. Identical
+ledger copies remain counted and persisted. An optional `expected_diagnostic_sha256`
+pins the complete original diagnostic when otherwise identical coordinates carry
+different details or withheld outputs. Strict publication accepts acknowledged issues. A
+warning is either defined by a rule, such as `omitted_columnless_occurrence`, or a
+counted acknowledgement. The compiled `AcknowledgeDecision` reaches issues raised while
+its source scope resolves. An optional `expected_evidence_sha256` pins the full original
+records named by its refs and their bound physical coding assertions. The canonical
+fingerprint ignores content ordering but retains multiplicity, source fields, parent
+facts, physical delivered cells, coding references, and raw coding associations and
+validity evidence. A changed fingerprint leaves the original error intact and adds a
 stale acknowledgement error. Unguarded entries retain exact issue matching.
 
 Diagnostic mode resolves exactly the same facts and issues. It scans the complete

@@ -326,6 +326,7 @@ def test_acknowledgement_compiler_preserves_optional_evidence_guard(tmp_path):
         reason="The source omits the physical matrix coordinates.",
         evidence="Complete original source family.",
         expected_evidence_sha256="a" * 64,
+        expected_diagnostic_sha256="b" * 64,
     )
     tree = replace(
         tree,
@@ -342,9 +343,14 @@ def test_acknowledgement_compiler_preserves_optional_evidence_guard(tmp_path):
         if case.decision.kind == "acknowledge"
     )
     assert case.decision.expected_evidence_sha256 == entry.expected_evidence_sha256
+    assert case.decision.expected_diagnostic_sha256 == entry.expected_diagnostic_sha256
     with pytest.raises(ValueError):
         AcknowledgeEntry.model_validate(
             {**entry.model_dump(), "expected_evidence_sha256": "not-a-sha256"}
+        )
+    with pytest.raises(ValueError):
+        AcknowledgeEntry.model_validate(
+            {**entry.model_dump(), "expected_diagnostic_sha256": "not-a-sha256"}
         )
 
 

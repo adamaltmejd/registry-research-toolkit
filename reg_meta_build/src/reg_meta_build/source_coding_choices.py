@@ -566,9 +566,17 @@ def compile_coding_selection(
             if documented.source_authority is not None
             else None
         )
+        own_certificate = (
+            documented.source_authority is not None
+            and bool(documented.source_authority.raw_codings)
+            and documented.source_authority.enumeration is None
+            and not documented.source_authority.label_equivalences
+            and period_block is None
+        )
         if (
             not witnessed_labels
             and period_block is None
+            and not own_certificate
             and any(
                 segment.code_set is not None and segment.code_set.members
                 for claim in coding_for_period(claims, start, end)
@@ -608,6 +616,21 @@ def compile_coding_selection(
             if documented.source_authority is not None
             else (),
         )
+        if own_certificate:
+            source = resolve_code_membership(coding_for_period(claims, start, end))
+            if (
+                not _covers(source, start, end)
+                or not _documented_targets_match(claims, selection, start, end)
+                or any(
+                    segment.version_label != selection.version_label
+                    for segment in source.segments
+                )
+            ):
+                return (
+                    None,
+                    "stale",
+                    "complete own source domain changed or lacks coverage",
+                )
         if selection.period_block is not None and not documented_period_block_matches(
             claims,
             selection.period_block,
@@ -765,6 +788,27 @@ def _selection(
             claims
         ) != tuple(sorted(selection.expected_source_codings)):
             return None, "documented_source_coding_changed"
+        if (
+            selection.expected_raw_codings
+            and selection.enumeration is None
+            and not selection.label_equivalences
+            and selection.period_block is None
+        ):
+            source = resolve_code_membership(
+                coding_for_period(claims, decision.valid_from, decision.valid_to)
+            )
+            if (
+                not _covers(source, decision.valid_from, decision.valid_to)
+                or not _documented_targets_match(
+                    claims, selection, decision.valid_from, decision.valid_to
+                )
+                or any(
+                    segment.version_label != selection.version_label
+                    for segment in source.segments
+                )
+            ):
+                return None, "documented_own_source_domain_changed"
+            return replace(source, claims=claims), None
         if (
             selection.source_scope is not None
             and selection.period_block is None

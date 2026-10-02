@@ -1733,11 +1733,18 @@ class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
                 or self.source_authority.enumeration.syntax
                 not in {"kategori-alpha-equals", "ascii-decimal-comma-equals"}
             )
+            and (
+                self.source_authority.enumeration is not None
+                or not self.source_authority.raw_codings
+                or self.source_authority.source_scope is not None
+            )
         ):
             raise ValueError(
-                "raw choice coding fingerprints belong to choice authority"
+                "complete own-source certificates require finite periods and raw coding fingerprints"
             )
-        elif any(value is not None for value in pdf):
+        if self.source_authority is not None and any(
+            value is not None for value in pdf
+        ):
             raise ValueError("documented coding must select one authority form")
         exact_scope = (
             self.source_authority.source_scope
@@ -1811,6 +1818,9 @@ class AcknowledgeEntry(_CurationModel):
     reason: str
     evidence: str
     expected_evidence_sha256: str | None = Field(
+        default=None, pattern=r"^[0-9a-f]{64}$"
+    )
+    expected_diagnostic_sha256: str | None = Field(
         default=None, pattern=r"^[0-9a-f]{64}$"
     )
 

@@ -1818,7 +1818,11 @@ def test_an_overbroad_acknowledgement_is_an_error_and_acknowledges_nothing(monke
     )
     monkeypatch.setattr(
         "reg_meta_build.source_scope.resolve_sibling_pairs",
-        lambda *_args, **_kwargs: SiblingResolution((), (), (issue, issue)),
+        lambda *_args, **_kwargs: SiblingResolution(
+            (),
+            (),
+            (issue, issue.model_copy(update={"detail": "A distinct source claim"})),
+        ),
     )
     result = resolve((item,), cases=(acknowledge(issue, item),))
     assert [d.severity for d in result.diagnostics if d.code == "repeated_issue"] == [
@@ -2336,7 +2340,6 @@ def test_explicit_source_diagnostic_uses_exact_register_acknowledgment():
                 ),
             ),
         ),
-        ((key, problem), (key, problem)),
     ):
         stale = resolve((item,), cases=(case,), source_diagnostics=problems)
         assert not stale.acknowledged
@@ -2344,6 +2347,13 @@ def test_explicit_source_diagnostic_uses_exact_register_acknowledgment():
             d.code in {"stale_curation_entry", "overbroad_curation_entry"}
             for d in stale.diagnostics
         )
+    duplicates = resolve(
+        (item,), cases=(case,), source_diagnostics=((key, problem), (key, problem))
+    )
+    assert duplicates.acknowledged == {problem.code: 1}
+    assert [d for d in duplicates.diagnostics if d.code == problem.code] == [
+        warning
+    ] * 2
     wrong = case.model_copy(
         update={
             "decision": case.decision.model_copy(
@@ -2548,3 +2558,70 @@ def test_guarded_support_acknowledgement_pins_unattached_originals(change):
     rejected, _ = replay(rows, (case,))
     assert rejected.acknowledged == {}
     assert any(d.code == "stale_curation_entry" for d in rejected.diagnostics)
+
+
+@pytest.mark.parametrize("contrast", ["output", "detail"])
+def test_complete_diagnostic_guard_selects_only_one_distinct_issue(contrast):
+    from reg_meta.source_evidence import canonical_sha256
+
+    item = record()
+    key = source_register_key(item)
+    issue = ResolutionDiagnostic(
+        code="unsupported_representation_coding",
+        severity="error",
+        subject="scb/example/value-5",
+        detail="Literal LEFT has disputed coding.",
+        refs=(record_ref(item),),
+        fields=("coding",),
+        withheld_output=("representation.LEFT.value_set",),
+    )
+    other = issue.model_copy(
+        update={"withheld_output": ("representation.RIGHT.value_set",)}
+        if contrast == "output"
+        else {"detail": "Different own claim fingerprints."}
+    )
+    generic = acknowledge(issue, item)
+    unguarded = resolve(
+        (item,), cases=(generic,), source_diagnostics=((key, issue), (key, other))
+    )
+    assert not unguarded.acknowledged
+    assert any(d.code == "overbroad_curation_entry" for d in unguarded.diagnostics)
+    cases = tuple(
+        generic.model_copy(
+            update={
+                "case_id": f"exact-{i}",
+                "decision": generic.decision.model_copy(
+                    update={
+                        "expected_diagnostic_sha256": canonical_sha256(
+                            d.model_dump(mode="json")
+                        )
+                    }
+                ),
+            }
+        )
+        for i, d in enumerate((issue, other))
+    )
+    settled = resolve(
+        (item,),
+        cases=cases,
+        source_diagnostics=((key, issue), (key, other), (key, issue)),
+    )
+    assert settled.acknowledged == {issue.code: 2}
+    problems = [d for d in settled.diagnostics if d.code == issue.code]
+    assert len(problems) == 3 and all(d.severity == "warning" for d in problems)
+    assert [d.acknowledged_by for d in problems].count("exact-0") == 2
+    assert settled.warning_count >= 3
+    streamed = []
+    result = resolve(
+        (item,),
+        cases=cases,
+        on_diagnostic=streamed.append,
+        source_diagnostics=((key, issue), (key, other), (key, issue)),
+    )
+    assert result.diagnostics == () and result.warning_count == settled.warning_count
+    assert [d for d in streamed if d.code == issue.code] == problems
+    changed = issue.model_copy(update={"withheld_output": ("representation.CHANGED",)})
+    drift = resolve((item,), cases=(cases[0],), source_diagnostics=((key, changed),))
+    assert not drift.acknowledged
+    assert changed in drift.diagnostics
+    assert any(d.code == "stale_curation_entry" for d in drift.diagnostics)

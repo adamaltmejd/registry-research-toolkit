@@ -3435,3 +3435,130 @@ def test_raw_coding_fingerprints_are_shared_only_within_one_application(monkeypa
     rejected = choices.apply_coding_choices(evidence, cases, coding={column: changed})
     assert len(hashed) == 2 * len(claims)
     assert all(item.status == "stale" for item in rejected.accounting)
+
+
+@pytest.mark.parametrize("drift", [None, "member", "label", "fingerprint", "period"])
+def test_complete_own_source_certificate_retains_domain_and_refuses_drift(drift):
+    from reg_meta_build.source_coding import coding_source_sha256
+
+    record = _record()
+    claims = (_claim("Own list", "01"),)
+    authority = _row_authority(record, claims).model_copy(
+        update={"raw_codings": [coding_source_sha256(c) for c in claims]}
+    )
+    values = {
+        "version_label": "Own list",
+        "members": [["01", "Label"]],
+        "source_authority": authority,
+    }
+    cases, issues, register, scope, _, column = _compile_entry(
+        "documented", values, claims
+    )
+    assert len(cases) == 1 and not issues
+    applied = _apply(record, claims, *cases)
+    assert applied.accounting[0].status == "applied"
+    source = resolve_code_membership(claims)
+    assert applied.coding[column].claims == source.claims
+    assert [
+        (s.valid_from, s.valid_to, s.code_set, s.version_label)
+        for s in applied.coding[column].segments
+    ] == [
+        (s.valid_from, s.valid_to, s.code_set, s.version_label) for s in source.segments
+    ]
+    if drift is None:
+        return
+    if drift in {"member", "label"}:
+        claims = (
+            replace(
+                claims[0],
+                members=(
+                    replace(
+                        claims[0].members[0],
+                        **{"code" if drift == "member" else "label": "Changed"},
+                    ),
+                ),
+            ),
+        )
+    elif drift == "fingerprint":
+        claims = (replace(claims[0], claim_id="Changed raw assertion"),)
+    else:
+        entry = register.coding.documented[0].model_copy(
+            update={"periods": [["2019-01-01", "2020-12-31"]]}
+        )
+        register = register.model_copy(
+            update={
+                "coding": register.coding.model_copy(update={"documented": [entry]})
+            }
+        )
+    columns = {column: (record,)}
+    fresh, issues = compile_coding_register(
+        register,
+        scope,
+        originals=(record,),
+        columns=columns,
+        column_scopes=_column_scopes(columns),
+        coding={column: claims},
+    )
+    assert not fresh and len(issues) == 1
+    assert issues[0].code == "stale_curation_entry"
+    if drift != "period":
+        rejected = _apply(record, claims, *cases)
+        assert rejected.accounting[0].status == "stale"
+
+
+def test_ordinary_documented_authority_still_refuses_a_complete_existing_list():
+    record = _record()
+    claims = (_claim("Own list", "01"),)
+    cases, issues, *_ = _compile_entry(
+        "documented",
+        {
+            "version_label": "Own list",
+            "members": [["01", "Label"]],
+            "source_authority": _row_authority(record, claims),
+        },
+        claims,
+    )
+    assert not cases and len(issues) == 1
+    assert "already has a complete source list" in issues[0].detail
+
+
+@pytest.mark.parametrize("mixed", ["pdf", "unsupported_enumeration"])
+def test_complete_own_source_certificate_rejects_mixed_authority(mixed):
+    import json
+
+    from reg_meta_build.curation_tree import CodingDocumentedEntry
+    from reg_meta_build.source_coding import coding_source_sha256
+    from reg_meta_build.source_curation import SourceEnumeration
+
+    record = _record()
+    claims = (_claim("Own list", "01"),)
+    authority = _row_authority(record, claims).model_copy(
+        update={"raw_codings": [coding_source_sha256(c) for c in claims]}
+    )
+    values = {
+        "variable": "1.2",
+        "variant": "1.3",
+        "column": "A",
+        "periods": [["2020-01-01", "2020-12-31"]],
+        "reason": "Exact own source certificate",
+        "source": "Prepared source",
+        "version_label": "Own list",
+        "members": [["01", "Label"]],
+        "source_authority": authority,
+    }
+    if mixed == "pdf":
+        values["document_url"] = "https://example.test/source.pdf"
+    else:
+        values["source_authority"] = authority.model_copy(
+            update={
+                "enumeration": SourceEnumeration(
+                    field="definition",
+                    syntax="ascii-decimal-dot-space",
+                    lines=("01. Label",),
+                ),
+            }
+        )
+    with pytest.raises(ValidationError, match="authority|certificate"):
+        CodingDocumentedEntry.model_validate_json(
+            json.dumps(values, default=lambda v: v.model_dump(mode="json"))
+        )
