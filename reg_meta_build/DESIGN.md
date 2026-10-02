@@ -1489,7 +1489,7 @@ availability. A missing delivery inventory fails configuration unless the explic
 flag is selected. Provider regeneration and input acceptance remain separate maintainer
 operations.
 
-SWECOV source routing lives in the tracked `source_policy.toml` beside its inventory
+SWECOV source routing lives in the authored `source_policy.toml` beside its inventory
 overlay. Category/detail routes select catalog variants or split selectors; flavor
 entries carry explicit provider/register/variant metadata and any exact table selectors.
 The generator validates this policy once and derives its runtime indexes. Repeated
@@ -1498,12 +1498,26 @@ table/column overrides remain in `inventory_overlay.toml`: they have a different
 from category routing. Both files are curation inputs, not generated outputs. The
 generator neither invents routes nor changes their declarations.
 
+The complete private input acceptance retains these policies, source documents,
+generated inventory and review evidence in a clean local-only Git repository. Its
+manifest covers every payload. Regeneration explicitly selects the accepted candidate's
+policies; a tracked default policy is not evidence that a later private candidate uses
+identical dispositions. Changed policy or inventory bytes require a fresh acceptance.
+The public prepared sources and builder code remain separately pinned.
+
 Inventory generation retains accepted catalog placement bounds and resolves each finite
 table edition through positively covering declared owners. Missing coverage or
 simultaneous owners produces a worklist before the inventory can be replaced. Each
 literal representation must cover the edition; sibling spellings cannot supply its
-dates. Source-backed annual stock-file overrides may name the exact year-end snapshot in
-the inventory while retaining the original catalog state windows.
+dates. Source-backed stock-file overrides may name an exact snapshot date, including
+October school censuses, while retaining the original catalog state windows. A source
+snapshot date alone does not establish the delivery date of a derived geocoded extract.
+
+Unsupported physical fields remain in the inventory with unavailable mappings and
+explicit reasons. Exact auxiliary fields can also retain a known owner and meaning in
+their evidence while the maintained primary holding supplies the ordering coordinate.
+This avoids duplicate logical coordinates without claiming that the auxiliary field's
+meaning is unknown or that one delivery supersedes another.
 
 An exact `[[mapping]]` may declare `select_owner = true` when the physical delivery
 documents which source question or survey wave owns that column. This selects one
