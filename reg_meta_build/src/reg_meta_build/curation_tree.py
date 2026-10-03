@@ -1546,6 +1546,14 @@ class _CheckedCodingEntry(CodingEntry):
         return self
 
 
+class CodingWarningEntry(_CheckedCodingEntry):
+    """Retain source coding unchanged while exposing a guarded source conflict."""
+
+    data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")]
+    expected_evidence_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    fields: list[Literal["data_type", "coding"]] = Field(min_length=1)
+
+
 class CodingUncodedEntry(_CheckedCodingEntry):
     stored_role: Literal["label", "free_text"] | None = None
 
@@ -1844,6 +1852,7 @@ class CodingSentinelEntry(CodingEntry):
 
 
 class CodingCuration(_CurationModel):
+    warning: list[CodingWarningEntry] = Field(default_factory=list)
     choice: list[CodingChoiceEntry] = Field(default_factory=list)
     uncoded: list[CodingUncodedEntry] = Field(default_factory=list)
     omit: list[CodingEntry] = Field(default_factory=list)
@@ -2170,6 +2179,7 @@ def _register_arrays(
         ("identity.edition_split", entry.identity.edition_split),
         ("identity.split", entry.identity.split),
         ("identity.rename", entry.identity.rename),
+        ("coding.warning", entry.coding.warning),
         ("coding.choice", entry.coding.choice),
         ("coding.uncoded", entry.coding.uncoded),
         ("coding.omit", entry.coding.omit),

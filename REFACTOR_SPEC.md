@@ -405,46 +405,30 @@ whole-corpus build. Evidence (maintainer-local, gitignored):
 The design lives in [`reg_meta_build/DESIGN.md`](reg_meta_build/DESIGN.md); its
 *transitional* notes mark what the work below removes.
 
-**Release gap (accepted).** The live catalog, reg_meta 0.40.1, was built by the removed
-`--providers` path, and main cannot rebuild it. There is no release until the new
-pipeline reaches parity. Progress is tracked as "registers at semantic parity with
-0.40.1".
+**Restoration completed (2026-10-02).** The new pipeline built all 290 public source
+scopes strictly, with zero unresolved errors. Fresh-process replay produced
+byte-identical databases and decompressed source ledgers. Two complete private SWECOV
+extensions also passed holdings validation and produced identical databases. These
+proofs cover runtime `80904afde0a6803fe2f23b9c220e756941aa7e9c`; they do not establish
+statistical equivalence or the accuracy of every provider declaration. Maintainer-local
+receipts are in `archive/reports/curation-reorg-2026-09-24/tools/` (`Batch57-*`).
 
-Ordered work. The in-process compile landed with the target layout and removed curation
-from the input bundle.
+The first slice, full source onboarding, in-process curation and strict global
+restoration are complete. Curation edits do not require source preparation. There is no
+remaining register-by-register onboarding queue for this restoration.
 
-1. Record the design (Y-222).
-2. `build-db --registers` (Y-223).
-3. Diagnostic builds withhold and report instead of aborting (Y-225), and
-   `[[acknowledge]]` (Y-224).
-4. **Done:** compile curation in-process (plan Y-226 and its children). This covers the
-   target layout, taking curation out of the input bundle, pin-free entries, turning
-   stored cases back into rules (label binding, naming hashes), and deleting
-   `PipelineSelection`, the scope files and the offline conversion.
-5. Remove the register-specific code DESIGN.md lists as debt.
-6. **Done:** first slice and its source-policy decisions.
-7. **Done:** strict slice, deterministic replay, explained semantic deltas and scoped
-   SWECOV holdings verification (2026-10-01; local Batch44 evidence).
-8. Onboard the remaining registers one at a time to semantic parity with 0.40.1.
+The independent post-restoration review found a loss of known sentinel roles in stored
+state classification conformance, one FASIT storage-type/domain inconsistency requiring
+source investigation, and this stale tracker. Resolve those findings before adapting
+consumer contracts. The remaining register-specific implementation debt is enumerated in
+`reg_meta_build/DESIGN.md`; the code-architecture review assesses it separately from
+catalog restoration. Builder schema 8 and consumer schema 6 remain incompatible:
+reader/UI adaptation, document-index verification and release are separate work.
 
-**Slice.**
-
-- SCB: LISA (34), HREG (47), IT-användning (258), Innovation i företag (257), RTB (2),
-  IoT (25), AGI (392).
-- SOS: LOVA, MFR, patient register.
-- One thin authored FK source.
-
-The slice is done when all of these hold:
-
-- prepare is untouched by curation edits;
-- a strict `--registers` build exits 0 from tracked TOML alone, byte-identical on rerun;
-- every warning is rule-defined or a counted acknowledgement;
-- the semantic diff against reg_meta 0.40.1 for those registers is explained;
-- `extend-db` SWECOV over the slice passes its holdings gate.
-
-Completion: the slice is done and every register is onboarded at semantic parity with
-0.40.1. At that gate, remove DESIGN.md's transitional notes and its pointer here, then
-delete this section.
+Completion gate: once the post-restoration builder fixes are verified and the
+register-specific debt is resolved or explicitly scoped in package design, delete this
+section and the design's transitional pointer. Do not retain it as a permanent build
+tracker.
 
 ## v1 slug freeze (#209)
 

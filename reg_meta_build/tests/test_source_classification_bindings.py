@@ -11,6 +11,7 @@ from reg_meta.source_evidence import SourceField, SourceRevision
 from reg_meta_build._curation import SentinelCode
 from reg_meta_build.classifications import load_valid_codes
 from reg_meta_build.curation_tree import load_curation_tree
+from reg_meta_build.db import SCHEMA_VERSION
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
     ResolvedClassificationCode,
@@ -1264,7 +1265,7 @@ def test_two_book_conformance_and_extensions_are_stored_independently(tmp_path):
             connection.execute(
                 "SELECT value FROM import_manifest WHERE key='schema_version'"
             ).fetchone()[0]
-            == "7.0.0"
+            == SCHEMA_VERSION
         )
     from reg_meta.db import open_db
     from reg_meta.errors import RegMetaError
@@ -1272,7 +1273,7 @@ def test_two_book_conformance_and_extensions_are_stored_independently(tmp_path):
     with pytest.raises(RegMetaError) as caught:
         open_db(output)
     assert caught.value.code == "schema_incompatible"
-    assert "7.0.0" in caught.value.message and "6.18.0" in caught.value.message
+    assert SCHEMA_VERSION in caught.value.message and "6.18.0" in caught.value.message
     from reg_meta_build.db import open_built_db
 
     with open_built_db(output) as conn:
@@ -1287,7 +1288,7 @@ def test_two_book_conformance_and_extensions_are_stored_independently(tmp_path):
     with pytest.raises(RegMetaError) as stale:
         open_built_db(output)
     assert stale.value.code == "schema_incompatible"
-    assert "6.18.0" in stale.value.message and "7.0.0" in stale.value.message
+    assert "6.18.0" in stale.value.message and SCHEMA_VERSION in stale.value.message
 
 
 @pytest.mark.parametrize("difference", ["code", "label"])

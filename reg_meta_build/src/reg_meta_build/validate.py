@@ -47,6 +47,7 @@ stays green; they bite on the orchestrator's full-corpus build.
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass, field
 from datetime import date
 from enum import StrEnum
@@ -254,6 +255,7 @@ def validate_built_db(
         has_projection = {"value_set", "value_set_member"}.issubset(tables)
         _check_schema_shape(conn, result, tables)
         _check_state_projection_integrity(conn, result, has_projection)
+        _check_state_classification_sentinels(conn, result, tables)
         _check_var_year_codes_anchor(conn, result, has_projection)
         _check_one_value_set_per_period(conn, result, tables)
         _check_no_codeless_codebearing_overlap(conn, result, tables, flavored=flavored)
@@ -1586,6 +1588,55 @@ def _check_tags(
 # sub-annual alias-window variables so yearly/co-delivered alias representations
 # in the same table do not mask a monthly-family regression.
 _AW_MIN_MERGED_FAMILIES = 8
+
+
+def _check_state_classification_sentinels(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """Check stored local sentinel evidence against its exact state and member."""
+    from reg_meta_build.resolved_catalog import ResolvedScopedSentinels
+
+    if "classification_conformance_code" not in tables:
+        result.fail("state classification validation requires conformance members")
+        return
+    invalid = 0
+    for row in conn.execute(
+        "SELECT cc.scoped_sentinels, vc.code, vc.label, s.delivery_column_name, "
+        "s.valid_from, s.valid_to, s.period_scope FROM classification_conformance_code cc "
+        "JOIN value_code vc USING(code_id) JOIN variable_state s USING(state_id) "
+        "WHERE cc.scoped_sentinels != '[]'"
+    ):
+        payload, code, label, column, start, end, scope = row
+        try:
+            certificates = json.loads(payload)
+            if not isinstance(certificates, list) or not certificates:
+                raise ValueError("scoped sentinel evidence must be a nonempty list")
+            for entry in certificates:
+                certificate = ResolvedScopedSentinels.model_validate_json(
+                    json.dumps(entry)
+                )
+                if (
+                    certificate.delivery_column_name != column
+                    or scope != "intervals"
+                    or start is None
+                    or end is None
+                    or not certificate.valid_from
+                    <= start
+                    <= end
+                    <= certificate.valid_to
+                    or (code, label) not in certificate.members
+                ):
+                    raise ValueError(
+                        "sentinel certificate does not belong to state member"
+                    )
+        except ValueError, TypeError:
+            invalid += 1
+    if invalid:
+        result.fail(
+            f"{invalid:,} state classification member(s) have invalid scoped sentinel evidence"
+        )
+    else:
+        result.ok("state classification members retain their scoped sentinel evidence")
 
 
 def _check_alias_classification(

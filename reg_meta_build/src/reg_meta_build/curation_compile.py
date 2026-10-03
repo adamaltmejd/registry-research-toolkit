@@ -32,6 +32,7 @@ from .curation_tree import (
     CodingExtendEntry,
     CodingSentinelEntry,
     CodingUncodedEntry,
+    CodingWarningEntry,
     EnrichmentAliasEntry,
     EnrichmentDescriptionEntry,
     ErrataColumnEntry,
@@ -111,6 +112,7 @@ from .source_curation import (
     ResolutionDiagnostic,
     SearchAliasDecision,
     SourceRecordRef,
+    SourceWarningDecision,
     _field_matches,
     acknowledgement_evidence_sha256,
     capture_expectations,
@@ -4819,6 +4821,7 @@ def compile_coding_register(
     diagnostics = []
     compact_evidence = {}
     for kind, entries in (
+        ("warning", register.coding.warning),
         ("choice", register.coding.choice),
         ("uncoded", register.coding.uncoded),
         ("omit", register.coding.omit),
@@ -4929,6 +4932,8 @@ def compile_coding_register(
                             "exact noncanonical sentinel members no longer cover the window",
                         )
                     )
+                elif isinstance(entry, CodingWarningEntry):
+                    status, detail = "matched", ""
                 else:
                     selection, status, detail = compile_coding_selection(
                         entry, kind, claims, start, end
@@ -4937,7 +4942,12 @@ def compile_coding_register(
                     entry.expected_evidence_sha256
                     if isinstance(
                         entry,
-                        (CodingChoiceEntry, CodingExtendEntry, CodingUncodedEntry),
+                        (
+                            CodingChoiceEntry,
+                            CodingExtendEntry,
+                            CodingUncodedEntry,
+                            CodingWarningEntry,
+                        ),
                     )
                     else None
                 )
@@ -5116,7 +5126,9 @@ def compile_coding_register(
                             )
                         }
                     )
-                assert selection is not None or isinstance(entry, CodingSentinelEntry)
+                assert selection is not None or isinstance(
+                    entry, (CodingSentinelEntry, CodingWarningEntry)
+                )
                 target_refs = {record_ref(record) for record in records}
                 target_records = (
                     authority_records
@@ -5161,6 +5173,28 @@ def compile_coding_register(
                     effective_column=column,
                     expected_members=tuple(target.ref for target in targets),
                 )
+                if isinstance(entry, CodingWarningEntry):
+                    cases.append(
+                        CurationCase(
+                            case_id=case_id,
+                            targets=targets,
+                            peer_guards=(guard,),
+                            decision=SourceWarningDecision(
+                                reviewed=True,
+                                column_key=column,
+                                valid_from=start,
+                                valid_to=end,
+                                expected_codings=coding_expectations(
+                                    claims, start, end
+                                ),
+                                data_warning=entry.data_warning,
+                                fields=tuple(entry.fields),
+                                reason=entry.reason,
+                                provenance=entry.source,
+                            ),
+                        )
+                    )
+                    continue
                 if isinstance(entry, CodingSentinelEntry):
                     assert classifications is not None
                     cases.append(

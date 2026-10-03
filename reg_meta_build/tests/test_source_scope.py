@@ -2625,3 +2625,83 @@ def test_complete_diagnostic_guard_selects_only_one_distinct_issue(contrast):
     assert not drift.acknowledged
     assert changed in drift.diagnostics
     assert any(d.code == "stale_curation_entry" for d in drift.diagnostics)
+
+
+def test_source_conflict_warning_preserves_type_and_exact_source_window():
+    from reg_meta_build.data_warnings import DataWarning, scope_data_warnings
+    from reg_meta_build.source_curation import SourceWarningDecision
+    from reg_meta_build.source_occurrences import source_occurrence
+
+    item = record()
+    occurrence = source_occurrence(item)
+    case = CurationCase(
+        case_id="curation/registers/scb/example.toml#/coding.warning/1/period/1",
+        targets=capture_expectations((item,), fields=tuple(SourceFields.model_fields)),
+        decision=SourceWarningDecision(
+            reviewed=True,
+            column_key=occurrence.column_key,
+            valid_from="2020-01-01",
+            valid_to="2020-12-31",
+            expected_codings=(),
+            fields=("data_type", "coding"),
+            data_warning="Source integer type and textual coding disagree.",
+            reason="Retain both source declarations.",
+            provenance="Exact source rows.",
+        ),
+    )
+    baseline = resolve((item,))
+    result = resolve((item,), cases=(case,))
+    assert result.variables == baseline.variables
+    (warning,) = scope_data_warnings(result)
+    assert warning.code == "source_metadata_conflict"
+    assert warning.fields == ("data_type", "coding")
+    assert (warning.valid_from, warning.valid_to) == ("2020-01-01", "2020-12-31")
+    assert warning.variant == "people-2" and warning.delivery_column_name == "VALUE"
+    assert warning.refs == (capture_expectations((item,), fields=())[0].ref,)
+    assert DataWarning.model_validate_json(warning.model_dump_json()) == warning
+
+
+@pytest.mark.parametrize("change", ["type", "coding"])
+def test_source_conflict_warning_rejects_changed_runtime_evidence(change):
+    from reg_meta_build.data_warnings import scope_data_warnings
+    from reg_meta_build.source_curation import SourceWarningDecision
+    from reg_meta_build.source_occurrences import source_occurrence
+
+    item = record()
+    case = CurationCase(
+        case_id="warning",
+        targets=capture_expectations((item,), fields=tuple(SourceFields.model_fields)),
+        decision=SourceWarningDecision(
+            reviewed=True,
+            column_key=source_occurrence(item).column_key,
+            valid_from="2020-01-01",
+            valid_to="2020-12-31",
+            expected_codings=(),
+            fields=("data_type", "coding"),
+            data_warning="Conflict",
+            reason="Retain both",
+            provenance="Source rows",
+        ),
+    )
+    if change == "type":
+        item = item.model_copy(
+            update={
+                "fields": item.fields.model_copy(
+                    update={"data_type": value_field("text")}
+                )
+            }
+        )
+    else:
+        case = case.model_copy(
+            update={
+                "decision": case.decision.model_copy(
+                    update={"expected_codings": ("0" * 64,)}
+                )
+            }
+        )
+    result = resolve((item,), cases=(case,))
+    assert not scope_data_warnings(result)
+    assert [(d.code, d.severity) for d in result.diagnostics] == [
+        ("stale_curation_entry", "error")
+    ]
+    assert result.evaluations[0].status == "stale"

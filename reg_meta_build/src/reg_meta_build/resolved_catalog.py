@@ -971,7 +971,10 @@ def _write_classifications(
 
 
 def _write_conformance(
-    conn: sqlite3.Connection, state_id: int, conformance: ResolvedConformance
+    conn: sqlite3.Connection,
+    state_id: int,
+    conformance: ResolvedConformance,
+    classification: ResolvedClassification,
 ) -> None:
     checked = len(conformance.checked_codes)
     extensions = set(conformance.nonconforming_members) | set(
@@ -979,6 +982,10 @@ def _write_conformance(
     )
     nonconforming = len({code for code, _ in extensions})
     matched = checked - nonconforming
+    sentinel_pairs = set(conformance.sentinel_members)
+    sentinel_meanings = {
+        sentinel.code: sentinel.meaning for sentinel in classification.sentinel_codes
+    }
     conn.execute(
         "INSERT INTO classification_conformance (state_id, declared_classification_id, status, "
         "checked_code_count, matched_code_count, nonconforming_code_count, overlap) "
@@ -994,12 +1001,25 @@ def _write_conformance(
         ),
     )
     conn.executemany(
-        "INSERT INTO classification_conformance_code (state_id, declared_classification_id, code_id) VALUES (?, ?, ?)",
+        "INSERT INTO classification_conformance_code "
+        "(state_id, declared_classification_id, code_id, member_kind, sentinel_meaning, scoped_sentinels) "
+        "VALUES (?, ?, ?, ?, ?, ?)",
         (
             (
                 state_id,
                 _classification_id(conformance.declared_classification),
                 _value_code_id(*pair),
+                "sentinel" if pair in sentinel_pairs else "nonstandard",
+                sentinel_meanings.get(pair[0]) if pair in sentinel_pairs else None,
+                json.dumps(
+                    [
+                        certificate.model_dump(mode="json")
+                        for certificate in conformance.scoped_sentinels
+                        if pair in certificate.members
+                    ],
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ),
             )
             for pair in sorted(extensions)
         ),
@@ -1118,6 +1138,7 @@ def write_resolved_catalog(
             seed_providers(conn)
             value_set_ids = _write_value_sets(conn, variables, classifications)
             _write_classifications(conn, classifications, classification_predecessors)
+            classifications_by_slug = {book.slug: book for book in classifications}
             conn.executemany(
                 "INSERT INTO classification_replaced_by "
                 "(predecessor_slug, successor_slug, effective_year, note) VALUES (?, ?, ?, ?)",
@@ -1270,7 +1291,12 @@ def write_resolved_catalog(
                             ),
                         )
                         if link.conformance is not None:
-                            _write_conformance(conn, state_id, link.conformance)
+                            _write_conformance(
+                                conn,
+                                state_id,
+                                link.conformance,
+                                classifications_by_slug[link.classification],
+                            )
                     conn.execute(
                         "INSERT OR IGNORE INTO variable_alias "
                         "(variable_id, register_variant_id, delivery_column_name) VALUES (?, ?, ?)",

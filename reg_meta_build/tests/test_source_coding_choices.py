@@ -3562,3 +3562,63 @@ def test_complete_own_source_certificate_rejects_mixed_authority(mixed):
         CodingDocumentedEntry.model_validate_json(
             json.dumps(values, default=lambda v: v.model_dump(mode="json"))
         )
+
+
+def test_guarded_coding_warning_retains_facts_and_rejects_changed_evidence():
+    from reg_meta_build.source_coding import coding_source_sha256
+    from reg_meta_build.source_curation import (
+        SourceWarningDecision,
+        acknowledgement_evidence_sha256,
+        evaluate_cases,
+    )
+
+    record = _record()
+    claims = (_claim("LA15", "LA1501"),)
+    values = {
+        "fields": ["data_type", "coding"],
+        "data_warning": "Integer storage and textual response codes disagree.",
+        "expected_evidence_sha256": acknowledgement_evidence_sha256(
+            (record,), (coding_source_sha256(c) for c in claims)
+        ),
+    }
+    cases, issues, register, scope, columns, column = _compile_entry(
+        "warning", values, claims, record=record
+    )
+    assert not issues and len(cases) == 1
+    assert isinstance(cases[0].decision, SourceWarningDecision)
+    assert cases[0].targets == capture_expectations(
+        (record,), fields=tuple(SourceFields.model_fields), parents=True, coding=True
+    )
+    evidence = SourceEvidence(
+        (record,), effective_occurrences=(source_occurrence(record),)
+    )
+    assert evaluate_cases(cases, evidence)[0].status == "applicable"
+    # The warning creates no coding assignment, type correction, or omitted state.
+    assert cases[0].decision.kind == "source_warning"
+    for changed_records, changed_claims in (
+        (
+            (
+                record.model_copy(
+                    update={
+                        "fields": record.fields.model_copy(
+                            update={"data_type": value_field("text")}
+                        )
+                    }
+                ),
+            ),
+            claims,
+        ),
+        ((record,), (_claim("LA15", "LA1502"),)),
+    ):
+        new_cases, diagnostics = compile_coding_register(
+            register,
+            scope,
+            originals=changed_records,
+            columns={column: changed_records},
+            column_scopes=_column_scopes(columns),
+            coding={column: changed_claims},
+        )
+        assert not new_cases
+        assert [(d.code, d.severity) for d in diagnostics] == [
+            ("stale_curation_entry", "error")
+        ]

@@ -24,7 +24,7 @@ from reg_meta.db import (
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
 # Produced catalog schema; readers gate their independently supported version.
-SCHEMA_VERSION = "8.0.0"
+SCHEMA_VERSION = "8.1.0"
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
@@ -833,11 +833,17 @@ CREATE INDEX idx_classification_conformance_declared
 
 -- The concrete value-set members that did not belong to the declared canonical
 -- classification. Stored instead of recomputed at read time so the UI warning
--- exactly matches the build gate.
+-- exactly matches the build gate. Known sentinels retain their global meaning
+-- or exact scoped certificates; neither kind expands the canonical book.
 CREATE TABLE classification_conformance_code (
     state_id INTEGER NOT NULL,
     declared_classification_id INTEGER NOT NULL,
     code_id  INTEGER NOT NULL REFERENCES value_code(code_id),
+    member_kind TEXT NOT NULL CHECK (member_kind IN ('nonstandard', 'sentinel')),
+    sentinel_meaning TEXT,
+    scoped_sentinels TEXT NOT NULL CHECK (json_valid(scoped_sentinels) AND json_type(scoped_sentinels) = 'array'),
+    CHECK ((member_kind = 'nonstandard' AND sentinel_meaning IS NULL AND scoped_sentinels = '[]')
+        OR (member_kind = 'sentinel' AND (coalesce(length(trim(sentinel_meaning)), 0) > 0 OR json_array_length(scoped_sentinels) > 0))),
     PRIMARY KEY (state_id, declared_classification_id, code_id),
     FOREIGN KEY (state_id, declared_classification_id)
         REFERENCES classification_conformance(state_id, declared_classification_id)

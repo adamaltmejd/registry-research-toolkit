@@ -980,8 +980,11 @@ The resolver carries each accepted local exception to the writer as a checked
 certificate: literal column, finite state window, exact code-label pairs, selected
 codebook hash, complete source-coding hashes and case provenance. The writer checks that
 certificate against its actual state and book before validating membership. Missing,
-changed or out-of-window certificates cannot broaden conformance. The certificate is
-build-time evidence; it adds no canonical codes or public sentinel policy.
+changed or out-of-window certificates cannot broaden conformance. State conformance
+stores the exact scoped certificates alongside each affected member, just as alias
+conformance retains them. Extension members distinguish substantive nonstandard codes
+from known sentinels; global sentinel meanings are retained where declared. These local
+facts add no canonical codes or global sentinel policy.
 
 A state retains every positively named classification book as an independent
 association, with its declaration provenance and, when an effective response domain
@@ -1257,14 +1260,24 @@ more than one distinct complete diagnostic is over-broad; both are errors. Ident
 ledger copies remain counted and persisted. An optional `expected_diagnostic_sha256`
 pins the complete original diagnostic when otherwise identical coordinates carry
 different details or withheld outputs. Strict publication accepts acknowledged issues. A
-warning is either defined by a rule, such as `omitted_columnless_occurrence`, or a
-counted acknowledgement. The compiled `AcknowledgeDecision` reaches issues raised while
-its source scope resolves. An optional `expected_evidence_sha256` pins the full original
-records named by its refs and their bound physical coding assertions. The canonical
-fingerprint ignores content ordering but retains multiplicity, source fields, parent
-facts, physical delivered cells, coding references, and raw coding associations and
-validity evidence. A changed fingerprint leaves the original error intact and adds a
-stale acknowledgement error. Unguarded entries retain exact issue matching.
+warning comes from a rule such as `omitted_columnless_occurrence`, a checked explicit
+annotation, or a counted acknowledgement. The compiled `AcknowledgeDecision` reaches
+issues raised while its source scope resolves. An optional `expected_evidence_sha256`
+pins the full original records named by its refs and their bound physical coding
+assertions. The canonical fingerprint ignores content ordering but retains multiplicity,
+source fields, parent facts, physical delivered cells, coding references, and raw coding
+associations and validity evidence. A changed fingerprint leaves the original error
+intact and adds a stale acknowledgement error. Unguarded entries retain exact issue
+matching.
+
+A `[[coding.warning]]` declaration records a reviewed source metadata conflict while
+retaining its type and response domain unchanged. It uses the coding compiler's exact
+column, finite window, full source-evidence digest and original coding expectations.
+Changed evidence is an error; a warning is emitted only for applicable guarded cases.
+This is separate from an acknowledgement: it makes a supported contradiction visible
+without asserting a repair or changing which facts are available. Its consumer warning
+code is `source_metadata_conflict`, with exact affected fields, source references and
+period. Review prose explains the decision; the checked TOML is executable authority.
 
 Source-event endpoint acknowledgements use the same register-local declarations and
 exact matcher at the global event boundary, after all selected scopes are observed. Both

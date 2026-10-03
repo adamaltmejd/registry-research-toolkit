@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+import sqlite3
 from contextlib import closing
 from typing import TYPE_CHECKING
 
@@ -1464,6 +1466,91 @@ def test_scoped_sentinel_certificate_keeps_local_member_without_changing_book(
                 "SELECT count(*) FROM value_code WHERE code='09350' AND label='Okänt'"
             ).fetchone()[0]
             == 1
+        )
+        kind, meaning, payload = conn.execute(
+            "SELECT member_kind, sentinel_meaning, scoped_sentinels FROM classification_conformance_code"
+        ).fetchone()
+        assert (kind, meaning) == ("sentinel", None)
+        assert json.loads(payload) == [
+            variable.states[0]
+            .classification_links[0]
+            .conformance.scoped_sentinels[0]
+            .model_dump(mode="json")
+        ]
+
+
+def test_state_conformance_preserves_global_sentinel_meaning_and_substantive_extension(
+    tmp_path: Path,
+) -> None:
+    book = _classification().model_copy(
+        update={"sentinel_codes": (SentinelCode(code="99", meaning="Not applicable"),)}
+    )
+    conformance = ResolvedConformance(
+        declared_classification=book.slug,
+        status="extended",
+        checked_codes=("001", "98", "99"),
+        nonconforming_members=(("98", "Substantive extra"),),
+        sentinel_members=(("99", "Source wording"),),
+    )
+    state = _state(2000).model_copy(
+        update={
+            "value_set": ResolvedCodeSet(
+                members=(
+                    ("001", "Source label"),
+                    ("98", "Substantive extra"),
+                    ("99", "Source wording"),
+                )
+            ),
+            "classification_links": (
+                ResolvedClassificationLink(
+                    classification=book.slug, conformance=conformance
+                ),
+            ),
+        }
+    )
+    output = tmp_path / "reg_meta.db"
+    write_resolved_catalog(
+        (_variable().model_copy(update={"states": (state,)}),),
+        output,
+        manifest={},
+        classifications=(book,),
+    )
+    with closing(open_built_db(output)) as conn:
+        assert [
+            tuple(row)
+            for row in conn.execute(
+                "SELECT vc.code, vc.label, cc.member_kind, cc.sentinel_meaning, cc.scoped_sentinels "
+                "FROM classification_conformance_code cc JOIN value_code vc USING(code_id) ORDER BY vc.code"
+            )
+        ] == [
+            ("98", "Substantive extra", "nonstandard", None, "[]"),
+            ("99", "Source wording", "sentinel", "Not applicable", "[]"),
+        ]
+
+
+def test_stored_scoped_sentinel_wrong_window_is_rejected(tmp_path: Path) -> None:
+    from reg_meta_build.validate import _check_state_classification_sentinels
+
+    variable, book = _scoped_sentinel_variable()
+    output = tmp_path / "reg_meta.db"
+    write_resolved_catalog((variable,), output, manifest={}, classifications=(book,))
+    with closing(sqlite3.connect(output)) as conn:
+        payload = json.loads(
+            conn.execute(
+                "SELECT scoped_sentinels FROM classification_conformance_code"
+            ).fetchone()[0]
+        )
+        payload[0]["valid_to"] = "1999-12-31"
+        conn.execute(
+            "UPDATE classification_conformance_code SET scoped_sentinels=?",
+            (json.dumps(payload),),
+        )
+        result = ValidationResult()
+        _check_state_classification_sentinels(
+            conn, result, {"classification_conformance_code"}
+        )
+        assert any(
+            "invalid scoped sentinel evidence" in failure for failure in result.failures
         )
 
 

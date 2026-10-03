@@ -181,7 +181,7 @@ def _linked_facts(path: Path, *, offset: int = 0, split_source: bool = False) ->
             (key(7),),
         )
         conn.execute(
-            "INSERT INTO classification_conformance_code SELECT state_id, ?, ? FROM variable_state",
+            "INSERT INTO classification_conformance_code SELECT state_id, ?, ?, 'nonstandard', NULL, '[]' FROM variable_state",
             (key(7), key(13)),
         )
         conn.execute(
@@ -477,6 +477,10 @@ def test_state_linked_facts_are_equivalent_across_independent_splits(
             "classification_conformance_code",
         ),
         (
+            "UPDATE classification_conformance_code SET member_kind='sentinel', sentinel_meaning='Not applicable'",
+            "classification_conformance_code",
+        ),
+        (
             "UPDATE variable_state_lineage SET source_state_id = consumer_state_id",
             "variable_state_lineage",
         ),
@@ -657,7 +661,7 @@ def test_plural_classification_links_keep_independent_checks_and_provenance(tmp_
                 (offset + 14,),
             )
             conn.execute(
-                "INSERT INTO classification_conformance_code SELECT state_id, ?, ? FROM variable_state",
+                "INSERT INTO classification_conformance_code SELECT state_id, ?, ?, 'nonstandard', NULL, '[]' FROM variable_state",
                 (offset + 14, offset + 8),
             )
             conn.commit()

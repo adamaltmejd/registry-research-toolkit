@@ -20,7 +20,10 @@ from reg_meta_build.curation_compile import compile_coding_register
 from reg_meta_build.source_annotations import apply_alias_cases
 from reg_meta_build.source_classification_bindings import apply_classification_cases
 from reg_meta_build.source_coding import coding_source_sha256
-from reg_meta_build.source_coding_choices import apply_coding_choices
+from reg_meta_build.source_coding_choices import (
+    apply_coding_choices,
+    coding_expectations,
+)
 from reg_meta_build.source_coordinates import (
     native_column_key,
     native_variable_key,
@@ -29,6 +32,7 @@ from reg_meta_build.source_coordinates import (
 )
 from reg_meta_build.source_curation import (
     AcknowledgeDecision,
+    ApplicabilityIssue,
     CheckedIdentityChange,
     ClassificationDecision,
     CodingDecision,
@@ -37,6 +41,7 @@ from reg_meta_build.source_curation import (
     RepresentationDecision,
     ResolutionDiagnostic,
     SourceEvidence,
+    SourceWarningDecision,
     acknowledged_diagnostic,
     acknowledgement_evidence_sha256,
     evaluate_cases,
@@ -576,7 +581,10 @@ def resolve_source_scope(
         if kind in {"search_alias", "alias_window"}:
             aliases.append(case)
             continue
-        if isinstance(case.decision, (CodingDecision, ClassificationDecision)):
+        if isinstance(
+            case.decision,
+            (CodingDecision, ClassificationDecision, SourceWarningDecision),
+        ):
             column_key = case.decision.column_key
             if column_key not in column_owners:
                 replacements = original_columns.get(column_key, set())
@@ -684,6 +692,48 @@ def resolve_source_scope(
             ),
             coding=classified.coding,
         )
+        warning_cases = tuple(
+            c for c in selected if c.decision.kind == "source_warning"
+        )
+        for case, evaluation in zip(
+            warning_cases, evaluate_cases(warning_cases, coding_evidence), strict=True
+        ):
+            decision = case.decision
+            observed = coding_expectations(
+                tuple(claims.get(decision.column_key, ())),
+                decision.valid_from,
+                decision.valid_to,
+            )
+            if set(observed) != set(decision.expected_codings):
+                evaluation = evaluation.model_copy(
+                    update={
+                        "status": "stale",
+                        "decision": None,
+                        "issues": (
+                            *evaluation.issues,
+                            ApplicabilityIssue(
+                                code="copied_coding_evidence_changed",
+                                subject=case.case_id,
+                                detail="The source coding evidence changed; no warning was applied.",
+                            ),
+                        ),
+                    }
+                )
+            evaluations.append(evaluation)
+            if evaluation.status != "applicable":
+                emit(
+                    ResolutionDiagnostic(
+                        code="stale_curation_entry",
+                        severity="error",
+                        case_id=case.case_id,
+                        subject=repr(decision.column_key),
+                        detail="The guarded source warning no longer matches its source evidence.",
+                        refs=tuple(t.ref for t in case.targets),
+                        fields=decision.fields,
+                        valid_from=decision.valid_from,
+                        valid_to=decision.valid_to,
+                    )
+                )
         for result in (chosen, classified, representation):
             evaluations.extend(result.evaluations)
             for issue in result.diagnostics:

@@ -13,6 +13,7 @@ from reg_meta.catalog import DataWarning
 from reg_meta.fqid import Fqid
 from reg_meta.source_evidence import canonical_sha256
 
+from reg_meta_build.source_curation import CodingDecision, SourceWarningDecision
 from reg_meta_build.source_intervals import occurrence_bounds
 
 if TYPE_CHECKING:
@@ -276,7 +277,7 @@ def scope_data_warnings(
     }
     coding_annotations = defaultdict(list)
     for case_id, decision in annotated.items():
-        if decision.kind == "coding":
+        if isinstance(decision, (CodingDecision, SourceWarningDecision)):
             coding_annotations[decision.column_key].append((case_id, decision))
     for occurrence in result.corrections.occurrences:
         variable = result.variables.get(occurrence.variable_key)
@@ -327,7 +328,9 @@ def scope_data_warnings(
                     case_id,
                     decision.data_warning,
                     decision.reason + "\n" + decision.provenance,
-                    ("coding",),
+                    decision.fields
+                    if decision.kind == "source_warning"
+                    else ("coding",),
                     exact,
                 )
             )
@@ -364,7 +367,9 @@ def scope_data_warnings(
                         "delivery_column_name": state.delivery_column_name,
                         "valid_from": date.fromordinal(lo).isoformat(),
                         "valid_to": date.fromordinal(hi).isoformat(),
-                        "code": "assumed_storage_type"
+                        "code": "source_metadata_conflict"
+                        if annotated[case_id].kind == "source_warning"
+                        else "assumed_storage_type"
                         if "data_type" in fields
                         else "source_identity_assumption"
                         if "identity" in fields

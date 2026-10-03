@@ -1970,3 +1970,48 @@ def test_compiled_retained_source_finding_reaches_exact_ack(
         assert any(i["code"] == "stale_curation_entry" for i in issues)
     else:
         assert findings[0]["acknowledged_by"] == "accepted-partial-owner"
+
+
+def test_warning_only_register_is_compiled_and_warning_roundtrips(catalog, tmp_path):
+    from reg_meta_build.prepared_catalog import open_prepared_catalog_sources
+    from reg_meta_build.source_curation import acknowledgement_evidence_sha256
+
+    prepared = open_prepared_catalog_sources(
+        catalog.prepared, input_commit=catalog.commit, expected_sha256=catalog.digest
+    )
+    originals = tuple(
+        r for r in prepared.records.records if r.source == "scb-registerinformation"
+    )
+    guard = acknowledgement_evidence_sha256(originals)
+    curated = catalog.curation / "registers/scb/sample.toml"
+    with curated.open("a") as handle:
+        handle.write(f'''
+[[coding.warning]]
+variable = "1.101"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+fields = ["data_type", "coding"]
+expected_evidence_sha256 = "{guard}"
+data_warning = "Retained source metadata conflict"
+reason = "Preserve source type and own coding"
+source = "Exact source rows"
+''')
+    checked = catalog.check(tmp_path / "check-report")
+    assert checked["passed"] is True
+    db = tmp_path / "catalog.db"
+    result = catalog.build(db, tmp_path / "report", registers=("1",), diagnostic=True)
+    assert result["counts"].get("error", 0) == 0
+    with sqlite3.connect(db) as conn:
+        warning = conn.execute("SELECT warning_json FROM data_warning").fetchone()
+        assert warning is not None
+        payload = json.loads(warning[0])
+        assert payload["code"] == "source_metadata_conflict"
+        assert payload["variant"] == "people"
+        assert payload["delivery_column_name"] == "VALUE"
+        assert payload["valid_from"] == "2020-01-01"
+        assert payload["valid_to"] == "2020-12-31"
+        assert payload["refs"][0]["semantic_record_key"][-1] == "member:1001"
+        assert conn.execute("SELECT data_type FROM variable_state").fetchone() == (
+            "integer",
+        )

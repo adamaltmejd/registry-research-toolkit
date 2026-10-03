@@ -4980,3 +4980,14 @@ variable = "371.661"
 columns = { "ALONE" = "371.661.alone", "ALONE1" = "371.661.alone1", "ALONE2" = "371.661.alone2", "ALONEX" = "371.661.alonex" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "5da7926cf097c66ab4168c43e4087e1da8db64c27931d1c1a1b533297658aaaf"
+
+[[coding.warning]]
+variable = "371.47"
+variant = "individregister"
+column = "BLAREG"
+periods = [["2015-01-01", "2015-12-31"]]
+fields = ["data_type", "coding"]
+expected_evidence_sha256 = "b16f02eb85f7f572312a84076125ef620bf09003853d1ca5ce3a799fd084172e"
+data_warning = "The source declares integer storage for BLAREG in 2015 but associates the textual LA1501–LA1569 response codes. Both declarations are retained; the physical encoding is unverified."
+reason = "All 69 response associations explicitly name native member 494131 and the LA15 descriptor. The same original declares Datatyp=int and data length 0. Neither the source type nor the response codes can safely be corrected without delivery evidence."
+source = "Accepted prepared SCB registerinformation member 494131, edition 11725, variant 1344, and its complete Vardemangder associations; review-2026-10-03/fixes/fasit-association-trace.json and fasit-warning-guards.json."

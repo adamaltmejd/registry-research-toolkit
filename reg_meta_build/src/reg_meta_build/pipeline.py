@@ -559,7 +559,8 @@ def _run_pipeline(
         f"{register.register_info.provider}/{register.register_info.slug}": register
         for register in tree.registers
         if (
-            register.coding.choice
+            register.coding.warning
+            or register.coding.choice
             or register.coding.uncoded
             or register.coding.omit
             or register.coding.extend
@@ -573,6 +574,7 @@ def _run_pipeline(
         ids = tuple(
             f"{register.source_file}#/coding.{kind}/{index}/period/{period_index}"
             for kind, entries in (
+                ("warning", register.coding.warning),
                 ("choice", register.coding.choice),
                 ("uncoded", register.coding.uncoded),
                 ("omit", register.coding.omit),

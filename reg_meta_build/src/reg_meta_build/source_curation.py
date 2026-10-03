@@ -1148,6 +1148,14 @@ class _ColumnDecision(CodingWindow):
         return self
 
 
+class SourceWarningDecision(_ColumnDecision):
+    """Expose a source inconsistency without changing source facts or coding."""
+
+    kind: Literal["source_warning"] = "source_warning"
+    data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")]
+    fields: tuple[Literal["data_type", "coding"], ...] = Field(min_length=1)
+
+
 class CodingDecision(_ColumnDecision):
     """Assign coding, explicit uncoded meaning, or omission to one exact window."""
 
@@ -1222,6 +1230,7 @@ type CurationDecision = (
     | RepresentationDecision
     | DeliveryMetadataDecision
     | CodingDecision
+    | SourceWarningDecision
     | ClassificationDecision
 )
 
