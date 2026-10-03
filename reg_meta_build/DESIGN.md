@@ -505,14 +505,22 @@ JSON buffer are released after validation and any requested dump. Coding guards 
 check the complete register before variable formation; afterward, raw coding claims are
 consumed per variable rather than retaining every processed column through scope end.
 
-Serialized scope contracts still validate all nested inputs. Field expectations reuse
-the source model's single-field type guard instead of constructing every absent field
-again. A singleton record alternative needs no uniqueness comparison; its nested
-projection still receives full validation. Multiple alternatives retain shape and
-canonical-token checks. An added delivery retains its own literal donor and negative
-native-base records as quantity evidence. Complete edition or variant support still
-guards the correction, but unrelated variables cannot become contributors to that
-quantity's metadata or coding authority.
+Serialized scope contracts still validate all nested inputs. Scope collection entries
+cross the strict JSON contract individually, sharing one guard validation context for
+the scope. This bounds temporary serialization and parser buffers by the largest
+complete entry instead of the whole collection. Each case retains all targets and peer
+guards for its own validation. The assembled scope receives normal strict model
+validation as well. Dynamic serialization retains subclass fields and nonfinite scalar
+tokens, so malformed nested contracts cannot disappear through a typed serializer. Error
+locations retain the original field and collection index.
+
+Field expectations reuse the source model's single-field type guard instead of
+constructing every absent field again. A singleton record alternative needs no
+uniqueness comparison; its nested projection still receives full validation. Multiple
+alternatives retain shape and canonical-token checks. An added delivery retains its own
+literal donor and negative native-base records as quantity evidence. Complete edition or
+variant support still guards the correction, but unrelated variables cannot become
+contributors to that quantity's metadata or coding authority.
 
 An explicitly reviewed `upstream = "additional-physical-column-in-version"` entry
 requires a native-variable anchor and adds the exact physical column alongside the

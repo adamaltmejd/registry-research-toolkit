@@ -651,6 +651,10 @@ def test_compiled_scope_json_read_shares_validated_guards_without_skipping_field
     compiled = CompiledCuration(fields={}, cases={key: cases}, report={})
     result = _compiled_scope(key, compiled)
     assert result.cases[0].targets[0] is result.cases[1].targets[0]
+    assert (
+        result.cases[0].targets[0].alternatives[0]
+        is result.cases[1].targets[0].alternatives[0]
+    )
     baseline = CompiledScope.model_validate_json(
         CompiledScope(
             source="fixture", register_key=None, cases=cases

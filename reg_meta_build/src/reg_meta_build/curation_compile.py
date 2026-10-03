@@ -105,7 +105,6 @@ from .source_curation import (
     CurationCase,
     DeliveryMetadataDecision,
     FieldExpectation,
-    GuardValidationContext,
     OccurrenceCorrectionDecision,
     PeerGuard,
     RepresentationDecision,
@@ -6869,15 +6868,15 @@ def compile_deferred_naming(
     dict[Any, tuple[NamingAmbiguity, ...]],
 ]:
     """Compile only declarations used to classify out-of-slice references."""
-    from .pipeline import CompiledScope
+    from .pipeline import _validate_compiled_scope
 
     naming, _, _, _, _ = compile_native_naming(tree, prepared, scopes, subset=True)
     scopes = tuple(
-        CompiledScope.model_validate_json(
-            scope.model_copy(
-                update={"naming": naming.get((scope.source, scope.register_key), ())}
-            ).model_dump_json(),
-            context=GuardValidationContext(),
+        _validate_compiled_scope(
+            {
+                **dict(scope),
+                "naming": naming.get((scope.source, scope.register_key), ()),
+            }
         )
         for scope in scopes
     )
@@ -6911,17 +6910,17 @@ def compile_curation(
     storage_columns: dict[tuple[str, str], SourceColumnTypeDeclaration] | None = None,
 ) -> CompiledCuration:
     """Compile global families, wiring, and exact issue acknowledgements."""
-    from .pipeline import CompiledScope
+    from .pipeline import _validate_compiled_scope
 
     naming, variants, provider_keys, naming_diagnostics, naming_report = (
         compile_native_naming(tree, prepared, scopes, subset=subset)
     )
     scopes = tuple(
-        CompiledScope.model_validate_json(
-            scope.model_copy(
-                update={"naming": naming.get((scope.source, scope.register_key), ())}
-            ).model_dump_json(),
-            context=GuardValidationContext(),
+        _validate_compiled_scope(
+            {
+                **dict(scope),
+                "naming": naming.get((scope.source, scope.register_key), ()),
+            }
         )
         for scope in scopes
     )

@@ -11,9 +11,9 @@ from dataclasses import asdict
 from datetime import UTC, datetime
 from io import TextIOWrapper
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast, get_args, get_origin
 
-from pydantic import BaseModel, ConfigDict, TypeAdapter
+from pydantic import BaseModel, ConfigDict, TypeAdapter, ValidationError
 from reg_meta.source_evidence import canonical_sha256
 
 from reg_meta_build.catalog_dependencies import (
@@ -108,6 +108,8 @@ from reg_meta_build.validate import validate_built_db
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
 
+    from pydantic_core import InitErrorDetails
+
     from reg_meta_build.curation_tree import CurationTree
     from reg_meta_build.source_value_bindings import (
         ValueBindingIssue,
@@ -155,9 +157,17 @@ class CompiledScope(_Model):
     variants: tuple[tuple[NativeKey, ResolvedVariant], ...] = ()
 
 
-_CURATION_CASES = TypeAdapter(
-    tuple[CurationCase, ...], config=ConfigDict(ser_json_inf_nan="constants")
+_COMPILED_SCOPE_JSON = TypeAdapter(
+    object, config=ConfigDict(ser_json_inf_nan="constants")
 )
+# Only variadic tuples can be validated entry by entry. Collection constraints
+# belong to the final normal scope validation, not the single-entry adapters.
+_COMPILED_SCOPE_COLLECTIONS = {
+    name: TypeAdapter(field.annotation, config=ConfigDict(strict=True))
+    for name, field in CompiledScope.model_fields.items()
+    if get_origin(field.annotation) is tuple
+    and get_args(field.annotation)[-1:] == (Ellipsis,)
+}
 
 
 class CompiledGlobals(_Model):
@@ -189,27 +199,75 @@ LOCAL_CHECKS_NOT_RUN = (
 )
 
 
+def _validate_compiled_scope(values: dict[str, object]) -> CompiledScope:
+    """Validate complete JSON entries without retaining a whole-scope wire buffer."""
+    context = GuardValidationContext()
+    # simplify: CompiledScope has no cross-field validators. Revisit header parsing
+    # if it gains one; final normal validation checks the assembled scope below.
+    header = CompiledScope.model_validate_json(
+        _COMPILED_SCOPE_JSON.dump_json(
+            {
+                name: value
+                for name, value in values.items()
+                if name not in _COMPILED_SCOPE_COLLECTIONS
+            },
+            warnings="error",
+        ),
+        context=context,
+    )
+    parsed = header.model_dump(mode="python")
+    for name, adapter in _COMPILED_SCOPE_COLLECTIONS.items():
+        supplied = values.get(name, ())
+        # Real compiled collections are tuples. Other containers still cross the
+        # complete JSON contract so, for example, an empty dict cannot disappear.
+        chunks = (
+            ((index, (item,)) for index, item in enumerate(supplied))
+            if type(supplied) is tuple
+            else ((0, supplied),)
+        )
+        items = []
+        for offset, chunk in chunks:
+            try:
+                items.extend(
+                    adapter.validate_json(
+                        _COMPILED_SCOPE_JSON.dump_json(chunk, warnings="error"),
+                        strict=True,
+                        context=context,
+                    )
+                )
+            except ValidationError as exc:
+                errors = exc.errors(include_url=False)
+                for error in errors:
+                    loc = error["loc"]
+                    error["loc"] = (
+                        (name, offset + loc[0], *loc[1:])
+                        if loc and isinstance(loc[0], int)
+                        else (name, *loc)
+                    )
+                raise ValidationError.from_exception_data(
+                    CompiledScope.__name__, cast("list[InitErrorDetails]", errors)
+                ) from exc
+        parsed[name] = tuple(items)
+    # Every supplied value has crossed strict JSON validation; normal final model
+    # validation still checks the assembled scope, including any scope validators.
+    return CompiledScope.model_validate(parsed, context=context)
+
+
 def _compiled_scope(
     key: tuple[str, NativeKey | None], compiled: CompiledCuration
 ) -> CompiledScope:
     """Validate one compiled scope through its serialized JSON contract."""
-    return CompiledScope.model_validate_json(
-        TypeAdapter(
-            dict[str, object], config=ConfigDict(ser_json_inf_nan="constants")
-        ).dump_json(
-            {
-                "source": key[0],
-                "register_key": key[1],
-                "cases": compiled.cases.get(key, ()),
-                "source_diagnostics": (compiled.source_diagnostics or {}).get(key, ()),
-                "naming": (compiled.naming or {}).get(key, ()),
-                "naming_ambiguities": (compiled.naming_ambiguities or {}).get(key, ()),
-                "provider_keys": (compiled.provider_keys or {}).get(key, ()),
-                "variants": (compiled.variants or {}).get(key, ()),
-            },
-            warnings="error",
-        ),
-        context=GuardValidationContext(),
+    return _validate_compiled_scope(
+        {
+            "source": key[0],
+            "register_key": key[1],
+            "cases": compiled.cases.get(key, ()),
+            "source_diagnostics": (compiled.source_diagnostics or {}).get(key, ()),
+            "naming": (compiled.naming or {}).get(key, ()),
+            "naming_ambiguities": (compiled.naming_ambiguities or {}).get(key, ()),
+            "provider_keys": (compiled.provider_keys or {}).get(key, ()),
+            "variants": (compiled.variants or {}).get(key, ()),
+        }
     )
 
 
@@ -1109,9 +1167,12 @@ def _run_pipeline(
                     def record_coding_compilation(
                         register, new_cases, new_diagnostics, scope_key=scope_key
                     ) -> None:
-                        _CURATION_CASES.validate_json(
-                            _CURATION_CASES.dump_json(new_cases, warnings="error"),
-                            context=GuardValidationContext(),
+                        _validate_compiled_scope(
+                            {
+                                "source": scope_key[0],
+                                "register_key": scope_key[1],
+                                "cases": new_cases,
+                            }
                         )
                         name = f"{register.register_info.provider}/{register.register_info.slug}"
                         if name in seen_coding:

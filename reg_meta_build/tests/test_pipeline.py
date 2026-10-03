@@ -1151,6 +1151,60 @@ def test_compiled_scope_contract_revalidates_serialized_naming(
     assert not (tmp_path / "bad.db").exists()
 
 
+@pytest.mark.parametrize(
+    "field",
+    [
+        "cases",
+        "source_diagnostics",
+        "naming",
+        "naming_ambiguities",
+        "provider_keys",
+        "variants",
+    ],
+)
+@pytest.mark.parametrize("invalid", [{}, None, "not an array"])
+def test_compiled_scope_json_rejects_invalid_collection_containers(
+    field: str, invalid: object
+) -> None:
+    from pydantic import ValidationError
+    from reg_meta_build.pipeline import _validate_compiled_scope
+
+    with pytest.raises(ValidationError) as caught:
+        _validate_compiled_scope(
+            {"source": "fixture", "register_key": None, field: invalid}
+        )
+    assert caught.value.errors()[0]["loc"] == (field,)
+
+
+def test_compiled_scope_json_preserves_order_types_and_failure_coordinates() -> None:
+    from pydantic import ConfigDict, TypeAdapter, ValidationError
+    from reg_meta_build.pipeline import CompiledScope, _validate_compiled_scope
+
+    serializer = TypeAdapter(object, config=ConfigDict(ser_json_inf_nan="constants"))
+    provider_keys = ((("member", 1), "Å"), (("member", "1"), None))
+    data = {
+        "source": "källa",
+        "register_key": ("register", 1),
+        "provider_keys": provider_keys,
+    }
+    baseline = CompiledScope.model_validate_json(serializer.dump_json(data))
+    parsed = _validate_compiled_scope(data)
+    assert parsed.model_dump_json() == baseline.model_dump_json()
+    invalid = {**data, "provider_keys": (*provider_keys, ((True,), "B"))}
+    with pytest.raises(ValidationError) as old:
+        CompiledScope.model_validate_json(serializer.dump_json(invalid))
+    with pytest.raises(ValidationError) as new:
+        _validate_compiled_scope(invalid)
+    for caught in (old, new):
+        assert caught.value.errors()[0]["loc"][:2] == ("provider_keys", 2)
+    assert [(e["loc"], e["type"]) for e in old.value.errors()] == [
+        (e["loc"], e["type"]) for e in new.value.errors()
+    ]
+    for replacement in ({"source": 1}, {"unknown": True}):
+        with pytest.raises(ValidationError):
+            _validate_compiled_scope({**data, **replacement})
+
+
 @pytest.mark.parametrize("local", [False, True])
 def test_late_coding_contract_revalidates_serialized_nested_decision(
     catalog: CatalogFixture, tmp_path: Path, monkeypatch, local: bool
