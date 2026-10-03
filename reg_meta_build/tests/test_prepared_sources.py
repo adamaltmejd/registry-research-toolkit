@@ -699,6 +699,9 @@ def test_register_slices_preserve_native_identity_parent_rows_and_unknowns(
             for field in SourceRecord.model_fields
             if field not in {"record_id", "source", "source_revision_id", "subject"}
         }
+        arguments["locators"] = original.locators + (
+            original.locators[0].model_copy(update={"physical_record": f"copy:{row}"}),
+        )
         return SourceRecord.create(
             revision=revision,
             subject=original.subject.model_copy(update={"register_name": coordinate}),
@@ -728,6 +731,31 @@ def test_register_slices_preserve_native_identity_parent_rows_and_unknowns(
         None: (unknown,),
     }
     assert tuple(reader.iter_register_slices("missing")) == ()
+    for selection, expected in (
+        (
+            {source_register_key(first)},
+            ((source_register_key(first), (first, changed, first)),),
+        ),
+        ({None}, ((None, (unknown,)),)),
+        (
+            {source_register_key(other), None},
+            ((None, (unknown,)), (source_register_key(other), (other,))),
+        ),
+        (set(), ()),
+    ):
+        selected = open_prepared_source_records(
+            root, expected_sha256=manifest.sha256, input_commit=commit
+        )
+        primed = next(selected.iter_records())
+        assert primed == first
+        observed = tuple(selected.iter_register_slices(revision.dataset, selection))
+        assert observed == expected
+        if source_register_key(first) in selection:
+            assert observed[0][1][0] is primed
+        assert (
+            tuple(selected.iter_register_slices(revision.dataset, selection))
+            == expected
+        )
     assert tuple(reader.records) == records
     assert reader.input_commit == commit
 

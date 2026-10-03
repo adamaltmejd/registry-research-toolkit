@@ -2,21 +2,30 @@
 
 from __future__ import annotations
 
-from dataclasses import replace
+import json
+from dataclasses import asdict, replace
+from typing import cast
 
 import pytest
+from reg_meta.source_evidence import DeliveredCell, RecordLocator, canonical_sha256
 from reg_meta_build.source_coding import (
     CodeListClaim,
     CodeMembershipClaim,
     coding_content_sha256,
     coding_observation_fingerprints,
+    coding_source_sha256,
     copied_coding_fingerprints,
     has_unknown_code_membership,
     resolve_code_membership,
 )
 from reg_meta_build.source_records import ScopeInterval, TemporalScope
 from reg_meta_build.source_value_periods import value_period
-from reg_meta_build.source_values import SourceValueAssociation, SourceValueWindow
+from reg_meta_build.source_values import (
+    SourceMemberHint,
+    SourceValueAssociation,
+    SourceValueValidity,
+    SourceValueWindow,
+)
 
 
 def _scope(start: str = "2020-01-01", end: str = "2020-12-31") -> TemporalScope:
@@ -37,6 +46,91 @@ def _claim(
     identity: str, *members: CodeMembershipClaim, scope: TemporalScope | None = None
 ) -> CodeListClaim:
     return CodeListClaim(identity, scope or _scope(), members)
+
+
+def test_coding_source_hash_preserves_complete_ordered_json_evidence() -> None:
+    locator = RecordLocator(
+        semantic_record_key=("member:01",),
+        physical_file="värden.xlsx",
+        physical_table="Lista",
+        physical_record="2",
+        physical_cells=("A2", "B2"),
+    )
+    cell = DeliveredCell(
+        name="Kod", present=True, raw_value="001", interpreted_value="001"
+    )
+    association = SourceValueAssociation(
+        row_number=2,
+        descriptor_key="lista",
+        value_key="001",
+        source_file="värden.xlsx",
+        source_table="Lista",
+        member_id="01",
+        item_id="",
+        member_hints=(SourceMemberHint("row", "Åäö", locator),),
+        member_references=("", "01"),
+        supplied_period="2020–2021",
+        supplied_window=SourceValueWindow("known", "2020-01-01", "2021-12-31"),
+        section_window=SourceValueWindow("unknown"),
+        section_locator=locator,
+        delivered_cells=(cell, cell),
+    )
+    cached_cell = cell.model_copy(
+        update={"cached_raw_value": "001", "cached_raw_type": "string"}
+    )
+    validity = SourceValueValidity(
+        row_number=3,
+        item_id="",
+        valid_from="Original date",
+        valid_to=None,
+        source_file="värden.xlsx",
+        raw_cells=(None, "", "001"),
+        locators=(locator,),
+        delivered_cells=(cached_cell,),
+        window=SourceValueWindow("unknown"),
+    )
+    member = CodeMembershipClaim(
+        "001", "Åäö", _scope(), (association, association), (validity,), True
+    )
+    claim = replace(
+        _claim("claim", member, _member("", ""), _member(None, None), member),
+        version_label="Original version",
+        drop_unknown_membership=True,
+    )
+    values = (
+        association,
+        replace(association, item_id=None),
+        replace(association, delivered_cells=(cached_cell,)),
+        claim,
+        replace(claim, members=claim.members[1:] + claim.members[:1]),
+        replace(claim, members=claim.members[:-1]),
+        replace(claim, members=(replace(member, unknown_validity=False),)),
+    )
+    for value in values:
+        legacy_payload = json.loads(
+            json.dumps(asdict(value), default=lambda item: item.model_dump(mode="json"))
+        )
+        assert coding_source_sha256(value) == canonical_sha256(legacy_payload)
+    assert coding_source_sha256(values[0]) != coding_source_sha256(values[1])
+    assert coding_source_sha256(values[0]) != coding_source_sha256(values[2])
+    assert coding_source_sha256(claim) != coding_source_sha256(values[4])
+    assert coding_source_sha256(claim) != coding_source_sha256(values[5])
+
+
+@pytest.mark.parametrize(
+    "number", [0, -0.0, 2**80, True, 1.5, float("inf"), float("-inf"), float("nan")]
+)
+def test_coding_source_hash_keeps_stdlib_json_number_encoding(number: object) -> None:
+    # Hashing does not validate source contracts; keep the old encoding even for
+    # numeric values that an accepted association's integer field cannot contain.
+    association = SourceValueAssociation(
+        row_number=cast("int", number),
+        descriptor_key="list",
+        value_key="value",
+        source_file="values.csv",
+    )
+    legacy_payload = json.loads(json.dumps(asdict(association)))
+    assert coding_source_sha256(association) == canonical_sha256(legacy_payload)
 
 
 def test_exact_codes_labels_duplicates_and_occurrence_evidence_survive() -> None:

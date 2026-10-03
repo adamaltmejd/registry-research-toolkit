@@ -300,7 +300,11 @@ lookups. The decoded-record cache keeps at most 8,192 recent originals, includin
 compilation; callers still receive complete ordered batches and retain their own
 records. Eviction reconstructs the same pinned originals and does not change guards,
 source fingerprints or output. Phase-end clearing additionally releases the remaining
-cache.
+cache. Register batches use an exact temporary ordinal relation for uncached originals
+and seek the existing locator/cell primary keys. This avoids rescanning the source for
+each register, preserves original ordinal/position order and multiplicity, and writes
+nothing to accepted prepared files. Native-family reads keep their existing indexed
+path; no persistent cache or prepared-format change is required.
 
 Support target cardinality uses a distinct native-coordinate projection before attaching
 facts. It avoids hydrating unrelated prose and cells but includes unknown/ambiguous
@@ -585,6 +589,10 @@ and multiplicity. It is exclusive with `source_authority`. Compilation still cap
 full field, parent, coding and peer guards for runtime application. Source review and
 the decision's reason explain the meaning; the digest only guards that evidence. Raw
 coding fingerprints are shared within one application call, never cached across inputs.
+Physical coding fingerprints serialize the supplied dataclass/model graph directly
+through the installed JSON adapter before canonical hashing. This retains every ordered
+assertion and raw validity value without a deep copy or an encode/parse roundtrip;
+serialization warnings remain errors.
 
 `coding.uncoded` may explicitly declare `stored_role = "label"` or `"free_text"` when
 reviewed source metadata identifies a stored text component whose attached numeric books

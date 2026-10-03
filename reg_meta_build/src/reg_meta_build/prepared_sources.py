@@ -744,30 +744,61 @@ def _read_record_batch(
     cache: dict[int, SourceRecord],
     where: str,
     parameters: tuple[Any, ...],
+    *,
+    exact_ordinals: bool = False,
 ) -> tuple[SourceRecord, ...]:
     """Fetch locator and cell rows for one family or register in two queries."""
     if all(row["ordinal"] in cache for row in rows):
         return tuple(cache[row["ordinal"]] for row in rows)
     locators: dict[int, list[RecordLocator]] = {}
     cells: dict[int, list[DeliveredCell]] = {}
-    for row in conn.execute(
+    locator_query = (
         "SELECT locator.*, occurrence.semantic_key FROM locator "
         "JOIN occurrence ON occurrence.ordinal=locator.occurrence "
-        f"{where} ORDER BY locator.occurrence, locator.position",
-        parameters,
-    ):
+        f"{where} ORDER BY locator.occurrence, locator.position"
+    )
+    cell_query = (
+        "SELECT delivered_cell.occurrence, delivered_cell.payload "
+        "FROM delivered_cell JOIN occurrence "
+        "ON occurrence.ordinal=delivered_cell.occurrence "
+        f"{where} ORDER BY delivered_cell.occurrence, delivered_cell.position"
+    )
+    if exact_ordinals:
+        conn.execute(
+            "CREATE TEMP TABLE IF NOT EXISTS selected_occurrence "
+            "(ordinal INTEGER PRIMARY KEY, semantic_key TEXT NOT NULL)"
+        )
+        conn.execute("DELETE FROM selected_occurrence")
+        conn.executemany(
+            "INSERT INTO selected_occurrence VALUES (?, ?)",
+            (
+                (row["ordinal"], row["semantic_key"])
+                for row in rows
+                if row["ordinal"] not in cache
+            ),
+        )
+        # CROSS JOIN keeps the batch outermost: seek the child primary keys instead
+        # of rescanning every occurrence in the source for each register.
+        locator_query = (
+            "SELECT locator.*, selected_occurrence.semantic_key "
+            "FROM selected_occurrence CROSS JOIN locator "
+            "ON locator.occurrence=selected_occurrence.ordinal "
+            "ORDER BY selected_occurrence.ordinal, locator.position"
+        )
+        cell_query = (
+            "SELECT delivered_cell.occurrence, delivered_cell.payload "
+            "FROM selected_occurrence CROSS JOIN delivered_cell "
+            "ON delivered_cell.occurrence=selected_occurrence.ordinal "
+            "ORDER BY selected_occurrence.ordinal, delivered_cell.position"
+        )
+        parameters = ()
+    for row in conn.execute(locator_query, parameters):
         ordinal = row["occurrence"]
         if ordinal not in cache:
             locators.setdefault(ordinal, []).append(
                 _read_locator(row, tuple(json.loads(row["semantic_key"])), payload)
             )
-    for row in conn.execute(
-        "SELECT delivered_cell.occurrence, delivered_cell.payload "
-        "FROM delivered_cell JOIN occurrence "
-        "ON occurrence.ordinal=delivered_cell.occurrence "
-        f"{where} ORDER BY delivered_cell.occurrence, delivered_cell.position",
-        parameters,
-    ):
+    for row in conn.execute(cell_query, parameters):
         ordinal = row["occurrence"]
         if ordinal not in cache:
             cells.setdefault(ordinal, []).append(payload(row["payload"], "cell"))
@@ -1222,6 +1253,7 @@ class PreparedSourceRecords:
                         "JOIN register_partition USING (provider, register_payload) "
                         "WHERE occurrence.source=? AND register_partition.partition=?",
                         (source, partition),
+                        exact_ordinals=True,
                     ),
                 )
 
