@@ -391,45 +391,6 @@ gate; controlled traces keep #1138's search budgets and #1139's CLS < 0.1 as reg
 evidence. Move the lasting cache/payload rationale into `reg_webapp/DESIGN.md`, then
 delete this section.
 
-## reg_meta_build restructuring (2026-09-24)
-
-The maintainer froze the Y-184 regeneration cycle on 2026-09-24 and adopted a
-restructuring of `reg_meta_build`. Rules had been encoded as pinned curation: the
-classification label rule became 18,756 stored cases and naming became 51,904
-declarations pinned by whole-file hashes, so every code change forced a hand-written
-regeneration. Curation sat in the input bundle, so each curation edit forced a 33–37 min
-re-prepare. Strict builds had no acknowledge surface, and every iteration was a
-whole-corpus build. Evidence (maintainer-local, gitignored):
-`archive/reports/curation-reorg-2026-09-24/`.
-
-The design lives in [`reg_meta_build/DESIGN.md`](reg_meta_build/DESIGN.md); its
-*transitional* notes mark what the work below removes.
-
-**Restoration completed (2026-10-02).** The new pipeline built all 290 public source
-scopes strictly, with zero unresolved errors. Fresh-process replay produced
-byte-identical databases and decompressed source ledgers. Two complete private SWECOV
-extensions also passed holdings validation and produced identical databases. These
-proofs cover runtime `80904afde0a6803fe2f23b9c220e756941aa7e9c`; they do not establish
-statistical equivalence or the accuracy of every provider declaration. Maintainer-local
-receipts are in `archive/reports/curation-reorg-2026-09-24/tools/` (`Batch57-*`).
-
-The first slice, full source onboarding, in-process curation and strict global
-restoration are complete. Curation edits do not require source preparation. There is no
-remaining register-by-register onboarding queue for this restoration.
-
-The independent post-restoration review found a loss of known sentinel roles in stored
-state classification conformance, one FASIT storage-type/domain inconsistency requiring
-source investigation, and this stale tracker. Resolve those findings before adapting
-consumer contracts. The remaining register-specific implementation debt is enumerated in
-`reg_meta_build/DESIGN.md`; the code-architecture review assesses it separately from
-catalog restoration. Builder schema 8 and consumer schema 6 remain incompatible:
-reader/UI adaptation, document-index verification and release are separate work.
-
-Completion gate: once the post-restoration builder fixes are verified and the
-register-specific debt is resolved or explicitly scoped in package design, delete this
-section and the design's transitional pointer. Do not retain it as a permanent build
-tracker.
-
 ## v1 slug freeze (#209)
 
 The grow-only slug-immutability gate is **per-provider**, not global. There is no

@@ -14,10 +14,6 @@ The four-step pipeline below is the only `build-db` implementation. A diagnostic
 database is incomplete and cannot be activated by builder publication. Input declaration
 loaders and read-only worklists do not constitute an alternative build route.
 
-Where the code has not caught up with this design, the text marks the current state as
-*transitional*; [../REFACTOR_SPEC.md](../REFACTOR_SPEC.md) orders the work that removes
-it.
-
 ## Responsibilities
 
 The design serves five maintainer tasks:
@@ -61,8 +57,8 @@ dependency and lineage resolution → `resolved_catalog.write_resolved_catalog`.
   | —    | `extend_db.py`, `sources/curated.py`, `ir/`                                                | Separate steward extension over a released global catalog.                                        |
   | —    | `doc_db.py`                                                                                | Document indexing; independent of source fact resolution.                                         |
 
-Transitional: builder code still names specific registers or variants in three places.
-They are debt to remove, not precedent:
+Builder code still names specific registers or variants in three places. These are
+bounded exceptions to remove, not precedent for new source interpretation:
 
 - `sources/scb_records.py` `_PROJECTION_REGISTERS`, which reads one forecast register's
   edition names as vintages;
