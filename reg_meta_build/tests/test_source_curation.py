@@ -564,6 +564,60 @@ def test_json_guard_interning_keeps_full_values_and_scope_isolation() -> None:
     assert adapter.dump_json(fresh) == payload
 
 
+def test_json_guard_interning_preserves_reference_and_alternative_order() -> None:
+    ref = SourceRecordRef(source="källa", semantic_record_key=("å", "b"))
+    alternatives = tuple(
+        RecordProjection(fields=(_field("name", "value", value),))
+        for value in ("Första", "Andra")
+    )
+    expected = RecordExpectation(ref=ref, alternatives=alternatives)
+    variants = (
+        expected,
+        expected,
+        expected.model_copy(update={"alternatives": tuple(reversed(alternatives))}),
+        expected.model_copy(
+            update={"ref": ref.model_copy(update={"semantic_record_key": ("å/b",)})}
+        ),
+        expected.model_copy(update={"ref": ref.model_copy(update={"source": "KÄLLA"})}),
+    )
+    adapter = TypeAdapter(tuple[RecordExpectation, ...])
+    payload = adapter.dump_json(variants)
+    baseline = adapter.validate_json(payload)
+    parsed = adapter.validate_json(payload, context=GuardValidationContext())
+    assert adapter.dump_json(parsed) == adapter.dump_json(baseline) == payload
+    assert parsed[0] is parsed[1]
+    assert all(item is not parsed[0] for item in parsed[2:])
+    assert parsed[2].alternatives == tuple(reversed(parsed[0].alternatives))
+    assert parsed[2].alternatives[0] is parsed[0].alternatives[1]
+    assert parsed[3].alternatives[0] is parsed[0].alternatives[0]
+    invalid = json.loads(expected.model_dump_json())
+    invalid["ref"]["semantic_record_key"] = [1]
+    with pytest.raises(ValidationError):
+        adapter.validate_json(
+            json.dumps([json.loads(expected.model_dump_json()), invalid]),
+            context=GuardValidationContext(),
+        )
+
+
+def test_json_guard_interning_keeps_complete_subclass_facts() -> None:
+    class MarkedExpectation(RecordExpectation):
+        marker: str
+
+    first = MarkedExpectation(
+        ref=SourceRecordRef(source="fixture", semantic_record_key=("member:1",)),
+        alternatives=(RecordProjection(fields=(_field("name", "value", "Name"),)),),
+        marker="First",
+    )
+    second = first.model_copy(update={"marker": "Second"})
+    adapter = TypeAdapter(tuple[MarkedExpectation, ...])
+    payload = adapter.dump_json((first, second, first))
+    parsed = adapter.validate_json(payload, context=GuardValidationContext())
+    assert adapter.dump_json(parsed) == payload
+    assert parsed[0] is parsed[2]
+    assert parsed[0] is not parsed[1]
+    assert parsed[0].alternatives[0] is parsed[1].alternatives[0]
+
+
 def test_compiled_scope_json_read_shares_validated_guards_without_skipping_fields() -> (
     None
 ):

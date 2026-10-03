@@ -483,15 +483,27 @@ requires a fresh context. No cached source state survives a build.
 
 Compiled-scope JSON reads also share identical immutable `RecordProjection` and
 `RecordExpectation` objects within that read. Every nested value, projection shape and
-alternative is validated before interning. Keys contain the exact model class and
-complete normalized JSON value, including native coordinates, scopes, parents and coding
-references. Separate scopes receive separate contexts. This restores sharing lost by
-serialization without bypassing contract validation or changing garbage-collector
-settings; it avoids retaining a full duplicate guard graph for each reviewed case. Scope
-serialization passes existing model objects directly to Pydantic's JSON adapter,
-avoiding an intermediate nested Python dictionary tree. Serialization warnings are
-errors, and nonfinite raw numbers remain explicit tokens for strict rejection rather
-than becoming null. Final JSON validation still rejects unexpected subclass fields.
+alternative is validated before interning. Projection keys contain the exact model class
+and complete normalized JSON value, including native coordinates, scopes, parents and
+coding references. Expectation keys contain the exact model class, complete reference
+JSON and ordered identities of those canonical projections. The context and retained
+expectations own the projections, keeping those identities stable for that read without
+duplicating their JSON in expectation keys. Separate scopes receive separate contexts.
+Expectation subclasses retain complete JSON keys so their additional facts stay
+distinct. This restores sharing lost by serialization without bypassing contract
+validation or changing garbage-collector settings; it avoids retaining a full duplicate
+guard graph for each reviewed case. Scope serialization passes existing model objects
+directly to Pydantic's JSON adapter, avoiding an intermediate nested Python dictionary
+tree. Serialization warnings are errors, and nonfinite raw numbers remain explicit
+tokens for strict rejection rather than becoming null. Final JSON validation still
+rejects unexpected subclass fields.
+
+After a scope's JSON contract validates, its raw compiled cases, naming and supporting
+declarations are released as the validated scope takes ownership. Decision dumps retain
+those originals only until their requested serialization. Global raw fields and their
+JSON buffer are released after validation and any requested dump. Coding guards still
+check the complete register before variable formation; afterward, raw coding claims are
+consumed per variable rather than retaining every processed column through scope end.
 
 Serialized scope contracts still validate all nested inputs. Field expectations reuse
 the source model's single-field type guard instead of constructing every absent field

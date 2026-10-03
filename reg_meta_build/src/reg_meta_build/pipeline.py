@@ -523,7 +523,16 @@ def _run_pipeline(
         scopes[key] = _compiled_scope(key, compiled)
         if dump_decisions is None:
             # Release each raw graph as its validated replacement becomes available.
-            compiled.cases.pop(key, None)
+            for mapping in (
+                compiled.cases,
+                compiled.source_diagnostics,
+                compiled.naming,
+                compiled.naming_ambiguities,
+                compiled.provider_keys,
+                compiled.variants,
+            ):
+                if mapping is not None:
+                    mapping.pop(key, None)
     selected_coding_names = {
         name
         for scope in scopes.values()
@@ -619,6 +628,9 @@ def _run_pipeline(
             + "\n",
             encoding="utf-8",
         )
+    # Global contracts are validated and any requested dump is written now.
+    compiled.fields.clear()
+    del global_json
     # The accepted preparation's immutable commit dates the catalog vintage;
     # rebuild wall time would make identical selected inputs produce new bytes.
     import_date = (

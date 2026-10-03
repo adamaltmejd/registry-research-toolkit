@@ -140,7 +140,7 @@ class GuardValidationContext:
             tuple[type[RecordProjection], str], RecordProjection
         ] = {}
         self.expectations: dict[
-            tuple[type[RecordExpectation], str], RecordExpectation
+            tuple[type[RecordExpectation], str, tuple[int, ...]], RecordExpectation
         ] = {}
 
 
@@ -256,8 +256,20 @@ class RecordExpectation(_CurationModel):
             if len(tokens) != len(set(tokens)):
                 raise ValueError("record alternatives must be unique")
         if isinstance(info.context, GuardValidationContext):
+            # JSON validation has interned each complete child projection. The
+            # context owns those models, so their identities remain stable here.
+            # Subclasses may add facts outside this exact base-model shape.
             return info.context.expectations.setdefault(
-                (type(self), self.model_dump_json()), self
+                (
+                    type(self),
+                    self.ref.model_dump_json()
+                    if type(self) is RecordExpectation
+                    else self.model_dump_json(),
+                    tuple(id(item) for item in self.alternatives)
+                    if type(self) is RecordExpectation
+                    else (),
+                ),
+                self,
             )
         return self
 

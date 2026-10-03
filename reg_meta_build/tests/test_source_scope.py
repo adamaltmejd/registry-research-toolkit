@@ -219,6 +219,8 @@ def resolve(
     label_rules=None,
     classification_overrides=None,
     source_diagnostics=(),
+    coding_registers=(),
+    coding_scope=None,
 ):
     support = SourceSupportBindings((), ())
     for item in records:
@@ -246,6 +248,8 @@ def resolve(
         classification_overrides=classification_overrides or {},
         on_diagnostic=on_diagnostic,
         diagnostic=diagnostic,
+        coding_registers=coding_registers,
+        coding_scope=coding_scope,
     )
 
 
@@ -693,9 +697,12 @@ def test_superseded_scb_preliminary_is_support_and_final_alone_forms_state():
     assert exclusive.states[0].delivery_column_name == "OTHER"
 
 
+@pytest.mark.parametrize("precompile", [False, True])
 def test_interleaved_occurrences_share_bound_lists_and_keep_every_evidence_use(
-    tmp_path, monkeypatch
+    tmp_path, monkeypatch, precompile
 ):
+    from reg_meta_build import source_scope
+
     first, second = record(1), record(2)
     root = tmp_path / "values"
     manifest = prepare_source_values(
@@ -724,6 +731,19 @@ def test_interleaved_occurrences_share_bound_lists_and_keep_every_evidence_use(
         root, expected_sha256=manifest.sha256, input_commit=accept_prepared(root)
     )
     lookups = []
+    compiled_members = []
+
+    def compile_claims(register, scope, *, coding, **kwargs):
+        compiled_members.extend(
+            association.member_id
+            for claims in coding.values()
+            for claim in claims
+            for member in claim.members
+            for association in member.associations
+        )
+        return (), ()
+
+    monkeypatch.setattr(source_scope, "compile_coding_register", compile_claims)
     with open_value_bindings((source,)) as sessions:
         session = sessions[0].session
         original = session.lookup_native_member
@@ -733,7 +753,15 @@ def test_interleaved_occurrences_share_bound_lists_and_keep_every_evidence_use(
             return original(member)
 
         monkeypatch.setattr(session, "lookup_native_member", lookup)
-        result = resolve((first, second, first, second), value_sessions=sessions)
+        result = resolve(
+            (first, second, first, second),
+            value_sessions=sessions,
+            coding_registers=(SimpleNamespace(coding=SimpleNamespace(documented=())),)
+            if precompile
+            else (),
+            coding_scope=SimpleNamespace() if precompile else None,
+        )
+    assert compiled_members == (["1", "1", "2", "2"] if precompile else [])
     assert lookups == [1, 2]
     assert not result.diagnostics
     assert len(result.corrections.occurrences) == 4

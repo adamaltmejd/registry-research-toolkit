@@ -569,6 +569,10 @@ def resolve_source_scope(
             emit(issue)
         if on_coding_compiled is not None:
             on_coding_compiled(register, new_cases, new_diagnostics)
+    # Complete-register guards have finished; do not retain their raw claim map
+    # while consuming the same evidence one variable at a time below.
+    del original_coding, coding_columns
+    column_records.clear()
     cases = (*cases, *compiled_cases)
     if len({c.case_id for c in cases}) != len(cases):
         raise ValueError("source scope case IDs must be unique")
@@ -647,7 +651,7 @@ def resolve_source_scope(
         else:
             provider_key = provider_keys[key]
         claims = (
-            claims_by_variable[key]
+            claims_by_variable.pop(key)
             if coding_registers
             else bind_claims(key, occurrences)
         )

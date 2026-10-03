@@ -608,6 +608,7 @@ def test_completed_scope_contracts_are_released(
     scopes = []
     scope_keys = []
     guarded_cases = []
+    raw_scope_keys = []
 
     def observed_compile(*args, **kwargs):
         compiled = compile_tree(*args, **kwargs)
@@ -616,10 +617,37 @@ def test_completed_scope_contracts_are_released(
         assert all(case.targets and case.peer_guards for case in cases)
         assert all(case.decision.kind == "correct_occurrences" for case in cases)
         guarded_cases.extend(case.case_id for case in cases)
+        raw_scope_keys[:] = [
+            set(mapping or {})
+            for mapping in (
+                compiled.cases,
+                compiled.source_diagnostics,
+                compiled.naming,
+                compiled.naming_ambiguities,
+                compiled.provider_keys,
+                compiled.variants,
+            )
+        ]
         return compiled
 
     def observe_scope(key, compiled):
-        assert all((prior in compiled.cases) == dump for prior in scope_keys)
+        for mapping, original_keys in zip(
+            (
+                compiled.cases,
+                compiled.source_diagnostics,
+                compiled.naming,
+                compiled.naming_ambiguities,
+                compiled.provider_keys,
+                compiled.variants,
+            ),
+            raw_scope_keys,
+            strict=True,
+        ):
+            if mapping is not None:
+                assert all(
+                    (prior in mapping) == (dump and prior in original_keys)
+                    for prior in scope_keys
+                )
         scope = compile_scope(key, compiled)
         scopes.append(weakref.ref(scope))
         scope_keys.append(key)
@@ -628,6 +656,7 @@ def test_completed_scope_contracts_are_released(
     def observed_finalize(compiled, *args, **kwargs):
         assert len(scopes) == 2
         assert all(ref() is None for ref in scopes)
+        assert not compiled.fields
         cases = [case for group in compiled.cases.values() for case in group]
         assert [case.case_id for case in cases] == (guarded_cases if dump else [])
         return finalize(compiled, *args, **kwargs)
