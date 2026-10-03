@@ -884,12 +884,12 @@ def _seed_conformance(
     codes: list[str],
 ) -> None:
     src.execute(
-        "UPDATE variable_state SET classification_id=? WHERE state_id=?",
+        "INSERT OR IGNORE INTO state_classification (classification_id, state_id) VALUES (?, ?)",
         (classification_id, state_id),
     )
     src.execute(
-        "INSERT OR IGNORE INTO classification_code (classification_id, code_id) "
-        "SELECT ?, vsm.code_id FROM variable_state vs "
+        "INSERT OR IGNORE INTO classification_code (classification_id, code_id, is_valid) "
+        "SELECT ?, vsm.code_id, 1 FROM variable_state vs "
         "JOIN value_set_member vsm ON vsm.value_set_id=vs.value_set_id "
         "JOIN value_code vc ON vc.code_id=vsm.code_id "
         "WHERE vs.state_id=? AND vc.code NOT IN (" + ",".join("?" for _ in codes) + ")",
@@ -911,9 +911,9 @@ def _seed_conformance(
         ),
     )
     src.executemany(
-        "INSERT INTO classification_conformance_code (state_id, code_id) "
-        "SELECT ?, code_id FROM value_code WHERE code = ?",
-        [(state_id, code) for code in codes],
+        "INSERT INTO classification_conformance_code (state_id, declared_classification_id, code_id, member_kind, sentinel_meaning, scoped_sentinels) "
+        "SELECT ?, ?, code_id, 'nonstandard', NULL, '[]' FROM value_code WHERE code = ?",
+        [(state_id, classification_id, code) for code in codes],
     )
 
 

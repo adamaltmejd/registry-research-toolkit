@@ -16,8 +16,10 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, ConfigDict, Field
 from reg_meta.catalog import (
     BindingGroupRef,
+    CatalogStorageId,
     ClassificationCode,
     ClassificationEdition,
+    ClassificationExtensionMember,
     ConceptGroupMember,
     ConceptGroupSummary,
     DataWarning,
@@ -301,8 +303,8 @@ class BindingNode(BaseModel):
     warnings: tuple[DataWarning, ...] = ()
     kind: Literal["binding"] = "binding"
     fqid: str
-    variable_id: int
-    register_id: int
+    variable_id: CatalogStorageId
+    register_id: CatalogStorageId
     name: str | None
     definition: str | None
     description: str | None
@@ -316,7 +318,7 @@ class BindingNode(BaseModel):
     is_sensitive: bool
     is_identifier: bool
     deprecated: bool = False
-    source_register_id: int | None
+    source_register_id: CatalogStorageId | None
     source_register_text: str | None
     states: list[VariableState]
     same_as: list[VariableRef]
@@ -516,15 +518,15 @@ class ValueSetCodesResponse(BaseModel):
     is left without walking it; `codes` is code/label-ordered, the same order
     reg_meta hydrates a value set in."""
 
-    value_set_id: int
+    value_set_id: CatalogStorageId
     # Echoes `?state=` when the page is a state's mismatch list, else None.
-    state_id: int | None = None
+    state_id: CatalogStorageId | None = None
     # The `?q` the page was filtered by (empty = unfiltered).
     q: str
     total: int
     offset: int
     limit: int
-    codes: list[ValueSetMember]
+    codes: list[ClassificationExtensionMember | ValueSetMember]
 
 
 class PredecessorsResponse(BaseModel):

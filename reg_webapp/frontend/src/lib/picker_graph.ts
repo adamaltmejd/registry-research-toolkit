@@ -122,8 +122,8 @@ function cellLabel(rep: GraphState): string {
   if (rep.value_set_version_label !== "") {
     return rep.value_set_version_label;
   }
-  if (rep.classification_slug) {
-    return rep.classification_slug;
+  if (rep.classification_slugs.length > 0) {
+    return rep.classification_slugs.join(", ");
   }
   if (rep.delivery_column_name) {
     return rep.delivery_column_name;

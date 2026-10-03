@@ -57,11 +57,11 @@ vi.mock("./api", async (importOriginal) => {
 function state(over: Partial<VariableStateModel>): VariableStateModel {
   return {
     warning_ids: [],
-    state_id: 1,
+    state_id: "1",
     period_scope: "intervals",
     variant: "v",
     variant_label: null,
-    register_variant_id: 1,
+    register_variant_id: "1",
     valid_from: "1992-01-01",
     valid_to: "9999-12-31",
     data_type: null,
@@ -74,14 +74,14 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
     value_set_id: null,
     value_set: null,
     is_identifier: false,
-    classification_slug: null,
+    classifications: [],
     ...over,
   };
 }
 
 function gstate(over: Partial<GraphState>): GraphState {
   return {
-    state_id: 1,
+    state_id: "1",
     period_scope: "intervals",
     variant: "v",
     variant_label: null,
@@ -90,7 +90,7 @@ function gstate(over: Partial<GraphState>): GraphState {
     valid_to: "2020-12-31",
     value_set_id: null,
     value_set_version_label: "",
-    classification_slug: null,
+    classification_slugs: [],
     delivery_column_name: null,
     ...over,
   };
@@ -112,8 +112,8 @@ function node(
     measurement_unit: null,
     is_identifier: false,
     is_sensitive: false,
-    register_id: 1,
-    variable_id: 1,
+    register_id: "1",
+    variable_id: "1",
     source_register_id: null,
     source_register_text: null,
     states,
@@ -155,14 +155,14 @@ function graph(
 }
 
 /** One variant, no delivery column → the picker enumerates zero rows. */
-const single = [state({ state_id: 1, variant: "individer" })];
+const single = [state({ state_id: "1", variant: "individer" })];
 
 /** Picker rows: two distinct (variant, delivery column) representations, each
  * with a finite window. `Kon` (individer, 2010–2015) and `Sni` (arbetsstallen,
  * 2018–2020) — two selectable rows over the full history. */
 const pickerStates = [
   state({
-    state_id: 1,
+    state_id: "1",
     variant: "individer",
     delivery_column_name: "Kon",
     valid_from: "2010-01-01",
@@ -170,7 +170,7 @@ const pickerStates = [
     value_set_version_label: "1-siffrig",
   }),
   state({
-    state_id: 2,
+    state_id: "2",
     variant: "arbetsstallen",
     delivery_column_name: "Sni",
     valid_from: "2018-01-01",
@@ -181,7 +181,7 @@ const pickerStates = [
 
 const foldedVariantStates = [
   state({
-    state_id: 10,
+    state_id: "10",
     variant: "individer-16plus",
     variant_label: "Individer, 16 år och äldre",
     variant_family: "individer-15plus",
@@ -192,7 +192,7 @@ const foldedVariantStates = [
     data_type: "int",
   }),
   state({
-    state_id: 11,
+    state_id: "11",
     variant: "individer-15plus",
     variant_label: "Individer, 15 år och äldre",
     variant_family: "individer-15plus",
@@ -209,18 +209,18 @@ const foldedVariantStates = [
  * finite to clip it to, so the pick resolves no period at all (Y-58). */
 const openEndedStates = [
   state({
-    state_id: 1,
+    state_id: "1",
     variant: "individer-15plus",
     delivery_column_name: "Kon",
     valid_from: "2018-01-01",
     valid_to: "9999-12-31",
-    value_set_id: 7,
+    value_set_id: "7",
   }),
 ];
 
 const singleWithStructural = [
   state({
-    state_id: 1,
+    state_id: "1",
     variant: "individer",
     data_type: "char",
     data_length: "1",
@@ -293,14 +293,14 @@ beforeEach(() => {
   vi.mocked(getValueSetCodes).mockImplementation(
     async (valueSetId, { state = null, q = "", offset = 0, limit = 200 }) => {
       const codes =
-        valueSetId === 814
+        valueSetId === "814"
           ? [
               { code: "0", label: "Nej" },
               { code: "1", label: "Ja" },
             ]
           : [];
       return {
-        value_set_id: valueSetId,
+        value_set_id: String(valueSetId),
         state_id: state,
         period_scope: "intervals",
         q,
@@ -409,7 +409,7 @@ describe("BindingLeafView representation picker (#678)", () => {
           facets: [],
           states: [
             gstate({
-              state_id: 2,
+              state_id: "2",
               representation_run_id: 2,
               delivery_column_name: null,
               valid_from: "2021-01-01",
@@ -465,7 +465,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       facets: [],
       states: [
         gstate({
-          state_id: i + 1,
+          state_id: String(i + 1),
           representation_run_id: i + 1,
           delivery_column_name: null,
           value_set_version_label: `coding ${i}`,
@@ -571,7 +571,7 @@ describe("BindingLeafView representation picker (#678)", () => {
               valid_to: "2009-12-31",
             }),
             gstate({
-              state_id: 2,
+              state_id: "2",
               representation_run_id: 2,
               delivery_column_name: null,
               value_set_version_label: "new coding",
@@ -631,7 +631,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       facets: [],
       states: [
         gstate({
-          state_id: 2,
+          state_id: "2",
           representation_run_id: 2,
           delivery_column_name: "Kon2",
           valid_from: "2005-01-01",
@@ -1347,14 +1347,14 @@ describe("BindingLeafView representation picker (#678)", () => {
   it("a folded rename row commits representation: null (not the latest column)", async () => {
     const renameStates = [
       state({
-        state_id: 1,
+        state_id: "1",
         variant: "individer",
         delivery_column_name: "DINF",
         valid_from: "1981-01-01",
         valid_to: "1983-12-31",
       }),
       state({
-        state_id: 2,
+        state_id: "2",
         variant: "individer",
         delivery_column_name: "DINF83",
         valid_from: "1984-01-01",
@@ -1363,7 +1363,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       // Contiguous eras (no delivery gap) so the union wire period is a single
       // 1981..1995 span — the rename fold, not an interrupted series.
       state({
-        state_id: 3,
+        state_id: "3",
         variant: "individer",
         delivery_column_name: "DINF86",
         valid_from: "1986-01-01",
@@ -1590,7 +1590,7 @@ describe("BindingLeafView representation picker (#678)", () => {
   it("clamps a stale project window to steward bounds before staged add (#1037)", async () => {
     const longSpan = [
       state({
-        state_id: 1,
+        state_id: "1",
         variant: "individer",
         delivery_column_name: "Kon",
         valid_from: "1996-01-01",
@@ -1631,7 +1631,7 @@ describe("BindingLeafView representation picker (#678)", () => {
   it("uses the steward-bounded period in the States narrowed note (#1037)", async () => {
     const longSpan = [
       state({
-        state_id: 1,
+        state_id: "1",
         variant: "individer",
         delivery_column_name: "Kon",
         valid_from: "1996-01-01",
@@ -1711,7 +1711,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     // hoisted once and the rows show the population.
     const fordonsreg = [
       state({
-        state_id: 1,
+        state_id: "1",
         variant: "lastbilar",
         delivery_column_name: "Sni2002",
         value_set_version_label: "SNI 2002",
@@ -1719,7 +1719,7 @@ describe("BindingLeafView representation picker (#678)", () => {
         valid_to: "2015-12-31",
       }),
       state({
-        state_id: 2,
+        state_id: "2",
         variant: "bussar",
         delivery_column_name: "Sni2002",
         value_set_version_label: "SNI 2002",
@@ -1789,7 +1789,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     // overlapping pair would collapse to one rename row (#902).
     const colVaries = [
       state({
-        state_id: 1,
+        state_id: "1",
         variant: "individer",
         delivery_column_name: "Ssyk3",
         value_set_version_label: "SSYK 3-siffrig",
@@ -1797,7 +1797,7 @@ describe("BindingLeafView representation picker (#678)", () => {
         valid_to: "2020-12-31",
       }),
       state({
-        state_id: 2,
+        state_id: "2",
         variant: "individer",
         delivery_column_name: "Ssyk5",
         value_set_version_label: "SSYK 5-siffrig",
@@ -1843,7 +1843,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     // (a non-overlapping pair would collapse to one rename row, #902).
     const sni92 = [
       state({
-        state_id: 1,
+        state_id: "1",
         variant: "individer",
         delivery_column_name: "Sni92A",
         value_set_version_label:
@@ -1852,7 +1852,7 @@ describe("BindingLeafView representation picker (#678)", () => {
         valid_to: "2020-12-31",
       }),
       state({
-        state_id: 2,
+        state_id: "2",
         variant: "individer",
         delivery_column_name: "Sni92B",
         value_set_version_label:
@@ -1892,28 +1892,28 @@ describe("BindingLeafView representation picker (#678)", () => {
     // the reliable value_set_id, NOT the label.
     const states = [
       state({
-        state_id: 1,
+        state_id: "1",
         variant: "v",
         delivery_column_name: "ColA",
-        value_set_id: 303,
+        value_set_id: "303",
         value_set_version_label: "MiS 1996:1",
         valid_from: "2019-01-01",
         valid_to: "2019-12-31",
       }),
       state({
-        state_id: 2,
+        state_id: "2",
         variant: "v",
         delivery_column_name: "ColA",
-        value_set_id: 249,
+        value_set_id: "249",
         value_set_version_label: "SUN",
         valid_from: "2020-01-01",
         valid_to: "2022-12-31",
       }),
       state({
-        state_id: 3,
+        state_id: "3",
         variant: "v",
         delivery_column_name: "ColB",
-        value_set_id: 100,
+        value_set_id: "100",
         value_set_version_label: "Stable",
         valid_from: "2019-01-01",
         valid_to: "2022-12-31",
@@ -1965,28 +1965,28 @@ describe("BindingLeafView representation picker (#678)", () => {
     // coding (value-set 249 / "SUN", not the earlier 303 / "MiS 1996:1").
     const states = [
       state({
-        state_id: 1,
+        state_id: "1",
         variant: "v",
         delivery_column_name: "ColA",
-        value_set_id: 303,
+        value_set_id: "303",
         value_set_version_label: "MiS 1996:1",
         valid_from: "2019-01-01",
         valid_to: "2019-12-31",
       }),
       state({
-        state_id: 2,
+        state_id: "2",
         variant: "v",
         delivery_column_name: "ColA",
-        value_set_id: 249,
+        value_set_id: "249",
         value_set_version_label: "SUN",
         valid_from: "2020-01-01",
         valid_to: "2022-12-31",
       }),
       state({
-        state_id: 3,
+        state_id: "3",
         variant: "v",
         delivery_column_name: "ColB",
-        value_set_id: 100,
+        value_set_id: "100",
         value_set_version_label: "Stable",
         valid_from: "2019-01-01",
         valid_to: "2022-12-31",
@@ -2017,19 +2017,19 @@ describe("BindingLeafView representation picker (#678)", () => {
     // ROW's variant, so `?codes=a::COL` must isolate A's coding — the deep-link bug.
     const states = [
       state({
-        state_id: 1,
+        state_id: "1",
         variant: "a",
         delivery_column_name: "COL",
-        value_set_id: 100,
+        value_set_id: "100",
         value_set_version_label: "Coding A",
         valid_from: "2015-01-01",
         valid_to: "2018-12-31",
       }),
       state({
-        state_id: 2,
+        state_id: "2",
         variant: "b",
         delivery_column_name: "COL",
-        value_set_id: 200,
+        value_set_id: "200",
         value_set_version_label: "Coding B",
         valid_from: "2019-01-01",
         valid_to: "2022-12-31",
@@ -2059,7 +2059,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     // chip ("Kon"), NOT a repeated "Kön". The constant register prefix is hoisted off.
     const oneColumn = [
       state({
-        state_id: 1,
+        state_id: "1",
         variant: "individer",
         delivery_column_name: "Kon",
         valid_from: "2010-01-01",
@@ -2214,7 +2214,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       fqidPath: "scb/lisa/kon",
       node: node([
         state({
-          state_id: 1,
+          state_id: "1",
           variant: "individer",
           variant_label: "Individuals",
           delivery_column_name: "Kon",
@@ -2222,7 +2222,7 @@ describe("BindingLeafView representation picker (#678)", () => {
           valid_to: "2019-12-31",
         }),
         state({
-          state_id: 2,
+          state_id: "2",
           variant: "individer",
           variant_label: "Individuals",
           delivery_column_name: "Kon",
@@ -2263,7 +2263,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       fqidPath: "scb/lisa/kon",
       node: node([
         state({
-          state_id: 2,
+          state_id: "2",
           variant: "individer",
           variant_label: "Individuals",
           delivery_column_name: "Kon",
@@ -2313,7 +2313,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       fqidPath: "scb/lisa/kon",
       node: node([
         state({
-          state_id: 2,
+          state_id: "2",
           variant: "individer",
           variant_label: "Individuals",
           delivery_column_name: "AliasB",
@@ -2365,7 +2365,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       fqidPath: "scb/lisa/kon",
       node: node([
         state({
-          state_id: 2,
+          state_id: "2",
           variant: "individer",
           variant_label: "Individuals",
           delivery_column_name: "AliasB",
@@ -2426,7 +2426,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(
         [
           state({
-            state_id: 20,
+            state_id: "20",
             variant: "_default",
             variant_label: "All enterprises",
             delivery_column_name: "CO11",
@@ -2439,7 +2439,7 @@ describe("BindingLeafView representation picker (#678)", () => {
             ),
           }),
           state({
-            state_id: 21,
+            state_id: "21",
             variant: "_default",
             variant_label: "All enterprises",
             delivery_column_name: "CO11",
@@ -2522,7 +2522,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       node: node(
         [
           state({
-            state_id: 50,
+            state_id: "50",
             variant: "_default",
             variant_label: "All enterprises",
             delivery_column_name: "CO11",
@@ -2530,7 +2530,7 @@ describe("BindingLeafView representation picker (#678)", () => {
             valid_to: "2014-12-31",
             data_type: null,
             data_length: null,
-            value_set_id: 814,
+            value_set_id: "814",
             value_set_version_label: "Ja eller nej",
             value_set_summary: { code_count: 2, integer_range: null },
             provenance: matrixProvenance(
@@ -2554,7 +2554,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     await expect.element(page.getByText("Nej", { exact: true })).toBeVisible();
     await expect.element(page.getByText("Ja", { exact: true })).toBeVisible();
     expect(getValueSetCodes).toHaveBeenCalledWith(
-      814,
+      "814",
       expect.objectContaining({ offset: 0, limit: 200 }),
       expect.anything(),
     );
@@ -2594,7 +2594,7 @@ describe("BindingLeafView representation picker (#678)", () => {
 
   it("limits curated matrix evidence to the selected variant and period", async () => {
     const selected = state({
-      state_id: 30,
+      state_id: "30",
       variant: "_default",
       variant_label: "All enterprises",
       delivery_column_name: "CO11",
@@ -2603,14 +2603,14 @@ describe("BindingLeafView representation picker (#678)", () => {
       provenance: matrixProvenance("group-enterprises-sweden", "CO11", 23),
     });
     const selectedPeer = state({
-      state_id: 31,
+      state_id: "31",
       variant: "_default",
       delivery_column_name: "CO10",
       valid_from: "2014-01-01",
       valid_to: "2016-12-31",
     });
     const otherPeriod = state({
-      state_id: 32,
+      state_id: "32",
       variant: "_default",
       variant_label: "All enterprises",
       delivery_column_name: "CO11",
@@ -2624,7 +2624,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       ),
     });
     const otherVariant = state({
-      state_id: 33,
+      state_id: "33",
       variant: "groups",
       variant_label: "Enterprise groups",
       delivery_column_name: "CO12",
@@ -2686,27 +2686,27 @@ describe("BindingLeafView representation picker (#678)", () => {
       fqidPath: "scb/innovation-foretag/co11",
       node: node([
         state({
-          state_id: 40,
+          state_id: "40",
           delivery_column_name: "CO11",
           provenance: "curated:future-format\n{}",
         }),
         state({
-          state_id: 41,
+          state_id: "41",
           delivery_column_name: "CONA1",
           provenance: "curated:scb-cis2016-matrix-answer\n{not-json}",
         }),
         state({
-          state_id: 43,
+          state_id: "43",
           delivery_column_name: "CO11",
           provenance: "curated:scb-cis2014-matrix-answer\n{not-json}",
         }),
         state({
-          state_id: 44,
+          state_id: "44",
           delivery_column_name: "CO12",
           provenance: "curated:scb-cis2014-matrix-answer-extra\n{}",
         }),
         state({
-          state_id: 42,
+          state_id: "42",
           delivery_column_name: "CO12",
           provenance: matrixProvenance("group-foreign", "CO12", 25).replace(
             "https://",
@@ -2735,7 +2735,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       fqidPath: "scb/lisa/kon",
       node: node([
         state({
-          state_id: 2,
+          state_id: "2",
           variant: "individer",
           variant_label: "Individuals",
           delivery_column_name: "AliasA",
@@ -2794,27 +2794,27 @@ describe("BindingLeafView representation picker (#678)", () => {
 describe("BindingLeafView period-scoped value-set history (#744)", () => {
   it("uses the period subset for Add while rendering full history with outside-period collapse", async () => {
     const inA = state({
-      state_id: 10,
+      state_id: "10",
       variant: "individer",
-      value_set_id: 10,
+      value_set_id: "10",
       value_set_version_label: "In-period A",
       delivery_column_name: "Kon",
       valid_from: "2007-01-01",
       valid_to: "2007-12-31",
     });
     const inB = state({
-      state_id: 11,
+      state_id: "11",
       variant: "individer",
-      value_set_id: 11,
+      value_set_id: "11",
       value_set_version_label: "In-period B",
       delivery_column_name: "Kon",
       valid_from: "2008-01-01",
       valid_to: "2008-12-31",
     });
     const outside = state({
-      state_id: 12,
+      state_id: "12",
       variant: "outside-population",
-      value_set_id: 12,
+      value_set_id: "12",
       value_set_version_label: "Outside period",
       valid_from: "1990-01-01",
       valid_to: "1990-12-31",
@@ -2858,25 +2858,25 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
     // in-scope row. The period-only outside-period collapse (#744) still works, scoped
     // to the narrowed variant.
     const inA = state({
-      state_id: 20,
+      state_id: "20",
       variant: "individer",
-      value_set_id: 20,
+      value_set_id: "20",
       value_set_version_label: "In-period A",
       valid_from: "2007-01-01",
       valid_to: "2007-12-31",
     });
     const inB = state({
-      state_id: 21,
+      state_id: "21",
       variant: "individer",
-      value_set_id: 21,
+      value_set_id: "21",
       value_set_version_label: "In-period B",
       valid_from: "2008-01-01",
       valid_to: "2008-12-31",
     });
     const samePeriodOtherVariant = state({
-      state_id: 22,
+      state_id: "22",
       variant: "other-population",
-      value_set_id: 22,
+      value_set_id: "22",
       value_set_version_label: "Same-period other variant",
       valid_from: "2008-01-01",
       valid_to: "2008-12-31",
@@ -2885,9 +2885,9 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
     // demonstrates the outside-period disclosure still functions for the narrowed
     // variant.
     const outsideIndivider = state({
-      state_id: 23,
+      state_id: "23",
       variant: "individer",
-      value_set_id: 23,
+      value_set_id: "23",
       value_set_version_label: "Outside period",
       valid_from: "1990-01-01",
       valid_to: "1990-12-31",
@@ -2936,17 +2936,17 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
     // The control for Fix 3: with no `?variant`/`?value_set_version`, the value-set
     // list is the full period history — every variant's same-period coding shows.
     const inA = state({
-      state_id: 24,
+      state_id: "24",
       variant: "individer",
-      value_set_id: 24,
+      value_set_id: "24",
       value_set_version_label: "In-period A",
       valid_from: "2007-01-01",
       valid_to: "2007-12-31",
     });
     const samePeriodOtherVariant = state({
-      state_id: 25,
+      state_id: "25",
       variant: "other-population",
-      value_set_id: 25,
+      value_set_id: "25",
       value_set_version_label: "Same-period other variant",
       valid_from: "2007-01-01",
       valid_to: "2007-12-31",
@@ -2973,17 +2973,17 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
 
   it("keeps modifier-resolved single-state detail with a broader period-only scope", async () => {
     const picked = state({
-      state_id: 30,
+      state_id: "30",
       variant: "individer",
-      value_set_id: 30,
+      value_set_id: "30",
       value_set_version_label: "Picked",
       valid_from: "2007-01-01",
       valid_to: "2007-12-31",
     });
     const samePeriodOtherVariant = state({
-      state_id: 31,
+      state_id: "31",
       variant: "other-population",
-      value_set_id: 31,
+      value_set_id: "31",
       value_set_version_label: "Same-period other variant",
       valid_from: "2007-01-01",
       valid_to: "2007-12-31",
@@ -3013,18 +3013,18 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
 
   it("keeps Add scoped to the primary resolve when the period-scope fetch fails", async () => {
     const picked = state({
-      state_id: 40,
+      state_id: "40",
       variant: "individer",
-      value_set_id: 40,
+      value_set_id: "40",
       value_set_version_label: "Picked",
       delivery_column_name: "Kon",
       valid_from: "2007-01-01",
       valid_to: "2007-12-31",
     });
     const otherVariant = state({
-      state_id: 41,
+      state_id: "41",
       variant: "other-population",
-      value_set_id: 41,
+      value_set_id: "41",
       value_set_version_label: "Other",
       delivery_column_name: "Sni",
       valid_from: "2007-01-01",
@@ -3070,17 +3070,17 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
     // `valueSetScope` are gated on `!narrowedError`, so the value-set list shows the
     // full history (every variant), not a modifier-narrowed (possibly empty) subset.
     const individerCoding = state({
-      state_id: 50,
+      state_id: "50",
       variant: "individer",
-      value_set_id: 50,
+      value_set_id: "50",
       value_set_version_label: "Individer coding",
       valid_from: "2007-01-01",
       valid_to: "2007-12-31",
     });
     const otherCoding = state({
-      state_id: 51,
+      state_id: "51",
       variant: "other-population",
-      value_set_id: 51,
+      value_set_id: "51",
       value_set_version_label: "Other coding",
       valid_from: "2007-01-01",
       valid_to: "2007-12-31",
@@ -3410,4 +3410,50 @@ describe("BindingLeafView — the applied period's pending resolve (Y-65)", () =
     await expect.element(loading).not.toBeInTheDocument();
     expect(document.activeElement).toBe(field);
   });
+});
+
+it("omits annual availability controls for year-independent delivery and preserves the study window", async () => {
+  const studyWindow = { from: 2018, to: 2020 };
+  windowStore.set(studyWindow);
+  const independent = state({
+    period_scope: "year_independent",
+    valid_from: null,
+    valid_to: null,
+    delivery_column_name: "KON",
+  });
+  const { rerender } = await render(BindingLeafView, {
+    ...SEED,
+    vintageYear: 2026,
+    fqidPath: "scb/lisa/kon",
+    node: node([independent]),
+  });
+  await expect
+    .element(
+      page.getByText(
+        "Year-independent delivery. An annual availability period does not apply.",
+      ),
+    )
+    .toBeVisible();
+  await expect
+    .element(page.getByRole("button", { name: "Apply period" }))
+    .not.toBeInTheDocument();
+  expect(windowStore.value).toEqual(studyWindow);
+  await rerender({
+    ...SEED,
+    vintageYear: 2026,
+    fqidPath: "scb/lisa/kon",
+    node: node([
+      independent,
+      state({
+        state_id: "2",
+        delivery_column_name: "YEARLY",
+        valid_from: "2018-01-01",
+        valid_to: "2020-12-31",
+      }),
+    ]),
+  });
+  await expect
+    .element(page.getByRole("button", { name: "Apply period" }))
+    .toBeVisible();
+  expect(windowStore.value).toEqual(studyWindow);
 });

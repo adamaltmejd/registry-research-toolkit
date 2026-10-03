@@ -86,11 +86,11 @@ function ax(...names: string[]): { name: string; label: string }[] {
 function state(over: Partial<VariableStateModel>): VariableStateModel {
   return {
     warning_ids: [],
-    state_id: 1,
+    state_id: "1",
     period_scope: "intervals",
     variant: "v",
     variant_label: null,
-    register_variant_id: 1,
+    register_variant_id: "1",
     valid_from: "",
     valid_to: "",
     data_type: null,
@@ -104,8 +104,8 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
     value_set: null,
     value_set_summary: null,
     is_identifier: false,
-    classification_slug: null,
-    classification_conformance: null,
+    classifications: [],
+
     ...over,
   };
 }
@@ -500,13 +500,13 @@ describe("deriveType", () => {
   });
 
   it("a value set → categorical (overrides the storage token)", () => {
-    expect(deriveType(state({ value_set_id: 5, data_type: "int" }))).toBe(
+    expect(deriveType(state({ value_set_id: "5", data_type: "int" }))).toBe(
       "categorical",
     );
     expect(
       deriveType(
         state({
-          value_set_id: 5,
+          value_set_id: "5",
           value_set_summary: { code_count: 1, integer_range: null },
           data_type: "char",
         }),
@@ -521,7 +521,7 @@ describe("deriveType", () => {
     expect(
       deriveType(
         state({
-          value_set_id: 5,
+          value_set_id: "5",
           value_set_summary: {
             code_count: 111,
             integer_range: { min: 0, max: 110 },
@@ -536,7 +536,7 @@ describe("deriveType", () => {
     expect(
       deriveType(
         state({
-          value_set_id: 5,
+          value_set_id: "5",
           value_set_summary: { code_count: 2, integer_range: null },
           data_type: "int",
         }),
@@ -545,7 +545,7 @@ describe("deriveType", () => {
     expect(
       deriveType(
         state({
-          value_set_id: 6,
+          value_set_id: "6",
           value_set_summary: { code_count: 10, integer_range: null },
           data_type: "int",
         }),
@@ -584,7 +584,7 @@ describe("deriveType", () => {
     // checked first).
     expect(
       deriveType(
-        state({ data_type: "int", is_identifier: true, value_set_id: 5 }),
+        state({ data_type: "int", is_identifier: true, value_set_id: "5" }),
       ),
     ).toBe("id");
   });
@@ -633,9 +633,16 @@ describe("representationsFromStates", () => {
         valid_from: "2000-01-01",
         valid_to: "2010-12-31",
         value_set_version_label: "5-års intervall",
-        value_set_id: 71,
+        value_set_id: "71",
         value_set_summary: { code_count: 1, integer_range: null },
-        classification_slug: "lkf2007",
+        classifications: [
+          {
+            slug: "lkf2007",
+            short_name: "lkf2007",
+            name: "lkf2007",
+            conformance: null,
+          },
+        ],
       }),
       state({
         delivery_column_name: "agrupp2",
@@ -656,14 +663,14 @@ describe("representationsFromStates", () => {
       column: "agrupp",
       label: "5-års intervall",
       codeCount: 1,
-      classificationSlug: "lkf2007",
+      classificationSlugs: ["lkf2007"],
       validTo: "2010-12-31",
     });
     // codingKey = version label + the content-addressed value-set id.
     expect(reps[1].codingKey).toBe("5-års intervall|71");
     expect(reps[0].codeCount).toBeNull();
     // agrupp2's representative state is code-less → null classification slug.
-    expect(reps[0].classificationSlug).toBeNull();
+    expect(reps[0].classificationSlugs).toEqual([]);
   });
 
   it("is empty / single when there is no real choice", () => {
@@ -702,24 +709,38 @@ describe("representationsFromStates", () => {
         delivery_column_name: "kon",
         valid_from: "2018-01-01",
         valid_to: "9999-12-31",
-        classification_slug: "lkf2007",
+        classifications: [
+          {
+            slug: "lkf2007",
+            short_name: "lkf2007",
+            name: "lkf2007",
+            conformance: null,
+          },
+        ],
       }),
       state({
         delivery_column_name: "kon_detalj",
         valid_from: "2018-01-01",
         valid_to: "9999-12-31",
-        classification_slug: "lkf2016",
+        classifications: [
+          {
+            slug: "lkf2016",
+            short_name: "lkf2016",
+            name: "lkf2016",
+            conformance: null,
+          },
+        ],
       }),
     ]);
     expect(reps.map((r) => r.column).sort()).toEqual(["kon", "kon_detalj"]);
     // Each co-existing representation keeps its OWN classification slug (the
     // crosswalk case — per-column fidelity, not a shared binding-level value).
-    expect(reps.find((r) => r.column === "kon")?.classificationSlug).toBe(
+    expect(reps.find((r) => r.column === "kon")?.classificationSlugs).toEqual([
       "lkf2007",
-    );
+    ]);
     expect(
-      reps.find((r) => r.column === "kon_detalj")?.classificationSlug,
-    ).toBe("lkf2016");
+      reps.find((r) => r.column === "kon_detalj")?.classificationSlugs,
+    ).toEqual(["lkf2016"]);
   });
 
   it("ranks an open-ended column ahead of a dated one (latest-era primary)", () => {
@@ -780,7 +801,7 @@ describe("representationsCollapse", () => {
       valid_from: "1980-01-01",
       valid_to: "1987-12-31",
       value_set_version_label: label,
-      value_set_id,
+      value_set_id: value_set_id == null ? null : String(value_set_id),
     });
 
   it("collapses coding-identical coexisting columns (UT0290/UT0280)", () => {
@@ -1740,7 +1761,7 @@ describe("pickerRepresentations (#678 direct picker)", () => {
   it("one row per distinct (variant, delivery column), period spanning its states", () => {
     const states = [
       state({
-        state_id: 1,
+        state_id: "1",
         variant: "individer",
         delivery_column_name: "Kon",
         valid_from: "2010-01-01",
@@ -1748,7 +1769,7 @@ describe("pickerRepresentations (#678 direct picker)", () => {
         value_set_version_label: "1-siffrig",
       }),
       state({
-        state_id: 2,
+        state_id: "2",
         variant: "individer",
         delivery_column_name: "Kon",
         valid_from: "2016-01-01",
@@ -1756,7 +1777,7 @@ describe("pickerRepresentations (#678 direct picker)", () => {
         value_set_version_label: "1-siffrig",
       }),
       state({
-        state_id: 3,
+        state_id: "3",
         variant: "individer",
         delivery_column_name: "KonDetalj",
         valid_from: "2018-01-01",
@@ -1780,7 +1801,7 @@ describe("pickerRepresentations (#678 direct picker)", () => {
   it("the value-set label comes from the latest-era state of the column", () => {
     const states = [
       state({
-        state_id: 1,
+        state_id: "1",
         variant: "v1",
         delivery_column_name: "Sni",
         valid_from: "2002-01-01",
@@ -1788,7 +1809,7 @@ describe("pickerRepresentations (#678 direct picker)", () => {
         value_set_version_label: "SNI 2002",
       }),
       state({
-        state_id: 2,
+        state_id: "2",
         variant: "v1",
         delivery_column_name: "Sni",
         valid_from: "2007-01-01",
@@ -1966,7 +1987,7 @@ describe("pickerRepresentations (#678 direct picker)", () => {
     // 2010" and the wire period stays unset (no in-grammar token for the end).
     const gstate = (over: Partial<GraphState>): GraphState =>
       ({
-        state_id: 1,
+        state_id: "1",
         period_scope: "intervals",
         representation_run_id: 1,
         variant: "individer",
@@ -1976,7 +1997,7 @@ describe("pickerRepresentations (#678 direct picker)", () => {
         value_set_id: null,
         valid_from: null,
         valid_to: null,
-        classification_slug: null,
+        classification_slugs: [],
         ...over,
       }) as GraphState;
 
@@ -1999,7 +2020,7 @@ describe("pickerRepresentations (#678 direct picker)", () => {
   it("normalizes a null graph-state start to the yearless floor (until <year>)", () => {
     const [row] = pickerRepresentations([
       {
-        state_id: 2,
+        state_id: "2",
         period_scope: "intervals",
         representation_run_id: 1,
         variant: "v1",
@@ -2009,7 +2030,7 @@ describe("pickerRepresentations (#678 direct picker)", () => {
         value_set_id: null,
         valid_from: null, // unknown start
         valid_to: "2008-12-31",
-        classification_slug: null,
+        classification_slugs: [],
       } as GraphState,
     ]);
     expect(row.from).toBe("0001-01-01");
@@ -2026,7 +2047,7 @@ describe("pickerRepresentations (#678 direct picker)", () => {
       state({
         variant: "forvärvsarbetande",
         delivery_column_name: "SUN2020Niva_Old",
-        value_set_id: 303,
+        value_set_id: "303",
         value_set_version_label: "MiS 1996:1",
         valid_from: "2019-01-01",
         valid_to: "2019-12-31",
@@ -2034,7 +2055,7 @@ describe("pickerRepresentations (#678 direct picker)", () => {
       state({
         variant: "forvärvsarbetande",
         delivery_column_name: "SUN2020Niva_Old",
-        value_set_id: 249,
+        value_set_id: "249",
         value_set_version_label: "SUN",
         valid_from: "2020-01-01",
         valid_to: "2023-12-31",
@@ -2050,7 +2071,7 @@ describe("pickerRepresentations (#678 direct picker)", () => {
       state({
         variant: "v1",
         delivery_column_name: "Sun",
-        value_set_id: 249,
+        value_set_id: "249",
         value_set_version_label: "SUN 2020 NivaOld",
         valid_from: "2020-01-01",
         valid_to: "2020-12-31",
@@ -2058,7 +2079,7 @@ describe("pickerRepresentations (#678 direct picker)", () => {
       state({
         variant: "v1",
         delivery_column_name: "Sun",
-        value_set_id: 249,
+        value_set_id: "249",
         value_set_version_label: "SUN 2000 NivaOld",
         valid_from: "2021-01-01",
         valid_to: "2021-12-31",
@@ -2081,7 +2102,7 @@ describe("pickerRepresentations (#678 direct picker)", () => {
       state({
         variant: "v1",
         delivery_column_name: "Col",
-        value_set_id: 42,
+        value_set_id: "42",
         valid_from: "2019-01-01",
         valid_to: "2019-12-31",
       }),
@@ -2094,14 +2115,14 @@ describe("pickerRepresentations (#678 direct picker)", () => {
       state({
         variant: "v1",
         delivery_column_name: "Col",
-        value_set_id: 100,
+        value_set_id: "100",
         valid_from: "2018-01-01",
         valid_to: "2018-12-31",
       }),
       state({
         variant: "v1",
         delivery_column_name: "Col",
-        value_set_id: 100,
+        value_set_id: "100",
         valid_from: "2019-01-01",
         valid_to: "2019-12-31",
       }),
@@ -4008,12 +4029,12 @@ describe("coverageFromStates (#615 availability span)", () => {
     expect(
       coverageFromStates([
         state({
-          state_id: 1,
+          state_id: "1",
           valid_from: "2000-01-01",
           valid_to: "2008-12-31",
         }),
         state({
-          state_id: 2,
+          state_id: "2",
           valid_from: "1995-01-01",
           valid_to: "2010-06-30",
         }),
@@ -4027,7 +4048,7 @@ describe("coverageFromStates (#615 availability span)", () => {
     expect(
       coverageFromStates([
         state({
-          state_id: 1,
+          state_id: "1",
           valid_from: "2005-01-01",
           valid_to: "9999-12-31",
         }),
@@ -4043,7 +4064,7 @@ describe("coverageFromStates (#615 availability span)", () => {
     expect(
       coverageFromStates([
         state({
-          state_id: 1,
+          state_id: "1",
           valid_from: "0001-01-01",
           valid_to: "2008-12-31",
         }),
@@ -4055,7 +4076,7 @@ describe("coverageFromStates (#615 availability span)", () => {
     expect(coverageFromStates([])).toBeNull();
     expect(
       coverageFromStates([
-        state({ state_id: 1, valid_from: "", valid_to: "" }),
+        state({ state_id: "1", valid_from: "", valid_to: "" }),
       ]),
     ).toBeNull();
   });
@@ -4067,7 +4088,7 @@ describe("coverageFromStates (#615 availability span)", () => {
     expect(
       coverageFromStates([
         state({
-          state_id: 1,
+          state_id: "1",
           valid_from: "0001-01-01",
           valid_to: "9999-12-31",
         }),
@@ -4079,12 +4100,12 @@ describe("coverageFromStates (#615 availability span)", () => {
     expect(
       coverageFromStates([
         state({
-          state_id: 1,
+          state_id: "1",
           valid_from: "0001-01-01",
           valid_to: "2008-12-31",
         }),
         state({
-          state_id: 2,
+          state_id: "2",
           valid_from: "2002-01-01",
           valid_to: "2010-12-31",
         }),
@@ -4118,36 +4139,57 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
   // classification edition (the M13 two-level dedup).
   it("dedups NON-classification states by value_set_id, preserving first-seen order", () => {
     const states = [
-      state({ value_set_id: 10, variant: "a", valid_from: "2000-01-01" }),
-      state({ value_set_id: 20, variant: "a", valid_from: "2001-01-01" }),
-      state({ value_set_id: 10, variant: "b", valid_from: "2000-01-01" }),
+      state({ value_set_id: "10", variant: "a", valid_from: "2000-01-01" }),
+      state({ value_set_id: "20", variant: "a", valid_from: "2001-01-01" }),
+      state({ value_set_id: "10", variant: "b", valid_from: "2000-01-01" }),
     ];
     const vs = distinctValueSets(states);
     expect(vs.map((v) => v.key)).toEqual(["id/10", "id/20"]);
   });
 
-  it("collapses several value_set_ids that share one classification_slug into ONE entry (M13)", () => {
+  it("keeps distinct source domains that declare the same classification", () => {
     // kommun's LKF editions: SCB ships ≥2 distinct `value_set_id`s per vintage
     // (lkf1980 ×2, lkf1995 ×3, …). They are the SAME classification edition, so
     // they MUST collapse to one "= LKF 1980" row — not a duplicate per id.
     const states = [
       state({
-        value_set_id: 100,
-        classification_slug: "lkf1980",
+        value_set_id: "100",
+        classifications: [
+          {
+            slug: "lkf1980",
+            short_name: "lkf1980",
+            name: "lkf1980",
+            conformance: null,
+          },
+        ],
         variant: "doda",
         valid_from: "1980-01-01",
         valid_to: "1980-12-31",
       }),
       state({
-        value_set_id: 101, // distinct id, SAME edition
-        classification_slug: "lkf1980",
+        value_set_id: "101", // distinct id, SAME edition
+        classifications: [
+          {
+            slug: "lkf1980",
+            short_name: "lkf1980",
+            name: "lkf1980",
+            conformance: null,
+          },
+        ],
         variant: "fodda",
         valid_from: "1981-01-01",
         valid_to: "1981-12-31",
       }),
       state({
-        value_set_id: 200,
-        classification_slug: "lkf1995",
+        value_set_id: "200",
+        classifications: [
+          {
+            slug: "lkf1995",
+            short_name: "lkf1995",
+            name: "lkf1995",
+            conformance: null,
+          },
+        ],
         variant: "doda",
         valid_from: "1995-01-01",
         valid_to: "1995-12-31",
@@ -4155,17 +4197,16 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     ];
     const vs = distinctValueSets(states);
     // One entry per distinct slug — NOT per value_set_id.
-    expect(vs.map((v) => v.key)).toEqual(["class/lkf1980", "class/lkf1995"]);
+    expect(vs.map((v) => v.key)).toEqual(["id/100", "id/101", "id/200"]);
     // The collapsed edition's usages are the UNION across its ids' variants.
     const lkf1980 = vs[0];
-    expect(lkf1980.classificationSlug).toBe("lkf1980");
-    expect(lkf1980.usages.map((u) => u.variant).sort()).toEqual([
-      "doda",
-      "fodda",
-    ]);
+    expect(lkf1980.classificationSlugs).toEqual(["lkf1980"]);
+    expect(lkf1980.usages.map((u) => u.variant)).toEqual(["doda"]);
+    expect(vs[1].classificationSlugs).toEqual(["lkf1980"]);
+    expect(vs[1].usages.map((u) => u.variant)).toEqual(["fodda"]);
   });
 
-  it("keeps warning-bearing conformance when classification states collapse", () => {
+  it("keeps each source domain’s exact classification conformance", () => {
     // The pre-Y-46 regression, re-stated for on-demand mismatch lists: an edition
     // whose codings warn SEPARATELY (X on one, Y on the next) must not lose either
     // list to the grouping. The lists are per-state relations now, so the entry
@@ -4179,6 +4220,8 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
       checked_code_count: 2,
       matched_code_count: 2,
       nonconforming_code_count: 0,
+      nonstandard_code_count: 0,
+      sentinel_code_count: 0,
       overlap: 1,
       nonconforming_codes: [],
     };
@@ -4187,73 +4230,118 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
       checked_code_count: 3,
       matched_code_count: 2,
       nonconforming_code_count: 1,
+      nonstandard_code_count: 1,
+      sentinel_code_count: 0,
       overlap: 2 / 3,
-      nonconforming_codes: [{ code: "X", label: "Extra" }],
+      nonconforming_codes: [
+        {
+          code: "X",
+          label: "Extra",
+          member_kind: "nonstandard" as const,
+          scoped_sentinels: [],
+        },
+      ],
     };
     const laterWarningConformance = {
       ...cleanConformance,
       checked_code_count: 4,
       matched_code_count: 3,
       nonconforming_code_count: 1,
+      nonstandard_code_count: 1,
+      sentinel_code_count: 0,
       overlap: 3 / 4,
-      nonconforming_codes: [{ code: "Y", label: "Later extra" }],
+      nonconforming_codes: [
+        {
+          code: "Y",
+          label: "Later extra",
+          member_kind: "nonstandard" as const,
+          scoped_sentinels: [],
+        },
+      ],
     };
     const states = [
       state({
-        state_id: 10,
-        value_set_id: 100,
-        classification_slug: "lkf1980",
-        classification_conformance: cleanConformance,
+        state_id: "10",
+        value_set_id: "100",
+        classifications: [
+          {
+            slug: "lkf1980",
+            short_name: "lkf1980",
+            name: "lkf1980",
+            conformance: cleanConformance,
+          },
+        ],
+
         variant: "doda",
         valid_from: "1980-01-01",
         valid_to: "1980-12-31",
       }),
       state({
-        state_id: 11,
-        value_set_id: 101,
+        state_id: "11",
+        value_set_id: "101",
         value_set_version_label: "LKF 1980 rev A",
-        classification_slug: "lkf1980",
-        classification_conformance: warningConformance,
+        classifications: [
+          {
+            slug: "lkf1980",
+            short_name: "lkf1980",
+            name: "lkf1980",
+            conformance: warningConformance,
+          },
+        ],
+
         variant: "fodda",
         valid_from: "1981-01-01",
         valid_to: "1981-12-31",
       }),
       state({
-        state_id: 12,
-        value_set_id: 102,
+        state_id: "12",
+        value_set_id: "102",
         value_set_version_label: "LKF 1980 rev B",
-        classification_slug: "lkf1980",
-        classification_conformance: laterWarningConformance,
+        classifications: [
+          {
+            slug: "lkf1980",
+            short_name: "lkf1980",
+            name: "lkf1980",
+            conformance: laterWarningConformance,
+          },
+        ],
+
         variant: "flytt",
         valid_from: "1982-01-01",
         valid_to: "1982-12-31",
       }),
     ];
     const vs = distinctValueSets(states);
-    expect(vs).toHaveLength(1);
+    expect(vs).toHaveLength(3);
     // Every distinct verdict survives the collapse — each with the state and
     // coding that reads its list, and the period/variants it was recorded over.
-    expect(vs[0].conformances).toEqual([
+    expect(vs.flatMap((v) => v.conformances)).toEqual([
       {
         verdict: cleanConformance,
-        stateId: 10,
-        valueSetId: 100,
+        column: null,
+        aliasWindowFrom: null,
+        stateId: "10",
+        valueSetId: "100",
         versionLabel: "",
         variants: ["doda"],
         spans: [{ from: "1980-01-01", to: "1980-12-31", pooled: false }],
       },
       {
         verdict: warningConformance,
-        stateId: 11,
-        valueSetId: 101,
+        column: null,
+        aliasWindowFrom: null,
+        stateId: "11",
+        valueSetId: "101",
         versionLabel: "LKF 1980 rev A",
         variants: ["fodda"],
         spans: [{ from: "1981-01-01", to: "1981-12-31", pooled: false }],
       },
       {
         verdict: laterWarningConformance,
-        stateId: 12,
-        valueSetId: 102,
+        column: null,
+        aliasWindowFrom: null,
+        stateId: "12",
+        valueSetId: "102",
         versionLabel: "LKF 1980 rev B",
         variants: ["flytt"],
         spans: [{ from: "1982-01-01", to: "1982-12-31", pooled: false }],
@@ -4261,9 +4349,9 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     ]);
     // BOTH warning lists stay reachable — X's and Y's are DISTINCT reads, and
     // each count describes its own (the baseline reported one merged verdict).
-    const warning = vs[0].conformances.filter((c) =>
-      conformanceNeedsNotice(c.verdict),
-    );
+    const warning = vs
+      .flatMap((v) => v.conformances)
+      .filter((c) => conformanceNeedsNotice(c.verdict));
     expect(warning.map((c) => c.verdict.nonconforming_codes[0].code)).toEqual([
       "X",
       "Y",
@@ -4285,39 +4373,63 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
       checked_code_count: 600,
       matched_code_count: 597,
       nonconforming_code_count: 3,
+      nonstandard_code_count: 3,
+      sentinel_code_count: 0,
       overlap: 0.995,
       nonconforming_codes: [],
     };
     const vs = distinctValueSets([
       state({
-        state_id: 30,
-        value_set_id: 902,
+        state_id: "30",
+        value_set_id: "902",
         value_set_version_label: "Församling 2006",
-        classification_slug: "sun2020",
-        classification_conformance: verdict,
+        classifications: [
+          {
+            slug: "sun2020",
+            short_name: "sun2020",
+            name: "sun2020",
+            conformance: verdict,
+          },
+        ],
+
         variant: "doda",
         valid_from: "2006-01-01",
         valid_to: "2006-12-31",
       }),
       state({
-        state_id: 31,
-        value_set_id: 902,
+        state_id: "31",
+        value_set_id: "902",
         value_set_version_label: "Församling 2006",
-        classification_slug: "sun2020",
-        classification_conformance: verdict,
+        classifications: [
+          {
+            slug: "sun2020",
+            short_name: "sun2020",
+            name: "sun2020",
+            conformance: verdict,
+          },
+        ],
+
         variant: "fodda",
         valid_from: "2007-01-01",
         valid_to: "2019-12-31",
       }),
     ]);
-    expect(vs[0].conformances).toEqual([
+    expect(
+      vs[0].conformances.map((c) => ({
+        id: c.stateId,
+        variants: c.variants,
+        spans: c.spans,
+      })),
+    ).toEqual([
       {
-        verdict,
-        stateId: 30,
-        valueSetId: 902,
-        versionLabel: "Församling 2006",
-        variants: ["doda", "fodda"],
-        spans: [{ from: "2006-01-01", to: "2019-12-31", pooled: false }],
+        id: "30",
+        variants: ["doda"],
+        spans: [{ from: "2006-01-01", to: "2006-12-31", pooled: false }],
+      },
+      {
+        id: "31",
+        variants: ["fodda"],
+        spans: [{ from: "2007-01-01", to: "2019-12-31", pooled: false }],
       },
     ]);
   });
@@ -4331,6 +4443,8 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
       checked_code_count: 40,
       matched_code_count: 10,
       nonconforming_code_count: 30,
+      nonstandard_code_count: 30,
+      sentinel_code_count: 0,
       overlap: 0.25,
       nonconforming_codes: [],
     };
@@ -4340,57 +4454,96 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
       checked_code_count: 5,
       matched_code_count: 4,
       nonconforming_code_count: 1,
+      nonstandard_code_count: 1,
+      sentinel_code_count: 0,
       overlap: 0.8,
     };
     const vs = distinctValueSets([
       state({
-        state_id: 10,
-        value_set_id: 100,
-        classification_slug: "lkf1980",
-        classification_conformance: kept,
+        state_id: "10",
+        value_set_id: "100",
+        classifications: [
+          {
+            slug: "lkf1980",
+            short_name: "lkf1980",
+            name: "lkf1980",
+            conformance: kept,
+          },
+        ],
       }),
       state({
-        state_id: 11,
-        value_set_id: 101,
-        classification_slug: "lkf1980",
-        classification_conformance: severed,
+        state_id: "11",
+        value_set_id: "101",
+        classifications: [
+          {
+            slug: "lkf1980",
+            short_name: "lkf1980",
+            name: "lkf1980",
+            conformance: severed,
+          },
+        ],
       }),
     ]);
     // The louder verdict does not silence the other one: both lists stay open.
-    expect(vs[0].conformances.map((c) => c.stateId)).toEqual([10, 11]);
-    expect(vs[0].conformances.map((c) => c.verdict.status)).toEqual([
-      "conforming",
-      "extended",
+    expect(vs.flatMap((v) => v.conformances).map((c) => c.stateId)).toEqual([
+      "10",
+      "11",
     ]);
+    expect(
+      vs.flatMap((v) => v.conformances).map((c) => c.verdict.status),
+    ).toEqual(["conforming", "extended"]);
 
     // A clean verdict is carried too — it simply has nothing to say. WHICH
     // verdicts speak is `conformanceNeedsNotice`, one rule in one place, not a
     // filter baked into the projection.
-    const clean = { ...kept, nonconforming_code_count: 0, overlap: 1 };
+    const clean = {
+      ...kept,
+      nonconforming_code_count: 0,
+      nonstandard_code_count: 0,
+      sentinel_code_count: 0,
+      overlap: 1,
+    };
     const quiet = distinctValueSets([
       state({
-        state_id: 20,
-        value_set_id: 100,
-        classification_slug: "lkf1980",
-        classification_conformance: clean,
+        state_id: "20",
+        value_set_id: "100",
+        classifications: [
+          {
+            slug: "lkf1980",
+            short_name: "lkf1980",
+            name: "lkf1980",
+            conformance: clean,
+          },
+        ],
       }),
       state({
-        state_id: 21,
-        value_set_id: 101,
-        classification_slug: "lkf1980",
-        classification_conformance: clean,
+        state_id: "21",
+        value_set_id: "101",
+        classifications: [
+          {
+            slug: "lkf1980",
+            short_name: "lkf1980",
+            name: "lkf1980",
+            conformance: clean,
+          },
+        ],
       }),
     ]);
-    expect(quiet[0].conformances.map((c) => c.stateId)).toEqual([20, 21]);
+    expect(quiet.flatMap((v) => v.conformances).map((c) => c.stateId)).toEqual([
+      "20",
+      "21",
+    ]);
     expect(
-      quiet[0].conformances.some((c) => conformanceNeedsNotice(c.verdict)),
+      quiet
+        .flatMap((v) => v.conformances)
+        .some((c) => conformanceNeedsNotice(c.verdict)),
     ).toBe(false);
   });
 
   it("buckets a null value_set_id as its own 'no value set' entry", () => {
     const states = [
       state({ value_set_id: null, variant: "a" }),
-      state({ value_set_id: 5, variant: "a" }),
+      state({ value_set_id: "5", variant: "a" }),
       state({ value_set_id: null, variant: "b" }),
     ];
     const vs = distinctValueSets(states);
@@ -4405,14 +4558,14 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     // view can disambiguate the otherwise-identical rows by span.
     const states = [
       state({
-        value_set_id: 1,
+        value_set_id: "1",
         value_set_version_label: "Kommun historisk",
         variant: "a",
         valid_from: "1968-01-01",
         valid_to: "1970-12-31",
       }),
       state({
-        value_set_id: 2,
+        value_set_id: "2",
         value_set_version_label: "Kommun historisk",
         variant: "a",
         valid_from: "1971-01-01",
@@ -4429,28 +4582,35 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
   it("carries classification_slug + version label from the representative state", () => {
     const states = [
       state({
-        value_set_id: 1,
-        classification_slug: "lkf2007",
+        value_set_id: "1",
+        classifications: [
+          {
+            slug: "lkf2007",
+            short_name: "lkf2007",
+            name: "lkf2007",
+            conformance: null,
+          },
+        ],
         value_set_version_label: "LKF",
         variant: "a",
       }),
       state({
-        value_set_id: 2,
-        classification_slug: null,
+        value_set_id: "2",
+        classifications: [],
         value_set_version_label: "Kommun historisk",
         variant: "a",
       }),
     ];
     const vs = distinctValueSets(states);
-    expect(vs[0].classificationSlug).toBe("lkf2007");
-    expect(vs[1].classificationSlug).toBeNull();
+    expect(vs[0].classificationSlugs).toEqual(["lkf2007"]);
+    expect(vs[1].classificationSlugs).toEqual([]);
     expect(vs[1].versionLabel).toBe("Kommun historisk");
   });
 
   it("lists which variants use a value set (the cross-variant case)", () => {
     const states = [
-      state({ value_set_id: 1, variant: "doda", valid_from: "1983-01-01" }),
-      state({ value_set_id: 1, variant: "fodda", valid_from: "1983-01-01" }),
+      state({ value_set_id: "1", variant: "doda", valid_from: "1983-01-01" }),
+      state({ value_set_id: "1", variant: "fodda", valid_from: "1983-01-01" }),
     ];
     const vs = distinctValueSets(states);
     expect(vs[0].usages.map((u) => u.variant).sort()).toEqual([
@@ -4465,7 +4625,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     const years = [1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990];
     const states = years.map((y) =>
       state({
-        value_set_id: 1,
+        value_set_id: "1",
         variant: "doda",
         valid_from: `${y}-01-01`,
         valid_to: `${y}-12-31`,
@@ -4480,8 +4640,8 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
   it("carries technical changes inside a folded value-set span (#743)", () => {
     const states = [
       state({
-        state_id: 1,
-        value_set_id: 1,
+        state_id: "1",
+        value_set_id: "1",
         variant: "doda",
         valid_from: "2010-01-01",
         valid_to: "2010-12-31",
@@ -4489,8 +4649,8 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
         delivery_column_name: "KOMMUN",
       }),
       state({
-        state_id: 2,
-        value_set_id: 1,
+        state_id: "2",
+        value_set_id: "1",
         variant: "doda",
         valid_from: "2011-01-01",
         valid_to: "2011-12-31",
@@ -4521,24 +4681,24 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     "does not report a replacement when a successor adds an alias (%s)",
     (_label, continuingStateId, aliasStateId, reverseSuccessors) => {
       const predecessor = state({
-        state_id: 1,
-        value_set_id: 1,
+        state_id: "1",
+        value_set_id: "1",
         variant: "individer",
         valid_from: "2017-01-01",
         valid_to: "2017-12-31",
         delivery_column_name: "A",
       });
       const continuing = state({
-        state_id: continuingStateId,
-        value_set_id: 1,
+        state_id: String(continuingStateId),
+        value_set_id: "1",
         variant: "individer",
         valid_from: "2018-01-01",
         valid_to: "2018-12-31",
         delivery_column_name: "A",
       });
       const alias = state({
-        state_id: aliasStateId,
-        value_set_id: 1,
+        state_id: String(aliasStateId),
+        value_set_id: "1",
         variant: "individer",
         valid_from: "2018-01-01",
         valid_to: "2018-12-31",
@@ -4564,16 +4724,16 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
   it("does not report technical changes for same-state monthly windows", () => {
     const states = [
       state({
-        state_id: 10,
-        value_set_id: 1,
+        state_id: "10",
+        value_set_id: "1",
         variant: "individer",
         valid_from: "2020-01-01",
         valid_to: "2020-01-31",
         delivery_column_name: "LonFinkJan",
       }),
       state({
-        state_id: 10,
-        value_set_id: 1,
+        state_id: "10",
+        value_set_id: "1",
         variant: "individer",
         valid_from: "2020-02-01",
         valid_to: "2020-02-29",
@@ -4589,14 +4749,14 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
   it("does not report technical changes for overlapping alternatives", () => {
     const states = [
       state({
-        value_set_id: 1,
+        value_set_id: "1",
         variant: "individer",
         valid_from: "2020-01-01",
         valid_to: "2020-12-31",
         delivery_column_name: "A",
       }),
       state({
-        value_set_id: 1,
+        value_set_id: "1",
         variant: "individer",
         valid_from: "2020-06-01",
         valid_to: "2021-12-31",
@@ -4612,8 +4772,8 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
   it("keeps the span-end predecessor after a contained overlap", () => {
     const states = [
       state({
-        state_id: 1,
-        value_set_id: 1,
+        state_id: "1",
+        value_set_id: "1",
         variant: "individer",
         valid_from: "2020-01-01",
         valid_to: "2021-12-31",
@@ -4621,8 +4781,8 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
         delivery_column_name: "A",
       }),
       state({
-        state_id: 2,
-        value_set_id: 1,
+        state_id: "2",
+        value_set_id: "1",
         variant: "individer",
         valid_from: "2021-01-01",
         valid_to: "2021-06-30",
@@ -4630,8 +4790,8 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
         delivery_column_name: "B",
       }),
       state({
-        state_id: 3,
-        value_set_id: 1,
+        state_id: "3",
+        value_set_id: "1",
         variant: "individer",
         valid_from: "2022-01-01",
         valid_to: "2022-12-31",
@@ -4658,24 +4818,24 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
   it("does not pick an arbitrary transition after equal-end overlapping alternatives", () => {
     const states = [
       state({
-        state_id: 1,
-        value_set_id: 1,
+        state_id: "1",
+        value_set_id: "1",
         variant: "individer",
         valid_from: "2020-01-01",
         valid_to: "2020-12-31",
         delivery_column_name: "A",
       }),
       state({
-        state_id: 2,
-        value_set_id: 1,
+        state_id: "2",
+        value_set_id: "1",
         variant: "individer",
         valid_from: "2020-06-01",
         valid_to: "2020-12-31",
         delivery_column_name: "B",
       }),
       state({
-        state_id: 3,
-        value_set_id: 1,
+        state_id: "3",
+        value_set_id: "1",
         variant: "individer",
         valid_from: "2021-01-01",
         valid_to: "2021-12-31",
@@ -4691,14 +4851,14 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
   it("a gap year splits a span in two", () => {
     const states = [
       state({
-        value_set_id: 1,
+        value_set_id: "1",
         variant: "doda",
         valid_from: "2000-01-01",
         valid_to: "2000-12-31",
       }),
       // 2001 missing → gap.
       state({
-        value_set_id: 1,
+        value_set_id: "1",
         variant: "doda",
         valid_from: "2002-01-01",
         valid_to: "2002-12-31",
@@ -4714,13 +4874,13 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
   it("does not merge across different variants (spans are per-variant)", () => {
     const states = [
       state({
-        value_set_id: 1,
+        value_set_id: "1",
         variant: "doda",
         valid_from: "2000-01-01",
         valid_to: "2000-12-31",
       }),
       state({
-        value_set_id: 1,
+        value_set_id: "1",
         variant: "fodda",
         valid_from: "2001-01-01",
         valid_to: "2001-12-31",
@@ -4740,7 +4900,7 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
   it("keeps the open-ended ceiling on a still-delivered span", () => {
     const states = [
       state({
-        value_set_id: 1,
+        value_set_id: "1",
         variant: "doda",
         valid_from: "2016-01-01",
         valid_to: "9999-12-31",
@@ -4759,25 +4919,39 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     // span — not one per id (which would leave two adjacent rows).
     const states = [
       state({
-        value_set_id: 100,
-        classification_slug: "lkf1980",
+        value_set_id: "100",
+        classifications: [
+          {
+            slug: "lkf1980",
+            short_name: "lkf1980",
+            name: "lkf1980",
+            conformance: null,
+          },
+        ],
         variant: "doda",
         valid_from: "1980-01-01",
         valid_to: "1980-12-31",
       }),
       state({
-        value_set_id: 101, // distinct id, SAME edition + variant + adjacent year
-        classification_slug: "lkf1980",
+        value_set_id: "101", // distinct id, SAME edition + variant + adjacent year
+        classifications: [
+          {
+            slug: "lkf1980",
+            short_name: "lkf1980",
+            name: "lkf1980",
+            conformance: null,
+          },
+        ],
         variant: "doda",
         valid_from: "1981-01-01",
         valid_to: "1981-12-31",
       }),
     ];
     const vs = distinctValueSets(states);
-    expect(vs).toHaveLength(1);
+    expect(vs).toHaveLength(2);
     expect(vs[0].usages).toHaveLength(1);
     expect(vs[0].usages[0].spans).toEqual([
-      { from: "1980-01-01", to: "1981-12-31", pooled: false },
+      { from: "1980-01-01", to: "1980-12-31", pooled: false },
     ]);
   });
 
@@ -4786,13 +4960,13 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     // single span spanning the outer bounds.
     const states = [
       state({
-        value_set_id: 1,
+        value_set_id: "1",
         variant: "doda",
         valid_from: "2000-01-01",
         valid_to: "2003-12-31",
       }),
       state({
-        value_set_id: 1,
+        value_set_id: "1",
         variant: "doda",
         valid_from: "2002-01-01", // starts INSIDE the first window
         valid_to: "2005-12-31",
@@ -4809,13 +4983,13 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     // span — the day-after adjacency test must NOT fuse across it.
     const states = [
       state({
-        value_set_id: 1,
+        value_set_id: "1",
         variant: "doda",
         valid_from: "2000-01-01",
         valid_to: "2000-06-30",
       }),
       state({
-        value_set_id: 1,
+        value_set_id: "1",
         variant: "doda",
         valid_from: "2000-08-01", // a one-month gap after 2000-06-30
         valid_to: "2000-12-31",
@@ -4837,13 +5011,13 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     // "since 2016" one.
     const states = [
       state({
-        value_set_id: 1,
+        value_set_id: "1",
         variant: "doda",
         valid_from: "2016-01-01",
         valid_to: "9999-12-31",
       }),
       state({
-        value_set_id: 1,
+        value_set_id: "1",
         variant: "doda",
         valid_from: "2020-01-01",
         valid_to: "9999-12-31",
@@ -4860,13 +5034,13 @@ describe("valueSetKeyForColumn (#905 — deep-link column → value set)", () =>
   it("maps a stable-coding column to its distinct value set key", () => {
     const states = [
       state({
-        value_set_id: 100,
+        value_set_id: "100",
         delivery_column_name: "COLA",
         valid_from: "2010-01-01",
         valid_to: "2012-12-31",
       }),
       state({
-        value_set_id: 200,
+        value_set_id: "200",
         delivery_column_name: "COLB",
         valid_from: "2010-01-01",
         valid_to: "2012-12-31",
@@ -4882,13 +5056,13 @@ describe("valueSetKeyForColumn (#905 — deep-link column → value set)", () =>
     // representative.
     const states = [
       state({
-        value_set_id: 303,
+        value_set_id: "303",
         delivery_column_name: "COL",
         valid_from: "2015-01-01",
         valid_to: "2018-12-31",
       }),
       state({
-        value_set_id: 249,
+        value_set_id: "249",
         delivery_column_name: "COL",
         valid_from: "2019-01-01",
         valid_to: "2022-12-31",
@@ -4903,16 +5077,16 @@ describe("valueSetKeyForColumn (#905 — deep-link column → value set)", () =>
     // the picker row and deep-link resolver stay aligned.
     const states = [
       state({
-        state_id: 5,
-        value_set_id: 303,
+        state_id: "5",
+        value_set_id: "303",
         value_set_version_label: "SNI 2003",
         delivery_column_name: "COL",
         valid_from: "2018-01-01",
         valid_to: "2022-12-31",
       }),
       state({
-        state_id: 9,
-        value_set_id: 249,
+        state_id: "9",
+        value_set_id: "249",
         value_set_version_label: "SNI 2022",
         delivery_column_name: "COL",
         valid_from: "2019-01-01",
@@ -4927,18 +5101,27 @@ describe("valueSetKeyForColumn (#905 — deep-link column → value set)", () =>
   it("resolves a classification column to its slug key (two-level dedup)", () => {
     const states = [
       state({
-        value_set_id: 100,
-        classification_slug: "lkf2007",
+        value_set_id: "100",
+        classifications: [
+          {
+            slug: "lkf2007",
+            short_name: "lkf2007",
+            name: "lkf2007",
+            conformance: null,
+          },
+        ],
         delivery_column_name: "KOMMUN",
         valid_from: "2007-01-01",
         valid_to: "2010-12-31",
       }),
     ];
-    expect(valueSetKeyForColumn(states, "KOMMUN")).toBe("class/lkf2007");
+    expect(valueSetKeyForColumn(states, "KOMMUN")).toBe("id/100");
   });
 
   it("returns null when no state delivers the column", () => {
-    const states = [state({ value_set_id: 100, delivery_column_name: "COLA" })];
+    const states = [
+      state({ value_set_id: "100", delivery_column_name: "COLA" }),
+    ];
     expect(valueSetKeyForColumn(states, "NOPE")).toBeNull();
   });
 
@@ -4951,14 +5134,14 @@ describe("valueSetKeyForColumn (#905 — deep-link column → value set)", () =>
     const states = [
       state({
         variant: "a",
-        value_set_id: 100,
+        value_set_id: "100",
         delivery_column_name: "COL",
         valid_from: "2015-01-01",
         valid_to: "2018-12-31",
       }),
       state({
         variant: "b",
-        value_set_id: 200,
+        value_set_id: "200",
         delivery_column_name: "COL",
         valid_from: "2019-01-01",
         valid_to: "2022-12-31",
@@ -4978,7 +5161,7 @@ describe("valueSetKeyForColumn (#905 — deep-link column → value set)", () =>
     const states = [
       state({
         variant: "only",
-        value_set_id: 300,
+        value_set_id: "300",
         delivery_column_name: "COL",
       }),
     ];
@@ -5042,7 +5225,7 @@ describe("year-independent delivery", () => {
       valid_to: null,
       variant: "country-groups",
       delivery_column_name: "CountryGroup",
-      value_set_id: 1,
+      value_set_id: "1",
     });
     expect(formatStateWindow(independent)).toBe("Year-independent");
     expect(coverageFromStates([independent])).toBeNull();

@@ -213,7 +213,7 @@ class TestGetRegister:
     def test_by_name(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "register", "TESTREG"])
         assert code == 0
-        assert data["data"]["register_id"] == 1
+        assert data["data"]["register_id"] == "1"
 
     def test_fuzzy_match(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "register", "TEST"])
@@ -221,9 +221,9 @@ class TestGetRegister:
         # "TEST" matches "TESTREG" by substring
         if "registers" in data["data"]:
             ids = [r["register_id"] for r in data["data"]["registers"]]
-            assert 1 in ids
+            assert "1" in ids
         else:
-            assert data["data"]["register_id"] == 1
+            assert data["data"]["register_id"] == "1"
 
     def test_not_found(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "register", "ZZZNONEXIST"])
@@ -242,7 +242,7 @@ class TestGetSchema:
         assert code == 0
         variants = data["data"]["variants"]
         assert len(variants) == 1
-        assert variants[0]["register_variant_id"] == 10
+        assert variants[0]["register_variant_id"] == "10"
         assert len(variants[0]["versions"]) == 3  # 2020, 2021, 2022
 
     def test_by_register(self, db_path: str):
@@ -402,7 +402,7 @@ class TestGetVarinfo:
         )
         assert code == 0
         assert data["data"]["name"] == "Kön"
-        assert data["data"]["register_id"] == 1
+        assert data["data"]["register_id"] == "1"
         # A2.6: "instances" are `variable_state` rows now (coalesced per-delivery
         # shape), not per-cvid rows — TESTREG Kön has two states.
         assert len(data["data"]["instances"]) == 2
@@ -593,7 +593,7 @@ class TestSplitSiblingIsolation:
 
     def test_classifications_isolate_per_sibling(self):
         """A2.7 resolves the A2.6 limitation: `classifications_for_variable`
-        re-sources off `variable_state.classification_id` keyed by `variable_id`,
+        follows exact state_classification links keyed by variable_id,
         so each split sibling returns ONLY its own classification. Pre-A2.7 (off
         `variable_instance`, keyed by the shared `var_id`) both siblings would
         return BOTH classifications."""
@@ -619,11 +619,11 @@ class TestSplitSiblingIsolation:
             for slug in ("ssyk-3pos", "ssyk-5pos")
         )
         conn.execute(
-            "UPDATE variable_state SET classification_id = ? WHERE variable_id = ?",
+            "INSERT INTO state_classification (classification_id, state_id) SELECT ?, state_id FROM variable_state WHERE variable_id = ?",
             (cls_a, a_vid),
         )
         conn.execute(
-            "UPDATE variable_state SET classification_id = ? WHERE variable_id = ?",
+            "INSERT INTO state_classification (classification_id, state_id) SELECT ?, state_id FROM variable_state WHERE variable_id = ?",
             (cls_b, b_vid),
         )
         conn.commit()
@@ -841,6 +841,53 @@ class TestGetValues:
         assert out["groups"][1]["variable_slugs"] == ["kon-barn"]
         labels = {v["label"] for v in out["groups"][1]["values"]}
         assert labels == {"Pojke", "Flicka"}
+
+    def test_grouped_codes_keep_per_column_owner_coordinates(self):
+        from reg_meta.cli import _group_instances_by_codes
+
+        common = {
+            "state_id": 4205816878166387785,
+            "variable_slug": "headquarters",
+            "register_id": 3260911770827315191,
+            "register_name": "Survey",
+            "register_variant_id": 10,
+            "variant_name": "Firms",
+            "valid_from": "2006-01-01",
+            "valid_to": "2006-12-31",
+            "year": 2006,
+        }
+        instances = [
+            common
+            | {
+                "delivery_column_name": column,
+                "value_set_version_label": label,
+                "values": [{"code": str(code), "label": "Source"}],
+            }
+            for column, label, code in (
+                ("A1a2codes", "native-a", 1),
+                ("Q1a3codes", "native-q", 2),
+            )
+        ]
+        output = _group_instances_by_codes(
+            instances,
+            input_value="Headquarters",
+            variable_name="Headquarters",
+            year=2006,
+        )
+        owners = [
+            instance for group in output["groups"] for instance in group["instances"]
+        ]
+        assert {
+            (
+                owner["state_id"],
+                owner["delivery_column_name"],
+                owner["value_set_version_label"],
+            )
+            for owner in owners
+        } == {
+            (common["state_id"], "A1a2codes", "native-a"),
+            (common["state_id"], "Q1a3codes", "native-q"),
+        }
 
     def test_groups_text_rendering(self, tmp_path):
         """`_write_groups_payload` renders a header summary, per-group code
@@ -1086,7 +1133,7 @@ class TestGetDatacolumns:
             ["--db", db_path, "get", "datacolumns", "Kön", "--register", "TESTREG"]
         )
         assert code == 0
-        assert all(r["register_id"] == 1 for r in data["data"])
+        assert all(r["register_id"] == "1" for r in data["data"])
 
     def test_alias_anomaly(self, db_path: str):
         """TestVar should show both TestCol and TestKolumn aliases."""
@@ -1199,7 +1246,7 @@ class TestResolve:
         assert code == 0
         col = data["data"]["columns"][0]
         assert col["status"] == "matched"
-        assert all(m["register_id"] == 1 for m in col["matches"])
+        assert all(m["register_id"] == "1" for m in col["matches"])
         # Nothing is split in the fixture register, so the match stays unique.
         assert len(col["matches"]) == 1
 
@@ -1208,7 +1255,7 @@ class TestResolve:
         col = data["data"]["columns"][0]
         reg_ids = {m["register_id"] for m in col["matches"]}
         # "Kon" is in reg 1, "KON" is in reg 2 — case-insensitive should match both
-        assert 1 in reg_ids
+        assert "1" in reg_ids
 
     def test_case_insensitive(self, db_path: str):
         data, _ = _run_json(["--db", db_path, "resolve", "--columns", "kon"])
@@ -1528,7 +1575,7 @@ class TestGetDiff:
         )
         assert code == 0
         assert len(data["data"]["variants"]) >= 1
-        assert data["data"]["variants"][0]["register_variant_id"] == 10
+        assert data["data"]["variants"][0]["register_variant_id"] == "10"
 
     def test_year_with_no_covering_state_is_empty(self, db_path: str):
         """A2.6: schema-at-year now uses `variable_state` validity overlap (no
@@ -1650,7 +1697,7 @@ class TestGetLineage:
             r for r in data["data"]["registers"] if r["register_name"] == "OTHERREG"
         )
         # TESTREG should resolve to register_id "1"
-        assert otherreg["source_register_id"] == 1
+        assert otherreg["source_register_id"] == "1"
         assert otherreg["source_register_text"] == "TESTREG"
 
     def test_no_provenance_is_unknown(self, db_path: str):
@@ -1718,7 +1765,7 @@ class TestGetAvailability:
         d = data["data"]
         assert d["target_type"] == "variable"
         # Should only have TESTREG
-        assert all(r["register_id"] == 1 for r in d["registers"])
+        assert all(r["register_id"] == "1" for r in d["registers"])
 
     def test_register_availability(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "availability", "TESTREG"])

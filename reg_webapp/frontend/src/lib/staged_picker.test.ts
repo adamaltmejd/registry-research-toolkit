@@ -821,11 +821,11 @@ describe("rowAddSegments (#376 per-concrete-segment fan-out)", () => {
 function leafState(over: Partial<VariableStateModel>): VariableStateModel {
   return {
     warning_ids: [],
-    state_id: 1,
+    state_id: "1",
     period_scope: "intervals",
     variant: "individer",
     variant_label: null,
-    register_variant_id: 1,
+    register_variant_id: "1",
     valid_from: "1990-01-01",
     valid_to: "2023-12-31",
     data_type: "int",
@@ -835,10 +835,10 @@ function leafState(over: Partial<VariableStateModel>): VariableStateModel {
     provenance: null,
     pooled: false,
     value_set_version_label: "",
-    value_set_id: 7,
+    value_set_id: "7",
     value_set: null,
     is_identifier: false,
-    classification_slug: null,
+    classifications: [],
     ...over,
   };
 }
@@ -877,8 +877,8 @@ const konDeliveries: VariableDeliveryModel[] = [
  * PARALLEL variants, so the leaf enumerates two rows — the same two the register
  * list's one tickable column stands for. */
 const konStates = [
-  leafState({ state_id: 1, variant: "hushall" }),
-  leafState({ state_id: 2, variant: "individer" }),
+  leafState({ state_id: "1", variant: "hushall" }),
+  leafState({ state_id: "2", variant: "individer" }),
 ];
 
 const konBandKey = "scb/lisa/kon";
@@ -890,21 +890,21 @@ const lanBandKey = "scb/civilstandsandringar/lan";
 
 const lanStates = [
   leafState({
-    state_id: 1,
+    state_id: "1",
     variant: "andringar",
     delivery_column_name: "Lan",
     valid_from: "1968-01-01",
     valid_to: "1968-12-31",
   }),
   leafState({
-    state_id: 2,
+    state_id: "2",
     variant: "andringar",
     delivery_column_name: "Lan",
     valid_from: "1995-01-01",
     valid_to: "1996-12-31",
   }),
   leafState({
-    state_id: 3,
+    state_id: "3",
     variant: "andringar",
     delivery_column_name: "Lan",
     valid_from: "1998-01-01",

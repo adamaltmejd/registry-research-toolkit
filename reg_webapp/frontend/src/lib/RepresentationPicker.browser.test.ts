@@ -51,7 +51,7 @@ function row(over: Partial<PickerRepresentation>): PickerRepresentation {
 
 function graphState(over: Partial<GraphState> = {}): GraphState {
   return {
-    state_id: 1,
+    state_id: "1",
     period_scope: "intervals",
     variant: "v",
     variant_label: null,
@@ -60,7 +60,7 @@ function graphState(over: Partial<GraphState> = {}): GraphState {
     valid_to: "2010-12-31",
     value_set_id: null,
     value_set_version_label: "",
-    classification_slug: null,
+    classification_slugs: [],
     delivery_column_name: "Col",
     ...over,
   };
@@ -161,7 +161,7 @@ type LisaIndividerVariant = "individer-16plus" | "individer-15plus";
 function lisaIndividerState(variant: LisaIndividerVariant): PickerStateInput {
   const predecessor = variant === "individer-16plus";
   return {
-    state_id: predecessor ? 1 : 2,
+    state_id: predecessor ? "1" : "2",
     period_scope: "intervals",
     variant,
     variant_label: predecessor ? "Individer, 16 plus" : "Individer, 15 plus",
@@ -321,7 +321,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
         label: "B",
         states: [
           graphState({
-            state_id: 2,
+            state_id: "2",
             period_scope: "intervals",
             representation_run_id: 2,
             delivery_column_name: "Bcol",
@@ -375,7 +375,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
           valid_to: "2009-12-31",
         }),
         graphState({
-          state_id: 2,
+          state_id: "2",
           period_scope: "intervals",
           representation_run_id: 2,
           delivery_column_name: "NEW",
@@ -446,7 +446,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             label: "Successor",
             states: [
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "NextCol",
@@ -519,7 +519,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             label: "Successor",
             states: [
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "NextCol",
@@ -595,7 +595,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             label: "No-column successor",
             states: [
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: null,
@@ -693,7 +693,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
                 valid_to: "2009-12-31",
               }),
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: null,
@@ -706,7 +706,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
           graphNode(bFqid, {
             states: [
               graphState({
-                state_id: 3,
+                state_id: "3",
                 period_scope: "intervals",
                 representation_run_id: 3,
                 delivery_column_name: null,
@@ -992,7 +992,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
                 valid_to: "2013-12-31",
               }),
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "PersOrgNr",
@@ -1000,7 +1000,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
                 valid_to: "2017-12-31",
               }),
               graphState({
-                state_id: 3,
+                state_id: "3",
                 period_scope: "intervals",
                 representation_run_id: 3,
                 delivery_column_name: "BorgNr",
@@ -1174,7 +1174,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
           graphNode(aFqid, {
             states: [
               graphState({
-                state_id: 1,
+                state_id: "1",
                 period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "OLD",
@@ -1182,7 +1182,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
                 valid_to: "1999-12-31",
               }),
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "NEW",
@@ -1369,7 +1369,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
                 valid_to: "2009-12-31",
               }),
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 variant: "individer-15plus",
                 representation_run_id: 2,
@@ -1479,7 +1479,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
                 valid_to: "2009-12-31",
               }),
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 variant: "individer-15plus",
                 representation_run_id: 2,
@@ -1492,7 +1492,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
           graphNode(successorFqid, {
             states: [
               graphState({
-                state_id: 3,
+                state_id: "3",
                 period_scope: "intervals",
                 representation_run_id: 3,
                 delivery_column_name: "Kon2",
@@ -1567,7 +1567,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
           graphNode(bFqid, {
             states: [
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "NEXT",
@@ -1629,7 +1629,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
           graphNode(aFqid, {
             states: [
               graphState({
-                state_id: 1,
+                state_id: "1",
                 period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "OLD",
@@ -1637,7 +1637,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
                 valid_to: "1999-12-31",
               }),
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "NEW",
@@ -1696,13 +1696,13 @@ describe("RepresentationPicker graph mode (#904)", () => {
           graphNode(aFqid, {
             states: [
               graphState({
-                state_id: 1,
+                state_id: "1",
                 period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "HIDDEN",
               }),
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "MEMBER",
@@ -1768,7 +1768,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
           graphNode(aFqid, {
             states: [
               graphState({
-                state_id: 1,
+                state_id: "1",
                 period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "HIDDEN",
@@ -1776,7 +1776,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
                 valid_to: "1999-12-31",
               }),
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "MEMBER",
@@ -1895,7 +1895,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
           graphNode(bFqid, {
             states: [
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "Bcol",
@@ -1939,7 +1939,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
       return graphNode(fqid, {
         states: [
           graphState({
-            state_id: i + 1,
+            state_id: String(i + 1),
             period_scope: "intervals",
             representation_run_id: i + 1,
             delivery_column_name: `C${i}`,
@@ -2062,7 +2062,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
           graphNode(aFqid, {
             states: columns.map((column, i) =>
               graphState({
-                state_id: i + 1,
+                state_id: String(i + 1),
                 period_scope: "intervals",
                 representation_run_id: i + 1,
                 delivery_column_name: column,
@@ -2074,7 +2074,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
           graphNode(bFqid, {
             states: [
               graphState({
-                state_id: 100,
+                state_id: "100",
                 period_scope: "intervals",
                 representation_run_id: 100,
                 delivery_column_name: "NEXT",
@@ -2144,7 +2144,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
           graphNode(aFqid, {
             states: [
               graphState({
-                state_id: 1,
+                state_id: "1",
                 period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "OLD",
@@ -2153,7 +2153,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
                 valid_to: "1999-12-31",
               }),
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "NEW",
@@ -2221,7 +2221,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
           graphNode(aFqid, {
             states: [
               graphState({
-                state_id: 1,
+                state_id: "1",
                 period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "OLD",
@@ -2230,7 +2230,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
                 valid_to: "1999-12-31",
               }),
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "NEW",
@@ -2318,23 +2318,23 @@ describe("RepresentationPicker graph mode (#904)", () => {
           graphNode(fqid, {
             states: [
               graphState({
-                state_id: 1,
+                state_id: "1",
                 period_scope: "intervals",
                 variant: "individer-16plus",
                 representation_run_id: 1,
                 delivery_column_name: "Kon",
-                value_set_id: 10,
+                value_set_id: "10",
                 value_set_version_label: "16+ coding",
                 valid_from: "1990-01-01",
                 valid_to: "2009-12-31",
               }),
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 variant: "individer-15plus",
                 representation_run_id: 2,
                 delivery_column_name: "Kon",
-                value_set_id: 20,
+                value_set_id: "20",
                 value_set_version_label: "15+ coding",
                 valid_from: "2010-01-01",
                 valid_to: "2023-12-31",
@@ -2390,13 +2390,13 @@ describe("RepresentationPicker graph mode (#904)", () => {
           graphNode(aFqid, {
             states: [
               graphState({
-                state_id: 1,
+                state_id: "1",
                 period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "MEMBER",
               }),
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "HIDDEN",
@@ -2486,13 +2486,13 @@ describe("RepresentationPicker graph mode (#904)", () => {
             states: [
               graphState({ delivery_column_name: "DIN1" }),
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "DIN2",
               }),
               graphState({
-                state_id: 3,
+                state_id: "3",
                 period_scope: "intervals",
                 representation_run_id: 3,
                 delivery_column_name: "DIN3",
@@ -2502,7 +2502,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
           graphNode("scb/iot/next", {
             states: [
               graphState({
-                state_id: 4,
+                state_id: "4",
                 period_scope: "intervals",
                 representation_run_id: 4,
                 delivery_column_name: "NEXT",
@@ -2567,7 +2567,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
           graphNode(bFqid, {
             states: [
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "NEXT",
@@ -2652,7 +2652,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
           graphNode(bFqid, {
             states: [
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "SUNNEXT",
@@ -2713,13 +2713,13 @@ describe("RepresentationPicker graph mode (#904)", () => {
           graphNode(aFqid, {
             states: [
               graphState({
-                state_id: 1,
+                state_id: "1",
                 period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "JAN",
               }),
               graphState({
-                state_id: 1,
+                state_id: "1",
                 period_scope: "intervals",
                 representation_run_id: 1,
                 delivery_column_name: "FEB",
@@ -2729,7 +2729,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
           graphNode(bFqid, {
             states: [
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "NEXT",
@@ -2827,7 +2827,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
             group_label: null,
             states: [
               graphState({
-                state_id: 2,
+                state_id: "2",
                 period_scope: "intervals",
                 representation_run_id: 2,
                 delivery_column_name: "Syss",
@@ -4059,7 +4059,7 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
           registerPrefix: "scb/lisa",
           rows: pickerRepresentations(
             populations.map((p, i) => ({
-              state_id: i + 1,
+              state_id: String(i + 1),
               period_scope: "intervals",
               variant: p.variant,
               variant_label: p.label,
@@ -4077,7 +4077,7 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
             label: "Kön",
             states: populations.map((p, i) =>
               graphState({
-                state_id: i + 1,
+                state_id: String(i + 1),
                 period_scope: "intervals",
                 representation_run_id: i + 1,
                 variant: p.variant,
@@ -4227,7 +4227,7 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
             label: "Sysselsättning",
             states: [
               graphState({
-                state_id: 3,
+                state_id: "3",
                 period_scope: "intervals",
                 representation_run_id: 3,
                 delivery_column_name: "Syss",
@@ -4514,7 +4514,7 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
           registerPrefix: "scb/lisa",
           rows: pickerRepresentations(
             labels.map((label, i) => ({
-              state_id: i + 1,
+              state_id: String(i + 1),
               period_scope: "intervals",
               variant: variants[i],
               variant_label: label,
@@ -4532,7 +4532,7 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
             label: "Kön",
             states: labels.map((label, i) =>
               graphState({
-                state_id: i + 1,
+                state_id: String(i + 1),
                 period_scope: "intervals",
                 representation_run_id: i + 1,
                 variant: variants[i],

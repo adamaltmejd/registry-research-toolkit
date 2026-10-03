@@ -222,21 +222,37 @@ def test_cis2016_matrix_columns_map_to_their_answer_identities(
     assert physical_names["co11"] == "co11"
     assert physical_names["co52"] == "Co52"
 
-    # Identically spelled columns outside the two reviewed waves remain on the
-    # unreviewed source identity; neither declaration establishes continuity.
-    older = [
-        mapping
+    # Reviewed 2014/2016 meanings do not establish ownership for older deliveries.
+    older_tables = [
+        table.model_copy(
+            update={
+                "columns": tuple(
+                    column
+                    for column in table.columns
+                    if column.name.casefold() in answer_by_column
+                )
+            }
+        )
         for table in inventory.tables
         if table.id == f"CIS{table.edition}" and table.id not in {"CIS2014", "CIS2016"}
-        for column in table.columns
-        for mapping in column.mappings
-        if mapping.representation is not None
-        and mapping.representation.casefold() in answer_by_column
     ]
-    assert len(older) == 183
-    assert all(
-        str(mapping.variable) == "scb/innovation-foretag/co11" for mapping in older
-    )
+    older_columns = [column for table in older_tables for column in table.columns]
+    assert len(older_columns) == 183
+    assert {table.id: len(table.columns) for table in older_tables} == {
+        "CIS2002": 30,
+        "CIS2004": 24,
+        "CIS2006": 24,
+        "CIS2008": 30,
+        "CIS2010": 30,
+        "CIS2012": 45,
+        "CIS2018": 0,
+        "CIS2020": 0,
+    }
+    assert all(not column.mappings for column in older_columns)
+    retained = inventory.model_copy(update={"tables": tuple(older_tables)})
+    index = build_catalog_index(retained, _NoCatalog())
+    assert not index.admitted_variable_fqids
+    assert not index.periods_by_coordinate
 
 
 def test_every_mapping_pins_its_representation(inventory: DeliveryInventory) -> None:

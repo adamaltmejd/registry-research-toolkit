@@ -724,18 +724,14 @@ def test_representation_gap_in_list_year_segment_is_clipped(
 
 
 @pytest.fixture
-def synthesized_feb_end_catalog():
-    """A state whose upper bound is the grammar-generated non-leap Feb-29.
-
-    reg_meta period-token windows may carry this ISO-shaped but non-calendar
-    bound, so semantic gap math must normalize it before using `date` arithmetic.
-    """
+def february_catalog():
+    """A valid February-only delivery under-covers a requested calendar year."""
     from _slugged_db import build_slugged_db
 
     conn = build_slugged_db()
     conn.execute(
         "UPDATE variable_state SET delivery_column_name = 'kon', "
-        "valid_from = '2019-02-01', valid_to = '2019-02-29' "
+        "valid_from = '2019-02-01', valid_to = '2019-02-28' "
         "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
     )
     conn.commit()
@@ -745,8 +741,8 @@ def synthesized_feb_end_catalog():
         conn.close()
 
 
-def test_representation_with_synthesized_feb_end_does_not_crash(
-    synthesized_feb_end_catalog,
+def test_february_representation_has_partial_annual_coverage(
+    february_catalog,
 ):
     source = {
         "name": "s",
@@ -760,9 +756,8 @@ def test_representation_with_synthesized_feb_end_does_not_crash(
             }
         ],
     }
-    result = validate_semantic(_project([source]), synthesized_feb_end_catalog)
-    # The state's non-calendar `2019-02-29` upper bound is snapped, so the gap
-    # math runs: the concept simply under-covers the requested year (info).
+    result = validate_semantic(_project([source]), february_catalog)
+    # February delivery does not establish coverage of the rest of the year.
     assert [(i.code, i.level) for i in result.issues] == [
         ("range_period_partially_covered", "info")
     ]

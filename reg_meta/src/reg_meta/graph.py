@@ -47,6 +47,7 @@ from pydantic import Field
 from .catalog import (
     OPEN_ENDED_VALID_TO,
     UNKNOWN_VALID_FROM,
+    CatalogStorageId,
     GroupFacet,
     ResolvedVariable,
     _CatalogModel,
@@ -79,7 +80,7 @@ class GraphState(_CatalogModel):
     opens a new run — the boundary is value-set identity (id + version label) /
     classification / column identity only (see ``_is_representation_boundary``)."""
 
-    state_id: int
+    state_id: CatalogStorageId
     period_scope: Literal["intervals", "year_independent"] = "intervals"
     variant: str
     # `register_variant.name` — the variant's curator display name (e.g. "Snöskotrar"
@@ -93,9 +94,9 @@ class GraphState(_CatalogModel):
     variant_family_label: str | None = None
     representation_run_id: int
     delivery_column_name: str | None
-    value_set_id: int | None
+    value_set_id: CatalogStorageId | None
     value_set_version_label: str
-    classification_slug: str | None
+    classification_slugs: tuple[str, ...]
     # ISO 'YYYY-MM-DD'; None = unknown/open start. The unknown-start `0001-01-01`
     # sentinel is normalized to None here (mirroring the open-END `9999-12-31` →
     # None below), so the renderer's time axis reads "unknown start" rather than a
@@ -231,7 +232,7 @@ def _is_representation_boundary(prev: VariableState, cur: VariableState) -> bool
     ``value_set_version_label`` (the #526 state-identity gkey for a VALUED state is
     keyed on both; two states sharing a ``value_set_id`` but differing in label are
     DISTINCT materialized states, so the label is part of value-set identity, not a
-    low-trust wobble) — the classification (``classification_slug``), or the
+    low-trust wobble) — the classification (``classifications``), or the
     coalesced ``delivery_column_name`` (the per-era surviving column — a cross-era
     column RENAME). These are precisely the distinctions that survive #526's
     value-set-anchored fold in ``variable_state``. The label is ``''`` for valueless
@@ -245,7 +246,8 @@ def _is_representation_boundary(prev: VariableState, cur: VariableState) -> bool
     return (
         prev.value_set_id != cur.value_set_id
         or prev.value_set_version_label != cur.value_set_version_label
-        or prev.classification_slug != cur.classification_slug
+        or tuple(b.slug for b in prev.classifications)
+        != tuple(b.slug for b in cur.classifications)
         or prev.delivery_column_name != cur.delivery_column_name
     )
 
@@ -295,7 +297,7 @@ def _graph_states(states: tuple[VariableState, ...]) -> list[GraphState]:
                 delivery_column_name=s.delivery_column_name,
                 value_set_id=s.value_set_id,
                 value_set_version_label=s.value_set_version_label,
-                classification_slug=s.classification_slug,
+                classification_slugs=tuple(b.slug for b in s.classifications),
                 valid_from=None if s.valid_from == UNKNOWN_VALID_FROM else s.valid_from,
                 valid_to=None if s.valid_to == OPEN_ENDED_VALID_TO else s.valid_to,
             )
@@ -436,7 +438,7 @@ class _GraphBuilder:
         identity, not the caller's same_as alias), or None when the FQID resolves
         to no live variable."""
         try:
-            resolved = self._catalog.resolve(fqid)
+            resolved = self._catalog.resolve_binding(fqid, with_codes=False)
         except RegMetaError as exc:
             # A dead/not-found member (e.g. a renamed slug surfaced by a chain walk)
             # is skipped from the union, not fatal to the whole graph. A genuinely
@@ -611,7 +613,7 @@ class _GraphBuilder:
         if node_id in self._hydrated:
             return node_id
         try:
-            resolved = self._catalog.resolve(edition.fqid)
+            resolved = self._catalog.resolve_binding(edition.fqid, with_codes=False)
         except RegMetaError as exc:
             # A dead/renamed predecessor (not_found) keeps its thin placeholder; any
             # other RegMetaError is a real fault and must not vanish silently.

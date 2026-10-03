@@ -39,9 +39,16 @@ converter greedy-consumes any suffix. The catch-all MUST stay last.
 from __future__ import annotations
 
 import urllib.parse
-from typing import TYPE_CHECKING, Any, Literal, cast
+from typing import TYPE_CHECKING, Annotated, Any, Literal, cast
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    Path as PathParameter,
+    Query,
+    Request,
+)
 from fastapi.responses import RedirectResponse
 from reg_meta.catalog import (
     Catalog,
@@ -1591,6 +1598,7 @@ def get_concept_group(
 )
 def get_data_warnings(
     request: Request,
+    unassigned_only: bool = False,
     validated: ValidatedFqidPath = Depends(_validated_fqid),
     period: list[Period] | None = Depends(_validated_period),
     variant: str | None = Depends(_validated_variant),
@@ -1630,6 +1638,7 @@ def get_data_warnings(
                     period=member,
                     variant=variant,
                     representation=representation,
+                    unassigned_only=unassigned_only,
                 )
             }
         except RegMetaError as exc:
@@ -1900,39 +1909,60 @@ def _validated_code_limit(limit: int = _VALUE_SET_CODES_DEFAULT_LIMIT) -> int:
 @router.get("/value-sets/{value_set_id}/codes", response_model=ValueSetCodesResponse)
 def get_value_set_codes(
     request: Request,
-    value_set_id: int,
-    state: int | None = None,
-    partition: Literal["source_extensions", "canonical"] = "source_extensions",
+    value_set_id: Annotated[int, PathParameter(ge=-(1 << 63), le=(1 << 63) - 1)],
+    state: Annotated[int | None, Query(ge=-(1 << 63), le=(1 << 63) - 1)] = None,
+    partition: Literal[
+        "source_extensions", "canonical", "nonstandard", "sentinels"
+    ] = "source_extensions",
+    classification: str | None = None,
+    column: str | None = None,
+    alias_window_from: str | None = None,
     q: str = "",
     offset: int = 0,
     limit: int = Depends(_validated_code_limit),
 ) -> ValueSetCodesResponse:
-    """One bounded page of value set `value_set_id`'s (code, label) membership.
+    """A filtered, bounded source-code page, optionally scoped to an exact book.
 
-    `?state=<state_id>` reads that state's STORED classification mismatch list
-    instead (`classification_conformance_code`) — the same code→label contract, so
-    the panel that renders a value set renders a mismatch list unchanged. The state
-    must carry this value set, so a state id can never read a coding it does not
-    belong to.
-
-    `?q` filters (diacritic-blind substring over code AND label, the SPA's own
-    `foldText` rule) BEFORE `?offset`/`?limit`, and `total` reports the filtered
-    count — a page is a window onto the whole matching set, never a filter over one
-    page. Codes are code/label-ordered, so paging is stable. An unknown value set —
-    or a state that does not carry it — is a 404: the panel is reached from a state
-    that named both, so neither is a plausible browse target to redirect."""
+    State partitions require the declared classification; alias partitions also
+    require both the physical column and original coding-window identity. Unknown
+    ownership returns 404. Filtering precedes paging and preserves source labels.
+    """
     validate_text_query(q)
     offset = max(0, offset)
+    if (column is None) != (alias_window_from is None):
+        raise HTTPException(
+            status_code=422, detail="column and alias_window_from are required together"
+        )
+    if state is None and (
+        classification is not None
+        or partition != "source_extensions"
+        or column is not None
+    ):
+        raise HTTPException(
+            status_code=422, detail="state is required with classification"
+        )
     with _catalog_conn(request) as conn:
         catalog = Catalog(conn)
         if state is None:
             codes = catalog.value_set_codes(value_set_id)
             missing = f"no value set {value_set_id} in this catalog"
         else:
-            codes = (
-                catalog.state_canonical_codes(state, value_set_id)
-                if partition == "canonical"
-                else catalog.state_nonconforming_codes(state, value_set_id)
+            if classification is None:
+                raise HTTPException(
+                    status_code=422, detail="classification is required with state"
+                )
+            reader = {
+                "canonical": catalog.state_canonical_codes,
+                "source_extensions": catalog.state_nonconforming_codes,
+                "nonstandard": catalog.state_nonstandard_codes,
+                "sentinels": catalog.state_sentinel_codes,
+            }[partition]
+            codes = reader(
+                state,
+                value_set_id,
+                classification_slug=classification,
+                delivery_column_name=column,
+                alias_window_from=alias_window_from,
             )
             missing = f"state {state} does not carry value set {value_set_id}"
     if codes is None:

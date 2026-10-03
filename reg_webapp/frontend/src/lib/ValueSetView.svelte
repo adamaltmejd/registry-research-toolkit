@@ -35,10 +35,9 @@ import ValueSetCodes from "./ValueSetCodes.svelte";
 //                  height-constrained / large-list-collapsed container). Structural
 //                  fields live in BindingLeafView's bottom Technical details disclosure.
 //   length  > 1 → a VALUE-SET-centric view (#668 / dogfooding M13/M18/M20):
-//                  the states dedup at TWO levels into DISTINCT value sets
-//                  (classification editions by `classification_slug`, others by
-//                  `value_set_id` — kommun's 415 states → ~21 LKF editions + a few
-//                  plain code lists), shown as a compact list by DEFAULT (the
+//                  the states group by source value-set identity
+//                  (declared classifications do not replace `value_set_id`),
+//                  shown as a compact list by DEFAULT (the
 //                  union). A FilterInput narrows the list and a per-row "Isolate"
 //                  focuses one (both LOCAL view state); "All value sets" resets.
 //                  A `focusColumn` deep-link seeds the same isolation. A
@@ -103,17 +102,24 @@ const single = $derived.by(() => {
   return states[0];
 });
 
-// #668: the dedup that powers the multi-state view — the DISTINCT value sets
-// (classification editions by slug, others by `value_set_id`), each carrying
-// which variants/spans use it. kommun's 415 states collapse to ~21 LKF editions
-// + a few plain code lists here.
+// Distinct source domains retain whole-history usages; their visible conformance
+// notices follow the selected scope so another era’s certificates are not implied.
 const valueSets = $derived(distinctValueSets(states));
-const scopeValueSetKeys = $derived.by(() => {
-  if (scopeStates === null) {
-    return null;
-  }
-  return new Set(distinctValueSets(scopeStates).map((vs) => vs.key));
-});
+const scopedValueSets = $derived(
+  scopeStates === null ? null : distinctValueSets(scopeStates),
+);
+const scopeValueSetKeys = $derived(
+  scopedValueSets === null
+    ? null
+    : new Set(scopedValueSets.map((vs) => vs.key)),
+);
+
+function visibleConformances(vs: DistinctValueSet): StateConformance[] {
+  if (scopedValueSets === null || !inPeriod(vs)) return vs.conformances;
+  return (
+    scopedValueSets.find((scoped) => scoped.key === vs.key)?.conformances ?? []
+  );
+}
 
 // A version label shared by ≥2 NON-classification rows can't tell them apart on
 // its own (kommun's "Kommun historisk" ×22) — those rows get their overall span
@@ -121,7 +127,7 @@ const scopeValueSetKeys = $derived.by(() => {
 const ambiguousLabels = $derived.by(() => {
   const counts = new Map<string, number>();
   for (const vs of valueSets) {
-    if (!vs.classificationSlug && vs.versionLabel) {
+    if (vs.classificationSlugs.length === 0 && vs.versionLabel) {
       const label = vs.versionLabel;
       counts.set(label, (counts.get(label) ?? 0) + 1);
     }
@@ -225,8 +231,8 @@ function inPeriod(vs: DistinctValueSet): boolean {
 // empty-version placeholder; they fall back to the span, or a neutral label when
 // the span is wholly unknown.
 function valueSetLabel(vs: DistinctValueSet): string {
-  if (vs.classificationSlug) {
-    return humanizeClassificationSlug(vs.classificationSlug);
+  if (vs.classificationSlugs.length > 0) {
+    return vs.classificationSlugs.map(humanizeClassificationSlug).join(", ");
   }
   const span = formatWindow(vs.overallSpan.from, vs.overallSpan.to);
   if (!vs.versionLabel) {
@@ -347,7 +353,7 @@ function trackDisclosure(key: string, event: Event): void {
      carry each coding's id and size, not its members, so the panel fetches its
      own bounded pages (and owns their loading / error / empty states) around the
      shared CodeList (#638 PR3). -->
-{#snippet valueSetTable(valueSetId: number, codeCount: number)}
+{#snippet valueSetTable(valueSetId: string, codeCount: number)}
   <ValueSetCodes
     {valueSetId}
     {codeCount}
@@ -399,36 +405,33 @@ function trackDisclosure(key: string, event: Event): void {
         {/if}
       {/if}
       {#if conf.matched_code_count > 0 && source.valueSetId !== null}
-        {@const canonicalKey = `canonical:${source.stateId}`}
+        {@const canonicalKey = `canonical:${source.stateId}:${source.aliasWindowFrom ?? ""}:${source.column ?? ""}:${conf.declared_classification_slug}`}
         <details open={openPanels[canonicalKey] ?? false} ontoggle={(e) => trackDisclosure(canonicalKey, e)}>
           <summary>Matching source codes ({conf.matched_code_count})</summary>
           {#if openPanels[canonicalKey]}
             <ValueSetCodes valueSetId={source.valueSetId} stateId={source.stateId}
-              partition="canonical" codeCount={conf.matched_code_count}
+              classification={conf.declared_classification_slug} column={source.column} aliasWindowFrom={source.aliasWindowFrom} partition="canonical" codeCount={conf.matched_code_count}
               filterLabel="Filter matching source codes" filterPlaceholder="Filter matching source codes…" />
           {/if}
         </details>
       {/if}
-      {#if conf.nonconforming_code_count > 0 && source.valueSetId !== null}
-        {@const panelKey = `mismatch:${source.stateId}`}
-        <details
-          open={openPanels[panelKey] ?? false}
-          ontoggle={(e) => trackDisclosure(panelKey, e)}
-        >
-          <summary>
-            Source extensions ({conf.nonconforming_code_count})
-          </summary>
-          {#if openPanels[panelKey]}
-            <ValueSetCodes
-              valueSetId={source.valueSetId}
-              stateId={source.stateId}
-              codeCount={conf.nonconforming_code_count}
-              filterLabel="Filter source extensions"
-              filterPlaceholder="Filter source extensions…"
-            />
-          {/if}
-        </details>
-      {/if}
+      {#each [
+        { partition: "nonstandard" as const, label: "Nonstandard source codes", count: conf.nonstandard_code_count },
+        { partition: "sentinels" as const, label: "Special source codes", count: conf.sentinel_code_count },
+      ] as section (section.partition)}
+        {#if section.count > 0 && source.valueSetId !== null}
+          {@const panelKey = `${section.partition}:${source.stateId}:${source.aliasWindowFrom ?? ""}:${source.column ?? ""}:${conf.declared_classification_slug}`}
+          <details open={openPanels[panelKey] ?? false} ontoggle={(e) => trackDisclosure(panelKey, e)}>
+            <summary>{section.label} ({section.count})</summary>
+            {#if openPanels[panelKey]}
+              <ValueSetCodes valueSetId={source.valueSetId} stateId={source.stateId}
+                classification={conf.declared_classification_slug} column={source.column} aliasWindowFrom={source.aliasWindowFrom} partition={section.partition}
+                codeCount={section.count} filterLabel={`Filter ${section.label.toLowerCase()}`}
+                filterPlaceholder={`Filter ${section.label.toLowerCase()}…`} />
+            {/if}
+          </details>
+        {/if}
+      {/each}
     </div>
   {/if}
 {/snippet}
@@ -507,20 +510,21 @@ function trackDisclosure(key: string, event: Event): void {
 <!-- #668: a classification value set links to its classification instead of
      dumping its (often 1000+) codes — the M13/kommun fix; a plain value set
      expands its codes inline through the shared CodeList (#310). -->
+{#snippet classificationLinks(slugs: string[])}
+  {#each slugs as slug, index (slug)}{#if index > 0}, {/if}<a href={catalogHref(`class/${slug}`)}>{humanizeClassificationSlug(slug)}</a>{/each}
+{/snippet}
+
 {#snippet valueSetBody(vs: DistinctValueSet)}
-  {#if vs.classificationSlug}
+  {#if vs.classificationSlugs.length > 0}
     <p class="vs-classification">
-      Codes from the
-      <a href={catalogHref(`class/${vs.classificationSlug}`)}>
-        {humanizeClassificationSlug(vs.classificationSlug)}
-      </a>
-      classification.
+      The source declares {vs.classificationSlugs.length === 1 ? "this classification" : "these classifications"}:
+      {@render classificationLinks(vs.classificationSlugs)}. Source codes retain their own labels.
     </p>
-    {#each vs.conformances as c (c.stateId)}
+    {#each visibleConformances(vs) as c (`${c.stateId}:${c.aliasWindowFrom ?? ""}:${c.column ?? ""}:${c.verdict.declared_classification_slug}`)}
       {@render conformanceNotice(c, { coding: c.versionLabel })}
     {/each}
   {:else}
-    {#each vs.conformances as c (c.stateId)}
+    {#each visibleConformances(vs) as c (`${c.stateId}:${c.aliasWindowFrom ?? ""}:${c.column ?? ""}:${c.verdict.declared_classification_slug}`)}
       {@render conformanceNotice(c, { coding: null })}
     {/each}
     {#if vs.valueSetId !== null && vs.summary}
@@ -536,12 +540,10 @@ function trackDisclosure(key: string, event: Event): void {
 {#snippet valueSetRow(vs: DistinctValueSet)}
   <li>
     <div class="vs-row">
-      {#if vs.classificationSlug}
+      {#if vs.classificationSlugs.length > 0}
         <!-- A classification value set: link out, never dump the (huge)
              code list. -->
-        <a class="vs-label" href={catalogHref(`class/${vs.classificationSlug}`)}>
-          = {humanizeClassificationSlug(vs.classificationSlug)}
-        </a>
+        <span class="vs-label">{@render classificationLinks(vs.classificationSlugs)}</span>
       {:else}
         <span class="vs-label">{valueSetLabel(vs)}</span>
         {#if vs.summary}
@@ -562,12 +564,12 @@ function trackDisclosure(key: string, event: Event): void {
       </button>
     </div>
     {@render usage(vs)}
-    {#each vs.conformances as c (c.stateId)}
+    {#each visibleConformances(vs) as c (`${c.stateId}:${c.aliasWindowFrom ?? ""}:${c.column ?? ""}:${c.verdict.declared_classification_slug}`)}
       {@render conformanceNotice(c, {
-        coding: vs.classificationSlug ? c.versionLabel : null,
+        coding: vs.classificationSlugs.length > 0 ? c.versionLabel : null,
       })}
     {/each}
-    {#if !vs.classificationSlug && vs.valueSetId !== null && vs.summary}
+    {#if vs.classificationSlugs.length === 0 && vs.valueSetId !== null && vs.summary}
       <!-- #310: inspect a plain value set's codes inline, without isolating —
            and only once opened (Y-46), so a long history of codings costs one
            bounded read of the ONE the reader asked for. -->
@@ -642,11 +644,17 @@ function trackDisclosure(key: string, event: Event): void {
       {/if}
     </dl>
 
-    {#if s.classification_conformance}
+    {#each s.classifications as classification (classification.slug)}
+    <p class="vs-classification">The source declares
+      <a href={catalogHref(`class/${classification.slug}`)}>{classification.short_name || classification.name || humanizeClassificationSlug(classification.slug)}</a>.
+    </p>
+    {#if classification.conformance}
       {@render conformanceNotice(
         {
-          verdict: s.classification_conformance,
+          verdict: classification.conformance,
           stateId: s.state_id,
+          column: s.coding_window_from != null ? s.delivery_column_name : null,
+          aliasWindowFrom: s.coding_window_from ?? null,
           valueSetId: s.value_set_id,
           versionLabel: s.value_set_version_label,
           variants: [s.variant],
@@ -655,6 +663,7 @@ function trackDisclosure(key: string, event: Event): void {
         null,
       )}
     {/if}
+    {/each}
 
     {#if s.value_set_id !== null && s.value_set_summary}
       {@const summary = s.value_set_summary}
@@ -705,10 +714,8 @@ function trackDisclosure(key: string, event: Event): void {
         ← All value sets
       </button>
       <h4 class="vs-heading">
-        {#if vs.classificationSlug}
-          <a href={catalogHref(`class/${vs.classificationSlug}`)}>
-            = {humanizeClassificationSlug(vs.classificationSlug)}
-          </a>
+        {#if vs.classificationSlugs.length > 0}
+          {@render classificationLinks(vs.classificationSlugs)}
         {:else}
           {valueSetLabel(vs)}
           {#if vs.summary}

@@ -919,12 +919,14 @@ def _search_docs(query: str, db_arg: str | None = None) -> list[dict[str, Any]]:
 
     Returns lightweight hint results (no full body). Exact variable name
     matches get a boosted rank so they surface near the top of mixed
-    search results. Raises ``RegMetaError`` if the doc DB is missing or
-    incompatible — query commands require docs to be installed.
+    search results. An absent optional doc DB contributes no results; an
+    installed but incompatible one still fails its schema gate.
     """
-    from .doc_db import ensure_doc_db
+    from .doc_db import doc_db_path, ensure_doc_db
     from .doc_queries import doc_search
 
+    if not doc_db_path(db_arg).exists():
+        return []
     conn = ensure_doc_db(db_arg)
     try:
         data = doc_search(conn, query, limit=10)
@@ -1223,6 +1225,14 @@ def _group_instances_by_codes(
                         "valid_from": m["valid_from"],
                         "valid_to": m["valid_to"],
                         "year": m["year"],
+                        **{
+                            field: m[field]
+                            for field in (
+                                "delivery_column_name",
+                                "value_set_version_label",
+                            )
+                            if field in m
+                        },
                     }
                     for m in members
                 ],
@@ -3133,7 +3143,7 @@ def _prompt_first_run_download(
     db_path = db_path_from_args(args.db)
     docs_path = db_path.parent / DOC_DB_FILENAME
     missing_main = needs_main and not db_path.exists()
-    missing_docs = not docs_path.exists()
+    missing_docs = not needs_main and not docs_path.exists()
     if not (missing_main or missing_docs):
         return
     if fmt == "json" or not sys.stdin.isatty():
@@ -3145,7 +3155,7 @@ def _prompt_first_run_download(
     if missing_docs:
         parts.append("doc DB (~600 KB compressed, ~3 MB on disk)")
     header = (
-        "Query commands require both the main DB and the doc DB."
+        "Metadata commands require the main DB."
         if needs_main
         else "Docs commands require the doc DB."
     )
@@ -3249,20 +3259,11 @@ def run(argv: list[str] | None = None) -> int:
             pass
 
     try:
-        # Auto-download artifacts on first use (interactive only). Only
-        # bootstrap the artifacts each command actually needs: search/get/
-        # resolve open the main DB and the doc DB; docs/* only open the
-        # doc DB and must not trigger the ~400 MB main-DB download.
+        # Metadata queries use the catalog alone; documentation is optional
+        # enrichment. Only docs commands require and bootstrap the docs database.
         needs_main = args.command in ("search", "get", "resolve")
         if needs_main or args.command == "docs":
             _prompt_first_run_download(args, fmt, needs_main=needs_main)
-            # Enforce doc-DB presence for non-docs query commands up front
-            # so they fail fast and consistently before doing main-DB query
-            # work. docs/* handlers call ensure_doc_db themselves.
-            if needs_main:
-                from .doc_db import ensure_doc_db
-
-                ensure_doc_db(args.db).close()
         payload, exit_code = handler(args)
         if not quiet and fmt != "json":
             _collect_hints(key, payload.get("data", {}), args, hints)

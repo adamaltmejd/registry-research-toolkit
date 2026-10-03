@@ -8,7 +8,8 @@ export const CODE_FILTER_THRESHOLD = 5;
 
 <script lang="ts">
 import { Accordion, Collapsible } from "bits-ui";
-import { matchesFilter } from "./catalog";
+import { matchesFilter, formatWindow } from "./catalog";
+import type { ClassificationExtensionMemberModel } from "./api";
 import FilterInput from "./FilterInput.svelte";
 
 // The UNIFIED value-set / code viewer (#638 PR3). A variable's value set and a
@@ -34,6 +35,9 @@ interface Code {
   label: string;
   is_valid?: boolean | null;
   level?: number | null;
+  member_kind?: ClassificationExtensionMemberModel["member_kind"];
+  sentinel_meaning?: ClassificationExtensionMemberModel["sentinel_meaning"];
+  scoped_sentinels?: ClassificationExtensionMemberModel["scoped_sentinels"];
 }
 
 interface CodeGroup {
@@ -313,7 +317,16 @@ function groupedByBucketPrefix(list: Code[]): CodeLayout | null {
 {#snippet codeRow(code: Code)}
   <li class="code-row">
     <code class="code-key">{code.code}</code>
-    <span class="code-label">{code.label}</span>
+    <span class="code-label">{code.label}{#if code.member_kind === "sentinel"}
+        {#if code.sentinel_meaning}<span class="sentinel-meaning">Special code: {code.sentinel_meaning}</span>{/if}
+        {#each code.scoped_sentinels ?? [] as evidence}
+          <span class="sentinel-meaning">Special code for <code>{evidence.delivery_column_name}</code>
+            {formatWindow(evidence.valid_from, evidence.valid_to) || "unknown period"}:
+            {evidence.members.filter(([member]) => member === code.code).map(([, meaning]) => meaning).join("; ")}
+          </span>
+          <Collapsible.Root><Collapsible.Trigger class="flat-toggle">Source evidence</Collapsible.Trigger><Collapsible.Content><p>{evidence.provenance}</p></Collapsible.Content></Collapsible.Root>
+        {/each}
+      {/if}</span>
   </li>
 {/snippet}
 
@@ -433,6 +446,11 @@ function groupedByBucketPrefix(list: Code[]): CodeLayout | null {
     font-family: var(--font-mono);
     color: var(--text-muted);
     font-size: var(--text-mono);
+  }
+  .sentinel-meaning {
+    display: block;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
   }
   .code-label {
     flex: 1;

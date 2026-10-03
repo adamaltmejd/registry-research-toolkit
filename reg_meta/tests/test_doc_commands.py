@@ -402,9 +402,9 @@ class TestDocList:
 
 
 class TestDocDbRequired:
-    """Query commands refuse to run without a doc DB installed."""
+    """Metadata works independently; documentation commands require their own DB."""
 
-    def test_search_without_docs_raises(self, tmp_path: Path, fixture_db: Path):
+    def test_search_without_docs_succeeds(self, tmp_path: Path, fixture_db: Path):
         # Copy only the catalog; its sibling doc DB must remain absent.
         db_dir = tmp_path / "db"
         db_dir.mkdir()
@@ -414,12 +414,10 @@ class TestDocDbRequired:
             ["--db", str(db_dir), "search", "--query", "testvariabel"],
             verbose=True,
         )
-        # Doc DB is required; code is EXIT_CONFIG (10) with the structured
-        # doc_db_not_found error the CLI surfaces on missing artifacts.
-        assert code == 10
-        assert data["error"]["code"] == "doc_db_not_found"
+        assert code == 0
+        assert "error" not in data
 
-    def test_get_without_docs_raises(self, tmp_path: Path, fixture_db: Path):
+    def test_get_without_docs_succeeds(self, tmp_path: Path, fixture_db: Path):
         db_dir = tmp_path / "db"
         db_dir.mkdir()
         (db_dir / "reg_meta.db").write_bytes(fixture_db.read_bytes())
@@ -428,6 +426,14 @@ class TestDocDbRequired:
             ["--db", str(db_dir), "get", "register", "1"],
             verbose=True,
         )
+        assert code == 0
+        assert data["data"]["register_id"] == "1"
+
+    def test_docs_without_docs_fails(self, tmp_path: Path, fixture_db: Path):
+        db_dir = tmp_path / "db"
+        db_dir.mkdir()
+        (db_dir / "reg_meta.db").write_bytes(fixture_db.read_bytes())
+        data, code = _run_json(["--db", str(db_dir), "docs", "list"], verbose=True)
         assert code == 10
         assert data["error"]["code"] == "doc_db_not_found"
 

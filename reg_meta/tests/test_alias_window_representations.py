@@ -81,10 +81,10 @@ def test_alias_windows_do_not_hide_overlapping_base_state(tmp_path: Path) -> Non
             "INSERT INTO variable_state "
             "(variable_id, register_variant_id, valid_from, valid_to, data_type, "
             "data_length, delivery_column_name, value_set_id, "
-            "value_set_version_label, classification_id) "
+            "value_set_version_label) "
             "SELECT variable_id, register_variant_id, "
             "'2017-01-01', '2019-12-31', data_type, data_length, "
-            "'LoneInk_BASE', value_set_id, value_set_version_label, classification_id "
+            "'LoneInk_BASE', value_set_id, value_set_version_label "
             "FROM variable_state WHERE delivery_column_name = ?",
             (_ALIASES[0],),
         )
@@ -133,10 +133,10 @@ def test_curated_partial_state_window_preserves_base_and_earlier_alias(
             "(variable_id, register_variant_id, valid_from, valid_to, data_type, "
             "data_length, delivery_column_name, source_register_text, "
             "operational_definition, provenance, value_set_id, "
-            "value_set_version_label, classification_id) "
+            "value_set_version_label) "
             "SELECT variable_id, register_variant_id, '2013-01-01', '2015-12-31', "
             "data_type, data_length, ?, source_register_text, NULL, provenance, "
-            "value_set_id, value_set_version_label, classification_id "
+            "value_set_id, value_set_version_label "
             "FROM variable_state WHERE state_id = ?",
             (curated_column, state_id),
         )
@@ -358,8 +358,12 @@ def test_per_column_coding_preserves_domains_native_labels_and_lazy_loading(
             "INSERT INTO classification (short_name, name, slug) VALUES ('base', 'Base classification', 'base') RETURNING id"
         ).fetchone()[0]
         write_conn.execute(
-            "UPDATE variable_state SET classification_id = ?, value_set_id = NULL, value_set_version_label = 'base-label' WHERE state_id = ?",
-            (classification_id, state_id),
+            "UPDATE variable_state SET value_set_id = NULL, value_set_version_label = 'base-label' WHERE state_id = ?",
+            (state_id,),
+        )
+        write_conn.execute(
+            "INSERT INTO state_classification (state_id, classification_id) VALUES (?, ?)",
+            (state_id, classification_id),
         )
         write_conn.execute(
             "INSERT INTO classification_conformance VALUES (?, ?, 'conforming', 2, 2, 0, 1.0)",
@@ -385,10 +389,7 @@ def test_per_column_coding_preserves_domains_native_labels_and_lazy_loading(
         assert [s.delivery_column_name for s in states] == list(_ALIASES)
         assert [s.value_set_id for s in states] == [first_set, second_set]
         assert [len(s.value_set) for s in states] == [2, 1]
-        assert all(
-            s.classification_slug is s.classification_conformance is None
-            for s in states
-        )
+        assert all(s.classifications == () for s in states)
         assert cat.resolve_at(_FQID, "2018", value_set_version="base-label") == []
         assert cat.states(_FQID) == states
         schema = get_schema(conn, register_variant_id=str(variant_id))
@@ -424,7 +425,7 @@ def test_per_column_coding_preserves_domains_native_labels_and_lazy_loading(
             _FQID, "2018", with_codes=False, with_code_summary=True
         )
         assert [s.value_set_summary.code_count for s in summary] == [2, 1]
-        assert all(s.value_set is s.classification_conformance is None for s in summary)
+        assert all(s.value_set is None and s.classifications == () for s in summary)
     finally:
         conn.close()
 

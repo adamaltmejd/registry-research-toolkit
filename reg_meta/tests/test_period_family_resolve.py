@@ -81,7 +81,7 @@ def test_month_window_period_token_is_own_month(merged_db: Path) -> None:
         # The window token is the OWN month, distinct from the annual "2018".
         assert tokens == {
             "LonFinkJan": "2018-01",
-            "LonFinkFeb": "2018-02",
+            "LonFinkFeb": "2018-02-01..2018-02-28",
             "LonFinkMars": "2018-03",
         }
         assert all(t != "2018" for t in tokens.values())

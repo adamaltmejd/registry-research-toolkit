@@ -17,6 +17,8 @@ from reg_meta.source_evidence import (
     SourceRevision,
 )
 
+from .ids import CatalogStorageId
+
 
 class _SourceDeclaration(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True, strict=True)
@@ -108,7 +110,7 @@ class DocumentaryRelationship(BaseModel):
     """Owner-bound literal metadata, with unresolved references made explicit."""
 
     model_config = ConfigDict(extra="forbid", frozen=True, strict=True)
-    relationship_id: int = Field(gt=0)
+    relationship_id: CatalogStorageId = Field(gt=0)
     owner: str
     declaration: LiteralSourceRelationship
     variables: tuple[DocumentaryVariableReference, ...] = ()

@@ -669,20 +669,11 @@ export interface paths {
         };
         /**
          * Get Value Set Codes
-         * @description One bounded page of value set `value_set_id`'s (code, label) membership.
+         * @description A filtered, bounded source-code page, optionally scoped to an exact book.
          *
-         *     `?state=<state_id>` reads that state's STORED classification mismatch list
-         *     instead (`classification_conformance_code`) — the same code→label contract, so
-         *     the panel that renders a value set renders a mismatch list unchanged. The state
-         *     must carry this value set, so a state id can never read a coding it does not
-         *     belong to.
-         *
-         *     `?q` filters (diacritic-blind substring over code AND label, the SPA's own
-         *     `foldText` rule) BEFORE `?offset`/`?limit`, and `total` reports the filtered
-         *     count — a page is a window onto the whole matching set, never a filter over one
-         *     page. Codes are code/label-ordered, so paging is stable. An unknown value set —
-         *     or a state that does not carry it — is a 404: the panel is reached from a state
-         *     that named both, so neither is a plausible browse target to redirect.
+         *     State partitions require the declared classification; alias partitions also
+         *     require both the physical column and original coding-window identity. Unknown
+         *     ownership returns 404. Filtering precedes paging and preserves source labels.
          */
         get: operations["get_value_set_codes_api_value_sets__value_set_id__codes_get"];
         put?: never;
@@ -865,11 +856,11 @@ export interface components {
             /** Operational Definition */
             operational_definition?: string | null;
             /** Register Id */
-            register_id: number;
+            register_id: string;
             /** Same As */
             same_as: components["schemas"]["VariableRef"][];
             /** Source Register Id */
-            source_register_id: number | null;
+            source_register_id: string | null;
             /** Source Register Text */
             source_register_text: string | null;
             /** States */
@@ -879,7 +870,7 @@ export interface components {
             /** Tags */
             tags?: components["schemas"]["TagMembership"][];
             /** Variable Id */
-            variable_id: number;
+            variable_id: string;
             /** Via Same As */
             via_same_as?: string[] | null;
             /**
@@ -1014,9 +1005,13 @@ export interface components {
              * Nonconforming Codes
              * @default []
              */
-            nonconforming_codes: components["schemas"]["ValueSetMember"][];
+            nonconforming_codes: components["schemas"]["ClassificationExtensionMember"][];
+            /** Nonstandard Code Count */
+            nonstandard_code_count: number;
             /** Overlap */
             overlap: number;
+            /** Sentinel Code Count */
+            sentinel_code_count: number;
             /**
              * Status
              * @enum {string}
@@ -1106,6 +1101,25 @@ export interface components {
              * @description The edition's OWN point-in-time vintage year, read off the `classification` row's `valid_from` (the vintage lives in slug + name + valid_from). UNLIKE `effective_year` (the supersession year), this is the edition's intrinsic year — sun1996→1996, sun2020→2020 regardless of whether it has a successor. None when the row carries no `valid_from`.
              */
             version_year: number | null;
+        };
+        /** ClassificationExtensionMember */
+        ClassificationExtensionMember: {
+            /** Code */
+            code: string;
+            /** Label */
+            label: string;
+            /**
+             * Member Kind
+             * @enum {string}
+             */
+            member_kind: "nonstandard" | "sentinel";
+            /**
+             * Scoped Sentinels
+             * @default []
+             */
+            scoped_sentinels: components["schemas"]["ScopedSentinelEvidence"][];
+            /** Sentinel Meaning */
+            sentinel_meaning?: string | null;
         };
         /**
          * ClassificationFamilyNode
@@ -1913,8 +1927,8 @@ export interface components {
          *     classification / column identity only (see ``_is_representation_boundary``).
          */
         GraphState: {
-            /** Classification Slug */
-            classification_slug: string | null;
+            /** Classification Slugs */
+            classification_slugs: string[];
             /** Delivery Column Name */
             delivery_column_name: string | null;
             /**
@@ -1926,13 +1940,13 @@ export interface components {
             /** Representation Run Id */
             representation_run_id: number;
             /** State Id */
-            state_id: number;
+            state_id: string;
             /** Valid From */
             valid_from: string | null;
             /** Valid To */
             valid_to: string | null;
             /** Value Set Id */
-            value_set_id: number | null;
+            value_set_id: string | null;
             /** Value Set Version Label */
             value_set_version_label: string;
             /** Variant */
@@ -1992,11 +2006,11 @@ export interface components {
          */
         LineageEdge: {
             /** Consumer State Id */
-            consumer_state_id: number;
+            consumer_state_id: string;
             /** Source Fqid */
             source_fqid?: string | null;
             /** Source State Id */
-            source_state_id: number;
+            source_state_id: string;
             /** Valid From */
             valid_from: string;
             /** Valid To */
@@ -2025,7 +2039,7 @@ export interface components {
          */
         LineageWarning: {
             /** Consumer State Id */
-            consumer_state_id: number;
+            consumer_state_id: string;
             /** Message */
             message: string;
             /** Warning Kind */
@@ -2673,6 +2687,26 @@ export interface components {
             /** Register */
             register: string;
         };
+        /** ScopedSentinelEvidence */
+        ScopedSentinelEvidence: {
+            /** Classification Sha256 */
+            classification_sha256: string;
+            /** Delivery Column Name */
+            delivery_column_name: string;
+            /** Members */
+            members: [
+                string,
+                string
+            ][];
+            /** Provenance */
+            provenance: string;
+            /** Source Fingerprints */
+            source_fingerprints: string[];
+            /** Valid From */
+            valid_from: string | null;
+            /** Valid To */
+            valid_to: string | null;
+        };
         /**
          * SearchClassificationEdition
          * @description One edition of a folded classification succession chain (#571): a vintage
@@ -2752,6 +2786,21 @@ export interface components {
             semantic_record_key: string[];
             /** Source */
             source: string;
+        };
+        /**
+         * StateClassification
+         * @description A linked official book and the delivered domain's per-book evidence.
+         */
+        StateClassification: {
+            conformance?: components["schemas"]["ClassificationConformance"] | null;
+            /** Name */
+            name: string;
+            /** Provenance */
+            provenance?: string | null;
+            /** Short Name */
+            short_name: string;
+            /** Slug */
+            slug: string;
         };
         /**
          * StatesResponse
@@ -2937,7 +2986,7 @@ export interface components {
          */
         ValueSetCodesResponse: {
             /** Codes */
-            codes: components["schemas"]["ValueSetMember"][];
+            codes: (components["schemas"]["ClassificationExtensionMember"] | components["schemas"]["ValueSetMember"])[];
             /** Limit */
             limit: number;
             /** Offset */
@@ -2945,11 +2994,11 @@ export interface components {
             /** Q */
             q: string;
             /** State Id */
-            state_id?: number | null;
+            state_id?: string | null;
             /** Total */
             total: number;
             /** Value Set Id */
-            value_set_id: number;
+            value_set_id: string;
         };
         /**
          * ValueSetMember
@@ -3249,9 +3298,13 @@ export interface components {
          *     subset whose validity range intersects the queried period.
          */
         VariableState: {
-            classification_conformance?: components["schemas"]["ClassificationConformance"] | null;
-            /** Classification Slug */
-            classification_slug: string | null;
+            /**
+             * Classifications
+             * @default []
+             */
+            classifications: components["schemas"]["StateClassification"][];
+            /** Coding Window From */
+            coding_window_from?: string | null;
             /** Data Length */
             data_length: string | null;
             /** Data Type */
@@ -3289,11 +3342,11 @@ export interface components {
              */
             provenance: string | null;
             /** Register Variant Id */
-            register_variant_id: number;
+            register_variant_id: string;
             /** Source Register Text */
             source_register_text: string | null;
             /** State Id */
-            state_id: number;
+            state_id: string;
             /** Valid From */
             valid_from: string | null;
             /** Valid To */
@@ -3301,7 +3354,7 @@ export interface components {
             /** Value Set */
             value_set: components["schemas"]["ValueSetMember"][] | null;
             /** Value Set Id */
-            value_set_id: number | null;
+            value_set_id: string | null;
             value_set_summary?: components["schemas"]["ValueSetSummary"] | null;
             /** Value Set Version Label */
             value_set_version_label: string;
@@ -3604,6 +3657,7 @@ export interface operations {
     get_data_warnings_api_catalog__fqid__data_warnings_get: {
         parameters: {
             query?: {
+                unassigned_only?: boolean;
                 representation?: string | null;
                 period?: string | null;
                 variant?: string | null;
@@ -4181,7 +4235,10 @@ export interface operations {
         parameters: {
             query?: {
                 state?: number | null;
-                partition?: "source_extensions" | "canonical";
+                partition?: "source_extensions" | "canonical" | "nonstandard" | "sentinels";
+                classification?: string | null;
+                column?: string | null;
+                alias_window_from?: string | null;
                 q?: string;
                 offset?: number;
                 limit?: number;

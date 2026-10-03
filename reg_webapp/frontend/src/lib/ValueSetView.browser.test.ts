@@ -30,16 +30,16 @@ const CODES = new Map<string, ValueSetMemberModel[]>();
  * state carries in their place. `stateId` registers a state's stored
  * classification-mismatch list instead of the value set's own membership. */
 function coding(
-  valueSetId: number,
+  valueSetId: string | number,
   codes: ValueSetMemberModel[],
   opts: {
-    stateId?: number;
-    partition?: "canonical" | "source_extensions";
+    stateId?: string | number;
+    partition?: "canonical" | "source_extensions" | "nonstandard" | "sentinels";
     integerRange?: { min: number; max: number };
   } = {},
 ): VariableStateModel["value_set_summary"] {
   CODES.set(
-    `${valueSetId}:${opts.stateId ?? ""}:${opts.partition ?? "source_extensions"}`,
+    `${valueSetId}:${opts.stateId ?? ""}:${opts.partition ?? (opts.stateId != null ? "nonstandard" : "source_extensions")}`,
     codes,
   );
   return { code_count: codes.length, integer_range: opts.integerRange ?? null };
@@ -66,7 +66,7 @@ beforeEach(() => {
           c.label.toLowerCase().includes(needle),
       );
       return {
-        value_set_id: valueSetId,
+        value_set_id: String(valueSetId),
         state_id: state,
         period_scope: "intervals",
         q,
@@ -83,11 +83,11 @@ beforeEach(() => {
 function state(over: Partial<VariableStateModel>): VariableStateModel {
   return {
     warning_ids: [],
-    state_id: 1,
+    state_id: "1",
     period_scope: "intervals",
     variant: "v",
     variant_label: null,
-    register_variant_id: 1,
+    register_variant_id: "1",
     valid_from: "2000-01-01",
     valid_to: "2000-12-31",
     data_type: null,
@@ -101,8 +101,8 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
     value_set: null,
     value_set_summary: null,
     is_identifier: false,
-    classification_slug: null,
-    classification_conformance: null,
+    classifications: [],
+
     period_token: null,
     ...over,
   };
@@ -120,18 +120,25 @@ function normalizedText(selector: string): string {
 // A two-value-set fixture mirroring kommun: one classification value set (links
 // out, no codes), one plain value set (expandable codes).
 const classState = state({
-  state_id: 1,
-  value_set_id: 100,
-  classification_slug: "lkf2007",
+  state_id: "1",
+  value_set_id: "100",
+  classifications: [
+    {
+      slug: "lkf2007",
+      short_name: "lkf2007",
+      name: "lkf2007",
+      conformance: null,
+    },
+  ],
   value_set_version_label: "LKF",
   variant: "doda",
   valid_from: "2007-01-01",
   valid_to: "2010-12-31",
 });
 const plainState = state({
-  state_id: 2,
-  value_set_id: 200,
-  classification_slug: null,
+  state_id: "2",
+  value_set_id: "200",
+  classifications: [],
   value_set_version_label: "Kommun historisk",
   variant: "fodda",
   valid_from: "1961-01-01",
@@ -142,9 +149,9 @@ const plainState = state({
   ]),
 });
 const ageState = state({
-  state_id: 5,
-  value_set_id: 500,
-  classification_slug: null,
+  state_id: "5",
+  value_set_id: "500",
+  classifications: [],
   value_set_version_label: "Ålder",
   variant: "personer",
   valid_from: "2000-01-01",
@@ -164,9 +171,9 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // Four states, two value sets → two rows in the union list.
     const states = [
       classState,
-      state({ ...classState, state_id: 3, valid_from: "2011-01-01" }),
+      state({ ...classState, state_id: "3", valid_from: "2011-01-01" }),
       plainState,
-      state({ ...plainState, state_id: 4, valid_from: "1968-01-01" }),
+      state({ ...plainState, state_id: "4", valid_from: "1968-01-01" }),
     ];
     await render(ValueSetView, { states, narrowed: false });
     expect(document.querySelectorAll(".vs-list > li")).toHaveLength(2);
@@ -176,8 +183,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     "shows literal delivery names, descriptions, definitions and units (multiple=%s)",
     async (multiple) => {
       const first = state({
-        state_id: 10,
-        value_set_id: 500,
+        state_id: "10",
+        value_set_id: "500",
         delivery_column_name: "AGI1LonFink01",
         name: "Income reported in January",
         description: "Exact January source description",
@@ -239,7 +246,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
           measurement_unit: "Kronor",
         }),
         state({
-          state_id: 2,
+          state_id: "2",
           name: null,
           description: null,
           definition: null,
@@ -262,8 +269,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   it("shows state operational definitions when parallel columns share one value set (#736)", async () => {
     const states = [
       state({
-        state_id: 10,
-        value_set_id: 500,
+        state_id: "10",
+        value_set_id: "500",
         value_set_version_label: "vald/inte vald",
         delivery_column_name: "fedunsatreason_1",
         operational_definition: "Education was not relevant to work",
@@ -273,8 +280,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         ]),
       }),
       state({
-        state_id: 11,
-        value_set_id: 500,
+        state_id: "11",
+        value_set_id: "500",
         value_set_version_label: "vald/inte vald",
         delivery_column_name: "fedunsatreason_2",
         operational_definition: "Education was too theoretical",
@@ -301,8 +308,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   it("renders expanded state definitions with duplicate source state ids (#736)", async () => {
     const states = [
       state({
-        state_id: 20,
-        value_set_id: 600,
+        state_id: "20",
+        value_set_id: "600",
         value_set_version_label: "expanded",
         delivery_column_name: "month_jan",
         operational_definition: "January expanded state",
@@ -314,8 +321,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         ]),
       }),
       state({
-        state_id: 20,
-        value_set_id: 600,
+        state_id: "20",
+        value_set_id: "600",
         value_set_version_label: "expanded",
         delivery_column_name: "month_feb",
         operational_definition: "February expanded state",
@@ -344,8 +351,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   it("disambiguates repeated definition column labels by state window (#736)", async () => {
     const states = [
       state({
-        state_id: 30,
-        value_set_id: 700,
+        state_id: "30",
+        value_set_id: "700",
         value_set_version_label: "stable",
         delivery_column_name: "reason",
         operational_definition: "Early definition",
@@ -357,8 +364,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         ]),
       }),
       state({
-        state_id: 31,
-        value_set_id: 700,
+        state_id: "31",
+        value_set_id: "700",
         value_set_version_label: "stable",
         delivery_column_name: "reason",
         operational_definition: "Later definition",
@@ -385,7 +392,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       narrowed: false,
     });
     // The classification row links out to the classification.
-    const link = page.getByRole("link", { name: "= LKF 2007" });
+    const link = page.getByRole("link", { name: "LKF 2007" });
     await expect.element(link).toBeVisible();
     expect(link.element().getAttribute("href")).toBe("/catalog/class/lkf2007");
   });
@@ -397,25 +404,34 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         { code: "01", label: "Original source meaning" },
         { code: "02", label: "Another source meaning" },
       ],
-      { stateId: 1, partition: "canonical" },
+      { stateId: "1", partition: "canonical" },
     );
     await render(ValueSetView, {
       states: [
         state({
           ...classState,
-          classification_conformance: {
-            declared_classification_slug: "lkf2007",
-            declared_classification_short_name: "LKF2007",
-            declared_classification_name: "Kommun historisk",
-            status: "extended",
-            checked_code_count: 3,
-            matched_code_count: 2,
-            nonconforming_code_count: 1,
-            overlap: 2 / 3,
-            nonconforming_codes: [],
-          },
+          classifications: [
+            {
+              slug: "lkf2007",
+              short_name: "lkf2007",
+              name: "lkf2007",
+              conformance: {
+                declared_classification_slug: "lkf2007",
+                declared_classification_short_name: "LKF2007",
+                declared_classification_name: "Kommun historisk",
+                status: "extended",
+                checked_code_count: 3,
+                matched_code_count: 2,
+                nonconforming_code_count: 1,
+                nonstandard_code_count: 1,
+                sentinel_code_count: 0,
+                overlap: 2 / 3,
+                nonconforming_codes: [],
+              },
+            },
+          ],
           value_set_summary: coding(100, [{ code: "X", label: "Extra code" }], {
-            stateId: 1,
+            stateId: "1",
           }),
         }),
         plainState,
@@ -425,7 +441,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     expect(normalizedText(".conformance-notice")).toContain(
       "2 source codes match this classification; 1 is a source extension.",
     );
-    const summary = page.getByText("Source extensions (1)");
+    const summary = page.getByText("Nonstandard source codes (1)");
     await summary.click();
     await expect.element(page.getByText("Extra code")).toBeVisible();
     await page.getByText("Matching source codes (2)").click();
@@ -437,7 +453,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         .mocked(getValueSetCodes)
         .mock.calls.some(
           ([, options]) =>
-            options.partition === "canonical" && options.state === 1,
+            options.partition === "canonical" && options.state === "1",
         ),
     ).toBe(true);
   });
@@ -454,6 +470,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       checked_code_count: 3,
       matched_code_count: 2,
       nonconforming_code_count: 1,
+      nonstandard_code_count: 1,
+      sentinel_code_count: 0,
       overlap: 2 / 3,
       nonconforming_codes: [],
     };
@@ -461,40 +479,77 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       states: [
         state({
           ...classState,
-          state_id: 11,
+          state_id: "11",
           period_scope: "intervals",
-          value_set_id: 101,
+          value_set_id: "101",
           value_set_version_label: "LKF 2007 rev A",
           variant: "fodda",
           valid_from: "1981-01-01",
           valid_to: "1981-12-31",
-          classification_conformance: conformance,
+          classifications: [
+            {
+              slug: conformance.declared_classification_slug,
+              short_name: conformance.declared_classification_slug,
+              name: conformance.declared_classification_slug,
+              conformance: conformance,
+            },
+          ],
           value_set_summary: coding(101, [{ code: "X", label: "Extra" }], {
-            stateId: 11,
+            stateId: "11",
           }),
         }),
         state({
           ...classState,
-          state_id: 12,
+          state_id: "12",
           period_scope: "intervals",
-          value_set_id: 102,
+          value_set_id: "102",
           value_set_version_label: "LKF 2007 rev B",
           variant: "flytt",
           valid_from: "1982-01-01",
           valid_to: "1982-12-31",
-          classification_conformance: {
-            ...conformance,
-            checked_code_count: 4,
-            matched_code_count: 2,
-            nonconforming_code_count: 2,
-          },
+          classifications: [
+            {
+              slug: {
+                ...conformance,
+                checked_code_count: 4,
+                matched_code_count: 2,
+                nonconforming_code_count: 2,
+                nonstandard_code_count: 2,
+                sentinel_code_count: 0,
+              }.declared_classification_slug,
+              short_name: {
+                ...conformance,
+                checked_code_count: 4,
+                matched_code_count: 2,
+                nonconforming_code_count: 2,
+                nonstandard_code_count: 2,
+                sentinel_code_count: 0,
+              }.declared_classification_slug,
+              name: {
+                ...conformance,
+                checked_code_count: 4,
+                matched_code_count: 2,
+                nonconforming_code_count: 2,
+                nonstandard_code_count: 2,
+                sentinel_code_count: 0,
+              }.declared_classification_slug,
+              conformance: {
+                ...conformance,
+                checked_code_count: 4,
+                matched_code_count: 2,
+                nonconforming_code_count: 2,
+                nonstandard_code_count: 2,
+                sentinel_code_count: 0,
+              },
+            },
+          ],
           value_set_summary: coding(
             102,
             [
               { code: "Y", label: "Later extra" },
               { code: "Z", label: "Later still" },
             ],
-            { stateId: 12 },
+            { stateId: "12" },
           ),
         }),
         plainState,
@@ -518,11 +573,11 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     ]);
 
     // Both lists open, each from its own state — X here, Y and Z there.
-    await page.getByText("Source extensions (1)").click();
+    await page.getByText("Nonstandard source codes (1)").click();
     await expect
       .element(page.getByText("Extra", { exact: true }))
       .toBeVisible();
-    await page.getByText("Source extensions (2)").click();
+    await page.getByText("Nonstandard source codes (2)").click();
     await expect.element(page.getByText("Later extra")).toBeVisible();
     await expect.element(page.getByText("Later still")).toBeVisible();
     // Each list is read by ITS OWN state — no disclosure reads another's coding.
@@ -541,8 +596,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     await render(ValueSetView, {
       states: [
         state({
-          state_id: 40,
-          value_set_id: 903,
+          state_id: "40",
+          value_set_id: "903",
           value_set_version_label: "Församling tom",
           variant: "doda",
           valid_from: "2020-01-01",
@@ -550,7 +605,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
           value_set_summary: coding(903, []),
         }),
         state({
-          state_id: 41,
+          state_id: "41",
           value_set_id: null,
           value_set_version_label: "Fritext",
           variant: "doda",
@@ -586,24 +641,32 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     await render(ValueSetView, {
       states: [
         state({
-          value_set_id: 300,
-          classification_slug: "isced-f2013",
+          value_set_id: "300",
+          classifications: [
+            {
+              slug: "isced-f2013",
+              short_name: "isced-f2013",
+              name: "isced-f2013",
+              conformance: {
+                declared_classification_slug: "isced-f2013",
+                declared_classification_short_name: "ISCED-F 2013",
+                declared_classification_name: "ISCED-F 2013",
+                status: "extended",
+                checked_code_count: 25,
+                matched_code_count: 1,
+                nonconforming_code_count: 24,
+                nonstandard_code_count: 24,
+                sentinel_code_count: 0,
+                overlap: 0.04,
+                nonconforming_codes: [],
+              },
+            },
+          ],
           value_set_version_label: "ISCED F 2013",
           value_set_summary: coding(300, [
             { code: "13", label: "Datavetenskap" },
             { code: "1a", label: "Pedagogik" },
           ]),
-          classification_conformance: {
-            declared_classification_slug: "isced-f2013",
-            declared_classification_short_name: "ISCED-F 2013",
-            declared_classification_name: "ISCED-F 2013",
-            status: "extended",
-            checked_code_count: 25,
-            matched_code_count: 1,
-            nonconforming_code_count: 24,
-            overlap: 0.04,
-            nonconforming_codes: [],
-          },
         }),
         plainState,
       ],
@@ -613,13 +676,13 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       "1 source code matches this classification; 24 are source extensions.",
     );
     await expect
-      .element(page.getByRole("link", { name: "= isced-f2013" }))
+      .element(page.getByRole("link", { name: "isced-f2013" }).first())
       .toBeVisible();
     await expect
       .element(page.getByText("Matching source codes (1)"))
       .toBeVisible();
     await expect
-      .element(page.getByText("Source extensions (24)"))
+      .element(page.getByText("Nonstandard source codes (24)"))
       .toBeVisible();
   });
 
@@ -710,14 +773,14 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // window rows carry the badge.
     const base = {
       variant: "v",
-      value_set_id: 100,
-      classification_slug: null,
+      value_set_id: "100",
+      classifications: [],
     };
     await render(ValueSetView, {
       states: [
         state({
           ...base,
-          state_id: 1,
+          state_id: "1",
           period_scope: "intervals",
           valid_from: "2012-01-01",
           valid_to: "2012-12-31",
@@ -725,7 +788,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         }),
         state({
           ...base,
-          state_id: 2,
+          state_id: "2",
           period_scope: "intervals",
           valid_from: "2013-01-01",
           valid_to: "2013-12-31",
@@ -733,7 +796,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         }),
         state({
           ...base,
-          state_id: 3,
+          state_id: "3",
           period_scope: "intervals",
           valid_from: "2014-01-01",
           valid_to: "2014-12-31",
@@ -746,37 +809,37 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     expect(document.querySelectorAll(".pooled-badge")).toHaveLength(2);
   });
 
-  it("collapses several value_set_ids that share one classification_slug into ONE row (M13)", async () => {
+  it("keeps distinct source domains even when they declare the same classification", async () => {
     // The duplicate-LKF-row bug: SCB ships ≥2 distinct value_set_ids per LKF
     // edition. Two such states for lkf2007 must render ONE "= LKF 2007" row, not
     // two — plus the one plain value set → two rows total.
     const states = [
       classState, // lkf2007, value_set_id 100
-      state({ ...classState, state_id: 9, value_set_id: 101 }), // SAME edition, distinct id
+      state({ ...classState, state_id: "9", value_set_id: "101" }), // SAME edition, distinct id
       plainState,
     ];
     await render(ValueSetView, { states, narrowed: false });
-    expect(document.querySelectorAll(".vs-list > li")).toHaveLength(2);
+    expect(document.querySelectorAll(".vs-list > li")).toHaveLength(3);
     // Exactly one "= LKF 2007" link (no duplicate row).
     expect(
       document.querySelectorAll('a[href="/catalog/class/lkf2007"]'),
-    ).toHaveLength(1);
+    ).toHaveLength(2);
   });
 
   it("disambiguates non-classification rows that share a version label by span", async () => {
     // Two plain value sets both labelled "Kommun historisk" (kommun's ×22 case):
     // the bare label can't tell them apart, so each row appends its overall span.
     const a = state({
-      state_id: 1,
-      value_set_id: 10,
+      state_id: "1",
+      value_set_id: "10",
       value_set_version_label: "Kommun historisk",
       variant: "a",
       valid_from: "1968-01-01",
       valid_to: "1970-12-31",
     });
     const b = state({
-      state_id: 2,
-      value_set_id: 11,
+      state_id: "2",
+      value_set_id: "11",
       value_set_version_label: "Kommun historisk",
       variant: "a",
       valid_from: "1971-01-01",
@@ -854,15 +917,15 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // isolated body has no codes to dump and no classification to link, so it
     // renders no filler text.
     const codeless = state({
-      state_id: 1,
-      value_set_id: 300,
+      state_id: "1",
+      value_set_id: "300",
       value_set_version_label: "Codeless",
       variant: "a",
       value_set_summary: null,
     });
     const other = state({
-      state_id: 2,
-      value_set_id: 301,
+      state_id: "2",
+      value_set_id: "301",
       value_set_version_label: "Other",
       variant: "a",
     });
@@ -891,8 +954,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   it("renders technical-change hints inside a folded value-set usage (#743)", async () => {
     const states = [
       state({
-        state_id: 1,
-        value_set_id: 300,
+        state_id: "1",
+        value_set_id: "300",
         value_set_version_label: "Kommun historisk",
         variant: "doda",
         valid_from: "2010-01-01",
@@ -901,8 +964,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         delivery_column_name: "KOMMUN",
       }),
       state({
-        state_id: 2,
-        value_set_id: 300,
+        state_id: "2",
+        value_set_id: "300",
         value_set_version_label: "Kommun historisk",
         variant: "doda",
         valid_from: "2011-01-01",
@@ -923,8 +986,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
 
   it("collapses period-out-of-scope value sets behind a disclosure (#744)", async () => {
     const inScopePlain = state({
-      state_id: 3,
-      value_set_id: 201,
+      state_id: "3",
+      value_set_id: "201",
       value_set_version_label: "In-period plain",
       variant: "doda",
       valid_from: "2008-01-01",
@@ -957,8 +1020,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
 
   it("counts filtered matches inside the outside-period disclosure (#744 review)", async () => {
     const inScopePlain = state({
-      state_id: 3,
-      value_set_id: 201,
+      state_id: "3",
+      value_set_id: "201",
       value_set_version_label: "In-period plain",
       variant: "doda",
       valid_from: "2008-01-01",
@@ -983,7 +1046,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         state({
           variant: "doda",
           value_set_version_label: "Kommun historisk",
-          value_set_id: 900,
+          value_set_id: "900",
           value_set_summary: coding(900, [
             { code: "0114", label: "Upplands Väsby" },
           ]),
@@ -1028,18 +1091,18 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     await render(ValueSetView, {
       states: [
         state({
-          state_id: 10,
+          state_id: "10",
           variant: "_default",
-          value_set_id: 700,
+          value_set_id: "700",
           value_set_version_label: "",
           valid_from: "0001-01-01",
           valid_to: "9999-12-31",
           operational_definition: "Defined from the source register.",
         }),
         state({
-          state_id: 11,
+          state_id: "11",
           variant: "regional",
-          value_set_id: 700,
+          value_set_id: "700",
           value_set_version_label: "",
           valid_from: "2010-01-01",
           valid_to: "2010-12-31",
@@ -1075,7 +1138,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     const lone = state({
       variant: "doda",
       value_set_version_label: "Kommun historisk",
-      value_set_id: 900,
+      value_set_id: "900",
       value_set_summary: coding(900, [
         { code: "0114", label: "Upplands Väsby" },
       ]),
@@ -1108,7 +1171,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     const lone = state({
       variant: "doda",
       value_set_version_label: "Kommun historisk",
-      value_set_id: 900,
+      value_set_id: "900",
       value_set_summary: coding(900, [
         { code: "0114", label: "Upplands Väsby" },
       ]),
@@ -1132,8 +1195,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // NOT appear — the union branch's own "no matches" describes the filtered-out
     // state instead.
     const inScopePlain = state({
-      state_id: 3,
-      value_set_id: 201,
+      state_id: "3",
+      value_set_id: "201",
       value_set_version_label: "In-period plain",
       variant: "doda",
       valid_from: "2008-01-01",
@@ -1186,8 +1249,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // the deep link isolates the LATEST-era one (max valid_to) — the picker row's
     // representative coding. The earlier coding stays one "← All value sets" away.
     const early = state({
-      state_id: 1,
-      value_set_id: 303,
+      state_id: "1",
+      value_set_id: "303",
       value_set_version_label: "Old coding",
       variant: "v",
       delivery_column_name: "COL",
@@ -1195,8 +1258,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_to: "2018-12-31",
     });
     const latest = state({
-      state_id: 2,
-      value_set_id: 249,
+      state_id: "2",
+      value_set_id: "249",
       value_set_version_label: "New coding",
       variant: "v",
       delivery_column_name: "COL",
@@ -1224,8 +1287,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // `states` set where COL now delivers "Second coding"; the isolation must FOLLOW
     // to the new value set, not strand the old one.
     const first = state({
-      state_id: 1,
-      value_set_id: 401,
+      state_id: "1",
+      value_set_id: "401",
       value_set_version_label: "First coding",
       variant: "v",
       delivery_column_name: "COL",
@@ -1233,8 +1296,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_to: "2012-12-31",
     });
     const firstOther = state({
-      state_id: 2,
-      value_set_id: 402,
+      state_id: "2",
+      value_set_id: "402",
       value_set_version_label: "First other",
       variant: "v",
       delivery_column_name: "OTHER",
@@ -1252,8 +1315,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
 
     // Navigate to a sibling: a NEW states set where COL delivers a different coding.
     const second = state({
-      state_id: 3,
-      value_set_id: 501,
+      state_id: "3",
+      value_set_id: "501",
       value_set_version_label: "Second coding",
       variant: "v",
       delivery_column_name: "COL",
@@ -1261,8 +1324,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_to: "2015-12-31",
     });
     const secondOther = state({
-      state_id: 4,
-      value_set_id: 502,
+      state_id: "4",
+      value_set_id: "502",
       value_set_version_label: "Second other",
       variant: "v",
       delivery_column_name: "OTHER",
@@ -1289,8 +1352,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // value set regardless of period) takes precedence over the period-collapse: the
     // focused detail renders fully, not buried under "… outside this period".
     const inPeriodCol = state({
-      state_id: 1,
-      value_set_id: 600,
+      state_id: "1",
+      value_set_id: "600",
       value_set_version_label: "In-period coding",
       variant: "v",
       delivery_column_name: "INCOL",
@@ -1298,8 +1361,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_to: "2008-12-31",
     });
     const outOfPeriodCol = state({
-      state_id: 2,
-      value_set_id: 601,
+      state_id: "2",
+      value_set_id: "601",
       value_set_version_label: "Out-of-period coding",
       variant: "v",
       delivery_column_name: "OUTCOL",
@@ -1345,8 +1408,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // `focusVariant: "a"` must isolate variant a's coding, NOT variant b's latest-era
     // one (the unscoped column lookup would pick b).
     const a = state({
-      state_id: 1,
-      value_set_id: 100,
+      state_id: "1",
+      value_set_id: "100",
       value_set_version_label: "Coding A",
       variant: "a",
       delivery_column_name: "COL",
@@ -1354,8 +1417,8 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_to: "2018-12-31",
     });
     const b = state({
-      state_id: 2,
-      value_set_id: 200,
+      state_id: "2",
+      value_set_id: "200",
       value_set_version_label: "Coding B",
       variant: "b",
       delivery_column_name: "COL",
@@ -1388,4 +1451,153 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     expect(headingB).toContain("Coding B");
     expect(headingB).not.toContain("Coding A");
   });
+});
+
+it("keeps every declared book and reads scoped special codes using exact large IDs", async () => {
+  const stateId = "9007199254740993";
+  const valueSetId = "9007199254740992";
+  const verdict = {
+    declared_classification_slug: "sni2007",
+    declared_classification_short_name: "SNI 2007",
+    declared_classification_name: "SNI 2007",
+    status: "extended" as const,
+    checked_code_count: 2,
+    matched_code_count: 1,
+    nonconforming_code_count: 1,
+    nonstandard_code_count: 0,
+    sentinel_code_count: 1,
+    overlap: 0.5,
+    nonconforming_codes: [],
+  };
+  vi.mocked(getValueSetCodes).mockImplementation(async (id, options) => ({
+    value_set_id: id,
+    state_id: options.state ?? null,
+    q: "",
+    total: 1,
+    offset: 0,
+    limit: 200,
+    codes:
+      options.state == null
+        ? [{ code: "0", label: "Original source label" }]
+        : [
+            {
+              code: "0",
+              label: "Original source label",
+              member_kind: "sentinel",
+              sentinel_meaning: null,
+              scoped_sentinels: [
+                {
+                  valid_from: "2013-01-01",
+                  valid_to: "2013-12-31",
+                  delivery_column_name: "NgS1",
+                  classification_sha256: "a".repeat(64),
+                  source_fingerprints: ["b".repeat(64)],
+                  members: [["0", "No recorded industry"]],
+                  provenance:
+                    "Reviewed source coding for this column and period.",
+                },
+              ],
+            },
+          ],
+  }));
+  await render(ValueSetView, {
+    states: [
+      state({
+        state_id: stateId,
+        value_set_id: valueSetId,
+        value_set_summary: { code_count: 2, integer_range: null },
+        coding_window_from: "2013-01-01",
+        delivery_column_name: "NgS1",
+        classifications: [
+          {
+            slug: "sni2007",
+            short_name: "SNI 2007",
+            name: "SNI 2007",
+            conformance: verdict,
+          },
+          {
+            slug: "sni2002",
+            short_name: "SNI 2002",
+            name: "SNI 2002",
+            conformance: null,
+          },
+        ],
+      }),
+    ],
+    narrowed: false,
+  });
+  expect(
+    document.querySelector('a[href="/catalog/class/sni2007"]'),
+  ).not.toBeNull();
+  expect(
+    document.querySelector('a[href="/catalog/class/sni2002"]'),
+  ).not.toBeNull();
+  await page.getByText("Special source codes (1)").click();
+  await expect
+    .element(page.getByText("Original source label").first())
+    .toBeVisible();
+  await expect
+    .element(page.getByText("No recorded industry", { exact: false }))
+    .toBeVisible();
+  const request = vi.mocked(getValueSetCodes).mock.lastCall;
+  expect(request?.[0]).toBe(valueSetId);
+  expect(request?.[1]).toMatchObject({
+    state: stateId,
+    classification: "sni2007",
+    partition: "sentinels",
+    column: "NgS1",
+    alias_window_from: "2013-01-01",
+  });
+  await page.getByRole("button", { name: "Source evidence" }).click();
+  await expect
+    .element(
+      page.getByText("Reviewed source coding for this column and period."),
+    )
+    .toBeVisible();
+});
+
+it("limits conformance notices to the selected delivery while preserving historical usage", async () => {
+  const conformance = {
+    declared_classification_slug: "sni2007",
+    declared_classification_short_name: "SNI 2007",
+    declared_classification_name: "SNI 2007",
+    status: "extended" as const,
+    checked_code_count: 2,
+    matched_code_count: 1,
+    nonconforming_code_count: 1,
+    nonstandard_code_count: 1,
+    sentinel_code_count: 0,
+    overlap: 0.5,
+    nonconforming_codes: [],
+  };
+  const historical = state({
+    state_id: "10",
+    variant: "v",
+    value_set_id: "100",
+    valid_from: "1980-01-01",
+    valid_to: "1991-12-31",
+    classifications: [
+      {
+        slug: "sni2007",
+        short_name: "SNI 2007",
+        name: "SNI 2007",
+        conformance,
+      },
+    ],
+  });
+  const selected = state({
+    ...historical,
+    state_id: "11",
+    valid_from: "1992-01-01",
+    valid_to: "1992-12-31",
+  });
+  await render(ValueSetView, {
+    states: [historical, selected],
+    scopeStates: [selected],
+    narrowed: true,
+  });
+  expect(document.querySelectorAll(".conformance-notice")).toHaveLength(1);
+  expect(normalizedText(".conformance-scope")).toContain("recorded for 1992");
+  expect(normalizedText(".conformance-scope")).not.toContain("1980");
+  expect(normalizedText(".vs-usage")).toContain("1980 – 1992");
 });

@@ -4861,9 +4861,7 @@ def search_variables_by_classification(
 ) -> list[dict[str, Any]]:
     """List variables with at least one state tagged with this classification.
 
-    A2.7: re-sourced off `variable_state.classification_id` (was per-instance
-    `variable_instance.classification_id`). `variable_state` carries
-    `variable_id`, so the join is direct and sibling-isolated.
+    State and physical-window book links remain isolated to the owning variable.
     """
     cls_id = _resolve_classification_id(conn, identifier)
     rows = conn.execute(
@@ -4873,11 +4871,16 @@ def search_variables_by_classification(
         FROM variable_state vs
         JOIN variable v ON vs.variable_id = v.variable_id
         JOIN register r ON v.register_id = r.register_id
-        WHERE vs.classification_id = ?
+        WHERE EXISTS (SELECT 1 FROM state_classification sc WHERE sc.state_id = vs.state_id AND sc.classification_id = ?)
+           OR EXISTS (SELECT 1 FROM alias_window_classification ac JOIN variable_alias_window aw
+              ON aw.variable_id = ac.variable_id AND aw.register_variant_id = ac.register_variant_id
+              AND aw.delivery_column_name = ac.delivery_column_name AND aw.valid_from = ac.valid_from
+              WHERE ac.variable_id = vs.variable_id AND ac.register_variant_id = vs.register_variant_id
+              AND aw.valid_from <= vs.valid_to AND aw.valid_to >= vs.valid_from AND ac.classification_id = ?)
         ORDER BY r.name, v.name
         LIMIT ? OFFSET ?
         """,
-        (cls_id, limit, offset),
+        (cls_id, cls_id, limit, offset),
     ).fetchall()
     return [dict(r) for r in rows]
 
@@ -4890,18 +4893,20 @@ def classifications_for_variable(
     A single variable can span multiple classifications across its lifetime
     (e.g. SUN2000 → SUN2020), so this returns a list, not a scalar.
 
-    A2.7: re-sourced off `variable_state.classification_id` and keyed by
-    `variable_id` (the unique per-variable key). This SIBLING-ISOLATES — the
-    A2.6 limitation (where `variable_instance` had no `variable_id`, so an A2.2
-    split sibling's classifications aggregated across every sibling sharing the
-    `var_id`) is resolved. `instance_count` counts distinct states now.
+    State and physical-window links preserve every declared book. `instance_count`
+    counts distinct owning states, without multiplying multi-book links.
     """
     rows = conn.execute(
         """
         SELECT c.id, c.short_name, c.name, c.publisher,
                COUNT(DISTINCT vs.state_id) AS instance_count
         FROM variable_state vs
-        JOIN classification c ON vs.classification_id = c.id
+        JOIN classification c ON EXISTS (SELECT 1 FROM state_classification sc WHERE sc.state_id = vs.state_id AND sc.classification_id = c.id)
+          OR EXISTS (SELECT 1 FROM alias_window_classification ac JOIN variable_alias_window aw
+              ON aw.variable_id = ac.variable_id AND aw.register_variant_id = ac.register_variant_id
+              AND aw.delivery_column_name = ac.delivery_column_name AND aw.valid_from = ac.valid_from
+              WHERE ac.variable_id = vs.variable_id AND ac.register_variant_id = vs.register_variant_id
+              AND aw.valid_from <= vs.valid_to AND aw.valid_to >= vs.valid_from AND ac.classification_id = c.id)
         WHERE vs.variable_id = ?
         GROUP BY c.id
         ORDER BY c.short_name

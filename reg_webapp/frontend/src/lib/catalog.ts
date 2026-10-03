@@ -902,7 +902,7 @@ const ID_TOKENS = new Set(["identifierare", "uniqueidentifier"]);
 interface TypeDerivationState {
   data_type?: string | null;
   is_identifier?: boolean;
-  value_set_id?: number | null;
+  value_set_id?: string | null;
   value_set_summary?: VariableStateModel["value_set_summary"];
 }
 
@@ -984,7 +984,7 @@ export interface Representation {
   column: string;
   label: string;
   codeCount: number | null;
-  classificationSlug: string | null;
+  classificationSlugs: string[];
   validTo: string;
   codingKey: string;
 }
@@ -1090,7 +1090,7 @@ export function representationsFromStates(
     column: s.delivery_column_name as string,
     label: s.value_set_version_label,
     codeCount: s.value_set_summary?.code_count ?? null,
-    classificationSlug: s.classification_slug ?? null,
+    classificationSlugs: s.classifications.map((c) => c.slug),
     validTo: maxValidTo.get(s.delivery_column_name as string) as string,
     codingKey: codingKeyOf(s),
   });
@@ -1472,7 +1472,7 @@ function minIso(a: string, b: string): string {
  * fork the function. */
 export interface PickerStateInput {
   period_scope?: "intervals" | "year_independent";
-  state_id: number;
+  state_id: string;
   variant: string;
   /** The variant's curator DISPLAY name (`register_variant.name`), or null for a
    * NULL-named variant. Display-only — `variant` (the slug) stays the selection key /
@@ -1489,12 +1489,12 @@ export interface PickerStateInput {
    * SCB labels inconsistently for the same id across populations/years. `null` for a
    * code-less state — its own distinct value, so a null↔id transition counts as a
    * coding change. */
-  value_set_id: number | null;
+  value_set_id: string | null;
   valid_from: string | null;
   valid_to: string | null;
 }
 
-function latestRepresentativeState<S extends { state_id: number }>(
+function latestRepresentativeState<S extends { state_id: string }>(
   states: readonly S[],
   validTo: (s: S) => string,
 ): S {
@@ -1504,7 +1504,7 @@ function latestRepresentativeState<S extends { state_id: number }>(
   }
   return states.reduce((best, s) =>
     validTo(s) > validTo(best) ||
-    (validTo(s) === validTo(best) && s.state_id > best.state_id)
+    (validTo(s) === validTo(best) && BigInt(s.state_id) > BigInt(best.state_id))
       ? s
       : best,
   );
@@ -1774,7 +1774,7 @@ export function deliveryColumnRows(
       delivery.period_scope === "year_independent"
         ? [
             {
-              state_id: stateId++,
+              state_id: String(stateId++),
               variant: delivery.variant,
               variant_label: null,
               delivery_column_name: delivery.column,
@@ -1786,7 +1786,7 @@ export function deliveryColumnRows(
             },
           ]
         : delivery.windows.map((window) => ({
-            state_id: stateId++,
+            state_id: String(stateId++),
             variant: delivery.variant,
             variant_label: null,
             delivery_column_name: delivery.column,
@@ -2637,21 +2637,9 @@ export function representationInWindow(
 // ── Value-set-centric state fold (#668 — dogfooding M13/M18/M20) ──────────────
 // A binding leaf's `variable_state` rows blow up by VINTAGE: `scb/rtb/kommun` has
 // 415 states but only ~28 distinct value-set ids — which themselves collapse to
-// ~21 classification editions. The leaf's multi-state view is value-SET-centric,
-// not state-centric, and dedups at TWO levels (M13):
-//   - a CLASSIFICATION value set (one with a `classification_slug`) dedups by
-//     `classification_slug`, so the several `value_set_id`s SCB ships for one LKF
-//     edition (lkf1980 ×2, lkf1995 ×3, …) collapse to ONE "= LKF 1980" row — they
-//     are the same classification edition. It links out to the classification
-//     instead of dumping its (huge) code list.
-//   - a NON-classification value set (no slug) keeps per `value_set_id`: each id
-//     is a genuinely distinct code list. When several share a `versionLabel`
-//     (e.g. "Kommun historisk" ×22) the VIEW disambiguates the row with its
-//     overall period span so the rows aren't indistinguishable.
-// The usages of a collapsed classification row are the UNION of all states across
-// its `value_set_id`s (the per-variant adjacent-year M20 collapse runs over that
-// union). Pure projection, unit-tested in catalog.test.ts; ValueSetView is
-// presentational over the result.
+// Source domains group by their value-set identity. Declaring the same official
+// book does not make different delivered domains identical. Their book links and
+// scoped conformance remain separate, while adjacent delivery windows still fold.
 
 /** A contiguous delivery-year run within one (value set, variant), collapsed
  * across ADJACENT years (#668 / dogfooding M20). The per-variable annual states
@@ -2700,7 +2688,7 @@ export interface ValueSetVariantUsage {
  * non-classification rows share a `versionLabel`. */
 export interface DistinctValueSet {
   key: string;
-  classificationSlug: string | null;
+  classificationSlugs: string[];
   /** Every distinct stored verdict the entry's states carry, each with the state
    * its mismatch list is read by and the variants/window it was recorded over.
    * Empty when no state declares a classification. */
@@ -2708,7 +2696,7 @@ export interface DistinctValueSet {
   versionLabel: string;
   /** The coding's IDENTITY — what the bounded code-list request is keyed on.
    * Null for a state with no value set. */
-  valueSetId: number | null;
+  valueSetId: string | null;
   /** Cardinality-independent facts about that coding (count, dense-integer
    * span). Null when there is no value set. */
   summary: VariableStateModel["value_set_summary"];
@@ -2720,7 +2708,7 @@ export interface DistinctValueSet {
 }
 
 type ClassificationConformanceModel = NonNullable<
-  VariableStateModel["classification_conformance"]
+  VariableStateModel["classifications"][number]["conformance"]
 >;
 
 function displayTechnicalValue(value: string): string {
@@ -2792,7 +2780,11 @@ function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
     .sort(
       (a, b) =>
         a.valid_from.localeCompare(b.valid_from) ||
-        a.state_id - b.state_id ||
+        (BigInt(a.state_id) < BigInt(b.state_id)
+          ? -1
+          : BigInt(a.state_id) > BigInt(b.state_id)
+            ? 1
+            : 0) ||
         a.valid_to.localeCompare(b.valid_to),
     );
   const spans: ValueSetSpan[] = [];
@@ -2871,21 +2863,12 @@ function dayAfter(iso: string): string {
   return new Date(ms + 86_400_000).toISOString().slice(0, 10);
 }
 
-/** The TWO-LEVEL dedup key for a state's value set (M13): a classification value
- * set keys by `class/<slug>` so an edition's several `value_set_id`s collapse to
- * one entry; a non-classification one keys by `id/<value_set_id>` (`id/none` for
- * the null "no value set" bucket) so each distinct code list stays its own row.
- * The `class/` vs `id/` prefixes keep the two namespaces from ever colliding. */
+/** Source coding identity; a declared classification does not replace it. */
 function valueSetDedupKey(s: VariableStateModel): string {
-  return s.classification_slug
-    ? `class/${s.classification_slug}`
-    : `id/${s.value_set_id ?? "none"}`;
+  return `id/${s.value_set_id ?? "none"}`;
 }
 
-/** Whether a stored verdict says something the reader must see: a SEVERED
- * declaration (the reason those codes are not a classification link at all), or
- * codes that fall outside the classification the state declares. A clean "kept"
- * verdict adds nothing to the classification link already rendered. */
+/** Source-local codes need a notice even though the declared book stays linked. */
 export function conformanceNeedsNotice(
   c: ClassificationConformanceModel,
 ): boolean {
@@ -2903,42 +2886,35 @@ export function conformanceNeedsNotice(
  * coding, which has no mismatch list to open. */
 export interface StateConformance {
   verdict: ClassificationConformanceModel;
-  stateId: number;
-  valueSetId: number | null;
+  stateId: string;
+  column: string | null;
+  aliasWindowFrom: string | null;
+  valueSetId: string | null;
   versionLabel: string;
   variants: string[];
   spans: ValueSetSpan[];
 }
 
-/** EVERY distinct stored conformance verdict in a group — one per (coding,
- * declared classification) pair, since a state's stored mismatch list is a
- * function of exactly those two (the build gate matches the state's value-set
- * members against the declared edition's codes). States sharing both share the
- * list, so collapsing them loses nothing and a long era of yearly states reports
- * once; two codings under one classification edition keep BOTH lists, each read
- * by its own state.
- *
- * Deliberately NOT a synthesized rollup: the mismatch lists are per-state
- * on-demand relations now, so a merged row would name counts no single read could
- * produce — every count here describes the one list its disclosure opens. Which
- * of them warrant a notice is the view's call (`conformanceNeedsNotice`); this
- * stays the complete set. */
+/** Preserve the exact state, alias window and book that owns each partition.
+ * Equal domain IDs alone do not prove equal scoped sentinel evidence. */
 function groupConformances(states: VariableStateModel[]): StateConformance[] {
   const byList = new Map<
     string,
     { verdict: ClassificationConformanceModel; states: VariableStateModel[] }
   >();
   for (const s of states) {
-    const verdict = s.classification_conformance;
-    if (verdict == null) {
-      continue;
-    }
-    const key = `${s.value_set_id ?? "none"}\u0000${verdict.declared_classification_slug}`;
-    const seen = byList.get(key);
-    if (seen) {
-      seen.states.push(s);
-    } else {
-      byList.set(key, { verdict, states: [s] });
+    for (const classification of s.classifications) {
+      const verdict = classification.conformance;
+      if (verdict == null) {
+        continue;
+      }
+      const key = `${s.state_id}\u0000${s.coding_window_from ?? ""}\u0000${s.delivery_column_name ?? ""}\u0000${verdict.declared_classification_slug}`;
+      const seen = byList.get(key);
+      if (seen) {
+        seen.states.push(s);
+      } else {
+        byList.set(key, { verdict, states: [s] });
+      }
     }
   }
   return [...byList.values()].map(({ verdict, states: recorded }) => {
@@ -2946,6 +2922,8 @@ function groupConformances(states: VariableStateModel[]): StateConformance[] {
     return {
       verdict,
       stateId: rep.state_id,
+      column: rep.coding_window_from != null ? rep.delivery_column_name : null,
+      aliasWindowFrom: rep.coding_window_from ?? null,
       valueSetId: rep.value_set_id,
       versionLabel: rep.value_set_version_label,
       variants: [...new Set(recorded.map((s) => s.variant))],
@@ -2956,14 +2934,8 @@ function groupConformances(states: VariableStateModel[]): StateConformance[] {
   });
 }
 
-/** Project a variable's multi-state set into DISTINCT value sets (#668), deduped
- * at TWO levels: classification value sets by `classification_slug`, others by
- * `value_set_id` (see `valueSetDedupKey` and the section header). First-seen order
- * is preserved so the list is stable; within each entry the states group by
- * variant and collapse adjacent years (M20) over the UNION of all states in the
- * bucket (so a collapsed classification edition's usages span its ids). The
- * representative (first-seen) state supplies the version label / value set / data
- * type. Pure — unit-tested. */
+/** Group source domains by value-set identity, preserving first-seen order.
+ * Delivery windows fold within a domain; declared book links stay plural. */
 export function distinctValueSets(
   states: VariableStateModel[],
 ): DistinctValueSet[] {
@@ -2991,7 +2963,11 @@ export function distinctValueSets(
             (a.delivery_column_name ?? "").localeCompare(
               b.delivery_column_name ?? "",
             ) ||
-            a.state_id - b.state_id,
+            (BigInt(a.state_id) < BigInt(b.state_id)
+              ? -1
+              : BigInt(a.state_id) > BigInt(b.state_id)
+                ? 1
+                : 0),
         ),
       }),
     );
@@ -3019,7 +2995,9 @@ export function distinctValueSets(
           };
     return {
       key,
-      classificationSlug: rep.classification_slug ?? null,
+      classificationSlugs: [
+        ...new Set(group.flatMap((s) => s.classifications.map((c) => c.slug))),
+      ],
       conformances,
       versionLabel: rep.value_set_version_label,
       valueSetId: rep.value_set_id,

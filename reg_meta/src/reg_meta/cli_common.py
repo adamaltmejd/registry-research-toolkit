@@ -90,8 +90,50 @@ def write_to(content: str, output_path: str | None, *, truncate: bool = False) -
         sys.stdout.write(content)
 
 
+_STORAGE_ID_KEYS = frozenset(
+    {
+        "id",
+        "provider_id",
+        "register_id",
+        "register_variant_id",
+        "variable_id",
+        "state_id",
+        "value_set_id",
+        "code_id",
+        "classification_id",
+        "supersedes_id",
+        "source_register_id",
+        "relationship_id",
+        "consumer_state_id",
+        "source_state_id",
+        "declared_classification_id",
+    }
+)
+
+
+def _json_storage_ids(value: Any) -> Any:
+    """Raw SQL CLI rows use the same opaque decimal IDs as catalog models."""
+    if isinstance(value, dict):
+        return {
+            key: str(item)
+            if key in _STORAGE_ID_KEYS
+            and isinstance(item, int)
+            and not isinstance(item, bool)
+            else _json_storage_ids(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, (tuple, list)):
+        return [_json_storage_ids(item) for item in value]
+    return value
+
+
 def write_json(payload: dict[str, Any], output_path: str | None) -> None:
-    content = json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    content = (
+        json.dumps(
+            _json_storage_ids(payload), ensure_ascii=False, indent=2, sort_keys=True
+        )
+        + "\n"
+    )
     if output_path:
         tmp = Path(output_path).expanduser().resolve()
         tmp_file = tmp.with_suffix(tmp.suffix + ".tmp")

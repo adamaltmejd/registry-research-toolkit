@@ -49,6 +49,7 @@ it("requests the selected delivery and keeps register warnings separate", async 
     period: "2020",
     variant: "personer",
     representation: "KON",
+    unassigned_only: false,
   });
   await expect
     .element(page.getByText("Unbound register evidence."))
@@ -66,6 +67,12 @@ it("shows register limitations without duplicating individual variable warnings"
     },
   ]);
   await render(ScopedDataWarnings, { fqid: "scb/lisa", registerOnly: true });
+  expect(getDataWarnings).toHaveBeenCalledWith("scb/lisa", {
+    period: null,
+    variant: null,
+    representation: null,
+    unassigned_only: true,
+  });
   await expect
     .element(page.getByText("Unbound register evidence."))
     .toBeVisible();

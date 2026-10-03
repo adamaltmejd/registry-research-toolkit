@@ -36,11 +36,12 @@ function state(
   validTo: string,
 ): VariableStateModel {
   return {
-    state_id: 1,
+    warning_ids: [],
+    state_id: "1",
     period_scope: "intervals",
     variant: "v1",
     variant_label: null,
-    register_variant_id: 1,
+    register_variant_id: "1",
     valid_from: validFrom,
     valid_to: validTo,
     data_type: "int",
@@ -54,8 +55,7 @@ function state(
     value_set: null,
     value_set_summary: null,
     is_identifier: false,
-    classification_slug: null,
-    classification_conformance: null,
+    classifications: [],
   } as VariableStateModel;
 }
 

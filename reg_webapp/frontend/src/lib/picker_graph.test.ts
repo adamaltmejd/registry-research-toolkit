@@ -19,7 +19,7 @@ import {
 
 function state(over: Partial<GraphState> = {}): GraphState {
   return {
-    state_id: 1,
+    state_id: "1",
     period_scope: "intervals",
     variant: "v",
     variant_label: null,
@@ -28,7 +28,7 @@ function state(over: Partial<GraphState> = {}): GraphState {
     valid_to: "2010-12-31",
     value_set_id: null,
     value_set_version_label: "",
-    classification_slug: null,
+    classification_slugs: [],
     delivery_column_name: "Col",
     ...over,
   };
@@ -75,14 +75,14 @@ describe("cellsOf — representation-run grouping", () => {
     const node = variableNode({
       states: [
         state({
-          state_id: 1,
+          state_id: "1",
           representation_run_id: 1,
           value_set_version_label: "1-siffrig",
           valid_from: "2010-01-01",
           valid_to: "2010-12-31",
         }),
         state({
-          state_id: 2,
+          state_id: "2",
           representation_run_id: 1,
           value_set_version_label: "1-siffrig",
           valid_from: "2011-01-01",
@@ -113,7 +113,7 @@ describe("cellsOf — representation-run grouping", () => {
         states: [
           state({
             value_set_version_label: "",
-            classification_slug: "sun2020",
+            classification_slugs: ["sun2020"],
           }),
         ],
       }),
@@ -125,7 +125,7 @@ describe("cellsOf — representation-run grouping", () => {
         states: [
           state({
             value_set_version_label: "",
-            classification_slug: null,
+            classification_slugs: [],
             delivery_column_name: "Kon",
           }),
         ],

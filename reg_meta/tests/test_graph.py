@@ -412,7 +412,7 @@ class TestRepresentationRuns:
                 value_set_id=99,
                 value_set=None,
                 is_identifier=False,
-                classification_slug=None,
+                classifications=(),
             )
 
         states = (

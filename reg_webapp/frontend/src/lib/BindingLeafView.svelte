@@ -613,15 +613,18 @@ const coverage = $derived(coverageFromStates(node.states));
 /** The selectable representation rows — one per distinct (variant, delivery
  * column) over the active state history (the full history, or the
  * variant/version-narrowed subset when a modifier is active). */
-const pickerRows = $derived(
-  pickerRepresentations(
-    narrowStatesByModifier(
-      node.states,
-      params.variant ?? null,
-      params.value_set_version ?? null,
-    ),
+const pickerStates = $derived(
+  narrowStatesByModifier(
+    node.states,
+    params.variant ?? null,
+    params.value_set_version ?? null,
   ),
 );
+const yearIndependentSelection = $derived(
+  pickerStates.length > 0 &&
+    pickerStates.every((state) => state.period_scope === "year_independent"),
+);
+const pickerRows = $derived(pickerRepresentations(pickerStates));
 const pickerBands = $derived([
   {
     key: node.fqid,
@@ -783,6 +786,9 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
        full history is resolved inside the picker; submit/clear flow through the
        same `?period` URL path (a local change writes `?period` only, never the
        global window). -->
+  {#if yearIndependentSelection}
+    <p class="muted">Year-independent delivery. An annual availability period does not apply.</p>
+  {:else}
   <PeriodPicker
     period={boundedPickerPeriod}
     window={boundedProjectWindow}
@@ -793,6 +799,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
     onsubmit={(period) => setResolution({ period })}
     onclear={() => setResolution({ period: null })}
   />
+  {/if}
 
   <!-- #678 redesign: the direct representation picker. The variable's
        representations (one row per distinct variant + delivery column over the

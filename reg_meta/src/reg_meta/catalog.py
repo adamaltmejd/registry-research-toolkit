@@ -43,6 +43,9 @@ from .fqid import (
     period_token_to_bounds,
     validate_slug,
 )
+from .ids import (
+    CatalogStorageId,  # noqa: TC001 - Runtime Pydantic field type; public catalog export.
+)
 from .inventory import _merge
 from .source_evidence import SourceRecordRef, canonical_sha256
 
@@ -189,14 +192,14 @@ class DataWarning(_CatalogModel):
 
 class ResolvedProvider(_CatalogModel):
     fqid: Fqid
-    provider_id: int
+    provider_id: CatalogStorageId
     name: str
 
 
 class ResolvedRegister(_CatalogModel):
     fqid: Fqid
-    register_id: int
-    provider_id: int
+    register_id: CatalogStorageId
+    provider_id: CatalogStorageId
     # Glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk): `name` was `registernamn`, `purpose` was `registersyfte`.
     # `registerrubrik` is dropped (redundant with name).
     name: str
@@ -208,7 +211,7 @@ class ResolvedRegister(_CatalogModel):
 
 class ResolvedClassification(_CatalogModel):
     fqid: Fqid
-    classification_id: int
+    classification_id: CatalogStorageId
     short_name: str
     name: str
     # OUTBOUND succession (#571): the editions that replaced this one
@@ -334,7 +337,11 @@ def _coverage_bounds(
     stateless variable / empty register) yield both bounds None and `open_ended`
     False."""
     open_ended = cov_to == OPEN_ENDED_VALID_TO
-    return cov_from, (None if open_ended else cov_to), open_ended
+    return (
+        (None if cov_from == UNKNOWN_VALID_FROM else cov_from),
+        (None if open_ended else cov_to),
+        open_ended,
+    )
 
 
 def _fuse_windows(eras: list[tuple[str, str]]) -> tuple[VariableWindow, ...]:
@@ -762,6 +769,31 @@ def dense_integer_range(
     return DenseIntegerRange(min=lo, max=hi)
 
 
+class ScopedSentinelEvidence(_CatalogModel):
+    valid_from: str | None
+    valid_to: str | None
+    delivery_column_name: str
+    classification_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    source_fingerprints: tuple[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...]
+    members: tuple[tuple[str, str], ...]
+    provenance: str
+
+
+class ClassificationExtensionMember(ValueSetMember):
+    member_kind: Literal["nonstandard", "sentinel"]
+    sentinel_meaning: str | None = None
+    scoped_sentinels: tuple[ScopedSentinelEvidence, ...] = ()
+
+
+class _AliasConformanceEvidence(_CatalogModel):
+    declared_classification: str
+    status: Literal["conforming", "extended"]
+    checked_codes: tuple[str, ...]
+    nonconforming_members: tuple[tuple[str, str], ...] = ()
+    sentinel_members: tuple[tuple[str, str], ...] = ()
+    scoped_sentinels: tuple[ScopedSentinelEvidence, ...] = ()
+
+
 class ClassificationConformance(_CatalogModel):
     """Per-state value-set/classification conformance (#656).
 
@@ -777,7 +809,19 @@ class ClassificationConformance(_CatalogModel):
     matched_code_count: int
     nonconforming_code_count: int
     overlap: float
-    nonconforming_codes: tuple[ValueSetMember, ...] = ()
+    nonstandard_code_count: int
+    sentinel_code_count: int
+    nonconforming_codes: tuple[ClassificationExtensionMember, ...] = ()
+
+
+class StateClassification(_CatalogModel):
+    """A linked official book and the delivered domain's per-book evidence."""
+
+    slug: str
+    short_name: str
+    name: str
+    provenance: str | None = None
+    conformance: ClassificationConformance | None = None
 
 
 class VariableState(_CatalogModel):
@@ -786,7 +830,7 @@ class VariableState(_CatalogModel):
     `ResolvedVariable.states` is a tuple of these; `resolve_at` returns the
     subset whose validity range intersects the queried period."""
 
-    state_id: int
+    state_id: CatalogStorageId
     # `register_variant.slug` for `register_variant_id`. The two-level model (see DESIGN.md → Two-level variable model) makes the column
     # NOT NULL, so a state always carries a real variant — `variant` is always a
     # resolved slug, never the synth `_default` placeholder (that fiction exists
@@ -804,7 +848,7 @@ class VariableState(_CatalogModel):
     # succession family; concrete `variant` remains the add coordinate.
     variant_family: str | None = None
     variant_family_label: str | None = None
-    register_variant_id: int
+    register_variant_id: CatalogStorageId
     period_scope: Literal["intervals", "year_independent"] = "intervals"
     valid_from: str | None
     valid_to: str | None
@@ -846,7 +890,8 @@ class VariableState(_CatalogModel):
     # Overlap discriminator (see reg_meta_build/DESIGN.md → Build-time triage (SCB); multi-vintage / grain / coding). NOT NULL
     # DEFAULT '' in the DDL, so '' means "no discriminator", not absent.
     value_set_version_label: str
-    value_set_id: int | None
+    coding_window_from: str | None = None
+    value_set_id: CatalogStorageId | None
     # `ValueSetMember` (code, label) entries for `value_set_id`, hydrated eagerly
     # when non-NULL. None when the state carries no value set OR the caller asked
     # for state metadata only (`resolve_at(..., with_codes=False)`) — `value_set_id`
@@ -863,11 +908,7 @@ class VariableState(_CatalogModel):
     # ResolvedVariable in scope (the `resolve_at` / `/states` paths) can still
     # read the authoritative identifier flag.
     is_identifier: bool
-    # Classification family slug (see DESIGN.md → Classifications) for this state's value set (e.g. 'lkf2007'),
-    # resolved per-state from `variable_state.classification_id` — it varies
-    # across a variable's states. None for code-less / unclassified states.
-    classification_slug: str | None
-    classification_conformance: ClassificationConformance | None = None
+    classifications: tuple[StateClassification, ...] = ()
     # The coarsest exact display token for this window (#321/#681): the token
     # `period_token_for_bounds(valid_from, valid_to)` expands back to exactly
     # `(valid_from, valid_to)`, or the explicit `lo..hi` range for a non-grammar
@@ -1151,8 +1192,8 @@ class LineageEdge(_CatalogModel):
     intersection. `source_fqid` is the source state's 3-part binding FQID,
     best-effort (None when the source's slugs aren't populated)."""
 
-    consumer_state_id: int
-    source_state_id: int
+    consumer_state_id: CatalogStorageId
+    source_state_id: CatalogStorageId
     valid_from: str  # intersection start (ISO 8601 'YYYY-MM-DD')
     valid_to: str  # intersection end (ISO 8601 'YYYY-MM-DD')
     source_fqid: Fqid | None = None
@@ -1163,7 +1204,7 @@ class LineageWarning(_CatalogModel):
     `variable_state_lineage_warning`. `warning_kind` is 'no_source_state' or
     'ambiguous_source_variant'."""
 
-    consumer_state_id: int
+    consumer_state_id: CatalogStorageId
     warning_kind: str
     message: str
 
@@ -1182,8 +1223,8 @@ class ResolvedVariable(_CatalogModel):
     # identity the edge accessors key off — graph nodes use it so an alias-entry
     # graph keys on the canonical, not the caller's address.
     canonical_fqid: Fqid
-    variable_id: int
-    register_id: int
+    variable_id: CatalogStorageId
+    register_id: CatalogStorageId
     provider_key: str
     name: str | None
     definition: str | None
@@ -1197,7 +1238,7 @@ class ResolvedVariable(_CatalogModel):
     is_sensitive: bool
     is_identifier: bool
     deprecated: bool = False
-    source_register_id: int | None
+    source_register_id: CatalogStorageId | None
     source_register_text: str | None
     related_documents: tuple[RelatedDocument, ...] = ()
     # Full state history, chronological ascending (oldest first). Each state
@@ -1338,6 +1379,7 @@ type _StoredAliasWindow = tuple[
     str,
     str | None,
     str | None,
+    str,
 ]
 
 
@@ -1371,6 +1413,7 @@ class Catalog:
         # summary needs runs once per DISTINCT value set for the life of this
         # Catalog rather than once per state.
         self._value_set_summaries: dict[int, ValueSetSummary] = {}
+        self._data_warning_payloads: dict[str, DataWarning] = {}
 
     def data_warnings(
         self,
@@ -1379,28 +1422,42 @@ class Catalog:
         period: Period | None = None,
         variant: str | None = None,
         representation: str | None = None,
+        unassigned_only: bool = False,
+        include_unassigned: bool = True,
     ) -> tuple[DataWarning, ...]:
         """Return applicable source limitations, including unassigned register warnings.
 
         Unscoped warnings remain visible under a delivery filter. Their coordinates
         stay unscoped; filtering does not manufacture evidence of state ownership.
         """
+        if unassigned_only and not include_unassigned:
+            raise ValueError("unassigned_only requires include_unassigned")
         coordinate = parse(fqid) if isinstance(fqid, str) else fqid
         if coordinate.kind not in (FqidKind.REGISTER, FqidKind.VARIABLE_BINDING):
             raise ValueError("data warnings require a register or variable binding")
+        variable_id = None
         if coordinate.kind == FqidKind.VARIABLE_BINDING:
             resolved = self._resolve_variable_identity(coordinate)
             if resolved is None:
                 raise _not_found(coordinate)
-            meta = self._lookup_variable_meta(resolved[0]["variable_id"])
+            variable_id = resolved[0]["variable_id"]
+            meta = self._lookup_variable_meta(variable_id)
             coordinate = Fqid.binding_fqid(
                 meta["provider_slug"], meta["register_slug"], meta["slug"]
             )
         clauses = ["p.slug = ?", "r.slug = ?"]
         args: list[object] = [coordinate.provider, coordinate.register]
-        if coordinate.variable is not None:
-            clauses.append("(w.variable_id IS NULL OR v.slug = ?)")
-            args.append(coordinate.variable)
+        if unassigned_only:
+            clauses.append("w.variable_id IS NULL")
+        elif not include_unassigned:
+            clauses.append("w.variable_id IS NOT NULL")
+        if variable_id is not None:
+            clauses.append(
+                "(w.variable_id IS NULL OR w.variable_id = ?)"
+                if include_unassigned
+                else "w.variable_id = ?"
+            )
+            args.append(variable_id)
         if variant is not None:
             validate_slug(variant, "variant", allow_default=True)
             clauses.append("(w.register_variant_id IS NULL OR rv.slug = ?)")
@@ -1427,7 +1484,14 @@ class Catalog:
             "WHERE " + " AND ".join(clauses) + " ORDER BY w.warning_id",
             args,
         )
-        return tuple(DataWarning.model_validate_json(row[0]) for row in rows)
+        warnings = []
+        for (payload,) in rows:
+            warning = self._data_warning_payloads.get(payload)
+            if warning is None:
+                warning = DataWarning.model_validate_json(payload)
+                self._data_warning_payloads[payload] = warning
+            warnings.append(warning)
+        return tuple(warnings)
 
     @classmethod
     def open(
@@ -2892,7 +2956,7 @@ class Catalog:
             via_same_as=via_same_as,
             warnings=tuple(
                 w
-                for w in self.data_warnings(canonical_fqid)
+                for w in self.data_warnings(canonical_fqid, include_unassigned=False)
                 if w.variable_fqid == canonical_fqid
             ),
         )
@@ -2938,10 +3002,9 @@ class Catalog:
         return self._conn.execute(
             "SELECT v.variable_id, v.register_id, v.provider_key, "
             "v.name AS variable_name "
-            "FROM variable v "
-            "JOIN register r ON v.register_id = r.register_id "
-            "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = ? AND r.slug = ? AND v.slug = ?",
+            "FROM variable v WHERE v.register_id IN ("
+            "SELECT r.register_id FROM register r JOIN provider p USING(provider_id) "
+            "WHERE p.slug = ? AND r.slug = ?) AND v.slug = ?",
             (provider, register, variable_slug),
         ).fetchone()
 
@@ -2982,63 +3045,21 @@ class Catalog:
         the year-only INTERIM limit is lifted. The interval test is the standard
         `valid_from <= hi AND valid_to >= lo` (string compare is chronologically
         correct because every stored value is a full date)."""
-        # JOIN `variable` to denormalize the variable-grain `is_identifier` flag
-        # onto each state (see DESIGN.md → Two-level variable model — the column is variable-grain); LEFT JOIN
-        # `classification` for the per-state `classification_slug` (NULL for
-        # code-less states). Columns are qualified so the ORDER BY stays
-        # unambiguous.
+        sql = (
+            "SELECT vs.*, v.is_identifier, rv.name AS variant_label "
+            "FROM variable_state vs JOIN variable v USING(variable_id) "
+            "JOIN register_variant rv USING(register_variant_id) "
+            "WHERE vs.variable_id = ? "
+        )
+        args = [variable_id]
         if register_variant_id is not None:
-            rows = self._conn.execute(
-                "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
-                "vs.data_length, vs.delivery_column_name, vs.source_register_text, "
-                "vs.operational_definition, vs.definition, vs.measurement_unit, vs.name, vs.description, vs.provenance, vs.pooled, vs.value_set_id, "
-                "vs.value_set_version_label, vs.period_scope, vs.valid_from, vs.valid_to, "
-                "v.is_identifier, c.slug AS classification_slug, "
-                "ccf.status AS conformance_status, "
-                "ccf.checked_code_count, ccf.matched_code_count, "
-                "ccf.nonconforming_code_count, ccf.overlap, "
-                "dc.slug AS declared_classification_slug, "
-                "dc.short_name AS declared_classification_short_name, "
-                "dc.name AS declared_classification_name, "
-                "rv.name AS variant_label "
-                "FROM variable_state vs "
-                "JOIN variable v ON vs.variable_id = v.variable_id "
-                "JOIN register_variant rv "
-                "ON vs.register_variant_id = rv.register_variant_id "
-                "LEFT JOIN classification c ON vs.classification_id = c.id "
-                "LEFT JOIN classification_conformance ccf ON ccf.state_id = vs.state_id "
-                "LEFT JOIN classification dc ON dc.id = ccf.declared_classification_id "
-                "WHERE vs.variable_id = ? AND vs.register_variant_id = ? "
-                "ORDER BY vs.valid_from, vs.valid_to, vs.value_set_version_label, "
-                "vs.state_id",
-                (variable_id, register_variant_id),
-            ).fetchall()
-        else:
-            rows = self._conn.execute(
-                "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
-                "vs.data_length, vs.delivery_column_name, vs.source_register_text, "
-                "vs.operational_definition, vs.definition, vs.measurement_unit, vs.name, vs.description, vs.provenance, vs.pooled, vs.value_set_id, "
-                "vs.value_set_version_label, vs.period_scope, vs.valid_from, vs.valid_to, "
-                "v.is_identifier, c.slug AS classification_slug, "
-                "ccf.status AS conformance_status, "
-                "ccf.checked_code_count, ccf.matched_code_count, "
-                "ccf.nonconforming_code_count, ccf.overlap, "
-                "dc.slug AS declared_classification_slug, "
-                "dc.short_name AS declared_classification_short_name, "
-                "dc.name AS declared_classification_name, "
-                "rv.name AS variant_label "
-                "FROM variable_state vs "
-                "JOIN variable v ON vs.variable_id = v.variable_id "
-                "JOIN register_variant rv "
-                "ON vs.register_variant_id = rv.register_variant_id "
-                "LEFT JOIN classification c ON vs.classification_id = c.id "
-                "LEFT JOIN classification_conformance ccf ON ccf.state_id = vs.state_id "
-                "LEFT JOIN classification dc ON dc.id = ccf.declared_classification_id "
-                "WHERE vs.variable_id = ? "
-                "ORDER BY vs.valid_from, vs.valid_to, vs.value_set_version_label, "
-                "vs.register_variant_id, vs.state_id",
-                (variable_id,),
-            ).fetchall()
+            sql += "AND vs.register_variant_id = ? "
+            args.append(register_variant_id)
+        rows = self._conn.execute(
+            sql + "ORDER BY vs.valid_from, vs.valid_to, vs.value_set_version_label, "
+            "vs.register_variant_id, vs.state_id",
+            args,
+        ).fetchall()
         if bounds is None:
             return rows
         lo, hi = bounds
@@ -3096,94 +3117,301 @@ class Catalog:
             return None
         return self._value_set_codes(value_set_id)
 
-    def state_nonconforming_codes(
-        self, state_id: int, value_set_id: int
-    ) -> tuple[ValueSetMember, ...] | None:
-        """The stored classification MISMATCH list for one `variable_state`, in
-        the same code/label order as a value set's members. None when the state
-        does not exist or does not carry `value_set_id` — the caller passes the
-        value set it is asking about, so a state id can never read a coding it
-        does not belong to."""
-        owned = self._conn.execute(
-            "SELECT 1 FROM variable_state WHERE state_id = ? AND value_set_id = ?",
-            (state_id, value_set_id),
-        ).fetchone()
-        if owned is None:
-            return None
+    def _classification_members(
+        self, state_id: int, classification_id: int
+    ) -> tuple[ClassificationExtensionMember, ...]:
+        rows = self._conn.execute(
+            "SELECT vc.code, vc.label, ccc.member_kind, ccc.sentinel_meaning, ccc.scoped_sentinels "
+            "FROM classification_conformance_code ccc JOIN value_code vc USING(code_id) "
+            "WHERE ccc.state_id = ? AND ccc.declared_classification_id = ? ORDER BY vc.code, vc.label",
+            (state_id, classification_id),
+        )
         return tuple(
-            ValueSetMember(code=r["code"], label=r["label"])
-            for r in self._nonconforming_code_rows(state_id)
+            ClassificationExtensionMember(
+                code=r["code"],
+                label=r["label"],
+                member_kind=r["member_kind"],
+                sentinel_meaning=r["sentinel_meaning"],
+                scoped_sentinels=json.loads(r["scoped_sentinels"]),
+            )
+            for r in rows
+        )
+
+    def _state_classifications(
+        self, state_id: int, *, with_codes: bool, with_conformance: bool
+    ) -> tuple[StateClassification, ...]:
+        rows = self._conn.execute(
+            "SELECT c.id, c.slug, c.short_name, c.name, sc.provenance, cf.status, "
+            "cf.checked_code_count, cf.matched_code_count, cf.nonconforming_code_count, cf.overlap "
+            "FROM state_classification sc JOIN classification c ON c.id = sc.classification_id "
+            "LEFT JOIN classification_conformance cf ON cf.state_id = sc.state_id "
+            "AND cf.declared_classification_id = sc.classification_id WHERE sc.state_id = ? ORDER BY c.slug",
+            (state_id,),
+        )
+        result = []
+        for r in rows:
+            conformance = None
+            if with_conformance and r["status"] is not None:
+                counts = dict(
+                    self._conn.execute(
+                        "SELECT member_kind, count(DISTINCT vc.code) FROM classification_conformance_code ccc "
+                        "JOIN value_code vc USING(code_id) WHERE state_id = ? AND declared_classification_id = ? GROUP BY member_kind",
+                        (state_id, r["id"]),
+                    )
+                )
+                conformance = ClassificationConformance(
+                    declared_classification_slug=r["slug"],
+                    declared_classification_short_name=r["short_name"],
+                    declared_classification_name=r["name"],
+                    status=r["status"],
+                    checked_code_count=r["checked_code_count"],
+                    matched_code_count=r["matched_code_count"],
+                    nonconforming_code_count=r["nonconforming_code_count"],
+                    overlap=r["overlap"],
+                    nonstandard_code_count=counts.get("nonstandard", 0),
+                    sentinel_code_count=counts.get("sentinel", 0),
+                    nonconforming_codes=self._classification_members(state_id, r["id"])
+                    if with_codes
+                    else (),
+                )
+            result.append(
+                StateClassification(
+                    slug=r["slug"],
+                    short_name=r["short_name"],
+                    name=r["name"],
+                    provenance=r["provenance"],
+                    conformance=conformance,
+                )
+            )
+        return tuple(result)
+
+    def _alias_classifications(
+        self,
+        variable_id: int,
+        register_variant_id: int,
+        column: str,
+        window_from: str,
+        *,
+        with_codes: bool,
+        with_conformance: bool,
+    ) -> tuple[StateClassification, ...]:
+        rows = self._conn.execute(
+            "SELECT c.slug, c.short_name, c.name, ac.provenance, ac.conformance FROM alias_window_classification ac "
+            "JOIN classification c ON c.id = ac.classification_id WHERE ac.variable_id = ? AND ac.register_variant_id = ? "
+            "AND ac.delivery_column_name = ? AND ac.valid_from = ? ORDER BY c.slug",
+            (variable_id, register_variant_id, column, window_from),
+        )
+        result = []
+        for r in rows:
+            conformance = None
+            if with_conformance and r["conformance"] is not None:
+                evidence = _AliasConformanceEvidence.model_validate_json(
+                    r["conformance"]
+                )
+                if evidence.declared_classification != r["slug"]:
+                    raise ValueError(
+                        "alias conformance declaration does not match its linked book"
+                    )
+                raw = evidence.model_dump()
+                certificates = evidence.scoped_sentinels
+                extra: tuple[ClassificationExtensionMember, ...] = tuple(
+                    ClassificationExtensionMember(
+                        code=code,
+                        label=label,
+                        member_kind=kind,
+                        scoped_sentinels=tuple(
+                            c for c in certificates if (code, label) in c.members
+                        )
+                        if kind == "sentinel"
+                        else (),
+                    )
+                    for kind, key in (
+                        ("nonstandard", "nonconforming_members"),
+                        ("sentinel", "sentinel_members"),
+                    )
+                    for code, label in raw[key]
+                )
+                checked = len(set(raw["checked_codes"]))
+                nonstandard = len(
+                    {m.code for m in extra if m.member_kind == "nonstandard"}
+                )
+                sentinel = len({m.code for m in extra if m.member_kind == "sentinel"})
+                unmatched = len({m.code for m in extra})
+                sorted_extra = tuple(
+                    sorted(extra, key=lambda member: (member.code, member.label))
+                )
+                conformance = ClassificationConformance(
+                    declared_classification_slug=r["slug"],
+                    declared_classification_short_name=r["short_name"],
+                    declared_classification_name=r["name"],
+                    status=raw["status"],
+                    checked_code_count=checked,
+                    matched_code_count=checked - unmatched,
+                    nonconforming_code_count=unmatched,
+                    nonstandard_code_count=nonstandard,
+                    sentinel_code_count=sentinel,
+                    overlap=(checked - unmatched) / checked if checked else 1.0,
+                    nonconforming_codes=sorted_extra if with_codes else (),
+                )
+            result.append(
+                StateClassification(
+                    slug=r["slug"],
+                    short_name=r["short_name"],
+                    name=r["name"],
+                    provenance=r["provenance"],
+                    conformance=conformance,
+                )
+            )
+        return tuple(result)
+
+    def _owned_classification(
+        self,
+        state_id: int,
+        value_set_id: int,
+        classification_slug: str,
+        delivery_column_name: str | None,
+        alias_window_from: str | None,
+    ) -> StateClassification | None:
+        row = self._conn.execute(
+            "SELECT * FROM variable_state WHERE state_id = ?", (state_id,)
+        ).fetchone()
+        if row is None:
+            return None
+        if delivery_column_name is None and alias_window_from is None:
+            if row["value_set_id"] != value_set_id:
+                return None
+            books = self._state_classifications(
+                state_id, with_codes=True, with_conformance=True
+            )
+        elif delivery_column_name is not None and alias_window_from is not None:
+            owned = self._conn.execute(
+                "SELECT 1 FROM variable_alias_window WHERE variable_id = ? AND register_variant_id = ? "
+                "AND delivery_column_name = ? AND valid_from = ? AND value_set_id = ? AND coding_metadata = 'per_column' "
+                "AND valid_from <= ? AND valid_to >= ?",
+                (
+                    row["variable_id"],
+                    row["register_variant_id"],
+                    delivery_column_name,
+                    alias_window_from,
+                    value_set_id,
+                    row["valid_to"],
+                    row["valid_from"],
+                ),
+            ).fetchone()
+            if owned is None:
+                return None
+            books = self._alias_classifications(
+                row["variable_id"],
+                row["register_variant_id"],
+                delivery_column_name,
+                alias_window_from,
+                with_codes=True,
+                with_conformance=True,
+            )
+        else:
+            return None
+        return next(
+            (
+                b
+                for b in books
+                if b.slug == classification_slug and b.conformance is not None
+            ),
+            None,
+        )
+
+    def state_nonconforming_codes(
+        self,
+        state_id: int,
+        value_set_id: int,
+        *,
+        classification_slug: str,
+        delivery_column_name: str | None = None,
+        alias_window_from: str | None = None,
+    ) -> tuple[ClassificationExtensionMember, ...] | None:
+        """Source extensions for exactly one owned coding and declared book."""
+        book = self._owned_classification(
+            state_id,
+            value_set_id,
+            classification_slug,
+            delivery_column_name,
+            alias_window_from,
+        )
+        return (
+            book.conformance.nonconforming_codes
+            if book is not None and book.conformance is not None
+            else None
+        )
+
+    def state_nonstandard_codes(
+        self,
+        state_id: int,
+        value_set_id: int,
+        *,
+        classification_slug: str,
+        delivery_column_name: str | None = None,
+        alias_window_from: str | None = None,
+    ) -> tuple[ClassificationExtensionMember, ...] | None:
+        members = self.state_nonconforming_codes(
+            state_id,
+            value_set_id,
+            classification_slug=classification_slug,
+            delivery_column_name=delivery_column_name,
+            alias_window_from=alias_window_from,
+        )
+        return (
+            None
+            if members is None
+            else tuple(m for m in members if m.member_kind == "nonstandard")
+        )
+
+    def state_sentinel_codes(
+        self,
+        state_id: int,
+        value_set_id: int,
+        *,
+        classification_slug: str,
+        delivery_column_name: str | None = None,
+        alias_window_from: str | None = None,
+    ) -> tuple[ClassificationExtensionMember, ...] | None:
+        members = self.state_nonconforming_codes(
+            state_id,
+            value_set_id,
+            classification_slug=classification_slug,
+            delivery_column_name=delivery_column_name,
+            alias_window_from=alias_window_from,
+        )
+        return (
+            None
+            if members is None
+            else tuple(m for m in members if m.member_kind == "sentinel")
         )
 
     def state_canonical_codes(
-        self, state_id: int, value_set_id: int
+        self,
+        state_id: int,
+        value_set_id: int,
+        *,
+        classification_slug: str,
+        delivery_column_name: str | None = None,
+        alias_window_from: str | None = None,
     ) -> tuple[ValueSetMember, ...] | None:
-        """Delivered source pairs whose literal codes occur in the declared book.
-
-        This never returns undelivered official codes or replaces source labels.
-        """
-        owned = self._conn.execute(
-            "SELECT 1 FROM variable_state vs "
-            "JOIN classification_conformance cc ON cc.state_id = vs.state_id "
-            "WHERE vs.state_id = ? AND vs.value_set_id = ?",
-            (state_id, value_set_id),
-        ).fetchone()
-        if owned is None:
+        """Delivered source pairs whose literal codes occur in the selected book."""
+        book = self._owned_classification(
+            state_id,
+            value_set_id,
+            classification_slug,
+            delivery_column_name,
+            alias_window_from,
+        )
+        if book is None:
             return None
         rows = self._conn.execute(
-            "SELECT vc.code, vc.label FROM value_set_member vsc "
-            "JOIN value_code vc ON vc.code_id = vsc.code_id "
-            "JOIN classification_conformance cf ON cf.state_id = ? "
-            "WHERE vsc.value_set_id = ? AND EXISTS ("
-            "SELECT 1 FROM classification_code cc "
-            "JOIN value_code canonical ON canonical.code_id = cc.code_id "
-            "WHERE cc.classification_id = cf.declared_classification_id "
-            "AND canonical.code = vc.code) ORDER BY vc.code, vc.label",
-            (state_id, value_set_id),
-        ).fetchall()
-        return tuple(
-            ValueSetMember(code=row["code"], label=row["label"]) for row in rows
+            "SELECT vc.code, vc.label FROM value_set_member vsm JOIN value_code vc USING(code_id) WHERE vsm.value_set_id = ? AND EXISTS ("
+            "SELECT 1 FROM classification_code cc JOIN classification c ON c.id = cc.classification_id "
+            "JOIN value_code canonical ON canonical.code_id = cc.code_id WHERE c.slug = ? AND canonical.code = vc.code) ORDER BY vc.code, vc.label",
+            (value_set_id, classification_slug),
         )
-
-    def _nonconforming_code_rows(self, state_id: int) -> list[sqlite3.Row]:
-        return self._conn.execute(
-            "SELECT vc.code, vc.label "
-            "FROM classification_conformance_code ccc "
-            "JOIN value_code vc ON vc.code_id = ccc.code_id "
-            "WHERE ccc.state_id = ? "
-            "ORDER BY vc.code, vc.label",
-            (state_id,),
-        ).fetchall()
-
-    def _classification_conformance_for_state(
-        self, row: sqlite3.Row, *, with_codes: bool
-    ) -> ClassificationConformance | None:
-        """Hydrate the state-local classification conformance warning, if any.
-        `with_codes=False` keeps the stored verdict, declaration and counts but
-        leaves `nonconforming_codes` empty — the mismatch list is then read on
-        demand through `state_nonconforming_codes`, and
-        `nonconforming_code_count` is what says whether there is one."""
-        if row["conformance_status"] is None:
-            return None
-        if row["nonconforming_code_count"] == 0 or not with_codes:
-            code_rows = ()
-        else:
-            code_rows = self._nonconforming_code_rows(row["state_id"])
-        return ClassificationConformance(
-            declared_classification_slug=row["declared_classification_slug"],
-            declared_classification_short_name=row[
-                "declared_classification_short_name"
-            ],
-            declared_classification_name=row["declared_classification_name"],
-            status=row["conformance_status"],
-            checked_code_count=row["checked_code_count"],
-            matched_code_count=row["matched_code_count"],
-            nonconforming_code_count=row["nonconforming_code_count"],
-            overlap=row["overlap"],
-            nonconforming_codes=tuple(
-                ValueSetMember(code=r["code"], label=r["label"]) for r in code_rows
-            ),
-        )
+        return tuple(ValueSetMember(code=r["code"], label=r["label"]) for r in rows)
 
     @staticmethod
     def _period_token_for_window(valid_from: str, valid_to: str) -> str | None:
@@ -3223,6 +3451,7 @@ class Catalog:
             }
         warnings = self.data_warnings(
             Fqid.binding_fqid(*owner),
+            include_unassigned=False,
             variant=variant,
             representation=column,
             period=period,
@@ -3305,11 +3534,10 @@ class Catalog:
                 else None
             ),
             is_identifier=bool(row["is_identifier"]),
-            classification_slug=row["classification_slug"],
-            classification_conformance=(
-                self._classification_conformance_for_state(row, with_codes=with_codes)
-                if with_codes or with_code_summary
-                else None
+            classifications=self._state_classifications(
+                row["state_id"],
+                with_codes=with_codes,
+                with_conformance=with_codes or with_code_summary,
             ),
             period_token=(
                 "_default"
@@ -3388,6 +3616,7 @@ class Catalog:
                     version_label,
                     name,
                     description,
+                    wfrom,
                 )
             )
         return out
@@ -3419,7 +3648,7 @@ class Catalog:
         inherited. Explicit per-column metadata replaces type, width, operational definition
         and source attribution, including nulls, and intersects canonical state boundaries. Shared storage stays
         inherited. Explicit per-column coding replaces the value set and native
-        version label, clears classification attribution, and respects lazy
+        version label, uses the window's own classification evidence, and respects lazy
         code/summary loading.
         Expanded alias representations do not inherit the base column's
         operational definition. The per-window identity is the compound (state_id,
@@ -3451,6 +3680,7 @@ class Catalog:
                 version_label,
                 name,
                 description,
+                original_from,
             ) = window
             return base.model_copy(
                 update={
@@ -3489,8 +3719,15 @@ class Catalog:
                             "value_set_summary": self.value_set_summary(value_set_id)
                             if with_code_summary and value_set_id is not None
                             else None,
-                            "classification_slug": None,
-                            "classification_conformance": None,
+                            "coding_window_from": original_from,
+                            "classifications": self._alias_classifications(
+                                variable_id,
+                                base.register_variant_id,
+                                col,
+                                original_from,
+                                with_codes=with_codes,
+                                with_conformance=with_codes or with_code_summary,
+                            ),
                         }
                         if coding_mode == "per_column"
                         else {}
@@ -4600,7 +4837,7 @@ class Catalog:
         domain predicates live in `graph.py`; this is the thin entry point."""
         from . import graph  # local: graph.py imports catalog (one-directional)
 
-        resolved = self.resolve_binding(fqid)
+        resolved = self.resolve_binding(fqid, with_codes=False)
         return graph.graph_for_fqid(self, resolved)
 
     def graph_for_classification_fqid(self, fqid: str | Fqid) -> RelationshipGraph:

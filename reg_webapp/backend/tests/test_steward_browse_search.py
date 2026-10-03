@@ -1083,10 +1083,10 @@ def test_lineage_and_warnings_narrow_to_held_consumer_column(
         warnings = client.get("/api/catalog/scb/lisa/disp/lineage_warnings").json()
 
     assert [e["consumer_state_id"] for e in lineage["lineage_edges"]] == [
-        states["CDISP5"]
+        str(states["CDISP5"])
     ]
     assert [w["consumer_state_id"] for w in warnings["lineage_warnings"]] == [
-        states["CDISP5"]
+        str(states["CDISP5"])
     ]
 
 

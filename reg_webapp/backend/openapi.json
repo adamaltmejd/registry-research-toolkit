@@ -294,7 +294,7 @@
           },
           "register_id": {
             "title": "Register Id",
-            "type": "integer"
+            "type": "string"
           },
           "same_as": {
             "items": {
@@ -306,7 +306,7 @@
           "source_register_id": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -348,7 +348,7 @@
           },
           "variable_id": {
             "title": "Variable Id",
-            "type": "integer"
+            "type": "string"
           },
           "via_same_as": {
             "anyOf": [
@@ -578,14 +578,22 @@
           "nonconforming_codes": {
             "default": [],
             "items": {
-              "$ref": "#/components/schemas/ValueSetMember"
+              "$ref": "#/components/schemas/ClassificationExtensionMember"
             },
             "title": "Nonconforming Codes",
             "type": "array"
           },
+          "nonstandard_code_count": {
+            "title": "Nonstandard Code Count",
+            "type": "integer"
+          },
           "overlap": {
             "title": "Overlap",
             "type": "number"
+          },
+          "sentinel_code_count": {
+            "title": "Sentinel Code Count",
+            "type": "integer"
           },
           "status": {
             "enum": [
@@ -604,7 +612,9 @@
           "checked_code_count",
           "matched_code_count",
           "nonconforming_code_count",
-          "overlap"
+          "overlap",
+          "nonstandard_code_count",
+          "sentinel_code_count"
         ],
         "title": "ClassificationConformance",
         "type": "object"
@@ -748,6 +758,53 @@
           "is_self"
         ],
         "title": "ClassificationEdition",
+        "type": "object"
+      },
+      "ClassificationExtensionMember": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "member_kind": {
+            "enum": [
+              "nonstandard",
+              "sentinel"
+            ],
+            "title": "Member Kind",
+            "type": "string"
+          },
+          "scoped_sentinels": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ScopedSentinelEvidence"
+            },
+            "title": "Scoped Sentinels",
+            "type": "array"
+          },
+          "sentinel_meaning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sentinel Meaning"
+          }
+        },
+        "required": [
+          "code",
+          "label",
+          "member_kind"
+        ],
+        "title": "ClassificationExtensionMember",
         "type": "object"
       },
       "ClassificationFamilyNode": {
@@ -2423,16 +2480,12 @@
         "additionalProperties": false,
         "description": "One ``variable_state`` inside a variable node, emitted ordered by\n``(variant, valid_from)``. ``representation_run_id`` groups consecutive states\ninto rendered cells: states sharing it form ONE cell. The id increments at each\n#526 representation boundary and at every ``variant`` change (a run never spans\nvariants). Raw ``data_type`` / ``data_length`` are intentionally NOT on the wire\nAND are NOT boundary signals: SCB's per-delivery ``Datatyp`` / length is\nlow-trust passthrough (#526 blanks it), so a type/length wobble alone never\nopens a new run \u2014 the boundary is value-set identity (id + version label) /\nclassification / column identity only (see ``_is_representation_boundary``).",
         "properties": {
-          "classification_slug": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Classification Slug"
+          "classification_slugs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Classification Slugs",
+            "type": "array"
           },
           "delivery_column_name": {
             "anyOf": [
@@ -2460,7 +2513,7 @@
           },
           "state_id": {
             "title": "State Id",
-            "type": "integer"
+            "type": "string"
           },
           "valid_from": {
             "anyOf": [
@@ -2487,7 +2540,7 @@
           "value_set_id": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -2545,7 +2598,7 @@
           "delivery_column_name",
           "value_set_id",
           "value_set_version_label",
-          "classification_slug",
+          "classification_slugs",
           "valid_from",
           "valid_to"
         ],
@@ -2623,7 +2676,7 @@
         "properties": {
           "consumer_state_id": {
             "title": "Consumer State Id",
-            "type": "integer"
+            "type": "string"
           },
           "source_fqid": {
             "anyOf": [
@@ -2638,7 +2691,7 @@
           },
           "source_state_id": {
             "title": "Source State Id",
-            "type": "integer"
+            "type": "string"
           },
           "valid_from": {
             "title": "Valid From",
@@ -2686,7 +2739,7 @@
         "properties": {
           "consumer_state_id": {
             "title": "Consumer State Id",
-            "type": "integer"
+            "type": "string"
           },
           "message": {
             "title": "Message",
@@ -4055,6 +4108,82 @@
         "title": "SameAsRef",
         "type": "object"
       },
+      "ScopedSentinelEvidence": {
+        "additionalProperties": false,
+        "properties": {
+          "classification_sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Classification Sha256",
+            "type": "string"
+          },
+          "delivery_column_name": {
+            "title": "Delivery Column Name",
+            "type": "string"
+          },
+          "members": {
+            "items": {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "string"
+                }
+              ],
+              "type": "array"
+            },
+            "title": "Members",
+            "type": "array"
+          },
+          "provenance": {
+            "title": "Provenance",
+            "type": "string"
+          },
+          "source_fingerprints": {
+            "items": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "title": "Source Fingerprints",
+            "type": "array"
+          },
+          "valid_from": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid From"
+          },
+          "valid_to": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid To"
+          }
+        },
+        "required": [
+          "valid_from",
+          "valid_to",
+          "delivery_column_name",
+          "classification_sha256",
+          "source_fingerprints",
+          "members",
+          "provenance"
+        ],
+        "title": "ScopedSentinelEvidence",
+        "type": "object"
+      },
       "SearchClassificationEdition": {
         "additionalProperties": false,
         "description": "One edition of a folded classification succession chain (#571): a vintage\nof the same classification (e.g. `sun1996`, `sun2000`). Carried by\n`ClassificationSuccessionSearchResult.editions`, terminal-first then descending\n`effective_year`. Every edition is a live `classification` row (the build\nvalidator guarantees succession editions are live), so `fqid` is None only when\nthe slug is malformed/unresolvable. A nested node \u2014 no `type`/`rank`.",
@@ -4245,6 +4374,52 @@
           "semantic_record_key"
         ],
         "title": "SourceRecordRef",
+        "type": "object"
+      },
+      "StateClassification": {
+        "additionalProperties": false,
+        "description": "A linked official book and the delivered domain's per-book evidence.",
+        "properties": {
+          "conformance": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ClassificationConformance"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "provenance": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provenance"
+          },
+          "short_name": {
+            "title": "Short Name",
+            "type": "string"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "short_name",
+          "name"
+        ],
+        "title": "StateClassification",
         "type": "object"
       },
       "StatesResponse": {
@@ -4577,7 +4752,14 @@
         "properties": {
           "codes": {
             "items": {
-              "$ref": "#/components/schemas/ValueSetMember"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ClassificationExtensionMember"
+                },
+                {
+                  "$ref": "#/components/schemas/ValueSetMember"
+                }
+              ]
             },
             "title": "Codes",
             "type": "array"
@@ -4597,7 +4779,7 @@
           "state_id": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -4611,7 +4793,7 @@
           },
           "value_set_id": {
             "title": "Value Set Id",
-            "type": "integer"
+            "type": "string"
           }
         },
         "required": [
@@ -5199,17 +5381,15 @@
         "additionalProperties": false,
         "description": "One `variable_state` row (see DESIGN.md \u2192 Two-level variable model) \u2014 a variable's per-delivery shape, tagged\nwith the **variant coordinate** it was delivered in. The longitudinal\n`ResolvedVariable.states` is a tuple of these; `resolve_at` returns the\nsubset whose validity range intersects the queried period.",
         "properties": {
-          "classification_conformance": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ClassificationConformance"
-              },
-              {
-                "type": "null"
-              }
-            ]
+          "classifications": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/StateClassification"
+            },
+            "title": "Classifications",
+            "type": "array"
           },
-          "classification_slug": {
+          "coding_window_from": {
             "anyOf": [
               {
                 "type": "string"
@@ -5218,7 +5398,7 @@
                 "type": "null"
               }
             ],
-            "title": "Classification Slug"
+            "title": "Coding Window From"
           },
           "data_length": {
             "anyOf": [
@@ -5351,7 +5531,7 @@
           },
           "register_variant_id": {
             "title": "Register Variant Id",
-            "type": "integer"
+            "type": "string"
           },
           "source_register_text": {
             "anyOf": [
@@ -5366,7 +5546,7 @@
           },
           "state_id": {
             "title": "State Id",
-            "type": "integer"
+            "type": "string"
           },
           "valid_from": {
             "anyOf": [
@@ -5407,7 +5587,7 @@
           "value_set_id": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -5491,8 +5671,7 @@
           "value_set_version_label",
           "value_set_id",
           "value_set",
-          "is_identifier",
-          "classification_slug"
+          "is_identifier"
         ],
         "title": "VariableState",
         "type": "object"
@@ -6096,6 +6275,16 @@
             "schema": {
               "title": "Fqid",
               "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "unassigned_only",
+            "required": false,
+            "schema": {
+              "default": false,
+              "title": "Unassigned Only",
+              "type": "boolean"
             }
           },
           {
@@ -6955,7 +7144,7 @@
     },
     "/api/value-sets/{value_set_id}/codes": {
       "get": {
-        "description": "One bounded page of value set `value_set_id`'s (code, label) membership.\n\n`?state=<state_id>` reads that state's STORED classification mismatch list\ninstead (`classification_conformance_code`) \u2014 the same code\u2192label contract, so\nthe panel that renders a value set renders a mismatch list unchanged. The state\nmust carry this value set, so a state id can never read a coding it does not\nbelong to.\n\n`?q` filters (diacritic-blind substring over code AND label, the SPA's own\n`foldText` rule) BEFORE `?offset`/`?limit`, and `total` reports the filtered\ncount \u2014 a page is a window onto the whole matching set, never a filter over one\npage. Codes are code/label-ordered, so paging is stable. An unknown value set \u2014\nor a state that does not carry it \u2014 is a 404: the panel is reached from a state\nthat named both, so neither is a plausible browse target to redirect.",
+        "description": "A filtered, bounded source-code page, optionally scoped to an exact book.\n\nState partitions require the declared classification; alias partitions also\nrequire both the physical column and original coding-window identity. Unknown\nownership returns 404. Filtering precedes paging and preserves source labels.",
         "operationId": "get_value_set_codes_api_value_sets__value_set_id__codes_get",
         "parameters": [
           {
@@ -6963,6 +7152,8 @@
             "name": "value_set_id",
             "required": true,
             "schema": {
+              "maximum": 9223372036854775807,
+              "minimum": -9223372036854775808,
               "title": "Value Set Id",
               "type": "integer"
             }
@@ -6974,6 +7165,8 @@
             "schema": {
               "anyOf": [
                 {
+                  "maximum": 9223372036854775807,
+                  "minimum": -9223372036854775808,
                   "type": "integer"
                 },
                 {
@@ -6991,10 +7184,60 @@
               "default": "source_extensions",
               "enum": [
                 "source_extensions",
-                "canonical"
+                "canonical",
+                "nonstandard",
+                "sentinels"
               ],
               "title": "Partition",
               "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "classification",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Classification"
+            }
+          },
+          {
+            "in": "query",
+            "name": "column",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Column"
+            }
+          },
+          {
+            "in": "query",
+            "name": "alias_window_from",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Alias Window From"
             }
           },
           {

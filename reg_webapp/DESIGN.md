@@ -114,13 +114,15 @@ trace-hook test that counts statements == 0).
 Data-quality warnings are catalog evidence, separate from project validation errors.
 Register and binding responses embed their own warnings; the
 `/catalog/{fqid}/data_warnings` endpoint also supports period, variant and literal
-representation filtering. Unassigned register limitations remain visible but do not
-acquire an inferred variable owner. The catalog shows warnings before column selection,
-with their delivery scope. The project reads warnings for its selected columns and
-source periods, showing register limitations separately. A failed warning request
-remains visible rather than implying the data has no limitations. Warnings use the
-existing status tags and panels; inside project source cards the same content renders
-inline. They are not serialized into `project_data.json`.
+representation filtering. `unassigned_only=true` filters register limitations in SQL, so
+a leaf does not download every other variable’s warnings. The default remains the
+complete register warning read. Unassigned register limitations remain visible but do
+not acquire an inferred variable owner. The catalog shows warnings before column
+selection, with their delivery scope. The project reads warnings for its selected
+columns and source periods, showing register limitations separately. A failed warning
+request remains visible rather than implying the data has no limitations. Warnings use
+the existing status tags and panels; inside project source cards the same content
+renders inline. They are not serialized into `project_data.json`.
 
 Catalog routes live in one `routes/catalog.py` APIRouter, declaring `/catalog`, then the
 suffixed routes, then `/catalog/{fqid:path}` (the catch-all **last**). Starlette matches
@@ -293,44 +295,53 @@ window using `query_input.matches_filter` — a character-for-character port of 
 `foldText`/`matchesFilter` (NFD-decompose, drop combining marks, lowercase, plain
 substring, `%`/`_` literal), because SQLite's LIKE folds neither non-ASCII case nor
 diacritics and an "N of M" that disagreed with the in-browser filters would be a lie.
-`?state=` switches the read to that state's stored `classification_conformance_code`
-mismatch list, and is refused with a 404 unless the state actually carries the requested
-value set — a state id can never read a coding it does not belong to. Not steward-gated,
-and its ids are enumerable by design: value-set members and these stored mismatch lists
-are catalog-global reference data, on the same footing as the classification codes
-already served (→ Classification pass-through (decision 2)). Holding a binding is not
-what authorizes reading a coding, so the pass-through rests on that policy and not on an
-id being hard to guess. The SPA's `ValueSetCodes` panel owns the paging, the filter and
-the loading / error+retry / empty states, and is mounted only where a code table is
-actually shown — a closed disclosure issues no request. "Shown" means the state HAS a
-coding, not that the coding has members: a `value_set_id` with `code_count` 0 shows its
-size on the row and says "This value set has no codes" in place — no disclosure, since
-there is nothing to open, and no read, since the leaf already counted it. An empty
-coding and no coding at all are different facts, and a reader who cannot tell them apart
-is left guessing whether the page failed. Inside the panel the shared `CodeList` renders
-each page verbatim: a server page is a WINDOW, so the viewer's own filter and its
-large-list grouping are suppressed there — grouping a partial page would group the wrong
-thing, and a set that drills down on a classification page reads as a flat bounded list
-here. Typing is debounced into one read, because this filter scans the whole set
-server-side. `Catalog.resolve`, `/states` and the complete exports keep their
-full-membership semantics unchanged.
+`?state=` requires `?classification=<slug>` and reads that exact state's declared book.
+`?partition=canonical` returns only delivered source codes that occur in the book;
+`nonstandard` and `sentinels` return separate stored extensions. Special codes retain
+reviewed global meanings or scoped certificates; none becomes an official book code.
+Per-column codings also send `column` and the original `alias_window_from`, so clipped
+periods cannot borrow a sibling column's domain. Wrong state, coding, book or alias
+ownership returns 404; incomplete selectors return 422. Not steward-gated, and its ids
+are enumerable by design: value-set members and these stored mismatch lists are
+catalog-global reference data, on the same footing as the classification codes already
+served (→ Classification pass-through (decision 2)). Holding a binding is not what
+authorizes reading a coding, so the pass-through rests on that policy and not on an id
+being hard to guess. The SPA's `ValueSetCodes` panel owns the paging, the filter and the
+loading / error+retry / empty states, and is mounted only where a code table is actually
+shown — a closed disclosure issues no request. "Shown" means the state HAS a coding, not
+that the coding has members: a `value_set_id` with `code_count` 0 shows its size on the
+row and says "This value set has no codes" in place — no disclosure, since there is
+nothing to open, and no read, since the leaf already counted it. An empty coding and no
+coding at all are different facts, and a reader who cannot tell them apart is left
+guessing whether the page failed. Inside the panel the shared `CodeList` renders each
+page verbatim: a server page is a WINDOW, so the viewer's own filter and its large-list
+grouping are suppressed there — grouping a partial page would group the wrong thing, and
+a set that drills down on a classification page reads as a flat bounded list here.
+Typing is debounced into one read, because this filter scans the whole set server-side.
+`Catalog.resolve`, `/states` and the complete exports keep their full-membership
+semantics unchanged.
 
-One consequence in the SPA worth naming: `distinctValueSets` used to synthesize a
-cross-state conformance rollup whose mismatch count was the size of the deduped union of
-its states' mismatch lists. Those lists are per-state on-demand relations now, so no
-single read could produce that number. The entry therefore carries `conformances` — one
-STORED verdict per distinct list, each with the state its list is read by and the
-variants/period it was recorded over, rendered as its own notice inside the entry.
-Nothing a state warned about is dropped by the grouping: a classification edition
-spanning two codings keeps both lists, side by side and separately openable. What IS
-collapsed is repetition — one entry per (coding, declared classification) pair, because
-the build gate derives both the verdict and its mismatch list from exactly those two
-(`reg_meta_build/classifications.py` matches the state's value-set members against the
-declared edition's valid codes), so an era of yearly states over one coding shares one
-list and reports it once. The window on that notice covers the states that CARRY the
-verdict, which is often narrower than the coding's own usage window, so it is labelled
-"recorded for" rather than left to be read as the era. Every count shown describes the
-one list its disclosure opens.
+A named steward runtime must pair the flavored catalog with its exact accepted inventory
+through `REG_WEBAPP_STEWARDS_DIR`. The committed legacy inventory's structural tests
+establish retention and admission behavior; they do not establish alignment with a newly
+built real catalog. Unmapped physical columns remain in inventory and admit no catalog
+coordinate. A missing field-specific reason remains unknown; the UI must not invent one
+from another edition's reviewed mapping.
+
+Storage IDs serialize as decimal strings, including nested reader models and local
+response envelopes. The browser never converts them to JavaScript numbers; comparisons
+use integer-safe ordering. Incoming code-list IDs are bounded to SQLite's signed 64-bit
+range before a query runs.
+
+`distinctValueSets` groups source domains by `value_set_id`, preserving first-seen
+order. A shared declared book does not make distinct source domains identical. Every
+book remains linked, including a declared book with nonstandard codes. Conformance
+notices retain each exact state, column window and book; counts describe the precise
+partition each disclosure opens. In-period notices follow the selected window and
+variant; whole-history usage spans and explicit out-of-period domains remain available.
+Known coverage and unknown bounds remain distinct. An exclusively year-independent
+selection hides the leaf's annual availability control while preserving the project's
+study window; these deliveries do not acquire invented observation years.
 
 **301 redirect for renamed/dead slugs (#355 PART 2; register grain added in #412;
 `?period` and sub-endpoints added in #411; classification grain added in #571).** When a

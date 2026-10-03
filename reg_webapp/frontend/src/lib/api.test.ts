@@ -11,6 +11,7 @@ import {
   getConceptGroup,
   getDoc,
   getDocsForVariable,
+  getValueSetCodes,
   isCatalogNode,
   type StatesResponse,
   search,
@@ -495,4 +496,42 @@ describe("isCatalogNode", () => {
     const states: StatesResponse = { binding: "scb/lisa/kon", states: [] };
     expect(isCatalogNode(states)).toBe(false);
   });
+});
+
+it("round-trips adjacent catalog IDs above JavaScript’s safe integer range without collision", async () => {
+  const paths: string[] = [];
+  stubFetch(async (url) => {
+    paths.push(url);
+    const parsed = new URL(url, "https://catalog.test");
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({
+        value_set_id: parsed.pathname.split("/")[3],
+        state_id: parsed.searchParams.get("state"),
+        codes: [],
+        total: 0,
+        offset: 0,
+        limit: 200,
+        q: "",
+      }),
+    };
+  });
+  const ids = ["9007199254740992", "9007199254740993"];
+  for (const id of ids) {
+    const response = await getValueSetCodes(id, {
+      state: id,
+      classification: "sni2007",
+      partition: "sentinels",
+      column: "NgS1",
+      alias_window_from: "2013-01-01",
+    });
+    expect(response.value_set_id).toBe(id);
+    expect(response.state_id).toBe(id);
+  }
+  expect(new Set(paths).size).toBe(2);
+  expect(paths[1]).toContain("/9007199254740993/codes?");
+  expect(paths[1]).toContain("state=9007199254740993");
+  expect(paths[1]).toContain("classification=sni2007");
+  expect(paths[1]).toContain("alias_window_from=2013-01-01");
 });

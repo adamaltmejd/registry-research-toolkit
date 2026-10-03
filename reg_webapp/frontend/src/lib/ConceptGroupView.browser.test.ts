@@ -40,7 +40,7 @@ const SEED = { regMetaVersion: "1.0.0", steward: "global" } as const;
 /** A minimal GraphState — only the fields `pickerRepresentations` reads. */
 function gstate(over: Partial<GraphState>): GraphState {
   return {
-    state_id: 1,
+    state_id: "1",
     period_scope: "intervals",
     representation_run_id: 1,
     variant: "v",
@@ -50,7 +50,7 @@ function gstate(over: Partial<GraphState>): GraphState {
     value_set_id: null,
     valid_from: "2010-01-01",
     valid_to: "2015-12-31",
-    classification_slug: null,
+    classification_slugs: [],
     ...over,
   };
 }
@@ -121,11 +121,11 @@ function node(
 function vstate(over: Partial<VariableStateModel>): VariableStateModel {
   return {
     warning_ids: [],
-    state_id: 1,
+    state_id: "1",
     period_scope: "intervals",
     variant: "individer",
     variant_label: null,
-    register_variant_id: 1,
+    register_variant_id: "1",
     valid_from: "2010-01-01",
     valid_to: "2015-12-31",
     data_type: "int",
@@ -138,7 +138,7 @@ function vstate(over: Partial<VariableStateModel>): VariableStateModel {
     value_set_id: null,
     value_set: null,
     is_identifier: false,
-    classification_slug: null,
+    classifications: [],
     ...over,
   };
 }
@@ -157,7 +157,7 @@ function mockResolveColumns(
     return statesResponse(
       columns.map((column, index) =>
         vstate({
-          state_id: index + 1,
+          state_id: String(index + 1),
           variant,
           delivery_column_name: column,
         }),
@@ -2345,7 +2345,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
             valid_to: "2015-12-31",
           }),
           gstate({
-            state_id: 2,
+            state_id: "2",
             representation_run_id: 2,
             variant: "individer",
             delivery_column_name: "IncExtra",
@@ -2404,7 +2404,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
             valid_to: "2015-12-31",
           }),
           gstate({
-            state_id: 2,
+            state_id: "2",
             representation_run_id: 2,
             variant: "individer",
             delivery_column_name: "IncExtra",

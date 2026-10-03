@@ -219,7 +219,7 @@ def test_steward_graph_narrowing_drops_unheld_representation_edge_columns():
                 delivery_column_name="BorgNr",
                 value_set_id=None,
                 value_set_version_label="",
-                classification_slug=None,
+                classification_slugs=(),
                 valid_from="2010-01-01",
                 valid_to="2013-12-31",
             ),
@@ -231,7 +231,7 @@ def test_steward_graph_narrowing_drops_unheld_representation_edge_columns():
                 delivery_column_name="PersOrgNr",
                 value_set_id=None,
                 value_set_version_label="",
-                classification_slug=None,
+                classification_slugs=(),
                 valid_from="2014-01-01",
                 valid_to=None,
             ),
@@ -812,6 +812,11 @@ def test_data_warnings_endpoint(client):
     response = client.get("/api/catalog/scb/lisa/data_warnings")
     assert response.status_code == 200, response.json()
     assert len(response.json()) == 2
+    unassigned = client.get("/api/catalog/scb/lisa/data_warnings?unassigned_only=true")
+    assert unassigned.status_code == 200
+    assert unassigned.json() == [
+        w for w in response.json() if w["variable_fqid"] is None
+    ]
     assert (
         client.get(f"/api/catalog/{_KON}/data_warnings?period=invalid").status_code
         == 422

@@ -236,6 +236,8 @@ export type VariableStateModel = Schemas["VariableState"];
  * and `value_set_summary` (Y-46). */
 export type ValueSetCodesResponse = Schemas["ValueSetCodesResponse"];
 export type ValueSetMemberModel = Schemas["ValueSetMember"];
+export type ClassificationExtensionMemberModel =
+  Schemas["ClassificationExtensionMember"];
 export type ValueSetSummaryModel = Schemas["ValueSetSummary"];
 export type DenseIntegerRangeModel = Schemas["DenseIntegerRange"];
 export type VariableRefModel = Schemas["VariableRef"];
@@ -465,6 +467,7 @@ export type DataWarningModel = Schemas["DataWarning"];
 export function getDataWarnings(
   fqidPath: string,
   params: {
+    unassigned_only?: boolean;
     period?: string | null;
     variant?: string | null;
     representation?: string | null;
@@ -472,7 +475,7 @@ export function getDataWarnings(
 ): Promise<DataWarningModel[]> {
   const query = new URLSearchParams();
   for (const [key, value] of Object.entries(params)) {
-    if (value) query.set(key, value);
+    if (value) query.set(key, String(value));
   }
   return apiGet<DataWarningModel[]>(
     `/catalog/${encodeFqid(fqidPath)}/data_warnings${query.size ? `?${query}` : ""}`,
@@ -485,10 +488,13 @@ export function getDataWarnings(
  * the page window and `total` counts the matches, so paging never turns into
  * filtering one page. */
 export function getValueSetCodes(
-  valueSetId: number,
+  valueSetId: string,
   params: {
-    state?: number | null;
-    partition?: "canonical" | "source_extensions";
+    state?: string | null;
+    partition?: "canonical" | "source_extensions" | "nonstandard" | "sentinels";
+    classification?: string;
+    column?: string;
+    alias_window_from?: string;
     q?: string;
     offset?: number;
     limit?: number;
@@ -498,6 +504,12 @@ export function getValueSetCodes(
   const query = new URLSearchParams();
   if (params.state != null) {
     query.set("state", String(params.state));
+  }
+  if (params.column != null) query.set("column", params.column);
+  if (params.alias_window_from != null)
+    query.set("alias_window_from", params.alias_window_from);
+  if (params.classification) {
+    query.set("classification", params.classification);
   }
   if (params.partition) {
     query.set("partition", params.partition);

@@ -21,7 +21,12 @@ let {
 } = $props();
 const resource = asyncResource(() =>
   fqid
-    ? getDataWarnings(fqid, { period, variant, representation })
+    ? getDataWarnings(fqid, {
+        period,
+        variant,
+        representation,
+        unassigned_only: registerOnly,
+      })
     : Promise.resolve([]),
 );
 const warnings = $derived(

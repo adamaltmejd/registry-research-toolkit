@@ -272,18 +272,19 @@ split exists, 1:1 otherwise. A **synthetic `variable_id` PK** backs all this so
 key's provider-specific shape varies. (The triage fold/split mechanics live in
 [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md).)
 
-**`classification_id` and `source_label` placement.** The per-era classification family
-lives on `variable_state.classification_id` (an era can change code system mid-life —
-see "Classifications"), while the human-readable source attribution lives on
+**Classification and `source_label` placement.** Per-era classification books live in
+`state_classification` (an era can carry multiple books or change code systems mid-life
+— see "Classifications"), while the human-readable source attribution lives on
 `variable.source_label` (cross-era constant). `variable_state` carries `state_id`,
 `variable_id`, `register_variant_id`, `valid_from`/`valid_to`, `data_type`,
-`data_length`, `delivery_column_name`, `value_set_id`, `value_set_version_label`, and
-`classification_id`. It also carries `pooled` (Y-202: 1 when the state spans a pooled
-multi-year edition range with no explicit annual coverage — one marked state over the
-whole range, never inferred annual availability inside it; 0 otherwise). It also carries
-nullable `provenance`: NULL for an ordinary provider-documented interval,
-`errata:<class>\n<evidence>` for an SCB correction, and optionally `steward:<label>` for
-steward-only rows. When an SCB correction overlaps a provider-documented claim,
+`data_length`, `delivery_column_name`, `value_set_id`, and `value_set_version_label`.
+`state_classification` links every declared book to its owning state. It also carries
+`pooled` (Y-202: 1 when the state spans a pooled multi-year edition range with no
+explicit annual coverage — one marked state over the whole range, never inferred annual
+availability inside it; 0 otherwise). It also carries nullable `provenance`: NULL for an
+ordinary provider-documented interval, `errata:<class>\n<evidence>` for an SCB
+correction, and optionally `steward:<label>` for steward-only rows. When an SCB
+correction overlaps a provider-documented claim,
 `errata:scoped-attributions\n<JSON array>` records pair each correction class and
 evidence value with its exact `source_editions`. This preserves multiple attributions
 without confusing disjoint editions or relabeling the enclosing documented window.
@@ -543,11 +544,15 @@ whose labels carry meaning stays a table.
 The members themselves are then read explicitly and narrowly:
 `Catalog.value_set_codes(value_set_id)` is the full membership of ONE coding (None for
 an unknown id, distinguishing it from a coding with no members), and
-`Catalog.state_nonconforming_codes(state_id, value_set_id)` is one state's stored
-classification mismatch list, refused (None) unless that state actually carries that
-coding. `Catalog.resolve`, `Catalog.states`, the `/states` export and
-`reg-meta get values` are untouched: their default is still the complete record, members
-embedded.
+`Catalog.state_nonconforming_codes(state_id, value_set_id, classification_slug=...)`
+reads one owned coding's extensions against one declared book. `state_nonstandard_codes`
+and `state_sentinel_codes` separate substantive extras from known missing/other markers;
+`state_canonical_codes` returns only delivered source pairs whose literal codes occur in
+that book. Sentinel members retain their stored meaning and exact scoped certificates.
+Per-column requests must also supply `delivery_column_name` and `alias_window_from`;
+wrong or incomplete ownership coordinates return None. `Catalog.resolve`,
+`Catalog.states`, the `/states` export and `reg-meta get values` are untouched: their
+default is still the complete record, members embedded.
 
 The catalog return shapes — and, as of #701 (2026-06-23), the search return shapes in
 `search.py` — are frozen Pydantic v2 models on a shared `_CatalogModel` base
@@ -731,14 +736,16 @@ window; False otherwise), `value_set_version_label` (NOT NULL, `''` = no discrim
 value set), `is_identifier` (variable-grain flag denormalized onto every state via a
 JOIN — constant across all of a variable's states — so consumers holding only a
 `VariableState` (e.g. the `resolve_at` / `/states` paths) can read the authoritative
-identifier flag without needing the enclosing `ResolvedVariable`), and
-`classification_slug` (the classification family slug (see DESIGN.md → Classifications)
-for this state's value set, e.g. `lkf2007`; resolved per-state from
-`variable_state.classification_id` — varies across a variable's states; None for
-code-less / unclassified states). The full delivery-column history — multiple aliases
-per state from cross-edition spelling drift — lives in the `variable_alias` table;
-`delivery_column_name` is its denormalized latest, and `reg-meta get datacolumns`
-surfaces the complete list.
+identifier flag without needing the enclosing `ResolvedVariable`), and `classifications`
+(a tuple of `StateClassification` links, each carrying its book slug, display names,
+provenance and optional state-local conformance). Multiple books remain separate. A
+physical alias with per-column coding has its own links in
+`alias_window_classification`; it never inherits a sibling's coding evidence.
+`coding_window_from` retains that alias's original compound-key start even when its
+displayed interval is clipped by a base state. The full delivery-column history —
+multiple aliases per state from cross-edition spelling drift — lives in the
+`variable_alias` table; `delivery_column_name` is its denormalized latest, and
+`reg-meta get datacolumns` surfaces the complete list.
 
 **Edge semantics (reader-facing).** All relationship edges are **variable grain** — the
 variant is a delivery coordinate, not an identity level, so there is nothing below the
@@ -1274,8 +1281,10 @@ The build records declared value-set mismatches at state grain in
 `classification_conformance` / `classification_conformance_code`. A known
 source-declared classification remains linked regardless of overlap. `conforming` means
 all delivered codes occur in its official book; `extended` means the source also
-supplies local codes, including explicitly curated nonstandard sentinels. The variable's
-value-set viewer separates matching source members from source extensions. Source labels
+supplies source extensions. Each book's extensions distinguish substantive nonstandard
+codes from known sentinel codes. Sentinel meanings and exact scoped certificates remain
+attached to the owning state or physical alias. The variable's value-set viewer keeps
+matching source members, substantive extras and sentinel markers separate. Source labels
 remain intact, and local extensions never become official classification members.
 Unknown or ambiguous classification references remain unresolved.
 
@@ -1463,14 +1472,14 @@ adjacent `variable_state` rows — the value-set IDENTITY (`value_set_id` **and*
 `value_set_version_label`: the #526 state-identity gkey for a valued state keys on both,
 so two states sharing a `value_set_id` but differing in label are distinct materialized
 states; the label is `''` for valueless states, so it never spuriously fires there),
-classification (`classification_slug`), or the per-era coalesced `delivery_column_name`.
-Raw `data_type` / `data_length` are **never** a boundary signal on their own: SCB's
-per-delivery `Datatyp` / length is low-trust passthrough that #526 blanks, so an
-`int -> bigint` or char↔varchar wobble does NOT open a run. This scopes the boundary to
-"distinctions that survive in `variable_state`" — precisely what reg_meta_build's #526
-value-set-anchored fold leaves in the materialized rows; reg_meta re-derives it
-query-side (it must not depend on reg_meta_build — wrong dependency direction).
-Per-period alias multiplexing (monthly families' 12 columns, held in
+classification books (`classification_slugs`), or the per-era coalesced
+`delivery_column_name`. Raw `data_type` / `data_length` are **never** a boundary signal
+on their own: SCB's per-delivery `Datatyp` / length is low-trust passthrough that #526
+blanks, so an `int -> bigint` or char↔varchar wobble does NOT open a run. This scopes
+the boundary to "distinctions that survive in `variable_state`" — precisely what
+reg_meta_build's #526 value-set-anchored fold leaves in the materialized rows; reg_meta
+re-derives it query-side (it must not depend on reg_meta_build — wrong dependency
+direction). Per-period alias multiplexing (monthly families' 12 columns, held in
 `variable_alias_window`, not in `states`) is an alias concern, **not** a coding boundary
 — those expanded windows share a `state_id` and are folded back to the single claim
 before runs are computed.
@@ -1807,3 +1816,10 @@ make formulas executable, establish variable equivalence, choose a code namespac
 extend availability. Supplied periods remain literal source fields. The reader validates
 persisted JSON using the same evidence models as ingestion; the schema is regenerated
 directly when this contract changes.
+
+Storage identifiers remain exact SQLite/Python integers. All JSON surfaces serialize
+these identifiers as opaque decimal strings, including CLI SQL rows and API models.
+Counts, years and local representation-run ordinals remain numbers. Readers require
+schema 8.1; old catalogs must be regenerated. The `0001-01-01` unknown coverage sentinel
+is presented as an absent coverage start; source declarations and warnings remain
+available separately and do not establish observation availability.

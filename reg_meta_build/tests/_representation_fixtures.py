@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import sqlite3
+from calendar import monthrange
 from contextlib import closing
 from typing import TYPE_CHECKING
 
 from reg_meta.db import SCHEMA_VERSION
-from reg_meta.fqid import period_token_to_bounds
 from reg_meta_build.db import DDL, _populate_fts, _value_set_hash, seed_providers
 
 if TYPE_CHECKING:
@@ -87,8 +87,8 @@ def build_alias_representations(tmp_path: Path) -> Path:
 
 
 def build_month_family(tmp_path: Path, *, march_2018: bool = True) -> Path:
-    # Reader tests pin the existing period grammar, including its Feb-29 upper
-    # bound. Pipeline tests independently require real calendar boundaries.
+    # Stored delivery windows use real calendar dates. Query token bounds are
+    # tested separately; their February over-count must not enter catalog data.
     return _build(
         tmp_path,
         slug="lonfink",
@@ -96,7 +96,11 @@ def build_month_family(tmp_path: Path, *, march_2018: bool = True) -> Path:
         years=(2018, 2019),
         codes=[("1", "Låg"), ("2", "Hög")],
         windows=[
-            (column, *period_token_to_bounds(f"{year}-{month:02d}"))
+            (
+                column,
+                f"{year}-{month:02d}-01",
+                f"{year}-{month:02d}-{monthrange(year, month)[1]}",
+            )
             for month, column in (
                 (1, "LonFinkJan"),
                 (2, "LonFinkFeb"),

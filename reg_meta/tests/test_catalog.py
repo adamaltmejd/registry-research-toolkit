@@ -22,6 +22,7 @@ from reg_meta.catalog import (
     ClassificationCode,
     ClassificationDerivedFromRef,
     ClassificationEdition,
+    ClassificationExtensionMember,
     ClassificationRef,
     DenseIntegerRange,
     GroupAxis,
@@ -758,12 +759,9 @@ class TestResolveVariableLongitudinal:
         assert r.is_identifier is True
         assert r.states[0].is_identifier is True
 
-    def test_classification_slug_resolved_per_state(self) -> None:
-        # `variable_state.classification_id` is per-state, so the slug resolves
-        # per-state via the LEFT JOIN. The fixture's auto-seeded base state is
-        # code-less (classification_id NULL → slug None); seed a second state
-        # pointing at the 'sun2020' classification and assert its slug comes
-        # through alongside the base state's None.
+    def test_classification_links_resolved_per_state(self) -> None:
+        # Book links belong to their exact state. The unclassified seed keeps
+        # an empty tuple; the second state exposes its own SUN2020 link.
         conn = build_slugged_db()
         cls_id = conn.execute(
             "SELECT id FROM classification WHERE slug = 'sun2020'"
@@ -780,10 +778,11 @@ class TestResolveVariableLongitudinal:
         )
         conn.commit()
         by_from = {
-            s.valid_from: s.classification_slug for s in Catalog(conn).states(_KON)
+            s.valid_from: tuple(b.slug for b in s.classifications)
+            for s in Catalog(conn).states(_KON)
         }
-        assert by_from["2018-01-01"] is None
-        assert by_from["2019-01-01"] == "sun2020"
+        assert by_from["2018-01-01"] == ()
+        assert by_from["2019-01-01"] == ("sun2020",)
 
     def test_states_tagged_with_variant(self) -> None:
         # The same variable delivered in two variants → two states, each carrying
@@ -1096,9 +1095,9 @@ class TestResolveAt:
             (state_id, cls_id),
         )
         conn.execute(
-            "INSERT INTO classification_conformance_code (state_id, code_id) "
-            "SELECT ?, code_id FROM value_code WHERE code = '2'",
-            (state_id,),
+            "INSERT INTO classification_conformance_code (state_id, declared_classification_id, code_id, member_kind, scoped_sentinels) "
+            "SELECT ?, ?, code_id, 'nonstandard', '[]' FROM value_code WHERE code = '2'",
+            (state_id, cls_id),
         )
         if windowed:
             conn.executemany(
@@ -1123,12 +1122,20 @@ class TestResolveAt:
         full = cat.resolve_at(_KON, 2018, variant="individer-15plus")
         assert len(full) == (2 if windowed else 1)
         assert all(s.value_set is not None for s in full)
-        assert all(s.classification_conformance is not None for s in full)
+        assert all(s.classifications[0].conformance is not None for s in full)
 
         statements = _traced(conn)
         lean = cat.resolve_at(_KON, 2018, variant="individer-15plus", with_codes=False)
         assert lean == [
-            s.model_copy(update={"value_set": None, "classification_conformance": None})
+            s.model_copy(
+                update={
+                    "value_set": None,
+                    "classifications": tuple(
+                        b.model_copy(update={"conformance": None})
+                        for b in s.classifications
+                    ),
+                }
+            )
             for s in full
         ]
         assert all(s.value_set_id == 3 for s in lean)
@@ -1156,7 +1163,7 @@ class TestResolveAt:
         assert len(states) == 1
         assert states[0].is_identifier is True
 
-    def test_classification_slug_on_variant_scoped_state(self) -> None:
+    def test_classification_links_on_variant_scoped_state(self) -> None:
         # Mirror of the is_identifier variant-scoped test, for classification: the
         # variant-scoped (`register_variant_id IS NOT NULL`) SELECT branch must
         # also resolve the per-state slug. A pre-2018 window keeps the seed clear
@@ -1178,7 +1185,7 @@ class TestResolveAt:
         conn.commit()
         states = Catalog(conn).resolve_at(_KON, 2017, variant="individer-15plus")
         assert len(states) == 1
-        assert states[0].classification_slug == "sun2020"
+        assert tuple(b.slug for b in states[0].classifications) == ("sun2020",)
 
     def test_period_token_month(self) -> None:
         conn = self._two_state_year_db()
@@ -2570,12 +2577,21 @@ class TestBoundedCodeReads:
         conn = TestResolveAt._coded_state_db(windowed=False)
         state_id = conn.execute("SELECT state_id FROM variable_state").fetchone()[0]
         cat = Catalog(conn)
-        assert cat.state_nonconforming_codes(state_id, 3) == (
-            ValueSetMember(code="2", label="Kvinna"),
+        assert cat.state_nonconforming_codes(
+            state_id, 3, classification_slug="sun2020"
+        ) == (
+            ClassificationExtensionMember(
+                code="2", label="Kvinna", member_kind="nonstandard"
+            ),
         )
         # The state carries value set 3, not 4 — so 4 cannot be read through it.
-        assert cat.state_nonconforming_codes(state_id, 4) is None
-        assert cat.state_nonconforming_codes(999, 3) is None
+        assert (
+            cat.state_nonconforming_codes(state_id, 4, classification_slug="sun2020")
+            is None
+        )
+        assert (
+            cat.state_nonconforming_codes(999, 3, classification_slug="sun2020") is None
+        )
 
 
 class TestCodeSummaryHydration:
@@ -2599,7 +2615,7 @@ class TestCodeSummaryHydration:
         )
         # The stored conformance verdict survives; only its mismatch LIST moves
         # to the on-demand read, and the count is what says there is one.
-        conformance = state.classification_conformance
+        conformance = state.classifications[0].conformance
         assert conformance is not None
         assert conformance.status == "extended"
         assert conformance.nonconforming_code_count == 1
@@ -2616,7 +2632,7 @@ class TestCodeSummaryHydration:
         )
         assert state.value_set is None
         assert state.value_set_summary is None
-        assert state.classification_conformance is None
+        assert state.classifications[0].conformance is None
         assert not [
             sql
             for sql in statements
@@ -2636,10 +2652,12 @@ class TestCodeSummaryHydration:
             ValueSetMember(code="2", label="Kvinna"),
         )
         assert state.value_set_summary is None
-        conformance = state.classification_conformance
+        conformance = state.classifications[0].conformance
         assert conformance is not None
         assert conformance.nonconforming_codes == (
-            ValueSetMember(code="2", label="Kvinna"),
+            ClassificationExtensionMember(
+                code="2", label="Kvinna", member_kind="nonstandard"
+            ),
         )
         assert cat.states(_KON) == list(resolved.states)
 

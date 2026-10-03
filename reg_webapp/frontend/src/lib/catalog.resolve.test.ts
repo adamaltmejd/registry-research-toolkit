@@ -17,11 +17,11 @@ vi.mock("./api", async (importOriginal) => {
 function state(over: Partial<VariableStateModel>): VariableStateModel {
   return {
     warning_ids: [],
-    state_id: 1,
+    state_id: "1",
     period_scope: "intervals",
     variant: "v",
     variant_label: null,
-    register_variant_id: 1,
+    register_variant_id: "1",
     valid_from: "2010-01-01",
     valid_to: "2020-12-31",
     data_type: null,
@@ -34,7 +34,7 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
     value_set_id: null,
     value_set: null,
     is_identifier: false,
-    classification_slug: null,
+    classifications: [],
     ...over,
   };
 }

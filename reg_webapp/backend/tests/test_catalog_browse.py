@@ -287,7 +287,7 @@ def test_binding_leaf_embeds_full_record(client):
     assert state["is_identifier"] is False
     # The per-state classification slug serializes too; the fixture kon state has
     # classification_id NULL → None.
-    assert state["classification_slug"] is None
+    assert state["classifications"] == []
     assert state["provenance"] is None
     # #321: an OPEN-ENDED state (valid_to = the 9999-12-31 sentinel) has no
     # finite period token — the field is None (the SPA renders "since
@@ -296,7 +296,7 @@ def test_binding_leaf_embeds_full_record(client):
     # Y-46: the leaf carries the coding's IDENTITY and a cardinality-independent
     # summary, never its members — those come from
     # `/api/value-sets/{id}/codes` when the code panel is opened.
-    assert state["value_set_id"] == 1
+    assert state["value_set_id"] == "1"
     assert state["value_set"] is None
     assert state["value_set_summary"] == {"code_count": 2, "integer_range": None}
     # #892/#932: the per-(split-)variable distinguishing text is serialized on the
@@ -934,7 +934,9 @@ def test_classification_leaf_embeds_value_set_codes(client):
     assert resp.status_code == 200
     codes = resp.json()["codes"]
     by_label = {c["label"]: c for c in codes}
-    assert set(by_label) == {"Man"}
+    assert "Man" in by_label
+    assert len(codes) == 1389
+    assert all(code["is_valid"] is True for code in codes)
     assert by_label["Man"]["is_valid"] is True
     # Code-ordered (the SQL ORDER BY vc.code, vc.label).
     assert [c["code"] for c in codes] == sorted(c["code"] for c in codes)
@@ -1223,7 +1225,7 @@ def test_state_period_token_passes_through_reg_meta():
             value_set_id=None,
             value_set=None,
             is_identifier=False,
-            classification_slug=None,
+            classifications=(),
             period_token=period_token,
         )
 

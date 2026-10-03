@@ -1418,11 +1418,11 @@ function columnState(
 ): VariableStateModel {
   return {
     warning_ids: [],
-    state_id: id,
+    state_id: String(id),
     period_scope: "intervals",
     variant,
     variant_label: null,
-    register_variant_id: 1,
+    register_variant_id: "1",
     valid_from: from,
     valid_to: to,
     data_type: "int",
@@ -1432,10 +1432,10 @@ function columnState(
     provenance: null,
     pooled: false,
     value_set_version_label: "",
-    value_set_id: 7,
+    value_set_id: "7",
     value_set: null,
     is_identifier: false,
-    classification_slug: null,
+    classifications: [],
   };
 }
 

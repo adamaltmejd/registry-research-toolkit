@@ -35,7 +35,7 @@ function serve(all: ValueSetMemberModel[]): void {
           c.label.toLowerCase().includes(needle),
       );
       return {
-        value_set_id: valueSetId,
+        value_set_id: String(valueSetId),
         state_id: state,
         q,
         total: matched.length,
@@ -59,7 +59,7 @@ describe("ValueSetCodes — the bounded code read", () => {
         release = resolve;
       }),
     );
-    await render(ValueSetCodes, { valueSetId: 7, codeCount: 2 });
+    await render(ValueSetCodes, { valueSetId: "7", codeCount: 2 });
 
     // Busy while in flight — the placeholder is decorative, the status is on the
     // container (DESIGN.md → loading).
@@ -68,7 +68,7 @@ describe("ValueSetCodes — the bounded code read", () => {
     expect(status?.textContent).toContain("Loading codes…");
 
     release({
-      value_set_id: 7,
+      value_set_id: "7",
       state_id: null,
       q: "",
       total: 2,
@@ -84,7 +84,7 @@ describe("ValueSetCodes — the bounded code read", () => {
     vi.mocked(getValueSetCodes).mockRejectedValueOnce(
       new ApiError(503, null, "value set 7 is unavailable"),
     );
-    await render(ValueSetCodes, { valueSetId: 7, codeCount: 2 });
+    await render(ValueSetCodes, { valueSetId: "7", codeCount: 2 });
 
     const alert = page.getByRole("alert");
     await expect.element(alert).toBeVisible();
@@ -98,7 +98,7 @@ describe("ValueSetCodes — the bounded code read", () => {
 
   it("says an empty coding is empty, and a filter with no match is no match", async () => {
     serve([]);
-    await render(ValueSetCodes, { valueSetId: 7, codeCount: 0 });
+    await render(ValueSetCodes, { valueSetId: "7", codeCount: 0 });
     await expect
       .element(page.getByText("This value set has no codes."))
       .toBeVisible();
@@ -107,7 +107,7 @@ describe("ValueSetCodes — the bounded code read", () => {
     expect(vi.mocked(getValueSetCodes)).not.toHaveBeenCalled();
 
     serve(members(8));
-    await render(ValueSetCodes, { valueSetId: 8, codeCount: 8 });
+    await render(ValueSetCodes, { valueSetId: "8", codeCount: 8 });
     await page
       .getByRole("textbox", { name: "Filter codes" })
       .fill("Härjedalen");
@@ -118,7 +118,7 @@ describe("ValueSetCodes — the bounded code read", () => {
 
   it("pages through a set larger than one request, tracking the real total", async () => {
     serve(members(450));
-    await render(ValueSetCodes, { valueSetId: 9, codeCount: 450 });
+    await render(ValueSetCodes, { valueSetId: "9", codeCount: 450 });
 
     await expect.element(page.getByText("Kommun 0")).toBeVisible();
     await expect
@@ -154,7 +154,7 @@ describe("ValueSetCodes — the bounded code read", () => {
     // outside the pages this panel had loaded. A client-side filter over the
     // loaded pages would report 11; filtering the whole set first reports 61.
     serve(members(750));
-    await render(ValueSetCodes, { valueSetId: 9, codeCount: 750 });
+    await render(ValueSetCodes, { valueSetId: "9", codeCount: 750 });
     await expect
       .element(page.getByText("Showing 200 of 750 codes."))
       .toBeVisible();
@@ -177,7 +177,7 @@ describe("ValueSetCodes — the bounded code read", () => {
 
   it("sends one read for a burst of keystrokes, not one per character", async () => {
     serve(members(40));
-    await render(ValueSetCodes, { valueSetId: 7, codeCount: 40 });
+    await render(ValueSetCodes, { valueSetId: "7", codeCount: 40 });
     await expect.element(page.getByText("Kommun 39")).toBeVisible();
 
     // Fake the clock around the burst so the debounce timer only fires when
@@ -202,7 +202,7 @@ describe("ValueSetCodes — the bounded code read", () => {
 
   it("keeps the paging button focused while the page it asked for loads", async () => {
     serve(members(450));
-    await render(ValueSetCodes, { valueSetId: 9, codeCount: 450 });
+    await render(ValueSetCodes, { valueSetId: "9", codeCount: 450 });
     await expect
       .element(page.getByText("Showing 200 of 450 codes."))
       .toBeVisible();
@@ -228,7 +228,7 @@ describe("ValueSetCodes — the bounded code read", () => {
     button.click();
 
     release({
-      value_set_id: 9,
+      value_set_id: "9",
       state_id: null,
       q: "",
       total: 450,
@@ -247,7 +247,7 @@ describe("ValueSetCodes — the bounded code read", () => {
 
   it("does not guess a filtered count before the server reports one", async () => {
     serve(members(40));
-    await render(ValueSetCodes, { valueSetId: 7, codeCount: 40 });
+    await render(ValueSetCodes, { valueSetId: "7", codeCount: 40 });
     await expect.element(page.getByText("Kommun 39")).toBeVisible();
 
     let release: (r: ValueSetCodesResponse) => void = () => {};
@@ -262,7 +262,7 @@ describe("ValueSetCodes — the bounded code read", () => {
     expect(document.querySelector(".filter-count")).toBeNull();
 
     release({
-      value_set_id: 7,
+      value_set_id: "7",
       state_id: null,
       q: "Kommun 3",
       total: 11,
@@ -276,15 +276,15 @@ describe("ValueSetCodes — the bounded code read", () => {
   it("reads a state's stored mismatch list when given one, and hides a pointless filter", async () => {
     serve(members(3));
     await render(ValueSetCodes, {
-      valueSetId: 12,
-      stateId: 34,
+      valueSetId: "12",
+      stateId: "34",
       codeCount: 3,
       filterLabel: "Filter nonconforming codes",
     });
     await expect.element(page.getByText("Kommun 2")).toBeVisible();
-    expect(vi.mocked(getValueSetCodes).mock.calls[0][0]).toBe(12);
+    expect(vi.mocked(getValueSetCodes).mock.calls[0][0]).toBe("12");
     expect(vi.mocked(getValueSetCodes).mock.calls[0][1]).toMatchObject({
-      state: 34,
+      state: "34",
     });
     // Below the shared threshold a filter box is more chrome than help.
     expect(document.querySelector(".filter-input")).toBeNull();

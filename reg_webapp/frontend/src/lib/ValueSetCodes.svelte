@@ -26,11 +26,14 @@ import { Button, Skeleton } from "./ui";
 
 interface Props {
   /** The coding to read. */
-  valueSetId: number;
+  valueSetId: string;
   /** Set to read that state's stored classification MISMATCH list instead of the
    * value set's own membership. The state must carry `valueSetId`. */
-  stateId?: number | null;
-  partition?: "canonical" | "source_extensions";
+  stateId?: string | null;
+  partition?: "canonical" | "source_extensions" | "nonstandard" | "sentinels";
+  classification?: string;
+  column?: string | null;
+  aliasWindowFrom?: string | null;
   /** How many codes the whole (unfiltered) set has — from the leaf's summary, so
    * the filter affordance and its count render before the first page lands. */
   codeCount: number;
@@ -42,6 +45,9 @@ let {
   valueSetId,
   stateId = null,
   partition = "source_extensions",
+  classification,
+  column = null,
+  aliasWindowFrom = null,
   codeCount,
   filterLabel = "Filter codes",
   filterPlaceholder = "Filter codes…",
@@ -76,7 +82,7 @@ $effect(() => {
 // a new coding, a new state or a new query drops the earlier pages instead of
 // appending to them — no reset effect, and so no effect-ordering hazard.
 const setKey = $derived(
-  `${valueSetId}:${stateId ?? ""}:${partition}:${query.trim()}`,
+  `${valueSetId}:${stateId ?? ""}:${partition}:${classification ?? ""}:${column ?? ""}:${aliasWindowFrom ?? ""}:${query.trim()}`,
 );
 
 // The pages BEFORE the one in flight, plus the matching total they were counted
@@ -113,6 +119,9 @@ const resource = asyncResource((signal) => {
     {
       state: stateId,
       partition,
+      classification,
+      column: column ?? undefined,
+      alias_window_from: aliasWindowFrom ?? undefined,
       q: query,
       offset: carried.codes.length,
       limit: PAGE_SIZE,
