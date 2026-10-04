@@ -13,6 +13,7 @@ import tomllib
 from typing import TYPE_CHECKING
 
 import pytest
+from catalog_manifest import synthetic_manifest
 from reg_meta.errors import RegMetaError
 from reg_meta_build.classifications import load_valid_codes
 
@@ -811,7 +812,7 @@ class TestRepoClassificationCsvSnapshots:
         output = write_resolved_catalog(
             (),
             tmp_path / "catalog.db",
-            manifest={"fixture": "canonical-kva"},
+            manifest=synthetic_manifest() | {"fixture": "canonical-kva"},
             diagnostic=True,
             classifications=(book,),
         )
@@ -928,7 +929,10 @@ def classification_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     )
     db_dir = tmp / "db"
     write_resolved_catalog(
-        variables, db_dir / "reg_meta.db", manifest={}, classifications=books
+        variables,
+        db_dir / "reg_meta.db",
+        manifest=synthetic_manifest(),
+        classifications=books,
     )
 
     # Query commands require a doc DB alongside.

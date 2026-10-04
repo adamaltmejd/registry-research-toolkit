@@ -65,10 +65,7 @@ from .doc_coverage import compute_doc_coverage, render_doc_coverage_toml
 from .doc_db import build_doc_db, repo_docs_dir
 from .extend_db import (
     extend_db,
-    load_private_holdings_warnings,
-    resolve_delivery_inventory,
-    resolve_steward_providers_dir,
-    resolve_steward_slug_dir,
+    read_private_holdings_input,
 )
 from .fqid_slugs import (
     SNAPSHOT_FILENAME,
@@ -114,7 +111,6 @@ from .succession_candidates import (
     infer_succession_candidates,
     render_succession_toml,
 )
-from .validate import HoldingsGate, validate_built_db
 from .variable_same_as import (
     infer_same_as_candidates,
     render_candidates_toml,
@@ -123,7 +119,6 @@ from .variable_same_as import (
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from reg_meta.inventory import DeliveryInventory
 
 # ---------------------------------------------------------------------------
 # Parser
@@ -338,11 +333,11 @@ def _build_parser() -> argparse.ArgumentParser:
 
     extend_db_p = sub.add_parser(
         "extend-db",
-        help="Overlay steward provider TOMLs onto a released global DB (maintainer-only).",
+        help="Compile accepted steward holdings onto a schema-9 global DB (maintainer-only).",
         description=(
             "Build a steward-FLAVORED metadata DB (#365 PR2): an insert-only\n"
             "overlay of steward-ONLY content (the steward's own providers,\n"
-            "registers, and variables) onto a RELEASED global reg_meta.db. The\n"
+            "registers, and variables) onto a strict schema-9 global reg_meta.db. The\n"
             "base DB is a read-only input — never mutated; the result is written\n"
             "to the --db output directory. Enrichment of existing global entities\n"
             "(descriptions, aliases, columns SCB never documented) is global-build\n"
@@ -350,21 +345,22 @@ def _build_parser() -> argparse.ArgumentParser:
             "Examples:\n"
             "  reg-meta-build --db /tmp/swecov extend-db \\\n"
             "      --base-db ~/.reg_meta/reg_meta.db \\\n"
-            "      --providers-dir reg_meta_build/input_data/swecov/providers"
+            "      --holdings-input /path/to/accepted-candidate \\n"
+            "      --input-commit SHA --input-manifest-sha256 SHA256"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     extend_db_p.add_argument(
         "--base-db",
         required=True,
-        help="Path to the released global reg_meta.db to overlay onto (read-only).",
+        help="Path to the complete schema-9 global reg_meta.db to overlay onto (read-only).",
     )
     extend_db_p.add_argument(
         "--providers-dir",
         default=None,
         help=(
-            "Directory containing one curated-provider TOML per steward-only "
-            "provider (default: input_data/<steward>/providers/ from a checkout)."
+            "Accepted candidate directory containing one curated-provider TOML per steward-only "
+            "provider (defaults to the accepted candidate's providers/)."
         ),
     )
     extend_db_p.add_argument(
@@ -376,51 +372,36 @@ def _build_parser() -> argparse.ArgumentParser:
         "--slug-dir",
         default=None,
         help=(
-            "Directory of the steward's curated slug TOMLs "
+            "Rejected override; naming comes from committed steward slug TOMLs "
             "(default: reg_meta_build/fqid_slugs/<steward>/ from a repo checkout)."
         ),
     )
     extend_db_p.add_argument(
         "--skip-slugs",
         action="store_true",
-        help="Skip steward slug population (the overlaid rows keep NULL slugs).",
+        help="Rejected for publishable extend-db; committed steward slug pins are required.",
     )
     extend_db_p.add_argument(
         "--delivery-inventory",
         default=None,
-        help=(
-            "Path to the steward's §12 delivery inventory TOML, the holdings the "
-            "flavored validation checks the built windows against (default: "
-            "reg_webapp/stewards/<steward>/inventory.toml from a repo checkout; "
-            "absent, the run FAILS rather than shipping unchecked)."
-        ),
+        help="Accepted candidate's policy/inventory.toml; external paths are rejected.",
     )
     extend_db_p.add_argument(
         "--holdings-input",
         default=None,
-        help="Accepted local-only private input candidate retaining undated holdings.",
+        help="Accepted private candidate containing provider overlays, policies, inventory and raw census.",
     )
     extend_db_p.add_argument("--input-commit", default=None)
     extend_db_p.add_argument("--input-manifest-sha256", default=None)
     extend_db_p.add_argument(
         "--skip-holdings-gate",
         action="store_true",
-        help=(
-            "Skip the steward-holdings window-coverage gate entirely — the only "
-            "way to build a flavor with no holdings statement to check it against. "
-            "The flavor may then ship windows the steward's own inventory "
-            "contradicts."
-        ),
+        help="Rejected: exact holdings compilation and accounting are mandatory.",
     )
     extend_db_p.add_argument(
         "--no-validate",
         action="store_true",
-        help=(
-            "Skip the post-overlay flavored validation. By default extend-db runs "
-            "the full structural suite plus the tightened non-SCB minted-id band "
-            "check and the steward-holdings window-coverage gate, and fails with "
-            "EXIT_CONFIG on any violation."
-        ),
+        help="Rejected: strict artifact validation is mandatory.",
     )
 
     build_docs_p = sub.add_parser(
@@ -1319,157 +1300,83 @@ def _cmd_verify_input_bundle(
     ), 0
 
 
-def _flavored_validate_hook(
-    slug_dir: Path | None, delivery_inventory: DeliveryInventory | HoldingsGate
-) -> Callable[[Path], None]:
-    """Return an extend_db pre_rename_hook running the FLAVORED validator against
-    the staging DB. Uses ``flavored=True`` (the tightened non-SCB minted-id
-    band check) and
-    ``corpus=False`` (a flavor adds a steward tail, not the SCB/SOS bulk, so the
-    real-corpus volume floors don't apply).
-
-    Threads the resolved STEWARD ``slug_dir`` (the dir the overlay populated) into
-    the validator so the entity-key curation gate (#559) runs on the overlay,
-    scoped to the steward providers that dir covers. ``None`` (``--skip-slugs``)
-    self-skips the gate. ``delivery_inventory`` (Y-115) is the steward's loaded
-    holdings statement for the window-coverage gate, or ``HoldingsGate.SKIPPED``
-    when ``--skip-holdings-gate`` asked for no gate (Y-124); the resolver decides
-    which, so this hook only forwards it — there is no third value meaning
-    "nobody said"."""
-
-    def hook(staging_db: Path) -> None:
-        validation = validate_built_db(
-            staging_db,
-            flavored=True,
-            slug_dir=slug_dir,
-            delivery_inventory=delivery_inventory,
-        )
-        sys.stderr.write(validation.format_report() + "\n")
-        sys.stderr.flush()
-        if validation.failures:
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="validation_failed",
-                error_class="configuration",
-                message=(
-                    f"Post-overlay flavored validation failed: "
-                    f"{len(validation.failures)} check(s) — "
-                    f"{'; '.join(validation.failures)}"
-                ),
-                remediation=(
-                    "Inspect the [FAIL] lines above. The staging DB has been "
-                    "discarded and any previously-installed flavored DB is "
-                    "unchanged. Fix the inventory and rerun `reg-meta-build "
-                    "extend-db` (pass `--no-validate` to skip these checks)."
-                ),
-            )
-
-    return hook
-
-
 def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
-    db_dir = Path(args.db) if args.db else default_db_dir()
-    providers_dir = resolve_steward_providers_dir(
-        Path(args.providers_dir) if args.providers_dir else None, args.steward
-    )
-    # Resolve the steward slug dir ONCE and feed the SAME value to both the
-    # flavored validate hook (so its entity-key gate reads the dir the overlay
-    # populated) and `extend_db` (which re-resolves idempotently). Mirrors
-    # `_cmd_build_db`'s resolve-once pattern.
-    slug_dir = resolve_steward_slug_dir(
-        Path(args.slug_dir).expanduser().resolve() if args.slug_dir else None,
-        args.steward,
-        skip_slugs=args.skip_slugs,
-    )
-    pre_rename_hook = None
-    inventory_path = None
-    if not args.no_validate:
-        inventory_path = resolve_delivery_inventory(
-            Path(args.delivery_inventory) if args.delivery_inventory else None,
-            args.steward,
-            skip_holdings_gate=args.skip_holdings_gate,
+    from .artifact_identity import committed_steward_slugs
+
+    if any((args.slug_dir, args.skip_slugs, args.skip_holdings_gate, args.no_validate)):
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="publishable_extension_override",
+            error_class="configuration",
+            message="Publishable extend-db rejects slug overrides and validation/holdings skip flags.",
+            remediation="Use committed steward slug pins and the complete accepted holdings candidate.",
         )
-        # Loaded HERE, before the overlay: a malformed holdings statement must fail
-        # in a second, not after the multi-GB copy the hook runs behind.
-        pre_rename_hook = _flavored_validate_hook(
-            slug_dir,
-            load_delivery_inventory(inventory_path)
-            if inventory_path
-            else HoldingsGate.SKIPPED,
+    if not (args.holdings_input and args.input_commit and args.input_manifest_sha256):
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="private_holdings_pins_required",
+            error_class="configuration",
+            message="extend-db requires --holdings-input and both exact input pins.",
+            remediation="Select the clean accepted private input candidate and its full pins.",
         )
-    holdings_input = getattr(args, "holdings_input", None)
-    input_commit = getattr(args, "input_commit", None)
-    input_manifest_sha256 = getattr(args, "input_manifest_sha256", None)
-    data_warnings = ()
-    if any((holdings_input, input_commit, input_manifest_sha256)):
-        if not (holdings_input and input_commit and input_manifest_sha256):
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="private_holdings_pins_required",
-                error_class="configuration",
-                message="Private holdings require --holdings-input and both exact input pins.",
-                remediation="Select the clean accepted private input candidate and its full pins.",
-            )
-        candidate = Path(holdings_input).expanduser().resolve()
-        if (
-            providers_dir != candidate / "providers"
-            or slug_dir != candidate / "slugs"
-            or inventory_path != candidate / "policy" / "inventory.toml"
-        ):
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="private_holdings_paths_mismatch",
-                error_class="configuration",
-                message="Private providers, slugs and delivery inventory must come from the accepted holdings candidate.",
-                remediation="Select its providers/, slugs/ and policy/inventory.toml; regenerate and accept a fresh candidate if needed.",
-            )
-        try:
-            data_warnings = load_private_holdings_warnings(
-                Path(holdings_input),
-                input_commit=input_commit,
-                input_manifest_sha256=input_manifest_sha256,
-            )
-        except ValueError as exc:
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="private_holdings_invalid",
-                error_class="configuration",
-                message=str(exc),
-                remediation="Restore the accepted private evidence and exact policy guards.",
-            ) from exc
-    result = extend_db(
-        base_db=Path(args.base_db),
-        providers_dir=providers_dir,
-        db_dir=db_dir,
-        steward=args.steward,
-        slug_dir=slug_dir,
-        skip_slugs=args.skip_slugs,
-        pre_rename_hook=pre_rename_hook,
-        data_warnings=data_warnings,
-    )
-    duration_ms = int((time.perf_counter() - start) * 1000)
+    candidate = Path(args.holdings_input).expanduser().resolve()
+    providers_dir = candidate / "providers"
+    inventory_path = candidate / "policy/inventory.toml"
+    if (
+        args.providers_dir
+        and Path(args.providers_dir).expanduser().resolve() != providers_dir
+    ) or (
+        args.delivery_inventory
+        and Path(args.delivery_inventory).expanduser().resolve() != inventory_path
+    ):
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="private_holdings_paths_mismatch",
+            error_class="configuration",
+            message="Provider overlays and inventory must come from the accepted holdings candidate.",
+            remediation="Use its providers/ and policy/inventory.toml without external supplements.",
+        )
+    try:
+        read_private_holdings_input(
+            candidate,
+            input_commit=args.input_commit,
+            input_manifest_sha256=args.input_manifest_sha256,
+        )
+        load_delivery_inventory(inventory_path)
+        committed_steward_slugs(args.steward)
+        result = extend_db(
+            base_db=Path(args.base_db),
+            providers_dir=providers_dir,
+            db_dir=Path(args.db) if args.db else default_db_dir(),
+            steward=args.steward,
+            holdings_input=candidate,
+            input_commit=args.input_commit,
+            input_manifest_sha256=args.input_manifest_sha256,
+        )
+    except ValueError as exc:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="private_holdings_invalid",
+            error_class="configuration",
+            message=str(exc),
+            remediation="Review the located accepted-input or compiler failure; do not change accepted bytes in place.",
+        ) from exc
     return success_envelope(
         command="extend-db",
         args_payload={
             "base_db": args.base_db,
             "providers_dir": str(providers_dir),
-            # The RESOLVED holdings statement the gate ran against, not the raw
-            # flag: a published flavor's envelope states which file it was checked
-            # against, and `skip_holdings_gate` is the only reason it can be null
-            # on a validated run (Y-124).
-            "delivery_inventory": str(inventory_path) if inventory_path else None,
-            "holdings_input": holdings_input,
-            "input_commit": input_commit,
-            "input_manifest_sha256": input_manifest_sha256,
+            "delivery_inventory": str(inventory_path),
+            "holdings_input": str(candidate),
+            "input_commit": args.input_commit,
+            "input_manifest_sha256": args.input_manifest_sha256,
             "steward": args.steward,
-            "skip_slugs": args.skip_slugs,
-            "skip_holdings_gate": args.skip_holdings_gate,
-            "validate": not args.no_validate,
+            "validate": True,
         },
         db_info={"schema_version": SCHEMA_VERSION},
         data=result,
-        duration_ms=duration_ms,
+        duration_ms=int((time.perf_counter() - start) * 1000),
     ), 0
 
 
@@ -2298,8 +2205,8 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
         "Inspect captured LISA and raw SCB source records.",
     ),
     (
-        "extend-db --base-db DB [--providers-dir DIR] [--steward S]",
-        "Overlay steward provider TOMLs onto a released global DB.",
+        "extend-db --base-db DB --holdings-input DIR --input-commit SHA --input-manifest-sha256 SHA256 [--steward S]",
+        "Compile accepted steward holdings onto a strict schema-9 catalog.",
     ),
     (
         "build-docs [--docs-dir DIR]",

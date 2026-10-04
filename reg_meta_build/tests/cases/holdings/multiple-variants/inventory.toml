@@ -1,0 +1,16 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "Combined"
+edition = 2018
+[[table.column]]
+name = "Observed"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/value"
+representation = "Value"
+[[table.column.mapping]]
+register_variant = "scb/example/other"
+variable = "scb/example/value"
+representation = "Value"

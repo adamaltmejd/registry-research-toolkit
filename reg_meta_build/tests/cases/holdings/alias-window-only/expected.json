@@ -1,0 +1,36 @@
+{
+  "tables": [
+    [
+      "AliasOnly",
+      "intervals",
+      2018,
+      null,
+      null
+    ]
+  ],
+  "periods": [
+    [
+      "AliasOnly",
+      "2018-01-01",
+      "2018-12-31"
+    ]
+  ],
+  "columns": [
+    [
+      "AliasOnly",
+      "Observed",
+      null
+    ]
+  ],
+  "mappings": [
+    [
+      "AliasOnly",
+      "Observed",
+      "scb/example/annual",
+      "scb/example/value",
+      "Alias",
+      "Alias"
+    ]
+  ],
+  "warnings": []
+}

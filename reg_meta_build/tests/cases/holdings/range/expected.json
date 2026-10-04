@@ -1,0 +1,41 @@
+{
+  "tables": [
+    [
+      "Range",
+      "intervals",
+      {
+        "from": 2018,
+        "to": 2020
+      },
+      null,
+      null
+    ]
+  ],
+  "periods": [
+    [
+      "Range",
+      "2018-01-01",
+      "2020-12-31"
+    ]
+  ],
+  "columns": [
+    [
+      "Range",
+      "Observed",
+      null
+    ]
+  ],
+  "mappings": [
+    [
+      "Range",
+      "Observed",
+      "scb/example/annual",
+      "scb/example/value",
+      "Value",
+      "Value"
+    ]
+  ],
+  "warnings": [
+    "holding_temporally_unassessed"
+  ]
+}

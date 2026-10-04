@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+from catalog_manifest import synthetic_manifest
 from reg_meta.source_evidence import RecordLocator, SourceField, SourceRevision
 from reg_meta_build.catalog_resolution import resolve_parents
 from reg_meta_build.curation_compile import convert_column_partitions
@@ -226,7 +227,7 @@ def test_search_alias_is_guarded_metadata_without_added_availability(
         (alias.delivery_column_name, alias.windows) for alias in updated.aliases
     ] == [("ALTERNATIVE", ())]
     output = tmp_path / "aliases.db"
-    write_resolved_catalog((updated,), output, manifest={})
+    write_resolved_catalog((updated,), output, manifest=synthetic_manifest())
     with closing(open_built_db(output)) as conn:
         assert (
             conn.execute(
@@ -641,7 +642,7 @@ def test_holdings_period_converts_to_one_pooled_range(tmp_path: Path) -> None:
     assert (state.valid_from, state.valid_to) == ("2002-01-01", "2020-12-31")
     assert state.pooled is True
     output = tmp_path / "catalog.db"
-    write_resolved_catalog((formed.variable,), output, manifest={})
+    write_resolved_catalog((formed.variable,), output, manifest=synthetic_manifest())
     with closing(open_built_db(output)) as conn:
         assert tuple(
             conn.execute(
@@ -1277,7 +1278,7 @@ def test_explicit_identity_decision_keeps_exact_columns_and_periods(
     )
     assert variable.variable is not None and variable.diagnostics == ()
     output = tmp_path / "catalog.db"
-    write_resolved_catalog((variable.variable,), output, manifest={})
+    write_resolved_catalog((variable.variable,), output, manifest=synthetic_manifest())
     with closing(open_built_db(output)) as conn:
         assert [
             tuple(row)
@@ -1737,7 +1738,9 @@ def test_corrected_facts_and_provenance_reach_direct_materialization(
     assert formed.diagnostics == ()
     output = tmp_path / "catalog.db"
     write_resolved_catalog(
-        (formed.variable,), output, manifest={"fixture": "checked-effects"}
+        (formed.variable,),
+        output,
+        manifest=synthetic_manifest() | {"fixture": "checked-effects"},
     )
     with closing(open_built_db(output)) as conn:
         assert tuple(
@@ -2261,7 +2264,7 @@ def test_alias_window_needs_owned_alias_and_does_not_expand_states(
     ]
     assert updated.aliases[0].windows[0].provenance is not None
     output = tmp_path / "window.db"
-    write_resolved_catalog((updated,), output, manifest={})
+    write_resolved_catalog((updated,), output, manifest=synthetic_manifest())
     with closing(open_built_db(output)) as conn:
         assert conn.execute("SELECT count(*) FROM variable_state").fetchone()[0] == 1
         assert tuple(

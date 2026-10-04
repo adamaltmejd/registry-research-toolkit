@@ -1,0 +1,61 @@
+{
+  "tables": [
+    [
+      "Annual2018",
+      "intervals",
+      2018,
+      null,
+      null
+    ],
+    [
+      "Annual2019",
+      "intervals",
+      "2019",
+      null,
+      null
+    ]
+  ],
+  "periods": [
+    [
+      "Annual2018",
+      "2018-01-01",
+      "2018-12-31"
+    ],
+    [
+      "Annual2019",
+      "2019-01-01",
+      "2019-12-31"
+    ]
+  ],
+  "columns": [
+    [
+      "Annual2018",
+      "Observed",
+      null
+    ],
+    [
+      "Annual2019",
+      "Observed",
+      null
+    ]
+  ],
+  "mappings": [
+    [
+      "Annual2018",
+      "Observed",
+      "scb/example/annual",
+      "scb/example/value",
+      "Value",
+      "Value"
+    ],
+    [
+      "Annual2019",
+      "Observed",
+      "scb/example/annual",
+      "scb/example/value",
+      "Value",
+      "Value"
+    ]
+  ],
+  "warnings": []
+}

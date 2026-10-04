@@ -1,0 +1,44 @@
+{
+  "tables": [
+    [
+      "Combined",
+      "intervals",
+      2018,
+      null,
+      null
+    ]
+  ],
+  "periods": [
+    [
+      "Combined",
+      "2018-01-01",
+      "2018-12-31"
+    ]
+  ],
+  "columns": [
+    [
+      "Combined",
+      "Observed",
+      null
+    ]
+  ],
+  "mappings": [
+    [
+      "Combined",
+      "Observed",
+      "scb/example/annual",
+      "scb/example/value",
+      "Value",
+      "Value"
+    ],
+    [
+      "Combined",
+      "Observed",
+      "scb/example/other",
+      "scb/example/value",
+      "Value",
+      "Value"
+    ]
+  ],
+  "warnings": []
+}

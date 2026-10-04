@@ -15,6 +15,7 @@ from __future__ import annotations
 import sqlite3
 from typing import TYPE_CHECKING
 
+from catalog_manifest import synthetic_manifest
 from reg_meta_build.db import DDL, _populate_fts
 from reg_meta_build.resolved_catalog import (
     ResolvedCodeSet,
@@ -76,7 +77,7 @@ def _build(tmp_path: Path):
         ),
     )
     output = tmp_path / "reg_meta.db"
-    write_resolved_catalog((variable,), output, manifest={})
+    write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
     return sqlite3.connect(output)
 
 

@@ -1,0 +1,36 @@
+{
+  "tables": [
+    [
+      "CodingWindow",
+      "intervals",
+      2018,
+      null,
+      null
+    ]
+  ],
+  "periods": [
+    [
+      "CodingWindow",
+      "2018-01-01",
+      "2018-12-31"
+    ]
+  ],
+  "columns": [
+    [
+      "CodingWindow",
+      "Observed",
+      null
+    ]
+  ],
+  "mappings": [
+    [
+      "CodingWindow",
+      "Observed",
+      "scb/example/annual",
+      "scb/example/value",
+      "Alias",
+      "Alias"
+    ]
+  ],
+  "warnings": []
+}

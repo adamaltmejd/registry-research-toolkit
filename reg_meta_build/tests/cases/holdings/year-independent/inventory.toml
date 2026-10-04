@@ -1,0 +1,13 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "Catalogue"
+edition = "_default"
+period_scope = "year_independent"
+[[table.column]]
+name = "Observed"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/value"
+representation = "Value"

@@ -1,6 +1,7 @@
 """Source claims and accepted identity are separate requirements for lineage."""
 
 import pytest
+from catalog_manifest import synthetic_manifest
 from reg_meta_build.catalog_dependencies import CatalogDependencyError
 from reg_meta_build.catalog_lineage import resolve_catalog_lineage
 from reg_meta_build.resolved_catalog import ResolvedRegister, ResolvedVariant
@@ -465,7 +466,7 @@ def test_exact_lineage_acknowledgement_keeps_source_text_and_persists_warning(tm
     write_resolved_catalog(
         result.variables,
         output,
-        manifest={},
+        manifest=synthetic_manifest(),
         metadata=result.metadata,
         data_warnings=(warning,),
     )

@@ -1,0 +1,41 @@
+{
+  "tables": [
+    [
+      "Pooled",
+      "intervals",
+      {
+        "from": 2018,
+        "to": 2020
+      },
+      null,
+      null
+    ]
+  ],
+  "periods": [
+    [
+      "Pooled",
+      "2018-01-01",
+      "2020-12-31"
+    ]
+  ],
+  "columns": [
+    [
+      "Pooled",
+      "Observed",
+      null
+    ]
+  ],
+  "mappings": [
+    [
+      "Pooled",
+      "Observed",
+      "scb/example/annual",
+      "scb/example/value",
+      "Value",
+      "Value"
+    ]
+  ],
+  "warnings": [
+    "holding_temporally_unassessed"
+  ]
+}

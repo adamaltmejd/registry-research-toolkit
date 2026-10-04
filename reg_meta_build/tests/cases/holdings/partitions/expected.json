@@ -1,0 +1,61 @@
+{
+  "tables": [
+    [
+      "ShardA",
+      "intervals",
+      2018,
+      "north",
+      null
+    ],
+    [
+      "ShardB",
+      "intervals",
+      2018,
+      "south",
+      null
+    ]
+  ],
+  "periods": [
+    [
+      "ShardA",
+      "2018-01-01",
+      "2018-12-31"
+    ],
+    [
+      "ShardB",
+      "2018-01-01",
+      "2018-12-31"
+    ]
+  ],
+  "columns": [
+    [
+      "ShardA",
+      "Observed",
+      null
+    ],
+    [
+      "ShardB",
+      "Observed",
+      null
+    ]
+  ],
+  "mappings": [
+    [
+      "ShardA",
+      "Observed",
+      "scb/example/annual",
+      "scb/example/value",
+      "Value",
+      "Value"
+    ],
+    [
+      "ShardB",
+      "Observed",
+      "scb/example/annual",
+      "scb/example/value",
+      "Value",
+      "Value"
+    ]
+  ],
+  "warnings": []
+}

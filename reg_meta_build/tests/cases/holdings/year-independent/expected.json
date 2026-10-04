@@ -1,0 +1,30 @@
+{
+  "tables": [
+    [
+      "Catalogue",
+      "year_independent",
+      "_default",
+      null,
+      null
+    ]
+  ],
+  "periods": [],
+  "columns": [
+    [
+      "Catalogue",
+      "Observed",
+      null
+    ]
+  ],
+  "mappings": [
+    [
+      "Catalogue",
+      "Observed",
+      "scb/example/annual",
+      "scb/example/value",
+      "Value",
+      "Value"
+    ]
+  ],
+  "warnings": []
+}

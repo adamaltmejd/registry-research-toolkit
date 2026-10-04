@@ -1,10 +1,8 @@
-"""Insert-only steward catalog overlay built from curated-provider TOMLs.
+"""Compile accepted steward metadata and physical holdings onto an exact base.
 
-``extend-db`` copies a released global database, loads every ``*.toml`` in a
-steward provider directory through :class:`sources.curated.CuratedAdapter`, and
-inserts that IR into the copy. The released base is never mutated. The separate
-delivery-inventory TOML remains the steward holdings statement used by the
-post-overlay Section 12 coverage gate.
+Strict extension consumes pinned provider, inventory and policy inputs with
+committed steward naming. Metadata-only diagnostics are create-only and cannot
+be activated as runtime catalogs. The validated global base is never mutated.
 """
 
 from __future__ import annotations
@@ -13,7 +11,6 @@ import csv
 import hashlib
 import io
 import json
-import re
 import shutil
 import sqlite3
 import tomllib
@@ -22,7 +19,14 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    JsonValue,
+    TypeAdapter,
+    field_validator,
+)
 from reg_meta.catalog import DataWarning
 from reg_meta.db import DB_FILENAME
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
@@ -30,7 +34,7 @@ from reg_meta.fqid import FqidError, FqidKind, validate_slug
 from reg_meta.source_evidence import canonical_sha256
 
 from .data_warnings import write_data_warnings
-from .db import open_built_db
+from .db import get_manifest, open_built_db
 from .id import mint
 from .ir import (
     IRRegister,
@@ -40,7 +44,6 @@ from .ir import (
     IRVariableState,
     IRVariant,
 )
-from .source_records import TemporalScope
 from .sources.curated import CuratedAdapter
 
 if TYPE_CHECKING:
@@ -261,40 +264,6 @@ def resolve_steward_slug_dir(
     return resolved
 
 
-def resolve_delivery_inventory(
-    inventory_path: Path | None, steward: str, *, skip_holdings_gate: bool
-) -> Path | None:
-    """Resolve the distinct Section 12 steward holdings statement."""
-    if skip_holdings_gate:
-        return None
-    if inventory_path is not None:
-        return inventory_path.expanduser().resolve()
-    candidate = (
-        Path(__file__).resolve().parents[3]
-        / "reg_webapp"
-        / "stewards"
-        / steward
-        / "inventory.toml"
-    )
-    if not candidate.is_file():
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="extend_delivery_inventory_not_found",
-            error_class="configuration",
-            message=(
-                "No --delivery-inventory given and no committed holdings "
-                f"statement for steward {steward!r} at {candidate}."
-            ),
-            remediation=(
-                "Pass --delivery-inventory, run from a repo checkout carrying "
-                f"reg_webapp/stewards/{steward}/inventory.toml, or pass "
-                "--skip-holdings-gate (the flavor then ships unchecked against "
-                "the steward's holdings)."
-            ),
-        )
-    return candidate
-
-
 def extend_db(
     base_db: Path,
     providers_dir: Path | None,
@@ -305,8 +274,12 @@ def extend_db(
     skip_slugs: bool = False,
     pre_rename_hook: Callable[[Path], None] | None = None,
     data_warnings: tuple[DataWarning, ...] = (),
+    holdings_input: Path | None = None,
+    input_commit: str | None = None,
+    input_manifest_sha256: str | None = None,
+    diagnostic: bool = False,
 ) -> dict[str, Any]:
-    """Apply steward curated-provider IR to a copy of ``base_db``."""
+    """Build strict accepted holdings or an explicit metadata-only diagnostic."""
     from .db import (
         _insert_core_graph_from_ir,
         _populate_fts,
@@ -342,8 +315,59 @@ def extend_db(
             remediation="Point --db at a different output directory.",
         )
 
+    from .artifact_identity import (
+        builder_commit,
+        committed_steward_slugs,
+        generation_id,
+    )
+    from .holdings_compile import compile_holdings, write_holdings_assessment_warnings
+
+    revision = builder_commit()
+    if holdings_input is None and not diagnostic:
+        raise ValueError(
+            "Publishable extension requires accepted holdings and exact pins"
+        )
+    if holdings_input is not None and diagnostic:
+        raise ValueError("Accepted holdings require the full strict compilation path")
+    if holdings_input is not None:
+        holdings_input = holdings_input.expanduser().resolve()
+        if not input_commit or not input_manifest_sha256:
+            raise ValueError("Private holdings require both exact input pins")
+        if slug_dir is not None or skip_slugs:
+            raise ValueError(
+                "Publishable extension rejects --slug-dir and --skip-slugs"
+            )
+        read_private_holdings_input(
+            holdings_input,
+            input_commit=input_commit,
+            input_manifest_sha256=input_manifest_sha256,
+        )
+        providers_dir = providers_dir or holdings_input / "providers"
+        if providers_dir.expanduser().resolve() != holdings_input / "providers":
+            raise ValueError(
+                "Private providers must come from the accepted holdings candidate"
+            )
+        pinned_slug_dir = committed_steward_slugs(steward)
+    else:
+        pinned_slug_dir = None
+
     resolved_providers_dir = resolve_steward_providers_dir(providers_dir, steward)
+    with base_db.open("rb") as base_file:
+        base_digest = hashlib.file_digest(base_file, "sha256").hexdigest()
     with closing(open_built_db(base_db)) as source_db:
+        if holdings_input is not None:
+            from .holdings_validation import validate_compiled_holdings
+
+            validate_compiled_holdings(source_db)
+            base_manifest = get_manifest(source_db)
+            if (
+                base_manifest.get("catalog_artifact_kind"),
+                base_manifest.get("catalog_publishable"),
+                base_manifest.get("catalog_completeness"),
+            ) != ("catalog", "true", "complete"):
+                raise ValueError(
+                    "Steward compilation requires a complete publishable global base"
+                )
         classification_short_names = frozenset(
             name
             for (name,) in source_db.execute("SELECT short_name FROM classification")
@@ -351,7 +375,7 @@ def extend_db(
     graph = _load_provider_ir(
         resolved_providers_dir, steward, classification_short_names
     )
-    steward_slug_dir = resolve_steward_slug_dir(
+    steward_slug_dir = pinned_slug_dir or resolve_steward_slug_dir(
         slug_dir, steward, skip_slugs=skip_slugs
     )
 
@@ -361,12 +385,16 @@ def extend_db(
     if tmp_path.exists():
         tmp_path.unlink()
     shutil.copy2(base_db, tmp_path)
+    with tmp_path.open("rb") as copied:
+        if hashlib.file_digest(copied, "sha256").hexdigest() != base_digest:
+            tmp_path.unlink(missing_ok=True)
+            raise ValueError("Base database changed during selection")
 
     conn = sqlite3.connect(tmp_path)
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA synchronous=NORMAL")
     conn.execute("PRAGMA temp_store=MEMORY")
-    conn.execute("PRAGMA foreign_keys=OFF")
+    conn.execute("PRAGMA foreign_keys=ON")
     write_failed = True
     counts = {
         "providers": 0,
@@ -397,6 +425,58 @@ def extend_db(
             _assert_steward_rows_slugged(conn)
 
         write_data_warnings(conn, data_warnings)
+        if diagnostic:
+            conn.executemany(
+                "INSERT OR REPLACE INTO import_manifest(key, value) VALUES (?, ?)",
+                (
+                    ("catalog_artifact_kind", "diagnostic"),
+                    ("catalog_publishable", "false"),
+                    ("catalog_completeness", "incomplete"),
+                ),
+            )
+        if holdings_input is not None:
+            manifest = get_manifest(conn)
+            if (
+                manifest.get("catalog_artifact_kind") != "catalog"
+                or manifest.get("catalog_publishable") != "true"
+                or manifest.get("catalog_completeness") != "complete"
+                or not manifest.get("generation_id")
+            ):
+                raise ValueError(
+                    "Steward compilation requires a complete publishable schema-9 catalog with generation identity"
+                )
+            assert input_commit is not None and input_manifest_sha256 is not None
+            compiled = compile_holdings(conn, holdings_input, steward=steward)
+            counts["data_warnings"] += write_holdings_assessment_warnings(conn)
+            manifest.update(
+                {
+                    "catalog_artifact_kind": "steward",
+                    "builder_commit": revision,
+                    "steward": steward,
+                    "base_db_sha256": base_digest,
+                    "base_generation_id": manifest["generation_id"],
+                    "holdings_input_commit": input_commit,
+                    "holdings_manifest_sha256": input_manifest_sha256,
+                    "holdings_policy_sha256": compiled.accounting.policy_sha256,
+                    "holdings_accounting_counts": json.dumps(
+                        compiled.accounting.counts,
+                        ensure_ascii=False,
+                        sort_keys=True,
+                        separators=(",", ":"),
+                    ),
+                    "holdings_accounting_sha256": compiled.accounting.sha256,
+                }
+            )
+            manifest["generation_id"] = generation_id(manifest)
+            conn.executemany(
+                "INSERT OR REPLACE INTO import_manifest(key, value) VALUES (?, ?)",
+                sorted(manifest.items()),
+            )
+            counts.update(
+                holding_tables=compiled.tables,
+                holding_columns=compiled.columns,
+                holding_mappings=compiled.mappings,
+            )
 
         for fts in ("register_fts", "variable_fts"):
             conn.execute(f"INSERT INTO {fts}({fts}) VALUES('delete-all')")
@@ -423,15 +503,38 @@ def extend_db(
         if write_failed:
             tmp_path.unlink(missing_ok=True)
 
-    if pre_rename_hook is not None:
-        try:
-            pre_rename_hook(tmp_path)
-        except BaseException:
-            tmp_path.unlink(missing_ok=True)
-            _unlink_wal_sidecars(tmp_path)
-            raise
+    try:
+        if not diagnostic:
+            from .validate import validate_built_db
 
-    publish_db(tmp_path, final_path)
+            validation = validate_built_db(
+                tmp_path, flavored=True, slug_dir=pinned_slug_dir
+            )
+            _progress(validation.format_report())
+            if not validation.passed:
+                raise RegMetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="validation_failed",
+                    error_class="configuration",
+                    message="Compiled steward validation failed: "
+                    + "; ".join(validation.failures),
+                    remediation="Review the located build failure and regenerate from accepted inputs.",
+                )
+            committed_steward_slugs(steward)
+        if pre_rename_hook is not None:
+            pre_rename_hook(tmp_path)
+    except BaseException:
+        tmp_path.unlink(missing_ok=True)
+        _unlink_wal_sidecars(tmp_path)
+        raise
+
+    if diagnostic:
+        try:
+            final_path.hardlink_to(tmp_path)
+        finally:
+            tmp_path.unlink(missing_ok=True)
+    else:
+        publish_db(tmp_path, final_path)
     _progress(f"Flavored database written to {final_path}")
     return {**counts, "db_path": str(final_path)}
 
@@ -442,73 +545,25 @@ class _UndatedHolding(BaseModel):
     register_fqid: str = Field(alias="register")
     rows_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     reason: str = Field(min_length=1)
+    edition: JsonValue = None
+    partition: str | None = None
+
+    @field_validator("partition")
+    @classmethod
+    def check_partition(cls, value: str | None) -> str | None:
+        from reg_meta.fqid import validate_slug
+
+        if value is not None:
+            validate_slug(value, "partition")
+        return value
 
 
-def load_undated_holdings(
-    policy_path: Path,
-    source_path: Path,
-    *,
-    input_commit: str,
-    input_manifest_sha256: str,
-) -> tuple[DataWarning, ...]:
-    """Validate exact undated holdings evidence; retain no annual admission links."""
-    if not re.fullmatch(r"[0-9a-f]{40}", input_commit) or not re.fullmatch(
-        r"[0-9a-f]{64}", input_manifest_sha256
-    ):
-        raise ValueError("Undated holdings require full accepted input pins")
-    entries, rows_by_table, source_sha256 = load_holdings_retention_policy(
-        policy_path, source_path
-    )
-    warnings = []
-    for entry in sorted(entries, key=lambda item: item.table):
-        rows = rows_by_table.get(entry.table)
-        evidence = {
-            "table": entry.table,
-            "rows": rows,
-            "source_sha256": source_sha256,
-            "policy_sha256": hashlib.sha256(policy_path.read_bytes()).hexdigest(),
-            "input_commit": input_commit,
-            "input_manifest_sha256": input_manifest_sha256,
-            "temporal_scope": TemporalScope(
-                kind="unknown", label=entry.reason
-            ).model_dump(mode="json"),
-        }
-        detail = json.dumps(
-            evidence, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-        )
-        payload = {
-            "register_fqid": entry.register_fqid,
-            "variable_fqid": None,
-            "variant": None,
-            "delivery_column_name": None,
-            "valid_from": None,
-            "valid_to": None,
-            "code": "unknown_holding_edition",
-            "severity": "warning",
-            "summary": "A delivered table has no established calendar coverage",
-            "detail": detail,
-            "diagnostic_detail_sha256": canonical_sha256(evidence),
-            "source_subject": entry.table,
-            "fields": ["inventory.edition"],
-            "refs": [],
-            "withheld_output": ["annual_availability", "catalog_ordering"],
-            "acknowledged_by": "source_policy",
-            "case_id": entry.table,
-        }
-        # Normalize optional defaults before deriving the content identity.
-        warning = DataWarning.model_validate_json(
-            json.dumps({"warning_id": canonical_sha256(payload), **payload})
-        )
-        warnings.append(warning)
-    return tuple(warnings)
-
-
-def load_private_holdings_warnings(
+def read_private_holdings_input(
     root: Path,
     *,
     input_commit: str,
     input_manifest_sha256: str,
-) -> tuple[DataWarning, ...]:
+) -> dict[str, Any]:
     """Read only exact committed private input bytes before extension copies its base."""
     from ._accepted_prepared import read_accepted_manifest
     from .input_snapshot import _git, _git_bytes, _index_tags
@@ -569,17 +624,19 @@ def load_private_holdings_warnings(
         raise ValueError(
             "Private input manifest requires one holdings CSV and holdings policy"
         )
-    undated = load_undated_holdings(
-        selection.root / policy_name,
-        selection.root / source_names[0],
-        input_commit=input_commit,
-        input_manifest_sha256=input_manifest_sha256,
-    )
-    return undated + _private_unknown_validity_warnings(
-        selection.root,
-        input_commit=input_commit,
-        input_manifest_sha256=input_manifest_sha256,
-    )
+    required = {
+        "policy/inventory.toml",
+        "policy/source_policy.toml",
+        "policy/inventory_overlay.toml",
+        "policy/holdings_policy.toml",
+    }
+    if not required <= proofs.keys() or not any(
+        name.startswith("providers/") and name.endswith(".toml") for name in proofs
+    ):
+        raise ValueError(
+            "Private input manifest lacks accepted inventory, policies or providers"
+        )
+    return manifest
 
 
 def load_holdings_retention_policy(
@@ -611,99 +668,3 @@ def load_holdings_retention_policy(
         if entry.table in excluded:
             raise ValueError(f"Retained holding cannot also be excluded: {entry.table}")
     return entries, rows_by_table, source_sha256
-
-
-def _private_unknown_validity_warnings(
-    root: Path,
-    *,
-    input_commit: str,
-    input_manifest_sha256: str,
-) -> tuple[DataWarning, ...]:
-    """Keep source validity absence separate from witnessed holdings editions."""
-    from reg_meta.inventory import load_inventory
-
-    from .fqid_slugs import load_slug_dir
-
-    graph = _load_provider_ir(root / "providers", "swecov")
-    names = {
-        (entry.provider, entry.source_id): entry.slug
-        for entry in load_slug_dir(root / "slugs")
-        if entry.kind == "register"
-    }
-    inventory = load_inventory(root / "policy" / "inventory.toml")
-    variables = {value.variable_id: value for value in graph.variables}
-    warnings = []
-    for register in graph.registers:
-        states = tuple(
-            state
-            for state in graph.states
-            if variables[state.variable_id].register_id == register.register_id
-            and (state.valid_from is None or state.valid_to is None)
-        )
-        if not states:
-            continue
-        slug = names.get((register.provider, str(register.register_id)))
-        if slug is None:
-            raise ValueError(
-                f"Private warning register lacks accepted naming: {register.register_id}"
-            )
-        register_fqid = f"{register.provider}/{slug}"
-        variable_ids = {state.variable_id for state in states}
-        table_witnesses = [
-            table.model_dump(mode="json")
-            for table in inventory.tables
-            if any(
-                mapping.register_variant.startswith(register_fqid + "/")
-                for column in table.columns
-                for mapping in column.mappings
-            )
-        ]
-        evidence = {
-            "input_commit": input_commit,
-            "input_manifest_sha256": input_manifest_sha256,
-            "states": [state.model_dump(mode="json") for state in states],
-            "aliases": [
-                alias.model_dump(mode="json")
-                for alias in graph.aliases
-                if alias.variable_id in variable_ids
-            ],
-            "alias_windows": [
-                window.model_dump(mode="json")
-                for window in graph.alias_windows
-                if window.variable_id in variable_ids
-            ],
-            "holding_table_witnesses": table_witnesses,
-            "source_validity": "Unknown where the authored state bound is absent.",
-            "storage_sentinels": {
-                "missing_start": "0001-01-01",
-                "missing_end": "9999-12-31",
-            },
-            "interpretation": "Storage sentinels do not establish observed calendar coverage or year independence. Holdings editions witness delivered availability only; no additional annual alias equivalence is asserted.",
-        }
-        payload = {
-            "register_fqid": register_fqid,
-            "variable_fqid": None,
-            "variant": None,
-            "delivery_column_name": None,
-            "valid_from": None,
-            "valid_to": None,
-            "code": "unknown_source_validity",
-            "severity": "warning",
-            "summary": "Private source state validity bounds are undocumented",
-            "detail": json.dumps(
-                evidence, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-            ),
-            "diagnostic_detail_sha256": canonical_sha256(evidence),
-            "source_subject": register_fqid,
-            "fields": ["source.validity"],
-            "refs": [],
-            "withheld_output": ["source_validity_bounds"],
-            "acknowledged_by": "source_policy",
-            "case_id": f"unknown-validity:{register_fqid}",
-        }
-        warnings.append(
-            DataWarning.model_validate_json(
-                json.dumps({"warning_id": canonical_sha256(payload), **payload})
-            )
-        )
-    return tuple(warnings)

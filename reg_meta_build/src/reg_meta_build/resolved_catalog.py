@@ -1119,6 +1119,20 @@ def write_resolved_catalog(
             )
         import_metadata[key] = value
 
+    if not partial:
+        from .artifact_identity import builder_commit, generation_id
+
+        import_metadata.setdefault("builder_commit", builder_commit())
+        expected_generation = generation_id(import_metadata)
+        if (
+            "generation_id" in import_metadata
+            and import_metadata["generation_id"] != expected_generation
+        ):
+            raise ValueError(
+                "manifest generation_id conflicts with canonical semantic inputs"
+            )
+        import_metadata["generation_id"] = expected_generation
+
     output = Path(output)
     if partial and (
         output.exists()

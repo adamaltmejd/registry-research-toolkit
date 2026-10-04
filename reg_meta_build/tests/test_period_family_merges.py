@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+from catalog_manifest import synthetic_manifest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.curation_compile import compile_matrix_repr, compile_period_families
@@ -416,7 +417,9 @@ def test_checked_month_definitions_keep_literal_text_and_source_scopes(tmp_path)
             formed.coverage,
             withheld={},
         )
-    path = write_resolved_catalog((variable,), tmp_path / "catalog.db", manifest={})
+    path = write_resolved_catalog(
+        (variable,), tmp_path / "catalog.db", manifest=synthetic_manifest()
+    )
     with sqlite3.connect(path) as conn:
         assert conn.execute("SELECT definition FROM variable_state").fetchone() == (
             None,

@@ -4,22 +4,27 @@ Maintainer-only builder for `reg_meta.db` and the separate `reg_meta_docs.db` do
 index. End users install [`reg_meta`](../reg_meta/) and fetch published databases with
 `reg-meta update`.
 
-The current builder output uses schema `8.1.0`. Exact reviewed source crosswalks without
+The current builder output uses schema `9.0.0`. Exact reviewed source crosswalks without
 established variable endpoints remain in `source_relationship` as `retained_unattached`,
 with raw declarations and register-scoped warnings. This builder format is separate from
-the unchanged reader schema; publication requires the coordinated consumer adaptation.
-State classification extensions retain their known sentinel roles and meanings,
-including exact scoped certificates, without changing source labels or the official
-codebook.
+reader query behavior; publication requires the coordinated consumer adaptation. State
+classification extensions retain their known sentinel roles and meanings, including
+exact scoped certificates, without changing source labels or the official codebook.
 
-Private extension inputs can be selected with `extend-db --holdings-input` and exact
-`--input-commit` / `--input-manifest-sha256` pins. Providers, slugs and delivery
-inventory must come from that accepted local-only candidate. Its builder-owned
-`policy/holdings_policy.toml` records exact lookup exclusions and row-guarded undated
-holdings. Undated tables remain register-scoped warning evidence, without annual
-availability or catalog ordering links. Separate warnings retain authored source states
-whose validity bounds are absent: `0001-01-01` / `9999-12-31` are storage sentinels, not
-observed coverage. Inventory editions witness delivered availability independently.
+Private extension requires `extend-db --holdings-input` and exact `--input-commit` /
+`--input-manifest-sha256` pins. Providers, inventory, policies and raw census come from
+that accepted candidate. Naming comes from committed `fqid_slugs/<steward>/` bytes in
+the clean builder checkout; private slug copies are acceptance evidence only. Slug
+overrides and validation/holdings skip flags are rejected.
+
+The extension preserves physical editions, intervals, partitions, columns and explicit
+mapping identities in four holding relations. Retained unknown tables preserve census
+columns and their authored reason, with no periods or mappings. Exact disjoint census
+accounting, resolver-based representation canonicalization and structural validation are
+mandatory before scratch artifact placement. The manifest records semantic generation
+identity, accepted input pins, base provenance and accounting counts/digests. Rebuild
+schema-9 bases; schema-8.1 artifacts are comparison evidence only. No release is
+permitted until the staged consumer cut and acceptance gate complete.
 
 ## Catalog workflow
 

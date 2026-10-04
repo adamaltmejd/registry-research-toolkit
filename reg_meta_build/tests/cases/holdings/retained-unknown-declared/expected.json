@@ -1,0 +1,53 @@
+{
+  "tables": [
+    [
+      "Annual",
+      "intervals",
+      2018,
+      null,
+      null
+    ],
+    [
+      "Undated",
+      "unknown",
+      2019,
+      "sample",
+      "No established calendar edition."
+    ]
+  ],
+  "periods": [
+    [
+      "Annual",
+      "2018-01-01",
+      "2018-12-31"
+    ]
+  ],
+  "columns": [
+    [
+      "Annual",
+      "Observed",
+      null
+    ],
+    [
+      "Undated",
+      "Observed",
+      null
+    ],
+    [
+      "Undated",
+      "Other",
+      null
+    ]
+  ],
+  "mappings": [
+    [
+      "Annual",
+      "Observed",
+      "scb/example/annual",
+      "scb/example/value",
+      "Value",
+      "Value"
+    ]
+  ],
+  "warnings": []
+}

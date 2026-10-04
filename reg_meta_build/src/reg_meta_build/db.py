@@ -1587,7 +1587,7 @@ def _require_publishable_catalog(conn: sqlite3.Connection, db_path: Path) -> Non
     """Protect builder activation while leaving explicit diagnostic reads possible."""
     manifest = get_manifest(conn)
     if (
-        manifest.get("catalog_artifact_kind", "catalog") != "catalog"
+        manifest.get("catalog_artifact_kind", "catalog") not in {"catalog", "steward"}
         or manifest.get("catalog_publishable", "true") != "true"
         or manifest.get("catalog_completeness", "complete") != "complete"
     ):

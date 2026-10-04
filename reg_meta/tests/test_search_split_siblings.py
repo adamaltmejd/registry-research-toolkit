@@ -12,6 +12,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
+from catalog_manifest import synthetic_manifest
 from reg_meta.db import open_db
 from reg_meta.queries import search
 from reg_meta_build.resolved_catalog import (
@@ -63,7 +64,7 @@ def split_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
             ("Skolkommun", "1480", "Göteborgs kommun"),
         )
     )
-    write_resolved_catalog(variables, output, manifest={})
+    write_resolved_catalog(variables, output, manifest=synthetic_manifest())
     return output
 
 

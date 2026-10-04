@@ -57,6 +57,11 @@ _EMPTY_ONLY = frozenset(
         "variable_instance",
         "variable_alias_build",
         "unika_summary",
+        # Holdings semantic projection belongs to the later reader/conformance cut.
+        "holding_table",
+        "holding_period",
+        "holding_column",
+        "holding_mapping",
     }
 )
 _PLAIN_TABLES = frozenset(

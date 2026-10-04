@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+from catalog_manifest import synthetic_manifest
 from pydantic import ValidationError
 from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.catalog_dependencies import (
@@ -318,7 +319,9 @@ def test_per_column_storage_survives_formation_coverage_and_catalog_read(
                 )
             }
         )
-    write_resolved_catalog((variable,), tmp_path / "reg_meta.db", manifest={})
+    write_resolved_catalog(
+        (variable,), tmp_path / "reg_meta.db", manifest=synthetic_manifest()
+    )
     with closing(open_built_db(tmp_path / "reg_meta.db")) as conn:
         assert {
             row[0]: (row[1], row[2])
@@ -393,7 +396,9 @@ def test_per_column_window_spans_coding_states_without_losing_storage(
     )
     assert len(variable.states) == 2
     check_delivery_coverage((variable,), formed.coverage, withheld={})
-    write_resolved_catalog((variable,), tmp_path / "reg_meta.db", manifest={})
+    write_resolved_catalog(
+        (variable,), tmp_path / "reg_meta.db", manifest=synthetic_manifest()
+    )
     with closing(open_built_db(tmp_path / "reg_meta.db")) as conn:
         assert {
             tuple(row)
@@ -433,7 +438,9 @@ def test_per_column_window_spans_coding_states_without_losing_storage(
         }
     )
     with pytest.raises(ValueError, match="complete backing states"):
-        write_resolved_catalog((gap,), tmp_path / "gap.db", manifest={})
+        write_resolved_catalog(
+            (gap,), tmp_path / "gap.db", manifest=synthetic_manifest()
+        )
 
 
 def test_per_column_storage_keeps_same_column_conflict_and_rejects_mixed_modes() -> (
@@ -512,7 +519,7 @@ def test_shared_state_keeps_metadata_period_and_query_selects_precise_column(
         check_delivery_coverage((dropped,), formed.coverage, withheld={})
     assert state.provenance is not None and "representations:" in state.provenance
     output = tmp_path / "reg_meta.db"
-    write_resolved_catalog((variable,), output, manifest={})
+    write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
     with closing(open_built_db(output)) as conn:
         assert conn.execute("SELECT count(*) FROM variable_state").fetchone()[0] == 1
         assert (
@@ -579,7 +586,9 @@ def test_coding_cut_inside_alias_window_keeps_a_participating_base(
         "First",
         "Second",
     ]
-    write_resolved_catalog((formed.variable,), tmp_path / "reg_meta.db", manifest={})
+    write_resolved_catalog(
+        (formed.variable,), tmp_path / "reg_meta.db", manifest=synthetic_manifest()
+    )
     with closing(open_built_db(tmp_path / "reg_meta.db")) as conn:
         assert [
             tuple(row)
@@ -920,7 +929,7 @@ def test_per_column_coding_preserves_native_domains_and_alias_only_index(
     )
     check_delivery_coverage((variable,), formed.coverage, withheld={})
     output = tmp_path / "reg_meta.db"
-    write_resolved_catalog((variable,), output, manifest={})
+    write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
     with closing(open_built_db(output)) as conn:
         assert conn.execute("SELECT count(*) FROM value_set").fetchone()[0] == 2
         assert conn.execute("SELECT count(*) FROM code_variable_map").fetchone()[0] == 2
@@ -1053,7 +1062,9 @@ def test_per_column_operation_and_attribution_do_not_borrow_sibling_facts(
         "Second": ("Second operation", second_source),
     }
     check_delivery_coverage((variable,), formed.coverage, withheld={})
-    write_resolved_catalog((variable,), tmp_path / "reg_meta.db", manifest={})
+    write_resolved_catalog(
+        (variable,), tmp_path / "reg_meta.db", manifest=synthetic_manifest()
+    )
     with closing(open_built_db(tmp_path / "reg_meta.db")) as conn:
         assert {
             tuple(row)
@@ -1235,7 +1246,9 @@ def test_checked_delivery_metadata_retain_literals_and_coverage(tmp_path):
     )
     with pytest.raises(ValueError, match="literal delivery unit changed"):
         check_delivery_coverage((wrong,), formed.coverage, withheld={})
-    write_resolved_catalog((formed.variable,), tmp_path / "reg_meta.db", manifest={})
+    write_resolved_catalog(
+        (formed.variable,), tmp_path / "reg_meta.db", manifest=synthetic_manifest()
+    )
     with closing(open_built_db(tmp_path / "reg_meta.db")) as conn:
         assert {
             row[0]
@@ -1618,7 +1631,9 @@ def test_per_column_classifications_keep_independent_books_and_domains(tmp_path)
     } == {column: (link,) for column, link in links.items()}
     check_delivery_coverage((variable,), formed.coverage, withheld={})
     output = tmp_path / "per-column-books.db"
-    write_resolved_catalog((variable,), output, manifest={}, classifications=books)
+    write_resolved_catalog(
+        (variable,), output, manifest=synthetic_manifest(), classifications=books
+    )
     with closing(open_built_db(output)) as conn:
         assert [
             tuple(row)
