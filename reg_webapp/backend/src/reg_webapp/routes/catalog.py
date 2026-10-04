@@ -124,6 +124,7 @@ from reg_webapp.query_input import clamp_limit, matches_filter, validate_text_qu
 
 if TYPE_CHECKING:
     import sqlite3
+    from collections.abc import Iterable
 
     from reg_webapp.catalog_index import CatalogIndex
 
@@ -268,17 +269,14 @@ def _filter_states_to_held(
 
 
 def _folded_column_coverage(
-    catalog: Catalog, provider_slug: str, register_slug: str
+    columns: Iterable[tuple[tuple[str, str | None], VariableCoverage]],
 ) -> dict[tuple[str, str | None], VariableCoverage]:
-    """`Catalog.register_column_coverage` re-keyed on `_fold_column`, so a column
+    """Catalog column coverage re-keyed on `_fold_column`, so a column
     finds its coverage row whatever case the reader spells it in. One pass per
     listing; reg_meta already folds its own case twins onto one key, so no two rows
     can collide here."""
     return {
-        (slug, _fold_column(column)): coverage
-        for (slug, column), coverage in catalog.register_column_coverage(
-            provider_slug, register_slug
-        ).items()
+        (slug, _fold_column(column)): coverage for (slug, column), coverage in columns
     }
 
 
@@ -815,7 +813,9 @@ def _concept_group_node(
     echoed for the SPA to highlight (None when absent/unrecognized — a bad hint is
     ignored, keeping the group page first-class)."""
     coverage = catalog.register_variable_coverage(provider_slug, register_slug)
-    column_coverage = _folded_column_coverage(catalog, provider_slug, register_slug)
+    column_coverage = _folded_column_coverage(
+        catalog.register_column_coverage(provider_slug, register_slug).items()
+    )
     members: list[ConceptGroupNodeMember] = []
     for m in group.members:
         # The member FQID's leaf segment IS its variable slug — the key
@@ -952,8 +952,8 @@ def _provider_response(
         # #865: a filtered steward must NOT inherit the full-register aggregate —
         # `provider_register_coverage` counts EVERY variable in each register, so a
         # held register would overstate spans for partial-column holds. Recompute each
-        # held register's coverage from its HELD delivery columns only
-        # (`register_column_coverage`, keyed by `(variable slug, delivery column)`). The
+        # held register's coverage from its HELD delivery columns only.
+        # Read all held registers' column coverage in one provider query. The
         # held FQIDs per register are derived ONCE from `admitted_variable_fqids`.
         held_columns_by_register: dict[str, dict[str, frozenset[str | None]]] = {}
         for fqid in index.admitted_variable_fqids:
@@ -962,16 +962,28 @@ def _provider_response(
                 variable
             ] = _folded_columns(index.held_columns(fqid))
 
+        provider_columns = catalog.provider_column_coverage(
+            provider_slug,
+            [r.fqid.register for r in registers if r.fqid.register is not None],
+        )
+
         def coverage_for(register_slug: str) -> RegisterCoverage | None:
             held_columns = held_columns_by_register.get(
                 f"{provider_slug}/{register_slug}"
             )
             if not held_columns:
                 return None
-            per_column = _folded_column_coverage(catalog, provider_slug, register_slug)
-            per_unnamed = catalog.register_unnamed_column_coverage(
-                provider_slug, register_slug
+            columns = provider_columns.get(register_slug, {})
+            per_column = _folded_column_coverage(
+                ((slug, column), coverage)
+                for (slug, column), coverage in columns.items()
+                if column is not None
             )
+            per_unnamed = {
+                slug: coverage
+                for (slug, column), coverage in columns.items()
+                if column is None
+            }
             return _held_register_coverage(per_column, per_unnamed, held_columns)
 
     return ProviderResponse(
@@ -1024,7 +1036,9 @@ def _register_response(
             return variable_coverage.get(variable_slug)
 
     else:
-        column_coverage = _folded_column_coverage(catalog, provider_slug, register_slug)
+        column_coverage = _folded_column_coverage(
+            catalog.register_column_coverage(provider_slug, register_slug).items()
+        )
         unnamed_coverage = catalog.register_unnamed_column_coverage(
             provider_slug, register_slug
         )
