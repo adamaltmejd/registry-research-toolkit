@@ -1,0 +1,6 @@
+[
+  {"layout": "db-file-ignore-only", "accepted": false},
+  {"layout": "ignored-tracked-backup-symlink", "accepted": false},
+  {"layout": "ignored", "accepted": true},
+  {"layout": "outside", "accepted": true}
+]

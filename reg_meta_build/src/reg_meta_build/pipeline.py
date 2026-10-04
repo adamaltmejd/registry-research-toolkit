@@ -457,7 +457,6 @@ def _run_pipeline(
 
     started = time.perf_counter()
     publishable = not diagnostic and not registers
-    revision = builder_commit() if publishable and not check else None
     prepared_path = prepared_path.resolve()
     output = output.resolve() if output is not None else None
     report_dir = report_dir.resolve()
@@ -502,6 +501,12 @@ def _run_pipeline(
         raise ValueError(
             "build outputs must be separate from build inputs and each other"
         )
+    revision = None
+    if publishable and output is not None:
+        output_directories = {"--db": output.parent, "--report-dir": report_dir}
+        if dump_decisions is not None:
+            output_directories["--dump-decisions"] = dump_decisions
+        revision = builder_commit(output_directories=output_directories)
     input_started = time.perf_counter()
     prepared = open_prepared_catalog_sources(
         prepared_path,

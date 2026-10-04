@@ -1,0 +1,8 @@
+{
+  "rejected_contains": "output directory must be outside the builder checkout or Git-ignored with no tracked files",
+  "accepted_contains": "catalog input bundle directory not found",
+  "error_codes": {
+    "build-db": "pipeline_build_failed",
+    "extend-db": "private_holdings_invalid"
+  }
+}

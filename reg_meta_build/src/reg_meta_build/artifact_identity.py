@@ -30,11 +30,11 @@ STEWARD_GENERATION_KEYS = (
 )
 
 
-def builder_commit() -> str:
+def builder_commit(*, output_directories: Mapping[str, Path] | None = None) -> str:
     """Capture the clean tracked builder source, never an enclosing wheel's repo."""
     module = Path(__file__).resolve()
     try:
-        _, revision = _tracked_source_commit(
+        repository, revision = _tracked_source_commit(
             tuple(
                 module.with_name(name)
                 for name in (
@@ -51,6 +51,22 @@ def builder_commit() -> str:
             "Publishable builds require clean tracked builder sources; "
             "run from the source checkout, not an installed wheel. " + str(exc)
         ) from exc
+    for option, directory in (output_directories or {}).items():
+        directory = directory.resolve()
+        if not directory.is_relative_to(repository):
+            continue
+        relative = directory.relative_to(repository).as_posix()
+        try:
+            if directory == repository or _git(
+                repository, "ls-files", "--", f":(literal){relative}"
+            ):
+                raise SnapshotError("output directory contains tracked files")
+            _git(repository, "check-ignore", "--quiet", "--", relative + "/")
+        except SnapshotError as exc:
+            raise ValueError(
+                f"Publishable {option} output directory must be outside the builder "
+                "checkout or Git-ignored with no tracked files: " + str(directory)
+            ) from exc
     return revision
 
 

@@ -324,7 +324,11 @@ def extend_db(
     from .holdings_compile import compile_holdings, write_holdings_assessment_warnings
 
     with ExitStack() as inputs:
-        revision = builder_commit() if not diagnostic else None
+        revision = (
+            builder_commit(output_directories={"--db": db_dir})
+            if not diagnostic
+            else None
+        )
         if holdings_input is None and not diagnostic:
             raise ValueError(
                 "Publishable extension requires accepted holdings and exact pins"

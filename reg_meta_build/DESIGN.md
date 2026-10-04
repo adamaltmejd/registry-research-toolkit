@@ -1614,6 +1614,13 @@ publishable catalog. Publishable builds require clean tracked builder sources in
 source checkout. Installed wheels are not a source-revision authority and fail with an
 actionable checkout requirement. Capture the revision before compilation and verify it
 again before placement; uncommitted code or a changed revision cannot claim that pin.
+Before consuming inputs, publishable builds require each output directory (DB parent,
+report and decision dump) to be outside the builder checkout or Git-ignored with no
+tracked files. The directory rule covers staging files, sidecars and backups as well as
+the final DB; ignoring only `*.db` is insufficient. Direct strict writer calls use the
+same preflight. This prevents build-created files from violating the final clean-source
+check after compilation. Diagnostic, scoped and check-only runs keep their existing
+output rules.
 
 The accepted candidate's manifest covers every consumed provider TOML, inventory,
 policy, source document and review-evidence payload. Provider and policy directories
