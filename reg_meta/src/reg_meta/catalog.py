@@ -373,6 +373,36 @@ def _merge_span(
     return (min(held[0], cov_from), max(held[1], cov_to), held[2] + count)
 
 
+def _column_coverage(
+    rows: Iterable[sqlite3.Row],
+) -> dict[tuple[str, str], VariableCoverage]:
+    """Fold named column aggregates using the shared representative spelling rule."""
+    # The twins' rows merge, keyed by the fold; the spellings they were read
+    # under are the candidates the key is named from below.
+    merged: dict[tuple[str, str], tuple[str, str, int]] = {}
+    stated: dict[str, list[str]] = {}
+    for r in rows:
+        stated.setdefault(r["slug"], []).append(r["col"])
+        key = (r["slug"], r["col"].lower())
+        merged[key] = _merge_span(
+            merged.get(key), r["cov_from"], r["cov_to"], r["nstates"]
+        )
+    out: dict[tuple[str, str], VariableCoverage] = {}
+    # No alias history reaches this reader, so the rule comes down to its
+    # second arm: the lowest of the twins by byte order.
+    for slug, columns in stated.items():
+        for folded, spelling in representative_columns(columns).items():
+            raw_from, raw_to, count = merged[(slug, folded)]
+            cov_from, cov_to, open_ended = _coverage_bounds(raw_from, raw_to)
+            out[(slug, spelling)] = VariableCoverage(
+                coverage_from=cov_from,
+                coverage_to=cov_to,
+                open_ended=open_ended,
+                state_count=count,
+            )
+    return out
+
+
 def representative_columns(
     stated: Iterable[str | None], aliased: Iterable[str | None] = ()
 ) -> dict[str, str]:
@@ -1694,30 +1724,7 @@ class Catalog:
             "GROUP BY v.variable_id, vs.delivery_column_name",
             (provider_slug, register_slug),
         ).fetchall()
-        # The twins' rows merge, keyed by the fold; the spellings they were read
-        # under are the candidates the key is named from below.
-        merged: dict[tuple[str, str], tuple[str, str, int]] = {}
-        stated: dict[str, list[str]] = {}
-        for r in rows:
-            stated.setdefault(r["slug"], []).append(r["col"])
-            key = (r["slug"], r["col"].lower())
-            merged[key] = _merge_span(
-                merged.get(key), r["cov_from"], r["cov_to"], r["nstates"]
-            )
-        out: dict[tuple[str, str], VariableCoverage] = {}
-        # No alias history reaches this reader, so the rule comes down to its
-        # second arm: the lowest of the twins by byte order.
-        for slug, columns in stated.items():
-            for folded, spelling in representative_columns(columns).items():
-                raw_from, raw_to, count = merged[(slug, folded)]
-                cov_from, cov_to, open_ended = _coverage_bounds(raw_from, raw_to)
-                out[(slug, spelling)] = VariableCoverage(
-                    coverage_from=cov_from,
-                    coverage_to=cov_to,
-                    open_ended=open_ended,
-                    state_count=count,
-                )
-        return out
+        return _column_coverage(rows)
 
     def register_variable_deliveries(
         self, provider_slug: str, register_slug: str
@@ -1969,6 +1976,65 @@ class Catalog:
                 open_ended=open_ended,
                 state_count=r["nstates"],
             )
+        return out
+
+    def provider_column_coverage(
+        self, provider_slug: str, register_slugs: Iterable[str] | None = None
+    ) -> dict[str, dict[tuple[str, str | None], VariableCoverage]]:
+        """Column coverage for a provider, optionally restricted to register slugs.
+
+        Named keys match `register_column_coverage`; `(variable, None)` keys match
+        `register_unnamed_column_coverage`. Registers without slugged state-bearing
+        variables are absent. This is catalog coverage; consumers filter holdings.
+        """
+        params = [provider_slug]
+        register_filter = ""
+        if register_slugs is not None:
+            slugs = sorted(set(register_slugs))
+            if not slugs:
+                return {}
+            register_filter = f" AND r.slug IN ({','.join('?' for _ in slugs)})"
+            params.extend(slugs)
+        # LEFT joins keep register selection ahead of indexed variable/state
+        # lookups; the former inner joins scanned the entire state table per
+        # register. HAVING drops the stateless rows those joins retain.
+        rows = self._conn.execute(
+            "SELECT r.slug AS register_slug, v.slug AS slug, "
+            "vs.delivery_column_name AS col, MIN(vs.valid_from) AS cov_from, "
+            "MAX(vs.valid_to) AS cov_to, COUNT(vs.state_id) AS nstates "
+            "FROM register r JOIN provider p ON r.provider_id = p.provider_id "
+            "LEFT JOIN variable v "
+            "ON v.register_id = r.register_id AND v.slug IS NOT NULL "
+            "LEFT JOIN variable_state vs ON vs.variable_id = v.variable_id "
+            "WHERE p.slug = ? AND r.slug IS NOT NULL "
+            + register_filter
+            + " GROUP BY r.register_id, v.variable_id, vs.delivery_column_name "
+            "HAVING COUNT(vs.state_id) > 0",
+            params,
+        ).fetchall()
+        by_register: dict[str, list[sqlite3.Row]] = {}
+        for row in rows:
+            by_register.setdefault(row["register_slug"], []).append(row)
+        out: dict[str, dict[tuple[str, str | None], VariableCoverage]] = {}
+        for register, register_rows in by_register.items():
+            columns: dict[tuple[str, str | None], VariableCoverage] = {}
+            columns.update(
+                _column_coverage(
+                    row for row in register_rows if row["col"] is not None
+                ).items()
+            )
+            for row in register_rows:
+                if row["col"] is None:
+                    cov_from, cov_to, open_ended = _coverage_bounds(
+                        row["cov_from"], row["cov_to"]
+                    )
+                    columns[(row["slug"], None)] = VariableCoverage(
+                        coverage_from=cov_from,
+                        coverage_to=cov_to,
+                        open_ended=open_ended,
+                        state_count=row["nstates"],
+                    )
+            out[register] = columns
         return out
 
     def provider_register_coverage(

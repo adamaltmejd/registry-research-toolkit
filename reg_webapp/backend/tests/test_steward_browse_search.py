@@ -30,6 +30,7 @@ from typing import TYPE_CHECKING
 import pytest
 from _steward_helpers import Holding, write_steward as _write_steward
 from fastapi.testclient import TestClient
+from reg_meta.catalog import Catalog
 from reg_webapp.app import create_app
 from reg_webapp.catalog_index import CatalogIndex
 from reg_webapp.routes.catalog import _narrow_refs_to_held
@@ -818,6 +819,70 @@ def test_partial_column_hold_coverage_uses_held_column(
         "open_ended": False,
         "state_count": 1,
     }
+
+
+def test_provider_coverage_batches_registers_with_identical_payload(
+    catalog_db: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    _seed_partial_column_lineage(catalog_db)
+    _seed_unnamed_column_variable(catalog_db)
+    with sqlite3.connect(catalog_db) as conn:
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, data_type, delivery_column_name) "
+            "SELECT variable_id, 10, '2016-01-01', '2017-12-31', 'int', 'kON' "
+            "FROM variable WHERE register_id = 1 AND slug = 'kon'"
+        )
+    stewards = _set_steward_env(tmp_path, monkeypatch)
+    provider_read = Catalog.provider_column_coverage
+
+    def legacy_columns(catalog, provider_slug, register_slugs):
+        return {
+            register: {
+                **catalog.register_column_coverage(provider_slug, register),
+                **{
+                    (slug, None): coverage
+                    for slug, coverage in catalog.register_unnamed_column_coverage(
+                        provider_slug, register
+                    ).items()
+                },
+            }
+            for register in register_slugs
+        }
+
+    calls = []
+
+    def batched_columns(catalog, provider_slug, register_slugs):
+        calls.append((provider_slug, register_slugs))
+        return provider_read(catalog, provider_slug, register_slugs)
+
+    def unexpected_register_read(*args):
+        pytest.fail("provider coverage repeated a per-register read")
+
+    with _booted(
+        stewards,
+        "ifau",
+        [
+            ("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon", "2018"),
+            ("scb/lisa/individer-15plus", "scb/lisa/disp", "CDISP5", "2020"),
+            ("scb/lisa/individer-15plus", "scb/lisa/unnamed", None, "2018"),
+            ("scb/rams/standard", "scb/rams/syss", None, "2019"),
+        ],
+    ) as client:
+        monkeypatch.setattr(Catalog, "provider_column_coverage", legacy_columns)
+        before = client.get("/api/catalog/scb")
+        assert before.status_code == 200
+        monkeypatch.setattr(Catalog, "provider_column_coverage", batched_columns)
+        monkeypatch.setattr(
+            Catalog, "register_column_coverage", unexpected_register_read
+        )
+        monkeypatch.setattr(
+            Catalog, "register_unnamed_column_coverage", unexpected_register_read
+        )
+        after = client.get("/api/catalog/scb")
+        assert after.status_code == 200
+        assert after.content == before.content
+    assert calls == [("scb", ["lisa", "rams"])]
 
 
 def test_partial_column_hold_deliveries_name_only_held_column(

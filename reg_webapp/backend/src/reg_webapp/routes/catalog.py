@@ -952,8 +952,8 @@ def _provider_response(
         # #865: a filtered steward must NOT inherit the full-register aggregate —
         # `provider_register_coverage` counts EVERY variable in each register, so a
         # held register would overstate spans for partial-column holds. Recompute each
-        # held register's coverage from its HELD delivery columns only
-        # (`register_column_coverage`, keyed by `(variable slug, delivery column)`). The
+        # held register's coverage from its HELD delivery columns only.
+        # Read all held registers' column coverage in one provider query. The
         # held FQIDs per register are derived ONCE from `admitted_variable_fqids`.
         held_columns_by_register: dict[str, dict[str, frozenset[str | None]]] = {}
         for fqid in index.admitted_variable_fqids:
@@ -962,16 +962,28 @@ def _provider_response(
                 variable
             ] = _folded_columns(index.held_columns(fqid))
 
+        provider_columns = catalog.provider_column_coverage(
+            provider_slug,
+            [r.fqid.register for r in registers if r.fqid.register is not None],
+        )
+
         def coverage_for(register_slug: str) -> RegisterCoverage | None:
             held_columns = held_columns_by_register.get(
                 f"{provider_slug}/{register_slug}"
             )
             if not held_columns:
                 return None
-            per_column = _folded_column_coverage(catalog, provider_slug, register_slug)
-            per_unnamed = catalog.register_unnamed_column_coverage(
-                provider_slug, register_slug
-            )
+            columns = provider_columns.get(register_slug, {})
+            per_column = {
+                (slug, _fold_column(column)): coverage
+                for (slug, column), coverage in columns.items()
+                if column is not None
+            }
+            per_unnamed = {
+                slug: coverage
+                for (slug, column), coverage in columns.items()
+                if column is None
+            }
             return _held_register_coverage(per_column, per_unnamed, held_columns)
 
     return ProviderResponse(

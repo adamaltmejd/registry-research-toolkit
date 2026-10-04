@@ -21,7 +21,13 @@ sys.path.insert(
     0, str(Path(__file__).resolve().parents[2] / "reg_meta_build" / "tests")
 )
 
-from _slugged_db import add_state, add_variable, add_variant, build_slugged_db
+from _slugged_db import (
+    add_register,
+    add_state,
+    add_variable,
+    add_variant,
+    build_slugged_db,
+)
 
 if TYPE_CHECKING:
     import sqlite3
@@ -209,6 +215,101 @@ def test_register_column_coverage_folds_case_twin_spellings(
     assert merged.coverage_to == "2018-12-31"
     assert merged.state_count == 2
     assert merged.open_ended is False
+
+
+@pytest.mark.parametrize("reversed_rows", [False, True])
+def test_provider_column_coverage_matches_register_reads(reversed_rows: bool) -> None:
+    conn = build_slugged_db()
+    add_variable(conn, register_id=1, var_id=800, name="Twin", slug="twin")
+    states = [
+        ("ÅR", "0001-01-01", "2015-12-31", 10),
+        ("år", "2016-01-01", "9999-12-31", 11),
+        (None, "1990-01-01", "1999-12-31", 10),
+        ("Other", "2010-01-01", "2012-12-31", 10),
+    ]
+    add_variant(conn, register_variant_id=11, register_id=1, slug="other", name="Other")
+    for column, start, end, variant in reversed(states) if reversed_rows else states:
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="twin",
+            register_variant_id=variant,
+            valid_from=start,
+            valid_to=end,
+            delivery_column_name=column,
+        )
+    # Repeated slugs in another register and provider must remain separate.
+    for register_id, provider_id, register_slug in [(2, 1, "rams"), (3, 2, "lisa")]:
+        add_register(
+            conn,
+            register_id=register_id,
+            provider_id=provider_id,
+            slug=register_slug,
+            name=register_slug,
+        )
+        add_variant(
+            conn,
+            register_variant_id=register_id * 10,
+            register_id=register_id,
+            slug="standard",
+            name="Standard",
+        )
+        add_variable(
+            conn, register_id=register_id, var_id=800, name="Twin", slug="twin"
+        )
+        add_state(
+            conn,
+            register_id=register_id,
+            variable_slug="twin",
+            register_variant_id=register_id * 10,
+            valid_from="2020-01-01",
+            valid_to="2021-12-31",
+            delivery_column_name="år",
+        )
+    add_register(conn, register_id=4, slug="empty", name="Empty")
+    add_variable(conn, register_id=4, var_id=900, name="Stateless", slug="nostate")
+    # A state-bearing but unaddressable variable is excluded, like the old reads.
+    add_variable(conn, register_id=1, var_id=801, name="Hidden", slug="hidden")
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="hidden",
+        register_variant_id=10,
+        valid_from="1800-01-01",
+        delivery_column_name="Hidden",
+    )
+    conn.execute(
+        "UPDATE variable SET slug = NULL WHERE register_id = 1 AND slug = 'hidden'"
+    )
+    catalog = Catalog(conn)
+    expected = {}
+    for register in ("lisa", "rams"):
+        expected[register] = {
+            **catalog.register_column_coverage("scb", register),
+            **{
+                (slug, None): cov
+                for slug, cov in catalog.register_unnamed_column_coverage(
+                    "scb", register
+                ).items()
+            },
+        }
+    statements: list[str] = []
+    conn.set_trace_callback(statements.append)
+    actual = catalog.provider_column_coverage("scb")
+    conn.set_trace_callback(None)
+    assert actual == expected
+    assert len(statements) == 1
+    assert actual["lisa"][("twin", "ÅR")].state_count == 2
+    assert actual["lisa"][("twin", "ÅR")].coverage_from is None
+    assert actual["lisa"][("twin", "ÅR")].open_ended is True
+    assert actual["rams"][("twin", "år")].coverage_to == "2021-12-31"
+    assert catalog.provider_column_coverage("scb", ["rams", "rams", "missing"]) == {
+        "rams": expected["rams"]
+    }
+    assert catalog.provider_column_coverage("scb", []) == {}
+    assert catalog.provider_column_coverage("scb", ["empty"]) == {}
+    assert catalog.provider_column_coverage("scb", ["rams') OR 1=1 --"]) == {}
+    assert catalog.provider_column_coverage("missing") == {}
 
 
 def test_register_variable_deliveries() -> None:
