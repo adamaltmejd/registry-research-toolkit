@@ -323,17 +323,22 @@ will need period-column `WHERE` clauses later.
 
 ### Staged cut and completion gate
 
-Plans 00 and 01 are independent. Plans 02–04 are one unreleased schema-9 series with
-separately reviewable PRs; do not tag `reg_meta/v*` or `reg_webapp/v*` until plan 05
-passes. Main may reject released 8.1 artifacts between writer and reader cuts; use the
-schema-9 scratch builds via `REG_META_DB`. No compatibility fallback or migration.
+Plans 00 and 01 are independent and have merged (#1145, #1144). Plan 01b scaffolds the
+conformance suite beside plan 02; plan 06 sweeps the package test suites after plan 05.
+Plans 02–04 are one unreleased schema-9 series with separately reviewable PRs; do not
+tag `reg_meta/v*` or `reg_webapp/v*` until plan 05 passes. Main may reject released 8.1
+artifacts between writer and reader cuts; use the schema-9 scratch builds via
+`REG_META_DB`. No compatibility fallback or migration.
 
 1. **00 — Coverage N+1 fix:** schema-8.1 index and grouped query improvement,
    independent of compilation. Do not attribute a performance gain to relational
    compilation alone.
 2. **01 — Contract review:** documentation and local DDL draft only. Separate reviewer
    and maintainer ratify before 02 starts; a draft PR is not ratification.
-3. **02 — Builder:** schema 9, four holding relations, explicit representation, shared
+3. **01b — Conformance suite:** root-level `conformance/` runner parametrized by
+   artifact directory, cases as data, private-name-import and file-size lints; see
+   `ARCHITECTURE.md` → Testing strategy. Plan 03 adds the holdings-scope cases.
+4. **02 — Builder:** schema 9, four holding relations, explicit representation, shared
    canonicalization/uniqueness checks, complete census accounting and manifest identity.
    Build one full strict new-schema public base, compare reference facts against the
    untouched 8.1 baseline, reuse it for accepted SWECOV compilation. No excluded/lookup
@@ -343,7 +348,7 @@ schema-9 scratch builds via `REG_META_DB`. No compatibility fallback or migratio
    warning helper's candidate-slug lookup with that same committed slug authority;
    private slug copies remain evidence only. Provider overlays remain accepted private
    inputs.
-4. **03 — Reader:** shared holdings/reference predicate, query-time alias/state
+5. **03 — Reader:** shared holdings/reference predicate, query-time alias/state
    resolver, `materialize_order(project, conn)`, generation-based cursor/order
    provenance and named catalog directory selection. Delete unqualified mapping
    machinery and `order --inventory`. Named `--catalog` and `--db` are mutually
@@ -357,17 +362,19 @@ schema-9 scratch builds via `REG_META_DB`. No compatibility fallback or migratio
    silent fallback or configuration file. Docs use the selected artifact's own sibling
    file. Rename provenance mode to `steward_holdings` within the in-definition version 1
    contract.
-5. **04 — Web:** switch adapters to the shared reader; validate configured steward at
+6. **04 — Web:** switch adapters to the shared reader; validate configured steward at
    boot. Delete runtime inventory loading/reconciliation, `CatalogIndex`, held-column
    folds, temp allow-list and search backfill; remove old drift context and smoke/test
    gate. Delete tracked legacy SWECOV inventory, retain tracked generator defaults.
    Regenerate OpenAPI/TypeScript where contracts change. Scope toggle is optional and
    not part of the gate; API/default-scope behavior is mandatory.
-6. **05 — Independent acceptance:** prove real accepted-input accounting, reference and
+7. **05 — Independent acceptance:** prove real accepted-input accounting, reference and
    normalized order parity, deterministic replay, scope correctness and measured changed
    path performance/nonregression through CLI, API and rendered UI. Synthetic checks
    alone do not establish real-corpus or live-service proof. Publication/deployment is a
    separate operation; a Rust conformance corpus is deferred until this cut settles.
+8. **06 — Test sweep:** one PR per package under the `AGENTS.md` testing policy,
+   deletion first; see "Remaining test coverage" below.
 
 Completion means one artifact for catalog/holdings/order with no runtime inventory, full
 disjoint table/column accounting, explicit scope/defaults, query-time semantic
