@@ -8,6 +8,14 @@ overview) lives in the root `ARCHITECTURE.md`; remaining/unbuilt work lives in
 `REFACTOR_SPEC.md`. The API contract itself is the committed `backend/openapi.json` (the
 reference); `models.py` + the route handlers are the response-shape reference.
 
+**Compiled-holdings transition (2026-10-04).** The compiled contract is owned by
+`ARCHITECTURE.md` and `reg_meta/DESIGN.md`; §12 tracks its unreleased cut. Below,
+`CatalogIndex`, held-column folding, runtime inventory loading, inventory drift and
+inventory-dependent coverage/search/stats describe the **pre-cut implementation**,
+retained only until the runtime cut deletes them. They do not define the compiled
+artifact's scope or identity. The UI scope switch is optional and not an acceptance
+gate.
+
 ## Why no auth — cost protection instead
 
 The data is public-ish registry metadata; there is **no server-side user-private state**
@@ -321,12 +329,13 @@ Typing is debounced into one read, because this filter scans the whole set serve
 `Catalog.resolve`, `/states` and the complete exports keep their full-membership
 semantics unchanged.
 
-A named steward runtime must pair the flavored catalog with its exact accepted inventory
-through `REG_WEBAPP_STEWARDS_DIR`. The committed legacy inventory's structural tests
-establish retention and admission behavior; they do not establish alignment with a newly
-built real catalog. Unmapped physical columns remain in inventory and admit no catalog
-coordinate. A missing field-specific reason remains unknown; the UI must not invent one
-from another edition's reviewed mapping.
+Under the compiled contract a named steward runtime consumes its one self-identifying
+artifact. Boot validates schema, completeness, publishability and
+`REG_WEBAPP_STEWARD == import_manifest.steward`; unset/global requires a `catalog`
+artifact. It never loads inventory through `REG_WEBAPP_STEWARDS_DIR`. Unmapped physical
+columns remain in `holding_column` and admit no catalog coordinate. A missing
+field-specific reason remains unknown; the UI must not invent one from another edition's
+reviewed mapping.
 
 Storage IDs serialize as decimal strings, including nested reader models and local
 response envelopes. The browser never converts them to JavaScript numbers; comparisons
@@ -776,9 +785,9 @@ joins SQLite drives from `variable_state` and scans the WHOLE table instead of s
   "delivered under" — every column of the alias history is a name to be found by — and
   NOT the resolver's: a browse row names columns rather than promising a resolution,
   which is why it keeps a window no state contains where `_expand_state_windows` drops
-  it (what a steward can actually deliver is the boot gate's question, and that one
-  reads the resolver — see reg_meta/DESIGN.md → Consistency gate against the catalog
-  DB). Columns are identified case-insensitively (`py_lower`, the rule the build
+  it (in the pre-cut implementation, deliverability is the boot gate's question, and
+  that one reads the resolver — see reg_meta/DESIGN.md → Consistency gate against the
+  catalog DB). Columns are identified case-insensitively (`py_lower`, the rule the build
   validates `variable_alias ⊇ state columns` with), so an alias that only re-spells a
   listed column is that one delivery.
 - **Steward semantics**: for a filtered steward the deliveries are narrowed to
@@ -971,10 +980,12 @@ origin computation or latency. The pure logic lives in `etag.py` (`compute_etag`
 DRY onto every GET read response.
 
 **V1 early-revalidation correction (decision 2026-07-14; not implemented at this
-head).** App code, catalog DB, delivery inventory, steward configuration, and docs DB
-are immutable for a process lifetime; changing any of them replaces the process. At
-startup, derive one content-backed generation token from those inputs. For known pure
-GET reads, derive the validator from that token plus steward and the canonical request
+head).** App code, compiled catalog DB, steward branding configuration and paired docs
+DB are immutable for a process lifetime; changing any of them replaces the process. At
+startup, derive one content-backed HTTP generation token from those inputs, including
+catalog `generation_id`. Loose delivery inventory is no longer an HTTP input. Include
+read scope in the canonical request identity and caches/cursors. For known pure GET
+reads, derive the validator from that token plus steward and the canonical request
 identity, and satisfy a matching `If-None-Match` before route execution, DB work, or
 body serialization. Keep the current body-derived path as the conservative fallback for
 an unknown or mutable GET. This makes a 304 cheap without weakening exact representation
@@ -1061,6 +1072,17 @@ revalidatable. This is P2: render-blocking CSS cost only 26–39 ms and DevTools
 zero FCP/LCP savings from removing it.
 
 ## Steward layering and the in-memory catalog index (`stewards.py` + `catalog_index.py`)
+
+**Pre-cut implementation only.** This entire section is deleted at the runtime cut when
+the compiled reader replaces runtime inventory loading, index construction, folds, boot
+drift checks and search backfill. The replacement uses `reg_meta`'s shared SQL scope
+predicate before counts/groups/pagination, with holdings/reference defaults read from
+artifact kind. All variable admission uses mapped variant and canonical representation;
+reference neighbors never become selectable. Boot checks manifest steward identity;
+`/api/context` drops `catalog_drift_warnings` and inventory-derived
+`catalog_period_span`, and reports generation/default scope. Remove
+`REG_WEBAPP_FAIL_ON_STEWARD_DRIFT` and the release-marked inventory runtime test with
+the old gate. Build validation owns drift.
 
 A steward ships `stewards/<id>/steward.toml` (identity/branding) plus `inventory.toml` —
 its **delivery inventory**, the single source of truth for what the deployment holds
@@ -2047,11 +2069,11 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   `/assets/*` files must be long-lived `immutable`, while `index.html` and SPA fallback
   documents must revalidate. The original #220 path gate remains unchanged.
 - **V1 programmatic boundary (decision 2026-07-14)**: the local agent/CLI reads the
-  versioned DB and public delivery inventory directly, so it does not depend on the
-  deployed API or impersonate a browser to evade zone bot protection. V1 deployment
-  supports the SPA. If remote programmatic API access becomes a product surface later,
-  admit a truthful toolkit User-Agent on the API paths under endpoint-specific rate
-  limits and probes; do not document a fake browser header as the contract.
+  selected compiled SQLite generation directly, so it does not depend on the deployed
+  API or impersonate a browser to evade zone bot protection. V1 deployment supports the
+  SPA. If remote programmatic API access becomes a product surface later, admit a
+  truthful toolkit User-Agent on the API paths under endpoint-specific rate limits and
+  probes; do not document a fake browser header as the contract.
 
 ## Frontend unit tests (Vitest)
 
@@ -2106,37 +2128,17 @@ boundary unchanged.
   download (see below). Unlike `/validate`, it **gates** first: you cannot materialize
   an order from an invalid spec → 422.
 
-**The order manifest (shipped, §12 lane 4).** `/order` is a THIN adapter over
-`reg_meta.order.materialize_order(project, inventory, conn)` — the contract, the
-pipeline, and every fail-closed finding live in `reg_meta/DESIGN.md` → "Order
-materializer and manifest (`order.py`)", not here. The adapter owns exactly three
-things:
+**The order manifest.** The compiled contract uses a thin adapter over
+`reg_meta.order.materialize_order(project, conn)`. The reader cut implements that
+signature; the runtime cut switches this adapter. The pipeline and every fail-closed
+finding live in `reg_meta/DESIGN.md` → "Order materializer and manifest (`order.py`)".
+The adapter owns exactly three things:
 
-- **The deployment's inventory**, read once at boot by
-  `stewards.load_delivery_inventory` from `stewards/<id>/inventory.toml` and parked on
-  `app.state.inventory`. The `global` deployment — the one with no steward configured —
-  takes §12's global-deployment fallback (`inventory=None`, handed straight to the
-  materializer) **unconditionally**; every other shape fails startup (fail fast): a
-  NAMED steward with no inventory, the `global` deployment WITH one, a malformed
-  inventory, or one declaring a different steward than the directory it sits in. A named
-  steward booting into the fallback would reject every one of its own projects as a
-  confusing `steward_mismatch` (the fallback demands `steward == "global"`) from a
-  server that reported itself healthy — the deployment error would be deferred to, and
-  paid by, each researcher in turn. Conversely, loading a stray inventory under `global`
-  would silently swap the full universe it exists to serve for whatever that file lists;
-  §12 keeps the fallback until a physical global inventory is introduced deliberately. A
-  named steward's inventory is then checked AGAINST THE BOOT CONNECTION
-  (`stewards.check_delivery_inventory` over `reg_meta.inventory_check`): §12's standing
-  inventory ↔ DB consistency gate, which fails startup when any mapping's
-  `(register_variant, variable FQID, representation)` does not resolve against the DB
-  this deployment serves — a mapping that pins no representation still has its binding
-  checked at its declared variant. The flavored DB and the committed inventory are cut
-  separately and pre-v1 slug churn is legal, so they CAN drift — and unlike the catalog
-  INDEX the same inventory builds there is no drift downgrade here: a mapping the index
-  drops for its table's edition merely narrows the browse, while a coordinate the
-  catalog does not name at all is a holdings claim about something that does not exist.
-  The rules and the report shape live in `reg_meta/DESIGN.md` → "Consistency gate
-  against the catalog DB (`inventory_check.py`)".
+- **The selected artifact connection**, opened read-only for this request after boot
+  validates manifest identity. `catalog_artifact_kind` chooses global logical fallback
+  or compiled steward holdings. Missing steward holdings or identity mismatch fails;
+  browse scope never bypasses project provenance or physical coverage. No inventory
+  argument, `app.state.inventory`, loose TOML or inventory reconciliation survives.
 - **The download**: the 200 body is `OrderManifest.to_json()` VERBATIM (the handler
   returns a raw `Response`, which FastAPI passes through without re-serializing), so the
   SPA download and `reg-meta order` hand the steward byte-identical files — §12's
@@ -2263,7 +2265,7 @@ enforces one value set per `(variable, variant, period, delivery_column)`.
 **Onboarding.** Stewards declare a subset of what reg_meta knows; data without an FQID
 can't be authored (no `{display_name + type, no FQID}` escape hatch in v1). New
 variables/registers/classifications onboard via slug-TOML PRs against `reg_meta_build`;
-once the next reg_meta release lands, the steward adds them to their inventory.
+the steward authors accepted builder inventory and publishes a new compiled generation.
 
 **Steward catalog filtering — `fqid_outside_steward_catalog` /
 `representation_outside_steward_catalog`.** When a researcher's project references a
@@ -2274,21 +2276,22 @@ steward holds *no* column of the concept, and the distinct
 column the binding **resolves** to — its message enumerates what the steward *does* hold
 ("available there as 'Ssyk1' only" is the actionable form of "not available"). These are
 warnings during editing so an uploaded project can be inspected, but `/order` does not
-consume them: the materializer runs its own fail-closed inventory/resolution gate and
-blocks these conditions with its own findings, so a steward-catalog warning never
+consume them: the materializer runs its fail-closed compiled-holdings/resolution gate
+and blocks these conditions with its own findings, so a steward-catalog warning never
 silently becomes an order. There is no cross- steward preview, retarget, or one-click
 mutation feature: the active deployment is the validation target, and the user edits and
-re-uploads the JSON if they intend to change it. The current check is wired into
-`/api/project/validate`: `routes/project.py` threads `app.state.catalog_index` into
-`validate_semantic` via `run_in_threadpool`; it runs **after** the per-binding period
-resolution because the researcher side's resolved columns are what
-`CatalogIndex.held_columns_for_variant(fqid, variant)` compares (when those are
-indeterminate — unresolved period, unknown pinned representation, ambiguous multi-column
-binding — the binding already carries its own error and only the FQID-level arm runs).
-The `global` deployment (index `None`) never emits either code, and an unresolved
-`register_variant` skips the probe entirely (it already earned `fqid_unresolved`;
-holdings are keyed *by* variant, so there is nothing truthful left to say). Admission
-keys on the **source's variant coordinate** — a mapping states a whole
+re-uploads the JSON if they intend to change it. The warning codes remain; the runtime
+cut re-sources them from SQL at the source's variant. The following wiring describes the
+**pre-cut implementation** in `/api/project/validate`: `routes/project.py` threads
+`app.state.catalog_index` into `validate_semantic` via `run_in_threadpool`; it runs
+**after** the per-binding period resolution because the researcher side's resolved
+columns are what `CatalogIndex.held_columns_for_variant(fqid, variant)` compares (when
+those are indeterminate — unresolved period, unknown pinned representation, ambiguous
+multi-column binding — the binding already carries its own error and only the FQID-level
+arm runs). The `global` deployment (index `None`) never emits either code, and an
+unresolved `register_variant` skips the probe entirely (it already earned
+`fqid_unresolved`; holdings are keyed *by* variant, so there is nothing truthful left to
+say). Admission keys on the **source's variant coordinate** — a mapping states a whole
 `(register_variant, variable, representation)` coordinate, so holding `kon` under
 `individer-15plus` admits nothing under `individer-16plus`, and the cross-variant union
 would let an order through for a column the steward cannot deliver. It keys on the

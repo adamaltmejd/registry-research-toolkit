@@ -50,11 +50,13 @@ from their own warehouses instead of each project going through SCB directly:
 - **ifau** — the subset in IFAU's warehouse.
 - **swecov** — the subset in the SWECOV research program.
 
-One codebase, three steward-scoped views: same UX, different catalog and order export.
-See [`reg_webapp/DESIGN.md`](reg_webapp/DESIGN.md) for the runtime steward dispatch;
-[`reg_meta_build/DESIGN.md`](reg_meta_build/DESIGN.md) § "Steward-flavored DB —
-extend-db (#365 PR2)" for the build-side `extend-db` machinery (ships steward-only
-registers/variables on top of a released global DB).
+One codebase, steward-scoped views: same UX, different holdings and order target. The
+compiled-holdings contract below gives each steward one self-identifying SQLite artifact
+containing full reference metadata plus its physical holdings. TOML inventory and policy
+are accepted builder inputs; readers do not load them. SWECOV proves the first cut; IFAU
+delivery authoring remains outside it. See
+[`reg_meta_build/DESIGN.md`](reg_meta_build/DESIGN.md) § "Steward extension" and
+[`reg_webapp/DESIGN.md`](reg_webapp/DESIGN.md) for the build and runtime boundaries.
 
 ## What the toolkit is
 
@@ -64,19 +66,19 @@ and export it as a data order. The human SPA and agent/CLI are equal v1 product
 surfaces: `POST /api/project/order` and `reg-meta order` are both thin adapters over the
 same `reg_meta.order.materialize_order`, pinned byte-identical by a cross-adapter test.
 `reg-meta` ships no separate `validate` subcommand — `reg-meta order` fails closed on
-any bad input, exit 10 for an unreadable/invalid project or inventory and exit 17 for an
-order blocked by materialization findings — while the SPA validates the draft
-automatically on every edit.
+any bad input, exit 10 for an unreadable/invalid project or catalog configuration and
+exit 17 for an order blocked by materialization findings — while the SPA validates the
+draft automatically on every edit.
 
 The unifying research-intent artifact is **`project_data.json`** — written by the
 webapp, consumed by the shared materializer above and the planned MONA runner rebuild.
 Its schema and structural validator are `reg_schema`
 ([`reg_schema/DESIGN.md`](reg_schema/DESIGN.md)). It deliberately does not encode
-physical filenames or SQL tables. A steward's public delivery inventory
-(`table + edition → literal columns → zero-or-more logical mappings`) joins a project
-and reg_meta resolution to produce one normalized, versioned JSON order manifest for
-both web and CLI consumers (shipped for `global`/`swecov`; `ifau` not yet authored). See
-`REFACTOR_SPEC.md` §12.
+physical filenames or SQL tables. Compiled physical holdings
+(`table + edition → literal columns → zero-or-more explicit logical mappings`) join a
+project and query-time reg_meta resolution to produce one normalized, versioned JSON
+order manifest for web and CLI. The materializer ships for `global`/`swecov` with the
+pre-cut inventory argument; §12 tracks the compiled reader cut.
 
 Current shipped coverage is browse/search the catalog → choose variables and periods →
 automatic validation → the versioned JSON order manifest. The former mock-data bootstrap
@@ -98,8 +100,8 @@ registry-research-toolkit/
     frontend/       # Svelte 5 + Vite (bun)
     stewards/
       global/       # steward.toml only (full universe)
-      ifau/         # steward.toml + inventory.toml               [PLANNED]
-      swecov/       # steward.toml + current inventory.toml
+      ifau/         # steward.toml (holdings artifact planned)
+      swecov/       # steward.toml (legacy inventory until §12 cut)
 ```
 
 > The `reg_monabundle` and `mock_data_wizard` packages have been archived to
@@ -167,6 +169,45 @@ upstream. None of these inputs cross the MONA boundary, and no source reconcilia
 changes the rule that PII stays in MONA and only aggregate, disclosure-controlled
 results leave it.
 
+### Catalog artifact identity and read scope
+
+**Compiled-holdings contract (2026-10-04); runtime cut remains in §12.** A publishable
+`reg_meta.db` identifies itself through `import_manifest.catalog_artifact_kind`:
+`catalog` for a global reference artifact, `steward` for reference metadata plus that
+steward's compiled holdings. Both use the same schema. A steward installation needs no
+separate global DB to inspect unheld metadata. The optional sibling `reg_meta_docs.db`
+remains separately paired; full document content is outside the single-file guarantee.
+Diagnostic/incomplete artifacts remain nonpublishable and fail runtime admission.
+
+Identity stays in `import_manifest`, including `generation_id`; a steward also records
+`steward`, `base_db_sha256`, `base_generation_id`, `holdings_input_commit`,
+`holdings_manifest_sha256` and `holdings_policy_sha256`. Generation identity hashes
+canonical semantic inputs and the schema version, not output bytes, timestamps or host
+paths. Builder revision, accepted public pins and curation digest participate; steward
+identity additionally includes its base generation, accepted holdings pins, policy and
+accounting digest. The exact base file digest is byte-level provenance only and does not
+enter generation identity. Publish the final file SHA-256 separately. The builder design
+specifies the digest encoding. Search cursors and `OrderProvenance` use `generation_id`
+instead of `import_date`; HTTP read identities include generation and scope. Import time
+may remain display data.
+
+Read scope defaults to `holdings` on a steward artifact and `reference` on a catalog
+artifact; explicit `holdings` on a catalog artifact errors. The holdings predicate
+applies to provider, register and variable binding/state nodes, using the same compiled
+mapping membership before counts, groups or pagination. Classifications, value sets,
+documents and lineage stay reference metadata. Query-time resolution intersects physical
+periods with applicable states; no resolved segments are compiled. Unknown-scope
+holdings remain physical evidence, cannot admit logical nodes and cannot be ordered. The
+public-surface rules and exceptions live in `reg_meta/DESIGN.md`.
+
+The reader and webapp open the selected artifact read-only and validate its identity.
+`REG_WEBAPP_STEWARD` must equal its manifest steward; unset/global selects the `catalog`
+kind, not an implicit fallback for a named steward. Orders use
+`materialize_order(project, conn)` and the artifact's kind, independent of browse scope.
+Accepted inventory/policy/raw-census accounting is a build gate with counts and digests
+in the manifest; exclusions and lookups are not runtime holdings. Failures leave prior
+artifacts and accepted inputs unchanged.
+
 ## Repo-wide invariants
 
 These are hygiene that keeps options open, enforced in CI where noted. Package-local
@@ -208,9 +249,10 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   `[tool.uv.sources]` in the workspace, and exact pins would force monorepo-wide
   lockstep without enabling out-of-workspace builds. `reg_meta_build` releases
   independently (it produces the DB asset `reg_meta` fetches). Schema breakage is
-  signalled by `project_data.json`'s `schema_version` (major 2+ = Model A — 3 since
-  `Source.period` became finite-only); per the compatibility policy below, v1 ships no
-  migration shims.
+  signalled by `project_data.json`'s `schema_version` (major 2+ = Model A — 3 since the
+  whole-history `Source.period` sentinel was removed; bare `_default` now selects
+  year-independent data only at a concrete variant). Per the compatibility policy below,
+  v1 ships no migration shims.
 
 ## API style
 
@@ -235,7 +277,9 @@ in each owning DESIGN.md):
    `representation_outside_steward_catalog` semantics. Shipped: boot-time catalog drop +
    wiring into `/validate` (issue #227); column-based admission (issue #206); browse +
    search scoping (issue #859) — catalog root/provider/register/binding narrowed to held
-   holdings, search register/variable surfaces scoped via `fqids` allow-list.
+   holdings, search register/variable surfaces scoped via `fqids` allow-list. This is
+   pre-cut implementation; §12 replaces the runtime inventory/index path with shared SQL
+   predicates while retaining these warning codes and observable selection guards.
 5. **Per-deploy smoke tests** — golden `/api/context` + shallow `/api/catalog` walk on
    container start. **Remaining** (no deployment yet).
 6. **Server-side input-validation gates** — period canonicalization and FQID
