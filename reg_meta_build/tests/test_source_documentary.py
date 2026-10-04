@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from contextlib import closing
 from types import SimpleNamespace
 
@@ -233,6 +234,10 @@ def test_literal_binding_persists_without_availability_extension(tmp_path, kind)
     relations, issues = _compile(setup)
     assert not issues and len(relations) == 1
     relation = relations[0]
+    assert type(relation).model_validate_json(relation.model_dump_json()) == relation
+    assert relation.model_dump(mode="json")["relationship_id"] == str(
+        relation.relationship_id
+    )
     assert relation.binding_status == "owner_bound_literal"
     assert relation.declaration.model_dump(mode="json") == setup[1].model_dump(
         mode="json"
@@ -297,6 +302,20 @@ def test_literal_binding_persists_without_availability_extension(tmp_path, kind)
         )
         with pytest.raises(ValidationError):
             type(relations[0]).model_validate_json("{}")
+
+
+@pytest.mark.parametrize("wire_id", ["01", "+1", "1.0", " 1", "-1", "0", True, 1.5])
+def test_documentary_json_rejects_invalid_storage_identifiers(wire_id):
+    (relation,), issues = _compile(_setup())
+    assert not issues
+    payload = relation.model_dump(mode="json")
+    payload["relationship_id"] = wire_id
+    with pytest.raises(ValidationError):
+        type(relation).model_validate_json(json.dumps(payload))
+    payload = relation.model_dump()
+    payload["relationship_id"] = str(relation.relationship_id)
+    with pytest.raises(ValidationError):
+        type(relation).model_validate(payload)
 
 
 @pytest.mark.parametrize(

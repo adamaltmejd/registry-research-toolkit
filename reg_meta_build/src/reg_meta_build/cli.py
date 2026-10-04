@@ -2552,9 +2552,9 @@ def run(argv: list[str] | None = None) -> int:
         payload, exit_code = handler(args)
         try:
             if verbose:
-                write_json(payload, output_path)
+                write_json(payload, output_path, storage_ids=False)
             else:
-                write_json(payload.get("data", payload), output_path)
+                write_json(payload.get("data", payload), output_path, storage_ids=False)
         except Exception as exc:
             data = payload.get("data", payload)
             if args.command == "build-db" and (

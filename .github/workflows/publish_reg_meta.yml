@@ -67,6 +67,11 @@ jobs:
       # both exist. `-m "not release"` deselects test_update_and_query: the
       # release's own assets are smoke-tested above, and the clean-container
       # download runs post-publish (the `integration` job below).
+      - name: Prepare rootless Podman
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes podman
+          podman info
       - name: Verify reg_meta installs from the registry in a clean container
         run: |
           uv run python -m pytest reg_meta/tests/test_integration.py \
@@ -75,7 +80,7 @@ jobs:
       - run: uv build reg_meta/ --out-dir dist/
       - uses: pypa/gh-action-pypi-publish@v1.14.2
 
-  # Post-release end-to-end smoke: install reg_meta into a clean Docker container
+  # Post-release end-to-end smoke: install reg_meta into a clean Podman container
   # and run the full install → `reg-meta update` (downloads this release's DB) →
   # query pipeline. Stronger than the `publish` job's in-runner verify above
   # (clean container, only the package installed — the real user path). It

@@ -639,7 +639,11 @@ def test_repo_classification_files_count_and_stay_unique(
     assert len(labels) == len(set(labels)) == 111
     assert sum(len(book.sentinel_codes) for book in books) == 543
     assert sum(1 for book in books if book.sentinel_codes) == 65
-    assert len(bound) == len(set(bound)) == 10
+    # e83a178d retired the aggregate sector owner; literal components retain
+    # their classification links through the source label binding.
+    assert len(bound) == len(set(bound)) == 9
+    assert "scb/yrkesreg/sektorkod" not in bound
+    assert {"scb/yrkesreg/sektor-ku1", "scb/yrkesreg/sektorkod-2"} <= set(bound)
     books_dir = _ROOT / "input_data" / "classifications"
     assert all((books_dir / book.codes_file).is_file() for book in books)
 
@@ -736,8 +740,10 @@ def test_repo_coding_windows_are_ported(repo_tree: CurationTree) -> None:
         )
         for entry in kind
     ]
-    assert len(coding) == 302
-    assert sum(len(entry.periods) for entry in coding) == 554
+    # Accepted post-081fe35a source-domain restoration adds exact declarations
+    # and periods; no range is inferred from a gap or a neighboring witness.
+    assert len(coding) == 443
+    assert sum(len(entry.periods) for entry in coding) == 896
     assert (
         sum(
             entry.source_authority is not None
@@ -745,7 +751,7 @@ def test_repo_coding_windows_are_ported(repo_tree: CurationTree) -> None:
             for register in tree.registers
             for entry in register.coding.documented
         )
-        == 2
+        == 19
     )
     assert (
         sum(
@@ -753,7 +759,7 @@ def test_repo_coding_windows_are_ported(repo_tree: CurationTree) -> None:
             for register in tree.registers
             for entry in register.coding.choice
         )
-        == 98
+        == 183
     )
     assert (
         sum(
@@ -767,7 +773,7 @@ def test_repo_coding_windows_are_ported(repo_tree: CurationTree) -> None:
             )
             for register in tree.registers
         )
-        == 31
+        == 39
     )
 
 
@@ -798,7 +804,7 @@ def test_repo_concept_groups_parses() -> None:
         ("scb", "breg", "personnrvard"),
         ("scb", "breg", "personnrap"),
         ("scb", "flergenreg", "personnrf"),
-        ("scb", "energianvandning-fiske", "signal"),
+        ("scb", "energianvandning-fiske", "signal-ordinal"),
     }
     accepted_groups = {
         (g.provider, g.register, g.key): g
@@ -910,7 +916,13 @@ def test_repo_code_label_pairs_parses() -> None:
     # (value-set ownership, co-delivery) are maintainer-build territory.
     pairs = load_code_label_pairs(_CURATION)
     assert pairs  # the curated SCB pairs ship with the repo
-    assert len(pairs) == 90
+    # 0ad84057 removed the obsolete aggregate fuel-country/label pair.
+    assert len(pairs) == 89
+    assert not any(
+        p.code_register == "branslestatistik"
+        and p.code_variable == "land-for-import-export"
+        for p in pairs
+    )
     assert all(p.code_provider and p.code_register and p.code_variable for p in pairs)
     assert all(
         p.label_provider and p.label_register and p.label_variable for p in pairs
@@ -950,7 +962,14 @@ def test_repo_delivery_enrichment_parses(repo_tree: CurationTree) -> None:
     registers = repo_tree.registers
     descriptions = [d for r in registers for d in r.enrichment.description]
     aliases = [a for r in registers for a in r.enrichment.alias]
-    assert (len(descriptions), len(aliases)) == (355, 45)
+    # fc03cf0f retained the previously omitted documentary description.
+    assert (len(descriptions), len(aliases)) == (356, 45)
+    assert any(
+        d.register_fqid == "scb/ksju"
+        and d.variable == "helantdagar-2015"
+        and d.description == "Dagar med sjuklön hela dagar (insamlad variabel)"
+        for d in descriptions
+    )
     # the #365 global description backfills + delivery-column aliases ship together
     assert descriptions
     assert aliases
@@ -1062,8 +1081,20 @@ def test_repo_relations_parses() -> None:
     # on a real build. Endpoint RESOLUTION is maintainer-build territory (the
     # materializers fail fast).
     relations = load_relations(_CURATION / "relations.toml")
-    # 615 (#508) + 232 (#737) - 6 (Y-318 mixed SUN owner) = 841 edges.
-    assert len(relations.same_as) == 841
+    # 615 + 232 - 6 mixed SUN edges - 2 stale course edges (147f5c0b)
+    # - 13 retired aggregate identities (e83a178d).
+    assert len(relations.same_as) == 826
+    retired = {
+        "scb/rams/naringsgren-foretag",
+        "scb/livsmedelsforsaljning/naringsgren-for-statistiken",
+        "scb/slh/yrkesuppgift",
+        "scb/personalutbildningsstatistik/utbildningsinriktning-3-positioner",
+    }
+    assert not retired.intersection(
+        endpoint
+        for edge in relations.same_as
+        for endpoint in (edge.a_fqid(), edge.b_fqid())
+    )
     assert all(
         e.grain is FqidKind.VARIABLE_BINDING and e.a_variable and e.b_variable
         for e in relations.same_as
@@ -1134,8 +1165,8 @@ def test_repo_relations_parses() -> None:
     # + 2 #846 FRIDA firm-key variant-scoped gap-fill round-trip edges
     # + 1 #376 LISA register_variant succession edge
     # + 3 #1122 LISA FÅMANS KU→AGI source succession edges
-    # + 8 Y-88 curated LISA succession edges.
-    assert len(relations.replaced_by) == 63
+    # + 8 Y-88 curated LISA succession edges + 1 retained ULF frame succession.
+    assert len(relations.replaced_by) == 64
     assert all(str(e.predecessor) and str(e.successor) for e in relations.replaced_by)
     ksju_edges = [
         e
@@ -1311,7 +1342,10 @@ def test_repo_column_owning_splits_resolve_to_a_slug(repo_tree: CurationTree) ->
         sum(len(register.identity.split) for register in tree.registers),
         sum(len(register.identity.rename) for register in tree.registers),
         sum(len(register.identity.column_owner) for register in tree.registers),
-    ) == (20, 21, 1, 349)
+    ) == (20, 36, 1, 6014)
+    # Accepted source-role restoration after 081fe35a adds 15 source-field
+    # splits and 5665 exact column owners; the ownership/slug proofs below
+    # remain mandatory for every accepted partition.
     # Y-303 rev 2: six reused PAR native names each deliver distinct source
     # concepts. AR/INDATUM/INDATUMA/ALDER/IDNR split by Deldatamängd; FODDAT
     # splits by data type because its OV/SV text originals share one
@@ -2762,7 +2796,13 @@ def test_repo_iot_operational_definitions_keep_slots_points_and_native_scope(
     # IDMANT/KBH also describe a different native parish variable (1 November).
     assert "25.24373" not in expected
     assert all(not owner.startswith("25.24373.") for owner in names)
-    assert snapshot["scb/25.24373"] == "forsamling-den-1-11"
+    # 8d4a6bc0 names the exact parish owner while retaining all four literals.
+    assert "scb/25.24373" not in snapshot
+    assert snapshot["scb/25.24373.folkbokford-1-november"] == "forsamling-den-1-11"
+    assert set(partitions["25.24373"].columns) == {"BLKFNOV", "FORS", "IDMANT", "KBH"}
+    assert set(partitions["25.24373"].columns.values()) == {
+        "25.24373.folkbokford-1-november"
+    }
     assert snapshot["scb/25.30856"] == "bsamf"
     assert snapshot["scb/25.39924"] == "indtj"
 
@@ -2915,11 +2955,15 @@ def test_repo_reviewed_parallel_columns_keep_exact_wave_intersections(
         for register in tree.registers
         for entry in register.representation.delivery_metadata
     ]
-    assert len(metadata) == 38
+    # Accepted source-role curation after b88e1f7c adds 36 exact metadata
+    # declarations (e05decb1, 74c1aa37, a448a020, e9f7687c).
+    assert len(metadata) == 74
     assert Counter(tuple(entry.fields) for entry in metadata) == {
-        ("description",): 36,
+        ("description",): 69,
+        ("description", "name"): 3,
         ("name", "description"): 2,
     }
+    assert all(entry.records and entry.columns and entry.evidence for entry in metadata)
 
 
 def test_repo_reviewed_matrix_activations_pin_exact_evidence(

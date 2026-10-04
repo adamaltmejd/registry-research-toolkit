@@ -1,13 +1,13 @@
-name: Integration (Docker)
+name: Integration (Podman)
 
-# Server-side home for the release-asset-dependent tests. The Docker half
+# Server-side home for the release-asset-dependent tests. The container half
 # (reg_meta/tests/test_integration.py) installs reg_meta into a clean
 # python:3.14-slim container and exercises install → `reg-meta update`
-# (downloads the DB from GitHub Releases) → query; the non-Docker half is
+# (downloads the DB from GitHub Releases) → query; the host half is
 # reg_webapp's §12 inventory ↔ flavored-DB consistency gate. Both need a
 # published release asset matching the current SCHEMA_VERSION, so this workflow
 # deliberately does NOT run on push/PR — a red X on unrelated work when a
-# release is merely owed would be noise. The Docker tests also run locally as a
+# release is merely owed would be noise. The package tests also run locally as a
 # pre-push gate (.pre-commit-config.yaml, `--run-integration --install-mode
 # workspace`); CI's `test` job runs `-m "not integration"`.
 on:
@@ -24,7 +24,7 @@ on:
 
 jobs:
   integration:
-    runs-on: ubuntu-latest # Docker daemon preinstalled and running
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
       contents: read
@@ -34,6 +34,11 @@ jobs:
         with:
           version: "0.12.11"
       - run: uv sync --frozen
+      - name: Prepare rootless Podman
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes podman
+          podman info
       # The `-m "integration or release"` selection below includes reg_webapp's
       # §12 inventory ↔ flavored-DB consistency gate
       # (test_steward_swecov.py::test_every_inventory_mapping_resolves_against_the_flavored_db),
@@ -103,11 +108,11 @@ jobs:
           PY
           rm "$zst"
           echo "db_dir=$db_dir" >> "$GITHUB_OUTPUT"
-      # Both opt-in flags: --run-integration (all Docker tests) and --run-release
+      # Both opt-in flags: --run-integration (all container tests) and --run-release
       # (the subset that needs a published release asset). Serial, NOT `-n auto`:
       # the module-scoped image fixture builds the container once; xdist would
       # rebuild it per worker. GITHUB_TOKEN authenticates the in-container
-      # `reg-meta update` GitHub API call (forwarded by _docker_run) — the
+      # `reg-meta update` GitHub API call (forwarded by the native runner) — the
       # unauthenticated 60/hr-per-IP limit is easily exhausted from shared runner
       # IPs. REG_META_DB points the §12 gate at the flavored DB provisioned above.
       #
@@ -119,7 +124,7 @@ jobs:
       # newest published asset) is expected and informative — a release-drift
       # signal, not a code regression. The post-release call never hits this (the
       # matching asset was just published).
-      - name: Run Docker integration + release tests
+      - name: Run Podman integration + release tests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REG_META_DB: ${{ steps.swecov-db.outputs.db_dir }}
