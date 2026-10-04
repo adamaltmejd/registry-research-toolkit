@@ -71,6 +71,11 @@ def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
             "INSERT INTO import_manifest (key, value) VALUES (?, ?)",
             (
                 ("schema_version", SCHEMA_VERSION),
+                ("catalog_artifact_kind", "catalog"),
+                ("catalog_publishable", "true"),
+                ("catalog_completeness", "complete"),
+                ("builder_commit", "0" * 40),
+                ("generation_id", "0" * 64),
                 ("import_date", "2020-01-01T00:00:00Z"),
                 ("row_counts", json.dumps({"variables": 8, "states": 9})),
             ),

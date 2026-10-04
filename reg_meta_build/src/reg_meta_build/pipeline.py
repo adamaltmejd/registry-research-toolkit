@@ -43,7 +43,7 @@ from reg_meta_build.curation_compile import (
 )
 from reg_meta_build.curation_tree import load_curation_tree
 from reg_meta_build.data_warnings import acknowledged_data_warnings, scope_data_warnings
-from reg_meta_build.db import _emit_timing, _paths_overlap
+from reg_meta_build.db import SCHEMA_VERSION, _emit_timing, _paths_overlap
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
 from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
@@ -453,6 +453,9 @@ def _run_pipeline(
         ch not in "0123456789abcdef" for ch in input_manifest_sha256
     ):
         raise ValueError("--input-manifest-sha256 must be a lowercase SHA-256")
+    from .artifact_identity import builder_commit, generation_id
+
+    revision = builder_commit()
     started = time.perf_counter()
     publishable = not diagnostic and not registers
     prepared_path = prepared_path.resolve()
@@ -1708,6 +1711,19 @@ def _run_pipeline(
                         scoped=bool(registers),
                         corpus=publishable,
                         manifest={
+                            "builder_commit": revision,
+                            "generation_id": generation_id(
+                                {
+                                    "schema_version": SCHEMA_VERSION,
+                                    "builder_commit": revision,
+                                    "catalog_artifact_kind": "diagnostic"
+                                    if diagnostic
+                                    else "catalog",
+                                    "prepared_commit": input_commit,
+                                    "prepared_manifest_sha256": input_manifest_sha256,
+                                    "curation_tree_sha256": curation_hash,
+                                }
+                            ),
                             "import_date": import_date,
                             "prepared_commit": input_commit,
                             "prepared_manifest_sha256": input_manifest_sha256,
