@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 from catalog_manifest import synthetic_manifest
-from reg_meta_build.artifact_identity import generation_id
+from reg_meta_build.artifact_identity import committed_steward_slugs, generation_id
 from reg_meta_build.holdings_compile import (
     compile_holdings,
     write_holdings_assessment_warnings,
@@ -152,3 +152,12 @@ def test_public_artifact_records_canonical_generation(tmp_path: Path) -> None:
     assert {key: actual[key] for key in expected} == expected
     result = validate_built_db(output)
     assert result.passed, result.format_report()
+
+
+def test_slug_authority_rejects_a_different_builder_revision() -> None:
+    case = CASES / "slug-authority"
+    request = json.loads((case / "request.json").read_text())
+    expected = json.loads((case / "expected.json").read_text())
+    with pytest.raises(ValueError) as error:
+        committed_steward_slugs(**request)
+    assert expected["error_contains"] in str(error.value)

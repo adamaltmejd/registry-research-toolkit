@@ -347,7 +347,7 @@ def extend_db(
             raise ValueError(
                 "Private providers must come from the accepted holdings candidate"
             )
-        pinned_slug_dir = committed_steward_slugs(steward)
+        pinned_slug_dir = committed_steward_slugs(steward, revision=revision)
     else:
         pinned_slug_dir = None
 
@@ -520,7 +520,7 @@ def extend_db(
                     + "; ".join(validation.failures),
                     remediation="Review the located build failure and regenerate from accepted inputs.",
                 )
-            committed_steward_slugs(steward)
+            committed_steward_slugs(steward, revision=revision)
         if pre_rename_hook is not None:
             pre_rename_hook(tmp_path)
     except BaseException:

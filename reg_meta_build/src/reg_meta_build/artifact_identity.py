@@ -43,7 +43,7 @@ def generation_id(manifest: Mapping[str, str]) -> str:
     return canonical_sha256({key: manifest[key] for key in keys})
 
 
-def committed_steward_slugs(steward: str) -> Path:
+def committed_steward_slugs(steward: str, *, revision: str) -> Path:
     """Admit only ordinary tracked slug bytes from the clean builder checkout."""
     from reg_meta.fqid import validate_slug
 
@@ -51,6 +51,8 @@ def committed_steward_slugs(steward: str) -> Path:
 
     validate_slug(steward, "steward")
     root = Path(__file__).resolve().parents[3]
+    if _git(root, "rev-parse", "HEAD") != revision:
+        raise ValueError("Builder revision changed during holdings compilation")
     if _git(root, "status", "--porcelain", "--untracked-files=all"):
         raise ValueError("Publishable extension requires a clean builder checkout")
     directory = root / "reg_meta_build/fqid_slugs" / steward
@@ -58,7 +60,9 @@ def committed_steward_slugs(steward: str) -> Path:
         raise ValueError("Committed steward slug directory is absent or a symlink")
     relative = directory.relative_to(root).as_posix()
     committed = set(
-        _git(root, "ls-tree", "-r", "--name-only", "HEAD", "--", relative).splitlines()
+        _git(
+            root, "ls-tree", "-r", "--name-only", revision, "--", relative
+        ).splitlines()
     )
     actual = {
         path.relative_to(root).as_posix()
@@ -72,7 +76,9 @@ def committed_steward_slugs(steward: str) -> Path:
     for name in sorted(actual):
         path = root / name
         if path.is_symlink() or path.read_bytes() != _git_bytes(
-            root, "cat-file", "blob", f"HEAD:{name}"
+            root, "cat-file", "blob", f"{revision}:{name}"
         ):
             raise ValueError(f"Steward slug differs from committed bytes: {name}")
+    if _git(root, "rev-parse", "HEAD") != revision:
+        raise ValueError("Builder revision changed during holdings compilation")
     return directory

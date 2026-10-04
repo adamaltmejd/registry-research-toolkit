@@ -42,8 +42,6 @@ from reg_meta.errors import (
 
 # The steward's distinct §12 holdings statement, for the flavored validation's
 # window-coverage gate.
-from reg_meta.inventory import load_inventory as load_delivery_inventory
-
 from ._curation import repo_curation_dir
 from .classifications import (
     dump_classification_residue,
@@ -65,7 +63,6 @@ from .doc_coverage import compute_doc_coverage, render_doc_coverage_toml
 from .doc_db import build_doc_db, repo_docs_dir
 from .extend_db import (
     extend_db,
-    read_private_holdings_input,
 )
 from .fqid_slugs import (
     SNAPSHOT_FILENAME,
@@ -1302,8 +1299,6 @@ def _cmd_verify_input_bundle(
 
 def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
-    from .artifact_identity import committed_steward_slugs
-
     if any((args.slug_dir, args.skip_slugs, args.skip_holdings_gate, args.no_validate)):
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
@@ -1338,13 +1333,6 @@ def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             remediation="Use its providers/ and policy/inventory.toml without external supplements.",
         )
     try:
-        read_private_holdings_input(
-            candidate,
-            input_commit=args.input_commit,
-            input_manifest_sha256=args.input_manifest_sha256,
-        )
-        load_delivery_inventory(inventory_path)
-        committed_steward_slugs(args.steward)
         result = extend_db(
             base_db=Path(args.base_db),
             providers_dir=providers_dir,
