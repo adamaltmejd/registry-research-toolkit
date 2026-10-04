@@ -777,8 +777,15 @@ class TestMovedEdges:
         # #846 RTB PNR → PersonNr representation-grain rename edge + 2 #846 FRIDA
         # firm-key variant-scoped gap-fill round-trip edges + 1 #376 LISA
         # register_variant succession edge + 3 #1122 LISA FÅMANS KU→AGI source
-        # succession edges + 8 Y-88 curated LISA succession edges.
-        assert len(rel.replaced_by) == 63
+        # succession edges + 8 Y-88 curated LISA succession edges + the ULF
+        # sampling-frame succession retained in e83a178d.
+        assert len(rel.replaced_by) == 64
+        [ulf] = [e for e in rel.replaced_by if e.predecessor.register == "ulf"]
+        assert (ulf.predecessor_variant, ulf.successor_variant) == (
+            "individer-16-74-ar-ulf",
+            "individer-16-84-ar-ulf",
+        )
+        assert "1975-1977" in ulf.note
         # #508 (615) + #737 (232) - 6 mixed SUN peer edges - 2 stale course
         # relations - 13 retired aggregate identities = 826 same_as edges; all
         # variable-grain with a non-empty note; max connected component stays

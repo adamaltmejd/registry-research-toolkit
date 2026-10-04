@@ -1270,10 +1270,11 @@ def test_two_book_conformance_and_extensions_are_stored_independently(tmp_path):
     from reg_meta.db import open_db
     from reg_meta.errors import RegMetaError
 
-    with pytest.raises(RegMetaError) as caught:
-        open_db(output)
-    assert caught.value.code == "schema_incompatible"
-    assert SCHEMA_VERSION in caught.value.message and "6.18.0" in caught.value.message
+    with open_db(output) as conn:
+        assert (
+            conn.execute("SELECT count(*) FROM state_classification").fetchone()[0] == 2
+        )
+    conn.close()
     from reg_meta_build.db import open_built_db
 
     with open_built_db(output) as conn:
@@ -1285,10 +1286,11 @@ def test_two_book_conformance_and_extensions_are_stored_independently(tmp_path):
         conn.execute(
             "UPDATE import_manifest SET value='6.18.0' WHERE key='schema_version'"
         )
-    with pytest.raises(RegMetaError) as stale:
-        open_built_db(output)
-    assert stale.value.code == "schema_incompatible"
-    assert "6.18.0" in stale.value.message and SCHEMA_VERSION in stale.value.message
+    for opener in (open_db, open_built_db):
+        with pytest.raises(RegMetaError) as stale:
+            opener(output)
+        assert stale.value.code == "schema_incompatible"
+        assert "6.18.0" in stale.value.message and SCHEMA_VERSION in stale.value.message
 
 
 @pytest.mark.parametrize("difference", ["code", "label"])

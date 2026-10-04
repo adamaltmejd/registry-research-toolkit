@@ -127,10 +127,15 @@ def _json_storage_ids(value: Any) -> Any:
     return value
 
 
-def write_json(payload: dict[str, Any], output_path: str | None) -> None:
+def write_json(
+    payload: dict[str, Any], output_path: str | None, *, storage_ids: bool = True
+) -> None:
     content = (
         json.dumps(
-            _json_storage_ids(payload), ensure_ascii=False, indent=2, sort_keys=True
+            _json_storage_ids(payload) if storage_ids else payload,
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=True,
         )
         + "\n"
     )

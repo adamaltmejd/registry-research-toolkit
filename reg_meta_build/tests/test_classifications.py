@@ -981,9 +981,10 @@ class TestClassificationStorage:
             }
             assert conn.execute("PRAGMA foreign_key_check").fetchall() == []
 
-    def test_unadapted_reader_cli_refuses_new_producer_schema(
-        self, classification_db: Path
-    ):
+    def test_reader_cli_accepts_current_producer_schema(self, classification_db: Path):
         data, code = _run_json(classification_db, ["get", "classification", "--list"])
-        assert code == 10
-        assert data["error"]["code"] == "schema_incompatible"
+        assert code == 0
+        assert {item["short_name"] for item in data["classifications"]} == {
+            "TESTKON",
+            "TESTKON2",
+        }
