@@ -337,7 +337,12 @@ schema-9 scratch builds via `REG_META_DB`. No compatibility fallback or migratio
    canonicalization/uniqueness checks, complete census accounting and manifest identity.
    Build one full strict new-schema public base, compare reference facts against the
    untouched 8.1 baseline, reuse it for accepted SWECOV compilation. No excluded/lookup
-   rows or semantic segments; preserve diagnostic/nonpublishable guards.
+   rows or semantic segments; preserve diagnostic/nonpublishable guards. Read committed
+   steward slug pins from the clean builder checkout, reject slug overrides/skip flags
+   and uncommitted supplements. Replace the candidate/slugs path requirement and private
+   warning helper's candidate-slug lookup with that same committed slug authority;
+   private slug copies remain evidence only. Provider overlays remain accepted private
+   inputs.
 4. **03 — Reader:** shared holdings/reference predicate, query-time alias/state
    resolver, `materialize_order(project, conn)`, generation-based cursor/order
    provenance and named catalog directory selection. Delete unqualified mapping

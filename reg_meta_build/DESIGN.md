@@ -1518,17 +1518,22 @@ and unknown fields fail early. The extension cannot introduce code sets or
 classification linkage.
 
 Steward IDs use explicit prefixed inputs to `id.mint`, including provider and native
-keys. Register/variant slug pins come from the steward slug directory. Variable slugging
-is incremental and preserves every existing global slug. The retained `ir/` models serve
-this extension graph, not the global source-cleaning boundary.
+keys. Steward slug pins remain tracked in `fqid_slugs/<steward>/`, under the existing
+snapshot and freeze checks. Publishable builds read those pins from the clean builder
+checkout recorded by `builder_commit` and require each consumed slug file to match its
+committed bytes. Reject `--slug-dir` overrides, `--skip-slugs` and untracked or ignored
+slug supplements. Private candidate slug copies may remain immutable acceptance
+evidence, but never supply build naming. Variable slugging is incremental and preserves
+every existing global slug. The retained `ir/` models serve this extension graph, not
+the global source-cleaning boundary.
 
 The extension rebuilds register/variable search indexes; it retains the copied
 value-code index because no values were added. Structural, mapping and accounting gates
 run before atomic publication of one steward artifact. Strict steward publication
-requires accepted provider overlays, slug pins, inventory and policy; no skip flag
-bypasses compilation or accounting. Provider regeneration and input acceptance remain
-separate maintainer operations. Diagnostic output remains explicitly nonpublishable and
-cannot replace the active artifact.
+requires accepted provider overlays, inventory and policy plus committed steward slug
+pins; no skip flag bypasses compilation or accounting. Provider regeneration and input
+acceptance remain separate maintainer operations. Diagnostic output remains explicitly
+nonpublishable and cannot replace the active artifact.
 
 Compile the four relations specified in `reg_meta/DESIGN.md` → "Compiled holdings
 relations and read scope". Reuse inventory models, edition/interval primitives, catalog
@@ -1591,12 +1596,16 @@ compiler requires both; the file digest does not enter `generation_id`. Holdings
 identify the accepted input Git commit and manifest; no private payload is embedded in
 identity rows.
 
-The accepted candidate's manifest covers every consumed provider TOML, steward slug pin,
-inventory, policy, source document and review-evidence payload. Provider, slug and
-policy directories must come from that clean pinned candidate. External overrides and
-tracked defaults cannot supplement a publishable build. Changed provider or slug bytes
-require fresh acceptance, so `holdings_manifest_sha256` also covers those semantic
-inputs.
+The accepted candidate's manifest covers every consumed provider TOML, inventory,
+policy, source document and review-evidence payload. Provider and policy directories
+must come from that clean pinned candidate. External provider/policy overrides and
+tracked policy defaults cannot supplement a publishable build. Changed provider bytes
+require fresh acceptance and are covered by `holdings_manifest_sha256`. Steward slug
+identity is covered separately by `builder_commit`; changing tracked slug pins requires
+public review and the existing slug checks, not fresh acceptance merely to copy them
+privately. All accepted mapping coordinates must still resolve under the selected
+committed pins; incompatibility fails the build rather than falling back to a private
+slug copy.
 
 Define `holdings_policy_sha256` as SHA-256 of a sorted relative-policy-path → SHA-256
 object covering `source_policy.toml`, `inventory_overlay.toml` and
