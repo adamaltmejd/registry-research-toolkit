@@ -12,8 +12,9 @@ reference); `models.py` + the route handlers are the response-shape reference.
 `ARCHITECTURE.md` and `reg_meta/DESIGN.md`; §12 tracks its unreleased cut. Below,
 `CatalogIndex`, held-column folding, runtime inventory loading, inventory drift and
 inventory-dependent coverage/search/stats describe the **pre-cut implementation**,
-retained only until plan 04 deletes them. They do not define the compiled artifact's
-scope or identity. The UI scope switch is optional and not an acceptance gate.
+retained only until the runtime cut deletes them. They do not define the compiled
+artifact's scope or identity. The UI scope switch is optional and not an acceptance
+gate.
 
 ## Why no auth — cost protection instead
 
@@ -1072,8 +1073,8 @@ zero FCP/LCP savings from removing it.
 
 ## Steward layering and the in-memory catalog index (`stewards.py` + `catalog_index.py`)
 
-**Pre-cut implementation only.** This entire section is deleted in plan 04 when the
-compiled reader replaces runtime inventory loading, index construction, folds, boot
+**Pre-cut implementation only.** This entire section is deleted at the runtime cut when
+the compiled reader replaces runtime inventory loading, index construction, folds, boot
 drift checks and search backfill. The replacement uses `reg_meta`'s shared SQL scope
 predicate before counts/groups/pagination, with holdings/reference defaults read from
 artifact kind. All variable admission uses mapped variant and canonical representation;
@@ -2128,10 +2129,10 @@ boundary unchanged.
   an order from an invalid spec → 422.
 
 **The order manifest.** The compiled contract uses a thin adapter over
-`reg_meta.order.materialize_order(project, conn)`. Plan 03 implements that signature;
-plan 04 switches this adapter. The pipeline and every fail-closed finding live in
-`reg_meta/DESIGN.md` → "Order materializer and manifest (`order.py`)". The adapter owns
-exactly three things:
+`reg_meta.order.materialize_order(project, conn)`. The reader cut implements that
+signature; the runtime cut switches this adapter. The pipeline and every fail-closed
+finding live in `reg_meta/DESIGN.md` → "Order materializer and manifest (`order.py`)".
+The adapter owns exactly three things:
 
 - **The selected artifact connection**, opened read-only for this request after boot
   validates manifest identity. `catalog_artifact_kind` chooses global logical fallback
@@ -2279,8 +2280,8 @@ consume them: the materializer runs its fail-closed compiled-holdings/resolution
 and blocks these conditions with its own findings, so a steward-catalog warning never
 silently becomes an order. There is no cross- steward preview, retarget, or one-click
 mutation feature: the active deployment is the validation target, and the user edits and
-re-uploads the JSON if they intend to change it. The warning codes remain; plan 04
-re-sources them from SQL at the source's variant. The following wiring describes the
+re-uploads the JSON if they intend to change it. The warning codes remain; the runtime
+cut re-sources them from SQL at the source's variant. The following wiring describes the
 **pre-cut implementation** in `/api/project/validate`: `routes/project.py` threads
 `app.state.catalog_index` into `validate_semantic` via `run_in_threadpool`; it runs
 **after** the per-binding period resolution because the researcher side's resolved

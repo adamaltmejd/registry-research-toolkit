@@ -615,9 +615,9 @@ byte-identical. The restriction is applied before folding and paging, so every p
 in scope. reg_meta stays steward-agnostic: the caller supplies the allow-list; the set's
 provenance is opaque here. The webapp's filtered-steward `/api/search` passes
 `admitted_variable_fqids | held_register_fqids` (see `reg_webapp/DESIGN.md`); the CLI
-never passes `fqids`. Plan 03 replaces this steward admission path with the shared
-compiled-holdings predicate before pagination. General ranking/folding limits remain;
-only holdings backfill and allow-list reconstruction go.
+never passes `fqids`. The reader cut replaces this steward admission path with the
+shared compiled-holdings predicate before pagination. General ranking/folding limits
+remain; only holdings backfill and allow-list reconstruction go.
 
 **Why two methods for succession.** `predecessors` / `successors` are split (not one
 `replaced` returning a dict) so every edge-traversal accessor returns `list[...]`
@@ -853,11 +853,16 @@ triples are unique per column. Physical names use exact comparison. SQL enforces
 local CHECKs and those UNIQUEs. Shared Python validation enforces same-register
 variable/ variant ownership, nonempty table/column collections, edition/scope
 correspondence, reason/mapping exclusivity, interval disjointness and cross-location
-logical-cell ambiguity per partition. Reuse
-`DeliveryInventory._check_one_to_one_resolution` after canonicalization, rather than
-adding an overlap algorithm. Distinct explicit partitions are separate claims; equal
-partitions or an unlabelled whole-population claim conflict on overlapping cells.
-Year-independent claims retain their separate scope check.
+logical-cell ambiguity per partition. Extract the conflict logic of
+`DeliveryInventory._check_one_to_one_resolution` into one shared pure placement
+validator in `reg_meta.inventory`, rather than adding an overlap algorithm. The
+inventory model passes authored representation spellings; the compiler passes canonical
+spellings. Preserve variable/variant and scope grouping, exact physical locations,
+interval overlap, partition separation and aggregated actionable errors. The compiler
+also rejects duplicate canonical triples within a column with input locators before
+insertion; SQL UNIQUE remains the final guard. Distinct explicit partitions are separate
+claims; equal partitions or an unlabelled whole-population claim conflict on overlapping
+cells. Year-independent claims retain their separate scope check.
 
 The compiler folds each literal with Python `str.lower()` (`py_lower`), the exact shared
 fold of `representative_columns`. No NFC, `casefold()` or SQLite `lower()`. At the
@@ -865,8 +870,8 @@ mapped variable/variant it requires exactly one distinct matching catalog state
 spelling; zero or several fail publication. Store both spellings and use the canonical
 one for runtime holding comparisons. Do not use the lowest-spelling tie-break or
 alias-only fallback to weaken this gate. This is deliberately stricter than the existing
-reader's alias-only acceptance, not a claim that its inputs already pass. Plan 02 must
-report rejected accepted mappings for separate source/contract review. Reader-side
+reader's alias-only acceptance, not a claim that its inputs already pass. The compiler
+must report rejected accepted mappings for separate source/contract review. Reader-side
 holding folds go; the resolver's own alias/state identity rule remains shared domain
 behavior.
 
@@ -886,8 +891,8 @@ mappings.
 
 Candidate indexes are `holding_mapping(variable_id, variant_id)`,
 `holding_mapping(column_id)`, `holding_column(table_id)` and
-`holding_period(table_id, lo, hi)`. PK/UNIQUE prefixes already serve the last three;
-plan 02 chooses nonredundant indexes and final order from query plans.
+`holding_period(table_id, lo, hi)`. PK/UNIQUE prefixes already serve the last three; the
+writer chooses nonredundant indexes and final order from query plans.
 
 ### Artifact selection
 
@@ -895,12 +900,29 @@ Named `--catalog NAME` selects `<data>/NAME/`; global retains the existing data 
 `--catalog` and `--db DIRECTORY` are mutually exclusive, and `--db`/`REG_META_DB` retain
 directory semantics (append `reg_meta.db`). Explicit flags win; without one,
 `REG_META_DB` wins over the default global directory. A named steward selection must
-match manifest `steward`; global requires `catalog_artifact_kind = "catalog"`. Missing,
+match manifest `steward`; the default global directory and explicit `--catalog global`
+require `catalog_artifact_kind = "catalog"`. Explicit `--db` or an effective
+`REG_META_DB` accepts either publishable kind, derives kind/steward and default scope
+from its manifest, and reports that identity; it imposes no directory-name steward
+check. Project provenance and webapp boot checks still apply to that identity. Missing,
 incompatible, incomplete or nonpublishable selection fails before serving, with no
-fallback. `update --catalog NAME` fetches `reg_meta_<NAME>.db.zst` into only that named
-steward directory; global keeps `reg_meta.db.zst`. No selection configuration file.
-Optional docs are the selected catalog's sibling, never another installed catalog's
-companion. A missing docs file does not block metadata/holdings/order reads.
+fallback.
+
+For a named steward, `update --catalog NAME` fetches `reg_meta_<NAME>.db.zst` and the
+compatible shared reference-docs asset `reg_meta_docs.db.zst` into only that named
+steward directory, as `reg_meta.db` and `reg_meta_docs.db`. There is no steward-specific
+docs asset name. Global keeps `reg_meta.db.zst` plus the same docs asset in the existing
+data root. Docs retain their independent version/update policy; each selected directory
+owns its copy. No selection configuration file. Optional docs are the selected catalog's
+sibling, never another installed catalog's companion. A missing docs file does not block
+metadata/holdings/order reads; docs operations report `doc_db_not_found` with an update
+action for the selected directory. Absence of steward-only document content is not
+filled from another installed artifact. Updates through `--db` or effective
+`REG_META_DB` require an existing admitted catalog and derive the asset name from its
+kind/steward; the downloaded replacement must match that identity before activation. An
+empty, incompatible or nonpublishable explicit directory fails before writes, with an
+action to bootstrap through a named/default installation. Never replace a path-selected
+steward artifact with a global asset or infer steward identity from its directory name.
 
 ### Scope predicate and public surfaces
 
@@ -994,13 +1016,19 @@ holdings contain only the first three dispositions. No exclusions, lookups or ra
 relation.
 
 **Pre-cut implementation:** `check_inventory(inventory, conn)` currently runs at webapp
-boot and in a release-marked maintainer test against separately loaded TOML. Plan 04
-deletes this runtime gate and the committed legacy inventory; build validation replaces
-it. Runtime boot checks artifact schema, completeness, publishability and steward
-identity, opens SQLite read-only and never rebuilds an inventory index. Build failures
-remain actionable and deterministic; diagnostic output never activates as a catalog.
+boot and in a release-marked maintainer test against separately loaded TOML. The runtime
+cut deletes this runtime gate and the committed legacy inventory; build validation
+replaces it. Runtime boot checks artifact schema, completeness, publishability and
+steward identity, opens SQLite read-only and never rebuilds an inventory index. Build
+failures remain actionable and deterministic; diagnostic output never activates as a
+catalog.
 
 ## Order materializer and manifest (`order.py`)
+
+**Compiled-holdings contract for this entire section (2026-10-04).** The shipped pre-cut
+implementation still takes inventory input, emits `mapping_ambiguous` and uses
+`catalog_import_date` and mode `steward_inventory`. The reader cut replaces those with
+the signature, findings and provenance below; this section defines the target contract.
 
 `materialize_order(project, conn)` is the one place a logical `project_data.json`
 selection meets a steward's physical delivery topology. It returns either a complete
@@ -1009,16 +1037,15 @@ compiled contract above owns the facts; `REFACTOR_SPEC.md` §12 tracks the cut. 
 FastAPI endpoint and the CLI/plugin are thin adapters over this one function, which is
 what makes their results byte-identical; all logic (and all fail-closing) lives here.
 
-**Contract signature; implementation follows in plan 03.**
-`import_manifest.catalog_artifact_kind = "catalog"` selects the **global-deployment
-fallback**: it has no physical delivery topology, so canonical resolution alone grounds
-the logical order. A `steward` artifact always uses its compiled holdings, even when
-browsing reference scope. Missing holdings never selects fallback. It is the SAME
-function and the same pipeline — only step 3's matching arm differs — so there is no
-second clip/slice/coverage implementation to drift. `OrderProvenance.mode`
-(`steward_inventory` \| `global_fallback`) names which one produced a manifest, and the
-provenance gate treats the global deployment like any other: `ProjectData.steward` must
-equal `"global"` (`order.GLOBAL_STEWARD`).
+**Artifact-driven materialization.** `import_manifest.catalog_artifact_kind = "catalog"`
+selects the **global-deployment fallback**: it has no physical delivery topology, so
+canonical resolution alone grounds the logical order. A `steward` artifact always uses
+its compiled holdings, even when browsing reference scope. Missing holdings never
+selects fallback. It is the SAME function and the same pipeline — only step 3's matching
+arm differs — so there is no second clip/slice/coverage implementation to drift.
+`OrderProvenance.mode` (`steward_holdings` \| `global_fallback`) names which one
+produced a manifest, and the provenance gate treats the global deployment like any
+other: `ProjectData.steward` must equal `"global"` (`order.GLOBAL_STEWARD`).
 
 Per `sources[*].bindings[*]`, in project declaration order:
 
@@ -1702,10 +1729,10 @@ newer release exists.
 
 **Pre-cut auto-download on first use**: query commands (`search`, `get`, `resolve`,
 `docs/*`) prompt to download whichever artifacts are missing when invoked interactively.
-Non-interactive invocations fail with `db_not_found` / `doc_db_not_found`. Plan 03
-narrows the docs requirement to docs operations, preserving actionable missing-catalog
-errors and explicit selected-directory updates; metadata/holdings/order reads need only
-the catalog artifact.
+Non-interactive invocations fail with `db_not_found` / `doc_db_not_found`. The reader
+cut narrows the docs requirement to docs operations, preserving actionable
+missing-catalog errors and explicit selected-directory updates; metadata/holdings/order
+reads need only the catalog artifact.
 
 ### Package version format
 

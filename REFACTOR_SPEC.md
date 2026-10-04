@@ -344,9 +344,14 @@ schema-9 scratch builds via `REG_META_DB`. No compatibility fallback or migratio
    machinery and `order --inventory`. Named `--catalog` and `--db` are mutually
    exclusive; explicit selection wins, otherwise `REG_META_DB`, then default global.
    `--catalog NAME` maps to `<data>/NAME/` (global retains the existing data root);
-   `update --catalog NAME` updates only that directory. Steward artifact name must match
-   manifest steward; no silent fallback or configuration file. Docs use the selected
-   artifact's sibling file.
+   `update --catalog NAME` installs the named catalog asset and compatible shared
+   reference-docs asset into only that directory. A named steward must match manifest
+   steward; explicit paths accept either publishable kind and derive/report identity
+   from the manifest. Explicit-path updates derive the asset from an existing admitted
+   artifact and preserve its identity; an uninitialized path fails before writes. No
+   silent fallback or configuration file. Docs use the selected artifact's own sibling
+   file. Rename provenance mode to `steward_holdings` within the in-definition version 1
+   contract.
 5. **04 — Web:** switch adapters to the shared reader; validate configured steward at
    boot. Delete runtime inventory loading/reconciliation, `CatalogIndex`, held-column
    folds, temp allow-list and search backfill; remove old drift context and smoke/test
@@ -364,9 +369,10 @@ disjoint table/column accounting, explicit scope/defaults, query-time semantic
 resolution, deterministic physical topology and orders, passed relevant checks and
 independent acceptance. Performance is measured against the architecture's budgets; no
 new build duration or latency is promised by this documentation change. Diagnostic and
-MONA/PII guards remain intact. Delete §12 at plan 05 acceptance after moving any
-remaining package decisions to their owning designs; local operational plans are then
-deleted.
+MONA/PII guards remain intact. At plan 05 acceptance, move remaining package decisions
+to their owning designs, delete superseded pre-cut sections and transition notes, and
+remove references to these local plans and §12 from every owning document. Delete §12
+and the local operational plans only after that documentation cleanup passes review.
 
 **Closed project root (#1134, 2026-07-15):** v1 has no generic namespaced blocks and no
 placeholder `extensions` field. `ProjectData` rejects extras, and the structural layer

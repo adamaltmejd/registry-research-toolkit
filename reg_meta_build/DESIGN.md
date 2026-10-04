@@ -1499,7 +1499,7 @@ build.
 
 ## Steward extension
 
-**Compiled-holdings contract (2026-10-04); writer cut follows in plan 02.** `extend-db`
+**Compiled-holdings contract (2026-10-04); §12 tracks the writer cut.** `extend-db`
 copies an exact validated global database built under schema 9, adds steward-private
 providers and their registers, variables and states, then compiles accepted physical
 holdings into the same SQLite artifact. The old schema 8.1 base is comparison evidence
@@ -1525,10 +1525,10 @@ this extension graph, not the global source-cleaning boundary.
 The extension rebuilds register/variable search indexes; it retains the copied
 value-code index because no values were added. Structural, mapping and accounting gates
 run before atomic publication of one steward artifact. Strict steward publication
-requires accepted inventory and policy; no skip flag bypasses compilation or accounting.
-Provider regeneration and input acceptance remain separate maintainer operations.
-Diagnostic output remains explicitly nonpublishable and cannot replace the active
-artifact.
+requires accepted provider overlays, slug pins, inventory and policy; no skip flag
+bypasses compilation or accounting. Provider regeneration and input acceptance remain
+separate maintainer operations. Diagnostic output remains explicitly nonpublishable and
+cannot replace the active artifact.
 
 Compile the four relations specified in `reg_meta/DESIGN.md` → "Compiled holdings
 relations and read scope". Reuse inventory models, edition/interval primitives, catalog
@@ -1544,10 +1544,13 @@ existing IDs, validate register ownership, then fold the literal with the shared
 variable/variant must match; zero or several fail. Store literal and canonical spelling.
 Do not apply NFC, Unicode casefold or a lowest-spelling tie-break. This inherited gate
 is stricter than alias-window-only acceptance today; rejected accepted mappings require
-separate review, never silent compiler fallback. After canonicalization reuse
+separate review, never silent compiler fallback. After canonicalization, pass canonical
+spellings to the shared pure placement validator extracted from
 `DeliveryInventory._check_one_to_one_resolution` for temporal ambiguity per cell per
-partition, including labelled/unlabelled conflicts. Do not infer aliases' applicability
-or clip physical holdings to state windows during compilation.
+partition, including labelled/unlabelled conflicts. Reject duplicate canonical triples
+within a physical column with actionable input locators before insertion; SQL UNIQUE
+remains the final guard. Do not infer aliases' applicability or clip physical holdings
+to state windows during compilation.
 
 The existing coverage assessment keeps range/list editions "temporally unassessed";
 reuse `data_warning` for that disposition. Single-period assessment's flat union is
@@ -1578,12 +1581,22 @@ cursor or order generation discriminator. Publishable `catalog_artifact_kind` is
 `catalog` or `steward`; existing `diagnostic` output remains nonpublishable and rejected
 by runtime readers. Add `builder_commit` and `generation_id` to publishable artifacts.
 
-A steward also requires `steward`, `base_db_sha256`, `holdings_input_commit`,
-`holdings_manifest_sha256`, `holdings_policy_sha256`, `holdings_accounting_counts` and
-`holdings_accounting_sha256`. These keys are absent on a global catalog, whose holdings
-relations are empty. `base_db_sha256` hashes the exact new-schema base file before
-extension. Holdings pins identify the accepted input Git commit and manifest; no private
-payload is embedded in identity rows.
+A steward also requires `steward`, `base_db_sha256`, `base_generation_id`,
+`holdings_input_commit`, `holdings_manifest_sha256`, `holdings_policy_sha256`,
+`holdings_accounting_counts` and `holdings_accounting_sha256`. These keys are absent on
+a global catalog, whose holdings relations are empty. `base_db_sha256` hashes the exact
+new-schema base file before extension and remains byte-level provenance only.
+`base_generation_id` records that validated catalog artifact's semantic generation. The
+compiler requires both; the file digest does not enter `generation_id`. Holdings pins
+identify the accepted input Git commit and manifest; no private payload is embedded in
+identity rows.
+
+The accepted candidate's manifest covers every consumed provider TOML, steward slug pin,
+inventory, policy, source document and review-evidence payload. Provider, slug and
+policy directories must come from that clean pinned candidate. External overrides and
+tracked defaults cannot supplement a publishable build. Changed provider or slug bytes
+require fresh acceptance, so `holdings_manifest_sha256` also covers those semantic
+inputs.
 
 Define `holdings_policy_sha256` as SHA-256 of a sorted relative-policy-path → SHA-256
 object covering `source_policy.toml`, `inventory_overlay.toml` and
@@ -1605,12 +1618,13 @@ mappings.
 Canonical digest encoding is UTF-8 JSON with sorted object keys, compact separators,
 `ensure_ascii=false`, no floats and no trailing newline. `generation_id` hashes an
 object containing `schema_version`, `builder_commit`, `catalog_artifact_kind`,
-`prepared_commit`, `prepared_manifest_sha256`, `curation_tree_sha256`; steward adds all
-its identity keys above except the count summary (covered by accounting digest). Never
-include `generation_id` itself, finished output bytes, `import_date`, absolute paths,
-logs or volatile timings. Publish final artifact SHA-256 separately, outside that
-database. Replays use the exact semantic pins; do not promise unmeasured build
-durations.
+`prepared_commit`, `prepared_manifest_sha256`, `curation_tree_sha256`; steward adds
+`steward`, `base_generation_id`, `holdings_input_commit`, `holdings_manifest_sha256`,
+`holdings_policy_sha256` and `holdings_accounting_sha256`. Exclude `base_db_sha256` and
+the count summary (covered by accounting digest). Never include `generation_id` itself,
+finished output bytes, `import_date`, absolute paths, logs or volatile timings. Publish
+final artifact SHA-256 separately, outside that database. Replays use the exact semantic
+pins; do not promise unmeasured build durations.
 
 SWECOV source routing lives in the authored `source_policy.toml` beside its inventory
 overlay. Category/detail routes select catalog variants or split selectors; flavor
@@ -1619,9 +1633,9 @@ The generator validates this policy once and derives its runtime indexes. Repeat
 selectors, conflicting metadata and unknown fields fail configuration. Physical
 table/column overrides remain in `inventory_overlay.toml`: they have a different scope
 from category routing. Both files stay tracked as generator defaults, not generated
-outputs. The generator neither invents routes nor changes their declarations. Plan 04
-deletes only the stale tracked `reg_webapp/stewards/swecov/inventory.toml`; accepted
-holdings remain private builder inputs and never become loose runtime files.
+outputs. The generator neither invents routes nor changes their declarations. The
+runtime cut deletes only the stale tracked `reg_webapp/stewards/swecov/inventory.toml`;
+accepted holdings remain private builder inputs and never become loose runtime files.
 
 The complete private input acceptance retains these policies, source documents,
 generated inventory and review evidence in a clean local-only Git repository. Its

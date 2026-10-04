@@ -180,14 +180,16 @@ remains separately paired; full document content is outside the single-file guar
 Diagnostic/incomplete artifacts remain nonpublishable and fail runtime admission.
 
 Identity stays in `import_manifest`, including `generation_id`; a steward also records
-`steward`, `base_db_sha256`, `holdings_input_commit`, `holdings_manifest_sha256` and
-`holdings_policy_sha256`. Generation identity hashes canonical semantic inputs and the
-schema version, not output bytes, timestamps or host paths. Builder revision, accepted
-public pins and curation digest participate; steward identity additionally includes its
-exact base digest, accepted holdings pins, policy and accounting digest. Publish the
-final file SHA-256 separately. The builder design specifies the digest encoding. Search
-cursors and `OrderProvenance` use `generation_id` instead of `import_date`; HTTP read
-identities include generation and scope. Import time may remain display data.
+`steward`, `base_db_sha256`, `base_generation_id`, `holdings_input_commit`,
+`holdings_manifest_sha256` and `holdings_policy_sha256`. Generation identity hashes
+canonical semantic inputs and the schema version, not output bytes, timestamps or host
+paths. Builder revision, accepted public pins and curation digest participate; steward
+identity additionally includes its base generation, accepted holdings pins, policy and
+accounting digest. The exact base file digest is byte-level provenance only and does not
+enter generation identity. Publish the final file SHA-256 separately. The builder design
+specifies the digest encoding. Search cursors and `OrderProvenance` use `generation_id`
+instead of `import_date`; HTTP read identities include generation and scope. Import time
+may remain display data.
 
 Read scope defaults to `holdings` on a steward artifact and `reference` on a catalog
 artifact; explicit `holdings` on a catalog artifact errors. The holdings predicate
@@ -247,9 +249,10 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   `[tool.uv.sources]` in the workspace, and exact pins would force monorepo-wide
   lockstep without enabling out-of-workspace builds. `reg_meta_build` releases
   independently (it produces the DB asset `reg_meta` fetches). Schema breakage is
-  signalled by `project_data.json`'s `schema_version` (major 2+ = Model A — 3 since
-  `Source.period` became finite-only); per the compatibility policy below, v1 ships no
-  migration shims.
+  signalled by `project_data.json`'s `schema_version` (major 2+ = Model A — 3 since the
+  whole-history `Source.period` sentinel was removed; bare `_default` now selects
+  year-independent data only at a concrete variant). Per the compatibility policy below,
+  v1 ships no migration shims.
 
 ## API style
 
