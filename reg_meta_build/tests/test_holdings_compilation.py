@@ -19,6 +19,8 @@ from reg_meta_build.holdings_compile import (
 from reg_meta_build.resolved_catalog import ResolvedVariable, write_resolved_catalog
 from reg_meta_build.validate import validate_built_db
 
+from reg_meta_build.fqid_slugs import populate_variable_slugs
+
 CASES = Path(__file__).parent / "cases/holdings"
 
 
@@ -161,3 +163,30 @@ def test_slug_authority_rejects_a_different_builder_revision() -> None:
     with pytest.raises(ValueError) as error:
         committed_steward_slugs(**request)
     assert expected["error_contains"] in str(error.value)
+
+
+def test_artifact_variable_naming_leaves_pin_inputs_unchanged(tmp_path: Path) -> None:
+    case = CASES / "variable-naming"
+    request = json.loads((case / "request.json").read_text())
+    expected = json.loads((case / "expected.json").read_text())
+    variables = tuple(
+        ResolvedVariable.model_validate_json(json.dumps(value))
+        for value in json.loads((case / request["catalog"]).read_text())
+    )
+    output = tmp_path / "reg_meta.db"
+    write_resolved_catalog(variables, output, manifest=synthetic_manifest())
+    pins = tmp_path / "pins"
+    pins.mkdir()
+    with sqlite3.connect(output) as conn:
+        conn.execute("UPDATE variable SET slug=NULL")
+        populate_variable_slugs(conn, pins, incremental=True, persist_auto=False)
+        actual = {
+            "variable_slugs": [
+                row[0]
+                for row in conn.execute("SELECT slug FROM variable ORDER BY slug")
+            ],
+            "generated_slug_files": sorted(path.name for path in pins.iterdir()),
+        }
+    assert actual == expected
+    result = validate_built_db(output)
+    assert result.passed, result.format_report()

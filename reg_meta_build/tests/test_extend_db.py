@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+import json
 import sqlite3
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import pytest
 from catalog_manifest import synthetic_manifest
@@ -24,9 +25,6 @@ from reg_meta_build.resolved_catalog import (
     write_resolved_catalog,
 )
 from reg_meta_build.validate import validate_built_db
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 _STEWARD = "swecov"
 _BANK = "swedbank"
@@ -698,3 +696,15 @@ def _fixture_warning():
     return DataWarning.model_validate_json(
         (Path(__file__).parent / "cases/holdings/warning/request.json").read_text()
     )
+
+
+def test_extension_preserves_base_generation_provenance(
+    tmp_path: Path, global_db: Path
+) -> None:
+    case = Path(__file__).parent / "cases/holdings/extension-manifest"
+    request = json.loads((case / "request.json").read_text())
+    expected = json.loads((case / "expected.json").read_text())
+    _, output = _run(tmp_path, global_db)
+    with sqlite3.connect(output) as conn:
+        manifest = dict(conn.execute("SELECT key,value FROM import_manifest"))
+    assert {key: manifest[key] for key in request["fields"]} == expected

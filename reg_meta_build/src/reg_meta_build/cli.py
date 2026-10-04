@@ -40,8 +40,6 @@ from reg_meta.errors import (
     RegMetaError,
 )
 
-# The steward's distinct §12 holdings statement, for the flavored validation's
-# window-coverage gate.
 from ._curation import repo_curation_dir
 from .classifications import (
     dump_classification_residue,

@@ -391,6 +391,7 @@ def extend_db(
             raise ValueError("Base database changed during selection")
 
     conn = sqlite3.connect(tmp_path)
+    conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA synchronous=NORMAL")
     conn.execute("PRAGMA temp_store=MEMORY")
@@ -421,21 +422,24 @@ def extend_db(
         if not skip_slugs:
             assert steward_slug_dir is not None
             populate_slugs(conn, steward_slug_dir, strict=False)
-            populate_variable_slugs(conn, steward_slug_dir, incremental=True)
+            populate_variable_slugs(
+                conn, steward_slug_dir, incremental=True, persist_auto=diagnostic
+            )
             _assert_steward_rows_slugged(conn)
 
         write_data_warnings(conn, data_warnings)
+        manifest = get_manifest(conn)
         if diagnostic:
+            manifest.update(
+                catalog_artifact_kind="diagnostic",
+                catalog_publishable="false",
+                catalog_completeness="incomplete",
+            )
             conn.executemany(
                 "INSERT OR REPLACE INTO import_manifest(key, value) VALUES (?, ?)",
-                (
-                    ("catalog_artifact_kind", "diagnostic"),
-                    ("catalog_publishable", "false"),
-                    ("catalog_completeness", "incomplete"),
-                ),
+                sorted(manifest.items()),
             )
         if holdings_input is not None:
-            manifest = get_manifest(conn)
             if (
                 manifest.get("catalog_artifact_kind") != "catalog"
                 or manifest.get("catalog_publishable") != "true"

@@ -1,0 +1,9 @@
+{
+  "mode": "diagnostic",
+  "fields": [
+    "catalog_artifact_kind",
+    "catalog_publishable",
+    "catalog_completeness",
+    "generation_id"
+  ]
+}
