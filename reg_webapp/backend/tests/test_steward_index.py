@@ -7,19 +7,11 @@ Covers:
 
 (a) the committed ``inventory.toml`` filters the universe (register_variant coord
     → admitted ``(FQID, resolved delivery column)`` pairs, the per-coordinate
-    union of edition intervals — clipped, for a ``representation = None``
-    mapping, to each resolved column's own state windows — and its coarse
-    per-register projection, unmapped columns admitting nothing);
+    union of edition intervals and its coarse per-register projection,
+    unmapped columns admitting nothing);
 (b) the membership probes ``fqid_outside_steward_catalog`` (A5.2b-ii) consults —
     variant-scoped for admission, variant-blind for discovery;
-(c) **boot-survives-drift**: an inventory mapping reg_meta has drifted out from
-    under still BOOTS — the coordinate drops from the index, a drift warning is
-    recorded, ``app.state.catalog_index`` is populated, and ``/api/context``
-    exposes the warning — NOT a crash. Both drift arms are pinned as UNIT tests;
-    at the boot seam only the EDITION arm survives, because §12's consistency
-    gate (``stewards.check_delivery_inventory``) is period-agnostic and fails
-    startup on a coordinate the catalog does not name at all;
-(d) the ``global`` deployment has no inventory and no index.
+(c) the ``global`` deployment has no inventory and no index.
 
 A filtered steward is selected at boot via ``REG_WEBAPP_STEWARD`` +
 ``REG_WEBAPP_STEWARDS_DIR`` (the static per-deployment selection seam),
@@ -33,7 +25,6 @@ from typing import TYPE_CHECKING
 
 import pytest
 import reg_meta.db
-from _slugged_db import add_state, build_slugged_db
 from _steward_helpers import (
     CLEAN_HOLDINGS as _CLEAN_HOLDINGS,
     catalog_index as _catalog_index,
@@ -59,34 +50,6 @@ def catalog(catalog_db):
         conn.close()
 
 
-@pytest.fixture
-def renamed_column_catalog():
-    """A catalog carrying a RENAME: ``scb/lisa/kon`` is delivered as ``Kon``
-    through 2018 and as ``KonNy`` from 2019 on.
-
-    Its own hand-built slugged DB rather than the shared ``catalog_db`` fixture:
-    the rename is the point (one binding, two canonical representations in
-    disjoint state windows), and no other test wants it in the browse fixtures.
-    """
-    conn = build_slugged_db()
-    # The stock fixture state is `Kon` from 2018, open-ended; close it at the
-    # rename and continue the concept under the new spelling.
-    conn.execute("UPDATE variable_state SET valid_to = '2018-12-31'")
-    add_state(
-        conn,
-        register_id=1,
-        variable_slug="kon",
-        register_variant_id=10,
-        valid_from="2019-01-01",
-        delivery_column_name="KonNy",
-    )
-    conn.commit()
-    try:
-        yield Catalog(conn)
-    finally:
-        conn.close()
-
-
 def _inventory(toml: str) -> DeliveryInventory:
     return DeliveryInventory.model_validate(tomllib.loads(toml))
 
@@ -94,23 +57,6 @@ def _inventory(toml: str) -> DeliveryInventory:
 # One table, one physical column, ONE `representation = None` mapping — the arm
 # that must be resolved against the catalog. Only the edition varies, so each
 # test below states just the edition shape it is about.
-_NULL_MAPPING_TABLE = """\
-version = 1
-steward = "ifau"
-
-[[table]]
-id = "LISA_Individ.csv"
-edition = {edition}
-
-[[table.column]]
-name = "P1105_Kon"
-[[table.column.mapping]]
-register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/kon"
-"""
-
-_KON = ("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon")
-_KON_NY = ("scb/lisa/individer-15plus", "scb/lisa/kon", "KonNy")
 
 
 # ── (a) the inventory filters the universe ─────────────────────────────────
@@ -175,20 +121,6 @@ representation = "Kon"
     # The admitted token is the mapping's `representation`, never the PHYSICAL column
     # name (`P1105_Kon`) the steward's own table spells it with.
     assert index.held_columns("scb/lisa/kon") == frozenset({"Kon"})
-
-
-def test_null_representation_resolves_to_the_states_columns(catalog):
-    """`representation = None` means "the concept's SINGLE representation" (§12),
-    never a wildcard — so it resolves against the catalog over the table's
-    edition bounds, giving the token the researcher side compares against."""
-    index = _catalog_index(
-        [("scb/lisa/individer-15plus", "scb/lisa/kon", None, "2018")], catalog
-    )
-
-    assert index.bindings_by_variant["scb/lisa/individer-15plus"] == frozenset(
-        {("scb/lisa/kon", "Kon")}
-    )
-    assert index.drift_warnings == ()
 
 
 def test_unmapped_column_admits_nothing(catalog):
@@ -294,71 +226,6 @@ def test_coordinate_periods_are_keyed_per_coordinate_not_per_register(catalog):
     assert index.period_range_by_register == {"scb/rams": ("2018-01-01", "2020-12-31")}
 
 
-def test_disjoint_editions_hold_each_column_only_where_it_is_delivered(
-    renamed_column_catalog,
-):
-    """A table delivered in 2018 AND 2020, across a rename: the steward holds
-    the OLD spelling in 2018 and the NEW one in 2020, and nothing else.
-
-    Resolving the mapping to a bare set of columns loses which segment each was
-    found in, and every column then inherits every edition interval — admitting
-    a `KonNy` column in a 2018 delivery that has none, and a retired `Kon` in
-    2020. Exact admission is the whole point of the per-coordinate map.
-    """
-    index = build_catalog_index(
-        _inventory(_NULL_MAPPING_TABLE.format(edition="[2018, 2020]")),
-        renamed_column_catalog,
-    )
-
-    assert index.periods_by_coordinate == {
-        _KON: (("2018-01-01", "2018-12-31"),),
-        _KON_NY: (("2020-01-01", "2020-12-31"),),
-    }
-    assert index.drift_warnings == ()
-
-
-def test_a_continuous_edition_splits_at_the_rename(renamed_column_catalog):
-    """The same rename under ONE continuous edition — the case per-segment
-    resolution cannot reach.
-
-    `{ from = 2018, to = 2020 }` is a SINGLE edition interval, so segmenting the
-    edition separates nothing; only clipping each resolved column against its
-    own state window puts the boundary where the rename is. The union still
-    covers the whole edition (the concept is delivered throughout), split at the
-    day the spelling changed.
-    """
-    index = build_catalog_index(
-        _inventory(_NULL_MAPPING_TABLE.format(edition="{ from = 2018, to = 2020 }")),
-        renamed_column_catalog,
-    )
-
-    assert index.periods_by_coordinate == {
-        _KON: (("2018-01-01", "2018-12-31"),),
-        _KON_NY: (("2019-01-01", "2020-12-31"),),
-    }
-    assert index.drift_warnings == ()
-
-
-def test_an_edition_segment_no_state_covers_is_not_admitted(catalog):
-    """`scb/lisa/kon`'s only state begins in 2018, so a table delivered in 2015
-    AND 2018 states a holding reg_meta backs in 2018 ONLY.
-
-    The uncovered segment must not ride along on the covered one: it would admit
-    a year the steward cannot deliver and drag the register's browse span (and
-    the deployment-wide year span behind it) three years too far back. Partial
-    coverage is NOT drift — the mapping resolves and is admitted; only a mapping
-    that resolves nowhere in the edition warns.
-    """
-    index = build_catalog_index(
-        _inventory(_NULL_MAPPING_TABLE.format(edition="[2015, 2018]")), catalog
-    )
-
-    assert index.periods_by_coordinate == {_KON: (("2018-01-01", "2018-12-31"),)}
-    assert index.period_range_by_register == {"scb/lisa": ("2018-01-01", "2018-12-31")}
-    assert index.catalog_period_span == (2018, 2018)
-    assert index.drift_warnings == ()
-
-
 def test_catalog_period_span_is_null_when_nothing_is_admitted():
     index = CatalogIndex(
         bindings_by_variant={},
@@ -410,7 +277,7 @@ def test_catalog_sizes_de_dupes_binding_columns():
                     ("scb/lisa/kon", "KonDetaljerad"),
                 }
             ),
-            "sos/patient/_default": frozenset({("sos/patient/diagnos", None)}),
+            "sos/patient/_default": frozenset({("sos/patient/diagnos", "Diagnos")}),
         },
         periods_by_coordinate={},
         period_range_by_register={
@@ -442,41 +309,6 @@ def test_held_variant_coords_excludes_empty_slot():
 
 
 # ── (c) drift drops a mapping from the index (unit) ────────────────────────
-
-
-def test_unresolvable_null_representation_drops_and_warns(catalog):
-    """A `representation = None` mapping whose FQID reg_meta no longer resolves
-    is DROPPED (it can't be authored against), the rest of the inventory is
-    unaffected, and the miss is recorded for `/api/context`'s drift banner."""
-    index = _catalog_index(
-        [
-            ("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon", "2018"),
-            ("scb/lisa/individer-15plus", "scb/lisa/ghostvar", None, "2018"),
-        ],
-        catalog,
-    )
-
-    assert index.bindings_by_variant["scb/lisa/individer-15plus"] == frozenset(
-        {("scb/lisa/kon", "Kon")}
-    )
-    (warning,) = index.drift_warnings
-    assert warning.code == "fqid_unresolved"
-    assert warning.path == "table['T1_2018.csv'].column['P1_ghostvar']"
-    assert "ghostvar" in warning.message
-
-
-def test_null_representation_outside_state_validity_drops_and_warns(catalog):
-    """The other drift arm: the FQID resolves, but reg_meta delivers no state for
-    it over the table's edition (kon's only state starts 2018)."""
-    index = _catalog_index(
-        [("scb/lisa/individer-15plus", "scb/lisa/kon", None, "2015")], catalog
-    )
-
-    assert index.bindings_by_variant == {}
-    assert index.period_range_by_register == {}
-    (warning,) = index.drift_warnings
-    assert warning.code == "period_outside_state_validity"
-    assert "scb/lisa/kon" in warning.message
 
 
 # ── (d) the global deployment has no index ─────────────────────────────────
@@ -516,45 +348,6 @@ def test_boot_with_filtered_steward_populates_index(catalog_db, _filtered_stewar
     assert body["steward"]["id"] == "ifau"
     assert body["steward"]["catalog_period_span"] == {"from": 2018, "to": 2019}
     assert body["catalog_drift_warnings"] == []
-
-
-def test_boot_survives_catalog_drift(catalog_db, _filtered_steward_dir):
-    """⚠️ Boot-availability: an inventory mapping reg_meta no longer delivers
-    over its table's edition must BOOT — the coordinate drops from the index,
-    startup does NOT crash, and the drift is surfaced on /api/context.
-
-    The EDITION arm is the drift that reaches the index at boot. §12's
-    consistency gate (``stewards.check_delivery_inventory``) runs on the same
-    boot connection and is period-agnostic, so a coordinate the catalog does not
-    name at all fails startup instead of drifting through — pinned by
-    ``test_project_order`` → the unresolvable-inventory boot guard.
-    """
-    _write_steward(
-        _filtered_steward_dir,
-        "ifau",
-        [
-            ("scb/rams/standard", "scb/rams/syss", "Syss", "2019"),
-            # kon's only state starts 2018, so this table's edition holds none.
-            ("scb/lisa/individer-15plus", "scb/lisa/kon", None, "2015"),
-        ],
-    )
-
-    app = create_app()
-    # Entering the context runs the lifespan — it must NOT raise on the drift.
-    with TestClient(app) as client:
-        index = app.state.catalog_index
-        assert index is not None
-        # The out-of-edition mapping dropped; the resolvable one survives.
-        assert index.bindings_by_variant == {
-            "scb/rams/standard": frozenset({("scb/rams/syss", "Syss")})
-        }
-        resp = client.get("/api/context")
-
-    assert resp.status_code == 200
-    warnings = resp.json()["catalog_drift_warnings"]
-    assert len(warnings) == 1
-    assert warnings[0]["code"] == "period_outside_state_validity"
-    assert "scb/lisa/kon" in warnings[0]["message"]
 
 
 def test_boot_global_has_no_index(catalog_db, tmp_path, monkeypatch):

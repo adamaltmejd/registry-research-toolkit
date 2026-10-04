@@ -43,7 +43,7 @@ if TYPE_CHECKING:
 # The steward holds ONLY scb/lisa/kon — so scb/rams (and lisa's other bindings)
 # are out of catalog, and the sun classification family stays catalog-global.
 _HELD_HOLDINGS = [
-    ("scb/lisa/individer-15plus", "scb/lisa/kon", None, "2018"),
+    ("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon", "2018"),
 ]
 
 
@@ -85,7 +85,7 @@ def syss_client(
         stewards,
         "ifau",
         [
-            ("scb/rams/standard", "scb/rams/syss", None, "2019"),
+            ("scb/rams/standard", "scb/rams/syss", "Syss", "2019"),
         ],
     ) as client:
         assert client.app.state.catalog_index is not None
@@ -106,8 +106,8 @@ def both_client(
         stewards,
         "ifau",
         [
-            ("scb/lisa/individer-15plus", "scb/lisa/kon", None, "2018"),
-            ("scb/rams/standard", "scb/rams/syss", None, "2019"),
+            ("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon", "2018"),
+            ("scb/rams/standard", "scb/rams/syss", "Syss", "2019"),
         ],
     ) as client:
         assert client.app.state.catalog_index is not None
@@ -865,8 +865,7 @@ def test_provider_coverage_batches_registers_with_identical_payload(
         [
             ("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon", "2018"),
             ("scb/lisa/individer-15plus", "scb/lisa/disp", "CDISP5", "2020"),
-            ("scb/lisa/individer-15plus", "scb/lisa/unnamed", None, "2018"),
-            ("scb/rams/standard", "scb/rams/syss", None, "2019"),
+            ("scb/rams/standard", "scb/rams/syss", "Syss", "2019"),
         ],
     ) as client:
         monkeypatch.setattr(Catalog, "provider_column_coverage", legacy_columns)
@@ -911,40 +910,6 @@ def test_partial_column_hold_deliveries_name_only_held_column(
     ]
 
 
-def test_unnamed_column_hold_coverage_uses_variable_fallback(
-    catalog_db: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-):
-    _seed_unnamed_column_variable(catalog_db)
-    stewards = _set_steward_env(tmp_path, monkeypatch)
-    with _booted(
-        stewards,
-        "ifau",
-        [
-            ("scb/lisa/individer-15plus", "scb/lisa/unnamed", None, "2018"),
-        ],
-    ) as client:
-        provider = client.get("/api/catalog/scb").json()
-        register = client.get("/api/catalog/scb/lisa").json()
-
-    lisa = next(c for c in provider["children"] if c["fqid"] == "scb/lisa")
-    assert lisa["coverage"] == {
-        "variable_count": 1,
-        "coverage_from": "2017-01-01",
-        "coverage_to": "2019-12-31",
-        "open_ended": False,
-    }
-
-    unnamed = next(
-        c for c in register["children"] if c.get("fqid") == "scb/lisa/unnamed"
-    )
-    assert unnamed["coverage"] == {
-        "coverage_from": "2017-01-01",
-        "coverage_to": "2019-12-31",
-        "open_ended": False,
-        "state_count": 1,
-    }
-
-
 def test_all_unheld_concept_group_404s(steward_client):
     # gap 6 (nice-to-have): the `ink` group lives on scb/rams (members inkjan/inkfeb),
     # none held by the kon-only steward → the group subject 404s.
@@ -973,7 +938,12 @@ def test_indexed_steward_tags_ignore_unheld_group_siblings(
         stewards,
         "ifau",
         [
-            ("scb/lisa/individer-15plus", "scb/lisa/helduntagged", None, "2018"),
+            (
+                "scb/lisa/individer-15plus",
+                "scb/lisa/helduntagged",
+                "HeldUntagged",
+                "2018",
+            ),
         ],
     ) as client:
         assert client.app.state.catalog_index is not None
@@ -1041,7 +1011,7 @@ def test_indexed_same_as_alias_leaf_keeps_canonical_direct_tags(
         stewards,
         "ifau",
         [
-            ("scb/lisa/individer-15plus", "scb/lisa/kon-alias", None, "2018"),
+            ("scb/lisa/individer-15plus", "scb/lisa/kon-alias", "Kon", "2018"),
         ],
     ) as client:
         assert client.app.state.catalog_index is not None
@@ -1101,7 +1071,7 @@ def test_binding_graph_keeps_held_same_as_alias_focus(
         stewards,
         "ifau",
         [
-            ("scb/lisa/individer-15plus", "scb/lisa/kon-alias", None, "2018"),
+            ("scb/lisa/individer-15plus", "scb/lisa/kon-alias", "Kon", "2018"),
         ],
     ) as client:
         body = client.get("/api/catalog/scb/lisa/kon-alias/graph").json()
@@ -1143,7 +1113,7 @@ def test_lineage_and_warnings_narrow_to_held_consumer_column(
         "ifau",
         [
             ("scb/lisa/individer-15plus", "scb/lisa/disp", "CDISP5", "2020"),
-            ("scb/rams/standard", "scb/rams/syss", None, "2020"),
+            ("scb/rams/standard", "scb/rams/syss", "Syss", "2020"),
         ],
     ) as client:
         lineage = client.get("/api/catalog/scb/lisa/disp/lineage").json()

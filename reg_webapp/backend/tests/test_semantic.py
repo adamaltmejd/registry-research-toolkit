@@ -1234,25 +1234,6 @@ def test_ambiguous_binding_skips_representation_admission(
     assert "fqid_outside_steward_catalog" not in codes
 
 
-def test_steward_none_vs_researcher_pin_compare_equal_on_resolved_column(
-    catalog, kon_only_index
-):
-    # Drift-handling rationale (#206): the steward authored `representation: None`
-    # back when `kon` had ONE column; reg_meta later grows a sibling and the
-    # researcher must pin. Both sides RESOLVE to the same `Kon` column, so the
-    # pinned researcher binding is admitted — raw-string matching (None vs "Kon")
-    # would falsely reject. (Single-column fixture: pinning is legal, not required.)
-    source = {
-        **_CLEAN_SOURCE,
-        "bindings": [{**_CLEAN_SOURCE["bindings"][0], "representation": "Kon"}],
-    }
-    result = validate_semantic(_project([source]), catalog, index=kon_only_index)
-    codes = {i.code for i in result.issues}
-    assert "representation_outside_steward_catalog" not in codes
-    assert "fqid_outside_steward_catalog" not in codes
-    assert result.ok
-
-
 @pytest.fixture
 def renamed_column_catalog():
     """`scb/lisa/kon` SEQUENTIALLY renamed: column `Kon` through 2019-12-31, then
@@ -1282,13 +1263,10 @@ def renamed_column_catalog():
 
 
 def test_resolved_column_mismatch_across_sequential_rename(renamed_column_catalog):
-    # Neither side pins a `representation` (legal — one column per instant), yet
-    # admission still catches the mismatch because BOTH sides resolve to columns:
-    # the steward's 2018-edition mapping resolves to `Kon`; the researcher's 2020
-    # binding resolves to the renamed `KonNy`. Raw-string matching (None vs None)
-    # would falsely admit it.
+    # The steward explicitly holds Kon; an unpinned researcher binding in
+    # 2020 resolves to KonNy and remains outside those holdings.
     index = _catalog_index(
-        [("scb/lisa/individer-15plus", "scb/lisa/kon", None, "2018")],
+        [("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon", "2018")],
         renamed_column_catalog,
     )
     assert index.bindings_by_variant["scb/lisa/individer-15plus"] == frozenset(

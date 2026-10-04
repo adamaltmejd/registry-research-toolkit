@@ -163,6 +163,8 @@ name = "Kon"
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
 variable = "scb/lisa/kon"
+representation = "Kon"
+
 """
 
 
@@ -208,6 +210,8 @@ name = "Kon"
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-16plus"
 variable = "scb/lisa/kon"
+representation = "Kon"
+
 """
 
 

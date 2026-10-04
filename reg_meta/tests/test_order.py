@@ -62,6 +62,7 @@ name = "Kon"
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
 variable = "scb/lisa/kon"
+representation = "Kon"
 
 [[table.column]]
 name = "Ssyk3"
@@ -79,6 +80,7 @@ name = "Kon"
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
 variable = "scb/lisa/kon"
+representation = "Kon"
 
 [[table.column]]
 name = "DispInk09"
@@ -109,6 +111,7 @@ name = "Kon"
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
 variable = "scb/lisa/kon"
+representation = "Kon"
 
 [[table]]
 id = "LISA_Individ_2020.csv"
@@ -118,6 +121,8 @@ name = "Kon"
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
 variable = "scb/lisa/kon"
+representation = "Kon"
+
 """
 
 
@@ -125,42 +130,11 @@ variable = "scb/lisa/kon"
 # both of its representation slices (`Ssyk3` 2018, `Ssyk4` 2019–2020). The
 # mapping cannot say which slice its column is, so it must block rather than
 # claim one physical column carries both canonical representations.
-UNQUALIFIED_INVENTORY = """
-version = 1
-steward = "swecov"
-
-[[table]]
-id = "LISA_Individ_2018-2020.csv"
-edition = { from = 2018, to = 2020 }
-[[table.column]]
-name = "Yrke"
-[[table.column.mapping]]
-register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/yrke"
-[[table.column]]
-name = "Kon"
-[[table.column.mapping]]
-register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/kon"
-"""
 
 
 # The qualified fixture plus a 2021 table whose single `yrke` column is
 # unqualified. It lies outside every request below, so it can never contribute a
 # column — and therefore must never block a representation-changing binding.
-INERT_UNQUALIFIED_INVENTORY = (
-    FIXTURE_INVENTORY
-    + """
-[[table]]
-id = "LISA_Individ_2021.csv"
-edition = 2021
-[[table.column]]
-name = "Yrke"
-[[table.column.mapping]]
-register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/yrke"
-"""
-)
 
 
 # §12's disjoint-partition arm: one edition delivered as two sub-population
@@ -180,6 +154,7 @@ name = "Kon"
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
 variable = "scb/lisa/kon"
+representation = "Kon"
 
 [[table]]
 id = "LISA_Stora_2018-2020.csv"
@@ -190,6 +165,8 @@ name = "Kon"
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
 variable = "scb/lisa/kon"
+representation = "Kon"
+
 """
 
 
@@ -774,63 +751,6 @@ class TestBlockingFindings:
         # The exact uncovered subperiod, not just "incomplete".
         assert result.findings[0].period == "2019"
         assert result.findings[0].variable == "scb/lisa/kon"
-
-    def test_unqualified_mapping_blocks_a_representation_change(
-        self, conn, tmp_path
-    ) -> None:
-        # One unqualified column cannot serve both `Ssyk3` and `Ssyk4`: matching
-        # it against every slice would emit a manifest claiming that column is
-        # two different canonical representations.
-        result = materialize_order(
-            _project("scb/lisa/yrke"),
-            _inventory(tmp_path, UNQUALIFIED_INVENTORY),
-            conn,
-        )
-
-        assert result.manifest is None
-        assert _codes(result) == ["mapping_ambiguous"]
-        assert "Ssyk3" in result.findings[0].message
-        assert "Ssyk4" in result.findings[0].message
-
-    def test_out_of_period_unqualified_mapping_never_blocks(
-        self, conn, tmp_path
-    ) -> None:
-        # The unqualified `yrke` column sits in a 2021 table, outside the
-        # 2018–2020 request: it cannot match any slice, so it cannot make the
-        # representation change ambiguous either.
-        result = materialize_order(
-            _project("scb/lisa/yrke"),
-            _inventory(tmp_path, INERT_UNQUALIFIED_INVENTORY),
-            conn,
-        )
-
-        assert result.findings == ()
-        assert result.manifest is not None
-        assert [
-            (e.logical.representation, e.physical.table)
-            for e in result.manifest.entries
-        ] == [
-            ("Ssyk3", "LISA_Individ_2018.csv"),
-            ("Ssyk4", "LISA_Individ_2019-2020.csv"),
-        ]
-
-    def test_unqualified_mapping_serves_a_single_representation(
-        self, conn, tmp_path
-    ) -> None:
-        # Same inventory, but `kon` resolves to ONE canonical representation
-        # across the request — §12's single-representation arm still matches.
-        result = materialize_order(
-            _project("scb/lisa/kon"),
-            _inventory(tmp_path, UNQUALIFIED_INVENTORY),
-            conn,
-        )
-
-        assert result.findings == ()
-        assert result.manifest is not None
-        assert [
-            (e.logical.representation, e.physical.column)
-            for e in result.manifest.entries
-        ] == [("Kon", "Kon")]
 
     def test_steward_mismatch_blocks_before_anything_resolves(
         self, conn, inventory
@@ -1438,6 +1358,8 @@ name = "Kon"
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
 variable = "scb/lisa/kon"
+representation = "Kon"
+
 """)
     inventory = load_inventory(path)
     result = materialize_order(
