@@ -666,12 +666,12 @@ shows its study-window span without resolving every state:
 
 For a filtered steward, the same payload fields are recomputed over the steward's held
 delivery columns so a partial-column hold does not inherit the whole-variable coverage
-span/count. Provider listings read `Catalog.provider_column_coverage` once, restricted
-to listed registers with admitted bindings. Register listings use
-`Catalog.register_column_coverage` and `register_unnamed_column_coverage`. Both paths
-filter the result against `CatalogIndex.held_columns` in the webapp. Named held columns
-without a per-column state row get `coverage = None`; unnamed coverage is kept separate
-because a named-column window must not inherit a NULL-column state's bounds.
+span/count. Provider listings read `Catalog.provider_column_coverage` once for the
+listed held registers. Register listings use `Catalog.register_column_coverage` and
+`register_unnamed_column_coverage`. Both paths filter the result against
+`CatalogIndex.held_columns` in the webapp. Named held columns without a per-column state
+row get `coverage = None`; unnamed coverage is kept separate because a named-column
+window must not inherit a NULL-column state's bounds.
 
 The provider query starts from registers and LEFT joins variables and states, keeping
 register selection ahead of the existing indexed variable/state lookups. HAVING removes

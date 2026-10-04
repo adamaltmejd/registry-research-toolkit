@@ -25,7 +25,6 @@ surfaces here.
 from __future__ import annotations
 
 import sqlite3
-from dataclasses import replace
 from typing import TYPE_CHECKING
 
 import pytest
@@ -886,35 +885,6 @@ def test_provider_coverage_batches_registers_with_identical_payload(
     assert len(calls) == 1
     assert calls[0][0] == "scb"
     assert set(calls[0][1]) == {"lisa", "rams"}
-
-
-@pytest.mark.parametrize("with_bindings", [True, False])
-def test_provider_batch_skips_registers_without_held_bindings(
-    steward_client: TestClient, monkeypatch: pytest.MonkeyPatch, with_bindings: bool
-) -> None:
-    index = steward_client.app.state.catalog_index
-    steward_client.app.state.catalog_index = replace(
-        index,
-        bindings_by_variant=index.bindings_by_variant if with_bindings else {},
-        period_range_by_register={
-            **index.period_range_by_register,
-            "scb/rams": ("2018-01-01", "2018-12-31"),
-        },
-    )
-    provider_read = Catalog.provider_column_coverage
-    calls = []
-
-    def batched_columns(catalog, provider_slug, register_slugs):
-        slugs = tuple(register_slugs)
-        calls.append((provider_slug, set(slugs)))
-        return provider_read(catalog, provider_slug, slugs)
-
-    monkeypatch.setattr(Catalog, "provider_column_coverage", batched_columns)
-    response = steward_client.get("/api/catalog/scb")
-    assert response.status_code == 200
-    children = {node["fqid"]: node for node in response.json()["children"]}
-    assert children["scb/rams"]["coverage"] is None
-    assert calls == [("scb", {"lisa"} if with_bindings else set())]
 
 
 def test_partial_column_hold_deliveries_name_only_held_column(

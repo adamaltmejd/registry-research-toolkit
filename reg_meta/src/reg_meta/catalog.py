@@ -1711,6 +1711,9 @@ class Catalog:
         answers with. Two keys would split one column's coverage between them, and
         a steward's register page (which matches its held column to this key by the
         same fold) would show whichever half its own spelling landed on."""
+        # simplify: this single-register reader can scan all variable_state rows;
+        # optimize in a register/subject fix if profiling attributes a 200 ms
+        # catalog-budget miss to this query.
         rows = self._conn.execute(
             "SELECT v.slug AS slug, vs.delivery_column_name AS col, "
             "MIN(vs.valid_from) AS cov_from, MAX(vs.valid_to) AS cov_to, "
@@ -1955,6 +1958,9 @@ class Catalog:
         coverage still needs exact coverage for a held unnamed column; using the
         variable-level union would borrow named sibling states.
         """
+        # simplify: this single-register reader can scan all variable rows;
+        # optimize with register_column_coverage if register-page profiling
+        # attributes a 200 ms catalog-budget miss to these queries.
         rows = self._conn.execute(
             "SELECT v.slug AS slug, MIN(vs.valid_from) AS cov_from, "
             "MAX(vs.valid_to) AS cov_to, COUNT(vs.state_id) AS nstates "
@@ -1996,8 +2002,8 @@ class Catalog:
             register_filter = f" AND r.slug IN ({','.join('?' for _ in slugs)})"
             params.extend(slugs)
         # LEFT joins keep register selection ahead of indexed variable/state
-        # lookups; the former inner joins scanned the entire state table per
-        # register. HAVING drops the stateless rows those joins retain.
+        # lookups; the live per-register inner-join queries can scan catalog-wide
+        # tables. HAVING drops the stateless rows those joins retain.
         rows = self._conn.execute(
             "SELECT r.slug AS register_slug, v.slug AS slug, "
             "vs.delivery_column_name AS col, MIN(vs.valid_from) AS cov_from, "

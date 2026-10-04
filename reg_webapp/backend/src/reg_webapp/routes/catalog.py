@@ -964,12 +964,7 @@ def _provider_response(
 
         provider_columns = catalog.provider_column_coverage(
             provider_slug,
-            [
-                r.fqid.register
-                for r in registers
-                if r.fqid.register is not None
-                and str(r.fqid) in held_columns_by_register
-            ],
+            [r.fqid.register for r in registers if r.fqid.register is not None],
         )
 
         def coverage_for(register_slug: str) -> RegisterCoverage | None:
