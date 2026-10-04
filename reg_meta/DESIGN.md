@@ -189,11 +189,12 @@ state's spelling, Y-93's representative, and `MIN(variable_alias.delivery_column
 — so one column could come back under three names.
 
 Holding compiler comparisons use this exact fold to resolve the authored spelling once.
-The compiled mapping stores its canonical state spelling; runtime holding comparisons
-use that spelling without reader-side folds. The compiled contract below adds a
-uniqueness gate: it fails if zero or several distinct state spellings match, rather than
-picking the lowest. The resolver's general representative/alias behavior remains
-unchanged.
+The compiled mapping stores the representative spelling of that delivery column — the
+one `representative_columns` names it under — and runtime holding comparisons use it
+without reader-side folds. The compiled contract below adds a presence gate: the
+authored spelling must fold onto a delivery column the resolver emits for that
+variable/variant (states plus participating alias windows); no match fails publication.
+The resolver's general representative/alias behavior remains unchanged.
 
 ## Composite registers and source tracking
 
@@ -865,15 +866,21 @@ claims; equal partitions or an unlabelled whole-population claim conflict on ove
 cells. Year-independent claims retain their separate scope check.
 
 The compiler folds each literal with Python `str.lower()` (`py_lower`), the exact shared
-fold of `representative_columns`. No NFC, `casefold()` or SQLite `lower()`. At the
-mapped variable/variant it requires exactly one distinct matching catalog state
-spelling; zero or several fail publication. Store both spellings and use the canonical
-one for runtime holding comparisons. Do not use the lowest-spelling tie-break or
-alias-only fallback to weaken this gate. This is deliberately stricter than the existing
-reader's alias-only acceptance, not a claim that its inputs already pass. The compiler
-must report rejected accepted mappings for separate source/contract review. Reader-side
-holding folds go; the resolver's own alias/state identity rule remains shared domain
-behavior.
+fold of `representative_columns`. No NFC, `casefold()` or SQLite `lower()`. The
+comparison universe at the mapped variable/variant is what
+`Catalog._expand_state_windows` emits over the whole history: the states' own delivery
+columns plus the alias windows that participate under its containment, replacement and
+curated-addition rules (ratified 2026-10-04, replacing the states-only draft; the
+earlier `inventory_check._expanded_columns` mirror is the model, with its coding-mode
+drift fixed or the resolver called directly). The folded literal must name exactly one
+delivery column in that universe; no match fails publication with the coordinate and
+locator. `representation_canonical` is that column's representative spelling from
+`representative_columns(states, windows)` — a state's own spelling where a state names
+the column, else the lowest alias spelling — so the stored value is the spelling every
+reader already compares by, not an arbitrary pick. Store both spellings. The compiler
+must report rejected accepted mappings for separate source review, never fall back
+silently. Reader-side holding folds go; the resolver's own alias/state identity rule
+remains shared domain behavior.
 
 `Catalog._expand_state_windows` remains the resolution authority. Per-column metadata or
 coding windows intersect successive base states; shared windows must be contained.

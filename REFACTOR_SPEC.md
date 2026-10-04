@@ -164,12 +164,13 @@ review on zero or ambiguous period tokens rather than guess.
 
 Each physical column has zero or more semantic mappings. A mapping names
 `register_variant`, variable FQID and required literal `representation`. The compiler
-stores their catalog IDs and the unique canonical state spelling under shared `lower()`;
-semantic applicability is resolved only at query time. Zero mappings keep an unresolved
-physical column in the coverage denominator without admitting or ordering it. Several
-mappings let one physical table/column serve multiple register variants (the existing
-combined Utrikeshandel table does); several tables may map the same logical coordinate
-over **disjoint** editions (the ordinary annual series).
+stores their catalog IDs and the representative spelling of the resolver-emitted
+delivery column the literal folds onto under shared `lower()`; semantic applicability is
+resolved only at query time. Zero mappings keep an unresolved physical column in the
+coverage denominator without admitting or ordering it. Several mappings let one physical
+table/column serve multiple register variants (the existing combined Utrikeshandel table
+does); several tables may map the same logical coordinate over **disjoint** editions
+(the ordinary annual series).
 
 **One-to-one resolution invariant (ratified 2026-09-01).** Every admitted
 `(register_variant, variable, representation, period)` cell resolves to exactly **one**

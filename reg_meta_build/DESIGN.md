@@ -1545,17 +1545,19 @@ segment relation, findings relation, excluded rows or semantic state resolution.
 
 Require every mapping's representation. Resolve authored variable/variant coordinates to
 existing IDs, validate register ownership, then fold the literal with the shared Python
-`str.lower()`/`py_lower` rule. Exactly one distinct catalog state spelling at that
-variable/variant must match; zero or several fail. Store literal and canonical spelling.
-Do not apply NFC, Unicode casefold or a lowest-spelling tie-break. This inherited gate
-is stricter than alias-window-only acceptance today; rejected accepted mappings require
-separate review, never silent compiler fallback. After canonicalization, pass canonical
-spellings to the shared pure placement validator extracted from
-`DeliveryInventory._check_one_to_one_resolution` for temporal ambiguity per cell per
-partition, including labelled/unlabelled conflicts. Reject duplicate canonical triples
-within a physical column with actionable input locators before insertion; SQL UNIQUE
-remains the final guard. Do not infer aliases' applicability or clip physical holdings
-to state windows during compilation.
+`str.lower()`/`py_lower` rule. The folded literal must name exactly one delivery column
+in the universe `Catalog._expand_state_windows` emits for that variable/variant over the
+whole history (states plus participating alias windows); no match fails. Store the
+literal and the representative spelling `representative_columns(states, windows)` gives
+that column (ratified 2026-10-04; the states-only draft was stricter than the resolver
+and would have rejected legitimate alias-only columns). Do not apply NFC or Unicode
+casefold. Rejected accepted mappings require separate review, never silent compiler
+fallback. After canonicalization, pass canonical spellings to the shared pure placement
+validator extracted from `DeliveryInventory._check_one_to_one_resolution` for temporal
+ambiguity per cell per partition, including labelled/unlabelled conflicts. Reject
+duplicate canonical triples within a physical column with actionable input locators
+before insertion; SQL UNIQUE remains the final guard. Do not infer aliases'
+applicability or clip physical holdings to state windows during compilation.
 
 The existing coverage assessment keeps range/list editions "temporally unassessed";
 reuse `data_warning` for that disposition. Single-period assessment's flat union is
