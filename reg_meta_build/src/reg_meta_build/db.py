@@ -24,7 +24,7 @@ from reg_meta.db import (
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
 # Produced catalog schema; readers gate their independently supported version.
-SCHEMA_VERSION = "8.1.0"
+SCHEMA_VERSION = "9.0.0"
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
@@ -1481,6 +1481,74 @@ CREATE TABLE source_join_key (
 );
 
 -- Import metadata
+CREATE TABLE holding_table (
+    -- Deterministic artifact-local key; never a row/person identifier or semantic owner.
+    table_id INTEGER PRIMARY KEY,
+    -- Verbatim opaque delivery identifier; never an inferred register or renamed table.
+    physical_id TEXT NOT NULL UNIQUE CHECK (length(physical_id) > 0),
+    -- Authored physical scope; never inferred metadata validity or fabricated all-years.
+    scope TEXT NOT NULL CHECK (scope IN ('intervals', 'year_independent', 'unknown')),
+    -- Typed authored edition JSON (int/token/range/list); never flattened resolver windows.
+    edition_json TEXT CHECK (edition_json IS NULL OR json_valid(edition_json)),
+    -- Explicit shard slug or NULL; never a population predicate or an inferred filename.
+    partition TEXT CHECK (partition IS NULL OR (length(partition) > 0
+        AND partition GLOB '[a-z]*' AND partition NOT GLOB '*[^a-z0-9-]*'
+        AND partition NOT LIKE '%--%' AND substr(partition, -1) <> '-'
+        AND partition <> 'class')),
+    -- Authored retain_unknown reason only; never an invented reason or warning witness JSON.
+    retain_unknown_reason TEXT CHECK (retain_unknown_reason IS NULL
+        OR length(trim(retain_unknown_reason)) > 0),
+    -- Relative pinned input/record locator; never source payload, absolute host path or PII.
+    source_ref TEXT NOT NULL CHECK (length(source_ref) > 0),
+    CHECK ((scope = 'unknown' AND retain_unknown_reason IS NOT NULL)
+        OR (scope <> 'unknown' AND retain_unknown_reason IS NULL)),
+    CHECK (scope = 'unknown' OR edition_json IS NOT NULL),
+    CHECK (scope <> 'year_independent' OR
+        (json_type(edition_json) = 'text' AND json_extract(edition_json, '$') = '_default'))
+);
+
+CREATE TABLE holding_period (
+    -- Owning physical table; never a semantic state or alias-window key.
+    table_id INTEGER NOT NULL REFERENCES holding_table(table_id),
+    -- Inclusive physical lower ISO bound; never clipped to catalog applicability.
+    lo TEXT NOT NULL CHECK (lo GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
+    -- Inclusive physical upper ISO bound; never a guessed bound for unknown scope.
+    hi TEXT NOT NULL CHECK (hi GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
+    PRIMARY KEY (table_id, lo, hi),
+    CHECK (lo <= hi)
+);
+
+CREATE TABLE holding_column (
+    -- Deterministic artifact-local key; never an observation or catalog state ID.
+    column_id INTEGER PRIMARY KEY,
+    -- Exact physical table owner; never an inferred logical register owner.
+    table_id INTEGER NOT NULL REFERENCES holding_table(table_id),
+    -- Literal case-preserving column name; never a canonical representation substitute.
+    name TEXT NOT NULL CHECK (length(name) > 0),
+    -- Authored unmapped reason or NULL when absent; never synthesized from another edition.
+    unmapped_reason TEXT CHECK (unmapped_reason IS NULL OR length(trim(unmapped_reason)) > 0),
+    UNIQUE (table_id, name)
+);
+
+CREATE TABLE holding_mapping (
+    -- Physical column carrying the authored mapping; never a precomputed logical slice.
+    column_id INTEGER NOT NULL REFERENCES holding_column(column_id),
+    -- Existing variant ID for the authored coordinate; never a selected state/window ID.
+    variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
+    -- Existing variable ID for the authored binding; never a resolved same_as donor ID.
+    variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
+    -- Required verbatim authored token; never case-folded display text or an omitted wildcard.
+    representation_literal TEXT NOT NULL CHECK (length(representation_literal) > 0),
+    -- Representative spelling of the resolver-emitted delivery column (states + participating
+    -- alias windows) the literal folds onto; never temporal semantic resolution.
+    representation_canonical TEXT NOT NULL CHECK (length(representation_canonical) > 0),
+    PRIMARY KEY (column_id, variant_id, variable_id, representation_canonical)
+);
+
+-- Candidate logical-to-physical index; verify order with plan 02 EXPLAIN QUERY PLAN.
+CREATE INDEX idx_holding_mapping_variable_variant
+    ON holding_mapping(variable_id, variant_id);
+
 CREATE TABLE import_manifest (
     key TEXT PRIMARY KEY,
     value TEXT NOT NULL
