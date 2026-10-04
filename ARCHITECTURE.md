@@ -263,29 +263,70 @@ reproduce. See [`reg_webapp/DESIGN.md`](reg_webapp/DESIGN.md).
 
 ## Testing strategy
 
-Six load-bearing test categories span the packages; the consolidated view (full detail
-in each owning DESIGN.md):
+The toolkit is a deterministic compiler feeding an immutable artifact to stateless
+readers, so its behavior is observable at a small number of boundaries that outlive the
+code behind them. Tests assert at those boundaries and nowhere else; the binding rules
+for agents are in `AGENTS.md` → "Testing policy". This section names the boundaries, the
+oracle each one uses, and the three cost tiers tests run in.
 
-1. **Shared validator corpus** — `reg_schema/test_corpus/` golden
-   `(input.json, expected_ValidationResult.json)` pairs, run by **two** consumers:
-   `reg_schema`'s Python tests and the SPA's TS tests. — shipped.
-2. **FQID property tests** — round-trip, segment-count discrimination, reserved-slug
-   rejection, slug-immutability snapshot. — shipped.
-3. **Kit reproducibility** — same spec + codes + stats → identical kit zip.
-   **Remaining** (see REFACTOR_SPEC.md).
-4. **Steward catalog filtering** — `fqid_outside_steward_catalog` /
-   `representation_outside_steward_catalog` semantics. Shipped: boot-time catalog drop +
-   wiring into `/validate` (issue #227); column-based admission (issue #206); browse +
-   search scoping (issue #859) — catalog root/provider/register/binding narrowed to held
-   holdings, search register/variable surfaces scoped via `fqids` allow-list. This is
-   pre-cut implementation; §12 replaces the runtime inventory/index path with shared SQL
-   predicates while retaining these warning codes and observable selection guards.
-5. **Per-deploy smoke tests** — golden `/api/context` + shallow `/api/catalog` walk on
-   container start. **Remaining** (no deployment yet).
-6. **Server-side input-validation gates** — period canonicalization and FQID
-   route-segment validation (422-before-SQL), provider-ID namespace property,
-   provenance-DB confinement. — shipped (see `reg_webapp/DESIGN.md` and
-   `reg_meta_build/DESIGN.md`).
+### Boundaries and oracles
+
+  | Boundary                                 | Oracle (data, not code)                                                              | Status    |
+  | ---------------------------------------- | ------------------------------------------------------------------------------------ | --------- |
+  | Prepared inputs + curation → artifact    | synthetic source fixtures → `validate_built_db` + content snapshot                   | shipped   |
+  | Artifact → CLI JSON / library models     | golden `request → response` cases over the synthetic artifact                        | partial   |
+  | Artifact → HTTP                          | `openapi.json` snapshot + TestClient goldens over the fixture DB                     | shipped   |
+  | `project_data.json` → validation result  | `reg_schema/test_corpus/` run by Python and TS consumers                             | shipped   |
+  | Project + artifact → order manifest      | byte-identical `order.json` goldens, cross-adapter identity                          | shipped   |
+  | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                           | shipped   |
+  | FQID / period grammars, interval algebra | Hypothesis properties + round-trip snapshots                                         | shipped   |
+  | Real artifact ↔ accepted inputs          | conformance suite against an artifact directory (accounting, agreement, order bytes) | remaining |
+
+A function that is not one of these is reached through one that is. Structural artifact
+invariants have one authority, `validate_built_db`; tests run it, they do not re-derive
+its checks. Expected outputs are files reviewed in the diff; a golden that changes is a
+content decision, not a test fix.
+
+The steward-filtering semantics (`fqid_outside_steward_catalog` /
+`representation_outside_steward_catalog`, column-based admission, scoped browse and
+search) are pinned today through the pre-cut runtime inventory and index tests; §12
+replaces that path with shared SQL predicates while retaining the warning codes and the
+observable selection guards as the boundary under test.
+
+### Tiers
+
+1. **Commit (seconds).** Contract tests over synthetic fixtures built from readable
+   source, property tests, golden corpora. Run narrowed by package while iterating.
+2. **Push / CI (minutes).** The full synthetic build through the real pipeline, the
+   conformance suite against its output, the OpenAPI snapshot and codegen drift checks,
+   the frontend suites, and the Playwright smoke driver against the fixture DB.
+   `@pytest.mark.integration` adds the container-backed tests.
+3. **Artifact (maintainer or release gate).** The same conformance suite pointed at a
+   real artifact directory (`@pytest.mark.release`, deselected without one): accounting
+   against the accepted private inputs, browse/validate/order agreement on sampled
+   bindings, order byte-identity against pinned baseline orders, performance budget
+   probes. CI has no real artifact, so this tier is the maintainer's hard line before a
+   release and runs in the release workflow once the asset exists.
+
+### Conformance suite
+
+Tiers 2 and 3 share one suite, `conformance/` at the repository root, parametrized by an
+artifact directory and holding its cases as data (`conformance/cases/`): requests,
+expected structured results, normalized orders. It is the seed of the
+language-independent corpus a reader port must pass, so it depends on the artifact
+format and the public CLI/API surfaces only, never on Python internals. Its build-out is
+staged with the compiled-holdings work (see `REFACTOR_SPEC.md` → "Remaining test
+coverage").
+
+### Discipline against ballooning
+
+Pre-v1 agentic development produced a suite that churns faster than the code it covers
+and reaches into private names in over a hundred places. The policy stops new growth of
+that kind; the existing tests are swept one package at a time after the
+compiled-holdings cut, deleting any test that pins an internal whose behavior a boundary
+case already covers and rewriting the rest against the artifact. Coverage is measured as
+boundaries with a corpus, not as line percentage; a boundary without a corpus is the
+gap.
 
 ## Maturity and compatibility policy
 

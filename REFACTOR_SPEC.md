@@ -511,6 +511,14 @@ Carried from the testing strategy; the shipped categories are in
   payloads independently of corpus cardinality; retain controlled cold/repeat CLS trace
   evidence; and probe immutable hashed assets plus the search edge MISS→HIT contract.
   See `ARCHITECTURE.md` → Repo-wide invariants.
+- **Conformance suite and test sweep** — a root-level `conformance/` suite parametrized
+  by artifact directory (synthetic in CI, real artifact under `--run-release`) holding
+  its cases as data: accounting against accepted inputs, browse/validate/order
+  agreement, order byte-identity, performance probes. Built alongside the
+  compiled-holdings cut; afterwards the existing per-package suites are swept one
+  package at a time under the `AGENTS.md` testing policy (delete tests pinning internals
+  that a boundary case covers, rewrite the rest against the artifact). See
+  `ARCHITECTURE.md` → Testing strategy.
 
 ## Open / deferred decisions
 

@@ -83,6 +83,43 @@ trigger
 (`# simplify: O(n^2) scan, index it if the candidate set passes a few thousand`), so a
 simplification reads as intent and a deferral can't silently rot.
 
+# Testing policy
+
+Tests pin **contracts and behavior**, never implementation. The toolkit is a
+deterministic compiler (`reg_meta_build`) that feeds an immutable artifact to stateless
+readers (`reg_meta`, `reg_webapp`), so nearly every behavior is observable at a boundary
+that outlives the code behind it. `ARCHITECTURE.md` → "Testing strategy" names the
+boundaries, the oracles and the tiers; the rules below are what an agent must follow
+when writing, changing or deleting a test.
+
+- **Assert only at a named boundary**: built-artifact content, CLI JSON, library return
+  models, HTTP responses, `project_data.json` validation results, order-manifest bytes,
+  curation-TOML load or located failure, the FQID and period grammars. Anything else is
+  reached through one of those, not tested on its own.
+- **No private-name imports in tests** (`from x import _helper`) and no patching of
+  internal modules. Mock only process boundaries: network, clock, filesystem,
+  subprocess.
+- **Oracles are data.** Expected behavior lives in golden corpora and snapshot files
+  (`input → expected`) readable without Python. Changing an expected file is a content
+  decision reviewed in the diff; never regenerate goldens to make a run pass without
+  reading what changed and saying why in the commit.
+- **Fixtures come from readable source** (TOML/JSON/CSV run through the real pipeline),
+  never from Python literals of database rows. The synthetic artifact is the unit.
+- **One behavior per test, named by behavior.** No test file over 800 lines; split by
+  contract surface, not by helper.
+- **Delete with the code.** A test that pinned deleted behavior is deleted, not
+  retargeted. A refactor that changes no boundary changes no test; if it does, the
+  boundary moved and the design note says so.
+- **Determinism is a tested property**: byte-identical rebuilds and serializations;
+  Hypothesis for grammars and interval algebra.
+- **Structural validation has one authority.** `validate_built_db` owns artifact
+  invariants; tests run it on the synthetic artifact, they do not re-derive its checks.
+- **Bug fix = a regression case in the owning corpus**, not a new assertion block in a
+  helper test.
+- **Frontend follows the same rule**: assert on rendered DOM, the accessibility tree and
+  the codegen'd API types, not component internals. No screenshot regression. A
+  UI-specific regime is a separate, later decision.
+
 # Python conventions
 
 - Runtime deps live in each package's `pyproject.toml`; dev deps live only in the
@@ -136,14 +173,11 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
 - **Web frontend** (`reg_webapp/frontend/`): Svelte 5 + Vite + TypeScript, bun-managed.
   TS types codegen'd from FastAPI's `openapi.json`.
 - **Tests**: pytest + pytest-xdist; `@pytest.mark.integration` opts into Apple Container
-  (macOS) or Podman (Linux) tests. Build/parse coverage is fully synthetic (no
-  gitignored real SCB/SOS data) and runs the full structural validator
-  (`validate_built_db(corpus=False)` — every invariant except the real-corpus volume
-  gate). Real-corpus drift is surfaced by a maintainer's actual `build-db`. Strict
-  builds require `corpus=True`; diagnostic builds retain structural validation and
-  report corpus failures in a separate, nonpublishable output. Hypothesis (dev-only) is
-  used for property-based tests on invariant-heavy surfaces (`test_*_properties.py` in
-  `reg_meta` and `reg_meta_build`), additive to the example/snapshot suites.
+  (macOS) or Podman (Linux) tests; `@pytest.mark.release` opts into real-artifact tests.
+  Build/parse coverage is fully synthetic (no gitignored real SCB/SOS data) and runs the
+  full structural validator (`validate_built_db(corpus=False)`); strict builds require
+  `corpus=True`. Hypothesis (dev-only) covers invariant-heavy grammars. Rules for what a
+  test may assert on: "Testing policy" above and `ARCHITECTURE.md` → "Testing strategy".
 - **Type checking**: `uvx --from ty==0.0.79 ty check` (Astral, beta). Blocking in CI;
   pinned via `uvx` so CI, pre-commit, and cached Codex environments use the same
   checker. `ty` moves quickly, so bump this pin deliberately/frequently. Not a dev dep —
