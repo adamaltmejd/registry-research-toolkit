@@ -2847,10 +2847,6 @@ def _check_representation_replaced_by(
     result.info(f"{n_edges} representation succession edge(s)")
 
 
-# How many (register, variant, column) groups the report spells out in full.
-# Beyond it the count stands in and `build_catalog.py errata` writes the rest:
-# a red gate on a stale inventory can name thousands of groups, and a stderr
-# report nobody scrolls to the end of is not a repair instruction.
 def _check_operational(conn: sqlite3.Connection, result: ValidationResult) -> None:
     result.section("[operational]")
     fk_violations = list(conn.execute("PRAGMA foreign_key_check"))

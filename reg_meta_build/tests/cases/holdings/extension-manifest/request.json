@@ -4,6 +4,10 @@
     "catalog_artifact_kind",
     "catalog_publishable",
     "catalog_completeness",
-    "generation_id"
+    "base_generation_id"
+  ],
+  "absent_fields": [
+    "generation_id",
+    "builder_commit"
   ]
 }

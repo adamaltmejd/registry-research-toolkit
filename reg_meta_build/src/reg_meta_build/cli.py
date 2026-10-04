@@ -364,19 +364,6 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Steward slug (default: swecov).",
     )
     extend_db_p.add_argument(
-        "--slug-dir",
-        default=None,
-        help=(
-            "Rejected override; naming comes from committed steward slug TOMLs "
-            "(default: reg_meta_build/fqid_slugs/<steward>/ from a repo checkout)."
-        ),
-    )
-    extend_db_p.add_argument(
-        "--skip-slugs",
-        action="store_true",
-        help="Rejected for publishable extend-db; committed steward slug pins are required.",
-    )
-    extend_db_p.add_argument(
         "--delivery-inventory",
         default=None,
         help="Accepted candidate's policy/inventory.toml; external paths are rejected.",
@@ -388,16 +375,6 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     extend_db_p.add_argument("--input-commit", default=None)
     extend_db_p.add_argument("--input-manifest-sha256", default=None)
-    extend_db_p.add_argument(
-        "--skip-holdings-gate",
-        action="store_true",
-        help="Rejected: exact holdings compilation and accounting are mandatory.",
-    )
-    extend_db_p.add_argument(
-        "--no-validate",
-        action="store_true",
-        help="Rejected: strict artifact validation is mandatory.",
-    )
 
     build_docs_p = sub.add_parser(
         "build-docs",
@@ -1297,14 +1274,6 @@ def _cmd_verify_input_bundle(
 
 def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
-    if any((args.slug_dir, args.skip_slugs, args.skip_holdings_gate, args.no_validate)):
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="publishable_extension_override",
-            error_class="configuration",
-            message="Publishable extend-db rejects slug overrides and validation/holdings skip flags.",
-            remediation="Use committed steward slug pins and the complete accepted holdings candidate.",
-        )
     if not (args.holdings_input and args.input_commit and args.input_manifest_sha256):
         raise RegMetaError(
             exit_code=EXIT_CONFIG,

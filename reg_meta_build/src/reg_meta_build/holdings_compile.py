@@ -42,13 +42,9 @@ class CompiledHoldings:
     accounting: HoldingsAccounting
 
 
-def canonical_inventory(
-    conn: sqlite3.Connection, inventory: DeliveryInventory
-) -> DeliveryInventory:
-    """Canonicalize against the resolver's actual whole-history delivery universe."""
-    conn.row_factory = sqlite3.Row
-    register_py_lower(conn)
-    catalog = Catalog(conn)
+def _catalog_coordinate_ids(
+    conn: sqlite3.Connection,
+) -> tuple[dict[str, int], dict[str, int]]:
     variables = {
         f"{row['provider']}/{row['register_slug']}/{row['slug']}": row["variable_id"]
         for row in conn.execute(
@@ -63,6 +59,17 @@ def canonical_inventory(
             "SELECT rv.register_variant_id, rv.slug, p.slug AS provider, r.slug AS register_slug FROM register_variant rv JOIN register r USING(register_id) JOIN provider p USING(provider_id)"
         )
     }
+    return variables, variants
+
+
+def canonical_inventory(
+    conn: sqlite3.Connection, inventory: DeliveryInventory
+) -> DeliveryInventory:
+    """Canonicalize against the resolver's actual whole-history delivery universe."""
+    conn.row_factory = sqlite3.Row
+    register_py_lower(conn)
+    catalog = Catalog(conn)
+    variables, variants = _catalog_coordinate_ids(conn)
     universes: dict[tuple[int, int], dict[str, str]] = {}
     rejections = []
     tables = []
@@ -141,6 +148,7 @@ def compile_holdings(
         raise ValueError("Accepted inventory steward does not match selected steward")
     accounting = account_holdings(root, inventory)
     canonical = canonical_inventory(conn, inventory)
+    variables, variants = _catalog_coordinate_ids(conn)
     raw = tomllib.loads(inventory_path.read_text(encoding="utf-8"))
     authored = {table["id"]: (index, table) for index, table in enumerate(raw["table"])}
     logical = {table.id: table for table in canonical.tables}
@@ -208,21 +216,12 @@ def compile_holdings(
                 literal_columns[column.name].mappings if physical_id in logical else ()
             )
             for literal, mapping in zip(literals, column.mappings, strict=True):
-                provider, register, variant = mapping.register_variant.split("/")
-                variable = conn.execute(
-                    "SELECT v.variable_id FROM variable v JOIN register r USING(register_id) JOIN provider p USING(provider_id) WHERE p.slug=? AND r.slug=? AND v.slug=?",
-                    (provider, register, mapping.variable.variable),
-                ).fetchone()
-                variant_row = conn.execute(
-                    "SELECT rv.register_variant_id FROM register_variant rv JOIN register r USING(register_id) JOIN provider p USING(provider_id) WHERE p.slug=? AND r.slug=? AND rv.slug=?",
-                    (provider, register, variant),
-                ).fetchone()
                 conn.execute(
                     "INSERT INTO holding_mapping(column_id, variant_id, variable_id, representation_literal, representation_canonical) VALUES (?, ?, ?, ?, ?)",
                     (
                         column_id,
-                        variant_row[0],
-                        variable[0],
+                        variants[mapping.register_variant],
+                        variables[str(mapping.variable)],
                         literal.representation,
                         mapping.representation,
                     ),

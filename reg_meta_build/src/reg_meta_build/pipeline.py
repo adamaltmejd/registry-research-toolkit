@@ -455,9 +455,9 @@ def _run_pipeline(
         raise ValueError("--input-manifest-sha256 must be a lowercase SHA-256")
     from .artifact_identity import builder_commit, generation_id
 
-    revision = builder_commit()
     started = time.perf_counter()
     publishable = not diagnostic and not registers
+    revision = builder_commit() if publishable and not check else None
     prepared_path = prepared_path.resolve()
     output = output.resolve() if output is not None else None
     report_dir = report_dir.resolve()
@@ -1704,6 +1704,26 @@ def _run_pipeline(
                     )
                 if diagnostic or not counts["error"]:
                     phase_started = time.perf_counter()
+                    identity = {}
+                    if publishable:
+                        assert revision is not None
+                        if builder_commit() != revision:
+                            raise ValueError(
+                                "Builder revision changed during compilation"
+                            )
+                        identity = {
+                            "builder_commit": revision,
+                            "generation_id": generation_id(
+                                {
+                                    "schema_version": SCHEMA_VERSION,
+                                    "builder_commit": revision,
+                                    "catalog_artifact_kind": "catalog",
+                                    "prepared_commit": input_commit,
+                                    "prepared_manifest_sha256": input_manifest_sha256,
+                                    "curation_tree_sha256": curation_hash,
+                                }
+                            ),
+                        }
                     write_resolved_catalog(
                         lineage.variables,
                         output,
@@ -1711,19 +1731,7 @@ def _run_pipeline(
                         scoped=bool(registers),
                         corpus=publishable,
                         manifest={
-                            "builder_commit": revision,
-                            "generation_id": generation_id(
-                                {
-                                    "schema_version": SCHEMA_VERSION,
-                                    "builder_commit": revision,
-                                    "catalog_artifact_kind": "diagnostic"
-                                    if diagnostic
-                                    else "catalog",
-                                    "prepared_commit": input_commit,
-                                    "prepared_manifest_sha256": input_manifest_sha256,
-                                    "curation_tree_sha256": curation_hash,
-                                }
-                            ),
+                            **identity,
                             "import_date": import_date,
                             "prepared_commit": input_commit,
                             "prepared_manifest_sha256": input_manifest_sha256,

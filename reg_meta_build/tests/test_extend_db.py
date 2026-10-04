@@ -708,3 +708,4 @@ def test_extension_preserves_base_generation_provenance(
     with sqlite3.connect(output) as conn:
         manifest = dict(conn.execute("SELECT key,value FROM import_manifest"))
     assert {key: manifest[key] for key in request["fields"]} == expected
+    assert set(request["absent_fields"]).isdisjoint(manifest)

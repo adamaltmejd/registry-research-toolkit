@@ -135,9 +135,13 @@ def test_publishable_extension_rejects_unpinned_or_skipped_inputs(case: Path) ->
         text=True,
         check=False,
     )
-    assert result.returncode != 0
-    output = json.loads(result.stdout)
-    assert output["error"]["code"] == expected["error_code"]
+    if "stderr_contains" in expected:
+        assert result.returncode == expected["returncode"]
+        assert expected["stderr_contains"] in result.stderr
+    else:
+        assert result.returncode != 0
+        output = json.loads(result.stdout)
+        assert output["error"]["code"] == expected["error_code"]
 
 
 def test_public_artifact_records_canonical_generation(tmp_path: Path) -> None:
@@ -188,5 +192,30 @@ def test_artifact_variable_naming_leaves_pin_inputs_unchanged(tmp_path: Path) ->
             "generated_slug_files": sorted(path.name for path in pins.iterdir()),
         }
     assert actual == expected
+    result = validate_built_db(output)
+    assert result.passed, result.format_report()
+
+
+@pytest.mark.parametrize(
+    "mode", json.loads((CASES / "partial-identity/request.json").read_text())["modes"]
+)
+def test_partial_artifact_does_not_claim_a_publishable_generation(
+    tmp_path: Path, mode: dict[str, bool]
+) -> None:
+    case = CASES / "partial-identity"
+    request = json.loads((case / "request.json").read_text())
+    expected = json.loads((case / "expected.json").read_text())
+    variables = tuple(
+        ResolvedVariable.model_validate_json(json.dumps(value))
+        for value in json.loads((case / request["catalog"]).read_text())
+    )
+    output = tmp_path / "reg_meta.db"
+    write_resolved_catalog(variables, output, manifest=synthetic_manifest(), **mode)
+    with sqlite3.connect(output) as conn:
+        manifest = dict(conn.execute("SELECT key,value FROM import_manifest"))
+    assert set(expected["absent_fields"]).isdisjoint(manifest)
+    assert {
+        key: manifest[key] for key in ("catalog_publishable", "catalog_completeness")
+    } == {key: expected[key] for key in ("catalog_publishable", "catalog_completeness")}
     result = validate_built_db(output)
     assert result.passed, result.format_report()

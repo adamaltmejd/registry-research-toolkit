@@ -28,12 +28,22 @@ def validate_compiled_holdings(conn: sqlite3.Connection) -> None:
     """Validate facts through their authored models and the shared placement gate."""
     manifest = dict(conn.execute("SELECT key, value FROM import_manifest"))
     kind = manifest.get("catalog_artifact_kind")
-    if kind == "diagnostic":
-        return
-    if kind not in {"catalog", "steward"}:
+    if kind not in {"catalog", "steward", "diagnostic"}:
         raise ValueError(
             "Compiled artifact requires catalog_artifact_kind catalog or steward"
         )
+    incomplete = (
+        kind == "diagnostic" or manifest.get("catalog_completeness") == "incomplete"
+    )
+    if incomplete:
+        if kind == "steward" or set(manifest) & {"generation_id", "builder_commit"}:
+            raise ValueError("Incomplete artifact must not claim an active generation")
+        if any(
+            conn.execute(f"SELECT COUNT(*) FROM {relation}").fetchone()[0]
+            for relation in HOLDING_RELATIONS
+        ):
+            raise ValueError("Incomplete artifact must have empty holding relations")
+        return
     required = {*GENERATION_KEYS, "generation_id"}
     if kind == "steward":
         required |= {

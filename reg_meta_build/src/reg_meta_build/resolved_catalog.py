@@ -1119,10 +1119,16 @@ def write_resolved_catalog(
             )
         import_metadata[key] = value
 
-    if not partial:
+    captured_revision = None
+    if partial:
+        import_metadata.pop("builder_commit", None)
+        import_metadata.pop("generation_id", None)
+    else:
         from .artifact_identity import builder_commit, generation_id
 
-        import_metadata.setdefault("builder_commit", builder_commit())
+        if "builder_commit" not in import_metadata:
+            captured_revision = builder_commit()
+            import_metadata["builder_commit"] = captured_revision
         expected_generation = generation_id(import_metadata)
         if (
             "generation_id" in import_metadata
@@ -1418,5 +1424,9 @@ def write_resolved_catalog(
             # even if another process creates the destination during the build.
             output.hardlink_to(staged)
         else:
+            if (corpus or captured_revision is not None) and (
+                builder_commit() != import_metadata["builder_commit"]
+            ):
+                raise ValueError("Builder revision changed during compilation")
             publish_db(staged, output)
     return output

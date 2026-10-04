@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 
 from reg_meta.source_evidence import canonical_sha256
 
-from .input_snapshot import _git
+from .input_snapshot import SnapshotError, _git, _tracked_source_commit
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -31,8 +31,27 @@ STEWARD_GENERATION_KEYS = (
 
 
 def builder_commit() -> str:
-    """Capture code identity before a build can regenerate slug files."""
-    return _git(Path(__file__).resolve().parents[3], "rev-parse", "HEAD")
+    """Capture the clean tracked builder source, never an enclosing wheel's repo."""
+    module = Path(__file__).resolve()
+    try:
+        _, revision = _tracked_source_commit(
+            tuple(
+                module.with_name(name)
+                for name in (
+                    "artifact_identity.py",
+                    "pipeline.py",
+                    "resolved_catalog.py",
+                    "extend_db.py",
+                )
+            ),
+            identity="builder",
+        )
+    except SnapshotError as exc:
+        raise ValueError(
+            "Publishable builds require clean tracked builder sources; "
+            "run from the source checkout, not an installed wheel. " + str(exc)
+        ) from exc
+    return revision
 
 
 def generation_id(manifest: Mapping[str, str]) -> str:

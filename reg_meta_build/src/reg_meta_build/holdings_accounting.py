@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import hashlib
-import json
 import tomllib
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
@@ -131,7 +130,6 @@ def account_holdings(root: Path, inventory: DeliveryInventory) -> HoldingsAccoun
         for name in POLICY_NAMES
     }
     # Only this canonical count summary and the projection digest enter SQLite.
-    json.dumps(counts, allow_nan=False)
     return HoldingsAccounting(
         raw,
         counts,

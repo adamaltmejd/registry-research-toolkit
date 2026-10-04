@@ -1,0 +1,4 @@
+{
+  "error_code": "private_holdings_invalid",
+  "error_contains": "Publishable builds require clean tracked builder sources"
+}

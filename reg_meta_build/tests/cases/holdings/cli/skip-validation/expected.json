@@ -1,3 +1,4 @@
 {
-  "error_code": "publishable_extension_override"
+  "returncode": 2,
+  "stderr_contains": "unrecognized arguments: --no-validate"
 }

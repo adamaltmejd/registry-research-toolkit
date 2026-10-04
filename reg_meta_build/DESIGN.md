@@ -1559,6 +1559,15 @@ duplicate canonical triples within a physical column with actionable input locat
 before insertion; SQL UNIQUE remains the final guard. Do not infer aliases'
 applicability or clip physical holdings to state windows during compilation.
 
+Compilation does not retain the former Y-115 build assertion that a held single-year
+column has a catalog window in that same year. A physical holding is preserved even when
+semantic applicability is absent for its edition; the whole-history fold gate
+establishes its binding identity only. Query-time resolution and ordering must still
+require applicable column windows and reject uncovered requests. The compiler calls
+`Catalog`'s existing expansion directly because the consistency checker's older mirror
+omits per-column coding intersections. That mirror is not compiler authority; its
+consolidation belongs to the staged reader cut.
+
 The existing coverage assessment keeps range/list editions "temporally unassessed";
 reuse `data_warning` for that disposition. Single-period assessment's flat union is
 source accounting, not `Catalog` semantic resolution. The latter remains query-time,
@@ -1598,16 +1607,26 @@ compiler requires both; the file digest does not enter `generation_id`. Holdings
 identify the accepted input Git commit and manifest; no private payload is embedded in
 identity rows.
 
+Scoped and diagnostic artifacts omit active `generation_id` and `builder_commit`;
+diagnostic extension preserves the copied base identity only as `base_generation_id` and
+`base_db_sha256`. These incomplete artifacts never share an active generation with a
+publishable catalog. Publishable builds require clean tracked builder sources in a
+source checkout. Installed wheels are not a source-revision authority and fail with an
+actionable checkout requirement. Capture the revision before compilation and verify it
+again before placement; uncommitted code or a changed revision cannot claim that pin.
+
 The accepted candidate's manifest covers every consumed provider TOML, inventory,
 policy, source document and review-evidence payload. Provider and policy directories
 must come from that clean pinned candidate. External provider/policy overrides and
 tracked policy defaults cannot supplement a publishable build. Changed provider bytes
-require fresh acceptance and are covered by `holdings_manifest_sha256`. Steward slug
-identity is covered separately by `builder_commit`; changing tracked slug pins requires
-public review and the existing slug checks, not fresh acceptance merely to copy them
-privately. All accepted mapping coordinates must still resolve under the selected
-committed pins; incompatibility fails the build rather than falling back to a private
-slug copy.
+require fresh acceptance and are covered by `holdings_manifest_sha256`. Verification
+materializes the exact committed manifest members into a temporary build-owned snapshot;
+all provider, inventory, policy and census reads consume that snapshot. Later edits to
+the accepted working tree cannot change the consumed bytes. Steward slug identity is
+covered separately by `builder_commit`; changing tracked slug pins requires public
+review and the existing slug checks, not fresh acceptance merely to copy them privately.
+All accepted mapping coordinates must still resolve under the selected committed pins;
+incompatibility fails the build rather than falling back to a private slug copy.
 
 Define `holdings_policy_sha256` as SHA-256 of a sorted relative-policy-path → SHA-256
 object covering `source_policy.toml`, `inventory_overlay.toml` and

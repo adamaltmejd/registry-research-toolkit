@@ -14,9 +14,10 @@ import json
 import shutil
 import sqlite3
 import tomllib
-from contextlib import closing
+from contextlib import ExitStack, closing
 from dataclasses import dataclass
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from typing import TYPE_CHECKING, Any
 
 from pydantic import (
@@ -322,225 +323,246 @@ def extend_db(
     )
     from .holdings_compile import compile_holdings, write_holdings_assessment_warnings
 
-    revision = builder_commit()
-    if holdings_input is None and not diagnostic:
-        raise ValueError(
-            "Publishable extension requires accepted holdings and exact pins"
-        )
-    if holdings_input is not None and diagnostic:
-        raise ValueError("Accepted holdings require the full strict compilation path")
-    if holdings_input is not None:
-        holdings_input = holdings_input.expanduser().resolve()
-        if not input_commit or not input_manifest_sha256:
-            raise ValueError("Private holdings require both exact input pins")
-        if slug_dir is not None or skip_slugs:
+    with ExitStack() as inputs:
+        revision = builder_commit() if not diagnostic else None
+        if holdings_input is None and not diagnostic:
             raise ValueError(
-                "Publishable extension rejects --slug-dir and --skip-slugs"
+                "Publishable extension requires accepted holdings and exact pins"
             )
-        read_private_holdings_input(
-            holdings_input,
-            input_commit=input_commit,
-            input_manifest_sha256=input_manifest_sha256,
-        )
-        providers_dir = providers_dir or holdings_input / "providers"
-        if providers_dir.expanduser().resolve() != holdings_input / "providers":
+        if holdings_input is not None and diagnostic:
             raise ValueError(
-                "Private providers must come from the accepted holdings candidate"
-            )
-        pinned_slug_dir = committed_steward_slugs(steward, revision=revision)
-    else:
-        pinned_slug_dir = None
-
-    resolved_providers_dir = resolve_steward_providers_dir(providers_dir, steward)
-    with base_db.open("rb") as base_file:
-        base_digest = hashlib.file_digest(base_file, "sha256").hexdigest()
-    with closing(open_built_db(base_db)) as source_db:
-        if holdings_input is not None:
-            from .holdings_validation import validate_compiled_holdings
-
-            validate_compiled_holdings(source_db)
-            base_manifest = get_manifest(source_db)
-            if (
-                base_manifest.get("catalog_artifact_kind"),
-                base_manifest.get("catalog_publishable"),
-                base_manifest.get("catalog_completeness"),
-            ) != ("catalog", "true", "complete"):
-                raise ValueError(
-                    "Steward compilation requires a complete publishable global base"
-                )
-        classification_short_names = frozenset(
-            name
-            for (name,) in source_db.execute("SELECT short_name FROM classification")
-        )
-    graph = _load_provider_ir(
-        resolved_providers_dir, steward, classification_short_names
-    )
-    steward_slug_dir = pinned_slug_dir or resolve_steward_slug_dir(
-        slug_dir, steward, skip_slugs=skip_slugs
-    )
-
-    db_dir.mkdir(parents=True, exist_ok=True)
-    final_path = db_dir / DB_FILENAME
-    tmp_path = final_path.with_suffix(".db.tmp")
-    if tmp_path.exists():
-        tmp_path.unlink()
-    shutil.copy2(base_db, tmp_path)
-    with tmp_path.open("rb") as copied:
-        if hashlib.file_digest(copied, "sha256").hexdigest() != base_digest:
-            tmp_path.unlink(missing_ok=True)
-            raise ValueError("Base database changed during selection")
-
-    conn = sqlite3.connect(tmp_path)
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA journal_mode=WAL")
-    conn.execute("PRAGMA synchronous=NORMAL")
-    conn.execute("PRAGMA temp_store=MEMORY")
-    conn.execute("PRAGMA foreign_keys=ON")
-    write_failed = True
-    counts = {
-        "providers": 0,
-        "registers": len(graph.registers),
-        "variants": len(graph.variants),
-        "variables": len(graph.variables),
-        "states": len(graph.states),
-        "data_warnings": len(data_warnings),
-    }
-    try:
-        _progress(f"extend-db: overlaying steward {steward!r} onto {base_db.name}")
-        counts["providers"] = _insert_providers(conn, graph.providers)
-        _insert_core_graph_from_ir(
-            conn,
-            registers=list(graph.registers),
-            variants=list(graph.variants),
-            variables=list(graph.variables),
-            states=list(graph.states),
-            aliases=list(graph.aliases),
-            alias_windows=list(graph.alias_windows),
-            provider_ids=_provider_id_by_slug(conn),
-        )
-
-        if not skip_slugs:
-            assert steward_slug_dir is not None
-            populate_slugs(conn, steward_slug_dir, strict=False)
-            populate_variable_slugs(
-                conn, steward_slug_dir, incremental=True, persist_auto=diagnostic
-            )
-            _assert_steward_rows_slugged(conn)
-
-        write_data_warnings(conn, data_warnings)
-        manifest = get_manifest(conn)
-        if diagnostic:
-            manifest.update(
-                catalog_artifact_kind="diagnostic",
-                catalog_publishable="false",
-                catalog_completeness="incomplete",
-            )
-            conn.executemany(
-                "INSERT OR REPLACE INTO import_manifest(key, value) VALUES (?, ?)",
-                sorted(manifest.items()),
+                "Accepted holdings require the full strict compilation path"
             )
         if holdings_input is not None:
-            if (
-                manifest.get("catalog_artifact_kind") != "catalog"
-                or manifest.get("catalog_publishable") != "true"
-                or manifest.get("catalog_completeness") != "complete"
-                or not manifest.get("generation_id")
-            ):
+            holdings_input = holdings_input.expanduser().resolve()
+            if not input_commit or not input_manifest_sha256:
+                raise ValueError("Private holdings require both exact input pins")
+            if slug_dir is not None or skip_slugs:
                 raise ValueError(
-                    "Steward compilation requires a complete publishable schema-9 catalog with generation identity"
+                    "Publishable extension rejects --slug-dir and --skip-slugs"
                 )
-            assert input_commit is not None and input_manifest_sha256 is not None
-            compiled = compile_holdings(conn, holdings_input, steward=steward)
-            counts["data_warnings"] += write_holdings_assessment_warnings(conn)
-            manifest.update(
-                {
-                    "catalog_artifact_kind": "steward",
-                    "builder_commit": revision,
-                    "steward": steward,
-                    "base_db_sha256": base_digest,
-                    "base_generation_id": manifest["generation_id"],
-                    "holdings_input_commit": input_commit,
-                    "holdings_manifest_sha256": input_manifest_sha256,
-                    "holdings_policy_sha256": compiled.accounting.policy_sha256,
-                    "holdings_accounting_counts": json.dumps(
-                        compiled.accounting.counts,
-                        ensure_ascii=False,
-                        sort_keys=True,
-                        separators=(",", ":"),
-                    ),
-                    "holdings_accounting_sha256": compiled.accounting.sha256,
-                }
+            providers_dir = providers_dir or holdings_input / "providers"
+            if providers_dir.expanduser().resolve() != holdings_input / "providers":
+                raise ValueError(
+                    "Private providers must come from the accepted holdings candidate"
+                )
+            assert revision is not None
+            pinned_slug_dir = committed_steward_slugs(steward, revision=revision)
+            snapshot = Path(
+                inputs.enter_context(TemporaryDirectory(prefix="reg-meta-holdings-"))
             )
-            manifest["generation_id"] = generation_id(manifest)
-            conn.executemany(
-                "INSERT OR REPLACE INTO import_manifest(key, value) VALUES (?, ?)",
-                sorted(manifest.items()),
+            read_private_holdings_input(
+                holdings_input,
+                input_commit=input_commit,
+                input_manifest_sha256=input_manifest_sha256,
+                materialize_to=snapshot,
             )
-            counts.update(
-                holding_tables=compiled.tables,
-                holding_columns=compiled.columns,
-                holding_mappings=compiled.mappings,
-            )
+            holdings_input = snapshot
+            providers_dir = snapshot / "providers"
+        else:
+            pinned_slug_dir = None
 
-        for fts in ("register_fts", "variable_fts"):
-            conn.execute(f"INSERT INTO {fts}({fts}) VALUES('delete-all')")
-        _populate_fts(conn, include_value_code=False)
+        resolved_providers_dir = resolve_steward_providers_dir(providers_dir, steward)
+        with base_db.open("rb") as base_file:
+            base_digest = hashlib.file_digest(base_file, "sha256").hexdigest()
+        with closing(open_built_db(base_db)) as source_db:
+            if holdings_input is not None:
+                from .holdings_validation import validate_compiled_holdings
 
-        violations = list(conn.execute("PRAGMA foreign_key_check"))
-        if violations:
-            sample = ", ".join(f"{v[0]}#{v[1]}" for v in violations[:5])
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="foreign_key_violation",
-                error_class="configuration",
-                message=(
-                    f"PRAGMA foreign_key_check returned {len(violations)} "
-                    f"violation(s) before commit. Sample: {sample}."
-                ),
-                remediation="Inspect the curated provider's register/variant references.",
+                validate_compiled_holdings(source_db)
+                base_manifest = get_manifest(source_db)
+                if (
+                    base_manifest.get("catalog_artifact_kind"),
+                    base_manifest.get("catalog_publishable"),
+                    base_manifest.get("catalog_completeness"),
+                ) != ("catalog", "true", "complete"):
+                    raise ValueError(
+                        "Steward compilation requires a complete publishable global base"
+                    )
+            classification_short_names = frozenset(
+                name
+                for (name,) in source_db.execute(
+                    "SELECT short_name FROM classification"
+                )
             )
+        graph = _load_provider_ir(
+            resolved_providers_dir, steward, classification_short_names
+        )
+        steward_slug_dir = pinned_slug_dir or resolve_steward_slug_dir(
+            slug_dir, steward, skip_slugs=skip_slugs
+        )
+
+        db_dir.mkdir(parents=True, exist_ok=True)
+        final_path = db_dir / DB_FILENAME
+        tmp_path = final_path.with_suffix(".db.tmp")
+        if tmp_path.exists():
+            tmp_path.unlink()
+        shutil.copy2(base_db, tmp_path)
+        with tmp_path.open("rb") as copied:
+            if hashlib.file_digest(copied, "sha256").hexdigest() != base_digest:
+                tmp_path.unlink(missing_ok=True)
+                raise ValueError("Base database changed during selection")
+
+        conn = sqlite3.connect(tmp_path)
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA journal_mode=WAL")
+        conn.execute("PRAGMA synchronous=NORMAL")
+        conn.execute("PRAGMA temp_store=MEMORY")
         conn.execute("PRAGMA foreign_keys=ON")
-        conn.commit()
-        write_failed = False
-    finally:
-        conn.close()
-        if write_failed:
-            tmp_path.unlink(missing_ok=True)
-
-    try:
-        if not diagnostic:
-            from .validate import validate_built_db
-
-            validation = validate_built_db(
-                tmp_path, flavored=True, slug_dir=pinned_slug_dir
+        write_failed = True
+        counts = {
+            "providers": 0,
+            "registers": len(graph.registers),
+            "variants": len(graph.variants),
+            "variables": len(graph.variables),
+            "states": len(graph.states),
+            "data_warnings": len(data_warnings),
+        }
+        try:
+            _progress(f"extend-db: overlaying steward {steward!r} onto {base_db.name}")
+            counts["providers"] = _insert_providers(conn, graph.providers)
+            _insert_core_graph_from_ir(
+                conn,
+                registers=list(graph.registers),
+                variants=list(graph.variants),
+                variables=list(graph.variables),
+                states=list(graph.states),
+                aliases=list(graph.aliases),
+                alias_windows=list(graph.alias_windows),
+                provider_ids=_provider_id_by_slug(conn),
             )
-            _progress(validation.format_report())
-            if not validation.passed:
+
+            if not skip_slugs:
+                assert steward_slug_dir is not None
+                populate_slugs(conn, steward_slug_dir, strict=False)
+                populate_variable_slugs(
+                    conn, steward_slug_dir, incremental=True, persist_auto=diagnostic
+                )
+                _assert_steward_rows_slugged(conn)
+
+            write_data_warnings(conn, data_warnings)
+            manifest = get_manifest(conn)
+            if diagnostic:
+                if base_generation := manifest.pop("generation_id", None):
+                    manifest["base_generation_id"] = base_generation
+                manifest.pop("builder_commit", None)
+                conn.execute(
+                    "DELETE FROM import_manifest WHERE key IN ('generation_id', 'builder_commit')"
+                )
+                manifest["base_db_sha256"] = base_digest
+                manifest.update(
+                    catalog_artifact_kind="diagnostic",
+                    catalog_publishable="false",
+                    catalog_completeness="incomplete",
+                )
+                conn.executemany(
+                    "INSERT OR REPLACE INTO import_manifest(key, value) VALUES (?, ?)",
+                    sorted(manifest.items()),
+                )
+            if holdings_input is not None:
+                if (
+                    manifest.get("catalog_artifact_kind") != "catalog"
+                    or manifest.get("catalog_publishable") != "true"
+                    or manifest.get("catalog_completeness") != "complete"
+                    or not manifest.get("generation_id")
+                ):
+                    raise ValueError(
+                        "Steward compilation requires a complete publishable schema-9 catalog with generation identity"
+                    )
+                assert input_commit is not None and input_manifest_sha256 is not None
+                assert revision is not None
+                compiled = compile_holdings(conn, holdings_input, steward=steward)
+                counts["data_warnings"] += write_holdings_assessment_warnings(conn)
+                manifest.update(
+                    {
+                        "catalog_artifact_kind": "steward",
+                        "builder_commit": revision,
+                        "steward": steward,
+                        "base_db_sha256": base_digest,
+                        "base_generation_id": manifest["generation_id"],
+                        "holdings_input_commit": input_commit,
+                        "holdings_manifest_sha256": input_manifest_sha256,
+                        "holdings_policy_sha256": compiled.accounting.policy_sha256,
+                        "holdings_accounting_counts": json.dumps(
+                            compiled.accounting.counts,
+                            ensure_ascii=False,
+                            sort_keys=True,
+                            separators=(",", ":"),
+                        ),
+                        "holdings_accounting_sha256": compiled.accounting.sha256,
+                    }
+                )
+                manifest["generation_id"] = generation_id(manifest)
+                conn.executemany(
+                    "INSERT OR REPLACE INTO import_manifest(key, value) VALUES (?, ?)",
+                    sorted(manifest.items()),
+                )
+                counts.update(
+                    holding_tables=compiled.tables,
+                    holding_columns=compiled.columns,
+                    holding_mappings=compiled.mappings,
+                )
+
+            for fts in ("register_fts", "variable_fts"):
+                conn.execute(f"INSERT INTO {fts}({fts}) VALUES('delete-all')")
+            _populate_fts(conn, include_value_code=False)
+
+            violations = list(conn.execute("PRAGMA foreign_key_check"))
+            if violations:
+                sample = ", ".join(f"{v[0]}#{v[1]}" for v in violations[:5])
                 raise RegMetaError(
                     exit_code=EXIT_CONFIG,
-                    code="validation_failed",
+                    code="foreign_key_violation",
                     error_class="configuration",
-                    message="Compiled steward validation failed: "
-                    + "; ".join(validation.failures),
-                    remediation="Review the located build failure and regenerate from accepted inputs.",
+                    message=(
+                        f"PRAGMA foreign_key_check returned {len(violations)} "
+                        f"violation(s) before commit. Sample: {sample}."
+                    ),
+                    remediation="Inspect the curated provider's register/variant references.",
                 )
-            committed_steward_slugs(steward, revision=revision)
-        if pre_rename_hook is not None:
-            pre_rename_hook(tmp_path)
-    except BaseException:
-        tmp_path.unlink(missing_ok=True)
-        _unlink_wal_sidecars(tmp_path)
-        raise
-
-    if diagnostic:
-        try:
-            final_path.hardlink_to(tmp_path)
+            conn.execute("PRAGMA foreign_keys=ON")
+            conn.commit()
+            write_failed = False
         finally:
+            conn.close()
+            if write_failed:
+                tmp_path.unlink(missing_ok=True)
+
+        try:
+            if not diagnostic:
+                assert revision is not None
+                from .validate import validate_built_db
+
+                validation = validate_built_db(
+                    tmp_path, flavored=True, slug_dir=pinned_slug_dir
+                )
+                _progress(validation.format_report())
+                if not validation.passed:
+                    raise RegMetaError(
+                        exit_code=EXIT_CONFIG,
+                        code="validation_failed",
+                        error_class="configuration",
+                        message="Compiled steward validation failed: "
+                        + "; ".join(validation.failures),
+                        remediation="Review the located build failure and regenerate from accepted inputs.",
+                    )
+                committed_steward_slugs(steward, revision=revision)
+            if pre_rename_hook is not None:
+                pre_rename_hook(tmp_path)
+        except BaseException:
             tmp_path.unlink(missing_ok=True)
-    else:
-        publish_db(tmp_path, final_path)
-    _progress(f"Flavored database written to {final_path}")
-    return {**counts, "db_path": str(final_path)}
+            _unlink_wal_sidecars(tmp_path)
+            raise
+
+        if diagnostic:
+            try:
+                final_path.hardlink_to(tmp_path)
+            finally:
+                tmp_path.unlink(missing_ok=True)
+        else:
+            publish_db(tmp_path, final_path)
+        _progress(f"Flavored database written to {final_path}")
+        return {**counts, "db_path": str(final_path)}
 
 
 class _UndatedHolding(BaseModel):
@@ -567,11 +589,18 @@ def read_private_holdings_input(
     *,
     input_commit: str,
     input_manifest_sha256: str,
+    materialize_to: Path | None = None,
 ) -> dict[str, Any]:
-    """Read only exact committed private input bytes before extension copies its base."""
+    """Verify accepted input and optionally materialize its committed bytes for a build."""
     from ._accepted_prepared import read_accepted_manifest
     from .input_snapshot import _git, _git_bytes, _index_tags
 
+    if materialize_to is not None and (
+        not materialize_to.is_dir() or any(materialize_to.iterdir())
+    ):
+        raise ValueError(
+            "Accepted input snapshot requires an empty build-owned directory"
+        )
     selection = read_accepted_manifest(
         root, expected_sha256=input_manifest_sha256, input_commit=input_commit
     )
@@ -618,6 +647,12 @@ def read_private_holdings_input(
             raise ValueError(
                 f"Private input manifest member differs from accepted bytes: {name}"
             )
+        if materialize_to is not None:
+            snapshot_member = materialize_to / path
+            snapshot_member.parent.mkdir(parents=True, exist_ok=True)
+            snapshot_member.write_bytes(committed)
+    if materialize_to is not None:
+        (materialize_to / "manifest.json").write_bytes(selection.manifest_bytes)
     policy_name = "policy/holdings_policy.toml"
     source_names = [
         name
