@@ -1499,10 +1499,14 @@ build.
 
 ## Steward extension
 
-`extend-db` copies a released global database and adds steward-private providers and
-their registers, variables and states. Facts about an existing global provider belong in
-common global curation. Steward extension does not mutate the base or resolve global
-source conflicts.
+**Compiled-holdings contract (2026-10-04); writer cut follows in plan 02.** `extend-db`
+copies an exact validated global database built under schema 9, adds steward-private
+providers and their registers, variables and states, then compiles accepted physical
+holdings into the same SQLite artifact. The old schema 8.1 base is comparison evidence
+only: rebuild the new-schema public base once and reuse it; do not migrate old databases
+or rerun public preparation for each compiler edit. Facts about an existing global
+provider belong in common global curation. Steward extension does not mutate the base or
+resolve global source conflicts.
 
 `sources/curated.py` is steward-only. Its `<provider>.toml` requires a `[provider]` name
 and source label, explicit variable keys and nonempty state arrays. Repeated variable
@@ -1518,13 +1522,95 @@ keys. Register/variant slug pins come from the steward slug directory. Variable 
 is incremental and preserves every existing global slug. The retained `ir/` models serve
 this extension graph, not the global source-cleaning boundary.
 
-The overlay rebuilds register/variable search indexes; it retains the copied value-code
-index because no values were added. Structural validation and the steward holdings gate
-run before atomic publication. The holdings gate checks single-period editions only;
-pooled ranges/lists are explicitly unassessed and never infer annual column
-availability. A missing delivery inventory fails configuration unless the explicit skip
-flag is selected. Provider regeneration and input acceptance remain separate maintainer
-operations.
+The extension rebuilds register/variable search indexes; it retains the copied
+value-code index because no values were added. Structural, mapping and accounting gates
+run before atomic publication of one steward artifact. Strict steward publication
+requires accepted inventory and policy; no skip flag bypasses compilation or accounting.
+Provider regeneration and input acceptance remain separate maintainer operations.
+Diagnostic output remains explicitly nonpublishable and cannot replace the active
+artifact.
+
+Compile the four relations specified in `reg_meta/DESIGN.md` → "Compiled holdings
+relations and read scope". Reuse inventory models, edition/interval primitives, catalog
+IDs and the common atomic writer. Preserve exact physical identifiers, authored edition
+shapes, partitions, unmapped columns/reasons and pinned input evidence locators. Include
+retained unknown-scope census tables with their authored reason, no physical periods and
+no logical mappings. Year-independent scope is explicit, not a fabricated interval. No
+segment relation, findings relation, excluded rows or semantic state resolution.
+
+Require every mapping's representation. Resolve authored variable/variant coordinates to
+existing IDs, validate register ownership, then fold the literal with the shared Python
+`str.lower()`/`py_lower` rule. Exactly one distinct catalog state spelling at that
+variable/variant must match; zero or several fail. Store literal and canonical spelling.
+Do not apply NFC, Unicode casefold or a lowest-spelling tie-break. This inherited gate
+is stricter than alias-window-only acceptance today; rejected accepted mappings require
+separate review, never silent compiler fallback. After canonicalization reuse
+`DeliveryInventory._check_one_to_one_resolution` for temporal ambiguity per cell per
+partition, including labelled/unlabelled conflicts. Do not infer aliases' applicability
+or clip physical holdings to state windows during compilation.
+
+The existing coverage assessment keeps range/list editions "temporally unassessed";
+reuse `data_warning` for that disposition. Single-period assessment's flat union is
+source accounting, not `Catalog` semantic resolution. The latter remains query-time,
+including per-column storage/coding intersections, shared-window containment,
+replacement participation/fallback and additive curated windows. Any use of the existing
+consistency checker must account for its coding-mode drift; it is not an exact resolver
+oracle. Regenerate `unknown_holding_edition` / `unknown_source_validity` holding
+warnings from `holding_table` evidence or drop redundant ones. Delete their
+inventory-JSON witnesses; there is one holdings truth.
+
+The accounting gate proves the disjoint union dated ∪ year-independent ∪
+retained-unknown ∪ excluded ∪ lookup equals the raw table/column census from accepted
+inventory, policy, overlay and CSV. A missing, duplicate or contradictory disposition
+fails publication. Runtime relations contain only dated, year-independent and
+retained-unknown facts; exclusions and lookups remain accepted build evidence. Store
+counts and the accounting projection digest in the manifest. Strict gates and existing
+disclosure confinement remain mandatory; no raw individual-level content enters
+artifacts.
+
+### Artifact manifest and deterministic generation
+
+Extend existing `import_manifest` key/value rows, not a new identity table. Preserve
+`schema_version`, `prepared_commit`, `prepared_manifest_sha256`, `curation_tree_sha256`,
+`catalog_publishable`, `catalog_completeness`, classification succession metadata and
+other existing keys. `import_date` remains optional display/provenance data, never a
+cursor or order generation discriminator. Publishable `catalog_artifact_kind` is
+`catalog` or `steward`; existing `diagnostic` output remains nonpublishable and rejected
+by runtime readers. Add `builder_commit` and `generation_id` to publishable artifacts.
+
+A steward also requires `steward`, `base_db_sha256`, `holdings_input_commit`,
+`holdings_manifest_sha256`, `holdings_policy_sha256`, `holdings_accounting_counts` and
+`holdings_accounting_sha256`. These keys are absent on a global catalog, whose holdings
+relations are empty. `base_db_sha256` hashes the exact new-schema base file before
+extension. Holdings pins identify the accepted input Git commit and manifest; no private
+payload is embedded in identity rows.
+
+Define `holdings_policy_sha256` as SHA-256 of a sorted relative-policy-path → SHA-256
+object covering `source_policy.toml`, `inventory_overlay.toml` and
+`holdings_policy.toml` selected from the accepted candidate. Never substitute tracked
+defaults. `holdings_accounting_counts` is canonical JSON giving table/physical-column
+counts for `raw`, `dated`, `year_independent`, `retained_unknown`, `excluded`, `lookup`.
+The accounting digest hashes an array of objects with exactly `table` (exact physical
+identifier), `column` (null for the table-grain record, literal name otherwise),
+`disposition` (`dated`, `year_independent`, `retained_unknown`, `excluded`, `lookup`)
+and `evidence` (sorted relative pinned-input/record locators). Every raw table has
+exactly one table-grain record and every raw column exactly one column-grain record with
+its table's disposition; unmapping does not exclude a held column. Sort records by exact
+table in binary order, null column before named columns in binary order, then
+disposition; sort evidence strings in binary order. Only the digest enters the manifest,
+not private identifiers. Authored retained-unknown register and census-row digest remain
+in the pinned policy evidence located by `source_ref`; they are not new logical
+mappings.
+
+Canonical digest encoding is UTF-8 JSON with sorted object keys, compact separators,
+`ensure_ascii=false`, no floats and no trailing newline. `generation_id` hashes an
+object containing `schema_version`, `builder_commit`, `catalog_artifact_kind`,
+`prepared_commit`, `prepared_manifest_sha256`, `curation_tree_sha256`; steward adds all
+its identity keys above except the count summary (covered by accounting digest). Never
+include `generation_id` itself, finished output bytes, `import_date`, absolute paths,
+logs or volatile timings. Publish final artifact SHA-256 separately, outside that
+database. Replays use the exact semantic pins; do not promise unmeasured build
+durations.
 
 SWECOV source routing lives in the authored `source_policy.toml` beside its inventory
 overlay. Category/detail routes select catalog variants or split selectors; flavor
@@ -1532,8 +1618,10 @@ entries carry explicit provider/register/variant metadata and any exact table se
 The generator validates this policy once and derives its runtime indexes. Repeated
 selectors, conflicting metadata and unknown fields fail configuration. Physical
 table/column overrides remain in `inventory_overlay.toml`: they have a different scope
-from category routing. Both files are curation inputs, not generated outputs. The
-generator neither invents routes nor changes their declarations.
+from category routing. Both files stay tracked as generator defaults, not generated
+outputs. The generator neither invents routes nor changes their declarations. Plan 04
+deletes only the stale tracked `reg_webapp/stewards/swecov/inventory.toml`; accepted
+holdings remain private builder inputs and never become loose runtime files.
 
 The complete private input acceptance retains these policies, source documents,
 generated inventory and review evidence in a clean local-only Git repository. Its

@@ -188,16 +188,12 @@ window), `Catalog.register_variable_deliveries` (one delivery row per folded col
 state's spelling, Y-93's representative, and `MIN(variable_alias.delivery_column_name)`
 — so one column could come back under three names.
 
-A consumer holding a spelling of its OWN matches these rows by the fold, never by string
-equality — `queries._filter_variable_delivery_scope`, which narrows a search hit's
-delivery columns to a steward's holdings, and `queries._group_member_in_delivery_scope`,
-which decides whether a concept group's representation member is inside that same scope,
-both fold their two sides for exactly that reason (Y-107, Y-108; the columns they keep
-stay the catalog's own spelling). A steward's inventory token is exactly such a
-spelling: the boot gate below accepts it in whichever spelling the resolver produced for
-that pair — the alias-WINDOW spelling where a state expands into its windows — which by
-this rule is deliberately not always the representative (see reg_webapp/DESIGN.md →
-Steward layering and the in-memory catalog index).
+Holding compiler comparisons use this exact fold to resolve the authored spelling once.
+The compiled mapping stores its canonical state spelling; runtime holding comparisons
+use that spelling without reader-side folds. The compiled contract below adds a
+uniqueness gate: it fails if zero or several distinct state spellings match, rather than
+picking the lowest. The resolver's general representative/alias behavior remains
+unchanged.
 
 ## Composite registers and source tracking
 
@@ -557,19 +553,20 @@ default is still the complete record, members embedded.
 The catalog return shapes — and, as of #701 (2026-06-23), the search return shapes in
 `search.py` — are frozen Pydantic v2 models on a shared `_CatalogModel` base
 (`BaseModel` with `frozen=True, populate_by_name=True, extra="forbid"`). This mirrors
-`reg_schema`'s `_Model` shape but is a **separate** base — reg_meta takes no dependency
-on reg_schema. Collection fields stay `tuple[...]`; Pydantic serializes tuples to JSON
-arrays. `Fqid` stays a frozen `@dataclass` but carries `__get_pydantic_core_schema__` so
-`fqid` fields validate from `str` or `Fqid` and serialize to the canonical FQID string
-(OpenAPI `string`). Register-bearing models use Python attr `register_name` with
-`Field(alias="register")` to avoid the `BaseModel.register` shadow; wire/init name stays
-`register`. The earlier no-Pydantic soft preference (import-ergonomics + aspirational
-Go/Rust port) is historical — #681 (2026-06-22) resolved that the port's real cross-impl
-contracts are the SQLite `SCHEMA_VERSION` + `openapi.json` (both Pydantic-independent),
-so reg_meta adopted Pydantic so FastAPI can consume its catalog models directly. The
-hard no-Pydantic rule applied only to `reg_monabundle`'s amalgamated bundle (now
-archived); reg_meta was never subject to it. See root CLAUDE.md "Stack" and
-ARCHITECTURE.md.
+`reg_schema`'s `_Model` shape but is a **separate** catalog base. The order materializer
+uses the package's `reg_meta → reg_schema` dependency; catalog return models do not
+inherit the project model base. Collection fields stay `tuple[...]`; Pydantic serializes
+tuples to JSON arrays. `Fqid` stays a frozen `@dataclass` but carries
+`__get_pydantic_core_schema__` so `fqid` fields validate from `str` or `Fqid` and
+serialize to the canonical FQID string (OpenAPI `string`). Register-bearing models use
+Python attr `register_name` with `Field(alias="register")` to avoid the
+`BaseModel.register` shadow; wire/init name stays `register`. The earlier no-Pydantic
+soft preference (import-ergonomics + aspirational Go/Rust port) is historical — #681
+(2026-06-22) resolved that the port's real cross-impl contracts are the SQLite
+`SCHEMA_VERSION` + `openapi.json` (both Pydantic-independent), so reg_meta adopted
+Pydantic so FastAPI can consume its catalog models directly. The hard no-Pydantic rule
+applied only to `reg_monabundle`'s amalgamated bundle (now archived); reg_meta was never
+subject to it. See root CLAUDE.md "Stack" and ARCHITECTURE.md.
 
 When a caller constructs `Catalog` with a docs-DB connection, `ResolvedRegister` and
 `ResolvedVariable` also carry `related_documents`: register-version PDF metadata
@@ -608,16 +605,19 @@ inside their SQL branches before the bound. Presentation layers use it when they
 a curated identity separately: every continuation then shares one origin universe and
 cannot emit the injected identity again at its natural FTS position.
 
-`search` accepts an optional `fqids: Collection[str] | None` allow-list (#859) that
-restricts the **register and variable** leaf rows (and concept-group folding) to
-entities whose navigable `fqid` is in the set. A group surfaces only if ≥1 of its
-members is held, and its `members` list is narrowed to held members. Classification and
-value/code surfaces are catalog-global and pass through unaffected. `None` means no
-restriction — the pre-#859 behavior is byte-identical. The restriction is applied before
-folding and paging, so every page is in scope. reg_meta stays steward-agnostic: the
-caller supplies the allow-list; the set's provenance is opaque here. The webapp's
-filtered-steward `/api/search` passes `admitted_variable_fqids | held_register_fqids`
-(see `reg_webapp/DESIGN.md`); the CLI never passes `fqids`.
+**Pre-cut search admission:** `search` accepts an optional
+`fqids: Collection[str] | None` allow-list (#859) that restricts the **register and
+variable** leaf rows (and concept-group folding) to entities whose navigable `fqid` is
+in the set. A group surfaces only if ≥1 of its members is held, and its `members` list
+is narrowed to held members. Classification and value/code surfaces are catalog-global
+and pass through unaffected. `None` means no restriction — the pre-#859 behavior is
+byte-identical. The restriction is applied before folding and paging, so every page is
+in scope. reg_meta stays steward-agnostic: the caller supplies the allow-list; the set's
+provenance is opaque here. The webapp's filtered-steward `/api/search` passes
+`admitted_variable_fqids | held_register_fqids` (see `reg_webapp/DESIGN.md`); the CLI
+never passes `fqids`. Plan 03 replaces this steward admission path with the shared
+compiled-holdings predicate before pagination. General ranking/folding limits remain;
+only holdings backfill and allow-list reconstruction go.
 
 **Why two methods for succession.** `predecessors` / `successors` are split (not one
 `replaced` returning a dict) so every edge-traversal accessor returns `list[...]`
@@ -703,13 +703,16 @@ rows maps 1:1, byte-identically. The monthly merge is explicitly retained under
 #518/#523; the retention rationale and the #523↔#496 two-layer boundary are recorded in
 `reg_meta_build/DESIGN.md` → *Consumers: monthly column families*.
 
-**`Period`** — `int | str | dict`, the polymorphic period `resolve_at` accepts (mirrors
-`Source.period`): a bare year (`2018`), a period token
+**`Period`** — `int | str | dict`, the polymorphic period `resolve_at` accepts: a bare
+year (`2018`), a period token
 (`"HT2020"`/`"LA2020"`/`"2020-Q3"`/`"2020-08"`/`"2018-12-31"`), an explicit range
 `{"from", "to"}` (endpoints are int or token), or the `"_default"` snapshot sentinel (no
-period filter). Expanded to an inclusive ISO `(lo, hi)` interval by `_period_bounds` +
-`fqid.period_token_to_bounds`, intersected against the full-date `variable_state`
-validity ranges — so sub-annual and range queries are precise, not year-granular.
+period filter). In a project source, `_default` instead selects only year-independent
+states at an explicit concrete variant; it cannot mean every calendar year or an
+unspecified period. Finite periods expand to an inclusive ISO `(lo, hi)` interval by
+`_period_bounds` + `fqid.period_token_to_bounds`, intersected against the full-date
+`variable_state` validity ranges — so sub-annual and range queries are precise, not
+year-granular.
 
 **`ResolvedVariable`** — the longitudinal binding resolution. Fields: `fqid` (the
 caller's 3-seg binding FQID `provider/register/slug`, preserved through a `same_as`
@@ -815,204 +818,204 @@ sub-resource coordinate (passed to `resolve_at`), not a slash-path FQID segment.
 v0.x per-edition `resolve()` behavior was deleted, not aliased — pre-v1 policy (no
 shims).
 
-## Steward delivery inventory (`inventory.py`)
+## Compiled holdings relations and read scope
 
-A `project_data.json` source is a **logical** selection — register variant, variable,
-period. What a steward physically delivers is separate data, and the delivery inventory
-is that contract: the public, version-controlled steward source of truth from which
-edition-aware admission, coverage stats, browse unions, and order materialization are
-derived. `REFACTOR_SPEC.md` §12 is the decision text; this section documents the format
-and the validator. This module is the contract alone — the materializer, the coverage
-gate and the order manifest live in `order.py` (next section); each steward's real
-inventory content (and its generator) is separate work.
+**Contract (2026-10-04); implementation is the staged §12 cut.** The activated SQLite
+artifact is the sole runtime source of physical holdings. Accepted inventory TOML is a
+builder input contract, not a second runtime catalog. Reference metadata describes
+meaning and validity; holdings describe possession; the existing `Catalog` resolver
+determines semantic applicability at query time. No state/window resolution is compiled.
 
-**Format: TOML** (ratified 2026-08-31), following the repo's generated-`auto.toml`-plus-
-curated-overrides pattern (`reg_meta_build/fqid_slugs/`): humans curate editions, and
-comments carry the curation rationale, so the format has to be comment-capable. The
-compiled steward artifact's internal representation is the build's choice, not this
-file's.
+Four relations retain these facts:
 
-```toml
-version = 1                       # contract version — bumped, never migrated (pre-v1)
-steward = "swecov"                # the deployment this inventory belongs to
+- `holding_table`: one row per exact opaque physical identifier, with explicit `scope`
+  (`intervals`, `year_independent`, `unknown`), original typed `edition_json`, optional
+  table-level `partition`, input evidence locator `source_ref`, and an authored
+  `retain_unknown_reason` only for unknown scope. Store the edition value read from TOML
+  as JSON before year-integer normalization; preserve int/token/range/list distinctions,
+  list order and endpoints. Comments remain in the pinned input. Unknown may have no
+  edition declaration; preserve any supplied declaration without inventing one.
+- `holding_period`: inclusive ISO `(lo, hi)` physical intervals, keyed by table and
+  bounds. Interval scope has one or more sorted disjoint periods from `edition_bounds`;
+  year-independent and unknown have none. Preserve holes, never expand one range/list
+  table into annual tables or clip physical facts to metadata validity.
+- `holding_column`: artifact-local key, table FK, literal case-preserving `name` and
+  nullable authored `unmapped_reason`. Zero mappings retain physical possession without
+  admission. An absent reason remains absent; a reason cannot accompany mappings.
+- `holding_mapping`: physical-column FK, existing `variable_id` and `variant_id` FKs,
+  required `representation_literal` and `representation_canonical`. Preserve the
+  authored binding identity, including a literal same_as source; do not replace its ID
+  with a donor, state or alias-window ID. `_default` resolves to a real variant row,
+  never a wildcard. One column may map several variants or representations.
 
-[[table]]
-id = "LISA_Individ_2019.csv"      # opaque EXACT identifier: a delivery filename, or a
-                                  # schema-qualified SQL table (`dbo.Patientregister`)
-edition = 2019                    # ONE explicit finite period — never "_default"
-partition = "mikro"               # OPTIONAL §12 shard label (a slug) — present only
-                                  # when this edition is split by sub-population
+Exact physical IDs are unique; column names are unique per table; mapping canonical
+triples are unique per column. Physical names use exact comparison. SQL enforces FKs,
+local CHECKs and those UNIQUEs. Shared Python validation enforces same-register
+variable/ variant ownership, nonempty table/column collections, edition/scope
+correspondence, reason/mapping exclusivity, interval disjointness and cross-location
+logical-cell ambiguity per partition. Reuse
+`DeliveryInventory._check_one_to_one_resolution` after canonicalization, rather than
+adding an overlap algorithm. Distinct explicit partitions are separate claims; equal
+partitions or an unlabelled whole-population claim conflict on overlapping cells.
+Year-independent claims retain their separate scope check.
 
-[[table.column]]
-name = "Kon"                      # literal, case-preserving physical column
-[[table.column.mapping]]
-register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/kon"
-representation = "Kon"            # optional; the canonical reg_meta representation
+The compiler folds each literal with Python `str.lower()` (`py_lower`), the exact shared
+fold of `representative_columns`. No NFC, `casefold()` or SQLite `lower()`. At the
+mapped variable/variant it requires exactly one distinct matching catalog state
+spelling; zero or several fail publication. Store both spellings and use the canonical
+one for runtime holding comparisons. Do not use the lowest-spelling tie-break or
+alias-only fallback to weaken this gate. This is deliberately stricter than the existing
+reader's alias-only acceptance, not a claim that its inputs already pass. Plan 02 must
+report rejected accepted mappings for separate source/contract review. Reader-side
+holding folds go; the resolver's own alias/state identity rule remains shared domain
+behavior.
 
-[[table.column]]
-name = "LopNr"                    # zero mappings = unresolved, but still inventoried
-```
+`Catalog._expand_state_windows` remains the resolution authority. Per-column metadata or
+coding windows intersect successive base states; shared windows must be contained.
+Source replacement requires participating base column and request overlap, otherwise the
+base remains; curated shared-coding windows add independently. Year-independent states
+remain year-independent. A join on canonical `variable_state.delivery_column_name` is
+sufficient only where it preserves these rules; aliases use the existing resolver.
+`inventory_check._expanded_columns` is an intended whole-history mirror with known
+coding-mode drift, not a replacement oracle. The builder's inventory coverage flat union
+answers a different accounting question. None of the three rules is copied into DDL.
+Range/list physical periods survive; the build coverage assessment retains its existing
+"temporally unassessed" disposition through `data_warning`, without partial-resolution
+rows or a findings relation. Unknown tables retain census columns but no logical
+mappings.
 
-- **`id` is opaque and exact.** It is never parsed for meaning: a table whose name
-  carries no period still requires an explicit curated `edition`. Filename-edition
-  inference is not implemented here; if a generator adds it, §12 requires it to fail for
-  review on zero or ambiguous period tokens rather than guess.
-- **One explicit finite `edition` per table**, in the shared period grammar. A year int
-  or token (`2019`, `2019-03`, `2019-Q3`, `HT2019`, `LA2019`, `2019-03-01`) means ONE
-  delivered period; a `{ from, to }` range or finite list means a multi-period file (the
-  list represents an interrupted series). A bare TOML year int canonicalizes to its
-  token string. `"_default"` and any unbounded "all periods" sentinel are rejected: an
-  edition is what makes coverage computable. `edition_bounds()` expands an edition into
-  inclusive ISO `(lo, hi)` intervals via `fqid.period_token_to_bounds`, so an inventory
-  edition and a project period expand through the same grammar.
-- **Zero or more mappings per column.** A mapping names the 3-part variant coordinate,
-  the 3-segment variable binding FQID, and the nullable canonical `representation` (a
-  join discriminator, not an output substitute). Zero mappings keep an unresolved
-  physical column in the coverage denominator without admitting or ordering it; several
-  mappings let one column serve several variants (the combined Utrikeshandel table); and
-  several tables may map the same logical coordinate over **disjoint** editions — the
-  ordinary annual series (`LISA_Individ_2019.csv` + `LISA_Individ_2020.csv`).
-- **Optional `partition` label (§12's disjoint-partition arm, ratified 2026-09-01).**
-  Some registers arrive as several tables partitioned by **sub-population within one
-  edition** — survey strata (`ITftg_Mikro`/`ITftg_Stora`), reporter streams
-  (`Arb_`/`Soc_AGIIndivid`), administrative splits (`NDR_adults` over/under 70),
-  per-municipality deliveries (SÄBO) — and are deliberately unified as ONE user-facing
-  variant: nothing semantic differs across the shards, and no researcher should have to
-  know delivery trivia to get the whole register. A table may therefore carry a short
-  slug naming which shard it is. It rides the shared slug grammar, so it must start with
-  a letter and may not be period-shaped (`over70` is legal, `70plus` and `2019` are not)
-  — it becomes a filename token in `order.extraction_filenames`. Labels are explicit
-  curated facts, **never inferred**, so a true re-delivery cannot hide behind a
-  partition without a reviewable curation line saying so. Partitions are an
-  inventory/order-layer concept only, **never a catalog concept**: there is no
-  population field, no table chooser, and nothing partition-shaped on any browse or
-  catalog surface.
-- **One-to-one resolution invariant (§12, ratified 2026-09-01).** Every admitted
-  `(register_variant, variable, representation, period)` cell resolves to exactly
-  **one** physical `(table, column)` **per partition**: the extraction tool never
-  chooses between sources, and the materializer emits every matching table whole, so two
-  mappings serving one cell would order the same observations twice from two layouts.
-  Validation therefore **errors** whenever two mappings could serve one cell — same
-  variant + variable, conflating representations (a `null` representation means "the
-  concept's single representation", so it conflates with any explicit one and with
-  another `null`; two DIFFERENT explicit representations are two cells and stay legal),
-  and overlapping editions, whether across tables or across two columns of one table —
-  **unless the two tables carry DISTINCT `partition` labels**, which makes them shards
-  of one sub-population split rather than two claims on one cell. Everything else still
-  conflicts: equal labels are the same shard delivered twice, and an unlabelled table
-  claims the whole population of its edition, so it necessarily overlaps any shard of it
-  (that half-labelled case says so in the conflict line, since the fix is a label rather
-  than a supersession discard). Two columns of one table share its label, so the
-  across-columns arm is unaffected. A repeated identical mapping triple inside one
-  column is rejected too. The inventory states **current holdings only**: a superseded
-  delivery (a cumulative re-delivery replacing an earlier snapshot, e.g. the dated
-  `FHM_NVR_Covid*` series) is discarded at curation, and this error — naming both
-  physical locations, the coordinate and the overlapping period — IS the maintainer's
-  supersession worklist. There is deliberately no auto-pick-latest arm: a filename date
-  is not proof of supersession, so the validator fails for review and the curator
-  decides. Zero-column cells are not errors; they are simply not admitted.
+Candidate indexes are `holding_mapping(variable_id, variant_id)`,
+`holding_mapping(column_id)`, `holding_column(table_id)` and
+`holding_period(table_id, lo, hi)`. PK/UNIQUE prefixes already serve the last three;
+plan 02 chooses nonredundant indexes and final order from query plans.
 
-**Validator.** `load_inventory(path)` parses the TOML and returns the frozen Pydantic
-models (`DeliveryInventory` → `InventoryTable` → `InventoryColumn` → `ColumnMapping`),
-or fails fast with `RegMetaError` — `inventory_toml_unreadable` / `inventory_invalid`,
-both `EXIT_CONFIG` (10), the same configuration class the curation TOMLs use. Errors
-name the offending table and column by identifier rather than array index
-(`table['LISA_Individ_2019.csv'].column['Kon'].mapping[0].variable`), because the author
-is editing a TOML file where an index is not a locator. Structural rules beyond field
-shape: unknown keys are rejected (`extra="forbid"`), a table identifier appears once (an
-identifier is exact and carries exactly one edition), a physical column is declared once
-per table with all of its mappings under it, a mapping's variable must belong to its
-`register_variant`'s `provider/register`, and the one-to-one resolution invariant above
-holds across the whole file (its error lists every conflicting pair in one pass, because
-that list is the maintainer's worklist). Structurally empty input is rejected too — an
-inventory declares at least one table, and a table at least one column. This file is the
-steward's authoritative holdings statement, so an empty one is a mis-generated or
-half-authored file, never a claim to deliver nothing; accepting it would silently zero
-out admission, coverage, and browse unions. Inventory ↔ reg_meta DB consistency is
-deliberately NOT part of this structural pass — the validator is pure domain code with
-no DB access; it is `inventory_check.py` below.
+### Artifact selection
 
-The models are `reg_schema`-free: the contract needs only reg_meta's own period grammar
-and FQID parser. (`order.py` takes the `reg_meta → reg_schema` dependency §12 sanctions;
-the inventory contract itself does not need it.) `EditionRange` mirrors reg_schema's
-`PeriodRange` wire shape (`from`/`to`, `from_` attr with a `"from"` alias), so a project
-period and an inventory edition expand through one grammar without a converter.
+Named `--catalog NAME` selects `<data>/NAME/`; global retains the existing data root.
+`--catalog` and `--db DIRECTORY` are mutually exclusive, and `--db`/`REG_META_DB` retain
+directory semantics (append `reg_meta.db`). Explicit flags win; without one,
+`REG_META_DB` wins over the default global directory. A named steward selection must
+match manifest `steward`; global requires `catalog_artifact_kind = "catalog"`. Missing,
+incompatible, incomplete or nonpublishable selection fails before serving, with no
+fallback. `update --catalog NAME` fetches `reg_meta_<NAME>.db.zst` into only that named
+steward directory; global keeps `reg_meta.db.zst`. No selection configuration file.
+Optional docs are the selected catalog's sibling, never another installed catalog's
+companion. A missing docs file does not block metadata/holdings/order reads.
+
+### Scope predicate and public surfaces
+
+A publishable `steward` artifact defaults to `holdings`; a `catalog` artifact defaults
+to `reference`. Explicit holdings on catalog errors. Reference means every semantic node
+in the selected generation, including steward-only metadata, not a separately downloaded
+or newer global DB. Unknown scope and unmapped columns do not admit logical nodes.
+Membership uses authored variable/variant identity and canonical representation; a
+same_as reference edge never grants possession of a different binding.
+
+  | Node kind              | Holdings predicate                                                                                                                                             | Reference                                                   |
+  | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+  | Provider               | At least one admitted descendant register.                                                                                                                     | All providers.                                              |
+  | Register               | At least one admitted variable binding at a mapped variant.                                                                                                    | All registers and variants.                                 |
+  | Variable binding/state | At least one explicit mapping under this register; a selected variant/representation must match that mapping. Resolver output is narrowed to physical periods. | Full semantic history, subject to explicit request filters. |
+
+An interval holding contributes only the intersection of its exact periods with the
+request and resolved applicability; year-independent holdings require compatible
+year-independent resolver output, never artificial dates. Unknown never contributes.
+Without a period filter, membership uses any applicable interval or year-independent
+mapping; with one, it requires an overlap in that scope. Discovery may union admitted
+variants for a binding, but variant-specific leaves, validation and order never do.
+Coverage retains disjoint intervals, does not overwrite catalog validity and does not
+promise orderability. Missing or ambiguous semantic applicability is still a resolver/
+order finding, even when physical possession exists.
+
+The same predicate governs root/provider/register/variable browsing, resolve results,
+states, coverage/deliveries, register/variable search, groups, graphs, stats and logical
+CLI exports. Apply it before counts, grouping and search pagination; no backfill loop or
+per-request allow-list reconstruction. Search cursors bind to query, period, variant,
+read scope and `generation_id`. A changed context rejects continuation. Unheld direct
+links return 404 in holdings; any existing canonical redirect targets only an admitted
+node. Reference scope permits inspecting the same node without making it selectable.
+
+Exceptions are explicit:
+
+- Classifications, value sets/codes, documentation and lineage/reference edges stay
+  reference in either read scope. A variable-owned suffix still requires an admitted
+  owner in holdings; complete code exports retain full-membership semantics for that
+  admitted owner. A held graph can show labelled reference neighbors; none become
+  selectable from the edge. Group membership and subject coverage use the predicate for
+  variable members; classification groups stay reference.
+- Register `/data_warnings` in holdings requires an admitted register and filters
+  variable-owned warnings to admitted bindings (and selected variant/period where
+  supplied). Register-wide warnings remain visible. Reference scope keeps all warnings.
+  Holding warnings reuse `data_warning`; unknown-scope evidence comes from holding rows,
+  not duplicated inventory JSON witnesses.
+- Project validation and order accept no browse scope override. Steward membership
+  warnings keep `fqid_outside_steward_catalog` and
+  `representation_outside_steward_catalog`, derived from SQL at the source's variant.
+  Global logical fallback is keyed on artifact kind, not missing inventory.
+- CLI adds `--scope` only to `search`, `get register`, `get schema`, `get availability`.
+  Other logical exports use the artifact default and the shared predicate; inherently
+  reference code/docs/classification reads remain reference. API catalog/search routes
+  and `/api/stats` accept explicit scope; context reports identity/default scope.
+
+### Inventory TOML authoring contract (`inventory.py`)
+
+Keep `version = 1`: requiring `ColumnMapping.representation` changes validation, not
+accepted bytes (both accepted and legacy inventories are fully explicit). Changed input
+bytes still require fresh acceptance. Frozen models reject unknown keys, malformed
+FQIDs, empty input and duplicate physical names. The input shape remains
+`table → column → zero-or-more mapping`; every mapping requires `register_variant`,
+`variable` and nonempty literal `representation`. No nullable/unqualified arm remains;
+`mapping_ambiguous`, `_has_unqualified_mapping`, `unqualified_ok` and
+`catalog_index._admitted_intervals` are deleted in the reader cut.
+
+A physical table has an opaque exact `id`, explicit `edition`, `period_scope` defaulting
+to `intervals`, optional `partition` and all literal columns. Finite editions use the
+shared year/month/day/quarter/semester/school-year token, `{from,to}` range or sorted
+nonoverlapping finite list grammar. `edition_bounds` is reused for physical periods.
+Year-independent input explicitly sets `period_scope = "year_independent"` and the whole
+edition `"_default"`; its mappings require concrete variants. `_default` is never a
+finite or unknown-scope sentinel. Retained unknown tables come from accepted
+`retain_unknown` policy plus the raw census, not invented finite inventory entries.
+
+Partitions keep `validate_slug`'s lowercase, letter-initial, single-hyphen grammar;
+`_default`, `class` and period-shaped values are rejected. They describe explicit shards
+of delivery, not researcher-selectable catalog populations. Unmapped physical columns
+retain their authored nonblank reason where supplied; no reason is synthesized.
 
 ### Consistency gate against the catalog DB (`inventory_check.py`)
 
-§12's other half: a structurally perfect inventory still strands mappings when the DB
-under it moves. Pre-v1 slug churn is legal, so a catalog release that renames a slug
-leaves every mapping naming it well-formed and meaningless — the failure is silent, and
-it surfaces as blocked orders and holdings claims about coordinates that no longer
-exist. `check_inventory(inventory, conn)` returns every coordinate that does not resolve
-against an open catalog DB; empty is the passing baseline.
+The compiler is the standing mapping/ownership/accounting gate before publication. It
+validates every authored triple against the exact new-schema base plus steward
+extension, canonicalizes spelling and preserves physical facts. Accounting over accepted
+inventory, policy, overlay and raw census must prove the disjoint union dated ∪
+year-independent ∪ retained-unknown ∪ excluded ∪ lookup equals the full census at table
+and physical-column grain. Counts and digests go into `import_manifest`; runtime
+holdings contain only the first three dispositions. No exclusions, lookups or raw census
+relation.
 
-Two consumers, one implementation: the named-steward webapp boot runs it fail-fast on
-its own boot connection (`reg_webapp.stewards.check_delivery_inventory` — a deployment
-must never *serve* an inventory its DB cannot resolve), and the maintainer's pytest runs
-it over the committed inventory against the flavored DB `REG_META_DB` points at
-(`reg_webapp/backend/tests/test_steward_swecov.py`). That test is `release`-marked, so
-the default gate DESELECTS it rather than skipping it — CI has no flavored DB, and a
-skip would read as missing evidence where a deselection reads as out of scope. The boot
-gate is therefore the hard line; the pytest is the maintainer's early warning, run with
-`--run-release` when regenerating the inventory or cutting a release.
-
-- **Resolution is read the way the ORDER PATH reads it**, never re-derived —
-  symmetrically. A gate STRICTER than `order._materialize_binding` fails a deployment
-  over holdings it can actually serve; a gate LOOSER lets one boot on holdings it
-  cannot, which is the failure this whole check exists to prevent. So a direct slug miss
-  still gets `Catalog`'s curated `variable_same_as` fallback, and the representation
-  universe is what `Catalog._expand_state_windows` would emit — NOT `variable_state`
-  unioned with `variable_alias_window`. A window row is not an independent
-  representation: it expands a state only when it is contained in that state's validity
-  *and* that state's own delivery column participates in the contained set, and
-  otherwise the state stands on its own column while its windows deliver nothing.
-  `_expanded_columns` mirrors exactly those two conditions (the resolver's third, window
-  ∩ requested period, is trivially true here — the gate reads the whole history).
-  Reading the tables as a flat union would bless an orphaned, non-contained or
-  non-participating window and pass a mapping `resolve_at` cannot fill.
-- **Bulk, because it runs at every boot.** An inventory carries tens of thousands of
-  mappings, so each lookup is one streaming scan filtered against the inventory's own
-  coordinates — the working set is the inventory's, not the catalog's (SWECOV's 36.5k
-  mappings check in ~0.1s). The binding and representation grains share the state/window
-  pair of scans, since a representation is a narrowing of its binding. Only the same_as
-  fallback, rare by construction, goes through `Catalog` per coordinate — and it is
-  wrapped (`_aliased_states`), because a raised coordinate must not cost the run every
-  other finding: the gate owes both consumers a COMPLETE grouped report, so a resolution
-  failure counts as no states and lands as `binding_unavailable`.
-- **Findings group by the failing COORDINATE, not the mapping occurrence** — one renamed
-  variant slug is one finding over N mappings, which is the unit a maintainer repairs.
-  Each carries `mapping_count` and a capped sample of `table[...].column[...]` locations
-  in the validator's own author-facing spelling. Output is deterministic: grouped by
-  code (variant → variable → binding → representation, coarse to fine), sorted by
-  coordinate within each group, so two releases' reports diff. A coordinate reported at
-  a coarser grain does not cascade into the finer ones — one cause, one repair.
-- **Every mapping is checked at four grains — variant, variable, binding, and (when it
-  pins one) representation.** The `binding_unavailable` grain is the pairing: an
-  existing variable and an existing variant can still be a binding the catalog carries
-  no state for, because the variable's states all live under other variants. The name is
-  the order path's own for it, and here it holds at every period, so no request could
-  ever fill the mapping.
-- **A mapping that omits `representation` skips the representation check only.** §12's
-  single-representation arm is request-dependent — whether the binding resolves to ONE
-  canonical representation across a requested period is `order.py`'s `unqualified_ok`
-  decision, not a static property of the catalog. That the binding is *delivered at its
-  declared variant at all* is static, so an unqualified mapping is still checked there.
+**Pre-cut implementation:** `check_inventory(inventory, conn)` currently runs at webapp
+boot and in a release-marked maintainer test against separately loaded TOML. Plan 04
+deletes this runtime gate and the committed legacy inventory; build validation replaces
+it. Runtime boot checks artifact schema, completeness, publishability and steward
+identity, opens SQLite read-only and never rebuilds an inventory index. Build failures
+remain actionable and deterministic; diagnostic output never activates as a catalog.
 
 ## Order materializer and manifest (`order.py`)
 
-`materialize_order(project, inventory, conn)` is the one place a logical
-`project_data.json` selection meets a steward's physical delivery topology. It returns
-either a complete `OrderManifest` or a non-empty set of `OrderFinding`s — never a
-partial order. `REFACTOR_SPEC.md` §12 is the decision text. The FastAPI endpoint and the
-CLI/plugin are thin adapters over this one function, which is what makes their results
-byte-identical; all logic (and all fail-closing) lives here.
+`materialize_order(project, conn)` is the one place a logical `project_data.json`
+selection meets a steward's physical delivery topology. It returns either a complete
+`OrderManifest` or a non-empty set of `OrderFinding`s — never a partial order. The
+compiled contract above owns the facts; `REFACTOR_SPEC.md` §12 tracks the cut. The
+FastAPI endpoint and the CLI/plugin are thin adapters over this one function, which is
+what makes their results byte-identical; all logic (and all fail-closing) lives here.
 
-`inventory=None` selects §12's **global-deployment fallback**: the global deployment has
-no physical delivery topology, so canonical resolution alone grounds the order. It is
-the SAME function and the same pipeline — only step 3's matching arm differs — so there
-is no second clip/slice/coverage implementation to drift. `OrderProvenance.mode`
+**Contract signature; implementation follows in plan 03.**
+`import_manifest.catalog_artifact_kind = "catalog"` selects the **global-deployment
+fallback**: it has no physical delivery topology, so canonical resolution alone grounds
+the logical order. A `steward` artifact always uses its compiled holdings, even when
+browsing reference scope. Missing holdings never selects fallback. It is the SAME
+function and the same pipeline — only step 3's matching arm differs — so there is no
+second clip/slice/coverage implementation to drift. `OrderProvenance.mode`
 (`steward_inventory` \| `global_fallback`) names which one produced a manifest, and the
 provenance gate treats the global deployment like any other: `ProjectData.steward` must
 equal `"global"` (`order.GLOBAL_STEWARD`).
@@ -1048,26 +1051,18 @@ Per `sources[*].bindings[*]`, in project declaration order:
    physical order readiness.
 3. **Steward matching + coverage gate.** A table matches a slice only when one of its
    columns carries a mapping matching `(register_variant, variable, representation)` AND
-   its edition overlaps THAT slice; the edition contributes only its overlap. A mapping
-   that OMITS `representation` is the inventory's single-representation arm: it matches
-   only a binding that resolves to ONE canonical representation across the request. When
-   the representation changed, an unqualified mapping cannot say which slice its column
-   is, so it blocks (`mapping_ambiguous`) instead of letting one physical column claim
-   two canonical representations — but only from a table whose edition overlaps the
-   clipped request, since a table that cannot overlap never contributes a column and so
-   cannot make anything ambiguous. Any subperiod of the availability-clipped request
-   left uncovered blocks the WHOLE order with the exact gap (`coverage_gap`), and a
-   slice no mapping serves blocks with `mapping_missing`. Overlap alone never buys a
-   partial manifest. The materializer never CHOOSES between tables and needs no chooser:
-   §12's one-to-one resolution invariant (previous section) means a valid inventory
-   offers at most one `(table, column)` per cell instant **per partition**, so the
-   several contributions one slice can collect are either disjoint pieces of it (the
-   annual series) or distinct partitions of it (the sub-population split), and both are
-   wanted whole. Coverage needs no partition arm of its own: contributions already union
-   across matching tables, and partitions are simply more matching tables. The
-   `mapping_ambiguous` block survives that invariant because the inventory validator is
-   DB-blind — a lone unqualified mapping is structurally valid, and only the catalog
-   knows the binding's representation changed across the request. In global-fallback
+   its physical edition overlaps THAT slice; only the intersection contributes. Matching
+   reads compiled IDs and canonical spelling, never loose inventory TOML. All mappings
+   are explicit. Any subperiod of the availability-clipped request left uncovered blocks
+   the WHOLE order with the exact gap (`coverage_gap`), and a slice no mapping serves
+   blocks with `mapping_missing`. Overlap alone never buys a partial manifest. The
+   materializer never CHOOSES between tables and needs no chooser: §12's one-to-one
+   resolution invariant (previous section) means a valid inventory offers at most one
+   `(table, column)` per cell instant **per partition**, so the several contributions
+   one slice can collect are either disjoint pieces of it (the annual series) or
+   distinct partitions of it (the sub-population split), and both are wanted whole.
+   Coverage needs no partition arm of its own: contributions already union across
+   matching tables, and partitions are simply more matching tables. In global-fallback
    mode the slice's own canonical column serves it under a blank table, so the slice
    covers itself exactly and the same gate runs unchanged — what canonical resolution
    did not deliver has already blocked upstream as an unresolved, unavailable or
@@ -1084,11 +1079,11 @@ Per `sources[*].bindings[*]`, in project declaration order:
 binding — `steward_mismatch`, `project_empty`, `period_not_orderable`,
 `variable_unresolved`, `binding_unavailable`, `representation_unknown`,
 `representation_unresolved`, `representation_ambiguous`, `mapping_missing`,
-`mapping_ambiguous`, `coverage_gap` — so a researcher fixes the whole order in one edit
-instead of one gap per round trip. `ProjectData.steward` must equal the deployment's
-steward — the inventory's, or `"global"` in fallback mode (provenance is checked before
-anything resolves; retargeting is deliberately not a feature) — and an empty project
-stays a valid draft that cannot produce a header-only manifest.
+`coverage_gap` — so a researcher fixes the whole order in one edit instead of one gap
+per round trip. `ProjectData.steward` must equal the deployment's steward — the
+manifest's, or `"global"` in fallback mode (provenance is checked before anything
+resolves; retargeting is deliberately not a feature) — and an empty project stays a
+valid draft that cannot produce a header-only manifest.
 
 **The manifest is a versioned JSON contract.** Version 1 is **in definition** until the
 §12 boundary ships: it has no external consumer yet, so shape changes while the
@@ -1098,7 +1093,7 @@ decision, Y-19/1 review). Bump discipline — an incompatible change bumps
 reader (the steward-side extract system). `OrderManifest` (version
 `ORDER_MANIFEST_VERSION`) carries provenance (mode, steward, project name / schema
 version / declared reg_meta version / SHA-256 of the project's canonical JSON, plus the
-catalog DB's `schema_version` and `import_date`), the resolved entries — logical
+catalog DB's `schema_version` and `generation_id`), the resolved entries — logical
 coordinate (`provider,register,variant,variable` + the canonical representation), the
 availability-clipped `requested_period`, and the physical coordinate
 (`edition`,`table`,`column`, plus the table's `partition` label when it has one) — and
@@ -1167,12 +1162,13 @@ re-type live here too, beside the materializer:
   manifest), with this line as the human summary beside them.
 
 The adapters themselves are `reg_webapp`'s `POST /api/project/order` (see
-`reg_webapp/DESIGN.md` → Project-write surface) and
-`reg-meta order <project.json> [--inventory <toml>]`, which writes `to_json()` verbatim
-to stdout or `--output` — never through the CLI envelope or `--format`, because that
-canonical serialization IS the artifact. Omitting `--inventory` is the same
-`inventory=None` global fallback the webapp's global deployment passes, not a degraded
-CLI mode.
+`reg_webapp/DESIGN.md` → Project-write surface) and `reg-meta order <project.json>`,
+which writes `to_json()` verbatim to stdout or `--output` — never through the CLI
+envelope or `--format`, because canonical serialization IS the artifact. `--inventory`
+is deleted. Both adapters select physical steward order or global logical fallback from
+the opened artifact's manifest. `ORDER_MANIFEST_VERSION` stays 1 under the in-definition
+rule. Generation provenance intentionally changes the envelope; compare unchanged
+normalized entries, clips and finding order byte-for-byte, not old whole-manifest bytes.
 
 **Deferred (ratified 2026-09-02): companion tables.** Steward deliveries carry
 reference/crosswalk tables that are useful — sometimes essential — beside certain
@@ -1575,8 +1571,11 @@ docs query accessor so catalog browse payloads never inline binary content.
 End users never see the markdown files. The doc DB is distributed as a GitHub Release
 asset (`reg_meta_docs.db.zst`) parallel to the main DB asset, installed into the same
 cache dir (`$XDG_DATA_HOME/reg_meta/`), and fetched by `reg-meta update` alongside the
-main DB. Query commands (`search`, `get`, `resolve`, `docs/*`) refuse to run without the
-doc DB — on first use the CLI offers to download both artifacts.
+main DB. **Pre-cut CLI behavior:** query commands (`search`, `get`, `resolve`, `docs/*`)
+refuse to run without the doc DB and offer both downloads on first use. The compiled
+selection contract makes docs optional for metadata, holdings and orders; only a docs
+operation requires its paired sibling and reports `doc_db_not_found` when missing. No
+unrelated installed docs artifact is attached silently.
 
 `reg-meta-build build-docs` is a maintainer-only command that rebuilds the doc DB from a
 repo checkout of `reg_meta_build/docs/` before upload. Runtime never reads markdown —
@@ -1690,21 +1689,23 @@ via `reg-meta update`.
 Legacy bare `v*` tags (pre-0.6.0) are still recognized during the transition but new
 releases must use the `reg_meta/v*` prefix.
 
-**Update command**: `reg-meta update` is the single command that brings everything
-current — it walks releases to find the latest main-DB and doc-DB assets, and (when
-reg-meta was installed as a uv tool) also runs `uv tool upgrade reg-meta` to upgrade the
-package itself. On a venv/editable install (e.g. the Docker bake) the self-upgrade is
-skipped (`result["package"] = "skipped_not_uv_tool"`) and only the DB/doc assets are
-fetched; the package is managed by whatever installed the venv. Already-current assets
-are skipped (tracked via `.db_source` and `.docs_source` in the cache dir). A background
-version checker runs once per week (cached in `~/.local/share/reg_meta/.update_check`)
-and prints a hint on interactive runs when a newer release exists.
+**Pre-cut update command**: `reg-meta update` is the single command that brings
+everything current — it walks releases to find the latest main-DB and doc-DB assets, and
+(when reg-meta was installed as a uv tool) also runs `uv tool upgrade reg-meta` to
+upgrade the package itself. On a venv/editable install (e.g. the Docker bake) the
+self-upgrade is skipped (`result["package"] = "skipped_not_uv_tool"`) and only the
+DB/doc assets are fetched; the package is managed by whatever installed the venv.
+Already-current assets are skipped (tracked via `.db_source` and `.docs_source` in the
+cache dir). A background version checker runs once per week (cached in
+`~/.local/share/reg_meta/.update_check`) and prints a hint on interactive runs when a
+newer release exists.
 
-**Auto-download on first use**: query commands (`search`, `get`, `resolve`, `docs/*`)
-prompt to download whichever artifacts are missing when invoked interactively, so users
-don't need to know about `reg-meta update` on first install. Non-interactive invocations
-fail with structured errors (`db_not_found`, `doc_db_not_found`) rather than silently
-skipping.
+**Pre-cut auto-download on first use**: query commands (`search`, `get`, `resolve`,
+`docs/*`) prompt to download whichever artifacts are missing when invoked interactively.
+Non-interactive invocations fail with `db_not_found` / `doc_db_not_found`. Plan 03
+narrows the docs requirement to docs operations, preserving actionable missing-catalog
+errors and explicit selected-directory updates; metadata/holdings/order reads need only
+the catalog artifact.
 
 ### Package version format
 
