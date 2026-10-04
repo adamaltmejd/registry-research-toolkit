@@ -345,7 +345,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "Examples:\n"
             "  reg-meta-build --db /tmp/swecov extend-db \\\n"
             "      --base-db ~/.reg_meta/reg_meta.db \\\n"
-            "      --holdings-input /path/to/accepted-candidate \\n"
+            "      --holdings-input /path/to/accepted-candidate \\\n"
             "      --input-commit SHA --input-manifest-sha256 SHA256"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
