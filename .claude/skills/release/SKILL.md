@@ -85,10 +85,10 @@ difference:
 - **`main` may carry coherent unpublished sibling changes.** A schema bump lands on main
   with reg_meta's raised floor in the same push, and the schema publisher only runs
   *after* that push and its GitHub release. So the pre-push gate (step 6) runs the
-  reg_meta Docker module in `--install-mode workspace`: it builds this checkout's
-  reg_schema **and** reg_meta wheels in a pinned container and installs both. Green
-  means the two sources are mutually installable. It is **not** evidence that reg-schema
-  is on PyPI.
+  reg_meta package integration module in `--install-mode workspace`: it builds this
+  checkout's reg_schema **and** reg_meta wheels in a pinned container and installs both.
+  Green means the two sources are mutually installable. It is **not** evidence that
+  reg-schema is on PyPI.
 - **A dependent package may not reach PyPI until its declared dependencies resolve
   there.** That is the `registry` mode of the same module (reg_schema kept out of the
   build context, `uv pip install --no-sources ./reg_meta`), run as a preflight before
@@ -226,13 +226,13 @@ fi
 ```
 
 **The push runs the full pre-push gate** (#710): the entire pytest suite — including the
-`reg_meta` Docker integration test as a *hard* gate (`--run-integration`, so its
-`docker` fixture **fails** rather than skips) — runs at push time, not commit. The bump
-commit touches `pyproject.toml` and `__init__.py`, which the gate's
-`files: \.(py|toml|json)$` filter matches, so the suite **will** run on this push.
-**Docker must be running** or the push is blocked — start it and push again, never
-bypass with `--no-verify`. (The release-marked `test_update_and_query`, which downloads
-the published asset, is carved off pre-push and runs only post-publish — see step 10.)
+`reg_meta` native container integration test as a *hard* gate (`--run-integration`, so
+its runtime fixture **fails** rather than skips) — runs at push time, not commit. The
+bump commit touches `pyproject.toml` and `__init__.py`, which the push range gate
+matches, so the suite **will** run on this push. **Apple Container (macOS) or Podman
+(Linux) must be healthy** or the push is blocked — start it and push again, never bypass
+with `--no-verify`. (The release-marked `test_update_and_query`, which downloads the
+published asset, is carved off pre-push and runs only post-publish — see step 10.)
 
 This gate runs `--install-mode workspace` (see Two packaging phases): it proves this
 checkout's reg_schema and reg_meta wheels install together, so a schema bump can land on
@@ -575,7 +575,7 @@ done
 ```
 
 **reg_meta post-publish gate:** `publish_reg_meta.yml` calls `integration.yml`
-(`workflow_call`) after publishing. That job runs the **release-marked** Docker test
+(`workflow_call`) after publishing. That job runs the **release-marked** container test
 (`test_update_and_query`) against the just-published asset, plus the §12 inventory ↔
 flavored-DB consistency gate against `reg_meta_swecov.db.zst` from *this* release
 (digest-verified, provisioned as `REG_META_DB`). It installs the **tagged source** with
@@ -595,7 +595,7 @@ looks at `reg_meta_swecov.db.zst`. Read the step that actually failed:
 - **the §12 consistency gate** — a schema-incompatible flavored DB, or an inventory
   mapping that no longer resolves (step 11's territory).
 
-The Docker tests are carved off pre-push and never run on push/PR, so a CLI-surface
+The release-asset test is carved off pre-push and ordinary push/PR CI, so a CLI-surface
 change can strand them silently until this gate. Fix the cause — on main, or on the
 release's assets — and re-validate with `gh workflow run integration.yml --ref main`
 (then watch that dispatched run). Do **not** re-release a working package over a stale

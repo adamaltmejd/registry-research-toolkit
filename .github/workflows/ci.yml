@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
+    branches: [main, codex/curation-completion]
   workflow_call:
   # Manual re-fire (#326): GitHub occasionally drops a push event (hit on the
   # #317 rollout — container-build.yml got the event, ci.yml didn't), and the
@@ -56,6 +56,31 @@ jobs:
           version: "0.12.11"
       - run: uv sync --frozen
       - run: uv run python -m pytest -m "not integration"
+
+  package-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          version: "0.12.11"
+      - run: uv sync --frozen
+      - name: Prepare rootless Podman
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes podman
+          podman --version
+          podman build --help
+          podman run --help
+          podman rmi --help
+          podman info
+      # Source coherence only: registry dependencies and release assets have
+      # separate publication gates in publish_reg_meta.yml / integration.yml.
+      - name: Verify workspace wheels install together with Podman
+        run: |
+          uv run python -m pytest reg_meta/tests/test_integration.py \
+            --run-integration --install-mode workspace -m "not release"
 
   changes:
     runs-on: ubuntu-latest

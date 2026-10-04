@@ -135,9 +135,9 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
   is reg_schema's `ValidationResult`/`ValidationIssue`.
 - **Web frontend** (`reg_webapp/frontend/`): Svelte 5 + Vite + TypeScript, bun-managed.
   TS types codegen'd from FastAPI's `openapi.json`.
-- **Tests**: pytest + pytest-xdist; `@pytest.mark.integration` opts into
-  Docker-requiring tests. Build/parse coverage is fully synthetic (no gitignored real
-  SCB/SOS data) and runs the full structural validator
+- **Tests**: pytest + pytest-xdist; `@pytest.mark.integration` opts into Apple Container
+  (macOS) or Podman (Linux) tests. Build/parse coverage is fully synthetic (no
+  gitignored real SCB/SOS data) and runs the full structural validator
   (`validate_built_db(corpus=False)` — every invariant except the real-corpus volume
   gate). Real-corpus drift is surfaced by a maintainer's actual `build-db`. Strict
   builds require `corpus=True`; diagnostic builds retain structural validation and
@@ -176,10 +176,9 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
 
 # Issue tracker
 
-GitHub Issues is the **idea archive, not a build queue**. Before filing,
-**search open AND closed issues**
-(`gh issue list --state all --search "<keywords>"`) for an existing match: extend or
-comment on it rather than opening a duplicate.
+GitHub Issues is the **idea archive, not a build queue**. Before filing, **search open
+AND closed issues** (`gh issue list --state all --search "<keywords>"`) for an existing
+match: extend or comment on it rather than opening a duplicate.
 
 **Title** — mirror the commit convention: `<type>(<package>): <imperative summary>`
 (e.g. `feat(reg_meta_build): …`, `fix(reg_webapp): …`).
@@ -202,10 +201,9 @@ enforced by `scripts/tests/test_skill_gh_reads.py`.
 - Develop on an isolated branch or worktree. A PR needs green CI and the maintainer's
   review before it merges. Coordinate concurrent work and keep main to a single write
   path.
-- Dependency maintenance uses
-  [upgrade-deps](.agents/skills/upgrade-deps/SKILL.md), releases use
-  [release](.agents/skills/release/SKILL.md), and real-seed verification uses
-  [build-db](.agents/skills/build-db/SKILL.md).
+- Dependency maintenance uses [upgrade-deps](.agents/skills/upgrade-deps/SKILL.md),
+  releases use [release](.agents/skills/release/SKILL.md), and real-seed verification
+  uses [build-db](.agents/skills/build-db/SKILL.md).
 
 # Layout
 

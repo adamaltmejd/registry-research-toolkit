@@ -54,8 +54,9 @@ and avoid unrelated lockfile churn.
 
 Update all homes of a selected runtime together. Frontend tool launchers may resolve
 `node` differently in CI and production. Check the actual runtime and shared libraries
-in each affected environment. Test a changed image early with ordinary Docker builds and
-plain progress output, before expensive review. Keep task-owned images/containers
+in each affected environment. Test a changed image early with its actual runtime: Apple
+Container (macOS) or Podman (Linux) for package integration; Docker for production
+publishing/deployment, before expensive review. Keep task-owned images/containers
 identifiable; no shared-cache pruning.
 
 Fix resulting API, typing, build and test incompatibilities directly. Extend focused
@@ -70,8 +71,8 @@ existing checks once; read their current commands and checker pins from AGENTS.m
 and hooks instead of duplicating version pins in this skill:
 
 - Python: frozen installation, lint/format/types, version consistency and the relevant
-  full test suite. Keep the hard Docker packaging checks; source coherence uses
-  `--install-mode workspace`. Registry availability is a distinct release check and
+  full test suite. Keep the hard native container packaging checks; source coherence
+  uses `--install-mode workspace`. Registry availability is a distinct release check and
   cannot be inferred from a local sibling-wheel install.
 - Frontend: lint, Svelte/TypeScript checking, tests, production build and generated
   API-type drift check when its dependency/runtime stack changes.
