@@ -217,8 +217,7 @@ def test_register_column_coverage_folds_case_twin_spellings(
     assert merged.open_ended is False
 
 
-@pytest.mark.parametrize("reversed_rows", [False, True])
-def test_provider_column_coverage_matches_register_reads(reversed_rows: bool) -> None:
+def _provider_coverage_db(reversed_rows: bool = False) -> sqlite3.Connection:
     conn = build_slugged_db()
     add_variable(conn, register_id=1, var_id=800, name="Twin", slug="twin")
     states = [
@@ -281,7 +280,17 @@ def test_provider_column_coverage_matches_register_reads(reversed_rows: bool) ->
     conn.execute(
         "UPDATE variable SET slug = NULL WHERE register_id = 1 AND slug = 'hidden'"
     )
-    catalog = Catalog(conn)
+    return conn
+
+
+@pytest.fixture
+def provider_db() -> sqlite3.Connection:
+    return _provider_coverage_db()
+
+
+@pytest.mark.parametrize("reversed_rows", [False, True])
+def test_provider_column_coverage_matches_register_reads(reversed_rows: bool) -> None:
+    catalog = Catalog(_provider_coverage_db(reversed_rows))
     expected = {}
     for register in ("lisa", "rams"):
         expected[register] = {
@@ -293,23 +302,91 @@ def test_provider_column_coverage_matches_register_reads(reversed_rows: bool) ->
                 ).items()
             },
         }
+    assert catalog.provider_column_coverage("scb") == expected
+
+
+def test_provider_column_coverage_uses_one_query(
+    provider_db: sqlite3.Connection,
+) -> None:
+    catalog = Catalog(provider_db)
     statements: list[str] = []
-    conn.set_trace_callback(statements.append)
-    actual = catalog.provider_column_coverage("scb")
-    conn.set_trace_callback(None)
-    assert actual == expected
+    provider_db.set_trace_callback(statements.append)
+    catalog.provider_column_coverage("scb")
+    provider_db.set_trace_callback(None)
     assert len(statements) == 1
-    assert actual["lisa"][("twin", "ÅR")].state_count == 2
-    assert actual["lisa"][("twin", "ÅR")].coverage_from is None
-    assert actual["lisa"][("twin", "ÅR")].open_ended is True
-    assert actual["rams"][("twin", "år")].coverage_to == "2021-12-31"
-    assert catalog.provider_column_coverage("scb", ["rams", "rams", "missing"]) == {
-        "rams": expected["rams"]
+
+
+def test_provider_column_coverage_folds_unicode_twins(
+    provider_db: sqlite3.Connection,
+) -> None:
+    columns = Catalog(provider_db).provider_column_coverage("scb")["lisa"]
+    assert {key for key in columns if key[0] == "twin" and key[1] is not None} == {
+        ("twin", "Other"),
+        ("twin", "ÅR"),
     }
-    assert catalog.provider_column_coverage("scb", []) == {}
+    assert columns[("twin", "ÅR")].state_count == 2
+
+
+def test_provider_column_coverage_maps_open_bounds(
+    provider_db: sqlite3.Connection,
+) -> None:
+    coverage = Catalog(provider_db).provider_column_coverage("scb")["lisa"][
+        ("twin", "ÅR")
+    ]
+    assert coverage.coverage_from is None
+    assert coverage.coverage_to is None
+    assert coverage.open_ended is True
+
+
+def test_provider_column_coverage_keeps_registers_separate(
+    provider_db: sqlite3.Connection,
+) -> None:
+    coverage = Catalog(provider_db).provider_column_coverage("scb")
+    assert coverage["lisa"][("twin", "ÅR")].open_ended is True
+    assert coverage["rams"][("twin", "år")].coverage_to == "2021-12-31"
+
+
+def test_provider_column_coverage_filters_registers(
+    provider_db: sqlite3.Connection,
+) -> None:
+    catalog = Catalog(provider_db)
+    expected = catalog.provider_column_coverage("scb")["rams"]
+    assert catalog.provider_column_coverage("scb", ["rams", "rams", "missing"]) == {
+        "rams": expected
+    }
+
+
+def test_provider_column_coverage_empty_filter(provider_db: sqlite3.Connection) -> None:
+    assert Catalog(provider_db).provider_column_coverage("scb", []) == {}
+
+
+def test_provider_column_coverage_excludes_stateless_registers(
+    provider_db: sqlite3.Connection,
+) -> None:
+    catalog = Catalog(provider_db)
+    assert "empty" not in catalog.provider_column_coverage("scb")
     assert catalog.provider_column_coverage("scb", ["empty"]) == {}
-    assert catalog.provider_column_coverage("scb", ["rams') OR 1=1 --"]) == {}
-    assert catalog.provider_column_coverage("missing") == {}
+
+
+def test_provider_column_coverage_excludes_unaddressable_variables(
+    provider_db: sqlite3.Connection,
+) -> None:
+    columns = Catalog(provider_db).provider_column_coverage("scb")["lisa"]
+    assert all(slug is not None and column != "Hidden" for slug, column in columns)
+
+
+def test_provider_column_coverage_binds_register_filter(
+    provider_db: sqlite3.Connection,
+) -> None:
+    assert (
+        Catalog(provider_db).provider_column_coverage("scb", ["rams') OR 1=1 --"]) == {}
+    )
+
+
+def test_provider_column_coverage_unknown_provider(
+    provider_db: sqlite3.Connection,
+) -> None:
+    assert Catalog(provider_db).provider_column_coverage("missing") == {}
 
 
 def test_register_variable_deliveries() -> None:
