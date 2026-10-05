@@ -1,0 +1,20 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/groups/*/group": [
+        "classification_codes",
+        "register_value_sets"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/groups/*/group": [
+        "classification_codes",
+        "register_value_sets"
+      ]
+    }
+  }
+]

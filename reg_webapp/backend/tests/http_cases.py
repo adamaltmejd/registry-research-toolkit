@@ -33,10 +33,12 @@ def assert_http_case(case, tmp_path, monkeypatch):
     request = json.loads((case / "request.json").read_text())
     expected = json.loads((case / "expected.json").read_text())
     kind = request.get("kind", "steward")
+    fixture = request.get("fixture", "compiled")
+    source = fixture if fixture.startswith("reader") else CASES / "fixtures" / fixture
     path = fixture_db.build_reader_fixture_db(
         tmp_path / "artifact",
         kind=kind,
-        fixture=CASES / "fixtures" / request.get("fixture", "compiled"),
+        fixture=source,
     )
     monkeypatch.setenv("REG_META_DB", str(path.parent))
     monkeypatch.setenv(

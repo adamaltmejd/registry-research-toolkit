@@ -1,0 +1,27 @@
+{
+  "fixture": "reader",
+  "requests": [
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "Value",
+        "type": "variable",
+        "limit": 1,
+        "scope": "holdings"
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "Value",
+        "type": "variable",
+        "limit": 1,
+        "scope": "reference"
+      },
+      "cursor_from": [
+        0,
+        "/groups/0/next_cursor"
+      ]
+    }
+  ]
+}

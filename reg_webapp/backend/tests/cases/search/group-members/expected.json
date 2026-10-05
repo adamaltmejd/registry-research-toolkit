@@ -1,0 +1,11 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/results/0/members/*/delivery_column": [
+        "value"
+      ],
+      "/groups/0/results/0/member_count": 1
+    }
+  }
+]
