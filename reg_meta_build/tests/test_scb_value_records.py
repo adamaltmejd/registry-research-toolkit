@@ -204,3 +204,45 @@ def test_normalized_payloads_keep_missing_distinct_from_supplied_empty(
     assert cleaned.descriptors[empty.descriptor_key].version == ""
     assert cleaned.validity[0].valid_from is None
     assert cleaned.validity[1].valid_from == ""
+
+
+def test_clean_scb_values_decodes_dos_remnant_bytes_within_cp1252_cells(
+    tmp_path: Path,
+) -> None:
+    # Placeholders are swapped for raw bytes after the fixture is written: DOS
+    # cp850 remnants undefined in cp1252 (0x81, 0x8D, 0x90, 0x9D), a remnant inside
+    # ordinary text, and cp1252's own 0x80 (euro sign) alone and beside a remnant.
+    raw_labels = {
+        b"DOS_U_UML": b"\x81",
+        b"DOS_I_GRAVE": b"\x8d",
+        b"DOS_E_ACUTE": b"\x90",
+        b"DOS_O_SLASH": b"\x9d",
+        b"DOS_MIXED": b"MURCI\x90LAGO",
+        b"CP_EURO_MIXED": b"\x80 \x9d",
+        b"CP_EURO": b"\x80",
+    }
+    value_rows = [
+        f"Version|Level|{code:03d}|{placeholder.decode()}|100|"
+        for code, placeholder in enumerate(raw_labels, start=1)
+    ]
+    scb_dir = write_scb_input(tmp_path / "source", vardemangder_rows=value_rows)
+    value_path = scb_dir / "Vardemangder.csv"
+    content = value_path.read_bytes()
+    for placeholder, raw in raw_labels.items():
+        content = content.replace(placeholder, raw)
+    value_path.write_bytes(content)
+    reader = open_scb_snapshot(write_scb_snapshot(tmp_path / "accepted", scb_dir))
+
+    cleaned = clean_scb_values(reader)
+    assert [
+        cleaned.values[association.value_key].normalized_content
+        for association in cleaned.associations()
+    ] == [
+        ("001", "ü"),
+        ("002", "ì"),
+        ("003", "É"),
+        ("004", "Ø"),
+        ("005", "MURCIÉLAGO"),
+        ("006", "€ Ø"),
+        ("007", "€"),
+    ]

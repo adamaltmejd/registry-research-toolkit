@@ -1,8 +1,9 @@
 """Curated cross-register thematic tag layer (#311) — build-side machinery.
 
 Covers the loader (`load_tags`: shape + exactly-one-grain + dedup validation),
-per-grain uniqueness and exactly-one-grain enforced by the DDL, and the validator
-closure check. Common writer and dependency tests cover resolved tag materialization.
+and per-grain uniqueness and exactly-one-grain enforced by the DDL. The validator
+closure check is pinned by the `tag-*` cases under `cases/validate/`; common writer
+and dependency tests cover resolved tag materialization.
 Tests use both small local fixtures and the committed seed `tags.toml`.
 """
 
@@ -11,7 +12,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from _slugged_db import add_variable, build_slugged_db, seed_tags
+from _slugged_db import build_slugged_db, seed_tags
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build._curation import repo_curation_path
 from reg_meta_build.tags import (
@@ -294,39 +295,3 @@ def test_tag_member_exactly_one_grain_check() -> None:
             "VALUES (?, NULL, NULL)",
             (tag_id,),
         )
-
-
-def test_validator_closure_passes_on_materialized_tags() -> None:
-    from reg_meta_build.validate import ValidationResult, _check_tags
-
-    conn = build_slugged_db(classification=None)
-    add_variable(conn, register_id=1, var_id=90, name="Income", slug="dispink")
-    seed_tags(
-        conn,
-        (
-            _tag(
-                (
-                    TagMember("scb", "lisa", "dispink", 0, True, "primary"),
-                    TagMember("scb", "lisa", None, 1, False, None),
-                )
-            ),
-        ),
-    )
-    tables = {
-        r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
-    }
-    result = ValidationResult()
-    _check_tags(conn, result, tables)
-    assert result.passed, result.failures
-
-
-def test_synthetic_build_ships_empty_tags(fixture_db) -> None:
-    """The explicit synthetic catalog has empty, queryable tag tables."""
-    import sqlite3
-
-    conn = sqlite3.connect(fixture_db)
-    try:
-        assert conn.execute("SELECT COUNT(*) FROM tag").fetchone()[0] == 0
-        assert conn.execute("SELECT COUNT(*) FROM tag_member").fetchone()[0] == 0
-    finally:
-        conn.close()

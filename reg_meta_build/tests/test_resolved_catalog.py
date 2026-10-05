@@ -1200,6 +1200,9 @@ def test_distinct_memberships_and_changed_labels_remain_distinct(
         (("01", "Participation"),),
         (("01", "Revised label"),),
         (("01", "Participation"), ("02", "Employment")),
+        # Same concatenated code+label bytes, split differently.
+        (("ab", "c"),),
+        (("a", "bc"),),
     )
     variable = _variable().model_copy(
         update={
@@ -1207,7 +1210,9 @@ def test_distinct_memberships_and_changed_labels_remain_distinct(
                 _state(year).model_copy(
                     update={"value_set": ResolvedCodeSet(members=members)}
                 )
-                for year, members in zip(range(2000, 2003), memberships, strict=True)
+                for year, members in zip(
+                    range(2000, 2000 + len(memberships)), memberships, strict=True
+                )
             )
         }
     )
@@ -1217,7 +1222,7 @@ def test_distinct_memberships_and_changed_labels_remain_distinct(
         states = conn.execute(
             "SELECT value_set_id FROM variable_state ORDER BY valid_from"
         ).fetchall()
-        assert len({row[0] for row in states}) == 3
+        assert len({row[0] for row in states}) == len(memberships) == 5
         for state, members in zip(states, memberships, strict=True):
             assert (
                 tuple(
