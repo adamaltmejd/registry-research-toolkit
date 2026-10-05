@@ -9,7 +9,6 @@ Only network, filesystem, subprocess, environment, clock and platform patches pa
 from __future__ import annotations
 
 import ast
-import subprocess
 from pathlib import Path
 
 import pytest
@@ -113,22 +112,6 @@ PROCESS_ROOTS = {
 }
 
 
-def python_test_files():
-    names = subprocess.check_output(
-        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--", "*.py"],
-        cwd=ROOT,
-        text=True,
-    ).splitlines()
-    return sorted(
-        {
-            ROOT / name
-            for name in names
-            if ("tests" in Path(name).parts or "conformance" in Path(name).parts)
-            and (ROOT / name).is_file()
-        }
-    )
-
-
 def private(name):
     return name.startswith("_") and not (name.startswith("__") and name.endswith("__"))
 
@@ -168,8 +151,25 @@ def violations(source, *, conformance=False):
                 ):
                     hits.append((node.lineno, f"{node.module}.{alias.name}"))
     for node in ast.walk(tree):
-        if not isinstance(node, ast.Call) or not node.args:
+        if conformance and isinstance(node, ast.Attribute) and private(node.attr):
+            hits.append((node.lineno, dotted(node, aliases)))
+        if not isinstance(node, ast.Call):
             continue
+        if (
+            conformance
+            and isinstance(node.func, ast.Name)
+            and node.func.id in {"getattr", "hasattr"}
+            and len(node.args) > 1
+            and isinstance(node.args[1], ast.Constant)
+            and isinstance(node.args[1].value, str)
+            and private(node.args[1].value)
+        ):
+            hits.append(
+                (
+                    node.lineno,
+                    f"{node.func.id}({dotted(node.args[0], aliases)}, {node.args[1].value})",
+                )
+            )
         called = dotted(node.func, aliases)
         is_patch = called in {
             "patch",
@@ -185,26 +185,49 @@ def violations(source, *, conformance=False):
         }
         if not (is_patch or is_monkey):
             continue
-        target = dotted(node.args[0], aliases)
-        if (
-            called.endswith((".setattr", ".delattr", ".patch.object"))
-            and len(node.args) > 1
-            and not isinstance(node.args[0], ast.Constant)
-        ):
-            target += "." + dotted(node.args[1], aliases)
-        # Nested process adapters (e.g. reg_meta.update.subprocess.run) are
-        # still process boundaries; unknown targets fail closed.
+        keywords = {keyword.arg: keyword.value for keyword in node.keywords}
+        target_node = node.args[0] if node.args else keywords.get("target")
+        if target_node is None:
+            hits.append((node.lineno, f"{called}(unresolved target)"))
+            continue
+        target = dotted(target_node, aliases)
+        if called.endswith(
+            (".setattr", ".delattr", ".patch.object")
+        ) and not isinstance(target_node, ast.Constant):
+            attribute = (
+                node.args[1]
+                if len(node.args) > 1
+                else keywords.get("name", keywords.get("attribute"))
+            )
+            if attribute is not None:
+                target += "." + dotted(attribute, aliases)
+        # Only direct process imports or literal process paths qualify. Calls,
+        # subscripts and product-module re-exports cannot prove a process boundary.
+        # The module registry is an internal-module patch even through imported sys.
+        structured = isinstance(target_node, (ast.Name, ast.Attribute, ast.Constant))
+        candidate = target_node
+        while isinstance(candidate, ast.Attribute):
+            candidate = candidate.value
+        structured = structured and isinstance(candidate, (ast.Name, ast.Constant))
+        parts = target.split(".")
         boundary = (
-            any(part in PROCESS_ROOTS for part in target.split("."))
-            or target == "type(output).replace"
+            structured
+            and all(part.isidentifier() for part in parts)
+            and parts[0] in PROCESS_ROOTS
+            and parts[:2] != ["sys", "modules"]
+            and (
+                isinstance(target_node, ast.Constant)
+                or isinstance(candidate, ast.Name)
+                and candidate.id in aliases
+            )
         )
         if not boundary:
             hits.append((node.lineno, f"{called}({target})"))
     return sorted(hits)
 
 
-def test_existing_tests_use_public_boundaries():
-    files = python_test_files()
+def test_existing_tests_use_public_boundaries(python_test_files):
+    files = python_test_files
     assert files, "No test files scanned"
     observed = {}
     for path in files:
@@ -234,6 +257,17 @@ def test_existing_tests_use_public_boundaries():
         "from reg_meta import queries as q\nmonkeypatch.setattr(q, 'search', replacement)",
         "monkeypatch.setitem(golden._PIN_BUILDERS, 'key', value)",
         "mocker.patch.object(module, 'name', replacement)",
+        "from reg_meta import queries\nqueries._helper()",
+        "from reg_meta import queries\ngetattr(queries, '_helper')()",
+        "from reg_meta import queries\nhasattr(queries, '_helper')",
+        "import sys\nmonkeypatch.setattr(sys.modules['reg_meta.queries'], 'search', fake)",
+        "import sys\nmonkeypatch.setitem(sys.modules, 'reg_meta.queries', fake)",
+        "from reg_meta import queries\nmonkeypatch.setattr(queries.os, 'getenv', fake)",
+        "from reg_meta import queries\nmonkeypatch.setattr(queries.time, 'time', fake)",
+        "from reg_meta import queries\nmonkeypatch.setattr(queries.sqlite3, 'connect', fake)",
+        "monkeypatch.setattr(type(output), 'replace', fail_replace)",
+        "from unittest.mock import patch as replace\nreplace(target='reg_meta.queries.search')",
+        "from unittest.mock import patch as replace\nreplace.object(target=module, attribute='search', new=fake)",
     ],
 )
 def test_lint_rejects_private_imports_and_internal_patches(source):
@@ -246,7 +280,10 @@ def test_lint_rejects_private_imports_and_internal_patches(source):
         "from reg_meta import __version__",
         "from reg_meta.cli import run",
         "import urllib.request as network\nmonkeypatch.setattr(network, 'urlopen', replacement)",
-        "from reg_meta import update\nmonkeypatch.setattr(update.subprocess, 'run', replacement)",
+        "import subprocess\nmonkeypatch.setattr(subprocess, 'run', replacement)",
+        "from pathlib import Path\nmonkeypatch.setattr(Path, 'replace', replacement)",
+        "from unittest.mock import patch as replace\nreplace(target='subprocess.run')",
+        "from unittest.mock import patch as replace\nimport subprocess\nreplace.object(target=subprocess, attribute='run', new=fake)",
         "monkeypatch.setenv('REG_META_DB', directory)",
     ],
 )

@@ -33,6 +33,11 @@ from pathlib import Path
 import reg_meta.db
 import reg_meta.doc_db
 
+_READER_TESTS_DIR = Path(__file__).resolve().parents[3] / "reg_meta" / "tests"
+if str(_READER_TESTS_DIR) not in sys.path:
+    sys.path.insert(0, str(_READER_TESTS_DIR))
+from reader_artifacts import FIXTURE_IMPORT_DATE
+
 _SLUGGED_DB_DIR = Path(__file__).resolve().parents[3] / "reg_meta_build" / "tests"
 
 
@@ -42,8 +47,6 @@ def ensure_slugged_db_importable() -> None:
     if str(_SLUGGED_DB_DIR) not in sys.path:
         sys.path.insert(0, str(_SLUGGED_DB_DIR))
 
-
-FIXTURE_IMPORT_DATE = "2026-06-01T00:00:00Z"
 
 # A schema_version that PASSES open_db's gate (same major.minor) but differs from
 # the code constant in the PATCH (_check_schema_compat ignores patch) — so
@@ -1289,9 +1292,6 @@ def build_reader_fixture_db(
     The reader's test support runs the real catalog writer, holdings compiler and
     artifact validator. Dev servers and HTTP conformance cases use these same bytes.
     """
-    reader_tests = Path(__file__).resolve().parents[3] / "reg_meta" / "tests"
-    if str(reader_tests) not in sys.path:
-        sys.path.insert(0, str(reader_tests))
     from reader_artifacts import build_reader_artifact
 
     return build_reader_artifact(

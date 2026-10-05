@@ -304,9 +304,11 @@ return-model cases retain contracts that have no equivalent CLI or HTTP projecti
    the selected artifact before execution; incompatible or non-publishable artifacts
    fail, never silently skip. The artifact checks compare manifest accounting, sampled
    browse/search/validate agreement, repeated search/order bytes, CLI/HTTP order
-   identity and located refusal. CI runs them after asset download in `integration.yml`;
-   published schema drift is a release-drift failure. Accepted-input census, pinned
-   baseline acceptance and performance probes remain maintainer work in plan 05.
+   identity and located refusal. CI runs them against both published global catalog and
+   SWECOV steward assets in independent `integration.yml` jobs, alongside the native
+   registry-install gate. Published schema drift is a release-drift failure.
+   Accepted-input census, pinned baseline acceptance and performance probes remain
+   maintainer work in plan 05.
 
 ### Conformance suite
 
@@ -321,12 +323,12 @@ session-built catalog/steward artifacts and use exactly `--artifact-dir` under t
 They derive expectations from artifact content or cross-adapter agreement, never
 real-identifier goldens.
 
-The sole volatility policy is `conformance/normalization.py`. Order comparisons remove
-only its five declared provenance fields and preserve key/list order; repeated runs also
-compare raw bytes. Existing scope accounting covers tables and columns; no manifest
-count contract yet exists for mappings, periods or unmapped reasons. Catalog artifacts
-permit global fallback orders; steward reference visibility does not grant orderability.
-The existing `reg_schema/test_corpus/` stays in place for its Python and TS consumers.
+Order comparisons across adapters and repeated runs use raw bytes, including provenance;
+no volatile fields are removed, and key/list order remains observable. Existing scope
+accounting covers tables and columns; no manifest count contract yet exists for
+mappings, periods or unmapped reasons. Catalog artifacts permit global fallback orders;
+steward reference visibility does not grant orderability. The existing
+`reg_schema/test_corpus/` stays in place for its Python and TS consumers.
 
 The corpus depends on public contracts rather than private Python internals. Private
 imports/internal patches and oversized test modules are gated by repo lints: zero

@@ -9,7 +9,6 @@ import json
 import re
 
 from artifact_requests import sample_project
-from normalization import order_bytes
 from reg_meta.cli import run
 from reg_meta.db import get_manifest, open_db
 from reg_meta.order import materialize_order, project_from_raw
@@ -69,6 +68,11 @@ def test_admission_manifest_and_existing_accounting(artifact_dir):
 def test_sampled_browse_search_validate_order_agreement(
     artifact_dir, artifact_client, tmp_path, capsys
 ):
+    assert_sampled_agreement(artifact_dir, artifact_client, tmp_path, capsys)
+
+
+def assert_sampled_agreement(artifact_dir, artifact_client, tmp_path, capsys):
+    """Observe the same adapter contracts for admitted and regression artifacts."""
     with open_db(artifact_dir / "reg_meta.db") as conn:
         project = sample_project(conn)
         result = materialize_order(project_from_raw(project), conn)
@@ -87,9 +91,20 @@ def test_sampled_browse_search_validate_order_agreement(
         "Repeated HTTP first page differs",
     )
     hits = [hit for group in search.json()["groups"] for hit in group["results"]]
+    seen_cursors = set()
+    while not any(hit.get("fqid") == fqid for hit in hits):
+        group = search.json()["groups"][0]
+        if not group["has_more"]:
+            break
+        cursor = group["next_cursor"]
+        require(cursor and cursor not in seen_cursors, "HTTP search cursor stalled")
+        seen_cursors.add(cursor)
+        search = artifact_client.get("/api/search", params={**params, "cursor": cursor})
+        require(search.status_code == 200, "Sample search continuation failed")
+        hits = [hit for group in search.json()["groups"] for hit in group["results"]]
     require(
         any(hit.get("fqid") == fqid for hit in hits),
-        "Sample missing from search first page",
+        "Sample missing from HTTP search traversal",
     )
     argv = [
         "--db",
@@ -111,8 +126,18 @@ def test_sampled_browse_search_validate_order_agreement(
     first = capsys.readouterr().out
     require(run(argv) == 0, "Repeated CLI sample search failed")
     require(capsys.readouterr().out == first, "Repeated CLI first page differs")
+    page = json.loads(first)
+    seen_cursors = set()
+    while not any(hit.get("fqid") == fqid for hit in page["results"]):
+        if not page["has_more"]:
+            break
+        cursor = page["next_cursor"]
+        require(cursor and cursor not in seen_cursors, "CLI search cursor stalled")
+        seen_cursors.add(cursor)
+        require(run([*argv, "--cursor", cursor]) == 0, "CLI search continuation failed")
+        page = json.loads(capsys.readouterr().out)
     require(
-        any(hit.get("fqid") == fqid for hit in json.loads(first)["results"]),
+        any(hit.get("fqid") == fqid for hit in page["results"]),
         "CLI search identity disagrees",
     )
     validated = artifact_client.post("/api/project/validate", json=project)
@@ -130,10 +155,6 @@ def test_sampled_browse_search_validate_order_agreement(
     cli = capsys.readouterr().out
     response = artifact_client.post("/api/project/order", json=project)
     require(response.status_code == 200, "HTTP sample order failed")
-    require(
-        order_bytes(cli) == order_bytes(response.text),
-        "Normalized CLI/HTTP order bytes differ",
-    )
     require(
         cli == result.manifest.to_json() == response.text,
         "Raw adapter serialization differs",

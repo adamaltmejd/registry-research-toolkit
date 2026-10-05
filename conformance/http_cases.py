@@ -35,7 +35,7 @@ def select_json(value, path):
 
 
 def assert_http_case(case, tmp_path, monkeypatch):
-    from reader_artifacts import build_reader_artifact
+    from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
 
     request = json.loads((case / "request.json").read_text())
     expected = json.loads((case / "expected.json").read_text())
@@ -46,7 +46,7 @@ def assert_http_case(case, tmp_path, monkeypatch):
         tmp_path / "artifact",
         source,
         kind,
-        identity_overrides={"import_date": "2026-06-01T00:00:00Z"},
+        identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     )
     monkeypatch.setenv("REG_META_DB", str(path.parent))
     monkeypatch.setenv(

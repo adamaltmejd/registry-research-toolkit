@@ -1,0 +1,22 @@
+{
+  "entries": [
+    {
+      "source": "Sample",
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "variant": "annual",
+        "variable": "scb/example/a-sampled",
+        "representation": "Value"
+      },
+      "requested_period": "2018-01-01",
+      "physical": {
+        "table": "",
+        "column": "Value",
+        "edition": "2018-01-01"
+      }
+    }
+  ],
+  "clips": [],
+  "absent_from_first_search_page": "scb/example/a-sampled"
+}

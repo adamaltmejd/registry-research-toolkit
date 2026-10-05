@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from reader_artifacts import build_reader_artifact
+from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
 from reg_meta.db import open_db
 from reg_meta.errors import RegMetaError
 
@@ -45,7 +45,7 @@ def artifact_dir(request, tmp_path_factory):
         tmp_path_factory.mktemp(f"conformance-{request.param}"),
         "reader",
         request.param,
-        identity_overrides={"import_date": "2026-06-01T00:00:00Z"},
+        identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     ).parent
 
 

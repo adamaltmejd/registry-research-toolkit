@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
-from reader_artifacts import build_reader_artifact
+from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
 from reg_meta.errors import RegMetaError
 from reg_webapp.app import create_app
 
@@ -23,7 +23,7 @@ def test_artifact_boot(case, tmp_path, monkeypatch):
         tmp_path / "catalog",
         "reader",
         request["kind"],
-        identity_overrides={"import_date": "2026-06-01T00:00:00Z"},
+        identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     )
     with sqlite3.connect(path) as conn:
         conn.executemany(

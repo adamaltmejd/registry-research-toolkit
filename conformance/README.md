@@ -28,9 +28,9 @@ configuration. The documented equals form selects the current checkout reliably.
 Each case directory has `request.json` and `expected.json`. `observe` fields and JSON
 pointer projections define the compared public result; errors also pin the exit/status
 and located findings. Orders additionally compare CLI and materializer serialization and
-repeat bytes. See `normalization.py` for the only permitted volatile-field removal list.
-Keys and lists retain their order during byte comparisons. Path placeholders in the
-selection oracle expand to the test filesystem before comparison.
+repeat raw bytes, including provenance. No volatile fields are removed from those
+comparisons. Keys and lists retain their order. Path placeholders in the selection
+oracle expand to the test filesystem before comparison.
 
   | Surface directory                                             | Boundary and request interpretation                                                |
   | ------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
@@ -69,6 +69,12 @@ synthetic kinds by default. A real run uses one admitted schema-9 artifact. Real
 identifiers stay in memory and temporary test request files; failure messages omit them.
 Catalog artifacts support global-fallback orders; steward artifacts only order compiled
 holdings regardless of reference browsing.
+
+`integration.yml` downloads the global catalog and SWECOV steward assets from the
+selected release, verifies each digest and admits its embedded manifest before running
+tier 3. The artifact jobs and native registry-install job run independently; a failed
+artifact gate does not suppress the other artifact run or native install checks.
+Incompatible published assets remain failures until a matching release is available.
 
 Plan 02 manifests do not contain mapping, period or unmapped-reason totals. Comparisons
 of those relation counts to manifest fields cannot run until that contract exists.

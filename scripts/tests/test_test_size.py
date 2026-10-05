@@ -6,7 +6,6 @@ and support scripts are not test modules. New untracked files are scanned as wel
 
 from __future__ import annotations
 
-import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -51,25 +50,18 @@ ALLOWLIST = {
 }
 
 
-def test_test_modules_stay_under_800_lines():
-    names = subprocess.check_output(
-        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--", "*.py"],
-        cwd=ROOT,
-        text=True,
-    ).splitlines()
-    files = {
-        ROOT / name
-        for name in names
-        if ("tests" in Path(name).parts or "conformance" in Path(name).parts)
-        and (Path(name).name.startswith("test_") or Path(name).name == "conftest.py")
-        and (ROOT / name).is_file()
-    }
+def test_test_modules_stay_under_800_lines(python_test_files):
+    files = [
+        path
+        for path in python_test_files
+        if path.name.startswith("test_") or path.name == "conftest.py"
+    ]
     assert files, "No test modules scanned"
-    observed = {
-        path.relative_to(ROOT).as_posix(): len(path.read_text().splitlines())
-        for path in files
-        if len(path.read_text().splitlines()) > 800
-    }
+    observed = {}
+    for path in files:
+        lines = len(path.read_text().splitlines())
+        if lines > 800:
+            observed[path.relative_to(ROOT).as_posix()] = lines
     assert set(observed) == ALLOWLIST, (
         "New oversized files: "
         + repr({name: observed[name] for name in sorted(set(observed) - ALLOWLIST)})
