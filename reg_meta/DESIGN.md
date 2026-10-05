@@ -533,7 +533,10 @@ keyword on `resolve_at` / `resolve_binding`, never implied by `with_codes=False`
 verdict/declaration/counts with an EMPTY `nonconforming_codes`.
 `Catalog.value_set_summary` memoizes per distinct `value_set_id` for the Catalog's
 lifetime, so a history whose 290 states share one coding pays for one membership scan
-rather than 290. `dense_integer_range` is the denseness test itself: enough members,
+rather than 290. `Catalog` likewise memoizes the holdings delivery fusion behind
+coverage and deliveries for its lifetime, and the delivery-column spelling lookup pins
+`idx_variable_state_variable` by name (`INDEXED BY`), because the artifact ships no
+planner statistics. `dense_integer_range` is the denseness test itself: enough members,
 every code a distinct canonical decimal integer inside JS's safe-integer range, every
 label restating its own code, and the values covering enough of their own span — a set
 whose labels carry meaning stays a table.

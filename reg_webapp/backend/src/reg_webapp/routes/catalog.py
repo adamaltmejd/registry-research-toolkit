@@ -466,17 +466,13 @@ def _provider_coverage(
 ) -> dict[str, RegisterCoverage]:
     """`provider_register_coverage`, memoized for the app's lifetime.
 
-    The artifact is immutable while the app serves it, and the holdings fusion
-    behind a provider's coverage costs hundreds of milliseconds on a steward
-    artifact. The key carries the generation and the read scope (coverage differs
-    by scope); only resolved providers reach here, so the memo holds at most one
-    entry per provider and scope."""
-    key = (
-        request.app.state.manifest["generation_id"],
-        catalog.scope,
-        provider_slug,
-    )
-    memo: dict[tuple[str, str, str], dict[str, RegisterCoverage]] = (
+    An app serves one immutable artifact per process (the memo is created in the
+    lifespan and discarded with the app), and the holdings fusion behind a
+    provider's coverage is the provider page's dominant cost. The key carries the
+    read scope because coverage differs by scope; only resolved providers reach
+    here, so the memo holds at most one entry per provider and scope."""
+    key = (catalog.scope, provider_slug)
+    memo: dict[tuple[str, str], dict[str, RegisterCoverage]] = (
         request.app.state.provider_coverage
     )
     if key not in memo:

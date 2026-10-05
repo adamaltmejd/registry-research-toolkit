@@ -57,8 +57,11 @@ def test_holdings_admission_and_spellings_use_indexed_plans(artifact_dir):
         catalog.catalog_sizes()
         for provider in catalog.list_providers():
             catalog.resolve(provider.fqid)
-            for register in catalog.list_registers(str(provider.fqid)):
-                catalog.resolve(register.fqid)
+            # One register per provider (first by slug): the plan shapes do not
+            # depend on which register is resolved, and tier 3 stays bounded.
+            registers = catalog.list_registers(str(provider.fqid))
+            if registers:
+                catalog.resolve(min(registers, key=lambda r: str(r.fqid)).fqid)
         catalog.resolve(binding)
         conn.set_trace_callback(None)
         plans = _plans(conn, statements)
@@ -150,9 +153,12 @@ def test_provider_pages_repeat_and_follow_the_requested_scope(
         _assert_provider_pages(client, artifact_dir, scopes)
 
 
-def test_provider_pages_are_not_shared_across_generations(tmp_path, monkeypatch):
+def test_fresh_app_over_another_artifact_serves_its_own_provider_pages(
+    tmp_path, monkeypatch
+):
     """Two artifacts whose reference coverage differs, booted one after the other
-    in one process: the second serves its own coverage, not the first's."""
+    in one process: the second app serves its own coverage, not the first's (a
+    process-global memo would fail this)."""
 
     def build(name, fixture, kind):
         return build_reader_artifact(

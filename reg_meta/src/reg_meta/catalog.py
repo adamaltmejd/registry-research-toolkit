@@ -1540,7 +1540,9 @@ class Catalog:
         self._variant_family_cache: dict[int, dict[str, _VariantFamilyInfo]] = {}
         self._delivery_spelling_cache: dict[tuple[int, int], dict[str, str]] = {}
         # `_provider_held_deliveries` memo: a register page reads coverage and
-        # deliveries back to back from the same fusion.
+        # deliveries back to back from the same fusion. Shared, not copied: every
+        # reader treats the cached dicts as read-only, and `_held_deliveries`
+        # copies before anything leaves through a public method.
         self._held_deliveries_cache: dict[
             tuple[str, tuple[str, ...] | None],
             dict[str, dict[str, list[VariableDelivery]]],
