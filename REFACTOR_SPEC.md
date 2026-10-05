@@ -25,8 +25,8 @@ mock-data subsystem (kit-build, the realign-then-extract MONA workflow,
 to branch `archive/mona-subsystem` (tag `mona-subsystem-pre-rebuild`), pending a
 from-scratch rebuild tracked in #707 (archived under #699).
 
-**Remaining (this document):** composite panel keys, the steward delivery inventories
-and normalized order boundary, the remaining real steward coverage, measured web
+**Remaining (this document):** composite panel keys, the open items of the shipped
+compiled-holdings cut (§12), the remaining real steward coverage, measured web
 performance hardening, the `reg_meta_build` restructuring, and the v1 slug freeze.
 (Webapp deployment — step 6.5 — shipped 2026-06-11; the webapp-authoring hard-cut — step
 7 — shipped 2026-06-11.)
@@ -140,21 +140,22 @@ normalized JSON order manifest documented in the owning reader design.
 
 ## 12 — Steward delivery inventory + normalized order manifest
 
-**Compiled-holdings contract (2026-10-04); staged implementation remains below.** The
-shared materializer and normalized manifest already ship. This cut replaces runtime
-inventory with one self-identifying SQLite generation. Owning contracts live in
-`ARCHITECTURE.md`, `reg_meta/DESIGN.md` and `reg_meta_build/DESIGN.md`; this section is
-remaining-work coordination, not a second contract. One common manifest, no per-steward
-export templates. A `project_data.json` source is a logical selection; a steward's
-physical delivery topology is separate data. Each inventory table has an opaque
-identifier (an exact filename or schema-qualified SQL table), one explicit physical
-edition, and its literal, case-preserving physical columns. Edition uses the existing
-finite period grammar — year, month, day, quarter, semester, or a finite multi-period
-range/list. Explicit year-independent scope uses `"_default"` without date intervals;
-retained unknown scope carries authored evidence and is nonorderable. Neither scope is
-inferred as an unbounded "all periods" sentinel. A table without an edition encoded in
-its name still requires an explicit curated edition; filename inference must fail for
-review on zero or ambiguous period tokens rather than guess.
+**Compiled holdings shipped (schema 9, accepted 2026-10-06).** One self-identifying
+SQLite generation carries catalog, holdings and order facts; there is no runtime
+inventory. Owning contracts live in `ARCHITECTURE.md`, `reg_meta/DESIGN.md` and
+`reg_meta_build/DESIGN.md`. The ratified decision text below remains only because
+product comments cite it as `REFACTOR_SPEC.md` §12; the open items are listed at the end
+of this section. One common manifest, no per-steward export templates. A
+`project_data.json` source is a logical selection; a steward's physical delivery
+topology is separate data. Each inventory table has an opaque identifier (an exact
+filename or schema-qualified SQL table), one explicit physical edition, and its literal,
+case-preserving physical columns. Edition uses the existing finite period grammar —
+year, month, day, quarter, semester, or a finite multi-period range/list. Explicit
+year-independent scope uses `"_default"` without date intervals; retained unknown scope
+carries authored evidence and is nonorderable. Neither scope is inferred as an unbounded
+"all periods" sentinel. A table without an edition encoded in its name still requires an
+explicit curated edition; filename inference must fail for review on zero or ambiguous
+period tokens rather than guess.
 
 Each physical column has zero or more semantic mappings. A mapping names
 `register_variant`, variable FQID and required literal `representation`. The compiler
@@ -316,91 +317,33 @@ table-specific period predicates when steward delivery/extraction consumes the m
 SWECOV's one-large-SQL-table-per-SoS-register delivery is the known upgrade trigger; it
 will need period-column `WHERE` clauses later.
 
-### Staged cut and completion gate
+### Status and remaining items
 
-Plans 00 and 01 are independent and have merged (#1145, #1144); plans 02, 03 and 04
-merged as #1146, #1147 and #1149, and plan 01b (conformance suite) as #1150, all on
-2026-10-05. Plan 05's conformance checks prove opt-in accepted-input table/cell and
-authored-mapping agreement, complete HTTP variable-node admission and sampled CLI/HTTP
-browse/search/validate/order agreement. Scripted historical-order comparison remains a
-maintainer check; its receipts are in the maintainer-local
-`archive/reports/curation-reorg-2026-09-24/tools/review-2026-10-04/plans/05-completion.md`.
-Changed catalog paths miss the performance budget. Acceptance and publication remain
-blocked pending that finding; the completion gate and operational plans remain. Plan 06
-sweeps package tests after acceptance. Plans 02–04 are one unreleased schema-9 series
-with separately reviewable PRs; do not tag `reg_meta/v*` or `reg_webapp/v*` until plan
-05 passes. Main may reject released 8.1 artifacts between writer and reader cuts; use
-the schema-9 scratch builds via `REG_META_DB`. No compatibility fallback or migration.
+The compiled-holdings cut shipped through plans 00 to 05b of the series and passed
+independent acceptance on 2026-10-06 against the pinned schema-9 public and SWECOV
+steward artifacts. No `reg_meta/v*` or `reg_webapp/v*` tag has been cut for it;
+publishing those artifacts with matching readers is a separate, separately authorized
+release. Until it ships, main is schema 9 while the latest release is 8.1: readers
+reject the released 8.1 assets, `container-build.yml`'s schema-guard blocks deploys, and
+local work uses the schema-9 scratch builds via `REG_META_DB`. The closed project root
+(#1134) and the 2026-07-14 interface decisions now live in `reg_schema/DESIGN.md`,
+`reg_meta/DESIGN.md` and `reg_webapp/DESIGN.md`.
 
-1. **00 — Coverage N+1 fix:** schema-8.1 index and grouped query improvement,
-   independent of compilation. Do not attribute a performance gain to relational
-   compilation alone.
-2. **01 — Contract review:** documentation and local DDL draft only. Separate reviewer
-   and maintainer ratify before 02 starts; a draft PR is not ratification.
-3. **01b — Conformance suite:** root-level `conformance/` runner parametrized by
-   artifact directory, cases as data, private-name-import and file-size lints; see
-   `ARCHITECTURE.md` → Testing strategy. It owns the relocated plan 03/04 scope cases.
-4. **02 — Builder:** schema 9, four holding relations, explicit representation, shared
-   canonicalization/uniqueness checks, complete census accounting and manifest identity.
-   Build one full strict new-schema public base, compare reference facts against the
-   untouched 8.1 baseline, reuse it for accepted SWECOV compilation. No excluded/lookup
-   rows or semantic segments; preserve diagnostic/nonpublishable guards. Read committed
-   steward slug pins from the clean builder checkout, reject slug overrides/skip flags
-   and uncommitted supplements. Replace the candidate/slugs path requirement and private
-   warning helper's candidate-slug lookup with that same committed slug authority;
-   private slug copies remain evidence only. Provider overlays remain accepted private
-   inputs.
-5. **03 — Reader:** shared holdings/reference predicate, query-time alias/state
-   resolver, `materialize_order(project, conn)`, generation-based cursor/order
-   provenance and named catalog directory selection. Delete unqualified mapping
-   machinery and `order --inventory`. Named `--catalog` and `--db` are mutually
-   exclusive; explicit selection wins, otherwise `REG_META_DB`, then default global.
-   `--catalog NAME` maps to `<data>/NAME/` (global retains the existing data root);
-   `update --catalog NAME` installs the named catalog asset and compatible shared
-   reference-docs asset into only that directory. A named steward must match manifest
-   steward; explicit paths accept either publishable kind and derive/report identity
-   from the manifest. Explicit-path updates derive the asset from an existing admitted
-   artifact and preserve its identity; an uninitialized path fails before writes. No
-   silent fallback or configuration file. Docs use the selected artifact's own sibling
-   file. Rename provenance mode to `steward_holdings` within the in-definition version 1
-   contract.
-6. **04 — Web:** switch adapters to the shared reader; validate configured steward at
-   boot. Delete runtime inventory loading/reconciliation, `CatalogIndex`, held-column
-   folds, temp allow-list and search backfill; remove old drift context and smoke/test
-   gate. Delete tracked legacy SWECOV inventory, retain tracked generator defaults.
-   Regenerate OpenAPI/TypeScript where contracts change. Scope toggle is optional and
-   not part of the gate; API/default-scope behavior is mandatory.
-7. **05 — Independent acceptance:** prove real accepted-input accounting, reference and
-   normalized order parity, deterministic replay, scope correctness and measured changed
-   path performance/nonregression through CLI, API and rendered UI. Synthetic checks
-   alone do not establish real-corpus or live-service proof. Publication/deployment is a
-   separate operation; a Rust conformance corpus is deferred until this cut settles.
-8. **06 — Test sweep:** one PR per package under the `AGENTS.md` testing policy,
-   deletion first; see "Remaining test coverage" below.
+Still open under this section:
 
-Completion means one artifact for catalog/holdings/order with no runtime inventory, full
-disjoint table/column accounting, explicit scope/defaults, query-time semantic
-resolution, deterministic physical topology and orders, passed relevant checks and
-independent acceptance. Performance is measured against the architecture's budgets; no
-new build duration or latency is promised by this documentation change. Diagnostic and
-MONA/PII guards remain intact. At plan 05 acceptance, move remaining package decisions
-to their owning designs, delete superseded pre-cut sections and transition notes, and
-remove references to these local plans and §12 from every owning document. Delete §12
-and the local operational plans only after that documentation cleanup passes review.
+- **Package test sweep:** see "Remaining test coverage" below.
+- **Shared semantic pass:** the project semantic layer still lives in the webapp
+  (`reg_webapp/DESIGN.md` → "Current semantic validation"); the rules above place it in
+  shared `reg_meta` code.
+- **Common study window:** the SPA authoring default in the rules above is not built
+  (`reg_webapp/DESIGN.md`, "Still to come").
+- **Citation retarget:** every `rg '§12'` hit across tracked files, including the
+  codegen'd frontend types, cites this section as decision text. Move the per-binding
+  period-override deferral and the row-filter `simplify:` into `reg_meta/DESIGN.md` →
+  "Order materializer and manifest", retarget those citations to the owning
+  `reg_meta/DESIGN.md` sections, then delete this section.
 
-**Closed project root (#1134, 2026-07-15):** v1 has no generic namespaced blocks and no
-placeholder `extensions` field. `ProjectData` rejects extras, and the structural layer
-reports every unknown top-level key as `unexpected_field`; the archived `reg_monabundle`
-fixtures and namespaced-block validator are gone. If a concrete future consumer needs
-extension data, design an explicit `extensions` container and owner-specific contract at
-that point; do not preserve an open root just in case. This is independent of order
-rendering despite appearing beside the old template plan historically.
-
-**Interface decisions (2026-07-14):** steward-provenance mismatch hard-blocks ordering;
-the app has no steward-retarget workflow, and every upload is validated against the
-receiving deployment. The agent/CLI reads the selected compiled SQLite generation rather
-than calling a deployed API. The SPA and programmatic paths remain equal product
-surfaces over one materializer.
+Diagnostic and MONA/PII guards remain intact.
 
 ## P — Measured web performance hardening
 
@@ -525,8 +468,10 @@ Carried from the testing strategy; the shipped categories are in
   under the `AGENTS.md` policy: delete tests pinning internals covered by a boundary
   case, rewrite the rest against artifacts, and shrink the private-import/size lint
   allowlists. Accepted-private-input census is shipped via opt-in `--holdings-input`.
-  Historical-order comparisons and performance acceptance remain separate maintainer
-  checks; the recorded performance gate has not passed. See `ARCHITECTURE.md` → Testing
+  Historical-order comparisons, latency and cold-boot measurements remain separate
+  maintainer checks. At the schema-9 acceptance, local TestClient measurements were
+  within every holdings budget and cold boot showed no regression against `b45f916d` in
+  the same environment; nothing was measured on Fly. See `ARCHITECTURE.md` → Testing
   strategy.
 
 ## Open / deferred decisions

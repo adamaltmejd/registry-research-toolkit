@@ -218,10 +218,11 @@ _FQID_NOT_FOUND_CODE = "fqid_not_found"
 def _is_fqid_not_found(exc: RegMetaError) -> bool:
     """True iff `exc` is reg_meta's genuine "this FQID resolves to no row"
     (`fqid_not_found`) — a dead/renamed slug. The single source of this predicate,
-    reused by `_resolves_live`, `_http_404_if_not_found`, and `_redirect_or_4xx` so
-    the dead-slug test is spelled ONCE. Any OTHER `EXIT_NOT_FOUND` code (e.g.
-    `state_variant_unresolved`) is a corrupt-DB / build-invariant break — a server
-    fault, NOT a client 404 — so it is NOT this predicate."""
+    reused by `_http_404_if_not_found`, `_http_4xx_from_regmeta`, and
+    `_redirect_or_4xx` so the dead-slug test is spelled ONCE. Any OTHER
+    `EXIT_NOT_FOUND` code (e.g. `state_variant_unresolved`) is a corrupt-DB /
+    build-invariant break — a server fault, NOT a client 404 — so it is NOT this
+    predicate."""
     return exc.exit_code == EXIT_NOT_FOUND and exc.code == _FQID_NOT_FOUND_CODE
 
 
