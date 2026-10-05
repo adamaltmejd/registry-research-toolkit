@@ -17,7 +17,6 @@ from pathlib import Path
 
 import pytest
 import reg_meta.db
-from _steward_helpers import CASE_TWIN_HOLDINGS, write_steward
 from fastapi.testclient import TestClient
 from reg_meta.catalog import ConceptGroupMember
 from reg_meta.queries import _code_system
@@ -25,23 +24,19 @@ from reg_meta.search import (
     CodeSearchResult,
     ConceptGroupSearchResult,
     RegisterSearchResult,
-    SearchResults,
     VariableSearchResult,
 )
 from reg_webapp.app import create_app
-from reg_webapp.catalog_index import CatalogIndex
 from reg_webapp.golden import _Pin, apply_golden_boost
 from reg_webapp.models import (
     RegisterSearchGroup,
     RegisterValueSetSearchGroup,
     VariableSearchGroup,
 )
-from reg_webapp.routes import search as search_route
 from reg_webapp.routes.search import (
     _best_bet_score,
     _best_bets,
     _has_searchable_token,
-    _narrow_variable_leaf_columns,
     _rank_codes,
     _validated_limit,
 )
@@ -504,185 +499,6 @@ def test_validated_limit_clamps():
     assert _validated_limit(0) == 1
     assert _validated_limit(999) == 50
     assert _validated_limit(10) == 10
-
-
-def test_narrow_variable_leaf_columns_treats_none_as_concrete_column():
-    index = CatalogIndex(
-        bindings_by_variant={
-            "scb/lisa/individer-15plus": frozenset(
-                {("scb/lisa/kon", None), ("scb/lisa/kon", "Kon")}
-            )
-        },
-        periods_by_coordinate={},
-        period_range_by_register={"scb/lisa": ("2018-01-01", "2018-12-31")},
-        drift_warnings=(),
-    )
-    result = VariableSearchResult(
-        fqid="scb/lisa/kon",
-        name="Kön",
-        register="LISA",
-        delivery_column_names=("Kon", "KonOld"),
-        rank=0.0,
-    )
-
-    kept = _narrow_variable_leaf_columns([result], index)
-
-    assert len(kept) == 1
-    assert kept[0].delivery_column_names == ("Kon",)
-
-
-@pytest.fixture
-def case_twin_client(case_twin_db, tmp_path, monkeypatch):
-    """A client for a steward over the case-twin catalog: `ifau` holds `scb/lisa/idve`
-    as `Idh` (the windowed era's spelling, which the boot gate resolves) while the
-    catalog's alias history spells the same column `IdH` and renames it `Taxvarde` in
-    an era the steward does NOT hold."""
-    stewards = tmp_path / "stewards"
-    write_steward(stewards, "ifau", CASE_TWIN_HOLDINGS)
-    monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(stewards))
-    monkeypatch.setenv("REG_WEBAPP_STEWARD", "ifau")
-    with TestClient(create_app()) as client:
-        yield client
-
-
-def test_steward_search_keeps_a_variable_held_under_a_case_twin_spelling(
-    case_twin_client,
-):
-    """Y-107: searching for the column dropped the variable outright — the delivery
-    scope matched no held name, so the hit read as depending on an unheld alias. The
-    row comes back under the catalog's own spelling; the unheld `Taxvarde` rename stays
-    out of the chips."""
-    body = case_twin_client.get(
-        "/api/search", params={"q": "Idh", "type": "variable"}
-    ).json()
-
-    results = _group(body, "variables")["results"]
-    assert [(r["fqid"], r["delivery_column_names"]) for r in results] == [
-        ("scb/lisa/idve", ["IdH"])
-    ]
-
-
-def test_steward_search_keeps_a_group_member_held_under_a_case_twin_spelling(
-    case_twin_client,
-):
-    """Y-108: the curated `fastighet-rep` members name their columns as the catalog's
-    alias history spells them (`IdH`, `Taxvarde`), while the steward holds `Idh`.
-    Compared exactly, reg_meta's group-member scope dropped the held member upstream of
-    the webapp and the group — its other member unheld — folded away from the steward's
-    search entirely. Both comparisons fold, so the group comes back holding the case
-    twin under the catalog's own spelling and nothing else."""
-    body = case_twin_client.get(
-        "/api/search", params={"q": "Fastighetsbeteckning", "type": "variable"}
-    ).json()
-
-    results = _group(body, "variables")["results"]
-    assert [r["group_key"] for r in results] == ["fastighet-rep"]
-    group = results[0]
-    assert [m["delivery_column"] for m in group["members"]] == ["IdH"]
-    assert group["member_count"] == 1
-
-
-def test_filtered_variable_search_passes_delivery_scope_into_full_backfill_query(
-    client, monkeypatch
-):
-    index = CatalogIndex(
-        bindings_by_variant={
-            "scb/lisa/individer-15plus": frozenset({("scb/lisa/kon", "Kon")})
-        },
-        periods_by_coordinate={},
-        period_range_by_register={"scb/lisa": ("2018-01-01", "2018-12-31")},
-        drift_warnings=(),
-    )
-    client.app.state.catalog_index = index
-    calls: list[int | None] = []
-
-    def fake_search(
-        _conn,
-        query,
-        *,
-        field,
-        type,
-        fqids=None,
-        delivery_column_scope=None,
-        limit=50,
-        fold_groups=True,
-        cursor=None,
-    ):
-        assert query == "needle"
-        assert field == "description"
-        assert type == "variable"
-        assert fqids == {"scb/lisa", "scb/lisa/kon"}
-        assert delivery_column_scope == {"scb/lisa/kon": frozenset({"Kon"})}
-        assert fold_groups
-        calls.append(limit)
-        rows = (
-            VariableSearchResult(
-                fqid="scb/lisa/kon",
-                name="needle variable",
-                register="LISA",
-                delivery_column_names=("Kon",),
-                rank=1.0,
-            ),
-        )
-        return SearchResults(
-            results=rows[:limit],
-            has_more=False,
-        )
-
-    monkeypatch.setattr(search_route, "reg_meta_search", fake_search)
-
-    body = client.get("/api/search?q=needle&type=variable&limit=1").json()
-    group = _group(body, "variables")
-
-    assert calls == [1]
-    assert not group["has_more"]
-    assert [r["name"] for r in group["results"]] == ["needle variable"]
-    assert group["results"][0]["delivery_column_names"] == ["Kon"]
-
-
-def test_value_search_keeps_code_owner_lists_bounded(client, monkeypatch):
-    class ExplodingIndex:
-        held_register_fqids = frozenset({"scb/lisa"})
-        admitted_variable_fqids = frozenset({"scb/lisa/kon"})
-
-        def held_columns(self, _fqid):
-            raise AssertionError("value search must not build delivery-column scope")
-
-    client.app.state.catalog_index = ExplodingIndex()
-    calls: list[tuple[int | None, str]] = []
-
-    def fake_search(
-        _conn,
-        query,
-        *,
-        field,
-        type,
-        limit=50,
-        fold_groups=True,
-        code_variable_owner_limit=5,
-        code_owner_scope="all",
-        cursor=None,
-    ):
-        assert query == "needle"
-        assert field == "value"
-        assert type == "value"
-        assert limit == 1
-        assert not fold_groups
-        calls.append((code_variable_owner_limit, code_owner_scope))
-        if code_owner_scope == "register_local":
-            return SearchResults(
-                results=(_code("1", variable_count=250),), has_more=False
-            )
-        return SearchResults(results=(), has_more=False)
-
-    monkeypatch.setattr(search_route, "reg_meta_search", fake_search)
-
-    body = client.get("/api/search?q=needle&type=value&limit=1").json()
-    group = _group(body, "register_value_sets")
-
-    assert calls == [(5, "classification"), (5, "register_local")]
-    assert not group["has_more"]
-    assert group["results"][0]["variable_count"] == 250
 
 
 def _code(code: str, *, classification_count: int = 0, variable_count: int = 0):

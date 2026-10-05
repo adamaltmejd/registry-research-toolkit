@@ -1011,7 +1011,7 @@ Partitions keep `validate_slug`'s lowercase, letter-initial, single-hyphen gramm
 of delivery, not researcher-selectable catalog populations. Unmapped physical columns
 retain their authored nonblank reason where supplied; no reason is synthesized.
 
-### Consistency gate against the catalog DB (`inventory_check.py`)
+### Build-time consistency gate
 
 The compiler is the standing mapping/ownership/accounting gate before publication. It
 validates every authored triple against the exact new-schema base plus steward
@@ -1022,13 +1022,11 @@ and physical-column grain. Counts and digests go into `import_manifest`; runtime
 holdings contain only the first three dispositions. No exclusions, lookups or raw census
 relation.
 
-**Pre-cut implementation:** `check_inventory(inventory, conn)` currently runs at webapp
-boot and in a release-marked maintainer test against separately loaded TOML. The runtime
-cut deletes this runtime gate and the committed legacy inventory; build validation
-replaces it. Runtime boot checks artifact schema, completeness, publishability and
-steward identity, opens SQLite read-only and never rebuilds an inventory index. Build
-failures remain actionable and deterministic; diagnostic output never activates as a
-catalog.
+The former runtime consistency checker and committed legacy webapp inventory are
+removed. Build validation owns mapping consistency. Runtime boot checks artifact schema,
+completeness, publishability and steward identity, opens SQLite read-only and never
+rebuilds an inventory index. Build failures remain actionable and deterministic;
+diagnostic output never activates as a catalog.
 
 ## Order materializer and manifest (`order.py`)
 

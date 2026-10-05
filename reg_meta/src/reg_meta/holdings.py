@@ -255,19 +255,6 @@ class Holdings:
             )
         )
 
-    def held_columns(self, fqid: str) -> frozenset[str]:
-        provider, register, variable = fqid.split("/")
-        row = self.conn.execute(
-            "SELECT v.variable_id FROM variable v JOIN register r USING(register_id) "
-            "JOIN provider p USING(provider_id) WHERE p.slug = ? AND r.slug = ? AND v.slug = ?",
-            (provider, register, variable),
-        ).fetchone()
-        return self.columns(row[0]) if row is not None else frozenset()
-
-    def held_columns_for_variant(self, fqid: str, variant_coord: str) -> frozenset[str]:
-        ids = self.binding_ids(fqid, variant_coord)
-        return self.columns(*ids) if ids is not None else frozenset()
-
     def held_variant_coords_for_register(self, register_fqid: str) -> frozenset[str]:
         provider, register = register_fqid.split("/")
         return frozenset(

@@ -25,7 +25,6 @@ from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor
 
 import pytest
-from _steward_helpers import write_steward
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
 
@@ -409,52 +408,3 @@ def test_concurrent_validate_no_cross_thread_error(unthrottled_client):
         )
     failures = [c for c in codes if c != 200]
     assert not failures, f"cross-thread failures under concurrency: {failures}"
-
-
-# ── #227: fqid_outside_steward_catalog through a FILTERED steward client ────
-# A filtered steward deployment (catalog admits only `scb/lisa/kon`) surfaces
-# `fqid_outside_steward_catalog` (warning) for a researcher spec referencing a
-# resolvable-but-unadmitted FQID — the steward filter now wired into /validate.
-# The default `client` fixture boots the `global` steward (no index), so this
-# needs its own env-seam client (mirrors test_steward_index.py's seam).
-
-
-@pytest.fixture
-def filtered_client(catalog_db, tmp_path, monkeypatch):
-    """A client whose app boots the `ifau` steward with a delivery inventory
-    admitting ONLY `scb/lisa/kon`, so a researcher FQID outside it
-    (`scb/rams/syss`) trips the steward filter."""
-    stewards = tmp_path / "stewards"
-    write_steward(
-        stewards, "ifau", [("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon", "2018")]
-    )
-    monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(stewards))
-    monkeypatch.setenv("REG_WEBAPP_STEWARD", "ifau")
-    with TestClient(create_app()) as c:
-        yield c
-
-
-def test_fqid_outside_steward_catalog_via_filtered_client(filtered_client):
-    spec = {
-        "schema_version": "3.0.0",
-        "steward": "ifau",
-        "reg_meta_version": "5.1.0",
-        "name": "test",
-        "sources": [
-            {
-                "name": "rams",
-                "register_variant": "scb/rams/standard",
-                "period": 2019,
-                "bindings": [{"variable": "scb/rams/syss", "type": "numeric"}],
-            }
-        ],
-    }
-    resp = filtered_client.post("/api/project/validate", json=spec)
-    assert resp.status_code == 200
-    body = resp.json()
-    # The FQID resolves reg_meta-wide but is outside the steward's catalog → a
-    # non-blocking warning, so ok stays True.
-    assert body["ok"] is True
-    outside = [i for i in body["issues"] if i["code"] == "fqid_outside_steward_catalog"]
-    assert len(outside) == 1
-    assert outside[0]["level"] == "warning"

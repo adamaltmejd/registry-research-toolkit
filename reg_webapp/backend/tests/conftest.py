@@ -25,11 +25,6 @@ from webapp_fixture_support import fixture_db
 if TYPE_CHECKING:
     from pathlib import Path
 
-# `test_steward_index` builds its own slugged DBs from `reg_meta_build`'s bare-name
-# `_slugged_db` helper, so make that dir importable for the whole session (the
-# builder above does the same on its own behalf; the call is idempotent).
-fixture_db.ensure_slugged_db_importable()
-
 FIXTURE_IMPORT_DATE = fixture_db.FIXTURE_IMPORT_DATE
 FIXTURE_SCHEMA_VERSION = fixture_db.FIXTURE_SCHEMA_VERSION
 
@@ -104,22 +99,6 @@ def docs_db(catalog_db: Path) -> Path:
     docs_path = catalog_db.parent / reg_meta.doc_db.DOC_DB_FILENAME
     fixture_db.build_docs_fixture_db(docs_path)
     return docs_path
-
-
-@pytest.fixture
-def case_twin_db(catalog_db: Path) -> Path:
-    """``catalog_db`` plus the Y-107 case-twin scenario (``fixture_db``): one
-    `scb/lisa/idve` variable whose column is spelled `Idh` by the era a steward's
-    inventory was generated over and `IdH` by the era after it (plus an unheld
-    `Taxvarde` rename). Seeded here rather than in ``build_catalog_fixture_db`` for
-    the same reason ``topical_catalog_db`` is."""
-    conn = sqlite3.connect(catalog_db)
-    try:
-        fixture_db.seed_case_twin_column(conn)
-        conn.commit()
-    finally:
-        conn.close()
-    return catalog_db
 
 
 @pytest.fixture

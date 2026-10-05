@@ -2,15 +2,13 @@
 
 The headline catalog-size counts the landing page renders. Asserts 200 and
 that the unfiltered ``global`` deployment returns reg_meta's slug-aware
-``Catalog.catalog_sizes()`` value. Filtered-steward coverage then asserts that
-the route counts through the steward index instead of the full DB.
+``Catalog.catalog_sizes()`` value. Scoped compiled-artifact counts are covered by the HTTP scope corpus.
 """
 
 from __future__ import annotations
 
 import pytest
 import reg_meta.db
-from _steward_helpers import write_steward
 from fastapi.testclient import TestClient
 from reg_meta.catalog import Catalog, CatalogSizes
 from reg_webapp.app import create_app
@@ -35,25 +33,3 @@ def test_stats_returns_global_catalog_sizes(client, catalog_db):
     finally:
         conn.close()
     assert stats == expected
-
-
-def test_stats_uses_steward_index_for_filtered_catalog(
-    catalog_db, tmp_path, monkeypatch
-):
-    stewards = tmp_path / "stewards"
-    monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(stewards))
-    monkeypatch.setenv("REG_WEBAPP_STEWARD", "ifau")
-    write_steward(
-        stewards,
-        "ifau",
-        [("scb/lisa/individer-15plus", "scb/lisa/kon", "Kon", "2018")],
-    )
-
-    with TestClient(create_app()) as client:
-        resp = client.get("/api/stats")
-
-    assert resp.status_code == 200
-    assert resp.headers["cache-control"] == CACHE_CONTROL_SHORT
-    assert CatalogSizes.model_validate(resp.json()) == CatalogSizes(
-        providers=1, registers=1, variables=1
-    )

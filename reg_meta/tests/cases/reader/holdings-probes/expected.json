@@ -9,12 +9,6 @@
   "providers": [
     "scb"
   ],
-  "columns": [
-    "Value"
-  ],
-  "variant_columns": [
-    "Value"
-  ],
   "variants": [
     "scb/example/annual"
   ],

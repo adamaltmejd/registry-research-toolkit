@@ -1,0 +1,21 @@
+[
+  {
+    "slug": "example-codes",
+    "short_name": "Example codes",
+    "name": "Example codes",
+    "codes": [
+      {
+        "code": "0",
+        "label": "Choice 0"
+      },
+      {
+        "code": "1",
+        "label": "Choice 1"
+      },
+      {
+        "code": "2",
+        "label": "Choice 2"
+      }
+    ]
+  }
+]

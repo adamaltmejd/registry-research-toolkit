@@ -574,36 +574,6 @@ def test_variable_search_exact_column_token_shows_only_that_alias() -> None:
     assert out.results[0].delivery_column_names == ("fedunsatreason_1",)
 
 
-def test_variable_search_delivery_scope_drops_unheld_suffix_token_alias_hit() -> None:
-    conn = build_slugged_db(
-        variable=("Orsak till missnöje, formell utbildning", 32183, 1001, "Kol"),
-        delivery_column_name="fedunsatreason_1",
-        variable_slug="formal-utbildning",
-    )
-    add_binding(
-        conn,
-        cvid=1002,
-        register_id=1,
-        register_variant_id=10,
-        regver_id=100,
-        var_id=32183,
-        delivery_column_name="fedunsatreason_2",
-    )
-    _rebuild_fts(conn)
-
-    out = search(
-        conn,
-        "fedunsatreason 1",
-        field="description",
-        type="variable",
-        fqids={"scb/lisa/formal-utbildning"},
-        delivery_column_scope={"scb/lisa/formal-utbildning": {"fedunsatreason_2"}},
-    )
-
-    assert len(out.results) == 0
-    assert out.results == ()
-
-
 def test_variable_search_multi_alias_query_shows_only_matching_aliases() -> None:
     conn = build_slugged_db(
         variable=("Orsak till missnöje, formell utbildning", 32183, 1001, "Kol"),
@@ -723,30 +693,6 @@ def test_variable_cursor_pages_are_stable_and_sql_bounded() -> None:
     variable_fts = [sql for sql in statements if "FROM variable_fts" in sql]
     assert variable_fts
     assert all("LIMIT" in sql for sql in variable_fts)
-
-    held = combined[2]
-    scoped = search(
-        conn,
-        "Needle",
-        field="description",
-        type="variable",
-        fqids={held},
-        limit=1,
-    )
-    assert [str(result.fqid) for result in scoped.results] == [held]
-    assert not scoped.has_more
-
-    with pytest.raises(RegMetaError) as exc:
-        search(
-            conn,
-            "Needle",
-            field="description",
-            type="variable",
-            fqids={combined[0]},
-            limit=2,
-            cursor=first.next_cursor,
-        )
-    assert exc.value.code == "invalid_search_cursor"
 
 
 def test_register_scope_is_applied_before_sql_pagination() -> None:
@@ -888,36 +834,6 @@ def test_unscoped_search_still_pages_the_whole_prefix(field: str) -> None:
     assert page.next_cursor is not None
 
 
-def test_variable_search_delivery_scope_drops_unheld_alias_hit() -> None:
-    conn = build_slugged_db(
-        variable=("Plain variable", 32183, 1001, "HeldColumn"),
-        delivery_column_name="HeldColumn",
-        variable_slug="plain-variable",
-    )
-    add_binding(
-        conn,
-        cvid=1002,
-        register_id=1,
-        register_variant_id=10,
-        regver_id=100,
-        var_id=32183,
-        delivery_column_name="LeakTermAlias",
-    )
-    _rebuild_fts(conn)
-
-    out = search(
-        conn,
-        "LeakTerm",
-        field="description",
-        type="variable",
-        fqids={"scb/lisa/plain-variable"},
-        delivery_column_scope={"scb/lisa/plain-variable": {"HeldColumn"}},
-    )
-
-    assert len(out.results) == 0
-    assert out.results == ()
-
-
 def test_irrelevant_like_branches_do_not_saturate_register_search(
     db: sqlite3.Connection, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -959,41 +875,6 @@ def test_classification_code_exclusion_happens_before_limit() -> None:
     assert [str(row["fqid"]) for row in code_rows] == ["class/class-c"]
 
 
-def test_variable_search_delivery_scope_keeps_description_hit() -> None:
-    conn = build_slugged_db(
-        variable=("Plain variable", 32183, 1001, "HeldColumn"),
-        delivery_column_name="HeldColumn",
-        variable_slug="plain-variable",
-    )
-    add_binding(
-        conn,
-        cvid=1002,
-        register_id=1,
-        register_variant_id=10,
-        regver_id=100,
-        var_id=32183,
-        delivery_column_name="LeakTermAlias",
-    )
-    conn.execute(
-        "UPDATE variable SET description = ? WHERE slug = 'plain-variable'",
-        ("LeakTerm appears in the public description",),
-    )
-    _rebuild_fts(conn)
-
-    out = search(
-        conn,
-        "LeakTerm",
-        field="description",
-        type="variable",
-        fqids={"scb/lisa/plain-variable"},
-        delivery_column_scope={"scb/lisa/plain-variable": {"HeldColumn"}},
-    )
-
-    assert len(out.results) == 1
-    assert str(out.results[0].fqid) == "scb/lisa/plain-variable"
-    assert out.results[0].delivery_column_names == ("HeldColumn",)
-
-
 @pytest.fixture
 def case_twin_db() -> sqlite3.Connection:
     """One `scb/lisa/idve` variable delivered under TWO spellings of one column: the
@@ -1017,141 +898,6 @@ def case_twin_db() -> sqlite3.Connection:
     )
     _rebuild_fts(conn)
     return conn
-
-
-def test_variable_search_delivery_scope_keeps_a_held_case_twin_spelling(
-    case_twin_db: sqlite3.Connection,
-) -> None:
-    """Y-107: the scope's spelling of a column need not be the catalog's spelling.
-
-    Comparing exactly, the hit's only held name folded away, so `IdH` read as an unheld
-    alias and the whole variable was dropped from the steward's search.
-    """
-    out = search(
-        case_twin_db,
-        "Idh",
-        field="description",
-        type="variable",
-        fqids={"scb/lisa/idve"},
-        delivery_column_scope={"scb/lisa/idve": {"Idh"}},
-    )
-
-    assert [str(row.fqid) for row in out.results] == ["scb/lisa/idve"]
-    # The fold decides membership; the name shown stays the catalog's own spelling.
-    assert out.results[0].delivery_column_names == ("IdH",)
-
-
-def test_group_member_delivery_scope_keeps_a_held_case_twin_spelling(
-    case_twin_db: sqlite3.Connection,
-) -> None:
-    """Y-108: the same fold on the group MEMBER's side of the scope.
-
-    The curated members name the column as the curation spells it (`IdH`, the catalog's
-    alias history) while the steward holds `Idh`. Compared exactly, the held member left
-    the group's member list upstream of every webapp surface — and with the unheld
-    `Taxvarde` rename the only other member, the whole group folded away from the
-    steward's search.
-    """
-    conn = case_twin_db
-    vid = conn.execute(
-        "SELECT variable_id FROM variable WHERE slug = 'idve'"
-    ).fetchone()[0]
-    conn.execute(
-        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source) VALUES (90, 'variable', 1, 'fastighet-rep', "
-        "'Fastighetsbeteckning', 'curated')"
-    )
-    conn.execute(
-        "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
-        "VALUES (90, 'era', 0, 'era')"
-    )
-    conn.executemany(
-        "INSERT INTO concept_group_variable "
-        "(group_id, variable_id, delivery_column_name) VALUES (90, ?, ?)",
-        [(vid, "IdH"), (vid, "Taxvarde")],
-    )
-
-    # The group's own LABEL is what folds a one-variable representation family into a
-    # group row (two members on one variable are one member key, never ≥2 distinct).
-    out = search(
-        conn,
-        "Fastighetsbeteckning",
-        field="description",
-        type="variable",
-        fqids={"scb/lisa/idve"},
-        delivery_column_scope={"scb/lisa/idve": {"Idh"}},
-    )
-
-    (group,) = out.results
-    assert group.type == "group"
-    # The held case twin survives under the curation's own spelling; the unheld
-    # rename does not.
-    assert [m.delivery_column for m in group.members] == ["IdH"]
-    assert group.member_count == 1
-
-
-def test_variable_search_delivery_scope_filters_before_group_folding() -> None:
-    conn = build_slugged_db(
-        variable=("First variable", 32183, 1001, "HeldA"),
-        delivery_column_name="HeldA",
-        variable_slug="first-variable",
-    )
-    add_variable(
-        conn,
-        register_id=1,
-        var_id=42181,
-        name="Second variable",
-        slug="second-variable",
-    )
-    add_binding(
-        conn,
-        cvid=1002,
-        register_id=1,
-        register_variant_id=10,
-        regver_id=100,
-        var_id=42181,
-        delivery_column_name="HeldB",
-    )
-    first_id = conn.execute(
-        "SELECT variable_id FROM variable WHERE slug = 'first-variable'"
-    ).fetchone()[0]
-    second_id = conn.execute(
-        "SELECT variable_id FROM variable WHERE slug = 'second-variable'"
-    ).fetchone()[0]
-    conn.executemany(
-        "INSERT INTO variable_alias "
-        "(variable_id, register_variant_id, delivery_column_name) VALUES (?, 10, ?)",
-        [(first_id, "LeakTermA"), (second_id, "LeakTermB")],
-    )
-    conn.execute(
-        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source) VALUES (80, 'variable', 1, 'pair', 'Pair group', 'curated')"
-    )
-    conn.execute(
-        "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
-        "VALUES (80, 'member', 0, 'member')"
-    )
-    conn.executemany(
-        "INSERT INTO concept_group_variable "
-        "(group_id, variable_id, delivery_column_name) VALUES (80, ?, NULL)",
-        [(first_id,), (second_id,)],
-    )
-    _rebuild_fts(conn)
-
-    out = search(
-        conn,
-        "LeakTerm",
-        field="description",
-        type="variable",
-        fqids={"scb/lisa/first-variable", "scb/lisa/second-variable"},
-        delivery_column_scope={
-            "scb/lisa/first-variable": {"HeldA"},
-            "scb/lisa/second-variable": {"HeldB"},
-        },
-    )
-
-    assert len(out.results) == 0
-    assert out.results == ()
 
 
 def test_variable_name_hit_ranks_above_delivery_column_hit() -> None:
@@ -1643,38 +1389,6 @@ def test_delivery_alias_participates_in_pre_slice_relevance_order(monkeypatch) -
         "scb/reg/broad-a",
         "scb/reg/broad-b",
     ]
-
-
-def test_steward_scope_narrows_internal_alias_ranking() -> None:
-    row = {
-        "type": "variable",
-        "fqid": "scb/reg/visible",
-        "variable_name": "Exact topic",
-        "delivery_column_names": ("HELD", "EXACT"),
-        "_ranking_delivery_column_names": ("HELD", "EXACT"),
-    }
-
-    narrowed = queries._filter_variable_delivery_scope(
-        [row], "exact", {"scb/reg/visible": {"HELD"}}
-    )
-
-    assert narrowed[0]["delivery_column_names"] == ("HELD",)
-    assert narrowed[0]["_ranking_delivery_column_names"] == ("HELD",)
-    assert queries._search_display_score("exact", narrowed[0]) == 100
-
-
-def test_group_representation_ranking_scope_excludes_unheld_columns() -> None:
-    scope = {"scb/reg/member": {"HELD"}}
-
-    assert queries._group_member_in_delivery_scope(
-        {"fqid": "scb/reg/member", "delivery_column": "HELD"}, scope
-    )
-    assert not queries._group_member_in_delivery_scope(
-        {"fqid": "scb/reg/member", "delivery_column": "EXACT"}, scope
-    )
-    assert queries._group_member_in_delivery_scope(
-        {"fqid": "scb/reg/member", "delivery_column": None}, scope
-    )
 
 
 def test_excluded_fqid_is_cursor_bound_and_removed_before_limit(monkeypatch) -> None:

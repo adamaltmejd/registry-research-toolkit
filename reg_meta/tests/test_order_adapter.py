@@ -305,13 +305,9 @@ representation = "Kon"
     )
     assert result.findings == ()
     assert result.manifest.entries[0].physical.table == "country_groups.csv"
-    from reg_meta.inventory_check import check_inventory
-
-    assert check_inventory(inventory, conn) == ()
     conn.execute(
         "UPDATE variable_state SET period_scope='intervals', valid_from='2020-01-01', valid_to='2020-12-31' WHERE delivery_column_name='Kon'"
     )
-    assert check_inventory(inventory, conn)
     assert (
         resolve_project_binding(conn, "scb/lisa/kon", "_default").finding.code
         == "binding_unavailable"

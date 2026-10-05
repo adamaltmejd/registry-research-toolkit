@@ -1,6 +1,4 @@
-# The `global` steward is special (see reg_webapp/DESIGN.md → Steward layering and the in-memory catalog index (stewards.py + catalog_index.py)): it ships NO inventory.toml,
-# so the catalog is reg_meta's full universe (no filter). Its absence is what
-# the loader keys on to select full-universe mode.
+# Global branding requires a public catalog artifact at boot.
 id = "global"
 name = "Global"
 long_name = "Swedish Register Research Catalog (full universe)"

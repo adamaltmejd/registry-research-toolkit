@@ -30,10 +30,7 @@ primary_region = "arn" # Stockholm — the user base is Swedish register researc
 
 [env]
   REG_WEBAPP_STEWARD = "swecov"
-  REG_WEBAPP_FAIL_ON_STEWARD_DRIFT = "1"
-  # SWECOV builds a filtered steward catalog index at startup. Local cold boot
-  # against the 426 MiB flavored DB measured about 160s on 2026-07-02; keep
-  # the entrypoint smoke gate aligned with Fly's health-check grace.
+  # Keep the entrypoint smoke deadline aligned with Fly's health-check grace.
   REG_WEBAPP_SMOKE_READY_DEADLINE = "420"
 
 [http_service]

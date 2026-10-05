@@ -219,12 +219,6 @@ def test_holdings_public_probes(tmp_path: Path) -> None:
             "admitted": sorted(holdings.admitted_variable_fqids),
             "registers": sorted(holdings.held_register_fqids),
             "providers": sorted(holdings.held_provider_slugs),
-            "columns": sorted(holdings.held_columns(request["variable"])),
-            "variant_columns": sorted(
-                holdings.held_columns_for_variant(
-                    request["variable"], request["variant"]
-                )
-            ),
             "variants": sorted(
                 holdings.held_variant_coords_for_register(request["register"])
             ),
@@ -241,33 +235,6 @@ def test_holdings_public_probes(tmp_path: Path) -> None:
                     *ids, request["representation"], bounds=tuple(request["bounds"])
                 )
             ],
-        }
-        assert actual == expected
-    finally:
-        conn.close()
-
-
-@pytest.mark.parametrize(
-    "case", sorted((CASES / "inventory").iterdir()), ids=lambda p: p.name
-)
-def test_inventory_findings(case: Path, tmp_path: Path) -> None:
-    from reg_meta.inventory import load_inventory
-    from reg_meta.inventory_check import check_inventory
-
-    request = json.loads((case / "request.json").read_text())
-    expected = json.loads((case / "expected.json").read_text())
-    path = build_reader_artifact(
-        tmp_path / "artifact", request["fixture"], request["artifact"]
-    )
-    conn = open_db(path)
-    try:
-        actual = {
-            "findings": [
-                finding.model_dump(mode="json")
-                for finding in check_inventory(
-                    load_inventory(case / "inventory.toml"), conn
-                )
-            ]
         }
         assert actual == expected
     finally:

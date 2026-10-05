@@ -1,0 +1,17 @@
+{
+  "fixture": "whole-variable-group",
+  "requests": [
+    {
+      "path": "/api/catalog/group/scb/example/value-family"
+    },
+    {
+      "path": "/api/catalog/group/scb/example/value-family/graph"
+    },
+    {
+      "path": "/api/catalog/group/scb/example/value-family/graph",
+      "query": {
+        "scope": "reference"
+      }
+    }
+  ]
+}

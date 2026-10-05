@@ -1,0 +1,23 @@
+[
+  {
+    "status": 404
+  },
+  {
+    "status": 404
+  },
+  {
+    "status": 200,
+    "json": {
+      "/members/*/delivery_column": [
+        "Unknown",
+        "Unknown2"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/focus_id": null
+    }
+  }
+]

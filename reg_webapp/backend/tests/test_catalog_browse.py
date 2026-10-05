@@ -14,7 +14,6 @@ import sqlite3
 from concurrent.futures import ThreadPoolExecutor
 
 import pytest
-from _steward_helpers import CASE_TWIN_HOLDINGS, write_steward
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
 
@@ -201,75 +200,6 @@ def test_register_children_carry_alias_backed_delivery_columns(client):
         ("individer-15plus", "LonFinkJan", "2018-01-01", "2018-01-31"),
         ("individer-15plus", "LonFinkMars", "2018-03-01", "2018-03-31"),
     ]
-
-
-@pytest.fixture
-def case_twin_client(case_twin_db, tmp_path, monkeypatch):
-    """The `ifau` steward holding `scb/lisa/idve` under ITS OWN spelling `Idh` of a
-    column the catalog delivers as `IdH`, booted against the case-twin fixture DB
-    (`fixture_db.seed_case_twin_column`). The `Taxvarde` era stays unheld."""
-    stewards = tmp_path / "stewards"
-    write_steward(stewards, "ifau", CASE_TWIN_HOLDINGS)
-    monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(stewards))
-    monkeypatch.setenv("REG_WEBAPP_STEWARD", "ifau")
-    with TestClient(create_app()) as client:
-        yield client
-
-
-def test_held_column_matches_the_catalog_spelling_case_insensitively(case_twin_client):
-    """Y-102: a steward holds the column under ITS OWN spelling (Y-92 emits the
-    holdings' literal one on purpose), which need not be the spelling the
-    catalog's state carries — SWECOV holds `Idh` where the state says `IdH`, on
-    7% of its mappings. The register page matches the two by `py_lower`, so the
-    delivery row IS shown and the variable's coverage counts it; before, the
-    exact-string compare left the researcher a variable with no delivery row and
-    no coverage though the boot gate had admitted the mapping.
-
-    The fold widens nothing else: a second delivered column this steward does not
-    hold stays out of the row.
-    """
-    body = case_twin_client.get("/api/catalog/scb/lisa").json()
-
-    idve = next(c for c in body["children"] if c.get("fqid") == "scb/lisa/idve")
-    # The held `Idh` is the state's `IdH`: one delivery row, under the catalog's
-    # own spelling. `Taxvarde` is delivered but unheld, so it stays excluded.
-    assert [(d["variant"], d["column"]) for d in idve["deliveries"]] == [
-        ("individer-15plus", "IdH")
-    ]
-    # Both eras of the one column fold onto one coverage row: the `Idh` era and the
-    # `IdH` era are the same column, so the span covers them and counts both states.
-    assert idve["coverage"] == {
-        "coverage_from": "2013-01-01",
-        "coverage_to": "2023-12-31",
-        "open_ended": False,
-        "state_count": 2,
-    }
-
-
-def test_held_case_twin_column_keeps_the_leafs_states(case_twin_client):
-    """Y-107: the leaf narrows its states to the held columns. The steward holds the
-    column as the windowed era spells it (`Idh`), so the exact compare dropped the
-    era that stands on the catalog's own `IdH` — the researcher's variable page lost
-    2019–2023 of a column the boot gate had admitted. Both eras are shown now; the
-    unheld `Taxvarde` rename stays narrowed away."""
-    body = case_twin_client.get("/api/catalog/scb/lisa/idve").json()
-
-    assert [(s["delivery_column_name"], s["valid_from"]) for s in body["states"]] == [
-        ("Idh", "2013-01-01"),
-        ("IdH", "2019-01-01"),
-    ]
-
-
-def test_held_case_twin_column_keeps_its_concept_group_member(case_twin_client):
-    """Y-107: a concept-group member names its column in a CURATED spelling (the
-    build validates it against `variable_alias`) and the index carries the steward's
-    own, so the exact compare it used read the held member as unheld — and, both
-    members failing, dropped the whole group off the register page. The `IdH` member
-    survives; the unheld `Taxvarde` member does not."""
-    body = case_twin_client.get("/api/catalog/scb/lisa").json()
-
-    group = next(g for g in body["groups"] if g["key"] == "fastighet-rep")
-    assert [m["delivery_column"] for m in group["members"]] == ["IdH"]
 
 
 def test_binding_leaf_embeds_full_record(client):

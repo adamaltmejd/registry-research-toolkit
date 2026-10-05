@@ -30,10 +30,9 @@ def test_swecov_fly_app_selects_swecov_steward() -> None:
     assert fly["build"]["args"]["REG_META_FLAVOR"] == "swecov"
     assert fly["build"]["args"]["REG_WEBAPP_STEWARD"] == "swecov"
     assert fly["env"]["REG_WEBAPP_STEWARD"] == "swecov"
-    assert fly["env"]["REG_WEBAPP_FAIL_ON_STEWARD_DRIFT"] == "1"
 
 
-def test_swecov_deploy_allows_slow_catalog_index_boot() -> None:
+def test_swecov_deploy_has_bounded_readiness_checks() -> None:
     fly = _toml("reg_webapp/fly.swecov.toml")
     workflow = _text(".github/workflows/container-build.yml")
     entrypoint = _text("reg_webapp/docker-entrypoint.sh")

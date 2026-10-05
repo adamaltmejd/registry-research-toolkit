@@ -1,0 +1,275 @@
+[
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "owner1",
+    "provider_key": "1",
+    "name": "Owner 1",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2010-01-01",
+        "valid_to": "2025-12-31",
+        "delivery_column_name": "Owner1",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Shared choice"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "owner2",
+    "provider_key": "2",
+    "name": "Owner 2",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2010-01-01",
+        "valid_to": "2025-12-31",
+        "delivery_column_name": "Owner2",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Shared choice"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "owner3",
+    "provider_key": "3",
+    "name": "Owner 3",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2010-01-01",
+        "valid_to": "2025-12-31",
+        "delivery_column_name": "Owner3",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Shared choice"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "owner4",
+    "provider_key": "4",
+    "name": "Owner 4",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2010-01-01",
+        "valid_to": "2025-12-31",
+        "delivery_column_name": "Owner4",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Shared choice"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "owner5",
+    "provider_key": "5",
+    "name": "Owner 5",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2010-01-01",
+        "valid_to": "2025-12-31",
+        "delivery_column_name": "Owner5",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Shared choice"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "owner6",
+    "provider_key": "6",
+    "name": "Owner 6",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2010-01-01",
+        "valid_to": "2025-12-31",
+        "delivery_column_name": "Owner6",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Shared choice"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "owner7",
+    "provider_key": "7",
+    "name": "Owner 7",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2010-01-01",
+        "valid_to": "2025-12-31",
+        "delivery_column_name": "Owner7",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Shared choice"
+            ]
+          ]
+        }
+      }
+    ]
+  }
+]
