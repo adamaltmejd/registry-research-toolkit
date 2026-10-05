@@ -20,12 +20,12 @@ from __future__ import annotations
 import tomllib
 from typing import TYPE_CHECKING
 
+import pytest
 from _slugged_db import add_state, add_variable, add_variant, build_slugged_db
 from reg_meta_build.relations import (
     load_relations,
 )
 from reg_meta_build.succession_candidates import (
-    _adjacent,
     infer_succession_candidates,
     render_succession_toml,
 )
@@ -227,34 +227,6 @@ def _seed_corpus(conn: sqlite3.Connection) -> None:
         valid_to="2023-12-31",
     )
     conn.commit()
-
-
-class TestAdjacent:
-    """The temporal gate: disjoint AND adjacent — the day, or the year, after."""
-
-    def test_day_after(self) -> None:
-        assert _adjacent("2021-12-31", "2022-01-01")
-
-    def test_year_after_a_clipped_era(self) -> None:
-        # A mid-year end followed by the next delivery year is still succession.
-        assert _adjacent("2015-06-30", "2016-01-01")
-
-    def test_same_year_day_after(self) -> None:
-        assert _adjacent("2015-06-30", "2015-07-01")
-
-    def test_same_year_gap_is_not_adjacent(self) -> None:
-        assert not _adjacent("2015-06-30", "2015-09-01")
-
-    def test_year_gap_is_not_adjacent(self) -> None:
-        assert not _adjacent("2015-12-31", "2018-01-01")
-
-    def test_overlap_is_not_adjacent(self) -> None:
-        assert not _adjacent("2021-12-31", "2015-01-01")
-
-    def test_open_ended_sentinel_never_succeeds(self) -> None:
-        # The '9999-12-31' open end has no successor — and must not overflow date
-        # arithmetic looking for one.
-        assert not _adjacent("9999-12-31", "9999-12-31")
 
 
 class TestInfer:
@@ -536,6 +508,61 @@ class TestInfer:
             ("split_rename", "individer-15plus"),
             ("split_rename", "individer-16plus"),
         ]
+
+    @pytest.mark.parametrize(
+        ("predecessor_to", "successor_from", "successor_to", "emitted"),
+        [
+            # A mid-year end followed by the next delivery year is still succession.
+            ("2015-06-30", "2016-01-01", "2023-12-31", True),
+            # Inside one year, the day after succeeds.
+            ("2015-06-30", "2015-07-01", "2023-12-31", True),
+            # Inside one year, a gap does not.
+            ("2015-06-30", "2015-09-01", "2023-12-31", False),
+            # An open-ended (`9999-12-31`) successor is also tried as a
+            # predecessor of the earlier era; that overlap is rejected before any
+            # date arithmetic past the sentinel.
+            ("2015-12-31", "2016-01-01", "9999-12-31", True),
+        ],
+        ids=[
+            "year-after-clipped-era",
+            "same-year-day-after",
+            "same-year-gap",
+            "open-ended-successor",
+        ],
+    )
+    def test_adjacency_gate(
+        self,
+        predecessor_to: str,
+        successor_from: str,
+        successor_to: str,
+        emitted: bool,
+    ) -> None:
+        conn = _base_db()
+        _add_era(
+            conn,
+            var_id=950,
+            slug="wert-gammal",
+            name="Wert",
+            column="Wert",
+            valid_from="2010-01-01",
+            valid_to=predecessor_to,
+        )
+        _add_era(
+            conn,
+            var_id=951,
+            slug="wert-ny",
+            name="Wert",
+            column="Wert",
+            valid_from=successor_from,
+            valid_to=successor_to,
+        )
+        conn.commit()
+        pairs = [
+            (c.kind, c.predecessor.fqid, c.successor.fqid)
+            for c in infer_succession_candidates(conn).candidates
+        ]
+        expected = [("cross_var_id", "scb/lisa/wert-gammal", "scb/lisa/wert-ny")]
+        assert pairs == (expected if emitted else [])
 
     def test_empty_db(self) -> None:
         conn = _base_db()
