@@ -365,54 +365,6 @@ def test_a_same_as_aliased_variable_resolves(conn, tmp_path) -> None:
     )
 
 
-UNQUALIFIED_INVENTORY = """
-version = 1
-steward = "swecov"
-
-[[table]]
-id = "LISA_Individ_2018.csv"
-edition = 2018
-
-[[table.column]]
-name = "SomeColumnTheCatalogNeverNames"
-[[table.column.mapping]]
-register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/kon"
-"""
-
-
-def test_a_mapping_without_a_representation_takes_no_representation_check(
-    conn, tmp_path
-) -> None:
-    """§12's single-representation arm is request-dependent — only the order
-    pass can decide whether the binding resolves to ONE representation across a
-    requested period — so an unqualified mapping's physical column name is not
-    checked against the catalog's delivery columns."""
-    assert check_inventory(_inventory(tmp_path, UNQUALIFIED_INVENTORY), conn) == ()
-
-
-def test_a_mapping_without_a_representation_still_checks_its_binding(
-    conn, tmp_path
-) -> None:
-    """Skipping the representation check must not skip the PAIRING. `kon` is a
-    real variable and `individer-20plus` a real variant, but the catalog carries
-    no state pairing them — the order path could never fill this mapping at any
-    period, so the gate must not let a steward boot on it."""
-    (finding,) = check_inventory(
-        _inventory(
-            tmp_path,
-            UNQUALIFIED_INVENTORY.replace("individer-15plus", "individer-20plus"),
-        ),
-        conn,
-    )
-    assert finding.code == "binding_unavailable"
-    assert finding.coordinate == "scb/lisa/individer-20plus scb/lisa/kon"
-    assert finding.mapping_count == 1
-    assert finding.locations == (
-        "table['LISA_Individ_2018.csv'].column['SomeColumnTheCatalogNeverNames']",
-    )
-
-
 def test_an_unavailable_binding_does_not_cascade_into_its_representation(
     conn, tmp_path
 ) -> None:
@@ -447,9 +399,9 @@ def test_an_aliased_variable_at_a_variant_it_never_reaches_is_reported(
     (finding,) = check_inventory(
         _inventory(
             tmp_path,
-            UNQUALIFIED_INVENTORY.replace(
-                "individer-15plus", "individer-20plus"
-            ).replace("lisa/kon", "lisa/konkod"),
+            CLEAN_INVENTORY.rsplit("[[table.column]]", 1)[0]
+            .replace("individer-15plus", "individer-20plus")
+            .replace("lisa/kon", "lisa/konkod"),
         ),
         conn,
     )

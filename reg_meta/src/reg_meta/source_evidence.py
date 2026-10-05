@@ -39,14 +39,18 @@ class SourceRecordRef(_SourceModel):
         return self
 
 
-def canonical_sha256(value: Any) -> str:
-    payload = json.dumps(
+def canonical_json(value: Any) -> str:
+    """Serialize shared deterministic JSON for digests and artifact fields."""
+    return json.dumps(
         value,
         ensure_ascii=False,
         sort_keys=True,
         separators=(",", ":"),
-    ).encode("utf-8")
-    return hashlib.sha256(payload).hexdigest()
+    )
+
+
+def canonical_sha256(value: Any) -> str:
+    return hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
 
 
 class SourceRevision(_SourceModel):

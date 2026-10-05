@@ -1,0 +1,4 @@
+{
+  "returncode": 2,
+  "stderr_contains": "unrecognized arguments: --skip-slugs"
+}

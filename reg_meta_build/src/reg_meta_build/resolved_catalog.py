@@ -1119,6 +1119,28 @@ def write_resolved_catalog(
             )
         import_metadata[key] = value
 
+    captured_revision = None
+    if partial:
+        import_metadata.pop("builder_commit", None)
+        import_metadata.pop("generation_id", None)
+    else:
+        from .artifact_identity import builder_commit, generation_id
+
+        if corpus or "builder_commit" not in import_metadata:
+            revision = builder_commit()
+            if "builder_commit" not in import_metadata:
+                captured_revision = revision
+                import_metadata["builder_commit"] = revision
+        expected_generation = generation_id(import_metadata)
+        if (
+            "generation_id" in import_metadata
+            and import_metadata["generation_id"] != expected_generation
+        ):
+            raise ValueError(
+                "manifest generation_id conflicts with canonical semantic inputs"
+            )
+        import_metadata["generation_id"] = expected_generation
+
     output = Path(output)
     if partial and (
         output.exists()
@@ -1404,5 +1426,9 @@ def write_resolved_catalog(
             # even if another process creates the destination during the build.
             output.hardlink_to(staged)
         else:
+            if (corpus or captured_revision is not None) and (
+                builder_commit() != import_metadata["builder_commit"]
+            ):
+                raise ValueError("Builder revision changed during compilation")
             publish_db(staged, output)
     return output

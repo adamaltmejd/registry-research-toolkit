@@ -1,0 +1,6 @@
+{
+  "steward": "swecov",
+  "census_name": "swecov/SWECOV_variables_full_fixture.csv",
+  "unaccounted_inventory": "inventory-unaccounted.toml",
+  "supplemental_inputs": ["data_warnings", "pre_rename_hook"]
+}

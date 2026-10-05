@@ -1,0 +1,13 @@
+{
+  "mode": "diagnostic",
+  "fields": [
+    "catalog_artifact_kind",
+    "catalog_publishable",
+    "catalog_completeness",
+    "base_generation_id"
+  ],
+  "absent_fields": [
+    "generation_id",
+    "builder_commit"
+  ]
+}

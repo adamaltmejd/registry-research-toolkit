@@ -1,0 +1,7 @@
+{
+  "error_contains": "unresolved coordinate",
+  "error_locators": [
+    "policy/inventory.toml:table['Unresolved'].column['Observed'].mapping[0]"
+  ],
+  "rejected_mappings": 1
+}

@@ -1,0 +1,12 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "Annual2018"
+edition = 2018
+[[table.column]]
+name = "Observed"
+[[table.column.mapping]]
+register_variant = "fixture/example/annual"
+variable = "fixture/example/value"
+representation = "Value"

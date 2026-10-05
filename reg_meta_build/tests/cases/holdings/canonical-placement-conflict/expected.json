@@ -1,0 +1,7 @@
+{
+  "error_contains": "exactly one physical (table, column)",
+  "error_locators": [
+    "table['First'].column['Observed']",
+    "table['Second'].column['Observed']"
+  ]
+}

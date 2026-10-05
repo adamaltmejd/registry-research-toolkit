@@ -8,6 +8,7 @@ from types import SimpleNamespace
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+from catalog_manifest import synthetic_manifest
 from pydantic import ValidationError
 from reg_meta.documentary import (
     DocumentaryRelationship,
@@ -272,7 +273,7 @@ def test_literal_binding_persists_without_availability_extension(tmp_path, kind)
     write_resolved_catalog(
         variables,
         tmp_path / "reg_meta.db",
-        manifest={},
+        manifest=synthetic_manifest(),
         metadata=ResolvedMetadata(documentary_relationships=relations),
     )
     with closing(open_built_db(tmp_path / "reg_meta.db")) as conn:
@@ -526,7 +527,7 @@ def test_retained_literal_writer_preserves_raw_evidence_without_endpoints(tmp_pa
     write_resolved_catalog(
         (),
         out,
-        manifest={},
+        manifest=synthetic_manifest(),
         diagnostic=True,
         parent_registers=(register,),
         metadata=ResolvedMetadata(documentary_relationships=relations),

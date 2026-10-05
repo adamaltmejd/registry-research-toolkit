@@ -2,18 +2,17 @@
 
 from __future__ import annotations
 
-import argparse
+import json
 import sqlite3
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import pytest
+from catalog_manifest import synthetic_manifest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.inventory import load_inventory as load_delivery_inventory
 from reg_meta_build.extend_db import (
     _insert_providers,
     _load_provider_ir,
     extend_db,
-    resolve_delivery_inventory,
     resolve_steward_providers_dir,
 )
 from reg_meta_build.id import _MINT_BIT, mint
@@ -26,9 +25,6 @@ from reg_meta_build.resolved_catalog import (
     write_resolved_catalog,
 )
 from reg_meta_build.validate import validate_built_db
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 _STEWARD = "swecov"
 _BANK = "swedbank"
@@ -179,7 +175,7 @@ def global_db(tmp_path: Path) -> Path:
             ),
         ),
         output,
-        manifest={},
+        manifest=synthetic_manifest(),
     )
     return output
 
@@ -207,6 +203,7 @@ def _run(
         slug_dir=slug_dir,
         skip_slugs=skip_slugs,
         pre_rename_hook=pre_rename_hook,
+        diagnostic=True,
     )
     return result, out / "reg_meta.db"
 
@@ -610,194 +607,12 @@ def test_hook_failure_discards_staging_db(tmp_path: Path, global_db: Path) -> No
     assert not (tmp_path / "out" / "reg_meta.db.tmp").exists()
 
 
-def _empty_holdings(tmp_path: Path) -> Path:
-    path = tmp_path / "holdings.toml"
-    path.write_text(
-        'version = 1\nsteward = "swecov"\n\n[[table]]\nid = "Nothing_2019"\n'
-        'edition = 2019\n\n[[table.column]]\nname = "UNMAPPED"\n',
-        encoding="utf-8",
-    )
-    return path
-
-
-def test_cli_uses_providers_dir_and_keeps_holdings_gate(
-    tmp_path: Path, global_db: Path
-) -> None:
-    from reg_meta_build.cli import _cmd_extend_db
-
-    providers_dir = _providers(tmp_path)
-    slug_dir = tmp_path / "slugs"
-    _write_slug_dir(slug_dir)
-    holdings = _empty_holdings(tmp_path)
-    out = tmp_path / "out"
-    args = argparse.Namespace(
-        db=str(out),
-        base_db=str(global_db),
-        providers_dir=str(providers_dir),
-        delivery_inventory=str(holdings),
-        steward=_STEWARD,
-        slug_dir=str(slug_dir),
-        skip_slugs=False,
-        skip_holdings_gate=False,
-        no_validate=False,
-    )
-    envelope, exit_code = _cmd_extend_db(args)
-    assert exit_code == 0
-    assert envelope["request"]["args"]["providers_dir"] == str(providers_dir.resolve())
-    assert envelope["request"]["args"]["delivery_inventory"] == str(holdings.resolve())
-    assert envelope["data"]["variables"] == 3
-
-
-def test_argparse_removed_flavor_inventory_option() -> None:
-    from reg_meta_build.cli import _build_parser
-
-    parser = _build_parser()
-    args = parser.parse_args(["extend-db", "--base-db", "base.db"])
-    assert args.providers_dir is None
-    assert not hasattr(args, "inventory")
-    with pytest.raises(SystemExit):
-        parser.parse_args(
-            ["extend-db", "--base-db", "base.db", "--inventory", "old.json"]
-        )
-
-
-def test_delivery_inventory_resolution_remains_distinct(tmp_path: Path) -> None:
-    holdings = _empty_holdings(tmp_path)
-    assert (
-        resolve_delivery_inventory(holdings, _STEWARD, skip_holdings_gate=False)
-        == holdings.resolve()
-    )
-    assert resolve_delivery_inventory(None, "missing", skip_holdings_gate=True) is None
-    assert load_delivery_inventory(holdings).steward == _STEWARD
-
-
-@pytest.mark.parametrize("edition, fails", [(2017, True), (2019, False)])
-def test_section_12_holdings_gate_still_checks_provider_windows(
-    tmp_path: Path, global_db: Path, edition: int, fails: bool
-) -> None:
-    from reg_meta_build.cli import _flavored_validate_hook
-
-    text = _BASE_TOML.replace(
-        '    column = "BELOPP"\n    data_type = "float"',
-        '    column = "BELOPP"\n    data_type = "float"\n'
-        '    valid_from = "2018"\n    valid_to = "2020"',
-        1,
-    )
-    _, out = _run(tmp_path, global_db, text)
-    conn = sqlite3.connect(out)
-    provider, register, variant = conn.execute(
-        "SELECT p.slug, r.slug, rv.slug FROM register_variant rv "
-        "JOIN register r USING (register_id) JOIN provider p USING (provider_id) "
-        "WHERE r.register_id = ?",
-        (_ids()["register"],),
-    ).fetchone()
-    variable = conn.execute(
-        "SELECT slug FROM variable WHERE variable_id = ?", (_ids()["belopp"],)
-    ).fetchone()[0]
-    conn.close()
-
-    holdings = tmp_path / f"holdings-{edition}.toml"
-    holdings.write_text(
-        f'version = 1\nsteward = "{_STEWARD}"\n\n[[table]]\n'
-        f'id = "Transactions_{edition}"\nedition = {edition}\n\n'
-        '[[table.column]]\nname = "BELOPP"\n\n'
-        "[[table.column.mapping]]\n"
-        f'register_variant = "{provider}/{register}/{variant}"\n'
-        f'variable = "{provider}/{register}/{variable}"\n'
-        'representation = "BELOPP"\n',
-        encoding="utf-8",
-    )
-    hook = _flavored_validate_hook(None, load_delivery_inventory(holdings))
-    if fails:
-        with pytest.raises(RegMetaError) as exc:
-            hook(out)
-        assert exc.value.code == "validation_failed"
-        assert "held 2017" in exc.value.message
-    else:
-        hook(out)
-
-
-def _undated_warning(tmp_path: Path):
-    import hashlib
-    import json
-
-    from reg_meta.source_evidence import canonical_sha256
-    from reg_meta_build.extend_db import load_undated_holdings
-
-    source = tmp_path / "holdings.csv"
-    source.write_text(
-        "Category,Detail,Table,V1,V2,V3\nBank,,Undated,PersonNr,,Amount\n"
-    )
-    rows = [{"line": 2, "cells": ["Bank", "", "Undated", "PersonNr", "", "Amount"]}]
-    policy = tmp_path / "policy.toml"
-    policy.write_text(
-        f'source_sha256 = "{hashlib.sha256(source.read_bytes()).hexdigest()}"\n'
-        '[[retain_unknown]]\ntable = "Undated"\n'
-        'register = "swedbank/transaktioner"\n'
-        f'rows_sha256 = "{canonical_sha256(rows)}"\n'
-        'reason = "Calendar coverage is undocumented."\n'
-    )
-    warning = load_undated_holdings(
-        policy, source, input_commit="a" * 40, input_manifest_sha256="b" * 64
-    )[0]
-    assert json.loads(warning.detail)["rows"] == rows
-    return policy, source, warning
-
-
-def test_undated_holdings_preserve_cells_and_withhold_calendar_links(
-    tmp_path: Path,
-) -> None:
-    import json
-
-    from reg_meta_build.extend_db import load_undated_holdings
-
-    policy, source, warning = _undated_warning(tmp_path)
-    assert (
-        warning
-        == load_undated_holdings(
-            policy, source, input_commit="a" * 40, input_manifest_sha256="b" * 64
-        )[0]
-    )
-    assert json.loads(warning.detail)["temporal_scope"]["kind"] == "unknown"
-    assert (
-        warning.variable_fqid,
-        warning.variant,
-        warning.delivery_column_name,
-        warning.valid_from,
-        warning.valid_to,
-    ) == (None,) * 5
-    source.write_text(source.read_text().replace("Amount", "Changed"))
-    with pytest.raises(ValueError, match="source SHA"):
-        load_undated_holdings(
-            policy, source, input_commit="a" * 40, input_manifest_sha256="b" * 64
-        )
-
-
-def test_undated_holding_rows_are_guarded_even_after_repinning_csv(
-    tmp_path: Path,
-) -> None:
-    import hashlib
-
-    from reg_meta_build.extend_db import load_undated_holdings
-
-    policy, source, _ = _undated_warning(tmp_path)
-    old = hashlib.sha256(source.read_bytes()).hexdigest()
-    source.write_text(source.read_text().replace("Amount", "Changed"))
-    policy.write_text(
-        policy.read_text().replace(old, hashlib.sha256(source.read_bytes()).hexdigest())
-    )
-    with pytest.raises(ValueError, match="row guard"):
-        load_undated_holdings(
-            policy, source, input_commit="a" * 40, input_manifest_sha256="b" * 64
-        )
-
-
-def test_extension_writes_unknown_holdings_using_actual_private_ids(
+def test_extension_writes_register_warnings_using_actual_private_ids(
     tmp_path: Path, global_db: Path
 ) -> None:
     from reg_meta_build.db import open_built_db
 
-    _, _, warning = _undated_warning(tmp_path)
+    warning = _fixture_warning()
     providers = _providers(tmp_path, _BASE_TOML)
     slugs = tmp_path / "slugs"
     _write_slug_dir(slugs)
@@ -809,6 +624,7 @@ def test_extension_writes_unknown_holdings_using_actual_private_ids(
         steward=_STEWARD,
         slug_dir=slugs,
         data_warnings=(warning,),
+        diagnostic=True,
     )
     conn = open_built_db(out / "reg_meta.db")
     try:
@@ -830,7 +646,7 @@ def test_warning_writer_rejects_missing_register_and_demotes_only_explicitly(
     from reg_meta.source_evidence import canonical_sha256
     from reg_meta_build.data_warnings import write_data_warnings
 
-    _, _, warning = _undated_warning(tmp_path)
+    warning = _fixture_warning()
     conn = sqlite3.connect(global_db)
     try:
         with pytest.raises(ValueError, match="register is not written"):
@@ -859,38 +675,24 @@ def test_warning_writer_rejects_missing_register_and_demotes_only_explicitly(
         conn.close()
 
 
-def test_private_validity_warnings_keep_authored_absence_and_delivery_witnesses(
-    tmp_path: Path,
+def _fixture_warning():
+    from pathlib import Path
+
+    from reg_meta.catalog import DataWarning
+
+    return DataWarning.model_validate_json(
+        (Path(__file__).parent / "cases/holdings/warning/warning.json").read_text()
+    )
+
+
+def test_extension_preserves_base_generation_provenance(
+    tmp_path: Path, global_db: Path
 ) -> None:
-    import json
-
-    from reg_meta_build.extend_db import _private_unknown_validity_warnings
-
-    _providers(tmp_path)
-    _write_slug_dir(tmp_path / "slugs")
-    policy = tmp_path / "policy"
-    policy.mkdir()
-    (policy / "inventory.toml").write_text(
-        'version = 1\nsteward = "swecov"\n[[table]]\nid = "Bank_2020"\nedition = 2020\n'
-        '[[table.column]]\nname = "BELOPP"\n[[table.column.mapping]]\n'
-        'register_variant = "swedbank/transaktioner/transaktioner-default"\n'
-        'variable = "swedbank/transaktioner/belopp"\n'
-    )
-    warnings = _private_unknown_validity_warnings(
-        tmp_path, input_commit="a" * 40, input_manifest_sha256="b" * 64
-    )
-    assert warnings == _private_unknown_validity_warnings(
-        tmp_path, input_commit="a" * 40, input_manifest_sha256="b" * 64
-    )
-    warning = next(
-        value
-        for value in warnings
-        if str(value.register_fqid) == "swedbank/transaktioner"
-    )
-    evidence = json.loads(warning.detail)
-    assert evidence["holding_table_witnesses"][0]["edition"] == "2020"
-    assert any(state["valid_from"] is None for state in evidence["states"])
-    assert all(state["valid_to"] is None for state in evidence["states"])
-    assert evidence["storage_sentinels"]["missing_start"] == "0001-01-01"
-    assert warning.valid_from is None and warning.valid_to is None
-    assert evidence["aliases"]
+    case = Path(__file__).parent / "cases/holdings/extension-manifest"
+    request = json.loads((case / "request.json").read_text())
+    expected = json.loads((case / "expected.json").read_text())
+    _, output = _run(tmp_path, global_db)
+    with sqlite3.connect(output) as conn:
+        manifest = dict(conn.execute("SELECT key,value FROM import_manifest"))
+    assert {key: manifest[key] for key in request["fields"]} == expected
+    assert set(request["absent_fields"]).isdisjoint(manifest)

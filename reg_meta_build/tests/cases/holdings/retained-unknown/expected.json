@@ -1,0 +1,53 @@
+{
+  "tables": [
+    {
+      "physical_id": "Annual",
+      "scope": "intervals",
+      "edition": 2018,
+      "partition": null,
+      "retain_unknown_reason": null
+    },
+    {
+      "physical_id": "Undated",
+      "scope": "unknown",
+      "edition": null,
+      "partition": null,
+      "retain_unknown_reason": "No established calendar edition."
+    }
+  ],
+  "periods": [
+    {
+      "physical_id": "Annual",
+      "lo": "2018-01-01",
+      "hi": "2018-12-31"
+    }
+  ],
+  "columns": [
+    {
+      "physical_id": "Annual",
+      "name": "Observed",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Undated",
+      "name": "Observed",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Undated",
+      "name": "Other",
+      "unmapped_reason": null
+    }
+  ],
+  "mappings": [
+    {
+      "physical_id": "Annual",
+      "name": "Observed",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/value",
+      "representation_literal": "Value",
+      "representation_canonical": "Value"
+    }
+  ],
+  "warnings": []
+}

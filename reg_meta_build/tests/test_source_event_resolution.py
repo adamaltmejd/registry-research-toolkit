@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import replace
 
 import pytest
+from catalog_manifest import synthetic_manifest
 from reg_meta.errors import RegMetaError
 from reg_meta.source_evidence import DeliveredCell, canonical_sha256
 from reg_meta_build.resolved_catalog import ResolvedRegister
@@ -236,7 +237,7 @@ def test_exact_missing_event_acknowledgement_keeps_originals_and_withheld_edge(
     write_resolved_catalog(
         (),
         output,
-        manifest={},
+        manifest=synthetic_manifest(),
         diagnostic=True,
         parent_registers=tuple(bindings.guarded_registers.values()),
         data_warnings=(warning,),

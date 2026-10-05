@@ -89,6 +89,7 @@ def test_year_independent_inventory_requires_exact_physical_column() -> None:
                                     {
                                         "register_variant": "scb/lisa/individer-15plus",
                                         "variable": "scb/lisa/vara",
+                                        "representation": "Foo",
                                     }
                                 ],
                             }

@@ -1,0 +1,7 @@
+{
+  "args": [
+    "extend-db",
+    "--base-db",
+    "absent"
+  ]
+}

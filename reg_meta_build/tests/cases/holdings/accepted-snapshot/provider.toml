@@ -1,0 +1,14 @@
+[provider]
+name = "Fixture provider"
+source_label = "synthetic"
+
+[[register]]
+key = "example"
+name = "Example"
+
+[[register.variable]]
+key = "value"
+name = "Value"
+
+[[register.variable.state]]
+column = "Value"

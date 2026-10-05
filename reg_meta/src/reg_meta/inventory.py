@@ -226,17 +226,9 @@ def _overlap(
     return tuple(x for left in a for right in b if (x := _intersect(left, right)))
 
 
-def _representations_conflate(left: str | None, right: str | None) -> bool:
-    """Do two mapping representations describe the SAME cell (§12)?
-
-    Equal explicit representations do. So does a `None` on either side: `None`
-    asserts "the concept's single representation", so it conflates with any
-    explicit one — and with another `None`. Two DIFFERENT explicit
-    representations are different cells (parallel representations, or the two
-    ends of a rename), which `order.py`'s slicing and `Binding.representation`
-    already choose between; the inventory must not second-guess that with
-    period arithmetic."""
-    return left is None or right is None or left == right
+def _representations_conflate(left: str, right: str) -> bool:
+    """Explicit representations describe the same cell only when equal."""
+    return left == right
 
 
 def _partitions_separate(left: str | None, right: str | None) -> bool:
@@ -272,12 +264,8 @@ def _location(table_id: str, column_name: str) -> str:
     return f"table[{table_id!r}].column[{column_name!r}]"
 
 
-def _representation_label(representation: str | None) -> str:
-    return (
-        f"representation {representation!r}"
-        if representation is not None
-        else "no representation"
-    )
+def _representation_label(representation: str) -> str:
+    return f"representation {representation!r}"
 
 
 class ColumnMapping(_InventoryModel):
@@ -288,12 +276,12 @@ class ColumnMapping(_InventoryModel):
     (`<provider>/<register>/<variant>`, `_default` allowed for a single-table
     register), `variable` the 3-segment binding FQID, and `representation` the
     canonical reg_meta `variable_alias.delivery_column_name` this column
-    corresponds to — `None` when the concept has a single representation. The
-    representation is a join discriminator, not an output substitute (§12)."""
+    corresponds to. The
+    representation is a required join discriminator, not an output substitute (§12)."""
 
     register_variant: str
     variable: Fqid
-    representation: str | None = Field(default=None, min_length=1)
+    representation: str = Field(min_length=1)
 
     @field_validator("register_variant")
     @classmethod
@@ -482,7 +470,7 @@ class InventoryTable(_InventoryModel):
 
 # One mapping's physical placement, as `_check_one_to_one_resolution` compares
 # them: `(table id, column name, representation, edition bounds, partition)`.
-_Placement = tuple[str, str, str | None, tuple[_Interval, ...], str | None]
+_Placement = tuple[str, str, str, tuple[_Interval, ...], str | None]
 
 
 class DeliveryInventory(_InventoryModel):
@@ -542,115 +530,103 @@ class DeliveryInventory(_InventoryModel):
 
     @model_validator(mode="after")
     def _check_one_to_one_resolution(self) -> DeliveryInventory:
-        """§12's ONE-TO-ONE RESOLUTION INVARIANT (ratified 2026-09-01): every
-        admitted `(register_variant, variable, representation, period)` cell
-        resolves to exactly ONE physical `(table, column)`. Two mappings that
-        could each serve one cell are an error here, because the extraction tool
-        never chooses between sources — the materializer matches every mapping
-        that fits and emits its table whole, so a conflict orders the same
-        observations twice from two layouts.
-
-        Two mappings at DIFFERENT physical locations conflict when their
-        editions overlap AND their representations conflate
-        (`_representations_conflate`) — across tables (the cumulative
-        `FHM_NVR_Covid*` re-delivery) or across two columns of one table (whose
-        single edition always overlaps itself). Several tables mapping one
-        coordinate over DISJOINT editions stays legal: that is the ordinary
-        annual series.
-
-        DISJOINT-PARTITION ARM (§12): the invariant holds per `(cell ×
-        partition)`, so two tables carrying DISTINCT `partition` labels never
-        conflict — they are shards of one sub-population split (survey strata,
-        reporter streams, per-municipality deliveries), unified as one
-        user-facing variant and extracted as one file each. Everything else
-        still conflicts: equal labels, and a label opposite an unlabelled table
-        (which claims the whole population, so it necessarily overlaps the
-        shard). Two columns of ONE table share its label, so the
-        across-columns arm is untouched.
-
-        Every conflicting pair is reported in one pass with both locations, the
-        coordinate and the overlapping period: the error IS the maintainer's
-        supersession worklist. There is deliberately no auto-pick-latest arm —
-        a filename date is not proof of supersession, so the curator discards
-        the superseded delivery and the inventory keeps stating CURRENT
-        holdings only (§12).
-
-        Cost: mappings are grouped by `(register_variant, variable)` and
-        compared pairwise only WITHIN a group, so a SWECOV-sized inventory
-        (thousands of mappings across many variables) never pays a global
-        O(n²) — the largest realistic group is one variable's annual series, a
-        few dozen editions.
-        """
-        located: dict[tuple[str, str, str], list[_Placement]] = {}
-        for table in self.tables:
-            bounds = (
-                edition_bounds(table.edition)
-                if table.period_scope == "intervals"
-                else ()
-            )
-            for column in table.columns:
-                for mapping in column.mappings:
-                    key = (
-                        mapping.register_variant,
-                        str(mapping.variable),
-                        table.period_scope,
-                    )
-                    located.setdefault(key, []).append(
-                        (
-                            table.id,
-                            column.name,
-                            mapping.representation,
-                            bounds,
-                            table.partition,
-                        )
-                    )
-        conflicts: list[str] = []
-        reported: set[tuple[str, ...]] = set()
-        for (variant, variable, scope), placements in located.items():
-            for index, (a_table, a_column, a_rep, a_bounds, a_part) in enumerate(
-                placements
-            ):
-                for b_table, b_column, b_rep, b_bounds, b_part in placements[
-                    index + 1 :
-                ]:
-                    if (a_table, a_column) == (b_table, b_column):
-                        # One location serving one cell IS the invariant; a
-                        # repeated triple there is `InventoryColumn`'s error.
-                        continue
-                    if not _representations_conflate(a_rep, b_rep):
-                        continue
-                    if _partitions_separate(a_part, b_part):
-                        continue
-                    overlap = _overlap(a_bounds, b_bounds)
-                    if not overlap and scope == "intervals":
-                        continue
-                    pair = (variant, variable, a_table, a_column, b_table, b_column)
-                    if pair in reported:
-                        # Two locations conflicting over one coordinate is ONE
-                        # curation decision, whatever mix of representations
-                        # spelled it (a column carrying both an unqualified and
-                        # an explicit mapping conflates twice with one opposite).
-                        continue
-                    reported.add(pair)
-                    conflicts.append(
-                        f"{_location(a_table, a_column)} "
-                        f"({_representation_label(a_rep)}) and "
-                        f"{_location(b_table, b_column)} "
-                        f"({_representation_label(b_rep)}) both map "
-                        f"{variant} {variable} over {'_default' if scope == 'year_independent' else _render(overlap)}"
-                        + _partition_hint(a_part, b_part)
-                    )
-        if conflicts:
-            raise ValueError(
-                "a cell must resolve to exactly one physical (table, column), "
-                "but these mappings could each serve the same cell:\n"
-                + "\n".join(f"    {line}" for line in conflicts)
-                + "\n  An inventory states CURRENT holdings only: discard the "
-                "superseded delivery at curation instead of choosing here (a "
-                "filename date is not proof of supersession) — REFACTOR_SPEC.md "
-                "§12."
-            )
+        validate_inventory_placements(self.tables)
         return self
+
+
+def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
+    """Enforce §12's one-to-one resolution invariant (ratified 2026-09-01).
+
+    Every admitted `(register_variant, variable, representation, period)` cell
+    resolves to exactly one physical `(table, column)`. Two mappings that could
+    serve one cell at different locations are an error: extraction must not
+    choose between sources or order the same observations twice.
+
+    Locations conflict when their editions overlap and their representations
+    conflate. Disjoint editions remain legal, as in an ordinary annual series.
+    Inventory validation passes literal representations; compilation passes the
+    resolver's canonical spellings, catching additional case-only conflicts.
+    Grouping preserves variant and period scope.
+
+    Disjoint-partition arm (§12): the invariant holds per `(cell × partition)`.
+    Distinct explicit partition labels denote separate population shards and
+    never conflict. Equal labels still conflict. An unlabelled location claims
+    the whole population and overlaps every shard. Columns of one table share
+    its partition label, so the across-column rule remains unchanged.
+
+    Report every conflicting pair with both locations, the coordinate and the
+    overlapping period. There is deliberately no auto-pick-latest rule: a file
+    date does not prove supersession. Curators remove superseded deliveries so
+    the inventory states current holdings only.
+
+    Cost: group by `(register_variant, variable, period_scope)` and compare
+    pairwise only within each group. An inventory with many variables avoids a
+    global quadratic scan; the usual largest group is one variable's annual
+    series with a few dozen editions.
+    """
+    located: dict[tuple[str, str, str], list[_Placement]] = {}
+    for table in tables:
+        bounds = (
+            edition_bounds(table.edition) if table.period_scope == "intervals" else ()
+        )
+        for column in table.columns:
+            for mapping in column.mappings:
+                key = (
+                    mapping.register_variant,
+                    str(mapping.variable),
+                    table.period_scope,
+                )
+                located.setdefault(key, []).append(
+                    (
+                        table.id,
+                        column.name,
+                        mapping.representation,
+                        bounds,
+                        table.partition,
+                    )
+                )
+    conflicts: list[str] = []
+    reported: set[tuple[str, ...]] = set()
+    for (variant, variable, scope), placements in located.items():
+        for index, (a_table, a_column, a_rep, a_bounds, a_part) in enumerate(
+            placements
+        ):
+            for b_table, b_column, b_rep, b_bounds, b_part in placements[index + 1 :]:
+                if (a_table, a_column) == (b_table, b_column):
+                    # One location serving one cell IS the invariant; a
+                    # repeated triple there is `InventoryColumn`'s error.
+                    continue
+                if not _representations_conflate(a_rep, b_rep):
+                    continue
+                if _partitions_separate(a_part, b_part):
+                    continue
+                overlap = _overlap(a_bounds, b_bounds)
+                if not overlap and scope == "intervals":
+                    continue
+                pair = (variant, variable, a_table, a_column, b_table, b_column)
+                if pair in reported:
+                    # One conflicting location pair is one curation decision,
+                    # even when several mappings locate the same coordinate.
+                    continue
+                reported.add(pair)
+                conflicts.append(
+                    f"{_location(a_table, a_column)} "
+                    f"({_representation_label(a_rep)}) and "
+                    f"{_location(b_table, b_column)} "
+                    f"({_representation_label(b_rep)}) both map "
+                    f"{variant} {variable} over {'_default' if scope == 'year_independent' else _render(overlap)}"
+                    + _partition_hint(a_part, b_part)
+                )
+    if conflicts:
+        raise ValueError(
+            "a cell must resolve to exactly one physical (table, column), "
+            "but these mappings could each serve the same cell:\n"
+            + "\n".join(f"    {line}" for line in conflicts)
+            + "\n  An inventory states CURRENT holdings only: discard the "
+            "superseded delivery at curation instead of choosing here (a "
+            "filename date is not proof of supersession) — REFACTOR_SPEC.md "
+            "§12."
+        )
 
 
 def _inventory_error(code: str, message: str, remediation: str) -> RegMetaError:

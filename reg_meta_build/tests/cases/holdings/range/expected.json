@@ -1,0 +1,41 @@
+{
+  "tables": [
+    {
+      "physical_id": "Range",
+      "scope": "intervals",
+      "edition": {
+        "from": 2018,
+        "to": 2020
+      },
+      "partition": null,
+      "retain_unknown_reason": null
+    }
+  ],
+  "periods": [
+    {
+      "physical_id": "Range",
+      "lo": "2018-01-01",
+      "hi": "2020-12-31"
+    }
+  ],
+  "columns": [
+    {
+      "physical_id": "Range",
+      "name": "Observed",
+      "unmapped_reason": null
+    }
+  ],
+  "mappings": [
+    {
+      "physical_id": "Range",
+      "name": "Observed",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/value",
+      "representation_literal": "Value",
+      "representation_canonical": "Value"
+    }
+  ],
+  "warnings": [
+    "holding_temporally_unassessed"
+  ]
+}

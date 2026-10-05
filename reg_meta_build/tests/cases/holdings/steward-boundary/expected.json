@@ -1,0 +1,28 @@
+{
+  "manifest": {
+    "catalog_artifact_kind": "steward",
+    "catalog_publishable": "true",
+    "catalog_completeness": "complete",
+    "schema_version": "9.0.0",
+    "steward": "swecov"
+  },
+  "counts": {
+    "holding_tables": 2,
+    "holding_columns": 2,
+    "holding_mappings": 2
+  },
+  "accounting": {
+    "raw": {"tables": 2, "columns": 2},
+    "dated": {"tables": 2, "columns": 2},
+    "year_independent": {"tables": 0, "columns": 0},
+    "retained_unknown": {"tables": 0, "columns": 0},
+    "excluded": {"tables": 0, "columns": 0},
+    "lookup": {"tables": 0, "columns": 0}
+  },
+  "mappings": [
+    {"table": "Annual2018", "column": "Observed", "variant": "fixture/example/annual", "variable": "fixture/example/value", "literal": "Value", "canonical": "Value"},
+    {"table": "Annual2019", "column": "Observed", "variant": "fixture/example/annual", "variable": "fixture/example/value", "literal": "Value", "canonical": "Value"}
+  ],
+  "unaccounted_error": "Holdings accounting: 1 census tables have no disposition: ['Annual2019']",
+  "supplement_error": "Supplemental warnings and publish hooks require diagnostic=True"
+}

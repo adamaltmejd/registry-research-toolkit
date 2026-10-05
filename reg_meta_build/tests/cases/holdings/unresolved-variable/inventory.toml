@@ -1,0 +1,12 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "Unresolved"
+edition = 2018
+[[table.column]]
+name = "Observed"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/missing"
+representation = "Value"

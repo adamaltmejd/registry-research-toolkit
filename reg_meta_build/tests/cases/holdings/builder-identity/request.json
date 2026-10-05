@@ -1,0 +1,7 @@
+{
+  "installations": [
+    "dirty-checkout",
+    "ignored-wheel-in-unrelated-repo",
+    "outside-checkout"
+  ]
+}

@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+from catalog_manifest import synthetic_manifest
 from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.catalog_resolution import resolve_parents
 from reg_meta_build.db import open_built_db
@@ -243,7 +244,7 @@ def test_parent_facts_feed_ordinary_formation_and_direct_catalog(
     write_resolved_catalog(
         (formed.variable,),
         output,
-        manifest={"fixture": "parent-resolution"},
+        manifest=synthetic_manifest() | {"fixture": "parent-resolution"},
         editions=tuple(parents.editions.values()),
     )
     with closing(open_built_db(output)) as conn:

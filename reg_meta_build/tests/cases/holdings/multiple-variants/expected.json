@@ -1,0 +1,44 @@
+{
+  "tables": [
+    {
+      "physical_id": "Combined",
+      "scope": "intervals",
+      "edition": 2018,
+      "partition": null,
+      "retain_unknown_reason": null
+    }
+  ],
+  "periods": [
+    {
+      "physical_id": "Combined",
+      "lo": "2018-01-01",
+      "hi": "2018-12-31"
+    }
+  ],
+  "columns": [
+    {
+      "physical_id": "Combined",
+      "name": "Observed",
+      "unmapped_reason": null
+    }
+  ],
+  "mappings": [
+    {
+      "physical_id": "Combined",
+      "name": "Observed",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/value",
+      "representation_literal": "Value",
+      "representation_canonical": "Value"
+    },
+    {
+      "physical_id": "Combined",
+      "name": "Observed",
+      "register_variant": "scb/example/other",
+      "variable": "scb/example/value",
+      "representation_literal": "Value",
+      "representation_canonical": "Value"
+    }
+  ],
+  "warnings": []
+}

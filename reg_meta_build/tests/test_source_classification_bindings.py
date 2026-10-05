@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+from catalog_manifest import synthetic_manifest
 from reg_meta.source_evidence import SourceField, SourceRevision
 from reg_meta_build._curation import SentinelCode
 from reg_meta_build.classifications import load_valid_codes
@@ -199,7 +200,7 @@ def test_checked_classification_forms_and_writes_without_copying_canonical_label
     write_resolved_catalog(
         (variable,),
         tmp_path / "reg_meta.db",
-        manifest={},
+        manifest=synthetic_manifest(),
         classifications=tuple(setup[3].values()),
     )
     with pytest.raises(ValueError, match="one application"):
@@ -315,7 +316,7 @@ def test_noncanonical_codes_keep_source_members_and_declared_evidence(tmp_path):
     write_resolved_catalog(
         (variable,),
         tmp_path / "reg_meta.db",
-        manifest={},
+        manifest=synthetic_manifest(),
         diagnostic=True,
         classifications=tuple(setup[3].values()),
     )
@@ -343,7 +344,7 @@ def test_curated_sentinel_keeps_checked_binding_with_warning(tmp_path):
     write_resolved_catalog(
         (variable,),
         tmp_path / "reg_meta.db",
-        manifest={},
+        manifest=synthetic_manifest(),
         classifications=(sentinel_book,),
     )
 
@@ -1245,7 +1246,10 @@ def test_two_book_conformance_and_extensions_are_stored_independently(tmp_path):
     assert all(link.provenance for link in state.classification_links)
     output = tmp_path / "reg_meta.db"
     write_resolved_catalog(
-        (variable,), output, manifest={}, classifications=(*setup[3].values(), second)
+        (variable,),
+        output,
+        manifest=synthetic_manifest(),
+        classifications=(*setup[3].values(), second),
     )
     with sqlite3.connect(output) as connection:
         assert connection.execute(

@@ -2309,6 +2309,7 @@ def populate_variable_slugs(
     fold_slugs: dict[int, str] | None = None,
     *,
     incremental: bool = False,
+    persist_auto: bool = True,
 ) -> dict[str, int]:
     """Populate register-unique `variable.slug` (see DESIGN.md → Slug curation).
 
@@ -2317,6 +2318,10 @@ def populate_variable_slugs(
     `[variable]` override (`slug_variable_override_stale` / `_conflict`), or a NEW
     fragile-basis slug on a `frozen` provider (`slug_freeze_new_fallback`, #786).
     Otherwise always derives a slug (the fallback chain never leaves one unset).
+
+    `persist_auto=False` derives new names in the artifact without rewriting
+    slug inputs. Strict steward builds use this with committed pins; existing
+    freeze and override checks still apply.
 
     `fold_slugs` maps a *folded* variable's `variable_id` to its
     shared-column-stem slug base. A fold keeps one variable whose states span
@@ -2842,7 +2847,7 @@ def populate_variable_slugs(
                 auto_derivation[source_id] = kind
                 auto_dirty = True
 
-        if auto_dirty:
+        if auto_dirty and persist_auto:
             if register_owned:
                 for reg_id, path in global_auto_paths[provider_slug].items():
                     register_auto = {

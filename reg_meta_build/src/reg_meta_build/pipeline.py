@@ -453,6 +453,8 @@ def _run_pipeline(
         ch not in "0123456789abcdef" for ch in input_manifest_sha256
     ):
         raise ValueError("--input-manifest-sha256 must be a lowercase SHA-256")
+    from .artifact_identity import builder_commit
+
     started = time.perf_counter()
     publishable = not diagnostic and not registers
     prepared_path = prepared_path.resolve()
@@ -499,6 +501,9 @@ def _run_pipeline(
         raise ValueError(
             "build outputs must be separate from build inputs and each other"
         )
+    revision = None
+    if publishable and output is not None:
+        revision = builder_commit()
     input_started = time.perf_counter()
     prepared = open_prepared_catalog_sources(
         prepared_path,
@@ -1701,6 +1706,16 @@ def _run_pipeline(
                     )
                 if diagnostic or not counts["error"]:
                     phase_started = time.perf_counter()
+                    identity = {}
+                    if publishable:
+                        assert revision is not None
+                        if builder_commit() != revision:
+                            raise ValueError(
+                                "Builder revision changed during compilation"
+                            )
+                        identity = {
+                            "builder_commit": revision,
+                        }
                     write_resolved_catalog(
                         lineage.variables,
                         output,
@@ -1708,6 +1723,7 @@ def _run_pipeline(
                         scoped=bool(registers),
                         corpus=publishable,
                         manifest={
+                            **identity,
                             "import_date": import_date,
                             "prepared_commit": input_commit,
                             "prepared_manifest_sha256": input_manifest_sha256,

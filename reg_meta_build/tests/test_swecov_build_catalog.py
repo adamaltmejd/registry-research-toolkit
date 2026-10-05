@@ -36,6 +36,7 @@ from reg_meta_build.ir import (
     IRVariant,
 )
 from reg_meta_build.sources.curated import CuratedAdapter
+from reg_meta_build.swecov_policy import SourcePolicy, SourceRoute
 
 if TYPE_CHECKING:
     from types import ModuleType
@@ -1717,7 +1718,7 @@ def test_source_policy_rejects_unchecked_or_duplicate_decisions(
     else:
         raw["non_catalog_categories"]["blank"] = " "
     with pytest.raises(ValidationError, match=message):
-        build_catalog.SourcePolicy.model_validate(raw)
+        SourcePolicy.model_validate(raw)
 
 
 def test_flavor_rejects_stale_declared_table_before_writing(tmp_path: Path) -> None:
@@ -1933,7 +1934,7 @@ def test_unmapped_source_route_requires_reason_and_no_catalog_target(
     from pydantic import ValidationError
 
     with pytest.raises(ValidationError):
-        build_catalog.SourceRoute.model_validate(
+        SourceRoute.model_validate(
             {
                 "category": "Socialstyrelsen",
                 "detail": "Barn",
@@ -1948,7 +1949,7 @@ def test_inventory_unmapped_route_retains_holdings_without_inferred_assignment(
     tmp_path: Path, flavored_db: Path, monkeypatch: pytest.MonkeyPatch, assigned: bool
 ) -> None:
     reason = "Separate source variants do not establish this combined delivery's owner."
-    route = build_catalog.SourceRoute.model_validate(
+    route = SourceRoute.model_validate(
         {
             "category": "Inera/1177",
             "detail": "Ordered tests",
@@ -1956,7 +1957,7 @@ def test_inventory_unmapped_route_retains_holdings_without_inferred_assignment(
             "unmapped_reason": reason,
         }
     )
-    policy = build_catalog.SourcePolicy.model_construct(route=[route])
+    policy = SourcePolicy.model_construct(route=[route])
     monkeypatch.setitem(
         build_catalog.MAPPING,
         (route.category, route.detail),

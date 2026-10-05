@@ -1,0 +1,15 @@
+{
+  "catalog": "../annual-series/catalog.json",
+  "modes": [
+    {
+      "diagnostic": true
+    },
+    {
+      "scoped": true
+    },
+    {
+      "diagnostic": true,
+      "scoped": true
+    }
+  ]
+}

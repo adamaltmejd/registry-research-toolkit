@@ -1,0 +1,51 @@
+{
+  "tables": [
+    {
+      "physical_id": "Pooled",
+      "scope": "intervals",
+      "edition": {
+        "from": 2018,
+        "to": 2020
+      },
+      "partition": null,
+      "retain_unknown_reason": null
+    }
+  ],
+  "periods": [
+    {
+      "physical_id": "Pooled",
+      "lo": "2018-01-01",
+      "hi": "2020-12-31"
+    }
+  ],
+  "columns": [
+    {
+      "physical_id": "Pooled",
+      "name": "Observed",
+      "unmapped_reason": null
+    }
+  ],
+  "mappings": [
+    {
+      "physical_id": "Pooled",
+      "name": "Observed",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/value",
+      "representation_literal": "Value",
+      "representation_canonical": "Value"
+    }
+  ],
+  "warnings": [
+    "holding_temporally_unassessed"
+  ],
+  "states": [
+    {
+      "variable": "scb/example/value",
+      "register_variant": "scb/example/annual",
+      "delivery_column_name": "Value",
+      "valid_from": "2010-01-01",
+      "valid_to": "2025-12-31",
+      "pooled": 1
+    }
+  ]
+}

@@ -37,6 +37,7 @@ name = "Kon"
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
 variable = "scb/lisa/kon"
+representation = "Kon"
 
 [[table.column]]
 name = "DispInk04"
@@ -59,11 +60,15 @@ name = "Varukod"
 [[table.column.mapping]]
 register_variant = "scb/utrikeshandel/import"
 variable = "scb/utrikeshandel/varukod"
+representation = "Varukod"
+
 [[table.column.mapping]]
 register_variant = "scb/utrikeshandel/export"
 variable = "scb/utrikeshandel/varukod"
 
 # An interrupted series: a finite list of edition segments.
+representation = "Varukod"
+
 [[table]]
 id = "SCB_Foretag_2005-2010_2015.csv"
 edition = [{ from = 2005, to = 2010 }, "2015"]
@@ -102,7 +107,7 @@ def test_fixture_parses_into_typed_models(inventory: DeliveryInventory) -> None:
     mapped = lisa.columns[0].mappings[0]
     assert mapped.register_variant == "scb/lisa/individer-15plus"
     assert str(mapped.variable) == "scb/lisa/kon"
-    assert mapped.representation is None
+    assert mapped.representation == "Kon"
     assert lisa.columns[1].mappings[0].representation == "DispInk04"
 
 
@@ -272,6 +277,8 @@ name = "Kon"
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
 {mapping}
+representation = "Kon"
+
 """
     with pytest.raises(RegMetaError) as excinfo:
         load_inventory(_write(tmp_path, text))
@@ -412,6 +419,8 @@ name = "Diagnosdatum"
 [[table.column.mapping]]
 register_variant = "fohm/sminet/_default"
 variable = "fohm/sminet/diagnosdatum"
+representation = "Diagnosdatum"
+
 """
     inventory = load_inventory(_write(tmp_path, text))
     mapping = inventory.tables[0].columns[0].mappings[0]
@@ -472,42 +481,6 @@ def test_rejects_two_tables_serving_one_cell(tmp_path) -> None:
     )
     # §12 forbids an auto-picked survivor: the maintainer curates.
     assert "filename date is not proof of supersession" in message
-
-
-def test_rejects_an_unqualified_mapping_overlapping_an_explicit_one(tmp_path) -> None:
-    """A `None` representation asserts "the concept's single representation", so
-    it conflates with any explicit one over the same period (§12)."""
-    text = """
-version = 1
-steward = "swecov"
-
-[[table]]
-id = "LISA_Individ_2019.csv"
-edition = 2019
-[[table.column]]
-name = "Kon"
-[[table.column.mapping]]
-register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/kon"
-
-[[table]]
-id = "LISA_Uttag_2015-2020.csv"
-edition = { from = 2015, to = 2020 }
-[[table.column]]
-name = "Kon"
-[[table.column.mapping]]
-register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/kon"
-representation = "Kon"
-"""
-    with pytest.raises(RegMetaError) as excinfo:
-        load_inventory(_write(tmp_path, text))
-    assert (
-        "table['LISA_Individ_2019.csv'].column['Kon'] (no representation) and "
-        "table['LISA_Uttag_2015-2020.csv'].column['Kon'] "
-        "(representation 'Kon') both map scb/lisa/individer-15plus "
-        "scb/lisa/kon over 2019" in excinfo.value.message
-    )
 
 
 def test_rejects_two_columns_of_one_table_serving_one_cell(tmp_path) -> None:
@@ -590,6 +563,7 @@ def test_the_invariant_holds_for_a_programmatic_inventory() -> None:
                             {
                                 "register_variant": "scb/lisa/individer-15plus",
                                 "variable": "scb/lisa/kon",
+                                "representation": "Kon",
                             }
                         ],
                     }
@@ -620,6 +594,7 @@ name = "Kon"
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
 variable = "scb/lisa/kon"
+representation = "Kon"
 
 [[table]]
 id = "LISA_Individ_2020.csv"
@@ -629,6 +604,8 @@ name = "Kon"
 [[table.column.mapping]]
 register_variant = "scb/lisa/individer-15plus"
 variable = "scb/lisa/kon"
+representation = "Kon"
+
 """
     inventory = load_inventory(_write(tmp_path, text))
     assert [table.id for table in inventory.tables] == [
@@ -696,6 +673,7 @@ name = "Belopp"
 [[table.column.mapping]]
 register_variant = "skv/agi/individuppgifter-agi"
 variable = "skv/agi/utbetalt-belopp"
+representation = "Belopp"
 
 [[table]]
 id = "Soc_AGIIndivid_2021-03.csv"
@@ -706,6 +684,8 @@ name = "Belopp"
 [[table.column.mapping]]
 register_variant = "skv/agi/individuppgifter-agi"
 variable = "skv/agi/utbetalt-belopp"
+representation = "Belopp"
+
 """
 
 
@@ -731,9 +711,9 @@ def test_rejects_two_tables_sharing_one_partition_label(tmp_path) -> None:
         )
     message = excinfo.value.message
     assert (
-        "table['Arb_AGIIndivid_2021-03.csv'].column['Belopp'] (no representation) "
+        "table['Arb_AGIIndivid_2021-03.csv'].column['Belopp'] (representation 'Belopp') "
         "and table['Soc_AGIIndivid_2021-03.csv'].column['Belopp'] "
-        "(no representation) both map skv/agi/individuppgifter-agi "
+        "(representation 'Belopp') both map skv/agi/individuppgifter-agi "
         "skv/agi/utbetalt-belopp over 2021-03" in message
     )
     # Same shard twice is a supersession decision, not a labelling slip, so the

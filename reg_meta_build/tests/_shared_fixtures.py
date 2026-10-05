@@ -57,6 +57,8 @@ def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """
     from contextlib import closing
 
+    from catalog_manifest import synthetic_manifest
+    from reg_meta_build.artifact_identity import generation_id
     from reg_meta_build.db import DDL, SCHEMA_VERSION, _populate_fts, seed_providers
 
     db_dir = tmp_path_factory.mktemp("db")
@@ -67,10 +69,23 @@ def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
         conn.executescript(
             Path(__file__).with_name("_catalog_fixture.sql").read_text(encoding="utf-8")
         )
+        identity = synthetic_manifest() | {
+            "schema_version": SCHEMA_VERSION,
+            "catalog_artifact_kind": "catalog",
+        }
+        identity["generation_id"] = generation_id(identity)
         conn.executemany(
             "INSERT INTO import_manifest (key, value) VALUES (?, ?)",
             (
                 ("schema_version", SCHEMA_VERSION),
+                ("catalog_artifact_kind", "catalog"),
+                ("catalog_publishable", "true"),
+                ("catalog_completeness", "complete"),
+                *tuple(
+                    (key, value)
+                    for key, value in identity.items()
+                    if key not in {"schema_version", "catalog_artifact_kind"}
+                ),
                 ("import_date", "2020-01-01T00:00:00Z"),
                 ("row_counts", json.dumps({"variables": 8, "states": 9})),
             ),

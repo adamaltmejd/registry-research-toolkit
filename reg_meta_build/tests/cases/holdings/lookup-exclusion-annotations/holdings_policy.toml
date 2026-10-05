@@ -1,0 +1,5 @@
+source_sha256 = "0ae0d9ec8aa9d8e3d86f630346dcef2267af1d9ca580bd77e9c3dcdfbe7c60e0"
+
+[[exclude]]
+table = "CodeLookup"
+reason = "Lookup routing owns this table; this annotation is inert."

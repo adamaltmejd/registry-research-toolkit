@@ -3,6 +3,7 @@
 from contextlib import closing
 
 import pytest
+from catalog_manifest import synthetic_manifest
 from reg_meta.errors import RegMetaError
 from reg_meta_build.catalog_dependencies import (
     DEFERRED_REFERENCE,
@@ -246,7 +247,7 @@ def test_month_groups_resolve_before_writing_with_ordered_facets(tmp_path):
     path = write_resolved_catalog(
         variables,
         tmp_path / "diagnostic.db",
-        manifest={},
+        manifest=synthetic_manifest(),
         diagnostic=True,
         metadata=ResolvedMetadata(variable_groups=result.groups),
     )
@@ -392,7 +393,7 @@ def test_classification_chains_resolve_before_writing_with_explicit_split(tmp_pa
     path = write_resolved_catalog(
         (_variable(ResolvedVariant(slug="people", name="People")),),
         tmp_path / "diagnostic.db",
-        manifest={},
+        manifest=synthetic_manifest(),
         diagnostic=True,
         classifications=books,
         classification_successions=edges,
@@ -458,7 +459,7 @@ def test_code_label_pair_resolves_without_sql_and_writes_standard_group(tmp_path
     path = write_resolved_catalog(
         variables,
         tmp_path / "diagnostic.db",
-        manifest={},
+        manifest=synthetic_manifest(),
         diagnostic=True,
         metadata=ResolvedMetadata(variable_groups=result.groups),
     )
@@ -782,7 +783,7 @@ def test_panel_withholds_whole_composite_axis_and_preserves_shared_facts(tmp_pat
     path = write_resolved_catalog(
         result.variables,
         tmp_path / "diagnostic.db",
-        manifest={},
+        manifest=synthetic_manifest(),
         diagnostic=True,
         parent_registers=result.registers,
         parent_variants=result.variants,

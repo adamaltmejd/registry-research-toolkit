@@ -1,0 +1,9 @@
+{
+  "args": [
+    "extend-db",
+    "--base-db",
+    "absent",
+    "--providers-dir",
+    "external"
+  ]
+}

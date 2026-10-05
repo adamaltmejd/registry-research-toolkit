@@ -6,6 +6,7 @@ from contextlib import closing
 from typing import TYPE_CHECKING
 
 import pytest
+from catalog_manifest import synthetic_manifest
 from pydantic import ValidationError
 from reg_meta.errors import RegMetaError
 from reg_meta_build.db import open_built_db
@@ -287,7 +288,7 @@ def _write(path: Path, metadata: ResolvedMetadata) -> None:
     write_resolved_catalog(
         (_variable("one"), _variable("two"), _variable("consumer", "sos")),
         path,
-        manifest={},
+        manifest=synthetic_manifest(),
         metadata=metadata,
         classifications=tuple(
             _classification(slug)
@@ -483,7 +484,7 @@ def test_group_members_preserve_case_distinct_declared_columns(tmp_path: Path) -
     write_resolved_catalog(
         (variable,),
         output,
-        manifest={},
+        manifest=synthetic_manifest(),
         metadata=ResolvedMetadata(variable_groups=(group,)),
     )
     with closing(open_built_db(output)) as conn:
@@ -510,7 +511,7 @@ def test_multi_axis_group_can_attach_whole_variables(tmp_path: Path) -> None:
     write_resolved_catalog(
         (_variable("one"), _variable("two")),
         output,
-        manifest={},
+        manifest=synthetic_manifest(),
         metadata=ResolvedMetadata(variable_groups=(group,)),
     )
     with closing(open_built_db(output)) as conn:

@@ -58,7 +58,7 @@ def _stamp_manifest(conn: sqlite3.Connection) -> None:
     ``open_db``'s schema-compat gate (run in the lifespan) passes. The slugged-DB
     DDL has the manifest table; we just fill the two keys the lifespan needs."""
     conn.executemany(
-        "INSERT INTO import_manifest(key, value) VALUES (?, ?)",
+        "INSERT OR REPLACE INTO import_manifest(key, value) VALUES (?, ?)",
         [
             ("schema_version", FIXTURE_SCHEMA_VERSION),
             ("import_date", FIXTURE_IMPORT_DATE),

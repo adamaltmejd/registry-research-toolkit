@@ -50,7 +50,6 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass, field
 from datetime import date
-from enum import StrEnum
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
@@ -65,12 +64,6 @@ from reg_meta_build.db import (
     PROVIDER_ID_SOS,
 )
 from reg_meta_build.id import _MINT_BIT, is_canonical_scb
-from reg_meta_build.inventory_coverage import (
-    coverage_misses,
-    errata_stanzas,
-    miss_line,
-    skipped_tables_line,
-)
 from reg_meta_build.relations import (
     _REPLACED_BY_NOTE_VINTAGE_LIFT,
     _variable_vintage_stream_key,
@@ -89,7 +82,6 @@ _GLOBAL_NONSCB_PROVIDER_IDS: tuple[int, ...] = tuple(
 if TYPE_CHECKING:
     import sqlite3
 
-    from reg_meta.inventory import DeliveryInventory
 
 LineKind = Literal["section", "ok", "fail", "info", "block"]
 
@@ -155,16 +147,6 @@ class ValidationResult:
         return "\n".join(parts)
 
 
-class HoldingsGate(StrEnum):
-    """Stands in for a holdings statement when ``extend-db --skip-holdings-gate``
-    turned the steward-holdings gate off (Y-124) — the operator's explicit refusal,
-    distinct from ``None`` (a build with no holdings statement at all: the global
-    build, synthetic CI). One three-state parameter rather than an inventory plus a
-    skip flag, so "an inventory AND a skip" cannot be handed to the gate."""
-
-    SKIPPED = "skipped"
-
-
 def validate_built_db(
     db_path: Path,
     *,
@@ -172,7 +154,6 @@ def validate_built_db(
     flavored: bool = False,
     bootstrap: bool = False,
     slug_dir: Path | None = None,
-    delivery_inventory: DeliveryInventory | HoldingsGate | None = None,
 ) -> ValidationResult:
     """Run the build invariants against ``db_path``.
 
@@ -230,16 +211,6 @@ def validate_built_db(
     of scope (validated at global build, and ``_variable_source_ids`` is unsafe on
     a flavored DB for global registers).
 
-    ``delivery_inventory`` (Y-115) is the steward's loaded §12 holdings statement
-    (``reg_webapp/stewards/<steward>/inventory.toml``); it feeds
-    ``_check_inventory_window_coverage``, which fails the build when a column the
-    steward HOLDS in a single-period table edition has no covering state or alias
-    window on its coordinate. Multi-period range/list tables are reported but not
-    assessed: their record spans are not column-availability evidence. ``None``
-    (the default, used by synthetic CI and the global build) SKIPS that gate —
-    there is no holdings statement to contradict; the
-    ``extend-db`` CLI resolves and loads it once, the way it does ``slug_dir``.
-    ``HoldingsGate.SKIPPED`` also skips it, and says the flag did it.
     """
     db_path = Path(db_path)
     if not db_path.exists():
@@ -299,7 +270,23 @@ def validate_built_db(
             conn, result, tables, corpus=corpus, bootstrap=bootstrap
         )
         _check_representation_replaced_by(conn, result, tables, corpus=corpus)
-        _check_inventory_window_coverage(conn, result, tables, delivery_inventory)
+        result.section("[compiled holdings]")
+        from .holdings_validation import validate_compiled_holdings
+
+        if {
+            "holding_table",
+            "holding_period",
+            "holding_column",
+            "holding_mapping",
+        } <= tables:
+            try:
+                validate_compiled_holdings(conn)
+            except (ValueError, KeyError, TypeError) as exc:
+                result.fail(str(exc))
+            else:
+                result.ok("physical holdings and generation identity valid")
+        else:
+            result.fail("compiled holding relations missing")
         _check_operational(conn, result)
     finally:
         conn.close()
@@ -326,7 +313,14 @@ def _check_schema_shape(
     conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
 ) -> None:
     result.section("[schema]")
-    for required in ("value_set", "value_set_member"):
+    for required in (
+        "value_set",
+        "value_set_member",
+        "holding_table",
+        "holding_period",
+        "holding_column",
+        "holding_mapping",
+    ):
         if required in tables:
             result.ok(f"{required} present")
         else:
@@ -2851,110 +2845,6 @@ def _check_representation_replaced_by(
         "SELECT COUNT(*) FROM representation_replaced_by"
     ).fetchone()[0]
     result.info(f"{n_edges} representation succession edge(s)")
-
-
-# How many (register, variant, column) groups the report spells out in full.
-# Beyond it the count stands in and `build_catalog.py errata` writes the rest:
-# a red gate on a stale inventory can name thousands of groups, and a stderr
-# report nobody scrolls to the end of is not a repair instruction.
-_MISS_REPORT_CAP = 10
-
-
-def _check_inventory_window_coverage(
-    conn: sqlite3.Connection,
-    result: ValidationResult,
-    tables: set[str],
-    delivery_inventory: DeliveryInventory | HoldingsGate | None,
-) -> None:
-    """Y-115/Y-126: every column the steward HOLDS in a single-period table
-    edition must have a covering ``variable_state`` or ``variable_alias_window``
-    on its coordinate. Multi-period tables are not availability evidence and are
-    reported without being assessed.
-
-    A flavor DB that contradicts the steward's own §12 holdings statement must not
-    ship: `catalog_index` admits an explicit ``representation`` over the table's
-    whole edition and `reg_meta.inventory_check` only asks whether the coordinate
-    EXISTS, so the contradiction survives every other gate and surfaces as the
-    RESEARCHER's ``period_outside_state_validity`` on data the steward has. The
-    repair for an SCB-export variable is upstream-grained — SCB omitted the row
-    from its own export — so the report includes a ``[[errata.delivered]]`` naming the
-    omitted ``Registerversionnamn``. A variable minted from ``[[errata.column]]`` has no
-    real row to clone, so its fail line directs the curator back to that entry and
-    mapping instead. Independently missing editions still contribute a preceding
-    ``[[errata.version]]``. A miss on ANY OTHER provider stays out of the stanza block —
-    that file corrects SCB's export only and its loader refuses another provider —
-    and its fail line names the curated surface its window is widened on instead.
-    See `inventory_coverage` for the reading rules.
-
-    ``delivery_inventory is None`` (synthetic CI, the global build) SKIPS the gate:
-    with no holdings statement there is nothing to contradict.
-    ``HoldingsGate.SKIPPED`` skips it too, and names the flag that asked for it.
-    """
-    result.section("[inventory: steward holdings have a catalog window]")
-    if delivery_inventory is HoldingsGate.SKIPPED:
-        result.ok(
-            "steward-holdings gate skipped — --skip-holdings-gate "
-            "(the flavor ships unchecked against the steward's holdings)"
-        )
-        return
-    if delivery_inventory is None:
-        result.ok("no delivery inventory given — steward-holdings gate skipped")
-        return
-    if not {"variable_state", "variable_alias_window"}.issubset(tables):
-        result.ok("variable_state / variable_alias_window absent — gate skipped")
-        return
-    report = coverage_misses(conn, delivery_inventory)
-    if report.skipped_tables:
-        result.info(skipped_tables_line(report.skipped_tables))
-    if report.unresolved:
-        result.info(
-            f"{report.unresolved:,} mapping(s) not judged — their coordinate "
-            "resolves to nothing (reg_meta.inventory_check's finding; regenerate "
-            "the inventory against this DB)"
-        )
-    if not report.misses:
-        result.ok(
-            f"all {report.pairs:,} held column × edition pair(s) assessed have a "
-            "covering state or alias window"
-        )
-        return
-    shown = report.misses[:_MISS_REPORT_CAP]
-    for miss in shown:
-        result.fail(miss_line(miss))
-    if len(report.misses) > len(shown):
-        result.info(
-            f"... and {len(report.misses) - len(shown):,} more "
-            "(register, variant, column) group(s)"
-        )
-    result.info(
-        f"{report.missed_pairs:,} held column × edition pair(s) in "
-        f"{len(report.misses):,} group(s) have no catalog window, "
-        f"out of {report.pairs:,} assessed"
-    )
-    result.info(
-        "`python input_data/swecov/build_catalog.py --db <flavored-db> errata` "
-        "writes every group as a worklist: loadable SCB candidates first, then "
-        "errata-column and curated-window inspection items. Never answer this gate "
-        "by skipping validation: the flavor would ship contradicting the steward's "
-        "holdings."
-    )
-    curated = report.curated_misses
-    if curated:
-        result.info(
-            f"{len(curated):,} group(s) are NOT on the `scb` provider and are NOT "
-            "errata: curation/registers/scb/<slug>.toml corrects SCB's own export and its loader "
-            "refuses another provider, so each of those lines names the curated "
-            "surface its window comes from — widen it there and rebuild."
-        )
-    stanzas = errata_stanzas(shown)
-    if stanzas:
-        result.info(
-            "curate each SCB omission in its named reg_meta_build/curation/registers/scb/<slug>.toml "
-            "file — the grouped `[[errata.*]]` candidates below include their target file, but `evidence` and "
-            "`noted` are TODO placeholders only the maintainer can fill (the loader "
-            "refuses a placeholder `noted`, so an uncurated paste cannot ship)."
-        )
-        result.block(stanzas)
 
 
 def _check_operational(conn: sqlite3.Connection, result: ValidationResult) -> None:

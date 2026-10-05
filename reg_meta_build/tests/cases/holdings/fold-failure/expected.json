@@ -1,0 +1,6 @@
+{
+  "error_contains": "is not a resolver-emitted delivery column",
+  "error_locators": [
+    "policy/inventory.toml:table['BadFold'].column['Observed'].mapping[0]"
+  ]
+}

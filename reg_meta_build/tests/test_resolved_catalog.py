@@ -8,6 +8,7 @@ from contextlib import closing
 from typing import TYPE_CHECKING
 
 import pytest
+from catalog_manifest import synthetic_manifest
 from pydantic import ValidationError
 from reg_meta.db import CLASSIFICATION_SUCCESSION_AS_OF_YEAR
 from reg_meta.errors import RegMetaError
@@ -90,7 +91,7 @@ def test_delivery_names_and_descriptions_survive_without_common_text(tmp_path: P
         ).model_dump()
     )
     output = tmp_path / "catalog.db"
-    write_resolved_catalog((variable,), output, manifest={})
+    write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
     assert validate_built_db(output, corpus=False).passed
     with closing(open_built_db(output)) as conn:
         row = conn.execute("SELECT name, description FROM variable").fetchone()
@@ -128,7 +129,7 @@ def test_independent_parent_metadata_survives_without_variables_or_editions(
     write_resolved_catalog(
         (_variable(),),
         output,
-        manifest={},
+        manifest=synthetic_manifest(),
         diagnostic=True,
         parent_registers=(other,),
         parent_variants=((register, variant),),
@@ -156,13 +157,13 @@ def test_conflicting_independent_parents_fail_before_replacing_output(
 ) -> None:
     variable = _variable()
     output = tmp_path / "catalog.db"
-    write_resolved_catalog((variable,), output, manifest={})
+    write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
     before = output.read_bytes()
     with pytest.raises(ValueError, match=f"inconsistent resolved parent {kind}"):
         write_resolved_catalog(
             (variable,),
             output,
-            manifest={},
+            manifest=synthetic_manifest(),
             parent_registers=(
                 variable.register_ref.model_copy(update={"name": "Conflict"}),
             )
@@ -200,7 +201,9 @@ def test_catalog_graph_fts_and_structural_validation(
     )
     output = tmp_path / "reg_meta.db"
     assert (
-        write_resolved_catalog((variable,), output, manifest={"input": "fixture"})
+        write_resolved_catalog(
+            (variable,), output, manifest=synthetic_manifest() | {"input": "fixture"}
+        )
         == output
     )
     validation = validate_built_db(output, corpus=False)
@@ -255,14 +258,18 @@ def test_catalog_graph_fts_and_structural_validation(
 def test_rerun_is_byte_identical_regardless_of_input_order(tmp_path: Path) -> None:
     variables = (_variable(), _variable("sos"))
     output = tmp_path / "reg_meta.db"
-    write_resolved_catalog(variables, output, manifest={"z": "last", "a": "first"})
+    write_resolved_catalog(
+        variables, output, manifest=synthetic_manifest() | {"z": "last", "a": "first"}
+    )
     original = output.read_bytes()
     reversed_variables = tuple(
         v.model_copy(update={"states": tuple(reversed(v.states))})
         for v in reversed(variables)
     )
     write_resolved_catalog(
-        reversed_variables, output, manifest={"a": "first", "z": "last"}
+        reversed_variables,
+        output,
+        manifest=synthetic_manifest() | {"a": "first", "z": "last"},
     )
     assert output.read_bytes() == original
     assert output.with_name("reg_meta.db.prev").read_bytes() == original
@@ -275,7 +282,9 @@ def test_curation_manifest_hashes_require_lowercase_sha256(
 ) -> None:
     output = tmp_path / "reg_meta.db"
     with pytest.raises(ValueError, match=f"manifest {key} must be a lowercase SHA-256"):
-        write_resolved_catalog((_variable(),), output, manifest={key: digest})
+        write_resolved_catalog(
+            (_variable(),), output, manifest=synthetic_manifest() | {key: digest}
+        )
     assert not output.exists()
 
 
@@ -311,7 +320,7 @@ def test_resolved_metadata_is_written_without_source_inference(tmp_path: Path) -
         }
     )
     output = tmp_path / "reg_meta.db"
-    write_resolved_catalog((variable,), output, manifest={})
+    write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
     with closing(open_built_db(output)) as conn:
         assert (
             conn.execute(
@@ -367,7 +376,9 @@ def test_edition_prose_population_and_object_types_do_not_change_state_periods(
         ),
     )
     output = tmp_path / "reg_meta.db"
-    write_resolved_catalog((variable,), output, manifest={}, editions=(edition,))
+    write_resolved_catalog(
+        (variable,), output, manifest=synthetic_manifest(), editions=(edition,)
+    )
     original = output.read_bytes()
     with closing(open_built_db(output)) as conn:
         assert tuple(
@@ -408,7 +419,7 @@ def test_edition_prose_population_and_object_types_do_not_change_state_periods(
     write_resolved_catalog(
         (variable,),
         output,
-        manifest={},
+        manifest=synthetic_manifest(),
         editions=(
             edition.model_copy(
                 update={"populations": tuple(reversed(edition.populations))}
@@ -453,7 +464,9 @@ def test_inconsistent_edition_metadata_preserves_previous_catalog(
     output = tmp_path / "existing.db"
     output.write_bytes(b"previous")
     with pytest.raises(ValueError, match="inconsistent|duplicate"):
-        write_resolved_catalog((variable,), output, manifest={}, editions=editions)
+        write_resolved_catalog(
+            (variable,), output, manifest=synthetic_manifest(), editions=editions
+        )
     assert output.read_bytes() == b"previous"
 
 
@@ -533,7 +546,7 @@ def test_classifications_and_explicit_conformance_are_written_exactly(
     write_resolved_catalog(
         (variable,),
         output,
-        manifest={},
+        manifest=synthetic_manifest(),
         classifications=(classification, predecessor),
         classification_successions=(succession,),
     )
@@ -608,7 +621,7 @@ def test_classifications_and_explicit_conformance_are_written_exactly(
     write_resolved_catalog(
         (variable,),
         output,
-        manifest={},
+        manifest=synthetic_manifest(),
         classifications=(predecessor, classification),
         classification_successions=(succession,),
     )
@@ -665,7 +678,10 @@ def test_bad_classification_references_or_membership_preserve_previous_catalog(
     output.write_bytes(b"previous")
     with pytest.raises(ValueError, match="classification|conformance"):
         write_resolved_catalog(
-            (variable,), output, manifest={}, classifications=classifications
+            (variable,),
+            output,
+            manifest=synthetic_manifest(),
+            classifications=classifications,
         )
     assert output.read_bytes() == b"previous"
 
@@ -689,7 +705,7 @@ def test_cyclic_classification_succession_preserves_previous_catalog(
         write_resolved_catalog(
             (_variable(),),
             output,
-            manifest={},
+            manifest=synthetic_manifest(),
             classifications=(first, second),
             classification_successions=edges,
         )
@@ -720,7 +736,7 @@ def test_classification_predecessor_is_a_deterministic_projection_of_active_edge
     write_resolved_catalog(
         (_variable(),),
         output,
-        manifest={},
+        manifest=synthetic_manifest(),
         classifications=books,
         classification_successions=edges,
     )
@@ -746,7 +762,7 @@ def test_classification_predecessor_is_a_deterministic_projection_of_active_edge
     write_resolved_catalog(
         (_variable(),),
         output,
-        manifest={},
+        manifest=synthetic_manifest(),
         classifications=tuple(reversed(books)),
         classification_successions=tuple(reversed(edges)),
     )
@@ -769,7 +785,7 @@ def test_invalid_classification_edges_fail_before_creating_output(
         write_resolved_catalog(
             (_variable(),),
             tmp_path / "diagnostic.db",
-            manifest={},
+            manifest=synthetic_manifest(),
             diagnostic=True,
             classifications=(_classification("before"), _classification("after")),
             classification_successions=edges,
@@ -794,7 +810,7 @@ def test_alias_windows_and_historical_search_aliases_are_explicit(
     )
     variable = variable.model_copy(update={"aliases": aliases})
     output = tmp_path / "reg_meta.db"
-    write_resolved_catalog((variable,), output, manifest={})
+    write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
     original = output.read_bytes()
     with closing(open_built_db(output)) as conn:
         rows = conn.execute(
@@ -813,7 +829,7 @@ def test_alias_windows_and_historical_search_aliases_are_explicit(
     write_resolved_catalog(
         (variable.model_copy(update={"aliases": tuple(reversed(aliases))}),),
         output,
-        manifest={},
+        manifest=synthetic_manifest(),
     )
     assert output.read_bytes() == original
 
@@ -835,7 +851,7 @@ def test_parallel_resolved_columns_keep_distinct_coding_states(
     )
     variable = variable.model_copy(update={"states": states})
     output = tmp_path / "reg_meta.db"
-    write_resolved_catalog((variable,), output, manifest={})
+    write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
     with closing(open_built_db(output)) as conn:
         rows = conn.execute(
             "SELECT value_set_version_label FROM variable_state ORDER BY value_set_version_label"
@@ -858,7 +874,7 @@ def test_parallel_resolved_columns_keep_distinct_coding_states(
     )
     previous = output.read_bytes()
     with pytest.raises(ValueError, match="overlapping distinct-value_set"):
-        write_resolved_catalog((conflicting,), output, manifest={})
+        write_resolved_catalog((conflicting,), output, manifest=synthetic_manifest())
     assert output.read_bytes() == previous
 
 
@@ -896,12 +912,12 @@ def test_formation_attributes_exactly_the_column_overlaps_the_writer_refuses(
     output = tmp_path / "reg_meta.db"
     if code is None:
         assert overlaps == ()
-        write_resolved_catalog((variable,), output, manifest={})
+        write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
         return
     ((found, message),) = overlaps
     assert found == code
     with pytest.raises(ValueError) as failure:
-        write_resolved_catalog((variable,), output, manifest={})
+        write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
     assert message.split(": ")[0] in str(failure.value)
 
 
@@ -925,7 +941,7 @@ def test_conflicting_alias_windows_fail_before_output(tmp_path: Path) -> None:
         write_resolved_catalog(
             (variable.model_copy(update={"aliases": (malformed,)}),),
             output,
-            manifest={},
+            manifest=synthetic_manifest(),
         )
     assert not output.exists()
 
@@ -938,7 +954,7 @@ def test_flags_preserve_explicit_booleans(
         update={"is_sensitive": sensitive, "is_identifier": identifier}
     )
     output = tmp_path / "reg_meta.db"
-    write_resolved_catalog((variable,), output, manifest={})
+    write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
     with closing(open_built_db(output)) as conn:
         row = conn.execute(
             "SELECT is_sensitive, is_identifier FROM variable"
@@ -957,7 +973,9 @@ def test_unknown_flags_are_preserved_as_evidence_but_refused_by_writer(
     with pytest.raises(ValueError, match=f"unknown flags.*{field}"):
         validate_resolved_variables((variable,))
     with pytest.raises(ValueError, match=f"unknown flags.*{field}"):
-        write_resolved_catalog((variable,), output, manifest={}, diagnostic=diagnostic)
+        write_resolved_catalog(
+            (variable,), output, manifest=synthetic_manifest(), diagnostic=diagnostic
+        )
     assert not output.exists()
 
 
@@ -965,10 +983,12 @@ def test_diagnostic_artifact_is_create_only_and_builder_cannot_publish_it(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     normal = tmp_path / "reg_meta.db"
-    write_resolved_catalog((_variable(),), normal, manifest={})
+    write_resolved_catalog((_variable(),), normal, manifest=synthetic_manifest())
     original = normal.read_bytes()
     diagnostic = tmp_path / "diagnostic.db"
-    write_resolved_catalog((_variable(),), diagnostic, manifest={}, diagnostic=True)
+    write_resolved_catalog(
+        (_variable(),), diagnostic, manifest=synthetic_manifest(), diagnostic=True
+    )
     diagnostic_bytes = diagnostic.read_bytes()
     with pytest.raises(RegMetaError) as rejected:
         publish_db(diagnostic, normal)
@@ -979,13 +999,19 @@ def test_diagnostic_artifact_is_create_only_and_builder_cannot_publish_it(
     for destination in (normal, diagnostic):
         with pytest.raises(ValueError, match="new explicit path"):
             write_resolved_catalog(
-                (_variable(),), destination, manifest={}, diagnostic=True
+                (_variable(),),
+                destination,
+                manifest=synthetic_manifest(),
+                diagnostic=True,
             )
     active = tmp_path / "absent-active"
     monkeypatch.setenv("REG_META_DB", str(active))
     with pytest.raises(ValueError, match="new explicit path"):
         write_resolved_catalog(
-            (_variable(),), active / "reg_meta.db", manifest={}, diagnostic=True
+            (_variable(),),
+            active / "reg_meta.db",
+            manifest=synthetic_manifest(),
+            diagnostic=True,
         )
     assert not active.exists()
 
@@ -1002,7 +1028,9 @@ def test_diagnostic_structural_failure_never_completes(
     monkeypatch.setattr(resolved_catalog, "validate_built_db", failed_validation)
     output = tmp_path / "diagnostic.db"
     with pytest.raises(ValueError, match="synthetic structural failure"):
-        write_resolved_catalog((_variable(),), output, manifest={}, diagnostic=True)
+        write_resolved_catalog(
+            (_variable(),), output, manifest=synthetic_manifest(), diagnostic=True
+        )
     assert not output.exists()
 
 
@@ -1019,7 +1047,9 @@ def test_diagnostic_publication_cannot_overwrite_a_racing_destination(
 
     monkeypatch.setattr(resolved_catalog, "validate_built_db", competing_publication)
     with pytest.raises(FileExistsError):
-        write_resolved_catalog((_variable(),), output, manifest={}, diagnostic=True)
+        write_resolved_catalog(
+            (_variable(),), output, manifest=synthetic_manifest(), diagnostic=True
+        )
     assert output.read_bytes() == b"published concurrently"
     assert sorted(path.name for path in tmp_path.iterdir()) == ["diagnostic.db"]
 
@@ -1030,13 +1060,13 @@ def test_malformed_flags_fail_shared_preflight_before_publication(
     tmp_path: Path, field: str, value: int | str
 ) -> None:
     output = tmp_path / "reg_meta.db"
-    write_resolved_catalog((_variable(),), output, manifest={})
+    write_resolved_catalog((_variable(),), output, manifest=synthetic_manifest())
     original = output.read_bytes()
     variable = _variable().model_copy(update={field: value})
     with pytest.raises(ValidationError, match=field):
         validate_resolved_variables((variable,))
     with pytest.raises(ValidationError, match=field):
-        write_resolved_catalog((variable,), output, manifest={})
+        write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
     assert output.read_bytes() == original
     assert sorted(p.name for p in tmp_path.iterdir()) == ["reg_meta.db"]
 
@@ -1056,7 +1086,7 @@ def test_documented_codes_do_not_require_known_physical_type(tmp_path: Path) -> 
     )
     variable = _variable().model_copy(update={"states": (state, _state(2002))})
     output = tmp_path / "reg_meta.db"
-    write_resolved_catalog((variable,), output, manifest={})
+    write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
     with closing(open_built_db(output)) as conn:
         state = conn.execute(
             "SELECT * FROM variable_state WHERE valid_from='2000-01-01'"
@@ -1108,7 +1138,7 @@ def test_shared_memberships_have_stable_ids_and_deterministic_replay(
         for provider in ("scb", "sos")
     )
     output = tmp_path / "reg_meta.db"
-    write_resolved_catalog(variables, output, manifest={})
+    write_resolved_catalog(variables, output, manifest=synthetic_manifest())
     original = output.read_bytes()
     with closing(open_built_db(output)) as conn:
         assert conn.execute("SELECT count(*) FROM value_set").fetchone()[0] == 1
@@ -1142,7 +1172,7 @@ def test_shared_memberships_have_stable_ids_and_deterministic_replay(
         )
         for variable in reversed(variables)
     )
-    write_resolved_catalog(reordered, output, manifest={})
+    write_resolved_catalog(reordered, output, manifest=synthetic_manifest())
     assert output.read_bytes() == original
     # Adding an unrelated membership cannot renumber an existing content ID.
     other = _variable(slug="other").model_copy(
@@ -1154,7 +1184,7 @@ def test_shared_memberships_have_stable_ids_and_deterministic_replay(
             )
         }
     )
-    write_resolved_catalog((other, *variables), output, manifest={})
+    write_resolved_catalog((other, *variables), output, manifest=synthetic_manifest())
     with closing(open_built_db(output)) as conn:
         ids = conn.execute(
             "SELECT DISTINCT state.value_set_id FROM variable_state state "
@@ -1182,7 +1212,7 @@ def test_distinct_memberships_and_changed_labels_remain_distinct(
         }
     )
     output = tmp_path / "reg_meta.db"
-    write_resolved_catalog((variable,), output, manifest={})
+    write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
     with closing(open_built_db(output)) as conn:
         states = conn.execute(
             "SELECT value_set_id FROM variable_state ORDER BY valid_from"
@@ -1210,7 +1240,7 @@ def test_malformed_memberships_fail_shared_preflight_and_preserve_catalog(
     tmp_path: Path, members: tuple
 ) -> None:
     output = tmp_path / "reg_meta.db"
-    write_resolved_catalog((_variable(),), output, manifest={})
+    write_resolved_catalog((_variable(),), output, manifest=synthetic_manifest())
     original = output.read_bytes()
     malformed = ResolvedCodeSet(members=(("01", "Label"),)).model_copy(
         update={"members": members}
@@ -1221,7 +1251,7 @@ def test_malformed_memberships_fail_shared_preflight_and_preserve_catalog(
     with pytest.raises(ValidationError):
         validate_resolved_variables((variable,))
     with pytest.raises(ValidationError):
-        write_resolved_catalog((variable,), output, manifest={})
+        write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
     assert output.read_bytes() == original
     assert sorted(p.name for p in tmp_path.iterdir()) == ["reg_meta.db"]
 
@@ -1261,7 +1291,7 @@ def test_identity_and_state_ambiguity_are_rejected() -> None:
 def test_conflicts_preserve_previous_catalog(tmp_path: Path, conflict: str) -> None:
     output = tmp_path / "reg_meta.db"
     variable = _variable()
-    write_resolved_catalog((variable,), output, manifest={})
+    write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
     original = output.read_bytes()
     other = _variable(slug="another")
     metadata = {}
@@ -1318,7 +1348,7 @@ def test_failed_validation_preserves_previous_catalog(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, corpus: bool
 ) -> None:
     output = tmp_path / "reg_meta.db"
-    write_resolved_catalog((_variable(),), output, manifest={})
+    write_resolved_catalog((_variable(),), output, manifest=synthetic_manifest())
     original = output.read_bytes()
 
     expected_corpus = corpus
@@ -1333,7 +1363,9 @@ def test_failed_validation_preserves_previous_catalog(
 
     monkeypatch.setattr(resolved_catalog, "validate_built_db", fail_validation)
     with pytest.raises(ValueError, match="synthetic publication gate failure"):
-        write_resolved_catalog((_variable("sos"),), output, manifest={}, corpus=corpus)
+        write_resolved_catalog(
+            (_variable("sos"),), output, manifest=synthetic_manifest(), corpus=corpus
+        )
     assert output.read_bytes() == original
     assert sorted(p.name for p in tmp_path.iterdir()) == ["reg_meta.db"]
 
@@ -1370,7 +1402,7 @@ def test_year_independent_writer_preserves_null_bounds_and_guards_scope_mixing(
     )
     variable = _variable().model_copy(update={"states": (independent,)})
     output = tmp_path / "independent.db"
-    write_resolved_catalog((variable,), output, manifest={})
+    write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
     with closing(open_built_db(output)) as connection:
         assert tuple(
             connection.execute(
@@ -1382,7 +1414,9 @@ def test_year_independent_writer_preserves_null_bounds_and_guards_scope_mixing(
         with pytest.raises(
             ValidationError, match="(duplicate year-independent|mixed dated)"
         ):
-            write_resolved_catalog((bad,), tmp_path / "bad.db", manifest={})
+            write_resolved_catalog(
+                (bad,), tmp_path / "bad.db", manifest=synthetic_manifest()
+            )
     with pytest.raises(ValidationError, match="dated alias windows"):
         write_resolved_catalog(
             (
@@ -1403,7 +1437,7 @@ def test_year_independent_writer_preserves_null_bounds_and_guards_scope_mixing(
                 ),
             ),
             tmp_path / "bad-alias.db",
-            manifest={},
+            manifest=synthetic_manifest(),
         )
 
 
@@ -1448,7 +1482,9 @@ def test_scoped_sentinel_certificate_keeps_local_member_without_changing_book(
 ) -> None:
     variable, book = _scoped_sentinel_variable()
     output = tmp_path / "reg_meta.db"
-    write_resolved_catalog((variable,), output, manifest={}, classifications=(book,))
+    write_resolved_catalog(
+        (variable,), output, manifest=synthetic_manifest(), classifications=(book,)
+    )
     with closing(open_built_db(output)) as conn:
         assert tuple(
             conn.execute(
@@ -1512,7 +1548,7 @@ def test_state_conformance_preserves_global_sentinel_meaning_and_substantive_ext
     write_resolved_catalog(
         (_variable().model_copy(update={"states": (state,)}),),
         output,
-        manifest={},
+        manifest=synthetic_manifest(),
         classifications=(book,),
     )
     with closing(open_built_db(output)) as conn:
@@ -1533,7 +1569,9 @@ def test_stored_scoped_sentinel_wrong_window_is_rejected(tmp_path: Path) -> None
 
     variable, book = _scoped_sentinel_variable()
     output = tmp_path / "reg_meta.db"
-    write_resolved_catalog((variable,), output, manifest={}, classifications=(book,))
+    write_resolved_catalog(
+        (variable,), output, manifest=synthetic_manifest(), classifications=(book,)
+    )
     with closing(sqlite3.connect(output)) as conn:
         payload = json.loads(
             conn.execute(
@@ -1599,7 +1637,7 @@ def test_scoped_sentinel_certificate_tampering_is_refused_before_publish(
         ValueError, match="scoped sentinel certificate|conformance disagrees"
     ):
         write_resolved_catalog(
-            (variable,), output, manifest={}, classifications=(book,)
+            (variable,), output, manifest=synthetic_manifest(), classifications=(book,)
         )
     assert output.read_bytes() == b"previous"
 
@@ -1661,7 +1699,10 @@ def test_data_warnings_persist_exact_ownership_without_inventing_scope(tmp_path:
     )
     output = tmp_path / "reg_meta.db"
     write_resolved_catalog(
-        (_variable(),), output, manifest={}, data_warnings=(warning, unscoped)
+        (_variable(),),
+        output,
+        manifest=synthetic_manifest(),
+        data_warnings=(warning, unscoped),
     )
     with closing(open_built_db(output)) as conn:
         rows = conn.execute("SELECT * FROM data_warning ORDER BY warning_id").fetchall()
@@ -1715,7 +1756,7 @@ def test_data_warnings_persist_exact_ownership_without_inventing_scope(tmp_path:
         write_resolved_catalog(
             (_variable().model_copy(update={"states": (state,)}),),
             candidate,
-            manifest={},
+            manifest=synthetic_manifest(),
             data_warnings=(warning, unscoped),
         )
         with closing(open_built_db(candidate)) as conn:
@@ -1732,7 +1773,7 @@ def test_data_warnings_persist_exact_ownership_without_inventing_scope(tmp_path:
         write_resolved_catalog(
             (_variable(),),
             tmp_path / "tampered.db",
-            manifest={},
+            manifest=synthetic_manifest(),
             data_warnings=(warning.model_copy(update={"detail": "Changed"}),),
         )
 
@@ -1934,7 +1975,7 @@ def test_incomplete_classification_partition_preserves_previous_catalog(
         write_resolved_catalog(
             (variable.model_copy(update={"states": (state,)}),),
             output,
-            manifest={},
+            manifest=synthetic_manifest(),
             classifications=(book,),
         )
     assert output.read_bytes() == b"previous"
@@ -1982,7 +2023,9 @@ def test_classified_alias_keeps_own_domain_and_book_without_backing_inheritance(
 ):
     variable, book = _classified_alias_variable()
     output = tmp_path / "alias.db"
-    write_resolved_catalog((variable,), output, manifest={}, classifications=(book,))
+    write_resolved_catalog(
+        (variable,), output, manifest=synthetic_manifest(), classifications=(book,)
+    )
     with closing(open_built_db(output)) as conn:
         row = conn.execute(
             "SELECT a.delivery_column_name, c.slug, a.conformance FROM alias_window_classification a JOIN classification c ON c.id=a.classification_id"
@@ -2012,7 +2055,9 @@ def test_alias_conformance_sql_boundary_rejects_tampering(tmp_path, defect):
 
     variable, book = _classified_alias_variable()
     output = tmp_path / "alias.db"
-    write_resolved_catalog((variable,), output, manifest={}, classifications=(book,))
+    write_resolved_catalog(
+        (variable,), output, manifest=synthetic_manifest(), classifications=(book,)
+    )
     with closing(sqlite3.connect(output)) as conn:
         conn.execute("PRAGMA foreign_keys=OFF")
         if defect == "missing_alias":
@@ -2088,6 +2133,6 @@ def test_alias_scoped_certificate_book_fingerprint_is_checked_before_writing(tmp
     output = tmp_path / "bad-certificate.db"
     with pytest.raises(ValueError, match="scoped sentinel certificate"):
         write_resolved_catalog(
-            (variable,), output, manifest={}, classifications=(book,)
+            (variable,), output, manifest=synthetic_manifest(), classifications=(book,)
         )
     assert not output.exists()
