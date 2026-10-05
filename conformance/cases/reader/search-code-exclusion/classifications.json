@@ -1,0 +1,35 @@
+[
+  {
+    "slug": "excluded-a",
+    "short_name": "A",
+    "name": "Excluded A",
+    "codes": [
+      {
+        "code": "C12",
+        "label": "Shared code"
+      }
+    ]
+  },
+  {
+    "slug": "excluded-b",
+    "short_name": "B",
+    "name": "Excluded B",
+    "codes": [
+      {
+        "code": "C12",
+        "label": "Shared code"
+      }
+    ]
+  },
+  {
+    "slug": "code-owner",
+    "short_name": "C",
+    "name": "Code owner",
+    "codes": [
+      {
+        "code": "C12",
+        "label": "Shared code"
+      }
+    ]
+  }
+]

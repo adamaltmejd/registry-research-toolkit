@@ -1,0 +1,64 @@
+[
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "punct",
+      "name": "Punctuation fixture"
+    },
+    "slug": "brutto",
+    "provider_key": "1",
+    "name": "Brutto",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "9999-12-31",
+        "delivery_column_name": "Brutto",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "punct",
+      "name": "Punctuation fixture"
+    },
+    "slug": "netto",
+    "provider_key": "2",
+    "name": "Netto",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "9999-12-31",
+        "delivery_column_name": "Netto",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  }
+]

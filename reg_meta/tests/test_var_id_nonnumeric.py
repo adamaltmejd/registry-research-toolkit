@@ -30,11 +30,11 @@ from typing import TYPE_CHECKING
 
 import pytest
 from reg_meta.queries import (
-    _SCB_ID_CEILING,
     get_varinfo,
     search,
     search_variables_by_classification,
 )
+from search_test_support import reader_search_conn
 
 sys.path.insert(
     0, str(Path(__file__).resolve().parents[2] / "reg_meta_build" / "tests")
@@ -61,10 +61,10 @@ _MIXED_KEY = "44abc"  # leading-digit-but-not-pure-digit (non-SCB, high band)
 _DIGIT_KEY = "2020"  # PURE-digit but non-SCB (high band) — the band guard's edge
 # over the old digit guard (which would have leaked `2020`)
 
-# Minted-id band base for the fixture: the production `_SCB_ID_CEILING`
-# (SCB variable_id < it, non-SCB >= it). `test_band_constant_in_sync_with_build`
-# guards that this mirrors reg_meta_build.id._MINT_BIT across the build/runtime
-# boundary, so the fixture never carries its own divergent literal.
+# Minted-id band base for the fixture (SCB variable_id < it, non-SCB >= it).
+# `test_pipeline_built_non_scb_variable_reports_no_var_id` ties the builder's
+# minted band to the reader's through a pipeline-built artifact.
+_SCB_ID_CEILING = 2**62
 
 
 def _insert_variable(
@@ -296,16 +296,18 @@ def test_none_var_id_renders_blank_not_none() -> None:
     assert "44" in listed
 
 
-def test_band_constant_in_sync_with_build() -> None:
-    # The var_id band boundary is duplicated by design across the build/runtime
-    # boundary (reg_meta can't import build-only code at runtime), so only this
-    # test ties the two literals together. Importing _MINT_BIT here is fine — a
-    # test is dev-time, not the runtime boundary id.py's docstring protects.
-    from reg_meta_build.id import _MINT_BIT
+def test_pipeline_built_non_scb_variable_reports_no_var_id(
+    tmp_path_factory: pytest.TempPathFactory,
+) -> None:
+    # The builder mints every non-SCB id in the high band and the reader's var_id
+    # band reads it as non-SCB, so a SOS variable whose provider_key is the
+    # digit-only `2020` reports no var_id while the SCB `44` keeps its integer.
+    # Either side moving its band boundary alone leaks `2020` as a var_id.
+    conn = reader_search_conn(tmp_path_factory, "var-id-bands")
 
-    assert _SCB_ID_CEILING == _MINT_BIT, (
-        "var_id band constant drift: "
-        f"reg_meta/queries.py::_SCB_ID_CEILING ({_SCB_ID_CEILING}) != "
-        f"reg_meta_build/id.py::_MINT_BIT ({_MINT_BIT}). They mirror each other "
-        "across the build/runtime boundary — update both."
-    )
+    rows = search(conn, "value", field="varname").results
+
+    assert {row.name: row.var_id for row in rows} == {
+        "Scb value": 44,
+        "Sos value": None,
+    }

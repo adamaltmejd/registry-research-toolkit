@@ -1,0 +1,17 @@
+[
+  {
+    "slug": "example-sex",
+    "short_name": "Example sex",
+    "name": "Example sex",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Man"
+      },
+      {
+        "code": "2",
+        "label": "Woman"
+      }
+    ]
+  }
+]

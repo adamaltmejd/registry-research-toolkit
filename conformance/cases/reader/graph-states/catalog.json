@@ -1,0 +1,181 @@
+[
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "pay",
+    "provider_key": "70",
+    "name": "Pay",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2010-01-01",
+        "valid_to": "2010-12-31",
+        "delivery_column_name": "Payjan",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Paid"
+            ]
+          ]
+        }
+      },
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2011-01-01",
+        "valid_to": "2011-12-31",
+        "delivery_column_name": "Pay",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Paid"
+            ],
+            [
+              "2",
+              "Unpaid"
+            ]
+          ]
+        }
+      }
+    ],
+    "aliases": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "delivery_column_name": "Payjan",
+        "windows": [
+          {
+            "valid_from": "2010-01-01",
+            "valid_to": "2010-01-31"
+          }
+        ]
+      },
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "delivery_column_name": "Payfeb",
+        "windows": [
+          {
+            "valid_from": "2010-02-01",
+            "valid_to": "2010-02-28"
+          }
+        ]
+      },
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "delivery_column_name": "Paymar",
+        "windows": [
+          {
+            "valid_from": "2010-03-01",
+            "valid_to": "2010-03-31"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "sex",
+    "provider_key": "71",
+    "name": "Sex",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Sex",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Man"
+            ],
+            [
+              "2",
+              "Woman"
+            ]
+          ]
+        },
+        "value_set_version_label": "wave-1",
+        "classification_links": [
+          {
+            "classification": "example-sex"
+          }
+        ]
+      },
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2019-01-01",
+        "valid_to": "2019-12-31",
+        "delivery_column_name": "Sexnew",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Man"
+            ],
+            [
+              "2",
+              "Woman"
+            ]
+          ]
+        }
+      }
+    ]
+  }
+]

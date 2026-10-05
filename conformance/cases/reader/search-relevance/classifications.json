@@ -1,0 +1,79 @@
+[
+  {
+    "slug": "broad-a",
+    "short_name": "Broad A",
+    "name": "C12 topic A",
+    "codes": [
+      {
+        "code": "C12",
+        "label": "Shared code"
+      }
+    ]
+  },
+  {
+    "slug": "broad-b",
+    "short_name": "Broad B",
+    "name": "C12 topic B",
+    "codes": [
+      {
+        "code": "C12",
+        "label": "Shared code"
+      }
+    ]
+  },
+  {
+    "slug": "exact",
+    "short_name": "C12",
+    "name": "Extended owner",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "item-0",
+    "short_name": "Item 0",
+    "name": "Item 0",
+    "codes": [
+      {
+        "code": "D45",
+        "label": "Item code"
+      }
+    ]
+  },
+  {
+    "slug": "item-1",
+    "short_name": "Item 1",
+    "name": "Item 1",
+    "codes": [
+      {
+        "code": "D45",
+        "label": "Item code"
+      }
+    ]
+  },
+  {
+    "slug": "item-2",
+    "short_name": "Item 2",
+    "name": "Item 2",
+    "codes": [
+      {
+        "code": "D45",
+        "label": "Item code"
+      }
+    ]
+  },
+  {
+    "slug": "item-3",
+    "short_name": "Item 3",
+    "name": "Item 3",
+    "codes": [
+      {
+        "code": "D45",
+        "label": "Item code"
+      }
+    ]
+  }
+]
