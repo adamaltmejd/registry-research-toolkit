@@ -54,6 +54,7 @@ from reg_meta.catalog import (
     Catalog,
     DataWarning,
     Period,
+    RegisterCoverage,
     ResolvedProvider,
     ResolvedRegister,
     ResolvedVariable,
@@ -460,13 +461,36 @@ def _classification_family_node(family) -> ClassificationFamilyNode:
     )
 
 
+def _provider_coverage(
+    request: Request, catalog: Catalog, provider_slug: str
+) -> dict[str, RegisterCoverage]:
+    """`provider_register_coverage`, memoized for the app's lifetime.
+
+    The artifact is immutable while the app serves it, and the holdings fusion
+    behind a provider's coverage costs hundreds of milliseconds on a steward
+    artifact. The key carries the generation and the read scope (coverage differs
+    by scope); only resolved providers reach here, so the memo holds at most one
+    entry per provider and scope."""
+    key = (
+        request.app.state.manifest["generation_id"],
+        catalog.scope,
+        provider_slug,
+    )
+    memo: dict[tuple[str, str, str], dict[str, RegisterCoverage]] = (
+        request.app.state.provider_coverage
+    )
+    if key not in memo:
+        memo[key] = catalog.provider_register_coverage(provider_slug)
+    return memo[key]
+
+
 def _provider_response(
-    catalog: Catalog, resolved: ResolvedProvider
+    request: Request, catalog: Catalog, resolved: ResolvedProvider
 ) -> ProviderResponse:
     provider_slug = resolved.fqid.provider
     assert provider_slug is not None
     registers = catalog.list_registers(provider_slug)
-    coverage = catalog.provider_register_coverage(provider_slug)
+    coverage = _provider_coverage(request, catalog, provider_slug)
     return ProviderResponse(
         fqid=str(resolved.fqid),
         name=resolved.name,
@@ -589,7 +613,7 @@ def _catalog_url(fqid: Fqid) -> str:
     return f"/api/catalog/{path}"
 
 
-def _resolve_to_node(catalog: Catalog, fqid: Fqid) -> CatalogNode:
+def _resolve_to_node(request: Request, catalog: Catalog, fqid: Fqid) -> CatalogNode:
     """Resolve a scoped node and enrich its HTTP response."""
     try:
         # The binding arm takes the LIGHT hydration: full history and every
@@ -605,7 +629,7 @@ def _resolve_to_node(catalog: Catalog, fqid: Fqid) -> CatalogNode:
         _http_404_if_not_found(exc)
         raise  # unreachable; _http_404_if_not_found re-raises non-404s
     if isinstance(resolved, ResolvedProvider):
-        return _provider_response(catalog, resolved)
+        return _provider_response(request, catalog, resolved)
     if isinstance(resolved, ResolvedRegister):
         return _register_response(catalog, resolved)
     if isinstance(resolved, ResolvedVariable):
@@ -1368,7 +1392,7 @@ def get_catalog_node(
         if redirect is not None:
             return redirect
         try:
-            return _resolve_to_node(catalog, parsed)
+            return _resolve_to_node(request, catalog, parsed)
         except HTTPException as exc:
             # #355 PART 2 / #412: a renamed/dead slug 404s (its `variable` or
             # `register` row is gone). Before surfacing that 404, walk to the
