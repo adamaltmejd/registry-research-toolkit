@@ -227,7 +227,11 @@ trap cleanup INT TERM EXIT
 # Built AFTER the trap so a failure mid-build still gets the dir removed.
 if [ -n "$fixture_db" ]; then
 	fixture_db_dir=$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-fixture-db.XXXXXX") || exit 1
-	if ! .venv/bin/python reg_webapp/backend/scripts/fixture_db.py "$fixture_db_dir" >/dev/null; then
+	fixture_kind_args=()
+	if [ "${REG_WEBAPP_STEWARD:-global}" != "global" ]; then
+		fixture_kind_args=(--kind steward)
+	fi
+	if ! .venv/bin/python reg_webapp/backend/scripts/fixture_db.py "$fixture_db_dir" "${fixture_kind_args[@]}" >/dev/null; then
 		echo "dev: --fixture-db build failed — see output above." >&2
 		exit 1
 	fi

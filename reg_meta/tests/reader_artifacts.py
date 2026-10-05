@@ -45,7 +45,7 @@ def build_reader_artifact(
         ResolvedVariable.model_validate_json(json.dumps(value))
         for value in json.loads((source / "catalog.json").read_text())
     )
-    directory.mkdir(parents=True)
+    directory.mkdir(parents=True, exist_ok=True)
     path = directory / "reg_meta.db"
     classification_source = source / "classifications.json"
     classifications = (

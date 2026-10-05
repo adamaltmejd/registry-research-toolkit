@@ -45,7 +45,7 @@ def _write_manifest_db(db_path: Path, schema_version: str) -> None:
     conn = sqlite3.connect(db_path)
     try:
         conn.execute("CREATE TABLE import_manifest(key TEXT PRIMARY KEY, value TEXT)")
-        fixture_db._stamp_manifest(conn)
+        fixture_db.stamp_manifest(conn)
         conn.execute(
             "UPDATE import_manifest SET value = ? WHERE key = 'schema_version'",
             (schema_version,),
@@ -143,3 +143,13 @@ def topical_catalog_db(catalog_db: Path) -> Path:
     finally:
         conn.close()
     return catalog_db
+
+
+@pytest.fixture
+def steward_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """The same compiled steward fixture available to dev.sh --fixture-db."""
+    directory = tmp_path / "steward"
+    path = fixture_db.build_reader_fixture_db(directory, kind="steward")
+    _point_app_at(monkeypatch, directory)
+    monkeypatch.setenv("REG_WEBAPP_STEWARD", "swecov")
+    return path
