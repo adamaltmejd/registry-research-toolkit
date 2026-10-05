@@ -1,0 +1,30 @@
+{
+  "kind": "catalog",
+  "fixture": "code-ranking",
+  "requests": [
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "Bulkval",
+        "type": "classification_code",
+        "limit": 0
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "Bulkval",
+        "type": "classification_code",
+        "limit": 10
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "Bulkval",
+        "type": "classification_code",
+        "limit": 999
+      }
+    }
+  ]
+}

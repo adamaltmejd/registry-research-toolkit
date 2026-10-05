@@ -1,0 +1,17 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/group": "top_results",
+      "/groups/0/results/0/type": "group",
+      "/groups/0/results/0/group_key": "disponibel-inkomst",
+      "/groups/0/results/*/type": [
+        "group",
+        "variable",
+        "variable",
+        "variable",
+        "variable"
+      ]
+    }
+  }
+]

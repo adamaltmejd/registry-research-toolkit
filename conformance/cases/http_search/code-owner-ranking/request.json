@@ -1,0 +1,14 @@
+{
+  "kind": "catalog",
+  "fixture": "code-ranking",
+  "requests": [
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "Rankval",
+        "type": "value",
+        "limit": 10
+      }
+    }
+  ]
+}

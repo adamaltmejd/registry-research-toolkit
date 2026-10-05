@@ -20,6 +20,9 @@ from typing import TYPE_CHECKING
 import pytest
 import reg_meta.db
 import reg_meta.doc_db
+from fastapi.testclient import TestClient
+from reg_meta.catalog import Catalog
+from reg_webapp.app import create_app
 from webapp_fixture_support import fixture_db
 
 if TYPE_CHECKING:
@@ -125,3 +128,18 @@ def steward_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     _point_app_at(monkeypatch, directory)
     monkeypatch.setenv("REG_WEBAPP_STEWARD", "swecov")
     return path
+
+
+@pytest.fixture
+def client(catalog_db):
+    with TestClient(create_app()) as c:
+        yield c
+
+
+@pytest.fixture
+def catalog(catalog_db):
+    conn = reg_meta.db.open_db(catalog_db, check_schema=False)
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()

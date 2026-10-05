@@ -1,0 +1,31 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/group": "top_results",
+      "/groups/0/results/*/type": [
+        "register",
+        "variable",
+        "group",
+        "register"
+      ],
+      "/groups/0/results/0/fqid": "scb/alderdom",
+      "/groups/0/results/1/fqid": "scb/lisa/gender"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/group": "top_results",
+      "/groups/0/results/*/type": [
+        "classification",
+        "code",
+        "code",
+        "register"
+      ],
+      "/groups/0/results/0/fqid": "class/qset",
+      "/groups/0/results/0/short_name": "QSET",
+      "/groups/0/results/0/name": "Q set"
+    }
+  }
+]

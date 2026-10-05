@@ -1,0 +1,14 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/group": "top_results",
+      "/groups/0/results/*/type": [
+        "group",
+        "register"
+      ],
+      "/groups/0/results/0/group_key": "demografi",
+      "/groups/0/results/1/fqid": "scb/alderdom"
+    }
+  }
+]

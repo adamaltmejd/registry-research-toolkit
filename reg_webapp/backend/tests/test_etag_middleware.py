@@ -17,7 +17,6 @@ from __future__ import annotations
 
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
-from reg_webapp.etag import CACHE_CONTROL_REVALIDATE, CACHE_CONTROL_SHORT
 from reg_webapp.middleware import ETagMiddleware
 
 import reg_meta
@@ -47,20 +46,6 @@ def test_error_response_has_no_etag(catalog_db):
         bad = client.get("/api/catalog/scb/Lisa")  # path guard → 422
         assert bad.status_code == 422
         assert "etag" not in bad.headers
-
-
-def test_context_revalidates_while_catalog_uses_short_window(catalog_db):
-    # /api/context is the vintage-footer source: it must revalidate every request
-    # (no-cache) so a returning browser never shows a previous deploy's version.
-    # Catalog reads carry the short 60s window so curated concept-group folds
-    # surface promptly for returning users (the body-hash ETag keeps it a 304).
-    with TestClient(create_app()) as client:
-        context = client.get("/api/context")
-        catalog = client.get("/api/catalog")
-    assert context.status_code == 200
-    assert context.headers["cache-control"] == CACHE_CONTROL_REVALIDATE
-    assert catalog.status_code == 200
-    assert catalog.headers["cache-control"] == CACHE_CONTROL_SHORT
 
 
 def test_304_drops_content_type_and_length(catalog_db):

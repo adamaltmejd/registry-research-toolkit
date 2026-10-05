@@ -1,0 +1,13 @@
+{
+  "kind": "catalog",
+  "fixture": "search-ranking",
+  "requests": [
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "transfereringar",
+        "limit": 5
+      }
+    }
+  ]
+}

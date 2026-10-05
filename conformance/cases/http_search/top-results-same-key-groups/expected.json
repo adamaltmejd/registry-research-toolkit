@@ -1,0 +1,16 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/group": "top_results",
+      "/groups/0/results/*/group_key": [
+        "tfoab",
+        "tfoab"
+      ],
+      "/groups/0/results/*/members/0/fqid": [
+        "scb/iot/tfoab01",
+        "scb/lisa/tfoab01"
+      ]
+    }
+  }
+]

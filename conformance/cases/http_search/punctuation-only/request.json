@@ -1,0 +1,25 @@
+{
+  "kind": "catalog",
+  "fixture": "code-ranking",
+  "requests": [
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "\"\" -- ;"
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "%"
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "_",
+        "type": "value"
+      }
+    }
+  ]
+}

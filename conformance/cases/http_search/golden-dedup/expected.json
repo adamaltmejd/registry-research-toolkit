@@ -1,0 +1,36 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/results/*/fqid": [
+        "scb/example"
+      ],
+      "/groups/0/has_more": false
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/results/*/fqid": [
+        "scb/lisa"
+      ],
+      "/groups/0/has_more": false
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/groups/*/group": [
+        "registers",
+        "variables",
+        "classifications",
+        "classification_codes",
+        "register_value_sets"
+      ],
+      "/groups/0/results/*/fqid": [
+        "scb/example"
+      ],
+      "/groups/0/has_more": false
+    }
+  }
+]

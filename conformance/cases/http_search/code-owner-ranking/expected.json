@@ -1,0 +1,50 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/groups/*/group": [
+        "classification_codes",
+        "register_value_sets"
+      ],
+      "/groups/0/results/*/code": [
+        "R2",
+        "R3",
+        "R1",
+        "R5",
+        "R4"
+      ],
+      "/groups/0/results/*/classification_count": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "/groups/0/results/*/variable_count": [
+        0,
+        3,
+        1,
+        0,
+        0
+      ],
+      "/groups/0/results/*/code_system": [
+        "ASET",
+        "ASET",
+        "ASET",
+        "ASET",
+        "ASET"
+      ],
+      "/groups/0/results/0/classifications/*/short_name": [
+        "ASET",
+        "BSET",
+        "CSET"
+      ],
+      "/groups/1/results/*/code": [
+        "R6"
+      ],
+      "/groups/1/results/*/code_system": [
+        null
+      ]
+    }
+  }
+]

@@ -1,0 +1,9 @@
+[[pin]]
+query = "kon"
+group = "register"
+fqids = ["scb/alderdom"]
+
+[[pin]]
+query = "Q90"
+group = "classification"
+fqids = ["class/qset"]

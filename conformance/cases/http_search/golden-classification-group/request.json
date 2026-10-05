@@ -1,0 +1,15 @@
+{
+  "kind": "catalog",
+  "fixture": "search-ranking",
+  "golden_config": "search_golden.toml",
+  "requests": [
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "sunx",
+        "type": "classification",
+        "limit": 5
+      }
+    }
+  ]
+}

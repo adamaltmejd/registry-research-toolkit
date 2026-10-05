@@ -1,0 +1,56 @@
+{
+  "kind": "catalog",
+  "golden_config": "search_golden.toml",
+  "requests": [
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "gizmo",
+        "type": "register",
+        "limit": 1
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "gizmo",
+        "type": "register",
+        "limit": 1
+      },
+      "cursor_from": [
+        0,
+        "/groups/0/next_cursor"
+      ]
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "other",
+        "type": "register",
+        "limit": 1
+      },
+      "cursor_from": [
+        0,
+        "/groups/0/next_cursor"
+      ]
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "gizmo",
+        "type": "register",
+        "limit": 1,
+        "cursor": "golden.AAAA"
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "gizmo",
+        "type": "register",
+        "limit": 1,
+        "cursor": "golden.eyJjb250ZXh0IjoiMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMCIsIm9mZnNldCI6MCwib3JpZ2luIjoiIiwic2lnbmF0dXJlIjoiMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMCIsInYiOjF9"
+      }
+    }
+  ]
+}

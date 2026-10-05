@@ -1,0 +1,4 @@
+[[pin]]
+query = "Sysselsättning"
+group = "register"
+fqids = ["scb/lisa"]

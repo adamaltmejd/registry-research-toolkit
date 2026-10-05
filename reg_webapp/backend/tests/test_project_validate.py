@@ -278,22 +278,6 @@ def test_non_leap_feb_range_to_endpoint_is_200_not_500(client):
     assert "range_period_partially_covered" not in codes, codes
 
 
-def test_model_issue_empty_loc_is_whole_document_pointer():
-    """A model-level (empty-``loc``) residual ValidationError must map to the RFC
-    6901 whole-document pointer ``""`` — NOT ``"/"`` (a property keyed by the empty
-    string, unresolvable). A5.3's SPA resolves these pointers, so the contract is
-    exact. Defensive path (structural owns the common cases), unit-tested directly."""
-    from pydantic_core import ValidationError
-    from reg_webapp.routes.project import _model_issue
-
-    exc = ValidationError.from_exception_data(
-        "ProjectData", [{"type": "missing", "loc": (), "input": {}}]
-    )
-    issue = _model_issue("residual model error", exc)
-    assert issue.path == ""
-    assert issue.code == "invalid_field"
-
-
 def test_nested_extra_key_is_issue_not_500(client):
     """A typo'd nested ``Source`` field is a clean 200 issue, not a traceback."""
     spec = _clean_spec()

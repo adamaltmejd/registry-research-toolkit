@@ -1,0 +1,278 @@
+[
+  {
+    "slug": "aset",
+    "short_name": "ASET",
+    "name": "A set",
+    "codes": [
+      {
+        "code": "R1",
+        "label": "Rankval one"
+      },
+      {
+        "code": "R2",
+        "label": "Rankval two"
+      },
+      {
+        "code": "R3",
+        "label": "Rankval three"
+      },
+      {
+        "code": "R4",
+        "label": "Rankval four"
+      },
+      {
+        "code": "R5",
+        "label": "Rankval five"
+      }
+    ]
+  },
+  {
+    "slug": "bset",
+    "short_name": "BSET",
+    "name": "B set",
+    "codes": [
+      {
+        "code": "R2",
+        "label": "Rankval two"
+      }
+    ]
+  },
+  {
+    "slug": "cset",
+    "short_name": "CSET",
+    "name": "C set",
+    "codes": [
+      {
+        "code": "R2",
+        "label": "Rankval two"
+      }
+    ]
+  },
+  {
+    "slug": "bulk",
+    "short_name": "BULK",
+    "name": "Bulk set",
+    "codes": [
+      {
+        "code": "B01",
+        "label": "Bulkval 01"
+      },
+      {
+        "code": "B02",
+        "label": "Bulkval 02"
+      },
+      {
+        "code": "B03",
+        "label": "Bulkval 03"
+      },
+      {
+        "code": "B04",
+        "label": "Bulkval 04"
+      },
+      {
+        "code": "B05",
+        "label": "Bulkval 05"
+      },
+      {
+        "code": "B06",
+        "label": "Bulkval 06"
+      },
+      {
+        "code": "B07",
+        "label": "Bulkval 07"
+      },
+      {
+        "code": "B08",
+        "label": "Bulkval 08"
+      },
+      {
+        "code": "B09",
+        "label": "Bulkval 09"
+      },
+      {
+        "code": "B10",
+        "label": "Bulkval 10"
+      },
+      {
+        "code": "B11",
+        "label": "Bulkval 11"
+      },
+      {
+        "code": "B12",
+        "label": "Bulkval 12"
+      },
+      {
+        "code": "B13",
+        "label": "Bulkval 13"
+      },
+      {
+        "code": "B14",
+        "label": "Bulkval 14"
+      },
+      {
+        "code": "B15",
+        "label": "Bulkval 15"
+      },
+      {
+        "code": "B16",
+        "label": "Bulkval 16"
+      },
+      {
+        "code": "B17",
+        "label": "Bulkval 17"
+      },
+      {
+        "code": "B18",
+        "label": "Bulkval 18"
+      },
+      {
+        "code": "B19",
+        "label": "Bulkval 19"
+      },
+      {
+        "code": "B20",
+        "label": "Bulkval 20"
+      },
+      {
+        "code": "B21",
+        "label": "Bulkval 21"
+      },
+      {
+        "code": "B22",
+        "label": "Bulkval 22"
+      },
+      {
+        "code": "B23",
+        "label": "Bulkval 23"
+      },
+      {
+        "code": "B24",
+        "label": "Bulkval 24"
+      },
+      {
+        "code": "B25",
+        "label": "Bulkval 25"
+      },
+      {
+        "code": "B26",
+        "label": "Bulkval 26"
+      },
+      {
+        "code": "B27",
+        "label": "Bulkval 27"
+      },
+      {
+        "code": "B28",
+        "label": "Bulkval 28"
+      },
+      {
+        "code": "B29",
+        "label": "Bulkval 29"
+      },
+      {
+        "code": "B30",
+        "label": "Bulkval 30"
+      },
+      {
+        "code": "B31",
+        "label": "Bulkval 31"
+      },
+      {
+        "code": "B32",
+        "label": "Bulkval 32"
+      },
+      {
+        "code": "B33",
+        "label": "Bulkval 33"
+      },
+      {
+        "code": "B34",
+        "label": "Bulkval 34"
+      },
+      {
+        "code": "B35",
+        "label": "Bulkval 35"
+      },
+      {
+        "code": "B36",
+        "label": "Bulkval 36"
+      },
+      {
+        "code": "B37",
+        "label": "Bulkval 37"
+      },
+      {
+        "code": "B38",
+        "label": "Bulkval 38"
+      },
+      {
+        "code": "B39",
+        "label": "Bulkval 39"
+      },
+      {
+        "code": "B40",
+        "label": "Bulkval 40"
+      },
+      {
+        "code": "B41",
+        "label": "Bulkval 41"
+      },
+      {
+        "code": "B42",
+        "label": "Bulkval 42"
+      },
+      {
+        "code": "B43",
+        "label": "Bulkval 43"
+      },
+      {
+        "code": "B44",
+        "label": "Bulkval 44"
+      },
+      {
+        "code": "B45",
+        "label": "Bulkval 45"
+      },
+      {
+        "code": "B46",
+        "label": "Bulkval 46"
+      },
+      {
+        "code": "B47",
+        "label": "Bulkval 47"
+      },
+      {
+        "code": "B48",
+        "label": "Bulkval 48"
+      },
+      {
+        "code": "B49",
+        "label": "Bulkval 49"
+      },
+      {
+        "code": "B50",
+        "label": "Bulkval 50"
+      },
+      {
+        "code": "B51",
+        "label": "Bulkval 51"
+      },
+      {
+        "code": "B52",
+        "label": "Bulkval 52"
+      },
+      {
+        "code": "B53",
+        "label": "Bulkval 53"
+      },
+      {
+        "code": "B54",
+        "label": "Bulkval 54"
+      },
+      {
+        "code": "B55",
+        "label": "Bulkval 55"
+      }
+    ]
+  }
+]

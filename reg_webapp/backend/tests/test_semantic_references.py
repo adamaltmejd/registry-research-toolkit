@@ -1,0 +1,541 @@
+"""Semantic validator reference resolution against the slugged ``catalog_db`` fixture.
+
+Covers FQID resolution, value-set and replacement hints, co-delivery and
+multi-representation ambiguity, representation pins, and sequential version
+or column transitions reading as drift rather than ambiguity.
+
+See DESIGN.md → Semantic validation (semantic.py). Covers: a clean spec → no
+issues; an unresolvable ``register_variant`` →
+``fqid_unresolved``; an unresolvable binding ``variable`` → ``fqid_unresolved``;
+an out-of-validity period → ``period_outside_state_validity``; a missing
+``value_set`` → ``value_set_missing``. Compiled steward admission is exercised
+through the source-built HTTP validation corpus.
+
+The fixture DB resolves ``scb/lisa/individer-15plus`` (variant) with binding
+``scb/lisa/kon`` (state ``2018-01-01..9999-12-31``, value set) and the
+classification ``class/sun2020``.
+"""
+
+from __future__ import annotations
+
+import pytest
+from backend_test_support import project as _project
+from reg_meta.catalog import Catalog
+from reg_webapp.semantic import validate_semantic
+
+_CLEAN_SOURCE = {
+    "name": "lisa-2018",
+    "register_variant": "scb/lisa/individer-15plus",
+    "period": 2018,
+    "bindings": [
+        {
+            "variable": "scb/lisa/kon",
+            "type": "categorical",
+            "value_set": "class/sun2020",
+        },
+    ],
+}
+
+
+def test_clean_spec_has_no_issues(catalog):
+    result = validate_semantic(_project([_CLEAN_SOURCE]), catalog)
+    assert result.ok
+    assert result.issues == ()
+
+
+def test_unresolvable_register_variant_is_fqid_unresolved(catalog):
+    source = {**_CLEAN_SOURCE, "register_variant": "scb/lisa/nosuchvariant"}
+    result = validate_semantic(_project([source]), catalog)
+    codes = {(i.code, i.level, i.path) for i in result.issues}
+    assert (
+        "fqid_unresolved",
+        "error",
+        "/sources/0/register_variant",
+    ) in codes
+    assert not result.ok
+
+
+def test_unresolvable_register_prefix_is_fqid_unresolved(catalog):
+    # A register the DB doesn't know → list_variants empty → fqid_unresolved.
+    source = {
+        "name": "s",
+        "register_variant": "scb/nosuchregister/individer-15plus",
+        "period": 2018,
+        "bindings": [{"variable": "scb/nosuchregister/x", "type": "categorical"}],
+    }
+    result = validate_semantic(_project([source]), catalog)
+    rv_issue = next(i for i in result.issues if i.path == "/sources/0/register_variant")
+    assert rv_issue.code == "fqid_unresolved"
+
+
+def test_unresolvable_binding_variable_is_fqid_unresolved(catalog):
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": 2018,
+        "bindings": [{"variable": "scb/lisa/nosuchvar", "type": "categorical"}],
+    }
+    result = validate_semantic(_project([source]), catalog)
+    issue = next(i for i in result.issues if i.path == "/sources/0/bindings/0/variable")
+    assert issue.code == "fqid_unresolved"
+    assert issue.level == "error"
+
+
+def test_period_outside_state_validity(catalog):
+    # kon's only state is 2018-01-01..9999-12-31; 2015 precedes it.
+    source = {**_CLEAN_SOURCE, "period": 2015}
+    result = validate_semantic(_project([source]), catalog)
+    issue = next(i for i in result.issues if i.code == "period_outside_state_validity")
+    assert issue.level == "error"
+    assert issue.path == "/sources/0/bindings/0/variable"
+
+
+def test_value_set_missing(catalog):
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": 2018,
+        "bindings": [
+            {
+                "variable": "scb/lisa/kon",
+                "type": "categorical",
+                "value_set": "class/nosuchclass",
+            }
+        ],
+    }
+    result = validate_semantic(_project([source]), catalog)
+    issue = next(i for i in result.issues if i.code == "value_set_missing")
+    assert issue.level == "error"
+    assert issue.path == "/sources/0/bindings/0/value_set"
+
+
+def test_variable_replaced_hint_after_effective_year(catalog):
+    source = {**_CLEAN_SOURCE, "period": 2020}
+    result = validate_semantic(_project([source]), catalog)
+    issue = next(i for i in result.issues if i.code == "variable_replaced")
+    assert issue.level == "info"
+    assert issue.path == "/sources/0/bindings/0/variable"
+    assert issue.successor_fqid == "scb/rams/syss"
+    assert "effective 2019" in issue.message
+    assert result.ok
+
+
+def test_variable_replaced_hint_skips_period_before_effective_year(catalog):
+    result = validate_semantic(_project([_CLEAN_SOURCE]), catalog)
+    assert {i.code for i in result.issues} == set()
+    assert result.ok
+
+
+def test_deprecated_traversal_hint_for_deprecated_variable():
+    from _slugged_db import build_slugged_db
+
+    conn = build_slugged_db()
+    conn.execute("UPDATE variable SET deprecated = 1 WHERE slug = 'kon'")
+    conn.commit()
+    try:
+        result = validate_semantic(_project([_CLEAN_SOURCE]), Catalog(conn))
+    finally:
+        conn.close()
+    issue = next(i for i in result.issues if i.code == "deprecated_traversal")
+    assert issue.level == "info"
+    assert issue.path == "/sources/0/bindings/0/variable"
+    assert issue.successor_fqid is None
+    assert result.ok
+
+
+def test_sos_provider_resolves_clean(catalog):
+    # Smoke that an unrelated valid-but-unused source doesn't false-positive: a
+    # second clean source alongside the first stays issue-free.
+    result = validate_semantic(
+        _project([_CLEAN_SOURCE, {**_CLEAN_SOURCE, "name": "lisa-2018-b"}]),
+        catalog,
+    )
+    assert result.ok
+
+
+# ── Fold: co-delivered value-set versions ──────────────────────────────────
+# A bare binding matching >1 state because several value-set versions are
+# co-delivered in the bound period is `binding_value_set_version_ambiguous`
+# (error); pinning `@<version>` narrows to one and passes. These need a 2-version
+# fixture, so they build their own in-memory DB rather than the shared catalog_db.
+
+
+@pytest.fixture
+def multiversion_catalog():
+    """A DB where `scb/lisa/kon` has TWO states co-delivered in 2018 under the
+    same variant with DISTINCT value sets (different `value_set_id`) — the genuine
+    co-delivery ambiguity (a `(variable, variant, period)` resolving to two
+    different code-lists)."""
+    from _slugged_db import add_state, add_value_set, build_slugged_db
+
+    conn = build_slugged_db()
+    add_value_set(conn, value_set_id=701, codes=[("1", "Man"), ("2", "Kvinna")])
+    add_value_set(conn, value_set_id=702, codes=[("1", "M"), ("2", "K"), ("3", "X")])
+    # The seeded kon state spans 2018-01-01..9999-12-31; stamp it value set 701 +
+    # label sun2020, then add a second co-delivered state with a DIFFERENT value
+    # set 702 in the same variant + window.
+    conn.execute(
+        "UPDATE variable_state SET value_set_version_label = 'sun2020', "
+        "value_set_id = 701 "
+        "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2018-01-01",
+        valid_to="9999-12-31",
+        delivery_column_name="Kon",  # the SAME column — co-delivery, not parallel
+        value_set_version_label="sun2000",
+        value_set_id=702,
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def test_bare_binding_with_codelivered_versions_is_ambiguous(multiversion_catalog):
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": 2018,
+        "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
+    }
+    result = validate_semantic(_project([source]), multiversion_catalog)
+    issue = next(
+        i for i in result.issues if i.code == "binding_value_set_version_ambiguous"
+    )
+    assert issue.level == "error"
+    assert "sun2000" in issue.message and "sun2020" in issue.message
+    assert not result.ok
+
+
+@pytest.fixture
+def same_value_set_catalog():
+    """`scb/lisa/kon` has TWO states co-delivered in 2018 under the same variant
+    that share ONE `value_set_id` but carry different free-text version labels —
+    the same values under two names. This is NOT ambiguity (the re-key on
+    `value_set_id` must NOT false-positive on it — the ~71% phantom case)."""
+    from _slugged_db import add_state, add_value_set, build_slugged_db
+
+    conn = build_slugged_db()
+    add_value_set(conn, value_set_id=701, codes=[("1", "Man"), ("2", "Kvinna")])
+    conn.execute(
+        "UPDATE variable_state SET value_set_version_label = 'LKF 2003', "
+        "value_set_id = 701 "
+        "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2018-01-01",
+        valid_to="9999-12-31",
+        delivery_column_name="Kon",  # the SAME column, as in a real re-label
+        value_set_version_label="LKF 2004",  # different label, SAME value set
+        value_set_id=701,
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def test_same_value_set_two_labels_is_not_ambiguous(same_value_set_catalog):
+    # Two co-delivered states sharing one value_set_id are the same values under
+    # two names — keying ambiguity on the label would false-positive here.
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": 2018,
+        "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
+    }
+    result = validate_semantic(_project([source]), same_value_set_catalog)
+    codes = {i.code for i in result.issues}
+    assert "binding_value_set_version_ambiguous" not in codes
+
+
+@pytest.fixture
+def multi_representation_catalog():
+    """`scb/lisa/kon` carries TWO co-existing DELIVERY COLUMNS at 2018 — parallel
+    REPRESENTATIONS of one concept (the SSYK 3/5-digit / age-bracket shape). A
+    binding must pick one via `representation`."""
+    from _slugged_db import add_state, add_value_set, build_slugged_db
+
+    conn = build_slugged_db()
+    add_value_set(conn, value_set_id=701, codes=[("1", "Man"), ("2", "Kvinna")])
+    add_value_set(conn, value_set_id=702, codes=[("1", "M"), ("2", "K"), ("3", "X")])
+    conn.execute(
+        "UPDATE variable_state SET value_set_id = 701, delivery_column_name = 'kon', "
+        "value_set_version_label = 'grov' "
+        "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2018-01-01",
+        valid_to="9999-12-31",
+        delivery_column_name="kon_detalj",  # a SECOND co-existing column
+        value_set_version_label="detalj",  # distinct label (the index keys on it)
+        value_set_id=702,
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def _repr_source(representation=None):
+    binding = {"variable": "scb/lisa/kon", "type": "categorical"}
+    if representation is not None:
+        binding["representation"] = representation
+    return {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": 2018,
+        "bindings": [binding],
+    }
+
+
+def test_multi_representation_without_representation_is_ambiguous(
+    multi_representation_catalog,
+):
+    result = validate_semantic(_project([_repr_source()]), multi_representation_catalog)
+    issue = next(
+        i for i in result.issues if i.code == "binding_value_set_version_ambiguous"
+    )
+    assert issue.level == "error"
+    # Both co-existing columns named; `'kon'` quoted distinguishes it from the
+    # `kon_detalj` substring.
+    assert "'kon'" in issue.message and "kon_detalj" in issue.message
+    assert not result.ok
+
+
+def test_representation_picks_one_column(multi_representation_catalog):
+    result = validate_semantic(
+        _project([_repr_source("kon_detalj")]),
+        multi_representation_catalog,
+    )
+    codes = {i.code for i in result.issues}
+    assert "binding_value_set_version_ambiguous" not in codes
+    assert "binding_representation_unknown" not in codes
+
+
+def test_unknown_representation_is_flagged(multi_representation_catalog):
+    result = validate_semantic(
+        _project([_repr_source("nope")]),
+        multi_representation_catalog,
+    )
+    issue = next(i for i in result.issues if i.code == "binding_representation_unknown")
+    assert issue.level == "error"
+    assert "nope" in issue.message
+
+
+# ── A version TRANSITION (sequential, non-overlapping) is drift, NOT a
+# co-delivery ambiguity. resolve_at returns every state whose validity intersects
+# the period, so a range period crossing a re-version matches several SEQUENTIAL
+# states; their distinct version labels must NOT trip the (blocking) ambiguity
+# error — only OVERLAPPING (co-delivered) versions do.
+
+
+@pytest.fixture
+def transition_catalog():
+    """A DB where `scb/lisa/kon` has two SEQUENTIAL (non-overlapping) states under
+    the same variant: sun2000 valid 2010-2015, then sun2020 valid 2016-9999 — a
+    version TRANSITION, not co-delivery."""
+    from _slugged_db import add_state, build_slugged_db
+
+    conn = build_slugged_db()
+    # Re-window the seeded kon state to the LATER era; add the earlier era as a
+    # second, non-overlapping state under the same variant.
+    conn.execute(
+        "UPDATE variable_state SET value_set_version_label = 'sun2020', "
+        "valid_from = '2016-01-01', valid_to = '9999-12-31' "
+        "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2010-01-01",
+        valid_to="2015-12-31",
+        delivery_column_name="Kon",  # a re-version keeps the column
+        value_set_version_label="sun2000",
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def test_range_crossing_version_transition_is_drift_not_ambiguous(transition_catalog):
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": {"from": 2014, "to": 2018},  # spans the 2015→2016 re-version
+        "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
+    }
+    result = validate_semantic(_project([source]), transition_catalog)
+    codes = {i.code for i in result.issues}
+    assert "binding_value_set_version_ambiguous" not in codes  # NOT co-delivered
+    assert "binding_state_drifts_within_period" in codes
+    assert result.ok  # drift is info-only, non-blocking
+    # MESSAGE HYGIENE: the range period renders in wire form (`2014..2018`), never
+    # a dataclass repr — the text travels through the API to CLI + SPA consumers.
+    drift = next(
+        i for i in result.issues if i.code == "binding_state_drifts_within_period"
+    )
+    assert "2014..2018" in drift.message, drift.message
+    assert "PeriodRange" not in drift.message and "from_=" not in drift.message
+
+
+@pytest.fixture
+def column_rename_catalog():
+    """`scb/lisa/kon` delivered under DISTINCT columns in NON-overlapping windows:
+    `KonOld` 2010-2015, renamed `KonNew` 2016-9999. A rename, not parallel
+    co-existence — a range crossing it must be drift, not representation-ambiguity."""
+    from _slugged_db import add_state, build_slugged_db
+
+    conn = build_slugged_db()
+    conn.execute(
+        "UPDATE variable_state SET delivery_column_name = 'KonNew', "
+        "valid_from = '2016-01-01', valid_to = '9999-12-31' "
+        "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2010-01-01",
+        valid_to="2015-12-31",
+        delivery_column_name="KonOld",
+        value_set_version_label="old",
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def test_range_crossing_column_rename_is_drift_not_ambiguous(column_rename_catalog):
+    # DISTINCT columns in NON-overlapping windows (a rename) must NOT demand a
+    # `representation` — only co-EXISTING (overlapping) columns do.
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": {"from": 2014, "to": 2018},  # spans the 2015→2016 rename
+        "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
+    }
+    result = validate_semantic(_project([source]), column_rename_catalog)
+    codes = {i.code for i in result.issues}
+    assert "binding_value_set_version_ambiguous" not in codes
+    assert "binding_state_drifts_within_period" in codes
+    assert result.ok
+
+
+# ── Validation cost: required states, not code cardinality ──────────────────
+#
+# The consumer is `POST /api/project/validate` for an ordinary geography
+# binding: one variable delivered under several variants with a state per year,
+# every state pointing at the SAME large code list. Validation reads identity
+# and state metadata only, so no code membership may be loaded for it and no
+# state outside the requested period may be hydrated. (`_states_in_bounds`
+# still SELECTs the variable's metadata history and filters the bounds in
+# Python — that read is unchanged here; what this test pins is that neither
+# unrequested history nor a shared code list adds per-row query work.)
+
+_GEOGRAPHY_SHAPES = ((3, 2), (3, 2000), (40, 2000))
+
+_GEOGRAPHY_SOURCE = {
+    "name": "rtb-2000",
+    "register_variant": "scb/rtb/personer",
+    "period": 2000,
+    "bindings": [
+        {
+            "variable": "scb/rtb/forsamling",
+            "type": "categorical",
+            "value_set": "class/sun2020",
+        }
+    ],
+}
+
+
+def _geography_conn(n_states: int, n_codes: int):
+    """`scb/rtb/forsamling` delivered under two variants with `n_states` yearly
+    states each, all sharing ONE value set of `n_codes` codes."""
+    from _slugged_db import (
+        add_register,
+        add_state,
+        add_value_set,
+        add_variable,
+        add_variant,
+        build_slugged_db,
+    )
+
+    conn = build_slugged_db()
+    add_register(conn, register_id=2, slug="rtb", name="RTB")
+    add_variable(conn, register_id=2, var_id=99, name="Församling", slug="forsamling")
+    add_value_set(
+        conn,
+        value_set_id=7,
+        codes=[(f"{i:05d}", f"Församling {i}") for i in range(n_codes)],
+    )
+    for register_variant_id, slug in ((20, "personer"), (21, "hushall")):
+        add_variant(
+            conn,
+            register_variant_id=register_variant_id,
+            register_id=2,
+            slug=slug,
+            name=slug.title(),
+        )
+        for year in range(2000, 2000 + n_states):
+            add_state(
+                conn,
+                register_id=2,
+                variable_slug="forsamling",
+                register_variant_id=register_variant_id,
+                valid_from=f"{year}-01-01",
+                valid_to=f"{year}-12-31",
+                delivery_column_name="Forsamling",
+                value_set_id=7,
+            )
+    conn.commit()
+    return conn
+
+
+def test_geography_binding_validates_without_loading_code_lists():
+    # One statement count for every shape: growing the shared code list or the
+    # state history the requested period does NOT need must not add query work.
+    counts: dict[tuple[int, int], int] = {}
+    for shape in _GEOGRAPHY_SHAPES:
+        conn = _geography_conn(*shape)
+        catalog = Catalog(conn)  # constructed before tracing: boot, not validation
+        statements: list[str] = []
+        conn.set_trace_callback(statements.append)
+        try:
+            result = validate_semantic(_project([_GEOGRAPHY_SOURCE]), catalog)
+        finally:
+            conn.set_trace_callback(None)
+            conn.close()
+        assert result.issues == ()
+        assert not [
+            sql
+            for sql in statements
+            if "value_set_member" in sql
+            or "value_code" in sql
+            or "classification_conformance_code" in sql
+        ], f"{shape} loaded code lists"
+        counts[shape] = len(statements)
+    assert len(set(counts.values())) == 1, counts
