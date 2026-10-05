@@ -1,0 +1,349 @@
+vardekod,vardebenamning
+00000,Ej specificerad verksamhet
+10000,"Jordbruk m.m., detaljinformation saknas"
+11101,Åkerbruk och husdjursskötsel
+11102,Trädgårdsodling och -skötsel
+11103,Renskötsel
+11104,Pälsdjursskötsel
+11105,Annan djurskötsel
+11200,Tjänster inom jordbruk
+11300,"Jakt, viltvård"
+12101,Skogsvård
+12102,"Kolning, insamling av skogsväxter och bär"
+12201,"Skogsavverkning, virkesmätning"
+12202,Flottning
+13010,Havs- och kustfiske
+13020,"Insjöfiske, fiskevård, fiskodling"
+21000,Kolbrytning
+22000,Råpetroleum- och naturgasutvinning
+23010,Järnmalmsbrytning
+23020,Brytning av andra malmer än järnmalm
+29010,"Stenbrytning, grus-, sand- och lertäkt"
+29020,Brytning av kemiska råvaror
+29030,Saltutvinning
+29090,Övrig brytning och utvinning
+31111,Slakt
+31112,Kött- och fläskvarutillverkning
+31121,Mjölkförädling
+31122,Glasstillverkning
+31130,Frukt- och grönsakskonservering
+31140,"Fiskberedning, fiskkonservering"
+31151,Margarintillverkning
+31159,Tillverkning av animaliska och vegetabiliska oljor
+31160,Tillverkning av kvarnprodukter
+31171,Knäckebrödstillverkning
+31179,Annan bagerivarutillverkning
+31180,Sockertillverkning
+31190,Choklad- och konfekttillverkning
+31211,Stärkelsetillverkning
+31212,Kafferostning
+31219,Tillverkning av andra livsmedel
+31220,Tillverkning av beredda fodermedel
+31311,Tillverkning av råsprit ur jordbruksvaror
+31312,Tillverkning av spritdrycker
+31320,Vintillverkning
+31330,Maltdryckstillverkning
+31340,Mineralvatten- och läskedryckstillverkning
+31400,Tobaksvarutillverkning
+32111,Garntillverkning
+32112,Vävnadstillverkning (utom trikåväv)
+32113,"Blekning, färgning och annan textilberedning"
+32120,Textilsömnad (utom beklädnadstillverkning)
+32130,Trikåvarutillverkning
+32140,Tillverkning av mattor
+32150,Tågvirkes- och bindgarnstillverkning
+32190,Övrig textilvarutillverkning
+32201,Tillverkning av hattar och mössor
+32202,Tillverkning av läderkläder (ej huvudbonader)
+32203,Tillverkning av pälskläder (ej huvudbonader)
+32204,Tillverkning av textilöverkläder
+32205,"Tillverkning av skjortor, underkläder"
+32206,Lönsömnad
+32209,Annan tillverkning av kläder
+32310,Lädertillverkning
+32320,Pälsberedning
+32330,"Tillverkning av reseffekter, handväskor"
+32400,Skotillverkning
+33111,"Sågning, hyvling, träimpregnering"
+33112,Trähus- och byggnadssnickeritillverkning
+33119,"Tillverkning av faner, lamellträ, spånskivor, träull och annat trämaterial"
+33120,Träförpackningstillverkning
+33190,Övrig trävarutillverkning
+33201,Tillverkning av stoppade möbler
+33202,Tillverkning av ostoppade trämöbler
+33209,"Tillverkning av trähöljen, korgmöbler m.m."
+34111,Massatillverkning
+34112,Pappers- och papptillverkning
+34113,Tillverkning av träfiberplattor
+34121,Tillverkning av wellpapp
+34129,Tillverkning av andra pappersförpackningar
+34190,Övrig tillverkning av pappers- och pappvaror
+34201,"Tryckning, dagstidningsutgivning"
+34202,"Tillverkning av tryckformar, matriser m.m."
+34203,Bokbindning
+34204,Förlagsverksamhet
+35111,Oorganisk kemikalietillverkning
+35112,Organisk kemikalietillverkning
+35113,Oxygen- och annan industrigasframställning
+35121,Gödselmedelstillverkning
+35122,Tillverkning av ogräs- och insektsbekämpningsmedel
+35131,Konstfiber- och basplasttillverkning
+35132,Plasthalvfabrikattillverkning
+35210,Färgtillverkning (utom tryckfärg)
+35220,Läkemedelstillverkning
+35230,Tvättmedels- och toalettmedelstillverkning
+35290,Övrig tillverkning av kemiska produkter
+35300,Petroleumraffinering
+35401,Smörjmedelsframställning
+35409,Annan tillverkning av petroleum- och kolprodukter
+35511,Tillverkning av däck och slangar
+35512,"Regummering, gummireparation"
+35590,Övrig gummivarutillverkning
+35601,Plastförpackningstillverkning
+35609,Tillverkning av andra plastvaror
+36100,Porslins- och lergodstillverkning
+36201,Planglastillverkning
+36202,Tillverkning av förpackningsglas
+36203,Tillverkning av hushålls- och prydnadsglas
+36209,Tillverkning av andra glasvaror
+36911,Tillverkning av rödtegelvaror
+36919,Tillverkning av andra tegelvaror
+36921,Cementtillverkning
+36922,Kalktillverkning
+36991,Stenbearbetning
+36992,Betong- och betongvarutillverkning
+36999,Tillverkning av övriga varor av mineraliska ämnen
+37101,Järn- och stålframställning
+37102,Ferrolegeringsframställning
+37103,Gjutning av järn och stål
+37201,Framställning av ickejärnmetaller ur malm
+37202,Framställning av ickejärnmetaller ur skrot
+37203,Halvfabrikattillverkning av ickejärnmetall
+37204,Gjutgodstillverkning av ickejärnmetall
+38110,"Tillverkning av verktyg, redskap"
+38120,Tillverkning av metallmöbler och persienner
+38130,Tillverkning av metallkonstruktioner
+38191,Metallförpackningstillverkning
+38192,"Tillverkning av metalltråd, -nät, -linor, -kablar"
+38193,"Tillverkning av spik, skruvar, bultar"
+38194,Tillverkning av andra byggnadsmetallvaror
+38195,Tillverkning av hushållsmetallvaror
+38199,Annan metallvarutillverkning
+38210,Tillverkning av stationära turbiner och motorer
+38220,Tillverkning av jordbruksmaskiner
+38231,Tillverkning av metallbearbetningsmaskiner
+38232,Tillverkning av träbearbetningsmaskiner
+38241,Tillverkning av massa- och pappersbearbetningsmaskiner
+38242,Tillverkning av byggnads- och mineralbrytningsmaskiner
+38249,Tillverkning av andra varubearbetningsmaskiner
+38251,"Tillverkning av datorer, datorutrustning, elektroniska kontorsmaskiner"
+38259,Tillverkning av övriga kontorsmaskiner
+38291,Tillverkning av hushållsapparater
+38292,Reparationer av maskiner (ej hushålls-)
+38299,Annan maskintillverkning
+38310,"Tillverkning av elmotorer,generatorer samt elapparatur för maskiner"
+38320,Tillverkning av teleprodukter
+38330,Tillverkning av elektriska hushållsapparater
+38391,Tillverkning av elektrisk tråd och kabel
+38392,Batteri- och ackumulatortillverkning
+38393,Glödlamps- och lysrörstillverkning
+38394,Reparation av elektriska produkter (ej hushålls-)
+38399,Tillverkning av andra elektriska produkter
+38411,Byggande och reparation av fartyg
+38412,Byggande och reparation av båtar
+38413,Tillverkning av fartygs- och båtmotorer
+38414,Fartygsupphuggning
+38421,Rälsfordonstillverkning
+38422,Reparation av rälsfordon
+38431,Tillverkning av bilar och underreden
+38432,"Tillverkning av bilmotorer, -delar, släpfordon"
+38440,"Tillverkning av cyklar, mopeder, motorcyklar, snöskoter"
+38451,Tillverkning av flygplan och -motorer
+38452,Reparation av flygplan o. flygplansmotorer
+38490,Transportmedelstillverkning (ej motordrivna)
+38510,Instrumenttillverkning och -reparation
+38520,Foto- och optikvarutillverkning
+38530,Urtillverkning
+39010,Guld- och silvervarutillverkning
+39020,Musikinstrumenttillverkning
+39030,Tillverkning av sportartiklar
+39090,Övrig tillverkning
+41010,Elförsörjning
+41020,Gasförsörjning
+41030,Fjärrvärmeförsörjning
+42000,Vattenförsörjning
+50110,"Schaktning och andra grundarbeten, rivning"
+50121,Byggande av hus
+50122,Byggande av anläggningar
+50201,Byggnadsplåtslageriarbeten
+50202,"Värme-, ventilation- och sanitetsarbeten"
+50203,Elektrisk installation
+50204,Byggnadsglasmästeriarbeten
+50205,Måleri- och tapetseringsarbeten
+50209,Övrigt byggnadshantverk
+61111,"Partihandel med djur, gödselmedel, oljefrö, spannmål"
+61112,"Partihandel med hudar, textilfibrer m.m."
+61113,"Partihandel med rundvirke, massa, papper, papp"
+61114,"Partihandel med kemikalier, färg, gummi, plastmaterial"
+61115,"Partihandel med malmer, metaller m.m."
+61116,Parti- och detaljhandel med byggnadsmaterial
+61117,Skrothandel
+61119,"Partihandel med övriga råvaror, halvfabrikat och driftsförnödenheter"
+61120,"Partihandel med maskiner, verktyg"
+61210,"Partihandel med livsmedel, dryckesvaror, tobak och blommor"
+61220,"Partihandel med textil-, beklädnads- och lädervaror"
+61230,Partihandel med hemutrustningsvaror
+61290,Partihandel med övriga konsumtionsvaror
+61310,Partihandel med transportmedel
+61320,"Partihandel med bränsle , driv- och smörjmedel"
+61411,"Handelsförmedling av djur, gödselmedel, oljefrö, spannmål"
+61412,"Handelsförmedling av hudar, textilfibrer m m"
+61413,"Handelsförmedling av rundvirke, massa, papper, papp"
+61414,"Handelsförmedling av kemikalier, färg, gummi, plastmaterial"
+61415,"Handelsförmedling av malmer, metaller m.m."
+61416,Handelsförmedling av byggnadsmaterial
+61417,"Handelsförmedling av övriga råvaror, halvfabrikat och driftsförnödenheter"
+61418,"Handelsförmedling av maskiner, verktyg m.m."
+61421,"Handelsförmedling av livsmedel, dryckesvaror, tobak, blommor"
+61422,"Handelsförmedling av textil-, beklädnads- och lädervaror"
+61423,Handelsförmedling av hemutrustningsvaror
+61429,Handelsförmedling av övriga konsumtionsvaror
+61431,Handelsförmedling av transportmedel
+61432,"Handelsförmedling av bränsle, driv- och smörjmedel"
+62100,Varuhushandel
+62210,Detaljhandel med livsmedel
+62221,Färg- och tapethandel
+62222,"Parfym-, sjukvårds- och bijouterihandel"
+62231,Tobaks- och tidningshandel
+62232,Bok- och pappershandel
+62240,Blomsterhandel
+62311,Konfektions- och ekiperingshandel
+62312,Skohandel
+62319,Övrig beklädnadshandel
+62321,"Detaljhandel med möbler, mattor och hemtextiler"
+62322,Järnhandel
+62323,Detaljhandel med radio och TV m.m.
+62324,Detaljhandel med hushållsapparater och belysningsartiklar
+62329,Handel med övrig hemutrustning
+62331,"Ur-, optik- o guldsmedsvaruhandel"
+62332,Fotohandel
+62333,Cykel- och sporthandel
+62334,"Musik- och leksakshandel, hobbyartiklar"
+62335,Detaljhandel med optiska artiklar
+62336,Urdetaljhandel
+62337,Guldsmeds- och juvelerardetaljhandel
+62390,Handel med övriga sällanköpsvaror
+62410,"Detaljhandel med bilar, bildelar, bildäck"
+62420,Drivmedelsdetaljhandel
+62510,Apoteksvaruhandel
+62520,Systemvaruhandel
+63100,Restaurang- och kafeverksamhet
+63201,Hotell- och pensionatsverksamhet
+63202,"Campingrörelse, stugby, vandrarhem m.m."
+71110,Järnvägstrafik
+71120,Buss- och spårvägstrafik i linjetrafik
+71130,Personbilstransport
+71140,Lastbils- och annan vägtransport
+71150,Transport i rörsystem
+71161,Bilparkeringsverksamhet
+71169,Andra stödtjänster inom landtransport
+71210,Utrikes- och kustsjöfart
+71220,Sjötransport på inre vattenvägar
+71231,"Lots-, fyr- och andra farledstjänster, isbrytning"
+71232,Stuveriverksamhet
+71239,Hamntjänster och andra stödtjänster inom sjötransport
+71310,Luftfart
+71320,Flygplatstjänster och stödtjänster inom luftfart
+71911,Resebyråverksamhet och researrangör
+71912,"Godstransportförmedling (spedition), mäkleriverksamhet"
+71919,Andra tjänster inom transport
+71921,Kyllagringsverksamhet
+71929,Annan lagrings- o. magasineringsverksamhet
+72001,Postkommunikationer
+72002,Telekommunikationer
+81010,Bankverksamhet
+81020,Annan kredit- och finansieringsverksamhet
+81030,Andra finansiella tjänster
+82001,Försäkringsåtagande verksamhet
+82002,Försäkringsförmedlande verksamhet
+83100,Fastighetsförvaltning och -förmedling
+83101,Förvaltning av egen bostadsfastighet
+83102,Ägareförvaltning av ickebostadsfastighet
+83103,"Fastighetsförvaltning enligt uppdrag, fastighetsförmedling"
+83210,Juridisk uppdragsverksamhet
+83220,Kameral uppdragsverksamhet
+83230,Drivande av datacentral och annan ADB-verksamhet
+83241,Byggkonsultverksamhet
+83249,Annan teknisk uppdragsverksamhet
+83250,"Annons-, reklam- och marknadsundersökningsverksamhet"
+83291,"Skriv-, duplicerings- och kopieringsverksamhet"
+83292,Uppdragsverksamhet avseende administrativ organisation
+83293,Bevakningsverksamhet
+83299,Annan uppdragsverksamhet
+83300,Maskinuthyrning (leasing och dylikt)
+90000,"Offentlig förvaltning m.m., detaljinformation saknas"
+91001,Offentlig förvaltning
+91002,Försvarsverksamhet
+91003,Polisverksamhet
+91004,Brandskyddsverksamhet
+92001,Avloppssystem och avloppsrening
+92002,Renhållningsverksamhet
+92003,Skorstensfejarverksamhet
+92004,Städningsverksamhet för företag och dyligt
+92005,Desinfektionsverksamhet
+92009,Annan rengöringsverksamhet
+93101,Grundskoleundervisning eller motsvarande
+93102,Gymnasial undervisning
+93103,Eftergymnasial undervisning
+93109,Annan undervisning
+93201,Naturvetenskaplig forskning
+93202,Teknologisk forsknings- och utvecklingsverksamhet
+93203,Medicinsk forsknings- och utvecklingsverksamhet
+93204,Samhällsvetenskaplig forskning
+93209,Annan forsknings- och utvecklingsverksamhet
+93310,Hälso- och sjukvård
+93320,Veterinärverksamhet
+93401,Barnavård och ungdomsvård
+93402,Åldringsvård
+93403,Nykterhetsvård (ej klinisk) och liknande
+93409,"Hem för syn- och hörselskadade, humanitär hjälpverksamhet"
+93501,Tekniska och ekonomiska branschorganisationer
+93502,Arbetsgivare- eller arbetstagareorganisationer
+93910,Religiösa organisationer
+93991,Politiska organisationer
+93999,Andra ideella och kulturella organisationer
+94110,Filminspelning
+94121,Filmdistribution
+94122,Visning av film (biografer)
+94130,Programverksamhet vid radio och TV
+94141,Teater- och operaverksamhet
+94142,Konsertverksamhet
+94143,"Populärunderhållning, artistförmedling"
+94144,"Skiv- och bandinspelning, skivförlagsverksamhet"
+94151,Fristående skriftställeri och litterär verksamhet
+94152,Fristående konstnärlig verksamhet
+94159,Fristående artistverksamhet
+94201,Biblioteks- och arkivverksamhet
+94202,"Museiverksamhet, konstutställning m.m."
+94901,"Sporttävlingsverksamhet, drivande av sport- och motionsinrättningar m m"
+94902,Trav- och galoppbaneverksamhet
+94903,"Drivande av nöjesfält, djurparker och dylikt"
+94904,Lotteriverksamhet m.m.
+94909,Dans- och andra nöjestillställningar
+95110,"Reparation av skor, lädervaror"
+95121,"Reparation av radio, TV"
+95129,Reparation av elektriska hushållsvaror (ej radio och TV)
+95130,Reparation av motorfordon
+95140,"Reparation av ur-, optik- och guldsmedsvaror"
+95191,Moped- och cykelreparation
+95199,Reparation av andra hushållsvaror
+95200,Tvätteriverksamhet
+95300,Hushållsarbete
+95911,Herrfrisering
+95912,Damfrisering
+95913,Skönhetsvård
+95920,"Fotografverksamhet, fotoservice m.m."
+95991,"Drift av varmbadhus, hygienbehandling m.m."
+95992,Begravningsbyråverksamhet
+95999,Annan serviceverksamhet
+96000,"Verksamhet vid internationella organisationer, utländska ambassader o dyl"
