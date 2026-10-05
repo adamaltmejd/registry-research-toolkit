@@ -45,12 +45,10 @@ def _write_manifest_db(db_path: Path, schema_version: str) -> None:
     conn = sqlite3.connect(db_path)
     try:
         conn.execute("CREATE TABLE import_manifest(key TEXT PRIMARY KEY, value TEXT)")
-        conn.executemany(
-            "INSERT INTO import_manifest(key, value) VALUES (?, ?)",
-            [
-                ("schema_version", schema_version),
-                ("import_date", FIXTURE_IMPORT_DATE),
-            ],
+        fixture_db._stamp_manifest(conn)
+        conn.execute(
+            "UPDATE import_manifest SET value = ? WHERE key = 'schema_version'",
+            (schema_version,),
         )
         conn.commit()
     finally:

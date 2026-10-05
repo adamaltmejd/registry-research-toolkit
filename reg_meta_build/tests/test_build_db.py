@@ -841,9 +841,15 @@ class TestSchemaCompat:
         db_path = tmp_path / "reg_meta.db"
         conn = sqlite3.connect(db_path)
         conn.execute("CREATE TABLE import_manifest (key TEXT PRIMARY KEY, value TEXT)")
-        conn.execute(
-            "INSERT INTO import_manifest VALUES ('schema_version', ?)",
-            (schema_version,),
+        conn.executemany(
+            "INSERT INTO import_manifest VALUES (?, ?)",
+            [
+                ("schema_version", schema_version),
+                ("catalog_artifact_kind", "catalog"),
+                ("catalog_publishable", "true"),
+                ("catalog_completeness", "complete"),
+                ("generation_id", "0" * 64),
+            ],
         )
         conn.commit()
         conn.close()

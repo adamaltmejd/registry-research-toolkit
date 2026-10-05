@@ -2151,7 +2151,7 @@ export interface components {
          *     Codes: `steward_mismatch`, `project_empty`, `period_not_orderable`,
          *     `variable_unresolved`, `binding_unavailable`, `representation_unknown`,
          *     `representation_unresolved`, `representation_ambiguous`, `mapping_missing`,
-         *     `mapping_ambiguous`, `coverage_gap`. `period` carries the EXACT offending
+         *     `column_window_unavailable`, `coverage_gap`. `period` carries the EXACT offending
          *     subperiod for the coverage codes, so a researcher can fix the request in one
          *     edit.
          */
@@ -2193,20 +2193,25 @@ export interface components {
          *     `project_hash` is the SHA-256 of the project's canonical JSON, so a manifest
          *     can be tied back to the exact uploaded project bytes.
          *
-         *     `mode` names what GROUNDED the entries — a steward's physical inventory or
+         *     `mode` names what GROUNDED the entries — a steward's compiled holdings or
          *     §12's global fallback (canonical resolution alone, blank `table`) — so a
          *     reader never has to infer it from the entry shape.
          */
         OrderProvenance: {
-            /** Catalog Import Date */
-            catalog_import_date: string;
+            /**
+             * Artifact Kind
+             * @enum {string}
+             */
+            artifact_kind: "catalog" | "steward";
+            /** Catalog Generation Id */
+            catalog_generation_id: string;
             /** Catalog Schema Version */
             catalog_schema_version: string;
             /**
              * Mode
              * @enum {string}
              */
-            mode: "steward_inventory" | "global_fallback";
+            mode: "steward_holdings" | "global_fallback";
             /** Project Hash */
             project_hash: string;
             /** Project Name */

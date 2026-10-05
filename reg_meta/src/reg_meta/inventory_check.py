@@ -242,7 +242,10 @@ def check_inventory(
             continue  # already reported at the binding grain; don't cascade
         key = pair_probes.get(pair)
         if key is not None:
-            if representation not in delivered[key]:
+            if (
+                catalog.canonical_delivery_column(*key, representation)
+                not in delivered[key]
+            ):
                 unresolved.append(cell)
         elif (states := aliased_states.get(pair)) is not None and not any(
             state.delivery_column_name == representation for state in states
@@ -276,6 +279,7 @@ def check_inventory(
                 target = mapping.representation or (
                     column.name if table.period_scope == "year_independent" else None
                 )
+                target = catalog.canonical_delivery_column(*pair_probes[pair], target)
                 if (
                     table.period_scope == "intervals"
                     and pair_probes[pair] in scoped_delivery["intervals"]

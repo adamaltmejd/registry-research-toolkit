@@ -339,7 +339,7 @@ def test_blocked_findings_match_the_materializers_own(client, catalog_db):
 
     spec = _spec(steward="swecov")
     with per_request_conn(catalog_db) as conn:
-        expected = materialize_order(project_from_raw(spec), None, conn)
+        expected = materialize_order(project_from_raw(spec), conn)
 
     findings = client.post("/api/project/order", json=spec).json()["findings"]
     assert findings == [f.model_dump(mode="json") for f in expected.findings]

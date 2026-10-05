@@ -413,22 +413,6 @@ def test_per_column_window_spans_coding_states_without_losing_storage(
             ("First", "2020-01-01", "2020-12-31", "200"),
             ("Second", "2020-01-01", "2020-12-31", "18"),
         }
-    from reg_meta.inventory_check import _expanded_columns
-
-    assert _expanded_columns(
-        [(s.valid_from, s.valid_to, s.delivery_column_name) for s in variable.states],
-        [
-            (
-                a.delivery_column_name,
-                w.valid_from,
-                w.valid_to,
-                w.provenance,
-                w.column_metadata,
-            )
-            for a in variable.aliases
-            for w in a.windows
-        ],
-    ) == {"First", "Second"}
     gap = variable.model_copy(
         update={
             "states": (

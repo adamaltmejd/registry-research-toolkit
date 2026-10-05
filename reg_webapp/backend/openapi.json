@@ -2916,7 +2916,7 @@
       },
       "OrderFinding": {
         "additionalProperties": false,
-        "description": "One blocking reason the order cannot be materialized.\n\nCodes: `steward_mismatch`, `project_empty`, `period_not_orderable`,\n`variable_unresolved`, `binding_unavailable`, `representation_unknown`,\n`representation_unresolved`, `representation_ambiguous`, `mapping_missing`,\n`mapping_ambiguous`, `coverage_gap`. `period` carries the EXACT offending\nsubperiod for the coverage codes, so a researcher can fix the request in one\nedit.",
+        "description": "One blocking reason the order cannot be materialized.\n\nCodes: `steward_mismatch`, `project_empty`, `period_not_orderable`,\n`variable_unresolved`, `binding_unavailable`, `representation_unknown`,\n`representation_unresolved`, `representation_ambiguous`, `mapping_missing`,\n`column_window_unavailable`, `coverage_gap`. `period` carries the EXACT offending\nsubperiod for the coverage codes, so a researcher can fix the request in one\nedit.",
         "properties": {
           "code": {
             "title": "Code",
@@ -3005,10 +3005,18 @@
       },
       "OrderProvenance": {
         "additionalProperties": false,
-        "description": "Everything the steward-side extract system needs to know WHICH project,\nagainst WHICH catalog, for WHICH deployment \u2014 so the manifest is\nself-contained offline (\u00a712: no network, no catalog lookup at extract time).\n\n`project_hash` is the SHA-256 of the project's canonical JSON, so a manifest\ncan be tied back to the exact uploaded project bytes.\n\n`mode` names what GROUNDED the entries \u2014 a steward's physical inventory or\n\u00a712's global fallback (canonical resolution alone, blank `table`) \u2014 so a\nreader never has to infer it from the entry shape.",
+        "description": "Everything the steward-side extract system needs to know WHICH project,\nagainst WHICH catalog, for WHICH deployment \u2014 so the manifest is\nself-contained offline (\u00a712: no network, no catalog lookup at extract time).\n\n`project_hash` is the SHA-256 of the project's canonical JSON, so a manifest\ncan be tied back to the exact uploaded project bytes.\n\n`mode` names what GROUNDED the entries \u2014 a steward's compiled holdings or\n\u00a712's global fallback (canonical resolution alone, blank `table`) \u2014 so a\nreader never has to infer it from the entry shape.",
         "properties": {
-          "catalog_import_date": {
-            "title": "Catalog Import Date",
+          "artifact_kind": {
+            "enum": [
+              "catalog",
+              "steward"
+            ],
+            "title": "Artifact Kind",
+            "type": "string"
+          },
+          "catalog_generation_id": {
+            "title": "Catalog Generation Id",
             "type": "string"
           },
           "catalog_schema_version": {
@@ -3017,7 +3025,7 @@
           },
           "mode": {
             "enum": [
-              "steward_inventory",
+              "steward_holdings",
               "global_fallback"
             ],
             "title": "Mode",
@@ -3052,7 +3060,8 @@
           "project_reg_meta_version",
           "project_hash",
           "catalog_schema_version",
-          "catalog_import_date"
+          "catalog_generation_id",
+          "artifact_kind"
         ],
         "title": "OrderProvenance",
         "type": "object"
