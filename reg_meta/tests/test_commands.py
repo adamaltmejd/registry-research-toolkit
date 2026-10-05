@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 import pytest
+from reader_artifacts import stamp_catalog_identity
 from reg_meta.cli import run
 
 
@@ -1020,6 +1021,7 @@ class TestGetValues:
             "INSERT INTO import_manifest VALUES ('schema_version', ?)",
             (SCHEMA_VERSION,),
         )
+        stamp_catalog_identity(conn)
         # Two registers, same variable name + var_id, same year, different code labels.
         from reg_meta_build.db import seed_providers
 
@@ -2325,8 +2327,9 @@ class TestSchemaCompat:
         db = tmp_path / "reg_meta.db"
         conn = sqlite3.connect(str(db))
         conn.executescript(DDL)
+        stamp_catalog_identity(conn)
         conn.execute(
-            "INSERT INTO import_manifest VALUES ('schema_version', ?)", (version,)
+            "UPDATE import_manifest SET value=? WHERE key='schema_version'", (version,)
         )
         conn.commit()
         conn.close()

@@ -1,0 +1,20 @@
+{
+  "fixture": "reader",
+  "artifact": "steward",
+  "argv": [
+    "--scope",
+    "reference",
+    "search",
+    "--query",
+    "Value",
+    "--field",
+    "description",
+    "--type",
+    "variable",
+    "--no-fold",
+    "--limit",
+    "1"
+  ],
+  "page": 2,
+  "observe": "search-page"
+}

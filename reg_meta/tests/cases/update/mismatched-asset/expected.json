@@ -1,0 +1,10 @@
+{
+  "error": {
+    "code": "incompatible_db_asset",
+    "class": "configuration",
+    "message": "Release reg_meta/v0.0.0 has a DB asset, but its artifact is incompatible with this version of reg_meta: Selected catalog 'swecov' disagrees with artifact kind 'catalog' and steward None.",
+    "remediation": "The maintainer needs to upload a freshly-built DB to a recent release. Report this at https://github.com/adamaltmejd/registry-research-toolkit/issues. Your existing database (if any) was left untouched."
+  },
+  "old_bytes_preserved": true,
+  "temporary_files": []
+}

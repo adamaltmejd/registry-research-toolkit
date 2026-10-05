@@ -1,0 +1,9 @@
+{
+  "package": "up_to_date",
+  "database_tag": "reg_meta/v0.0.0",
+  "docs_tag": "reg_meta/v0.0.0",
+  "urls": [
+    "reg_meta_swecov.db.zst",
+    "reg_meta_docs.db.zst"
+  ]
+}

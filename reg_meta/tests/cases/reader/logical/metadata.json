@@ -1,0 +1,25 @@
+{
+  "successions": [
+    {
+      "predecessor": "scb/example/value",
+      "successor": "scb/example/reference",
+      "effective_year": 2020
+    }
+  ],
+  "variable_groups": [
+    {
+      "register": "scb/example",
+      "key": "value-family",
+      "label": "Value family",
+      "source": "curated",
+      "members": [
+        {
+          "variable": "scb/example/value"
+        },
+        {
+          "variable": "scb/example/reference"
+        }
+      ]
+    }
+  ]
+}

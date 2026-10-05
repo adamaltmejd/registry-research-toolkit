@@ -1,0 +1,39 @@
+{
+  "entries": [
+    {
+      "source": "Example",
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "variant": "annual",
+        "variable": "scb/example/value",
+        "representation": "Value"
+      },
+      "requested_period": "2018",
+      "physical": {
+        "table": "ShardA",
+        "column": "Observed",
+        "edition": "2018",
+        "partition": "north"
+      }
+    },
+    {
+      "source": "Example",
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "variant": "annual",
+        "variable": "scb/example/value",
+        "representation": "Value"
+      },
+      "requested_period": "2018",
+      "physical": {
+        "table": "ShardB",
+        "column": "Observed",
+        "edition": "2018",
+        "partition": "south"
+      }
+    }
+  ],
+  "clips": []
+}

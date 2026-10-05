@@ -1,0 +1,15 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "steward",
+  "operation": "search_pages",
+  "args": [
+    "Choice"
+  ],
+  "kwargs": {
+    "scope": "reference",
+    "field": "value",
+    "type": "value",
+    "limit": 1
+  },
+  "observe": "value-pages"
+}

@@ -989,9 +989,9 @@ accepted bytes (both accepted and legacy inventories are fully explicit). Change
 bytes still require fresh acceptance. Frozen models reject unknown keys, malformed
 FQIDs, empty input and duplicate physical names. The input shape remains
 `table → column → zero-or-more mapping`; every mapping requires `register_variant`,
-`variable` and nonempty literal `representation`. No nullable/unqualified arm remains;
-`mapping_ambiguous`, `_has_unqualified_mapping`, `unqualified_ok` and
-`catalog_index._admitted_intervals` are deleted in the reader cut.
+`variable` and nonempty literal `representation`. Every mapping is qualified by its
+explicit representation. Runtime matching uses compiled canonical spelling and authored
+IDs.
 
 A physical table has an opaque exact `id`, explicit `edition`, `period_scope` defaulting
 to `intervals`, optional `partition` and all literal columns. Finite editions use the
@@ -1028,10 +1028,8 @@ catalog.
 
 ## Order materializer and manifest (`order.py`)
 
-**Compiled-holdings contract for this entire section (2026-10-04).** The shipped pre-cut
-implementation still takes inventory input, emits `mapping_ambiguous` and uses
-`catalog_import_date` and mode `steward_inventory`. The reader cut replaces those with
-the signature, findings and provenance below; this section defines the target contract.
+**Compiled-holdings contract (2026-10-04), implemented by the reader cut.** Ordering
+reads physical facts from the selected artifact and records its generation identity.
 
 `materialize_order(project, conn)` is the one place a logical `project_data.json`
 selection meets a steward's physical delivery topology. It returns either a complete
@@ -1109,11 +1107,11 @@ Per `sources[*].bindings[*]`, in project declaration order:
 binding — `steward_mismatch`, `project_empty`, `period_not_orderable`,
 `variable_unresolved`, `binding_unavailable`, `representation_unknown`,
 `representation_unresolved`, `representation_ambiguous`, `mapping_missing`,
-`coverage_gap` — so a researcher fixes the whole order in one edit instead of one gap
-per round trip. `ProjectData.steward` must equal the deployment's steward — the
-manifest's, or `"global"` in fallback mode (provenance is checked before anything
-resolves; retargeting is deliberately not a feature) — and an empty project stays a
-valid draft that cannot produce a header-only manifest.
+`coverage_gap`, `column_window_unavailable` — so a researcher fixes the whole order in
+one edit instead of one gap per round trip. `ProjectData.steward` must equal the
+deployment's steward — the manifest's, or `"global"` in fallback mode (provenance is
+checked before anything resolves; retargeting is deliberately not a feature) — and an
+empty project stays a valid draft that cannot produce a header-only manifest.
 
 **The manifest is a versioned JSON contract.** Version 1 is **in definition** until the
 §12 boundary ships: it has no external consumer yet, so shape changes while the

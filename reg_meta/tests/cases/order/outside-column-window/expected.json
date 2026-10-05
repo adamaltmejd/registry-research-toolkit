@@ -1,0 +1,12 @@
+{
+  "findings": [
+    {
+      "code": "column_window_unavailable",
+      "message": "policy/inventory.toml:table[1]: table 'Annual2019' column 'Observed' has no applicable column window for representation 'Value'",
+      "source": "Example",
+      "variable": "scb/example/value",
+      "period": "2019"
+    }
+  ],
+  "clips": []
+}

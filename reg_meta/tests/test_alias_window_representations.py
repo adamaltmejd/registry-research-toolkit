@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _representation_fixtures import build_alias_representations
+from reader_artifacts import stamp_catalog_identity
 from reg_meta.catalog import Catalog, ValueSetMember
 from reg_meta.db import open_db
 from reg_meta.queries import (
@@ -26,7 +27,10 @@ _ALIASES = ("LoneInk_LISA2006", "LoneInk_LISA2007")
 def _build_multi_alias_db(tmp_path: Path) -> Path:
     # One concrete SCB cvid can list several delivery headers. They are
     # co-delivered representations of the same state, not search-only aliases.
-    return build_alias_representations(tmp_path)
+    path = build_alias_representations(tmp_path)
+    with sqlite3.connect(path) as conn:
+        stamp_catalog_identity(conn)
+    return path
 
 
 def test_multi_alias_cvid_states_expose_every_delivery_column(tmp_path: Path) -> None:

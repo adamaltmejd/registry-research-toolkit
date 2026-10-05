@@ -154,7 +154,7 @@ def check_inventory(
 
     variant_ids = _variant_ids(conn, set(variants))
     variable_ids = _variable_ids(conn, set(variables))
-    catalog = Catalog(conn)
+    catalog = Catalog(conn, scope="reference")
     findings: list[InventoryFinding] = []
 
     for coordinate in sorted(variants):
@@ -380,36 +380,12 @@ def _delivered(
     *,
     scope: Literal["intervals", "year_independent"] | None = None,
 ) -> dict[_PairIds, frozenset[str]]:
-    """For each pair of `pairs` the catalog carries a state for, the delivery
-    column names the resolver would produce over the whole history.
+    """Whole-history delivery columns for reachable authored pairs.
 
-    A pair ABSENT from the result is one no `variable_state` row pairs — the
-    binding is unreachable. A pair mapped to an EMPTY set is reachable but
-    delivers no column (its states all carry a NULL `delivery_column_name`);
-    that is still a reachable binding, because whether an unqualified binding is
-    orderable across a given period is the representation grain, which only the
-    order path can decide.
-
-    `variable_alias_window` is read the way its ONLY resolver reader reads it
-    (`Catalog._expand_state_windows`), never as a flat union. Source-derived
-    shared windows replace a state only when contained in its validity and its
-    own delivery column participates; otherwise the state stands on its own.
-    Per-column storage windows intersect canonical states; structural validation
-    requires complete backing state coverage. Provenance-bearing curated windows
-    are additive. A flat union would bless an orphaned window as deliverable
-    and let a deployment boot on a mapping
-    `resolve_at` cannot fill — the exact false pass this gate exists to prevent.
-
-    These two tables have a SECOND reader with a deliberately different rule:
-    `reg_meta_build.inventory_coverage` (Y-115, extend-db's steward-holdings
-    gate) does read them as a flat union, because it asks whether the catalog
-    claims the column in an edition AT ALL, not whether `resolve_at` can fill
-    the mapping. Move `_expand_state_windows`' semantics and that reader needs
-    looking at too.
-
-    Two streaming scans, filtered against the inventory's own pairs, so the
-    working set stays the inventory's and not the catalog's."""
-    catalog = Catalog(conn)
+    A missing pair has no state at its variant; an empty set is reachable but
+    has no delivery column. Catalog owns all state and alias-window expansion.
+    """
+    catalog = Catalog(conn, scope="reference")
     delivered = {}
     for variable_id, variant_id in sorted(pairs):
         if conn.execute(

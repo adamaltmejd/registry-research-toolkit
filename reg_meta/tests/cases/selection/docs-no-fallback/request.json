@@ -1,0 +1,13 @@
+{
+  "kind": "steward",
+  "install": "swecov",
+  "argv": [
+    "--catalog",
+    "swecov"
+  ],
+  "command": [
+    "docs",
+    "list"
+  ],
+  "global_docs": true
+}

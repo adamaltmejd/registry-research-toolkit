@@ -1,0 +1,9 @@
+{
+  "exit": 10,
+  "error": {
+    "code": "catalog_unpublishable",
+    "class": "configuration",
+    "message": "Selected artifact lacks a publishable catalog identity and generation.",
+    "remediation": "Install a complete catalog with reg-meta update --catalog NAME."
+  }
+}

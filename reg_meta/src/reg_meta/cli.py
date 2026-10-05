@@ -110,7 +110,13 @@ def _build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         add_help=False,
     )
-    parser.add_argument(
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument(
+        "--catalog",
+        default=None,
+        help="Named catalog installation (global or steward slug).",
+    )
+    selection.add_argument(
         "--db",
         default=None,
         help=f"Database directory (default: {default_db_dir()}).",
@@ -145,6 +151,12 @@ def _build_parser() -> argparse.ArgumentParser:
         "--version", action="store_true", default=False, help=argparse.SUPPRESS
     )
 
+    parser.add_argument(
+        "--scope",
+        choices=["holdings", "reference"],
+        default=None,
+        help="Read scope for search, get register, schema and availability.",
+    )
     sub = parser.add_subparsers(dest="command")
 
     search_p = sub.add_parser(
@@ -622,20 +634,11 @@ def _build_parser() -> argparse.ArgumentParser:
             "an unreadable/invalid project or inventory exits 10.\n\n"
             "Examples:\n"
             "  reg-meta order project_data.json\n"
-            "  reg-meta order project_data.json --inventory swecov.toml -o order.json"
+            "  reg-meta order project_data.json --output order.json"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     order_p.add_argument("project", help="Path to the project_data.json to order.")
-    order_p.add_argument(
-        "--inventory",
-        default=None,
-        help=(
-            "Path to the steward delivery-inventory TOML. Omit for a global "
-            "deployment (no physical topology — canonical resolution grounds "
-            "the order)."
-        ),
-    )
 
     # --- doc command family ---
     doc_p = sub.add_parser(
@@ -723,12 +726,22 @@ def _build_parser() -> argparse.ArgumentParser:
 # ---------------------------------------------------------------------------
 
 
+def _selected_name(args: argparse.Namespace) -> str | None:
+    if args.catalog is not None:
+        return args.catalog
+    return "global" if args.db is None and not os.environ.get("REG_META_DB") else None
+
+
 def _cmd_info(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
-    db = db_path_from_args(args.db)
+    db = db_path_from_args(args.db, catalog=args.catalog)
     conn = open_db(db, check_schema=False)
     try:
         manifest = get_manifest(conn)
+        if _selected_name(args) is not None:
+            from .db import validate_catalog_selection
+
+            validate_catalog_selection(conn, _selected_name(args))
         tables = [
             r[0]
             for r in conn.execute(
@@ -750,6 +763,12 @@ def _cmd_info(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         db_info={
             "schema_version": manifest.get("schema_version", "unknown"),
             "import_date": manifest.get("import_date", "unknown"),
+            "artifact_kind": manifest.get("catalog_artifact_kind"),
+            "steward": manifest.get("steward"),
+            "generation_id": manifest.get("generation_id"),
+            "scope": {"steward": "holdings", "catalog": "reference"}.get(
+                manifest.get("catalog_artifact_kind", "")
+            ),
         },
         data={"manifest": manifest, "table_counts": table_counts, "db_path": str(db)},
         duration_ms=duration_ms,
@@ -761,7 +780,13 @@ def _cmd_update(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
     start = time.perf_counter()
     db_dir = Path(args.db) if args.db else None
-    result = run_update(db_dir=db_dir, tag=args.tag, force=args.force, yes=args.yes)
+    result = run_update(
+        db_dir=db_dir,
+        catalog=args.catalog,
+        tag=args.tag,
+        force=args.force,
+        yes=args.yes,
+    )
     duration_ms = int((time.perf_counter() - start) * 1000)
     return success_envelope(
         command="update",
@@ -784,17 +809,14 @@ def _cmd_order(args: argparse.Namespace) -> int:
     Exit codes come from the existing error classes via `handle_cli_exception`:
     0 ok, 17 (`EXIT_NO_MATCH`) a fail-closed blocked order, 10 (`EXIT_CONFIG`) an
     unreadable/invalid project or inventory."""
-    from .inventory import load_inventory
     from .order import blocked_message, load_project, materialize_order
 
     project = load_project(Path(args.project))
-    # No `--inventory` is the GLOBAL deployment (§12's fallback), the same
-    # `inventory=None` the webapp's global deployment passes — not a degraded
-    # mode the adapter invents.
-    inventory = load_inventory(Path(args.inventory)) if args.inventory else None
-    conn = open_db(db_path_from_args(args.db))
+    conn = open_db(
+        db_path_from_args(args.db, catalog=args.catalog), catalog=_selected_name(args)
+    )
     try:
-        result = materialize_order(project, inventory, conn)
+        result = materialize_order(project, conn)
     finally:
         conn.close()
     if result.manifest is None:
@@ -817,12 +839,33 @@ def _cmd_order(args: argparse.Namespace) -> int:
 # ---------------------------------------------------------------------------
 
 
-def _cmd_doc_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+def _selected_doc_db(args: argparse.Namespace) -> sqlite3.Connection:
     from .doc_db import ensure_doc_db
+
+    catalog_path = db_path_from_args(args.db, catalog=args.catalog)
+    open_db(catalog_path, catalog=_selected_name(args)).close()
+    directory = catalog_path.parent
+    try:
+        return ensure_doc_db(str(directory))
+    except RegMetaError as exc:
+        if exc.code != "doc_db_not_found":
+            raise
+        raise RegMetaError(
+            exit_code=exc.exit_code,
+            code=exc.code,
+            error_class=exc.error_class,
+            message=exc.message,
+            remediation=f"Run reg-meta update --catalog {_selected_name(args)} to fetch the paired doc DB."
+            if _selected_name(args) is not None
+            else f"Run reg-meta update --db {directory} to fetch the paired doc DB.",
+        ) from exc
+
+
+def _cmd_doc_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     from .doc_queries import doc_search
 
     start = time.perf_counter()
-    conn = ensure_doc_db(args.db)
+    conn = _selected_doc_db(args)
     try:
         data = doc_search(
             conn,
@@ -853,11 +896,10 @@ def _cmd_doc_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
 
 def _cmd_doc_get(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    from .doc_db import ensure_doc_db
     from .doc_queries import doc_get
 
     start = time.perf_counter()
-    conn = ensure_doc_db(args.db)
+    conn = _selected_doc_db(args)
     try:
         data = doc_get(conn, args.identifier)
     finally:
@@ -881,11 +923,10 @@ def _cmd_doc_get(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
 
 def _cmd_doc_list(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    from .doc_db import ensure_doc_db
     from .doc_queries import doc_list
 
     start = time.perf_counter()
-    conn = ensure_doc_db(args.db)
+    conn = _selected_doc_db(args)
     try:
         data = doc_list(
             conn,
@@ -957,13 +998,14 @@ def _search_docs(query: str, db_arg: str | None = None) -> list[dict[str, Any]]:
 
 def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
-    db = db_path_from_args(args.db)
-    conn = open_db(db)
+    db = db_path_from_args(args.db, catalog=args.catalog)
+    conn = open_db(db, catalog=_selected_name(args))
     try:
-        info = get_db_info(conn)
+        info = get_db_info(conn, getattr(args, "scope", None))
         data = search(
             conn,
             args.query,
+            scope=args.scope,
             field=args.field,
             type=args.type,
             register=args.register,
@@ -981,7 +1023,7 @@ def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     # key) so the doc rows (plain dicts) interleave on the shared `rank` sort key.
     search_rows = [m.model_dump(mode="json", by_alias=True) for m in data.results]
     doc_results = (
-        _search_docs(args.query, db_arg=args.db) if args.cursor is None else []
+        _search_docs(args.query, db_arg=str(db.parent)) if args.cursor is None else []
     )
     # `search_rows` is already in the catalog's public, query-sensitive order.
     # Its raw ranks alone do not encode the exact/prefix score that precedes rank,
@@ -1046,11 +1088,11 @@ def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
 def _cmd_get_register(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
-    db = db_path_from_args(args.db)
-    conn = open_db(db)
+    db = db_path_from_args(args.db, catalog=args.catalog)
+    conn = open_db(db, catalog=_selected_name(args))
     try:
-        info = get_db_info(conn)
-        registers = get_register(conn, args.register)
+        info = get_db_info(conn, getattr(args, "scope", None))
+        registers = get_register(conn, args.register, scope=args.scope)
         data = registers[0] if len(registers) == 1 else {"registers": registers}
     finally:
         conn.close()
@@ -1066,12 +1108,13 @@ def _cmd_get_register(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
 def _cmd_get_schema(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
-    db = db_path_from_args(args.db)
-    conn = open_db(db)
+    db = db_path_from_args(args.db, catalog=args.catalog)
+    conn = open_db(db, catalog=_selected_name(args))
     try:
-        info = get_db_info(conn)
+        info = get_db_info(conn, getattr(args, "scope", None))
         data = get_schema(
             conn,
+            scope=args.scope,
             register_variant_id=args.register_variant_id,
             register=args.register,
             years=args.years,
@@ -1111,10 +1154,10 @@ def _cmd_get_groups(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             ),
         )
     start = time.perf_counter()
-    db = db_path_from_args(args.db)
-    conn = open_db(db)
+    db = db_path_from_args(args.db, catalog=args.catalog)
+    conn = open_db(db, catalog=_selected_name(args))
     try:
-        info = get_db_info(conn)
+        info = get_db_info(conn, getattr(args, "scope", None))
         if args.classifications:
             data = get_classification_concept_groups(conn)
         else:
@@ -1136,10 +1179,10 @@ def _cmd_get_groups(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
 def _cmd_get_varinfo(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
-    db = db_path_from_args(args.db)
-    conn = open_db(db)
+    db = db_path_from_args(args.db, catalog=args.catalog)
+    conn = open_db(db, catalog=_selected_name(args))
     try:
-        info = get_db_info(conn)
+        info = get_db_info(conn, getattr(args, "scope", None))
         variables = get_varinfo(conn, args.variable, register=args.register)
         data: dict[str, Any] = (
             variables[0] if len(variables) == 1 else {"variables": variables}
@@ -1149,10 +1192,9 @@ def _cmd_get_varinfo(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
     # Annotate results with doc availability hint
     try:
-        from .doc_db import ensure_doc_db
         from .doc_queries import doc_exists
 
-        doc_conn = ensure_doc_db(args.db)
+        doc_conn = _selected_doc_db(args)
         try:
             has_doc = doc_exists(doc_conn, args.variable)
             if has_doc:
@@ -1252,15 +1294,15 @@ def _group_instances_by_codes(
 
 def _cmd_get_values(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
-    db = db_path_from_args(args.db)
-    conn = open_db(db)
+    db = db_path_from_args(args.db, catalog=args.catalog)
+    conn = open_db(db, catalog=_selected_name(args))
 
     target = args.target
     args._collapsed_instances = 0
     args._collapsed_registers = 0
 
     try:
-        info = get_db_info(conn)
+        info = get_db_info(conn, getattr(args, "scope", None))
         # A2.7: the by-CVID path is gone — the FQID is variable-grained and a
         # raw CVID is an internal build artifact with no consumer. A numeric
         # target resolves as a var_id (the variable's `provider_key`) inside
@@ -1331,10 +1373,10 @@ def _cmd_get_values(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
 def _cmd_get_datacolumns(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
-    db = db_path_from_args(args.db)
-    conn = open_db(db)
+    db = db_path_from_args(args.db, catalog=args.catalog)
+    conn = open_db(db, catalog=_selected_name(args))
     try:
-        info = get_db_info(conn)
+        info = get_db_info(conn, getattr(args, "scope", None))
         data = get_datacolumns(conn, args.variable, register=args.register)
     finally:
         conn.close()
@@ -1350,10 +1392,10 @@ def _cmd_get_datacolumns(args: argparse.Namespace) -> tuple[dict[str, Any], int]
 
 def _cmd_get_coded_variables(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
-    db = db_path_from_args(args.db)
-    conn = open_db(db)
+    db = db_path_from_args(args.db, catalog=args.catalog)
+    conn = open_db(db, catalog=_selected_name(args))
     try:
-        info = get_db_info(conn)
+        info = get_db_info(conn, getattr(args, "scope", None))
         data = get_coded_variables(
             conn,
             min_codes=args.min_codes,
@@ -1386,10 +1428,10 @@ def _cmd_get_diff(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             remediation="Swap the year values.",
         )
     start = time.perf_counter()
-    db = db_path_from_args(args.db)
-    conn = open_db(db)
+    db = db_path_from_args(args.db, catalog=args.catalog)
+    conn = open_db(db, catalog=_selected_name(args))
     try:
-        info = get_db_info(conn)
+        info = get_db_info(conn, getattr(args, "scope", None))
         data = get_diff(
             conn,
             register=args.register,
@@ -1421,10 +1463,10 @@ def _cmd_get_diff(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
 def _cmd_get_lineage(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
-    db = db_path_from_args(args.db)
-    conn = open_db(db)
+    db = db_path_from_args(args.db, catalog=args.catalog)
+    conn = open_db(db, catalog=_selected_name(args))
     try:
-        info = get_db_info(conn)
+        info = get_db_info(conn, getattr(args, "scope", None))
         data = get_lineage(conn, args.variable, register=args.register)
     finally:
         conn.close()
@@ -1476,10 +1518,10 @@ def _cmd_get_classification(args: argparse.Namespace) -> tuple[dict[str, Any], i
         )
 
     start = time.perf_counter()
-    db = db_path_from_args(args.db)
-    conn = open_db(db)
+    db = db_path_from_args(args.db, catalog=args.catalog)
+    conn = open_db(db, catalog=_selected_name(args))
     try:
-        info = get_db_info(conn)
+        info = get_db_info(conn, getattr(args, "scope", None))
         if args.list_all:
             data: Any = {"classifications": list_classifications(conn)}
             args_payload: dict[str, Any] = {"list": True}
@@ -1525,11 +1567,13 @@ def _cmd_get_classification(args: argparse.Namespace) -> tuple[dict[str, Any], i
 
 def _cmd_get_availability(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
-    db = db_path_from_args(args.db)
-    conn = open_db(db)
+    db = db_path_from_args(args.db, catalog=args.catalog)
+    conn = open_db(db, catalog=_selected_name(args))
     try:
-        info = get_db_info(conn)
-        data = get_availability(conn, args.target, register=args.register)
+        info = get_db_info(conn, getattr(args, "scope", None))
+        data = get_availability(
+            conn, args.target, register=args.register, scope=args.scope
+        )
     finally:
         conn.close()
     duration_ms = int((time.perf_counter() - start) * 1000)
@@ -1569,10 +1613,10 @@ def _cmd_resolve(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             remediation="Use --columns or pass JSON array of strings on stdin.",
         )
 
-    db = db_path_from_args(args.db)
-    conn = open_db(db)
+    db = db_path_from_args(args.db, catalog=args.catalog)
+    conn = open_db(db, catalog=_selected_name(args))
     try:
-        info = get_db_info(conn)
+        info = get_db_info(conn, getattr(args, "scope", None))
         results = resolve(conn, columns, register=args.register)
     finally:
         conn.close()
@@ -3129,22 +3173,20 @@ def _prompt_first_run_download(
 ) -> None:
     """Offer an interactive download when a query command finds artifacts missing.
 
-    *needs_main* is True for commands that open the main metadata DB
-    (``search``, ``get``, ``resolve``) and False for ``docs/*`` which
-    only read the doc DB. Prompting for the ~400 MB main DB on a
-    docs-only command would be wasteful and can fail the command even
-    when the user has a usable doc DB. In non-interactive contexts
-    (pipes, ``--format json``) this is a no-op — the subsequent handler
-    call will raise ``db_not_found`` / ``doc_db_not_found`` which
-    surface as the standard structured error.
+    Metadata commands require the selected catalog; docs commands also require
+    its paired doc DB. Docs admit the catalog identity before serving content.
+    In non-interactive contexts (pipes, ``--format json``) this is a no-op;
+    the handler reports the missing artifact as a structured error.
     """
     from .doc_db import DOC_DB_FILENAME
 
-    db_path = db_path_from_args(args.db)
+    db_path = db_path_from_args(args.db, catalog=args.catalog)
     docs_path = db_path.parent / DOC_DB_FILENAME
-    missing_main = needs_main and not db_path.exists()
+    missing_main = not db_path.exists()
     missing_docs = not needs_main and not docs_path.exists()
     if not (missing_main or missing_docs):
+        return
+    if _selected_name(args) is None:
         return
     if fmt == "json" or not sys.stdin.isatty():
         return
@@ -3157,7 +3199,7 @@ def _prompt_first_run_download(
     header = (
         "Metadata commands require the main DB."
         if needs_main
-        else "Docs commands require the doc DB."
+        else "Docs commands require the selected catalog and its paired doc DB."
     )
     sys.stderr.write(
         f"{header}\nMissing: " + ", ".join(parts) + ".\nDownload now? [y/N] "
@@ -3169,7 +3211,9 @@ def _prompt_first_run_download(
     from .download import download_db, download_docs_db
 
     if missing_main:
-        download_db(db_dir=db_path.parent, yes=True)
+        download_db(
+            db_dir=db_path.parent, catalog=_selected_name(args) or "global", yes=True
+        )
     if missing_docs:
         download_docs_db(db_dir=docs_path.parent)
     sys.stderr.write("\n")
@@ -3222,6 +3266,23 @@ def run(argv: list[str] | None = None) -> int:
         if not sub_command:
             _print_group_brief(parser, "docs")
             return EXIT_USAGE
+
+    if args.scope is not None and (args.command, sub_command) not in {
+        ("search", None),
+        ("get", "register"),
+        ("get", "schema"),
+        ("get", "availability"),
+    }:
+        return handle_cli_exception(
+            RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="usage_error",
+                error_class="usage",
+                message="--scope is available only for search, get register, get schema and get availability.",
+                remediation="Remove --scope for this command.",
+            ),
+            getattr(args, "output", None),
+        )
 
     # `order` writes the canonical manifest bytes (`OrderManifest.to_json`)
     # verbatim, so it bypasses the envelope/`--format` pipeline below —

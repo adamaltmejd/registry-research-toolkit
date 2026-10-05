@@ -1,0 +1,9 @@
+{
+  "exit": 10,
+  "error": {
+    "code": "catalog_bootstrap_required",
+    "class": "configuration",
+    "message": "Explicit-path updates require an existing admitted catalog before any writes.",
+    "remediation": "Bootstrap with reg-meta update --catalog NAME, then select its directory."
+  }
+}

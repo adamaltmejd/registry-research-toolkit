@@ -1,0 +1,13 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "steward",
+  "operation": "catalog_method",
+  "method": "data_warnings",
+  "args": [
+    "scb/example"
+  ],
+  "kwargs": {
+    "period": 2020
+  },
+  "observe": "warnings"
+}

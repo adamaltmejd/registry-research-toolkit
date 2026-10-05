@@ -1,0 +1,5 @@
+{
+  "first_types": ["doc", "variable"],
+  "catalog_fqids": ["scb/example/value", "scb/example/reference", "scb/example/second", "sos/unheld/unheld"],
+  "last_has_more": false
+}

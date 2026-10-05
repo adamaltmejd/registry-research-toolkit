@@ -1,0 +1,13 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "steward",
+  "operation": "catalog_method",
+  "method": "provider_column_coverage",
+  "args": [
+    "scb"
+  ],
+  "kwargs": {
+    "register_slugs": []
+  },
+  "observe": "coverage"
+}

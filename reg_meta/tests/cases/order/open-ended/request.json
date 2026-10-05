@@ -1,0 +1,31 @@
+{
+  "fixture": "reader/open-ended",
+  "artifact": "catalog",
+  "project": {
+    "schema_version": "3.0.0",
+    "steward": "global",
+    "reg_meta_version": "reg_meta/v0.40.1",
+    "name": "Reader case",
+    "sources": [
+      {
+        "name": "Example",
+        "register_variant": "scb/example/annual",
+        "period": {
+          "from": 2018,
+          "to": 2020
+        },
+        "bindings": [
+          {
+            "variable": "scb/example/value",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      }
+    ]
+  },
+  "observe": [
+    "entries",
+    "clips"
+  ]
+}

@@ -772,7 +772,7 @@ def test_cursor_binds_catalog_generation(conn: sqlite3.Connection) -> None:
     assert first.next_cursor is not None
     conn.execute(
         "INSERT OR REPLACE INTO import_manifest (key, value) "
-        "VALUES ('import_date', '2099-01-01')"
+        "VALUES ('generation_id', 'changed-generation')"
     )
 
     with pytest.raises(RegMetaError) as exc:

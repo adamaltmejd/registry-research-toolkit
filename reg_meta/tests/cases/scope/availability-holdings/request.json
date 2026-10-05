@@ -1,0 +1,17 @@
+{
+  "fixture": "reader",
+  "artifact": "steward",
+  "argv": [
+    "--scope",
+    "holdings",
+    "get",
+    "availability",
+    "scb/example"
+  ],
+  "observe": [
+    "min_year",
+    "max_year",
+    "years",
+    "gaps"
+  ]
+}

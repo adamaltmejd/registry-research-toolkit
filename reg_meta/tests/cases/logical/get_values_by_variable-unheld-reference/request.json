@@ -1,0 +1,10 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "catalog",
+  "operation": "get_values_by_variable",
+  "args": [
+    "Value reference"
+  ],
+  "kwargs": {},
+  "observe": "owner"
+}

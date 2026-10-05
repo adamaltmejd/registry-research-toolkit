@@ -1,0 +1,21 @@
+{
+  "fixture": "reader",
+  "artifact": "catalog",
+  "first_identity": {
+    "import_date": "2026-08-01T00:00:00Z"
+  },
+  "second_identity": {
+    "import_date": "2026-09-01T00:00:00Z"
+  },
+  "changed_identity": {
+    "import_date": "2026-09-01T00:00:00Z",
+    "curation_tree_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  },
+  "search": {
+    "query": "Value",
+    "field": "description",
+    "type": "variable",
+    "limit": 1,
+    "fold_groups": false
+  }
+}

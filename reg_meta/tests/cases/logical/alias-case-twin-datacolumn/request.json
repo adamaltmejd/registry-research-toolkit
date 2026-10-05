@@ -1,0 +1,15 @@
+{
+  "fixture": "reader/case-twins",
+  "artifact": "steward",
+  "operation": "search",
+  "args": [
+    "value"
+  ],
+  "kwargs": {
+    "field": "datacolumn",
+    "type": "variable",
+    "years": "2019",
+    "fold_groups": false
+  },
+  "observe": "datacolumn-search"
+}

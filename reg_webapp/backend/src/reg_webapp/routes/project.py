@@ -306,7 +306,7 @@ def _order_blocking(
         return _not_an_order(exc.message, ())
 
     with per_request_conn(db_path) as conn:
-        result = materialize_order(project, inventory, conn)
+        result = materialize_order(project, conn)
     if result.manifest is None:
         return _not_an_order(blocked_message(result), result.findings)
     return Response(
