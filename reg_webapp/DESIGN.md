@@ -536,13 +536,13 @@ present on the wire as the shared sort key.
   only as a bound parameter (no SQLi surface), so the gates guard cost/abuse, not
   injection.
 - **Bounded-origin budget (#1135):** every reg_meta SQL arm receives a finite prefix
-  bound and expensive folding, owner annotation, golden construction, steward backfill,
-  and top-results construction operate only on bounded candidates. The default is 3 per
-  group (maximum 50). The route emits per-phase `Server-Timing` entries for controlled
-  profiling. Representative broad all-scope cache-miss p95 is budgeted at 500 ms and
-  browser-cold search LCP below 2.5 s; edge-cache hits are not accepted as cold-origin
-  evidence. Invalid/context-stale cursors map to an actionable HTTP 422 at the route
-  boundary. There is no in-process response cache.
+  bound and expensive folding, owner annotation, golden construction, and top-results
+  construction operate only on bounded candidates. The default is 3 per group (maximum
+  50). The route emits per-phase `Server-Timing` entries for controlled profiling.
+  Representative broad all-scope cache-miss p95 is budgeted at 500 ms and browser-cold
+  search LCP below 2.5 s; edge-cache hits are not accepted as cold-origin evidence.
+  Invalid/context-stale cursors map to an actionable HTTP 422 at the route boundary.
+  There is no in-process response cache.
 - **Golden-boost** (`golden.apply_golden_boost`, #393 item 4 / #311): a curated-pin
   INJECTION (no longer the old no-op seam). For an exact (normalized: diacritic-fold +
   casefold + strip — so `sysselsattning` matches the `sysselsättning` pin, consistent
@@ -1056,11 +1056,11 @@ removed; builder publication validation owns those invariants.
 Catalog, search, and stats accept `?scope=holdings|reference`. Catalog artifacts default
 to reference and reject holdings; steward artifacts default to holdings and allow
 reference. Scope is applied inside the shared reader before hydration, grouping,
-ranking, counts, or pagination. Search does not construct allowlists or backfill
-filtered pages. Finite curated pins are admitted through `Catalog.exists` before ranking
-and pagination. Cursors bind both scope and the full artifact generation. Project
-endpoints reject any `scope` query parameter with a located 422; browse scope cannot
-override the selected artifact's orderability.
+ranking, counts, or pagination. The adapter consumes scoped pages directly. Finite
+curated pins are admitted through `Catalog.exists` before ranking and pagination.
+Cursors bind both scope and the full artifact generation. Project endpoints reject any
+`scope` query parameter with a located 422; browse scope cannot override the selected
+artifact's orderability.
 
 Provider and register discovery requires a mapped binding. Variable discovery unions
 mappings across source variants; states and deliveries retain their actual mapped
@@ -1071,7 +1071,8 @@ only when its terminal successor is held, preserving the query string and suffix
 
 Classifications, codes, value-set contents, same-as links, succession relationships,
 graph edges, and lineage remain reference evidence. The browse subject is scoped; a
-reference neighbor does not grant holdings or orderability.
+reference neighbor does not grant holdings or orderability. Hydrated graph states use
+the scoped reader; unheld neighboring variables remain thin with no selectable states.
 
 `/api/context` reports artifact kind, manifest steward, full generation, and default
 scope alongside branding and package versions. Its optional `catalog_period_span` is
