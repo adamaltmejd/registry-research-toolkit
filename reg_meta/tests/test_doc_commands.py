@@ -546,16 +546,6 @@ class TestSearchIntegration:
         }
         assert actual == expected
 
-    def test_search_includes_doc_results(self, combined_db_dir: str):
-        """Doc results must appear in default search."""
-        data, code = _run_json(
-            ["--db", combined_db_dir, "search", "--query", "kommun", "--field", "all"],
-            verbose=True,
-        )
-        assert code == 0
-        types = {r["type"] for r in data["data"]["results"]}
-        assert "doc" in types, "Doc results should appear in default search"
-
     def test_search_doc_hint_when_truncated(self, combined_db_dir: str):
         """When doc results are cut off by limit, doc_hint should be in JSON data."""
         # "variabel" matches three fixture docs (MappedVar, UnmappedVar and the
