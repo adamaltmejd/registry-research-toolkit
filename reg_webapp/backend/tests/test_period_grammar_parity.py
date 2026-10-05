@@ -28,7 +28,9 @@ future change touches one copy and not the other, this test fails.
 
 from __future__ import annotations
 
+import calendar
 import copy
+from datetime import date, timedelta
 from itertools import product
 
 import pytest
@@ -166,3 +168,37 @@ def test_period_list_ordering_agrees_with_reg_meta_bounds() -> None:
                 f"validate_structural rejected={rejected}"
             )
     assert not mismatches, "period bounds drift:\n" + "\n".join(mismatches)
+
+
+def _day(value: str, shift: int) -> str:
+    """``value`` shifted by ``shift`` days. reg_meta synthesizes a Feb-29 upper
+    bound in non-leap years; that edge is read as the last real February day."""
+    year, month, day = (int(part) for part in value.split("-"))
+    if (month, day) == (2, 29) and not calendar.isleap(year):
+        day = 28
+    return (date(year, month, day) + timedelta(days=shift)).isoformat()
+
+
+@pytest.mark.parametrize("token", _VALID)
+def test_period_list_edges_follow_reg_meta_bounds(token: str) -> None:
+    """Full-date neighbours of reg_meta's own bounds for ``token``: a day at its
+    lower or upper bound overlaps it, the day before/after does not. Pins each
+    token form's expansion edges, not just the relative order of the corpus."""
+    lo, hi = period_token_to_bounds(token)
+    first, last = _day(lo, 0), _day(hi, 0)
+    cases: dict[tuple[int | str, ...], bool] = {
+        (_day(lo, -1), token): False,
+        (first, token): True,
+        (token, last): True,
+        (token, _day(hi, 1)): False,
+    }
+    if token.isdigit():
+        # A bare year is also authored as an int literal; same expansion.
+        cases |= {
+            tuple(int(t) if t == token else t for t in pair): rejected
+            for pair, rejected in cases.items()
+        }
+    verdicts = {
+        pair: "/sources/0/period/1" in _period_issue_paths(list(pair)) for pair in cases
+    }
+    assert verdicts == cases
