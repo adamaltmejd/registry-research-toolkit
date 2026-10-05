@@ -12,6 +12,13 @@ from reg_meta.errors import RegMetaError
 
 def pytest_configure(config):
     directory = config.getoption("--artifact-dir")
+    holdings_input = config.getoption("--holdings-input")
+    if holdings_input is not None and (
+        directory is None or not config.getoption("--run-release")
+    ):
+        raise pytest.UsageError(
+            "--holdings-input requires --run-release and --artifact-dir"
+        )
     if directory is None:
         return
     if not config.getoption("--run-release"):
@@ -21,6 +28,13 @@ def pytest_configure(config):
         open_db(Path(directory).expanduser().resolve() / "reg_meta.db").close()
     except RegMetaError as exc:
         raise pytest.UsageError(f"{exc.code}: {exc.message}") from exc
+    if holdings_input is not None:
+        from holdings_accounting import admit_holdings_input
+
+        try:
+            admit_holdings_input(Path(holdings_input), Path(directory))
+        except ValueError as exc:
+            raise pytest.UsageError(str(exc)) from exc
 
 
 def pytest_generate_tests(metafunc):
@@ -33,6 +47,20 @@ def pytest_generate_tests(metafunc):
         else [pytest.param(kind, id=kind) for kind in ("catalog", "steward")]
     )
     metafunc.parametrize("artifact_dir", values, indirect=True, scope="session")
+
+
+def pytest_collection_modifyitems(config, items):
+    if config.getoption("--holdings-input") is not None:
+        return
+    # Private acceptance is an explicit maintainer boundary, never inferred from disk.
+    deselected = [
+        item
+        for item in items
+        if item.name.startswith("test_accepted_input_census_matches_compiled_artifact")
+    ]
+    if deselected:
+        items[:] = [item for item in items if item not in deselected]
+        config.hook.pytest_deselected(items=deselected)
 
 
 @pytest.fixture(scope="session")

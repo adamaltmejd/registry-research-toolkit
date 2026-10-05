@@ -606,20 +606,6 @@ inside their SQL branches before the bound. Presentation layers use it when they
 a curated identity separately: every continuation then shares one origin universe and
 cannot emit the injected identity again at its natural FTS position.
 
-**Pre-cut search admission:** `search` accepts an optional
-`fqids: Collection[str] | None` allow-list (#859) that restricts the **register and
-variable** leaf rows (and concept-group folding) to entities whose navigable `fqid` is
-in the set. A group surfaces only if ≥1 of its members is held, and its `members` list
-is narrowed to held members. Classification and value/code surfaces are catalog-global
-and pass through unaffected. `None` means no restriction — the pre-#859 behavior is
-byte-identical. The restriction is applied before folding and paging, so every page is
-in scope. reg_meta stays steward-agnostic: the caller supplies the allow-list; the set's
-provenance is opaque here. The pre-cut webapp's `/api/search` passed the runtime index's
-union of held binding and register identities; the CLI never passed `fqids`. The reader
-cut replaces this steward admission path with the shared compiled-holdings predicate
-before pagination. General ranking/folding limits remain; only holdings backfill and
-allow-list reconstruction go.
-
 **Why two methods for succession.** `predecessors` / `successors` are split (not one
 `replaced` returning a dict) so every edge-traversal accessor returns `list[...]`
 uniformly. The longitudinal `resolve(fqid).replaced_by` attribute carries the
@@ -821,11 +807,11 @@ shims).
 
 ## Compiled holdings relations and read scope
 
-**Contract (2026-10-04); implementation is the staged §12 cut.** The activated SQLite
-artifact is the sole runtime source of physical holdings. Accepted inventory TOML is a
-builder input contract, not a second runtime catalog. Reference metadata describes
-meaning and validity; holdings describe possession; the existing `Catalog` resolver
-determines semantic applicability at query time. No state/window resolution is compiled.
+**Compiled-holdings contract (2026-10-04).** The activated SQLite artifact is the sole
+runtime source of physical holdings. Accepted inventory TOML is a builder input
+contract, not a second runtime catalog. Reference metadata describes meaning and
+validity; holdings describe possession; the existing `Catalog` resolver determines
+semantic applicability at query time. No state/window resolution is compiled.
 
 Four relations retain these facts:
 
@@ -1030,8 +1016,8 @@ diagnostic output never activates as a catalog.
 
 ## Order materializer and manifest (`order.py`)
 
-**Compiled-holdings contract (2026-10-04), implemented by the reader cut.** Ordering
-reads physical facts from the selected artifact and records its generation identity.
+**Compiled-holdings contract (2026-10-04).** Ordering reads physical facts from the
+selected artifact and records its generation identity.
 
 `materialize_order(project, conn)` is the one place a logical `project_data.json`
 selection meets a steward's physical delivery topology. It returns either a complete
@@ -1605,11 +1591,9 @@ docs query accessor so catalog browse payloads never inline binary content.
 End users never see the markdown files. The doc DB is distributed as a GitHub Release
 asset (`reg_meta_docs.db.zst`) parallel to the main DB asset, installed into the same
 cache dir (`$XDG_DATA_HOME/reg_meta/`), and fetched by `reg-meta update` alongside the
-main DB. **Pre-cut CLI behavior:** query commands (`search`, `get`, `resolve`, `docs/*`)
-refuse to run without the doc DB and offer both downloads on first use. The compiled
-selection contract makes docs optional for metadata, holdings and orders; only a docs
-operation requires its paired sibling and reports `doc_db_not_found` when missing. No
-unrelated installed docs artifact is attached silently.
+main DB. Docs are optional for metadata, holdings and orders; only a docs operation
+requires its paired sibling and reports `doc_db_not_found` when missing. No unrelated
+installed docs artifact is attached silently.
 
 `reg-meta-build build-docs` is a maintainer-only command that rebuilds the doc DB from a
 repo checkout of `reg_meta_build/docs/` before upload. Runtime never reads markdown —
@@ -1723,23 +1707,21 @@ via `reg-meta update`.
 Legacy bare `v*` tags (pre-0.6.0) are still recognized during the transition but new
 releases must use the `reg_meta/v*` prefix.
 
-**Pre-cut update command**: `reg-meta update` is the single command that brings
-everything current — it walks releases to find the latest main-DB and doc-DB assets, and
-(when reg-meta was installed as a uv tool) also runs `uv tool upgrade reg-meta` to
-upgrade the package itself. On a venv/editable install (e.g. the Docker bake) the
-self-upgrade is skipped (`result["package"] = "skipped_not_uv_tool"`) and only the
-DB/doc assets are fetched; the package is managed by whatever installed the venv.
-Already-current assets are skipped (tracked via `.db_source` and `.docs_source` in the
-cache dir). A background version checker runs once per week (cached in
-`~/.local/share/reg_meta/.update_check`) and prints a hint on interactive runs when a
-newer release exists.
+**Update command**: `reg-meta update` is the single command that brings everything
+current — it walks releases to find the latest main-DB and doc-DB assets, and (when
+reg-meta was installed as a uv tool) also runs `uv tool upgrade reg-meta` to upgrade the
+package itself. On a venv/editable install (e.g. the Docker bake) the self-upgrade is
+skipped (`result["package"] = "skipped_not_uv_tool"`) and only the DB/doc assets are
+fetched; the package is managed by whatever installed the venv. Already-current assets
+are skipped (tracked via `.db_source` and `.docs_source` in the cache dir). A background
+version checker runs once per week (cached in `~/.local/share/reg_meta/.update_check`)
+and prints a hint on interactive runs when a newer release exists.
 
-**Pre-cut auto-download on first use**: query commands (`search`, `get`, `resolve`,
-`docs/*`) prompt to download whichever artifacts are missing when invoked interactively.
-Non-interactive invocations fail with `db_not_found` / `doc_db_not_found`. The reader
-cut narrows the docs requirement to docs operations, preserving actionable
-missing-catalog errors and explicit selected-directory updates; metadata/holdings/order
-reads need only the catalog artifact.
+**Auto-download on first use**: metadata, holdings and order reads require only the
+selected catalog artifact. Docs operations additionally require its paired sibling doc
+DB. Interactive query commands offer missing downloads; non-interactive invocations fail
+with actionable `db_not_found` / `doc_db_not_found` errors. Updates preserve explicit
+catalog selection and do not attach an unrelated installed docs artifact.
 
 ### Package version format
 

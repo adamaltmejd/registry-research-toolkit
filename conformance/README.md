@@ -77,9 +77,21 @@ artifact gate does not suppress the other artifact run or native install checks.
 Incompatible published assets remain failures until a matching release is available.
 
 Plan 02 manifests do not contain mapping, period or unmapped-reason totals. Comparisons
-of those relation counts to manifest fields cannot run until that contract exists.
-Accepted-private-input census and performance acceptance remain maintainer checks in
-plan 05. This suite makes no release or private-input acceptance claim.
+of those relation counts to manifest fields cannot run until that contract exists. Exact
+accepted-input table/cell accounting, authored mappings and policy digests run only with
+explicit `--holdings-input` alongside both tier-3 flags:
+
+```sh
+uv run python -m pytest conformance --run-release --artifact-dir=/path/to/steward/catalog --holdings-input=/path/to/accepted-candidate -q
+```
+
+Admission requires a steward artifact, a clean accepted-input Git tree, matching commit
+and manifest pins, and every consumed member's size and digest. A wrong path fails;
+without the option the census check is deselected. Readable synthetic sources exercise
+the same comparison by default. Private identifiers never become repository fixtures or
+failure messages. Exhaustive canonical-representative resolution, pinned historical
+orders, reference dbdiff, performance, cold boot and rendered acceptance remain
+maintainer checks. This suite alone makes no release or deployment acceptance claim.
 
 The inherited `catalog_method`/`method` request fields name Python APIs. A later
 portability pass can replace those with language-neutral domain operation names and

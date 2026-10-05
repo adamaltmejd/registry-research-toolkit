@@ -77,8 +77,8 @@ Its schema and structural validator are `reg_schema`
 physical filenames or SQL tables. Compiled physical holdings
 (`table + edition → literal columns → zero-or-more explicit logical mappings`) join a
 project and query-time reg_meta resolution to produce one normalized, versioned JSON
-order manifest for web and CLI. The materializer ships for `global`/`swecov` with the
-pre-cut inventory argument; §12 tracks the compiled reader cut.
+order manifest for web and CLI. The materializer reads the selected compiled artifact
+for `global`/`swecov`; inventory remains a builder input.
 
 Current shipped coverage is browse/search the catalog → choose variables and periods →
 automatic validation → the versioned JSON order manifest. The former mock-data bootstrap
@@ -101,7 +101,7 @@ registry-research-toolkit/
     stewards/
       global/       # steward.toml only (full universe)
       ifau/         # steward.toml (holdings artifact planned)
-      swecov/       # steward.toml (legacy inventory until §12 cut)
+      swecov/       # steward.toml (compiled holdings artifact)
 ```
 
 > The `reg_monabundle` and `mock_data_wizard` packages have been archived to
@@ -171,13 +171,13 @@ results leave it.
 
 ### Catalog artifact identity and read scope
 
-**Compiled-holdings contract (2026-10-04); runtime cut remains in §12.** A publishable
-`reg_meta.db` identifies itself through `import_manifest.catalog_artifact_kind`:
-`catalog` for a global reference artifact, `steward` for reference metadata plus that
-steward's compiled holdings. Both use the same schema. A steward installation needs no
-separate global DB to inspect unheld metadata. The optional sibling `reg_meta_docs.db`
-remains separately paired; full document content is outside the single-file guarantee.
-Diagnostic/incomplete artifacts remain nonpublishable and fail runtime admission.
+**Compiled-holdings contract (2026-10-04).** A publishable `reg_meta.db` identifies
+itself through `import_manifest.catalog_artifact_kind`: `catalog` for a global reference
+artifact, `steward` for reference metadata plus that steward's compiled holdings. Both
+use the same schema. A steward installation needs no separate global DB to inspect
+unheld metadata. The optional sibling `reg_meta_docs.db` remains separately paired; full
+document content is outside the single-file guarantee. Diagnostic/incomplete artifacts
+remain nonpublishable and fail runtime admission.
 
 Identity stays in `import_manifest`, including `generation_id`; a steward also records
 `steward`, `base_db_sha256`, `base_generation_id`, `holdings_input_commit`,
@@ -271,16 +271,16 @@ oracle each one uses, and the three cost tiers tests run in.
 
 ### Boundaries and oracles
 
-  | Boundary                                 | Oracle (data, not code)                                                                                   | Status  |
-  | ---------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------- |
-  | Prepared inputs + curation → artifact    | synthetic source fixtures → `validate_built_db` + content snapshot                                        | shipped |
-  | Artifact → CLI JSON / library models     | golden `request → response` cases over the synthetic artifact                                             | partial |
-  | Artifact → HTTP                          | `openapi.json` snapshot + TestClient goldens over the fixture DB                                          | shipped |
-  | `project_data.json` → validation result  | `reg_schema/test_corpus/` run by Python and TS consumers                                                  | shipped |
-  | Project + artifact → order manifest      | byte-identical `order.json` goldens, cross-adapter identity                                               | shipped |
-  | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                                                | shipped |
-  | FQID / period grammars, interval algebra | Hypothesis properties + round-trip snapshots                                                              | shipped |
-  | Real artifact ↔ accepted inputs          | conformance artifact checks (manifest accounting, agreement, order bytes); accepted-input census deferred | partial |
+  | Boundary                                 | Oracle (data, not code)                                                                                 | Status  |
+  | ---------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------- |
+  | Prepared inputs + curation → artifact    | synthetic source fixtures → `validate_built_db` + content snapshot                                      | shipped |
+  | Artifact → CLI JSON / library models     | golden `request → response` cases over the synthetic artifact                                           | partial |
+  | Artifact → HTTP                          | `openapi.json` snapshot + TestClient goldens over the fixture DB                                        | shipped |
+  | `project_data.json` → validation result  | `reg_schema/test_corpus/` run by Python and TS consumers                                                | shipped |
+  | Project + artifact → order manifest      | byte-identical `order.json` goldens, cross-adapter identity                                             | shipped |
+  | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                                              | shipped |
+  | FQID / period grammars, interval algebra | Hypothesis properties + round-trip snapshots                                                            | shipped |
+  | Real artifact ↔ accepted inputs          | conformance artifact checks and explicit accepted-input table/cell census, policy and authored mappings | shipped |
 
 A function that is not one of these is reached through one that is. Structural artifact
 invariants have one authority, `validate_built_db`; tests run it, they do not re-derive
@@ -307,8 +307,12 @@ return-model cases retain contracts that have no equivalent CLI or HTTP projecti
    identity and located refusal. CI runs them against both published global catalog and
    SWECOV steward assets in independent `integration.yml` jobs, alongside the native
    registry-install gate. Published schema drift is a release-drift failure.
-   Accepted-input census, pinned baseline acceptance and performance probes remain
-   maintainer work in plan 05.
+   Accepted-private-input census additionally requires explicit
+   `--holdings-input=/path/to/accepted-candidate`; mismatched commit/manifest, dirty
+   input, missing members and wrong paths fail admission. Full admitted-set comparison
+   and deterministic stratified binding agreement derive requests from the artifact.
+   Pinned historical baseline acceptance, exhaustive representative resolution,
+   performance and rendered checks remain separate maintainer work.
 
 ### Conformance suite
 

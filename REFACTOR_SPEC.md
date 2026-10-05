@@ -108,41 +108,26 @@ unchanged.
 
 ## 11 — Steward catalogs
 
-**Pre-cut deployment below.** §12 replaces loose runtime inventory with compiled
-holdings; SWECOV accepted inputs are already private builder evidence. IFAU authoring
-stays deferred.
+SWECOV branding is tracked in `reg_webapp/stewards/swecov/steward.toml`; accepted
+physical inventories and policies remain private builder inputs. Schema-9 runtime
+holdings, scoped admission and ordering read the selected compiled steward artifact. The
+builder compiles one validated global base with steward metadata and holdings; no loose
+inventory, runtime reconciliation or drift gate is shipped. Publication of the
+unreleased compiled series remains gated by §12 independent acceptance.
 
-**SWECOV shipped; IFAU pending.** The `swecov` steward layer now consists of a
-hand-maintained `reg_webapp/stewards/swecov/steward.toml` identity and the generated
-`inventory.toml` delivery inventory ratified in §12. The tracked, maintainer-run
-`input_data/swecov/build_catalog.py inventory` command generates the inventory against
-the flavored reg_meta DB; it is the source of column- and edition-aware admission.
-SWECOV is the proving steward for pre-v1 testing, so its inventory/config live in this
-repo for now. That is not the release architecture: before v1 release, extract SWECOV to
-its own steward repo/system and make that system copyable for future stewards.
+Deployment configuration targets `data.swecov.se` through the separate
+`reg-webapp-swecov` Fly app, using app-scoped `FLY_API_TOKEN_SWECOV`. Its reader
+requires a publishable artifact whose manifest steward matches the deployment. A global
+artifact cannot substitute for that steward artifact. The release asset, BuildKit
+manifest and selected sibling docs must preserve the same release identity; local
+acceptance does not verify live deployment or publication.
 
-#365 PR4 wiring: `data.swecov.se` is the SWECOV hostname, served by a separate Fly app
-(`reg-webapp-swecov`) behind the same Cloudflare Workers pattern as the global catalog.
-The SWECOV Fly jobs use the app-scoped `FLY_API_TOKEN_SWECOV` secret, not the global
-app's `FLY_API_TOKEN`. The SWECOV image bundles BOTH the committed inventory and the
-**flavored** `extend-db` DB (`REG_META_DB` pointed at it). CI keeps the generated flavor
-artifact out of git, but the SWECOV metadata is non-confidential for the current testing
-steward, so `reg_meta_swecov.db.zst` is a public GitHub release asset on the same
-`reg_meta/v*` tag as the public/global DB. The workflow synthesizes the BuildKit JSON
-manifest (`tag`, `url`, `sha256`), the bake refuses a tag/digest mismatch, and
-`reg_meta_docs.db` stays on the public release asset for that same tag. The inventory
-maps steward-only providers (`swedbank`, `region-*`, `swecov`, …) that the *global*
-release DB does not contain, so booting `REG_WEBAPP_STEWARD=swecov` against the plain
-global asset would drop every steward-only binding as drift — the flavored DB must ship
-as the deployment's reg_meta asset, and the SWECOV smoke gate fails on any steward
-catalog drift warning. The `ifau` steward inventory has not been authored yet. The
-provisional seven-column order CSV is gone: both product surfaces now serve §12's
-normalized delivery manifest below.
-
+IFAU authoring remains deferred. Before v1, extract SWECOV branding and its delivery
+pipeline into its own steward system and make that system copyable for future stewards.
 The SPA catalog-authoring mode (distinct from project authoring) and a `reg-meta-build`
-steward-diff CLI are **deferred post-v1**. V1 steward holdings are generated or
-hand-authored delivery inventories; the current `ProjectData` catalog filter is retired
-by §12 rather than becoming another authoring format.
+steward-diff CLI remain deferred post-v1. Holdings are authored or generated builder
+inputs, not another `ProjectData` catalog filter. Both product surfaces emit the
+normalized JSON order manifest documented in the owning reader design.
 
 ## 12 — Steward delivery inventory + normalized order manifest
 
@@ -326,11 +311,14 @@ will need period-column `WHERE` clauses later.
 
 Plans 00 and 01 are independent and have merged (#1145, #1144); plans 02, 03 and 04
 merged as #1146, #1147 and #1149, and plan 01b (conformance suite) as #1150, all on
-2026-10-05. Plan 05 runs next, through that suite; plan 06 sweeps the package test
-suites after plan 05. Plans 02–04 are one unreleased schema-9 series with separately
-reviewable PRs; do not tag `reg_meta/v*` or `reg_webapp/v*` until plan 05 passes. Main
-may reject released 8.1 artifacts between writer and reader cuts; use the schema-9
-scratch builds via `REG_META_DB`. No compatibility fallback or migration.
+2026-10-05. Plan 05 has independently reproduced accepted-input accounting and
+historical order parity, but changed catalog paths miss the performance budget.
+Acceptance and publication remain blocked pending that finding; the completion gate and
+operational plans remain. Plan 06 sweeps package tests after acceptance. Plans 02–04 are
+one unreleased schema-9 series with separately reviewable PRs; do not tag `reg_meta/v*`
+or `reg_webapp/v*` until plan 05 passes. Main may reject released 8.1 artifacts between
+writer and reader cuts; use the schema-9 scratch builds via `REG_META_DB`. No
+compatibility fallback or migration.
 
 1. **00 — Coverage N+1 fix:** schema-8.1 index and grouped query improvement,
    independent of compilation. Do not attribute a performance gain to relational
