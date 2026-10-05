@@ -46,3 +46,18 @@ def test_context_uses_compiled_physical_periods(steward_db):
     assert body["reg_meta"]["default_scope"] == "holdings"
     assert body["steward"]["catalog_period_span"] == {"from": 2018, "to": 2019}
     assert "catalog_drift_warnings" not in body
+
+
+def test_context_caps_physical_span_to_import_vintage(tmp_path, monkeypatch):
+    from webapp_fixture_support import fixture_db
+
+    path = fixture_db.build_reader_fixture_db(
+        tmp_path / "steward",
+        kind="steward",
+        identity_overrides={"import_date": "2018-12-31T00:00:00Z"},
+    )
+    monkeypatch.setenv("REG_META_DB", str(path.parent))
+    monkeypatch.setenv("REG_WEBAPP_STEWARD", "swecov")
+    with TestClient(create_app()) as client:
+        body = client.get("/api/context").json()
+    assert body["steward"]["catalog_period_span"] == {"from": 2018, "to": 2018}

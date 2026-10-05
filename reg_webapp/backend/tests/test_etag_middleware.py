@@ -29,7 +29,9 @@ def test_etag_prefix_is_installed_reg_meta_version_not_manifest(catalog_db):
     # `5.1.999` manifest — distinct, and must NOT appear in the ETag).
     with TestClient(create_app()) as client:
         etag = client.get("/api/catalog").headers["etag"]
+        generation = client.get("/api/context").json()["reg_meta"]["generation_id"]
     assert etag.startswith(f'"{reg_meta.__version__}-global-')
+    assert f"-{generation}-reference-" in etag
     assert "5.1.999" not in etag
 
 
@@ -90,3 +92,45 @@ def test_non_get_method_is_skipped(catalog_db):
     assert resp.status_code == 200
     assert "etag" not in resp.headers
     assert "cache-control" not in resp.headers
+
+
+def test_identical_reference_body_has_distinct_scope_validators(tmp_path, monkeypatch):
+    from http_cases import CASES
+    from webapp_fixture_support import fixture_db
+
+    path = fixture_db.build_reader_fixture_db(
+        tmp_path / "steward", kind="steward", fixture=CASES / "fixtures/compiled"
+    )
+    monkeypatch.setenv("REG_META_DB", str(path.parent))
+    monkeypatch.setenv("REG_WEBAPP_STEWARD", "swecov")
+    with TestClient(create_app()) as client:
+        held = client.get("/api/catalog/class/example-codes")
+        reference = client.get(
+            "/api/catalog/class/example-codes", params={"scope": "reference"}
+        )
+        default = client.get(
+            "/api/catalog/class/example-codes", params={"scope": "holdings"}
+        )
+    assert held.status_code == reference.status_code == default.status_code == 200
+    assert held.content == reference.content == default.content
+    assert held.headers["etag"] != reference.headers["etag"]
+    assert held.headers["etag"] == default.headers["etag"]
+
+
+def test_generation_invalidates_an_identical_body(tmp_path, monkeypatch):
+    from webapp_fixture_support import fixture_db
+
+    responses = []
+    for index, prepared_commit in enumerate(("a" * 40, "b" * 40)):
+        path = fixture_db.build_reader_fixture_db(
+            tmp_path / str(index),
+            kind="catalog",
+            identity_overrides={"prepared_commit": prepared_commit},
+        )
+        monkeypatch.setenv("REG_META_DB", str(path.parent))
+        monkeypatch.setenv("REG_WEBAPP_STEWARD", "global")
+        with TestClient(create_app()) as client:
+            responses.append(client.get("/api/catalog"))
+    assert responses[0].status_code == responses[1].status_code == 200
+    assert responses[0].content == responses[1].content
+    assert responses[0].headers["etag"] != responses[1].headers["etag"]

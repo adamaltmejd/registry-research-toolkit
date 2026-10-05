@@ -1278,7 +1278,11 @@ def build_docs_fixture_db(db_path: Path) -> None:
 
 
 def build_reader_fixture_db(
-    db_dir: Path, *, kind: str, fixture: str | Path = "reader"
+    db_dir: Path,
+    *,
+    kind: str,
+    fixture: str | Path = "reader",
+    identity_overrides: dict[str, str] | None = None,
 ) -> Path:
     """Build the shared readable-source catalog or steward artifact.
 
@@ -1291,7 +1295,13 @@ def build_reader_fixture_db(
     from reader_artifacts import build_reader_artifact
 
     return build_reader_artifact(
-        db_dir, fixture, kind, identity_overrides={"import_date": FIXTURE_IMPORT_DATE}
+        db_dir,
+        fixture,
+        kind,
+        identity_overrides={
+            "import_date": FIXTURE_IMPORT_DATE,
+            **(identity_overrides or {}),
+        },
     )
 
 

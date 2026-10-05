@@ -1,49 +1,9 @@
-"""ETag + Cache-Control logic for the read endpoints.
+"""Response-body validators bound to package, steward, generation and read scope.
 
-See DESIGN.md → ETag / Cache-Control (etag.py + middleware.py). Pure,
-FastAPI-free functions so the scheme is unit-testable in isolation; the
-middleware (``middleware.py``) wires them onto every read response. The
-scheme:
-
-    ETag: "<reg_meta_version>-<steward_id>-<sha256(body)[:16]>"
-    Cache-Control: <one of three per-route policies — see below>
-
-``cache_control_for`` picks one of three policies per path, all paired with the
-body-hash ETag so an unchanged representation returns a bodyless 304 and a changed
-one returns a fresh 200. At this head the route still executes and serializes before
-the body hash is known, so the 304 saves transfer but not origin computation:
-
-- ``/api/context`` (the deployment-identity read the SPA vintage footer renders)
-  carries ``no-cache`` — it must revalidate on every request because it visibly
-  asserts a version/date, so any stale copy would lie after a deploy.
-- The fold- or steward-dependent reads (``/api/catalog/*``, ``/api/search``, and
-  ``/api/stats``) carry a SHORT ``max-age=60`` window: freshly-curated
-  concept-group folds, steward catalog edits, and other catalog edits must surface
-  promptly for a returning user whose browser holds the unversioned cached copy.
-  The body-hash ETag already changes when the response body changes, but a 24h
-  ``max-age`` lets the browser serve its cached copy for a day WITHOUT
-  revalidating, so the new body never appears. ``/api/search`` embeds the same
-  #322 concept-group folds, so it has the identical staleness gap #499 fixed for
-  catalog (#506); ``/api/stats`` depends on the boot-loaded steward catalog index
-  for filtered deployments (#726). A short window forces revalidation soon (the
-  ETag avoids retransmitting an unchanged body, but route work still occurs); we
-  keep it ``public`` (NOT ``no-cache``) so the Cloudflare edge stays cacheable —
-  ``CF-Cache-Status: HIT`` and the #220 probe survive,
-  which ``no-cache`` would break.
-- The rebuild-stable doc-library reads (``/api/docs/*``) keep the 24h
-  ``max-age=86400`` window: their content only changes on a DB rebuild (which the
-  ``reg_meta_version`` ETag prefix already invalidates), so they carry no
-  fold-staleness and a long window is correct.
-
-The body-hash component makes ``If-None-Match`` per-URL coherent (every URL —
-including its ``?period`` / ``?variant`` query, already part of the URL — gets
-its own ETag). The ``reg_meta_version`` + ``steward_id`` prefix isn't needed for
-correctness (the hash disambiguates) but keeps ETags human-debuggable and
-invalidates the whole keyspace when either axis changes (e.g. a DB rebuild on a
-new reg_meta release).
-
-``reg_meta_version`` is the INSTALLED package version (``reg_meta.__version__``,
-the v1.x Model A release), NOT the DB ``schema_version`` manifest value.
+The existing cache policies remain: context revalidates, catalog/search/stats
+have a 60-second window, and document reads have a 24-hour window. The full
+compiled generation invalidates the keyspace even when a route body is unchanged.
+Conditional reads still execute the route before hashing its serialized bytes.
 """
 
 from __future__ import annotations
@@ -79,7 +39,7 @@ REVALIDATE_ALWAYS_PATHS = frozenset({"/api/context"})
 # catch-all — all share the `/api/catalog` prefix. `/api/search` is the
 # variable/code search route (routes/search.py); it embeds the same #322
 # concept-group folds, so it shares the staleness gap and the short window (#506).
-# `/api/stats` uses the boot-loaded steward catalog index for filtered
+# `/api/stats` uses the compiled holdings artifact for filtered
 # deployments (#726), so a same-id steward catalog redeploy needs a prompt
 # revalidation opportunity too.
 # The doc-library search lives at `/api/docs/search` (under the `/api/docs` prefix)
@@ -118,15 +78,16 @@ def cache_control_for(path: str) -> str:
     return CACHE_CONTROL
 
 
-def compute_etag(body: bytes, reg_meta_version: str, steward_id: str) -> str:
-    """The strong ETag for a response body: a quoted
-    ``"<reg_meta_version>-<steward_id>-<sha256(body)[:16]>"``.
-
-    Strong (no ``W/`` prefix) because the body is byte-deterministic for a given
-    URL + DB build. The value is quoted per RFC 7232; ``etag_matches`` compares
-    against the raw ``If-None-Match`` header value (which carries the quotes)."""
+def compute_etag(
+    body: bytes,
+    reg_meta_version: str,
+    steward_id: str,
+    generation_id: str,
+    scope: str,
+) -> str:
+    """Strong validator for the admitted artifact, effective scope and body."""
     digest = hashlib.sha256(body).hexdigest()[:_HASH_PREFIX_LEN]
-    return f'"{reg_meta_version}-{steward_id}-{digest}"'
+    return f'"{reg_meta_version}-{steward_id}-{generation_id}-{scope}-{digest}"'
 
 
 def _opaque_tag(tag: str) -> str:

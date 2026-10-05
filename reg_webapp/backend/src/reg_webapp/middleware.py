@@ -63,7 +63,17 @@ class ETagMiddleware(BaseHTTPMiddleware):
 
         body = await _read_body(response)
         steward_id = request.app.state.steward.id
-        etag = compute_etag(body, reg_meta.__version__, steward_id)
+        manifest = request.app.state.manifest
+        scope = getattr(
+            request.state,
+            "read_scope",
+            "holdings"
+            if manifest["catalog_artifact_kind"] == "steward"
+            else "reference",
+        )
+        etag = compute_etag(
+            body, reg_meta.__version__, steward_id, manifest["generation_id"], scope
+        )
 
         # dict() is safe here: read responses carry no repeated headers (no
         # Set-Cookie on a GET — auth is v2+, and A5.2b's write endpoints are
