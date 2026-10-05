@@ -8,32 +8,9 @@ clips, drift across states, and endpoint snapping.
 from __future__ import annotations
 
 import pytest
-import reg_meta.db
+from backend_test_support import project as _project
 from reg_meta.catalog import Catalog
-from reg_schema.project_data import ProjectData
 from reg_webapp.semantic import validate_semantic
-
-
-@pytest.fixture
-def catalog(catalog_db):
-    conn = reg_meta.db.open_db(catalog_db, check_schema=False)
-    try:
-        yield Catalog(conn)
-    finally:
-        conn.close()
-
-
-def _project(sources: list[dict]) -> ProjectData:
-    """Build a structurally valid ProjectData around the given sources."""
-    return ProjectData.model_validate(
-        {
-            "schema_version": "3.0.0",
-            "steward": "ifau",
-            "reg_meta_version": "5.1.0",
-            "name": "test",
-            "sources": sources,
-        }
-    )
 
 
 @pytest.fixture

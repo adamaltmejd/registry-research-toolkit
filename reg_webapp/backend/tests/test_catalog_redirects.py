@@ -8,14 +8,6 @@ never existed.
 from __future__ import annotations
 
 import pytest
-from fastapi.testclient import TestClient
-from reg_webapp.app import create_app
-
-
-@pytest.fixture
-def client(catalog_db):
-    with TestClient(create_app()) as c:
-        yield c
 
 
 def test_renamed_binding_redirects_301_to_terminal(client):

@@ -11,15 +11,8 @@ from __future__ import annotations
 import sqlite3
 from concurrent.futures import ThreadPoolExecutor
 
-import pytest
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
-
-
-@pytest.fixture
-def client(catalog_db):
-    with TestClient(create_app()) as c:
-        yield c
 
 
 def test_concurrent_browse_no_cross_thread_error(client):

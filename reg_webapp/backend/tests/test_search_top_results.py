@@ -7,20 +7,9 @@ variables and codes for topical queries (Y-18).
 from __future__ import annotations
 
 import pytest
+from backend_test_support import search_group as _group
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
-
-
-@pytest.fixture
-def client(catalog_db):
-    with TestClient(create_app()) as c:
-        yield c
-
-
-def _group(body: dict, name: str) -> dict:
-    (g,) = [g for g in body["groups"] if g["group"] == name]
-    return g
-
 
 # ── top-results / best-bets (#393 items 6/7) ────────────────────────────────
 

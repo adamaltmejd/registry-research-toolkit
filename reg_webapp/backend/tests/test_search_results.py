@@ -7,21 +7,7 @@ concept-group folding (#322) and diacritic parity (å→a) with the SPA filter.
 
 from __future__ import annotations
 
-import pytest
-from fastapi.testclient import TestClient
-from reg_webapp.app import create_app
-
-
-@pytest.fixture
-def client(catalog_db):
-    with TestClient(create_app()) as c:
-        yield c
-
-
-def _group(body: dict, name: str) -> dict:
-    (g,) = [g for g in body["groups"] if g["group"] == name]
-    return g
-
+from backend_test_support import search_group as _group
 
 # ── leaf hits + navigable FQIDs ──────────────────────────────────────────────
 
