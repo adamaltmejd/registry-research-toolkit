@@ -14,7 +14,6 @@ import json
 import sqlite3
 
 import pytest
-from _shared_fixtures import _build_stub_doc_db
 from _slugged_db import add_state, add_variable, build_slugged_db
 from reader_artifacts import stamp_catalog_identity
 from reg_meta.catalog import Catalog, GroupAxis
@@ -1023,7 +1022,7 @@ class TestSchemaAnnotation:
         assert disp_cols[0]["concept_group_label"] == "Disponibel inkomst"
 
 
-# ── CLI surface (envelope + flags); doc DB stub required by the query guard ──
+# ── CLI surface (envelope + flags); the doc DB is optional for these commands ──
 
 
 @pytest.fixture(scope="module")
@@ -1040,7 +1039,6 @@ def groups_db_dir(tmp_path_factory: pytest.TempPathFactory) -> str:
     conn.backup(on_disk)
     on_disk.close()
     conn.close()
-    _build_stub_doc_db(db_dir, tmp_path_factory)
     return str(db_dir)
 
 
