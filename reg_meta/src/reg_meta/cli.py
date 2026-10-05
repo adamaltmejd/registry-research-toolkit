@@ -625,13 +625,13 @@ def _build_parser() -> argparse.ArgumentParser:
         "order",
         help="Materialize a project_data.json into a JSON order manifest.",
         description=(
-            "Materialize a project against this DB (and, for a steward\n"
-            "deployment, its delivery inventory) into the canonical JSON order\n"
+            "Materialize a project against this compiled catalog DB\n"
+            "into the canonical JSON order\n"
             "manifest — the SAME materializer the webapp serves, so both emit\n"
             "byte-identical manifests (REFACTOR_SPEC.md §12).\n\n"
             "Writes the manifest to stdout, or to --output. A blocked order\n"
             "writes the JSON error envelope naming every finding and exits 17;\n"
-            "an unreadable/invalid project or inventory exits 10.\n\n"
+            "an unreadable/invalid project exits 10.\n\n"
             "Examples:\n"
             "  reg-meta order project_data.json\n"
             "  reg-meta order project_data.json --output order.json"

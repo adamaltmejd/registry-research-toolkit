@@ -2,11 +2,18 @@
 
 from __future__ import annotations
 
+import pytest
 from fastapi.testclient import TestClient
+from http_cases import CASES, assert_http_case
 from reg_webapp.app import create_app
-from reg_webapp.catalog_index import CatalogIndex
 from reg_webapp.models import ContextResponse
-from reg_webapp.routes.context import _catalog_period_span
+
+
+@pytest.mark.parametrize(
+    "case", sorted((CASES / "context").iterdir()), ids=lambda p: p.name
+)
+def test_context_contract(case, tmp_path, monkeypatch):
+    assert_http_case(case, tmp_path, monkeypatch)
 
 
 def test_context_returns_200_and_shape(
@@ -29,22 +36,37 @@ def test_context_returns_200_and_shape(
     # patch, so this proves /api/context surfaces the MANIFEST value.
     assert ctx.reg_meta.schema_version == fixture_schema_version
     assert ctx.reg_meta.import_date == fixture_import_date
+    assert ctx.reg_meta.catalog_artifact_kind == "catalog"
+    assert ctx.reg_meta.steward is None
+    assert ctx.reg_meta.default_scope == "reference"
+    assert len(ctx.reg_meta.generation_id) == 64
+    assert "catalog_drift_warnings" not in body
 
     assert ctx.webapp.version
     assert ctx.webapp.reg_meta_version
     assert ctx.steward.catalog_period_span is None
 
 
-def test_catalog_period_span_clamps_to_vintage_year():
-    index = CatalogIndex(
-        bindings_by_variant={},
-        periods_by_coordinate={},
-        period_range_by_register={"scb/lisa": ("1995-01-01", "2030-12-31")},
-        drift_warnings=(),
+def test_context_uses_compiled_physical_periods(steward_db):
+    with TestClient(create_app()) as client:
+        body = client.get("/api/context").json()
+    assert body["reg_meta"]["catalog_artifact_kind"] == "steward"
+    assert body["reg_meta"]["steward"] == "swecov"
+    assert body["reg_meta"]["default_scope"] == "holdings"
+    assert body["steward"]["catalog_period_span"] == {"from": 2018, "to": 2019}
+    assert "catalog_drift_warnings" not in body
+
+
+def test_context_caps_physical_span_to_import_vintage(tmp_path, monkeypatch):
+    from webapp_fixture_support import fixture_db
+
+    path = fixture_db.build_reader_fixture_db(
+        tmp_path / "steward",
+        kind="steward",
+        identity_overrides={"import_date": "2018-12-31T00:00:00Z"},
     )
-
-    span = _catalog_period_span(index, vintage_year=2026)
-
-    assert span is not None
-    assert span.from_ == 1995
-    assert span.to == 2026
+    monkeypatch.setenv("REG_META_DB", str(path.parent))
+    monkeypatch.setenv("REG_WEBAPP_STEWARD", "swecov")
+    with TestClient(create_app()) as client:
+        body = client.get("/api/context").json()
+    assert body["steward"]["catalog_period_span"] == {"from": 2018, "to": 2018}

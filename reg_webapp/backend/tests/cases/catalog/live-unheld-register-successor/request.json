@@ -1,0 +1,19 @@
+{
+  "requests": [
+    {
+      "path": "/api/catalog/fk/unheld"
+    },
+    {
+      "path": "/api/catalog/fk/unheld/variants"
+    },
+    {
+      "path": "/api/catalog/fk/unheld",
+      "query": {
+        "scope": "reference"
+      }
+    },
+    {
+      "path": "/api/catalog/scb/old-example"
+    }
+  ]
+}

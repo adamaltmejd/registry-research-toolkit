@@ -14,28 +14,16 @@ override (``reg_meta.db.default_db_dir``).
 
 from __future__ import annotations
 
-import importlib.util
 import sqlite3
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 import reg_meta.db
 import reg_meta.doc_db
+from webapp_fixture_support import fixture_db
 
-# Load the sibling builder script directly, without mutating sys.path (mirrors
-# test_openapi_snapshot.py), so its bare-name imports don't leak.
-_FIXTURE_DB_PATH = Path(__file__).resolve().parents[1] / "scripts" / "fixture_db.py"
-_spec = importlib.util.spec_from_file_location(
-    "reg_webapp_fixture_db", _FIXTURE_DB_PATH
-)
-assert _spec and _spec.loader
-fixture_db = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(fixture_db)
-
-# `test_steward_index` builds its own slugged DBs from `reg_meta_build`'s bare-name
-# `_slugged_db` helper, so make that dir importable for the whole session (the
-# builder above does the same on its own behalf; the call is idempotent).
-fixture_db.ensure_slugged_db_importable()
+if TYPE_CHECKING:
+    from pathlib import Path
 
 FIXTURE_IMPORT_DATE = fixture_db.FIXTURE_IMPORT_DATE
 FIXTURE_SCHEMA_VERSION = fixture_db.FIXTURE_SCHEMA_VERSION
@@ -45,7 +33,7 @@ def _write_manifest_db(db_path: Path, schema_version: str) -> None:
     conn = sqlite3.connect(db_path)
     try:
         conn.execute("CREATE TABLE import_manifest(key TEXT PRIMARY KEY, value TEXT)")
-        fixture_db._stamp_manifest(conn)
+        fixture_db.stamp_manifest(conn)
         conn.execute(
             "UPDATE import_manifest SET value = ? WHERE key = 'schema_version'",
             (schema_version,),
@@ -114,22 +102,6 @@ def docs_db(catalog_db: Path) -> Path:
 
 
 @pytest.fixture
-def case_twin_db(catalog_db: Path) -> Path:
-    """``catalog_db`` plus the Y-107 case-twin scenario (``fixture_db``): one
-    `scb/lisa/idve` variable whose column is spelled `Idh` by the era a steward's
-    inventory was generated over and `IdH` by the era after it (plus an unheld
-    `Taxvarde` rename). Seeded here rather than in ``build_catalog_fixture_db`` for
-    the same reason ``topical_catalog_db`` is."""
-    conn = sqlite3.connect(catalog_db)
-    try:
-        fixture_db.seed_case_twin_column(conn)
-        conn.commit()
-    finally:
-        conn.close()
-    return catalog_db
-
-
-@pytest.fixture
 def topical_catalog_db(catalog_db: Path) -> Path:
     """``catalog_db`` plus the topical ranking scenario (``fixture_db``): one
     register purpose and one variable name/definition carrying a topic, and six
@@ -143,3 +115,13 @@ def topical_catalog_db(catalog_db: Path) -> Path:
     finally:
         conn.close()
     return catalog_db
+
+
+@pytest.fixture
+def steward_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """The same compiled steward fixture available to dev.sh --fixture-db."""
+    directory = tmp_path / "steward"
+    path = fixture_db.build_reader_fixture_db(directory, kind="steward")
+    _point_app_at(monkeypatch, directory)
+    monkeypatch.setenv("REG_WEBAPP_STEWARD", "swecov")
+    return path

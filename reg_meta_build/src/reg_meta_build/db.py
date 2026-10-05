@@ -250,6 +250,36 @@ def open_built_db(db_path: Path) -> sqlite3.Connection:
     return conn
 
 
+def catalog_coordinate_ids(
+    conn: sqlite3.Connection,
+    *,
+    variable_fqids: set[str] | None = None,
+    variant_coords: set[str] | None = None,
+) -> tuple[dict[str, int], dict[str, int]]:
+    """Resolve exact authored bindings and variants; null slugs are unaddressable.
+
+    Optional coordinate sets bound the retained maps while streaming the catalog.
+    Curated identity aliases do not grant an authored holdings coordinate.
+    """
+    maps: list[dict[str, int]] = []
+    for table, id_column, wanted in (
+        ("variable", "variable_id", variable_fqids),
+        ("register_variant", "register_variant_id", variant_coords),
+    ):
+        ids = {}
+        for provider, register, slug, entity_id in conn.execute(
+            f"SELECT p.slug, r.slug, entity.slug, entity.{id_column} "
+            f"FROM {table} entity JOIN register r USING(register_id) "
+            "JOIN provider p USING(provider_id) "
+            "WHERE entity.slug IS NOT NULL AND r.slug IS NOT NULL"
+        ):
+            coordinate = f"{provider}/{register}/{slug}"
+            if wanted is None or coordinate in wanted:
+                ids[coordinate] = entity_id
+        maps.append(ids)
+    return maps[0], maps[1]
+
+
 DDL = """\
 -- Core tables (all IDs stored as INTEGER for compact storage)
 

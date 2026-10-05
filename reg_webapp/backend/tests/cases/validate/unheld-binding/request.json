@@ -1,0 +1,27 @@
+{
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "swecov",
+        "reg_meta_version": "5.1.0",
+        "name": "Synthetic validation",
+        "sources": [
+          {
+            "name": "source",
+            "register_variant": "scb/example/annual",
+            "period": 2018,
+            "bindings": [
+              {
+                "variable": "scb/example/reference",
+                "type": "numeric"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/members/*/fqid": [
+        "scb/example/value"
+      ],
+      "/members/*/delivery_column": [
+        null
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/nodes/*/fqid": [
+        "scb/example/value",
+        "scb/example/reference",
+        "scb/example/second"
+      ],
+      "/nodes/*/states/*/delivery_column_name": [
+        [
+          "Value",
+          "value"
+        ],
+        [],
+        [
+          "Valuetwo"
+        ]
+      ],
+      "/nodes/*/states/*/variant": [
+        [
+          "annual",
+          "annual"
+        ],
+        [],
+        [
+          "annual"
+        ]
+      ],
+      "/nodes/*/states/*/valid_from": [
+        [
+          "2018-01-01",
+          "2019-01-01"
+        ],
+        [],
+        [
+          "2018-01-01"
+        ]
+      ],
+      "/nodes/*/states/*/valid_to": [
+        [
+          "2018-12-31",
+          "2019-12-31"
+        ],
+        [],
+        [
+          "2019-12-31"
+        ]
+      ],
+      "/edges/*/source": [
+        "scb/example/value",
+        "scb/example/reference"
+      ],
+      "/edges/*/target": [
+        "scb/example/reference",
+        "scb/example/second"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/nodes/*/fqid": [
+        "scb/example/reference",
+        "scb/example/value",
+        "scb/example/second"
+      ],
+      "/nodes/*/states/*/delivery_column_name": [
+        [
+          "Valuereference"
+        ],
+        [
+          "Value",
+          "value",
+          "Secret",
+          "Archived"
+        ],
+        [
+          "Valuetwo",
+          "Secondhidden"
+        ]
+      ]
+    }
+  }
+]

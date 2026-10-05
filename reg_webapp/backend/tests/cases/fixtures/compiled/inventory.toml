@@ -1,0 +1,34 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "Annual2018"
+edition = 2018
+[[table.column]]
+name = "Observed"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/value"
+representation = "Value"
+[[table.column]]
+name = "Second"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/second"
+representation = "Valuetwo"
+
+[[table]]
+id = "Annual2019"
+edition = 2019
+[[table.column]]
+name = "Observed"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/value"
+representation = "Value"
+[[table.column]]
+name = "Second"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/second"
+representation = "Valuetwo"

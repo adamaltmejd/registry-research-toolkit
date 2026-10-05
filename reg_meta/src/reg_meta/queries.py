@@ -83,20 +83,12 @@ def _search_context(
     type: str,
     register: str | None,
     years: str | None,
-    fqids: Collection[str] | None,
     exclude_fqids: Collection[str] | None,
-    delivery_column_scope: Mapping[str, Collection[str | None]] | None,
     fold_groups: bool,
     code_owner_scope: str,
     classification_as_of_year: int | None,
     scope: ReadScope,
 ) -> str:
-    delivery_scope = None
-    if delivery_column_scope is not None:
-        delivery_scope = {
-            key: sorted("" if item is None else item for item in values)
-            for key, values in sorted(delivery_column_scope.items())
-        }
     return _stable_digest(
         {
             "query": _normalized_search_query(query),
@@ -104,9 +96,7 @@ def _search_context(
             "type": type,
             "register": register,
             "years": years,
-            "fqids": None if fqids is None else sorted(fqids),
             "exclude_fqids": (None if exclude_fqids is None else sorted(exclude_fqids)),
-            "delivery_column_scope": delivery_scope,
             "fold_groups": fold_groups,
             "code_owner_scope": code_owner_scope,
             "classification_as_of_year": classification_as_of_year,
@@ -542,71 +532,6 @@ def _matched_delivery_column_names(
     )
 
 
-def _depends_on_unheld_delivery_alias(
-    row: dict[str, Any], terms: tuple[str, ...], held_columns: tuple[str, ...]
-) -> bool:
-    public_text = _variable_search_public_text(row)
-    held_set = frozenset(held_columns)
-    unheld_columns = tuple(
-        col for col in row.get("delivery_column_names", ()) if col not in held_set
-    )
-    for term in terms:
-        if not any(_matches_fts_term(col, term) for col in unheld_columns):
-            continue
-        if any(_matches_fts_term(col, term) for col in held_columns):
-            continue
-        if any(_matches_fts_term(text, term) for text in public_text):
-            continue
-        return True
-    return False
-
-
-def _folded_held_columns(held: Collection[str | None]) -> frozenset[str]:
-    """One FQID's held delivery columns under `py_lower`'s fold, the rule that makes a
-    column's case twins ONE column (DESIGN.md → One spelling per delivery column).
-
-    A `delivery_column_scope` carries an inventory's spelling of the column, which need
-    not be the catalog's spelling of it, so every comparison against a catalog row folds
-    BOTH sides (Y-107, Y-108). What the caller keeps stays the catalog's own spelling:
-    the fold decides membership, never display. A `None` holding names no column, so it
-    matches none."""
-    return frozenset(col.lower() for col in held if col is not None)
-
-
-def _filter_variable_delivery_scope(
-    results: list[dict[str, Any]],
-    query: str,
-    delivery_column_scope: Mapping[str, Collection[str | None]],
-) -> list[dict[str, Any]]:
-    terms = _fts_terms(query)
-    filtered: list[dict[str, Any]] = []
-    for row in results:
-        if row["type"] != "variable":
-            filtered.append(row)
-            continue
-        held = delivery_column_scope.get(row.get("fqid"))
-        if held is None or not row.get("delivery_column_names"):
-            filtered.append(row)
-            continue
-        folded_held = _folded_held_columns(held)
-        held_columns = tuple(
-            col for col in row["delivery_column_names"] if col.lower() in folded_held
-        )
-        if _depends_on_unheld_delivery_alias(row, terms, held_columns):
-            continue
-        matched_columns = _matched_delivery_column_names(
-            held_columns, terms, _variable_search_public_text(row)
-        )
-        filtered.append(
-            {
-                **row,
-                "delivery_column_names": matched_columns or held_columns,
-                "_ranking_delivery_column_names": matched_columns or held_columns,
-            }
-        )
-    return filtered
-
-
 def _escape_like(s: str) -> str:
     """Escape SQL LIKE metacharacters so user text matches literally.
 
@@ -624,9 +549,7 @@ def search(
     type: str = "all",
     register: str | None = None,
     years: str | None = None,
-    fqids: Collection[str] | None = None,
     exclude_fqids: Collection[str] | None = None,
-    delivery_column_scope: Mapping[str, Collection[str | None]] | None = None,
     limit: int = 50,
     cursor: str | None = None,
     fold_groups: bool = True,
@@ -666,32 +589,10 @@ def search(
     label/key emits the group row even when no leaf row matches. Result-shaping
     only; folding happens before pagination, so a group row counts as one result.
 
-    fqids (#859): restrict the register and variable rows of the
-    **description-FTS / register / variable** surfaces to entities whose navigable
-    `fqid` is in this set — including concept-group folding (a group surfaces only
-    if ≥1 member is held, and its member list is narrowed to held members). The
-    `varname` / `datacolumn` LIKE arms carry no `fqid` (`_RESTRICTABLE_LEAF_TYPES`
-    excludes them) and are pass-through, so `fqids` is meaningful only with
-    `field="description"` (or `field="all"` on the description path) — the webapp's
-    filtered-steward `/api/search` only ever passes `field="description"`.
-    Classification and value/code surfaces are catalog-global and unaffected.
-    `None` = no restriction. The restriction is applied to leaf rows BEFORE folding
-    and before folding/paging, so every bounded page respects the restriction.
-    reg_meta stays steward-agnostic: the caller passes the allow-list; the set's
-    provenance is opaque here.
-
     ``exclude_fqids`` removes navigable register/classification identities inside
     their SQL branches before the bounded prefix. It is part of cursor context so
     callers that inject a curated identity separately cannot see it again on a
     continuation page.
-
-    delivery_column_scope is the optional column-grain companion to ``fqids`` for
-    variable FTS rows. It masks returned delivery-column aliases to held columns
-    and drops rows whose only query evidence is an unheld delivery alias, before
-    concept folding and pagination; it also narrows a folded concept group's
-    representation members to the columns held for their FQID. A held column matches
-    a catalog one under ``py_lower``'s fold, never by string equality — the scope
-    carries the caller's spelling of the column, not the catalog's.
 
     ``code_variable_owner_limit`` controls the shown code rows' variable owner slice
     (``None`` = all variable owners for the paginated code rows). Classification
@@ -718,8 +619,8 @@ def search(
     the committed DB policy.
 
     ``cursor`` is the opaque continuation returned by the preceding page. It is
-    bound to the normalized query, every requested scope, the active steward
-    restriction, and the catalog manifest. Returns at most ``limit`` rows and
+    bound to the normalized query, every requested scope, and the catalog manifest.
+    Returns at most ``limit`` rows and
     determines ``has_more`` with one bounded look-ahead row. Doc results are NOT
     included here — the CLI layer merges them separately.
     """
@@ -772,9 +673,7 @@ def search(
         type=type,
         register=register,
         years=years,
-        fqids=fqids,
         exclude_fqids=exclude_fqids,
-        delivery_column_scope=delivery_column_scope,
         fold_groups=fold_groups,
         code_owner_scope=code_owner_scope,
         classification_as_of_year=classification_as_of_year,
@@ -814,13 +713,6 @@ def search(
             return SearchResults(results=(), has_more=False)
         reg_ids = set(ids)
 
-    if fqids is not None:
-        conn.execute("DROP TABLE IF EXISTS _search_allowed_fqids")
-        conn.execute("CREATE TEMP TABLE _search_allowed_fqids (fqid TEXT PRIMARY KEY)")
-        conn.executemany(
-            "INSERT INTO _search_allowed_fqids (fqid) VALUES (?)",
-            ((fqid,) for fqid in sorted(fqids)),
-        )
     if exclude_fqids is not None:
         conn.execute("DROP TABLE IF EXISTS _search_excluded_fqids")
         conn.execute("CREATE TEMP TABLE _search_excluded_fqids (fqid TEXT PRIMARY KEY)")
@@ -833,11 +725,6 @@ def search(
     _VARIABLE_TYPES = {"variable", "varname", "datacolumn"}
     _CLASSIFICATION_TYPES = {"classification"}
     _VALUE_TYPES = {"code"}
-    # #859: the leaf row types carrying a navigable `fqid` an `fqids` allow-list can
-    # restrict against. `datacolumn`/`varname` (LIKE arms) carry NO `fqid` key — they
-    # never run on the webapp's `field="description"` steward path — so excluding them
-    # avoids dropping an fqid-less row that has no membership to test.
-    _RESTRICTABLE_LEAF_TYPES = {"register", "variable"}
 
     all_results: list[dict[str, Any]] = []
     candidate_saturated = False
@@ -920,7 +807,6 @@ def search(
                     conn,
                     fts_query,
                     reg_ids,
-                    fqids is not None,
                     exclude_fqids is not None,
                     entity_candidate_limit,
                     branch_offset,
@@ -935,8 +821,6 @@ def search(
                     conn,
                     fts_query,
                     reg_ids,
-                    include_delivery_columns=delivery_column_scope is not None,
-                    restrict_fqids=fqids is not None,
                     limit=entity_candidate_limit,
                     offset=branch_offset,
                     year_range=year_range,
@@ -1009,26 +893,6 @@ def search(
     elif type == "value":
         all_results = [r for r in all_results if r["type"] in _VALUE_TYPES]
 
-    # #859: a filtered-steward allow-list restricts the REGISTER and VARIABLE leaf
-    # surfaces to held navigable FQIDs, BEFORE folding and BEFORE the total/slice
-    # (so the count is exact). Classification / value / group-label rows pass
-    # through — they are catalog-global (the group-LABEL path is narrowed at the
-    # fold, where its members are known). An unslugged leaf (`fqid` None) can be in
-    # no steward catalog, so it drops under any restriction.
-    # #859: frozen ONCE here and reused for both the leaf filter and the
-    # `_fold_concept_groups` member-narrowing below (the same allow-list).
-    allow = frozenset(fqids) if fqids is not None else None
-    if allow is not None:
-        all_results = [
-            r
-            for r in all_results
-            if r["type"] not in _RESTRICTABLE_LEAF_TYPES or r.get("fqid") in allow
-        ]
-    if delivery_column_scope is not None:
-        all_results = _filter_variable_delivery_scope(
-            all_results, query, delivery_column_scope
-        )
-
     if fold_groups:
         # Label hits ride the NAME surface (a group label is a concept name).
         # `varname`/`all` search names directly; `description` (#350, the
@@ -1070,8 +934,6 @@ def search(
             all_results,
             label_hits,
             scope=scope,
-            allow=allow,
-            delivery_column_scope=delivery_column_scope,
         )
 
     identity_match_count = sum(
@@ -1099,9 +961,7 @@ def search(
             type=type,
             register=register,
             years=years,
-            fqids=fqids,
             exclude_fqids=exclude_fqids,
-            delivery_column_scope=delivery_column_scope,
             limit=limit,
             cursor=cursor,
             fold_groups=fold_groups,
@@ -1138,10 +998,9 @@ def search(
         reg_ids,
         variable_limit=code_variable_owner_limit,
     )
-    if delivery_column_scope is None:
-        _annotate_variable_delivery_columns(
-            conn, results, query, scope=scope, bounds=_year_bounds(year_range)
-        )
+    _annotate_variable_delivery_columns(
+        conn, results, query, scope=scope, bounds=_year_bounds(year_range)
+    )
     # Strip fold-internal keys from the SHOWN page only — non-page rows are
     # discarded, so there's nothing to clean on them. (`_strip_internal_keys`
     # touches only `_INTERNAL_KEYS`, never `fts_rank`, so the sort above is safe.)
@@ -1581,7 +1440,6 @@ def _search_description_registers(
     conn: sqlite3.Connection,
     query: str,
     reg_ids: set[int] | None,
-    restrict_fqids: bool,
     exclude_fqids: bool,
     limit: int,
     offset: int,
@@ -1612,12 +1470,6 @@ def _search_description_registers(
         "JOIN register r ON r.register_id = rf.register_id "
         "JOIN provider p ON p.provider_id = r.provider_id "
         "WHERE register_fts MATCH ? "
-        + (
-            "AND EXISTS (SELECT 1 FROM _search_allowed_fqids af "
-            "WHERE af.fqid = p.slug || '/' || r.slug) "
-            if restrict_fqids
-            else ""
-        )
         + (
             "AND NOT EXISTS (SELECT 1 FROM _search_excluded_fqids ef "
             "WHERE ef.fqid = p.slug || '/' || r.slug) "
@@ -1656,8 +1508,6 @@ def _search_description_variables(
     query: str,
     reg_ids: set[int] | None,
     *,
-    include_delivery_columns: bool,
-    restrict_fqids: bool,
     limit: int,
     offset: int,
     year_range: tuple[int | None, int | None] | None,
@@ -1720,12 +1570,6 @@ def _search_description_variables(
         "JOIN provider p ON p.provider_id = r.provider_id "
         "JOIN variable v ON v.variable_id = vf.rowid "
         "WHERE variable_fts MATCH ? "
-        + (
-            "AND EXISTS (SELECT 1 FROM _search_allowed_fqids af "
-            "WHERE af.fqid = p.slug || '/' || r.slug || '/' || v.slug) "
-            if restrict_fqids
-            else ""
-        )
         + " AND "
         + scope_predicate(scope, "variable", "v", bounds=_year_bounds(year_range))
         + " "
@@ -1741,7 +1585,6 @@ def _search_description_variables(
         scope=scope,
         bounds=_year_bounds(year_range),
     )
-    delivery_columns = ranking_delivery_columns if include_delivery_columns else {}
     results = []
     for r in rows:
         if reg_ids and r["register_id"] not in reg_ids:
@@ -1763,7 +1606,7 @@ def _search_description_variables(
                 "variable_definition": r["variable_definition"],
                 "variable_description": r["variable_description"],
                 "variable_operational_definition": r["variable_operational_definition"],
-                "delivery_column_names": delivery_columns.get(r["variable_id"], ()),
+                "delivery_column_names": (),
                 "_ranking_delivery_column_names": ranking_delivery_columns.get(
                     r["variable_id"], ()
                 ),
@@ -2831,8 +2674,6 @@ def _fold_concept_groups(
     label_hits: list[sqlite3.Row],
     *,
     scope: ReadScope | None = None,
-    allow: frozenset[str] | None = None,
-    delivery_column_scope: Mapping[str, Collection[str | None]] | None = None,
 ) -> list[dict[str, Any]]:
     """Collapse sibling search hits under their concept group (#322).
 
@@ -2851,15 +2692,7 @@ def _fold_concept_groups(
     them to `classification_replaced_by` succession edges), so it produces no
     hits until curated umbrella content ships.
 
-    `allow` (#859): a filtered-steward FQID allow-list. When set, a VARIABLE-kind
-    group's `members` list is narrowed to members whose `fqid` is held, and a group
-    that ends up with NO held member is dropped (the label-only path can surface a
-    group none of whose members the steward holds). CLASSIFICATION-kind groups are
-    catalog-global (decision 2) and pass through unnarrowed. `None` = no
-    restriction (the `global` path is byte-identical to pre-#859).
-
-    ``delivery_column_scope`` applies the same steward restriction at variable
-    representation grain before the group participates in relevance ordering."""
+    """
     membership = _member_group_index(conn, results)
 
     buckets: dict[int, list[dict[str, Any]]] = {}
@@ -2901,8 +2734,6 @@ def _fold_concept_groups(
                 buckets[gid],
                 summaries,
                 label_matched=gid in label_ids,
-                allow=allow,
-                delivery_column_scope=delivery_column_scope,
             )
             if group_row is not None:
                 out.append(group_row)
@@ -2914,8 +2745,6 @@ def _fold_concept_groups(
                 [],
                 summaries,
                 label_matched=True,
-                allow=allow,
-                delivery_column_scope=delivery_column_scope,
             )
             if group_row is not None:
                 out.append(group_row)
@@ -3021,18 +2850,12 @@ def _group_result_row(
     summaries: _GroupSummaryLookup,
     *,
     label_matched: bool,
-    allow: frozenset[str] | None = None,
-    delivery_column_scope: Mapping[str, Collection[str | None]] | None = None,
 ) -> dict[str, Any] | None:
     """One `type: "group"` search result row: group identity + the full
     member list + the leaf hits it folded (`matched`). `fts_rank` is the best
     (lowest) member rank so the group sorts where its members would have.
 
-    `allow` (#859): a filtered-steward FQID allow-list. When set, a VARIABLE-kind
-    group's `members`/`member_count` are narrowed to held members; a group left
-    with NO held member returns `None` (drop the group). CLASSIFICATION-kind groups
-    are catalog-global (decision 2) and pass through unnarrowed. `None` (unfiltered
-    `global` path) returns the full row unchanged — byte-identical to pre-#859."""
+    """
     summary = summaries.get(meta)
     payload = (
         _group_summary_to_dict(summary)
@@ -3040,18 +2863,6 @@ def _group_result_row(
         else {"axes": [], "member_count": 0, "members": []}
     )
     members = payload["members"]
-    if allow is not None and meta["kind"] != "classification":
-        members = [m for m in members if m.get("fqid") in allow]
-        if not members:
-            return None
-    if delivery_column_scope is not None and meta["kind"] != "classification":
-        members = [
-            member
-            for member in members
-            if _group_member_in_delivery_scope(member, delivery_column_scope)
-        ]
-        if not members:
-            return None
     return {
         "type": "group",
         "kind": meta["kind"],
@@ -3067,28 +2878,6 @@ def _group_result_row(
         "label_matched": label_matched,
         "fts_rank": min((h.get("fts_rank", 0) for h in matched), default=0),
     }
-
-
-def _group_member_in_delivery_scope(
-    member: dict[str, Any],
-    delivery_column_scope: Mapping[str, Collection[str | None]],
-) -> bool:
-    """True iff a concept-group member is inside the steward's delivery scope: its
-    FQID is held, and a REPRESENTATION member's own column folds onto one of the
-    columns held for that FQID. A whole-variable member (no column) needs only the
-    FQID.
-
-    The member names the column as the CURATION spells it and the scope as the
-    steward's inventory does, so the comparison folds both sides
-    (`_folded_held_columns`, Y-108) — compared exactly, a held case twin dropped
-    the member here, upstream of every webapp surface that reads it."""
-    fqid = member.get("fqid")
-    if fqid is None or fqid not in delivery_column_scope:
-        return False
-    delivery_column = member.get("delivery_column")
-    return delivery_column is None or delivery_column.lower() in _folded_held_columns(
-        delivery_column_scope[fqid]
-    )
 
 
 # `_code_id` is the value-arm's deferred-annotation marker (#352 perf):

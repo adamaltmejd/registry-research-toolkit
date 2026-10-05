@@ -1,0 +1,12 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/ok": true,
+      "/issues/*/code": [
+        "variable_replaced",
+        "representation_outside_steward_catalog"
+      ]
+    }
+  }
+]

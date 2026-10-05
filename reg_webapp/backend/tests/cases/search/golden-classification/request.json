@@ -1,0 +1,37 @@
+{
+  "golden_config": "search_golden.toml",
+  "requests": [
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "choicebook",
+        "type": "classification",
+        "scope": "holdings"
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "choicebook",
+        "type": "classification",
+        "scope": "reference"
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "stalebook",
+        "type": "classification",
+        "scope": "holdings"
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "stalebook",
+        "type": "classification",
+        "scope": "reference"
+      }
+    }
+  ]
+}

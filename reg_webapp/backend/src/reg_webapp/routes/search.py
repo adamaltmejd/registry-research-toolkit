@@ -26,7 +26,6 @@ from reg_meta.errors import RegMetaError
 from reg_meta.queries import SEARCH_TYPES, search as reg_meta_search
 
 from reg_webapp import golden
-from reg_webapp.catalog_index import _fold_column, _folded_columns, held_group_members
 from reg_webapp.conn import catalog_conn
 from reg_webapp.models import (
     ClassificationCodeSearchGroup,
@@ -39,6 +38,7 @@ from reg_webapp.models import (
     VariableSearchGroup,
 )
 from reg_webapp.query_input import clamp_limit, validate_text_query
+from reg_webapp.scope import browse_scope
 
 if TYPE_CHECKING:
     from reg_meta.search import (
@@ -48,14 +48,13 @@ if TYPE_CHECKING:
         SearchResults,
     )
 
-    from reg_webapp.catalog_index import CatalogIndex
     from reg_webapp.models import (
         ClassificationSearchItem,
         TopSearchItem,
         VariableSearchItem,
     )
 
-router = APIRouter(prefix="/api")
+router = APIRouter(prefix="/api", dependencies=[Depends(browse_scope)])
 
 _DEFAULT_LIMIT = 3
 _MAX_LIMIT = 50
@@ -425,99 +424,6 @@ def _best_bets(
     ]
 
 
-def _scope_to_fqids(
-    results: list[SearchResult], fqids: frozenset[str] | None
-) -> list[SearchResult]:
-    """Re-filter the golden-boost set to drop unheld register/VARIABLE LEAF pins
-    (#859). A no-op when `fqids` is None (the `global` deployment — byte-identical to
-    pre-#859). The reg_meta hits are ALREADY `fqids`-scoped query-time; this re-filter
-    exists ONLY to drop unheld LEAF pins the golden boost prepended from a separate
-    source.
-
-    A row is KEPT when it has NO `fqid` attribute (or `fqid is None`) OR its serialized
-    `fqid` is in the held set. The fqid-less pass-through is load-bearing: the variable
-    arm can carry `ConceptGroupSearchResult` rows (folded groups / label matches) which
-    have no `fqid` — those are already query-time scoped by reg_meta (`_group_result_row`'s
-    `allow` narrows members to held), so they must NOT be dropped here, or a filtered
-    steward stops seeing held concept groups. Compares the
-    SERIALIZED fqid string (the model's `fqid` is an `Fqid | None`; the held set holds
-    canonical strings), mirroring `golden.apply_golden_boost`'s dedup."""
-    if fqids is None:
-        return results
-    return [
-        r for r in results if (f := getattr(r, "fqid", None)) is None or str(f) in fqids
-    ]
-
-
-def _narrow_search_groups(
-    results: list[SearchResult], index: CatalogIndex
-) -> tuple[list[SearchResult], int]:
-    """Narrow each `ConceptGroupSearchResult` row's `members` to the steward's
-    COLUMN-grain holdings (#859) — the search half of `held_group_members`, which
-    carries the member rule itself (and the fold it matches columns under).
-
-    reg_meta already narrowed group members at FQID grain (`_group_result_row`'s
-    `allow` set), but a #819 representation member shares one FQID across different
-    `delivery_column`s — a steward holding only SOME columns of an FQID still sees the
-    unheld representations. This refines on top; `member_count` is reset to the
-    narrowed length. reg_meta's `_group_member_in_delivery_scope` folds the SAME
-    comparison upstream, in the same change (Y-108) — folding only here would be inert,
-    because an unfolded scope has already dropped the member by now.
-
-    A group left with NO surviving member is DROPPED. The steward variable arm uses
-    bounded cursor backfill so a dropped row does not unnecessarily shorten the page."""
-    kept_rows: list[SearchResult] = []
-    dropped = 0
-    for r in results:
-        # The `.type` discriminator narrows `r` to `ConceptGroupSearchResult` here.
-        if r.type != "group":
-            kept_rows.append(r)
-            continue
-        kept_members = held_group_members(r.members, index)
-        if not kept_members:
-            dropped += 1
-            continue
-        kept_rows.append(
-            r.model_copy(
-                update={
-                    "members": tuple(kept_members),
-                    "member_count": len(kept_members),
-                }
-            )
-        )
-    return kept_rows, dropped
-
-
-def _narrow_variable_leaf_columns(
-    results: list[SearchResult], index: CatalogIndex
-) -> list[SearchResult]:
-    """Mask variable leaf delivery-column chips to the steward's held columns.
-
-    The match is under `_fold_column` (Y-107): the index carries the inventory's own
-    spelling of the column and the chip the catalog's, so an exact compare masked a
-    held case twin away. The chip keeps the CATALOG's spelling — the fold decides
-    membership only."""
-    narrowed: list[SearchResult] = []
-    for result in results:
-        if result.type != "variable" or result.fqid is None:
-            narrowed.append(result)
-            continue
-        held = index.held_columns(str(result.fqid))
-        if not held or not result.delivery_column_names:
-            narrowed.append(result)
-            continue
-        held_names = _folded_columns(held)
-        held_columns = tuple(
-            col
-            for col in result.delivery_column_names
-            if _fold_column(col) in held_names
-        )
-        narrowed.append(
-            result.model_copy(update={"delivery_column_names": held_columns})
-        )
-    return narrowed
-
-
 @router.get("/search", response_model=SearchResponse)
 def get_search(
     request: Request,
@@ -544,13 +450,10 @@ def get_search(
     single type runs AND emits only that typed surface. Group ORDER is fixed for
     the ``all`` case.
 
-    A FILTERED steward (``app.state.catalog_index`` present, #859) scopes the
-    REGISTER and VARIABLE surfaces to the steward's held FQIDs — both the reg_meta
-    query (the ``fqids`` allow-list, applied query-time before paging)
-    and the golden boost (a boosted pin the steward does not hold is dropped). The
-    CLASSIFICATION and VALUE/code surfaces are catalog-global and pass through
-    unscoped. A global deployment uses the same cursor contract without the steward
-    restriction."""
+    The reader applies artifact scope before ranking and pagination. Codes and
+    classifications retain reference semantics; finite editorial pins use the same
+    reader existence predicate.
+    """
     cursor = _validated_cursor(cursor)
 
     # Per-type gates: each arm runs (and its group is emitted) only when the
@@ -560,17 +463,6 @@ def get_search(
     want_classification = req_type in ("all", "classification")
     want_classification_code = req_type in ("all", "value", "classification_code")
     want_register_value = req_type in ("all", "value", "register_value")
-
-    # #859: a filtered steward's held-FQID allow-list scopes the register/variable
-    # surfaces (None for the `global` deployment → no restriction). The set is the
-    # held registers UNIONED with the held binding FQIDs — a register hit matches on
-    # its 2-seg FQID, a variable hit on its 3-seg binding FQID.
-    index = request.app.state.catalog_index
-    fqids = (
-        index.held_register_fqids | index.admitted_variable_fqids
-        if index is not None
-        else None
-    )
 
     # Typed groups are appended in the fixed register→variable→classification→value
     # order. The all-scope top-results group is prepended after these typed groups
@@ -606,20 +498,18 @@ def get_search(
         # FastAPI response models all operate on the same reg_meta types.
         if want_register:
             phase_start = perf_counter()
-            register_pin_fqids = golden.pinned_fqids(q, "register")
-            if fqids is not None:
-                register_pin_fqids = tuple(
-                    pin for pin in register_pin_fqids if pin in fqids
-                )
+            register_pin_fqids = golden.eligible_pinned_fqids(
+                conn, q, "register", scope=request.state.read_scope
+            )
             register_cursor, register_pin_offset = _golden_cursor_boundary(
                 cursor, q, "register", register_pin_fqids
             )
             reg = _search_boundary(
                 conn,
                 q,
+                scope=request.state.read_scope,
                 field="description",
                 type="register",
-                fqids=fqids,
                 exclude_fqids=register_pin_fqids or None,
                 limit=limit,
                 cursor=register_cursor,
@@ -634,11 +524,6 @@ def get_search(
                 start=register_pin_offset,
                 limit=limit,
             )
-            # #859: drop boosted pins the steward does not hold (the reg_meta hits
-            # are already `fqids`-scoped; the boost prepends pins from a separate
-            # source, so re-apply the same filter to them). No-op when `fqids` is
-            # None (the `global` deployment).
-            reg_results = _scope_to_fqids(reg_results, fqids)
             reg_has_more, reg_next_cursor = _boosted_continuation(
                 reg, reg_results, limit=limit
             )
@@ -670,21 +555,12 @@ def get_search(
             phase_timings.append(("register", perf_counter() - phase_start))
         if want_variable:
             phase_start = perf_counter()
-            delivery_column_scope = (
-                {
-                    fqid: index.held_columns(fqid)
-                    for fqid in index.admitted_variable_fqids
-                }
-                if index is not None
-                else None
-            )
             var = _search_boundary(
                 conn,
                 q,
+                scope=request.state.read_scope,
                 field="description",
                 type="variable",
-                fqids=fqids,
-                delivery_column_scope=delivery_column_scope,
                 limit=limit,
                 cursor=cursor,
             )
@@ -693,55 +569,11 @@ def get_search(
                 if cursor is None
                 else list(var.results)
             )
-            # #859: same boost re-filter as the register arm (drops unheld LEAF pins;
-            # group/fqid-less rows pass through).
-            var_results = _scope_to_fqids(var_results, fqids)
             var_origin_has_more, var_origin_next_cursor = _boosted_continuation(
                 var, var_results, limit=limit
             )
-            # #865: reg_meta narrowed group members at FQID grain, but #819
-            # representation members share one FQID across `delivery_column`s — a steward
-            # holding only some columns still sees the unheld representations. Refine each
-            # group row's `members` at COLUMN grain (browse's `_narrow_group_members`
-            # equivalent for the search model), dropping a group with no held member and
-            # removing it from the bounded page.
-            if index is not None:
-                var_results = _narrow_variable_leaf_columns(var_results, index)
-                var_results, _ = _narrow_search_groups(var_results, index)
-                continuation_cursor = var_origin_next_cursor
-                continuation_has_more = var_origin_has_more
-                # Column-grain steward narrowing can drop a whole folded row.
-                # Backfill one bounded candidate at a time so we never skip an
-                # unshown origin row when advancing the opaque cursor.
-                backfill_budget = limit * 4 + 4
-                while (
-                    len(var_results) < limit
-                    and continuation_has_more
-                    and continuation_cursor is not None
-                    and backfill_budget > 0
-                ):
-                    page = _search_boundary(
-                        conn,
-                        q,
-                        field="description",
-                        type="variable",
-                        fqids=fqids,
-                        delivery_column_scope=delivery_column_scope,
-                        limit=1,
-                        cursor=continuation_cursor,
-                    )
-                    page_results = _scope_to_fqids(list(page.results), fqids)
-                    page_results = _narrow_variable_leaf_columns(page_results, index)
-                    page_results, _ = _narrow_search_groups(page_results, index)
-                    var_results.extend(page_results)
-                    continuation_cursor = page.next_cursor
-                    continuation_has_more = page.has_more
-                    backfill_budget -= 1
-                var_has_more = continuation_has_more
-                var_next_cursor = continuation_cursor
-            else:
-                var_has_more = var_origin_has_more
-                var_next_cursor = var_origin_next_cursor
+            var_has_more = var_origin_has_more
+            var_next_cursor = var_origin_next_cursor
             groups.append(
                 VariableSearchGroup(
                     results=cast(
@@ -762,6 +594,7 @@ def get_search(
             cls = _search_boundary(
                 conn,
                 q,
+                scope=request.state.read_scope,
                 field="description",
                 type="classification",
                 exclude_fqids=classification_pin_fqids or None,
@@ -812,6 +645,7 @@ def get_search(
             classification_codes = _search_boundary(
                 conn,
                 q,
+                scope=request.state.read_scope,
                 field="value",
                 type="value",
                 limit=limit,
@@ -848,6 +682,7 @@ def get_search(
             register_values = _search_boundary(
                 conn,
                 q,
+                scope=request.state.read_scope,
                 field="value",
                 type="value",
                 limit=limit,

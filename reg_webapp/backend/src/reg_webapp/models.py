@@ -68,8 +68,8 @@ class StewardInfo(BaseModel):
     catalog_period_span: CatalogPeriodSpan | None = Field(
         default=None,
         description=(
-            "Best-effort steward catalog-wide year span for UI slider bounds; "
-            "null for the global deployment or unparseable steward periods."
+            "Compiled physical-period year span for UI slider bounds; "
+            "null for catalog artifacts or holdings with no dated periods."
         ),
     )
 
@@ -83,6 +83,10 @@ class RegMetaInfo(BaseModel):
     import_date: str = Field(
         description="UTC timestamp the reg_meta DB was built/imported."
     )
+    catalog_artifact_kind: Literal["catalog", "steward"]
+    steward: str | None
+    generation_id: str
+    default_scope: Literal["holdings", "reference"]
 
 
 class WebappInfo(BaseModel):
@@ -97,38 +101,16 @@ class WebappInfo(BaseModel):
     )
 
 
-class CatalogDriftWarning(BaseModel):
-    """One boot-time steward-catalog drift warning.
-
-    Emitted when the steward's committed ``inventory.toml`` states a coordinate
-    reg_meta no longer admits: the mapping drops from the in-memory index and
-    this carries the miss to the SPA so it can show a "catalog drift" banner.
-    ``code`` is ``fqid_unresolved`` (the variable resolves to nothing) or
-    ``period_outside_state_validity`` (it resolves, but reg_meta delivers no
-    state over the table's edition); ``path`` locates the offending
-    ``table[…].column[…]`` in the inventory. Always empty for the ``global``
-    deployment (no inventory, no filter)."""
-
-    code: str
-    path: str
-    message: str
-
-
 class ContextResponse(BaseModel):
     """``GET /api/context`` — deployment identity, branding, build info.
 
-    No git sha (decision: no new provenance dep). The reg_meta block reflects
-    the DB the backend booted against; the webapp block reflects the installed
-    packages. ``catalog_drift_warnings`` is the steward-catalog
-    drift surfaced at boot — empty for ``global`` and for an up-to-date catalog.
-    The steward block may include a best-effort ``catalog_period_span`` for
-    slider bounds.
+    Identity is read from the admitted artifact; branding remains deployment config.
+    The optional physical-period bound is only a UI hint.
     """
 
     steward: StewardInfo
     reg_meta: RegMetaInfo
     webapp: WebappInfo
-    catalog_drift_warnings: list[CatalogDriftWarning] = Field(default_factory=list)
 
 
 # ── Catalog browse (see DESIGN.md → Catalog router structure) ───────────────

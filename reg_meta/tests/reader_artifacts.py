@@ -27,13 +27,15 @@ BUILDER_CASES = CASES.parents[2] / "reg_meta_build/tests/cases/holdings"
 
 def build_reader_artifact(
     directory: Path,
-    fixture: str,
+    fixture: str | Path,
     kind: str,
     *,
     identity_overrides: dict[str, str] | None = None,
 ) -> Path:
     source = (
-        CASES / "reader/fixture"
+        fixture
+        if isinstance(fixture, Path)
+        else CASES / "reader/fixture"
         if fixture == "reader"
         else CASES / fixture
         if fixture.startswith("reader/")
@@ -45,7 +47,7 @@ def build_reader_artifact(
         ResolvedVariable.model_validate_json(json.dumps(value))
         for value in json.loads((source / "catalog.json").read_text())
     )
-    directory.mkdir(parents=True)
+    directory.mkdir(parents=True, exist_ok=True)
     path = directory / "reg_meta.db"
     classification_source = source / "classifications.json"
     classifications = (

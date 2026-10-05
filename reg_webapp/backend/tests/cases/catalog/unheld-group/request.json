@@ -1,0 +1,25 @@
+{
+  "fixture": "unheld-group",
+  "requests": [
+    {
+      "path": "/api/catalog/group/scb/example/value-family",
+      "query": {}
+    },
+    {
+      "path": "/api/catalog/group/scb/example/value-family/graph",
+      "query": {}
+    },
+    {
+      "path": "/api/catalog/group/scb/example/value-family",
+      "query": {
+        "scope": "reference"
+      }
+    },
+    {
+      "path": "/api/catalog/group/scb/example/value-family/graph",
+      "query": {
+        "scope": "reference"
+      }
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "requests": [
+    {
+      "path": "/api/catalog/scb/example/retired/states",
+      "query": {
+        "period": "2018",
+        "scope": "holdings"
+      }
+    },
+    {
+      "path": "/api/catalog/scb/example/retired-unheld"
+    },
+    {
+      "path": "/api/catalog/scb/old-example"
+    },
+    {
+      "path": "/api/catalog/scb/example/reference"
+    },
+    {
+      "path": "/api/catalog/scb/old-example/variants",
+      "query": {
+        "scope": "holdings",
+        "period": "2018"
+      }
+    },
+    {
+      "path": "/api/catalog/scb/old-example/variants",
+      "query": {
+        "scope": "reference"
+      }
+    }
+  ]
+}

@@ -14,18 +14,9 @@ do — composition is tuple concatenation, no merge semantics. It takes a
 ``Catalog`` (never opens a connection): A5.2b-ii's ``POST /api/project/validate``
 calls it per-request with an in-handler connection.
 
-There is ONE caller: the researcher path (``POST /api/project/validate``), where
-an unresolved FQID is a blocking ``error``. It runs the COLUMN-based steward
-admission check (#206) when an ``index`` (the loaded ``CatalogIndex``) is
-supplied, probing the source's OWN ``register_variant``: a steward's inventory
-states whole ``(register_variant, variable, representation)`` coordinates, so
-holding a concept under one variant admits nothing under another. A RESOLVED
-FQID the steward holds no column of under that variant emits
-``fqid_outside_steward_catalog``, and one whose RESOLVED delivery column it does
-not hold there emits ``representation_outside_steward_catalog`` — both
-non-blocking ``warning``s (the column is real reg_meta-wide but this filtered
-deployment does not supply it). The ``global`` deployment's ``index`` is ``None``
-(no filter), so it never emits the codes.
+Validation resolves reference semantics and then probes the artifact's compiled
+mappings at the source's exact variant. The two steward membership warning codes
+remain nonblocking; validation is never a claim of physical order readiness.
 
 Inputs are the ``reg_schema`` Pydantic models (``ProjectData`` / ``Source`` /
 ``Binding``), which the webapp constructs only AFTER ``validate_structural``
@@ -56,6 +47,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
+from reg_meta.db import get_manifest
 from reg_meta.errors import RegMetaError
 from reg_meta.fqid import FqidError, parse
 
@@ -68,8 +60,6 @@ from reg_meta.inventory import _overlap, _render
 from reg_meta.order import requested_intervals, resolve_binding
 from reg_schema.validation import ValidationIssue, ValidationResult
 
-from reg_webapp.catalog_index import _fold_column, _folded_columns
-
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
@@ -77,32 +67,23 @@ if TYPE_CHECKING:
     from reg_meta.order import StateWindow
     from reg_schema.project_data import Binding, ProjectData, Source
 
-    from reg_webapp.catalog_index import CatalogIndex, Interval
+type Interval = tuple[str, str]
 
 
 def validate_semantic(
     project: ProjectData,
     catalog: Catalog,
-    *,
-    index: CatalogIndex | None = None,
 ) -> ValidationResult:
-    """Run semantic rules over ``project`` against ``catalog``.
+    """Validate reference semantics and compiled source-variant membership.
 
-    Walks ``sources[*].register_variant``, each ``sources[*].bindings[*]``
-    (``variable`` + ``value_set``), resolving against the live ``Catalog``.
-    Returns a ``ValidationResult`` carrying the issues (see module docstring).
-    Never opens a connection — the caller owns the ``Catalog``'s lifetime.
-
-    ``index`` is the loaded steward ``CatalogIndex``: when supplied, a RESOLVED
-    binding outside it — under the source's OWN ``register_variant`` — yields
-    ``fqid_outside_steward_catalog`` (no column of the concept held there) or
-    ``representation_outside_steward_catalog`` (concept held, but not the
-    binding's resolved column) — both warnings. ``None`` (the ``global``
-    deployment) never emits them.
-    """
+    The caller owns the reference Catalog and connection lifetime. Structural
+    validation runs before this boundary."""
+    steward = (
+        get_manifest(catalog.holdings.conn).get("catalog_artifact_kind") == "steward"
+    )
     issues: list[ValidationIssue] = []
     for s_idx, source in enumerate(project.sources):
-        _check_source(source, s_idx, catalog, index, issues)
+        _check_source(source, s_idx, catalog, steward, issues)
     return ValidationResult(issues=tuple(issues))
 
 
@@ -129,7 +110,7 @@ def _check_source(
     source: Source,
     s_idx: int,
     catalog: Catalog,
-    index: CatalogIndex | None,
+    steward: bool,
     issues: list[ValidationIssue],
 ) -> None:
     base = f"/sources/{s_idx}"
@@ -163,7 +144,15 @@ def _check_source(
 
     for b_idx, binding in enumerate(source.bindings):
         _check_binding(
-            binding, source, base, b_idx, variant_ok, requested, catalog, index, issues
+            binding,
+            source,
+            base,
+            b_idx,
+            variant_ok,
+            requested,
+            catalog,
+            steward,
+            issues,
         )
 
 
@@ -271,7 +260,7 @@ def _check_binding(
     variant_ok: bool,
     requested: tuple[Interval, ...],
     catalog: Catalog,
-    index: CatalogIndex | None,
+    steward: bool,
     issues: list[ValidationIssue],
 ) -> None:
     bbase = f"{base}/bindings/{b_idx}"
@@ -319,27 +308,13 @@ def _check_binding(
     resolved_columns = _check_binding_period(
         binding, source, var_path, variant_ok, requested, catalog, issues
     )
-    # STEWARD CATALOG FILTER (#227, column-based per #206). The FQID resolves
-    # reg_meta-wide (we are past the resolve-success path, so an unresolved FQID
-    # already got `fqid_unresolved` and returned — no double-report here), but a
-    # FILTERED steward deployment supplies only a subset of that universe. Runs
-    # AFTER the period check because admission compares RESOLVED delivery columns
-    # (the binding's `resolved_columns`), which only the period resolution knows.
-    # `index=None` (the `global` deployment) never emits either code, and an
-    # UNRESOLVED variant skips the probe entirely: holdings are keyed BY variant,
-    # so asking about one reg_meta itself does not know would answer "the steward
-    # doesn't supply it" on top of the `fqid_unresolved` that variant already
-    # earned — the same derivative noise the period probe skips for.
-    # Admission keys on the source's variant coordinate and the LITERAL binding
-    # FQID (a curated same_as sibling names a DIFFERENT column, so under
-    # column-holdings semantics warning on it is correct, not a keying artifact).
-    if index is not None and variant_ok:
+    if steward and variant_ok:
         _check_steward_admission(
             binding.variable,
             source.register_variant,
             var_path,
             resolved_columns,
-            index,
+            catalog,
             issues,
         )
     _check_value_set(binding, bbase, catalog, issues)
@@ -451,15 +426,6 @@ def _check_binding_period(
 
     resolution = resolve_binding(catalog, source, binding, requested)
 
-    # The clip is reported BEFORE any blocking finding, exactly as the
-    # materializer records it before its ambiguity gate returns: a binding that
-    # is both clipped and ambiguous surfaces both, so the researcher sees the
-    # window the finding is stated against.
-    #
-    # `info`, not `warning`: the binding RESOLVED and is usable — the available
-    # window orders fine. The steward index keys its binding-DROP on `warning`
-    # level (catalog_index.py), so an `info` correctly keeps a clipped binding in
-    # the index.
     if resolution.clip is not None:
         issues.append(
             _issue(
@@ -545,39 +511,15 @@ def _check_steward_admission(
     variant_coord: str,
     var_path: str,
     resolved_columns: frozenset[str] | None,
-    index: CatalogIndex,
+    catalog: Catalog,
     issues: list[ValidationIssue],
 ) -> None:
-    """Column-based steward admission (#206), scoped to the source's variant.
+    """Warn on missing authored binding/variant or canonical representation mappings.
 
-    An inventory mapping states a whole ``(register_variant, variable,
-    representation)`` coordinate (§12), so the probe consults ``variant_coord``'s
-    holdings and NOT the cross-variant union: a steward that maps `kon` only
-    under `individer-15plus` does not supply it to a project sourcing
-    `individer-16plus`, and admitting it would let an order through for a column
-    the steward cannot deliver.
-
-    Two distinct findings, both non-blocking ``warning``s (the "what would my
-    project look like under steward X?" feature relies on them enumerating, not
-    blocking):
-
-    - ``fqid_outside_steward_catalog`` — the steward holds NO column of this
-      concept under this variant.
-    - ``representation_outside_steward_catalog`` — it holds the concept there,
-      but not the column this binding resolves to; the message enumerates what
-      the steward DOES hold ("SSYK at 1-digit only" is the actionable form of
-      "not available").
-
-    ``resolved_columns=None`` means the binding's own column is indeterminate
-    (period/representation/ambiguity issues already reported) — only the
-    FQID-level check can run; the column-level check stays silent.
-
-    The column comparison folds (``_fold_column``, Y-107): the index carries the
-    inventory's own spelling of the column, which is not always the one the binding
-    resolves to, so an exact compare warned about a column the steward demonstrably
-    holds. ``held`` itself stays UNFOLDED — the message enumerates the steward's own
-    spelling verbatim."""
-    held = index.held_columns_for_variant(variable, variant_coord)
+    Indeterminate semantic columns skip representation admission. Physical periods
+    are checked by materialize_order; no cross-variant possession is inferred."""
+    ids = catalog.holdings.binding_ids(variable, variant_coord)
+    held = catalog.holdings.columns(*ids) if ids is not None else frozenset()
     if not held:
         issues.append(
             _issue(
@@ -592,9 +534,11 @@ def _check_steward_admission(
         return
     if resolved_columns is None:
         return
-    folded_held = _folded_columns(held)
+    assert ids is not None
     missing = frozenset(
-        column for column in resolved_columns if _fold_column(column) not in folded_held
+        column
+        for column in resolved_columns
+        if catalog.canonical_delivery_column(*ids, column) not in held
     )
     if missing:
         issues.append(

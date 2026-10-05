@@ -1,0 +1,30 @@
+{
+  "fixture": "reader",
+  "kind": "catalog",
+  "requests": [
+    {
+      "path": "/api/catalog",
+      "query": {
+        "scope": "holdings"
+      }
+    },
+    {
+      "path": "/api/catalog/scb/example/value",
+      "query": {
+        "scope": "holdings"
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "scope": "holdings"
+      }
+    },
+    {
+      "path": "/api/stats",
+      "query": {
+        "scope": "holdings"
+      }
+    }
+  ]
+}

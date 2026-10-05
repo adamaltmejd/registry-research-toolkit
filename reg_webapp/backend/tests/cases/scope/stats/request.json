@@ -1,0 +1,15 @@
+{
+  "fixture": "reader",
+  "kind": "steward",
+  "requests": [
+    {
+      "path": "/api/stats"
+    },
+    {
+      "path": "/api/stats",
+      "query": {
+        "scope": "reference"
+      }
+    }
+  ]
+}

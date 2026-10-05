@@ -40,14 +40,14 @@ Reading rules, each deliberate:
 * `variable_state` and `variable_alias_window` are read as a FLAT UNION keyed by
   the folded delivery column, and an edition is covered when the MERGED union
   contains it (a column whose edition straddles two abutting states is delivered,
-  not missing). Looser than `inventory_check._expanded_columns`, which mirrors
-  `Catalog._expand_state_windows`' containment/participation rule: the question
-  here is whether the catalog claims the column in that edition AT ALL, and a
+  not missing). Looser than `Catalog.delivery_columns`' resolver-based
+  containment/participation rule: the question here is whether the catalog
+  claims the column in that edition AT ALL, and a
   stricter read would demand errata for windows the resolver does deliver.
 * Columns fold with NFC normalization and then Python `str.lower()`, on BOTH
   sides — the held spelling out of the inventory TOML and `delivery_column_name`
-  out of the DB. That is the webapp's rule (`catalog_index._fold_column`,
-  `py_lower`), extended with the normalization a cross-file comparison needs:
+  out of the DB. This extends the catalog's `py_lower` rule with the
+  normalization a cross-file comparison needs:
   `Ä` reaches us composed (U+00C4) from one file and decomposed (`A` + U+0308)
   from the other, and those are the SAME column. NEVER SQL `lower()` (ASCII-only,
   so `Kön` would not fold) and never `_curation.fold_column` (NFKD + ASCII-drop,
@@ -61,8 +61,8 @@ Reading rules, each deliberate:
   boundary only, an undocumented `LA2020` is spelled in SCB's native form
   `2020/2021`, whose edition claims have the same school-year bounds.
 * A coordinate whose slugs do not resolve at all is SKIPPED and counted, never
-  failed: that is `reg_meta.inventory_check`'s finding, repaired by regenerating
-  the inventory (release step 11). A gate that failed on it would go red on
+  failed: compilation owns unresolved-coordinate failures, repaired in the
+  builder inputs before publication. A gate that failed on it would go red on
   ordinary pre-v1 slug churn instead of on a real holdings contradiction.
 """
 
@@ -74,15 +74,8 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal
 
-# `_merge` / `_render` / `_intersect` are `reg_meta.inventory`'s interval
-# primitives: the ONE grammar an edition, a project period and an availability
-# window expand and render through (`order.py`, `catalog.py` and
-# `reg_webapp.catalog_index` reach into them the same way). A held range must read
-# here exactly as it does in the inventory's own errors. `_variant_ids` /
-# `_variable_ids` are `inventory_check`'s batched exact-slug resolvers, so this
-# gate and the §12 boot gate agree about which coordinates exist.
+# Reuse the inventory's interval grammar at the build-time diagnostic boundary.
 from reg_meta.inventory import _intersect, _merge, _render, edition_bounds
-from reg_meta.inventory_check import _variable_ids, _variant_ids
 
 # `_CURATED_PROVIDERS` is the build's own `(provider slug, input_data subdir)`
 # registry — the one `sources/curated.py` reads — so the surface this gate names
@@ -93,7 +86,7 @@ from reg_meta.inventory_check import _variable_ids, _variant_ids
 # leaf, so a stanza reads like every other candidate emitter's. `_PROVIDER` is the
 # ONE provider `curation/registers/scb/<slug>.toml` accepts, imported rather than restated so the
 # partition here cannot drift from the loader's own refusal.
-from reg_meta_build.db import _CURATED_PROVIDERS
+from reg_meta_build.db import _CURATED_PROVIDERS, catalog_coordinate_ids
 from reg_meta_build.edition_bounds import edition_claims
 from reg_meta_build.fqid_slugs import _toml_str
 from reg_meta_build.scb_errata import _PROVIDER, ERRATA_COLUMN_SOURCE_LABEL
@@ -248,8 +241,11 @@ def coverage_misses(
         for column in table.columns
         for mapping in column.mappings
     }
-    variant_ids = _variant_ids(conn, {variant for variant, _ in coords})
-    variable_ids = _variable_ids(conn, {variable for _, variable in coords})
+    variable_ids, variant_ids = catalog_coordinate_ids(
+        conn,
+        variable_fqids={variable for _, variable in coords},
+        variant_coords={variant for variant, _ in coords},
+    )
     pair_ids: dict[_Coord, _PairIds] = {
         coord: (variable_ids[coord[1]], variant_ids[coord[0]])
         for coord in coords
@@ -570,9 +566,9 @@ class _Windows:
 
 def _load_windows(conn: sqlite3.Connection, pairs: set[_PairIds]) -> _Windows:
     """One streaming scan per delivery table, filtered against the inventory's own
-    pairs, so the working set stays the inventory's and not the catalog's (the same
-    posture `inventory_check._delivered` takes). The two tables are read by ONE
-    loop body because this gate wants their flat union: a delivery is a delivery
+    pairs, so the working set stays the inventory's and not the catalog's. The
+    two tables are read by ONE loop body because this gate wants their flat union:
+    a delivery is a delivery
     whichever table states it.
 
     `delivery_column_name` folds HERE, once, on the way in: the DB's spelling and
@@ -767,9 +763,9 @@ def _suggested_version_name(edition: _Interval) -> str:
 def _fold(column: str) -> str:
     """A delivery column's identity for matching: NFC, then Python `str.lower()`.
 
-    `reg_webapp.catalog_index._fold_column`'s rule (`py_lower`) is the lowercase
-    half — the fold every reader that matches a HELD column against a catalog row
-    goes through, Python's and never SQL's (SQLite `LOWER()` is ASCII-only, so
+    The catalog's `py_lower` rule is the lowercase half, used when readers
+    match a held column against a catalog row. Use Python's and never SQL's
+    lowercase operation (SQLite `LOWER()` is ASCII-only, so
     `Kön` would not fold). NFC is the half a CROSS-FILE comparison needs: the held
     spelling comes out of the steward's inventory TOML and the catalog's out of
     the DB, and `Ä` is one codepoint in one and two in the other without changing

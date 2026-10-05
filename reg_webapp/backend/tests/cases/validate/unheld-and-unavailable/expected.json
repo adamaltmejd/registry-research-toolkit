@@ -1,0 +1,20 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/ok": false,
+      "/issues/*/code": [
+        "period_outside_state_validity",
+        "fqid_outside_steward_catalog"
+      ],
+      "/issues/*/path": [
+        "/sources/0/bindings/0/variable",
+        "/sources/0/bindings/0/variable"
+      ],
+      "/issues/*/level": [
+        "error",
+        "warning"
+      ]
+    }
+  }
+]

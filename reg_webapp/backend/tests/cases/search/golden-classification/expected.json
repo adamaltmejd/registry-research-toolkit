@@ -1,0 +1,30 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/results/*/fqid": [
+        "class/example-codes"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/results/*/fqid": [
+        "class/example-codes"
+      ]
+    }
+  },
+  {
+    "status": 500,
+    "json": {
+      "/": "Internal Server Error"
+    }
+  },
+  {
+    "status": 500,
+    "json": {
+      "/": "Internal Server Error"
+    }
+  }
+]

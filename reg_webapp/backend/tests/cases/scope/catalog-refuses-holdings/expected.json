@@ -1,0 +1,42 @@
+[
+  {
+    "status": 422,
+    "json": {
+      "/detail/0/loc": [
+        "query",
+        "scope"
+      ],
+      "/detail/0/type": "scope_unavailable"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/detail/0/loc": [
+        "query",
+        "scope"
+      ],
+      "/detail/0/type": "scope_unavailable"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/detail/0/loc": [
+        "query",
+        "scope"
+      ],
+      "/detail/0/type": "scope_unavailable"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/detail/0/loc": [
+        "query",
+        "scope"
+      ],
+      "/detail/0/type": "scope_unavailable"
+    }
+  }
+]

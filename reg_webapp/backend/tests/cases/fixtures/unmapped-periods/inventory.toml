@@ -1,0 +1,16 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "UnmappedPast"
+edition = 1900
+[[table.column]]
+name = "Other"
+unmapped_reason = "No logical binding."
+
+[[table]]
+id = "UnmappedFuture"
+edition = 2090
+[[table.column]]
+name = "Other"
+unmapped_reason = "No logical binding."

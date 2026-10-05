@@ -24,8 +24,7 @@ import pytest
 from _curation_fixtures import write_lisa_errata
 from reg_meta.errors import RegMetaError
 from reg_meta.inventory import edition_bounds, load_inventory as load_delivery_inventory
-from reg_meta.inventory_check import check_inventory, unresolved_message
-from reg_meta_build.db import SCHEMA_VERSION, open_built_db
+from reg_meta_build.db import SCHEMA_VERSION
 from reg_meta_build.edition_bounds import edition_claims
 from reg_meta_build.ir import (
     IRRegister,
@@ -462,8 +461,7 @@ def flavored_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     # The `HuSSYK1` / `HUSSYK1` shape: a historical spelling carried by
     # `variable_alias` alone. With no window it is a search-only header the
     # order path never delivers, so it must stay out of the resolution index —
-    # a mapping onto it would refuse the deployment's boot (§12's gate,
-    # `reg_meta.inventory_check`).
+    # a mapping onto it is not supported by resolver-emitted delivery columns.
     conn.execute("INSERT INTO variable_alias VALUES (904, 902, 'T_KOLUMN')")
     conn.commit()
     conn.close()
@@ -565,15 +563,6 @@ def test_inventory_maps_every_spelling_of_a_co_delivered_column(
         ],
         "T_kolumn": [("inera/bestallda-prover/t-kolumn", "T_kolumn")],
     }
-    # The produced holdings must have complete catalog coordinate coverage.
-    conn = open_built_db(flavored_db)
-    try:
-        findings = check_inventory(
-            load_delivery_inventory(steward_dir / "inventory.toml"), conn
-        )
-    finally:
-        conn.close()
-    assert not findings, unresolved_message(findings)
 
 
 # --- cmd_inventory: per-register school-year editions ------------------------

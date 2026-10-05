@@ -1,0 +1,21 @@
+{
+  "fixture": "reader/logical",
+  "requests": [
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "Secret",
+        "type": "variable",
+        "scope": "holdings"
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "Secret",
+        "type": "variable",
+        "scope": "reference"
+      }
+    }
+  ]
+}

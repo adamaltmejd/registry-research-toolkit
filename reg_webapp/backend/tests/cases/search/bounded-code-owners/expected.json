@@ -1,0 +1,15 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/groups/1/results/0/variable_count": 7,
+      "/groups/1/results/0/variables/*/fqid": [
+        "scb/example/owner1",
+        "scb/example/owner2",
+        "scb/example/owner3",
+        "scb/example/owner4",
+        "scb/example/owner5"
+      ]
+    }
+  }
+]

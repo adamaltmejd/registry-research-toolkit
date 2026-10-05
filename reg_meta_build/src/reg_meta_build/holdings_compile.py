@@ -19,6 +19,7 @@ from reg_meta.inventory import (
 )
 from reg_meta.source_evidence import canonical_json
 
+from .db import catalog_coordinate_ids
 from .holdings_accounting import HoldingsAccounting, account_holdings
 
 if TYPE_CHECKING:
@@ -44,26 +45,6 @@ class CompiledHoldings:
     accounting: HoldingsAccounting
 
 
-def _catalog_coordinate_ids(
-    conn: sqlite3.Connection,
-) -> tuple[dict[str, int], dict[str, int]]:
-    variables = {
-        f"{row['provider']}/{row['register_slug']}/{row['slug']}": row["variable_id"]
-        for row in conn.execute(
-            "SELECT v.variable_id, v.slug, p.slug AS provider, r.slug AS register_slug FROM variable v JOIN register r USING(register_id) JOIN provider p USING(provider_id)"
-        )
-    }
-    variants = {
-        f"{row['provider']}/{row['register_slug']}/{row['slug']}": row[
-            "register_variant_id"
-        ]
-        for row in conn.execute(
-            "SELECT rv.register_variant_id, rv.slug, p.slug AS provider, r.slug AS register_slug FROM register_variant rv JOIN register r USING(register_id) JOIN provider p USING(provider_id)"
-        )
-    }
-    return variables, variants
-
-
 def canonical_inventory(
     conn: sqlite3.Connection,
     inventory: DeliveryInventory,
@@ -74,7 +55,7 @@ def canonical_inventory(
     conn.row_factory = sqlite3.Row
     register_py_lower(conn)
     catalog = Catalog(conn)
-    variables, variants = coordinate_ids or _catalog_coordinate_ids(conn)
+    variables, variants = coordinate_ids or catalog_coordinate_ids(conn)
     universes: dict[tuple[int, int], dict[str, str]] = {}
     rejections = []
     tables = []
@@ -137,7 +118,7 @@ def compile_holdings(
     if inventory.steward != steward:
         raise ValueError("Accepted inventory steward does not match selected steward")
     accounting = accounting or account_holdings(root, inventory)
-    variables, variants = _catalog_coordinate_ids(conn)
+    variables, variants = catalog_coordinate_ids(conn)
     canonical = canonical_inventory(
         conn, inventory, coordinate_ids=(variables, variants)
     )

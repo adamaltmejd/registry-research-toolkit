@@ -1,0 +1,14 @@
+{
+  "kind": "catalog",
+  "fixture": "many-code-owners",
+  "requests": [
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "Shared choice",
+        "type": "value",
+        "limit": 1
+      }
+    }
+  ]
+}

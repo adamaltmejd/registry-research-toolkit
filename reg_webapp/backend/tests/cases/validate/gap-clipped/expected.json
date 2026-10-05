@@ -1,0 +1,38 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/ok": true,
+      "/issues/*/code": [
+        "range_period_partially_covered",
+        "binding_state_drifts_within_period"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/entries/*/logical/representation": [
+        "Valueold",
+        "Valuenew"
+      ],
+      "/entries/*/requested_period": [
+        "2018",
+        "2019"
+      ],
+      "/entries/*/physical/column": [
+        "Observed",
+        "Observed"
+      ],
+      "/clips": [
+        {
+          "ordered_period": "2018..2019",
+          "requested_period": "2017..2019",
+          "source": "source",
+          "variable": "scb/example/value"
+        }
+      ],
+      "/provenance/mode": "steward_holdings"
+    }
+  }
+]

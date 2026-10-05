@@ -1,0 +1,24 @@
+[
+  {
+    "status": 404,
+    "json": {
+      "/detail": "not in this steward's catalog"
+    }
+  },
+  {
+    "status": 404,
+    "json": {
+      "/detail": "not in this steward's catalog"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/fqid": "fk/unheld"
+    }
+  },
+  {
+    "status": 301,
+    "location": "/api/catalog/scb/example"
+  }
+]

@@ -1,0 +1,5 @@
+{
+  "ok": false,
+  "type": "RuntimeError",
+  "message_contains": "REG_WEBAPP_STEWARD"
+}

@@ -614,11 +614,11 @@ is narrowed to held members. Classification and value/code surfaces are catalog-
 and pass through unaffected. `None` means no restriction — the pre-#859 behavior is
 byte-identical. The restriction is applied before folding and paging, so every page is
 in scope. reg_meta stays steward-agnostic: the caller supplies the allow-list; the set's
-provenance is opaque here. The webapp's filtered-steward `/api/search` passes
-`admitted_variable_fqids | held_register_fqids` (see `reg_webapp/DESIGN.md`); the CLI
-never passes `fqids`. The reader cut replaces this steward admission path with the
-shared compiled-holdings predicate before pagination. General ranking/folding limits
-remain; only holdings backfill and allow-list reconstruction go.
+provenance is opaque here. The pre-cut webapp's `/api/search` passed the runtime index's
+union of held binding and register identities; the CLI never passed `fqids`. The reader
+cut replaces this steward admission path with the shared compiled-holdings predicate
+before pagination. General ranking/folding limits remain; only holdings backfill and
+allow-list reconstruction go.
 
 **Why two methods for succession.** `predecessors` / `successors` are split (not one
 `replaced` returning a dict) so every edge-traversal accessor returns `list[...]`
@@ -1011,7 +1011,7 @@ Partitions keep `validate_slug`'s lowercase, letter-initial, single-hyphen gramm
 of delivery, not researcher-selectable catalog populations. Unmapped physical columns
 retain their authored nonblank reason where supplied; no reason is synthesized.
 
-### Consistency gate against the catalog DB (`inventory_check.py`)
+### Build-time consistency gate
 
 The compiler is the standing mapping/ownership/accounting gate before publication. It
 validates every authored triple against the exact new-schema base plus steward
@@ -1022,13 +1022,11 @@ and physical-column grain. Counts and digests go into `import_manifest`; runtime
 holdings contain only the first three dispositions. No exclusions, lookups or raw census
 relation.
 
-**Pre-cut implementation:** `check_inventory(inventory, conn)` currently runs at webapp
-boot and in a release-marked maintainer test against separately loaded TOML. The runtime
-cut deletes this runtime gate and the committed legacy inventory; build validation
-replaces it. Runtime boot checks artifact schema, completeness, publishability and
-steward identity, opens SQLite read-only and never rebuilds an inventory index. Build
-failures remain actionable and deterministic; diagnostic output never activates as a
-catalog.
+The former runtime consistency checker and committed legacy webapp inventory are
+removed. Build validation owns mapping consistency. Runtime boot checks artifact schema,
+completeness, publishability and steward identity, opens SQLite read-only and never
+rebuilds an inventory index. Build failures remain actionable and deterministic;
+diagnostic output never activates as a catalog.
 
 ## Order materializer and manifest (`order.py`)
 

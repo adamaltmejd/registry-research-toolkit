@@ -1,0 +1,21 @@
+{
+  "fixture": "compiled",
+  "requests": [
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "Choice",
+        "type": "value",
+        "scope": "holdings"
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "Choice",
+        "type": "value",
+        "scope": "reference"
+      }
+    }
+  ]
+}

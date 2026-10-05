@@ -10,8 +10,12 @@ directory that `create_app` boots against and serves rows from.
 from __future__ import annotations
 
 import importlib.util
+import os
+import shutil
+import subprocess
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
 
@@ -37,3 +41,49 @@ def test_built_dir_boots_and_serves_a_populated_catalog(tmp_path, monkeypatch):
         assert client.get("/api/catalog").json()["children"]
         assert client.get("/api/stats").json()["variables"] > 0
         assert client.get("/api/docs/doc/Kon.md").status_code == 200
+
+
+@pytest.mark.parametrize(
+    ("steward", "expected_kind_args"),
+    [("global", []), ("swecov", ["--kind", "steward"])],
+)
+def test_dev_runner_invokes_fixture_builder_with_optional_kind(
+    tmp_path, steward, expected_kind_args
+):
+    runner_relative = Path("reg_webapp/.claude/skills/run-reg-webapp/dev.sh")
+    root = Path(__file__).resolve().parents[3]
+    runner = tmp_path / runner_relative
+    runner.parent.mkdir(parents=True)
+    shutil.copyfile(root / runner_relative, runner)
+    venv_bin = tmp_path / ".venv/bin"
+    venv_bin.mkdir(parents=True)
+    for name, body in {
+        "python": 'printf "%s\\n" "$@" >"$FIXTURE_CALL_LOG"\nexit 73\n',
+        "uvicorn": "exit 0\n",
+    }.items():
+        executable = venv_bin / name
+        executable.write_text("#!/bin/bash\n" + body)
+        executable.chmod(0o755)
+    calls = tmp_path / "fixture-call.txt"
+    result = subprocess.run(
+        ["/bin/bash", str(runner), "--fixture-db", "shot", "/catalog"],
+        cwd=tmp_path,
+        env={
+            **os.environ,
+            "REG_WEBAPP_STEWARD": steward,
+            "REG_WEBAPP_SHOTS": str(tmp_path / "shots"),
+            "BACKEND_PORT": "8000",
+            "FRONTEND_PORT": "5173",
+            "FIXTURE_CALL_LOG": str(calls),
+        },
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 1
+    assert "dev: --fixture-db build failed" in result.stderr
+    arguments = calls.read_text().splitlines()
+    assert arguments[0] == "reg_webapp/backend/scripts/fixture_db.py"
+    assert arguments[2:] == expected_kind_args
+    assert not Path(arguments[1]).exists()

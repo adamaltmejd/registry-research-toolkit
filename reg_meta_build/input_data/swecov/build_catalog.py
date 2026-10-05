@@ -1757,9 +1757,9 @@ def _steward_load_db(db_path: Path):
     curated windows are additive and need no base-column window. Shared windows
     must be contained, while per-column storage or coding intersects states.
     Participating source windows replace the canonical state's window; otherwise
-    the canonical representation remains. §12's consistency gate
-    (`reg_meta.inventory_check`) refuses to boot a deployment whose inventory
-    maps anything else. A bare ``variable_alias`` row is the search-only
+    the canonical representation remains. The holdings compiler's consistency
+    gate (`reg_meta_build.holdings_compile`) rejects inventory mappings outside
+    this delivery universe. A bare ``variable_alias`` row is the search-only
     delivery-column history — mapping one would state holdings no order could
     ever fill — so those two conditions are mirrored here rather than unioning
     the two tables flat.
@@ -1947,7 +1947,7 @@ def _steward_scope(key: str, mapping: dict) -> tuple[set[str], set[str]]:
 #                                     MAPPING cannot place the table (residue
 #                                     providers, grafted holdings)
 #
-# The emitted `inventory.toml` is committed and validated through
+# The emitted `inventory.toml` is a local builder input, validated through
 # `reg_meta.inventory.load_inventory` — §12's one-to-one conflicts are the
 # maintainer's supersession worklist, and the build stays red until every
 # conflict has an overlay disposition. Overlay entries naming tables no longer
@@ -2535,7 +2535,7 @@ def cmd_inventory(args: argparse.Namespace) -> None:
 
 # --- errata: the columns held in editions the catalog has no window for ------
 #
-# The committed inventory states what SWECOV HOLDS; the flavored DB states what
+# The generated inventory states what SWECOV HOLDS; the flavored DB states what
 # reg_meta can deliver. Where they disagree — a column held in an edition with no
 # covering `variable_state` / `variable_alias_window` — the researcher hits
 # "period outside validity" on data the steward has, and `extend-db`'s flavored
@@ -2692,7 +2692,7 @@ def main() -> None:
     errata_p = sub.add_parser(
         "errata",
         help="write derived/errata_worklist.toml: candidate reg_meta_build/curation/registers/scb/<slug>.toml entries"
-        " for the columns the committed inventory holds in editions the FLAVORED"
+        " for the columns the generated inventory holds in editions the FLAVORED"
         " --db has no window for",
     )
     errata_p.add_argument(

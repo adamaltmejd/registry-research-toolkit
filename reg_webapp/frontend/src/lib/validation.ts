@@ -254,7 +254,6 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     hint: "error",
   },
   mapping_missing: { label: "Unmapped variable", hint: "error" },
-  mapping_ambiguous: { label: "Ambiguous mapping", hint: "error" },
   coverage_gap: { label: "Coverage gap", hint: "error" },
 };
 

@@ -1,0 +1,16 @@
+{
+  "requests": [
+    {
+      "path": "/api/catalog/scb/example/value/successors"
+    },
+    {
+      "path": "/api/catalog/scb/example/value"
+    },
+    {
+      "path": "/api/catalog/scb/example/value/graph"
+    },
+    {
+      "path": "/api/catalog/class/example-codes"
+    }
+  ]
+}

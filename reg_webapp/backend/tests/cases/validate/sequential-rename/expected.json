@@ -1,0 +1,30 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/ok": true,
+      "/issues/*/code": [
+        "binding_state_drifts_within_period"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/entries/*/logical/representation": [
+        "Valueold",
+        "Valuenew"
+      ],
+      "/entries/*/requested_period": [
+        "2018",
+        "2019"
+      ],
+      "/entries/*/physical/column": [
+        "Observed",
+        "Observed"
+      ],
+      "/clips": [],
+      "/provenance/mode": "steward_holdings"
+    }
+  }
+]

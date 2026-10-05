@@ -44,7 +44,6 @@ def ensure_slugged_db_importable() -> None:
 
 
 FIXTURE_IMPORT_DATE = "2026-06-01T00:00:00Z"
-FIXTURE_GENERATION_ID = "0" * 64
 
 # A schema_version that PASSES open_db's gate (same major.minor) but differs from
 # the code constant in the PATCH (_check_schema_compat ignores patch) — so
@@ -54,20 +53,31 @@ _MAJOR, _MINOR, _ = reg_meta.db.SCHEMA_VERSION.split(".")
 FIXTURE_SCHEMA_VERSION = f"{_MAJOR}.{_MINOR}.999"
 
 
-def _stamp_manifest(conn: sqlite3.Connection) -> None:
+def stamp_manifest(conn: sqlite3.Connection) -> None:
     """Add the boot-required ``import_manifest`` to a freshly-built slugged DB so
     ``open_db``'s schema and artifact-admission gates pass. Identity is fixed
     alongside the synthetic content, including a deterministic generation."""
+    from reg_meta_build.artifact_identity import generation_id
+
+    identity = json.loads(
+        (
+            Path(__file__).resolve().parents[3]
+            / "reg_meta/tests/cases/reader/fixture/identity.json"
+        ).read_text()
+    )
+    identity.update(
+        {
+            "schema_version": FIXTURE_SCHEMA_VERSION,
+            "import_date": FIXTURE_IMPORT_DATE,
+            "catalog_artifact_kind": "catalog",
+            "catalog_publishable": "true",
+            "catalog_completeness": "complete",
+        }
+    )
+    identity["generation_id"] = generation_id(identity)
     conn.executemany(
         "INSERT OR REPLACE INTO import_manifest(key, value) VALUES (?, ?)",
-        [
-            ("schema_version", FIXTURE_SCHEMA_VERSION),
-            ("import_date", FIXTURE_IMPORT_DATE),
-            ("catalog_artifact_kind", "catalog"),
-            ("catalog_publishable", "true"),
-            ("catalog_completeness", "complete"),
-            ("generation_id", FIXTURE_GENERATION_ID),
-        ],
+        sorted(identity.items()),
     )
     conn.commit()
 
@@ -182,7 +192,7 @@ def build_catalog_fixture_db(db_path: Path) -> None:
     _seed_many_state_binding(src, add_variable, add_state, add_value_set)
     _seed_data_warnings(src)
     _rebuild_fts(src)
-    _stamp_manifest(src)
+    stamp_manifest(src)
 
     dst = sqlite3.connect(db_path)
     try:
@@ -1267,14 +1277,45 @@ def build_docs_fixture_db(db_path: Path) -> None:
         conn.close()
 
 
-def build_fixture_db_dir(db_dir: Path) -> Path:
+def build_reader_fixture_db(
+    db_dir: Path,
+    *,
+    kind: str,
+    fixture: str | Path = "reader",
+    identity_overrides: dict[str, str] | None = None,
+) -> Path:
+    """Build the shared readable-source catalog or steward artifact.
+
+    The reader's test support runs the real catalog writer, holdings compiler and
+    artifact validator. Dev servers and HTTP conformance cases use these same bytes.
+    """
+    reader_tests = Path(__file__).resolve().parents[3] / "reg_meta" / "tests"
+    if str(reader_tests) not in sys.path:
+        sys.path.insert(0, str(reader_tests))
+    from reader_artifacts import build_reader_artifact
+
+    return build_reader_artifact(
+        db_dir,
+        fixture,
+        kind,
+        identity_overrides={
+            "import_date": FIXTURE_IMPORT_DATE,
+            **(identity_overrides or {}),
+        },
+    )
+
+
+def build_fixture_db_dir(db_dir: Path, *, kind: str | None = None) -> Path:
     """Build BOTH fixture DBs into ``db_dir`` — the shape ``REG_META_DB`` points at.
 
     The catalog DB is what the app boots on; the docs DB is optional at boot but
     `/doc/<identifier>` renders an empty state without it, so `--fixture-db` always
     writes the pair."""
-    db_dir.mkdir(parents=True, exist_ok=True)
-    build_catalog_fixture_db(db_dir / reg_meta.db.DB_FILENAME)
+    if kind is None:
+        db_dir.mkdir(parents=True, exist_ok=True)
+        build_catalog_fixture_db(db_dir / reg_meta.db.DB_FILENAME)
+    else:
+        build_reader_fixture_db(db_dir, kind=kind)
     build_docs_fixture_db(db_dir / reg_meta.doc_db.DOC_DB_FILENAME)
     return db_dir
 
@@ -1282,8 +1323,9 @@ def build_fixture_db_dir(db_dir: Path) -> Path:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("db_dir", type=Path, help="directory to write the DB pair into")
+    parser.add_argument("--kind", choices=("catalog", "steward"))
     args = parser.parse_args()
-    print(build_fixture_db_dir(args.db_dir))
+    print(build_fixture_db_dir(args.db_dir, kind=args.kind))
 
 
 if __name__ == "__main__":

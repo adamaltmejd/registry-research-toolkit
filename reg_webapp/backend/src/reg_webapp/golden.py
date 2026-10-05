@@ -38,6 +38,7 @@ from hashlib import sha256
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from reg_meta.catalog import Catalog
 from reg_meta.fqid import FqidError, parse as parse_fqid
 from reg_meta.search import ClassificationSearchResult, RegisterSearchResult
 
@@ -45,6 +46,7 @@ if TYPE_CHECKING:
     import sqlite3
     from collections.abc import Callable
 
+    from reg_meta.holdings import ReadScope
     from reg_meta.search import SearchResult
 
 # Packaged INSIDE reg_webapp (beside this module) so it ships with the src tree the
@@ -297,6 +299,23 @@ def pinned_fqids(query: str, group: str) -> tuple[str, ...]:
     """Return curated identities that origin search must exclude on every page."""
     pin = _PINS.get((_normalize(query), group))
     return () if pin is None else pin.fqids
+
+
+def eligible_pinned_fqids(
+    conn: sqlite3.Connection, query: str, group: str, *, scope: ReadScope
+) -> tuple[str, ...]:
+    """Validate reference pins before filtering their scoped eligibility."""
+    fqids = pinned_fqids(query, group)
+    if not fqids:
+        return ()
+    reference = Catalog(conn, scope="reference")
+    for fqid in fqids:
+        if not reference.exists(fqid):
+            raise ValueError(f"golden pin fqid {fqid!r} does not resolve to a {group}")
+    if scope == "reference":
+        return fqids
+    catalog = Catalog(conn, scope=scope)
+    return tuple(fqid for fqid in fqids if catalog.exists(fqid))
 
 
 def apply_golden_boost(

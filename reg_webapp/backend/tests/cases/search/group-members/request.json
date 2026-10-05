@@ -1,0 +1,12 @@
+{
+  "fixture": "compiled",
+  "requests": [
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "Value family",
+        "type": "variable"
+      }
+    }
+  ]
+}

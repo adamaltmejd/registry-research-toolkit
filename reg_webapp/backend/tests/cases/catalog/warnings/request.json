@@ -1,0 +1,22 @@
+{
+  "requests": [
+    {
+      "path": "/api/catalog/scb/example/data_warnings"
+    },
+    {
+      "path": "/api/catalog/scb/example/data_warnings",
+      "query": {
+        "scope": "reference"
+      }
+    },
+    {
+      "path": "/api/catalog/fk/unheld/data_warnings"
+    },
+    {
+      "path": "/api/catalog/scb/example/data_warnings",
+      "query": {
+        "variant": "archive"
+      }
+    }
+  ]
+}

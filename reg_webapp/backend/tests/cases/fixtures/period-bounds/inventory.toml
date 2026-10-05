@@ -1,0 +1,26 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "Mapped"
+edition = { from = 2018, to = 2019 }
+[[table.column]]
+name = "Observed"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/value"
+representation = "Value"
+
+[[table]]
+id = "UnmappedPast"
+edition = 1900
+[[table.column]]
+name = "Other"
+unmapped_reason = "No logical binding."
+
+[[table]]
+id = "UnmappedFuture"
+edition = 2090
+[[table.column]]
+name = "Other"
+unmapped_reason = "No logical binding."
