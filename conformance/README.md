@@ -83,7 +83,7 @@ tier 3. The artifact jobs and native registry-install job run independently; a f
 artifact gate does not suppress the other artifact run or native install checks.
 Incompatible published assets remain failures until a matching release is available.
 
-Plan 02 manifests do not contain mapping, period or unmapped-reason totals. Comparisons
+Schema-9 manifests do not contain mapping, period or unmapped-reason totals. Comparisons
 of those relation counts to manifest fields cannot run until that contract exists. Exact
 accepted-input table/cell accounting, authored mappings and policy digests run only with
 explicit `--holdings-input` alongside both tier-3 flags:

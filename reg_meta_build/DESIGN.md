@@ -1502,11 +1502,9 @@ build.
 **Compiled-holdings contract (2026-10-04).** `extend-db` copies an exact validated
 global database built under schema 9, adds steward-private providers and their
 registers, variables and states, then compiles accepted physical holdings into the same
-SQLite artifact. The old schema 8.1 base is comparison evidence only: rebuild the
-new-schema public base once and reuse it; do not migrate old databases or rerun public
-preparation for each compiler edit. Facts about an existing global provider belong in
-common global curation. Steward extension does not mutate the base or resolve global
-source conflicts.
+SQLite artifact. A base built under an older schema is rebuilt, never migrated. Facts
+about an existing global provider belong in common global curation. Steward extension
+does not mutate the base or resolve global source conflicts.
 
 `sources/curated.py` is steward-only. Its `<provider>.toml` requires a `[provider]` name
 and source label, explicit variable keys and nonempty state arrays. Repeated variable
@@ -1563,20 +1561,17 @@ Compilation does not retain the former Y-115 build assertion that a held single-
 column has a catalog window in that same year. A physical holding is preserved even when
 semantic applicability is absent for its edition; the whole-history fold gate
 establishes its binding identity only. Query-time resolution and ordering must still
-require applicable column windows and reject uncovered requests. The compiler calls
-`Catalog`'s existing expansion directly because the consistency checker's older mirror
-omits per-column coding intersections. That mirror is not compiler authority; its
-consolidation belongs to the staged reader cut.
+require applicable column windows and reject uncovered requests. The compiler reads the
+delivery universe through the reader's public `Catalog.delivery_columns`; there is no
+second expansion.
 
 The existing coverage assessment keeps range/list editions "temporally unassessed";
 reuse `data_warning` for that disposition. Single-period assessment's flat union is
 source accounting, not `Catalog` semantic resolution. The latter remains query-time,
 including per-column storage/coding intersections, shared-window containment,
-replacement participation/fallback and additive curated windows. Any use of the existing
-consistency checker must account for its coding-mode drift; it is not an exact resolver
-oracle. Drop redundant `unknown_holding_edition` / `unknown_source_validity` holding
-warnings and their inventory-JSON witnesses. The compiled `holding_table` evidence is
-the sole authority for these unknown scopes.
+replacement participation/fallback and additive curated windows. The compiled
+`holding_table` evidence is the sole authority for unknown scopes; the former
+`unknown_holding_edition` / `unknown_source_validity` holding warnings are retired.
 
 The accounting gate proves the disjoint union dated ∪ year-independent ∪
 retained-unknown ∪ excluded ∪ lookup equals the raw table/column census from accepted
