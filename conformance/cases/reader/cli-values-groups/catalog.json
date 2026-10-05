@@ -1,0 +1,650 @@
+[
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "reg01",
+      "name": "Reg01"
+    },
+    "slug": "sex",
+    "provider_key": "44",
+    "name": "Sex",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2017-01-01",
+        "valid_to": "2017-12-31",
+        "delivery_column_name": "Sex",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Man"
+            ],
+            [
+              "2",
+              "Woman"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "reg02",
+      "name": "Reg02"
+    },
+    "slug": "sex",
+    "provider_key": "44",
+    "name": "Sex",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2017-01-01",
+        "valid_to": "2017-12-31",
+        "delivery_column_name": "Sex",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Man"
+            ],
+            [
+              "2",
+              "Woman"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "reg03",
+      "name": "Reg03"
+    },
+    "slug": "sex",
+    "provider_key": "44",
+    "name": "Sex",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2017-01-01",
+        "valid_to": "2017-12-31",
+        "delivery_column_name": "Sex",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Man"
+            ],
+            [
+              "2",
+              "Woman"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "reg04",
+      "name": "Reg04"
+    },
+    "slug": "sex",
+    "provider_key": "44",
+    "name": "Sex",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2017-01-01",
+        "valid_to": "2017-12-31",
+        "delivery_column_name": "Sex",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Man"
+            ],
+            [
+              "2",
+              "Woman"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "reg05",
+      "name": "Reg05"
+    },
+    "slug": "sex",
+    "provider_key": "44",
+    "name": "Sex",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2017-01-01",
+        "valid_to": "2017-12-31",
+        "delivery_column_name": "Sex",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Man"
+            ],
+            [
+              "2",
+              "Woman"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "reg06",
+      "name": "Reg06"
+    },
+    "slug": "sex",
+    "provider_key": "44",
+    "name": "Sex",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2017-01-01",
+        "valid_to": "2017-12-31",
+        "delivery_column_name": "Sex",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Man"
+            ],
+            [
+              "2",
+              "Woman"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "reg07",
+      "name": "Reg07"
+    },
+    "slug": "sex",
+    "provider_key": "44",
+    "name": "Sex",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2017-01-01",
+        "valid_to": "2017-12-31",
+        "delivery_column_name": "Sex",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Man"
+            ],
+            [
+              "2",
+              "Woman"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "reg08",
+      "name": "Reg08"
+    },
+    "slug": "sex",
+    "provider_key": "44",
+    "name": "Sex",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2017-01-01",
+        "valid_to": "2017-12-31",
+        "delivery_column_name": "Sex",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Man"
+            ],
+            [
+              "2",
+              "Woman"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "reg09",
+      "name": "Reg09"
+    },
+    "slug": "sex",
+    "provider_key": "44",
+    "name": "Sex",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2017-01-01",
+        "valid_to": "2017-12-31",
+        "delivery_column_name": "Sex",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Man"
+            ],
+            [
+              "2",
+              "Woman"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "reg10",
+      "name": "Reg10"
+    },
+    "slug": "sex",
+    "provider_key": "44",
+    "name": "Sex",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2017-01-01",
+        "valid_to": "2017-12-31",
+        "delivery_column_name": "Sex",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Man"
+            ],
+            [
+              "2",
+              "Woman"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "reg11",
+      "name": "Reg11"
+    },
+    "slug": "sex",
+    "provider_key": "44",
+    "name": "Sex",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2017-01-01",
+        "valid_to": "2017-12-31",
+        "delivery_column_name": "Sex",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Man"
+            ],
+            [
+              "2",
+              "Woman"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "reg12",
+      "name": "Reg12"
+    },
+    "slug": "sex",
+    "provider_key": "44",
+    "name": "Sex",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2017-01-01",
+        "valid_to": "2017-12-31",
+        "delivery_column_name": "Sex",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Man"
+            ],
+            [
+              "2",
+              "Woman"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "regc",
+      "name": "RegC"
+    },
+    "slug": "sex-child",
+    "provider_key": "44",
+    "name": "Sex",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2017-01-01",
+        "valid_to": "2017-12-31",
+        "delivery_column_name": "Sex",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Boy"
+            ],
+            [
+              "2",
+              "Girl"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "regd",
+      "name": "RegD"
+    },
+    "slug": "sex",
+    "provider_key": "44",
+    "name": "Sex",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2017-01-01",
+        "valid_to": "2017-12-31",
+        "delivery_column_name": "SexA",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ],
+    "aliases": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "delivery_column_name": "SexA",
+        "windows": [
+          {
+            "valid_from": "2017-01-01",
+            "valid_to": "2017-12-31",
+            "provenance": "curation:fixture",
+            "coding_metadata": "per_column",
+            "value_set_version_label": "native-a",
+            "value_set": {
+              "members": [
+                [
+                  "1",
+                  "Man"
+                ],
+                [
+                  "2",
+                  "Woman"
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "delivery_column_name": "SexQ",
+        "windows": [
+          {
+            "valid_from": "2017-01-01",
+            "valid_to": "2017-12-31",
+            "provenance": "curation:fixture",
+            "coding_metadata": "per_column",
+            "value_set_version_label": "native-q",
+            "value_set": {
+              "members": [
+                [
+                  "F",
+                  "Female"
+                ],
+                [
+                  "M",
+                  "Male"
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
