@@ -101,7 +101,7 @@ def test_complete_admitted_set_agrees_with_http(artifact_dir, artifact_client):
     print(json.dumps({"complete_http_admitted_sets": observations}, sort_keys=True))
 
 
-def test_generation_seeded_stratified_binding_agreement(
+def check_generation_seeded_stratified_binding_agreement(
     artifact_dir, artifact_client, tmp_path, capsys
 ):
     with open_db(artifact_dir / "reg_meta.db") as conn:
@@ -230,6 +230,14 @@ def test_generation_seeded_stratified_binding_agreement(
     )
 
 
+def test_generation_seeded_stratified_binding_agreement(
+    artifact_dir, artifact_client, tmp_path, capsys
+):
+    check_generation_seeded_stratified_binding_agreement(
+        artifact_dir, artifact_client, tmp_path, capsys
+    )
+
+
 def test_unknown_physical_tables_cannot_supply_logical_bindings(artifact_dir):
     with open_db(artifact_dir / "reg_meta.db") as conn:
         tables = conn.execute(
@@ -346,6 +354,6 @@ def test_source_built_stratified_boundary_agreement(
         str(Path(__file__).resolve().parents[1] / "reg_webapp/stewards"),
     )
     with TestClient(create_app(rate_limit_per_minute=1000)) as client:
-        test_generation_seeded_stratified_binding_agreement(
+        check_generation_seeded_stratified_binding_agreement(
             path.parent, client, tmp_path, capsys
         )

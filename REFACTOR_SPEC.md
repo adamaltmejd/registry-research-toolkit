@@ -109,18 +109,27 @@ unchanged.
 ## 11 — Steward catalogs
 
 SWECOV branding is tracked in `reg_webapp/stewards/swecov/steward.toml`; accepted
-physical inventories and policies remain private builder inputs. Schema-9 runtime
-holdings, scoped admission and ordering read the selected compiled steward artifact. The
-builder compiles one validated global base with steward metadata and holdings; no loose
-inventory, runtime reconciliation or drift gate is shipped. Publication of the
-unreleased compiled series remains gated by §12 independent acceptance.
+physical inventories and the policies selected by accepted private candidates remain
+private builder inputs. The tracked `source_policy.toml`, `inventory_overlay.toml` and
+`holdings_policy.toml` are generator defaults, not proof of an accepted candidate's
+policy bytes. The tracked `reg_meta_build/input_data/swecov/build_catalog.py inventory`
+command generates the physical inventory; no concrete inventory is shipped as a loose
+runtime file. Schema-9 runtime holdings, scoped admission and ordering read the selected
+compiled steward artifact. The builder compiles one validated global base with steward
+metadata and holdings; no loose inventory, runtime reconciliation or drift gate is
+shipped. Publication of the unreleased compiled series remains gated by §12 independent
+acceptance.
 
 Deployment configuration targets `data.swecov.se` through the separate
 `reg-webapp-swecov` Fly app, using app-scoped `FLY_API_TOKEN_SWECOV`. Its reader
 requires a publishable artifact whose manifest steward matches the deployment. A global
-artifact cannot substitute for that steward artifact. The release asset, BuildKit
-manifest and selected sibling docs must preserve the same release identity; local
-acceptance does not verify live deployment or publication.
+artifact cannot substitute for that steward artifact. `reg_meta_swecov.db.zst` remains a
+public GitHub release asset on the same `reg_meta/v*` tag as the global catalog and
+public docs asset. The release skill produces and uploads it; `integration.yml` verifies
+and admits it, and `container-build.yml` supplies its `tag`, `url` and `sha256` through
+the BuildKit manifest. The bake refuses tag or digest mismatches. Selected sibling docs
+preserve the same release identity; local acceptance does not verify live deployment or
+publication.
 
 IFAU authoring remains deferred. Before v1, extract SWECOV branding and its delivery
 pipeline into its own steward system and make that system copyable for future stewards.
@@ -311,14 +320,17 @@ will need period-column `WHERE` clauses later.
 
 Plans 00 and 01 are independent and have merged (#1145, #1144); plans 02, 03 and 04
 merged as #1146, #1147 and #1149, and plan 01b (conformance suite) as #1150, all on
-2026-10-05. Plan 05 has independently reproduced accepted-input accounting and
-historical order parity, but changed catalog paths miss the performance budget.
-Acceptance and publication remain blocked pending that finding; the completion gate and
-operational plans remain. Plan 06 sweeps package tests after acceptance. Plans 02–04 are
-one unreleased schema-9 series with separately reviewable PRs; do not tag `reg_meta/v*`
-or `reg_webapp/v*` until plan 05 passes. Main may reject released 8.1 artifacts between
-writer and reader cuts; use the schema-9 scratch builds via `REG_META_DB`. No
-compatibility fallback or migration.
+2026-10-05. Plan 05's conformance checks prove opt-in accepted-input table/cell and
+authored-mapping agreement, complete HTTP variable-node admission and sampled CLI/HTTP
+browse/search/validate/order agreement. Scripted historical-order comparison remains a
+maintainer check; its receipts are in the maintainer-local
+`archive/reports/curation-reorg-2026-09-24/tools/review-2026-10-04/plans/05-completion.md`.
+Changed catalog paths miss the performance budget. Acceptance and publication remain
+blocked pending that finding; the completion gate and operational plans remain. Plan 06
+sweeps package tests after acceptance. Plans 02–04 are one unreleased schema-9 series
+with separately reviewable PRs; do not tag `reg_meta/v*` or `reg_webapp/v*` until plan
+05 passes. Main may reject released 8.1 artifacts between writer and reader cuts; use
+the schema-9 scratch builds via `REG_META_DB`. No compatibility fallback or migration.
 
 1. **00 — Coverage N+1 fix:** schema-8.1 index and grouped query improvement,
    independent of compilation. Do not attribute a performance gain to relational
@@ -512,8 +524,10 @@ Carried from the testing strategy; the shipped categories are in
   synthetic/real artifact checks. Sweep existing package suites one package at a time
   under the `AGENTS.md` policy: delete tests pinning internals covered by a boundary
   case, rewrite the rest against artifacts, and shrink the private-import/size lint
-  allowlists. Accepted-private-input census and performance acceptance remain plan 05.
-  See `ARCHITECTURE.md` → Testing strategy.
+  allowlists. Accepted-private-input census is shipped via opt-in `--holdings-input`.
+  Historical-order comparisons and performance acceptance remain separate maintainer
+  checks; the recorded performance gate has not passed. See `ARCHITECTURE.md` → Testing
+  strategy.
 
 ## Open / deferred decisions
 

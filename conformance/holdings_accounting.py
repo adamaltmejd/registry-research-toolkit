@@ -82,9 +82,12 @@ def admit_holdings_input(path: Path, artifact_dir: Path) -> Path:
         if not required.issubset(names):
             raise ValueError("Holdings input manifest omits consumed accounting inputs")
         return root
+    except KeyError as exc:
+        raise ValueError(
+            f"Holdings input manifest is missing required key: {exc.args[0]}"
+        ) from None
     except (
         OSError,
-        KeyError,
         TypeError,
         IndexError,
         json.JSONDecodeError,
