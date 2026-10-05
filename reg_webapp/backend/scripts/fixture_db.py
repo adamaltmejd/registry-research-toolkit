@@ -33,12 +33,13 @@ from pathlib import Path
 import reg_meta.db
 import reg_meta.doc_db
 
-_READER_TESTS_DIR = Path(__file__).resolve().parents[3] / "reg_meta" / "tests"
-if str(_READER_TESTS_DIR) not in sys.path:
-    sys.path.insert(0, str(_READER_TESTS_DIR))
-from reader_artifacts import FIXTURE_IMPORT_DATE
-
 _SLUGGED_DB_DIR = Path(__file__).resolve().parents[3] / "reg_meta_build" / "tests"
+_READER_FIXTURE_DIR = (
+    Path(__file__).resolve().parents[3] / "conformance/cases/reader/fixture"
+)
+FIXTURE_IMPORT_DATE = json.loads(
+    (_READER_FIXTURE_DIR / "import_metadata.json").read_text()
+)["import_date"]
 
 
 def ensure_slugged_db_importable() -> None:
@@ -62,12 +63,7 @@ def stamp_manifest(conn: sqlite3.Connection) -> None:
     alongside the synthetic content, including a deterministic generation."""
     from reg_meta_build.artifact_identity import generation_id
 
-    identity = json.loads(
-        (
-            Path(__file__).resolve().parents[3]
-            / "conformance/cases/reader/fixture/identity.json"
-        ).read_text()
-    )
+    identity = json.loads((_READER_FIXTURE_DIR / "identity.json").read_text())
     identity.update(
         {
             "schema_version": FIXTURE_SCHEMA_VERSION,
@@ -1292,6 +1288,9 @@ def build_reader_fixture_db(
     The reader's test support runs the real catalog writer, holdings compiler and
     artifact validator. Dev servers and HTTP conformance cases use these same bytes.
     """
+    reader_tests = Path(__file__).resolve().parents[3] / "reg_meta" / "tests"
+    if str(reader_tests) not in sys.path:
+        sys.path.insert(0, str(reader_tests))
     from reader_artifacts import build_reader_artifact
 
     return build_reader_artifact(

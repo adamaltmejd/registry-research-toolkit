@@ -23,7 +23,9 @@ from reg_meta_build.validate import validate_built_db
 
 CASES = Path(__file__).resolve().parents[2] / "conformance/cases"
 BUILDER_CASES = CASES.parents[1] / "reg_meta_build/tests/cases/holdings"
-FIXTURE_IMPORT_DATE = "2026-06-01T00:00:00Z"
+FIXTURE_IMPORT_DATE = json.loads(
+    (CASES / "reader/fixture/import_metadata.json").read_text()
+)["import_date"]
 
 
 def build_reader_artifact(

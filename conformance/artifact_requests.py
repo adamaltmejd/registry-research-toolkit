@@ -1,8 +1,12 @@
-"""Build public requests from artifact content; never retain real identifiers as files."""
+"""Public requests and adapter agreement; never retain real identifiers as files."""
 
 from __future__ import annotations
 
-from reg_meta.db import get_manifest
+import json
+
+from reg_meta.cli import run
+from reg_meta.db import get_manifest, open_db
+from reg_meta.order import materialize_order, project_from_raw
 
 
 def sample_project(conn, *, unheld=False):
@@ -91,3 +95,108 @@ def sample_project(conn, *, unheld=False):
             }
         ],
     }
+
+
+def require(condition, message):
+    if not condition:
+        raise AssertionError(message)
+
+
+def assert_sampled_agreement(artifact_dir, artifact_client, tmp_path, capsys):
+    """Observe the same adapter contracts for admitted and regression artifacts."""
+    with open_db(artifact_dir / "reg_meta.db") as conn:
+        project = sample_project(conn)
+        result = materialize_order(project_from_raw(project), conn)
+    require(result.manifest is not None, "Sampled admitted binding did not materialize")
+    fqid = project["sources"][0]["bindings"][0]["variable"]
+    scope = "reference" if project["steward"] == "global" else "holdings"
+    browse = artifact_client.get("/api/catalog/" + fqid, params={"scope": scope})
+    require(browse.status_code == 200, "Sampled binding missing from browse")
+    require(browse.json()["fqid"] == fqid, "Browse identity disagrees with sample")
+    query = browse.json()["name"]
+    params = {"q": query, "type": "variable", "limit": 100, "scope": scope}
+    search = artifact_client.get("/api/search", params=params)
+    require(search.status_code == 200, "Sample search failed")
+    require(
+        search.content == artifact_client.get("/api/search", params=params).content,
+        "Repeated HTTP first page differs",
+    )
+    hits = [hit for group in search.json()["groups"] for hit in group["results"]]
+    seen_cursors = set()
+    while not any(hit.get("fqid") == fqid for hit in hits):
+        group = search.json()["groups"][0]
+        if not group["has_more"]:
+            break
+        cursor = group["next_cursor"]
+        require(cursor and cursor not in seen_cursors, "HTTP search cursor stalled")
+        seen_cursors.add(cursor)
+        search = artifact_client.get("/api/search", params={**params, "cursor": cursor})
+        require(search.status_code == 200, "Sample search continuation failed")
+        hits = [hit for group in search.json()["groups"] for hit in group["results"]]
+    require(
+        any(hit.get("fqid") == fqid for hit in hits),
+        "Sample missing from HTTP search traversal",
+    )
+    argv = [
+        "--db",
+        str(artifact_dir),
+        "--format",
+        "json",
+        "search",
+        "--query",
+        query,
+        "--type",
+        "variable",
+        "--no-fold",
+        "--limit",
+        "100",
+        "--scope",
+        scope,
+    ]
+    require(run(argv) == 0, "CLI sample search failed")
+    first = capsys.readouterr().out
+    require(run(argv) == 0, "Repeated CLI sample search failed")
+    require(capsys.readouterr().out == first, "Repeated CLI first page differs")
+    page = json.loads(first)
+    seen_cursors = set()
+    while not any(hit.get("fqid") == fqid for hit in page["results"]):
+        if not page["has_more"]:
+            break
+        cursor = page["next_cursor"]
+        require(cursor and cursor not in seen_cursors, "CLI search cursor stalled")
+        seen_cursors.add(cursor)
+        require(run([*argv, "--cursor", cursor]) == 0, "CLI search continuation failed")
+        page = json.loads(capsys.readouterr().out)
+    require(
+        any(hit.get("fqid") == fqid for hit in page["results"]),
+        "CLI search identity disagrees",
+    )
+    validated = artifact_client.post("/api/project/validate", json=project)
+    require(
+        validated.status_code == 200 and validated.json()["ok"],
+        "Sample validation disagrees with admission",
+    )
+    project_file = tmp_path / "project.json"
+    project_file.write_text(json.dumps(project))
+    require(
+        run(["--db", str(artifact_dir), "--format", "json", "order", str(project_file)])
+        == 0,
+        "CLI sample order failed",
+    )
+    cli = capsys.readouterr().out
+    response = artifact_client.post("/api/project/order", json=project)
+    require(response.status_code == 200, "HTTP sample order failed")
+    require(
+        cli == result.manifest.to_json() == response.text,
+        "Raw adapter serialization differs",
+    )
+    require(
+        run(["--db", str(artifact_dir), "order", str(project_file)]) == 0,
+        "Repeated CLI order failed",
+    )
+    require(capsys.readouterr().out == cli, "Repeated CLI order bytes differ")
+    require(
+        artifact_client.post("/api/project/order", json=project).content
+        == response.content,
+        "Repeated HTTP order bytes differ",
+    )

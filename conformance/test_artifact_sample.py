@@ -6,14 +6,13 @@ import json
 from pathlib import Path
 
 import pytest
-from artifact_requests import sample_project
+from artifact_requests import assert_sampled_agreement, sample_project
 from fastapi.testclient import TestClient
 from reader_artifacts import CASES, FIXTURE_IMPORT_DATE, build_reader_artifact
 from reg_meta.cli import run
 from reg_meta.db import open_db
 from reg_meta.order import materialize_order, project_from_raw
 from reg_webapp.app import create_app
-from test_artifact import assert_sampled_agreement
 
 
 @pytest.mark.parametrize(

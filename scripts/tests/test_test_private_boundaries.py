@@ -4,6 +4,7 @@ Existing package violations are drained in plan 06; conformance has zero toleran
 Public protocol dunders are allowed. Bare private fixture modules importing public
 names are legacy test support; private imported names are still violations.
 Only network, filesystem, subprocess, environment, clock and platform patches pass.
+The AST scan covers explicit imports/access/mutations, not arbitrary dynamic execution.
 """
 
 from __future__ import annotations
@@ -111,6 +112,8 @@ PROCESS_ROOTS = {
     "tarfile",
 }
 
+PRODUCT_ROOTS = {"reg_meta", "reg_meta_build", "reg_schema", "reg_webapp"}
+
 
 def private(name):
     return name.startswith("_") and not (name.startswith("__") and name.endswith("__"))
@@ -124,6 +127,37 @@ def dotted(node, aliases):
     if isinstance(node, ast.Constant) and isinstance(node.value, str):
         return node.value
     return ast.unparse(node)
+
+
+def imported_path(node, aliases):
+    if isinstance(node, ast.Name):
+        return aliases.get(node.id)
+    if isinstance(node, ast.Attribute):
+        path = imported_path(node.value, aliases)
+        return f"{path}.{node.attr}" if path else None
+    if isinstance(node, ast.Subscript):
+        return imported_path(node.value, aliases)
+    return None
+
+
+def imported_root(node, aliases):
+    path = imported_path(node, aliases)
+    return path.split(".")[0] if path else None
+
+
+def process_boundary(node, aliases, *, target=None):
+    target = dotted(node, aliases) if target is None else target
+    candidate = node
+    while isinstance(candidate, ast.Attribute):
+        candidate = candidate.value
+    parts = target.split(".")
+    return (
+        isinstance(candidate, (ast.Name, ast.Constant))
+        and all(part.isidentifier() for part in parts)
+        and parts[0] in PROCESS_ROOTS
+        and parts[:2] != ["sys", "modules"]
+        and (isinstance(node, ast.Constant) or imported_root(node, aliases) is not None)
+    )
 
 
 def violations(source, *, conformance=False):
@@ -151,14 +185,27 @@ def violations(source, *, conformance=False):
                 ):
                     hits.append((node.lineno, f"{node.module}.{alias.name}"))
     for node in ast.walk(tree):
-        if conformance and isinstance(node, ast.Attribute) and private(node.attr):
-            hits.append((node.lineno, dotted(node, aliases)))
+        if conformance and isinstance(node, (ast.Attribute, ast.Subscript)):
+            target = dotted(node, aliases)
+            imported = imported_path(node, aliases)
+            if (
+                isinstance(node, ast.Attribute)
+                and private(node.attr)
+                or (
+                    isinstance(node.ctx, (ast.Store, ast.Del))
+                    and (
+                        imported_root(node, aliases) in PRODUCT_ROOTS
+                        or (imported or "").split(".")[:2] == ["sys", "modules"]
+                    )
+                )
+            ):
+                hits.append((node.lineno, target))
         if not isinstance(node, ast.Call):
             continue
+        called = dotted(node.func, aliases)
         if (
             conformance
-            and isinstance(node.func, ast.Name)
-            and node.func.id in {"getattr", "hasattr"}
+            and called in {"getattr", "hasattr", "builtins.getattr", "builtins.hasattr"}
             and len(node.args) > 1
             and isinstance(node.args[1], ast.Constant)
             and isinstance(node.args[1].value, str)
@@ -167,10 +214,43 @@ def violations(source, *, conformance=False):
             hits.append(
                 (
                     node.lineno,
-                    f"{node.func.id}({dotted(node.args[0], aliases)}, {node.args[1].value})",
+                    f"{called}({dotted(node.args[0], aliases)}, {node.args[1].value})",
                 )
             )
-        called = dotted(node.func, aliases)
+        if conformance and called in {
+            "importlib.import_module",
+            "__import__",
+            "builtins.__import__",
+        }:
+            module = (
+                node.args[0]
+                if node.args
+                else next(
+                    (
+                        keyword.value
+                        for keyword in node.keywords
+                        if keyword.arg == "name"
+                    ),
+                    None,
+                )
+            )
+            if (
+                isinstance(module, ast.Constant)
+                and isinstance(module.value, str)
+                and any(private(part) for part in module.value.split("."))
+            ):
+                hits.append((node.lineno, f"{called}({module.value})"))
+        if (
+            conformance
+            and called in {"setattr", "delattr", "builtins.setattr", "builtins.delattr"}
+            and node.args
+            and imported_root(node.args[0], aliases) is not None
+        ):
+            target = dotted(node.args[0], aliases)
+            if len(node.args) > 1:
+                target += "." + dotted(node.args[1], aliases)
+            if not process_boundary(node.args[0], aliases, target=target):
+                hits.append((node.lineno, f"{called}({target})"))
         is_patch = called in {
             "patch",
             "unittest.mock.patch",
@@ -204,24 +284,7 @@ def violations(source, *, conformance=False):
         # Only direct process imports or literal process paths qualify. Calls,
         # subscripts and product-module re-exports cannot prove a process boundary.
         # The module registry is an internal-module patch even through imported sys.
-        structured = isinstance(target_node, (ast.Name, ast.Attribute, ast.Constant))
-        candidate = target_node
-        while isinstance(candidate, ast.Attribute):
-            candidate = candidate.value
-        structured = structured and isinstance(candidate, (ast.Name, ast.Constant))
-        parts = target.split(".")
-        boundary = (
-            structured
-            and all(part.isidentifier() for part in parts)
-            and parts[0] in PROCESS_ROOTS
-            and parts[:2] != ["sys", "modules"]
-            and (
-                isinstance(target_node, ast.Constant)
-                or isinstance(candidate, ast.Name)
-                and candidate.id in aliases
-            )
-        )
-        if not boundary:
+        if not process_boundary(target_node, aliases, target=target):
             hits.append((node.lineno, f"{called}({target})"))
     return sorted(hits)
 
@@ -268,6 +331,38 @@ def test_existing_tests_use_public_boundaries(python_test_files):
         "monkeypatch.setattr(type(output), 'replace', fail_replace)",
         "from unittest.mock import patch as replace\nreplace(target='reg_meta.queries.search')",
         "from unittest.mock import patch as replace\nreplace.object(target=module, attribute='search', new=fake)",
+        "from reg_meta import queries as q\nq.search = fake",
+        "from reg_meta import queries as q\nq.search += fake",
+        "from reg_meta import queries as q\nq.os.getenv = fake",
+        "from reg_meta import queries as q\nq.registry['search'] = fake",
+        "from reg_meta import queries as q\nq.registry['search'] += fake",
+        "from reg_meta import queries as q\ndel q.registry['search']",
+        "from reg_meta import queries as q\nq.registry['search'].handler = fake",
+        "from reg_meta import queries as q\nq.search: object = fake",
+        "from reg_meta import queries as q\ndel q.search",
+        "from reg_meta import queries as q\n(q.search, local.value) = (fake, value)",
+        "from reg_meta import queries as q\n[q.search, local.value] = [fake, value]",
+        "from reg_meta import queries as q\nsetattr(q, 'search', fake)",
+        "from reg_meta import queries as q\ndelattr(q, 'search')",
+        "from reg_meta import queries as q\nfrom builtins import setattr as mutate\nmutate(q, 'search', fake)",
+        "from reg_meta import queries as q\nimport builtins as b\nb.delattr(q, 'search')",
+        "import sys\nsetattr(sys.modules['reg_meta.queries'], 'search', fake)",
+        "import sys\nsys.modules['reg_meta.queries'] = fake",
+        "import sys as runtime\nruntime.modules['reg_meta.queries'] = fake",
+        "from sys import modules as registry\nregistry['reg_meta.queries'] = fake",
+        "import sys\ndel sys.modules['reg_meta.queries']",
+        "import sys\nsys.modules = fake",
+        "import sys\nsetattr(sys, 'modules', fake)",
+        "import sys\ndelattr(sys, 'modules')",
+        "import sys as runtime\nfrom builtins import setattr as mutate\nmutate(runtime, 'modules', fake)",
+        "import sys\ndelattr(sys.modules['reg_meta.queries'], 'search')",
+        "import sys\nfrom builtins import setattr as mutate\nmutate(sys.modules['reg_meta.queries'], 'search', fake)",
+        "import importlib\nimportlib.import_module('reg_meta._x')",
+        "import importlib as loader\nloader.import_module('reg_meta._x')",
+        "from importlib import import_module as load\nload(name='reg_meta._x')",
+        "__import__('reg_meta._x')",
+        "import builtins\nbuiltins.__import__('reg_meta._x')",
+        "from builtins import __import__ as load\nload(name='reg_meta._x')",
     ],
 )
 def test_lint_rejects_private_imports_and_internal_patches(source):
@@ -285,6 +380,24 @@ def test_lint_rejects_private_imports_and_internal_patches(source):
         "from unittest.mock import patch as replace\nreplace(target='subprocess.run')",
         "from unittest.mock import patch as replace\nimport subprocess\nreplace.object(target=subprocess, attribute='run', new=fake)",
         "monkeypatch.setenv('REG_META_DB', directory)",
+        "fixture_model.value = value",
+        "fixture_model.registry['value'] = value",
+        "fixture_model.registry['value'].handler = value",
+        "setattr(fixture_model.registry['value'], 'handler', value)",
+        "fixture_model.value += value",
+        "fixture_model.value: object = value",
+        "del fixture_model.value",
+        "setattr(fixture_model, 'value', value)",
+        "delattr(fixture_model, 'value')",
+        "from reg_meta.models import CatalogModel\nfixture_model = CatalogModel()\nfixture_model.value = value",
+        "import os\nsetattr(os, 'getenv', fake)",
+        "import subprocess\nsubprocess.run = fake",
+        "from sys import modules as registry\nregistry = fake",
+        "from reg_meta import queries as q\nq = fake",
+        "import sys\nsetattr(sys, 'platform', fake)",
+        "import subprocess\nfrom builtins import setattr as mutate\nmutate(subprocess, 'run', fake)",
+        "import importlib\nimportlib.import_module('reg_meta.queries')",
+        "__import__('reg_meta.queries')",
     ],
 )
 def test_lint_allows_public_imports_and_process_boundaries(source):
