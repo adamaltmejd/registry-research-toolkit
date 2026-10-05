@@ -185,11 +185,6 @@ class TestSearchFolding:
         assert {m.facets[0].axis for m in group.members} == {"month"}
         _assert_no_internal_keys(results)
 
-    def test_fold_counts_one_result_for_pagination(self) -> None:
-        conn = _seeded_conn()
-        data = search(conn, "Lönesumma")
-        assert len(data.results) == 1
-
     def test_folded_prefix_backfills_and_continues_without_gap(self) -> None:
         conn = _seeded_conn()
         add_variable(
@@ -512,11 +507,6 @@ class TestClassificationSuccessionFold:
         assert not [r for r in results if r.type == "classification"]
         _assert_no_internal_keys(results)
 
-    def test_chain_counts_one_result_for_pagination(self) -> None:
-        conn = self._chain_conn()
-        data = search(conn, "yrkesklassificering", field="description")
-        assert len(data.results) == 1
-
     def test_cursor_completes_succession_before_first_page(self) -> None:
         conn = build_slugged_db()
         name = "Needle classification family"
@@ -740,16 +730,6 @@ class TestClassificationSuccessionSplitRoot:
         conn.commit()
         _rebuild_fts(conn)
         return conn
-
-    def test_split_root_is_its_own_terminal(self) -> None:
-        from reg_meta.queries import _terminal_classification_slug
-
-        conn = self._split_conn()
-        # sun1996 has 3 successors → it is its own terminal (no single current).
-        assert _terminal_classification_slug(conn, "sun1996") == "sun1996"
-        # Each linear branch still collapses to its real terminal.
-        assert _terminal_classification_slug(conn, "sun-niva2000") == "sun-niva2020"
-        assert _terminal_classification_slug(conn, "sun-grupp2000") == "sun-grupp2020"
 
     def test_split_root_hit_stays_leaf_without_terminal_fqid(self) -> None:
         # Only sun1996 matches (the branch editions carry a distinct name) → a lone

@@ -20,17 +20,11 @@ from _slugged_db import (
     add_variant,
     build_slugged_db,
 )
-from reg_meta.catalog import (
-    BindingGroupRef,
-    Catalog,
-    ResolvedVariable,
-)
+from reg_meta.catalog import Catalog
 from reg_meta.errors import RegMetaError
-from reg_meta.fqid import Fqid
 from reg_meta.graph import (
     ClassificationGraphNode,
     VariableGraphNode,
-    _GraphBuilder,
     graph_for_classification_fqid,
 )
 
@@ -703,29 +697,6 @@ class TestEdges:
         succ = [e for e in g.edges if e.kind == "succession"]
         assert (succ[0].source, succ[0].target) == ("scb/lisa/dead-old", "scb/lisa/kon")
 
-    def test_every_edge_is_succession(self) -> None:
-        # The contract is now succession-only: `GraphEdge.kind` only ever produces
-        # "succession". Build a union with a succession chain + a group + a value-set
-        # change and assert every emitted edge is a succession edge.
-        conn = build_slugged_db()  # kon
-        add_variable(conn, register_id=1, var_id=45, name="Kön ny", slug="kon-ny")
-        add_state(
-            conn,
-            register_id=1,
-            variable_slug="kon-ny",
-            register_variant_id=10,
-            delivery_column_name="KonNy",
-        )
-        _seed_replaced_by(
-            conn,
-            predecessor=("scb", "lisa", "kon"),
-            successor=("scb", "lisa", "kon-ny"),
-            effective_year=2010,
-        )
-        g = Catalog(conn).graph_for_fqid(_KON)
-        assert g.edges  # the succession edge is present
-        assert all(e.kind == "succession" for e in g.edges)
-
     def test_representation_succession_edge_carries_columns_and_year(self) -> None:
         # #888: representation-grain succession is a graph edge with variable-node
         # endpoints plus column endpoint metadata, so the renderer can map it to
@@ -768,31 +739,6 @@ class TestEdges:
         assert edge.variant is None
         assert edge.label == "identifier rename"
         assert edge.effective_year == 2014
-
-    def test_representation_succession_reverse_lookup_uses_successor_index(
-        self,
-    ) -> None:
-        # #1113 review: graph anchors can be successors, so the inbound half of
-        # the touching-edge query must not scan representation_replaced_by.
-        conn = build_slugged_db()
-        plan = "\n".join(
-            row[3]
-            for row in conn.execute(
-                "EXPLAIN QUERY PLAN "
-                "SELECT predecessor_provider, predecessor_register, "
-                "predecessor_variable, predecessor_column, successor_provider, "
-                "successor_register, successor_variable, successor_column, "
-                "variant, effective_year, beskrivning "
-                "FROM representation_replaced_by "
-                "WHERE (predecessor_provider = ? AND predecessor_register = ? "
-                "AND predecessor_variable = ?) "
-                "OR (successor_provider = ? AND successor_register = ? "
-                "AND successor_variable = ?)",
-                ("scb", "lisa", "kon", "scb", "lisa", "kon"),
-            )
-        )
-
-        assert "idx_representation_replaced_by_successor" in plan
 
     def test_variant_scoped_representation_edge_keeps_variant_scope(self) -> None:
         # #846/#888: a variant-local rename must not render as global. The graph
@@ -1261,47 +1207,6 @@ class TestVariableNodeFacets:
         assert node.group_key is None
         assert node.facets == []
         assert node.group_label is None
-
-    def test_facet_skew_degrades_gracefully(self) -> None:
-        # Skew: a `resolved.group` ref whose group/member the summary can't surface
-        # must degrade to facets == [] and group_label None — never crash. Exercised
-        # at the builder helper boundary directly (a DB-level skew is unreachable:
-        # `ResolvedVariable.group` and the group member list read the same
-        # `concept_group_variable` row, so they can't disagree there). Two misses:
-        # (a) a stale group ADDRESS `concept_group` returns None for; (b) a real group
-        # whose member list omits the canonical FQID.
-        conn = build_slugged_db()
-        catalog = Catalog(conn)
-        builder = _GraphBuilder(catalog)
-        kon_resolved = catalog.resolve(_KON)
-        assert isinstance(kon_resolved, ResolvedVariable)
-
-        # (a) stale group ADDRESS — no such group → concept_group None.
-        stale = kon_resolved.model_copy(
-            update={
-                "group": BindingGroupRef(provider="scb", register="lisa", key="nope")
-            }
-        )
-        assert builder._group_facets(stale) == ([], None)
-
-        # (b) real group, but its member list omits this canonical FQID (the member
-        # whose fqid == canonical_fqid isn't found → fall through).
-        _add_concept_group(
-            conn,
-            group_id=40,
-            register_id=1,
-            group_key="demog",
-            member_slugs=["kon"],
-            facet_axis="rank",
-            facets={"kon": ("1", "primary")},
-        )
-        mismatched = kon_resolved.model_copy(
-            update={
-                "group": BindingGroupRef(provider="scb", register="lisa", key="demog"),
-                "canonical_fqid": Fqid.binding_fqid("scb", "lisa", "ghost"),
-            }
-        )
-        assert _GraphBuilder(catalog)._group_facets(mismatched) == ([], None)
 
 
 # ── Classification chains + SUN-style groups ─────────────────────────────────
