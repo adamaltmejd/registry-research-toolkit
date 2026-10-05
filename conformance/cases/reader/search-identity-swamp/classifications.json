@@ -1,0 +1,574 @@
+[
+  {
+    "slug": "generic-00",
+    "short_name": "G00",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-01",
+    "short_name": "G01",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-02",
+    "short_name": "G02",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-03",
+    "short_name": "G03",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-04",
+    "short_name": "G04",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-05",
+    "short_name": "G05",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-06",
+    "short_name": "G06",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-07",
+    "short_name": "G07",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-08",
+    "short_name": "G08",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-09",
+    "short_name": "G09",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-10",
+    "short_name": "G10",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-11",
+    "short_name": "G11",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-12",
+    "short_name": "G12",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-13",
+    "short_name": "G13",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-14",
+    "short_name": "G14",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-15",
+    "short_name": "G15",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-16",
+    "short_name": "G16",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-17",
+    "short_name": "G17",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-18",
+    "short_name": "G18",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-19",
+    "short_name": "G19",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-20",
+    "short_name": "G20",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-21",
+    "short_name": "G21",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-22",
+    "short_name": "G22",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-23",
+    "short_name": "G23",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-24",
+    "short_name": "G24",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-25",
+    "short_name": "G25",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-26",
+    "short_name": "G26",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-27",
+    "short_name": "G27",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-28",
+    "short_name": "G28",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-29",
+    "short_name": "G29",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-30",
+    "short_name": "G30",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-31",
+    "short_name": "G31",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-32",
+    "short_name": "G32",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-33",
+    "short_name": "G33",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-34",
+    "short_name": "G34",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-35",
+    "short_name": "G35",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-36",
+    "short_name": "G36",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-37",
+    "short_name": "G37",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-38",
+    "short_name": "G38",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-39",
+    "short_name": "G39",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-40",
+    "short_name": "G40",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-41",
+    "short_name": "G41",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-42",
+    "short_name": "G42",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-43",
+    "short_name": "G43",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-44",
+    "short_name": "G44",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-45",
+    "short_name": "G45",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-46",
+    "short_name": "G46",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-47",
+    "short_name": "G47",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-48",
+    "short_name": "G48",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-49",
+    "short_name": "G49",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "generic-50",
+    "short_name": "G50",
+    "name": "C12",
+    "codes": [
+      {
+        "code": "C120",
+        "label": "Extended code"
+      }
+    ]
+  },
+  {
+    "slug": "discriminative",
+    "short_name": "A",
+    "name": "Grupperat",
+    "codes": [
+      {
+        "code": "C12",
+        "label": "Shared code"
+      }
+    ]
+  }
+]
