@@ -17,7 +17,6 @@ from reg_meta.fqid import FqidError
 from reg_meta.inventory import (
     DeliveryInventory,
     EditionRange,
-    _render,
     edition_bounds,
     load_inventory,
 )
@@ -174,7 +173,7 @@ def test_edition_bounds_expand_via_the_shared_period_grammar() -> None:
     )
 
 
-def test_school_year_edition_loads_and_renders_as_its_token(tmp_path) -> None:
+def test_school_year_edition_loads_as_its_token(tmp_path) -> None:
     inventory = load_inventory(
         _write(
             tmp_path,
@@ -190,9 +189,34 @@ name = "Betyg"
 """,
         )
     )
-    edition = inventory.tables[0].edition
-    assert edition == "LA2004"
-    assert _render(edition_bounds(edition)) == "LA2004"
+    assert inventory.tables[0].edition == "LA2004"
+
+
+def test_school_year_conflict_names_the_period_as_its_token(tmp_path) -> None:
+    """The located conflict line renders the shared school-year period back as
+    its own token, not as its ISO bounds."""
+    mapping = """
+[[table.column]]
+name = "Betyg"
+[[table.column.mapping]]
+register_variant = "scb/grundskola/elever"
+variable = "scb/grundskola/betyg"
+representation = "Betyg"
+"""
+    text = (
+        'version = 1\nsteward = "swecov"\n'
+        '\n[[table]]\nid = "Grundskola_a.csv"\nedition = "LA2004"\n'
+        + mapping
+        + '\n[[table]]\nid = "Grundskola_b.csv"\nedition = "LA2004"\n'
+        + mapping
+    )
+    with pytest.raises(RegMetaError) as excinfo:
+        load_inventory(_write(tmp_path, text))
+    assert excinfo.value.code == "inventory_invalid"
+    assert (
+        "both map scb/grundskola/elever scb/grundskola/betyg over LA2004"
+        in excinfo.value.message
+    )
 
 
 @pytest.mark.parametrize(
