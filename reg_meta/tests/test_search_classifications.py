@@ -20,8 +20,6 @@ import pytest
 from reg_meta.errors import RegMetaError
 from reg_meta.queries import search
 
-from reg_meta import queries
-
 sys.path.insert(
     0, str(Path(__file__).resolve().parents[2] / "reg_meta_build" / "tests")
 )
@@ -694,12 +692,12 @@ def test_register_scope_is_applied_before_sql_pagination() -> None:
     assert not page.has_more
 
 
-# The candidate prefix every foldable/entity arm takes, and the number of
-# year-eligible variables parked BEHIND a full prefix of ineligible ones. Read the
-# bound from the production constant: a copied literal would silently stop parking
-# the eligible tail behind a FULL prefix if the horizon ever moves, and these tests
-# would keep passing while testing nothing.
-_CANDIDATE_BOUND = queries._MAX_CURSOR_POSITION + 1
+# The candidate prefix every foldable/entity arm takes (the 1,000-position cursor
+# horizon plus one look-ahead row), and the number of year-eligible variables
+# parked BEHIND a full prefix of ineligible ones. Footgun: this literal mirrors the
+# search horizon; if the horizon grows past it, the eligible tail is no longer
+# parked behind a FULL prefix and these tests keep passing while testing nothing.
+_CANDIDATE_BOUND = 1_001
 _YEAR_ELIGIBLE = 4
 _ELIGIBLE_NAMES = {
     f"Needle {index:04d}"
