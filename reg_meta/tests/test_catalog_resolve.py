@@ -114,6 +114,18 @@ class TestVariantAndVersionKindsGone:
             Catalog(slugged_conn).resolve("scb/lisa/individer-15plus")
         assert exc.value.code == "fqid_not_found"
 
+    def test_old_four_seg_version_fqid_rejected(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        with pytest.raises(FqidError, match="4 segments"):
+            Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2018")
+
+    def test_old_five_seg_binding_fqid_rejected(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        with pytest.raises(FqidError, match="5 segments"):
+            Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2018/kon")
+
 
 class TestResolveBinding:
     """A2.5 (see DESIGN.md → Catalog API surface): `resolve()` returns the longitudinal `ResolvedVariable` —
