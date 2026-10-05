@@ -59,37 +59,33 @@ def scopes(manifest):
     )
 
 
-def test_complete_admitted_set_agrees_with_cli_and_http(
-    artifact_dir, artifact_client, capsys
-):
+def test_complete_admitted_set_agrees_with_http(artifact_dir, artifact_client):
     with open_db(artifact_dir / "reg_meta.db") as conn:
         manifest = get_manifest(conn)
         expected = {scope: admitted_bindings(conn, scope) for scope in scopes(manifest)}
     observations = []
     for scope, bindings in expected.items():
-        registers = sorted({binding.rsplit("/", 1)[0] for binding in bindings})
-        cli_seen = set()
+        held_registers = {binding.rsplit("/", 1)[0] for binding in bindings}
+        registers = sorted(
+            {binding.rsplit("/", 1)[0] for binding in expected["reference"]}
+        )
         http_seen = set()
         for register in registers:
-            schema = cli_json(
-                artifact_dir,
-                capsys,
-                ["--scope", scope, "get", "schema", "--register", register],
-            )
-            cli_seen.update(response_fqids(schema))
             response = artifact_client.get(
                 "/api/catalog/" + register, params={"scope": scope}
             )
+            if scope == "holdings" and register not in held_registers:
+                require(
+                    response.status_code == 404,
+                    "Unheld register entered complete HTTP admission set",
+                )
+                continue
             require(response.status_code == 200, "Admitted-set HTTP register failed")
             http_seen.update(
                 child["fqid"]
                 for child in response.json()["children"]
                 if child.get("fqid")
             )
-        require(
-            cli_seen == bindings,
-            "Complete CLI binding set disagrees with independent artifact census",
-        )
         require(
             http_seen == bindings,
             "Complete HTTP binding set disagrees with independent artifact census",
@@ -102,7 +98,7 @@ def test_complete_admitted_set_agrees_with_cli_and_http(
             }
         )
     # These counts/digests provide a receipt without retaining artifact identities.
-    print(json.dumps({"complete_admitted_sets": observations}, sort_keys=True))
+    print(json.dumps({"complete_http_admitted_sets": observations}, sort_keys=True))
 
 
 def test_generation_seeded_stratified_binding_agreement(
@@ -118,8 +114,10 @@ def test_generation_seeded_stratified_binding_agreement(
             conn, manifest["generation_id"], steward=steward
         )
     require(
-        sample and len(sample) == min(50, available_bindings),
-        "Sample did not fill the available distinct bindings",
+        sample
+        and len(sample) <= min(50, available_bindings)
+        and (available_bindings < 50 or len(sample) == 50),
+        "Sample did not select 50 applicable bindings from a large proposal set",
     )
     require(sample == repeated, "Generation-seeded sample is not reproducible")
     for candidate in sample:
@@ -131,6 +129,22 @@ def test_generation_seeded_stratified_binding_agreement(
             require(
                 browse.json()["fqid"] == candidate.variable,
                 "Sample browse identity disagrees",
+            )
+            point = artifact_client.get(
+                "/api/catalog/" + candidate.variable,
+                params={
+                    "scope": scope,
+                    "period": candidate.period,
+                    "variant": candidate.variant.rsplit("/", 1)[1],
+                },
+            )
+            require(
+                point.status_code == 200
+                and any(
+                    state["delivery_column_name"] == candidate.representation
+                    for state in point.json()["states"]
+                ),
+                "Sample native representation missing from point/variant browse",
             )
             query = browse.json()["name"]
             cli_browse = cli_json(
@@ -205,7 +219,8 @@ def test_generation_seeded_stratified_binding_agreement(
                 "sample_count": len(sample),
                 "sample_sha256": identity_digest([c.identity() for c in sample]),
                 "generation_id": manifest["generation_id"],
-                "available_strata": available_strata,
+                "raw_proposal_strata": available_strata,
+                "raw_proposal_bindings": available_bindings,
                 "selected_strata": dict(
                     Counter(stratum for c in sample for stratum in c.strata)
                 ),
@@ -307,6 +322,7 @@ def test_unheld_deep_link_and_reference_search_do_not_admit_order(
     "fixture",
     [
         "reader/case-twins",
+        "reader/temporal-case-twins",
         "alias-window-only",
         "range",
         "list",

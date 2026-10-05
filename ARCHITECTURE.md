@@ -309,8 +309,9 @@ return-model cases retain contracts that have no equivalent CLI or HTTP projecti
    registry-install gate. Published schema drift is a release-drift failure.
    Accepted-private-input census additionally requires explicit
    `--holdings-input=/path/to/accepted-candidate`; mismatched commit/manifest, dirty
-   input, missing members and wrong paths fail admission. Full admitted-set comparison
-   and deterministic stratified binding agreement derive requests from the artifact.
+   input, missing members and wrong paths fail admission. Full HTTP variable-node
+   admission comparison and deterministic stratified CLI/HTTP binding agreement derive
+   requests from the artifact. CLI delivery schemas expose a different membership grain.
    Pinned historical baseline acceptance, exhaustive representative resolution,
    performance and rendered checks remain separate maintainer work.
 

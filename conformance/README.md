@@ -70,6 +70,13 @@ identifiers stay in memory and temporary test request files; failure messages om
 Catalog artifacts support global-fallback orders; steward artifacts only order compiled
 holdings regardless of reference browsing.
 
+Complete HTTP register-child membership is compared with an independently derived
+whole-variable admission set. CLI browse, search and order agreement uses a generation-
+seeded, stratified sample of up to 50 distinct bindings. The public point resolver
+selects applicable native spellings within independently derived physical mappings. CLI
+`get schema` exposes applicable delivery columns, so it cannot establish the whole
+variable-node census; name search also omits unnamed variables and has a bounded cursor.
+
 `integration.yml` downloads the global catalog and SWECOV steward assets from the
 selected release, verifies each digest and admits its embedded manifest before running
 tier 3. The artifact jobs and native registry-install job run independently; a failed

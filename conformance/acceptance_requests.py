@@ -11,6 +11,8 @@ import re
 from collections import defaultdict
 from dataclasses import dataclass, replace
 
+from reg_meta.catalog import Catalog
+
 
 @dataclass(frozen=True)
 class AcceptanceBinding:
@@ -83,6 +85,8 @@ def acceptance_sample(conn, generation, *, steward, size=50):
     """Rank independent delivery/physical intersections with generation SHA-256.
 
     Select one distinct binding from each available stratum, then fill in hash order.
+    Public point resolution selects the applicable native spelling after proposal ranking.
+    Counts returned describe raw proposals, not the entire eligible delivery universe.
     Unknown physical tables cannot supply a binding and are checked separately.
     """
     deliveries = defaultdict(list)
@@ -208,6 +212,29 @@ def acceptance_sample(conn, generation, *, steward, size=50):
         return hashlib.sha256((generation + encoded).encode()).hexdigest()
 
     ranked = sorted(candidates.values(), key=rank)
+    reference = Catalog(conn, scope="reference")
+    resolved = {}
+
+    def applicable(candidate):
+        key = (candidate.variable, candidate.variant, candidate.period)
+        if key not in resolved:
+            resolved[key] = reference.resolve_at(
+                candidate.variable,
+                candidate.period,
+                variant=candidate.variant.rsplit("/", 1)[1],
+                with_codes=False,
+            )
+        native = sorted(
+            {
+                state.delivery_column_name
+                for state in resolved[key]
+                if state.delivery_column_name
+                and state.delivery_column_name.lower()
+                == candidate.representation.lower()
+            }
+        )
+        return replace(candidate, representation=native[0]) if native else None
+
     sample = []
     selected = set()
     for stratum in (
@@ -219,7 +246,12 @@ def acceptance_sample(conn, generation, *, steward, size=50):
         "ordinary",
     ):
         candidate = next(
-            (c for c in ranked if stratum in c.strata and c.variable not in selected),
+            (
+                eligible
+                for c in ranked
+                if stratum in c.strata and c.variable not in selected
+                if (eligible := applicable(c)) is not None
+            ),
             None,
         )
         if candidate is not None and len(sample) < size:
@@ -229,8 +261,10 @@ def acceptance_sample(conn, generation, *, steward, size=50):
         if len(sample) >= size:
             break
         if candidate.variable not in selected:
-            sample.append(candidate)
-            selected.add(candidate.variable)
+            eligible = applicable(candidate)
+            if eligible is not None:
+                sample.append(eligible)
+                selected.add(candidate.variable)
     return (
         sample,
         {
