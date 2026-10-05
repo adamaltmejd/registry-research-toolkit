@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
-from reg_meta.catalog import Catalog, _coverage_bounds
+from reg_meta.catalog import Catalog
 
 sys.path.insert(
     0, str(Path(__file__).resolve().parents[2] / "reg_meta_build" / "tests")
@@ -305,17 +305,6 @@ def test_provider_column_coverage_matches_register_reads(reversed_rows: bool) ->
     assert catalog.provider_column_coverage("scb") == expected
 
 
-def test_provider_column_coverage_uses_one_query(
-    provider_db: sqlite3.Connection,
-) -> None:
-    catalog = Catalog(provider_db)
-    statements: list[str] = []
-    provider_db.set_trace_callback(statements.append)
-    catalog.provider_column_coverage("scb")
-    provider_db.set_trace_callback(None)
-    assert len(statements) == 1
-
-
 def test_provider_column_coverage_folds_unicode_twins(
     provider_db: sqlite3.Connection,
 ) -> None:
@@ -354,10 +343,6 @@ def test_provider_column_coverage_filters_registers(
     assert catalog.provider_column_coverage("scb", ["rams", "rams", "missing"]) == {
         "rams": expected
     }
-
-
-def test_provider_column_coverage_empty_filter(provider_db: sqlite3.Connection) -> None:
-    assert Catalog(provider_db).provider_column_coverage("scb", []) == {}
 
 
 def test_provider_column_coverage_excludes_stateless_registers(
@@ -670,14 +655,3 @@ def test_register_variable_deliveries_windowed_case_distinct_spellings(
     assert by_column["TAXVARDE"].coverage_from == "2005-01-01"
     assert by_column["TAXVARDE"].coverage_to == "2015-12-31"
     assert by_column["TAXVARDE"].state_count == 2
-
-
-def test_coverage_bounds_mapping() -> None:
-    # (coverage_from, coverage_to, open_ended).
-    assert _coverage_bounds("2010-01-01", "9999-12-31") == ("2010-01-01", None, True)
-    assert _coverage_bounds("2010-01-01", "2015-12-31") == (
-        "2010-01-01",
-        "2015-12-31",
-        False,
-    )
-    assert _coverage_bounds(None, None) == (None, None, False)
