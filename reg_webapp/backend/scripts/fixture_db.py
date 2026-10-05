@@ -1290,7 +1290,9 @@ def build_reader_fixture_db(
         sys.path.insert(0, str(reader_tests))
     from reader_artifacts import build_reader_artifact
 
-    return build_reader_artifact(db_dir, fixture, kind)
+    return build_reader_artifact(
+        db_dir, fixture, kind, identity_overrides={"import_date": FIXTURE_IMPORT_DATE}
+    )
 
 
 def build_fixture_db_dir(db_dir: Path, *, kind: str | None = None) -> Path:
