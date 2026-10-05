@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import json
 import sqlite3
-from typing import TYPE_CHECKING
 
 import pytest
 from _shared_fixtures import _build_stub_doc_db
@@ -27,9 +26,6 @@ from reg_meta.queries import (
     get_schema,
     search,
 )
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 # (slug, month value, month label) for the curated month family. The labels
 # double as searchable variable names ("Lönesumma <month>").
@@ -1124,54 +1120,3 @@ class TestCliGroups:
         assert code == 0
         assert all(r["type"] != "group" for r in data["results"])
         assert len(data["results"]) == 3
-
-
-def _wire_results(data: object) -> list[dict]:
-    """Serialize a `SearchResults` to the wire dict rows the CLI renderer consumes,
-    mirroring `_cmd_search` (`model_dump(mode="json", by_alias=True)`, #701)."""
-    return [m.model_dump(mode="json", by_alias=True) for m in data.results]
-
-
-class TestSearchTableDisplay:
-    def test_group_rows_render_with_counts(self, tmp_path: Path) -> None:
-        from reg_meta.cli import _write_payload
-
-        conn = _seeded_conn()
-        results = _wire_results(search(conn, "Lönesumma"))
-        payload = {"data": {"results": results, "total_count": len(results)}}
-        out = tmp_path / "out.txt"
-        _write_payload(("search", None), payload, str(out), fmt="list")
-        text = out.read_text(encoding="utf-8")
-        # Pure-group results use the dedicated column set: identity + counts.
-        assert "agiink" in text
-        assert "matched" in text and "members" in text
-
-    def test_group_rows_render_in_mixed_results(self, tmp_path: Path) -> None:
-        from reg_meta.cli import _write_payload
-
-        conn = _seeded_conn()
-        # 'summa jan' style query that hits both a group and the lone Kön leaf
-        # is hard to construct; synthesize a mixed payload instead — the
-        # renderer only looks at the result dicts.
-        group_row = _wire_results(search(conn, "Lönesumma"))[0]
-        leaf = _wire_results(search(conn, "Kön", fold_groups=False))[0]
-        payload = {"data": {"results": [leaf, group_row], "total_count": 2}}
-        out = tmp_path / "out.txt"
-        _write_payload(("search", None), payload, str(out), fmt="list")
-        text = out.read_text(encoding="utf-8")
-        assert "3/3 members matched" in text  # group label projected inline
-        assert "Kön" in text
-
-    def test_get_groups_table_one_row_per_group(self, tmp_path: Path) -> None:
-        from reg_meta.cli import _write_payload
-
-        conn = _seeded_conn()
-        payload = {"data": get_concept_groups(conn, "LISA")}
-        out = tmp_path / "out.txt"
-        _write_payload(("get", "groups"), payload, str(out), fmt="list")
-        text = out.read_text(encoding="utf-8")
-        assert "agiink" in text
-        assert "Lönesumma per månad" in text
-        # #819: the axes column shows the authored axis LABEL ('månad'), not the
-        # stable match key ('month').
-        assert "månad" in text

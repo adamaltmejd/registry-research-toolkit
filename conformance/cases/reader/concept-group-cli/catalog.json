@@ -1,0 +1,126 @@
+[
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "payroll-jan",
+    "provider_key": "50",
+    "name": "Lönesumma januari",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Payjan",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "payroll-feb",
+    "provider_key": "51",
+    "name": "Lönesumma februari",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Payfeb",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "payroll-mar",
+    "provider_key": "52",
+    "name": "Lönesumma mars",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Paymar",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "pay-total",
+    "provider_key": "60",
+    "name": "Lön totalt",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Paytotal",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  }
+]
