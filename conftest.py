@@ -44,6 +44,12 @@ def pytest_addoption(parser: pytest.Parser) -> None:
             help=help_text,
         )
     parser.addoption(
+        "--artifact-dir",
+        type=str,
+        default=None,
+        help="conformance artifact directory (requires --run-release)",
+    )
+    parser.addoption(
         "--install-mode",
         choices=INSTALL_MODES,
         default="registry",

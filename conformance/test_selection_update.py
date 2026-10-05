@@ -71,10 +71,10 @@ def test_selection_case(case: Path, tmp_path: Path, monkeypatch, capsys):
     actual = {"exit": code}
     if code:
         actual["error"] = output["error"]
-        actual["error"]["message"] = (
-            actual["error"]["message"]
-            .replace(str(data), "$DATA")
-            .replace(str(explicit), "$EXPLICIT")
+        expected["error"]["message"] = (
+            expected["error"]["message"]
+            .replace("$DATA", str(data))
+            .replace("$EXPLICIT", str(explicit))
         )
     else:
         actual.update(

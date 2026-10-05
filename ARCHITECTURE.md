@@ -271,27 +271,25 @@ oracle each one uses, and the three cost tiers tests run in.
 
 ### Boundaries and oracles
 
-  | Boundary                                 | Oracle (data, not code)                                                              | Status    |
-  | ---------------------------------------- | ------------------------------------------------------------------------------------ | --------- |
-  | Prepared inputs + curation → artifact    | synthetic source fixtures → `validate_built_db` + content snapshot                   | shipped   |
-  | Artifact → CLI JSON / library models     | golden `request → response` cases over the synthetic artifact                        | partial   |
-  | Artifact → HTTP                          | `openapi.json` snapshot + TestClient goldens over the fixture DB                     | shipped   |
-  | `project_data.json` → validation result  | `reg_schema/test_corpus/` run by Python and TS consumers                             | shipped   |
-  | Project + artifact → order manifest      | byte-identical `order.json` goldens, cross-adapter identity                          | shipped   |
-  | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                           | shipped   |
-  | FQID / period grammars, interval algebra | Hypothesis properties + round-trip snapshots                                         | shipped   |
-  | Real artifact ↔ accepted inputs          | conformance suite against an artifact directory (accounting, agreement, order bytes) | remaining |
+  | Boundary                                 | Oracle (data, not code)                                                                                   | Status  |
+  | ---------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------- |
+  | Prepared inputs + curation → artifact    | synthetic source fixtures → `validate_built_db` + content snapshot                                        | shipped |
+  | Artifact → CLI JSON / library models     | golden `request → response` cases over the synthetic artifact                                             | partial |
+  | Artifact → HTTP                          | `openapi.json` snapshot + TestClient goldens over the fixture DB                                          | shipped |
+  | `project_data.json` → validation result  | `reg_schema/test_corpus/` run by Python and TS consumers                                                  | shipped |
+  | Project + artifact → order manifest      | byte-identical `order.json` goldens, cross-adapter identity                                               | shipped |
+  | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                                                | shipped |
+  | FQID / period grammars, interval algebra | Hypothesis properties + round-trip snapshots                                                              | shipped |
+  | Real artifact ↔ accepted inputs          | conformance artifact checks (manifest accounting, agreement, order bytes); accepted-input census deferred | partial |
 
 A function that is not one of these is reached through one that is. Structural artifact
 invariants have one authority, `validate_built_db`; tests run it, they do not re-derive
 its checks. Expected outputs are files reviewed in the diff; a golden that changes is a
 content decision, not a test fix.
 
-The steward-filtering semantics (`fqid_outside_steward_catalog` /
-`representation_outside_steward_catalog`, column-based admission, scoped browse and
-search) are pinned today through the pre-cut runtime inventory and index tests; §12
-replaces that path with shared SQL predicates while retaining the warning codes and the
-observable selection guards as the boundary under test.
+Compiled holdings admission, scoped browse/search and selection guards are pinned
+through source-built request/expected corpora in `conformance/cases/`. Public library
+return-model cases retain contracts that have no equivalent CLI or HTTP projection.
 
 ### Tiers
 
@@ -301,22 +299,36 @@ observable selection guards as the boundary under test.
    conformance suite against its output, the OpenAPI snapshot and codegen drift checks,
    the frontend suites, and the Playwright smoke driver against the fixture DB.
    `@pytest.mark.integration` adds the container-backed tests.
-3. **Artifact (maintainer or release gate).** The same conformance suite pointed at a
-   real artifact directory (`@pytest.mark.release`, deselected without one): accounting
-   against the accepted private inputs, browse/validate/order agreement on sampled
-   bindings, order byte-identity against pinned baseline orders, performance budget
-   probes. CI has no real artifact, so this tier is the maintainer's hard line before a
-   release and runs in the release workflow once the asset exists.
+3. **Artifact (maintainer or release gate).** Run
+   `pytest conformance --run-release --artifact-dir=/path/to/catalog`. The reader admits
+   the selected artifact before execution; incompatible or non-publishable artifacts
+   fail, never silently skip. The artifact checks compare manifest accounting, sampled
+   browse/search/validate agreement, repeated search/order bytes, CLI/HTTP order
+   identity and located refusal. CI runs them after asset download in `integration.yml`;
+   published schema drift is a release-drift failure. Accepted-input census, pinned
+   baseline acceptance and performance probes remain maintainer work in plan 05.
 
 ### Conformance suite
 
-Tiers 2 and 3 share one suite, `conformance/` at the repository root, parametrized by an
-artifact directory and holding its cases as data (`conformance/cases/`): requests,
-expected structured results, normalized orders. It is the seed of the
-language-independent corpus a reader port must pass, so it depends on the artifact
-format and the public CLI/API surfaces only, never on Python internals. Its build-out is
-staged with the compiled-holdings work (see `REFACTOR_SPEC.md` → "Remaining test
-coverage").
+Tiers 2 and 3 share `conformance/` at the repository root. Its readable case data moved
+byte-identically from the reader and backend suites; thin loaders execute CLI JSON,
+public library return models, order manifests and HTTP/boot/validation boundaries.
+Fixture-bound cases always use their named source-built synthetic artifacts, including
+in a tier 3 run. Artifact-parametrized checks default to session-built catalog/steward
+artifacts and use exactly `--artifact-dir` under tier 3. They derive expectations from
+artifact content or cross-adapter agreement, never real-identifier goldens.
+
+The sole volatility policy is `conformance/normalization.py`. Order comparisons remove
+only its five declared provenance fields and preserve key/list order; repeated runs also
+compare raw bytes. Existing scope accounting covers tables and columns; no manifest
+count contract yet exists for mappings, periods or unmapped reasons. Catalog artifacts
+permit global fallback orders; steward reference visibility does not grant orderability.
+The existing `reg_schema/test_corpus/` stays in place for its Python and TS consumers.
+
+The corpus depends on public contracts rather than private Python internals. Private
+imports/internal patches and oversized test modules are gated by repo lints: zero
+conformance exemptions, frozen package file allowlists that only shrink in plan 06. A
+future language-independent reader port reuses these oracles after the schema cut.
 
 ### Discipline against ballooning
 

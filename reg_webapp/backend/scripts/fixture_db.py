@@ -62,7 +62,7 @@ def stamp_manifest(conn: sqlite3.Connection) -> None:
     identity = json.loads(
         (
             Path(__file__).resolve().parents[3]
-            / "reg_meta/tests/cases/reader/fixture/identity.json"
+            / "conformance/cases/reader/fixture/identity.json"
         ).read_text()
     )
     identity.update(

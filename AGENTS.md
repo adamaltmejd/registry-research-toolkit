@@ -202,6 +202,11 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
 - `uvx --from panache-cli==3.9.0 panache format --check .` — markdown format check
   (config in `.panache.toml`; drop `--check` to fix)
 - `uvx --from panache-cli==3.9.0 panache lint .` — markdown lint
+- `uv run python -m pytest conformance -q` — source-built conformance corpus and
+  session-built catalog/steward artifact checks
+- `uv run python -m pytest conformance --run-release --artifact-dir=/path/to/catalog -q`
+  — conformance checks on an admitted real artifact; both flags required, bad artifacts
+  fail admission (fixture-bound goldens still use synthetic sources)
 - `uv run python -m pytest` — all tests (pytest discovers per-package via root pyproject
   `testpaths`)
 - `uv run python -m pytest reg_meta/` — narrow to a single package

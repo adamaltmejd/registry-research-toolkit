@@ -4,7 +4,7 @@ name: Integration (Podman)
 # (reg_meta/tests/test_integration.py) installs reg_meta into a clean
 # python:3.14-slim container and exercises install → `reg-meta update`
 # (downloads the DB from GitHub Releases) → query; the host half is
-# reg_webapp's §12 inventory ↔ flavored-DB consistency gate. Both need a
+# conformance artifact gate. Both need a
 # published release asset matching the current SCHEMA_VERSION, so this workflow
 # deliberately does NOT run on push/PR — a red X on unrelated work when a
 # release is merely owed would be noise. The package tests also run locally as a
@@ -39,10 +39,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install --yes podman
           podman info
-      # The `-m "integration or release"` selection below includes reg_webapp's
-      # §12 inventory ↔ flavored-DB consistency gate
-      # (test_steward_swecov.py::test_every_inventory_mapping_resolves_against_the_flavored_db),
-      # whose fixture hard-FAILS unless REG_META_DB names the SWECOV-flavored DB
+      # The conformance step below executes the
+      # conformance artifact gate,
+      # which hard-FAILS unless --artifact-dir names the SWECOV artifact
       # — deliberately, because a skip would report the gate as clean without
       # ever running it. So this job has to provision that asset for the
       # selection to be runnable at all.
@@ -108,6 +107,11 @@ jobs:
           PY
           rm "$zst"
           echo "db_dir=$db_dir" >> "$GITHUB_OUTPUT"
+      # Schema drift against a published asset is a release-drift failure.
+      - name: Run artifact conformance against the downloaded SWECOV DB
+        run: |
+          uv run python -m pytest conformance --run-release \
+            --artifact-dir="${{ steps.swecov-db.outputs.db_dir }}" -q
       # Both opt-in flags: --run-integration (all container tests) and --run-release
       # (the subset that needs a published release asset). Serial, NOT `-n auto`:
       # the module-scoped image fixture builds the container once; xdist would

@@ -21,8 +21,8 @@ from reg_meta_build.resolved_catalog import (
 from reg_meta_build.resolved_metadata import ResolvedMetadata
 from reg_meta_build.validate import validate_built_db
 
-CASES = Path(__file__).parent / "cases"
-BUILDER_CASES = CASES.parents[2] / "reg_meta_build/tests/cases/holdings"
+CASES = Path(__file__).resolve().parents[2] / "conformance/cases"
+BUILDER_CASES = CASES.parents[1] / "reg_meta_build/tests/cases/holdings"
 
 
 def build_reader_artifact(

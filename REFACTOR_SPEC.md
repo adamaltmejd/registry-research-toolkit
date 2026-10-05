@@ -325,9 +325,9 @@ will need period-column `WHERE` clauses later.
 ### Staged cut and completion gate
 
 Plans 00 and 01 are independent and have merged (#1145, #1144); plans 02, 03 and 04
-merged as #1146, #1147 and #1149 on 2026-10-05. Plan 01b (conformance suite) did not run
-beside plan 03 and runs next, before plan 05, which executes its checks through that
-suite; plan 06 sweeps the package test suites after plan 05. Plans 02–04 are one
+merged as #1146, #1147 and #1149 on 2026-10-05. Plan 01b now relocates the plan 03/04
+corpora into the root conformance suite before plan 05, which executes checks through
+that suite; plan 06 sweeps the package test suites after plan 05. Plans 02–04 are one
 unreleased schema-9 series with separately reviewable PRs; do not tag `reg_meta/v*` or
 `reg_webapp/v*` until plan 05 passes. Main may reject released 8.1 artifacts between
 writer and reader cuts; use the schema-9 scratch builds via `REG_META_DB`. No
@@ -340,7 +340,7 @@ compatibility fallback or migration.
    and maintainer ratify before 02 starts; a draft PR is not ratification.
 3. **01b — Conformance suite:** root-level `conformance/` runner parametrized by
    artifact directory, cases as data, private-name-import and file-size lints; see
-   `ARCHITECTURE.md` → Testing strategy. Plan 03 adds the holdings-scope cases.
+   `ARCHITECTURE.md` → Testing strategy. It owns the relocated plan 03/04 scope cases.
 4. **02 — Builder:** schema 9, four holding relations, explicit representation, shared
    canonicalization/uniqueness checks, complete census accounting and manifest identity.
    Build one full strict new-schema public base, compare reference facts against the
@@ -521,14 +521,12 @@ Carried from the testing strategy; the shipped categories are in
   payloads independently of corpus cardinality; retain controlled cold/repeat CLS trace
   evidence; and probe immutable hashed assets plus the search edge MISS→HIT contract.
   See `ARCHITECTURE.md` → Repo-wide invariants.
-- **Conformance suite and test sweep** — a root-level `conformance/` suite parametrized
-  by artifact directory (synthetic in CI, real artifact under `--run-release`) holding
-  its cases as data: accounting against accepted inputs, browse/validate/order
-  agreement, order byte-identity, performance probes. Built alongside the
-  compiled-holdings cut; afterwards the existing per-package suites are swept one
-  package at a time under the `AGENTS.md` testing policy (delete tests pinning internals
-  that a boundary case covers, rewrite the rest against the artifact). See
-  `ARCHITECTURE.md` → Testing strategy.
+- **Per-package test sweep** — root `conformance/` now owns the relocated corpora and
+  synthetic/real artifact checks. Sweep existing package suites one package at a time
+  under the `AGENTS.md` policy: delete tests pinning internals covered by a boundary
+  case, rewrite the rest against artifacts, and shrink the private-import/size lint
+  allowlists. Accepted-private-input census and performance acceptance remain plan 05.
+  See `ARCHITECTURE.md` → Testing strategy.
 
 ## Open / deferred decisions
 
