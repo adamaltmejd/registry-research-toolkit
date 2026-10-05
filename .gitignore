@@ -124,3 +124,6 @@ archive/
 .claude/scheduled_tasks.lock
 .claude/worktrees/
 .claude/settings.local.json
+
+# Local scratch: per-task probes, benchmarks and verification receipts.
+.local/
