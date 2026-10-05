@@ -9,14 +9,23 @@ degradation, and the ETag round-trip.
 
 from __future__ import annotations
 
+import shutil
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
-from reg_meta_build.doc_db import build_doc_db
 from reg_webapp.app import create_app
 
+import reg_meta_build
+
 DOCS_SOURCE = Path(__file__).parent / "docs_source"
+_BUILD_DOCS = (
+    "import sys; from pathlib import Path; "
+    "from reg_meta_build.doc_db import build_doc_db; "
+    "build_doc_db(Path(sys.argv[1]), Path(sys.argv[2]))"
+)
 
 
 @pytest.fixture
@@ -27,9 +36,24 @@ def client(docs_db):
 
 
 @pytest.fixture
-def client_built_docs(catalog_db):
-    """App with a docs index built from the readable `docs_source/` markdown."""
-    build_doc_db(DOCS_SOURCE, catalog_db.parent)
+def client_built_docs(catalog_db, tmp_path):
+    """App with a docs index built from the readable `docs_source/` markdown only.
+
+    `build_doc_db` also reads the checkout's doc-source and related-document
+    curation and its untracked PDF seed (paths beside the package). Building with
+    a copy of the installed package under `<tmp>/runtime/src` leaves those absent,
+    so the index holds exactly the docs in `docs_source/` in every checkout."""
+    src = tmp_path / "runtime" / "src"
+    shutil.copytree(
+        Path(reg_meta_build.__file__).parent,
+        src / "reg_meta_build",
+        ignore=shutil.ignore_patterns("__pycache__"),
+    )
+    subprocess.run(
+        [sys.executable, "-c", _BUILD_DOCS, str(DOCS_SOURCE), str(catalog_db.parent)],
+        check=True,
+        env={"PYTHONPATH": str(src)},
+    )
     with TestClient(create_app()) as c:
         yield c
 
