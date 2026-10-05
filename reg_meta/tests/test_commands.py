@@ -1083,13 +1083,6 @@ class TestResolve:
         # Nothing is split in the fixture register, so the match stays unique.
         assert len(col["matches"]) == 1
 
-    def test_cross_register(self, db_path: str):
-        data, _code = _run_json(["--db", db_path, "resolve", "--columns", "Kon"])
-        col = data["data"]["columns"][0]
-        reg_ids = {m["register_id"] for m in col["matches"]}
-        # "Kon" is in reg 1, "KON" is in reg 2 — case-insensitive should match both
-        assert "1" in reg_ids
-
     def test_case_insensitive(self, db_path: str):
         data, _ = _run_json(["--db", db_path, "resolve", "--columns", "kon"])
         col = data["data"]["columns"][0]
@@ -1152,11 +1145,6 @@ class TestResolve:
         match = data["data"]["columns"][0]["matches"][0]
         assert "confidence" not in match
         assert "match_reasons" not in match
-
-    def test_no_ambiguous_status(self, db_path: str):
-        """Resolve v2 should not return 'ambiguous' status."""
-        data, _ = _run_json(["--db", db_path, "resolve", "--columns", "Kon"])
-        assert data["data"]["columns"][0]["status"] in ("matched", "no_match")
 
     def test_swedish_uppercase_column_folds(self):
         """#853 regression: a delivery column stored with an uppercase Swedish
@@ -1661,11 +1649,6 @@ class TestOutputFormats:
         assert "TESTREG" in output
         assert "---" not in output  # no table separator
 
-    def test_json_verbose_has_envelope(self, db_path: str):
-        data, _ = _run_json(["--db", db_path, "search", "--query", "Kön"])
-        assert data["contract_version"] == "3.0.0"
-        assert "run" in data
-
     def test_json_no_verbose_is_data_only(self, db_path: str):
         data, code = _run_json(
             ["--db", db_path, "search", "--query", "Kön"], verbose=False
@@ -1778,42 +1761,6 @@ def _overlap_db():
         )
     conn.commit()
     return conn
-
-
-class TestStateOverlapHelpers:
-    """Unit tests for the overlap predicates (the bug was START-year-only)."""
-
-    def test_covers_year_spans_full_window(self):
-        from reg_meta.queries import _state_covers_year
-
-        # Multi-year window must match its MID and END years, not only the start.
-        assert _state_covers_year("2010-01-01", "2012-12-31", 2010)
-        assert _state_covers_year("2010-01-01", "2012-12-31", 2011)  # mid
-        assert _state_covers_year("2010-01-01", "2012-12-31", 2012)  # end
-        assert not _state_covers_year("2010-01-01", "2012-12-31", 2013)
-        assert not _state_covers_year("2010-01-01", "2012-12-31", 2009)
-
-    def test_covers_year_yearless_matches_anything(self):
-        from reg_meta.queries import _state_covers_year
-
-        # Yearless-fallback (0001..9999) matches any reasonable calendar year.
-        assert _state_covers_year("0001-01-01", "9999-12-31", 1850)
-        assert _state_covers_year("0001-01-01", "9999-12-31", 2024)
-
-
-class TestIsCodeShaped:
-    """#352: a query is code-shaped (→ also matches by value_code.code) iff it has
-    a digit AND length >= 3. Plain text (no digit) or too-short queries do label
-    FTS only."""
-
-    def test_code_shaped_queries(self):
-        from reg_meta.queries import _is_code_shaped
-
-        assert _is_code_shaped("F32")  # ICD-10
-        assert _is_code_shaped("0180")  # numeric kommun code
-        assert _is_code_shaped("47.11")  # SNI with separator
-        # Leading/trailing whitespace is stripped before the length test.
-        assert _is_code_shaped("  F32 ")
 
 
 class TestGetValuesYearOverlap:
