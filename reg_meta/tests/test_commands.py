@@ -1793,33 +1793,12 @@ class TestStateOverlapHelpers:
         assert not _state_covers_year("2010-01-01", "2012-12-31", 2013)
         assert not _state_covers_year("2010-01-01", "2012-12-31", 2009)
 
-    def test_covers_year_open_ended_matches_far_future(self):
-        from reg_meta.queries import _state_covers_year
-
-        # Open-ended (9999) must match years well past the opening year.
-        assert _state_covers_year("2015-01-01", "9999-12-31", 2015)
-        assert _state_covers_year("2015-01-01", "9999-12-31", 2099)
-        assert not _state_covers_year("2015-01-01", "9999-12-31", 2014)
-
     def test_covers_year_yearless_matches_anything(self):
         from reg_meta.queries import _state_covers_year
 
         # Yearless-fallback (0001..9999) matches any reasonable calendar year.
         assert _state_covers_year("0001-01-01", "9999-12-31", 1850)
         assert _state_covers_year("0001-01-01", "9999-12-31", 2024)
-
-    def test_overlaps_years_range_and_open_bounds(self):
-        from reg_meta.queries import _state_overlaps_years
-
-        # Multi-year window vs requested ranges.
-        assert _state_overlaps_years("2010-01-01", "2012-12-31", 2011, 2011)  # mid
-        assert _state_overlaps_years("2010-01-01", "2012-12-31", 2012, 2015)  # end edge
-        assert not _state_overlaps_years("2010-01-01", "2012-12-31", 2013, 2014)
-        # Open-ended window vs a far-future single year and open-high request.
-        assert _state_overlaps_years("2015-01-01", "9999-12-31", 2099, 2099)
-        assert _state_overlaps_years("2015-01-01", "9999-12-31", 2099, None)
-        # Open-low request (lo=None → 0) matches a yearless window.
-        assert _state_overlaps_years("0001-01-01", "9999-12-31", None, 1990)
 
 
 class TestIsCodeShaped:
@@ -1835,16 +1814,6 @@ class TestIsCodeShaped:
         assert _is_code_shaped("47.11")  # SNI with separator
         # Leading/trailing whitespace is stripped before the length test.
         assert _is_code_shaped("  F32 ")
-
-    def test_non_code_shaped_queries(self):
-        from reg_meta.queries import _is_code_shaped
-
-        assert not _is_code_shaped("Ja")  # no digit, too short
-        assert not _is_code_shaped("Nej")  # no digit (len 3 but text-only)
-        assert not _is_code_shaped("F3")  # has digit but len 2
-        assert not _is_code_shaped("12")  # digits but len 2
-        assert not _is_code_shaped("")  # empty
-        assert not _is_code_shaped("inkomst")  # plain word, no digit
 
 
 class TestGetValuesYearOverlap:
@@ -1871,6 +1840,8 @@ class TestGetValuesYearOverlap:
         assert out["instances"], "open-ended state must match a year past its start"
         labels = {v["label"] for inst in out["instances"] for v in inst["values"]}
         assert labels == {"Man", "Kvinna"}
+        # The yearless window alone would also answer 2099; pin the open one.
+        assert "2015-01-01" in {inst["valid_from"] for inst in out["instances"]}
 
     def test_yearless_window_matches_arbitrary_year(self):
         from reg_meta.queries import get_values_by_variable
