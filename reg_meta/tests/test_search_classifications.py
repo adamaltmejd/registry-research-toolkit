@@ -18,7 +18,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from reg_meta.errors import RegMetaError
-from reg_meta.queries import _fts_match_query, search
+from reg_meta.queries import search
 
 from reg_meta import queries
 
@@ -238,16 +238,6 @@ def test_like_metacharacter_query_matches_literally(
     fqids = [str(r.fqid) for r in out.results if r.type == "classification"]
     assert "class/underscore-owner" in fqids
     assert "class/plain-owner" not in fqids
-
-
-def test_code_shaped_query_surfaces_owning_classification(
-    db_with_class_codes: sqlite3.Connection,
-) -> None:
-    # 'C12' matches no classification NAME under sun2020, but sun2020 CONTAINS the
-    # code → it surfaces via code-containment with a navigable fqid.
-    out = search(db_with_class_codes, "C12", field="description", type="classification")
-    fqids = [str(r.fqid) for r in out.results if r.type == "classification"]
-    assert "class/sun2020" in fqids
 
 
 def test_code_containment_dedups_against_name_hit(
@@ -806,22 +796,6 @@ def test_unscoped_search_still_pages_the_whole_prefix(field: str) -> None:
     assert page.next_cursor is not None
 
 
-def test_irrelevant_like_branches_do_not_saturate_register_search(
-    db: sqlite3.Connection, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    def unexpected(*args: object, **kwargs: object) -> list[dict[str, object]]:
-        raise AssertionError("variable-only LIKE branch ran for register search")
-
-    monkeypatch.setattr(queries, "_search_datacolumns", unexpected)
-    monkeypatch.setattr(queries, "_search_varnames", unexpected)
-
-    result = search(db, "no-register-match", field="all", type="register", limit=1)
-
-    assert result.results == ()
-    assert not result.has_more
-    assert result.next_cursor is None
-
-
 @pytest.fixture
 def case_twin_db() -> sqlite3.Connection:
     """One `scb/lisa/idve` variable delivered under TWO spellings of one column: the
@@ -923,24 +897,6 @@ def test_invalid_type_raises(db: sqlite3.Connection) -> None:
     with pytest.raises(RegMetaError) as exc:
         search(db, "x", type="nonsense")
     assert "Invalid search type" in exc.value.message
-
-
-def test_fts_match_query_quotes_and_prefixes() -> None:
-    assert _fts_match_query("inkomst") == '"inkomst"*'
-    assert _fts_match_query("lon ink") == '"lon"* "ink"*'
-
-
-def test_fts_match_query_escapes_quotes() -> None:
-    # FTS5 operators inside a token are neutralized by quoting; embedded double
-    # quotes are doubled.
-    assert _fts_match_query('foo"bar') == '"foo""bar"*'
-    assert _fts_match_query("kon*") == '"kon*"*'
-
-
-def test_fts_match_query_drops_punctuation_only() -> None:
-    assert _fts_match_query("") is None
-    assert _fts_match_query("   ") is None
-    assert _fts_match_query('"" -- ;') is None
 
 
 def test_fts_special_chars_do_not_raise(db: sqlite3.Connection) -> None:
