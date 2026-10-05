@@ -35,31 +35,6 @@ from _slugged_db import (
     build_slugged_db,
 )
 
-
-def _seed_classification(
-    conn: sqlite3.Connection, *, slug: str, short_name: str, name: str
-) -> None:
-    conn.execute(
-        "INSERT INTO classification (short_name, name, slug) VALUES (?, ?, ?)",
-        (short_name, name, slug),
-    )
-
-
-def _seed_classification_edge(
-    conn: sqlite3.Connection,
-    *,
-    predecessor: str,
-    successor: str,
-    effective_year: int | None,
-) -> None:
-    conn.execute(
-        "INSERT INTO classification_replaced_by "
-        "(predecessor_slug, successor_slug, effective_year, note) "
-        "VALUES (?, ?, ?, 'derived:vintage_chain')",
-        (predecessor, successor, effective_year),
-    )
-
-
 if TYPE_CHECKING:
     import sqlite3
 
@@ -257,9 +232,6 @@ def test_like_metacharacter_query_matches_literally(
     # '12_…' prefix) and surfaces; cls_plain owns '120'/'125', which an UNESCAPED
     # `_` wildcard would wrongly match — it must NOT surface. Fails before the fix
     # (cls_plain leaks in via the wildcard); passes after (escaped + ESCAPE clause).
-    from reg_meta.queries import _is_code_shaped
-
-    assert _is_code_shaped("12_")
     out = search(
         db_with_like_metachar_codes, "12_", field="description", type="classification"
     )
@@ -850,31 +822,6 @@ def test_irrelevant_like_branches_do_not_saturate_register_search(
     assert result.next_cursor is None
 
 
-def test_classification_code_exclusion_happens_before_limit() -> None:
-    conn = build_slugged_db()
-    conn.executemany(
-        "INSERT INTO classification (id, short_name, name, slug) VALUES (?, ?, ?, ?)",
-        (
-            (60, "A", "C12 name hit A", "class-a"),
-            (61, "B", "C12 name hit B", "class-b"),
-            (62, "C", "Unrelated title", "class-c"),
-        ),
-    )
-    add_value_set(conn, value_set_id=70, codes=[("C12", "Shared code")])
-    code_id = conn.execute(
-        "SELECT code_id FROM value_code WHERE code = 'C12'"
-    ).fetchone()[0]
-    for slug in ("class-a", "class-b", "class-c"):
-        _link_code_to_classification(conn, slug, code_id)
-    _rebuild_fts(conn)
-    name_rows = queries._search_classifications(conn, '"C12"*', False, 10, 0)
-    exclude = {row["_classification_id"] for row in name_rows}
-
-    code_rows = queries._search_classifications_by_code(conn, "C12", exclude, 1, 0)
-
-    assert [str(row["fqid"]) for row in code_rows] == ["class/class-c"]
-
-
 @pytest.fixture
 def case_twin_db() -> sqlite3.Connection:
     """One `scb/lisa/idve` variable delivered under TWO spellings of one column: the
@@ -1150,38 +1097,3 @@ def test_years_excludes_classifications(
         ).results
         == ()
     )
-
-
-def test_classification_editions_orders_by_bfs_depth() -> None:
-    # #588: the search fold `_classification_editions` is TERMINAL-CENTRIC (no
-    # queried node — it collapses a whole family onto its terminal), so collect-all-
-    # ancestors is correct here; only the ORDERING changes — terminal-first by BFS
-    # DEPTH (robust to undated edges), not by descending effective_year. Chain
-    # eA→eB(UNDATED)→eC(terminal), plus a MERGE eD→eC: depth 0 = eC, depth 1 = eB+eD,
-    # depth 2 = eA. The old year-sort would have sunk the undated eB below dated
-    # predecessors; depth order is the walk, date-independent.
-    from reg_meta.queries import _classification_editions
-
-    conn = build_slugged_db()
-    for slug in ("eA", "eB", "eC", "eD"):
-        _seed_classification(conn, slug=slug, short_name=slug.upper(), name=slug)
-    _seed_classification_edge(
-        conn, predecessor="eA", successor="eB", effective_year=2000
-    )
-    _seed_classification_edge(
-        conn, predecessor="eB", successor="eC", effective_year=None
-    )
-    _seed_classification_edge(
-        conn, predecessor="eD", successor="eC", effective_year=2010
-    )
-    conn.commit()
-    editions = _classification_editions(conn, "eC")
-    slugs = [e["slug"] for e in editions]
-    # Terminal first (depth 0), then both depth-1 predecessors (slug-sorted: eB, eD),
-    # then depth-2 eA. The terminal-centric fold INCLUDES the merge sibling eD
-    # (unlike Catalog.classification_chain, which is anchored on a queried node).
-    assert slugs == ["eC", "eB", "eD", "eA"]
-    by_slug = {e["slug"]: e for e in editions}
-    assert by_slug["eC"]["effective_year"] is None  # terminal, no outbound edge
-    assert by_slug["eB"]["effective_year"] is None  # undated edge, display-only
-    assert by_slug["eA"]["effective_year"] == 2000

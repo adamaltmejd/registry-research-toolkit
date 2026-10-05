@@ -1,0 +1,77 @@
+[
+  {
+    "slug": "sun2020",
+    "short_name": "SUN2020",
+    "name": "Svensk utbildningsnomenklatur",
+    "codes": [
+      {
+        "code": "S20",
+        "label": "Utbildningsnivå"
+      },
+      {
+        "code": "Z100",
+        "label": "Utbildningsinriktning"
+      }
+    ]
+  },
+  {
+    "slug": "ea",
+    "short_name": "EA",
+    "name": "Yrkesgrupp edition A",
+    "codes": [
+      {
+        "code": "Y10",
+        "label": "Yrkesgrupp"
+      },
+      {
+        "code": "Z10",
+        "label": "Yrkesområde"
+      }
+    ]
+  },
+  {
+    "slug": "eb",
+    "short_name": "EB",
+    "name": "Yrkesgrupp edition B",
+    "codes": [
+      {
+        "code": "Y10",
+        "label": "Yrkesgrupp"
+      },
+      {
+        "code": "Z10",
+        "label": "Yrkesområde"
+      }
+    ]
+  },
+  {
+    "slug": "ec",
+    "short_name": "EC",
+    "name": "Yrkesgrupp edition C",
+    "codes": [
+      {
+        "code": "Y10",
+        "label": "Yrkesgrupp"
+      },
+      {
+        "code": "Z10",
+        "label": "Yrkesområde"
+      }
+    ]
+  },
+  {
+    "slug": "ed",
+    "short_name": "ED",
+    "name": "Yrkesgrupp edition D",
+    "codes": [
+      {
+        "code": "Y10",
+        "label": "Yrkesgrupp"
+      },
+      {
+        "code": "Z10",
+        "label": "Yrkesområde"
+      }
+    ]
+  }
+]
