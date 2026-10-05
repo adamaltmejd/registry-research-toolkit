@@ -33,7 +33,7 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from reg_meta.queries import _SCB_ID_CEILING, compare, get_diff, search
+from reg_meta.queries import compare, get_diff, search
 
 sys.path.insert(
     0, str(Path(__file__).resolve().parents[2] / "reg_meta_build" / "tests")
@@ -49,10 +49,11 @@ from _slugged_db import (
 if TYPE_CHECKING:
     import sqlite3
 
-# Minted-id band base = the production `_SCB_ID_CEILING` (reg_meta.queries), itself
-# kept in sync with `reg_meta_build.id._MINT_BIT` by `test_band_constant_in_sync_with_build`
-# in the sibling test_var_id_nonnumeric.py. SCB variable_id < ceiling, non-SCB >=
-# ceiling; the displayed var_id is None for the high band — the collapse surface #474 fixes.
+# Minted-id band base (2^62, the reader's var_id band ceiling). SCB variable_id <
+# ceiling, non-SCB >= ceiling; the displayed var_id is None for the high band — the
+# collapse surface #474 fixes. test_var_id_nonnumeric.py ties the builder's minted
+# band to the reader's through a pipeline-built artifact.
+_SCB_ID_CEILING = 2**62
 
 # Curated (non-SCB) register: provider_id 3, two variables with column-token
 # provider_keys (non-numeric) and HIGH-band ids → both displayed var_id = None.
