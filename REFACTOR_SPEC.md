@@ -319,12 +319,15 @@ will need period-column `WHERE` clauses later.
 
 ### Status and remaining items
 
-The compiled-holdings cut shipped as #1144 to #1147 and #1149 to #1152 and passed
+The compiled-holdings cut shipped through plans 00 to 05b of the series and passed
 independent acceptance on 2026-10-06 against the pinned schema-9 public and SWECOV
 steward artifacts. No `reg_meta/v*` or `reg_webapp/v*` tag has been cut for it;
 publishing those artifacts with matching readers is a separate, separately authorized
-release. The closed project root (#1134) and the 2026-07-14 interface decisions now live
-in `reg_schema/DESIGN.md`, `reg_meta/DESIGN.md` and `reg_webapp/DESIGN.md`.
+release. Until it ships, main is schema 9 while the latest release is 8.1: readers
+reject the released 8.1 assets, `container-build.yml`'s schema-guard blocks deploys, and
+local work uses the schema-9 scratch builds via `REG_META_DB`. The closed project root
+(#1134) and the 2026-07-14 interface decisions now live in `reg_schema/DESIGN.md`,
+`reg_meta/DESIGN.md` and `reg_webapp/DESIGN.md`.
 
 Still open under this section:
 
@@ -334,11 +337,10 @@ Still open under this section:
   shared `reg_meta` code.
 - **Common study window:** the SPA authoring default in the rules above is not built
   (`reg_webapp/DESIGN.md`, "Still to come").
-- **Citation retarget:** comments in `reg_meta` (`inventory.py`, `order.py`, `cli.py`),
-  `reg_webapp/backend` (`routes/project.py`) and the SWECOV steward's
-  `inventory_overlay.toml` cite this section as decision text. Move the per-binding
+- **Citation retarget:** every `rg '§12'` hit across tracked files, including the
+  codegen'd frontend types, cites this section as decision text. Move the per-binding
   period-override deferral and the row-filter `simplify:` into `reg_meta/DESIGN.md` →
-  "Order materializer and manifest", retarget those comments to the owning
+  "Order materializer and manifest", retarget those citations to the owning
   `reg_meta/DESIGN.md` sections, then delete this section.
 
 Diagnostic and MONA/PII guards remain intact.
@@ -467,8 +469,10 @@ Carried from the testing strategy; the shipped categories are in
   case, rewrite the rest against artifacts, and shrink the private-import/size lint
   allowlists. Accepted-private-input census is shipped via opt-in `--holdings-input`.
   Historical-order comparisons, latency and cold-boot measurements remain separate
-  maintainer checks; they passed at the schema-9 acceptance. See `ARCHITECTURE.md` →
-  Testing strategy.
+  maintainer checks. At the schema-9 acceptance, local TestClient measurements were
+  within every holdings budget and cold boot showed no regression against `b45f916d` in
+  the same environment; nothing was measured on Fly. See `ARCHITECTURE.md` → Testing
+  strategy.
 
 ## Open / deferred decisions
 

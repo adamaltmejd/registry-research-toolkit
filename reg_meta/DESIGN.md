@@ -1839,6 +1839,6 @@ directly when this contract changes.
 Storage identifiers remain exact SQLite/Python integers. All JSON surfaces serialize
 these identifiers as opaque decimal strings, including CLI SQL rows and API models.
 Counts, years and local representation-run ordinals remain numbers. Readers require
-schema 8.1; old catalogs must be regenerated. The `0001-01-01` unknown coverage sentinel
+schema 9; old catalogs must be regenerated. The `0001-01-01` unknown coverage sentinel
 is presented as an absent coverage start; source declarations and warnings remain
 available separately and do not establish observation availability.

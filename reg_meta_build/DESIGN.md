@@ -1502,9 +1502,11 @@ build.
 **Compiled-holdings contract (2026-10-04).** `extend-db` copies an exact validated
 global database built under schema 9, adds steward-private providers and their
 registers, variables and states, then compiles accepted physical holdings into the same
-SQLite artifact. A base built under an older schema is rebuilt, never migrated. Facts
-about an existing global provider belong in common global curation. Steward extension
-does not mutate the base or resolve global source conflicts.
+SQLite artifact. A base built under an older schema is rebuilt, never migrated. Rebuild
+the schema-9 public base once and reuse it for steward compilation; do not rerun public
+preparation for each compiler edit. Facts about an existing global provider belong in
+common global curation. Steward extension does not mutate the base or resolve global
+source conflicts.
 
 `sources/curated.py` is steward-only. Its `<provider>.toml` requires a `[provider]` name
 and source label, explicit variable keys and nonempty state arrays. Repeated variable
