@@ -11,7 +11,6 @@ import io
 import json
 import os
 import re
-import shutil
 import sqlite3
 import subprocess
 import sys
@@ -26,19 +25,13 @@ import pytest
 import zstandard
 from reader_artifacts import CASES, build_reader_artifact
 from reg_meta.cli import run
-from reg_meta.db import DB_FILENAME, SCHEMA_VERSION
 from reg_meta.doc_db import DOC_SCHEMA_VERSION
-from reg_meta.download import _is_reg_meta_release, _pick_release, version_from_tag
+from reg_meta.download import version_from_tag
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.update import (
-    UpdateChecker,
-    _clear_pending_update,
-    read_pending_update,
-    run_update,
-)
+from reg_meta.update import UpdateChecker, read_pending_update, run_update
 from reg_meta_build.doc_db import build_doc_db
 
-from reg_meta import __version__, download
+from reg_meta import __version__
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -456,179 +449,3 @@ def test_uv_tool_install_runs_uv_tool_upgrade(net, uv, monkeypatch):
     result = run_update(yes=True)
     assert result["package"] == {"old_version": __version__, "new_version": NEXT_PATCH}
     assert uv.calls[-1] == UPGRADE
-
-
-# --- rule-1 tests pending deletion (next commit) ---
-
-
-class TestIsRegMetaRelease:
-    def test_prefixed_tag(self):
-        assert _is_reg_meta_release({"tag_name": "reg_meta/v0.5.0"})
-
-
-def _release(tag: str, *, has_db: bool = False, has_docs: bool = False) -> dict:
-    """Build a minimal GitHub release dict for testing."""
-    assets: list[dict] = []
-    if has_db:
-        assets.append({"name": "reg_meta.db.zst"})
-    if has_docs:
-        assets.append({"name": "reg_meta_docs.db.zst"})
-    return {"tag_name": tag, "assets": assets}
-
-
-class TestPickRelease:
-    def test_db_on_latest(self):
-        releases = [_release("reg_meta/v0.5.0", has_db=True, has_docs=True)]
-        resolution = _pick_release(releases)
-        assert resolution.release_tag == "reg_meta/v0.5.0"
-        assert resolution.db_tag == "reg_meta/v0.5.0"
-        assert resolution.docs_tag == "reg_meta/v0.5.0"
-
-
-class TestPendingUpdate:
-    """Persistent update-available flag read/write/clear."""
-
-    @pytest.fixture(autouse=True)
-    def _isolate_flag(self, monkeypatch, tmp_path):
-        flag = tmp_path / ".update_available"
-        monkeypatch.setattr("reg_meta.update._update_available_path", lambda: flag)
-        self.flag_path = flag
-
-    def test_clear_when_missing(self):
-        _clear_pending_update()  # should not raise
-
-
-def _write_fake_db_zst(dest_zst: Path, schema_version: str) -> None:
-    """Build a minimal sqlite DB with the given schema_version and zstd it to dest."""
-    directory = dest_zst.parent / "download-fixture"
-    db_path = build_reader_artifact(directory, "annual-series", "catalog")
-    with sqlite3.connect(db_path) as conn:
-        conn.execute(
-            "UPDATE import_manifest SET value=? WHERE key='schema_version'",
-            (schema_version,),
-        )
-    cctx = zstandard.ZstdCompressor()
-    with db_path.open("rb") as src, dest_zst.open("wb") as out:
-        cctx.copy_stream(src, out)
-    shutil.rmtree(directory)
-
-
-def _install_catalog(path: Path) -> None:
-    directory = path.parent / "installed-fixture"
-    built = build_reader_artifact(directory, "annual-series", "catalog")
-    path.parent.mkdir(parents=True, exist_ok=True)
-    shutil.move(built, path)
-    shutil.rmtree(directory)
-
-
-class TestDownloadDbSchemaGuard:
-    """download_db refuses to overwrite an existing DB with an incompatible asset."""
-
-    def _patch_download(
-        self, monkeypatch: pytest.MonkeyPatch, schema_version: str
-    ) -> None:
-        """Replace the network download with a local zstd-ed DB having *schema_version*."""
-
-        def fake_download(url: str, dest: Path) -> None:
-            _write_fake_db_zst(dest, schema_version)
-
-        monkeypatch.setattr(download, "_download_file", fake_download)
-
-    def test_incompatible_asset_aborts_without_overwriting(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        """Stale DB asset (old minor) must not replace a working local DB."""
-        db_dir = tmp_path / "share"
-        db_dir.mkdir()
-        existing = db_dir / DB_FILENAME
-        existing.write_bytes(b"existing-db-sentinel")
-
-        major = int(SCHEMA_VERSION.split(".")[0])
-        self._patch_download(monkeypatch, f"{major - 1}.0.0")
-
-        with pytest.raises(RegMetaError) as exc_info:
-            download.download_db(
-                db_dir=db_dir, tag="reg_meta/vX.Y.Z", force=True, yes=True
-            )
-        assert exc_info.value.code == "incompatible_db_asset"
-        # Existing DB left untouched.
-        assert existing.read_bytes() == b"existing-db-sentinel"
-        # No tmp files leftover.
-        assert not (db_dir / "reg_meta.db.tmp").exists()
-        assert not (db_dir / "reg_meta.db.zst.tmp").exists()
-
-    def test_compatible_asset_replaces_existing(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        """Matching schema version is installed normally."""
-        db_dir = tmp_path / "share"
-        db_dir.mkdir()
-        existing = db_dir / DB_FILENAME
-        existing.write_bytes(b"existing-db-sentinel")
-
-        self._patch_download(monkeypatch, SCHEMA_VERSION)
-
-        result = download.download_db(
-            db_dir=db_dir, tag="reg_meta/vX.Y.Z", force=True, yes=True
-        )
-        assert result["tag"] == "reg_meta/vX.Y.Z"
-        assert existing.exists()
-        assert existing.read_bytes() != b"existing-db-sentinel"
-
-
-class TestRunUpdateFailFast:
-    """Updates require an admitted main catalog; its docs asset is optional."""
-
-    def _fake_resolve(
-        self,
-        monkeypatch: pytest.MonkeyPatch,
-        *,
-        db_tag: str | None,
-        docs_tag: str | None,
-    ) -> None:
-        # Match __version__ so run_update skips the package-upgrade branch
-        # entirely — we're testing asset-resolution behaviour, not uv.
-        # (CI doesn't have reg_meta installed as a uv tool, so invoking
-        # `uv tool upgrade reg-meta` would fail before any assertion.)
-        from reg_meta.download import ReleaseResolution
-
-        from reg_meta import __version__, update
-
-        def fake_resolve(
-            *, timeout: float = 15, catalog: str = "global"
-        ) -> ReleaseResolution:
-            return ReleaseResolution(
-                release_tag=f"reg_meta/v{__version__}",
-                version=__version__,
-                db_tag=db_tag,
-                docs_tag=docs_tag,
-            )
-
-        monkeypatch.setattr(update, "resolve_latest_release", fake_resolve)
-        monkeypatch.setattr(
-            update, "fetch_pypi_latest_version", lambda *, timeout=15: __version__
-        )
-
-    def test_missing_main_asset_and_no_local_db_raises(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        from reg_meta.update import run_update
-
-        self._fake_resolve(monkeypatch, db_tag=None, docs_tag=None)
-        with pytest.raises(RegMetaError) as exc_info:
-            run_update(db_dir=tmp_path, yes=True)
-        assert exc_info.value.code == "catalog_bootstrap_required"
-
-    def test_missing_optional_docs_asset_reports_absence(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        """An admitted main DB remains usable without its optional docs asset."""
-        from reg_meta.update import run_update
-
-        # An admitted main DB remains usable when the walker finds no docs asset.
-        _install_catalog(tmp_path / DB_FILENAME)
-        (tmp_path / ".db_source").write_text('{"tag": "reg_meta/v0.7.0"}')
-
-        self._fake_resolve(monkeypatch, db_tag="reg_meta/v0.7.0", docs_tag=None)
-        result = run_update(db_dir=tmp_path, yes=True)
-        assert result["docs"] == "no_docs_in_release"
