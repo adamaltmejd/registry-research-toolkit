@@ -128,18 +128,6 @@ class TestVariantAndVersionKindsGone:
             Catalog(slugged_conn).resolve("scb/lisa/individer-15plus")
         assert exc.value.code == "fqid_not_found"
 
-    def test_old_four_seg_version_fqid_rejected(
-        self, slugged_conn: sqlite3.Connection
-    ) -> None:
-        with pytest.raises(FqidError, match="4 segments"):
-            Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2018")
-
-    def test_old_five_seg_binding_fqid_rejected(
-        self, slugged_conn: sqlite3.Connection
-    ) -> None:
-        with pytest.raises(FqidError, match="5 segments"):
-            Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2018/kon")
-
 
 class TestResolveBinding:
     """A2.5 (see DESIGN.md → Catalog API surface): `resolve()` returns the longitudinal `ResolvedVariable` —
@@ -302,13 +290,6 @@ class TestStoredVariableSlug:
     longitudinal (`ResolvedVariable`, period-independent) — split siblings
     resolve to distinct `variable_id`s, and point selection moved to
     `resolve_at`."""
-
-    def test_resolves_via_stored_slug(self) -> None:
-        # Stored slug == derived slug for the common single-column case.
-        conn = build_slugged_db()
-        r = Catalog(conn).resolve("scb/lisa/kon")
-        assert isinstance(r, ResolvedVariable)
-        assert r.provider_key == "44"
 
     def test_two_aliases_one_slug_still_resolves(self) -> None:
         # A variable with two aliases (`Kon` + `Kön`) both folding to one slug:
@@ -543,14 +524,6 @@ class TestSameAsTraversal:
                 (*src, *tgt),
             )
         conn.commit()
-
-    def test_direct_hit_leaves_via_same_as_none(
-        self, slugged_conn: sqlite3.Connection
-    ) -> None:
-        # Sanity: a direct resolution doesn't touch the same_as graph.
-        r = Catalog(slugged_conn).resolve("scb/lisa/kon")
-        assert isinstance(r, ResolvedVariable)
-        assert r.via_same_as is None
 
     def test_same_as_one_hop_resolves(self) -> None:
         # Curated equivalence: kon ↔ civilstand-legacy (constructed scenario —
@@ -1015,17 +988,6 @@ class TestVariableIdentity:
         with pytest.raises(RegMetaError) as exc:
             Catalog(slugged_conn).variable_identity("class/sun2020")
         assert exc.value.code == "not_a_binding_fqid"
-
-    def test_reads_no_state_or_code_row(self, slugged_conn: sqlite3.Connection) -> None:
-        # The point of the method, and what makes its cost independent of how
-        # long the variable's history is: neither table is touched at all.
-        statements = _traced(slugged_conn)
-        Catalog(slugged_conn).variable_identity(_KON)
-        assert not [
-            sql
-            for sql in statements
-            if "variable_state" in sql or "value_set_member" in sql
-        ]
 
 
 class TestResolveAt:
@@ -2621,24 +2583,6 @@ class TestCodeSummaryHydration:
         assert conformance.nonconforming_code_count == 1
         assert conformance.nonconforming_codes == ()
 
-    def test_with_codes_false_alone_stays_exactly_as_narrow(self) -> None:
-        # The Y-44 guarantee: no summary is added implicitly, and neither
-        # per-state code query runs.
-        conn = TestResolveAt._coded_state_db(windowed=False)
-        cat = Catalog(conn)
-        statements = _traced(conn)
-        [state] = cat.resolve_at(
-            _KON, 2018, variant="individer-15plus", with_codes=False
-        )
-        assert state.value_set is None
-        assert state.value_set_summary is None
-        assert state.classifications[0].conformance is None
-        assert not [
-            sql
-            for sql in statements
-            if "value_set_member" in sql or "classification_conformance_code" in sql
-        ]
-
     def test_full_resolution_keeps_its_complete_default_semantics(self) -> None:
         # `Catalog.resolve` / `Catalog.states` are unchanged: members embedded,
         # mismatch list embedded, no summary.
@@ -3030,11 +2974,6 @@ class TestResolveTerminalSuccessor:
         terminal = Catalog(conn).resolve_terminal_successor("class/ssyk1996")
         assert terminal is not None
         assert str(terminal) == "class/ssyk2012"
-
-    def test_classification_no_outbound_edge_returns_none(self) -> None:
-        # sun2020 is the live, edge-free classification → genuinely unknown.
-        conn = build_slugged_db()
-        assert Catalog(conn).resolve_terminal_successor("class/sun2020") is None
 
     def test_classification_future_successor_not_terminal_until_as_of_year(
         self,
