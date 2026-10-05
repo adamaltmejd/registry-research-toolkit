@@ -305,6 +305,17 @@ def test_provider_column_coverage_matches_register_reads(reversed_rows: bool) ->
     assert catalog.provider_column_coverage("scb") == expected
 
 
+def test_provider_column_coverage_uses_one_query(
+    provider_db: sqlite3.Connection,
+) -> None:
+    catalog = Catalog(provider_db)
+    statements: list[str] = []
+    provider_db.set_trace_callback(statements.append)
+    catalog.provider_column_coverage("scb")
+    provider_db.set_trace_callback(None)
+    assert len(statements) == 1
+
+
 def test_provider_column_coverage_folds_unicode_twins(
     provider_db: sqlite3.Connection,
 ) -> None:

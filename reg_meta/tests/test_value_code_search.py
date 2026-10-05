@@ -424,6 +424,37 @@ def _seed_n_label_codes(conn: sqlite3.Connection, n: int, label: str) -> None:
     _finalize(conn)
 
 
+def test_unscoped_value_page_cost_does_not_grow_with_the_match_set() -> None:
+    """Perf guard (replaces the internal annotation spy): owner annotation runs for
+    the shown page only. An unscoped value search issues the same statements for
+    30 and for 60 matching codes, and writes at most `limit` scratch rows for the
+    owner lookup. FTS5's own per-hit bm25 lookups (traced with a leading `--`)
+    are excluded; they scale with the match set by design."""
+    from reg_meta_build.db import DDL, seed_providers
+
+    limit = 5
+    statement_counts = []
+    for n in (30, 60):
+        c = sqlite3.connect(":memory:")
+        c.row_factory = sqlite3.Row
+        register_py_lower(c)
+        c.executescript(DDL)
+        seed_providers(c)
+        _seed_n_label_codes(c, n, "Diagnos")
+        statements: list[str] = []
+        written_before = c.total_changes
+        c.set_trace_callback(statements.append)
+        out = search(c, "Diagnos", field="value", type="value", limit=limit)
+        c.set_trace_callback(None)
+        written = c.total_changes - written_before
+        c.close()
+        assert len(out.results) == limit
+        assert out.has_more
+        assert written <= limit, f"wrote {written} rows for a {limit}-row page"
+        statement_counts.append(sum(not s.startswith("--") for s in statements))
+    assert statement_counts[0] == statement_counts[1], statement_counts
+
+
 def test_limit_plus_one_reports_more_without_exact_count(
     conn: sqlite3.Connection,
 ) -> None:
