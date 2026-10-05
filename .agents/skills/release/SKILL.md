@@ -58,10 +58,10 @@ PyPI before publishing the builder.
 
 `reg_schema` is the `project_data.json` schema library. It releases on the
 `reg_schema/v*` tag through `publish_reg_schema.yml` and ships **nothing but the wheel**
-— no DB release assets and no doc DB — so step 8 and the step 11 catalog refresh do not
-apply to it. It is **upstream of both `reg_meta`** (a `reg-schema>=` floor in reg_meta's
-pyproject) **and `reg_webapp`**. Read that floor out of the package metadata, which is
-authoritative — never a version quoted in this skill:
+— no DB release assets and no doc DB — so step 8 and the step 11 artifact verification
+do not apply to it. It is **upstream of both `reg_meta`** (a `reg-schema>=` floor in
+reg_meta's pyproject) **and `reg_webapp`**. Read that floor out of the package metadata,
+which is authoritative — never a version quoted in this skill:
 
 ```sh
 grep 'reg-schema>=' reg_meta/pyproject.toml
@@ -203,7 +203,7 @@ This pytest is a fast per-package pre-flight; the **full** suite runs at push ti
 ### 6. Commit and push
 
 Complete the manual integration handoff above before the first main push. Keep the same
-coordination through subsequent package and inventory pushes.
+coordination through subsequent package pushes.
 
 Before committing, verify that all non-bump changes are already committed in their own
 commits. The bump commit must contain **only** version-bump files — `pyproject.toml`,
@@ -278,13 +278,13 @@ most recent one carrying each asset — robustness for historical asset-less rel
 but new releases must not rely on it. The CI smoke step runs `reg-meta update` and fails
 if it can't resolve a compatible pair of assets.)
 
-The raw SCB CSV exports and curated classification CSVs live under
-`reg_meta_build/input_data/` (gitignored). If missing, ask the user. If running from a
-worktree whose untracked seed lives in another checkout, build an overlay input root:
-start with that seed-bearing checkout's untracked inputs, then copy this release
-checkout's tracked `reg_meta_build/input_data/**` files on top and mirror tracked
-deletions/renames. Do not point `--input-dir` directly at another checkout if tracked
-inputs changed in this release.
+The main catalog build requires a complete accepted prepared root and its exact prepared
+acceptance commit and top-level `manifest.json` SHA-256. Raw source capture and
+preparation are separate maintainer operations; follow the [build-db
+skill](../build-db/SKILL.md) if those inputs or pins are unavailable. Do not combine
+loose inputs from different checkouts or overlay files onto an accepted candidate.
+Curation comes from this release's tracked builder checkout. Documentation inputs follow
+the separate doc-asset workflow in 8b; private holdings follow 8c.
 
 #### 8a. Main DB asset (`reg_meta.db.zst`)
 
@@ -306,22 +306,28 @@ Build and upload fresh if **any** condition is true:
 Otherwise copy the prior release's asset forward (8d) and skip the rest of 8a.
 
 The shipped DB is the full **global catalog**, built from the maintainer's accepted
-complete prepared-source selection. Follow the [build-db skill](../build-db/SKILL.md) to
-verify the exact source and curation pins. Do not use a scoped investigation selection
-or a diagnostic database as a release asset. Steward-private providers remain the
-separate `extend-db` overlay.
+complete prepared-source root. Follow the [build-db skill](../build-db/SKILL.md) to
+verify the exact source and curation pins. Do not use a `--registers` subset or a
+diagnostic database as a release asset. Steward-private providers remain the separate
+`extend-db` overlay.
 
-Build to a fresh scratch directory with strict validation. The selection is read-only;
-there are no loose CSV or mutable slug-directory build overrides. Every unresolved error
-must block publication. Check the report's `status` and `publication_ready` before
-compression. A diagnostic build retains errors and is never releasable.
+Build to a fresh scratch directory with strict validation. The accepted root is
+read-only; there are no loose CSV or mutable slug-directory build overrides. Every
+unresolved error must block publication. Check the report's `status` and
+`publication_ready` before compression. A diagnostic build retains errors and is never
+releasable.
 
 ```sh
 set -euo pipefail
 db_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_db.XXXXXX")"
-selection="/absolute/path/to/accepted-selection.json"
+prepared="/absolute/path/to/accepted-prepared"
+prepared_commit="EXACT_PREPARED_ACCEPTANCE_SHA"
+prepared_manifest_sha256="EXACT_TOP_LEVEL_PREPARED_SHA256"
 uv run reg-meta-build --db "$db_dir/catalog" build-db \
-  --selection "$selection" --report-dir "$db_dir/report" --timing
+  --prepared "$prepared" \
+  --input-commit "$prepared_commit" \
+  --input-manifest-sha256 "$prepared_manifest_sha256" \
+  --report-dir "$db_dir/report" --timing
 uv run python -c 'import json,sys; s=json.load(open(sys.argv[1])); assert s["status"] == "complete" and s["publication_ready"] is True' "$db_dir/report/summary.json"
 db="$db_dir/catalog/reg_meta.db"
 zstd -3 -T0 "$db" -o reg_meta.db.zst
@@ -330,10 +336,11 @@ rm reg_meta.db.zst
 ```
 
 The common writer validates structural and full-corpus invariants before atomically
-placing a self-contained SQLite file. Keep the build report and selected input pins with
-the release evidence. Confirm all expected global providers and their content are
-represented before shipping. Source discrepancies require a separately reviewed input or
-curation update; do not bypass validation or modify an accepted selection in place.
+placing a self-contained SQLite file. Keep the build report and accepted prepared input
+pins with the release evidence. Confirm all expected global providers and their content
+are represented before shipping. Source discrepancies require a separately reviewed
+input or curation update; do not bypass validation or modify an accepted prepared root
+in place.
 
 #### 8b. Doc DB asset (`reg_meta_docs.db.zst`)
 
@@ -374,16 +381,16 @@ gh release upload reg_meta/vX.Y.Z reg_meta_docs.db.zst
 rm -rf "$docs_dir" reg_meta_docs.db.zst
 ```
 
-#### 8c. SWECOV flavored DB asset (`reg_meta_swecov.db.zst`)
+#### 8c. SWECOV compiled steward asset (`reg_meta_swecov.db.zst`)
 
-The SWECOV steward app (`data.swecov.se`) bakes a **flavored** DB — the global catalog
-plus SWECOV's flavor providers — as its `REG_META_DB`. `container-build.yml`'s
-`build-swecov-image` job resolves this asset (by url + sha256) from the newest published
-`reg_meta/v*` release; **absent, the SWECOV deploy fails** at "Resolve SWECOV DB release
-artifact" and `deploy-swecov` / `edge-deploy-swecov` skip. The consumer side is PR
-#1014; this producer step must run on **every** reg_meta release (#1091 — omitting it
-broke v0.36.0–v0.38.0's SWECOV deploys silently, since the global apps deploy fine
-without it).
+The SWECOV steward app (`data.swecov.se`) bakes one **compiled steward artifact** — the
+global catalog, accepted steward provider overlays, and compiled physical holdings — as
+its `REG_META_DB`. `container-build.yml`'s `build-swecov-image` job resolves this asset
+(by url + sha256) from the newest published `reg_meta/v*` release; **absent, the SWECOV
+deploy fails** at "Resolve SWECOV DB release artifact" and `deploy-swecov` /
+`edge-deploy-swecov` skip. The consumer side is PR #1014; this producer step must run on
+**every** reg_meta release (#1091 — omitting it broke v0.36.0–v0.38.0's SWECOV deploys
+silently, since the global apps deploy fine without it).
 
 Build and upload fresh if **any** condition is true:
 
@@ -391,8 +398,10 @@ Build and upload fresh if **any** condition is true:
   DB content, so a fresh main DB requires a fresh flavored DB.
 - The SWECOV flavor inputs changed since the prior asset:
   `git diff <prev reg_meta tag>..HEAD -- reg_meta_build/fqid_slugs/swecov/` is
-  non-empty. The generated `input_data/swecov/providers/` TOMLs are
-  maintainer-local/untracked, so git can't see their drift — when in doubt, rebuild.
+  non-empty. The generated `input_data/swecov/providers/` TOMLs are accepted
+  maintainer-local inputs, so compare their exact acceptance pins rather than relying on
+  the public diff. A changed holdings commit, manifest, provider overlay, inventory,
+  census, or policy requires a fresh steward build.
 - The release is a **major** version bump.
 - The immediately-previous release does **not** carry `reg_meta_swecov.db.zst` (e.g.
   recovering from the v0.36.0–v0.38.0 gap). Copy-forward would then reach back to an
@@ -401,7 +410,9 @@ Build and upload fresh if **any** condition is true:
 
 Otherwise copy the prior release's asset forward (8d) — but **only from the
 immediately-previous release**, never a further-back one, so the flavored DB always
-pairs with the same global content 8a copied forward. Then skip the rest of 8c.
+pairs with the same global content 8a copied forward. Also verify the prior artifact's
+base generation and accepted holdings pins still match this release's inputs and current
+admission contract. Otherwise rebuild. Then skip the rest of 8c.
 
 Build the flavored DB from **this release's** main asset by downloading and
 decompressing it (`extend-db` opens the base with sqlite, never the `.zst`). Where that
@@ -409,9 +420,11 @@ asset lives when 8c runs depends on 8a's decision, because the main-DB copy-forw
 deferred to 8d (which runs **after** 8c): if 8a **rebuilt** the main DB it is already on
 this release's draft (`reg_meta/vX.Y.Z`); if 8a is **copying it forward**, pull it from
 the copy-forward source `reg_meta/v<prev>` instead — it is not on the draft yet. Either
-way the base is a fetched file, not 8a's temp dir. It is the same flavored DB step 11
-regenerates the steward delivery inventory against — 8c builds it from the release's
-main asset **before publish**, step 11 from the published release after. Checkpoint
+way the base is a fetched file, not 8a's temp dir. Select a clean accepted private
+holdings candidate and its full input commit and manifest SHA-256. That candidate owns
+provider overlays, policies, generated inventory, and raw census; the tracked generator
+and its default policies do not select or accept a candidate. Compile before publishing
+this release; no post-release runtime inventory regeneration is required. Checkpoint
 WAL→DELETE (self-contained single file, same invariant as 8a):
 
 ```sh
@@ -420,14 +433,20 @@ set -euo pipefail
 #   reg_meta/vX.Y.Z   if 8a rebuilt it (already uploaded to the draft), or
 #   reg_meta/v<prev>  if 8a is copying it forward (8d uploads to the draft after 8c).
 main_src="reg_meta/vX.Y.Z"
+# Set these from the reviewed acceptance evidence before running this block.
+: "${accepted_holdings:?clean accepted private candidate required}"
+: "${holdings_commit:?full accepted input commit required}"
+: "${holdings_manifest_sha256:?full accepted input manifest SHA-256 required}"
 base_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_base.XXXXXX")"
 gh release download "$main_src" --pattern reg_meta.db.zst --dir "$base_dir"
 zstd -d "$base_dir/reg_meta.db.zst" -o "$base_dir/reg_meta.db"
 flav_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_swecov.XXXXXX")"
 uv run reg-meta-build --db "$flav_dir" extend-db \
     --base-db "$base_dir/reg_meta.db" \
-    --providers-dir reg_meta_build/input_data/swecov/providers \
-    --slug-dir reg_meta_build/fqid_slugs/swecov
+    --steward swecov \
+    --holdings-input "$accepted_holdings" \
+    --input-commit "$holdings_commit" \
+    --input-manifest-sha256 "$holdings_manifest_sha256"
 db="$flav_dir/reg_meta.db"
 uv run python -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute('PRAGMA wal_checkpoint(TRUNCATE)'); c.execute('PRAGMA journal_mode=DELETE'); c.commit(); c.close()" "$db"
 zstd -3 -T0 "$db" -o reg_meta_swecov.db.zst
@@ -435,60 +454,35 @@ gh release upload reg_meta/vX.Y.Z reg_meta_swecov.db.zst
 rm -rf "$base_dir" "$flav_dir" reg_meta_swecov.db.zst
 ```
 
-`extend-db` validates by default (it skips only the code-less↔code-bearing guard, which
-the base already passed). After the build, confirm it carries **more** than the eight
-global providers — the SWECOV flavor providers raise the `provider` count. This is a
-light sanity check, not the authoritative gate: `deploy-swecov`'s
-`REG_WEBAPP_FAIL_ON_STEWARD_DRIFT=1` smoke gate fails the (post-publish) deploy if the
-committed steward catalog references any content the flavored DB lacks, so a truncated
-or stale provider curation surfaces there rather than shipping silently.
+Strict `extend-db` validates structural invariants, accepted mappings, and census
+accounting before atomic publication. It requires the clean accepted input candidate and
+both exact pins; committed builder sources and steward slug pins are also validated.
+There are no runtime inventory, skip-validation, or skip-holdings gates. Inspect the
+result's manifest and build report before uploading: it must be a complete, publishable
+`steward` artifact naming `swecov`, with the expected base generation, accepted-input
+pins, builder commit, and full generation ID. Verify the final file digest separately;
+output bytes do not enter the semantic generation identity. Physical holdings may extend
+beyond semantic windows; the shared order materializer checks applicability for each
+request.
 
-`extend-db` also gates the build on the steward's **committed delivery inventory**
-(`reg_webapp/stewards/<steward>/inventory.toml`, resolved from the checkout by default;
-`--delivery-inventory` overrides it): every column the steward HOLDS in a table edition
-must have a covering `variable_state` or `variable_alias_window` on its coordinate, or
-the flavored validation fails with `EXIT_CONFIG` / `validation_failed` and nothing is
-published (Y-115). The report groups each miss by (register, variant, column) with the
-held editions and the coordinate's known windows. A miss on the `scb` provider is
-written in the `[[errata.version]]` / `[[errata.delivered]]` grammar of
-`reg_meta_build/curation/registers/scb/<slug>.toml`, complete and pasteable but for its
-TODO `evidence` / `noted`. A miss on ANY OTHER provider is never errata — that file
-corrects SCB's own export and its loader refuses another provider — so it reports as one
-line naming the surface its window is curated on:
-`reg_meta_build/input_data/<Provider>/<slug>.toml`'s `valid_from` (e.g.
-`Forsakringskassan/fk.toml`), the Socialstyrelsen export for `sos`, or the
-curated-provider TOML `extend-db` overlaid for a steward's own minted provider. Widen
-the window there and rebuild; do not paste it into the errata file.
+A red publication gate requires a reviewed correction at its owning input or curation
+surface, followed by fresh acceptance where input bytes changed and a rebuild. Global
+source corrections go through the global build before steward extension. Do not widen
+windows or change an accepted candidate in place merely to make the gate pass. Runtime
+`open_db` admits only complete, publishable artifacts; webapp boot additionally requires
+the configured steward to match the artifact identity. Those admission checks replace
+the deleted runtime inventory reconciliation and drift banner, rather than deferring a
+failed compiler check until deployment.
 
-**A red gate is answered by curating errata, never by skipping validation.** The gate
-refuses to run blind: with no `--delivery-inventory` and no committed inventory for the
-steward, `extend-db` fails with `extend_delivery_inventory_not_found` (EXIT_CONFIG)
-instead of skipping itself, so it cannot silently disarm outside a checkout. Pass
-neither `--no-validate` nor `--skip-holdings-gate` (the flag that turns off this gate
-alone, and with it any statement that the flavor agrees with the steward's holdings):
-the failure says this flavor contradicts the steward's own holdings statement, so
-shipping it puts "period outside validity" in front of researchers for data the steward
-has. Write the full candidate worklist with `python build_catalog.py --db "$db" errata`
-(from `reg_meta_build/input_data/swecov/`; it needs only the flavored DB and the
-committed inventory — not the untracked holdings CSV; its third section lists the
-non-SCB misses, which are answered at their own surface and not here), curate the
-entries that have evidence into `reg_meta_build/curation/registers/scb/<slug>.toml`, and
-note the rebuild path: errata is an **SCB adapter** input, so a corrected window reaches
-the flavor only through a fresh **8a** main DB and then a fresh 8c overlay. A miss whose
-column SCB documents nowhere is a `[[errata.column]]` entry in the same file instead,
-not a `[[errata.delivered]]` one. If the curation is larger than this release can carry,
-land it as its own change and release from that — do not publish a flavored DB the gate
-refused.
-
-**Maintainer-local inputs**: `reg_meta_build/input_data/swecov/providers/` is
-untracked/maintainer-local. If a **fresh** SWECOV build is required (per the conditions
-above) but these inputs are absent — a non-maintainer or CI environment — **stop and do
-not publish**. Publishing (`--draft=false`, step 9) dispatches `container-build.yml`,
-whose `build-swecov-image` job hard-fails on the missing (or stale) asset — recreating
-exactly the broken-release state this step exists to prevent. Ask the maintainer to
-build and upload `reg_meta_swecov.db.zst` before publishing. (The 8d copy-forward path
-needs no maintainer-local inputs, so it is always available when a fresh build was
-**not** required.)
+**Maintainer-local inputs**: the accepted private holdings candidate and its provider
+overlays, inventory, policies, and census are local-only. If a **fresh** SWECOV build is
+required (per the conditions above) but these inputs are absent — a non-maintainer or CI
+environment — **stop and do not publish**. Publishing (`--draft=false`, step 9)
+dispatches `container-build.yml`, whose `build-swecov-image` job hard-fails on the
+missing (or stale) asset — recreating exactly the broken-release state this step exists
+to prevent. Ask the maintainer to build and upload `reg_meta_swecov.db.zst` before
+publishing. (The 8d copy-forward path needs no maintainer-local inputs, so it is always
+available when a fresh build was **not** required.)
 
 #### 8d. Copy-forward for assets not rebuilt
 
@@ -575,24 +569,27 @@ done
 
 **reg_meta post-publish gate:** `publish_reg_meta.yml` calls `integration.yml`
 (`workflow_call`) after publishing. That job runs the **release-marked** container test
-(`test_update_and_query`) against the just-published asset, plus the §12 inventory ↔
-flavored-DB consistency gate against `reg_meta_swecov.db.zst` from *this* release
-(digest-verified, provisioned as `REG_META_DB`). It installs the **tagged source** with
-its dependencies resolved from the registry (`--install-mode registry`) — not the wheel
-just uploaded to PyPI — so what it proves is that a registry-resolved reg_meta fetches
-and queries this release's assets. If the `publish` job is green but the `integration`
-job is red, **the PyPI upload succeeded** — and a PyPI version is immutable, so do not
-delete or re-release it over this. Beyond the upload, a green `publish` job certifies
-only the two `reg-meta update` assets its pre-upload smoke test exercises; nothing there
-looks at `reg_meta_swecov.db.zst`. Read the step that actually failed:
+(`test_update_and_query`) against the just-published assets. The workflow also
+provisions `reg_meta_swecov.db.zst` from *this* release and verifies its transport
+digest. That provisioning is not a compiler or webapp admission test; verify compiled
+artifact identity and boot separately below. The deleted runtime inventory suite
+supplies no release gate. It installs the **tagged source** with its dependencies
+resolved from the registry (`--install-mode registry`) — not the wheel just uploaded to
+PyPI — so what it proves is that a registry-resolved reg_meta fetches and queries this
+release's assets. If the `publish` job is green but the `integration` job is red, **the
+PyPI upload succeeded** — and a PyPI version is immutable, so do not delete or
+re-release it over this. Beyond the upload, a green `publish` job certifies only the two
+`reg-meta update` assets its pre-upload smoke test exercises; nothing there looks at
+`reg_meta_swecov.db.zst`. Read the step that actually failed:
 
 - **Provision the release's flavored SWECOV DB** — `reg_meta_swecov.db.zst` is missing,
   duplicated, or its recorded/actual SHA-256 disagree. An asset problem: fix the release
   (step 8) and re-run.
 - **`test_update_and_query`** — the release's `reg-meta update` assets, or a CLI surface
   a refactor renamed.
-- **the §12 consistency gate** — a schema-incompatible flavored DB, or an inventory
-  mapping that no longer resolves (step 11's territory).
+- **Compiled artifact admission or steward boot** — an incompatible, incomplete,
+  nonpublishable, or mismatched artifact. Repair the build or selected asset; never
+  resurrect loose runtime inventory as a workaround.
 
 The release-asset test is carved off pre-push and ordinary push/PR CI, so a CLI-surface
 change can strand them silently until this gate. Fix the cause — on main, or on the
@@ -603,88 +600,28 @@ test.
 If the package has no publish workflow, report the release is done after the tag is
 created.
 
-### 11. Refresh steward delivery inventories (reg_meta releases)
+### 11. Verify published compiled artifacts (reg_meta releases)
 
-reg_meta only, and **after** the release is published and deployment is monitored. A
-steward's committed delivery inventory (`reg_webapp/stewards/<id>/inventory.toml`, the
-§12 order-boundary artifact) maps holdings to catalog coordinates, so a new reg_meta
-release can strand its mappings (slug churn, new content, overlap fixes). Unlike the
-retired `steward.project_data.json`, the inventory carries **no version stamp and no
-staleness criterion — regenerate unconditionally** for every steward that has one
-(decision 2026-09-02: regeneration is cheap and deterministic, so an always-run beats a
-staleness check nobody maintains). This is not optional hygiene: a named-steward
-deployment **fails at boot** on an inventory its DB cannot resolve
-(`reg_meta.inventory_check`), so a stranded inventory blocks the next deploy.
+After publication, download and digest-verify this release's catalog and steward assets.
+Verify them through `reg_meta.db.open_db` and inspect `get_manifest` for artifact kind,
+steward identity, completeness, publishability, full generation, base generation, and
+accepted holdings pins. Confirm each matches the build evidence recorded in step 8. The
+public deployment requires a `catalog` artifact and `global` branding; the named steward
+deployment requires a `steward` artifact naming that exact steward.
 
-**Why after publish (not before):** the inventory is a `reg_webapp` **deploy** artifact,
-not part of the tagged PyPI / DB-asset release. It is **image-affecting** —
-`.github/workflows/container-build.yml` watches `reg_webapp/stewards/**`, and the
-container bakes the DB asset of the **newest *published*** `reg_meta/v*` release (it
-resolves `gh release list … reg_meta/v*`, asset-blind by newest tag). So the inventory
-must be generated against the **published** release's shipped asset. Pushing a
-regenerated inventory *before* the new release is published would deploy it against the
-**old** baked DB — and the boot-time consistency gate turns that inconsistency into a
-refused deploy. Publishing first, then refreshing, keeps the deployed inventory and
-baked DB in lockstep.
+Boot the webapp against each selected shipped artifact with its matching configuration
+and run the existing smoke gate. `/api/context` must report that artifact's full
+identity and default read scope; catalog artifacts default to reference and steward
+artifacts to holdings. Spot-check a scoped catalog or search read and a known order
+through the shared materializer. Record what these checks actually exercised; a digest
+or compiler report alone does not prove deployed HTTP behavior.
 
-Land the regen as its **own commit pushed to `origin/main`** — separate from the
-version-bump commit, which was already tagged in step 7. `origin/main` advancing past
-the tag is expected and harmless; the inventory ships on the next webapp deploy.
-
-For **every** `reg_webapp/stewards/*/inventory.toml` (do not special-case any one
-steward; today only swecov has one):
-
-- **download the steward's shipped flavored asset** (not a local rebuild) so the
-  inventory matches exactly what the container bakes — for swecov that is
-  `reg_meta_swecov.db.zst`, the very file 8c uploaded and `build-swecov-image` bakes as
-  `data.swecov.se`'s DB. Generating against a local `extend-db` rebuild re-introduces
-  the drift this asset exists to prevent: the untracked provider TOMLs can differ from
-  what 8c shipped (git can't see its drift), and a copy-forward release ships a prior
-  flavored DB, so a fresh local overlay would admit FQIDs absent from the baked asset.
-  Decompress the shipped asset to an uncompressed `reg_meta.db` (the generator opens the
-  base with sqlite, never the `.zst`):
-
-  ```sh
-  set -euo pipefail
-  base_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_swecov.XXXXXX")"
-  gh release download reg_meta/vX.Y.Z --pattern reg_meta_swecov.db.zst --dir "$base_dir"
-  zstd -d "$base_dir/reg_meta_swecov.db.zst" -o "$base_dir/reg_meta.db"
-  ```
-
-- regenerate the inventory **against that flavored DB** — for swecov, from
-  `reg_meta_build/input_data/swecov/` (the generator is tracked; its holdings CSV is
-  confidential and maintainer-local):
-
-  ```sh
-  uv run python build_catalog.py --csv <holdings CSV> --db "$base_dir/reg_meta.db" inventory
-  ```
-
-  The emitter re-reads the committed `inventory_overlay.toml` (the curation policy —
-  never regenerated, only hand-curated) and rewrites `inventory.toml`. When you run from
-  a worktree, make sure the output lands in **that worktree's**
-  `reg_webapp/stewards/<id>/` — the generator's default output dir is its own repo root
-  (the main checkout), not the worktree;
-
-- **prove the regen against the shipped asset** with the §12 consistency pytest — the
-  same check the deployment runs at boot:
-
-  ```sh
-  REG_META_DB="$base_dir" uv run python -m pytest --run-release reg_webapp/backend/tests/test_steward_swecov.py
-  ```
-
-  A failure means the release stranded coordinates the mechanical regen cannot fix —
-  slug renames needing `inventory_overlay.toml` curation. **Curate before pushing**: a
-  stranded inventory on main makes the next swecov deploy fail at boot, by design;
-
-- review the diff (table/edition/mapping counts, unmapped deltas) before accepting it;
-
-- commit the regenerated inventory(ies) as their own commit,
-  `git push origin HEAD:main`, and verify it landed on `origin/main`.
-
-The generator is tracked, but its holdings CSV inputs are untracked/maintainer-local, so
-in a non-maintainer or CI environment they are absent — **skip with a note** when they
-are. The boot-time consistency gate then blocks any swecov deploy until a maintainer
-regenerates.
+Do not regenerate or commit an inventory after publication. Generated inventory is an
+accepted local builder input consumed before compilation, not a webapp deploy file.
+Changed inputs require a fresh accepted candidate and a rebuilt steward asset under the
+normal release workflow. If the private candidate is unavailable when a fresh build is
+required, stop publication at step 8c; a runtime drift flag cannot make an old asset
+safe.
 
 ## Error recovery
 
