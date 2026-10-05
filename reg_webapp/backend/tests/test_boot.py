@@ -10,8 +10,6 @@ LAST among the catalog routes, and that the guard runs before any DB access
 
 from __future__ import annotations
 
-import sqlite3
-
 import pytest
 from _route_helpers import flat_api_routes
 from fastapi.testclient import TestClient
@@ -186,26 +184,3 @@ def test_reserved_slug_set_mirrors_catalog_routes():
         f"live provider-slot prefixes are {sorted(provider_prefixes)}, reserved value "
         f"is {RESERVED_GROUP_SLUG!r}. Update reg_meta.fqid or routes/catalog.py."
     )
-
-
-def test_section16_guard_runs_before_resolution(catalog_db):
-    # The per-segment guard must reject a traversal probe BEFORE any Catalog
-    # query — 422 with zero SQL executed (full coverage lives in
-    # test_fqid_validation.py; this is the boot-level smoke).
-    count = [0]
-    orig = sqlite3.connect
-
-    def traced(*args, **kwargs):
-        conn = orig(*args, **kwargs)
-        conn.set_trace_callback(lambda _stmt: count.__setitem__(0, count[0] + 1))
-        return conn
-
-    sqlite3.connect = traced
-    try:
-        with TestClient(create_app()) as client:
-            count[0] = 0  # reset after boot's schema-check SQL
-            resp = client.get("/api/catalog/scb/lisa/%2e%2e")
-    finally:
-        sqlite3.connect = orig
-    assert resp.status_code == 422
-    assert count[0] == 0
