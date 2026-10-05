@@ -1757,9 +1757,9 @@ def _steward_load_db(db_path: Path):
     curated windows are additive and need no base-column window. Shared windows
     must be contained, while per-column storage or coding intersects states.
     Participating source windows replace the canonical state's window; otherwise
-    the canonical representation remains. §12's consistency gate
-    (`reg_meta.inventory_check`) refuses to boot a deployment whose inventory
-    maps anything else. A bare ``variable_alias`` row is the search-only
+    the canonical representation remains. The holdings compiler's consistency
+    gate (`reg_meta_build.holdings_compile`) rejects inventory mappings outside
+    this delivery universe. A bare ``variable_alias`` row is the search-only
     delivery-column history — mapping one would state holdings no order could
     ever fill — so those two conditions are mirrored here rather than unioning
     the two tables flat.
