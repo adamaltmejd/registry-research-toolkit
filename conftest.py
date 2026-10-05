@@ -50,6 +50,12 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         help="conformance artifact directory (requires --run-release)",
     )
     parser.addoption(
+        "--holdings-input",
+        type=str,
+        default=None,
+        help="accepted holdings input directory (requires --run-release and --artifact-dir)",
+    )
+    parser.addoption(
         "--install-mode",
         choices=INSTALL_MODES,
         default="registry",

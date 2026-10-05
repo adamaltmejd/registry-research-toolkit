@@ -1499,14 +1499,14 @@ build.
 
 ## Steward extension
 
-**Compiled-holdings contract (2026-10-04); §12 tracks the writer cut.** `extend-db`
-copies an exact validated global database built under schema 9, adds steward-private
-providers and their registers, variables and states, then compiles accepted physical
-holdings into the same SQLite artifact. The old schema 8.1 base is comparison evidence
-only: rebuild the new-schema public base once and reuse it; do not migrate old databases
-or rerun public preparation for each compiler edit. Facts about an existing global
-provider belong in common global curation. Steward extension does not mutate the base or
-resolve global source conflicts.
+**Compiled-holdings contract (2026-10-04).** `extend-db` copies an exact validated
+global database built under schema 9, adds steward-private providers and their
+registers, variables and states, then compiles accepted physical holdings into the same
+SQLite artifact. The old schema 8.1 base is comparison evidence only: rebuild the
+new-schema public base once and reuse it; do not migrate old databases or rerun public
+preparation for each compiler edit. Facts about an existing global provider belong in
+common global curation. Steward extension does not mutate the base or resolve global
+source conflicts.
 
 `sources/curated.py` is steward-only. Its `<provider>.toml` requires a `[provider]` name
 and source label, explicit variable keys and nonempty state arrays. Repeated variable
@@ -1675,8 +1675,8 @@ selectors, conflicting metadata and unknown fields fail configuration. Physical
 table/column overrides remain in `inventory_overlay.toml`: they have a different scope
 from category routing. Both files stay tracked as generator defaults, not generated
 outputs. The generator neither invents routes nor changes their declarations. The
-runtime cut deletes only the stale tracked `reg_webapp/stewards/swecov/inventory.toml`;
-accepted holdings remain private builder inputs and never become loose runtime files.
+runtime uses only compiled holdings; accepted holdings remain private builder inputs and
+never become loose runtime files.
 
 The complete private input acceptance retains these policies, source documents,
 generated inventory and review evidence in a clean local-only Git repository. Its

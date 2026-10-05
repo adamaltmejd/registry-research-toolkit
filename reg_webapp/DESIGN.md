@@ -1974,10 +1974,10 @@ directly. The pipeline and every fail-closed finding live in `reg_meta/DESIGN.md
   argument, `app.state.inventory`, loose TOML or inventory reconciliation survives.
 - **The download**: the 200 body is `OrderManifest.to_json()` VERBATIM (the handler
   returns a raw `Response`, which FastAPI passes through without re-serializing), so the
-  SPA download and `reg-meta order` hand the steward byte-identical files — §12's
-  equal-product-surfaces rule, pinned by a cross-adapter test. `response_model=` still
-  publishes the reg_meta `OrderManifest` as the typed contract for the OpenAPI snapshot
-  and the SPA codegen, so this is NOT a `response_model` carve-out.
+  SPA download and `reg-meta order` hand the steward byte-identical files, pinned by a
+  cross-adapter test. `response_model=` still publishes the reg_meta `OrderManifest` as
+  the typed contract for the OpenAPI snapshot and the SPA codegen, so this is NOT a
+  `response_model` carve-out.
 - **The "not an order" status**: 422, never a partial 200 — for an invalid spec
   (`order.project_from_raw`, the gate both adapters share) and for a fail-closed blocked
   order alike. The body is the typed `OrderBlockedModel`: a `detail` line
@@ -2036,22 +2036,22 @@ Rules, walking each source's `register_variant` + every binding:
   (`order.requested_intervals`) and each binding resolved by the SHARED reg_meta pass
   the order materializer runs (`order.resolve_binding` — steps 1+2 in
   `reg_meta/DESIGN.md` → Order materializer); this layer only translates those facts
-  into issues, so the two never disagree about what is available. §12 is intersection
-  semantics: a binding is requested wherever it IS available inside the source window,
-  so narrower availability — a leading/trailing shortfall, an **internal** gap, or a
-  pinned `representation` that covers only part of the request — is an informational
-  clip (`range_period_partially_covered`, naming the period actually ordered), never an
-  error by itself. A clip is not a clean bill of health: the same binding can still
-  block on representation/value-set ambiguity here, and on the steward's coverage gate
-  at order time. A **#307 list period** (interrupted series; structurally sorted +
-  disjoint, wire form comma-joined — `2005..2010,2015..2020`) is one request with holes,
-  not a series of independent ones: it reports ONE clip for the whole request, and its
-  holes are genuinely absent from the question — a request that skips a year is NOT
-  equivalent to the range enclosing it, since a column co-existing only inside a hole is
-  not ambiguity and a column delivered only inside a hole is not availability.
-  Availability empty across the whole request still blocks. The pass's blocking findings
-  map onto this surface's codes — `variable_unresolved` → `fqid_unresolved`,
-  `binding_unavailable` → `period_outside_state_validity`, `representation_unknown` →
+  into issues, so the two never disagree about what is available. Intersection semantics
+  apply: a binding is requested wherever it IS available inside the source window, so
+  narrower availability — a leading/trailing shortfall, an **internal** gap, or a pinned
+  `representation` that covers only part of the request — is an informational clip
+  (`range_period_partially_covered`, naming the period actually ordered), never an error
+  by itself. A clip is not a clean bill of health: the same binding can still block on
+  representation/value-set ambiguity here, and on the steward's coverage gate at order
+  time. A **#307 list period** (interrupted series; structurally sorted + disjoint, wire
+  form comma-joined — `2005..2010,2015..2020`) is one request with holes, not a series
+  of independent ones: it reports ONE clip for the whole request, and its holes are
+  genuinely absent from the question — a request that skips a year is NOT equivalent to
+  the range enclosing it, since a column co-existing only inside a hole is not ambiguity
+  and a column delivered only inside a hole is not availability. Availability empty
+  across the whole request still blocks. The pass's blocking findings map onto this
+  surface's codes — `variable_unresolved` → `fqid_unresolved`, `binding_unavailable` →
+  `period_outside_state_validity`, `representation_unknown` →
   `binding_representation_unknown`, `representation_ambiguous` →
   `binding_value_set_version_ambiguous`, and `representation_unresolved` under its own
   name. The kept states still carry the request instants they are available for, so the
