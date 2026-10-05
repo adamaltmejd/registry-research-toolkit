@@ -76,30 +76,47 @@ def scope_predicate(
             " AND (ht.scope = 'year_independent' OR EXISTS (SELECT 1 FROM holding_period hp "
             f"WHERE hp.table_id = ht.table_id AND hp.lo <= {hi_sql} AND hp.hi >= {lo_sql}))"
         )
-    if kind == "variable":
+
+    def correlated(source: str, anchor: str) -> str:
+        """`member` as an EXISTS reading from `source`, correlated by `anchor`."""
         return (
             "EXISTS ("
-            + member.replace("SELECT hm.variable_id", "SELECT 1", 1).replace(
+            + member.replace(
+                "SELECT hm.variable_id FROM holding_mapping hm",
+                f"SELECT 1 FROM {source}",
+                1,
+            ).replace(
                 "WHERE ht.scope != 'unknown'",
-                f"WHERE hm.variable_id = {alias}.variable_id AND ht.scope != 'unknown'",
+                f"WHERE {anchor} AND ht.scope != 'unknown'",
                 1,
             )
             + ")"
         )
+
+    if kind == "variable":
+        return correlated("holding_mapping hm", f"hm.variable_id = {alias}.variable_id")
     if kind == "variant":
         return (
             f"{alias}.register_variant_id IN ("
             + member.replace("SELECT hm.variable_id", "SELECT hm.variant_id")
             + ")"
         )
-    registers = (
-        f"SELECT hv.register_id FROM variable hv WHERE hv.variable_id IN ({member})"
-    )
+
+    # Correlated through idx_variable_natkey(register_id) and
+    # idx_holding_mapping_variable_variant: an uncorrelated `IN (...)` list here
+    # scans every holding_mapping row per evaluation, and register/provider
+    # admission is evaluated once per register in several listings.
+    def held_register(register_sql: str) -> str:
+        return correlated(
+            "variable hv JOIN holding_mapping hm ON hm.variable_id = hv.variable_id",
+            f"hv.register_id = {register_sql}",
+        )
+
     if kind == "register":
-        return f"{alias}.register_id IN ({registers})"
+        return held_register(f"{alias}.register_id")
     return (
-        f"{alias}.provider_id IN (SELECT hr.provider_id FROM register hr "
-        f"WHERE hr.register_id IN ({registers}))"
+        f"EXISTS (SELECT 1 FROM register hr WHERE hr.provider_id = {alias}.provider_id "
+        f"AND {held_register('hr.register_id')})"
     )
 
 

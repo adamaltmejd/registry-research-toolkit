@@ -675,10 +675,13 @@ shows its study-window span without resolving every state:
 In holdings scope, the shared reader computes coverage over mapped source variants and
 canonical representations before aggregation. A partial-column hold cannot inherit the
 whole variable's coverage. Provider listings call `Catalog.provider_register_coverage`
-once; register listings use `Catalog.register_variable_coverage`,
-`register_column_coverage`, and `register_unnamed_column_coverage`. The routes format
-those public return models rather than rebuilding membership. Unnamed coverage stays
-separate from named columns.
+once per read scope and provider for the app's lifetime: the route memoizes that return
+model on `app.state`, because an app serves one immutable artifact per process and the
+holdings fusion behind it is the provider page's dominant cost. The memo holds reader
+return models, not responses, and at most one entry per admitted provider and scope.
+Register listings use `Catalog.register_variable_coverage`, `register_column_coverage`,
+and `register_unnamed_column_coverage`. The routes format those public return models
+rather than rebuilding membership. Unnamed coverage stays separate from named columns.
 
 Register-scoped concept-group subject pages also use `register_column_coverage` for
 representation members, but a missing per-column key is a known curated member with no

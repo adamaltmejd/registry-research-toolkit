@@ -429,8 +429,12 @@ def representative_columns(
 def _delivery_column_spellings(
     conn: sqlite3.Connection, variable_id: int, variant_id: int
 ) -> dict[str, str]:
+    # The artifact ships no sqlite_stat1, so the planner otherwise picks the
+    # register-variant index and filters every state of the variant. INDEXED BY
+    # fails loudly if the schema ever renames the index.
     stated = conn.execute(
         "SELECT delivery_column_name FROM variable_state "
+        "INDEXED BY idx_variable_state_variable "
         "WHERE variable_id = ? AND register_variant_id = ?",
         (variable_id, variant_id),
     )
@@ -1535,6 +1539,14 @@ class Catalog:
         self._class_same_as_sources: frozenset[tuple[str, str]] | None = None
         self._variant_family_cache: dict[int, dict[str, _VariantFamilyInfo]] = {}
         self._delivery_spelling_cache: dict[tuple[int, int], dict[str, str]] = {}
+        # `_provider_held_deliveries` memo: a register page reads coverage and
+        # deliveries back to back from the same fusion. Shared, not copied: every
+        # reader treats the cached dicts as read-only, and `_held_deliveries`
+        # copies before anything leaves through a public method.
+        self._held_deliveries_cache: dict[
+            tuple[str, tuple[str, ...] | None],
+            dict[str, dict[str, list[VariableDelivery]]],
+        ] = {}
         # `value_set_summary` memo. A variable's states SHARE value sets (one
         # geography coding across 290 yearly states), so the membership scan the
         # summary needs runs once per DISTINCT value set for the life of this
@@ -3939,9 +3951,29 @@ class Catalog:
     def _held_deliveries(
         self, provider: str, register: str
     ) -> dict[str, list[VariableDelivery]]:
-        return self._provider_held_deliveries(provider, [register]).get(register, {})
+        # Copied out of the memo: `register_variable_deliveries` hands it to callers.
+        return {
+            slug: list(deliveries)
+            for slug, deliveries in self._provider_held_deliveries(provider, [register])
+            .get(register, {})
+            .items()
+        }
 
     def _provider_held_deliveries(
+        self, provider: str, registers: Iterable[str] | None = None
+    ) -> dict[str, dict[str, list[VariableDelivery]]]:
+        """Memoized `_fuse_provider_held_deliveries`; callers only read the result."""
+        key = (
+            provider,
+            tuple(sorted(set(registers))) if registers is not None else None,
+        )
+        if key not in self._held_deliveries_cache:
+            self._held_deliveries_cache[key] = self._fuse_provider_held_deliveries(
+                provider, key[1]
+            )
+        return self._held_deliveries_cache[key]
+
+    def _fuse_provider_held_deliveries(
         self, provider: str, registers: Iterable[str] | None = None
     ) -> dict[str, dict[str, list[VariableDelivery]]]:
         """Batch semantic projections and physical periods before coverage aggregation.
@@ -4085,10 +4117,12 @@ class Catalog:
     def _require_binding(self, fqid: Fqid) -> None:
         if self.scope == "reference":
             return
+        # `_lookup_variable`'s shape: the register subquery keys
+        # idx_variable_slug(register_id, slug); a join plan scans it whole.
         row = self._conn.execute(
-            "SELECT 1 FROM variable v JOIN register r USING(register_id) "
-            "JOIN provider p USING(provider_id) "
-            "WHERE p.slug = ? AND r.slug = ? AND v.slug = ? AND "
+            "SELECT 1 FROM variable v WHERE v.register_id IN ("
+            "SELECT r.register_id FROM register r JOIN provider p USING(provider_id) "
+            "WHERE p.slug = ? AND r.slug = ?) AND v.slug = ? AND "
             + scope_predicate(self.scope, "variable", "v"),
             (fqid.provider, fqid.register, fqid.variable),
         ).fetchone()

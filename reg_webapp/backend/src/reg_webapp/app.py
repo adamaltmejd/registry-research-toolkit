@@ -106,6 +106,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     # already validated by open_db above, so the per-request open skips the
     # re-check (check_schema=False) — see routes/catalog.py `_catalog_conn`.
     app.state.db_path = db_path
+    # Provider coverage memo for this app's one artifact (routes/catalog.py
+    # `_provider_coverage`); discarded with the app.
+    app.state.provider_coverage = {}
     # Docs library (#354) is OPTIONAL: the deployed container ships
     # reg_meta_docs.db, but a dev/test env (or a steward without docs) may lack
     # it. Resolve + validate it ONCE here; on absence OR schema-incompat, leave
