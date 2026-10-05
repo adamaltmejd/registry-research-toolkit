@@ -2187,7 +2187,7 @@ def cmd_inventory(args: argparse.Namespace) -> None:
     retained_unknown = {}
     holdings_policy = getattr(args, "holdings_policy", None)
     if holdings_policy is not None:
-        from reg_meta_build.extend_db import load_holdings_retention_policy
+        from reg_meta_build.holdings_policy import load_holdings_retention_policy
 
         entries, _, _ = load_holdings_retention_policy(holdings_policy, args.csv)
         additions = _load_overlay(holdings_policy)

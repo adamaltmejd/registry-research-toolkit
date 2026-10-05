@@ -14,3 +14,14 @@ representation = "Value"
 register_variant = "scb/example/annual"
 variable = "scb/example/value"
 representation = "value"
+
+[[table.column]]
+name = "AnotherObserved"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/other"
+representation = "Value"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/other"
+representation = "VALUE"

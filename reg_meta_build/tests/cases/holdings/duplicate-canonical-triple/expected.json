@@ -1,3 +1,8 @@
 {
-  "error_contains": "duplicate canonical triple"
+  "error_contains": "duplicate canonical triple",
+  "error_locators": [
+    "policy/inventory.toml:table['Duplicate'].column['Observed'].mapping[1]",
+    "policy/inventory.toml:table['Duplicate'].column['AnotherObserved'].mapping[1]"
+  ],
+  "rejected_mappings": 2
 }

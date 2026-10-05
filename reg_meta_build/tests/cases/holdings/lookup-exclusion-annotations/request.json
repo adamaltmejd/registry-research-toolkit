@@ -1,0 +1,10 @@
+{
+  "catalog": "catalog.json",
+  "inventory": "inventory.toml",
+  "census": "census.csv",
+  "holdings_policy": "holdings_policy.toml",
+  "source_policy": "source_policy.toml",
+  "inventory_overlay": "inventory_overlay.toml",
+  "observe_accounting": true,
+  "behavior": "Lookup source routing takes precedence over exclusion annotations in either policy file."
+}

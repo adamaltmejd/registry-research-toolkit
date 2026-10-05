@@ -5,11 +5,12 @@ from __future__ import annotations
 import hashlib
 import tomllib
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from reg_meta.source_evidence import canonical_sha256
 
 from .holdings_census import census_rows
+from .holdings_policy import UndatedHolding, load_holdings_retention_policy
 from .swecov_policy import SourcePolicy
 
 if TYPE_CHECKING:
@@ -28,13 +29,11 @@ class HoldingsAccounting:
     sha256: str
     policy_sha256: str
     source_name: str
-    unknown: tuple[Any, ...]
+    unknown: tuple[UndatedHolding, ...]
 
 
 def account_holdings(root: Path, inventory: DeliveryInventory) -> HoldingsAccounting:
     """Require every census table and column to have exactly one disposition."""
-    from .extend_db import load_holdings_retention_policy
-
     source_paths = sorted((root / "swecov").glob("SWECOV_variables_full_*.csv"))
     if len(source_paths) != 1:
         raise ValueError("Holdings accounting requires exactly one complete census CSV")
@@ -79,9 +78,9 @@ def account_holdings(root: Path, inventory: DeliveryInventory) -> HoldingsAccoun
         claim(table, "lookup", refs)
     for name in ("inventory_overlay.toml", "holdings_policy.toml"):
         for index, entry in enumerate(policies[name].get("exclude", [])):
-            # The generator removes lookup routes before applying the overlay;
-            # annotations on those tables are inert, not a second disposition.
-            if name == "inventory_overlay.toml" and entry["table"] in lookups:
+            # The generator merges both exclusion policies before filtering
+            # lookup routes. Lookup annotations are inert in both files.
+            if entry["table"] in lookups:
                 continue
             claim(entry["table"], "excluded", {f"policy/{name}:exclude[{index}]"})
     for index, entry in enumerate(unknown):

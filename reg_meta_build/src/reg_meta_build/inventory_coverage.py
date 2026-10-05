@@ -1,26 +1,18 @@
-"""Steward holdings vs. catalog windows (Y-115) — the extend-db coverage gate.
+"""Steward column-window diagnostics for the curator's Y-115 worklist.
 
-`extend-db` builds a steward-flavored DB and validates it, but nothing in that
-suite compared the steward's OWN holdings statement — `reg_webapp/stewards/
-<steward>/inventory.toml`, the §12 delivery inventory — against the windows the
-catalog carries. Neither runtime gate does either: `catalog_index` trusts an
-explicit `representation` over the table's whole edition, and
-`reg_meta.inventory_check` only asks whether the coordinate EXISTS. So a column
-the steward holds in an edition reg_meta has no `variable_state` /
-`variable_alias_window` for passes every gate and fails the RESEARCHER instead —
-`order.resolve_binding` refuses it (`binding_unavailable` →
-`period_outside_state_validity`) or clips it silently.
+The steward generator's `build_catalog.py errata` command compares the authored
+inventory against catalog windows. This diagnostic is not a compiled holdings
+validation gate: a physical table's record span is not each column's availability.
+Compilation checks resolver-emitted columns over their whole history; query-time
+resolution and ordering must separately require applicable column windows.
 
-This module is that comparison, with two consumers that must not disagree about
-the rule: the flavored validation gate (`validate._check_inventory_window_coverage`)
-and the steward generator's `build_catalog.py errata` worklist. A miss on the `scb`
-provider renders as a VALID, COMPLETE `[[errata.delivered]]` stanza only when the
-variable came from SCB's export. A variable whose `source_label` is `scb-errata`
-came from a `[[errata.column]]` entry instead, so it has no documented row for the
-delivered loader to clone. Those misses render as comments directing the curator
-back to the matching target-variant `[[errata.column]]` entry and mapping. Independently
-justified `[[errata.version]]` candidates remain pasteable as they stand but for
-`evidence` and `noted`, which ride as TODO placeholders.
+A miss on the `scb` provider renders as a complete `[[errata.delivered]]` stanza
+only when the variable came from SCB's export. A variable whose `source_label`
+is `scb-errata` came from an `[[errata.column]]` entry and has no documented row
+for the delivered loader to clone. Those misses render comments directing the
+curator back to the target-variant `[[errata.column]]` entry and mapping.
+Independently justified `[[errata.version]]` candidates remain pasteable with
+`evidence` and `noted` TODO placeholders.
 
 A miss on ANY OTHER provider is never rendered in that grammar. `curation/registers/scb/<slug>.toml`
 corrects SCB's own export, and its loader refuses an entry on another provider
@@ -42,9 +34,9 @@ Reading rules, each deliberate:
   tokens retain their exact bounds. A range or list is a multi-period table: its
   dates describe the records in the file, not every column's availability, so it
   is counted and reported as not assessed and contributes no inferred correction.
-* An assessed mapping's basis is the table's full single-period `edition_bounds` —
-  the same claim `catalog_index` admits an explicit `representation` over — so
-  this gate refuses exactly the claim the runtime would have trusted.
+* An assessed mapping's basis is the table's full single-period `edition_bounds`.
+  A miss describes the curator's coverage worklist; it does not alter the compiled
+  physical holdings or determine whether a later researcher request is covered.
 * `variable_state` and `variable_alias_window` are read as a FLAT UNION keyed by
   the folded delivery column, and an edition is covered when the MERGED union
   contains it (a column whose edition straddles two abutting states is delivered,

@@ -607,19 +607,6 @@ def test_hook_failure_discards_staging_db(tmp_path: Path, global_db: Path) -> No
     assert not (tmp_path / "out" / "reg_meta.db.tmp").exists()
 
 
-def test_argparse_removed_flavor_inventory_option() -> None:
-    from reg_meta_build.cli import _build_parser
-
-    parser = _build_parser()
-    args = parser.parse_args(["extend-db", "--base-db", "base.db"])
-    assert args.providers_dir is None
-    assert not hasattr(args, "inventory")
-    with pytest.raises(SystemExit):
-        parser.parse_args(
-            ["extend-db", "--base-db", "base.db", "--inventory", "old.json"]
-        )
-
-
 def test_extension_writes_register_warnings_using_actual_private_ids(
     tmp_path: Path, global_db: Path
 ) -> None:
@@ -694,7 +681,7 @@ def _fixture_warning():
     from reg_meta.catalog import DataWarning
 
     return DataWarning.model_validate_json(
-        (Path(__file__).parent / "cases/holdings/warning/request.json").read_text()
+        (Path(__file__).parent / "cases/holdings/warning/warning.json").read_text()
     )
 
 

@@ -351,22 +351,9 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Path to the complete schema-9 global reg_meta.db to overlay onto (read-only).",
     )
     extend_db_p.add_argument(
-        "--providers-dir",
-        default=None,
-        help=(
-            "Accepted candidate directory containing one curated-provider TOML per steward-only "
-            "provider (defaults to the accepted candidate's providers/)."
-        ),
-    )
-    extend_db_p.add_argument(
         "--steward",
         default="swecov",
         help="Steward slug (default: swecov).",
-    )
-    extend_db_p.add_argument(
-        "--delivery-inventory",
-        default=None,
-        help="Accepted candidate's policy/inventory.toml; external paths are rejected.",
     )
     extend_db_p.add_argument(
         "--holdings-input",
@@ -1285,20 +1272,6 @@ def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     candidate = Path(args.holdings_input).expanduser().resolve()
     providers_dir = candidate / "providers"
     inventory_path = candidate / "policy/inventory.toml"
-    if (
-        args.providers_dir
-        and Path(args.providers_dir).expanduser().resolve() != providers_dir
-    ) or (
-        args.delivery_inventory
-        and Path(args.delivery_inventory).expanduser().resolve() != inventory_path
-    ):
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="private_holdings_paths_mismatch",
-            error_class="configuration",
-            message="Provider overlays and inventory must come from the accepted holdings candidate.",
-            remediation="Use its providers/ and policy/inventory.toml without external supplements.",
-        )
     try:
         result = extend_db(
             base_db=Path(args.base_db),

@@ -1,30 +1,30 @@
 {
   "tables": [
-    [
-      "Catalogue",
-      "year_independent",
-      "_default",
-      null,
-      null
-    ]
+    {
+      "physical_id": "Catalogue",
+      "scope": "year_independent",
+      "edition": "_default",
+      "partition": null,
+      "retain_unknown_reason": null
+    }
   ],
   "periods": [],
   "columns": [
-    [
-      "Catalogue",
-      "Observed",
-      null
-    ]
+    {
+      "physical_id": "Catalogue",
+      "name": "Observed",
+      "unmapped_reason": null
+    }
   ],
   "mappings": [
-    [
-      "Catalogue",
-      "Observed",
-      "scb/example/annual",
-      "scb/example/value",
-      "Value",
-      "Value"
-    ]
+    {
+      "physical_id": "Catalogue",
+      "name": "Observed",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/value",
+      "representation_literal": "Value",
+      "representation_canonical": "Value"
+    }
   ],
   "warnings": []
 }

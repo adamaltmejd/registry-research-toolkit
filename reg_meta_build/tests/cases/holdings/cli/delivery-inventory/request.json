@@ -1,0 +1,9 @@
+{
+  "args": [
+    "extend-db",
+    "--base-db",
+    "absent",
+    "--delivery-inventory",
+    "external"
+  ]
+}

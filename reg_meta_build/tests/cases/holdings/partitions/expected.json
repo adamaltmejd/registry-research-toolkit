@@ -1,61 +1,61 @@
 {
   "tables": [
-    [
-      "ShardA",
-      "intervals",
-      2018,
-      "north",
-      null
-    ],
-    [
-      "ShardB",
-      "intervals",
-      2018,
-      "south",
-      null
-    ]
+    {
+      "physical_id": "ShardA",
+      "scope": "intervals",
+      "edition": 2018,
+      "partition": "north",
+      "retain_unknown_reason": null
+    },
+    {
+      "physical_id": "ShardB",
+      "scope": "intervals",
+      "edition": 2018,
+      "partition": "south",
+      "retain_unknown_reason": null
+    }
   ],
   "periods": [
-    [
-      "ShardA",
-      "2018-01-01",
-      "2018-12-31"
-    ],
-    [
-      "ShardB",
-      "2018-01-01",
-      "2018-12-31"
-    ]
+    {
+      "physical_id": "ShardA",
+      "lo": "2018-01-01",
+      "hi": "2018-12-31"
+    },
+    {
+      "physical_id": "ShardB",
+      "lo": "2018-01-01",
+      "hi": "2018-12-31"
+    }
   ],
   "columns": [
-    [
-      "ShardA",
-      "Observed",
-      null
-    ],
-    [
-      "ShardB",
-      "Observed",
-      null
-    ]
+    {
+      "physical_id": "ShardA",
+      "name": "Observed",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "ShardB",
+      "name": "Observed",
+      "unmapped_reason": null
+    }
   ],
   "mappings": [
-    [
-      "ShardA",
-      "Observed",
-      "scb/example/annual",
-      "scb/example/value",
-      "Value",
-      "Value"
-    ],
-    [
-      "ShardB",
-      "Observed",
-      "scb/example/annual",
-      "scb/example/value",
-      "Value",
-      "Value"
-    ]
+    {
+      "physical_id": "ShardA",
+      "name": "Observed",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/value",
+      "representation_literal": "Value",
+      "representation_canonical": "Value"
+    },
+    {
+      "physical_id": "ShardB",
+      "name": "Observed",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/value",
+      "representation_literal": "Value",
+      "representation_canonical": "Value"
+    }
   ],
   "warnings": []
 }

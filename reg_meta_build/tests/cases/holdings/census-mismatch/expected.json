@@ -1,3 +1,6 @@
 {
-  "error_contains": "physical-column census mismatch"
+  "error_contains": "physical-column census mismatch",
+  "error_locators": [
+    "policy/inventory.toml:table[0]"
+  ]
 }

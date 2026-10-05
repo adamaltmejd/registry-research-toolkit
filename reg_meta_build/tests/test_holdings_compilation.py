@@ -48,15 +48,31 @@ def test_inventory_compiles_to_physical_facts(case: Path, tmp_path: Path) -> Non
     shutil.copyfile(
         case / request["census"], candidate / "swecov/SWECOV_variables_full_fixture.csv"
     )
-    (candidate / "policy/source_policy.toml").write_text(
-        "non_catalog_categories = {}\nflavor_registers = []\nroute = []\nflavor = []\nprovider_scope = []\nregister_scope = []\n"
-    )
-    (candidate / "policy/inventory_overlay.toml").write_text("")
+    if "source_policy" in request:
+        shutil.copyfile(
+            case / request["source_policy"], candidate / "policy/source_policy.toml"
+        )
+    else:
+        (candidate / "policy/source_policy.toml").write_text(
+            "non_catalog_categories = {}\nflavor_registers = []\nroute = []\nflavor = []\nprovider_scope = []\nregister_scope = []\n"
+        )
+    if "inventory_overlay" in request:
+        shutil.copyfile(
+            case / request["inventory_overlay"],
+            candidate / "policy/inventory_overlay.toml",
+        )
+    else:
+        (candidate / "policy/inventory_overlay.toml").write_text("")
     with sqlite3.connect(output) as conn:
         if "error_contains" in expected:
             with pytest.raises(ValueError) as error:
                 compile_holdings(conn, candidate, steward="swecov")
-            assert expected["error_contains"] in str(error.value)
+            message = str(error.value)
+            assert expected["error_contains"] in message
+            for locator in expected.get("error_locators", []):
+                assert locator in message
+            if "rejected_mappings" in expected:
+                assert f"rejected {expected['rejected_mappings']} mappings" in message
             assert conn.execute("SELECT COUNT(*) FROM holding_table").fetchone()[0] == 0
             return
         compiled = compile_holdings(conn, candidate, steward="swecov")
@@ -69,36 +85,53 @@ def test_inventory_compiles_to_physical_facts(case: Path, tmp_path: Path) -> Non
                 )
             ],
             "tables": [
-                [
-                    row[0],
-                    row[1],
-                    json.loads(row[2]) if row[2] is not None else None,
-                    row[3],
-                    row[4],
-                ]
+                {
+                    "physical_id": row["physical_id"],
+                    "scope": row["scope"],
+                    "edition": json.loads(row["edition_json"])
+                    if row["edition_json"] is not None
+                    else None,
+                    "partition": row["partition"],
+                    "retain_unknown_reason": row["retain_unknown_reason"],
+                }
                 for row in conn.execute(
                     "SELECT physical_id, scope, edition_json, partition, retain_unknown_reason FROM holding_table ORDER BY physical_id"
                 )
             ],
             "periods": [
-                list(row)
+                dict(row)
                 for row in conn.execute(
                     "SELECT physical_id, lo, hi FROM holding_period JOIN holding_table USING(table_id) ORDER BY physical_id, lo, hi"
                 )
             ],
             "columns": [
-                list(row)
+                dict(row)
                 for row in conn.execute(
                     "SELECT physical_id, name, unmapped_reason FROM holding_column JOIN holding_table USING(table_id) ORDER BY physical_id, name"
                 )
             ],
             "mappings": [
-                list(row)
+                dict(row)
                 for row in conn.execute(
-                    "SELECT ht.physical_id, hc.name, p.slug||'/'||r.slug||'/'||rv.slug, p.slug||'/'||r.slug||'/'||v.slug, representation_literal, representation_canonical FROM holding_mapping hm JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id) JOIN variable v USING(variable_id) JOIN register r USING(register_id) JOIN provider p USING(provider_id) JOIN register_variant rv ON rv.register_variant_id=hm.variant_id ORDER BY ht.physical_id, hc.name, rv.slug, representation_literal"
+                    "SELECT ht.physical_id, hc.name, p.slug||'/'||r.slug||'/'||rv.slug AS register_variant, p.slug||'/'||r.slug||'/'||v.slug AS variable, representation_literal, representation_canonical FROM holding_mapping hm JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id) JOIN variable v USING(variable_id) JOIN register r USING(register_id) JOIN provider p USING(provider_id) JOIN register_variant rv ON rv.register_variant_id=hm.variant_id ORDER BY ht.physical_id, hc.name, rv.slug, representation_literal"
                 )
             ],
         }
+        if request.get("observe_catalog_states"):
+            actual["states"] = [
+                dict(row)
+                for row in conn.execute(
+                    "SELECT p.slug||'/'||r.slug||'/'||v.slug AS variable, "
+                    "p.slug||'/'||r.slug||'/'||rv.slug AS register_variant, "
+                    "delivery_column_name, valid_from, valid_to, pooled "
+                    "FROM variable_state JOIN variable v USING(variable_id) "
+                    "JOIN register r USING(register_id) JOIN provider p USING(provider_id) "
+                    "JOIN register_variant rv USING(register_variant_id) "
+                    "ORDER BY variable, register_variant, valid_from, delivery_column_name"
+                )
+            ]
+        if request.get("observe_accounting"):
+            actual["accounting"] = compiled.accounting.counts
         assert actual == expected
         manifest = dict(conn.execute("SELECT key, value FROM import_manifest"))
         manifest.update(

@@ -535,11 +535,34 @@ class DeliveryInventory(_InventoryModel):
 
 
 def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
-    """Reject overlapping logical cells at different physical locations.
+    """Enforce §12's one-to-one resolution invariant (ratified 2026-09-01).
 
-    Inventory validation passes literal representations; compilation passes
-    canonical spellings. Distinct explicit partitions are separate claims;
-    unlabelled claims overlap every shard. Grouping preserves variant and scope.
+    Every admitted `(register_variant, variable, representation, period)` cell
+    resolves to exactly one physical `(table, column)`. Two mappings that could
+    serve one cell at different locations are an error: extraction must not
+    choose between sources or order the same observations twice.
+
+    Locations conflict when their editions overlap and their representations
+    conflate. Disjoint editions remain legal, as in an ordinary annual series.
+    Inventory validation passes literal representations; compilation passes the
+    resolver's canonical spellings, catching additional case-only conflicts.
+    Grouping preserves variant and period scope.
+
+    Disjoint-partition arm (§12): the invariant holds per `(cell × partition)`.
+    Distinct explicit partition labels denote separate population shards and
+    never conflict. Equal labels still conflict. An unlabelled location claims
+    the whole population and overlaps every shard. Columns of one table share
+    its partition label, so the across-column rule remains unchanged.
+
+    Report every conflicting pair with both locations, the coordinate and the
+    overlapping period. There is deliberately no auto-pick-latest rule: a file
+    date does not prove supersession. Curators remove superseded deliveries so
+    the inventory states current holdings only.
+
+    Cost: group by `(register_variant, variable, period_scope)` and compare
+    pairwise only within each group. An inventory with many variables avoids a
+    global quadratic scan; the usual largest group is one variable's annual
+    series with a few dozen editions.
     """
     located: dict[tuple[str, str, str], list[_Placement]] = {}
     for table in tables:
@@ -582,10 +605,8 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
                     continue
                 pair = (variant, variable, a_table, a_column, b_table, b_column)
                 if pair in reported:
-                    # Two locations conflicting over one coordinate is ONE
-                    # curation decision, whatever mix of representations
-                    # spelled it (a column carrying both an unqualified and
-                    # an explicit mapping conflates twice with one opposite).
+                    # One conflicting location pair is one curation decision,
+                    # even when several mappings locate the same coordinate.
                     continue
                 reported.add(pair)
                 conflicts.append(

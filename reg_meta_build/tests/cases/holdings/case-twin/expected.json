@@ -1,36 +1,36 @@
 {
   "tables": [
-    [
-      "CaseTwin",
-      "intervals",
-      2018,
-      null,
-      null
-    ]
+    {
+      "physical_id": "CaseTwin",
+      "scope": "intervals",
+      "edition": 2018,
+      "partition": null,
+      "retain_unknown_reason": null
+    }
   ],
   "periods": [
-    [
-      "CaseTwin",
-      "2018-01-01",
-      "2018-12-31"
-    ]
+    {
+      "physical_id": "CaseTwin",
+      "lo": "2018-01-01",
+      "hi": "2018-12-31"
+    }
   ],
   "columns": [
-    [
-      "CaseTwin",
-      "Observed",
-      null
-    ]
+    {
+      "physical_id": "CaseTwin",
+      "name": "Observed",
+      "unmapped_reason": null
+    }
   ],
   "mappings": [
-    [
-      "CaseTwin",
-      "Observed",
-      "scb/example/annual",
-      "scb/example/value",
-      "vAlUe",
-      "Value"
-    ]
+    {
+      "physical_id": "CaseTwin",
+      "name": "Observed",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/value",
+      "representation_literal": "vAlUe",
+      "representation_canonical": "Value"
+    }
   ],
   "warnings": []
 }

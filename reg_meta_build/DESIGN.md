@@ -1574,9 +1574,9 @@ source accounting, not `Catalog` semantic resolution. The latter remains query-t
 including per-column storage/coding intersections, shared-window containment,
 replacement participation/fallback and additive curated windows. Any use of the existing
 consistency checker must account for its coding-mode drift; it is not an exact resolver
-oracle. Regenerate `unknown_holding_edition` / `unknown_source_validity` holding
-warnings from `holding_table` evidence or drop redundant ones. Delete their
-inventory-JSON witnesses; there is one holdings truth.
+oracle. Drop redundant `unknown_holding_edition` / `unknown_source_validity` holding
+warnings and their inventory-JSON witnesses. The compiled `holding_table` evidence is
+the sole authority for these unknown scopes.
 
 The accounting gate proves the disjoint union dated ∪ year-independent ∪
 retained-unknown ∪ excluded ∪ lookup equals the raw table/column census from accepted
@@ -1614,13 +1614,12 @@ publishable catalog. Publishable builds require clean tracked builder sources in
 source checkout. Installed wheels are not a source-revision authority and fail with an
 actionable checkout requirement. Capture the revision before compilation and verify it
 again before placement; uncommitted code or a changed revision cannot claim that pin.
-Before consuming inputs, publishable builds require each output directory (DB parent,
-report and decision dump) to be outside the builder checkout or Git-ignored with no
-tracked files. The directory rule covers staging files, sidecars and backups as well as
-the final DB; ignoring only `*.db` is insufficient. Direct strict writer calls use the
-same preflight. This prevents build-created files from violating the final clean-source
-check after compilation. Diagnostic, scoped and check-only runs keep their existing
-output rules.
+Clean means no tracked changes, with the loaded builder sources equal to their HEAD
+blobs. Unrelated untracked local configuration, reports and generated output do not
+change that source identity. Accepted input repositories still require a fully clean
+checkout, including untracked files; committed steward slug directories require their
+exact committed file set and bytes. Recheck tracked source cleanliness and revision
+before placement. Existing input/output separation and atomic placement rules apply.
 
 The accepted candidate's manifest covers every consumed provider TOML, inventory,
 policy, source document and review-evidence payload. Provider and policy directories
@@ -1632,8 +1631,13 @@ all provider, inventory, policy and census reads consume that snapshot. Later ed
 the accepted working tree cannot change the consumed bytes. Steward slug identity is
 covered separately by `builder_commit`; changing tracked slug pins requires public
 review and the existing slug checks, not fresh acceptance merely to copy them privately.
-All accepted mapping coordinates must still resolve under the selected committed pins;
-incompatibility fails the build rather than falling back to a private slug copy.
+Census accounting runs on the verified snapshot before copying the base DB. Compilation
+reuses that accounting result; direct compiler calls perform the same gate themselves.
+Diagnostic library extensions may supply metadata warnings and a publication test hook;
+strict extensions reject these unpinned controls. CLI provider and inventory paths are
+derived only from the accepted candidate. All accepted mapping coordinates must still
+resolve under the selected committed pins; incompatibility fails the build rather than
+falling back to a private slug copy.
 
 Define `holdings_policy_sha256` as SHA-256 of a sorted relative-policy-path → SHA-256
 object covering `source_policy.toml`, `inventory_overlay.toml` and

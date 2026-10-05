@@ -7,32 +7,22 @@ be activated as runtime catalogs. The validated global base is never mutated.
 
 from __future__ import annotations
 
-import csv
 import hashlib
-import io
 import json
 import shutil
 import sqlite3
-import tomllib
 from contextlib import ExitStack, closing
 from dataclasses import dataclass
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import TYPE_CHECKING, Any
 
-from pydantic import (
-    BaseModel,
-    ConfigDict,
-    Field,
-    JsonValue,
-    TypeAdapter,
-    field_validator,
-)
+from pydantic import TypeAdapter
 from reg_meta.catalog import DataWarning
 from reg_meta.db import DB_FILENAME
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import FqidError, FqidKind, validate_slug
-from reg_meta.source_evidence import canonical_sha256
+from reg_meta.source_evidence import canonical_json
 
 from .data_warnings import write_data_warnings
 from .db import get_manifest, open_built_db
@@ -88,8 +78,7 @@ def resolve_steward_providers_dir(providers_dir: Path | None, steward: str) -> P
             error_class="configuration",
             message=f"Steward providers directory not found: {resolved}",
             remediation=(
-                "Pass --providers-dir or author one curated-provider TOML per "
-                f"provider under input_data/{steward}/providers/."
+                f"Author one curated-provider TOML per provider under {resolved}."
             ),
         )
     return resolved
@@ -105,7 +94,7 @@ def _load_provider_ir(
     if not paths:
         raise _cfg_error(
             f"Steward providers directory has no provider TOMLs: {providers_dir}",
-            "Author one <provider>.toml file or point --providers-dir at the delivery.",
+            "Author one <provider>.toml file in the accepted providers/ directory.",
         )
 
     providers: list[tuple[str, str]] = []
@@ -221,7 +210,7 @@ def _assert_steward_rows_slugged(conn: sqlite3.Connection) -> None:
         raise _cfg_error(
             f"{len(missing)} steward register/variant row(s) have no slug after "
             f"slug population. Sample: {'; '.join(missing[:5])}.",
-            "Add the missing slug pins to fqid_slugs/<steward>/ or pass --skip-slugs.",
+            "Commit the missing slug pins to fqid_slugs/<steward>/ and rebuild.",
         )
 
 
@@ -243,11 +232,11 @@ def resolve_steward_slug_dir(
                 code="extend_slug_dir_not_found",
                 error_class="configuration",
                 message=(
-                    "No --slug-dir given and no repo checkout found for the "
+                    "No repo checkout found for the "
                     f"steward slug dir (fqid_slugs/{steward}/)."
                 ),
                 remediation=(
-                    "Pass --slug-dir, run from a repo checkout, or use --skip-slugs."
+                    "Run from a source checkout with committed steward slug pins."
                 ),
             )
         resolved = global_dir.parent / "fqid_slugs" / steward
@@ -258,8 +247,7 @@ def resolve_steward_slug_dir(
             error_class="configuration",
             message=f"Steward slug dir not found: {resolved}",
             remediation=(
-                f"Create fqid_slugs/{steward}/ (defaults to churning) or "
-                "pass --skip-slugs."
+                f"Create and commit the required pins in fqid_slugs/{steward}/."
             ),
         )
     return resolved
@@ -293,6 +281,10 @@ def extend_db(
     data_warnings = TypeAdapter(tuple[DataWarning, ...]).validate_python(
         data_warnings, strict=True
     )
+    if not diagnostic and (data_warnings or pre_rename_hook is not None):
+        raise ValueError(
+            "Supplemental warnings and publish hooks require diagnostic=True"
+        )
     base_db = base_db.expanduser().resolve()
     db_dir = db_dir.expanduser().resolve()
 
@@ -316,19 +308,18 @@ def extend_db(
             remediation="Point --db at a different output directory.",
         )
 
+    from reg_meta.inventory import load_inventory
+
     from .artifact_identity import (
         builder_commit,
         committed_steward_slugs,
         generation_id,
     )
+    from .holdings_accounting import account_holdings
     from .holdings_compile import compile_holdings, write_holdings_assessment_warnings
 
     with ExitStack() as inputs:
-        revision = (
-            builder_commit(output_directories={"--db": db_dir})
-            if not diagnostic
-            else None
-        )
+        revision = builder_commit() if not diagnostic else None
         if holdings_input is None and not diagnostic:
             raise ValueError(
                 "Publishable extension requires accepted holdings and exact pins"
@@ -343,7 +334,7 @@ def extend_db(
                 raise ValueError("Private holdings require both exact input pins")
             if slug_dir is not None or skip_slugs:
                 raise ValueError(
-                    "Publishable extension rejects --slug-dir and --skip-slugs"
+                    "Publishable extension requires committed steward naming without diagnostic overrides"
                 )
             providers_dir = providers_dir or holdings_input / "providers"
             if providers_dir.expanduser().resolve() != holdings_input / "providers":
@@ -395,6 +386,15 @@ def extend_db(
         steward_slug_dir = pinned_slug_dir or resolve_steward_slug_dir(
             slug_dir, steward, skip_slugs=skip_slugs
         )
+
+        accounting = None
+        if holdings_input is not None:
+            inventory = load_inventory(holdings_input / "policy/inventory.toml")
+            if inventory.steward != steward:
+                raise ValueError(
+                    "Accepted inventory steward does not match selected steward"
+                )
+            accounting = account_holdings(holdings_input, inventory)
 
         db_dir.mkdir(parents=True, exist_ok=True)
         final_path = db_dir / DB_FILENAME
@@ -464,18 +464,15 @@ def extend_db(
                     sorted(manifest.items()),
                 )
             if holdings_input is not None:
-                if (
-                    manifest.get("catalog_artifact_kind") != "catalog"
-                    or manifest.get("catalog_publishable") != "true"
-                    or manifest.get("catalog_completeness") != "complete"
-                    or not manifest.get("generation_id")
-                ):
+                if not manifest.get("generation_id"):
                     raise ValueError(
                         "Steward compilation requires a complete publishable schema-9 catalog with generation identity"
                     )
                 assert input_commit is not None and input_manifest_sha256 is not None
                 assert revision is not None
-                compiled = compile_holdings(conn, holdings_input, steward=steward)
+                compiled = compile_holdings(
+                    conn, holdings_input, steward=steward, accounting=accounting
+                )
                 counts["data_warnings"] += write_holdings_assessment_warnings(conn)
                 manifest.update(
                     {
@@ -487,11 +484,8 @@ def extend_db(
                         "holdings_input_commit": input_commit,
                         "holdings_manifest_sha256": input_manifest_sha256,
                         "holdings_policy_sha256": compiled.accounting.policy_sha256,
-                        "holdings_accounting_counts": json.dumps(
-                            compiled.accounting.counts,
-                            ensure_ascii=False,
-                            sort_keys=True,
-                            separators=(",", ":"),
+                        "holdings_accounting_counts": canonical_json(
+                            compiled.accounting.counts
                         ),
                         "holdings_accounting_sha256": compiled.accounting.sha256,
                     }
@@ -524,7 +518,6 @@ def extend_db(
                     ),
                     remediation="Inspect the curated provider's register/variant references.",
                 )
-            conn.execute("PRAGMA foreign_keys=ON")
             conn.commit()
             write_failed = False
         finally:
@@ -567,25 +560,6 @@ def extend_db(
             publish_db(tmp_path, final_path)
         _progress(f"Flavored database written to {final_path}")
         return {**counts, "db_path": str(final_path)}
-
-
-class _UndatedHolding(BaseModel):
-    model_config = ConfigDict(extra="forbid", frozen=True)
-    table: str = Field(min_length=1)
-    register_fqid: str = Field(alias="register")
-    rows_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
-    reason: str = Field(min_length=1)
-    edition: JsonValue = None
-    partition: str | None = None
-
-    @field_validator("partition")
-    @classmethod
-    def check_partition(cls, value: str | None) -> str | None:
-        from reg_meta.fqid import validate_slug
-
-        if value is not None:
-            validate_slug(value, "partition")
-        return value
 
 
 def read_private_holdings_input(
@@ -680,34 +654,3 @@ def read_private_holdings_input(
             "Private input manifest lacks accepted inventory, policies or providers"
         )
     return manifest
-
-
-def load_holdings_retention_policy(
-    policy_path: Path,
-    source_path: Path,
-) -> tuple[tuple[_UndatedHolding, ...], dict[str, list[dict[str, Any]]], str]:
-    """Check exact source and ordered-row guards for inventory and warning emission."""
-    policy = tomllib.loads(policy_path.read_text(encoding="utf-8"))
-    source = source_path.read_bytes()
-    source_sha256 = hashlib.sha256(source).hexdigest()
-    if policy.get("source_sha256") != source_sha256:
-        raise ValueError("Undated holdings source SHA-256 does not match policy")
-    entries = TypeAdapter(tuple[_UndatedHolding, ...]).validate_python(
-        policy.get("retain_unknown", [])
-    )
-    if len({entry.table for entry in entries}) != len(entries):
-        raise ValueError("Duplicate undated holdings table")
-    rows_by_table: dict[str, list[dict[str, Any]]] = {}
-    for line, cells in enumerate(csv.reader(io.StringIO(source.decode("utf-8"))), 1):
-        if len(cells) >= 3:
-            rows_by_table.setdefault(cells[2].strip(), []).append(
-                {"line": line, "cells": cells}
-            )
-    excluded = {entry["table"] for entry in policy.get("exclude", [])}
-    for entry in entries:
-        rows = rows_by_table.get(entry.table)
-        if not rows or canonical_sha256(rows) != entry.rows_sha256:
-            raise ValueError(f"Undated holdings row guard failed: {entry.table}")
-        if entry.table in excluded:
-            raise ValueError(f"Retained holding cannot also be excluded: {entry.table}")
-    return entries, rows_by_table, source_sha256

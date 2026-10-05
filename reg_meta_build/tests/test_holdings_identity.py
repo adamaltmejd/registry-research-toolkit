@@ -33,140 +33,37 @@ def _copied_builder_checkout(tmp_path: Path) -> tuple[Path, Path]:
         package_dir / "reg_meta_build",
         ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
     )
+    source_root = Path(reg_meta_build.__file__).resolve().parents[3]
+    for name in (
+        "scripts/prototype_scb_inputs.py",
+        "uv.lock",
+    ):
+        target = checkout / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source_root / name, target)
     ignored = checkout / ".gitignore"
-    ignored.write_text("ignored/\n*.db\n__pycache__/\n")
+    ignored.write_text("ignored/\n__pycache__/\n")
     accept_prepared(ignored)
-    accept_prepared(checkout / "reg_meta_build")
+    for name in ("reg_meta_build", "scripts", "uv.lock"):
+        accept_prepared(checkout / name)
     return checkout, package_dir
 
 
 @pytest.mark.parametrize(
-    "case", json.loads((CASES / "output-preflight/request.json").read_text())
+    "case", json.loads((CASES / "tracked-builder/request.json").read_text())
 )
-def test_cli_checks_output_directories_before_consuming_inputs(
+def test_writer_pins_tracked_sources_with_untracked_outputs(
     tmp_path: Path, case: dict
 ) -> None:
-    expected = json.loads((CASES / "output-preflight/expected.json").read_text())
+    expected = json.loads((CASES / "tracked-builder/expected.json").read_text())
     checkout, package_dir = _copied_builder_checkout(tmp_path)
-    destinations = {
-        "db": tmp_path / "output",
-        "report": tmp_path / "report",
-        "decisions": tmp_path / "decisions",
-    }
-    destination = (
-        checkout / "ignored/output"
-        if case["layout"] in {"ignored", "tracked-in-ignored"}
-        else checkout
-        if case["layout"] == "db-file-ignore-only"
-        else tmp_path / "selected-output"
-        if case["layout"] == "outside"
-        else checkout / "output"
-    )
-    marker = destination / "marker.txt"
-    if case["layout"] == "tracked-in-ignored":
-        destination.mkdir(parents=True)
-        marker.write_text("tracked bytes must survive\n")
-        subprocess.run(
-            ["git", "-C", str(checkout), "add", "-f", "--", str(marker)],
-            check=True,
-        )
-        subprocess.run(
-            ["git", "-C", str(checkout), "commit", "-q", "-m", "Track output marker"],
-            check=True,
-        )
-    if case["layout"] == "symlink-into-checkout":
-        destination.mkdir()
-        alias = tmp_path / "output-alias"
-        alias.symlink_to(destination, target_is_directory=True)
-        destination = alias
-    destinations[case["destination"]] = destination
-    base = tmp_path / "base.db"
-    base.touch()
-    curation = tmp_path / "curation"
-    curation.mkdir()
-    arguments = ["--db", str(destinations["db"]), case["command"]]
-    if case["command"] == "build-db":
-        arguments += [
-            "--prepared",
-            str(tmp_path / "absent-input"),
-            "--report-dir",
-            str(destinations["report"]),
-            "--curation-dir",
-            str(curation),
-            "--dump-decisions",
-            str(destinations["decisions"]),
-        ]
-    else:
-        arguments += [
-            "--base-db",
-            str(base),
-            "--holdings-input",
-            str(tmp_path / "absent-input"),
-        ]
-    arguments += ["--input-commit", "a" * 40, "--input-manifest-sha256", "b" * 64]
-    result = subprocess.run(
-        [sys.executable, "-m", "reg_meta_build.cli", *arguments],
-        env={**os.environ, "PYTHONPATH": str(package_dir)},
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    assert result.returncode != 0
-    error = json.loads(result.stdout)["error"]
-    assert error["code"] == expected["error_codes"][case["command"]]
-    message = expected["accepted_contains" if case["accepted"] else "rejected_contains"]
-    assert message in error["message"]
-    assert not (destinations["db"] / "reg_meta.db").exists()
-    assert not (destinations["report"] / "summary.json").exists()
-    assert not (destinations["decisions"] / "global.json").exists()
-    if marker.exists():
-        assert marker.read_text() == "tracked bytes must survive\n"
-    assert (
-        subprocess.check_output(
-            [
-                "git",
-                "-C",
-                str(checkout),
-                "status",
-                "--porcelain",
-                "--untracked-files=all",
-            ],
-            text=True,
-        )
-        == ""
-    )
-
-
-@pytest.mark.parametrize(
-    "case", json.loads((CASES / "output-preflight/writer-request.json").read_text())
-)
-def test_writer_preserves_clean_checkout_with_its_output_footprint(
-    tmp_path: Path, case: dict
-) -> None:
-    expected = json.loads((CASES / "output-preflight/expected.json").read_text())
-    checkout, package_dir = _copied_builder_checkout(tmp_path)
-    directory = (
-        checkout / "ignored/output"
-        if case["layout"].startswith("ignored")
-        else tmp_path / "output"
-        if case["layout"] == "outside"
-        else checkout
-    )
-    output = directory / "reg_meta.db"
-    marker = output.with_suffix(".db.prev")
-    if case["layout"] == "ignored-tracked-backup-symlink":
-        directory.mkdir(parents=True)
-        original = tmp_path / "backup-target"
-        original.write_text("preserve backup target\n")
-        marker.symlink_to(original)
-        subprocess.run(
-            ["git", "-C", str(checkout), "add", "-f", "--", str(marker)],
-            check=True,
-        )
-        subprocess.run(
-            ["git", "-C", str(checkout), "commit", "-q", "-m", "Track backup link"],
-            check=True,
-        )
+    local_config = checkout / ".codex/config.toml"
+    local_config.parent.mkdir()
+    local_config.write_text("# unrelated local configuration\n")
+    source = package_dir / "reg_meta_build/pipeline.py"
+    if case["tracked_change"]:
+        source.write_bytes(source.read_bytes() + b"\n")
+    output = checkout / case["output"]
     result = subprocess.run(
         [
             sys.executable,
@@ -192,39 +89,36 @@ except ValueError as exc:
         text=True,
         check=False,
     )
-    if case["accepted"]:
+    if case["tracked_change"]:
+        assert result.returncode != 0
+        assert expected["error_contains"] in json.loads(result.stdout)["error"]
+        assert not output.exists()
+    else:
         assert result.returncode == 0, result.stderr
-        assert output.is_file()
         with sqlite3.connect(output) as conn:
             manifest = dict(conn.execute("SELECT key,value FROM import_manifest"))
         assert manifest["catalog_publishable"] == "true"
         assert (
             manifest["builder_commit"]
             == subprocess.check_output(
-                ["git", "-C", str(checkout), "rev-parse", "HEAD"],
-                text=True,
+                ["git", "-C", str(checkout), "rev-parse", "HEAD"], text=True
             ).strip()
         )
-    else:
-        assert result.returncode != 0
-        assert expected["rejected_contains"] in json.loads(result.stdout)["error"]
-        assert not output.exists()
-    if marker.is_symlink():
-        assert marker.read_text() == "preserve backup target\n"
-    assert (
-        subprocess.check_output(
-            [
-                "git",
-                "-C",
-                str(checkout),
-                "status",
-                "--porcelain",
-                "--untracked-files=all",
-            ],
-            text=True,
+        assert (
+            subprocess.check_output(
+                [
+                    "git",
+                    "-C",
+                    str(checkout),
+                    "status",
+                    "--porcelain",
+                    "--untracked-files=no",
+                ],
+                text=True,
+            )
+            == ""
         )
-        == ""
-    )
+    assert local_config.read_text() == "# unrelated local configuration\n"
 
 
 @pytest.mark.parametrize(
@@ -282,8 +176,8 @@ def test_cli_refuses_unpinned_builder_sources(
     assert not (tmp_path / "output").exists()
 
 
-def test_compilation_consumes_accepted_bytes_despite_transient_source_edits(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+def test_compilation_consumes_snapshot_after_accepted_source_changes(
+    tmp_path: Path,
 ) -> None:
     case = CASES / "accepted-snapshot"
     request = json.loads((case / "request.json").read_text())
@@ -342,18 +236,7 @@ def test_compilation_consumes_accepted_bytes_despite_transient_source_edits(
     changed = accepted.replace(
         request["replacement_from"].encode(), request["replacement_to"].encode()
     )
-    read_text = Path.read_text
-
-    def interleaved_read(path: Path, *args, **kwargs):
-        if path.name != "inventory.toml":
-            return read_text(path, *args, **kwargs)
-        inventory.write_bytes(changed)
-        try:
-            return read_text(path, *args, **kwargs)
-        finally:
-            inventory.write_bytes(accepted)
-
-    monkeypatch.setattr(Path, "read_text", interleaved_read)
+    inventory.write_bytes(changed)
     with sqlite3.connect(output) as conn:
         compile_holdings(conn, snapshot, steward="swecov")
         actual = {
@@ -371,7 +254,8 @@ def test_compilation_consumes_accepted_bytes_despite_transient_source_edits(
             ],
         }
     assert actual == expected
-    assert inventory.read_bytes() == accepted
+    assert inventory.read_bytes() == changed
+    inventory.write_bytes(accepted)
     read_private_holdings_input(
         candidate, input_commit=commit, input_manifest_sha256=digest
     )

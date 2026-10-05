@@ -36,6 +36,9 @@ Thumbs.db
 /.local/catalog-inputs/
 # Separate local input candidates contain copied source evidence, not product files.
 /.local/worktrees/
+# Private accepted inputs and retained compiler proofs stay local.
+/.local/private-swecov-candidates/
+/.local/holdings-02-builder-compilation/
 
 # Input data (SCB CSVs, Socialstyrelsen metadata, source PDFs — not committed).
 # Listed per-subdirectory so the maintainer-curated classifications/ folder

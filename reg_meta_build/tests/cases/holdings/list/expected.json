@@ -1,47 +1,47 @@
 {
   "tables": [
-    [
-      "List",
-      "intervals",
-      [
+    {
+      "physical_id": "List",
+      "scope": "intervals",
+      "edition": [
         2018,
         {
           "from": 2020,
           "to": 2021
         }
       ],
-      null,
-      null
-    ]
+      "partition": null,
+      "retain_unknown_reason": null
+    }
   ],
   "periods": [
-    [
-      "List",
-      "2018-01-01",
-      "2018-12-31"
-    ],
-    [
-      "List",
-      "2020-01-01",
-      "2021-12-31"
-    ]
+    {
+      "physical_id": "List",
+      "lo": "2018-01-01",
+      "hi": "2018-12-31"
+    },
+    {
+      "physical_id": "List",
+      "lo": "2020-01-01",
+      "hi": "2021-12-31"
+    }
   ],
   "columns": [
-    [
-      "List",
-      "Observed",
-      null
-    ]
+    {
+      "physical_id": "List",
+      "name": "Observed",
+      "unmapped_reason": null
+    }
   ],
   "mappings": [
-    [
-      "List",
-      "Observed",
-      "scb/example/annual",
-      "scb/example/value",
-      "Value",
-      "Value"
-    ]
+    {
+      "physical_id": "List",
+      "name": "Observed",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/value",
+      "representation_literal": "Value",
+      "representation_canonical": "Value"
+    }
   ],
   "warnings": [
     "holding_temporally_unassessed"

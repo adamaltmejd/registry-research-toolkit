@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 
 from reg_meta.source_evidence import canonical_sha256
 
-from .input_snapshot import SnapshotError, _git, _tracked_source_commit
+from .input_snapshot import SnapshotError, _builder_source_identity, _git
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -30,43 +30,15 @@ STEWARD_GENERATION_KEYS = (
 )
 
 
-def builder_commit(*, output_directories: Mapping[str, Path] | None = None) -> str:
+def builder_commit() -> str:
     """Capture the clean tracked builder source, never an enclosing wheel's repo."""
-    module = Path(__file__).resolve()
     try:
-        repository, revision = _tracked_source_commit(
-            tuple(
-                module.with_name(name)
-                for name in (
-                    "artifact_identity.py",
-                    "pipeline.py",
-                    "resolved_catalog.py",
-                    "extend_db.py",
-                )
-            ),
-            identity="builder",
-        )
+        _repository, revision = _builder_source_identity()
     except SnapshotError as exc:
         raise ValueError(
             "Publishable builds require clean tracked builder sources; "
             "run from the source checkout, not an installed wheel. " + str(exc)
         ) from exc
-    for option, directory in (output_directories or {}).items():
-        directory = directory.resolve()
-        if not directory.is_relative_to(repository):
-            continue
-        relative = directory.relative_to(repository).as_posix()
-        try:
-            if directory == repository or _git(
-                repository, "ls-files", "--", f":(literal){relative}"
-            ):
-                raise SnapshotError("output directory contains tracked files")
-            _git(repository, "check-ignore", "--quiet", "--", relative + "/")
-        except SnapshotError as exc:
-            raise ValueError(
-                f"Publishable {option} output directory must be outside the builder "
-                "checkout or Git-ignored with no tracked files: " + str(directory)
-            ) from exc
     return revision
 
 
@@ -88,7 +60,7 @@ def committed_steward_slugs(steward: str, *, revision: str) -> Path:
     root = Path(__file__).resolve().parents[3]
     if _git(root, "rev-parse", "HEAD") != revision:
         raise ValueError("Builder revision changed during holdings compilation")
-    if _git(root, "status", "--porcelain", "--untracked-files=all"):
+    if _git(root, "status", "--porcelain", "--untracked-files=no"):
         raise ValueError("Publishable extension requires a clean builder checkout")
     directory = root / "reg_meta_build/fqid_slugs" / steward
     if not directory.is_dir() or directory.is_symlink():

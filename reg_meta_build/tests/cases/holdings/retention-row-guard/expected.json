@@ -1,3 +1,6 @@
 {
-  "error_contains": "row guard failed"
+  "error_contains": "row guard failed",
+  "error_locators": [
+    "Undated"
+  ]
 }

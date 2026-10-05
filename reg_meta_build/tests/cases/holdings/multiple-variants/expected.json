@@ -1,44 +1,44 @@
 {
   "tables": [
-    [
-      "Combined",
-      "intervals",
-      2018,
-      null,
-      null
-    ]
+    {
+      "physical_id": "Combined",
+      "scope": "intervals",
+      "edition": 2018,
+      "partition": null,
+      "retain_unknown_reason": null
+    }
   ],
   "periods": [
-    [
-      "Combined",
-      "2018-01-01",
-      "2018-12-31"
-    ]
+    {
+      "physical_id": "Combined",
+      "lo": "2018-01-01",
+      "hi": "2018-12-31"
+    }
   ],
   "columns": [
-    [
-      "Combined",
-      "Observed",
-      null
-    ]
+    {
+      "physical_id": "Combined",
+      "name": "Observed",
+      "unmapped_reason": null
+    }
   ],
   "mappings": [
-    [
-      "Combined",
-      "Observed",
-      "scb/example/annual",
-      "scb/example/value",
-      "Value",
-      "Value"
-    ],
-    [
-      "Combined",
-      "Observed",
-      "scb/example/other",
-      "scb/example/value",
-      "Value",
-      "Value"
-    ]
+    {
+      "physical_id": "Combined",
+      "name": "Observed",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/value",
+      "representation_literal": "Value",
+      "representation_canonical": "Value"
+    },
+    {
+      "physical_id": "Combined",
+      "name": "Observed",
+      "register_variant": "scb/example/other",
+      "variable": "scb/example/value",
+      "representation_literal": "Value",
+      "representation_canonical": "Value"
+    }
   ],
   "warnings": []
 }

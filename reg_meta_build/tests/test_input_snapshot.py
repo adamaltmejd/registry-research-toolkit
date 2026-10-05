@@ -151,8 +151,11 @@ def _builder_checkout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     sources = (
         module,
         module.with_name("cli.py"),
+        module.with_name("artifact_identity.py"),
+        module.with_name("pipeline.py"),
+        module.with_name("resolved_catalog.py"),
+        module.with_name("extend_db.py"),
         repo / "scripts" / "prototype_scb_inputs.py",
-        repo / "scripts" / "build_db_watch.py",
         repo / "uv.lock",
     )
     for source in sources:
@@ -1996,9 +1999,11 @@ def test_build_lock_pins_clean_repositories_auxiliary_inputs_and_result(
         )
 
     (builder_repo / ".gitignore").write_text(
-        "/scripts/build_db_watch.py\n", encoding="utf-8"
+        "/reg_meta_build/src/reg_meta_build/cli.py\n", encoding="utf-8"
     )
-    _git(builder_repo, "rm", "-q", "--cached", "scripts/build_db_watch.py")
+    _git(
+        builder_repo, "rm", "-q", "--cached", "reg_meta_build/src/reg_meta_build/cli.py"
+    )
     _git(builder_repo, "add", ".gitignore")
     _git(builder_repo, "commit", "-q", "-m", "omit builder entry point")
     with pytest.raises(

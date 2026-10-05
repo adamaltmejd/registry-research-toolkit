@@ -1127,7 +1127,7 @@ def write_resolved_catalog(
         from .artifact_identity import builder_commit, generation_id
 
         if corpus or "builder_commit" not in import_metadata:
-            revision = builder_commit(output_directories={"--db": Path(output).parent})
+            revision = builder_commit()
             if "builder_commit" not in import_metadata:
                 captured_revision = revision
                 import_metadata["builder_commit"] = revision

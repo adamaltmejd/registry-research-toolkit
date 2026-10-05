@@ -30,7 +30,7 @@ def validate_compiled_holdings(conn: sqlite3.Connection) -> None:
     kind = manifest.get("catalog_artifact_kind")
     if kind not in {"catalog", "steward", "diagnostic"}:
         raise ValueError(
-            "Compiled artifact requires catalog_artifact_kind catalog or steward"
+            "Compiled artifact requires catalog_artifact_kind catalog, steward or diagnostic"
         )
     incomplete = (
         kind == "diagnostic" or manifest.get("catalog_completeness") == "incomplete"
@@ -88,6 +88,9 @@ def validate_compiled_holdings(conn: sqlite3.Connection) -> None:
     }
     inventory_tables = []
     stored_canonical = []
+    # simplify: per-column indexed reads fit the accepted 38k-column corpus;
+    # batch relation reads if inventories exceed 100k columns or profiling shows
+    # validation dominating the build. Canonicalization remains resolver-owned.
     for table in tables:
         scope = table["scope"]
         if table["partition"] is not None:

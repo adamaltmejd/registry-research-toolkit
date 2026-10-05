@@ -12,10 +12,12 @@ from reg_meta.catalog import Catalog, representative_columns
 from reg_meta.db import register_py_lower
 from reg_meta.inventory import (
     DeliveryInventory,
+    InventoryColumn,
     edition_bounds,
     load_inventory,
     validate_inventory_placements,
 )
+from reg_meta.source_evidence import canonical_json
 
 from .holdings_accounting import HoldingsAccounting, account_holdings
 
@@ -63,13 +65,16 @@ def _catalog_coordinate_ids(
 
 
 def canonical_inventory(
-    conn: sqlite3.Connection, inventory: DeliveryInventory
+    conn: sqlite3.Connection,
+    inventory: DeliveryInventory,
+    *,
+    coordinate_ids: tuple[dict[str, int], dict[str, int]] | None = None,
 ) -> DeliveryInventory:
     """Canonicalize against the resolver's actual whole-history delivery universe."""
     conn.row_factory = sqlite3.Row
     register_py_lower(conn)
     catalog = Catalog(conn)
-    variables, variants = _catalog_coordinate_ids(conn)
+    variables, variants = coordinate_ids or _catalog_coordinate_ids(conn)
     universes: dict[tuple[int, int], dict[str, str]] = {}
     rejections = []
     tables = []
@@ -122,9 +127,10 @@ def canonical_inventory(
                     continue
                 triple = variant_id, variable_id, canonical
                 if triple in seen:
-                    raise ValueError(
+                    rejections.append(
                         f"{locator}: duplicate canonical triple {mapping.register_variant} {mapping.variable} {canonical!r}"
                     )
+                    continue
                 seen.add(triple)
                 mappings.append(
                     mapping.model_copy(update={"representation": canonical})
@@ -139,16 +145,23 @@ def canonical_inventory(
 
 
 def compile_holdings(
-    conn: sqlite3.Connection, root: Path, *, steward: str
+    conn: sqlite3.Connection,
+    root: Path,
+    *,
+    steward: str,
+    accounting: HoldingsAccounting | None = None,
 ) -> CompiledHoldings:
-    """Insert inventory and retained-unknown census facts after every gate passes."""
+    """Compile facts, reusing accounting only from the same immutable input snapshot."""
+    conn.row_factory = sqlite3.Row
     inventory_path = root / "policy/inventory.toml"
     inventory = load_inventory(inventory_path)
     if inventory.steward != steward:
         raise ValueError("Accepted inventory steward does not match selected steward")
-    accounting = account_holdings(root, inventory)
-    canonical = canonical_inventory(conn, inventory)
+    accounting = accounting or account_holdings(root, inventory)
     variables, variants = _catalog_coordinate_ids(conn)
+    canonical = canonical_inventory(
+        conn, inventory, coordinate_ids=(variables, variants)
+    )
     raw = tomllib.loads(inventory_path.read_text(encoding="utf-8"))
     authored = {table["id"]: (index, table) for index, table in enumerate(raw["table"])}
     logical = {table.id: table for table in canonical.tables}
@@ -175,8 +188,6 @@ def compile_holdings(
             )
             source_ref = f"policy/holdings_policy.toml:retain_unknown[{index}]"
             periods = ()
-            from reg_meta.inventory import InventoryColumn
-
             columns = tuple(
                 InventoryColumn(name=name)
                 for name in sorted(accounting.columns[physical_id])
@@ -187,11 +198,7 @@ def compile_holdings(
                 table_id,
                 physical_id,
                 scope,
-                json.dumps(
-                    edition, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-                )
-                if edition is not None
-                else None,
+                canonical_json(edition) if edition is not None else None,
                 partition,
                 reason,
                 source_ref,

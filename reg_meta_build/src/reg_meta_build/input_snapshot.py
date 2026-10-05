@@ -2112,7 +2112,7 @@ def input_bundle_repository(path: Path) -> Path:
 
 
 def _tracked_source_commit(
-    source_paths: Sequence[Path], *, identity: str
+    source_paths: Sequence[Path], *, identity: str, tracked_only: bool = False
 ) -> tuple[Path, str]:
     sources = tuple(source.resolve() for source in source_paths)
     if any(not source.is_file() for source in sources):
@@ -2124,7 +2124,12 @@ def _tracked_source_commit(
     if len(set(repositories)) != 1:
         raise SnapshotError(f"{identity} sources must come from the same Git checkout")
     repo = repositories[0]
-    commit = clean_git_commit(repo)
+    if tracked_only:
+        if _git(repo, "status", "--porcelain", "--untracked-files=no"):
+            raise SnapshotError(f"Git repository has tracked changes: {repo}")
+        commit = _git(repo, "rev-parse", "HEAD")
+    else:
+        commit = clean_git_commit(repo)
     for source in sources:
         relative = source.relative_to(repo).as_posix()
         try:
@@ -2158,11 +2163,15 @@ def _builder_source_identity() -> tuple[Path, str]:
         (
             module_path,
             module_path.with_name("cli.py"),
+            module_path.with_name("artifact_identity.py"),
+            module_path.with_name("pipeline.py"),
+            module_path.with_name("resolved_catalog.py"),
+            module_path.with_name("extend_db.py"),
             repo / "scripts" / "prototype_scb_inputs.py",
-            repo / "scripts" / "build_db_watch.py",
             repo / "uv.lock",
         ),
         identity="builder",
+        tracked_only=True,
     )
 
 
