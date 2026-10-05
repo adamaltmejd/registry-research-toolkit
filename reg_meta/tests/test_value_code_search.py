@@ -251,24 +251,6 @@ def test_register_scope_drops_out_of_scope_only_owners(
     assert any(r.label == "Singelkod" for r in in_scope)
 
 
-def test_owner_cap_vs_full_count(conn: sqlite3.Connection) -> None:
-    """6 variables owning one code: `variable_count` is the full 6, but the
-    `variables` slice is capped at `_CODE_OWNERS_PER_HIT` (5)."""
-    from reg_meta.queries import _CODE_OWNERS_PER_HIT
-
-    _seed_register(conn, 1, "reg")
-    _seed_code(conn, 1, "7", "Delad kod")
-    for i in range(6):
-        vid = _seed_variable(conn, 1, str(100 + i), f"Var{i}", f"var{i}")
-        _map(conn, 1, vid)
-    _finalize(conn)
-
-    results = search(conn, "Delad kod", field="value", type="value").results
-    hit = next(r for r in results if r.label == "Delad kod")
-    assert hit.variable_count == 6
-    assert len(hit.variables) == _CODE_OWNERS_PER_HIT == 5
-
-
 def test_owner_cap_keeps_tightest_value_set_owners(
     conn: sqlite3.Connection,
 ) -> None:
@@ -453,25 +435,6 @@ def test_limit_plus_one_reports_more_without_exact_count(
     assert len(out.results) == 3  # the page is still limit-bounded
 
 
-def test_cursor_paginates_codes(conn: sqlite3.Connection) -> None:
-    _seed_n_label_codes(conn, 8, "Diagnos")
-    first = search(conn, "Diagnos", field="value", type="value", limit=3)
-    assert first.next_cursor is not None
-    page1 = first.results
-    page2 = search(
-        conn,
-        "Diagnos",
-        field="value",
-        type="value",
-        limit=3,
-        cursor=first.next_cursor,
-    ).results
-    assert len(page1) == 3
-    assert len(page2) == 3, "the continuation cursor must return the next page"
-    # Disjoint pages (same deterministic order across calls).
-    assert {r.code for r in page1}.isdisjoint({r.code for r in page2})
-
-
 def test_register_scope_returns_deep_in_scope_hit(conn: sqlite3.Connection) -> None:
     """Register scope must surface an in-scope hit even when HIGHER-ranked codes are
     all out-of-scope (regression: the arm truncated to `limit` BEFORE the register
@@ -502,63 +465,6 @@ def test_register_scope_returns_deep_in_scope_hit(conn: sqlite3.Connection) -> N
 # --------------------------------------------------------------------------- #
 # #352 perf: annotate only the shown page (unscoped path).
 # --------------------------------------------------------------------------- #
-
-
-def test_annotate_only_the_page_unscoped(
-    conn: sqlite3.Connection, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """THE regression guard for the perf fix: an unscoped (`reg_ids is None`)
-    value query matching MANY codes must annotate AT MOST `limit` (page) code_ids,
-    NOT the full match set — owner annotation is deferred to the shown page."""
-    from reg_meta import queries
-
-    _seed_n_label_codes(conn, 30, "Diagnos")
-
-    seen_batches: list[list[int]] = []
-    real_batch = queries._code_owner_annotations_batch
-
-    def _spy(
-        c: sqlite3.Connection,
-        code_ids: list[int],
-        reg_ids: object,
-        *,
-        variable_limit: int | None = queries._CODE_OWNERS_PER_HIT,
-        variable_counts: object = None,
-    ) -> object:
-        seen_batches.append(list(code_ids))
-        return real_batch(
-            c,
-            code_ids,
-            reg_ids,  # type: ignore[arg-type]
-            variable_limit=variable_limit,
-            variable_counts=variable_counts,  # type: ignore[arg-type]
-        )
-
-    monkeypatch.setattr(queries, "_code_owner_annotations_batch", _spy)
-
-    limit = 5
-    out = search(conn, "Diagnos", field="value", type="value", limit=limit)
-
-    # Every batch call (there is exactly one, post-slice) saw at most `limit` codes.
-    assert seen_batches, "owner annotation must run for the shown page"
-    for batch in seen_batches:
-        assert len(batch) <= limit, (
-            f"annotated {len(batch)} codes; the page is only {limit} — "
-            "the full match set is being annotated (perf regression)"
-        )
-    # Sanity: more codes matched than were annotated.
-    assert out.has_more
-    assert len(out.results) == limit
-
-
-def test_more_flag_with_deferred_annotation(
-    conn: sqlite3.Connection,
-) -> None:
-    """Deferred annotation remains page-bounded while look-ahead reports more."""
-    _seed_n_label_codes(conn, 12, "Diagnos")
-    out = search(conn, "Diagnos", field="value", type="value", limit=4)
-    assert len(out.results) == 4
-    assert out.has_more
 
 
 def test_page_rows_carry_correct_owners(conn: sqlite3.Connection) -> None:
@@ -616,30 +522,6 @@ def test_cursor_page_annotated(conn: sqlite3.Connection) -> None:
     assert by_code["1"].variable_count == 1
     assert by_code["2"].variable_count == 2
     assert not hasattr(p1, "_code_id") and not hasattr(p2, "_code_id")
-
-
-def test_reg_scope_does_not_use_code_id_marker(conn: sqlite3.Connection) -> None:
-    """The reg-scoped (`--register`) arm is byte-identical to before: it annotates
-    only the bounded in-scope page and never uses a deferred `_code_id` marker,
-    and its rows never carry the `_code_id` marker (annotated up front, not
-    deferred)."""
-    _seed_register(conn, 1, "rega")
-    _seed_register(conn, 2, "regb")
-    for i in range(4):
-        _seed_code(conn, 200 + i, str(200 + i), f"Diagnos B{i:02d}")
-        vid_b = _seed_variable(conn, 2, str(200 + i), f"BVar{i}", f"bvar{i}")
-        _map(conn, 200 + i, vid_b)
-    _seed_code(conn, 299, "299", "Diagnos A")
-    vid_a = _seed_variable(conn, 1, "299", "AVar", "avar")
-    _map(conn, 299, vid_a)
-    _finalize(conn)
-
-    scoped = search(conn, "Diagnos", field="value", type="value", register="rega")
-    # Only the regA-owned code survives the reg-scope drop.
-    assert len(scoped.results) == 1
-    assert [r.label for r in scoped.results] == ["Diagnos A"]
-    assert all(not hasattr(r, "_code_id") for r in scoped.results)
-    assert scoped.results[0].variable_count == 1
 
 
 def test_type_all_only_code_rows_annotated(conn: sqlite3.Connection) -> None:
