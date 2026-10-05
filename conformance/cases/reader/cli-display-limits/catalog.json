@@ -1,0 +1,472 @@
+[
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "wide",
+      "name": "Wide"
+    },
+    "slug": "category",
+    "provider_key": "44",
+    "name": "Category",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2020-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Category",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "001",
+              "Category 001 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "002",
+              "Category 002 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "003",
+              "Category 003 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "004",
+              "Category 004 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "005",
+              "Category 005 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "006",
+              "Category 006 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "007",
+              "Category 007 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "008",
+              "Category 008 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "009",
+              "Category 009 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "010",
+              "Category 010 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "011",
+              "Category 011 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "012",
+              "Category 012 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "013",
+              "Category 013 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "014",
+              "Category 014 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "015",
+              "Category 015 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "016",
+              "Category 016 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "017",
+              "Category 017 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "018",
+              "Category 018 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "019",
+              "Category 019 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "020",
+              "Category 020 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "021",
+              "Category 021 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "022",
+              "Category 022 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "023",
+              "Category 023 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "024",
+              "Category 024 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "025",
+              "Category 025 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "026",
+              "Category 026 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "027",
+              "Category 027 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "028",
+              "Category 028 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "029",
+              "Category 029 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "030",
+              "Category 030 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "031",
+              "Category 031 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "032",
+              "Category 032 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "033",
+              "Category 033 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "034",
+              "Category 034 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "035",
+              "Category 035 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "036",
+              "Category 036 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "037",
+              "Category 037 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "038",
+              "Category 038 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "039",
+              "Category 039 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "040",
+              "Category 040 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "041",
+              "Category 041 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "042",
+              "Category 042 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "043",
+              "Category 043 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "044",
+              "Category 044 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "045",
+              "Category 045 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "046",
+              "Category 046 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "047",
+              "Category 047 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "048",
+              "Category 048 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "049",
+              "Category 049 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "050",
+              "Category 050 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "051",
+              "Category 051 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "052",
+              "Category 052 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "053",
+              "Category 053 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "054",
+              "Category 054 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "055",
+              "Category 055 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "056",
+              "Category 056 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "057",
+              "Category 057 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "058",
+              "Category 058 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "059",
+              "Category 059 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "060",
+              "Category 060 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "061",
+              "Category 061 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "062",
+              "Category 062 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "063",
+              "Category 063 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "064",
+              "Category 064 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "065",
+              "Category 065 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "066",
+              "Category 066 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "067",
+              "Category 067 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "068",
+              "Category 068 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "069",
+              "Category 069 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "070",
+              "Category 070 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "071",
+              "Category 071 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "072",
+              "Category 072 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "073",
+              "Category 073 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "074",
+              "Category 074 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "075",
+              "Category 075 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "076",
+              "Category 076 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "077",
+              "Category 077 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "078",
+              "Category 078 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "079",
+              "Category 079 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "080",
+              "Category 080 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "081",
+              "Category 081 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "082",
+              "Category 082 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "083",
+              "Category 083 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "084",
+              "Category 084 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "085",
+              "Category 085 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "086",
+              "Category 086 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "087",
+              "Category 087 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "088",
+              "Category 088 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "089",
+              "Category 089 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "090",
+              "Category 090 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "091",
+              "Category 091 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "092",
+              "Category 092 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "093",
+              "Category 093 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "094",
+              "Category 094 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "095",
+              "Category 095 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "096",
+              "Category 096 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "097",
+              "Category 097 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "098",
+              "Category 098 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "099",
+              "Category 099 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "100",
+              "Category 100 long label text long label text long label text long label text long label text long label text "
+            ],
+            [
+              "101",
+              "Category 101 long label text long label text long label text long label text long label text long label text "
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "plain",
+      "name": "Plain"
+    },
+    "slug": "category",
+    "provider_key": "44",
+    "name": "Category",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2020-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Category",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  }
+]
