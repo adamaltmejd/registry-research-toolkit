@@ -12,17 +12,10 @@ from typing import TYPE_CHECKING
 from _slugged_db import build_slugged_db
 from groups_test_support import assert_no_internal_keys as _assert_no_internal_keys
 from reg_meta.queries import search
+from search_test_support import rebuild_fts as _rebuild_fts
 
 if TYPE_CHECKING:
     import sqlite3
-
-
-def _rebuild_fts(conn: sqlite3.Connection) -> None:
-    """Repopulate the external-content FTS5 indexes from their content tables
-    (mirrors test_search_classifications) so the classification-leaf search arm
-    (`_search_classifications`) returns hits on this in-memory fixture."""
-    for index in ("register_fts", "variable_fts", "classification_fts"):
-        conn.execute(f"INSERT INTO {index}({index}) VALUES('rebuild')")
 
 
 def _add_classification(

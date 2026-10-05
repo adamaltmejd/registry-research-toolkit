@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import sqlite3
 
-import pytest
+import catalog_test_support
 from _slugged_db import build_slugged_db
 from reg_meta.queries import (
     get_classification,
@@ -14,10 +14,8 @@ from reg_meta.queries import (
 )
 from reg_meta_build.db import DDL, seed_providers
 
-
-@pytest.fixture
-def slugged_conn() -> sqlite3.Connection:
-    return build_slugged_db()
+# The shared fixture lives in catalog_test_support; bind it here for pytest.
+slugged_conn = catalog_test_support.slugged_conn
 
 
 class TestGetRegisterFqid:
