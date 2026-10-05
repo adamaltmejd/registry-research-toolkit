@@ -16,7 +16,15 @@ from typing import TYPE_CHECKING
 import pytest
 from reg_meta.errors import RegMetaError
 from reg_meta.queries import search
-from search_test_support import reader_search_conn
+from search_test_support import (
+    add_binding,
+    add_register,
+    add_state,
+    add_variable,
+    build_slugged_db,
+    reader_search_conn,
+    rebuild_fts as _rebuild_fts,
+)
 
 if TYPE_CHECKING:
     import sqlite3
@@ -155,3 +163,191 @@ def test_delivery_alias_identity_participates_in_relevance_order(
         "scb/aliases/broad-a",
         "scb/aliases/broad-b",
     ]
+
+
+def test_variable_cursor_pages_are_stable_and_sql_bounded() -> None:
+    conn = build_slugged_db(
+        variable=("Needle alpha", 32183, 1001, "Alpha"),
+        delivery_column_name="Alpha",
+        variable_slug="needle-alpha",
+    )
+    for index, name in enumerate(("beta", "gamma", "delta"), start=2):
+        add_variable(
+            conn,
+            register_id=1,
+            var_id=42180 + index,
+            name=f"Needle {name}",
+            slug=f"needle-{name}",
+        )
+        add_binding(
+            conn,
+            cvid=1000 + index,
+            register_id=1,
+            register_variant_id=10,
+            regver_id=100,
+            var_id=42180 + index,
+            delivery_column_name=name.title(),
+        )
+    _rebuild_fts(conn)
+    statements: list[str] = []
+    conn.set_trace_callback(statements.append)
+
+    expected = search(conn, "Needle", field="description", type="variable", limit=10)
+    first = search(conn, "Needle", field="description", type="variable", limit=2)
+    assert first.has_more and first.next_cursor is not None
+    second = search(
+        conn,
+        "  NEEDLE  ",
+        field="description",
+        type="variable",
+        limit=2,
+        cursor=first.next_cursor,
+    )
+
+    combined = [str(result.fqid) for result in (*first.results, *second.results)]
+    assert combined == [str(result.fqid) for result in expected.results]
+    assert len(combined) == len(set(combined))
+    variable_fts = [sql for sql in statements if "FROM variable_fts" in sql]
+    assert variable_fts
+    assert all("LIMIT" in sql for sql in variable_fts)
+
+
+def test_register_scope_is_applied_before_sql_pagination() -> None:
+    conn = build_slugged_db(
+        variable=("Needle alpha", 32183, 1001, "Alpha"),
+        delivery_column_name="Alpha",
+        variable_slug="needle-alpha",
+    )
+    for index in range(5):
+        add_variable(
+            conn,
+            register_id=1,
+            var_id=42180 + index,
+            name=f"Needle blocker {index}",
+            slug=f"needle-blocker-{index}",
+        )
+    add_register(conn, register_id=2, slug="regb", name="Register B")
+    add_variable(
+        conn,
+        register_id=2,
+        var_id=52180,
+        name="Needle target",
+        slug="needle-target",
+    )
+    _rebuild_fts(conn)
+
+    page = search(
+        conn,
+        "Needle",
+        field="description",
+        type="variable",
+        register="Register B",
+        limit=1,
+    )
+
+    assert [str(result.fqid) for result in page.results] == ["scb/regb/needle-target"]
+    assert not page.has_more
+
+
+# The candidate prefix every foldable/entity arm takes (the 1,000-position cursor
+# horizon plus one look-ahead row), and the number of year-eligible variables
+# parked BEHIND a full prefix of ineligible ones. Footgun: this literal mirrors the
+# search horizon; if the horizon grows past it, the eligible tail is no longer
+# parked behind a FULL prefix and these tests keep passing while testing nothing.
+_CANDIDATE_BOUND = 1_001
+
+_YEAR_ELIGIBLE = 4
+
+_ELIGIBLE_NAMES = {
+    f"Needle {index:04d}"
+    for index in range(_CANDIDATE_BOUND, _CANDIDATE_BOUND + _YEAR_ELIGIBLE)
+}
+
+
+def _year_scoped_conn() -> sqlite3.Connection:
+    """A whole candidate prefix of 2010-only variables sharing a searchable name
+    prefix, then `_YEAR_ELIGIBLE` more delivered in 2020.
+
+    Both variable arms order these ahead of the eligible tail — the LIKE arm by
+    `v.name`, the FTS arm by (tied bm25, `vf.rowid`) — so a year filter applied to
+    the bounded prefix instead of inside each candidate query sees only 2010 rows
+    and returns nothing at all for `years="2020"`.
+    """
+    conn = build_slugged_db(variable=None)
+    for index in range(_CANDIDATE_BOUND + _YEAR_ELIGIBLE):
+        slug = f"needle-{index:04d}"
+        add_variable(
+            conn,
+            register_id=1,
+            var_id=20_000 + index,
+            name=f"Needle {index:04d}",
+            slug=slug,
+        )
+        eligible = index >= _CANDIDATE_BOUND
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug=slug,
+            register_variant_id=10,
+            valid_from="2020-01-01" if eligible else "2010-01-01",
+            valid_to="2020-12-31" if eligible else "2010-12-31",
+        )
+    conn.commit()
+    _rebuild_fts(conn)
+    return conn
+
+
+@pytest.mark.parametrize("field", ["varname", "description"])
+@pytest.mark.parametrize("fold_groups", [True, False])
+def test_year_scope_is_applied_before_sql_pagination(
+    field: str, fold_groups: bool
+) -> None:
+    conn = _year_scoped_conn()
+
+    page = search(
+        conn,
+        "Needle",
+        field=field,
+        type="variable",
+        years="2020",
+        fold_groups=fold_groups,
+    )
+
+    assert {result.name for result in page.results} == _ELIGIBLE_NAMES
+    assert not page.has_more
+
+
+@pytest.mark.parametrize("field", ["varname", "description"])
+def test_year_scoped_cursor_traverses_every_eligible_result(field: str) -> None:
+    conn = _year_scoped_conn()
+
+    seen: list[str] = []
+    cursor: str | None = None
+    while True:
+        page = search(
+            conn,
+            "Needle",
+            field=field,
+            type="variable",
+            years="2020",
+            limit=1,
+            cursor=cursor,
+        )
+        seen.extend(result.name for result in page.results)
+        if not page.has_more:
+            break
+        cursor = page.next_cursor
+
+    assert len(seen) == len(set(seen)) == _YEAR_ELIGIBLE
+    assert set(seen) == _ELIGIBLE_NAMES
+
+
+@pytest.mark.parametrize("field", ["varname", "description"])
+def test_unscoped_search_still_pages_the_whole_prefix(field: str) -> None:
+    conn = _year_scoped_conn()
+
+    page = search(conn, "Needle", field=field, type="variable", limit=50)
+
+    assert len(page.results) == 50
+    assert page.has_more
+    assert page.next_cursor is not None
