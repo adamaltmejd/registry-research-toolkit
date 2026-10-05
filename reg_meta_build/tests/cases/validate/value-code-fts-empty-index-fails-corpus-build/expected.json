@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "value_code_fts is EMPTY on a corpus build"
+  ]
+}

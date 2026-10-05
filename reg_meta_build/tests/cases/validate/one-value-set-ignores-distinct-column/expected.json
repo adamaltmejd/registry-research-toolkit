@@ -1,0 +1,8 @@
+{
+  "report_contains": [
+    "no (variable, variant, column) resolves a period to >1 value set"
+  ],
+  "failures_absent": [
+    "resolves to >1 value set"
+  ]
+}

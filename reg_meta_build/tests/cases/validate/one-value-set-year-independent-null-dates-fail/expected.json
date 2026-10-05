@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "resolves to >1 value set: testcol/Group [year-independent]"
+  ]
+}

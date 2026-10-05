@@ -1,0 +1,10 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "edge derivation collapse",
+    "no curated concept groups",
+    "vintage-chain derivation regression",
+    "vintage-lift derivation regression",
+    "family-merge regression"
+  ]
+}

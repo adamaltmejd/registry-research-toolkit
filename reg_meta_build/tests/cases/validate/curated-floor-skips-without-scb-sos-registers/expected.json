@@ -1,0 +1,8 @@
+{
+  "report_contains": [
+    "curated group(s) — no scb/sos source in this build"
+  ],
+  "failures_absent": [
+    "no curated concept groups"
+  ]
+}

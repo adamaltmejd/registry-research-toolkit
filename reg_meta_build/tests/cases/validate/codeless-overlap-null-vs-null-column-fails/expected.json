@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "code-less ↔ code-bearing overlapping state pair"
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "passed": false,
+  "failures_contain": ["2 state(s) have invalid delivery scope or date bounds"]
+}

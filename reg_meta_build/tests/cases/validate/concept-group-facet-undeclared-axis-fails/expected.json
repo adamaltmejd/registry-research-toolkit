@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "1 variable member facet(s) name an axis not declared on their group"
+  ]
+}

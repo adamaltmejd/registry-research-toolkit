@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "1 duplicate whole-variable member(s) + 1 variable(s) spanning >1 group — the one-group-per-variable invariant is broken"
+  ]
+}

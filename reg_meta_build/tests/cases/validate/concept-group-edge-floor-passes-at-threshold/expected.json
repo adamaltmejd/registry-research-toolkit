@@ -1,0 +1,8 @@
+{
+  "failures_absent": [
+    "edge derivation collapse"
+  ],
+  "report_contains": [
+    "[OK] 1,800 edge group(s) (>= 1,800)"
+  ]
+}

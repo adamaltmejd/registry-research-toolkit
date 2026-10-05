@@ -1,0 +1,12 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "1 succession edge(s) reference an unknown classification slug"
+  ],
+  "failures_absent": [
+    "missing a derived pointer"
+  ],
+  "report_contains": [
+    "supersedes_id is a faithful projection of active succession edges"
+  ]
+}

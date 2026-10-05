@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "1 edge group(s) (< 1,800) — edge derivation collapse"
+  ]
+}

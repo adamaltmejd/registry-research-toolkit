@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "dors/sosvar (source_id 500.LOPNR, panel_entity_key 'sosvar') has no curated [variable] slug pin"
+  ]
+}

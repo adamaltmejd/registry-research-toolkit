@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "2 variable member(s) do not carry exactly one facet per declared group axis"
+  ]
+}

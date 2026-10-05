@@ -1,0 +1,17 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "dors/sosvar (source_id 500.LOPNR, panel_entity_key 'sosvar') has no curated [variable] slug pin"
+  ],
+  "failures_absent": [
+    "source_id 1.44"
+  ],
+  "report_contains": [
+    "--flavored",
+    "--slug-dir <steward dir>",
+    "fqid_slugs/<steward>/<provider>.toml"
+  ],
+  "report_absent": [
+    "--out-dir"
+  ]
+}

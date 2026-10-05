@@ -1,0 +1,7 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "variable_instance should have been dropped",
+    "variable_alias_build should have been dropped"
+  ]
+}

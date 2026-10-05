@@ -1,0 +1,8 @@
+{
+  "failures_absent": [
+    "derived (token) classification concept group"
+  ],
+  "report_contains": [
+    "[OK] no derived (token) classification concept groups"
+  ]
+}

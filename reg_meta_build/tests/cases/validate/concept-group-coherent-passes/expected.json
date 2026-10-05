@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "failures_absent": [
+    "concept group(s) with < 2 members",
+    "wrong-kind group",
+    "outside their group's register",
+    "name an axis not declared",
+    "one facet per declared group axis",
+    "one-group-per-variable",
+    "classification group(s) declare >1 axis",
+    "mixing whole-variable and representation"
+  ],
+  "report_contains": [
+    "all 1 concept groups have >= 2 members",
+    "variable members stay in their group's register",
+    "member tables wire to matching-kind groups",
+    "each variable belongs to exactly one concept group"
+  ]
+}

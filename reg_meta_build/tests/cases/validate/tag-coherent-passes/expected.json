@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "failures_absent": [
+    "missing tag",
+    "exactly-one-grain",
+    "dangling"
+  ],
+  "report_contains": [
+    "1 tags / 2 tag members",
+    "[OK] every tag_member.tag_id resolves to a tag",
+    "[OK] every tag_member register_id/variable_id resolves"
+  ]
+}

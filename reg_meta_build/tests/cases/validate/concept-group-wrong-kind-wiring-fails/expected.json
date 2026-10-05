@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "2 group member(s) under a wrong-kind group"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "report_contains": [
+    "3 alias windows",
+    "[OK] every window's variable_id/register_variant_id resolves",
+    "[OK] every window column present in variable_alias",
+    "[OK] every exact source-window state keeps its representative column visible",
+    "[OK] every per-column metadata window has complete backing states",
+    "[OK] every alias coding override has an exact positive finite domain",
+    "[OK] per-column coding windows have unclassified backing without common coding"
+  ]
+}

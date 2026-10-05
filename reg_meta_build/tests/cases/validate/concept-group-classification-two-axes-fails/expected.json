@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "1 classification group(s) declare >1 axis"
+  ]
+}

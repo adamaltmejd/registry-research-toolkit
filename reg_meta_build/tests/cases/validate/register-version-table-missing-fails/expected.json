@@ -1,0 +1,8 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "register_version missing",
+    "population missing",
+    "object_type missing"
+  ]
+}

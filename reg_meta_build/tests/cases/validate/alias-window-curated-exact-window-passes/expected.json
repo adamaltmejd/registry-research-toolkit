@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "failures_absent": [
+    "representative column"
+  ],
+  "report_contains": [
+    "[OK] every exact source-window state keeps its representative column visible"
+  ]
+}

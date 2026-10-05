@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "2 per-column coding window(s) have classified or common-coded backing states"
+  ]
+}
