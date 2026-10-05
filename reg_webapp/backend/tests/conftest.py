@@ -14,23 +14,16 @@ override (``reg_meta.db.default_db_dir``).
 
 from __future__ import annotations
 
-import importlib.util
 import sqlite3
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 import reg_meta.db
 import reg_meta.doc_db
+from webapp_fixture_support import fixture_db
 
-# Load the sibling builder script directly, without mutating sys.path (mirrors
-# test_openapi_snapshot.py), so its bare-name imports don't leak.
-_FIXTURE_DB_PATH = Path(__file__).resolve().parents[1] / "scripts" / "fixture_db.py"
-_spec = importlib.util.spec_from_file_location(
-    "reg_webapp_fixture_db", _FIXTURE_DB_PATH
-)
-assert _spec and _spec.loader
-fixture_db = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(fixture_db)
+if TYPE_CHECKING:
+    from pathlib import Path
 
 # `test_steward_index` builds its own slugged DBs from `reg_meta_build`'s bare-name
 # `_slugged_db` helper, so make that dir importable for the whole session (the

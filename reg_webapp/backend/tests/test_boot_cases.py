@@ -10,8 +10,7 @@ import pytest
 from fastapi.testclient import TestClient
 from reg_meta.errors import RegMetaError
 from reg_webapp.app import create_app
-
-from conftest import fixture_db
+from webapp_fixture_support import fixture_db
 
 CASES = Path(__file__).parent / "cases/boot"
 

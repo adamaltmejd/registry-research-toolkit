@@ -1,0 +1,90 @@
+{
+  "successions": [
+    {
+      "predecessor": "scb/example/value",
+      "successor": "scb/example/reference",
+      "effective_year": 2020
+    },
+    {
+      "predecessor": "scb/example/reference",
+      "successor": "scb/example/second",
+      "effective_year": 2021
+    },
+    {
+      "predecessor": "scb/example/retired",
+      "successor": "scb/example/second"
+    },
+    {
+      "predecessor": "scb/example/retired-unheld",
+      "successor": "fk/unheld/reference"
+    },
+    {
+      "predecessor": "scb/old-example",
+      "successor": "scb/example"
+    }
+  ],
+  "variable_groups": [
+    {
+      "register": "scb/example",
+      "key": "value-family",
+      "label": "Value family",
+      "source": "curated",
+      "members": [
+        {
+          "variable": "scb/example/value",
+          "delivery_column_name": "value"
+        },
+        {
+          "variable": "scb/example/value",
+          "delivery_column_name": "Secret"
+        },
+        {
+          "variable": "scb/example/reference"
+        },
+        {
+          "variable": "scb/example/second",
+          "delivery_column_name": "Secondhidden"
+        }
+      ]
+    }
+  ],
+  "historical_predecessors": [
+    {
+      "target": "scb/example/retired",
+      "kind": "variable",
+      "reason": "Renamed synthetic reference",
+      "decision_reference": "fixture"
+    },
+    {
+      "target": "scb/example/retired-unheld",
+      "kind": "variable",
+      "reason": "Renamed synthetic reference",
+      "decision_reference": "fixture"
+    },
+    {
+      "target": "scb/old-example",
+      "kind": "register",
+      "reason": "Renamed synthetic reference",
+      "decision_reference": "fixture"
+    }
+  ],
+  "variable_same_as": [
+    {
+      "a": "scb/example/value",
+      "b": "scb/example/reference"
+    }
+  ],
+  "tags": [
+    {
+      "slug": "hidden-sibling",
+      "label": "Hidden sibling",
+      "members": [
+        {
+          "target": "scb/example/second",
+          "rank": 1,
+          "starred": false
+        }
+      ]
+    }
+  ]
+}

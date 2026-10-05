@@ -1721,6 +1721,42 @@ class Catalog:
     # list — not an error: a genuinely-absent node maps to 404 via `resolve()`,
     # and a present parent with no children maps to an empty children list.
 
+    def exists(self, fqid: str | Fqid) -> bool:
+        """Scope-aware node existence without hydrating states or code lists.
+
+        HTTP owner gates and finite editorial search pins use this before reading
+        reference edges. Reference scope retains same_as resolution; holdings never
+        inherits possession through an alias.
+        """
+        parsed = parse(fqid) if isinstance(fqid, str) else parse(str(fqid))
+        if parsed.kind is FqidKind.VARIABLE_BINDING:
+            try:
+                return self._resolve_variable_identity(parsed) is not None
+            except RegMetaError as exc:
+                if exc.code == "fqid_not_found":
+                    return False
+                raise
+        if parsed.kind is FqidKind.PROVIDER:
+            sql = "SELECT 1 FROM provider p WHERE p.slug = ? AND "
+            predicate = scope_predicate(self.scope, "provider", "p")
+            params = (parsed.provider,)
+        elif parsed.kind is FqidKind.REGISTER:
+            sql = (
+                "SELECT 1 FROM register r JOIN provider p USING(provider_id) "
+                "WHERE p.slug = ? AND r.slug = ? AND "
+            )
+            predicate = scope_predicate(self.scope, "register", "r")
+            params = (parsed.provider, parsed.register)
+        else:
+            try:
+                self.resolve(parsed)
+            except RegMetaError as exc:
+                if exc.code == "fqid_not_found":
+                    return False
+                raise
+            return True
+        return self._conn.execute(sql + predicate, params).fetchone() is not None
+
     def catalog_sizes(self) -> CatalogSizes:
         """Browse-addressable counts in this artifact and read scope.
 
@@ -2568,29 +2604,32 @@ class Catalog:
             "  ON a.group_id = g.group_id AND a.axis = f.axis "
             "WHERE p.slug = ? AND r.slug = ? AND g.kind = 'variable' "
             "  AND v.slug IS NOT NULL AND "
-            + scope_predicate(self.scope, "variable", "v")
+            + self._group_member_predicate("m")
             + " "
-            + (
-                "AND (m.delivery_column_name IS NULL OR EXISTS ("
-                "SELECT 1 FROM register_variant gv WHERE gv.register_id = v.register_id AND "
-                + scope_predicate(
-                    self.scope,
-                    "variable",
-                    "v",
-                    variant_sql="gv.register_variant_id",
-                    representation_sql=(
-                        "py_catalog_column(v.variable_id, gv.register_variant_id, m.delivery_column_name)"
-                    ),
-                )
-                + ")) "
-                if self.scope == "holdings"
-                else ""
-            )
             + "ORDER BY g.group_key, m.member_id, a.ordinal",
             (provider_slug, register_slug),
         ).fetchall()
         groups = self._assemble_variable_groups(provider_slug, register_slug, rows)
         return sorted(groups, key=lambda g: g.key)
+
+    def _group_member_predicate(self, alias: str) -> str:
+        """Shared binding and authored representation membership for group reads."""
+        predicate = scope_predicate(self.scope, "variable", alias)
+        if self.scope == "reference":
+            return predicate
+        return (
+            predicate + f" AND ({alias}.delivery_column_name IS NULL OR EXISTS ("
+            "SELECT 1 FROM register_variant gv WHERE gv.register_id = "
+            f"(SELECT register_id FROM variable WHERE variable_id = {alias}.variable_id) AND "
+            + scope_predicate(
+                self.scope,
+                "variable",
+                alias,
+                variant_sql="gv.register_variant_id",
+                representation_sql=f"py_catalog_column({alias}.variable_id, gv.register_variant_id, {alias}.delivery_column_name)",
+            )
+            + "))"
+        )
 
     def _tags_for_variable_ids(
         self, variable_ids: Iterable[int]
@@ -3034,7 +3073,9 @@ class Catalog:
             "JOIN tag t ON t.tag_id = tm.tag_id "
             "WHERE target_p.slug = ? AND target_r.slug = ? AND target.slug = ? "
             f"{scope_clause} AND "
-            + scope_predicate(self.scope, "variable", "group_member")
+            + self._group_member_predicate("group_member")
+            + " AND "
+            + self._group_member_predicate("target_member")
             + " "
             "ORDER BY tm.rank, t.slug, tm.variable_id",
             (fqid.provider, fqid.register, fqid.variable, *scope_params),

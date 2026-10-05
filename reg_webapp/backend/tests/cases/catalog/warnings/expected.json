@@ -1,0 +1,34 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/*/code": [
+        "register-limit",
+        "case-limit",
+        "binding-limit"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/*/code": [
+        "register-limit",
+        "unheld-limit",
+        "case-limit",
+        "binding-limit"
+      ]
+    }
+  },
+  {
+    "status": 404
+  },
+  {
+    "status": 200,
+    "json": {
+      "/*/code": [
+        "register-limit"
+      ]
+    }
+  }
+]

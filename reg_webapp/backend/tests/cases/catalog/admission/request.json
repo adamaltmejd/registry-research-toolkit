@@ -1,0 +1,22 @@
+{
+  "requests": [
+    {
+      "path": "/api/catalog"
+    },
+    {
+      "path": "/api/catalog/fk"
+    },
+    {
+      "path": "/api/catalog/fk/unheld"
+    },
+    {
+      "path": "/api/catalog/scb/example/reference"
+    },
+    {
+      "path": "/api/catalog/scb/example/reference",
+      "query": {
+        "scope": "reference"
+      }
+    }
+  ]
+}

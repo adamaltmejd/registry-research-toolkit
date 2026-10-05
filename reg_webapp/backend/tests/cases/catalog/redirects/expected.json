@@ -1,0 +1,16 @@
+[
+  {
+    "status": 301,
+    "location": "/api/catalog/scb/example/second/states?period=2018&scope=holdings"
+  },
+  {
+    "status": 404
+  },
+  {
+    "status": 301,
+    "location": "/api/catalog/scb/example"
+  },
+  {
+    "status": 404
+  }
+]

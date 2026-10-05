@@ -1,0 +1,34 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/successors/*/fqid": [
+        "scb/example/reference"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/same_as/*/fqid": [
+        "scb/example/reference"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/nodes/*/fqid": [
+        "scb/example/value",
+        "scb/example/reference",
+        "scb/example/second"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/fqid": "class/example-codes"
+    }
+  }
+]

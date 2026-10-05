@@ -1,0 +1,28 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/members/*/delivery_column": [
+        "value"
+      ],
+      "/members/0/coverage": {
+        "coverage_from": "2018-01-01",
+        "coverage_to": "2019-12-31",
+        "open_ended": false,
+        "state_count": 2
+      },
+      "/tags": []
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/members/*/delivery_column": [
+        null,
+        "Secondhidden",
+        "Secret",
+        "value"
+      ]
+    }
+  }
+]

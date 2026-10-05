@@ -1,0 +1,57 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/states/*/delivery_column_name": [
+        "Value",
+        "value"
+      ],
+      "/states/*/variant": [
+        "annual",
+        "annual"
+      ],
+      "/states/*/valid_from": [
+        "2018-01-01",
+        "2019-01-01"
+      ],
+      "/states/*/valid_to": [
+        "2018-12-31",
+        "2019-12-31"
+      ],
+      "/tags": []
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/states/*/delivery_column_name": [
+        "Value",
+        "value"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/variants/*/slug": [
+        "annual"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/children/0/fqid": "scb/example/second",
+      "/children/1/fqid": "scb/example/value",
+      "/children/1/coverage": {
+        "coverage_from": "2018-01-01",
+        "coverage_to": "2019-12-31",
+        "open_ended": false,
+        "state_count": 2
+      },
+      "/children/1/deliveries/*/column": [
+        "Value"
+      ]
+    }
+  }
+]

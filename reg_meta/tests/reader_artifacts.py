@@ -27,13 +27,15 @@ BUILDER_CASES = CASES.parents[2] / "reg_meta_build/tests/cases/holdings"
 
 def build_reader_artifact(
     directory: Path,
-    fixture: str,
+    fixture: str | Path,
     kind: str,
     *,
     identity_overrides: dict[str, str] | None = None,
 ) -> Path:
     source = (
-        CASES / "reader/fixture"
+        fixture
+        if isinstance(fixture, Path)
+        else CASES / "reader/fixture"
         if fixture == "reader"
         else CASES / fixture
         if fixture.startswith("reader/")

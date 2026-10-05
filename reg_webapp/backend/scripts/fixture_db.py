@@ -1278,7 +1278,7 @@ def build_docs_fixture_db(db_path: Path) -> None:
 
 
 def build_reader_fixture_db(
-    db_dir: Path, *, kind: str, fixture: str = "reader"
+    db_dir: Path, *, kind: str, fixture: str | Path = "reader"
 ) -> Path:
     """Build the shared readable-source catalog or steward artifact.
 

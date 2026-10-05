@@ -1,0 +1,72 @@
+"""Readable request/expected cases at the HTTP boundary."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from fastapi.testclient import TestClient
+from reg_webapp.app import create_app
+from webapp_fixture_support import fixture_db
+
+CASES = Path(__file__).parent / "cases"
+
+
+def select_json(value, path):
+    """JSON-pointer projection; '*' collects a list in response order."""
+    parts = path.strip("/").split("/") if path != "/" else []
+
+    def walk(current, remaining):
+        if not remaining:
+            return current
+        head, *tail = remaining
+        if head == "*":
+            return [walk(item, tail) for item in current]
+        return walk(
+            current[int(head)] if isinstance(current, list) else current[head], tail
+        )
+
+    return walk(value, parts)
+
+
+def assert_http_case(case, tmp_path, monkeypatch):
+    request = json.loads((case / "request.json").read_text())
+    expected = json.loads((case / "expected.json").read_text())
+    kind = request.get("kind", "steward")
+    path = fixture_db.build_reader_fixture_db(
+        tmp_path / "artifact",
+        kind=kind,
+        fixture=CASES / "fixtures" / request.get("fixture", "compiled"),
+    )
+    monkeypatch.setenv("REG_META_DB", str(path.parent))
+    monkeypatch.setenv(
+        "REG_WEBAPP_STEWARD", "swecov" if kind == "steward" else "global"
+    )
+    responses = []
+    with TestClient(create_app(rate_limit_per_minute=1000)) as client:
+        for step, oracle in zip(request["requests"], expected, strict=True):
+            params = dict(step.get("query", {}))
+            if "cursor_from" in step:
+                idx, pointer = step["cursor_from"]
+                params["cursor"] = select_json(responses[idx], pointer)
+                assert params["cursor"] is not None
+            response = client.request(
+                step.get("method", "GET"),
+                step["path"],
+                params=params,
+                json=step.get("body"),
+                follow_redirects=False,
+            )
+            assert response.status_code == oracle["status"]
+            if "location" in oracle:
+                assert response.headers["location"] == oracle["location"]
+            body = response.json() if response.content else None
+            responses.append(body)
+            projection = {
+                pointer: select_json(body, pointer)
+                for pointer in oracle.get("json", {})
+            }
+            assert projection == oracle.get("json", {}), (
+                projection,
+                oracle.get("json", {}),
+            )
