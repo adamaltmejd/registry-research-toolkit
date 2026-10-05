@@ -8,7 +8,7 @@ import tomllib
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from reg_meta.catalog import Catalog, representative_columns
+from reg_meta.catalog import Catalog
 from reg_meta.db import register_py_lower
 from reg_meta.inventory import (
     DeliveryInventory,
@@ -94,30 +94,9 @@ def canonical_inventory(
                     continue
                 key = variable_id, variant_id
                 if key not in universes:
-                    # Call the authority directly: the consistency-checker's mirror
-                    # omits per-column coding replacement/intersection rules.
-                    rows = catalog._states_in_bounds(variable_id, variant_id, None)
-                    emitted = catalog._expand_state_windows(
-                        variable_id,
-                        rows,
-                        None,
-                        with_codes=False,
-                        with_code_summary=False,
-                    )
-                    delivered = {
-                        state.delivery_column_name.lower()
-                        for state in emitted
-                        if state.delivery_column_name is not None
-                    }
-                    windows = catalog._variable_windows(variable_id).get(variant_id, [])
-                    spelling = representative_columns(
-                        (row["delivery_column_name"] for row in rows),
-                        (window[0] for window in windows),
-                    )
                     universes[key] = {
-                        fold: name
-                        for fold, name in spelling.items()
-                        if fold in delivered
+                        name.lower(): name
+                        for name in catalog.delivery_columns(variable_id, variant_id)
                     }
                 canonical = universes[key].get(mapping.representation.lower())
                 if canonical is None:

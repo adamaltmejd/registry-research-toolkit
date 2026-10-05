@@ -3618,6 +3618,37 @@ class Catalog:
             ),
         )
 
+    def delivery_columns(
+        self,
+        variable_id: int,
+        variant_id: int,
+        *,
+        period_scope: Literal["intervals", "year_independent"] | None = None,
+    ) -> frozenset[str]:
+        """Whole-history resolver delivery universe at an authored binding/variant.
+
+        Includes participating alias windows, using the resolver's replacement,
+        containment and coding rules. Names use representative spelling. This is
+        reference metadata, independent of browse scope and physical possession;
+        it does not promise applicability to any particular holding edition.
+        """
+        rows = self._states_in_bounds(variable_id, variant_id, None)
+        emitted = self._expand_state_windows(
+            variable_id, rows, None, with_codes=False, with_code_summary=False
+        )
+        delivered = {
+            state.delivery_column_name.lower()
+            for state in emitted
+            if state.delivery_column_name is not None
+            and (period_scope is None or state.period_scope == period_scope)
+        }
+        windows = self._variable_windows(variable_id).get(variant_id, [])
+        spelling = representative_columns(
+            (row["delivery_column_name"] for row in rows),
+            (window[0] for window in windows),
+        )
+        return frozenset(name for fold, name in spelling.items() if fold in delivered)
+
     def _states_for_variable(
         self, variable_id: int, *, with_codes: bool, with_code_summary: bool
     ) -> tuple[VariableState, ...]:

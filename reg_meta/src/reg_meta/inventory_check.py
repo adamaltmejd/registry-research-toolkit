@@ -133,12 +133,6 @@ def check_inventory(
     coordinate within each group, so two runs over the same inputs produce the
     same report.
 
-    A mapping that omits `representation` skips the representation check ONLY:
-    which canonical representation an unqualified binding resolves to is
-    request-dependent (§12's single-representation arm is decided across the
-    requested period, and `order._materialize_binding`'s `unqualified_ok` owns
-    it), but that the binding is delivered at its declared variant at all is
-    not — every mapping is checked at that grain.
     """
     variants: dict[str, _Uses] = {}
     variables: dict[str, _Uses] = {}
@@ -381,7 +375,10 @@ def _variable_ids(conn: sqlite3.Connection, wanted: set[str]) -> dict[str, int]:
 
 
 def _delivered(
-    conn: sqlite3.Connection, pairs: set[_PairIds], *, scope: str | None = None
+    conn: sqlite3.Connection,
+    pairs: set[_PairIds],
+    *,
+    scope: Literal["intervals", "year_independent"] | None = None,
 ) -> dict[_PairIds, frozenset[str]]:
     """For each pair of `pairs` the catalog carries a state for, the delivery
     column names the resolver would produce over the whole history.
@@ -412,86 +409,22 @@ def _delivered(
 
     Two streaming scans, filtered against the inventory's own pairs, so the
     working set stays the inventory's and not the catalog's."""
-    states: dict[_PairIds, list[tuple[str | None, str | None, str | None]]] = {}
-    for variable_id, register_variant_id, valid_from, valid_to, column in conn.execute(
-        "SELECT variable_id, register_variant_id, valid_from, valid_to, "
-        "delivery_column_name FROM variable_state"
-        + (" WHERE period_scope = ?" if scope is not None else ""),
-        (scope,) if scope is not None else (),
-    ):
-        pair = (variable_id, register_variant_id)
-        if pair in pairs:
-            states.setdefault(pair, []).append((valid_from, valid_to, column))
-    if not states:
-        return {}
-    windows: dict[_PairIds, list[tuple[str, str, str, str | None, str]]] = {}
-    for row in conn.execute(
-        "SELECT variable_id, register_variant_id, delivery_column_name, "
-        "valid_from, valid_to, provenance, column_metadata FROM variable_alias_window"
-    ):
-        (
-            variable_id,
-            register_variant_id,
-            column,
-            valid_from,
-            valid_to,
-            provenance,
-            mode,
-        ) = row
-        pair = (variable_id, register_variant_id)
-        if pair in states:
-            windows.setdefault(pair, []).append(
-                (column, valid_from, valid_to, provenance, mode)
+    catalog = Catalog(conn)
+    delivered = {}
+    for variable_id, variant_id in sorted(pairs):
+        if conn.execute(
+            "SELECT 1 FROM variable_state WHERE variable_id = ? "
+            "AND register_variant_id = ? "
+            + ("AND period_scope = ? " if scope is not None else "")
+            + "LIMIT 1",
+            (variable_id, variant_id, scope)
+            if scope is not None
+            else (variable_id, variant_id),
+        ).fetchone():
+            delivered[(variable_id, variant_id)] = catalog.delivery_columns(
+                variable_id, variant_id, period_scope=scope
             )
-    return {
-        pair: _expanded_columns(state_rows, windows.get(pair, []))
-        for pair, state_rows in states.items()
-    }
-
-
-def _expanded_columns(
-    states: list[tuple[str | None, str | None, str | None]],
-    windows: list[tuple[str, str, str, str | None, str]],
-) -> frozenset[str]:
-    """`Catalog._expand_state_windows`'s delivery columns for one pair.
-
-    The gate reads the WHOLE history (`"_default"`, no period filter), so the
-    resolver's window ∩ requested-bounds test is trivially true and is not
-    mirrored. Shared windows must be contained; per-column storage windows
-    intersect canonical states. Source replacement and curated addition follow
-    the same rules as the reader."""
-    columns: set[str] = set()
-    for valid_from, valid_to, column in states:
-        if valid_from is None and valid_to is None:
-            if column is not None:
-                columns.add(column)
-            continue
-        assert valid_from is not None and valid_to is not None
-        contained = [
-            w
-            for w in windows
-            if (w[4] == "per_column" and valid_from <= w[2] and w[1] <= valid_to)
-            or (valid_from <= w[1] and w[2] <= valid_to)
-        ]
-        source_windows = [w for w in contained if w[3] is None]
-        if (
-            source_windows
-            and column is not None
-            and any(w[0].lower() == column.lower() for w in source_windows)
-        ):
-            # The state's own column participates, so the state EXPANDS: the
-            # contained windows REPLACE it, the base column returning as the
-            # window that matched it — in that window's own spelling.
-            columns.update(w[0] for w in source_windows)
-        elif column is not None:
-            # No source window contained by this state, or none carrying its
-            # column: the state stands on its own and source windows deliver
-            # nothing. Curated windows are added separately below.
-            columns.add(column)
-        # Curated aliases are additive to whichever source representation the
-        # rules above selected; their non-NULL provenance is the schema marker.
-        columns.update(w[0] for w in contained if w[3] is not None)
-    return frozenset(columns)
+    return delivered
 
 
 def _aliased_states(

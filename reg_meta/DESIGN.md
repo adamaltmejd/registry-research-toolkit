@@ -866,35 +866,31 @@ claims; equal partitions or an unlabelled whole-population claim conflict on ove
 cells. Year-independent claims retain their separate scope check.
 
 The compiler folds each literal with Python `str.lower()` (`py_lower`), the exact shared
-fold of `representative_columns`. No NFC, `casefold()` or SQLite `lower()`. The
-comparison universe at the mapped variable/variant is what
-`Catalog._expand_state_windows` emits over the whole history: the states' own delivery
-columns plus the alias windows that participate under its containment, replacement and
-curated-addition rules (ratified 2026-10-04, replacing the states-only draft; the
-earlier `inventory_check._expanded_columns` mirror is the model, with its coding-mode
-drift fixed or the resolver called directly). The folded literal must name exactly one
-delivery column in that universe; no match fails publication with the coordinate and
-locator. `representation_canonical` is that column's representative spelling from
-`representative_columns(states, windows)` — a state's own spelling where a state names
-the column, else the lowest alias spelling — so the stored value is the spelling every
-reader already compares by, not an arbitrary pick. Store both spellings. The compiler
-must report rejected accepted mappings for separate source review, never fall back
-silently. Reader-side holding folds go; the resolver's own alias/state identity rule
-remains shared domain behavior.
+fold of `representative_columns`. No NFC, `casefold()` or SQLite `lower()`.
+`Catalog.delivery_columns(variable_id, variant_id)` exposes the whole-history reference
+delivery universe: states plus participating alias windows under the resolver's
+containment, replacement, curated-addition and coding rules. It returns a frozen set of
+representative spellings, independent of browse scope; optional `period_scope` narrows
+it to dated or year-independent delivery. The compiler and inventory consistency gate
+share this public method. It does not promise applicability to a physical edition. The
+folded literal must name exactly one column in that universe; no match fails publication
+with the coordinate and locator. `representation_canonical` uses the representative
+spelling: a state's spelling where a state names the column, else the lowest alias
+spelling. Store both literal and canonical spellings. Reader-side holding folds go; the
+resolver's own alias/state identity rule remains shared domain behavior.
 
 `Catalog._expand_state_windows` remains the resolution authority. Per-column metadata or
 coding windows intersect successive base states; shared windows must be contained.
 Source replacement requires participating base column and request overlap, otherwise the
 base remains; curated shared-coding windows add independently. Year-independent states
 remain year-independent. A join on canonical `variable_state.delivery_column_name` is
-sufficient only where it preserves these rules; aliases use the existing resolver.
-`inventory_check._expanded_columns` is an intended whole-history mirror with known
-coding-mode drift, not a replacement oracle. The builder's inventory coverage flat union
-answers a different accounting question. None of the three rules is copied into DDL.
-Range/list physical periods survive; the build coverage assessment retains its existing
-"temporally unassessed" disposition through `data_warning`, without partial-resolution
-rows or a findings relation. Unknown tables retain census columns but no logical
-mappings.
+sufficient only where it preserves these rules; aliases use the existing resolver. The
+inventory consistency gate uses the same public delivery universe. The builder's
+inventory coverage flat union answers a different accounting question. None of the three
+rules is copied into DDL. Range/list physical periods survive; the build coverage
+assessment retains its existing "temporally unassessed" disposition through
+`data_warning`, without partial-resolution rows or a findings relation. Unknown tables
+retain census columns but no logical mappings.
 
 Candidate indexes are `holding_mapping(variable_id, variant_id)`,
 `holding_mapping(column_id)`, `holding_column(table_id)` and
