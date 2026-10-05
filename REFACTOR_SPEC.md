@@ -324,10 +324,11 @@ will need period-column `WHERE` clauses later.
 
 ### Staged cut and completion gate
 
-Plans 00 and 01 are independent and have merged (#1145, #1144); plans 02 and 03 merged
-as #1146 and #1147 on 2026-10-05. Plan 01b scaffolds the conformance suite beside plan
-03; plan 06 sweeps the package test suites after plan 05. Plans 02–04 are one unreleased
-schema-9 series with separately reviewable PRs; do not tag `reg_meta/v*` or
+Plans 00 and 01 are independent and have merged (#1145, #1144); plans 02, 03 and 04
+merged as #1146, #1147 and #1149 on 2026-10-05. Plan 01b (conformance suite) did not run
+beside plan 03 and runs next, before plan 05, which executes its checks through that
+suite; plan 06 sweeps the package test suites after plan 05. Plans 02–04 are one
+unreleased schema-9 series with separately reviewable PRs; do not tag `reg_meta/v*` or
 `reg_webapp/v*` until plan 05 passes. Main may reject released 8.1 artifacts between
 writer and reader cuts; use the schema-9 scratch builds via `REG_META_DB`. No
 compatibility fallback or migration.
