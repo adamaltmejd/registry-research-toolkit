@@ -1,124 +1,139 @@
-"""Unit tests for the maintainer search-eval runner's pure helpers.
+"""CLI tests for the maintainer search-eval runner (``scripts/run_search_eval.py``).
 
-The runner itself needs a real catalog-scale ``reg_meta.db`` (it lives in ``scripts/``,
-not ``tests/``, for that reason), but its ``--db`` resolution and group-guard logic are
-pure and DB-free, so they get focused coverage here.
+The runner reads its eval set from the hard-wired ``<backend>/search_eval.toml``, so
+each test copies the script into a tmp ``<root>/scripts/`` layout next to a
+test-written ``<root>/search_eval.toml`` and runs it as a subprocess against the
+synthetic catalog DB, asserting on exit code, stdout and stderr.
 """
 
 from __future__ import annotations
 
-import importlib.util
+import os
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 
-import pytest
-from reg_meta.search import SearchResults
+_SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "run_search_eval.py"
 
-# Load the sibling script directly, without mutating sys.path (mirrors
-# test_openapi_snapshot.py), so the runner's bare-name imports don't leak.
-_RUNNER_PATH = Path(__file__).resolve().parents[1] / "scripts" / "run_search_eval.py"
-_spec = importlib.util.spec_from_file_location(
-    "reg_webapp_run_search_eval", _RUNNER_PATH
-)
-assert _spec is not None and _spec.loader is not None
-run_search_eval = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(run_search_eval)
+_HEADER = ["query", "group", "intended", "expect", "rank", "returned", "has_more"]
 
 
-def test_resolve_db_honors_file_path(tmp_path: Path) -> None:
-    """An explicit FILE path is used directly, not treated as a directory."""
-    db_file = tmp_path / "reg_meta.db"
-    db_file.write_bytes(b"")
-    assert run_search_eval._resolve_db(str(db_file)) == db_file
+def _case(query: str, group: str, intended: str = "scb/lisa") -> str:
+    return (
+        f'[[case]]\nquery = "{query}"\ngroup = "{group}"\n'
+        f'intended = "{intended}"\nexpect = "hit"\n\n'
+    )
 
 
-def test_resolve_db_treats_directory_as_container(tmp_path: Path) -> None:
-    """A directory arg resolves to ``<dir>/reg_meta.db`` via reg_meta's rules."""
-    assert run_search_eval._resolve_db(str(tmp_path)) == tmp_path / "reg_meta.db"
+def _run(
+    tmp_path: Path, cases: str, *args: str, home: Path | None = None
+) -> subprocess.CompletedProcess[str]:
+    """Run a tmp copy of the runner over ``cases``; REG_META_DB is unset so only
+    ``--db`` (or the platform default) can locate the catalog."""
+    root = tmp_path / "runner"
+    (root / "scripts").mkdir(parents=True, exist_ok=True)
+    shutil.copy(_SCRIPT, root / "scripts" / _SCRIPT.name)
+    (root / "search_eval.toml").write_text(cases, encoding="utf-8")
+    env = {k: v for k, v in os.environ.items() if k != "REG_META_DB"}
+    if home is not None:
+        env["HOME"] = str(home)
+    return subprocess.run(
+        [sys.executable, str(root / "scripts" / _SCRIPT.name), *args],
+        capture_output=True,
+        text=True,
+        env=env,
+        check=False,
+    )
 
 
-def test_resolve_db_expands_tilde_file_path(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+def _rows(stdout: str) -> list[list[str]]:
+    """The report table's header and data rows (up to the blank line), split on
+    whitespace; the separator row is dropped."""
+    table = stdout.split("\n\n", 1)[0].splitlines()
+    return [table[0].split(), *(line.split() for line in table[2:])]
+
+
+def test_db_file_path_is_used_directly(tmp_path: Path, catalog_db: Path) -> None:
+    """``--db <file>`` reads that file and prints the report."""
+    result = _run(tmp_path, _case("lisa", "register"), "--db", str(catalog_db))
+    assert result.returncode == 0, result.stderr
+    assert _rows(result.stdout)[1][:2] == ["lisa", "register"]
+
+
+def test_db_directory_resolves_reg_meta_db_inside(
+    tmp_path: Path, catalog_db: Path
 ) -> None:
-    """A ``~``-prefixed FILE path is expanded before the is-file check, so the
-    documented ``--db ~/.local/share/reg_meta/reg_meta.db`` form resolves."""
-    monkeypatch.setenv("HOME", str(tmp_path))
-    db_file = tmp_path / "reg_meta.db"
-    db_file.write_bytes(b"")
-    assert run_search_eval._resolve_db("~/reg_meta.db") == db_file
+    """``--db <dir>`` resolves ``<dir>/reg_meta.db``; a dir without one exits 2
+    naming the path it looked for."""
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    missing = _run(tmp_path, _case("lisa", "register"), "--db", str(empty))
+    assert missing.returncode == 2
+    assert str(empty / "reg_meta.db") in missing.stderr
+
+    found = _run(tmp_path, _case("lisa", "register"), "--db", str(catalog_db.parent))
+    assert found.returncode == 0, found.stderr
 
 
-def test_group_call_known_groups() -> None:
-    assert run_search_eval._group_call("register") == ("description", False)
-    assert run_search_eval._group_call("variable") == ("description", True)
-    assert run_search_eval._group_call("classification") == ("description", True)
+def test_db_tilde_file_path_is_expanded(tmp_path: Path, catalog_db: Path) -> None:
+    """A ``~``-prefixed file path resolves against ``$HOME``."""
+    result = _run(
+        tmp_path,
+        _case("lisa", "register"),
+        "--db",
+        "~/reg_meta.db",
+        home=catalog_db.parent,
+    )
+    assert result.returncode == 0, result.stderr
 
 
-def test_group_call_rejects_value_group() -> None:
-    """`value` was dropped: a code row has no fqid, so it could never match."""
-    with pytest.raises(ValueError, match="unsupported eval group 'value'"):
-        run_search_eval._group_call("value")
+def test_supported_groups_each_report_a_row(tmp_path: Path, catalog_db: Path) -> None:
+    """register, variable and classification cases all run, one row each."""
+    cases = (
+        _case("lisa", "register")
+        + _case("kön", "variable")
+        + _case("svensk", "classification")
+    )
+    result = _run(tmp_path, cases, "--db", str(catalog_db))
+    assert result.returncode == 0, result.stderr
+    assert [row[:2] for row in _rows(result.stdout)[1:]] == [
+        ["lisa", "register"],
+        ["kön", "variable"],
+        ["svensk", "classification"],
+    ]
 
 
-def test_group_call_rejects_unknown_group_names_supported_set() -> None:
-    with pytest.raises(ValueError) as exc:
-        run_search_eval._group_call("bogus")
-    msg = str(exc.value)
-    assert "bogus" in msg
-    assert "register | variable | classification" in msg
+def test_value_group_fails_fast(tmp_path: Path, catalog_db: Path) -> None:
+    """A ``value`` case is rejected: code rows carry no FQID, so it could never hit."""
+    result = _run(tmp_path, _case("kvinna", "value"), "--db", str(catalog_db))
+    assert result.returncode != 0
+    assert "unsupported eval group 'value'" in result.stderr
 
 
-def test_main_reports_bounded_page_without_exact_total(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
+def test_unknown_group_names_supported_set(tmp_path: Path, catalog_db: Path) -> None:
+    result = _run(tmp_path, _case("lisa", "bogus"), "--db", str(catalog_db))
+    assert result.returncode != 0
+    assert "'bogus'" in result.stderr
+    assert "register | variable | classification" in result.stderr
+
+
+def test_report_shows_page_size_and_has_more_never_total(
+    tmp_path: Path, catalog_db: Path
 ) -> None:
-    db_file = tmp_path / "reg_meta.db"
-    db_file.write_bytes(b"")
-    eval_file = tmp_path / "search_eval.toml"
-    eval_file.write_text(
-        """\
-[[case]]
-query = "needle"
-group = "register"
-intended = "scb/missing"
-expect = "gap"
-""",
-        encoding="utf-8",
+    """With more hits than ``--limit``, the row reports the returned page size and
+    ``has_more = true``; no exact total is printed."""
+    result = _run(
+        tmp_path,
+        _case("svensk", "classification"),
+        "--db",
+        str(catalog_db),
+        "--limit",
+        "1",
     )
-
-    class _Connection:
-        def close(self) -> None:
-            pass
-
-    monkeypatch.setattr(run_search_eval, "EVAL_PATH", eval_file)
-    monkeypatch.setattr(
-        run_search_eval, "open_db", lambda *_args, **_kwargs: _Connection()
-    )
-    monkeypatch.setattr(
-        run_search_eval,
-        "search",
-        lambda *_args, **_kwargs: SearchResults(results=(), has_more=False),
-    )
-    monkeypatch.setattr(
-        run_search_eval,
-        "pinned_fqids",
-        lambda *_args, **_kwargs: ("scb/first", "scb/second"),
-    )
-    monkeypatch.setattr(
-        run_search_eval,
-        "apply_golden_boost",
-        lambda *_args, **_kwargs: [],
-    )
-    monkeypatch.setattr(
-        sys,
-        "argv",
-        ["run_search_eval.py", "--db", str(db_file), "--limit", "1"],
-    )
-
-    assert run_search_eval.main() == 0
-    output = capsys.readouterr().out
-    assert "returned" in output
-    assert "has_more" in output
-    assert "total" not in output
-    assert "true" in output
+    assert result.returncode == 0, result.stderr
+    assert "total" not in result.stdout
+    header, row = _rows(result.stdout)
+    assert header == [*_HEADER, "status"]
+    returned, has_more = row[_HEADER.index("returned")], row[_HEADER.index("has_more")]
+    assert (returned, has_more) == ("1", "true")

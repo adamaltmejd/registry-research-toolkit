@@ -9,15 +9,27 @@ degradation, and the ETag round-trip.
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 from fastapi.testclient import TestClient
+from reg_meta_build.doc_db import build_doc_db
 from reg_webapp.app import create_app
-from reg_webapp.routes.docs import _EXCERPT_CHARS, _excerpt
+
+DOCS_SOURCE = Path(__file__).parent / "docs_source"
 
 
 @pytest.fixture
 def client(docs_db):
     """App with the docs index present."""
+    with TestClient(create_app()) as c:
+        yield c
+
+
+@pytest.fixture
+def client_built_docs(catalog_db):
+    """App with a docs index built from the readable `docs_source/` markdown."""
+    build_doc_db(DOCS_SOURCE, catalog_db.parent)
     with TestClient(create_app()) as c:
         yield c
 
@@ -228,12 +240,30 @@ def test_docs_search_etag_roundtrip(client):
     assert second.status_code == 304
 
 
-def test_excerpt_is_bounded():
-    assert _excerpt(None) is None
-    assert _excerpt("   ") is None
-    short = "a short body"
-    assert _excerpt(short) == short
-    long = "x" * (_EXCERPT_CHARS + 50)
-    out = _excerpt(long)
-    assert out.endswith("…")
-    assert len(out) <= _EXCERPT_CHARS + 1
+def _source_prose(name: str) -> str:
+    """The body of a plain-prose source doc: the text after its frontmatter."""
+    text = (DOCS_SOURCE / "lisa" / name).read_text(encoding="utf-8")
+    return text.split("\n---\n", 1)[1].strip()
+
+
+def test_doc_excerpt_short_body_verbatim(client_built_docs):
+    """A short doc body is served whole as its excerpt."""
+    body = client_built_docs.get("/api/docs/doc/Kort").json()
+    assert body["excerpt"] == "Kort beskrivning av variabeln."
+
+
+def test_doc_excerpt_long_body_truncated_at_500(client_built_docs):
+    """A body over 500 chars is cut to its first 500 chars, right-stripped, plus an
+    ellipsis — never the full text."""
+    prose = _source_prose("LoneInk.md")
+    assert len(prose) > 500
+    body = client_built_docs.get("/api/docs/doc/LoneInk").json()
+    assert body["excerpt"] == prose[:500].rstrip() + "…"
+
+
+def test_doc_excerpt_null_when_clean_body_empty(client_built_docs):
+    """A doc whose body is only a markdown table (stripped from the searchable text)
+    has no excerpt."""
+    body = client_built_docs.get("/api/docs/doc/Tabell").json()
+    assert body["filename"] == "Tabell.md"
+    assert body["excerpt"] is None

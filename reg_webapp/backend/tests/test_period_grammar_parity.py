@@ -1,4 +1,4 @@
-"""Cross-grammar parity gate: ``reg_meta.fqid`` vs ``reg_schema.structural``.
+"""Cross-grammar parity gate: ``reg_meta.fqid`` vs ``reg_schema.validate_structural``.
 
 The period-token grammar is DUPLICATED on purpose, for two reasons that survive:
 (a) LAYERING — ``reg_schema`` is the lightweight canonical-schema package, and
@@ -6,32 +6,35 @@ making it depend on the heavier catalog-query ``reg_meta`` (which owns a DB) wou
 be a backwards layering inversion; ``reg_schema`` uses string IDs and leaves
 resolution to the consumer (one-way dependency — see ``reg_schema/DESIGN.md`` and
 ``ARCHITECTURE.md``); and (b) the TS SPA mirrors the grammar regardless of either
-package. So each side carries its own copy of the period grammar
-(``reg_meta.fqid._PERIOD_PATTERNS`` + the ``is_period`` calendar check, and
-``reg_schema.structural._PERIOD_TOKEN`` + ``_is_period_endpoint``). A looser copy
-on either side would let a spec pass one gate yet fail the other (a structurally
-"valid" spec that reg_meta's resolver rejects, or vice versa).
+package. So each side carries its own copy of the period grammar and of the
+token-to-bounds expansion (``reg_meta.fqid.is_period`` /
+``period_token_to_bounds``, and the private period helpers behind
+``reg_schema.structural``). A looser copy on either side would let a spec pass
+one gate yet fail the other (a structurally "valid" spec that reg_meta's
+resolver rejects, or vice versa).
 
 Both grammars carry a sync comment saying "keep these two in sync". This test
-turns that comment into a CI gate: for one shared corpus of period strings —
-valid tokens, calendar-impossible full dates, and syntactic junk — the two
-verdicts MUST agree for every string. This is the single drift mitigation for
+turns that comment into a CI gate, checked through the PUBLIC validation result
+(``validate_structural`` issues on ``Source.period``) rather than reg_schema's
+private helpers: for one shared corpus of period strings — valid tokens,
+calendar-impossible full dates, and syntactic junk — reg_meta's verdict MUST
+equal whether ``validate_structural`` accepts the string as a period, and for
+every ordered pair of valid tokens the list-form sorted/non-overlap verdict MUST
+equal the one reg_meta's bounds imply. This is the single drift mitigation for
 issue #239 (which split the duplicated grammars apart by adding calendar-day
-validation to both); if a future change touches one grammar and not the other,
-this test fails.
-
-``reg_schema._is_period_endpoint`` is private, but reaching a structural-layer
-internal for a parity assertion is acceptable (mirrors how other tests reach
-internals) — it IS the predicate the structural layer uses for ``Source.period``
-endpoints. We feed only strings, so its int-literal arm never fires; the
-comparison is grammar-against-grammar.
+validation to both) and #307 (which duplicated the bounds expansion); if a
+future change touches one copy and not the other, this test fails.
 """
 
 from __future__ import annotations
 
+import copy
+from itertools import product
+
 import pytest
-from reg_meta.fqid import is_period
-from reg_schema.structural import _is_period_endpoint
+from reg_meta.fqid import is_period, period_token_to_bounds
+
+from reg_schema import validate_structural
 
 # One shared corpus spanning the three classes the two grammars must agree on.
 # Each verdict is asserted by AGREEMENT, not a hard-coded expected value, so the
@@ -43,6 +46,7 @@ _CORPUS: tuple[str, ...] = (
     "2018-01",
     "2018-12",
     "2018-02",  # non-leap February month token (no author day — valid)
+    "2020-02",  # leap February month token — its upper bound meets 2020-02-29
     "HT2020",
     "VT2019",
     "LA2004",
@@ -87,30 +91,78 @@ _CORPUS: tuple[str, ...] = (
     "_default",  # snapshot sentinel — not a token endpoint on either side
 )
 
+_VALID: tuple[str, ...] = tuple(v for v in _CORPUS if is_period(v))
+
+# Minimal clean project document (mirrors reg_schema/test_corpus/minimal); only
+# ``sources[0].period`` varies per case.
+_CLEAN_DOC: dict[str, object] = {
+    "schema_version": "2.0.0",
+    "steward": "global",
+    "reg_meta_version": "reg_meta/v1.0.0",
+    "name": "period_parity",
+    "sources": [
+        {
+            "name": "lisa_2018",
+            "register_variant": "scb/lisa/individer-15plus",
+            "period": 2018,
+            "bindings": [
+                {
+                    "variable": "scb/lisa/kon",
+                    "type": "categorical",
+                    "value_set": "class/sun2020",
+                }
+            ],
+        }
+    ],
+}
+
+
+def _period_issue_paths(period: object) -> list[str]:
+    doc = copy.deepcopy(_CLEAN_DOC)
+    doc["sources"][0]["period"] = period  # type: ignore[index]
+    return [
+        issue.path
+        for issue in validate_structural(doc).issues
+        if issue.code == "invalid_period" and issue.path.startswith("/sources/0/period")
+    ]
+
+
+def test_clean_document_with_range_period_has_no_issues() -> None:
+    """The base document is clean, so a period verdict is the only signal."""
+    doc = copy.deepcopy(_CLEAN_DOC)
+    doc["sources"][0]["period"] = {"from": "2018", "to": "2018"}  # type: ignore[index]
+    assert not validate_structural(doc).issues
+
 
 @pytest.mark.parametrize("value", _CORPUS)
 def test_period_grammars_agree(value: str) -> None:
-    assert is_period(value) == _is_period_endpoint(value), (
-        f"period grammar drift for {value!r}: "
-        f"reg_meta.is_period={is_period(value)} but "
-        f"reg_schema._is_period_endpoint={_is_period_endpoint(value)}"
+    """reg_meta accepts a token iff validate_structural accepts it as a range endpoint."""
+    # Range form: the scalar form special-cases "_default".
+    accepted = not _period_issue_paths({"from": value, "to": value})
+    assert is_period(value) == accepted, (
+        f"period grammar drift for {value!r}: reg_meta.is_period={is_period(value)} "
+        f"but validate_structural accepts={accepted}"
     )
 
 
-@pytest.mark.parametrize("value", [v for v in _CORPUS if is_period(v)])
-def test_period_bounds_expansions_agree(value: str) -> None:
-    """#307 widened the duplicate surface: ``reg_schema.structural`` now also
-    mirrors ``reg_meta.fqid.period_token_to_bounds`` (``_endpoint_bounds``) for
-    the period-list sorted/non-overlap rule. The same parity contract applies —
-    for every VALID token the two expansions must produce the same inclusive
-    ISO interval, or the structural overlap verdicts would drift from
-    reg_meta's interval-intersection verdicts (incl. the deliberate synthesized
-    Feb-29 upper bound both sides share)."""
-    from reg_meta.fqid import period_token_to_bounds
-    from reg_schema.structural import _endpoint_bounds
-
-    assert _endpoint_bounds(value) == period_token_to_bounds(value), (
-        f"period bounds drift for {value!r}: "
-        f"reg_meta.period_token_to_bounds={period_token_to_bounds(value)} but "
-        f"reg_schema._endpoint_bounds={_endpoint_bounds(value)}"
-    )
+def test_period_list_ordering_agrees_with_reg_meta_bounds() -> None:
+    """For every ordered pair of valid tokens, the list period ``[a, b]`` is
+    rejected at member 1 iff reg_meta's bounds say b starts before a (unsorted)
+    or inside a (overlap) — so the structural interval verdicts cannot drift
+    from reg_meta's expansion (incl. the synthesized Feb-29 upper bound both
+    sides share)."""
+    mismatches = []
+    for a, b in product(_VALID, repeat=2):
+        a_lo, a_hi = period_token_to_bounds(a)
+        b_lo, _ = period_token_to_bounds(b)
+        expected_rejected = b_lo < a_lo or b_lo <= a_hi
+        paths = _period_issue_paths([a, b])
+        # Single tokens are never inverted, so member 0 must never be flagged.
+        assert "/sources/0/period/0" not in paths, (a, b, paths)
+        rejected = "/sources/0/period/1" in paths
+        if rejected != expected_rejected:
+            mismatches.append(
+                f"[{a!r}, {b!r}]: reg_meta bounds imply rejected={expected_rejected}, "
+                f"validate_structural rejected={rejected}"
+            )
+    assert not mismatches, "period bounds drift:\n" + "\n".join(mismatches)
