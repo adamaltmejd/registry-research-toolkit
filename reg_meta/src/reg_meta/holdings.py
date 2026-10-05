@@ -92,14 +92,32 @@ def scope_predicate(
             + member.replace("SELECT hm.variable_id", "SELECT hm.variant_id")
             + ")"
         )
-    registers = (
-        f"SELECT hv.register_id FROM variable hv WHERE hv.variable_id IN ({member})"
-    )
+
+    # Correlated through idx_variable_slug(register_id) and
+    # idx_holding_mapping_variable_variant: an uncorrelated `IN (...)` list here
+    # scans every holding_mapping row per evaluation, and register/provider
+    # admission is evaluated once per register in several listings.
+    def held_register(register_sql: str) -> str:
+        return (
+            "EXISTS ("
+            + member.replace(
+                "SELECT hm.variable_id FROM holding_mapping hm",
+                "SELECT 1 FROM variable hv JOIN holding_mapping hm "
+                "ON hm.variable_id = hv.variable_id",
+                1,
+            ).replace(
+                "WHERE ht.scope != 'unknown'",
+                f"WHERE hv.register_id = {register_sql} AND ht.scope != 'unknown'",
+                1,
+            )
+            + ")"
+        )
+
     if kind == "register":
-        return f"{alias}.register_id IN ({registers})"
+        return held_register(f"{alias}.register_id")
     return (
-        f"{alias}.provider_id IN (SELECT hr.provider_id FROM register hr "
-        f"WHERE hr.register_id IN ({registers}))"
+        f"EXISTS (SELECT 1 FROM register hr WHERE hr.provider_id = {alias}.provider_id "
+        f"AND {held_register('hr.register_id')})"
     )
 
 
