@@ -16,12 +16,9 @@ ALLOWLIST = {
     "reg_meta/tests/test_graph.py",
     "reg_meta/tests/test_search_classifications.py",
     "reg_meta/tests/test_value_code_search.py",
-    "reg_meta_build/tests/test_build_db.py",
     "reg_meta_build/tests/test_catalog_dependencies.py",
     "reg_meta_build/tests/test_classifications.py",
-    "reg_meta_build/tests/test_concept_group_candidates.py",
     "reg_meta_build/tests/test_curation_compile.py",
-    "reg_meta_build/tests/test_entity_key_pins.py",
     "reg_meta_build/tests/test_fqid_slugs.py",
     "reg_meta_build/tests/test_input_snapshot.py",
     "reg_meta_build/tests/test_pipeline.py",
@@ -42,7 +39,6 @@ ALLOWLIST = {
     "reg_meta_build/tests/test_source_scope.py",
     "reg_meta_build/tests/test_source_value_bindings.py",
     "reg_meta_build/tests/test_swecov_build_catalog.py",
-    "reg_meta_build/tests/test_validate.py",
     "reg_schema/tests/test_structural.py",
 }
 
