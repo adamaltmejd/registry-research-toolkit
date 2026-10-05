@@ -23,12 +23,12 @@ def sample_project(conn, *, unheld=False):
     if held and not unheld:
         fields = fields.replace(
             "vs.delivery_column_name representation",
-            "hm.representation_canonical representation, hp.lo, hp.hi",
+            "vs.delivery_column_name representation, hp.lo, hp.hi",
         )
         fields += """
             JOIN holding_mapping hm ON hm.variable_id=vs.variable_id
                 AND hm.variant_id=vs.register_variant_id
-                AND lower(hm.representation_canonical)=lower(vs.delivery_column_name)
+                AND py_lower(hm.representation_canonical)=py_lower(vs.delivery_column_name)
             JOIN holding_column hc USING(column_id)
             JOIN holding_table ht USING(table_id)
             LEFT JOIN holding_period hp USING(table_id)
