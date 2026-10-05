@@ -84,11 +84,6 @@ ALLOWLIST = {
     "reg_meta_build/tests/test_validate.py",
     "reg_meta_build/tests/test_value_code_fts.py",
     "reg_schema/tests/test_structural.py",
-    "reg_webapp/backend/tests/test_docs.py",
-    "reg_webapp/backend/tests/test_period_grammar_parity.py",
-    "reg_webapp/backend/tests/test_project_validate.py",
-    "reg_webapp/backend/tests/test_run_search_eval.py",
-    "reg_webapp/backend/tests/test_search.py",
     "scripts/tests/test_gh_issue.py",
     "scripts/tests/test_prototype_scb_inputs.py",
 }

@@ -44,9 +44,6 @@ ALLOWLIST = {
     "reg_meta_build/tests/test_swecov_build_catalog.py",
     "reg_meta_build/tests/test_validate.py",
     "reg_schema/tests/test_structural.py",
-    "reg_webapp/backend/tests/test_catalog_browse.py",
-    "reg_webapp/backend/tests/test_search.py",
-    "reg_webapp/backend/tests/test_semantic.py",
 }
 
 
