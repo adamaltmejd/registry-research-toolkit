@@ -80,6 +80,56 @@ def test_scoped_cli_json(case: Path, tmp_path: Path, capsys) -> None:
                 "windows": sorted({(v["valid_from"], v["valid_to"]) for v in versions}),
             }
             actual["windows"] = [list(window) for window in actual["windows"]]
+        elif observe == "classification-variables":
+            actual = {
+                "names": sorted(row["variable_name"] for row in output["variables"])
+            }
+        elif observe == "logical-groups":
+            actual = {
+                "members": sorted(
+                    member["fqid"]
+                    for group in output["registers"][0]["groups"]
+                    for member in group["members"]
+                )
+            }
+        elif observe == "logical-varinfo":
+            actual = {
+                "columns": sorted(
+                    {
+                        column
+                        for state in output["instances"]
+                        for column in state["aliases"]
+                    }
+                )
+            }
+        elif observe == "logical-values":
+            actual = {
+                "codes": sorted(
+                    {
+                        code["code"]
+                        for state in output["instances"]
+                        for code in state["values"]
+                    }
+                )
+            }
+        elif observe == "logical-datacolumns":
+            actual = {
+                "columns": sorted({row["delivery_column_name"] for row in output})
+            }
+        elif observe == "logical-diff":
+            actual = {
+                "changed": sorted(
+                    {
+                        row["variable_name"]
+                        for variant in output["variants"]
+                        for row in variant["changed"]
+                    }
+                )
+            }
+        elif observe == "logical-coded-variables":
+            actual = {"names": sorted(row["variable_name"] for row in output)}
+        elif observe == "logical-resolve":
+            actual = {"statuses": [row["status"] for row in output["columns"]]}
         elif observe == "search-page":
             actual = {
                 "names": [row["name"] for row in output["results"]],

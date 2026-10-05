@@ -1,0 +1,6 @@
+{
+  "fixture": "year-independent",
+  "artifact": "steward",
+  "provider": "scb",
+  "register": "example"
+}

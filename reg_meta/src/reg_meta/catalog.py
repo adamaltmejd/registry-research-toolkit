@@ -18,6 +18,7 @@ import os
 import re
 from collections import deque
 from datetime import date
+from functools import lru_cache
 from typing import TYPE_CHECKING, Annotated, Literal, Self, TypeVar, cast
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -423,6 +424,52 @@ def representative_columns(
         named = sorted((c for c in columns if c is not None), reverse=True)
         spellings |= {column.lower(): column for column in named}
     return spellings
+
+
+def _delivery_column_spellings(
+    conn: sqlite3.Connection, variable_id: int, variant_id: int
+) -> dict[str, str]:
+    stated = conn.execute(
+        "SELECT delivery_column_name FROM variable_state "
+        "WHERE variable_id = ? AND register_variant_id = ?",
+        (variable_id, variant_id),
+    )
+    aliased = conn.execute(
+        "SELECT delivery_column_name FROM variable_alias_window "
+        "WHERE variable_id = ? AND register_variant_id = ?",
+        (variable_id, variant_id),
+    )
+    return representative_columns(
+        (row[0] for row in stated), (row[0] for row in aliased)
+    )
+
+
+def register_catalog_udfs(conn: sqlite3.Connection) -> None:
+    """Register semantic column normalization without retaining a Catalog.
+
+    The immutable artifact's spelling map has a bounded connection-local cache.
+    Physical holding identifiers and compiled representations stay exact.
+    """
+    if (
+        conn.execute(
+            "SELECT 1 FROM pragma_function_list WHERE name = 'py_catalog_column'"
+        ).fetchone()
+        is not None
+    ):
+        return
+
+    @lru_cache(maxsize=1024)
+    def spellings(variable_id: int, variant_id: int) -> dict[str, str]:
+        return _delivery_column_spellings(conn, variable_id, variant_id)
+
+    def canonical_column(
+        variable_id: int, variant_id: int, column: str | None
+    ) -> str | None:
+        if column is None:
+            return None
+        return spellings(variable_id, variant_id).get(column.lower(), column)
+
+    conn.create_function("py_catalog_column", 3, canonical_column, deterministic=True)
 
 
 # Concept-group browse shapes (#303; see DESIGN.md → Concept groups): a derived
@@ -1415,6 +1462,50 @@ type _StoredAliasWindow = tuple[
 ]
 
 
+def _applicable_alias_windows(
+    row: sqlite3.Row,
+    windows: list[_StoredAliasWindow],
+    bounds: tuple[str, str] | None,
+) -> tuple[bool, list[_StoredAliasWindow]]:
+    """Shared resolver projection for full states and lightweight coverage rows."""
+    if row["period_scope"] == "year_independent":
+        return True, []
+    lo, hi = bounds if bounds is not None else ("0001-01-01", "9999-12-31")
+    participating = []
+    for window in windows:
+        if window[4] == "per_column" or window[11] == "per_column":
+            start, end = (
+                max(row["valid_from"], window[1]),
+                min(row["valid_to"], window[2]),
+            )
+            if start <= end:
+                participating.append((window[0], start, end, *window[3:]))
+        elif row["valid_from"] <= window[1] and window[2] <= row["valid_to"]:
+            participating.append(window)
+    source = [w for w in participating if w[3] is None or w[11] == "per_column"]
+    curated = [w for w in participating if w[3] is not None and w[11] != "per_column"]
+    has_base = row["delivery_column_name"] is not None and any(
+        w[0].lower() == row["delivery_column_name"].lower() for w in source
+    )
+    matched = [w for w in source if w[1] <= hi and w[2] >= lo]
+    replace = bool(source and has_base and matched)
+    return not replace, (matched if replace else []) + [
+        w for w in curated if w[1] <= hi and w[2] >= lo
+    ]
+
+
+def _require_state_variant(state_id: int, variant_id: int, slug: str | None) -> str:
+    if slug is None:
+        raise RegMetaError(
+            exit_code=EXIT_NOT_FOUND,
+            code="state_variant_unresolved",
+            error_class="query",
+            message=f"variable_state {state_id} references register_variant {variant_id} with no slug",
+            remediation="Rebuild the reg_meta DB (slug population is incomplete).",
+        )
+    return slug
+
+
 class Catalog:
     """FQID resolution against an open reg_meta SQLite connection."""
 
@@ -1450,18 +1541,7 @@ class Catalog:
         # Catalog rather than once per state.
         self._value_set_summaries: dict[int, ValueSetSummary] = {}
         self._data_warning_payloads: dict[str, DataWarning] = {}
-        if (
-            self._conn.execute(
-                "SELECT 1 FROM pragma_function_list WHERE name = 'py_catalog_column'"
-            ).fetchone()
-            is None
-        ):
-            self._conn.create_function(
-                "py_catalog_column",
-                3,
-                self.canonical_delivery_column,
-                deterministic=True,
-            )
+        register_catalog_udfs(conn)
 
     def data_warnings(
         self,
@@ -2103,15 +2183,23 @@ class Catalog:
         """
         if self.scope == "holdings":
             selected = frozenset(register_slugs) if register_slugs is not None else None
-            return {
-                str(register.fqid).split("/")[1]: dict(
-                    self.register_column_coverage(
-                        provider_slug, str(register.fqid).split("/")[1]
-                    ).items()
-                )
-                for register in self.list_registers(provider_slug)
-                if selected is None or register.fqid.register in selected
-            }
+            deliveries = self._provider_held_deliveries(provider_slug, selected)
+            out = {}
+            for register in self.list_registers(provider_slug):
+                slug = register.fqid.register
+                assert slug is not None
+                if selected is not None and slug not in selected:
+                    continue
+                columns: dict[tuple[str, str | None], VariableCoverage] = {}
+                for variable, offered in deliveries.get(slug, {}).items():
+                    for column in sorted(
+                        {d.column for d in offered if d.column is not None}
+                    ):
+                        columns[(variable, column)] = self._delivery_coverage(
+                            [d for d in offered if d.column == column]
+                        )
+                out[slug] = columns
+            return out
 
         params = [provider_slug]
         register_filter = ""
@@ -2172,9 +2260,11 @@ class Catalog:
         ~40 ms across scb's 238 registers (query-time — see DESIGN.md)."""
         if self.scope == "holdings":
             out = {}
+            deliveries_by_register = self._provider_held_deliveries(provider_slug)
             for register in self.list_registers(provider_slug):
-                slug = str(register.fqid).split("/")[1]
-                deliveries = self._held_deliveries(provider_slug, slug)
+                slug = register.fqid.register
+                assert slug is not None
+                deliveries = deliveries_by_register.get(slug, {})
                 coverage = self._delivery_coverage(
                     [
                         delivery
@@ -2189,6 +2279,7 @@ class Catalog:
                     open_ended=coverage.open_ended,
                 )
             return out
+
         rows = self._conn.execute(
             "SELECT r.slug AS slug, COUNT(DISTINCT v.variable_id) AS nvar, "
             "MIN(vs.valid_from) AS cov_from, MAX(vs.valid_to) AS cov_to "
@@ -2480,7 +2571,18 @@ class Catalog:
             + scope_predicate(self.scope, "variable", "v")
             + " "
             + (
-                "AND (m.delivery_column_name IS NULL OR EXISTS (SELECT 1 FROM holding_mapping gm WHERE gm.variable_id = v.variable_id AND gm.representation_canonical = m.delivery_column_name)) "
+                "AND (m.delivery_column_name IS NULL OR EXISTS ("
+                "SELECT 1 FROM register_variant gv WHERE gv.register_id = v.register_id AND "
+                + scope_predicate(
+                    self.scope,
+                    "variable",
+                    "v",
+                    variant_sql="gv.register_variant_id",
+                    representation_sql=(
+                        "py_catalog_column(v.variable_id, gv.register_variant_id, m.delivery_column_name)"
+                    ),
+                )
+                + ")) "
                 if self.scope == "holdings"
                 else ""
             )
@@ -3726,20 +3828,7 @@ class Catalog:
         memoized per-value-set summary instead — see `resolve_at`."""
         rvid = row["register_variant_id"]
         variant = self._variant_slug(rvid)
-        if variant is None:
-            # see DESIGN.md → Two-level variable model: register_variant_id is NOT NULL on variable_state and FK'd to
-            # register_variant, so a missing slug is a build-invariant break, not
-            # a normal case — surface it loudly rather than emit a bad coordinate.
-            raise RegMetaError(
-                exit_code=EXIT_NOT_FOUND,
-                code="state_variant_unresolved",
-                error_class="query",
-                message=(
-                    f"variable_state {row['state_id']} references "
-                    f"register_variant {rvid} with no slug"
-                ),
-                remediation="Rebuild the reg_meta DB (slug population is incomplete).",
-            )
+        variant = _require_state_variant(row["state_id"], rvid, variant)
         family = self._variant_family_for_variant_id(rvid)
         return VariableState(
             warning_ids=self._state_warning_ids(
@@ -3809,62 +3898,147 @@ class Catalog:
     def _held_deliveries(
         self, provider: str, register: str
     ) -> dict[str, list[VariableDelivery]]:
+        return self._provider_held_deliveries(provider, [register]).get(register, {})
+
+    def _provider_held_deliveries(
+        self, provider: str, registers: Iterable[str] | None = None
+    ) -> dict[str, dict[str, list[VariableDelivery]]]:
+        """Batch semantic projections and physical periods before coverage aggregation.
+
+        Reuse the resolver's alias-window participation rule without constructing
+        full state models, loading codes/warnings, or querying each physical row.
+        """
+        params = [provider]
+        register_filter = ""
+        if registers is not None:
+            selected = sorted(set(registers))
+            if not selected:
+                return {}
+            register_filter = f" AND r.slug IN ({','.join('?' for _ in selected)})"
+            params.extend(selected)
         rows = self._conn.execute(
-            "SELECT v.variable_id, v.slug FROM variable v JOIN register r USING(register_id) "
-            "JOIN provider p USING(provider_id) WHERE p.slug = ? AND r.slug = ? "
-            "AND v.slug IS NOT NULL AND "
-            + scope_predicate(self.scope, "variable", "v")
-            + " ORDER BY v.slug",
-            (provider, register),
-        )
-        out = {}
-        for variable_id, slug in rows:
-            states = self._states_for_variable(
-                variable_id, with_codes=False, with_code_summary=False
+            "SELECT v.variable_id, v.slug AS variable_slug, r.slug AS register_slug, "
+            "vs.state_id, vs.register_variant_id, rv.slug AS variant, vs.period_scope, "
+            "vs.delivery_column_name, vs.valid_from, vs.valid_to "
+            "FROM register r JOIN provider p USING(provider_id) "
+            "LEFT JOIN variable v USING(register_id) "
+            "LEFT JOIN variable_state vs USING(variable_id) "
+            "LEFT JOIN register_variant rv ON rv.register_variant_id = vs.register_variant_id "
+            "WHERE p.slug = ? AND r.slug IS NOT NULL AND v.slug IS NOT NULL "
+            "AND vs.state_id IS NOT NULL AND "
+            + scope_predicate("holdings", "variable", "v")
+            + register_filter,
+            params,
+        ).fetchall()
+        windows_by_variable = {
+            row[0]: self._variable_windows(row[0])
+            for row in self._conn.execute(
+                "SELECT DISTINCT w.variable_id FROM variable_alias_window w "
+                "JOIN variable v USING(variable_id) JOIN register r USING(register_id) "
+                "JOIN provider p USING(provider_id) WHERE p.slug = ? AND "
+                + scope_predicate("holdings", "variable", "v")
+                + register_filter,
+                params,
             )
-            groups = {}
-            for state in states:
-                groups.setdefault(
-                    (
-                        state.variant,
-                        self.canonical_delivery_column(
-                            variable_id,
-                            int(state.register_variant_id),
-                            state.delivery_column_name,
-                        ),
-                        state.period_scope,
-                    ),
-                    [],
-                ).append(state)
-            deliveries = []
-            for (variant, column, period_scope), offered in sorted(groups.items()):
-                windows = _fuse_windows(
-                    [
-                        (s.valid_from, s.valid_to)
-                        for s in offered
-                        if s.valid_from is not None and s.valid_to is not None
-                    ]
+        }
+        stated: dict[tuple[int, int], list[str | None]] = {}
+        for row in rows:
+            stated.setdefault(
+                (row["variable_id"], row["register_variant_id"]), []
+            ).append(row["delivery_column_name"])
+        spellings = {
+            key: representative_columns(
+                columns,
+                (w[0] for w in windows_by_variable.get(key[0], {}).get(key[1], [])),
+            )
+            for key, columns in stated.items()
+        }
+        physical: dict[tuple[int, int, str, str], list[tuple[str, str]]] = {}
+        for row in self._conn.execute(
+            "SELECT hm.variable_id, hm.variant_id, hm.representation_canonical, "
+            "ht.scope, hp.lo, hp.hi FROM holding_mapping hm "
+            "JOIN variable v USING(variable_id) JOIN register r USING(register_id) "
+            "JOIN provider p USING(provider_id) JOIN holding_column hc USING(column_id) "
+            "JOIN holding_table ht USING(table_id) LEFT JOIN holding_period hp USING(table_id) "
+            "WHERE p.slug = ? AND ht.scope != 'unknown' " + register_filter,
+            params,
+        ):
+            intervals = physical.setdefault(tuple(row[:4]), [])
+            if row[4] is not None:
+                intervals.append((row[4], row[5]))
+        physical = {key: list(_merge(intervals)) for key, intervals in physical.items()}
+        groups: dict[tuple[str, str, str, str, str], list[tuple[str, str] | None]] = {}
+        for row in rows:
+            variable_id, variant_id = row["variable_id"], row["register_variant_id"]
+            variant = _require_state_variant(
+                row["state_id"], variant_id, row["variant"]
+            )
+            keep_base, windows = _applicable_alias_windows(
+                row, windows_by_variable.get(variable_id, {}).get(variant_id, []), None
+            )
+            projections = [(w[0], w[1], w[2]) for w in windows]
+            if keep_base:
+                projections.insert(
+                    0, (row["delivery_column_name"], row["valid_from"], row["valid_to"])
                 )
-                lo, hi, ongoing = _coverage_bounds(
-                    windows[0].valid_from if windows else None,
-                    windows[-1].valid_to if windows else None,
+            for column, lo, hi in projections:
+                if column is None:
+                    continue
+                column = spellings[(variable_id, variant_id)].get(
+                    column.lower(), column
                 )
-                deliveries.append(
-                    VariableDelivery(
-                        variant=variant,
-                        column=column,
-                        period_scope=period_scope,
-                        coverage=VariableCoverage(
-                            coverage_from=lo,
-                            coverage_to=hi,
-                            open_ended=ongoing,
-                            state_count=len(offered),
-                        ),
-                        windows=windows,
+                key = (variable_id, variant_id, column, row["period_scope"])
+                if key not in physical:
+                    continue
+                offered = (
+                    [None]
+                    if row["period_scope"] == "year_independent"
+                    else _merge(
+                        [
+                            (max(lo, start), min(hi, end))
+                            for start, end in physical[key]
+                            if max(lo, start) <= min(hi, end)
+                        ]
                     )
                 )
-            if deliveries:
-                out[slug] = deliveries
+                if offered:
+                    groups.setdefault(
+                        (
+                            row["register_slug"],
+                            row["variable_slug"],
+                            variant,
+                            column,
+                            row["period_scope"],
+                        ),
+                        [],
+                    ).extend(offered)
+        out: dict[str, dict[str, list[VariableDelivery]]] = {}
+        for (register, variable, variant, column, period_scope), offered in sorted(
+            groups.items()
+        ):
+            windows = _fuse_windows(
+                [window for window in offered if window is not None]
+            )
+            lo, hi, ongoing = _coverage_bounds(
+                windows[0].valid_from if windows else None,
+                windows[-1].valid_to if windows else None,
+            )
+            out.setdefault(register, {}).setdefault(variable, []).append(
+                VariableDelivery(
+                    variant=variant,
+                    column=column,
+                    period_scope=cast(
+                        'Literal["intervals", "year_independent"]', period_scope
+                    ),
+                    coverage=VariableCoverage(
+                        coverage_from=lo,
+                        coverage_to=hi,
+                        open_ended=ongoing,
+                        state_count=len(offered),
+                    ),
+                    windows=windows,
+                )
+            )
         return out
 
     def _require_binding(self, fqid: Fqid) -> None:
@@ -3971,11 +4145,8 @@ class Catalog:
     ) -> dict[str, str]:
         key = (variable_id, variant_id)
         if key not in self._delivery_spelling_cache:
-            rows = self._states_in_bounds(variable_id, variant_id, None)
-            windows = self._variable_windows(variable_id).get(variant_id, [])
-            self._delivery_spelling_cache[key] = representative_columns(
-                (row["delivery_column_name"] for row in rows),
-                (window[0] for window in windows),
+            self._delivery_spelling_cache[key] = _delivery_column_spellings(
+                self._conn, variable_id, variant_id
             )
         return self._delivery_spelling_cache[key]
 
@@ -4175,54 +4346,15 @@ class Catalog:
         windows_by_variant = self._variable_windows(variable_id)
         if not windows_by_variant:
             return [to_state(r) for r in rows]
-        lo, hi = bounds if bounds is not None else ("0001-01-01", "9999-12-31")
         out: list[VariableState] = []
         for row in rows:
             base = to_state(row)
-            if base.period_scope == "year_independent":
-                out.append(base)
-                continue
-            assert base.valid_from is not None and base.valid_to is not None
-            windows = windows_by_variant.get(row["register_variant_id"], [])
-            state_windows: list[_StoredAliasWindow] = []
-            for window in windows:
-                if window[4] == "per_column" or window[11] == "per_column":
-                    # One physical column window may span successive coding states.
-                    start, end = (
-                        max(base.valid_from, window[1]),
-                        min(base.valid_to, window[2]),
-                    )
-                    if start <= end:
-                        state_windows.append((window[0], start, end, *window[3:]))
-                elif base.valid_from <= window[1] and window[2] <= base.valid_to:
-                    state_windows.append(window)
-            source_windows = [
-                w for w in state_windows if w[3] is None or w[11] == "per_column"
-            ]
-            curated_windows = [
-                w for w in state_windows if w[3] is not None and w[11] != "per_column"
-            ]
-            has_source_base = base.delivery_column_name is not None and any(
-                window[0].lower() == base.delivery_column_name.lower()
-                for window in source_windows
+            keep_base, windows = _applicable_alias_windows(
+                row, windows_by_variant.get(row["register_variant_id"], []), bounds
             )
-            matched_source = [
-                window
-                for window in source_windows
-                if window[1] <= hi and window[2] >= lo
-            ]
-            if source_windows and has_source_base and matched_source:
-                out.extend(expand_window(base, window) for window in matched_source)
-            else:
-                # Preserve the old fallback exactly: a source family without a
-                # participating base, or without a window in range, leaves the
-                # original state visible with all of its metadata.
+            if keep_base:
                 out.append(base)
-            out.extend(
-                expand_window(base, window)
-                for window in curated_windows
-                if window[1] <= hi and window[2] >= lo
-            )
+            out.extend(expand_window(base, window) for window in windows)
         out.sort(
             key=lambda s: (
                 s.period_scope,

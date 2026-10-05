@@ -365,13 +365,7 @@ class TestDownloadDocsDbSchemaGuard:
 
 
 class TestRunUpdateFailFast:
-    """run_update must not leave the install in a broken state.
-
-    If the walker can't resolve an asset the user doesn't already have,
-    reg-meta update raises rather than reporting success — otherwise
-    query commands would fail with db_not_found/doc_db_not_found on the
-    very next invocation while `reg-meta update` claimed to succeed.
-    """
+    """Updates require an admitted main catalog; its docs asset is optional."""
 
     def _fake_resolve(
         self,
@@ -419,8 +413,7 @@ class TestRunUpdateFailFast:
         """An admitted main DB remains usable without its optional docs asset."""
         from reg_meta.update import run_update
 
-        # Simulate an already-installed main DB so the main-DB branch is
-        # 'up_to_date'; the raise must come from the doc-DB branch only.
+        # An admitted main DB remains usable when the walker finds no docs asset.
         _install_catalog(tmp_path / DB_FILENAME)
         (tmp_path / ".db_source").write_text('{"tag": "reg_meta/v0.7.0"}')
 

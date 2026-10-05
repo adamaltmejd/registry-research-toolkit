@@ -171,27 +171,36 @@ class Holdings:
             )
             params.extend([bounds[1], bounds[0]])
         rows = self.conn.execute(
-            "SELECT DISTINCT ht.table_id, ht.physical_id, hc.name, ht.partition, ht.scope, ht.source_ref "
+            "SELECT DISTINCT ht.table_id, ht.physical_id, hc.name, ht.partition, ht.scope, ht.source_ref, hp.lo, hp.hi "
             "FROM holding_mapping hm JOIN holding_column hc USING(column_id) "
-            "JOIN holding_table ht USING(table_id) WHERE "
+            "JOIN holding_table ht USING(table_id) "
+            "LEFT JOIN holding_period hp USING(table_id) WHERE "
             + " AND ".join(clauses)
-            + " ORDER BY ht.physical_id, hc.name",
+            + " ORDER BY ht.physical_id, hc.name, hp.lo, hp.hi",
             params,
         )
+        periods: dict[
+            tuple[int, str, str, str | None, str, str], list[tuple[str, str]]
+        ] = {}
+        for row in rows:
+            intervals = periods.setdefault(tuple(row[:6]), [])
+            if row[6] is not None:
+                intervals.append((row[6], row[7]))
         return tuple(
             HoldingMatch(
-                table_id=row[0],
-                table=row[1],
-                column=row[2],
-                partition=row[3],
-                period_scope=row[4],
-                source_ref=row[5],
-                periods=self.periods(row[0]),
+                table_id=key[0],
+                table=key[1],
+                column=key[2],
+                partition=key[3],
+                period_scope=key[4],
+                source_ref=key[5],
+                periods=tuple(intervals),
             )
-            for row in rows
+            for key, intervals in periods.items()
         )
 
     def periods(self, table_id: int) -> tuple[tuple[str, str], ...]:
+        """Exact physical periods for a table, independent of a matching request."""
         return tuple(
             (row[0], row[1])
             for row in self.conn.execute(

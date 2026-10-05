@@ -1,0 +1,15 @@
+{
+  "fixture": "reader",
+  "artifact": "steward",
+  "argv": [
+    "get",
+    "lineage",
+    "Unheld value",
+    "--register",
+    "sos/unheld"
+  ],
+  "observe": [
+    "variable_name",
+    "occurrences"
+  ]
+}

@@ -1,11 +1,11 @@
 {
   "findings": [
     {
-      "code": "binding_unavailable",
-      "message": "column 'scb/example/value' has no state covering scb/example/annual anywhere in 2019",
+      "code": "column_window_unavailable",
+      "message": "policy/inventory.toml:table[0]: table 'Annual2018' column 'Observed' has no applicable column window for representation 'Value'",
       "source": "Example",
       "variable": "scb/example/value",
-      "period": "2019"
+      "period": "2018"
     },
     {
       "code": "column_window_unavailable",
@@ -15,5 +15,12 @@
       "period": "2019"
     }
   ],
-  "clips": []
+  "clips": [
+    {
+      "source": "Example",
+      "variable": "scb/example/value",
+      "requested_period": "2018..2020",
+      "ordered_period": "2020"
+    }
+  ]
 }

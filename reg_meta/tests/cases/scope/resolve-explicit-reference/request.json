@@ -1,0 +1,12 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "steward",
+  "argv": [
+    "--scope",
+    "reference",
+    "resolve",
+    "--columns",
+    "Value,Secret,Archived,Valuereference"
+  ],
+  "observe": "logical-resolve"
+}

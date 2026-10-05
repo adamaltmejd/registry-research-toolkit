@@ -1,0 +1,39 @@
+{
+  "deliveries": {
+    "value": [
+      {
+        "variant": "annual",
+        "column": "Value",
+        "period_scope": "year_independent",
+        "coverage": {
+          "coverage_from": null,
+          "coverage_to": null,
+          "open_ended": false,
+          "state_count": 1
+        },
+        "windows": []
+      }
+    ]
+  },
+  "provider_columns": [
+    {
+      "register": "example",
+      "variable": "value",
+      "column": "Value",
+      "coverage": {
+        "coverage_from": null,
+        "coverage_to": null,
+        "open_ended": false,
+        "state_count": 1
+      }
+    }
+  ],
+  "provider_registers": {
+    "example": {
+      "variable_count": 1,
+      "coverage_from": null,
+      "coverage_to": null,
+      "open_ended": false
+    }
+  }
+}

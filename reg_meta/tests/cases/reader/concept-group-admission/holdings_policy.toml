@@ -1,0 +1,6 @@
+source_sha256 = "47194b42d62d6411a3bde97fee38b1385314df3149a2e995189ce44ee04ef670"
+[[retain_unknown]]
+table = "Undated"
+register = "scb/example"
+reason = "No established calendar edition."
+rows_sha256 = "c0f60fbb0a04c4ccd0287697998f007cf71bc83dda9a8b918ac3a3b62f0fdffa"

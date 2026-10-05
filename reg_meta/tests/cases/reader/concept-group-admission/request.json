@@ -1,0 +1,6 @@
+{
+  "fixture": "reader/concept-group-admission",
+  "artifact": "steward",
+  "provider": "scb",
+  "register": "example"
+}

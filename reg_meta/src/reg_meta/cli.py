@@ -155,7 +155,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--scope",
         choices=["holdings", "reference"],
         default=None,
-        help="Read scope for search, get register, schema and availability.",
+        help="Read scope for search, resolve and logical get commands.",
     )
     sub = parser.add_subparsers(dest="command")
 
@@ -1161,7 +1161,7 @@ def _cmd_get_groups(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         if args.classifications:
             data = get_classification_concept_groups(conn)
         else:
-            data = get_concept_groups(conn, args.register)
+            data = get_concept_groups(conn, args.register, scope=args.scope)
     finally:
         conn.close()
     duration_ms = int((time.perf_counter() - start) * 1000)
@@ -1183,7 +1183,9 @@ def _cmd_get_varinfo(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     conn = open_db(db, catalog=_selected_name(args))
     try:
         info = get_db_info(conn, getattr(args, "scope", None))
-        variables = get_varinfo(conn, args.variable, register=args.register)
+        variables = get_varinfo(
+            conn, args.variable, register=args.register, scope=args.scope
+        )
         data: dict[str, Any] = (
             variables[0] if len(variables) == 1 else {"variables": variables}
         )
@@ -1308,7 +1310,7 @@ def _cmd_get_values(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         # target resolves as a var_id (the variable's `provider_key`) inside
         # `get_values_by_variable`, like a variable name.
         multi = get_values_by_variable(
-            conn, target, register=args.register, year=args.year
+            conn, target, register=args.register, year=args.year, scope=args.scope
         )
         instances = multi["instances"]
         data: list[dict[str, Any]] | dict[str, Any]
@@ -1377,7 +1379,9 @@ def _cmd_get_datacolumns(args: argparse.Namespace) -> tuple[dict[str, Any], int]
     conn = open_db(db, catalog=_selected_name(args))
     try:
         info = get_db_info(conn, getattr(args, "scope", None))
-        data = get_datacolumns(conn, args.variable, register=args.register)
+        data = get_datacolumns(
+            conn, args.variable, register=args.register, scope=args.scope
+        )
     finally:
         conn.close()
     duration_ms = int((time.perf_counter() - start) * 1000)
@@ -1398,6 +1402,7 @@ def _cmd_get_coded_variables(args: argparse.Namespace) -> tuple[dict[str, Any], 
         info = get_db_info(conn, getattr(args, "scope", None))
         data = get_coded_variables(
             conn,
+            scope=args.scope,
             min_codes=args.min_codes,
             min_registers=args.min_registers,
             limit=args.limit,
@@ -1435,6 +1440,7 @@ def _cmd_get_diff(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         data = get_diff(
             conn,
             register=args.register,
+            scope=args.scope,
             from_year=args.from_year,
             to_year=args.to_year,
             variant=args.variant,
@@ -1542,6 +1548,7 @@ def _cmd_get_classification(args: argparse.Namespace) -> tuple[dict[str, Any], i
                 conn,
                 args.classification,
                 limit=args.limit,
+                scope=args.scope,
                 offset=args.offset,
             )
             data = {"variables": variables, "count": len(variables)}
@@ -1617,7 +1624,7 @@ def _cmd_resolve(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     conn = open_db(db, catalog=_selected_name(args))
     try:
         info = get_db_info(conn, getattr(args, "scope", None))
-        results = resolve(conn, columns, register=args.register)
+        results = resolve(conn, columns, register=args.register, scope=args.scope)
     finally:
         conn.close()
 
@@ -3272,13 +3279,21 @@ def run(argv: list[str] | None = None) -> int:
         ("get", "register"),
         ("get", "schema"),
         ("get", "availability"),
+        ("get", "groups"),
+        ("get", "classification"),
+        ("get", "varinfo"),
+        ("get", "values"),
+        ("get", "datacolumns"),
+        ("get", "diff"),
+        ("get", "coded-variables"),
+        ("resolve", None),
     }:
         return handle_cli_exception(
             RegMetaError(
                 exit_code=EXIT_USAGE,
                 code="usage_error",
                 error_class="usage",
-                message="--scope is available only for search, get register, get schema and get availability.",
+                message="--scope is available only for search, resolve and logical get commands.",
                 remediation="Remove --scope for this command.",
             ),
             getattr(args, "output", None),

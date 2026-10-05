@@ -879,18 +879,20 @@ spelling: a state's spelling where a state names the column, else the lowest ali
 spelling. Store both literal and canonical spellings. Reader-side holding folds go; the
 resolver's own alias/state identity rule remains shared domain behavior.
 
-`Catalog._expand_state_windows` remains the resolution authority. Per-column metadata or
-coding windows intersect successive base states; shared windows must be contained.
-Source replacement requires participating base column and request overlap, otherwise the
-base remains; curated shared-coding windows add independently. Year-independent states
-remain year-independent. A join on canonical `variable_state.delivery_column_name` is
-sufficient only where it preserves these rules; aliases use the existing resolver. The
-inventory consistency gate uses the same public delivery universe. The builder's
-inventory coverage flat union answers a different accounting question. None of the three
-rules is copied into DDL. Range/list physical periods survive; the build coverage
-assessment retains its existing "temporally unassessed" disposition through
-`data_warning`, without partial-resolution rows or a findings relation. Unknown tables
-retain census columns but no logical mappings.
+`Catalog._expand_state_windows` remains the resolution authority. Holdings coverage
+batches states and physical periods and shares its alias-participation projection; it
+does not construct full state/code/warning models just to aggregate delivery windows.
+Per-column metadata or coding windows intersect successive base states; shared windows
+must be contained. Source replacement requires participating base column and request
+overlap, otherwise the base remains; curated shared-coding windows add independently.
+Year-independent states remain year-independent. A join on canonical
+`variable_state.delivery_column_name` is sufficient only where it preserves these rules;
+aliases use the existing resolver. The inventory consistency gate uses the same public
+delivery universe. The builder's inventory coverage flat union answers a different
+accounting question. None of the three rules is copied into DDL. Range/list physical
+periods survive; the build coverage assessment retains its existing "temporally
+unassessed" disposition through `data_warning`, without partial-resolution rows or a
+findings relation. Unknown tables retain census columns but no logical mappings.
 
 Candidate indexes are `holding_mapping(variable_id, variant_id)`,
 `holding_mapping(column_id)`, `holding_column(table_id)` and
@@ -977,10 +979,12 @@ Exceptions are explicit:
   warnings keep `fqid_outside_steward_catalog` and
   `representation_outside_steward_catalog`, derived from SQL at the source's variant.
   Global logical fallback is keyed on artifact kind, not missing inventory.
-- CLI adds `--scope` only to `search`, `get register`, `get schema`, `get availability`.
-  Other logical exports use the artifact default and the shared predicate; inherently
-  reference code/docs/classification reads remain reference. API catalog/search routes
-  and `/api/stats` accept explicit scope; context reports identity/default scope.
+- CLI accepts `--scope` on scoped discovery and logical exports: `search`, `resolve`,
+  `get register`, `get schema`, `get availability`, `get varinfo`, `get values`,
+  `get datacolumns`, `get diff`, `get coded-variables`, `get groups` and the variable
+  enumeration of `get classification`. Defaults still follow the artifact; inherently
+  reference code/docs/classification metadata reads remain reference. API catalog/search
+  routes and `/api/stats` accept explicit scope; context reports identity/default scope.
 
 ### Inventory TOML authoring contract (`inventory.py`)
 
@@ -1081,11 +1085,15 @@ Per `sources[*].bindings[*]`, in project declaration order:
    columns carries a mapping matching `(register_variant, variable, representation)` AND
    its physical edition overlaps THAT slice; only the intersection contributes. Matching
    reads compiled IDs and canonical spelling, never loose inventory TOML. All mappings
-   are explicit. Any subperiod of the availability-clipped request left uncovered blocks
-   the WHOLE order with the exact gap (`coverage_gap`), and a slice no mapping serves
-   blocks with `mapping_missing`. Overlap alone never buys a partial manifest. The
-   materializer never CHOOSES between tables and needs no chooser: §12's one-to-one
-   resolution invariant (previous section) means a valid inventory offers at most one
+   are explicit. A finite holding edition that overlaps the original request but lies
+   wholly outside the binding's applicable column windows blocks with a located
+   `column_window_unavailable`, even if availability clipping removes that edition.
+   Semantic resolution findings are retained alongside physical findings. Any subperiod
+   of the availability-clipped request left uncovered blocks the WHOLE order with the
+   exact gap (`coverage_gap`), and a slice no mapping serves blocks with
+   `mapping_missing`. Overlap alone never buys a partial manifest. The materializer
+   never CHOOSES between tables and needs no chooser: §12's one-to-one resolution
+   invariant (previous section) means a valid inventory offers at most one
    `(table, column)` per cell instant **per partition**, so the several contributions
    one slice can collect are either disjoint pieces of it (the annual series) or
    distinct partitions of it (the sub-population split), and both are wanted whole.

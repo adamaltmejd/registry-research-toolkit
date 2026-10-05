@@ -1,0 +1,6 @@
+{
+  "fixture": "alias-window-only",
+  "artifact": "steward",
+  "provider": "scb",
+  "register": "example"
+}

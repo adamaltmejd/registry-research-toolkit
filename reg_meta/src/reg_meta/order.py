@@ -977,6 +977,8 @@ def _materialize_binding(
     resolution = resolve_binding(catalog, source, binding, requested)
     if resolution.clip is not None:
         clips.append(resolution.clip)
+    if resolution.finding is not None:
+        findings.append(resolution.finding)
     if inventory is not None and source.period != "_default":
         ids = inventory.binding_ids(binding.variable, source.register_variant)
         if ids is not None:
@@ -997,6 +999,8 @@ def _materialize_binding(
             window_blocked = False
             pinned = catalog.canonical_delivery_column(*ids, binding.representation)
             for match in inventory.matches(*ids, pinned, period_scope="intervals"):
+                # A wholly inapplicable physical edition is a located error,
+                # even if availability clipping would remove it from the request.
                 physical = [
                     x
                     for b in match.periods
@@ -1035,7 +1039,6 @@ def _materialize_binding(
                 return
 
     if resolution.finding is not None:
-        findings.append(resolution.finding)
         return
     slices = resolution.slices
     ids = (

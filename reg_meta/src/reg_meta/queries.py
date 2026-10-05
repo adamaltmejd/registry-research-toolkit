@@ -19,6 +19,7 @@ from .catalog import (
     Catalog,
     ConceptGroupMember,
     GroupFacet,
+    register_catalog_udfs,
     representative_columns,
 )
 from .db import classification_succession_as_of_year, get_manifest
@@ -723,7 +724,7 @@ def search(
     included here — the CLI layer merges them separately.
     """
     scope = resolve_scope(conn, scope)
-    Catalog(conn, scope="reference")
+    register_catalog_udfs(conn)
     conn.create_function("py_fts_term", 2, _matches_fts_term, deterministic=True)
     if field not in SEARCH_FIELDS:
         raise RegMetaError(
@@ -1820,7 +1821,7 @@ def _delivery_column_names_for_variables(
     as a legacy space-joined string, which is not a reliable display contract.
     """
     scope = resolve_scope(conn, scope)
-    Catalog(conn, scope="reference")
+    register_catalog_udfs(conn)
     displayed_column = (
         "py_catalog_column(va.variable_id, va.register_variant_id, va.delivery_column_name)"
         if scope == "holdings"
@@ -2455,14 +2456,17 @@ def _group_summary_to_dict(summary: ConceptGroupSummary) -> dict[str, Any]:
     }
 
 
-def get_concept_groups(conn: sqlite3.Connection, register: str) -> dict[str, Any]:
+def get_concept_groups(
+    conn: sqlite3.Connection, register: str, *, scope: ReadScope | None = None
+) -> dict[str, Any]:
     """Concept groups for a register (#325), keyed like the other `get`
     commands (name or numeric ID). Reuses `Catalog.list_concept_groups` for
     the group/member/facet shape. A register without a slug isn't catalog-
     addressable and reports an empty group list (the build only derives
     groups over slugged variables, so nothing is hidden)."""
-    reg_ids = require_register_ids(conn, register)
-    catalog = Catalog(conn)
+    scope = resolve_scope(conn, scope)
+    reg_ids = require_register_ids(conn, register, scope=scope)
+    catalog = Catalog(conn, scope=scope)
     registers_out: list[dict[str, Any]] = []
     for rid in reg_ids:
         row = conn.execute(
@@ -3390,14 +3394,18 @@ def get_schema(
 
 
 def _scoped_variable_rows(
-    conn: sqlite3.Connection, sql: str, params: Any = ()
+    conn: sqlite3.Connection,
+    sql: str,
+    params: Any = (),
+    *,
+    scope: ReadScope | None = None,
 ) -> sqlite3.Cursor:
     """Named logical exports keep reference data behind an admitted owner."""
     return conn.execute(
         "SELECT * FROM ("
         + sql
         + ") scoped WHERE "
-        + scope_predicate(resolve_scope(conn), "variable", "scoped"),
+        + scope_predicate(resolve_scope(conn, scope), "variable", "scoped"),
         params,
     )
 
@@ -3407,14 +3415,16 @@ def get_varinfo(
     variable: str,
     *,
     register: str | None = None,
+    scope: ReadScope | None = None,
 ) -> list[dict[str, Any]]:
     """Get detailed variable information.
 
     Returns a list of variable dicts, each with an "instances" key.
     """
+    scope = resolve_scope(conn, scope)
     reg_ids: list[int] | None = None
     if register:
-        reg_ids = require_register_ids(conn, register)
+        reg_ids = require_register_ids(conn, register, scope=scope)
 
     # Match variable by var_id first, fall back to name
     int_variable = _try_int(variable)
@@ -3428,6 +3438,7 @@ def get_varinfo(
             + _VAR_ID_V
             + f", r.name AS register_name FROM variable v JOIN register r ON v.register_id = r.register_id WHERE v.provider_key = CAST(? AS TEXT) AND v.register_id IN ({ph})",
             [int_variable, *reg_ids],
+            scope=scope,
         ).fetchall()
         vars_by_name = _scoped_variable_rows(
             conn,
@@ -3435,6 +3446,7 @@ def get_varinfo(
             + _VAR_ID_V
             + f", r.name AS register_name FROM variable v JOIN register r ON v.register_id = r.register_id WHERE LOWER(v.name) = LOWER(?) AND v.register_id IN ({ph})",
             [variable, *reg_ids],
+            scope=scope,
         ).fetchall()
     else:
         vars_by_id = _scoped_variable_rows(
@@ -3443,6 +3455,7 @@ def get_varinfo(
             + _VAR_ID_V
             + ", r.name AS register_name FROM variable v JOIN register r ON v.register_id = r.register_id WHERE v.provider_key = CAST(? AS TEXT)",
             (int_variable,),
+            scope=scope,
         ).fetchall()
         vars_by_name = _scoped_variable_rows(
             conn,
@@ -3450,6 +3463,7 @@ def get_varinfo(
             + _VAR_ID_V
             + ", r.name AS register_name FROM variable v JOIN register r ON v.register_id = r.register_id WHERE LOWER(v.name) = LOWER(?)",
             (variable,),
+            scope=scope,
         ).fetchall()
 
     matched_vars = vars_by_id or vars_by_name
@@ -3517,7 +3531,7 @@ def get_varinfo(
             (variable_id,),
         ).fetchall()
 
-        states = _expand_column_alias_rows(conn, states)
+        states = _expand_column_alias_rows(conn, states, scope=scope)
 
         # Value-set member counts per value_set_id (None when the state has no
         # codes). Batched so a wide variable doesn't fan out N+1 queries.
@@ -3672,6 +3686,7 @@ def _get_availability_variable(
     all_years: set[int] = set()
     registers_out: list[dict[str, Any]] = []
 
+    catalog = Catalog(conn, scope=scope) if scope == "holdings" else None
     for var in var_rows:
         rid = var["register_id"]
         vid = var["var_id"]
@@ -3685,16 +3700,16 @@ def _get_availability_variable(
         # Select by the matched `variable_id`, NOT `(register_id, provider_key)`:
         # `provider_key` is NON-unique after an A2.2 split, so a provider_key
         # filter would credit one sibling with every sibling's year coverage.
-        rows = conn.execute(
-            "SELECT vs.valid_from, vs.valid_to, vs.delivery_column_name "
-            "FROM variable_state vs "
-            "WHERE vs.variable_id = ? "
-            "ORDER BY vs.valid_from, vs.valid_to",
-            (variable_id,),
-        ).fetchall()
-
-        if scope == "holdings":
-            rows = _scoped_state_rows(conn, variable_id)
+        if catalog is not None:
+            rows = _scoped_state_rows(catalog, variable_id)
+        else:
+            rows = conn.execute(
+                "SELECT vs.valid_from, vs.valid_to, vs.delivery_column_name "
+                "FROM variable_state vs "
+                "WHERE vs.variable_id = ? "
+                "ORDER BY vs.valid_from, vs.valid_to",
+                (variable_id,),
+            ).fetchall()
 
         reg_years: list[int] = []
         aliases_by_year: dict[str, list[str]] = {}
@@ -3769,17 +3784,8 @@ def _get_availability_register(
 
     # A2.6: year coverage per variant comes from `variable_state` validity
     # windows (register_version is dropped before ship).
-    rows = conn.execute(
-        "SELECT rvar.register_variant_id, rvar.name AS variant_name, "
-        "vs.valid_from, vs.valid_to "
-        "FROM register_variant rvar "
-        "JOIN variable_state vs ON vs.register_variant_id = rvar.register_variant_id "
-        "WHERE rvar.register_id = ? "
-        "ORDER BY rvar.register_variant_id, vs.valid_from",
-        (reg_id,),
-    ).fetchall()
-
     if scope == "holdings":
+        catalog = Catalog(conn, scope=scope)
         rows = []
         variables = conn.execute(
             "SELECT v.variable_id FROM variable v WHERE v.register_id = ? AND "
@@ -3787,8 +3793,18 @@ def _get_availability_register(
             (reg_id,),
         )
         for (variable_id,) in variables:
-            for state in _scoped_state_rows(conn, variable_id):
+            for state in _scoped_state_rows(catalog, variable_id):
                 rows.append({**state, "variant_name": state["variant_label"]})
+    else:
+        rows = conn.execute(
+            "SELECT rvar.register_variant_id, rvar.name AS variant_name, "
+            "vs.valid_from, vs.valid_to "
+            "FROM register_variant rvar "
+            "JOIN variable_state vs ON vs.register_variant_id = rvar.register_variant_id "
+            "WHERE rvar.register_id = ? "
+            "ORDER BY rvar.register_variant_id, vs.valid_from",
+            (reg_id,),
+        ).fetchall()
 
     all_years: set[int] = set()
     variants: dict[int, dict[str, Any]] = {}
@@ -3830,11 +3846,8 @@ def _get_availability_register(
     }
 
 
-def _scoped_state_rows(
-    conn: sqlite3.Connection, variable_id: int
-) -> list[dict[str, Any]]:
+def _scoped_state_rows(catalog: Catalog, variable_id: int) -> list[dict[str, Any]]:
     """Scoped resolver states for raw CLI exports, with their original row metadata."""
-    catalog = Catalog(conn)
     states = catalog._states_for_variable(
         variable_id, with_codes=False, with_code_summary=False
     )
@@ -3846,22 +3859,28 @@ def _expand_column_alias_rows(
     rows: list[sqlite3.Row],
     *,
     scope: ReadScope | None = None,
-    expand_all: bool = False,
+    include_alias_windows: bool = False,
 ) -> list[dict[str, Any]]:
     """Reuse catalog representations where physical columns own literal metadata."""
     scope = resolve_scope(conn, scope)
     if not rows:
         return []
     variable_ids = sorted({row["variable_id"] for row in rows})
-    column_ids = {
-        row[0]
-        for row in conn.execute(
-            f"SELECT DISTINCT variable_id FROM variable_alias_window WHERE (coding_metadata = 'per_column' OR column_metadata = 'per_column') AND variable_id IN ({_in_placeholders(variable_ids)})",
-            variable_ids,
-        )
-    }
-    if scope == "holdings" or expand_all:
+    if scope == "holdings":
         column_ids = set(variable_ids)
+    else:
+        window_filter = (
+            "1"
+            if include_alias_windows
+            else "(coding_metadata = 'per_column' OR column_metadata = 'per_column')"
+        )
+        column_ids = {
+            row[0]
+            for row in conn.execute(
+                f"SELECT DISTINCT variable_id FROM variable_alias_window WHERE {window_filter} AND variable_id IN ({_in_placeholders(variable_ids)})",
+                variable_ids,
+            )
+        }
     if not column_ids:
         return [dict(row) for row in rows]
     catalog = Catalog(conn, scope=scope)
@@ -3918,6 +3937,7 @@ def get_values_by_variable(
     *,
     register: str | None = None,
     year: int | None = None,
+    scope: ReadScope | None = None,
 ) -> dict[str, Any]:
     """Resolve a variable to its states and return year-correct codes per state.
 
@@ -3928,9 +3948,10 @@ def get_values_by_variable(
     Resolution mirrors ``get_varinfo``: var_id → variable name → alias.
     Keys follow the glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk): `variabelnamn` → `variable_name`.
     """
+    scope = resolve_scope(conn, scope)
     reg_ids: list[int] | None = None
     if register:
-        reg_ids = require_register_ids(conn, register)
+        reg_ids = require_register_ids(conn, register, scope=scope)
 
     int_variable: int | None
     raw_int = _try_int(variable)
@@ -3949,6 +3970,7 @@ def get_values_by_variable(
                 + _VAR_ID_BARE
                 + f", name FROM variable WHERE provider_key = CAST(? AS TEXT) AND register_id IN ({ph})",
                 [int_variable, *reg_ids],
+                scope=scope,
             ).fetchall()
         rows_by_name = _scoped_variable_rows(
             conn,
@@ -3956,6 +3978,7 @@ def get_values_by_variable(
             + _VAR_ID_BARE
             + f", name FROM variable WHERE LOWER(name) = LOWER(?) AND register_id IN ({ph})",
             [variable, *reg_ids],
+            scope=scope,
         ).fetchall()
     else:
         if int_variable is not None:
@@ -3965,6 +3988,7 @@ def get_values_by_variable(
                 + _VAR_ID_BARE
                 + ", name FROM variable WHERE provider_key = CAST(? AS TEXT)",
                 (int_variable,),
+                scope=scope,
             ).fetchall()
         rows_by_name = _scoped_variable_rows(
             conn,
@@ -3972,6 +3996,7 @@ def get_values_by_variable(
             + _VAR_ID_BARE
             + ", name FROM variable WHERE LOWER(name) = LOWER(?)",
             (variable,),
+            scope=scope,
         ).fetchall()
 
     matched = rows_by_id or rows_by_name
@@ -4052,7 +4077,7 @@ def get_values_by_variable(
         variable_ids,
     ).fetchall()
 
-    state_rows = _expand_column_alias_rows(conn, state_rows)
+    state_rows = _expand_column_alias_rows(conn, state_rows, scope=scope)
 
     instances: list[dict[str, Any]] = []
     # Group code rows by value_set_id; a state's `values` is its set's codes.
@@ -4138,6 +4163,7 @@ def get_datacolumns(
     variable: str,
     *,
     register: str | None = None,
+    scope: ReadScope | None = None,
 ) -> list[dict[str, Any]]:
     """Get all delivery-column aliases for a variable.
 
@@ -4153,9 +4179,10 @@ def get_datacolumns(
     `(register_id, provider_key)`): an A2.2 split sibling has its own
     `variable_id`, so each sibling surfaces only its own columns.
     """
+    scope = resolve_scope(conn, scope)
     reg_ids: list[int] | None = None
     if register:
-        reg_ids = require_register_ids(conn, register)
+        reg_ids = require_register_ids(conn, register, scope=scope)
 
     # Match by var_id or variable name (glossary rename — was `variabelnamn`; see DESIGN.md → Glossary and Swedish↔English crosswalk). Carry
     # `variable_id` — the unique key the re-parented `variable_alias` filters by.
@@ -4168,6 +4195,7 @@ def get_datacolumns(
             + _VAR_ID_BARE
             + f" FROM variable WHERE (provider_key = CAST(? AS TEXT) OR LOWER(name) = LOWER(?)) AND register_id IN ({ph})",
             [int_variable, variable, *reg_ids],
+            scope=scope,
         ).fetchall()
     else:
         var_rows = _scoped_variable_rows(
@@ -4176,6 +4204,7 @@ def get_datacolumns(
             + _VAR_ID_BARE
             + " FROM variable WHERE provider_key = CAST(? AS TEXT) OR LOWER(name) = LOWER(?)",
             (int_variable, variable),
+            scope=scope,
         ).fetchall()
 
     if not var_rows:
@@ -4192,7 +4221,7 @@ def get_datacolumns(
     results: list[dict[str, Any]] = []
     seen: set[str] = set()
     for vr in var_rows:
-        if resolve_scope(conn) == "holdings":
+        if scope == "holdings":
             rows = conn.execute(
                 "SELECT DISTINCT hm.representation_canonical AS delivery_column_name, "
                 "v.register_id, hm.variant_id AS register_variant_id, r.name AS register_name "
@@ -4238,7 +4267,11 @@ def get_datacolumns(
 
 
 def _columns_at_year(
-    conn: sqlite3.Connection, register_variant_id: int, year: int
+    conn: sqlite3.Connection,
+    register_variant_id: int,
+    year: int,
+    *,
+    scope: ReadScope | None = None,
 ) -> dict[int, dict[str, Any]]:
     """A2.6: the variant's columns active at a calendar `year`, keyed by var_id.
 
@@ -4270,7 +4303,7 @@ def _columns_at_year(
         "WHERE vs.register_variant_id = ? "
         "AND vs.valid_from <= ? AND vs.valid_to >= ? AND "
         + scope_predicate(
-            resolve_scope(conn),
+            resolve_scope(conn, scope),
             "variable",
             "v",
             bounds=(iso_hi, iso_lo),
@@ -4282,7 +4315,9 @@ def _columns_at_year(
     ).fetchall()
     rows = [
         row
-        for row in _expand_column_alias_rows(conn, rows, expand_all=True)
+        for row in _expand_column_alias_rows(
+            conn, rows, scope=scope, include_alias_windows=True
+        )
         if _state_covers_year(row["valid_from"], row["valid_to"], year)
     ]
     result: dict[int, dict[str, Any]] = {}
@@ -4309,9 +4344,11 @@ def get_diff(
     to_year: int,
     variant: str | None = None,
     variables: list[str] | None = None,
+    scope: ReadScope | None = None,
 ) -> dict[str, Any]:
     """Compare a register's schema between two years."""
-    reg_ids = require_register_ids(conn, register)
+    scope = resolve_scope(conn, scope)
+    reg_ids = require_register_ids(conn, register, scope=scope)
 
     reg = conn.execute(
         "SELECT register_id, name FROM register WHERE register_id = ?",
@@ -4348,6 +4385,7 @@ def get_diff(
                 f"WHERE (provider_key = CAST(? AS TEXT) OR LOWER(name) = LOWER(?)) "
                 f"AND register_id IN ({ph})",
                 [_try_int(v), v, *reg_ids],
+                scope=scope,
             ).fetchall()
             if not rows:
                 # A2.7: `variable_alias` is variable_id-keyed; join straight to
@@ -4359,6 +4397,7 @@ def get_diff(
                     f"JOIN variable var ON va.variable_id = var.variable_id "
                     f"WHERE py_lower(va.delivery_column_name) = py_lower(?) AND var.register_id IN ({ph})",
                     [v, *reg_ids],
+                    scope=scope,
                 ).fetchall()
             for r in rows:
                 filter_variable_ids.add(r["variable_id"])
@@ -4388,8 +4427,8 @@ def get_diff(
         # validity windows (register_version is dropped before ship). A variant
         # with no state covering a year contributes nothing — same skip as the
         # old "version absent" branch.
-        from_cols = _columns_at_year(conn, rvid, from_year)
-        to_cols = _columns_at_year(conn, rvid, to_year)
+        from_cols = _columns_at_year(conn, rvid, from_year, scope=scope)
+        to_cols = _columns_at_year(conn, rvid, to_year, scope=scope)
         if not from_cols or not to_cols:
             continue
         any_versions_found = True
@@ -4517,7 +4556,7 @@ def get_lineage(
     """Show cross-register variable provenance."""
     reg_ids: list[int] | None = None
     if register:
-        reg_ids = require_register_ids(conn, register)
+        reg_ids = require_register_ids(conn, register, scope="reference")
 
     int_variable = _try_int(variable)
     if reg_ids:
@@ -4636,6 +4675,7 @@ def get_coded_variables(
     min_codes: int = 1,
     min_registers: int = 1,
     limit: int = 100,
+    scope: ReadScope | None = None,
 ) -> list[dict[str, Any]]:
     """Find variables that have value sets, ranked by usage.
 
@@ -4646,7 +4686,8 @@ def get_coded_variables(
     `n_instances` counts distinct states now — the per-era shape is the unit the
     shipped DB carries.
     """
-    Catalog(conn, scope="reference")
+    scope = resolve_scope(conn, scope)
+    register_catalog_udfs(conn)
     rows = conn.execute(
         "SELECT v.name AS variable_name, "
         "COUNT(DISTINCT vc.code) as n_distinct_codes, "
@@ -4664,7 +4705,7 @@ def get_coded_variables(
         "JOIN value_code vc ON vsm.code_id = vc.code_id "
         "WHERE "
         + scope_predicate(
-            resolve_scope(conn),
+            scope,
             "variable",
             "v",
             variant_sql="vs.register_variant_id",
@@ -4695,6 +4736,7 @@ def resolve(
     columns: list[str],
     *,
     register: str | None = None,
+    scope: ReadScope | None = None,
 ) -> list[dict[str, Any]]:
     """Resolve column names to variables via exact alias lookup.
 
@@ -4703,10 +4745,11 @@ def resolve(
     matches — split siblings share an alias and a `var_id`, and are told apart
     by the canonical binding `fqid` each match carries.
     """
-    Catalog(conn, scope="reference")
+    scope = resolve_scope(conn, scope)
+    register_catalog_udfs(conn)
     reg_ids: list[int] | None = None
     if register:
-        reg_ids = require_register_ids(conn, register)
+        reg_ids = require_register_ids(conn, register, scope=scope)
 
     register_filter = ""
     register_params: list[int] = []
@@ -4740,7 +4783,7 @@ def resolve(
         + register_filter
         + " AND "
         + scope_predicate(
-            resolve_scope(conn),
+            scope,
             "variable",
             "va",
             variant_sql="va.register_variant_id",
@@ -5133,6 +5176,7 @@ def search_variables_by_classification(
     *,
     limit: int = 100,
     offset: int = 0,
+    scope: ReadScope | None = None,
 ) -> list[dict[str, Any]]:
     """List variables with at least one state tagged with this classification.
 
@@ -5146,7 +5190,7 @@ def search_variables_by_classification(
         FROM variable_state vs
         JOIN variable v ON vs.variable_id = v.variable_id
         JOIN register r ON v.register_id = r.register_id
-        WHERE ({scope_predicate(resolve_scope(conn), "variable", "v", variant_sql="vs.register_variant_id")}) AND (EXISTS (SELECT 1 FROM state_classification sc WHERE sc.state_id = vs.state_id AND sc.classification_id = ?)
+        WHERE ({scope_predicate(resolve_scope(conn, scope), "variable", "v", variant_sql="vs.register_variant_id")}) AND (EXISTS (SELECT 1 FROM state_classification sc WHERE sc.state_id = vs.state_id AND sc.classification_id = ?)
            OR EXISTS (SELECT 1 FROM alias_window_classification ac JOIN variable_alias_window aw
               ON aw.variable_id = ac.variable_id AND aw.register_variant_id = ac.register_variant_id
               AND aw.delivery_column_name = ac.delivery_column_name AND aw.valid_from = ac.valid_from

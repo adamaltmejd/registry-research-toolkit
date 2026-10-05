@@ -543,9 +543,9 @@ export interface paths {
          *
          *     A THIN adapter over ``reg_meta.order.materialize_order`` (REFACTOR_SPEC.md
          *     §12): no gate, no fallback and no rendering lives here, so this endpoint and
-         *     the ``reg-meta order`` CLI emit byte-identical manifests. The deployment's
-         *     delivery inventory is read once at boot (``app.state.inventory``); ``None``
-         *     is §12's global-deployment fallback, which the materializer takes directly.
+         *     the ``reg-meta order`` CLI emit byte-identical manifests. The selected
+         *     artifact determines orderability: catalog artifacts use global fallback;
+         *     steward artifacts use their compiled holdings and steward identity.
          *
          *     200 is the manifest — ``application/json``, downloaded as ``order.json``.
          *     Anything else is NOT AN ORDER: 422 either because the spec is invalid
