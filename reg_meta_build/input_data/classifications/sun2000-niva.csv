@@ -50,3 +50,10 @@ vardekod,vardebenamning
 620,Licentiatutbildning
 640,Doktorsutbildning
 999,Okänd
+0,Förskoleutbildning
+1,Förgymnasial utbildning kortare än 9 år
+2,Förgymnasial utbildning 9 (10) år
+3,Gymnasial utbildning
+4,Eftergymnasial utbildning kortare än två år
+5,Eftergymnasial utbildning två år eller längre
+6,Forskarutbildning
