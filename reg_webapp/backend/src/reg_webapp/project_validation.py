@@ -31,8 +31,6 @@ if TYPE_CHECKING:
     from reg_schema.project_data import ProjectData
     from reg_schema.validation import ValidationIssue
 
-    from reg_webapp.catalog_index import CatalogIndex
-
 
 @contextmanager
 def per_request_conn(db_path: Path) -> Iterator[sqlite3.Connection]:
@@ -54,11 +52,6 @@ def per_request_conn(db_path: Path) -> Iterator[sqlite3.Connection]:
 def semantic_issues(
     project: ProjectData,
     catalog: Catalog,
-    index: CatalogIndex | None,
 ) -> list[ValidationIssue]:
-    """The §6.8.3 reg_meta-backed semantic layer. Takes an
-    already-built ``ProjectData`` (the caller owns the model-build error policy)
-    and a live ``Catalog`` (the caller owns the connection lifetime). ``index`` is
-    the deployment's steward ``CatalogIndex`` (``None`` for ``global``), threaded in
-    for the column-based steward-admission warnings."""
-    return list(validate_semantic(project, catalog, index=index).issues)
+    """Run semantic validation against the caller-owned reference Catalog."""
+    return list(validate_semantic(project, catalog).issues)

@@ -76,7 +76,6 @@ if TYPE_CHECKING:
 
     from reg_meta.catalog import Catalog
 
-    from reg_webapp.catalog_index import CatalogIndex
 
 router = APIRouter(prefix="/api/project")
 
@@ -137,16 +136,9 @@ def _to_result_model(result: ValidationResult) -> ValidationResultModel:
     )
 
 
-def _semantic_issues(
-    raw: dict[str, Any], catalog: Catalog, index: CatalogIndex | None
-) -> list[ValidationIssue]:
+def _semantic_issues(raw: dict[str, Any], catalog: Catalog) -> list[ValidationIssue]:
     """Build the ``ProjectData`` model, then run the reg_meta-backed semantic layer
     (``project_validation.semantic_issues``).
-
-    ``index`` is the deployment's loaded steward ``CatalogIndex`` (``None`` for the
-    ``global`` deployment); the semantic layer consults it to flag a resolvable
-    binding outside the steward's filtered subset (``fqid_outside_steward_catalog``
-    / ``representation_outside_steward_catalog`` — column-based admission, #206).
 
     Reached only when the structural layer passed. A residual model
     ``ValidationError`` is a constraint structural didn't replicate — surfaced as a
@@ -162,7 +154,7 @@ def _semantic_issues(
                 exc,
             )
         ]
-    return semantic_issues(project, catalog, index)
+    return semantic_issues(project, catalog)
 
 
 # The body is read RAW (not a typed param), so FastAPI emits no `requestBody` in
@@ -193,29 +185,21 @@ async def validate_project(request: Request) -> ValidationResultModel:
     opens on that threadpool thread (one thread → the cross-thread sqlite P1 can't
     recur)."""
     raw = await read_raw_json_object(request)
-    # The `CatalogIndex` is an immutable in-memory dataclass (no DB conn), so reading
-    # it on the threadpool thread is safe — mirrors how `db_path` is already passed.
     return await run_in_threadpool(
         _validate_blocking,
         request.app.state.db_path,
         raw,
-        request.app.state.catalog_index,
     )
 
 
-def _validate_blocking(
-    db_path: Path, raw: dict[str, Any], index: CatalogIndex | None
-) -> ValidationResultModel:
+def _validate_blocking(db_path: Path, raw: dict[str, Any]) -> ValidationResultModel:
     """The layered composition, run on a threadpool thread (off the
     event loop). Layer order (DB-free first, so a structurally-rejected body costs
     no DB hit): supported version → structural → (model build + semantic). When
     structural fails we SKIP the model build + semantic step (they assume a
     structurally valid spec).
 
-    ``index`` is the deployment's loaded steward ``CatalogIndex`` (``None`` for the
-    ``global`` deployment), threaded into the semantic layer for the steward
-    catalog filter (``fqid_outside_steward_catalog`` /
-    ``representation_outside_steward_catalog``)."""
+    """
     unsupported = schema_version_issue(raw)
     if unsupported is not None:
         return _to_result_model(ValidationResult(issues=(unsupported,)))
@@ -230,7 +214,7 @@ def _validate_blocking(
         from reg_meta.catalog import Catalog
 
         with per_request_conn(db_path) as conn:
-            issues.extend(_semantic_issues(raw, Catalog(conn), index))
+            issues.extend(_semantic_issues(raw, Catalog(conn, scope="reference")))
 
     return _to_result_model(ValidationResult(issues=tuple(issues)))
 
