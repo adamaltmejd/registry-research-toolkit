@@ -614,11 +614,11 @@ is narrowed to held members. Classification and value/code surfaces are catalog-
 and pass through unaffected. `None` means no restriction — the pre-#859 behavior is
 byte-identical. The restriction is applied before folding and paging, so every page is
 in scope. reg_meta stays steward-agnostic: the caller supplies the allow-list; the set's
-provenance is opaque here. The webapp's filtered-steward `/api/search` passes
-`admitted_variable_fqids | held_register_fqids` (see `reg_webapp/DESIGN.md`); the CLI
-never passes `fqids`. The reader cut replaces this steward admission path with the
-shared compiled-holdings predicate before pagination. General ranking/folding limits
-remain; only holdings backfill and allow-list reconstruction go.
+provenance is opaque here. The pre-cut webapp's `/api/search` passed the runtime index's
+union of held binding and register identities; the CLI never passed `fqids`. The reader
+cut replaces this steward admission path with the shared compiled-holdings predicate
+before pagination. General ranking/folding limits remain; only holdings backfill and
+allow-list reconstruction go.
 
 **Why two methods for succession.** `predecessors` / `successors` are split (not one
 `replaced` returning a dict) so every edge-traversal accessor returns `list[...]`

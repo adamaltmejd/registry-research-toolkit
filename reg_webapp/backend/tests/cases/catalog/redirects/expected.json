@@ -12,5 +12,13 @@
   },
   {
     "status": 404
+  },
+  {
+    "status": 301,
+    "location": "/api/catalog/scb/example/variants?scope=holdings&period=2018"
+  },
+  {
+    "status": 301,
+    "location": "/api/catalog/scb/example/variants?scope=reference"
   }
 ]

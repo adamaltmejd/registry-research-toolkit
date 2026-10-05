@@ -1,0 +1,4 @@
+{
+  "fixture": "unmapped-periods",
+  "requests": [{"path": "/api/context"}]
+}

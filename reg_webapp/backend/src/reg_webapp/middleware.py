@@ -64,13 +64,7 @@ class ETagMiddleware(BaseHTTPMiddleware):
         body = await _read_body(response)
         steward_id = request.app.state.steward.id
         manifest = request.app.state.manifest
-        scope = getattr(
-            request.state,
-            "read_scope",
-            "holdings"
-            if manifest["catalog_artifact_kind"] == "steward"
-            else "reference",
-        )
+        scope = getattr(request.state, "read_scope", request.app.state.default_scope)
         etag = compute_etag(
             body, reg_meta.__version__, steward_id, manifest["generation_id"], scope
         )

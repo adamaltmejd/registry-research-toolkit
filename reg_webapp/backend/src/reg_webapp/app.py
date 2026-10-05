@@ -21,6 +21,7 @@ import reg_meta.db
 import reg_meta.doc_db
 from fastapi import FastAPI
 from reg_meta.errors import RegMetaError
+from reg_meta.holdings import resolve_scope
 
 from . import __version__
 from .limits import (
@@ -70,15 +71,24 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     try:
         manifest = reg_meta.db.get_manifest(conn)
         kind = manifest["catalog_artifact_kind"]
-        artifact_steward = manifest.get("steward") if kind == "steward" else "global"
-        if steward.id != artifact_steward:
+        artifact_steward = manifest["steward"] if kind == "steward" else None
+        if steward.id != (artifact_steward or "global"):
             raise RuntimeError(
                 f"{db_path}: REG_WEBAPP_STEWARD={steward.id!r} does not match "
                 f"artifact steward {artifact_steward!r} ({kind})"
             )
-        # Physical bounds are a UI hint, never a semantic/orderability claim.
+        app.state.default_scope = resolve_scope(conn)
+        app.state.artifact_steward = artifact_steward
+        # Bounds describe admitted physical tables, never semantic validity.
         app.state.catalog_period_bounds = (
-            conn.execute("SELECT MIN(lo), MAX(hi) FROM holding_period").fetchone()
+            conn.execute(
+                "SELECT MIN(hp.lo), MAX(hp.hi) FROM holding_period hp "
+                "JOIN holding_table ht USING(table_id) "
+                "WHERE ht.scope != 'unknown' AND EXISTS ("
+                "SELECT 1 FROM holding_column hc "
+                "JOIN holding_mapping hm USING(column_id) "
+                "WHERE hc.table_id = ht.table_id)"
+            ).fetchone()
             if kind == "steward"
             else None
         )

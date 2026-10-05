@@ -1076,9 +1076,10 @@ the scoped reader; unheld neighboring variables remain thin with no selectable s
 
 `/api/context` reports artifact kind, manifest steward, full generation, and default
 scope alongside branding and package versions. Its optional `catalog_period_span` is
-computed once at boot from compiled physical `holding_period` MIN/MAX bounds, then
-capped at the catalog import year. It is a coarse UI slider bound, never a coverage or
-validity check. Catalog artifacts and holdings without dated periods return null.
+computed once at boot from compiled physical `holding_period` MIN/MAX bounds of known
+tables with an explicit mapping, then capped at the catalog import year. It is a coarse
+UI slider bound, never a coverage or validity check. Catalog artifacts and holdings
+without dated periods return null.
 
 `REG_WEBAPP_STEWARDS_DIR` overrides the branding root for wheels and Docker images.
 SWECOV is the proving steward; extracting its branding and delivery pipeline into its
@@ -2419,7 +2420,7 @@ slider also exposes an explicit ✕ clear control that writes `null` back to the
 making full history reachable at any time after the first interaction. Filtered steward
 deployments seed the rail and per-page picker bounds from
 `/api/context.steward.catalog_period_span` (#1037), a best-effort year span derived from
-compiled physical holding-period bounds and capped at the catalog import year. Catalog
+admitted physical holding-period bounds and capped at the catalog import year. Catalog
 artifacts and holdings without dated periods fall back to the fixed 1960 →
 catalog-vintage bounds.
 

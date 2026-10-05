@@ -1,9 +1,15 @@
 [
   {
-    "status": 404
+    "status": 404,
+    "json": {
+      "/detail": "not in this steward's catalog"
+    }
   },
   {
-    "status": 404
+    "status": 404,
+    "json": {
+      "/detail": "not in this steward's catalog"
+    }
   },
   {
     "status": 200,

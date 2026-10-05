@@ -20,7 +20,7 @@ def browse_scope(request: Request, scope: ReadScope | None = None) -> ReadScope:
                 }
             ],
         )
-    effective = scope or ("holdings" if kind == "steward" else "reference")
+    effective = scope or request.app.state.default_scope
     request.state.read_scope = effective
     return effective
 

@@ -199,16 +199,6 @@ class Holdings:
             for key, intervals in periods.items()
         )
 
-    def periods(self, table_id: int) -> tuple[tuple[str, str], ...]:
-        """Exact physical periods for a table, independent of a matching request."""
-        return tuple(
-            (row[0], row[1])
-            for row in self.conn.execute(
-                "SELECT lo, hi FROM holding_period WHERE table_id = ? ORDER BY lo, hi",
-                (table_id,),
-            )
-        )
-
     def columns(
         self, variable_id: int, variant_id: int | None = None
     ) -> frozenset[str]:
@@ -220,50 +210,5 @@ class Holdings:
                 "WHERE ht.scope != 'unknown' AND hm.variable_id = ? "
                 + ("AND hm.variant_id = ? " if variant_id is not None else ""),
                 (variable_id, variant_id) if variant_id is not None else (variable_id,),
-            )
-        )
-
-    @property
-    def admitted_variable_fqids(self) -> frozenset[str]:
-        return frozenset(
-            row[0]
-            for row in self.conn.execute(
-                "SELECT p.slug || '/' || r.slug || '/' || v.slug FROM variable v "
-                "JOIN register r USING(register_id) JOIN provider p USING(provider_id) WHERE "
-                + scope_predicate("holdings", "variable", "v")
-            )
-        )
-
-    @property
-    def held_register_fqids(self) -> frozenset[str]:
-        return frozenset(
-            row[0]
-            for row in self.conn.execute(
-                "SELECT p.slug || '/' || r.slug FROM register r "
-                "JOIN provider p USING(provider_id) WHERE "
-                + scope_predicate("holdings", "register", "r")
-            )
-        )
-
-    @property
-    def held_provider_slugs(self) -> frozenset[str]:
-        return frozenset(
-            row[0]
-            for row in self.conn.execute(
-                "SELECT p.slug FROM provider p WHERE "
-                + scope_predicate("holdings", "provider", "p")
-            )
-        )
-
-    def held_variant_coords_for_register(self, register_fqid: str) -> frozenset[str]:
-        provider, register = register_fqid.split("/")
-        return frozenset(
-            row[0]
-            for row in self.conn.execute(
-                "SELECT p.slug || '/' || r.slug || '/' || rv.slug FROM register_variant rv "
-                "JOIN register r USING(register_id) JOIN provider p USING(provider_id) "
-                "WHERE p.slug = ? AND r.slug = ? AND "
-                + scope_predicate("holdings", "variant", "rv"),
-                (provider, register),
             )
         )

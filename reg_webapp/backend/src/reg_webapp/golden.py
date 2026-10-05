@@ -304,9 +304,18 @@ def pinned_fqids(query: str, group: str) -> tuple[str, ...]:
 def eligible_pinned_fqids(
     conn: sqlite3.Connection, query: str, group: str, *, scope: ReadScope
 ) -> tuple[str, ...]:
-    """Finite editorial pins must satisfy the origin reader's scope predicate."""
+    """Validate reference pins before filtering their scoped eligibility."""
+    fqids = pinned_fqids(query, group)
+    if not fqids:
+        return ()
+    reference = Catalog(conn, scope="reference")
+    for fqid in fqids:
+        if not reference.exists(fqid):
+            raise ValueError(f"golden pin fqid {fqid!r} does not resolve to a {group}")
+    if scope == "reference":
+        return fqids
     catalog = Catalog(conn, scope=scope)
-    return tuple(pin for pin in pinned_fqids(query, group) if catalog.exists(pin))
+    return tuple(fqid for fqid in fqids if catalog.exists(fqid))
 
 
 def apply_golden_boost(

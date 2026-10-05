@@ -2,9 +2,18 @@
 
 from __future__ import annotations
 
+import pytest
 from fastapi.testclient import TestClient
+from http_cases import CASES, assert_http_case
 from reg_webapp.app import create_app
 from reg_webapp.models import ContextResponse
+
+
+@pytest.mark.parametrize(
+    "case", sorted((CASES / "context").iterdir()), ids=lambda p: p.name
+)
+def test_context_contract(case, tmp_path, monkeypatch):
+    assert_http_case(case, tmp_path, monkeypatch)
 
 
 def test_context_returns_200_and_shape(

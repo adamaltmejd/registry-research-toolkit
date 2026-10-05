@@ -711,7 +711,7 @@ def get_catalog_root(request: Request) -> RootResponse:
 @router.get("/catalog/{provider}/{register}/variants", response_model=VariantsResponse)
 def get_register_variants(
     request: Request, provider: str, register: str
-) -> VariantsResponse:
+) -> VariantsResponse | RedirectResponse:
     """List a register's variants (the `?variant=` browse axis). `_default`
     is a real variant and IS returned (not filtered). 404 when the register
     doesn't resolve (so a typo'd register isn't a silent empty list)."""
@@ -729,12 +729,15 @@ def get_register_variants(
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     with _catalog_conn(request) as conn:
         catalog = Catalog(conn, scope=request.state.read_scope)
+        redirect = _require_admitted(catalog, fqid, request, suffix="/variants")
+        if redirect is not None:
+            return redirect
         # Resolve the register first so a bad (provider, register) is a 404, not a
         # 200 with an empty list (list_variants alone can't distinguish them).
         try:
             catalog.resolve(fqid)
         except RegMetaError as exc:
-            _http_404_if_not_found(exc)
+            return _redirect_or_4xx(catalog, fqid, exc, request, suffix="/variants")
         variants = catalog.list_variants(provider, register)
     return VariantsResponse(register=register_fqid, variants=variants)
 

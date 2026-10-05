@@ -1,0 +1,20 @@
+{
+  "requests": [
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "diagnos",
+        "type": "register",
+        "scope": "holdings"
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "diagnos",
+        "type": "register",
+        "scope": "reference"
+      }
+    }
+  ]
+}

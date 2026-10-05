@@ -40,9 +40,9 @@ def get_context(request: Request) -> ContextResponse:
             schema_version=manifest["schema_version"],
             import_date=manifest["import_date"],
             catalog_artifact_kind=kind,
-            steward=manifest.get("steward") if kind == "steward" else None,
+            steward=request.app.state.artifact_steward,
             generation_id=manifest["generation_id"],
-            default_scope="holdings" if kind == "steward" else "reference",
+            default_scope=request.app.state.default_scope,
         ),
         webapp=WebappInfo(version=__version__, reg_meta_version=reg_meta.__version__),
     )

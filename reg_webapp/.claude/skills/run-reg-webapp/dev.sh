@@ -231,7 +231,14 @@ if [ -n "$fixture_db" ]; then
 	if [ "${REG_WEBAPP_STEWARD:-global}" != "global" ]; then
 		fixture_kind_args=(--kind steward)
 	fi
-	if ! .venv/bin/python reg_webapp/backend/scripts/fixture_db.py "$fixture_db_dir" "${fixture_kind_args[@]}" >/dev/null; then
+	# Match cleanup's empty-array guard for macOS system Bash 3.2 + nounset.
+	if ! (
+		if [ ${#fixture_kind_args[@]} -gt 0 ]; then
+			.venv/bin/python reg_webapp/backend/scripts/fixture_db.py "$fixture_db_dir" "${fixture_kind_args[@]}" >/dev/null
+		else
+			.venv/bin/python reg_webapp/backend/scripts/fixture_db.py "$fixture_db_dir" >/dev/null
+		fi
+	); then
 		echo "dev: --fixture-db build failed — see output above." >&2
 		exit 1
 	fi

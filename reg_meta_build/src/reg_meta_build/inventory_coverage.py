@@ -86,7 +86,7 @@ from reg_meta.inventory import _intersect, _merge, _render, edition_bounds
 # leaf, so a stanza reads like every other candidate emitter's. `_PROVIDER` is the
 # ONE provider `curation/registers/scb/<slug>.toml` accepts, imported rather than restated so the
 # partition here cannot drift from the loader's own refusal.
-from reg_meta_build.db import _CURATED_PROVIDERS
+from reg_meta_build.db import _CURATED_PROVIDERS, catalog_coordinate_ids
 from reg_meta_build.edition_bounds import edition_claims
 from reg_meta_build.fqid_slugs import _toml_str
 from reg_meta_build.scb_errata import _PROVIDER, ERRATA_COLUMN_SOURCE_LABEL
@@ -241,8 +241,11 @@ def coverage_misses(
         for column in table.columns
         for mapping in column.mappings
     }
-    variant_ids = _variant_ids(conn, {variant for variant, _ in coords})
-    variable_ids = _variable_ids(conn, {variable for _, variable in coords})
+    variable_ids, variant_ids = catalog_coordinate_ids(
+        conn,
+        variable_fqids={variable for _, variable in coords},
+        variant_coords={variant for variant, _ in coords},
+    )
     pair_ids: dict[_Coord, _PairIds] = {
         coord: (variable_ids[coord[1]], variant_ids[coord[0]])
         for coord in coords
@@ -760,9 +763,9 @@ def _suggested_version_name(edition: _Interval) -> str:
 def _fold(column: str) -> str:
     """A delivery column's identity for matching: NFC, then Python `str.lower()`.
 
-    `reg_webapp.catalog_index._fold_column`'s rule (`py_lower`) is the lowercase
-    half — the fold every reader that matches a HELD column against a catalog row
-    goes through, Python's and never SQL's (SQLite `LOWER()` is ASCII-only, so
+    The catalog's `py_lower` rule is the lowercase half, used when readers
+    match a held column against a catalog row. Use Python's and never SQL's
+    lowercase operation (SQLite `LOWER()` is ASCII-only, so
     `Kön` would not fold). NFC is the half a CROSS-FILE comparison needs: the held
     spelling comes out of the steward's inventory TOML and the catalog's out of
     the DB, and `Ä` is one codepoint in one and two in the other without changing
@@ -874,33 +877,3 @@ def _stanza(
         f"evidence = {_toml_str(evidence)}\n"
         f"noted = {_toml_str(_TODO_NOTED)}"
     )
-
-
-def _variant_ids(conn: sqlite3.Connection, wanted: set[str]) -> dict[str, int]:
-    """Resolve exact authored variant coordinates without hydrating catalog models."""
-    return {
-        coordinate: register_variant_id
-        for provider, register, variant, register_variant_id in conn.execute(
-            "SELECT p.slug, r.slug, rv.slug, rv.register_variant_id "
-            "FROM register_variant rv "
-            "JOIN register r ON rv.register_id = r.register_id "
-            "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE rv.slug IS NOT NULL AND r.slug IS NOT NULL"
-        )
-        if (coordinate := f"{provider}/{register}/{variant}") in wanted
-    }
-
-
-def _variable_ids(conn: sqlite3.Connection, wanted: set[str]) -> dict[str, int]:
-    """Resolve exact authored bindings; null slugs cannot answer a mapping."""
-    return {
-        fqid: variable_id
-        for provider, register, variable, variable_id in conn.execute(
-            "SELECT p.slug, r.slug, v.slug, v.variable_id "
-            "FROM variable v "
-            "JOIN register r ON v.register_id = r.register_id "
-            "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE v.slug IS NOT NULL AND r.slug IS NOT NULL"
-        )
-        if (fqid := f"{provider}/{register}/{variable}") in wanted
-    }
