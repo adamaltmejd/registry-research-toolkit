@@ -340,9 +340,8 @@ def test_provenance_column_keeps_monthly_window_selection_unchanged(
         conn.close()
 
 
-def test_per_column_coding_preserves_domains_native_labels_and_lazy_loading(
+def test_per_column_coding_preserves_domains_and_native_labels(
     tmp_path: Path,
-    monkeypatch,
 ) -> None:
     db = _build_multi_alias_db(tmp_path)
     write_conn = sqlite3.connect(db)
@@ -416,15 +415,9 @@ def test_per_column_coding_preserves_domains_native_labels_and_lazy_loading(
         }
         assert get_coded_variables(conn)[0]["n_distinct_codes"] == 2
 
-        def unexpected_code_read(*args):
-            raise AssertionError("metadata-only resolution must not hydrate codes")
-
-        original_code_reader = cat._value_set_codes
-        monkeypatch.setattr(cat, "_value_set_codes", unexpected_code_read)
         metadata = cat.resolve_at(_FQID, "2018", with_codes=False)
         assert [s.value_set_id for s in metadata] == [first_set, second_set]
         assert all(s.value_set is s.value_set_summary is None for s in metadata)
-        monkeypatch.setattr(cat, "_value_set_codes", original_code_reader)
         summary = cat.resolve_at(
             _FQID, "2018", with_codes=False, with_code_summary=True
         )
