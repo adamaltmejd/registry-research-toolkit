@@ -23,7 +23,9 @@
         "code",
         "register"
       ],
-      "/groups/0/results/0/fqid": "class/qset"
+      "/groups/0/results/0/fqid": "class/qset",
+      "/groups/0/results/0/short_name": "QSET",
+      "/groups/0/results/0/name": "Q set"
     }
   }
 ]

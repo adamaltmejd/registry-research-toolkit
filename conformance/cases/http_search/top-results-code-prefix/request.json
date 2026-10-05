@@ -1,0 +1,13 @@
+{
+  "kind": "catalog",
+  "fixture": "search-ranking",
+  "requests": [
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "Q90",
+        "limit": 5
+      }
+    }
+  ]
+}

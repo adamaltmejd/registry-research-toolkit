@@ -1,0 +1,17 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/group": "top_results",
+      "/groups/0/results/*/type": [
+        "code",
+        "code",
+        "register",
+        "classification"
+      ],
+      "/groups/0/results/0/code": "Q900",
+      "/groups/0/results/1/code": "Q901",
+      "/groups/0/results/2/fqid": "scb/qreport"
+    }
+  }
+]
