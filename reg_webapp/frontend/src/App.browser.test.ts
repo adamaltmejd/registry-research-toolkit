@@ -25,10 +25,13 @@ vi.mock("./lib/api", async (importOriginal) => {
 });
 
 const context: Context = {
-  catalog_drift_warnings: [],
   reg_meta: {
     import_date: "2026-07-14T00:00:00Z",
     schema_version: "5.2.0",
+    catalog_artifact_kind: "catalog",
+    steward: null,
+    generation_id: "0".repeat(64),
+    default_scope: "reference",
   },
   steward: {
     id: "global",

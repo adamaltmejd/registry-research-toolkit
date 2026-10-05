@@ -13,11 +13,7 @@ export interface paths {
         };
         /**
          * Get Catalog Root
-         * @description The catalog root: every provider plus the classification-root sentinel.
-         *
-         *     #859: a filtered steward keeps only providers it holds (`held_provider_slugs`);
-         *     the classification-root sentinel is ALWAYS appended (classifications pass through
-         *     — decision 2). The `global` deployment lists every provider (index None).
+         * @description List scoped providers plus the reference classification root.
          */
         get: operations["get_catalog_root_api_catalog_get"];
         put?: never;
@@ -621,13 +617,9 @@ export interface paths {
          *     single type runs AND emits only that typed surface. Group ORDER is fixed for
          *     the ``all`` case.
          *
-         *     A FILTERED steward (``app.state.catalog_index`` present, #859) scopes the
-         *     REGISTER and VARIABLE surfaces to the steward's held FQIDs — both the reg_meta
-         *     query (the ``fqids`` allow-list, applied query-time before paging)
-         *     and the golden boost (a boosted pin the steward does not hold is dropped). The
-         *     CLASSIFICATION and VALUE/code surfaces are catalog-global and pass through
-         *     unscoped. A global deployment uses the same cursor contract without the steward
-         *     restriction.
+         *     The reader applies artifact scope before ranking and pagination. Codes and
+         *     classifications retain reference semantics; finite editorial pins use the same
+         *     reader existence predicate.
          */
         get: operations["get_search_api_search_get"];
         put?: never;
@@ -647,9 +639,7 @@ export interface paths {
         };
         /**
          * Get Stats
-         * @description Headline catalog counts (providers / registers / variables) for the
-         *     landing page — full-universe for ``global``, steward-filtered when the
-         *     deployment loaded a ``CatalogIndex``.
+         * @description Headline counts after the shared SQL scope predicate.
          */
         get: operations["get_stats_api_stats_get"];
         put?: never;
@@ -878,27 +868,6 @@ export interface components {
              * @default []
              */
             warnings: components["schemas"]["DataWarning"][];
-        };
-        /**
-         * CatalogDriftWarning
-         * @description One boot-time steward-catalog drift warning.
-         *
-         *     Emitted when the steward's committed ``inventory.toml`` states a coordinate
-         *     reg_meta no longer admits: the mapping drops from the in-memory index and
-         *     this carries the miss to the SPA so it can show a "catalog drift" banner.
-         *     ``code`` is ``fqid_unresolved`` (the variable resolves to nothing) or
-         *     ``period_outside_state_validity`` (it resolves, but reg_meta delivers no
-         *     state over the table's edition); ``path`` locates the offending
-         *     ``table[…].column[…]`` in the inventory. Always empty for the ``global``
-         *     deployment (no inventory, no filter).
-         */
-        CatalogDriftWarning: {
-            /** Code */
-            code: string;
-            /** Message */
-            message: string;
-            /** Path */
-            path: string;
         };
         /**
          * CatalogPeriodSpan
@@ -1658,16 +1627,10 @@ export interface components {
          * ContextResponse
          * @description ``GET /api/context`` — deployment identity, branding, build info.
          *
-         *     No git sha (decision: no new provenance dep). The reg_meta block reflects
-         *     the DB the backend booted against; the webapp block reflects the installed
-         *     packages. ``catalog_drift_warnings`` is the steward-catalog
-         *     drift surfaced at boot — empty for ``global`` and for an up-to-date catalog.
-         *     The steward block may include a best-effort ``catalog_period_span`` for
-         *     slider bounds.
+         *     Identity is read from the admitted artifact; branding remains deployment config.
+         *     The optional physical-period bound is only a UI hint.
          */
         ContextResponse: {
-            /** Catalog Drift Warnings */
-            catalog_drift_warnings?: components["schemas"]["CatalogDriftWarning"][];
             reg_meta: components["schemas"]["RegMetaInfo"];
             steward: components["schemas"]["StewardInfo"];
             webapp: components["schemas"]["WebappInfo"];
@@ -2430,6 +2393,18 @@ export interface components {
          */
         RegMetaInfo: {
             /**
+             * Catalog Artifact Kind
+             * @enum {string}
+             */
+            catalog_artifact_kind: "catalog" | "steward";
+            /**
+             * Default Scope
+             * @enum {string}
+             */
+            default_scope: "holdings" | "reference";
+            /** Generation Id */
+            generation_id: string;
+            /**
              * Import Date
              * @description UTC timestamp the reg_meta DB was built/imported.
              */
@@ -2439,6 +2414,8 @@ export interface components {
              * @description Schema version of the reg_meta DB build (e.g. '5.2.0').
              */
             schema_version: string;
+            /** Steward */
+            steward: string | null;
         };
         /**
          * RegisterCoverage
@@ -2825,7 +2802,7 @@ export interface components {
          * @description Deployment identity + branding, from ``steward.toml``.
          */
         StewardInfo: {
-            /** @description Best-effort steward catalog-wide year span for UI slider bounds; null for the global deployment or unparseable steward periods. */
+            /** @description Compiled physical-period year span for UI slider bounds; null for catalog artifacts or holdings with no dated periods. */
             catalog_period_span?: components["schemas"]["CatalogPeriodSpan"] | null;
             /** Id */
             id: string;
@@ -3476,7 +3453,9 @@ export type $defs = Record<string, never>;
 export interface operations {
     get_catalog_root_api_catalog_get: {
         parameters: {
-            query?: never;
+            query?: {
+                scope?: ("holdings" | "reference") | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -3492,11 +3471,22 @@ export interface operations {
                     "application/json": components["schemas"]["RootResponse"];
                 };
             };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
     };
     get_classification_group_api_catalog_group_class__key__get: {
         parameters: {
-            query?: never;
+            query?: {
+                scope?: ("holdings" | "reference") | null;
+            };
             header?: never;
             path: {
                 key: string;
@@ -3527,7 +3517,9 @@ export interface operations {
     };
     get_classification_group_graph_api_catalog_group_class__key__graph_get: {
         parameters: {
-            query?: never;
+            query?: {
+                scope?: ("holdings" | "reference") | null;
+            };
             header?: never;
             path: {
                 key: string;
@@ -3559,6 +3551,7 @@ export interface operations {
     get_concept_group_api_catalog_group__provider___register___key__get: {
         parameters: {
             query?: {
+                scope?: ("holdings" | "reference") | null;
                 member?: string | null;
             };
             header?: never;
@@ -3593,7 +3586,9 @@ export interface operations {
     };
     get_concept_group_graph_api_catalog_group__provider___register___key__graph_get: {
         parameters: {
-            query?: never;
+            query?: {
+                scope?: ("holdings" | "reference") | null;
+            };
             header?: never;
             path: {
                 provider: string;
@@ -3627,6 +3622,7 @@ export interface operations {
     get_catalog_node_api_catalog__fqid__get: {
         parameters: {
             query?: {
+                scope?: ("holdings" | "reference") | null;
                 period?: string | null;
                 variant?: string | null;
                 value_set_version?: string | null;
@@ -3664,6 +3660,7 @@ export interface operations {
             query?: {
                 unassigned_only?: boolean;
                 representation?: string | null;
+                scope?: ("holdings" | "reference") | null;
                 period?: string | null;
                 variant?: string | null;
             };
@@ -3697,7 +3694,9 @@ export interface operations {
     };
     get_binding_dimensions_api_catalog__fqid__dimensions_get: {
         parameters: {
-            query?: never;
+            query?: {
+                scope?: ("holdings" | "reference") | null;
+            };
             header?: never;
             path: {
                 fqid: string;
@@ -3728,7 +3727,9 @@ export interface operations {
     };
     get_binding_graph_api_catalog__fqid__graph_get: {
         parameters: {
-            query?: never;
+            query?: {
+                scope?: ("holdings" | "reference") | null;
+            };
             header?: never;
             path: {
                 fqid: string;
@@ -3759,7 +3760,9 @@ export interface operations {
     };
     get_binding_lineage_api_catalog__fqid__lineage_get: {
         parameters: {
-            query?: never;
+            query?: {
+                scope?: ("holdings" | "reference") | null;
+            };
             header?: never;
             path: {
                 fqid: string;
@@ -3790,7 +3793,9 @@ export interface operations {
     };
     get_binding_lineage_warnings_api_catalog__fqid__lineage_warnings_get: {
         parameters: {
-            query?: never;
+            query?: {
+                scope?: ("holdings" | "reference") | null;
+            };
             header?: never;
             path: {
                 fqid: string;
@@ -3821,7 +3826,9 @@ export interface operations {
     };
     get_binding_predecessors_api_catalog__fqid__predecessors_get: {
         parameters: {
-            query?: never;
+            query?: {
+                scope?: ("holdings" | "reference") | null;
+            };
             header?: never;
             path: {
                 fqid: string;
@@ -3852,7 +3859,9 @@ export interface operations {
     };
     get_binding_states_api_catalog__fqid__states_get: {
         parameters: {
-            query?: never;
+            query?: {
+                scope?: ("holdings" | "reference") | null;
+            };
             header?: never;
             path: {
                 fqid: string;
@@ -3883,7 +3892,9 @@ export interface operations {
     };
     get_binding_successors_api_catalog__fqid__successors_get: {
         parameters: {
-            query?: never;
+            query?: {
+                scope?: ("holdings" | "reference") | null;
+            };
             header?: never;
             path: {
                 fqid: string;
@@ -3914,7 +3925,9 @@ export interface operations {
     };
     get_register_variants_api_catalog__provider___register__variants_get: {
         parameters: {
-            query?: never;
+            query?: {
+                scope?: ("holdings" | "reference") | null;
+            };
             header?: never;
             path: {
                 provider: string;
@@ -4186,6 +4199,7 @@ export interface operations {
         parameters: {
             query: {
                 cursor?: string | null;
+                scope?: ("holdings" | "reference") | null;
                 q: string;
                 limit?: number;
                 type?: string;
@@ -4218,7 +4232,9 @@ export interface operations {
     };
     get_stats_api_stats_get: {
         parameters: {
-            query?: never;
+            query?: {
+                scope?: ("holdings" | "reference") | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -4234,6 +4250,15 @@ export interface operations {
                     "application/json": components["schemas"]["CatalogSizes"];
                 };
             };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
     };
     get_value_set_codes_api_value_sets__value_set_id__codes_get: {
@@ -4246,6 +4271,7 @@ export interface operations {
                 alias_window_from?: string | null;
                 q?: string;
                 offset?: number;
+                scope?: ("holdings" | "reference") | null;
                 limit?: number;
             };
             header?: never;

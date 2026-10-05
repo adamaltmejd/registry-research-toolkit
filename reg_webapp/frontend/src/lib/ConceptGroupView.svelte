@@ -228,10 +228,11 @@ function memberHref(fqid: string): string {
  * column OUTSIDE the concept being browsed. Restricting the band's input states to
  * the group's member columns closes that. A whole-variable member means the concept
  * IS the whole variable, so all columns are legitimately selectable → no filter. In a
- * filtered-STEWARD catalog "all columns" is already the steward's HELD columns: the
- * group `/graph` route narrows each member variable's states to the held set (backend
- * `_narrow_graph_to_held`, #678), so a whole-variable member admitted only because the
- * steward holds SOME of its columns no longer leaks the non-held ones here. */
+ * holdings scope, the compiled reader admits the group's members. Graph edges and
+ * relationships retain reference evidence. The graph's selectable states use the
+ * scoped reader, so an unheld neighbor stays thin and grants no selectable columns.
+ * Semantic validation and order materialization additionally check the authored
+ * source variant and representation against the compiled artifact. */
 const memberColumnsByFqid = $derived.by(() => {
   const map = new Map<string, Set<string> | null>();
   for (const member of node?.members ?? []) {

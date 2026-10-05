@@ -18,7 +18,7 @@ import VariantBrowser from "./lib/VariantBrowser.svelte";
 import { windowStore } from "./lib/window.svelte";
 
 // The app root: owns the deployment context (GET /api/context), the DRAFT
-// LIFECYCLE, the beforeunload guard, the drift/error banners, the routed <main>
+// LIFECYCLE, the beforeunload guard, the context-error banner, the routed <main>
 // switch, and the citation footer. The chrome (left rail + topbar command bar)
 // is delegated to AppShell (#803); App passes the context-derived props down and
 // the routed content in as the shell's `children`. Internal <a> clicks are
@@ -60,7 +60,6 @@ onMount(() => {
 });
 
 const route = $derived(router.route);
-const driftWarnings = $derived(context?.catalog_drift_warnings ?? []);
 // The deployment's bare reg_meta package version + its steward id, seeded into a
 // new project's skeleton (ProjectEditor formats the version into a `reg_meta/v`
 // release tag). Both fall back to the empty string until /api/context resolves (a
@@ -126,20 +125,6 @@ const qualified = $derived(providerQualified());
       <p class="banner error" role="alert">
         Failed to load deployment context: {contextError}
       </p>
-    {/if}
-
-    {#if driftWarnings.length > 0}
-      <div class="banner drift" role="status">
-        <strong>Catalog drift:</strong>
-        {driftWarnings.length} steward
-        {driftWarnings.length === 1 ? "binding" : "bindings"} no longer resolve
-        against this reg_meta build.
-        <ul>
-          {#each driftWarnings as warning (`${warning.code}|${warning.path}`)}
-            <li><code>{warning.code}</code> — {warning.message}</li>
-          {/each}
-        </ul>
-      </div>
     {/if}
 
     <!-- The routed content (AppShell's `<main>` canvas is the landmark wrapper;
@@ -245,13 +230,6 @@ const qualified = $derived(providerQualified());
     padding: 0.75rem 1rem;
     border-radius: 4px;
     margin-bottom: 1rem;
-  }
-  .banner.drift {
-    background: var(--warn-bg);
-    border: 1px solid var(--warn);
-  }
-  .banner.drift ul {
-    margin: 0.5rem 0 0;
   }
   .banner.error {
     background: var(--err-bg);

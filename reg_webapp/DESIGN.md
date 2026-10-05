@@ -8,13 +8,11 @@ overview) lives in the root `ARCHITECTURE.md`; remaining/unbuilt work lives in
 `REFACTOR_SPEC.md`. The API contract itself is the committed `backend/openapi.json` (the
 reference); `models.py` + the route handlers are the response-shape reference.
 
-**Compiled-holdings transition (2026-10-04).** The compiled contract is owned by
-`ARCHITECTURE.md` and `reg_meta/DESIGN.md`; §12 tracks its unreleased cut. Below,
-`CatalogIndex`, held-column folding, runtime inventory loading, inventory drift and
-inventory-dependent coverage/search/stats describe the **pre-cut implementation**,
-retained only until the runtime cut deletes them. They do not define the compiled
-artifact's scope or identity. The UI scope switch is optional and not an acceptance
-gate.
+**Compiled holdings.** `ARCHITECTURE.md` and `reg_meta/DESIGN.md` own the compiled
+contract. The webapp admits one immutable catalog or steward artifact and delegates
+scope-sensitive reads to the shared SQL reader. Steward configuration supplies branding;
+it does not supply holdings. The optional SPA scope switch is deferred. HTTP browse
+clients can request reference or holdings scope explicitly.
 
 ## Why no auth — cost protection instead
 
@@ -32,7 +30,7 @@ reg_webapp/
     src/reg_webapp/        # FastAPI app, routes, models, stewards loader
     scripts/gen_openapi.py # deterministic OpenAPI dumper
     openapi.json           # committed snapshot (canonical API contract)
-    tests/                 # pytest, manifest-only fixture DB
+    tests/                 # pytest, HTTP corpora and source-built artifacts
   frontend/               # Svelte 5 + Vite + TS SPA (bun-managed)
     src/lib/api-types.ts   # codegen'd from ../backend/openapi.json
   stewards/               # per-steward config (sibling of backend/frontend)
@@ -444,17 +442,18 @@ concurrency smoke (the `TestClient` sequential default masks the bug).
 
 ## Global catalog search (`routes/search.py` + `conn.py`)
 
-`GET /api/search?q=&limit=&type=&cursor=` (#350) is the discovery surface consumed by
-the global header omnibox (`SearchOmnibox.svelte`, shipped in this PR). It returns
-**typed result groups** over the shipped FTS5 indexes, reusing reg_meta's
+`GET /api/search?q=&limit=&type=&cursor=&scope=` (#350) is the discovery surface
+consumed by the global header omnibox (`SearchOmnibox.svelte`, shipped in this PR). It
+returns **typed result groups** over the shipped FTS5 indexes, reusing reg_meta's
 concept-group-folded `search` (`reg_meta.queries.search`, #322) — the webapp does NOT
 reimplement folding or FTS. `?type=` (#393) scopes the search to ONE group: `all` (the
 default, or omitted) preserves the fixed-order four-group response; any single type
 (`register` / `variable` / `classification` / `value`) runs AND emits only that one
 group. An unknown value 422s at the boundary (the valid set mirrors reg_meta's
-`SEARCH_TYPES`). For a FILTERED steward, the register and variable surfaces are further
-scoped to the steward's held FQIDs — see § Steward layering → Browse and search scoping
-(#859) above; classification and code surfaces are catalog-global and unaffected.
+`SEARCH_TYPES`). Holdings scope restricts register and variable rows through the
+compiled SQL predicate before grouping and pagination; see § Compiled artifact identity
+and read scope. Classification and code surfaces remain reference evidence in both
+scopes.
 
 The SPA surface: a global `<SearchOmnibox>` in the app header routes to a shareable
 `/search?q=` results page (`SearchView.svelte`) that renders an optional compact
@@ -673,44 +672,13 @@ shows its study-window span without resolving every state:
 - **Provider-children** (`/api/catalog/{provider}` register nodes): per-register
   `coverage` — `variable_count` (slugged variables) + the span over all their states.
 
-For a filtered steward, the same payload fields are recomputed over the steward's held
-delivery columns so a partial-column hold does not inherit the whole-variable coverage
-span/count. Provider listings read `Catalog.provider_column_coverage` once for the
-listed held registers. Register listings use `Catalog.register_column_coverage` and
-`register_unnamed_column_coverage`. Both paths filter the result against
-`CatalogIndex.held_columns` in the webapp. Named held columns without a per-column state
-row get `coverage = None`; unnamed coverage is kept separate because a named-column
-window must not inherit a NULL-column state's bounds.
-
-The provider query starts from registers and LEFT joins variables and states, keeping
-register selection ahead of the existing indexed variable/state lookups. HAVING removes
-stateless rows. An inner-join shape can scan the entire state table for each register;
-verify the plan on the actual catalog before changing that join order. The per-register
-readers retain their existing query shape; optimizing those listings is separate work.
-
-A held column is matched to the catalog's rows through ONE fold (`_fold_column` /
-`_folded_columns` in `catalog_index.py`, `py_lower`'s rule), never by exact string
-(Y-102, Y-107, Y-108) — the index holds the inventory's spelling of the column, which is
-not always the catalog's (see § Steward layering and the in-memory catalog index). The
-same fold serves the coverage recompute, the deliveries narrowing, the graph's
-held-column narrowing, the binding leaf's states, the concept-group member's per-column
-window and its admission on browse and on search, the steward narrowing of search hits,
-`semantic.py`'s representation check, and — as `py_lower` in SQL or `str.lower` in
-Python — reg_meta's `_filter_variable_delivery_scope` and
-`_group_member_in_delivery_scope`. reg_meta names one representative spelling per
-column, so each folded column has a single row to find (reg_meta/DESIGN.md → One
-spelling per delivery column). No held-column comparison is exact any more: the search
-narrowing's group members were the last (Y-108, folded together with reg_meta's
-group-member scope, which decides that member upstream — folding one half alone would be
-inert), and the exact-spelling index probe they used is deleted rather than kept as a
-second rule. Browse and search keep ONE member rule between them (`held_group_members`
-in `catalog_index.py`, beside the fold); each route owns only what it does with the
-survivors.
-
-The fold lives BESIDE the index, never inside it: `held_columns` is also a DISPLAY value
-— the `representation_outside_steward_catalog` message enumerates the steward's own
-spelling — so a folded index would lowercase researcher-facing text. Callers fold at the
-comparison and return the catalog's own spelling of what they keep.
+In holdings scope, the shared reader computes coverage over mapped source variants and
+canonical representations before aggregation. A partial-column hold cannot inherit the
+whole variable's coverage. Provider listings call `Catalog.provider_register_coverage`
+once; register listings use `Catalog.register_variable_coverage`,
+`register_column_coverage`, and `register_unnamed_column_coverage`. The routes format
+those public return models rather than rebuilding membership. Unnamed coverage stays
+separate from named columns.
 
 Register-scoped concept-group subject pages also use `register_column_coverage` for
 representation members, but a missing per-column key is a known curated member with no
@@ -793,16 +761,15 @@ joins SQLite drives from `variable_state` and scans the WHOLE table instead of s
   "delivered under" — every column of the alias history is a name to be found by — and
   NOT the resolver's: a browse row names columns rather than promising a resolution,
   which is why it keeps a window no state contains where `_expand_state_windows` drops
-  it (in the pre-cut implementation, deliverability is the boot gate's question, and
-  that one reads the resolver — see reg_meta/DESIGN.md → Consistency gate against the
-  catalog DB). Columns are identified case-insensitively (`py_lower`, the rule the build
-  validates `variable_alias ⊇ state columns` with), so an alias that only re-spells a
-  listed column is that one delivery.
-- **Steward semantics**: for a filtered steward the deliveries are narrowed to
-  `CatalogIndex.held_columns(fqid)` — the SAME held-column set the coverage recompute
-  uses, matched by the same `_fold_column` fold — so a partial-column hold names only
-  the columns that steward actually holds, under the catalog's own spelling of each. The
-  index's grain is variant-blind, so the filter is on the column, not on the variant.
+  it. Compiler validation checks deliverability before publication; see
+  reg_meta/DESIGN.md for the compiled mapping and state contracts. Columns are
+  identified case-insensitively (`py_lower`, the rule the build validates
+  `variable_alias ⊇ state columns` with), so an alias that only re-spells a listed
+  column is that one delivery.
+- **Steward semantics**: the shared reader limits deliveries to mapped variants and
+  canonical representations in holdings scope. Discovery unions held mappings across
+  variants; each returned delivery retains its own variant and windows. Reference scope
+  returns the catalog's delivery evidence.
 - **Additive**: `deliveries` defaults to `[]` and is populated only in the register
   listing payload; the SPA must tolerate its absence (a register node's own payload, or
   a child that predates the field).
@@ -957,29 +924,24 @@ route (a sibling of `/api/context`), deliberately NOT under `/api/catalog`: that
 is the `{fqid:path}` catch-all, so a `/api/catalog/stats` would be swallowed by the
 catch-all (or need a reserved-slug carve-out + above-the-catch-all declaration).
 
-The `global` deployment (no steward filter) uses reg_meta's `Catalog.catalog_sizes()`,
-opened through the SAME per-request `catalog_conn` seam (`conn.py`) the catalog routes
-use. Those are full-universe, browse-addressable counts: slugged providers, slugged
-registers, and slugged variables under slugged registers. A FILTERED steward uses the
-boot-time in-memory `CatalogIndex` instead, so the landing-page stats reflect only that
-steward's catalog. The index is column-based for admission, so stats de-dupe variables
-by binding FQID rather than resolved delivery column; registers come from the
-inventory's period spans plus any admitted mapping's parent register. Drift-dropped
-mappings do not inflate the variable count.
+Both artifact kinds call `Catalog.catalog_sizes()` on the per-request connection with
+the effective read scope. Counts come from SQL before the response is serialized:
+providers and registers require a surviving binding, and variables count once per
+binding FQID. Catalog artifacts default to reference; steward artifacts default to
+holdings. Explicit browse scope follows the same contract as catalog and search routes.
 
-ETag + Cache-Control ride the generic `ETagMiddleware` (a GET read). `/api/stats` uses
-the short `public, max-age=60, must-revalidate` tier: for a filtered deployment the body
-depends on `inventory.toml`, so a same-id steward inventory redeploy must get a prompt
-revalidation opportunity instead of letting the browser serve a stale count for 24h.
+ETag + Cache-Control ride the generic `ETagMiddleware`. `/api/stats` keeps the short
+`public, max-age=60, must-revalidate` tier so a same-steward redeploy promptly exposes
+counts from the new generation.
 
 ## ETag / Cache-Control (`etag.py` + `middleware.py`)
 
 Every read endpoint (`/api/context`, `/api/stats`, the `/api/catalog` root + catch-all,
-the 7 binding-suffix sub-endpoints) carries
-`ETag: "<reg_meta_version>-<steward_id>-<sha256(body)[:16]>"` and a per-route
-`Cache-Control` (`cache_control_for`) in three tiers: `/api/context` revalidates always
-(see below); fold- or steward-dependent reads (`/api/catalog/*`, `/api/search`, and
-`/api/stats`) keep `public, max-age=60, must-revalidate`; rebuild-stable doc-library
+the 7 binding-suffix sub-endpoints) carries an ETag derived from the full catalog
+generation, effective read scope, package version, steward identity, and response body
+and a per-route `Cache-Control` (`cache_control_for`) in three tiers: `/api/context`
+revalidates always (see below); scope-sensitive reads (`/api/catalog/*`, `/api/search`,
+and `/api/stats`) keep `public, max-age=60, must-revalidate`; rebuild-stable doc-library
 reads (`/api/docs/*`) keep `public, max-age=86400, must-revalidate`. A matching
 `If-None-Match` yields a **304** with no body, but the current body-derived middleware
 still executes the route and serializes the response first: it saves transfer, not
@@ -1010,6 +972,8 @@ path meets it, so no second in-process response cache is warranted.
 - **`reg_meta_version`** is the INSTALLED `reg_meta.__version__` (the v1.x Model A
   package release), NOT the DB `schema_version` manifest. `steward_id` is
   `app.state.steward.id`.
+- **Generation and read scope** participate even when the response body is unchanged. A
+  cursor and validator from one generation or scope cannot identify another.
 - **The body-hash** makes `If-None-Match` per-URL coherent — the `?period` / `?variant`
   query is part of the URL, so it's already part of the cache key (different periods are
   different ETags).
@@ -1079,181 +1043,46 @@ currently revalidate, costing roughly 24–46 ms per main asset on repeat visits
 revalidatable. This is P2: render-blocking CSS cost only 26–39 ms and DevTools estimated
 zero FCP/LCP savings from removing it.
 
-## Steward layering and the in-memory catalog index (`stewards.py` + `catalog_index.py`)
+## Compiled artifact identity and read scope
 
-**Pre-cut implementation only.** This entire section is deleted at the runtime cut when
-the compiled reader replaces runtime inventory loading, index construction, folds, boot
-drift checks and search backfill. The replacement uses `reg_meta`'s shared SQL scope
-predicate before counts/groups/pagination, with holdings/reference defaults read from
-artifact kind. All variable admission uses mapped variant and canonical representation;
-reference neighbors never become selectable. Boot checks manifest steward identity;
-`/api/context` drops `catalog_drift_warnings` and inventory-derived
-`catalog_period_span`, and reports generation/default scope. Remove
-`REG_WEBAPP_FAIL_ON_STEWARD_DRIFT` and the release-marked inventory runtime test with
-the old gate. Build validation owns drift.
+Boot opens the admitted reg_meta artifact and checks its manifest: schema compatibility,
+publishability, completeness, artifact kind, and generation identity. A catalog artifact
+requires the `global` deployment; a steward artifact requires its exact manifest
+steward. A mismatch fails with the DB path and `REG_WEBAPP_STEWARD` locator. Only
+`stewards/<id>/steward.toml` is loaded for branding. Runtime inventory loading,
+reconciliation, drift warnings, the in-memory index, and the runtime release gate are
+removed; builder publication validation owns those invariants.
 
-A steward ships `stewards/<id>/steward.toml` (identity/branding) plus `inventory.toml` —
-its **delivery inventory**, the single source of truth for what the deployment holds
-(`reg_meta.inventory`, `REFACTOR_SPEC.md` §12). Each table has one explicit finite
-edition and literal physical columns, and each column has zero or more mappings to
-`(register_variant, variable FQID, canonical representation)`. Unmapped columns remain
-in the physical coverage denominator without becoming admitted or orderable; several
-mappings let a combined table serve several variants. That one inventory derives
-edition-aware admission, browse unions and normalized order output — there is no second
-holdings model. The **`global`** steward ships only `steward.toml`: the *absence* of an
-inventory means full-universe mode (no filter, reg_meta's whole catalog), and a stray
-one there is a boot failure, not a mode switch (`stewards.load_delivery_inventory`).
+Catalog, search, and stats accept `?scope=holdings|reference`. Catalog artifacts default
+to reference and reject holdings; steward artifacts default to holdings and allow
+reference. Scope is applied inside the shared reader before hydration, grouping,
+ranking, counts, or pagination. Search does not construct allowlists or backfill
+filtered pages. Finite curated pins are admitted through `Catalog.exists` before ranking
+and pagination. Cursors bind both scope and the full artifact generation. Project
+endpoints reject any `scope` query parameter with a located 422; browse scope cannot
+override the selected artifact's orderability.
 
-The in-memory **`CatalogIndex`** is built once at boot (`build_catalog_index`, from the
-loaded inventory) and held on `app.state` for the process lifetime. It is the filter
-that scopes a steward deployment to a subset of reg_meta's universe. It is an internal
-frozen `@dataclass` (never a response body — only response models are Pydantic; webapp
-internals are dataclasses), carrying three maps derived from the inventory's
-`tables → columns → mappings`:
+Provider and register discovery requires a mapped binding. Variable discovery unions
+mappings across source variants; states and deliveries retain their actual mapped
+variant and canonical representation. Concept-group membership and inherited tags are
+scoped by that same representation rule. Register and variable warnings are admitted
+with their subjects. A live unheld browse subject returns 404. A dead slug redirects
+only when its terminal successor is held, preserving the query string and suffix.
 
-- `bindings_by_variant` — `register_variant` coordinate → frozenset of admitted
-  `(binding FQID, resolved delivery column)` pairs. **Admission is column-based** (#206,
-  decided 2026-06-11): a steward is given a concrete dataset, so its catalog is a
-  statement of *holdings*, and holdings are physical delivery columns, not concepts —
-  bare-FQID admission cannot express "this steward has SSYK, but only at the 1-digit
-  level". The FQID side is the bare 3-segment binding FQID (no `@version` pin to
-  normalize away — that grammar is retired); the column side is the **resolved**
-  `delivery_column_name`. A mapping's `representation` IS that canonical token — never
-  the physical `column.name`, which is the steward's own literal delivery spelling — so
-  an explicit representation is admitted verbatim and boot performs **zero** catalog
-  resolution (every SWECOV mapping is explicit). Verbatim means in the INVENTORY's
-  spelling: the token names the catalog's column, but its case is the one the generator
-  wrote (Y-92 emits the holdings' literal spelling on purpose — admission is
-  column-based and the ordered column must stay orderable), and that is not always the
-  case the catalog's `variable_state` carries. On SWECOV it differs on 7% of 36,840
-  mappings (`Idh` held, `IdH` delivered), which a deployment BOOTS on — the gate accepts
-  the spelling the resolver produced — so every catalog-side comparison folds the two
-  (Y-102, § Coverage aggregates); comparing strings dropped exactly those columns from
-  the register page's delivery cell and its coverage. A `representation` of `None`
-  states "the concept's *single* representation" (§12) and is **not** a wildcard: it is
-  resolved against the catalog over the table's edition bounds, so a mapping authored
-  before reg_meta grew a sibling column still compares equal to a researcher who must
-  now pin. One edition can span a **rename**, so that resolution can answer with several
-  columns — each admitted only over its own share of the edition (next bullet).
-- `periods_by_coordinate` — the whole §12 coordinate
-  `(register_variant, binding FQID, resolved delivery column)` → the ascending,
-  non-overlapping union of the intervals every table stating it holds it *over*: the
-  table's whole **edition bounds** for an explicit `representation` (the steward's own
-  claim, trusted verbatim), and those bounds **clipped to the resolved column's state
-  windows** for a `representation = None` mapping — `order.py`'s availability clip, run
-  against an edition instead of a requested period. The clip is what keeps admission
-  exact where the edition is coarser than the delivery: a table spanning a rename holds
-  the old spelling before it and the new one after, never either across the whole run
-  (and clipping per column, not per edition segment, is the only form that also splits a
-  single *continuous* edition at the rename), while a table whose edition starts before
-  the concept does is admitted from its first delivered day, not the edition's. A
-  mapping states not only *what* the steward holds but *when*, and that "when" is per
-  coordinate: one variant of a register can run 1990–2010 and its successor 2011–.
-  Abutting intervals collapse (a column in a yearly table since 1990 is one interval,
-  not thirty), disjoint ones do **not** — the committed SWECOV inventory has 1614
-  coordinates with a real hole (the biennial innovation survey delivers 2002, 2004, 2006
-  …), and flattening those to an outer span is precisely the loss this map exists to
-  prevent. Retained for the order lane; the semantic validator does **not** gate on it —
-  period coverage against the steward's physical deliveries is the order materializer's
-  job (REFACTOR_SPEC.md §12).
-- `period_range_by_register` — register FQID → the outer inclusive ISO `(lo, hi)` of its
-  coordinates' intervals. Edition-aware by construction (an inventory edition is always
-  one explicit finite period, never `_default`), but gap-free by construction too: it is
-  the coarse **projection** of `periods_by_coordinate`, a best-effort span for UI
-  hinting **only**, NOT a validity gate (the semantic validator's per-binding
-  `period_outside_state_validity` is the gate).
+Classifications, codes, value-set contents, same-as links, succession relationships,
+graph edges, and lineage remain reference evidence. The browse subject is scoped; a
+reference neighbor does not grant holdings or orderability.
 
-The `global` deployment (no inventory) has **no** index (`None`); the catalog endpoints
-pass through to reg_meta's full universe.
+`/api/context` reports artifact kind, manifest steward, full generation, and default
+scope alongside branding and package versions. Its optional `catalog_period_span` is
+computed once at boot from compiled physical `holding_period` MIN/MAX bounds, then
+capped at the catalog import year. It is a coarse UI slider bound, never a coverage or
+validity check. Catalog artifacts and holdings without dated periods return null.
 
-**Browse and search scoping (#859).** The `CatalogIndex` now also scopes the **catalog
-browse** (`/api/catalog/*`) and **search** (`/api/search`) discovery surfaces for a
-filtered steward — previously it gated only validate/authoring/stats/context.
-
-*Browse — column-grain faithful (#206).* The catalog root shows only held providers; a
-provider node shows only held registers; a register node shows only held bindings
-(filtered by `admitted_variable_fqids`) with concept-group members narrowed to held
-(`held_group_members`: representation members at column grain under the fold above;
-whole-variable members via bare-FQID membership in `admitted_variable_fqids`; a group
-with no surviving member is dropped). A held binding leaf narrows its embedded `states`
-to held delivery columns (`held_columns`), and the `?period` / `/states` resolve_at
-subset is narrowed the same way. The `/variants` sub-resource filters to variant
-coordinates with ≥1 held binding (`held_variant_coords_for_register`). All seven
-binding-suffix sub-endpoints (`/states`, `/predecessors`, `/successors`, `/dimensions`,
-`/graph`, `/lineage`, `/lineage_warnings`) apply the ONE pre-resolve admission gate
-(`_require_admitted`) that covers binding, register, and provider grains uniformly:
-
-- a LIVE entity the steward does not hold → **404** ("not in this steward's catalog");
-- an UNADMITTED but dead/renamed slug whose terminal successor IS held → **301** to that
-  terminal (query string and sub-endpoint suffix preserved, mirroring the global
-  dead-slug redirect — a live unheld entity NEVER redirects, because succession edges
-  exist between live entities and a blind terminal walk would mis-redirect to an unheld
-  successor);
-- a dead slug whose terminal successor is UNHELD or has no successor → **404**.
-
-The `/graph` sub-endpoint gates the subject binding, then narrows variable graph nodes,
-their state lists, same-as metadata, and edges to held FQIDs/columns. Classification
-graphs remain catalog-global.
-
-*Classification pass-through (decision 2).* Classifications and codes are
-catalog-global. A steward inventory maps only variable columns, so there is no holdings
-basis to scope reference data. Classification routes (`class/…`), the bounded value-set
-code read (`/api/value-sets/{id}/codes`, including its `?state=` mismatch list) and the
-codes arm of search pass through unfiltered for all steward deployments.
-
-*Search.* `/api/search` passes `admitted_variable_fqids | held_register_fqids` as the
-`fqids` allow-list to `reg_meta.queries.search`. This restricts register and variable
-rows query-time at FQID grain. The webapp then refines variable groups at
-delivery-column grain; for filtered stewards it fetches the full FQID-grain variable
-result set once, drops all-unheld representation groups, and applies the display limit
-afterward so the shown page backfills correctly. Classification and value/code surfaces
-are unaffected. The golden-boost injection (`golden.apply_golden_boost`) is re-filtered
-for the same set after boost so a curated pin the steward does not hold is dropped. The
-`global` deployment (no index) is byte-for-byte unchanged.
-
-*Performance.* The derived projections (`admitted_variable_fqids`,
-`held_register_fqids`, `held_provider_slugs`, `_admitted_pairs`,
-`_held_columns_by_fqid`, `_held_columns_by_variant`, `_variant_coords_by_register`) are
-`functools.cached_property`: each is computed from `bindings_by_variant` on first access
-and memoized for the process lifetime. `cached_property` coexists with
-`@dataclass(frozen=True)` because the value is written into `__dict__` (no `__slots__`),
-bypassing the frozen `__setattr__`; the generated `__hash__` / `__eq__` read declared
-fields only.
-
-**Boot-availability vs. drift.** A *structural* break in the committed inventory
-(malformed TOML, an unknown key, a `_default` edition, a §12 one-to-one resolution
-conflict) is a misconfigured deployment, so `load_inventory` fails fast before the DB is
-even opened. reg_meta **drift** is different and must NOT crash startup: a
-`representation = None` mapping whose FQID no longer resolves (`fqid_unresolved`), or
-which reg_meta delivers no state for over the table's edition
-(`period_outside_state_validity`), is DROPPED from the index — unauthorable until the
-steward regenerates — and recorded in `drift_warnings`, which ride on `/api/context` so
-the SPA can show a "catalog drift" banner. An **explicit** representation is trusted
-verbatim by the index build; what checks it against the flavored DB is §12's
-inventory↔DB consistency gate, which runs on the same boot connection right after the
-index is built (see "The deployment's inventory" under the order adapter). The two
-divide by PERIOD: the gate is period-agnostic, so a coordinate the catalog does not name
-at all fails startup there — including the `fqid_unresolved` misses the index just
-recorded — and the `period_outside_state_validity` arm is the drift that actually
-reaches a booted deployment.
-
-Filtered browse responses narrow concept-group members to held bindings/columns, then
-recompute group tags and inherited binding tags from those surviving members. A steward
-catalog must not surface a thematic tag that exists only on an excluded sibling.
-
-Pre-v1, adding a proving steward is a monorepo PR (drop a directory, register the
-hostname, rebuild). `REG_WEBAPP_STEWARD` selects which steward a process serves;
-`REG_WEBAPP_STEWARDS_DIR` overrides the on-disk root for a packaged wheel/Docker image
-(the `stewards/` sibling doesn't exist there). SWECOV is the first proving steward and
-stays in-repo while testing the model, but that is not the release distribution shape:
-before v1, extract SWECOV into its own steward repo/system and keep that system copyable
-for later steward deployments. A real filtered steward inventory now ships:
-`stewards/swecov/inventory.toml` (column-based admission derived from the delivery
-topology; see `stewards/swecov/README.md` for provenance and coverage), and its
-`data.swecov.se` deployment is wired. Remaining v1 work is extraction to the
-steward-owned system. The SPA catalog-authoring mode and a `reg-meta-build steward-diff`
-CLI are deferred post-v1; see `REFACTOR_SPEC.md`. V1 deliberately has no generic
-per-steward extension surface.
+`REG_WEBAPP_STEWARDS_DIR` overrides the branding root for wheels and Docker images.
+SWECOV is the proving steward; extracting its branding and delivery pipeline into its
+own system remains separate from this runtime cut. No generic per-steward extension
+surface is introduced.
 
 ## Pydantic boundary
 
@@ -1952,10 +1781,10 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   build-completion order, not commit order — without the guard an older commit's slow
   build could overwrite a newer deploy; it also makes non-main dispatches deploy-inert).
   Two gates guard a bad image: the entrypoint smoke gate (container exits non-zero
-  before ever serving, and SWECOV sets `REG_WEBAPP_FAIL_ON_STEWARD_DRIFT=1` so any
-  steward catalog drift warning fails the deploy) and fly.toml's `/api/context` HTTP
-  check (flyctl reports failure if it never passes). Rollback: `flyctl releases --image`
-  lists history; `flyctl deploy --image <old>` restores in seconds.
+  before ever serving when artifact admission or a required route fails) and fly.toml's
+  `/api/context` HTTP check (flyctl reports failure if it never passes). Rollback:
+  `flyctl releases --image` lists history; `flyctl deploy --image <old>` restores in
+  seconds.
 - **Pending-schema-bump guard (#448)**: when `main`'s `SCHEMA_VERSION` /
   `DOC_SCHEMA_VERSION` is AHEAD of the latest released `reg_meta/v*` asset (same major,
   higher minor), the bake's `reg-meta update` would refuse the behind-schema asset (exit 10)
@@ -2095,22 +1924,17 @@ not `bun test` — the latter is Bun's own runner, which doesn't compile Svelte.
 
 ## Why CI uses a fixture DB, not a real asset
 
-CI has no published `reg_meta/v*` DB release asset to pull, so `reg-meta update` in CI
-would fail or fetch a stale incompatible DB. Instead the backend tests build fixture DBs
-in a tmp dir and point the app at them via the highest-precedence `REG_META_DB`
-override:
+Backend tests build artifacts in temporary directories and point the app at them with
+`REG_META_DB`; they do not fetch released DB assets. Compiled stewardship cases load
+readable logical JSON, inventory TOML, policies, and census CSV through the real builder
+and compiler. HTTP requests and expected status/body projections live in the owning JSON
+corpora. Boot cases vary manifest admission and deployment identity; catalog, search,
+validation, scope, and cache cases assert their public boundaries. No runtime index
+fixtures or release-marked inventory reconciliation suite remains.
 
-- **`/api/context`** reads only `import_manifest`, so its fixture (`compatible_db` /
-  `mismatched_db`) is just that one table.
-- **`/api/catalog`** resolves/lists against the full reg_meta schema, so the
-  `catalog_db` fixture builds a **slugged** DB via `reg_meta_build`'s `_slugged_db`
-  helper (a `scb/lisa/kon` binding with a state + value set, a second `scb/rams`
-  register, a `same_as` edge, and a `class/sun2020` classification), then stamps an
-  `import_manifest` so the boot compat check passes. The backend `conftest.py` mirrors
-  `reg_meta/tests/conftest.py`'s sys.path injection to import that bare-name helper.
-
-The real DB at the default path is the **local** boot smoke the maintainer/ orchestrator
-runs.
+Older catalog-only fixtures continue to serve unrelated route tests. Real pinned
+artifacts are checked separately for order parity, latency, and rendered evidence;
+synthetic success is not a real-corpus or deployment claim.
 
 ## Project-write surface (`routes/project.py`)
 
@@ -2137,10 +1961,9 @@ boundary unchanged.
   an order from an invalid spec → 422.
 
 **The order manifest.** The compiled contract uses a thin adapter over
-`reg_meta.order.materialize_order(project, conn)`. The reader cut implements that
-signature; the runtime cut switches this adapter. The pipeline and every fail-closed
-finding live in `reg_meta/DESIGN.md` → "Order materializer and manifest (`order.py`)".
-The adapter owns exactly three things:
+`reg_meta.order.materialize_order(project, conn)`. The adapter uses that signature
+directly. The pipeline and every fail-closed finding live in `reg_meta/DESIGN.md` →
+"Order materializer and manifest (`order.py`)". The adapter owns exactly three things:
 
 - **The selected artifact connection**, opened read-only for this request after boot
   validates manifest identity. `catalog_artifact_kind` chooses global logical fallback
@@ -2288,26 +2111,16 @@ consume them: the materializer runs its fail-closed compiled-holdings/resolution
 and blocks these conditions with its own findings, so a steward-catalog warning never
 silently becomes an order. There is no cross- steward preview, retarget, or one-click
 mutation feature: the active deployment is the validation target, and the user edits and
-re-uploads the JSON if they intend to change it. The warning codes remain; the runtime
-cut re-sources them from SQL at the source's variant. The following wiring describes the
-**pre-cut implementation** in `/api/project/validate`: `routes/project.py` threads
-`app.state.catalog_index` into `validate_semantic` via `run_in_threadpool`; it runs
-**after** the per-binding period resolution because the researcher side's resolved
-columns are what `CatalogIndex.held_columns_for_variant(fqid, variant)` compares (when
-those are indeterminate — unresolved period, unknown pinned representation, ambiguous
-multi-column binding — the binding already carries its own error and only the FQID-level
-arm runs). The `global` deployment (index `None`) never emits either code, and an
-unresolved `register_variant` skips the probe entirely (it already earned
-`fqid_unresolved`; holdings are keyed *by* variant, so there is nothing truthful left to
-say). Admission keys on the **source's variant coordinate** — a mapping states a whole
-`(register_variant, variable, representation)` coordinate, so holding `kon` under
-`individer-15plus` admits nothing under `individer-16plus`, and the cross-variant union
-would let an order through for a column the steward cannot deliver. It keys on the
-literal binding FQID: a curated same_as sibling (e.g. `kon→syss`) names a *different*
-physical column, so warning on it is correct under holdings semantics, not a keying
-artifact. The variant-blind `held_columns` probe remains the **discovery** grain,
-backing the browse and search listings, which carry their own variant axis
-(`held_variant_coords_for_register`).
+re-uploads the JSON if they intend to change it. The warning codes remain; the
+implementation reads compiled SQL mappings at the source's exact variant. It runs after
+shared period/representation resolution. `Holdings.binding_ids` and `Holdings.columns`
+distinguish an unheld binding or variant from a held binding with an unheld
+representation. Canonical column lookup handles spelling without granting a sibling
+variant or representation. If resolution is indeterminate, its existing error remains
+and only the binding-level admission check runs. Catalog artifacts emit neither steward
+warning. An unresolved source variant skips the probe. Admission uses the literal
+authored FQID; a same-as relationship is reference evidence and grants no physical
+membership. Physical period gaps remain the order materializer's responsibility.
 
 ## Cost protection (`limits.py`)
 
@@ -2605,8 +2418,9 @@ slider also exposes an explicit ✕ clear control that writes `null` back to the
 making full history reachable at any time after the first interaction. Filtered steward
 deployments seed the rail and per-page picker bounds from
 `/api/context.steward.catalog_period_span` (#1037), a best-effort year span derived from
-the steward index and clamped to the catalog vintage. The global deployment and
-unparseable steward periods fall back to the fixed 1960 → catalog-vintage bounds.
+compiled physical holding-period bounds and capped at the catalog import year. Catalog
+artifacts and holdings without dated periods fall back to the fixed 1960 →
+catalog-vintage bounds.
 
 ## API surface
 
@@ -2616,7 +2430,7 @@ POSTs are not. Catalog browse paths use FQID segments directly.
 
   | Method | Path                                             | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
   | ------ | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | GET    | `/api/context`                                   | Deployment identity, branding, build info, catalog-drift warnings.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+  | GET    | `/api/context`                                   | Admitted artifact identity, branding, build info, default read scope.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
   | GET    | `/api/catalog`                                   | Top-level: every provider the steward exposes + the `class` root.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
   | GET    | `/api/search`                                    | Global FTS search → bounded typed groups (`top_results`, `registers`, folded `variables`, `classifications`, `classification_codes`, `register_value_sets`); extensible, with unknown groups skipped by the SPA. Each emitted group carries `has_more` and an opaque `next_cursor`. `?q=` is required; `?limit=` caps each group; `?type=` scopes the response (`all` default); `?cursor=` continues the requested context-bound page. Documentation is not rendered in global search.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
   | GET    | `/api/docs/search`                               | Docs FTS search (excerpts + source pointer), optional `?register=`; `ingested=false` when no docs index.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |

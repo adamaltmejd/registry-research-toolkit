@@ -392,30 +392,6 @@
         "title": "BindingNode",
         "type": "object"
       },
-      "CatalogDriftWarning": {
-        "description": "One boot-time steward-catalog drift warning.\n\nEmitted when the steward's committed ``inventory.toml`` states a coordinate\nreg_meta no longer admits: the mapping drops from the in-memory index and\nthis carries the miss to the SPA so it can show a \"catalog drift\" banner.\n``code`` is ``fqid_unresolved`` (the variable resolves to nothing) or\n``period_outside_state_validity`` (it resolves, but reg_meta delivers no\nstate over the table's edition); ``path`` locates the offending\n``table[\u2026].column[\u2026]`` in the inventory. Always empty for the ``global``\ndeployment (no inventory, no filter).",
-        "properties": {
-          "code": {
-            "title": "Code",
-            "type": "string"
-          },
-          "message": {
-            "title": "Message",
-            "type": "string"
-          },
-          "path": {
-            "title": "Path",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "path",
-          "message"
-        ],
-        "title": "CatalogDriftWarning",
-        "type": "object"
-      },
       "CatalogPeriodSpan": {
         "description": "Best-effort inclusive year span for a steward's catalog holdings.",
         "properties": {
@@ -1867,15 +1843,8 @@
         "type": "object"
       },
       "ContextResponse": {
-        "description": "``GET /api/context`` \u2014 deployment identity, branding, build info.\n\nNo git sha (decision: no new provenance dep). The reg_meta block reflects\nthe DB the backend booted against; the webapp block reflects the installed\npackages. ``catalog_drift_warnings`` is the steward-catalog\ndrift surfaced at boot \u2014 empty for ``global`` and for an up-to-date catalog.\nThe steward block may include a best-effort ``catalog_period_span`` for\nslider bounds.",
+        "description": "``GET /api/context`` \u2014 deployment identity, branding, build info.\n\nIdentity is read from the admitted artifact; branding remains deployment config.\nThe optional physical-period bound is only a UI hint.",
         "properties": {
-          "catalog_drift_warnings": {
-            "items": {
-              "$ref": "#/components/schemas/CatalogDriftWarning"
-            },
-            "title": "Catalog Drift Warnings",
-            "type": "array"
-          },
           "reg_meta": {
             "$ref": "#/components/schemas/RegMetaInfo"
           },
@@ -3517,6 +3486,26 @@
       "RegMetaInfo": {
         "description": "reg_meta build provenance, read from the DB ``import_manifest``.",
         "properties": {
+          "catalog_artifact_kind": {
+            "enum": [
+              "catalog",
+              "steward"
+            ],
+            "title": "Catalog Artifact Kind",
+            "type": "string"
+          },
+          "default_scope": {
+            "enum": [
+              "holdings",
+              "reference"
+            ],
+            "title": "Default Scope",
+            "type": "string"
+          },
+          "generation_id": {
+            "title": "Generation Id",
+            "type": "string"
+          },
           "import_date": {
             "description": "UTC timestamp the reg_meta DB was built/imported.",
             "title": "Import Date",
@@ -3526,11 +3515,26 @@
             "description": "Schema version of the reg_meta DB build (e.g. '5.2.0').",
             "title": "Schema Version",
             "type": "string"
+          },
+          "steward": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Steward"
           }
         },
         "required": [
           "schema_version",
-          "import_date"
+          "import_date",
+          "catalog_artifact_kind",
+          "steward",
+          "generation_id",
+          "default_scope"
         ],
         "title": "RegMetaInfo",
         "type": "object"
@@ -4465,7 +4469,7 @@
                 "type": "null"
               }
             ],
-            "description": "Best-effort steward catalog-wide year span for UI slider bounds; null for the global deployment or unparseable steward periods."
+            "description": "Compiled physical-period year span for UI slider bounds; null for catalog artifacts or holdings with no dated periods."
           },
           "id": {
             "title": "Id",
@@ -5906,8 +5910,30 @@
   "paths": {
     "/api/catalog": {
       "get": {
-        "description": "The catalog root: every provider plus the classification-root sentinel.\n\n#859: a filtered steward keeps only providers it holds (`held_provider_slugs`);\nthe classification-root sentinel is ALWAYS appended (classifications pass through\n\u2014 decision 2). The `global` deployment lists every provider (index None).",
+        "description": "List scoped providers plus the reference classification root.",
         "operationId": "get_catalog_root_api_catalog_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "scope",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "holdings",
+                    "reference"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scope"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -5918,6 +5944,16 @@
               }
             },
             "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
           }
         },
         "summary": "Get Catalog Root"
@@ -5935,6 +5971,26 @@
             "schema": {
               "title": "Key",
               "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scope",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "holdings",
+                    "reference"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scope"
             }
           }
         ],
@@ -5990,6 +6046,26 @@
             "schema": {
               "title": "Key",
               "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scope",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "holdings",
+                    "reference"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scope"
             }
           }
         ],
@@ -6048,6 +6124,26 @@
             "schema": {
               "title": "Key",
               "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scope",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "holdings",
+                    "reference"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scope"
             }
           },
           {
@@ -6123,6 +6219,26 @@
               "title": "Key",
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "scope",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "holdings",
+                    "reference"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scope"
+            }
           }
         ],
         "responses": {
@@ -6162,6 +6278,26 @@
             "schema": {
               "title": "Fqid",
               "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scope",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "holdings",
+                    "reference"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scope"
             }
           },
           {
@@ -6314,6 +6450,26 @@
           },
           {
             "in": "query",
+            "name": "scope",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "holdings",
+                    "reference"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scope"
+            }
+          },
+          {
+            "in": "query",
             "name": "period",
             "required": false,
             "schema": {
@@ -6387,6 +6543,26 @@
               "title": "Fqid",
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "scope",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "holdings",
+                    "reference"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scope"
+            }
           }
         ],
         "responses": {
@@ -6426,6 +6602,26 @@
             "schema": {
               "title": "Fqid",
               "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scope",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "holdings",
+                    "reference"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scope"
             }
           }
         ],
@@ -6467,6 +6663,26 @@
               "title": "Fqid",
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "scope",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "holdings",
+                    "reference"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scope"
+            }
           }
         ],
         "responses": {
@@ -6506,6 +6722,26 @@
             "schema": {
               "title": "Fqid",
               "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scope",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "holdings",
+                    "reference"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scope"
             }
           }
         ],
@@ -6547,6 +6783,26 @@
               "title": "Fqid",
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "scope",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "holdings",
+                    "reference"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scope"
+            }
           }
         ],
         "responses": {
@@ -6587,6 +6843,26 @@
               "title": "Fqid",
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "scope",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "holdings",
+                    "reference"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scope"
+            }
           }
         ],
         "responses": {
@@ -6626,6 +6902,26 @@
             "schema": {
               "title": "Fqid",
               "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scope",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "holdings",
+                    "reference"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scope"
             }
           }
         ],
@@ -6675,6 +6971,26 @@
             "schema": {
               "title": "Register",
               "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scope",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "holdings",
+                    "reference"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scope"
             }
           }
         ],
@@ -7058,7 +7374,7 @@
     },
     "/api/search": {
       "get": {
-        "description": "Search registers, variables (concept-folded, #322), classifications, and\ncodes/values (#352) over the shipped FTS indexes. Each typed group is an\nindependent reg_meta `search()` call (register/variable/classification via the\nFTS `field=\"description\"` path; codes via the `field=\"value\"` path) so each\ncarries its own bounded continuation cursor; the value surface is split\ninto classification codes and register-local value sets so each gets its own\npage. The all-scope response prepends a `top_results` best-bets group built\nfrom those same typed rows when multiple candidates compete (#393 items 6/7);\nscoped responses emit only the requested typed surface (`type=value` emits the\ntwo value groups). A query with no usable token returns the selected group(s)\nempty (total 0) \u2014 not a 422.\n\n``?type=`` (#393 item 1) scopes the search: ``all`` (the default) preserves the\noptional top-results\u2192register\u2192variable\u2192classification\u2192value behavior; any\nsingle type runs AND emits only that typed surface. Group ORDER is fixed for\nthe ``all`` case.\n\nA FILTERED steward (``app.state.catalog_index`` present, #859) scopes the\nREGISTER and VARIABLE surfaces to the steward's held FQIDs \u2014 both the reg_meta\nquery (the ``fqids`` allow-list, applied query-time before paging)\nand the golden boost (a boosted pin the steward does not hold is dropped). The\nCLASSIFICATION and VALUE/code surfaces are catalog-global and pass through\nunscoped. A global deployment uses the same cursor contract without the steward\nrestriction.",
+        "description": "Search registers, variables (concept-folded, #322), classifications, and\ncodes/values (#352) over the shipped FTS indexes. Each typed group is an\nindependent reg_meta `search()` call (register/variable/classification via the\nFTS `field=\"description\"` path; codes via the `field=\"value\"` path) so each\ncarries its own bounded continuation cursor; the value surface is split\ninto classification codes and register-local value sets so each gets its own\npage. The all-scope response prepends a `top_results` best-bets group built\nfrom those same typed rows when multiple candidates compete (#393 items 6/7);\nscoped responses emit only the requested typed surface (`type=value` emits the\ntwo value groups). A query with no usable token returns the selected group(s)\nempty (total 0) \u2014 not a 422.\n\n``?type=`` (#393 item 1) scopes the search: ``all`` (the default) preserves the\noptional top-results\u2192register\u2192variable\u2192classification\u2192value behavior; any\nsingle type runs AND emits only that typed surface. Group ORDER is fixed for\nthe ``all`` case.\n\nThe reader applies artifact scope before ranking and pagination. Codes and\nclassifications retain reference semantics; finite editorial pins use the same\nreader existence predicate.",
         "operationId": "get_search_api_search_get",
         "parameters": [
           {
@@ -7075,6 +7391,26 @@
                 }
               ],
               "title": "Cursor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scope",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "holdings",
+                    "reference"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scope"
             }
           },
           {
@@ -7134,8 +7470,30 @@
     },
     "/api/stats": {
       "get": {
-        "description": "Headline catalog counts (providers / registers / variables) for the\nlanding page \u2014 full-universe for ``global``, steward-filtered when the\ndeployment loaded a ``CatalogIndex``.",
+        "description": "Headline counts after the shared SQL scope predicate.",
         "operationId": "get_stats_api_stats_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "scope",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "holdings",
+                    "reference"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scope"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -7146,6 +7504,16 @@
               }
             },
             "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
           }
         },
         "summary": "Get Stats"
@@ -7267,6 +7635,26 @@
               "default": 0,
               "title": "Offset",
               "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scope",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "holdings",
+                    "reference"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scope"
             }
           },
           {
