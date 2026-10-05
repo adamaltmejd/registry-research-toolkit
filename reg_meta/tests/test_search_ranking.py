@@ -127,11 +127,11 @@ def test_generic_identity_matches_do_not_swamp_the_ranked_order(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:
     """51 classifications named exactly `C12` (owning only `C120`) and one
-    `discriminative` owning `C12` itself, which the code arm ranks first. More
+    `zz-discriminative` owning `C12` itself, which the code arm ranks first. More
     than 50 identity matches switch identity promotion off."""
     conn = reader_search_conn(tmp_path_factory, "search-identity-swamp")
     first = search(conn, "C12", field="description", type="classification", limit=25)
-    assert str(first.results[0].fqid) == "class/discriminative"
+    assert str(first.results[0].fqid) == "class/zz-discriminative"
     assert first.next_cursor is not None
     second = search(
         conn,
@@ -144,7 +144,7 @@ def test_generic_identity_matches_do_not_swamp_the_ranked_order(
 
     combined = _fqids(first, second)
     assert len(combined) == len(set(combined))
-    assert combined[0] == "class/discriminative"
+    assert combined[0] == "class/zz-discriminative"
 
 
 def test_delivery_alias_identity_participates_in_relevance_order(
