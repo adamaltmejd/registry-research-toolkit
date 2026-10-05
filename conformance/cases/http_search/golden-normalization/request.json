@@ -1,0 +1,35 @@
+{
+  "kind": "catalog",
+  "golden_config": "search_golden.toml",
+  "requests": [
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "syssels\u00e4ttning",
+        "type": "register"
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "sysselsattning",
+        "type": "register"
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "  SYSSELS\u00c4TTNING  ",
+        "type": "register"
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "syssels\u00e4ttning",
+        "type": "register",
+        "cursor": ""
+      }
+    }
+  ]
+}

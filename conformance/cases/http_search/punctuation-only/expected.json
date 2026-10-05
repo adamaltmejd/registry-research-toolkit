@@ -1,0 +1,67 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/groups/*/group": [
+        "registers",
+        "variables",
+        "classifications",
+        "classification_codes",
+        "register_value_sets"
+      ],
+      "/groups/*/results": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "/groups/*/has_more": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/groups/*/group": [
+        "registers",
+        "variables",
+        "classifications",
+        "classification_codes",
+        "register_value_sets"
+      ],
+      "/groups/*/results": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "/groups/*/has_more": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/groups/*/group": [
+        "classification_codes",
+        "register_value_sets"
+      ],
+      "/groups/*/results": [
+        [],
+        []
+      ]
+    }
+  }
+]

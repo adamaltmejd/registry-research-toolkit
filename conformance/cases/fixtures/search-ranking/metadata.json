@@ -1,0 +1,105 @@
+{
+  "variable_groups": [
+    {
+      "register": "scb/iot",
+      "key": "kontroll",
+      "label": "Kontroll",
+      "source": "curated",
+      "members": [
+        {
+          "variable": "scb/iot/kontroll-0"
+        },
+        {
+          "variable": "scb/iot/kontroll-1"
+        },
+        {
+          "variable": "scb/iot/kontroll-2"
+        },
+        {
+          "variable": "scb/iot/kontroll-3"
+        },
+        {
+          "variable": "scb/iot/kontroll-4"
+        },
+        {
+          "variable": "scb/iot/kontroll-5"
+        }
+      ]
+    },
+    {
+      "register": "scb/lisa",
+      "key": "demografi",
+      "label": "Demografi",
+      "source": "curated",
+      "members": [
+        {
+          "variable": "scb/lisa/alder"
+        },
+        {
+          "variable": "scb/lisa/alder-utvandring"
+        }
+      ]
+    },
+    {
+      "register": "scb/iot",
+      "key": "tfoab",
+      "label": "Transfereringar",
+      "source": "curated",
+      "members": [
+        {
+          "variable": "scb/iot/tfoab01"
+        },
+        {
+          "variable": "scb/iot/tfoab02"
+        }
+      ]
+    },
+    {
+      "register": "scb/lisa",
+      "key": "tfoab",
+      "label": "Transfereringar",
+      "source": "curated",
+      "members": [
+        {
+          "variable": "scb/lisa/tfoab01"
+        },
+        {
+          "variable": "scb/lisa/tfoab02"
+        }
+      ]
+    },
+    {
+      "register": "scb/iot",
+      "key": "disponibel-inkomst",
+      "label": "Disponibel inkomst",
+      "source": "curated",
+      "members": [
+        {
+          "variable": "scb/iot/disponibel-inkomst"
+        },
+        {
+          "variable": "scb/iot/disponibel-inkomst-individ"
+        }
+      ]
+    }
+  ],
+  "classification_groups": [
+    {
+      "key": "sunx",
+      "label": "Sunx utbildning",
+      "source": "curated",
+      "members": [
+        {
+          "classification": "sunx2000",
+          "facet_value": "2000",
+          "facet_label": "2000"
+        },
+        {
+          "classification": "sunx2020",
+          "facet_value": "2020",
+          "facet_label": "2020"
+        }
+      ]
+    }
+  ]
+}

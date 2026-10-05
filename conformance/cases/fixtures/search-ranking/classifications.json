@@ -1,0 +1,39 @@
+[
+  {
+    "slug": "qset",
+    "short_name": "QSET",
+    "name": "Q set",
+    "codes": [
+      {
+        "code": "Q900",
+        "label": "Qtopic sample"
+      },
+      {
+        "code": "Q901",
+        "label": "Qtopic second"
+      }
+    ]
+  },
+  {
+    "slug": "sunx2000",
+    "short_name": "SUNX2000",
+    "name": "Sunx utbildning 2000",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Grund"
+      }
+    ]
+  },
+  {
+    "slug": "sunx2020",
+    "short_name": "SUNX2020",
+    "name": "Sunx utbildning 2020",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Grund"
+      }
+    ]
+  }
+]

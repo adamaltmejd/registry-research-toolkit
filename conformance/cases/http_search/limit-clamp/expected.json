@@ -1,0 +1,96 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/groups/*/group": [
+        "classification_codes"
+      ],
+      "/groups/0/results/*/classification_count": [
+        1
+      ],
+      "/groups/0/has_more": true
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/groups/*/group": [
+        "classification_codes"
+      ],
+      "/groups/0/results/*/classification_count": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "/groups/0/has_more": true
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/groups/*/group": [
+        "classification_codes"
+      ],
+      "/groups/0/results/*/classification_count": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "/groups/0/has_more": true
+    }
+  }
+]

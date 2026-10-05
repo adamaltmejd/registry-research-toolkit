@@ -1,0 +1,26 @@
+{
+  "kind": "catalog",
+  "golden_config": "search_golden.toml",
+  "requests": [
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "Example",
+        "type": "register"
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "Lisa",
+        "type": "register"
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "Example"
+      }
+    }
+  ]
+}

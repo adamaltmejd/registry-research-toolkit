@@ -1,0 +1,21 @@
+{
+  "kind": "catalog",
+  "fixture": "search-ranking",
+  "golden_config": "search_golden.toml",
+  "requests": [
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "kon",
+        "limit": 5
+      }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "Q90",
+        "limit": 5
+      }
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+[[pin]]
+query = "gizmo"
+group = "register"
+fqids = ["scb/lisa", "scb/example"]

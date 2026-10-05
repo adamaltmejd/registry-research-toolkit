@@ -1,0 +1,860 @@
+[
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "lisa",
+      "name": "LISA"
+    },
+    "slug": "gender",
+    "provider_key": "1",
+    "name": "K\u00f6n",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Gender",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "konj",
+      "name": "Konjunktur"
+    },
+    "slug": "index",
+    "provider_key": "2",
+    "name": "Index",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Index",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "iot",
+      "name": "IoT"
+    },
+    "slug": "kontroll-0",
+    "provider_key": "3",
+    "name": "Kontroll 0",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Kontroll_0",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "iot",
+      "name": "IoT"
+    },
+    "slug": "kontroll-1",
+    "provider_key": "4",
+    "name": "Kontroll 1",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Kontroll_1",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "iot",
+      "name": "IoT"
+    },
+    "slug": "kontroll-2",
+    "provider_key": "5",
+    "name": "Kontroll 2",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Kontroll_2",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "iot",
+      "name": "IoT"
+    },
+    "slug": "kontroll-3",
+    "provider_key": "6",
+    "name": "Kontroll 3",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Kontroll_3",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "iot",
+      "name": "IoT"
+    },
+    "slug": "kontroll-4",
+    "provider_key": "7",
+    "name": "Kontroll 4",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Kontroll_4",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "iot",
+      "name": "IoT"
+    },
+    "slug": "kontroll-5",
+    "provider_key": "8",
+    "name": "Kontroll 5",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Kontroll_5",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "lisa",
+      "name": "LISA"
+    },
+    "slug": "alder",
+    "provider_key": "9",
+    "name": "\u00c5lder",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Alder",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "lisa",
+      "name": "LISA"
+    },
+    "slug": "alder-utvandring",
+    "provider_key": "10",
+    "name": "\u00c5lder vid utvandring",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Alder_Utvandring",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "alderdom",
+      "name": "Alderdom"
+    },
+    "slug": "pension",
+    "provider_key": "11",
+    "name": "Pension",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Pension",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "iot",
+      "name": "IoT"
+    },
+    "slug": "tfoab01",
+    "provider_key": "12",
+    "name": "Transfereringar",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Tfoab01",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "iot",
+      "name": "IoT"
+    },
+    "slug": "tfoab02",
+    "provider_key": "13",
+    "name": "Transfereringar netto",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Tfoab02",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "lisa",
+      "name": "LISA"
+    },
+    "slug": "tfoab01",
+    "provider_key": "14",
+    "name": "Transfereringar",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Tfoab01",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "lisa",
+      "name": "LISA"
+    },
+    "slug": "tfoab02",
+    "provider_key": "15",
+    "name": "Transfereringar netto",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Tfoab02",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "iot",
+      "name": "IoT"
+    },
+    "slug": "disponibel-inkomst",
+    "provider_key": "16",
+    "name": "Disponibel inkomst familj",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Disponibel_Inkomst",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "iot",
+      "name": "IoT"
+    },
+    "slug": "disponibel-inkomst-individ",
+    "provider_key": "17",
+    "name": "Disponibel inkomst individ",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Disponibel_Inkomst_Individ",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "konj",
+      "name": "Konjunktur"
+    },
+    "slug": "disponibel-inkomst",
+    "provider_key": "18",
+    "name": "Disponibel inkomst",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Disponibel_Inkomst",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "alderdom",
+      "name": "Alderdom"
+    },
+    "slug": "disponibel-inkomst",
+    "provider_key": "19",
+    "name": "Disponibel inkomst",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Disponibel_Inkomst",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "alpha",
+      "name": "Alpha",
+      "purpose": "Deeptopic deeptopic deeptopic overview"
+    },
+    "slug": "disponibel-inkomst",
+    "provider_key": "20",
+    "name": "Disponibel inkomst",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Disponibel_Inkomst",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "beta",
+      "name": "Beta",
+      "purpose": "Deeptopic deeptopic survey"
+    },
+    "slug": "disponibel-inkomst",
+    "provider_key": "21",
+    "name": "Disponibel inkomst",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Disponibel_Inkomst",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "gamma",
+      "name": "Gamma",
+      "purpose": "Deeptopic registry"
+    },
+    "slug": "disponibel-inkomst",
+    "provider_key": "22",
+    "name": "Disponibel inkomst",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Disponibel_Inkomst",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "qreport",
+      "name": "Quarterly",
+      "purpose": "Q90report summary"
+    },
+    "slug": "disponibel-inkomst",
+    "provider_key": "23",
+    "name": "Disponibel inkomst",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Disponibel_Inkomst",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "alpha",
+      "name": "Alpha",
+      "purpose": "Deeptopic deeptopic deeptopic overview"
+    },
+    "slug": "deep",
+    "provider_key": "24",
+    "name": "Deep value",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Deep",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "beta",
+      "name": "Beta",
+      "purpose": "Deeptopic deeptopic survey"
+    },
+    "slug": "deep",
+    "provider_key": "25",
+    "name": "Deep value",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Deep",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "gamma",
+      "name": "Gamma",
+      "purpose": "Deeptopic registry"
+    },
+    "slug": "deep",
+    "provider_key": "26",
+    "name": "Deep value",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Deep",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "qreport",
+      "name": "Quarterly",
+      "purpose": "Q90report summary"
+    },
+    "slug": "qcode",
+    "provider_key": "27",
+    "name": "Quarter code",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Qcode",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "Q900",
+              "Qtopic sample"
+            ]
+          ]
+        },
+        "classification_links": [
+          {
+            "classification": "qset"
+          }
+        ]
+      }
+    ]
+  }
+]

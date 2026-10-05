@@ -1,0 +1,72 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/group": "top_results",
+      "/groups/0/results/*/type": [
+        "variable",
+        "group",
+        "register"
+      ],
+      "/groups/0/results/0/fqid": "scb/lisa/gender",
+      "/groups/0/results/1/group_key": "kontroll",
+      "/groups/0/results/2/fqid": "scb/konj"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/group": "top_results",
+      "/groups/0/results/*/type": [
+        "group",
+        "register"
+      ],
+      "/groups/0/results/0/group_key": "demografi",
+      "/groups/0/results/1/fqid": "scb/alderdom"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/group": "top_results",
+      "/groups/0/results/*/group_key": [
+        "tfoab",
+        "tfoab"
+      ],
+      "/groups/0/results/*/members/0/fqid": [
+        "scb/iot/tfoab01",
+        "scb/lisa/tfoab01"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/group": "top_results",
+      "/groups/0/results/0/type": "group",
+      "/groups/0/results/0/group_key": "disponibel-inkomst",
+      "/groups/0/results/*/type": [
+        "group",
+        "variable",
+        "variable",
+        "variable",
+        "variable"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/group": "top_results",
+      "/groups/0/results/*/type": [
+        "code",
+        "code",
+        "register",
+        "classification"
+      ],
+      "/groups/0/results/0/code": "Q900",
+      "/groups/0/results/1/code": "Q901",
+      "/groups/0/results/2/fqid": "scb/qreport"
+    }
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/results/*/fqid": [
+        "scb/lisa"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/results/*/fqid": [
+        "scb/lisa"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/results/*/fqid": [
+        "scb/lisa"
+      ]
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/detail": "Search cursor must not be empty. Restart the search without cursor."
+    }
+  }
+]
