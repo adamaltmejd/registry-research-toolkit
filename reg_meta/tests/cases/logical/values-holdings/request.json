@@ -1,0 +1,10 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "steward",
+  "operation": "get_values_by_variable",
+  "args": [
+    "Value"
+  ],
+  "kwargs": {},
+  "observe": "values"
+}

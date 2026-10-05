@@ -1,0 +1,12 @@
+{
+  "fixture": "reader",
+  "artifact": "catalog",
+  "argv": [
+    "--scope",
+    "holdings",
+    "get",
+    "register",
+    "scb/example"
+  ],
+  "observe": "error"
+}

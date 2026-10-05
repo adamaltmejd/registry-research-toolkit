@@ -1,0 +1,15 @@
+{
+  "fixture": "reader/case-twins",
+  "artifact": "steward",
+  "operation": "search",
+  "args": [
+    "value"
+  ],
+  "kwargs": {
+    "field": "description",
+    "type": "variable",
+    "years": "2019",
+    "fold_groups": false
+  },
+  "observe": "fts-search"
+}

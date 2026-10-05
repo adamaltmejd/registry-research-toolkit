@@ -1,0 +1,15 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "steward",
+  "operation": "get_diff",
+  "args": [],
+  "kwargs": {
+    "register": "scb/example",
+    "from_year": 2018,
+    "to_year": 2019,
+    "variables": [
+      "Value"
+    ]
+  },
+  "observe": "diff"
+}

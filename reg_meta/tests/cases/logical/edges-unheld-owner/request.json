@@ -1,0 +1,11 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "steward",
+  "operation": "catalog_method",
+  "method": "successors",
+  "args": [
+    "scb/example/reference"
+  ],
+  "kwargs": {},
+  "observe": "error"
+}

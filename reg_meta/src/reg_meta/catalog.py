@@ -14,9 +14,11 @@ path that enumerated per-edition bindings — are gone (see DESIGN.md → FQID g
 from __future__ import annotations
 
 import json
+import os
 import re
 from collections import deque
 from datetime import date
+from functools import lru_cache
 from typing import TYPE_CHECKING, Annotated, Literal, Self, TypeVar, cast
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -43,6 +45,7 @@ from .fqid import (
     period_token_to_bounds,
     validate_slug,
 )
+from .holdings import Holdings, ReadScope, resolve_scope, scope_predicate
 from .ids import (
     CatalogStorageId,  # noqa: TC001 - Runtime Pydantic field type; public catalog export.
 )
@@ -421,6 +424,52 @@ def representative_columns(
         named = sorted((c for c in columns if c is not None), reverse=True)
         spellings |= {column.lower(): column for column in named}
     return spellings
+
+
+def _delivery_column_spellings(
+    conn: sqlite3.Connection, variable_id: int, variant_id: int
+) -> dict[str, str]:
+    stated = conn.execute(
+        "SELECT delivery_column_name FROM variable_state "
+        "WHERE variable_id = ? AND register_variant_id = ?",
+        (variable_id, variant_id),
+    )
+    aliased = conn.execute(
+        "SELECT delivery_column_name FROM variable_alias_window "
+        "WHERE variable_id = ? AND register_variant_id = ?",
+        (variable_id, variant_id),
+    )
+    return representative_columns(
+        (row[0] for row in stated), (row[0] for row in aliased)
+    )
+
+
+def register_catalog_udfs(conn: sqlite3.Connection) -> None:
+    """Register semantic column normalization without retaining a Catalog.
+
+    The immutable artifact's spelling map has a bounded connection-local cache.
+    Physical holding identifiers and compiled representations stay exact.
+    """
+    if (
+        conn.execute(
+            "SELECT 1 FROM pragma_function_list WHERE name = 'py_catalog_column'"
+        ).fetchone()
+        is not None
+    ):
+        return
+
+    @lru_cache(maxsize=1024)
+    def spellings(variable_id: int, variant_id: int) -> dict[str, str]:
+        return _delivery_column_spellings(conn, variable_id, variant_id)
+
+    def canonical_column(
+        variable_id: int, variant_id: int, column: str | None
+    ) -> str | None:
+        if column is None:
+            return None
+        return spellings(variable_id, variant_id).get(column.lower(), column)
+
+    conn.create_function("py_catalog_column", 3, canonical_column, deterministic=True)
 
 
 # Concept-group browse shapes (#303; see DESIGN.md → Concept groups): a derived
@@ -1413,6 +1462,50 @@ type _StoredAliasWindow = tuple[
 ]
 
 
+def _applicable_alias_windows(
+    row: sqlite3.Row,
+    windows: list[_StoredAliasWindow],
+    bounds: tuple[str, str] | None,
+) -> tuple[bool, list[_StoredAliasWindow]]:
+    """Shared resolver projection for full states and lightweight coverage rows."""
+    if row["period_scope"] == "year_independent":
+        return True, []
+    lo, hi = bounds if bounds is not None else ("0001-01-01", "9999-12-31")
+    participating = []
+    for window in windows:
+        if window[4] == "per_column" or window[11] == "per_column":
+            start, end = (
+                max(row["valid_from"], window[1]),
+                min(row["valid_to"], window[2]),
+            )
+            if start <= end:
+                participating.append((window[0], start, end, *window[3:]))
+        elif row["valid_from"] <= window[1] and window[2] <= row["valid_to"]:
+            participating.append(window)
+    source = [w for w in participating if w[3] is None or w[11] == "per_column"]
+    curated = [w for w in participating if w[3] is not None and w[11] != "per_column"]
+    has_base = row["delivery_column_name"] is not None and any(
+        w[0].lower() == row["delivery_column_name"].lower() for w in source
+    )
+    matched = [w for w in source if w[1] <= hi and w[2] >= lo]
+    replace = bool(source and has_base and matched)
+    return not replace, (matched if replace else []) + [
+        w for w in curated if w[1] <= hi and w[2] >= lo
+    ]
+
+
+def _require_state_variant(state_id: int, variant_id: int, slug: str | None) -> str:
+    if slug is None:
+        raise RegMetaError(
+            exit_code=EXIT_NOT_FOUND,
+            code="state_variant_unresolved",
+            error_class="query",
+            message=f"variable_state {state_id} references register_variant {variant_id} with no slug",
+            remediation="Rebuild the reg_meta DB (slug population is incomplete).",
+        )
+    return slug
+
+
 class Catalog:
     """FQID resolution against an open reg_meta SQLite connection."""
 
@@ -1422,8 +1515,11 @@ class Catalog:
         doc_conn: sqlite3.Connection | None = None,
         *,
         classification_as_of_year: int | None = None,
+        scope: ReadScope | None = None,
     ) -> None:
         self._conn = conn
+        self.scope = resolve_scope(conn, scope)
+        self.holdings = Holdings(conn)
         self._doc_conn = doc_conn
         self._classification_as_of_year = (
             classification_as_of_year
@@ -1438,12 +1534,14 @@ class Catalog:
         self._var_same_as_sources: frozenset[tuple[str, str, str]] | None = None
         self._class_same_as_sources: frozenset[tuple[str, str]] | None = None
         self._variant_family_cache: dict[int, dict[str, _VariantFamilyInfo]] = {}
+        self._delivery_spelling_cache: dict[tuple[int, int], dict[str, str]] = {}
         # `value_set_summary` memo. A variable's states SHARE value sets (one
         # geography coding across 290 yearly states), so the membership scan the
         # summary needs runs once per DISTINCT value set for the life of this
         # Catalog rather than once per state.
         self._value_set_summaries: dict[int, ValueSetSummary] = {}
         self._data_warning_payloads: dict[str, DataWarning] = {}
+        register_catalog_udfs(conn)
 
     def data_warnings(
         self,
@@ -1465,6 +1563,8 @@ class Catalog:
         coordinate = parse(fqid) if isinstance(fqid, str) else fqid
         if coordinate.kind not in (FqidKind.REGISTER, FqidKind.VARIABLE_BINDING):
             raise ValueError("data warnings require a register or variable binding")
+
+        warning_column = "py_catalog_column(w.variable_id, w.register_variant_id, w.delivery_column_name)"
         variable_id = None
         if coordinate.kind == FqidKind.VARIABLE_BINDING:
             resolved = self._resolve_variable_identity(coordinate)
@@ -1493,9 +1593,7 @@ class Catalog:
             clauses.append("(w.register_variant_id IS NULL OR rv.slug = ?)")
             args.append(variant)
         if representation is not None:
-            clauses.append(
-                "(w.delivery_column_name IS NULL OR w.delivery_column_name = ?)"
-            )
+            clauses.append(f"(w.delivery_column_name IS NULL OR {warning_column} = ?)")
             args.append(representation)
         bounds = _period_bounds(period) if period is not None else None
         if bounds is not None:
@@ -1506,6 +1604,44 @@ class Catalog:
                 ]
             )
             args.extend([bounds[1], bounds[0]])
+        if self.scope == "holdings":
+            assert coordinate.provider is not None and coordinate.register is not None
+            admitted = self._conn.execute(
+                "SELECT 1 FROM register r JOIN provider p USING(provider_id) "
+                "WHERE p.slug = ? AND r.slug = ? AND "
+                + scope_predicate(self.scope, "register", "r"),
+                (coordinate.provider, coordinate.register),
+            ).fetchone()
+            if admitted is None:
+                raise _not_found(
+                    Fqid.register_fqid(coordinate.provider, coordinate.register)
+                )
+            clauses.append(
+                "(w.variable_id IS NULL OR "
+                + scope_predicate(
+                    self.scope,
+                    "variable",
+                    "v",
+                    bounds=bounds,
+                    variant_sql=(
+                        "COALESCE(w.register_variant_id, (SELECT selected.register_variant_id "
+                        "FROM register_variant selected WHERE selected.register_id = w.register_id "
+                        "AND selected.slug = ?))"
+                        if variant is not None
+                        else "COALESCE(w.register_variant_id, hm.variant_id)"
+                    ),
+                    representation_sql=(
+                        f"COALESCE({warning_column}, ?)"
+                        if representation is not None
+                        else f"COALESCE({warning_column}, hm.representation_canonical)"
+                    ),
+                )
+                + ")"
+            )
+            if variant is not None:
+                args.append(variant)
+            if representation is not None:
+                args.append(representation)
         rows = self._conn.execute(
             "SELECT w.warning_json FROM data_warning w "
             "JOIN register r USING(register_id) JOIN provider p USING(provider_id) "
@@ -1530,23 +1666,33 @@ class Catalog:
         *,
         with_docs: bool = False,
         classification_as_of_year: int | None = None,
+        scope: ReadScope | None = None,
+        catalog: str | None = None,
     ) -> Catalog:
-        path = db_path_from_args(str(db_arg) if db_arg is not None else None)
-        conn = open_db(path)
-        if not with_docs:
-            return cls(conn, classification_as_of_year=classification_as_of_year)
+        path = db_path_from_args(
+            str(db_arg) if db_arg is not None else None, catalog=catalog
+        )
+        selected = catalog
+        if selected is None and db_arg is None and not os.environ.get("REG_META_DB"):
+            selected = "global"
+        conn = open_db(path, catalog=selected)
+        doc_conn = None
         try:
-            from .doc_db import ensure_doc_db
+            if with_docs:
+                from .doc_db import ensure_doc_db
 
-            doc_conn = ensure_doc_db(str(db_arg) if db_arg is not None else None)
+                doc_conn = ensure_doc_db(str(path.parent))
+            return cls(
+                conn,
+                doc_conn=doc_conn,
+                classification_as_of_year=classification_as_of_year,
+                scope=scope,
+            )
         except Exception:
             conn.close()
+            if doc_conn is not None:
+                doc_conn.close()
             raise
-        return cls(
-            conn,
-            doc_conn=doc_conn,
-            classification_as_of_year=classification_as_of_year,
-        )
 
     def close(self) -> None:
         self._conn.close()
@@ -1576,35 +1722,34 @@ class Catalog:
     # and a present parent with no children maps to an empty children list.
 
     def catalog_sizes(self) -> CatalogSizes:
-        """Headline catalog-size counts for the landing page — the
-        BROWSE-ADDRESSABLE (slugged) grain, so each count mirrors its `list_*`
-        method's filter exactly: providers are always slugged (`list_providers`
-        applies no filter); registers count only the slugged rows
-        (`slug IS NOT NULL` — a NULL-slug row isn't reachable by an FQID, so the
-        browse listings drop it). The variable count requires BOTH the variable
-        AND its parent register to be slugged: the browse can't navigate into a
-        NULL-slug register (`list_registers` drops it), so a slugged variable
-        under one is unreachable and must not be counted. These are FULL-UNIVERSE
-        (the whole DB) — a steward-filter-aware count (a filtered deployment
-        browses fewer nodes) is a webapp concern / follow-up, NOT reg_meta's job
-        (reg_meta has no notion of webapp steward filtering). Three cheap COUNT
-        queries."""
+        """Browse-addressable counts in this artifact and read scope.
+
+        The shared SQL predicate applies before each count, matching list methods.
+        Reference retains the artifact's complete semantic universe.
+        """
         return CatalogSizes(
-            providers=self._conn.execute("SELECT COUNT(*) FROM provider").fetchone()[0],
+            providers=self._conn.execute(
+                "SELECT COUNT(*) FROM provider p WHERE "
+                + scope_predicate(self.scope, "provider", "p")
+            ).fetchone()[0],
             registers=self._conn.execute(
-                "SELECT COUNT(*) FROM register WHERE slug IS NOT NULL"
+                "SELECT COUNT(*) FROM register r WHERE slug IS NOT NULL AND "
+                + scope_predicate(self.scope, "register", "r")
             ).fetchone()[0],
             variables=self._conn.execute(
                 "SELECT COUNT(*) FROM variable v "
                 "JOIN register r ON v.register_id = r.register_id "
-                "WHERE v.slug IS NOT NULL AND r.slug IS NOT NULL"
+                "WHERE v.slug IS NOT NULL AND r.slug IS NOT NULL AND "
+                + scope_predicate(self.scope, "variable", "v")
             ).fetchone()[0],
         )
 
     def list_providers(self) -> list[ProviderSummary]:
         """Every provider in the catalog (e.g. scb, sos), ordered by slug."""
         rows = self._conn.execute(
-            "SELECT slug, name FROM provider ORDER BY slug"
+            "SELECT slug, name FROM provider p WHERE "
+            + scope_predicate(self.scope, "provider", "p")
+            + " ORDER BY slug"
         ).fetchall()
         return [
             ProviderSummary(fqid=Fqid.provider_fqid(r["slug"]), name=r["name"])
@@ -1621,7 +1766,9 @@ class Catalog:
         rows = self._conn.execute(
             "SELECT r.slug, r.name, r.purpose "
             "FROM register r JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = ? AND r.slug IS NOT NULL ORDER BY r.slug",
+            "WHERE p.slug = ? AND r.slug IS NOT NULL AND "
+            + scope_predicate(self.scope, "register", "r")
+            + " ORDER BY r.slug",
             (provider_slug,),
         ).fetchall()
         return [
@@ -1646,7 +1793,9 @@ class Catalog:
             "FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL AND "
+            + scope_predicate(self.scope, "variable", "v")
+            + " "
             "ORDER BY v.slug",
             (provider_slug, register_slug),
         ).fetchall()
@@ -1667,6 +1816,14 @@ class Catalog:
         keeps stateless variables (coverage None, count 0). Measured ~9 ms on the
         worst real register (scb/ulf, 7.3k variables) — query-time, no
         materialized columns (see reg_webapp/DESIGN.md → Coverage aggregates)."""
+        if self.scope == "holdings":
+            return {
+                slug: self._delivery_coverage(deliveries)
+                for slug, deliveries in self._held_deliveries(
+                    provider_slug, register_slug
+                ).items()
+            }
+
         rows = self._conn.execute(
             "SELECT v.slug AS slug, MIN(vs.valid_from) AS cov_from, "
             "MAX(vs.valid_to) AS cov_to, COUNT(vs.state_id) AS nstates "
@@ -1674,7 +1831,9 @@ class Catalog:
             "JOIN register r ON v.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
             "LEFT JOIN variable_state vs ON vs.variable_id = v.variable_id "
-            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL AND "
+            + scope_predicate(self.scope, "variable", "v")
+            + " "
             "GROUP BY v.variable_id",
             (provider_slug, register_slug),
         ).fetchall()
@@ -1711,6 +1870,19 @@ class Catalog:
         answers with. Two keys would split one column's coverage between them, and
         a steward's register page (which matches its held column to this key by the
         same fold) would show whichever half its own spelling landed on."""
+        if self.scope == "holdings":
+            out = {}
+            for slug, deliveries in self._held_deliveries(
+                provider_slug, register_slug
+            ).items():
+                for column in sorted(
+                    {d.column for d in deliveries if d.column is not None}
+                ):
+                    out[(slug, column)] = self._delivery_coverage(
+                        [d for d in deliveries if d.column == column]
+                    )
+            return out
+
         # simplify: this single-register reader can scan all variable_state rows;
         # optimize in a register/subject fix if profiling attributes a 200 ms
         # catalog-budget miss to this query.
@@ -1722,7 +1894,9 @@ class Catalog:
             "JOIN register r ON v.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
             "JOIN variable_state vs ON vs.variable_id = v.variable_id "
-            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL AND "
+            + scope_predicate(self.scope, "variable", "v")
+            + " "
             "  AND vs.delivery_column_name IS NOT NULL "
             "GROUP BY v.variable_id, vs.delivery_column_name",
             (provider_slug, register_slug),
@@ -1796,6 +1970,9 @@ class Catalog:
         their own and folded onto the columns here. Row order is established by
         the final sort, not by SQL: the alias pass appends columns no `ORDER BY`
         could have placed."""
+        if self.scope == "holdings":
+            return self._held_deliveries(provider_slug, register_slug)
+
         state_rows = self._conn.execute(
             "SELECT v.slug AS slug, rv.slug AS variant, "
             "vs.delivery_column_name AS col, vs.period_scope, "
@@ -1806,7 +1983,9 @@ class Catalog:
             "LEFT JOIN variable_state vs ON vs.variable_id = v.variable_id "
             "LEFT JOIN register_variant rv "
             "  ON rv.register_variant_id = vs.register_variant_id "
-            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL AND "
+            + scope_predicate(self.scope, "variable", "v")
+            + " "
             "  AND rv.slug IS NOT NULL ",
             (provider_slug, register_slug),
         ).fetchall()
@@ -1820,7 +1999,9 @@ class Catalog:
             "LEFT JOIN variable_alias_window w ON w.variable_id = v.variable_id "
             "LEFT JOIN register_variant rv "
             "  ON rv.register_variant_id = w.register_variant_id "
-            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL AND "
+            + scope_predicate(self.scope, "variable", "v")
+            + " "
             "  AND rv.slug IS NOT NULL AND w.delivery_column_name IS NOT NULL ",
             (provider_slug, register_slug),
         ).fetchall()
@@ -1833,7 +2014,9 @@ class Catalog:
             "LEFT JOIN variable_alias va ON va.variable_id = v.variable_id "
             "LEFT JOIN register_variant rv "
             "  ON rv.register_variant_id = va.register_variant_id "
-            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL AND "
+            + scope_predicate(self.scope, "variable", "v")
+            + " "
             "  AND rv.slug IS NOT NULL AND va.delivery_column_name IS NOT NULL",
             (provider_slug, register_slug),
         ).fetchall()
@@ -1958,6 +2141,9 @@ class Catalog:
         coverage still needs exact coverage for a held unnamed column; using the
         variable-level union would borrow named sibling states.
         """
+        if self.scope == "holdings":
+            return {}
+
         # simplify: this single-register reader can scan all variable rows;
         # optimize with register_column_coverage if register-page profiling
         # attributes a 200 ms catalog-budget miss to these queries.
@@ -1968,7 +2154,9 @@ class Catalog:
             "JOIN register r ON v.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
             "JOIN variable_state vs ON vs.variable_id = v.variable_id "
-            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL AND "
+            + scope_predicate(self.scope, "variable", "v")
+            + " "
             "  AND vs.delivery_column_name IS NULL "
             "GROUP BY v.variable_id",
             (provider_slug, register_slug),
@@ -1991,8 +2179,28 @@ class Catalog:
 
         Named keys match `register_column_coverage`; `(variable, None)` keys match
         `register_unnamed_column_coverage`. Registers without slugged state-bearing
-        variables are absent. This is catalog coverage; consumers filter holdings.
+        variables are absent. The artifact's read scope applies before coverage.
         """
+        if self.scope == "holdings":
+            selected = frozenset(register_slugs) if register_slugs is not None else None
+            deliveries = self._provider_held_deliveries(provider_slug, selected)
+            out = {}
+            for register in self.list_registers(provider_slug):
+                slug = register.fqid.register
+                assert slug is not None
+                if selected is not None and slug not in selected:
+                    continue
+                columns: dict[tuple[str, str | None], VariableCoverage] = {}
+                for variable, offered in deliveries.get(slug, {}).items():
+                    for column in sorted(
+                        {d.column for d in offered if d.column is not None}
+                    ):
+                        columns[(variable, column)] = self._delivery_coverage(
+                            [d for d in offered if d.column == column]
+                        )
+                out[slug] = columns
+            return out
+
         params = [provider_slug]
         register_filter = ""
         if register_slugs is not None:
@@ -2050,6 +2258,28 @@ class Catalog:
         register slug. `variable_count` counts slugged variables (matching
         `list_bindings`); the span is over all their states. One GROUP BY;
         ~40 ms across scb's 238 registers (query-time — see DESIGN.md)."""
+        if self.scope == "holdings":
+            out = {}
+            deliveries_by_register = self._provider_held_deliveries(provider_slug)
+            for register in self.list_registers(provider_slug):
+                slug = register.fqid.register
+                assert slug is not None
+                deliveries = deliveries_by_register.get(slug, {})
+                coverage = self._delivery_coverage(
+                    [
+                        delivery
+                        for offered in deliveries.values()
+                        for delivery in offered
+                    ]
+                )
+                out[slug] = RegisterCoverage(
+                    variable_count=len(deliveries),
+                    coverage_from=coverage.coverage_from,
+                    coverage_to=coverage.coverage_to,
+                    open_ended=coverage.open_ended,
+                )
+            return out
+
         rows = self._conn.execute(
             "SELECT r.slug AS slug, COUNT(DISTINCT v.variable_id) AS nvar, "
             "MIN(vs.valid_from) AS cov_from, MAX(vs.valid_to) AS cov_to "
@@ -2091,7 +2321,9 @@ class Catalog:
             "FROM register_variant rv "
             "JOIN register r ON rv.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = ? AND r.slug = ? AND rv.slug IS NOT NULL "
+            "WHERE p.slug = ? AND r.slug = ? AND rv.slug IS NOT NULL AND "
+            + scope_predicate(self.scope, "variant", "rv")
+            + " "
             "ORDER BY rv.slug",
             (provider_slug, register_slug),
         ).fetchall()
@@ -2335,8 +2567,26 @@ class Catalog:
             "LEFT JOIN concept_group_axis a "
             "  ON a.group_id = g.group_id AND a.axis = f.axis "
             "WHERE p.slug = ? AND r.slug = ? AND g.kind = 'variable' "
-            "  AND v.slug IS NOT NULL "
-            "ORDER BY g.group_key, m.member_id, a.ordinal",
+            "  AND v.slug IS NOT NULL AND "
+            + scope_predicate(self.scope, "variable", "v")
+            + " "
+            + (
+                "AND (m.delivery_column_name IS NULL OR EXISTS ("
+                "SELECT 1 FROM register_variant gv WHERE gv.register_id = v.register_id AND "
+                + scope_predicate(
+                    self.scope,
+                    "variable",
+                    "v",
+                    variant_sql="gv.register_variant_id",
+                    representation_sql=(
+                        "py_catalog_column(v.variable_id, gv.register_variant_id, m.delivery_column_name)"
+                    ),
+                )
+                + ")) "
+                if self.scope == "holdings"
+                else ""
+            )
+            + "ORDER BY g.group_key, m.member_id, a.ordinal",
             (provider_slug, register_slug),
         ).fetchall()
         groups = self._assemble_variable_groups(provider_slug, register_slug, rows)
@@ -2716,7 +2966,13 @@ class Catalog:
             "COUNT(tm.tag_id) AS member_count, "
             "COALESCE(SUM(tm.starred), 0) AS starred_count "
             "FROM tag t "
-            "LEFT JOIN tag_member tm ON tm.tag_id = t.tag_id "
+            "LEFT JOIN tag_member tm ON tm.tag_id = t.tag_id AND "
+            "(tm.variable_id IS NULL OR "
+            + scope_predicate(self.scope, "variable", "tm")
+            + ") AND "
+            "(tm.register_id IS NULL OR "
+            + scope_predicate(self.scope, "register", "tm")
+            + ") "
             "GROUP BY t.tag_id "
             "ORDER BY t.slug"
         ).fetchall()
@@ -2777,7 +3033,9 @@ class Catalog:
             "JOIN tag_member tm ON tm.variable_id = group_member.variable_id "
             "JOIN tag t ON t.tag_id = tm.tag_id "
             "WHERE target_p.slug = ? AND target_r.slug = ? AND target.slug = ? "
-            f"{scope_clause}"
+            f"{scope_clause} AND "
+            + scope_predicate(self.scope, "variable", "group_member")
+            + " "
             "ORDER BY tm.rank, t.slug, tm.variable_id",
             (fqid.provider, fqid.register, fqid.variable, *scope_params),
         ).fetchall()
@@ -2799,6 +3057,7 @@ class Catalog:
         `group_member_fqids` scopes that inheritance to a caller-narrowed member
         set while preserving the variable's own direct tags.
         """
+        self._require_binding(fqid)
         direct = self._direct_tags_for_variable(fqid)
         direct_slugs = {tag.slug for tag in direct}
         inherited = [
@@ -2826,7 +3085,9 @@ class Catalog:
             "JOIN tag t ON t.tag_id = tm.tag_id "
             "JOIN register r ON r.register_id = tm.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = ? AND r.slug = ? "
+            "WHERE p.slug = ? AND r.slug = ? AND "
+            + scope_predicate(self.scope, "register", "r")
+            + " "
             "ORDER BY tm.rank, t.slug",
             (fqid.provider, fqid.register),
         ).fetchall()
@@ -2834,7 +3095,8 @@ class Catalog:
 
     def _resolve_provider(self, fqid: Fqid) -> ResolvedProvider:
         row = self._conn.execute(
-            "SELECT provider_id, name FROM provider WHERE slug = ?",
+            "SELECT provider_id, name FROM provider p WHERE slug = ? AND "
+            + scope_predicate(self.scope, "provider", "p"),
             (fqid.provider,),
         ).fetchone()
         if not row:
@@ -2849,7 +3111,8 @@ class Catalog:
         row = self._conn.execute(
             "SELECT r.register_id, r.provider_id, r.name, r.purpose "
             "FROM register r JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = ? AND r.slug = ?",
+            "WHERE p.slug = ? AND r.slug = ? AND "
+            + scope_predicate(self.scope, "register", "r"),
             (fqid.provider, fqid.register),
         ).fetchone()
         if not row:
@@ -2922,6 +3185,7 @@ class Catalog:
         thread."""
         assert fqid.provider is not None and fqid.register is not None
         assert fqid.variable is not None
+        self._require_binding(fqid)
         direct = self._lookup_variable(fqid.provider, fqid.register, fqid.variable)
         if direct is not None:
             return direct, None
@@ -3505,11 +3769,17 @@ class Catalog:
         valid_to: str | None,
     ) -> tuple[str, ...]:
         owner = self._conn.execute(
-            "SELECT p.slug, r.slug, v.slug FROM variable_state s "
+            "SELECT p.slug, r.slug, v.slug, v.variable_id, s.register_variant_id FROM variable_state s "
             "JOIN variable v USING(variable_id) JOIN register r USING(register_id) "
-            "JOIN provider p USING(provider_id) WHERE s.state_id = ?",
+            "JOIN provider p USING(provider_id) WHERE s.state_id = ? AND "
+            + scope_predicate(self.scope, "variable", "v"),
             (state_id,),
         ).fetchone()
+        if owner is None:
+            # Raw semantic candidates are hydrated before held-state clipping.
+            # An unheld candidate has no visible owner warning and is dropped later.
+            return ()
+        column = self.canonical_delivery_column(owner[3], owner[4], column)
         period = None
         if (
             valid_from is not None
@@ -3522,7 +3792,7 @@ class Catalog:
                 "to": 9999 if valid_to == OPEN_ENDED_VALID_TO else valid_to[:7],
             }
         warnings = self.data_warnings(
-            Fqid.binding_fqid(*owner),
+            Fqid.binding_fqid(*owner[:3]),
             include_unassigned=False,
             variant=variant,
             representation=column,
@@ -3531,8 +3801,14 @@ class Catalog:
         return tuple(
             w.warning_id
             for w in warnings
-            if w.variable_fqid == Fqid.binding_fqid(*owner)
-            and (w.delivery_column_name is None or w.delivery_column_name == column)
+            if w.variable_fqid == Fqid.binding_fqid(*owner[:3])
+            and (
+                w.delivery_column_name is None
+                or self.canonical_delivery_column(
+                    owner[3], owner[4], w.delivery_column_name
+                )
+                == column
+            )
             and (
                 w.valid_from is None
                 or (valid_to is not None and w.valid_from <= valid_to)
@@ -3552,20 +3828,7 @@ class Catalog:
         memoized per-value-set summary instead — see `resolve_at`."""
         rvid = row["register_variant_id"]
         variant = self._variant_slug(rvid)
-        if variant is None:
-            # see DESIGN.md → Two-level variable model: register_variant_id is NOT NULL on variable_state and FK'd to
-            # register_variant, so a missing slug is a build-invariant break, not
-            # a normal case — surface it loudly rather than emit a bad coordinate.
-            raise RegMetaError(
-                exit_code=EXIT_NOT_FOUND,
-                code="state_variant_unresolved",
-                error_class="query",
-                message=(
-                    f"variable_state {row['state_id']} references "
-                    f"register_variant {rvid} with no slug"
-                ),
-                remediation="Rebuild the reg_meta DB (slug population is incomplete).",
-            )
+        variant = _require_state_variant(row["state_id"], rvid, variant)
         family = self._variant_family_for_variant_id(rvid)
         return VariableState(
             warning_ids=self._state_warning_ids(
@@ -3618,17 +3881,290 @@ class Catalog:
             ),
         )
 
+    @staticmethod
+    def _delivery_coverage(deliveries: list[VariableDelivery]) -> VariableCoverage:
+        windows = [window for delivery in deliveries for window in delivery.windows]
+        lo, hi, ongoing = _coverage_bounds(
+            min((w.valid_from for w in windows), default=None),
+            max((w.valid_to for w in windows), default=None),
+        )
+        return VariableCoverage(
+            coverage_from=lo,
+            coverage_to=hi,
+            open_ended=ongoing,
+            state_count=sum(d.coverage.state_count for d in deliveries),
+        )
+
+    def _held_deliveries(
+        self, provider: str, register: str
+    ) -> dict[str, list[VariableDelivery]]:
+        return self._provider_held_deliveries(provider, [register]).get(register, {})
+
+    def _provider_held_deliveries(
+        self, provider: str, registers: Iterable[str] | None = None
+    ) -> dict[str, dict[str, list[VariableDelivery]]]:
+        """Batch semantic projections and physical periods before coverage aggregation.
+
+        Reuse the resolver's alias-window participation rule without constructing
+        full state models, loading codes/warnings, or querying each physical row.
+        """
+        params = [provider]
+        register_filter = ""
+        if registers is not None:
+            selected = sorted(set(registers))
+            if not selected:
+                return {}
+            register_filter = f" AND r.slug IN ({','.join('?' for _ in selected)})"
+            params.extend(selected)
+        rows = self._conn.execute(
+            "SELECT v.variable_id, v.slug AS variable_slug, r.slug AS register_slug, "
+            "vs.state_id, vs.register_variant_id, rv.slug AS variant, vs.period_scope, "
+            "vs.delivery_column_name, vs.valid_from, vs.valid_to "
+            "FROM register r JOIN provider p USING(provider_id) "
+            "LEFT JOIN variable v USING(register_id) "
+            "LEFT JOIN variable_state vs USING(variable_id) "
+            "LEFT JOIN register_variant rv ON rv.register_variant_id = vs.register_variant_id "
+            "WHERE p.slug = ? AND r.slug IS NOT NULL AND v.slug IS NOT NULL "
+            "AND vs.state_id IS NOT NULL AND "
+            + scope_predicate("holdings", "variable", "v")
+            + register_filter,
+            params,
+        ).fetchall()
+        windows_by_variable = {
+            row[0]: self._variable_windows(row[0])
+            for row in self._conn.execute(
+                "SELECT DISTINCT w.variable_id FROM variable_alias_window w "
+                "JOIN variable v USING(variable_id) JOIN register r USING(register_id) "
+                "JOIN provider p USING(provider_id) WHERE p.slug = ? AND "
+                + scope_predicate("holdings", "variable", "v")
+                + register_filter,
+                params,
+            )
+        }
+        stated: dict[tuple[int, int], list[str | None]] = {}
+        for row in rows:
+            stated.setdefault(
+                (row["variable_id"], row["register_variant_id"]), []
+            ).append(row["delivery_column_name"])
+        spellings = {
+            key: representative_columns(
+                columns,
+                (w[0] for w in windows_by_variable.get(key[0], {}).get(key[1], [])),
+            )
+            for key, columns in stated.items()
+        }
+        physical: dict[tuple[int, int, str, str], list[tuple[str, str]]] = {}
+        for row in self._conn.execute(
+            "SELECT hm.variable_id, hm.variant_id, hm.representation_canonical, "
+            "ht.scope, hp.lo, hp.hi FROM holding_mapping hm "
+            "JOIN variable v USING(variable_id) JOIN register r USING(register_id) "
+            "JOIN provider p USING(provider_id) JOIN holding_column hc USING(column_id) "
+            "JOIN holding_table ht USING(table_id) LEFT JOIN holding_period hp USING(table_id) "
+            "WHERE p.slug = ? AND ht.scope != 'unknown' " + register_filter,
+            params,
+        ):
+            intervals = physical.setdefault(tuple(row[:4]), [])
+            if row[4] is not None:
+                intervals.append((row[4], row[5]))
+        physical = {key: list(_merge(intervals)) for key, intervals in physical.items()}
+        groups: dict[tuple[str, str, str, str, str], list[tuple[str, str] | None]] = {}
+        for row in rows:
+            variable_id, variant_id = row["variable_id"], row["register_variant_id"]
+            variant = _require_state_variant(
+                row["state_id"], variant_id, row["variant"]
+            )
+            keep_base, windows = _applicable_alias_windows(
+                row, windows_by_variable.get(variable_id, {}).get(variant_id, []), None
+            )
+            projections = [(w[0], w[1], w[2]) for w in windows]
+            if keep_base:
+                projections.insert(
+                    0, (row["delivery_column_name"], row["valid_from"], row["valid_to"])
+                )
+            for column, lo, hi in projections:
+                if column is None:
+                    continue
+                column = spellings[(variable_id, variant_id)].get(
+                    column.lower(), column
+                )
+                key = (variable_id, variant_id, column, row["period_scope"])
+                if key not in physical:
+                    continue
+                offered = (
+                    [None]
+                    if row["period_scope"] == "year_independent"
+                    else _merge(
+                        [
+                            (max(lo, start), min(hi, end))
+                            for start, end in physical[key]
+                            if max(lo, start) <= min(hi, end)
+                        ]
+                    )
+                )
+                if offered:
+                    groups.setdefault(
+                        (
+                            row["register_slug"],
+                            row["variable_slug"],
+                            variant,
+                            column,
+                            row["period_scope"],
+                        ),
+                        [],
+                    ).extend(offered)
+        out: dict[str, dict[str, list[VariableDelivery]]] = {}
+        for (register, variable, variant, column, period_scope), offered in sorted(
+            groups.items()
+        ):
+            windows = _fuse_windows(
+                [window for window in offered if window is not None]
+            )
+            lo, hi, ongoing = _coverage_bounds(
+                windows[0].valid_from if windows else None,
+                windows[-1].valid_to if windows else None,
+            )
+            out.setdefault(register, {}).setdefault(variable, []).append(
+                VariableDelivery(
+                    variant=variant,
+                    column=column,
+                    period_scope=cast(
+                        'Literal["intervals", "year_independent"]', period_scope
+                    ),
+                    coverage=VariableCoverage(
+                        coverage_from=lo,
+                        coverage_to=hi,
+                        open_ended=ongoing,
+                        state_count=len(offered),
+                    ),
+                    windows=windows,
+                )
+            )
+        return out
+
+    def _require_binding(self, fqid: Fqid) -> None:
+        if self.scope == "reference":
+            return
+        row = self._conn.execute(
+            "SELECT 1 FROM variable v JOIN register r USING(register_id) "
+            "JOIN provider p USING(provider_id) "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug = ? AND "
+            + scope_predicate(self.scope, "variable", "v"),
+            (fqid.provider, fqid.register, fqid.variable),
+        ).fetchone()
+        if row is None:
+            raise _not_found(fqid)
+
+    def _scope_states(
+        self,
+        variable_id: int,
+        states: list[VariableState],
+        bounds: tuple[str, str] | None,
+    ) -> list[VariableState]:
+        if self.scope == "reference":
+            return states
+        out = []
+        physical = {}
+        for state in states:
+            if state.delivery_column_name is None:
+                continue
+            key = (
+                int(state.register_variant_id),
+                self.canonical_delivery_column(
+                    variable_id,
+                    int(state.register_variant_id),
+                    state.delivery_column_name,
+                ),
+                state.period_scope,
+            )
+            if key not in physical:
+                physical[key] = self.holdings.matches(
+                    variable_id, key[0], key[1], bounds=bounds, period_scope=key[2]
+                )
+            matches = physical[key]
+            if state.period_scope == "year_independent":
+                if matches:
+                    out.append(state)
+                continue
+            assert state.valid_from is not None and state.valid_to is not None
+            intervals = []
+            for match in matches:
+                for lo, hi in match.periods:
+                    lo = max(lo, state.valid_from, bounds[0] if bounds else lo)
+                    hi = min(hi, state.valid_to, bounds[1] if bounds else hi)
+                    if lo <= hi:
+                        intervals.append((lo, hi))
+            out.extend(
+                state.model_copy(update={"valid_from": lo, "valid_to": hi})
+                for lo, hi in _merge(intervals)
+            )
+        return out
+
+    def delivery_columns(
+        self,
+        variable_id: int,
+        variant_id: int,
+        *,
+        period_scope: Literal["intervals", "year_independent"] | None = None,
+    ) -> frozenset[str]:
+        """Whole-history resolver delivery universe at an authored binding/variant.
+
+        Includes participating alias windows, using the resolver's replacement,
+        containment and coding rules. Names use representative spelling. This is
+        reference metadata, independent of browse scope and physical possession;
+        it does not promise applicability to any particular holding edition.
+        """
+        rows = self._states_in_bounds(variable_id, variant_id, None)
+        emitted = self._expand_state_windows(
+            variable_id, rows, None, with_codes=False, with_code_summary=False
+        )
+        delivered = {
+            state.delivery_column_name.lower()
+            for state in emitted
+            if state.delivery_column_name is not None
+            and (period_scope is None or state.period_scope == period_scope)
+        }
+        spelling = self._delivery_column_spellings(variable_id, variant_id)
+        return frozenset(name for fold, name in spelling.items() if fold in delivered)
+
+    def canonical_delivery_column(
+        self, variable_id: int, variant_id: int, column: str | None
+    ) -> str | None:
+        """Name a semantic source spelling by the shared whole-history rule.
+
+        This normalizes resolver metadata only; compiled physical identities and
+        canonical holding representations remain exact strings.
+        """
+        if column is None:
+            return None
+        return self._delivery_column_spellings(variable_id, variant_id).get(
+            column.lower(), column
+        )
+
+    def _delivery_column_spellings(
+        self, variable_id: int, variant_id: int
+    ) -> dict[str, str]:
+        key = (variable_id, variant_id)
+        if key not in self._delivery_spelling_cache:
+            self._delivery_spelling_cache[key] = _delivery_column_spellings(
+                self._conn, variable_id, variant_id
+            )
+        return self._delivery_spelling_cache[key]
+
     def _states_for_variable(
         self, variable_id: int, *, with_codes: bool, with_code_summary: bool
     ) -> tuple[VariableState, ...]:
         """Full chronological state history for a variable (all variants)."""
         return tuple(
-            self._expand_state_windows(
+            self._scope_states(
                 variable_id,
-                self._states_in_bounds(variable_id, None, None),
+                self._expand_state_windows(
+                    variable_id,
+                    self._states_in_bounds(variable_id, None, None),
+                    None,
+                    with_codes=with_codes,
+                    with_code_summary=with_code_summary,
+                ),
                 None,
-                with_codes=with_codes,
-                with_code_summary=with_code_summary,
             )
         )
 
@@ -3810,54 +4346,15 @@ class Catalog:
         windows_by_variant = self._variable_windows(variable_id)
         if not windows_by_variant:
             return [to_state(r) for r in rows]
-        lo, hi = bounds if bounds is not None else ("0001-01-01", "9999-12-31")
         out: list[VariableState] = []
         for row in rows:
             base = to_state(row)
-            if base.period_scope == "year_independent":
-                out.append(base)
-                continue
-            assert base.valid_from is not None and base.valid_to is not None
-            windows = windows_by_variant.get(row["register_variant_id"], [])
-            state_windows: list[_StoredAliasWindow] = []
-            for window in windows:
-                if window[4] == "per_column" or window[11] == "per_column":
-                    # One physical column window may span successive coding states.
-                    start, end = (
-                        max(base.valid_from, window[1]),
-                        min(base.valid_to, window[2]),
-                    )
-                    if start <= end:
-                        state_windows.append((window[0], start, end, *window[3:]))
-                elif base.valid_from <= window[1] and window[2] <= base.valid_to:
-                    state_windows.append(window)
-            source_windows = [
-                w for w in state_windows if w[3] is None or w[11] == "per_column"
-            ]
-            curated_windows = [
-                w for w in state_windows if w[3] is not None and w[11] != "per_column"
-            ]
-            has_source_base = base.delivery_column_name is not None and any(
-                window[0].lower() == base.delivery_column_name.lower()
-                for window in source_windows
+            keep_base, windows = _applicable_alias_windows(
+                row, windows_by_variant.get(row["register_variant_id"], []), bounds
             )
-            matched_source = [
-                window
-                for window in source_windows
-                if window[1] <= hi and window[2] >= lo
-            ]
-            if source_windows and has_source_base and matched_source:
-                out.extend(expand_window(base, window) for window in matched_source)
-            else:
-                # Preserve the old fallback exactly: a source family without a
-                # participating base, or without a window in range, leaves the
-                # original state visible with all of its metadata.
+            if keep_base:
                 out.append(base)
-            out.extend(
-                expand_window(base, window)
-                for window in curated_windows
-                if window[1] <= hi and window[2] >= lo
-            )
+            out.extend(expand_window(base, window) for window in windows)
         out.sort(
             key=lambda s: (
                 s.period_scope,
@@ -4368,7 +4865,7 @@ class Catalog:
             states = [
                 s for s in states if s.value_set_version_label == value_set_version
             ]
-        return states
+        return self._scope_states(variable_id, states, bounds)
 
     def states(self, fqid: str | Fqid) -> list[VariableState]:
         """see DESIGN.md → Catalog API surface: the variable's full state history (≡ `resolve(fqid).states`)."""
@@ -5006,12 +5503,32 @@ class Catalog:
             assert parsed.provider and parsed.register and parsed.variable
             start = (parsed.provider, parsed.register, parsed.variable)
             terminal = self._walk_terminal(start, self._first_successor_triple)
-            return None if terminal is None else Fqid.binding_fqid(*terminal)
+            if terminal is None:
+                return None
+            target = Fqid.binding_fqid(*terminal)
+            if self.scope == "holdings":
+                try:
+                    self._require_binding(target)
+                except RegMetaError:
+                    return None
+            return target
         if parsed.kind is FqidKind.REGISTER:
             assert parsed.provider and parsed.register
             pair = (parsed.provider, parsed.register)
             terminal = self._walk_terminal(pair, self._first_register_successor_pair)
-            return None if terminal is None else Fqid.register_fqid(*terminal)
+            if terminal is None:
+                return None
+            target = Fqid.register_fqid(*terminal)
+            if self.scope == "holdings":
+                row = self._conn.execute(
+                    "SELECT 1 FROM register r JOIN provider p USING(provider_id) "
+                    "WHERE p.slug = ? AND r.slug = ? AND "
+                    + scope_predicate(self.scope, "register", "r"),
+                    terminal,
+                ).fetchone()
+                if row is None:
+                    return None
+            return target
         if parsed.kind is FqidKind.CLASSIFICATION:
             assert parsed.classification
             # 1-tuple start: `_first_classification_successor_slug(*current)`

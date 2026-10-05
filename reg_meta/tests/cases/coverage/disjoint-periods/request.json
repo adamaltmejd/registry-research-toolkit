@@ -1,0 +1,6 @@
+{
+  "fixture": "list",
+  "artifact": "steward",
+  "provider": "scb",
+  "register": "example"
+}

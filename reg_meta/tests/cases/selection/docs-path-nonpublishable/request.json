@@ -1,0 +1,16 @@
+{
+  "kind": "steward",
+  "install": "explicit",
+  "argv": [
+    "--db",
+    "$EXPLICIT"
+  ],
+  "command": [
+    "docs",
+    "list"
+  ],
+  "local_docs": true,
+  "manifest_patch": {
+    "catalog_publishable": "false"
+  }
+}

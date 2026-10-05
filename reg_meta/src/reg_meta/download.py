@@ -63,6 +63,13 @@ def version_from_tag(tag: str) -> str:
     return tag.lstrip("v")
 
 
+def catalog_asset_name(catalog: str) -> str:
+    from .db import db_path_from_args
+
+    db_path_from_args(None, catalog=catalog)  # Validate before constructing a URL.
+    return DB_ASSET_NAME if catalog == "global" else f"reg_meta_{catalog}.db.zst"
+
+
 def _has_asset(release: dict, asset_name: str) -> bool:
     return any(a["name"] == asset_name for a in release.get("assets", []))
 
@@ -75,7 +82,9 @@ def _is_reg_meta_release(release: dict) -> bool:
     )
 
 
-def _pick_release(all_releases: list[dict]) -> ReleaseResolution:
+def _pick_release(
+    all_releases: list[dict], *, catalog: str = "global"
+) -> ReleaseResolution:
     """Select the latest reg_meta release and best asset tags from a list.
 
     Pure function — no I/O. Assumes *all_releases* is sorted newest-first
@@ -100,7 +109,7 @@ def _pick_release(all_releases: list[dict]) -> ReleaseResolution:
     db_tag: str | None = None
     docs_tag: str | None = None
     for r in releases:
-        if db_tag is None and _has_asset(r, DB_ASSET_NAME):
+        if db_tag is None and _has_asset(r, catalog_asset_name(catalog)):
             db_tag = r["tag_name"]
         if docs_tag is None and _has_asset(r, DOC_DB_ASSET_NAME):
             docs_tag = r["tag_name"]
@@ -124,7 +133,9 @@ def _github_auth_headers() -> dict[str, str]:
     return {"Authorization": f"Bearer {token}"} if token else {}
 
 
-def resolve_latest_release(*, timeout: float = 15) -> ReleaseResolution:
+def resolve_latest_release(
+    *, timeout: float = 15, catalog: str = "global"
+) -> ReleaseResolution:
     """Fetch the GitHub releases list and resolve reg_meta asset tags."""
     headers = {"Accept": "application/vnd.github+json", **_github_auth_headers()}
     req = urllib.request.Request(
@@ -143,7 +154,7 @@ def resolve_latest_release(*, timeout: float = 15) -> ReleaseResolution:
             remediation="Check your internet connection, or specify --tag explicitly.",
         ) from exc
 
-    return _pick_release(all_releases)
+    return _pick_release(all_releases, catalog=catalog)
 
 
 def fetch_pypi_latest_version(*, timeout: float = 15) -> str:
@@ -277,6 +288,7 @@ def download_db(
     db_dir: Path | None = None,
     *,
     tag: str = "latest",
+    catalog: str = "global",
     force: bool = False,
     yes: bool = False,
 ) -> dict[str, Any]:
@@ -284,8 +296,11 @@ def download_db(
 
     Returns dict with db_path, tag, and size_bytes.
     """
+    from .db import db_path_from_args
+
+    selected_path = db_path_from_args(None, catalog=catalog)
     if db_dir is None:
-        db_dir = default_db_dir()
+        db_dir = selected_path.parent
     final_path = db_dir / DB_FILENAME
 
     if final_path.exists() and not force:
@@ -298,7 +313,7 @@ def download_db(
         )
 
     if tag == "latest":
-        resolution = resolve_latest_release()
+        resolution = resolve_latest_release(catalog=catalog)
         if not resolution.db_tag:
             raise RegMetaError(
                 exit_code=EXIT_CONFIG,
@@ -311,7 +326,7 @@ def download_db(
         resolved_tag = resolution.db_tag
     else:
         resolved_tag = tag
-    url = DOWNLOAD_URL.format(tag=resolved_tag, asset=DB_ASSET_NAME)
+    url = DOWNLOAD_URL.format(tag=resolved_tag, asset=catalog_asset_name(catalog))
 
     if not yes:
         sys.stderr.write(
@@ -331,7 +346,9 @@ def download_db(
     tmp_db = final_path.with_suffix(".db.tmp")
 
     try:
-        sys.stderr.write(f"Downloading {resolved_tag} ({DB_ASSET_NAME})...\n")
+        sys.stderr.write(
+            f"Downloading {resolved_tag} ({catalog_asset_name(catalog)})...\n"
+        )
         _download_file(url, tmp_zst)
         _decompress(tmp_zst, tmp_db)
         tmp_zst.unlink()
@@ -340,7 +357,7 @@ def download_db(
         # asset would otherwise silently replace a working DB and surface as
         # cryptic SQL errors at query time.
         try:
-            open_db(tmp_db).close()
+            open_db(tmp_db, catalog=catalog).close()
         except RegMetaError as exc:
             tmp_db.unlink(missing_ok=True)
             raise RegMetaError(
@@ -348,7 +365,7 @@ def download_db(
                 code="incompatible_db_asset",
                 error_class="configuration",
                 message=(
-                    f"Release {resolved_tag} has a DB asset, but its schema is "
+                    f"Release {resolved_tag} has a DB asset, but its artifact is "
                     f"incompatible with this version of reg_meta: {exc.message}"
                 ),
                 remediation=(
@@ -359,9 +376,7 @@ def download_db(
                 ),
             ) from exc
 
-        if final_path.exists():
-            final_path.unlink()
-        tmp_db.rename(final_path)
+        tmp_db.replace(final_path)
 
         size = final_path.stat().st_size
         sys.stderr.write(f"Database ready: {final_path} ({_fmt_size(size)})\n")
@@ -453,9 +468,7 @@ def download_docs_db(
                 ),
             ) from exc
 
-        if final_path.exists():
-            final_path.unlink()
-        tmp_db.rename(final_path)
+        tmp_db.replace(final_path)
 
         size = final_path.stat().st_size
         sys.stderr.write(f"Doc DB ready: {final_path} ({_fmt_size(size)})\n")

@@ -1,0 +1,12 @@
+{
+  "fixture": "reader/case-twins",
+  "artifact": "steward",
+  "operation": "resolve",
+  "args": [
+    [
+      "value"
+    ]
+  ],
+  "kwargs": {},
+  "observe": "resolve-columns"
+}

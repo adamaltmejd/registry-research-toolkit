@@ -1,0 +1,9 @@
+{
+  "kind": "steward",
+  "install": "explicit",
+  "env": "empty",
+  "argv": [
+    "--db",
+    "$EXPLICIT"
+  ]
+}

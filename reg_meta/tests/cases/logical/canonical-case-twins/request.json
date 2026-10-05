@@ -1,0 +1,10 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "steward",
+  "operation": "catalog_states",
+  "args": [
+    "scb/example/value"
+  ],
+  "kwargs": {},
+  "observe": "states"
+}

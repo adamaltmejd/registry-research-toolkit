@@ -1,0 +1,21 @@
+{
+  "entries": [
+    {
+      "source": "Example",
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "variant": "annual",
+        "variable": "scb/example/value",
+        "representation": "Value"
+      },
+      "requested_period": "2018..2019",
+      "physical": {
+        "table": "Range",
+        "column": "Observed",
+        "edition": "2018..2020"
+      }
+    }
+  ],
+  "clips": []
+}

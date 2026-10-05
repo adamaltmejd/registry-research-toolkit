@@ -81,7 +81,31 @@ Register arguments accept numeric IDs, exact names, or substring matches.
 
 ## Database
 
-Stored at `~/.local/share/reg_meta/` by default. Override with `--db` or `$REG_META_DB`.
+Stored at `~/.local/share/reg_meta/` by default. `--catalog NAME` selects its `NAME/`
+subdirectory; `--catalog global` keeps the data root. `--db DIRECTORY` and
+`$REG_META_DB` select an explicit artifact directory. `--catalog` and `--db` are
+mutually exclusive. Explicit flags take precedence over the environment. Named steward
+selections must match the artifact's steward identity.
+
+A steward artifact defaults to `holdings` scope; a public catalog defaults to
+`reference`. `search`, `get register`, `get schema` and `get availability` accept
+`--scope holdings` or `--scope reference`. Reference scope reads the full selected
+artifact. Holdings scope narrows bindings, states and periods to compiled possession;
+requesting it on a public catalog is a configuration error.
+
+```bash
+reg-meta --catalog swecov --scope holdings get register scb/lisa
+reg-meta --catalog swecov --scope reference search --query "inkomst"
+reg-meta update --catalog swecov
+reg-meta --catalog swecov order project_data.json -o order.json
+```
+
+Order reads compiled holdings from the selected artifact. Its provenance records the
+artifact kind, steward and deterministic generation ID. A public catalog uses global
+logical fallback. Documentation uses only the selected directory's sibling
+`reg_meta_docs.db`; missing docs do not block metadata or order reads. Updating an
+explicit directory requires an existing publishable artifact and preserves its identity.
+Bootstrap an empty installation with a named or default update.
 
 ## Files
 

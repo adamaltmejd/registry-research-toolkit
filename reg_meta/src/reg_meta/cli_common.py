@@ -53,7 +53,7 @@ def success_envelope(
     *,
     command: str,
     args_payload: dict[str, Any],
-    db_info: dict[str, str] | None,
+    db_info: dict[str, Any] | None,
     data: Any,
     duration_ms: int,
 ) -> dict[str, Any]:
@@ -282,11 +282,17 @@ def write_formatted(
     write_to(content, output_path)
 
 
-def get_db_info(conn: sqlite3.Connection) -> dict[str, str]:
+def get_db_info(conn: sqlite3.Connection, scope=None) -> dict[str, Any]:
+    from .holdings import resolve_scope
+
     manifest = get_manifest(conn)
     return {
         "schema_version": manifest.get("schema_version", "unknown"),
         "import_date": manifest.get("import_date", "unknown"),
+        "artifact_kind": manifest.get("catalog_artifact_kind"),
+        "steward": manifest.get("steward"),
+        "generation_id": manifest.get("generation_id"),
+        "scope": resolve_scope(conn, scope),
     }
 
 
@@ -306,6 +312,8 @@ class NoRepeatParser(argparse.ArgumentParser):
 
 
 GLOBAL_FLAGS = {
+    "--catalog",
+    "--scope",
     "--db",
     "--format",
     "--output",
@@ -315,7 +323,7 @@ GLOBAL_FLAGS = {
     "--quiet",
     "--version",
 }
-GLOBAL_FLAGS_WITH_VALUE = {"--db", "--format", "--output"}
+GLOBAL_FLAGS_WITH_VALUE = {"--db", "--catalog", "--scope", "--format", "--output"}
 
 
 def reorder_global_flags(argv: list[str]) -> list[str]:

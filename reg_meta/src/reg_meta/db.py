@@ -10,6 +10,7 @@ side imports back.
 from __future__ import annotations
 
 import os
+import re
 import sqlite3
 import sys
 from datetime import UTC, datetime
@@ -332,6 +333,11 @@ def default_db_dir() -> Path:
     """
     if env := os.environ.get("REG_META_DB"):
         return Path(env).expanduser()
+    return data_dir()
+
+
+def data_dir() -> Path:
+    """Installation root, independent of an explicit REG_META_DB selection."""
     if xdg := os.environ.get("XDG_DATA_HOME"):
         return Path(xdg) / "reg_meta"
     if sys.platform == "win32":
@@ -339,10 +345,80 @@ def default_db_dir() -> Path:
     return Path.home() / ".local" / "share" / "reg_meta"
 
 
-def db_path_from_args(db_arg: str | None, filename: str = DB_FILENAME) -> Path:
-    if db_arg:
-        return Path(db_arg).expanduser().resolve() / filename
-    return default_db_dir().resolve() / filename
+def db_path_from_args(
+    db_arg: str | None,
+    filename: str = DB_FILENAME,
+    *,
+    catalog: str | None = None,
+) -> Path:
+    if db_arg is not None and catalog is not None:
+        raise RegMetaError(
+            exit_code=2,
+            code="usage_error",
+            error_class="usage",
+            message="--catalog and --db are mutually exclusive.",
+            remediation="Select one catalog name or database directory.",
+        )
+    if catalog is not None:
+        from .fqid import validate_slug
+
+        try:
+            validate_slug(catalog, "catalog")
+        except ValueError as exc:
+            raise RegMetaError(
+                exit_code=2,
+                code="usage_error",
+                error_class="usage",
+                message=f"Invalid catalog name {catalog!r}.",
+                remediation="Use a lowercase catalog slug, for example swecov or global.",
+            ) from exc
+        directory = data_dir() if catalog == "global" else data_dir() / catalog
+    else:
+        directory = Path(db_arg).expanduser() if db_arg else default_db_dir()
+    return directory.resolve() / filename
+
+
+def validate_catalog_selection(
+    conn: sqlite3.Connection, catalog: str | None = None
+) -> None:
+    """Admit publishable identity and, when named, require an exact selection."""
+    manifest = get_manifest(conn)
+    kind = manifest.get("catalog_artifact_kind")
+    valid = (
+        kind in {"catalog", "steward"}
+        and manifest.get("catalog_publishable") == "true"
+        and manifest.get("catalog_completeness") == "complete"
+        and re.fullmatch(r"[0-9a-f]{64}", manifest.get("generation_id", "")) is not None
+    )
+    if kind == "steward":
+        from .fqid import validate_slug
+
+        try:
+            validate_slug(manifest.get("steward", ""), "steward")
+        except ValueError:
+            valid = False
+    if not valid:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="catalog_unpublishable",
+            error_class="configuration",
+            message="Selected artifact lacks a publishable catalog identity and generation.",
+            remediation="Install a complete catalog with reg-meta update --catalog NAME.",
+        )
+    if catalog is not None and (
+        (catalog == "global" and kind != "catalog")
+        or (
+            catalog != "global"
+            and (kind != "steward" or manifest.get("steward") != catalog)
+        )
+    ):
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="catalog_mismatch",
+            error_class="configuration",
+            message=f"Selected catalog {catalog!r} disagrees with artifact kind {kind!r} and steward {manifest.get('steward')!r}.",
+            remediation="Select the artifact's catalog name or use its explicit directory.",
+        )
 
 
 def _check_schema_compat(conn: sqlite3.Connection, db_path: Path) -> None:
@@ -361,7 +437,7 @@ def _check_schema_compat(conn: sqlite3.Connection, db_path: Path) -> None:
 
     try:
         manifest = get_manifest(conn)
-    except sqlite3.OperationalError as exc:
+    except sqlite3.Error as exc:
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
             code="schema_incompatible",
@@ -423,6 +499,7 @@ def open_db(
     db_path: Path,
     *,
     check_schema: bool = True,
+    catalog: str | None = None,
     error_code: str = "db_not_found",
     remediation: str = (
         "Run `reg-meta update` to fetch the pre-built DB, "
@@ -462,6 +539,7 @@ def open_db(
     if check_schema:
         try:
             _check_schema_compat(conn, db_path)
+            validate_catalog_selection(conn, catalog)
         except RegMetaError:
             conn.close()
             raise

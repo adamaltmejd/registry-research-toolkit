@@ -75,7 +75,6 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from reg_meta.catalog import Catalog
-    from reg_meta.inventory import DeliveryInventory
 
     from reg_webapp.catalog_index import CatalogIndex
 
@@ -267,9 +266,9 @@ async def order_project(request: Request) -> Response:
 
     A THIN adapter over ``reg_meta.order.materialize_order`` (REFACTOR_SPEC.md
     §12): no gate, no fallback and no rendering lives here, so this endpoint and
-    the ``reg-meta order`` CLI emit byte-identical manifests. The deployment's
-    delivery inventory is read once at boot (``app.state.inventory``); ``None``
-    is §12's global-deployment fallback, which the materializer takes directly.
+    the ``reg-meta order`` CLI emit byte-identical manifests. The selected
+    artifact determines orderability: catalog artifacts use global fallback;
+    steward artifacts use their compiled holdings and steward identity.
 
     200 is the manifest — ``application/json``, downloaded as ``order.json``.
     Anything else is NOT AN ORDER: 422 either because the spec is invalid
@@ -285,13 +284,10 @@ async def order_project(request: Request) -> Response:
         _order_blocking,
         request.app.state.db_path,
         raw,
-        request.app.state.inventory,
     )
 
 
-def _order_blocking(
-    db_path: Path, raw: dict[str, Any], inventory: DeliveryInventory | None
-) -> Response:
+def _order_blocking(db_path: Path, raw: dict[str, Any]) -> Response:
     """Gate, materialize and serialize, on a threadpool thread.
 
     Both failure modes are a 422 of the SAME shape — an invalid spec and a
@@ -306,7 +302,7 @@ def _order_blocking(
         return _not_an_order(exc.message, ())
 
     with per_request_conn(db_path) as conn:
-        result = materialize_order(project, inventory, conn)
+        result = materialize_order(project, conn)
     if result.manifest is None:
         return _not_an_order(blocked_message(result), result.findings)
     return Response(

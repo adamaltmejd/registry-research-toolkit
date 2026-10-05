@@ -18,7 +18,9 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
-from reg_meta.db import DB_FILENAME, SCHEMA_VERSION, open_db
+from reader_artifacts import build_reader_artifact
+from reg_meta.catalog import Catalog
+from reg_meta.db import DB_FILENAME, open_db
 from reg_meta.doc_db import DOC_DB_FILENAME, DOC_SCHEMA_VERSION, open_doc_db
 from reg_meta.errors import RegMetaError
 
@@ -65,17 +67,8 @@ def test_open_db_reads_wal_db_in_readonly_dir(
     tmp_path: Path, restore_perms: Callable[[Path], None]
 ) -> None:
     ro_dir = tmp_path / "catalog"
-    ro_dir.mkdir()
-    db_file = ro_dir / DB_FILENAME
-    _make_wal_db(
-        db_file,
-        setup_sql=(
-            "CREATE TABLE import_manifest (key TEXT PRIMARY KEY, value TEXT);"
-            f"INSERT INTO import_manifest VALUES ('schema_version', '{SCHEMA_VERSION}');"
-            "CREATE TABLE probe (n INTEGER);"
-            "INSERT INTO probe VALUES (42);"
-        ),
-    )
+    db_file = build_reader_artifact(ro_dir, "annual-series", "catalog")
+    _make_wal_db(db_file, setup_sql="")
     _readonly_dir(ro_dir)
     restore_perms(ro_dir)
 
@@ -86,7 +79,7 @@ def test_open_db_reads_wal_db_in_readonly_dir(
 
     conn = open_db(db_file)
     try:
-        assert conn.execute("SELECT n FROM probe").fetchone()[0] == 42
+        assert str(Catalog(conn).list_registers("scb")[0].fqid) == "scb/example"
     finally:
         conn.close()
 

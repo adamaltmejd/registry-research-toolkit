@@ -1,0 +1,13 @@
+{
+  "kind": null,
+  "install": "swecov",
+  "argv": [
+    "--catalog",
+    "swecov"
+  ],
+  "command": [
+    "docs",
+    "list"
+  ],
+  "local_docs": true
+}

@@ -1,22 +1,9 @@
 """Order materializer + the JSON order-manifest contract (REFACTOR_SPEC.md §12).
 
-A `project_data.json` source is a LOGICAL selection; `inventory.py` is the
-steward's PHYSICAL delivery topology. This module is the one place the two meet:
-`materialize_order(project, inventory, conn)` turns a validated project plus a
-steward inventory plus an open reg_meta DB into either a complete physical order
-manifest or a fail-closed result naming every gap. It is shared domain code —
-the FastAPI endpoint and the CLI/plugin are thin adapters over this function, so
-both emit byte-identical results (§12). The raw-project ingress door they share
-lives here too, and its supported-version half (`schema_version_issue`) is shared
-one step wider still — with the webapp's `/api/project/validate`, which reads no
-order.
-
-`inventory=None` selects §12's confirmed GLOBAL-DEPLOYMENT FALLBACK: the global
-deployment has no physical inventory, so canonical resolution alone grounds the
-order. It is the same pipeline — only step 3's matching differs (see below) —
-and produces the same entry shape with a blank `table`, the resolved canonical
-column in `column`, and `edition` equal to that slice's requested period.
-`OrderProvenance.mode` names which of the two grounded the manifest.
+A validated project meets compiled physical facts through
+`materialize_order(project, conn)`. Both adapters emit its canonical bytes.
+Artifact kind selects steward holdings or global logical fallback; browse scope
+never changes orderability.
 
 Pipeline, per `sources[*].bindings[*]` in project declaration order:
 
@@ -37,40 +24,9 @@ Pipeline, per `sources[*].bindings[*]` in project declaration order:
    informational on both sides. It is not a clean bill of health: the same
    binding can still block here on representation ambiguity, and below on the
    steward's coverage gate.
-3. **Steward matching + coverage gate.** A table matches a slice only when one
-   of its columns carries a mapping matching `(register_variant, variable,
-   representation)` AND its physical edition overlaps THAT slice; the edition
-   contributes only its overlap. In global-fallback mode the slice's own
-   canonical column is what serves it, so the slice covers itself exactly and
-   the gate below runs unchanged over that contribution. A mapping that OMITS
-   `representation` is §12's single-representation arm: it matches only a
-   binding that resolves to one canonical representation across the request;
-   otherwise an overlapping table carrying one blocks the order rather than
-   claiming one column is two representations (a table that cannot overlap is
-   inert). Any subperiod of the availability-clipped request left uncovered
-   blocks the WHOLE order with the exact gaps — overlap alone never yields a
-   partial manifest. There is no table CHOOSING here and none is needed: §12's
-   one-to-one resolution invariant, enforced by `inventory.py`, guarantees a
-   valid inventory offers at most one `(table, column)` per cell instant PER
-   PARTITION, so several contributions to one slice are either disjoint pieces
-   of it (the annual series) or distinct partitions of it (the sub-population
-   split), and both are wanted whole. The unqualified-mapping block above
-   survives that invariant because the inventory validator is DB-blind: a lone
-   unqualified mapping is structurally fine, and only the catalog knows the
-   binding's representation changed across the request.
-4. **Emission.** Every matching table is emitted whole, every partition
-   included (v1 has no table chooser, no population field and no row filter —
-   the §12 `simplify:` stands). Entries keep project source/binding order; the
-   fan-out within a binding sorts by table, canonical edition, then physical
-   column. A partitioned entry carries its label, and `extraction_filenames`
-   gives it its own output file.
-
-Fail-closed and one-pass: a blocking result enumerates EVERY finding, so a
-researcher fixes the whole order at once instead of one gap per round trip.
-
-Pure domain code: no FastAPI, no filesystem writes, no timestamps — the only
-time-shaped values in the manifest come from the DB manifest and the project.
-Repeated runs over the same inputs are byte-identical (`OrderManifest.to_json`).
+3. **Physical matching and coverage.** Indexed canonical mapping lookups retain
+   exact periods and partitions. Missing applicable column windows and uncovered
+   availability block the whole order; entries retain stable physical ordering.
 """
 
 from __future__ import annotations
@@ -96,9 +52,10 @@ from reg_schema.validation import ValidationIssue
 import reg_schema
 
 from .catalog import Catalog, VariableState
-from .db import get_manifest
+from .db import get_manifest, validate_catalog_selection
 from .errors import EXIT_CONFIG, RegMetaError
-from .fqid import Fqid, FqidError, parse, snap_to_real_month_end
+from .fqid import FqidError, snap_to_real_month_end
+from .holdings import Holdings
 
 # The interval/period primitives live in `inventory.py` (which cannot import
 # this module): an edition, a requested period, an availability clip and a
@@ -121,7 +78,7 @@ if TYPE_CHECKING:
 
     from reg_schema.project_data import Binding, Period, Source
 
-    from .inventory import DeliveryInventory, EditionSegment, InventoryColumn
+    from .inventory import EditionSegment
 
 # Contract version of the emitted JSON manifest. Bumped when the shape changes;
 # pre-v1 there is no migration path (CLAUDE.md → maturity), and both boundaries
@@ -133,11 +90,8 @@ ORDER_MANIFEST_VERSION = 1
 # decides against it, by exact equality.
 SUPPORTED_SCHEMA_VERSION = reg_schema.__version__
 
-# The deployment a `None` inventory is: the full-universe global deployment,
-# which has no physical delivery topology (§12's fallback). It is a value of
-# `reg_schema`'s `Steward` literal and the webapp's default steward id, and the
-# provenance gate below compares `ProjectData.steward` against it exactly as it
-# does against a real inventory's steward.
+# A catalog artifact serves the full reference universe in global fallback.
+# Project provenance must match this identity just as it matches a steward's.
 GLOBAL_STEWARD = "global"
 
 
@@ -233,18 +187,19 @@ class OrderProvenance(_OrderModel):
     `project_hash` is the SHA-256 of the project's canonical JSON, so a manifest
     can be tied back to the exact uploaded project bytes.
 
-    `mode` names what GROUNDED the entries — a steward's physical inventory or
+    `mode` names what GROUNDED the entries — a steward's compiled holdings or
     §12's global fallback (canonical resolution alone, blank `table`) — so a
     reader never has to infer it from the entry shape."""
 
-    mode: Literal["steward_inventory", "global_fallback"]
+    mode: Literal["steward_holdings", "global_fallback"]
     steward: str
     project_name: str
     project_schema_version: str
     project_reg_meta_version: str
     project_hash: str
     catalog_schema_version: str
-    catalog_import_date: str
+    catalog_generation_id: str
+    artifact_kind: Literal["catalog", "steward"]
 
 
 class OrderManifest(_OrderModel):
@@ -258,14 +213,13 @@ class OrderManifest(_OrderModel):
 
     def to_json(self) -> str:
         """The canonical serialization: sorted keys, stable entry order, UTF-8,
-        trailing newline. Deterministic — two runs over the same project,
-        inventory and DB produce byte-identical output, which is what lets the
+        trailing newline. Deterministic — two runs over the same project
+        and artifact produce byte-identical output, which is what lets the
         FastAPI and CLI adapters be compared byte-for-byte (§12).
 
         `exclude_none` is the spelling of an absent optional: an unpartitioned
         entry omits `partition` entirely rather than carrying an explicit
-        `null`, so an inventory with no partitions serializes exactly as it did
-        before the arm existed. Every other manifest field is required, and any
+        `null`. Every other manifest field is required, and any
         future optional one must accept the same "absent means None" reading
         (both boundaries validate the same models, and absent restores the
         default on the way back in)."""
@@ -286,7 +240,7 @@ class OrderFinding(_OrderModel):
     Codes: `steward_mismatch`, `project_empty`, `period_not_orderable`,
     `variable_unresolved`, `binding_unavailable`, `representation_unknown`,
     `representation_unresolved`, `representation_ambiguous`, `mapping_missing`,
-    `mapping_ambiguous`, `coverage_gap`. `period` carries the EXACT offending
+    `column_window_unavailable`, `coverage_gap`. `period` carries the EXACT offending
     subperiod for the coverage codes, so a researcher can fix the request in one
     edit."""
 
@@ -721,20 +675,15 @@ def resolve_binding(
 
 def materialize_order(
     project: ProjectData,
-    inventory: DeliveryInventory | None,
     conn: sqlite3.Connection,
 ) -> OrderResult:
-    """Materialize `project` against `inventory` and the open reg_meta DB.
-
-    `inventory=None` is §12's global-deployment fallback — the deployment has no
-    physical topology, so canonical resolution grounds the order and entries
-    carry a blank `table`. Everything else (clip, slice, coverage gate, emission
-    order, determinism) is the same pipeline.
-
-    Returns a complete `OrderManifest` or a non-empty finding set — never a
-    partial order. `conn` is read only (the caller owns its lifetime, mirroring
-    `validate_semantic`)."""
-    steward = GLOBAL_STEWARD if inventory is None else inventory.steward
+    """Return a complete order or located findings from one immutable artifact."""
+    validate_catalog_selection(conn)
+    identity = get_manifest(conn)
+    inventory = (
+        Holdings(conn) if identity["catalog_artifact_kind"] == "steward" else None
+    )
+    steward = identity["steward"] if inventory is not None else GLOBAL_STEWARD
     if project.steward != steward:
         # §12: provenance is checked before anything resolves, and retargeting
         # is deliberately not an application feature — the rule the message's
@@ -762,7 +711,7 @@ def materialize_order(
             )
         )
 
-    catalog = Catalog(conn)
+    catalog = Catalog(conn, scope="reference")
     findings: list[OrderFinding] = []
     entries: list[OrderEntry] = []
     clips: list[ClipReport] = []
@@ -774,7 +723,7 @@ def materialize_order(
     return OrderResult(
         manifest=OrderManifest(
             version=ORDER_MANIFEST_VERSION,
-            provenance=_provenance(project, inventory, conn),
+            provenance=_provenance(project, conn),
             entries=tuple(entries),
             clips=tuple(clips),
         ),
@@ -945,19 +894,22 @@ def _blocked(finding: OrderFinding) -> OrderResult:
     return OrderResult(manifest=None, findings=(finding,))
 
 
-def _provenance(
-    project: ProjectData, inventory: DeliveryInventory | None, conn: sqlite3.Connection
-) -> OrderProvenance:
+def _provenance(project: ProjectData, conn: sqlite3.Connection) -> OrderProvenance:
     manifest = get_manifest(conn)
     return OrderProvenance(
-        mode="global_fallback" if inventory is None else "steward_inventory",
-        steward=GLOBAL_STEWARD if inventory is None else inventory.steward,
+        mode="steward_holdings"
+        if manifest["catalog_artifact_kind"] == "steward"
+        else "global_fallback",
+        steward=manifest.get("steward", GLOBAL_STEWARD),
+        artifact_kind="steward"
+        if manifest["catalog_artifact_kind"] == "steward"
+        else "catalog",
         project_name=project.name,
         project_schema_version=project.schema_version,
         project_reg_meta_version=project.reg_meta_version,
         project_hash=_project_hash(project),
         catalog_schema_version=manifest.get("schema_version", "unknown"),
-        catalog_import_date=manifest.get("import_date", "unknown"),
+        catalog_generation_id=manifest["generation_id"],
     )
 
 
@@ -976,7 +928,7 @@ def _project_hash(project: ProjectData) -> str:
 
 def _materialize_source(
     source: Source,
-    inventory: DeliveryInventory | None,
+    inventory: Holdings | None,
     catalog: Catalog,
     entries: list[OrderEntry],
     clips: list[ClipReport],
@@ -1005,7 +957,7 @@ def _materialize_binding(
     binding: Binding,
     source: Source,
     requested: tuple[_Interval, ...],
-    inventory: DeliveryInventory | None,
+    inventory: Holdings | None,
     catalog: Catalog,
     entries: list[OrderEntry],
     clips: list[ClipReport],
@@ -1022,45 +974,94 @@ def _materialize_binding(
             )
         )
 
-    # STEP 1+2, shared with `/api/project/validate`.
     resolution = resolve_binding(catalog, source, binding, requested)
     if resolution.clip is not None:
         clips.append(resolution.clip)
     if resolution.finding is not None:
         findings.append(resolution.finding)
+    if inventory is not None and source.period != "_default":
+        ids = inventory.binding_ids(binding.variable, source.register_variant)
+        if ids is not None:
+            # An exact semantic pin can clip away a differently spelled state
+            # sharing the physical canonical mapping. Applicability checks that
+            # mapping's history; ordering retains the pin's narrower resolution.
+            applicability = (
+                resolve_binding(
+                    catalog,
+                    source,
+                    binding.model_copy(update={"representation": None}),
+                    requested,
+                )
+                if binding.representation is not None
+                else resolution
+            )
+            applicable = tuple(window.state for window in applicability.states)
+            window_blocked = False
+            pinned = catalog.canonical_delivery_column(*ids, binding.representation)
+            for match in inventory.matches(*ids, pinned, period_scope="intervals"):
+                # A wholly inapplicable physical edition is a located error,
+                # even if availability clipping would remove it from the request.
+                physical = [
+                    x
+                    for b in match.periods
+                    for req in requested
+                    if (x := _intersect(b, req))
+                ]
+                if not physical:
+                    continue
+                columns = inventory.columns(*ids)
+                # A physical column can declare several canonical mappings. Check
+                # applicability for this location's representations, not a donor.
+                mapped = inventory.representations(match.table_id, match.column, *ids)
+                if binding.representation is not None:
+                    mapped &= {pinned}
+                for column in sorted(mapped & columns):
+                    windows = [
+                        (state.valid_from, state.valid_to)
+                        for state in applicable
+                        if catalog.canonical_delivery_column(
+                            *ids, state.delivery_column_name
+                        )
+                        == column
+                        and state.period_scope == "intervals"
+                        and state.valid_from is not None
+                        and state.valid_to is not None
+                    ]
+                    if not any(_intersect(p, w) for p in physical for w in windows):
+                        window_blocked = True
+                        finding(
+                            "column_window_unavailable",
+                            f"{match.source_ref}: table {match.table!r} column {match.column!r} "
+                            f"has no applicable column window for representation {column!r}",
+                            _render(_merge(physical)),
+                        )
+            if window_blocked:
+                return
+
+    if resolution.finding is not None:
         return
     slices = resolution.slices
-    availability = resolution.availability
-    # `resolve_binding` resolved the FQID, so parsing it cannot raise here; the
-    # inventory's mappings are keyed by `Fqid`, not by the raw string.
-    parsed = parse(binding.variable)
-
-    # An inventory mapping may omit `representation` — §12's "the concept has a
-    # single representation" arm. That is only unambiguous when the binding
-    # really resolves to ONE canonical representation across the request. When
-    # it changed, an unqualified mapping cannot say WHICH slice its column is,
-    # so it matches nothing and blocks: a manifest never claims one physical
-    # column represents two canonical representations.
+    ids = (
+        inventory.binding_ids(binding.variable, source.register_variant)
+        if inventory
+        else None
+    )
     representations = sorted(resolution.columns)
-    unqualified_ok = len(representations) == 1
     if source.period == "_default":
         column = representations[0]
         matches = (
             [("", column, None)]
             if inventory is None
             else [
-                (table.id, physical.name, table.partition)
-                for table in inventory.tables
-                if table.period_scope == "year_independent"
-                for physical in table.columns
-                if _column_matches(
-                    physical,
-                    source.register_variant,
-                    parsed,
-                    column,
-                    unqualified_ok=True,
+                (match.table, match.column, match.partition)
+                for match in inventory.matches(
+                    *ids,
+                    catalog.canonical_delivery_column(*ids, column),
+                    period_scope="year_independent",
                 )
             ]
+            if ids is not None
+            else []
         )
         if not matches:
             finding(
@@ -1092,39 +1093,6 @@ def _materialize_binding(
             )
         return
 
-    if inventory is not None and not unqualified_ok:
-        blocked_by_unqualified = False
-        for table in inventory.tables:
-            if table.period_scope != "intervals":
-                continue
-            # §12: a table matches a slice only where its edition overlaps, and
-            # overlap elsewhere in the request is not a match. A table that
-            # cannot reach this binding's clipped request contributes nothing,
-            # so its unqualified mapping is inert and must not block either.
-            if not any(
-                _intersect(bounds, window)
-                for bounds in edition_bounds(table.edition)
-                for window in availability
-            ):
-                continue
-            for inv_column in table.columns:
-                if not _has_unqualified_mapping(
-                    inv_column, source.register_variant, parsed
-                ):
-                    continue
-                blocked_by_unqualified = True
-                finding(
-                    "mapping_ambiguous",
-                    f"steward table {table.id!r} column {inv_column.name!r} maps "
-                    f"{source.register_variant} {binding.variable!r} with no "
-                    f"`representation`, but the column delivers "
-                    f"{representations} across the request; qualify the mapping "
-                    "with the canonical representation its column carries",
-                    resolution.requested_period,
-                )
-        if blocked_by_unqualified:
-            return
-
     # STEP 3+4: match each slice against the inventory, gate on full coverage of
     # the clipped request, then emit.
     contributions: dict[tuple[str, str, str], list[_Interval]] = {}
@@ -1148,28 +1116,23 @@ def _materialize_binding(
             contributions.setdefault(key, []).append((lo, hi))
             covered.append((lo, hi))
         else:
-            for table in inventory.tables:
-                if table.period_scope != "intervals":
+            canonical = catalog.canonical_delivery_column(*ids, column) if ids else None
+            matched = ids is not None and canonical in inventory.columns(*ids)
+            for match in (
+                inventory.matches(
+                    *ids, canonical, period_scope="intervals", bounds=(lo, hi)
+                )
+                if ids
+                else ()
+            ):
+                overlaps = [x for b in match.periods if (x := _intersect(b, (lo, hi)))]
+                if not overlaps:
                     continue
-                bounds = edition_bounds(table.edition)
-                for inv_column in table.columns:
-                    if not _column_matches(
-                        inv_column,
-                        source.register_variant,
-                        parsed,
-                        column,
-                        unqualified_ok=unqualified_ok,
-                    ):
-                        continue
-                    matched = True
-                    overlaps = [x for b in bounds if (x := _intersect(b, (lo, hi)))]
-                    if not overlaps:
-                        continue
-                    key = (table.id, inv_column.name, column)
-                    editions[key] = bounds
-                    partitions[key] = table.partition
-                    contributions.setdefault(key, []).extend(overlaps)
-                    covered.extend(overlaps)
+                key = (match.table, match.column, column)
+                editions[key] = match.periods
+                partitions[key] = match.partition
+                contributions.setdefault(key, []).extend(overlaps)
+                covered.extend(overlaps)
         if not matched:
             blocked = True
             finding(
@@ -1239,45 +1202,3 @@ def _coexisting_columns(slices: tuple[tuple[str, str, str], ...]) -> list[str]:
             if a_col != b_col and a_lo <= b_hi and b_lo <= a_hi:
                 ambiguous.update((a_col, b_col))
     return sorted(ambiguous)
-
-
-def _column_matches(
-    inv_column: InventoryColumn,
-    variant_coordinate: str,
-    variable: Fqid,
-    representation: str,
-    *,
-    unqualified_ok: bool,
-) -> bool:
-    """Does this physical column carry a mapping for exactly this slice?
-
-    Exact match on `(register_variant, variable, representation)` — matching
-    anywhere else in the overall request is not a match (§12). A mapping that
-    OMITS `representation` matches only when `unqualified_ok`, i.e. the caller
-    has proven the binding resolves to exactly one canonical representation
-    across the request (§12's "the concept has a single representation" arm);
-    otherwise it is ambiguous and the caller has already blocked the order.
-    """
-    return any(
-        mapping.register_variant == variant_coordinate
-        and mapping.variable == variable
-        and (
-            mapping.representation == representation
-            or (unqualified_ok and mapping.representation is None)
-        )
-        for mapping in inv_column.mappings
-    )
-
-
-def _has_unqualified_mapping(
-    inv_column: InventoryColumn, variant_coordinate: str, variable: Fqid
-) -> bool:
-    """Does this physical column map the logical coordinate with NO
-    `representation`? The ambiguity probe for a binding whose representation
-    changes across the request."""
-    return any(
-        mapping.register_variant == variant_coordinate
-        and mapping.variable == variable
-        and mapping.representation is None
-        for mapping in inv_column.mappings
-    )

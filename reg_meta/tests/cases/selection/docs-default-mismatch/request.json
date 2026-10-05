@@ -1,0 +1,10 @@
+{
+  "kind": "steward",
+  "install": "global",
+  "argv": [],
+  "command": [
+    "docs",
+    "list"
+  ],
+  "local_docs": true
+}

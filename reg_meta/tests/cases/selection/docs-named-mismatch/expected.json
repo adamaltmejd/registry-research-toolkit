@@ -1,0 +1,9 @@
+{
+  "exit": 10,
+  "error": {
+    "code": "catalog_mismatch",
+    "class": "configuration",
+    "message": "Selected catalog 'swecov' disagrees with artifact kind 'catalog' and steward None.",
+    "remediation": "Select the artifact's catalog name or use its explicit directory."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "steward",
+  "operation": "resolve",
+  "args": [
+    [
+      "Value",
+      "Secret",
+      "Archived",
+      "Valuereference"
+    ]
+  ],
+  "kwargs": {},
+  "observe": "resolve"
+}

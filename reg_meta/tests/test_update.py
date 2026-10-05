@@ -1,10 +1,12 @@
 """Tests for the update module (version parsing and release resolution)."""
 
+import shutil
 import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
 import zstandard
+from reader_artifacts import build_reader_artifact
 from reg_meta.db import DB_FILENAME, SCHEMA_VERSION
 from reg_meta.doc_db import (
     DOC_DB_FILENAME,
@@ -193,18 +195,25 @@ class TestPendingUpdate:
 
 def _write_fake_db_zst(dest_zst: Path, schema_version: str) -> None:
     """Build a minimal sqlite DB with the given schema_version and zstd it to dest."""
-    db_path = dest_zst.with_suffix(".db.source")
-    conn = sqlite3.connect(db_path)
-    conn.execute("CREATE TABLE import_manifest (key TEXT PRIMARY KEY, value TEXT)")
-    conn.execute(
-        "INSERT INTO import_manifest VALUES ('schema_version', ?)", (schema_version,)
-    )
-    conn.commit()
-    conn.close()
+    directory = dest_zst.parent / "download-fixture"
+    db_path = build_reader_artifact(directory, "annual-series", "catalog")
+    with sqlite3.connect(db_path) as conn:
+        conn.execute(
+            "UPDATE import_manifest SET value=? WHERE key='schema_version'",
+            (schema_version,),
+        )
     cctx = zstandard.ZstdCompressor()
     with db_path.open("rb") as src, dest_zst.open("wb") as out:
         cctx.copy_stream(src, out)
-    db_path.unlink()
+    shutil.rmtree(directory)
+
+
+def _install_catalog(path: Path) -> None:
+    directory = path.parent / "installed-fixture"
+    built = build_reader_artifact(directory, "annual-series", "catalog")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    shutil.move(built, path)
+    shutil.rmtree(directory)
 
 
 class TestDownloadDbSchemaGuard:
@@ -229,10 +238,8 @@ class TestDownloadDbSchemaGuard:
         existing = db_dir / DB_FILENAME
         existing.write_bytes(b"existing-db-sentinel")
 
-        major, minor = (int(x) for x in SCHEMA_VERSION.split(".")[:2])
-        if minor == 0:
-            pytest.skip("requires a non-zero minor in SCHEMA_VERSION")
-        self._patch_download(monkeypatch, f"{major}.{minor - 1}.0")
+        major = int(SCHEMA_VERSION.split(".")[0])
+        self._patch_download(monkeypatch, f"{major - 1}.0.0")
 
         with pytest.raises(RegMetaError) as exc_info:
             download.download_db(
@@ -338,7 +345,9 @@ class TestDownloadDocsDbSchemaGuard:
         """tag=latest when walker finds no doc asset raises no_docs_in_release."""
         from reg_meta.download import ReleaseResolution
 
-        def fake_resolve(*, timeout: float = 15) -> ReleaseResolution:
+        def fake_resolve(
+            *, timeout: float = 15, catalog: str = "global"
+        ) -> ReleaseResolution:
             return ReleaseResolution(
                 release_tag="reg_meta/v0.7.0",
                 version="0.7.0",
@@ -356,13 +365,7 @@ class TestDownloadDocsDbSchemaGuard:
 
 
 class TestRunUpdateFailFast:
-    """run_update must not leave the install in a broken state.
-
-    If the walker can't resolve an asset the user doesn't already have,
-    reg-meta update raises rather than reporting success — otherwise
-    query commands would fail with db_not_found/doc_db_not_found on the
-    very next invocation while `reg-meta update` claimed to succeed.
-    """
+    """Updates require an admitted main catalog; its docs asset is optional."""
 
     def _fake_resolve(
         self,
@@ -379,7 +382,9 @@ class TestRunUpdateFailFast:
 
         from reg_meta import __version__, update
 
-        def fake_resolve(*, timeout: float = 15) -> ReleaseResolution:
+        def fake_resolve(
+            *, timeout: float = 15, catalog: str = "global"
+        ) -> ReleaseResolution:
             return ReleaseResolution(
                 release_tag=f"reg_meta/v{__version__}",
                 version=__version__,
@@ -400,23 +405,21 @@ class TestRunUpdateFailFast:
         self._fake_resolve(monkeypatch, db_tag=None, docs_tag=None)
         with pytest.raises(RegMetaError) as exc_info:
             run_update(db_dir=tmp_path, yes=True)
-        assert exc_info.value.code == "no_db_in_release"
+        assert exc_info.value.code == "catalog_bootstrap_required"
 
-    def test_missing_docs_asset_and_no_local_docs_raises(
+    def test_missing_optional_docs_asset_reports_absence(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ):
-        """Main DB present locally, doc asset missing from walker: still raise."""
+        """An admitted main DB remains usable without its optional docs asset."""
         from reg_meta.update import run_update
 
-        # Simulate an already-installed main DB so the main-DB branch is
-        # 'up_to_date'; the raise must come from the doc-DB branch only.
-        (tmp_path / DB_FILENAME).write_bytes(b"placeholder")
+        # An admitted main DB remains usable when the walker finds no docs asset.
+        _install_catalog(tmp_path / DB_FILENAME)
         (tmp_path / ".db_source").write_text('{"tag": "reg_meta/v0.7.0"}')
 
         self._fake_resolve(monkeypatch, db_tag="reg_meta/v0.7.0", docs_tag=None)
-        with pytest.raises(RegMetaError) as exc_info:
-            run_update(db_dir=tmp_path, yes=True)
-        assert exc_info.value.code == "no_docs_in_release"
+        result = run_update(db_dir=tmp_path, yes=True)
+        assert result["docs"] == "no_docs_in_release"
 
     def test_missing_asset_but_local_copy_present_reports_no_in_release(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -424,7 +427,7 @@ class TestRunUpdateFailFast:
         """If user already has both artifacts locally, missing assets are OK."""
         from reg_meta.update import run_update
 
-        (tmp_path / DB_FILENAME).write_bytes(b"main-db-placeholder")
+        _install_catalog(tmp_path / DB_FILENAME)
         (tmp_path / ".db_source").write_text('{"tag": "reg_meta/v0.7.0"}')
         (tmp_path / DOC_DB_FILENAME).write_bytes(b"doc-db-placeholder")
         (tmp_path / ".docs_source").write_text('{"tag": "reg_meta/v0.7.0"}')
@@ -452,7 +455,7 @@ class TestRunUpdatePypiBehind:
         from reg_meta import __version__, update
 
         newer_tag = "reg_meta/v99.99.99"
-        (tmp_path / DB_FILENAME).write_bytes(b"db-placeholder")
+        _install_catalog(tmp_path / DB_FILENAME)
         (tmp_path / ".db_source").write_text(f'{{"tag": "{newer_tag}"}}')
         (tmp_path / DOC_DB_FILENAME).write_bytes(b"docs-placeholder")
         (tmp_path / ".docs_source").write_text(f'{{"tag": "{newer_tag}"}}')
@@ -460,7 +463,7 @@ class TestRunUpdatePypiBehind:
         monkeypatch.setattr(
             update,
             "resolve_latest_release",
-            lambda *, timeout=15: ReleaseResolution(
+            lambda *, timeout=15, catalog="global": ReleaseResolution(
                 release_tag=newer_tag,
                 version="99.99.99",
                 db_tag=newer_tag,
@@ -490,7 +493,7 @@ class TestRunUpdatePypiBehind:
         from reg_meta import update
 
         target_tag = "reg_meta/v99.99.99"
-        (tmp_path / DB_FILENAME).write_bytes(b"db-placeholder")
+        _install_catalog(tmp_path / DB_FILENAME)
         (tmp_path / ".db_source").write_text(f'{{"tag": "{target_tag}"}}')
         (tmp_path / DOC_DB_FILENAME).write_bytes(b"docs-placeholder")
         (tmp_path / ".docs_source").write_text(f'{{"tag": "{target_tag}"}}')
@@ -498,7 +501,7 @@ class TestRunUpdatePypiBehind:
         monkeypatch.setattr(
             update,
             "resolve_latest_release",
-            lambda *, timeout=15: ReleaseResolution(
+            lambda *, timeout=15, catalog="global": ReleaseResolution(
                 release_tag=target_tag,
                 version="99.99.99",
                 db_tag=target_tag,
@@ -607,7 +610,7 @@ class TestRunUpdateNonUvToolSkip:
         monkeypatch.setattr(
             update,
             "resolve_latest_release",
-            lambda *, timeout=15: ReleaseResolution(
+            lambda *, timeout=15, catalog="global": ReleaseResolution(
                 release_tag=newer_tag,
                 version="99.99.99",
                 db_tag=newer_tag,
@@ -627,7 +630,7 @@ class TestRunUpdateNonUvToolSkip:
         monkeypatch.setattr(update.subprocess, "run", forbid_run)
 
         # Stub the asset downloads so they "succeed" without network.
-        def fake_download_db(*, db_dir, tag, force, yes):
+        def fake_download_db(*, db_dir, tag, catalog, force, yes):
             return {"tag": tag}
 
         def fake_download_docs_db(*, db_dir, tag, force):
@@ -636,7 +639,9 @@ class TestRunUpdateNonUvToolSkip:
         monkeypatch.setattr(update, "download_db", fake_download_db)
         monkeypatch.setattr(update, "download_docs_db", fake_download_docs_db)
 
-        result = run_update(db_dir=tmp_path, yes=True)
+        monkeypatch.setenv("XDG_DATA_HOME", str(tmp_path))
+        monkeypatch.delenv("REG_META_DB", raising=False)
+        result = run_update(catalog="global", yes=True)
 
         assert result["package"] == "skipped_not_uv_tool"
         # DB/doc fetch happened (not left broken / up_to_date).
@@ -655,7 +660,7 @@ class TestRunUpdateNonUvToolSkip:
 
         newer_tag = "reg_meta/v99.99.99"
         # Local assets already match the target tag → asset branches no-op.
-        (tmp_path / DB_FILENAME).write_bytes(b"db-placeholder")
+        _install_catalog(tmp_path / DB_FILENAME)
         (tmp_path / ".db_source").write_text(f'{{"tag": "{newer_tag}"}}')
         (tmp_path / DOC_DB_FILENAME).write_bytes(b"docs-placeholder")
         (tmp_path / ".docs_source").write_text(f'{{"tag": "{newer_tag}"}}')
@@ -663,7 +668,7 @@ class TestRunUpdateNonUvToolSkip:
         monkeypatch.setattr(
             update,
             "resolve_latest_release",
-            lambda *, timeout=15: ReleaseResolution(
+            lambda *, timeout=15, catalog="global": ReleaseResolution(
                 release_tag=newer_tag,
                 version="99.99.99",
                 db_tag=newer_tag,

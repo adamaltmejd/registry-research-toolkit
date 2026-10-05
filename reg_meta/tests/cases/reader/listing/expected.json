@@ -1,0 +1,20 @@
+{
+  "sizes": {
+    "providers": 1,
+    "registers": 1,
+    "variables": 2
+  },
+  "providers": [
+    "scb"
+  ],
+  "registers": [
+    "scb/example"
+  ],
+  "bindings": [
+    "scb/example/second",
+    "scb/example/value"
+  ],
+  "delivery_columns": [
+    "Value"
+  ]
+}

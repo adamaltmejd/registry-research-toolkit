@@ -1,0 +1,13 @@
+{
+  "fixture": "reader",
+  "artifact": "steward",
+  "argv": [
+    "--scope",
+    "reference",
+    "get",
+    "schema",
+    "--register",
+    "scb/example"
+  ],
+  "observe": "schema-columns"
+}

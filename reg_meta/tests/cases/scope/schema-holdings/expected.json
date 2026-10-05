@@ -1,0 +1,12 @@
+{
+  "columns": [
+    "scb/example/second",
+    "scb/example/value"
+  ],
+  "windows": [
+    [
+      "2018-01-01",
+      "2019-12-31"
+    ]
+  ]
+}

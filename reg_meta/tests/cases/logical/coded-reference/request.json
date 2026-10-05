@@ -1,0 +1,8 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "catalog",
+  "operation": "get_coded_variables",
+  "args": [],
+  "kwargs": {},
+  "observe": "coded"
+}

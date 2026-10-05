@@ -44,6 +44,7 @@ def ensure_slugged_db_importable() -> None:
 
 
 FIXTURE_IMPORT_DATE = "2026-06-01T00:00:00Z"
+FIXTURE_GENERATION_ID = "0" * 64
 
 # A schema_version that PASSES open_db's gate (same major.minor) but differs from
 # the code constant in the PATCH (_check_schema_compat ignores patch) — so
@@ -55,13 +56,17 @@ FIXTURE_SCHEMA_VERSION = f"{_MAJOR}.{_MINOR}.999"
 
 def _stamp_manifest(conn: sqlite3.Connection) -> None:
     """Add the boot-required ``import_manifest`` to a freshly-built slugged DB so
-    ``open_db``'s schema-compat gate (run in the lifespan) passes. The slugged-DB
-    DDL has the manifest table; we just fill the two keys the lifespan needs."""
+    ``open_db``'s schema and artifact-admission gates pass. Identity is fixed
+    alongside the synthetic content, including a deterministic generation."""
     conn.executemany(
         "INSERT OR REPLACE INTO import_manifest(key, value) VALUES (?, ?)",
         [
             ("schema_version", FIXTURE_SCHEMA_VERSION),
             ("import_date", FIXTURE_IMPORT_DATE),
+            ("catalog_artifact_kind", "catalog"),
+            ("catalog_publishable", "true"),
+            ("catalog_completeness", "complete"),
+            ("generation_id", FIXTURE_GENERATION_ID),
         ],
     )
     conn.commit()

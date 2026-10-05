@@ -1,0 +1,13 @@
+{
+  "columns": [
+    "scb/example/reference",
+    "scb/example/second",
+    "scb/example/value"
+  ],
+  "windows": [
+    [
+      "2010-01-01",
+      "2025-12-31"
+    ]
+  ]
+}

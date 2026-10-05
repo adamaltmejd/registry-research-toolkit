@@ -9,10 +9,10 @@ See DESIGN.md → Project-write surface (routes/project.py) and reg_meta/DESIGN.
 fail-closed blocked order alike — never a partial 200), and the byte-identity
 with the ``reg-meta order`` CLI that is §12's whole point.
 
-These tests run the deployment with NO steward configured, and that one has no
-``inventory.toml``, so it runs §12's global-deployment fallback
-(``inventory=None``) — hence ``steward: "global"`` in the spec below. A NAMED
-steward gets no such fallback (see the boot guard below). The fixture's ``scb/lisa/kon`` binding resolves to
+The fixture is a catalog artifact, so the materializer uses global fallback
+and requires ``steward: "global"`` in the spec below. Runtime inventory files
+cannot grant steward orderability; that requires a steward artifact with
+compiled holdings. The fixture's ``scb/lisa/kon`` binding resolves to
 ``delivery_column_name = "Kon"`` at variant ``individer-15plus`` / state
 ``2018-01-01..9999-12-31``.
 """
@@ -70,18 +70,35 @@ def test_body_is_the_manifests_own_canonical_serialization(client):
 
 
 def test_manifest_grounds_the_global_fallback_entry(client):
-    """The deployment has no inventory, so §12's global fallback grounds the
+    """The selected catalog artifact's global fallback grounds the
     order: blank ``table``, the resolved canonical column, ``edition`` = the
-    requested period. Pinned here because it is the boot wiring
-    (``app.state.inventory is None``) that selects it, not the materializer."""
+    requested period."""
     resp = client.post("/api/project/order", json=_spec())
     manifest = OrderManifest.model_validate(json.loads(resp.text))
     assert manifest.provenance.mode == "global_fallback"
+    assert manifest.provenance.artifact_kind == "catalog"
     assert manifest.provenance.steward == "global"
     (entry,) = manifest.entries
     assert entry.physical.table == ""
     assert entry.physical.column == "Kon"
     assert entry.physical.edition == "2018"
+
+
+def test_runtime_inventory_cannot_grant_steward_orderability(
+    catalog_db, tmp_path, monkeypatch
+):
+    stewards = tmp_path / "stewards"
+    write_steward(stewards, "ifau", CLEAN_HOLDINGS)
+    monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(stewards))
+    monkeypatch.setenv("REG_WEBAPP_STEWARD", "ifau")
+
+    with TestClient(create_app()) as client:
+        response = client.post("/api/project/order", json=_spec(steward="ifau"))
+
+    assert response.status_code == 422
+    assert [finding["code"] for finding in response.json()["findings"]] == [
+        "steward_mismatch"
+    ]
 
 
 def test_disjoint_period_orders_the_available_part(client):
@@ -129,13 +146,9 @@ def test_month_without_an_alias_window_orders(client):
 def test_named_steward_without_an_inventory_fails_at_boot(
     catalog_db, tmp_path, monkeypatch
 ):
-    """The other side of the fallback above: an absent inventory means "global
-    fallback" ONLY for the deployment with no steward configured. A NAMED
-    steward booting into it would block every one of its own projects on
-    ``steward_mismatch`` (the fallback demands ``steward == "global"``) from a
-    server that reported itself healthy at startup — a deployment error
-    deferred to, and paid by, each researcher in turn. So it fails at boot,
-    naming the file to author (fail fast, like ``load_steward``'s own checks)."""
+    """The existing catalog-filter boot gate still requires a named steward's
+    inventory until the webapp cutover. This file does not select the order
+    mode; the selected artifact does."""
     stewards = tmp_path / "stewards"
     write_steward(stewards, "ifau", CLEAN_HOLDINGS, inventory=False)
     monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(stewards))
@@ -171,13 +184,8 @@ representation = "Kon"
 def test_global_deployment_with_an_inventory_fails_at_boot(
     catalog_db, tmp_path, monkeypatch
 ):
-    """The global deployment stays on §12's fallback UNCONDITIONALLY. Loading a
-    stray ``inventory.toml`` would silently switch it into steward-inventory
-    mode, narrowing the full universe it exists to serve down to whatever that
-    file happens to list — a mode change nobody asked for, from a file nobody
-    referenced. §12 keeps the fallback until a physical global inventory is
-    introduced deliberately, so until then the file is a misconfiguration and
-    boot says so."""
+    """The existing catalog-filter boot gate rejects a global inventory,
+    which would narrow the full reference universe that deployment serves."""
     stewards = tmp_path / "stewards"
     write_global(stewards)
     (stewards / "global" / "inventory.toml").write_text(
@@ -249,7 +257,7 @@ def test_deterministic(client):
 
 def test_byte_identical_to_the_cli_adapter(client, catalog_db, tmp_path, capsys):
     """§12's contract: the FastAPI adapter and ``reg-meta order`` are thin
-    adapters over ONE materializer, so the same (project, inventory, DB) inputs
+    adapters over ONE materializer, so the same (project, DB) inputs
     produce byte-identical ``order.json`` on both surfaces."""
     from reg_meta.cli import run
 
@@ -339,7 +347,7 @@ def test_blocked_findings_match_the_materializers_own(client, catalog_db):
 
     spec = _spec(steward="swecov")
     with per_request_conn(catalog_db) as conn:
-        expected = materialize_order(project_from_raw(spec), None, conn)
+        expected = materialize_order(project_from_raw(spec), conn)
 
     findings = client.post("/api/project/order", json=spec).json()["findings"]
     assert findings == [f.model_dump(mode="json") for f in expected.findings]

@@ -1,0 +1,19 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "steward",
+  "argv": [
+    "--scope",
+    "reference",
+    "get",
+    "diff",
+    "--register",
+    "scb/example",
+    "--from",
+    "2018",
+    "--to",
+    "2019",
+    "--variable",
+    "Value"
+  ],
+  "observe": "logical-diff"
+}

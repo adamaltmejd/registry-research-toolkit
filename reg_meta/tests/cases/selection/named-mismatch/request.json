@@ -1,0 +1,8 @@
+{
+  "kind": "steward",
+  "install": "other",
+  "argv": [
+    "--catalog",
+    "other"
+  ]
+}

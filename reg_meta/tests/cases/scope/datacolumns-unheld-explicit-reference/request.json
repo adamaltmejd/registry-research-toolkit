@@ -1,0 +1,12 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "steward",
+  "argv": [
+    "--scope",
+    "reference",
+    "get",
+    "datacolumns",
+    "Value reference"
+  ],
+  "observe": "logical-datacolumns"
+}

@@ -1,0 +1,12 @@
+{
+  "fixture": "reader",
+  "artifact": "steward",
+  "argv": [
+    "--scope",
+    "reference",
+    "get",
+    "register",
+    "scb/example"
+  ],
+  "observe": "register-variants"
+}

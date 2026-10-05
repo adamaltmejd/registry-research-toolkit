@@ -1,0 +1,11 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "steward",
+  "operation": "catalog_method",
+  "method": "resolve_terminal_successor",
+  "args": [
+    "scb/example/value"
+  ],
+  "kwargs": {},
+  "observe": "terminal"
+}

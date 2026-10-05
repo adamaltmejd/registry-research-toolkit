@@ -866,35 +866,33 @@ claims; equal partitions or an unlabelled whole-population claim conflict on ove
 cells. Year-independent claims retain their separate scope check.
 
 The compiler folds each literal with Python `str.lower()` (`py_lower`), the exact shared
-fold of `representative_columns`. No NFC, `casefold()` or SQLite `lower()`. The
-comparison universe at the mapped variable/variant is what
-`Catalog._expand_state_windows` emits over the whole history: the states' own delivery
-columns plus the alias windows that participate under its containment, replacement and
-curated-addition rules (ratified 2026-10-04, replacing the states-only draft; the
-earlier `inventory_check._expanded_columns` mirror is the model, with its coding-mode
-drift fixed or the resolver called directly). The folded literal must name exactly one
-delivery column in that universe; no match fails publication with the coordinate and
-locator. `representation_canonical` is that column's representative spelling from
-`representative_columns(states, windows)` — a state's own spelling where a state names
-the column, else the lowest alias spelling — so the stored value is the spelling every
-reader already compares by, not an arbitrary pick. Store both spellings. The compiler
-must report rejected accepted mappings for separate source review, never fall back
-silently. Reader-side holding folds go; the resolver's own alias/state identity rule
-remains shared domain behavior.
+fold of `representative_columns`. No NFC, `casefold()` or SQLite `lower()`.
+`Catalog.delivery_columns(variable_id, variant_id)` exposes the whole-history reference
+delivery universe: states plus participating alias windows under the resolver's
+containment, replacement, curated-addition and coding rules. It returns a frozen set of
+representative spellings, independent of browse scope; optional `period_scope` narrows
+it to dated or year-independent delivery. The compiler and inventory consistency gate
+share this public method. It does not promise applicability to a physical edition. The
+folded literal must name exactly one column in that universe; no match fails publication
+with the coordinate and locator. `representation_canonical` uses the representative
+spelling: a state's spelling where a state names the column, else the lowest alias
+spelling. Store both literal and canonical spellings. Reader-side holding folds go; the
+resolver's own alias/state identity rule remains shared domain behavior.
 
-`Catalog._expand_state_windows` remains the resolution authority. Per-column metadata or
-coding windows intersect successive base states; shared windows must be contained.
-Source replacement requires participating base column and request overlap, otherwise the
-base remains; curated shared-coding windows add independently. Year-independent states
-remain year-independent. A join on canonical `variable_state.delivery_column_name` is
-sufficient only where it preserves these rules; aliases use the existing resolver.
-`inventory_check._expanded_columns` is an intended whole-history mirror with known
-coding-mode drift, not a replacement oracle. The builder's inventory coverage flat union
-answers a different accounting question. None of the three rules is copied into DDL.
-Range/list physical periods survive; the build coverage assessment retains its existing
-"temporally unassessed" disposition through `data_warning`, without partial-resolution
-rows or a findings relation. Unknown tables retain census columns but no logical
-mappings.
+`Catalog._expand_state_windows` remains the resolution authority. Holdings coverage
+batches states and physical periods and shares its alias-participation projection; it
+does not construct full state/code/warning models just to aggregate delivery windows.
+Per-column metadata or coding windows intersect successive base states; shared windows
+must be contained. Source replacement requires participating base column and request
+overlap, otherwise the base remains; curated shared-coding windows add independently.
+Year-independent states remain year-independent. A join on canonical
+`variable_state.delivery_column_name` is sufficient only where it preserves these rules;
+aliases use the existing resolver. The inventory consistency gate uses the same public
+delivery universe. The builder's inventory coverage flat union answers a different
+accounting question. None of the three rules is copied into DDL. Range/list physical
+periods survive; the build coverage assessment retains its existing "temporally
+unassessed" disposition through `data_warning`, without partial-resolution rows or a
+findings relation. Unknown tables retain census columns but no logical mappings.
 
 Candidate indexes are `holding_mapping(variable_id, variant_id)`,
 `holding_mapping(column_id)`, `holding_column(table_id)` and
@@ -981,10 +979,12 @@ Exceptions are explicit:
   warnings keep `fqid_outside_steward_catalog` and
   `representation_outside_steward_catalog`, derived from SQL at the source's variant.
   Global logical fallback is keyed on artifact kind, not missing inventory.
-- CLI adds `--scope` only to `search`, `get register`, `get schema`, `get availability`.
-  Other logical exports use the artifact default and the shared predicate; inherently
-  reference code/docs/classification reads remain reference. API catalog/search routes
-  and `/api/stats` accept explicit scope; context reports identity/default scope.
+- CLI accepts `--scope` on scoped discovery and logical exports: `search`, `resolve`,
+  `get register`, `get schema`, `get availability`, `get varinfo`, `get values`,
+  `get datacolumns`, `get diff`, `get coded-variables`, `get groups` and the variable
+  enumeration of `get classification`. Defaults still follow the artifact; inherently
+  reference code/docs/classification metadata reads remain reference. API catalog/search
+  routes and `/api/stats` accept explicit scope; context reports identity/default scope.
 
 ### Inventory TOML authoring contract (`inventory.py`)
 
@@ -993,9 +993,9 @@ accepted bytes (both accepted and legacy inventories are fully explicit). Change
 bytes still require fresh acceptance. Frozen models reject unknown keys, malformed
 FQIDs, empty input and duplicate physical names. The input shape remains
 `table → column → zero-or-more mapping`; every mapping requires `register_variant`,
-`variable` and nonempty literal `representation`. No nullable/unqualified arm remains;
-`mapping_ambiguous`, `_has_unqualified_mapping`, `unqualified_ok` and
-`catalog_index._admitted_intervals` are deleted in the reader cut.
+`variable` and nonempty literal `representation`. Every mapping is qualified by its
+explicit representation. Runtime matching uses compiled canonical spelling and authored
+IDs.
 
 A physical table has an opaque exact `id`, explicit `edition`, `period_scope` defaulting
 to `intervals`, optional `partition` and all literal columns. Finite editions use the
@@ -1032,10 +1032,8 @@ catalog.
 
 ## Order materializer and manifest (`order.py`)
 
-**Compiled-holdings contract for this entire section (2026-10-04).** The shipped pre-cut
-implementation still takes inventory input, emits `mapping_ambiguous` and uses
-`catalog_import_date` and mode `steward_inventory`. The reader cut replaces those with
-the signature, findings and provenance below; this section defines the target contract.
+**Compiled-holdings contract (2026-10-04), implemented by the reader cut.** Ordering
+reads physical facts from the selected artifact and records its generation identity.
 
 `materialize_order(project, conn)` is the one place a logical `project_data.json`
 selection meets a steward's physical delivery topology. It returns either a complete
@@ -1087,11 +1085,15 @@ Per `sources[*].bindings[*]`, in project declaration order:
    columns carries a mapping matching `(register_variant, variable, representation)` AND
    its physical edition overlaps THAT slice; only the intersection contributes. Matching
    reads compiled IDs and canonical spelling, never loose inventory TOML. All mappings
-   are explicit. Any subperiod of the availability-clipped request left uncovered blocks
-   the WHOLE order with the exact gap (`coverage_gap`), and a slice no mapping serves
-   blocks with `mapping_missing`. Overlap alone never buys a partial manifest. The
-   materializer never CHOOSES between tables and needs no chooser: §12's one-to-one
-   resolution invariant (previous section) means a valid inventory offers at most one
+   are explicit. A finite holding edition that overlaps the original request but lies
+   wholly outside the binding's applicable column windows blocks with a located
+   `column_window_unavailable`, even if availability clipping removes that edition.
+   Semantic resolution findings are retained alongside physical findings. Any subperiod
+   of the availability-clipped request left uncovered blocks the WHOLE order with the
+   exact gap (`coverage_gap`), and a slice no mapping serves blocks with
+   `mapping_missing`. Overlap alone never buys a partial manifest. The materializer
+   never CHOOSES between tables and needs no chooser: §12's one-to-one resolution
+   invariant (previous section) means a valid inventory offers at most one
    `(table, column)` per cell instant **per partition**, so the several contributions
    one slice can collect are either disjoint pieces of it (the annual series) or
    distinct partitions of it (the sub-population split), and both are wanted whole.
@@ -1113,11 +1115,11 @@ Per `sources[*].bindings[*]`, in project declaration order:
 binding — `steward_mismatch`, `project_empty`, `period_not_orderable`,
 `variable_unresolved`, `binding_unavailable`, `representation_unknown`,
 `representation_unresolved`, `representation_ambiguous`, `mapping_missing`,
-`coverage_gap` — so a researcher fixes the whole order in one edit instead of one gap
-per round trip. `ProjectData.steward` must equal the deployment's steward — the
-manifest's, or `"global"` in fallback mode (provenance is checked before anything
-resolves; retargeting is deliberately not a feature) — and an empty project stays a
-valid draft that cannot produce a header-only manifest.
+`coverage_gap`, `column_window_unavailable` — so a researcher fixes the whole order in
+one edit instead of one gap per round trip. `ProjectData.steward` must equal the
+deployment's steward — the manifest's, or `"global"` in fallback mode (provenance is
+checked before anything resolves; retargeting is deliberately not a feature) — and an
+empty project stays a valid draft that cannot produce a header-only manifest.
 
 **The manifest is a versioned JSON contract.** Version 1 is **in definition** until the
 §12 boundary ships: it has no external consumer yet, so shape changes while the

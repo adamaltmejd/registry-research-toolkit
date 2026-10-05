@@ -1,0 +1,16 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "steward",
+  "operation": "catalog_states",
+  "args": [
+    "scb/example/value"
+  ],
+  "kwargs": {},
+  "observe": "state-warnings",
+  "warning_codes": {
+    "1c4e4839456e92c09b23355aa4ee3ac2c3ef376558e99d4d7da2f78605995725": "register-limit",
+    "f28e90edef4712b90f1e8e4dcf7262203492f5f01306e10a34d1efcbcbec40af": "binding-limit",
+    "b17f479dddd2ff2ccdc329a4d56b093b2b1348338b88985bcae79895eef568ed": "case-limit",
+    "b14ab4691bdaf267329d809f236a0caba8a5f1f4aa9d2a15812d77a12f09a76f": "unheld-limit"
+  }
+}

@@ -17,6 +17,7 @@ from typing import TYPE_CHECKING
 import pytest
 from _shared_fixtures import _build_stub_doc_db
 from _slugged_db import add_state, add_variable, build_slugged_db
+from reader_artifacts import stamp_catalog_identity
 from reg_meta.catalog import Catalog, GroupAxis
 from reg_meta.db import SCHEMA_VERSION
 from reg_meta.errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
@@ -1114,6 +1115,7 @@ def groups_db_dir(tmp_path_factory: pytest.TempPathFactory) -> str:
         "INSERT INTO import_manifest VALUES ('schema_version', ?)",
         (SCHEMA_VERSION,),
     )
+    stamp_catalog_identity(conn)
     conn.commit()
     db_dir = tmp_path_factory.mktemp("groups_db")
     on_disk = sqlite3.connect(db_dir / "reg_meta.db")

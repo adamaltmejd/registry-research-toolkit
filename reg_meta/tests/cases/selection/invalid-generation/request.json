@@ -1,0 +1,8 @@
+{
+  "kind": "catalog",
+  "install": "global",
+  "argv": [],
+  "manifest_patch": {
+    "generation_id": "not-a-digest"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "steward",
+  "argv": [
+    "--scope",
+    "reference",
+    "get",
+    "coded-variables"
+  ],
+  "observe": "logical-coded-variables"
+}

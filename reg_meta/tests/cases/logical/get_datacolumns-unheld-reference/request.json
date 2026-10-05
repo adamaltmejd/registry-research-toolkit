@@ -1,0 +1,10 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "catalog",
+  "operation": "get_datacolumns",
+  "args": [
+    "Value reference"
+  ],
+  "kwargs": {},
+  "observe": "owner"
+}

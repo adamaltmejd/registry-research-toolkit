@@ -221,6 +221,7 @@ def run_update(
     db_dir: Path | None = None,
     *,
     tag: str = "latest",
+    catalog: str | None = None,
     force: bool = False,
     yes: bool = False,
 ) -> dict[str, Any]:
@@ -231,8 +232,48 @@ def run_update(
     carrying that asset, so a doc-less package release still serves the
     previous doc DB. Already-current assets are skipped unless *force*.
     """
-    if db_dir is None:
-        db_dir = default_db_dir()
+    from .db import db_path_from_args, get_manifest, open_db
+
+    path_selected = catalog is None and (
+        db_dir is not None or bool(os.environ.get("REG_META_DB"))
+    )
+    db_path = db_path_from_args(
+        str(db_dir) if db_dir is not None else None, catalog=catalog
+    )
+    db_dir = db_path.parent
+    if path_selected:
+        try:
+            conn = open_db(db_path)
+            try:
+                identity = get_manifest(conn)
+                catalog = (
+                    identity["steward"]
+                    if identity["catalog_artifact_kind"] == "steward"
+                    else "global"
+                )
+            finally:
+                conn.close()
+        except RegMetaError as exc:
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="catalog_bootstrap_required",
+                error_class="configuration",
+                message="Explicit-path updates require an existing admitted catalog before any writes.",
+                remediation="Bootstrap with reg-meta update --catalog NAME, then select its directory.",
+            ) from exc
+    else:
+        catalog = catalog or "global"
+        # Named installations can bootstrap or repair an incompatible local copy.
+        # Download admission validates the replacement against this selected name.
+
+    installed_admitted = False
+    if db_path.exists():
+        try:
+            open_db(db_path, catalog=catalog).close()
+            installed_admitted = True
+        except RegMetaError:
+            if path_selected:
+                raise
 
     # Package version target comes from PyPI (what `uv tool upgrade` can
     # actually install); asset tags come from GitHub Releases (where the
@@ -241,7 +282,7 @@ def run_update(
     # upgrade target avoids a false-success loop where uv reports "Nothing
     # to upgrade" but we claim the upgrade happened.
     if tag == "latest":
-        resolution = resolve_latest_release(timeout=10)
+        resolution = resolve_latest_release(timeout=10, catalog=catalog)
         db_tag = resolution.db_tag
         docs_tag = resolution.docs_tag
         try:
@@ -253,10 +294,7 @@ def run_update(
             latest_ver = resolution.version
     else:
         latest_ver = version_from_tag(tag)
-        # Explicit tags are assumed self-contained: every published release
-        # carries both assets (the release flow copies them forward on
-        # code-only releases — release skill step 8, #343). A tag violating
-        # that fails loudly at download, not silently with stale assets.
+        # A main catalog is required; its optional shared docs asset may be absent.
         db_tag = tag
         docs_tag = tag
 
@@ -329,11 +367,11 @@ def run_update(
     # --- Main database ---
     db_path = db_dir / DB_FILENAME
     local_db_tag = _read_source_tag(db_dir / DB_SOURCE_FILE)
-    need_db = not db_path.exists() or force or (db_tag and local_db_tag != db_tag)
+    need_db = not installed_admitted or force or (db_tag and local_db_tag != db_tag)
     if need_db and db_tag:
         sys.stderr.write("Updating main database...\n")
         db_result = download_db(
-            db_dir=db_dir, tag=db_tag, force=db_path.exists(), yes=yes
+            db_dir=db_dir, tag=db_tag, catalog=catalog, force=db_path.exists(), yes=yes
         )
         result["database"] = db_result
     elif need_db and not db_tag:
@@ -366,26 +404,14 @@ def run_update(
     )
     if need_docs and docs_tag:
         sys.stderr.write("Updating doc DB...\n")
-        docs_result = download_docs_db(
-            db_dir=db_dir, tag=docs_tag, force=docs_path.exists()
-        )
-        result["docs"] = docs_result
-    elif need_docs and not docs_tag:
-        # Symmetric with the main-DB case: fail fast rather than leave the
-        # user with a broken install. Query commands require the doc DB.
-        reason = "No recent release includes a doc-DB asset required for this update."
-        if force and docs_path.exists():
-            reason += " (--force requires a fresh asset; none was found.)"
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="no_docs_in_release",
-            error_class="configuration",
-            message=reason,
-            remediation=(
-                "Build from markdown with `reg-meta-build build-docs`, "
-                "or check https://github.com/adamaltmejd/registry-research-toolkit/releases"
-            ),
-        )
+        try:
+            result["docs"] = download_docs_db(
+                db_dir=db_dir, tag=docs_tag, force=docs_path.exists()
+            )
+        except RegMetaError as exc:
+            if tag == "latest" or exc.code != "release_not_found":
+                raise
+            result["docs"] = "no_docs_in_release"
     elif not docs_tag:
         result["docs"] = "no_docs_in_release"
     else:

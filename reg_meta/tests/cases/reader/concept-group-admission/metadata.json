@@ -1,0 +1,20 @@
+{
+  "variable_groups": [
+    {
+      "register": "scb/example",
+      "key": "value-family",
+      "label": "Value family",
+      "source": "curated",
+      "members": [
+        {
+          "variable": "scb/example/value",
+          "delivery_column_name": "value"
+        },
+        {
+          "variable": "scb/example/value",
+          "delivery_column_name": "Unknown"
+        }
+      ]
+    }
+  ]
+}

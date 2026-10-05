@@ -1,0 +1,44 @@
+{
+  "deliveries": {
+    "value": [
+      {
+        "variant": "annual",
+        "column": "Alias",
+        "period_scope": "intervals",
+        "coverage": {
+          "coverage_from": "2018-01-01",
+          "coverage_to": "2018-12-31",
+          "open_ended": false,
+          "state_count": 1
+        },
+        "windows": [
+          {
+            "valid_from": "2018-01-01",
+            "valid_to": "2018-12-31"
+          }
+        ]
+      }
+    ]
+  },
+  "provider_columns": [
+    {
+      "register": "example",
+      "variable": "value",
+      "column": "Alias",
+      "coverage": {
+        "coverage_from": "2018-01-01",
+        "coverage_to": "2018-12-31",
+        "open_ended": false,
+        "state_count": 1
+      }
+    }
+  ],
+  "provider_registers": {
+    "example": {
+      "variable_count": 1,
+      "coverage_from": "2018-01-01",
+      "coverage_to": "2018-12-31",
+      "open_ended": false
+    }
+  }
+}

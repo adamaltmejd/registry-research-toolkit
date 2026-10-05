@@ -1,0 +1,8 @@
+{
+  "kind": "catalog",
+  "install": "global",
+  "argv": [],
+  "manifest_patch": {
+    "catalog_completeness": "incomplete"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "exit_code": 10,
+  "error": {
+    "class": "configuration",
+    "code": "scope_unavailable",
+    "message": "Holdings scope requires a steward artifact; this artifact is a catalog.",
+    "remediation": "Select a steward catalog or use --scope reference."
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "fixture": "reader/case-twins",
+  "artifact": "steward",
+  "provider": "scb",
+  "register": "example"
+}

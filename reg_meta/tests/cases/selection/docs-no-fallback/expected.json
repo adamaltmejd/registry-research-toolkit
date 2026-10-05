@@ -1,0 +1,9 @@
+{
+  "exit": 10,
+  "error": {
+    "code": "doc_db_not_found",
+    "class": "configuration",
+    "message": "Doc DB not found: $DATA/swecov/reg_meta_docs.db",
+    "remediation": "Run reg-meta update --catalog swecov to fetch the paired doc DB."
+  }
+}

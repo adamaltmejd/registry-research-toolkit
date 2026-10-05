@@ -1,0 +1,12 @@
+{
+  "kind": null,
+  "install": "explicit",
+  "argv": [
+    "--db",
+    "$EXPLICIT"
+  ],
+  "command": [
+    "update",
+    "--yes"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "steward",
+  "operation": "search",
+  "args": [
+    "Value"
+  ],
+  "kwargs": {
+    "scope": "reference",
+    "field": "description",
+    "type": "variable",
+    "limit": 1
+  },
+  "observe": "search-group"
+}

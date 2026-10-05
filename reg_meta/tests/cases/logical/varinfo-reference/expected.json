@@ -1,0 +1,16 @@
+{
+  "names": [
+    "Value"
+  ],
+  "columns": [
+    "Archived",
+    "Secret",
+    "Value",
+    "value"
+  ],
+  "years": [
+    2018,
+    2019,
+    2020
+  ]
+}

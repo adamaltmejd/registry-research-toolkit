@@ -10,10 +10,12 @@ by the rest of the resolver suite).
 
 from __future__ import annotations
 
+import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
 from _representation_fixtures import build_month_family
+from reader_artifacts import stamp_catalog_identity
 from reg_meta.catalog import Catalog, ValueSetMember
 from reg_meta.db import open_db
 
@@ -26,7 +28,10 @@ _FQID = "scb/testreg/lonfink"
 
 
 def _build(tmp_path: Path, monkeypatch) -> Path:
-    return build_month_family(tmp_path)
+    path = build_month_family(tmp_path)
+    with sqlite3.connect(path) as conn:
+        stamp_catalog_identity(conn)
+    return path
 
 
 @pytest.fixture
@@ -165,7 +170,10 @@ def test_non_merged_variable_unaffected(merged_db: Path) -> None:
 
 
 def _build_gap_year(tmp_path: Path, monkeypatch) -> Path:
-    return build_month_family(tmp_path, march_2018=False)
+    path = build_month_family(tmp_path, march_2018=False)
+    with sqlite3.connect(path) as conn:
+        stamp_catalog_identity(conn)
+    return path
 
 
 def test_gap_year_month_falls_back_to_annual_state(tmp_path: Path, monkeypatch) -> None:

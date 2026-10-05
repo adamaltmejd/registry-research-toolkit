@@ -1,0 +1,12 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "steward",
+  "argv": [
+    "--scope",
+    "holdings",
+    "get",
+    "groups",
+    "scb/example"
+  ],
+  "observe": "logical-groups"
+}

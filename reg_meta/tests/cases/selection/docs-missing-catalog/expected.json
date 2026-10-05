@@ -1,0 +1,9 @@
+{
+  "exit": 10,
+  "error": {
+    "code": "db_not_found",
+    "class": "configuration",
+    "message": "Database not found: $DATA/swecov/reg_meta.db",
+    "remediation": "Run `reg-meta update` to fetch the pre-built DB, or see `reg-meta-build build-db --help` to build from pinned prepared sources."
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "fixture": "partitions",
+  "artifact": "steward",
+  "provider": "scb",
+  "register": "example"
+}

@@ -1,0 +1,12 @@
+{
+  "findings": [
+    {
+      "code": "coverage_gap",
+      "message": "no steward edition delivers scb/example/annual 'scb/example/value' representation 'Value' for 2020; the whole order is blocked until every requested subperiod inside availability is covered",
+      "source": "Example",
+      "variable": "scb/example/value",
+      "period": "2020"
+    }
+  ],
+  "clips": []
+}
