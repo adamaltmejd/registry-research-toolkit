@@ -1,0 +1,18 @@
+[
+  {
+    "status": 404
+  },
+  {
+    "status": 404
+  },
+  {
+    "status": 200,
+    "json": {
+      "/fqid": "fk/unheld"
+    }
+  },
+  {
+    "status": 301,
+    "location": "/api/catalog/scb/example"
+  }
+]

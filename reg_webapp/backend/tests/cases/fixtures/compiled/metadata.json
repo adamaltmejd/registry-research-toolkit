@@ -21,6 +21,10 @@
     {
       "predecessor": "scb/old-example",
       "successor": "scb/example"
+    },
+    {
+      "predecessor": "fk/unheld",
+      "successor": "scb/example"
     }
   ],
   "variable_groups": [
