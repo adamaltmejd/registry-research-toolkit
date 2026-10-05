@@ -1,0 +1,54 @@
+{
+  "fixture": "reader",
+  "kind": "steward",
+  "requests": [
+    {
+      "path": "/api/project/validate",
+      "method": "POST",
+      "body": {},
+      "query": {
+        "scope": "reference"
+      }
+    },
+    {
+      "path": "/api/project/validate",
+      "method": "POST",
+      "body": {},
+      "query": {
+        "scope": "holdings"
+      }
+    },
+    {
+      "path": "/api/project/validate",
+      "method": "POST",
+      "body": {},
+      "query": {
+        "scope": ""
+      }
+    },
+    {
+      "path": "/api/project/order",
+      "method": "POST",
+      "body": {},
+      "query": {
+        "scope": "reference"
+      }
+    },
+    {
+      "path": "/api/project/order",
+      "method": "POST",
+      "body": {},
+      "query": {
+        "scope": "holdings"
+      }
+    },
+    {
+      "path": "/api/project/order",
+      "method": "POST",
+      "body": {},
+      "query": {
+        "scope": ""
+      }
+    }
+  ]
+}

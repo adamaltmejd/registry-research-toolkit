@@ -42,7 +42,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import JSONResponse, Response
 from pydantic import ValidationError
@@ -69,6 +69,7 @@ from reg_webapp.project_validation import (
     semantic_issues,
 )
 from reg_webapp.request_body import read_raw_json_object
+from reg_webapp.scope import reject_project_scope
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -77,7 +78,7 @@ if TYPE_CHECKING:
     from reg_meta.catalog import Catalog
 
 
-router = APIRouter(prefix="/api/project")
+router = APIRouter(prefix="/api/project", dependencies=[Depends(reject_project_scope)])
 
 
 def openapi_schemas() -> dict[str, dict[str, Any]]:
