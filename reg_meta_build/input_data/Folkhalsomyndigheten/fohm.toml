@@ -270,3 +270,69 @@ name = "Utförande vårdenhet"
 column = "vardenhet"
 definition = "Vårdenhet som utförde vaccinationen."
 data_type = "text"
+
+
+# Maintainer transcription of the SWECOV FHM_CovidWGS physical-schema export.
+# This is a project delivery, not a declaration of FOHM register inception.
+# The pooled 2020–2021 window is the table's observed Provdatum span; it does
+# not establish annual availability for any individual column. Literal headers
+# and storage types come from SWECOV-AKU-WGS-storage-evidence.json. No expanded
+# definitions, response-code lists or Lineage classification are supplied.
+# All fields are conservatively sensitive; this is maintainer policy. Identifier
+# flags are also policy for the project pseudonym and accession/linkage headers.
+[[register]]
+key = "covidwgs"
+name = "CovidWGS"
+
+[[register.variant]]
+key = "FHM_CovidWGS"
+name = "FHM_CovidWGS"
+description = "SWECOV's pooled physical delivery, observed in 2020–2021; per-column annual availability is unknown."
+valid_from = "2020-01-01"
+valid_to = "2021-12-31"
+period_scope = "pooled"
+
+[[register.variable]]
+name = "P1105_LopNr_PersonNr"
+column = "P1105_LopNr_PersonNr"
+data_type = "decimal"
+is_sensitive = true
+is_identifier = true
+variants = ["FHM_CovidWGS"]
+data_warning = "Only the literal delivered header and storage type are documented. Expanded definitions, response-code meanings and verified Lineage classification are unavailable. The 2020–2021 dates describe the pooled table, not annual per-column availability. Sensitivity and identifier flags are maintainer policy."
+description = "Literal SWECOV project pseudonym. The physical float storage declaration does not establish FOHM original PersonNr encoding or identifier width."
+
+[[register.variable]]
+name = "Provdatum"
+column = "Provdatum"
+data_type = "date"
+is_sensitive = true
+variants = ["FHM_CovidWGS"]
+data_warning = "Only the literal delivered header and storage type are documented. Expanded definitions, response-code meanings and verified Lineage classification are unavailable. The 2020–2021 dates describe the pooled table, not annual per-column availability. Sensitivity and identifier flags are maintainer policy."
+
+[[register.variable]]
+name = "Lineage"
+column = "Lineage"
+data_type = "text"
+is_sensitive = true
+variants = ["FHM_CovidWGS"]
+data_warning = "Only the literal delivered header and storage type are documented. Expanded definitions, response-code meanings and verified Lineage classification are unavailable. The 2020–2021 dates describe the pooled table, not annual per-column availability. Sensitivity and identifier flags are maintainer policy."
+
+[[register.variable]]
+name = "Gisaid"
+column = "Gisaid"
+data_type = "text"
+is_sensitive = true
+is_identifier = true
+variants = ["FHM_CovidWGS"]
+data_warning = "Only the literal delivered header and storage type are documented. Expanded definitions, response-code meanings and verified Lineage classification are unavailable. The 2020–2021 dates describe the pooled table, not annual per-column availability. Sensitivity and identifier flags are maintainer policy."
+
+[[register.variable]]
+name = "SmiLab_nr"
+column = "SmiLab_nr"
+data_type = "text"
+is_sensitive = true
+is_identifier = true
+variants = ["FHM_CovidWGS"]
+data_warning = "Only the literal delivered header and storage type are documented. Expanded definitions, response-code meanings and verified Lineage classification are unavailable. The 2020–2021 dates describe the pooled table, not annual per-column availability. Sensitivity and identifier flags are maintainer policy."
+

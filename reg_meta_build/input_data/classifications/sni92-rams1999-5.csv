@@ -1,0 +1,759 @@
+vardekod,vardebenamning
+00000,Näringsgren okänd
+01111,Spannmålsodlare m.fl.
+01112,Vallodlare
+01113,Potatisodlare
+01114,Sockerbetsodlare
+01115,"Odlare av jordbruksväxter,blandat"
+01117,"Odlare av växter, blandat,mest jordbruksväxter"
+01119,Övriga odlare avjordbruksväxter
+01121,Odlare av köksväxter påfriland
+01122,Odlare av plantskoleväxterm.m. på friland
+01123,Odlare av köksväxter iväxthus
+01124,Odlare av prydnadsväxter iväxthus
+01125,"Odlare av köks-, prydnads-o plantskoleväxter, blandat"
+01127,"Odl av växter,blandat,mestköks-,prydn-,plantsk.växter"
+01129,Svampodlare m.fl.
+01131,Frukt- och bärodlare
+01137,"Odlare av växter, blandat,mest frukt och bär"
+01139,Kryddväxtodlare m.fl.;bärplockare
+01211,Mjölkproducenter
+01212,Nötköttsproducenter
+01213,"Producenter av mjölk ochnötkött, blandat"
+01217,"Husdjursföretag, blandaddrift, mest nötkreatur"
+01221,Fåruppfödare
+01222,Getuppfödare
+01223,"Uppfödare av får o getter,blandat"
+01227,"Husdjursföretag, blandaddrift, mest får och getter"
+01228,Stuterier och andrahästuppfödare m.fl.
+01231,Smågrisuppfödare
+01232,Slaktsvinsuppfödare
+01233,"Uppfödare av smågrisar ochslaktsvin, blandat"
+01237,"Husdjursföretag, blandaddrift, mest svin"
+01241,Äggproducenter
+01242,Slaktkycklingsuppfödare
+01243,"Fjäderfäföretag, blandaddrift"
+01247,"Husdjursföretag, blandaddrift, mest fjäderfä"
+01249,Övriga fjäderfäföretag
+01250,Andra djurskötselföretag
+01251,Renskötare
+01252,Pälsdjursuppfödare
+01253,"Bi-, mask- och andrasmådjursuppfödare"
+01254,Uppfödare av sällskapsdjur
+01259,Andra djuruppfödare
+01300,Blandat jordbruk (växtodl ikombination m djurskötsel)
+01301,"Blandat jordbruk, mestväxtodling"
+01302,"Blandat jordbruk,mesthusdjursskötsel"
+01410,Serviceföretag tillväxtodling
+01420,"Serviceföretag tilldjurskötsel, ej veterinärer"
+01500,Jägare o viltvårdare inklserviceföretag
+01900,Småbruk
+02010,Skogsbruksföretag
+02011,"Skogsägare; producenter avskog på rot, leveransvirke"
+02012,Skogsvårdsföretag
+02013,Avverkningsföretag
+02014,Skogsfröplantager ochskogsplantskolor
+02019,Övriga skogsbruksföretag
+02021,Virkesmätningsföreningar
+02029,Övriga serviceföretag tillskogsbruk
+05011,"Trålfiskare, i saltvatten"
+05012,Övriga saltvattensfiskare
+05013,Sötvattensfiskare
+05021,Matfiskodlare
+05022,Sättfiskodlare
+05023,Kräftdjursodlare
+05024,Blötdjursodlare
+05025,Vattenväxtodlare
+10100,Stenkolsgruvor
+10200,Brunkolsgruvor
+10301,"Torvindustri, förjordförbättringsändamål"
+10302,"Torvindustri, förenergiändamål"
+11100,Industri för utvinning avråpetroleum och naturgas
+11200,Serviceföretag till råpet-rol- o naturgasutvinning
+12000,Uran- och toriumgruvor
+13100,Järnmalmsgruvor
+13200,Andra metallmalmsgruvor
+14110,Byggnadsstensbrott
+14120,"Kalk- och gipsstensbrott,dolomitbrott"
+14130,Skifferbrott
+14210,"Sand-, grus- o bergtäkter"
+14220,Lertäkter
+14300,Brott för kemiska mineral
+14400,Industri för saltutvinning
+14500,Övrig gruv- ochutvinningsindustri
+15111,Kreatursslakterier
+15112,Köttstyckerier
+15120,Fjäderfäslakterier
+15130,Charkuterier och annanindustri för köttvaror
+15200,Fiskberedningsindustri
+15310,Potatisindustri
+15320,Juice- och saftindustri
+15330,"Annan frukt-, bär- ochgrönsaksindustri"
+15410,Industri för råa oljor ochfetter
+15420,Industri för raffineradeoljor och fetter
+15430,Matfettsindustri
+15511,Ostindustri
+15512,Annan mejerivaruindustri
+15520,Glassindustri
+15611,Kvarnar
+15612,"Ind för frukostfling,mixero a beredn av kvarnprodukt"
+15620,Stärkelseindustri
+15710,Industri för bereddafodermedel
+15720,Industri för mat tillsällskapsdjur
+15810,Bagerier
+15821,Knäckebrödsindustri
+15822,Industri för kex ochkonserverade bakverk
+15830,Sockerindustri
+15841,Sockerkonfektyrindustri
+15842,Choklad- och choklad-konfektyrindustri
+15850,Industri för pastaprodukt
+15860,Kaffe- och teindustri
+15870,"Ind för senap, ketchupkryddor o a smaksättn.medel"
+15880,Ind för.homogeniseradelivsmedelsprep inkl dietmat
+15890,Annan livsmedelsindustri
+15910,Spritdrycksindustri
+15920,Råspritsbrännerier
+15930,Vinindustri
+15940,Cider- och annan fruktvins-industri
+15950,Industri för andra icke-destillerade jästa drycker
+15960,Ölbryggerier
+15970,Mälterier
+15980,Mineralvatten- ochläskedrycksindustri
+16000,Tobaksindustri
+17110,Bomullsgarnsindustri o.d.
+17120,Kardgarnsindustri o.d.
+17130,Kamgarnsindustri o.d.
+17140,Lin- och jutegarns-industri o.d.
+17150,Industri för silkegarn o.d
+17160,Sytrådsindustri
+17170,Annan garnindustri
+17210,Bomullsväverier o.d.
+17220,Kardgarnsväverier o.d.
+17230,Kamgarnsväverier o.d.
+17240,Sidenväverier o.d.
+17250,Andra väverier
+17300,"Blekerier,färgerier,textil-tryckerier o a textilb.verk"
+17401,Gardinindustri
+17402,Sängkläders- ochlinnevaruindustri
+17403,"Industri för presenningar,tält, segel o.d."
+17510,Mattindustri
+17520,Tågvirkes- och bindgarns-industri
+17530,Industri för bondad duk
+17541,Industri för band ochsnörmakerier
+17549,Diverse övrig textilie-industri
+17600,Trikåväverier
+17710,Strumpindustri
+17720,Tröjindustri
+18100,Läderbeklädnadsindustri
+18210,"Ind för arbets-, skydds-och överdragskläder"
+18221,Ind f a gång- o ytterkläderför män och pojkar
+18222,Ind f a gång- o ytterkläderför kvinnor och flickor
+18231,Ind f skjortor och under-kläder för män och pojkar
+18232,Ind f blusar och skjortorför kvinnor och flickor
+18233,"Ind för gördlar, byst-hållare, korsetter o.d."
+18234,Ind för andra underkläderför kvinnor och flickor
+18240,Ind för andra beklädnads-varor och tillbehör
+18300,Pälsindustri
+19100,Garverier
+19200,"Industri för reseffekter,handväskor, sadeltyg m.m."
+19300,Skoindustri
+20101,Sågverk
+20102,Hyvlerier
+20103,Träimpregneringsverk
+20201,"Industri för fanér,kryssfanér och lamellträ"
+20202,Spånskiveindustri
+20203,Träfiberskiveindustri
+20301,Industri för monterings-färdiga trähus
+20302,Industri för byggnads- ochinredningssnickerier
+20400,Träförpackningsindustri
+20510,Övrig trävaruindustri
+20520,"Industri för varor avkork, halm, rotting o.d."
+21111,Industri för mekaniskeller halvkemisk massa
+21112,Sulfatmassaindustri
+21113,Sulfitmassaindustri
+21121,Tidnings- och journal-pappersindustri
+21122,Annan tryckpappersindustri
+21123,Kraftpappers- ochkraftpappindustri
+21129,Övrig pappers- ochpappindustri
+21211,Wellpappindustri
+21219,"Övrig industri förpappers-, pappförpackningar"
+21220,Industri för hushålls- ochhygienartiklar av papper
+21230,"Industri för skrivpapper,kuvert o.d."
+21240,Tapetindustri
+21250,Industri för andrapappers- och pappvaror
+22110,Bokförlag
+22121,Dagstidningsförlag
+22122,Annonstidningsförlag
+22130,Tidskriftsförlag
+22140,Fonogramutgivare
+22150,Andra förlag
+22210,Dagstidningstryckerier
+22221,Tidskriftstryckerier
+22222,"Boktryckerier, övrigatryckerier"
+22230,Bokbinderier och industriför trycksaksbehandling
+22240,Ind för sättning och annanframst av tryckoriginal
+22250,Annan grafisk industri
+22310,Företag för reproduktionav ljudinspelningar
+22320,Företag för reproduktionav videoinspelningar
+22330,Företag för reproduktionav data och datorprogram
+23100,Industri förstenkolsprodukter
+23200,Petroleumraffinaderier
+23300,Kärnbränsleindustri
+24110,Industri för industrigaser
+24120,Industri för färgämnen
+24130,Industri för andraoorganiska baskemikalier
+24140,Industri för andraorganiska baskemikalier
+24150,Industri för gödselmedeloch kväveprodukter
+24160,Basplastindustri
+24170,Industri för syntetisktbasgummi
+24200,Ind f bekämpningsmedel o alantbrukskemiska produkter
+24300,Färgindustri
+24410,Industri för farmaceutiskabasprodukter
+24420,Läkemedelsindustri
+24510,Tvättmedelsindustri
+24520,Parfym- och toalett-artikelsindustri
+24610,Sprängämnesindustri
+24620,Industri för lim ochgelatin
+24630,Industri för eteriskaoljor
+24640,Industri för fotokemiskaprodukter
+24650,Industri förinspelningsmedier
+24660,Annan kemisk industri utomkonstfiberindustri
+24700,Konstfiberindustri
+25110,Industri för däck ochslangar
+25120,Regummeringsindustri
+25130,Annan gummivaruindustri
+25210,Industri förplasthalvfabrikat
+25220,Plastförpackningsindustri
+25230,Byggplastvaruindustri
+25240,Annan plastvaruindustri
+26110,Planglasverk
+26120,Industri för bearbetatplanglas
+26131,Industri för buteljer ochglasförpackningar
+26132,Glasbruk
+26140,Glasfiberindustri
+26150,Annan glasvaruindustri
+26210,Ind för keramiska hushålls-och prydnadsartiklar
+26220,Industri för keramiskasanitetsartiklar
+26230,Industri för keramiskaisolatorer o.d.
+26240,Ind för andra tekniskakeramiska produkter
+26250,"Ind för andra ej eldfastakeramiska prod, ej f byggn"
+26260,Industri för eldfastakeramiska produkter
+26300,Industri för keramiskagolv- och väggplattor
+26400,"Ind för murtegel,takpannoro andra byggvaror av tegel"
+26510,Cementindustri
+26520,Kalkbruk
+26530,Gipsindustri
+26611,Lättbetongindustri
+26619,Övrig industri förbyggnadsbetongvaror
+26620,Industri för byggvaror avgips
+26630,Industri förfabriksblandad betong
+26640,Murbruksindustri
+26650,Industri förfibercementvaror
+26660,"Annan betong-, cement- ochgipsvaruindustri"
+26701,Industri förbyggnadsstenvaror
+26709,Övrig stenvaruindustri
+26810,Slipmedelsindustri
+26821,Sten- ochmineralullsindustri
+26829,Diverse övrig ind för icke-metalliska mineraliska prod
+27100,Järn- och stålverk
+27210,Industri för gjutjärnsrör
+27221,Industri för icke-sömlösastålrör
+27222,Industri för sömlösastålrör
+27310,Kalldrageri för stålstång
+27320,Kallvalsverk för stålband
+27330,Industri för kallformningav stål
+27340,Dragerier för ståltråd
+27350,"Ind f övr prim.bearb järn ostål;prod ferroleg,ej EKSG"
+27410,Ädelmetallverk
+27420,Aluminiumverk
+27430,"Metallverk för bly, zinkoch tenn"
+27440,Kopparverk
+27450,Andra metallverk
+27510,Järngjuterier
+27520,Stålgjuterier
+27530,Lättmetallgjuterier
+27540,Andra metallgjuterier
+28110,Industri för metallstommaroch delar därav
+28120,Industri förbyggnadselement av metall
+28210,"Ind f cist, tankar, karo a behållare av metall"
+28220,Ind för radiatorer ochpannor f centraluppvärmning
+28300,Ind för ånggeneratorer
+28400,"Ind f smidn,pressn,prägl ovalsn metall;pulvermet.urgi"
+28510,Industri för beläggningoch överdragning av metall
+28520,Verkstäder förmetallegoarbeten
+28610,Industri för bestick
+28621,Industri för formverktyg
+28622,Industri för skärverktyg
+28629,Industri för övrigaverktyg och redskap
+28630,Industri för lås ochgångjärn
+28710,Industri för stålfat o.d.behållare
+28720,Industri förlättmetallförpackningar
+28730,Industri för metalltrådvara
+28740,"Ind för nitar, skruvar,kedjor och fjädrar"
+28751,"Ind f diskbänkar,sanitets-gods av metall f byggändam"
+28759,Diverse övrigmetallvaruindustri
+29110,Ind för motorer o turbinerutom f luftfartyg o fordon
+29120,Industri för pumpar ochkompressorer
+29130,Industri för kranar ochventiler
+29140,"Ind för lager,kugghjul o adelar för kraftöverföring"
+29210,Industri för ugnar ochbrännare
+29220,Industri för lyft- ochgodshanteringsanordningar
+29230,"Ind för maskin o apparat fkyla o ventilat, ej hushåll"
+29240,Övr industri för maskinerför allmänt ändamål
+29310,Traktorindustri
+29320,Industri för andra jord-och skogsbruksmaskiner
+29401,Industri förträbearbetningsmaskiner
+29402,Industri för svets- ochlödningsmaskiner
+29409,Industri för övrigaverktygsmaskiner
+29510,Industri för maskiner förmetallurgi
+29520,"Ind f gruv-,bergbrytnings-och byggmaskiner"
+29530,"Ind f maskiner f framst avlivsmedel,dryck,tobaksvaror"
+29540,"Ind f maskiner för prod avtextil-,beklädnads-,läderv"
+29550,"Ind f maskiner för prod avmassa, papper och papp"
+29561,Industri för plast- ochgummibearbetningsmaskiner
+29569,Diverse övrig industri förspecialmaskiner
+29600,Vapen- och ammunitions-industri
+29711,"Ind för kyl- och frysskåp,tvättmaskiner o a vitvaror"
+29719,Ind för övr elektriska hus-hållsmaskiner o -apparater
+29720,Ind f icke-elektriska hus-hållsmaskiner o -apparater
+30010,Kontorsmaskinindustri
+30020,Ind för datorer och annaninformationsbeh.utrustning
+31100,"Ind f elmotor, generatoroch transformatorer"
+31200,Ind för eldistributions-och elkontrollapparater
+31300,Industri för elektrisktråd och kabel
+31400,Batteri- ochackumulatorindustri
+31501,Belysningsarmaturindustri
+31502,Glödlamps- ochlysrörsindustri
+31610,Ind för övrig elapparaturför motorer och fordon
+31620,Diverse övrigelektroindustri
+32100,Industri för elektroniskakomponenter
+32200,"Ind f radio- o TV-sändare,trådtelefoni o telegrafiapp"
+32300,"Ind f radio- o TV-mottag,app f ljud- o videosignaler"
+33101,Industri för medicinskutrustning och instrument
+33102,Tandteknikerlaboratorier
+33200,"Ind f instr, app för mätn,kontr, provn,ej processtyrn"
+33300,Ind för instr för styrningav industriella processer
+33400,Industri för optiskainstrument o fotoutrustning
+33500,Urindustri
+34100,Motorfordonsindustri
+34200,"Ind f karosseri för motor-fordon;släpford,påhängsvagn"
+34300,Ind f delar och tillbehörtill motorfordon o motorer
+35110,Skeppsvarv
+35120,Fritidsbåtbyggerier
+35200,Rälsfordonsindustri
+35300,Flygplansindustri
+35410,Motorcykelindustri
+35420,Cykelindustri
+35430,Invalidfordonsindustri
+35500,Övrig transportmedels-industri
+36110,Industri för sittmöbleroch säten
+36120,Annan kontors- ochbutiksmöbelindustri
+36130,Annan köksmöbelindustri
+36140,Annan möbelindustri
+36150,Madrassindustri
+36210,Mynt- och medaljindustri
+36220,Ind för smycken och andraguld- och silversmedsvaror
+36300,Musikinstrumentindustri
+36400,Sportvaruindustri
+36500,Industri för spel ochleksaker
+36610,Bijouteriindustri
+36620,Borstbinderier
+36630,Diverse annantillverkningsindustri
+37100,Ind f återvinning av skrotoch avfall av metall
+37200,Ind f återvinning av skrotoch avfall av icke-metall
+40100,Elverk
+40200,Gasverk; distr av gas-formiga bränslen via rörnät
+40300,Värmeverk m.m.
+41000,Vattenverk
+45110,Entreprenörer för rivningav hus och markarbeten
+45120,Entreprenörer förmarkundersökning
+45211,Husbyggnadsentreprenörer
+45212,Entreprenörer för andrabyggnadsverk
+45221,Byggnadsplåtslagerier
+45229,Övriga entreprenörer förtakarbeten
+45230,Väg- o markanläggnings-entreprenörer
+45240,Vattenbyggnads-entreprenörer
+45250,Andra bygg- ochanläggningsentreprenörer
+45310,Elinstallationsfirmor
+45320,Isoleringsfirmor
+45331,Rörfirmor
+45332,Ventilationsfirmor
+45333,Kyl- och frys-installationsfirmor
+45339,Övriga VVS-firmor
+45340,Andra bygginstallations-firmor
+45410,"Firmor för puts-, fasad-och stuckatörsarbeten"
+45420,Firmor för byggnads-snickeriarbeten
+45430,Golv- ochväggbeläggningsfirmor
+45441,Målerier
+45442,Glasmästerier
+45450,Andra firmor för slut-behandling av byggnader
+45500,Uthyrningsfirmor för bygg-o anläggn.maskin med förare
+50101,"Handel med lastbilar,bussar och specialbilar"
+50102,Handel med personbilar
+50103,Handel med husvagnar ochhusbilar
+50201,"Bilserviceverkstäder,ej specialiserade"
+50202,Bilplåt- ochbillackeringsverkstäder
+50203,Bilel- ochbilelektronikverkstäder
+50204,Däckserviceverkstäder
+50301,"Partih m reservd o tillbehtill motorf, ej motorcyklar"
+50302,"Detaljh m reservd o tillbehtill motorf, ej motorcyklar"
+50400,Motorcykelhandel inklreparationsverkstäder
+50500,Bensinstationer
+51110,"Agenturh m jordbr.råvaror,djur,text.råvar o -halvfabr"
+51120,"Agenturh m bränsle, malm,metaller o ind.kemikalier"
+51130,Agenturhandel med virkeoch byggmaterial
+51141,"Agenturh m maskin,ind.utr,fartyg etc, ej datorer m.m."
+51142,Agenturhandel medkontorsutrustning o datorer
+51150,"Agenturh m möbler,hushålls-och järnhandelsvaror"
+51160,"Agenturhandel m textilier,kläder, skodon o lädervaror"
+51170,Agenturhandel med livsmedeldrycker och tobak
+51180,Agenturhandel med annatspecialsortiment
+51190,Agenturhandel med blandatsortiment
+51210,"Partihandel med spannmål,utsäde och djurfoder"
+51220,Partihandel med blommor ochväxter
+51230,Partihandel med levandedjur
+51240,"Partihandel med hudar,skinn och läder"
+51250,Partihandel med råtobak
+51310,Partihandel med frukt ochgrönsaker
+51320,Partihandel med kött ochköttvaror
+51330,"Partih med mejeriprodukter,ägg, matolja och matfett"
+51340,Partih med alkoholhaltigaoch andra drycker
+51350,Partihandel med tobak
+51360,"Partihandel med socker,choklad o sockerkonfektyr"
+51370,"Partihandel med kaffe, te,kakao och kryddor"
+51380,"Partih m andra livsmedel,bl.a. fisk,skal- o blötdjur"
+51390,"Icke spec partihandel medlivsmedel, drycker o tobak"
+51410,Partihandel med textilier
+51420,Partihandel med kläder ochskodon
+51431,Partih med hushållsmaskineroch -apparater
+51432,Partihandel med radio- ochTV-apparater
+51433,Partihandel med fonogram ovideokassetter
+51434,Partihandel med elartiklar
+51440,"Partih med glas och porslintapeter, rengöringsmedel"
+51450,Partihandel med parfym ochkosmetika
+51460,Partihandel med medicinskutrustning och apoteksvaror
+51471,Partihandel med möbler ochinredningsvaror
+51472,Partihandel med sport- ochfritidsartiklar
+51473,Partihandel medkontorsförbrukningsvaror
+51479,Partihandel med övrigahushållsvaror
+51510,Partihandel med bränslen
+51520,Partihandel med metalleroch metallmalmer
+51530,"Partih med virke, andrabyggmaterial o sanitetsgods"
+51541,Partihandel medjärnhandelsvaror
+51542,Partihandel med VVS-armatur
+51550,Partihandel med kemiskaprodukter
+51561,Partihandel medindustriförnödenheter
+51562,Partihandel med emballage
+51569,Partihandel med övrigainsatsvaror
+51570,"Partihandel med avfalls-produkter, skrothandel"
+51610,Partihandel medverktygsmaskiner
+51620,Partihandel med bygg- ochanläggningsmaskiner
+51630,"Partihandel med textil-,sy- och stickmaskiner"
+51640,Partih med kontorsmaskineroch kontorsutrustning
+51651,Partihandel med mät- ochprecisionsinstrument
+51652,Partih med datoriseradmaterialhanteringsutrustn
+51653,Partihandel m teleprodukteroch elektronikkomponenter
+51659,"Partih m övriga maskiner findustri, handel o sjöfart"
+51660,Partih m maskiner o verktygf jordbruk inkl traktorer
+51700,Övrig partihandel
+52111,"Varuhus och stormarknader,mest livsm, drycker o tobak"
+52112,Livsmedelsbutiker medbrett sortiment
+52121,Andra varuhus ochstormarknader
+52129,Övriga butiker medbrett sortiment
+52210,Frukt- och grönsaksaffärer
+52220,Kött- ochcharkuteriaffärer
+52230,Fiskaffärer
+52241,Brödbutiker
+52242,Konfektyrbutiker
+52250,Systembutiker
+52260,Tobaksaffärer
+52271,Hälsokostbutiker
+52279,Övriga specialbutiker medlivsmedel
+52310,Apotek
+52320,Sjukvårdsbutiker
+52330,Parfymaffärer
+52410,"Garn-, tyg- ochsybehörsaffärer"
+52421,"Affärer för herr-, dam-och barnkläder, blandat"
+52422,Herrklädesaffärer
+52423,Damklädesaffärer
+52424,Barnklädesaffärer
+52425,Pälsaffärer
+52431,Skoaffärer
+52432,Väskaffärer
+52441,Möbel- och mattaffärer
+52442,Hemtextilbutiker
+52443,Bosättningsaffärer
+52444,Elaffärer
+52451,Butiker för vitvaror ochandra hushållsmaskiner
+52452,Radio- och TV-affärer
+52453,Skiv- och videobutiker
+52454,Musikhandel
+52461,"Järn-, bygg- och VVS-varuhandel"
+52462,Färghandel
+52471,Bok- och pappershandel
+52472,Tidningshandel
+52481,Optiker
+52482,Fotoaffärer
+52483,Uraffärer
+52484,Guldsmedsaffärer
+52485,Sportaffärer
+52486,Leksaksaffärer
+52487,Blomster- ochträdgårdsvaruhandel
+52488,Zooaffärer
+52491,Konsthandel och gallerier
+52492,Mynt- och frimärksaffärer
+52493,Datorbutiker
+52494,Telebutiker
+52495,Tapet- ochgolvbeläggningshandel
+52496,Båt- ochbåttillbehörshandel
+52499,Övriga specialbutiker
+52501,Antikvariat ochantikvitetsaffärer
+52509,Butiker med övrigabegagnade varor
+52611,"Postorderhandel, brettsortiment"
+52612,Postorderhandel medtextilier och konfektion
+52613,Postorderhandel med sport-och fritidsutrustning
+52614,Postorderhandel medmediavaror; bokklubbar
+52615,Postorderhandel medbosättningsvaror
+52619,Postorderhandel med övrigavaror
+52621,Torg- och marknadshandelmed livsmedel
+52629,Torg- och marknadshandelmed övriga varor
+52631,Provisionshandel
+52632,Ambulerande och tillfällighandel med livsmedel
+52633,Ambulerande och tillfällighandel med övriga varor
+52639,"Övrig detaljhandel, ej ibutik"
+52710,"Skomakerier,klackbarer m.m."
+52720,Reparationsverkstäder förelektriska hushållsartiklar
+52730,Reparationsverkstäder förur och guldsmedsvaror
+52740,Andra rep.verkst f hus-hållsartiklar o personl art
+55111,Hotell med restaurang utomkonferensanläggningar
+55112,Konferensanläggningar
+55120,Hotell utan restaurang
+55210,Vandrarhem m.m.
+55220,Campingplatser m.m.
+55230,Stugbyar m.m.
+55300,Restauranger
+55400,Barer och pubar
+55510,Personalmatsalar
+55521,Cateringföretag förtransportsektorn
+55522,Centralkök för sjukhus
+55523,"Centralkök för skolor,omsorgs- o a institutioner"
+55529,Övriga cateringföretag
+60100,Järnvägsbolag
+60211,Kollektivtrafikföretag
+60212,Linjebussföretag
+60220,Taxiföretag
+60230,Charterbussföretag m.m.
+60240,Åkerier
+60300,Rörtransportföretag
+61101,Rederier för färjtrafiköver hav
+61102,Rederier för övrig havs-och kustsjöfart
+61200,Rederier för sjöfart påinre vattenvägar
+62100,Linjeflygbolag
+62200,Charter- och taxiflygbolag
+62300,Rymdfartsbolag
+63110,Godsterminaler
+63120,Centrala varulager ochmagasin
+63210,Övriga serviceföretag tilllandtransport
+63220,Hamnföretag o a service-företag till sjöfart
+63230,Flygplatser o a service-företag till luftfart
+63301,Researrangörer
+63302,Resebyråer
+63303,Turistbyråer
+63400,"Speditörer, lastbils-centraler, skeppsmäklare"
+64110,Postverket
+64120,"Budbils-, kurir- och andrapostföretag"
+64201,Nätdriftsstationer
+64202,Radiostationer
+64203,Kabel-TV-företag
+65110,Riksbanken
+65120,"Affärs-, spar- ochföreningsbanker"
+65210,Finansiella leasingbolag
+65220,Andra finansiella bolag
+65231,Investmentbolag
+65232,Värdepappersfonder
+66011,Fondförsäkringsbolag
+66012,Övriga livförsäkringsbolag
+66020,"Pensionsfonder,försäkringsföreningar"
+66030,Skadeförsäkringsbolag
+67110,Adm serviceföretag tillfinansförmedling
+67120,Fondkommissionärer m.fl.
+67130,Andra serviceföretag tillfinansförmedling
+67201,Försäkringsmäklare
+67202,Övr serviceföretag t för-säkr o pensionsfondsverks
+70110,Markexploatörer
+70120,Handel med egnafastigheter
+70201,"Fastighetsbolag, bostäder"
+70202,"Fastighetsbolag,industrilokaler"
+70203,"Fastighetsbolag, andralokaler"
+70204,Bostadsrättsföreningar
+70209,Övriga fastighetsbolag
+70310,Fastighetsmäklare
+70321,Rikskooperativafastighetsförvaltare
+70329,Övriga fastighets-förvaltare på uppdrag
+71100,Biluthyrare
+71210,Uthyrare av andralandtransportmedel
+71220,Fartygsuthyrare
+71230,Flygplansuthyrare
+71310,Uthyrare av jordbruks-maskiner o jordbruksredskap
+71320,Uthyrare av bygg- ochanläggningsmaskiner
+71330,Uthyr av kontorsmaskiner okontorsutr inkl datorer
+71340,Andra maskinuthyrare
+71401,Videofilmuthyrare
+71402,Uthyrare av andra varor fpersonligt och hushållsbruk
+72100,Maskinvarukonsulter
+72201,Datakonsulter
+72202,Programvaruproducenter
+72300,Dataservicebyråer
+72400,Databasvärdar ochdatabasförmedlare
+72500,Servicefirmor för datoreroch kontorsmaskiner
+72600,Övriga dataföretag
+73101,Naturvetenskapliga FoU-institutioner
+73102,Tekniska FoU-institutioner
+73103,Medicinska FoU-institutioner
+73104,LantbruksvetenskapligaFoU-institutioner
+73105,Tvärvetenskapl FoU-inst mtyngdp nat.vet o teknik
+73201,Samhällsvetenskapliga FoU-institutioner
+73202,Humanistiska FoU-institutioner
+73203,Tvärvetenskapl FoU-inst mtyngdp sam.vet o humaniora
+74111,Advokatbyråer m.m.
+74112,Patentbyråer m.m.
+74120,"Bokföringsbyråer,revisionsbyråer m.m."
+74130,Marknads- o opinions-undersökningsbyråer
+74140,"Konsultbyråer avs företagsorganisation, informat m.m."
+74150,Holdingbolag
+74201,Arkitektkontor
+74202,"Byggkonsultbyråer,tekniska konsultbyråer"
+74300,Tekniska provnings- ochanalysföretag
+74401,Reklambyråer
+74402,Annonsförmedlingsbyråer
+74403,Direktreklamföretag
+74409,Övriga marknadsförings-företag
+74500,Arbetsförmedlingar ochrekryteringsföretag
+74600,"Företag f bevakning o säker-hetstjänst, detektivbyråer"
+74701,Städföretag
+74702,Sanerings- ochdesinfektionsföretag
+74703,Skorstensfejare
+74811,Porträttfotoateljéer
+74812,Reklamfotoateljéer
+74813,Press- och övrigafotografer
+74814,Fotolaboratorier
+74820,Förpackningsfirmor
+74830,Kontorsservice- ochöversättningsbyråer
+74841,Byråer för grafiskformgivning och service
+74842,Andra formgivare
+74843,Inkasso- ochkreditkontrollbyråer
+74844,"Mäss-, kongress- ochdagkonferensarrangörer"
+74849,Diverse övrigaföretagsservicefirmor
+75111,"Stats- o kommunledande,lagstift o normerande organ"
+75112,"Inspekterande, kontroll otillståndsgiv myndigheter"
+75113,Skatteförvaltningen ochkronofogdemyndigheter
+75114,Informationsverk
+75121,Myndigheter som admgrundskola o gymnasieskola
+75122,Myndigheter som admhögskola och forskning
+75123,Myndigheter som adm hälso-och sjukvård
+75124,Myndigheter som adm socialverksamhet
+75125,"Myndigheter som admkultur, miljö, boende m.m."
+75131,Myndigheter som adminfrastrukturprogram
+75132,"Myndigheter som admjordbruk,skogsbruk o fiske"
+75133,Myndigheter som admarbetsmarknadsprogram
+75134,Myndigheter som adm andranäringslivsprogram
+75140,Stödmyndigheter tilloffentlig förvaltning
+75211,Myndigheter som handläggerutrikes ärenden
+75212,Myndigheter som handläggerbiståndsverksamhet
+75221,Militära operativaledningsmyndigheter
+75222,Armén
+75223,Marinen
+75224,Flygvapnet
+75225,Centrala militäramyndigheter
+75226,Civila försvaret ochfrivilligförsvaret
+75231,Åklagarväsendet
+75232,Domstolar
+75233,Kriminalvårdsanstalter
+75240,Polisen
+75250,Brandförsvaret
+75300,Försäkringskassorna
+80100,Grundskolan
+80210,Gymnasieskolansstudieförberedande linjer
+80220,Gymnasieskolansyrkesinriktade linjer m.m.
+80301,Högskolor o institutionerm utbildn f tekniska yrken
+80302,"Högsk o inst med utbildn fadm, ekon o sociala yrken"
+80303,Högskolor o institutionerm utb f undervisningsyrken
+80304,Högskolor o institutionermed utbildning f vårdyrken
+80305,Högskolor o inst med utb fkultur- o informationsyrken
+80309,Övriga högskolor
+80410,Trafikskolor
+80421,Kommunala vuxenskolor o.d.
+80422,AMU-center
+80423,Folkhögskolor
+80424,Studieförbunden o frivillig-
+80425,Personalutbildningsföretag
+80426,Kommunala musikskolor
+80427,Utbildningsserviceföretag
+80429,Övriga utbildningsinstitut
+85110,"Slutenvårdskliniker,sjukhem"
+85120,Hälso- ochsjukvårdsmottagningar
+85130,Tandläkarmottagningar
+85140,Andra enheter för hälso-och sjukvård
+85200,Veterinärkliniker
+85311,"Servicehus, service-lägenheter o ålderdomshem"
+85312,Gruppbostäder för psykisktutvecklingsstörda
+85313,Hem för vård eller boende
+85314,Flyktingförläggningar
+85315,Inackorderingshem
+85321,Förskolor
+85322,"Fritidshem, familje-daghem o.d."
+85323,"Hemtjänst, dagcentraler"
+85324,Socialkontor
+85325,Humanitära hjälp-organisationer
+90001,Reningsverk
+90002,"Anläggn f insaml, sort ochomlastn av ej miljöf avfall"
+90003,Anläggn f kompostering ochrötning av ej miljöf avfall
+90004,Anläggn för deponering avej miljöfarligt avfall
+90005,"Anl f mottagn, omlastn ochmellanlagr av miljöf avfall"
+90006,Anl f behandl o slutförvarav miljöfarligt avfall
+90007,Övriga avfallsanläggningar
+90008,"Gatu- o renhållningsverk,slamsugningsföretag m.m."
+91111,Branschorganisationer
+91112,Arbetsgivarorganisationer
+91120,Yrkesorganisationer
+91200,Arbetstagarorganisationer
+91310,Religiösa samfund
+91320,Politiska partier ochorganisationer
+91330,Andra intresse-organisationer
+92110,Film- och video-produktionsbolag
+92120,Film- och video-distributionsbolag
+92130,Biografer
+92200,Radio- och TV-bolag
+92310,Artister och producenterav konstnärliga etc alster
+92320,Teater- ochkonserthusföretag o.d.
+92330,Nöjesparker
+92340,Dans- och andranöjesarrangörer
+92400,Nyhets- och bildbyråer
+92511,Folkbibliotek
+92512,Forsknings- ochspecialbibliotek
+92513,Arkiv
+92520,Museer ochkulturminnesinstitutioner
+92530,"Botaniska trädgårdar,djurparker o naturreservat"
+92611,Skidsportanläggningar
+92612,"Golfbanor, golfklubbar"
+92613,Motorbanor
+92614,Trav- och galoppbanor
+92615,"Sporthallar,idrottsplatsero andra sportanläggningar"
+92621,Idrottsföreningar ochprofessionella idrottare
+92622,Tävlingsstall
+92623,"Sportskolor, båtklubbar m.m."
+92624,Sportarrangörer
+92625,Sportadministratörer
+92710,Spel- och vadhållnings-företag inkl ombud
+92721,Ridskolor ochuthyrningsstall
+92722,Förvaltare avsportfiskevatten
+92729,Diverse övriga arrangörerav rekreationsverksamhet
+93011,Industri- ochinstitutionstvätterier
+93012,Konsumenttvätterier
+93021,Frisörsalonger
+93022,Skönhetssalonger
+93030,Begravningsbyråer m.m.
+93040,Inrättningar förkroppsvård
+93050,Övriga serviceföretag
+95000,Förvärvsarbete i hushåll
+99000,"Internat organisationer,utländska ambassader o.d."
