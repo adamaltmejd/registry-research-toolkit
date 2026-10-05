@@ -96,6 +96,13 @@ when writing, changing or deleting a test.
   models, HTTP responses, `project_data.json` validation results, order-manifest bytes,
   curation-TOML load or located failure, the FQID and period grammars. Anything else is
   reached through one of those, not tested on its own.
+- **Conformance uses public contracts.** Cases may exercise CLI JSON, HTTP responses,
+  order manifests, or documented public library return-model contracts. A public
+  function name alone does not establish a contract: assert observable domain results or
+  located errors, never object internals, call graphs or query implementation. Do not
+  add product adapters solely to expose a test seam. Keep requests and expected results
+  readable as data; Python-specific operation names can be revised in a separate
+  portability pass after a byte-identical relocation.
 - **No private-name imports in tests** (`from x import _helper`) and no patching of
   internal modules. Mock only process boundaries: network, clock, filesystem,
   subprocess.
@@ -202,6 +209,11 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
 - `uvx --from panache-cli==3.9.0 panache format --check .` — markdown format check
   (config in `.panache.toml`; drop `--check` to fix)
 - `uvx --from panache-cli==3.9.0 panache lint .` — markdown lint
+- `uv run python -m pytest conformance -q` — source-built conformance corpus and
+  session-built catalog/steward artifact checks
+- `uv run python -m pytest conformance --run-release --artifact-dir=/path/to/catalog -q`
+  — conformance checks on an admitted real artifact; both flags required, bad artifacts
+  fail admission (fixture-bound goldens still use synthetic sources)
 - `uv run python -m pytest` — all tests (pytest discovers per-package via root pyproject
   `testpaths`)
 - `uv run python -m pytest reg_meta/` — narrow to a single package

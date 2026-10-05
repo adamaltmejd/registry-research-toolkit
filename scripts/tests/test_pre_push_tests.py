@@ -95,7 +95,7 @@ def test_full_gate_preserves_workspace_flags_and_exit_status(
         calls.append(command)
         return 7
 
-    monkeypatch.setattr(push.subprocess, "call", run)
+    monkeypatch.setattr(subprocess, "call", run)
     assert push.main() == 7
     assert calls == [
         (

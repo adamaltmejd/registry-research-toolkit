@@ -1,0 +1,22 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "Zulu"
+edition = { from = 2018, to = 2019 }
+[[table.column]]
+name = "Observed"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/value"
+representation = "Value"
+
+[[table]]
+id = "Alpha"
+edition = [2020, 2022]
+[[table.column]]
+name = "Observed"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/value"
+representation = "Value"

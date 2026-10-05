@@ -11,9 +11,12 @@ file) so the pattern can't drift.
 from __future__ import annotations
 
 import importlib.util
+import subprocess
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
+
+import pytest
 
 if TYPE_CHECKING:
     from types import ModuleType
@@ -33,3 +36,22 @@ def load_scripts_module(name: str) -> ModuleType:
     sys.modules[name] = module
     spec.loader.exec_module(module)
     return module
+
+
+@pytest.fixture(scope="session")
+def python_test_files() -> list[Path]:
+    """Discover tracked and unignored Python test/support files once per scan."""
+    root = _SCRIPTS.parent
+    names = subprocess.check_output(
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--", "*.py"],
+        cwd=root,
+        text=True,
+    ).splitlines()
+    return sorted(
+        {
+            root / name
+            for name in names
+            if ("tests" in Path(name).parts or "conformance" in Path(name).parts)
+            and (root / name).is_file()
+        }
+    )

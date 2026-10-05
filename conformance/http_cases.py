@@ -11,7 +11,6 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
-from webapp_fixture_support import fixture_db
 
 import reg_webapp
 
@@ -36,15 +35,18 @@ def select_json(value, path):
 
 
 def assert_http_case(case, tmp_path, monkeypatch):
+    from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
+
     request = json.loads((case / "request.json").read_text())
     expected = json.loads((case / "expected.json").read_text())
     kind = request.get("kind", "steward")
     fixture = request.get("fixture", "compiled")
     source = fixture if fixture.startswith("reader") else CASES / "fixtures" / fixture
-    path = fixture_db.build_reader_fixture_db(
+    path = build_reader_artifact(
         tmp_path / "artifact",
-        kind=kind,
-        fixture=source,
+        source,
+        kind,
+        identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     )
     monkeypatch.setenv("REG_META_DB", str(path.parent))
     monkeypatch.setenv(
@@ -75,7 +77,9 @@ def assert_http_case(case, tmp_path, monkeypatch):
                 "REG_META_DB": str(path.parent),
                 "REG_WEBAPP_STEWARD": "swecov" if kind == "steward" else "global",
                 "PYTHONPATH": os.pathsep.join((str(runtime), str(CASES.parent))),
-                "REG_WEBAPP_STEWARDS_DIR": str(CASES.parents[2] / "stewards"),
+                "REG_WEBAPP_STEWARDS_DIR": str(
+                    CASES.parents[1] / "reg_webapp/stewards"
+                ),
             },
         )
         assert completed.returncode == 0, completed.stderr

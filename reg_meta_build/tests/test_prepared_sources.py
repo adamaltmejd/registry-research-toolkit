@@ -6,6 +6,7 @@ import hashlib
 import json
 import sqlite3
 import subprocess
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
@@ -39,7 +40,6 @@ from reg_meta_build.source_support import SourceSupportBindings, SourceSupportJo
 from reg_meta_build import _accepted_prepared, prepared_sources
 
 if TYPE_CHECKING:
-    from pathlib import Path
     from typing import Literal
 
 
@@ -879,7 +879,7 @@ def test_existing_candidate_is_immutable_and_atomic_failure_leaves_nothing(
     def fail_replace(*_args: object, **_kwargs: object) -> None:
         raise OSError("injected replace failure")
 
-    monkeypatch.setattr(type(output), "replace", fail_replace)
+    monkeypatch.setattr(Path, "replace", fail_replace)
     with pytest.raises(OSError, match="injected replace failure"):
         _prepare(tmp_path / "new")
     assert sorted(path.name for path in tmp_path.iterdir()) == ["existing"]

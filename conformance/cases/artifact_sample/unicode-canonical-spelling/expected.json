@@ -1,0 +1,21 @@
+{
+  "entries": [
+    {
+      "source": "Sample",
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "variant": "annual",
+        "variable": "scb/example/value",
+        "representation": "ålder"
+      },
+      "requested_period": "2018-01-01",
+      "physical": {
+        "table": "UnicodeSeries",
+        "column": "Observed",
+        "edition": "2018..2019"
+      }
+    }
+  ],
+  "clips": []
+}

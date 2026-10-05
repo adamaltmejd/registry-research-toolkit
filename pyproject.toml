@@ -28,7 +28,9 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
+pythonpath = ["conformance", "reg_meta/tests"]
 testpaths = [
+  "conformance",
   "reg_meta",
   "reg_meta_build",
   "reg_schema",
@@ -92,7 +94,7 @@ combine-as-imports = true
 # JSON-shaped dicts (object-typed values, by design). None of these
 # categories are part of the shipped library surface, so exclude from
 # the type baseline.
-exclude = ["**/tests/**", "**/scripts/**", "scripts/**", "**/test_corpus/**"]
+exclude = ["**/tests/**", "**/scripts/**", "scripts/**", "**/test_corpus/**", "conformance/**"]
 
 [[tool.ty.overrides]]
 # The structural validator (see reg_schema/DESIGN.md → Structural rules and issue codes) narrows JSON-loaded values via

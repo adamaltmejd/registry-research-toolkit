@@ -3,8 +3,8 @@ name: Integration (Podman)
 # Server-side home for the release-asset-dependent tests. The container half
 # (reg_meta/tests/test_integration.py) installs reg_meta into a clean
 # python:3.14-slim container and exercises install → `reg-meta update`
-# (downloads the DB from GitHub Releases) → query; the host half is
-# reg_webapp's §12 inventory ↔ flavored-DB consistency gate. Both need a
+# (downloads the DB from GitHub Releases) → query; the host half is the
+# conformance artifact gate. These independent jobs need a
 # published release asset matching the current SCHEMA_VERSION, so this workflow
 # deliberately does NOT run on push/PR — a red X on unrelated work when a
 # release is merely owed would be noise. The package tests also run locally as a
@@ -39,13 +39,54 @@ jobs:
           sudo apt-get update
           sudo apt-get install --yes podman
           podman info
-      # The `-m "integration or release"` selection below includes reg_webapp's
-      # §12 inventory ↔ flavored-DB consistency gate
-      # (test_steward_swecov.py::test_every_inventory_mapping_resolves_against_the_flavored_db),
-      # whose fixture hard-FAILS unless REG_META_DB names the SWECOV-flavored DB
-      # — deliberately, because a skip would report the gate as clean without
-      # ever running it. So this job has to provision that asset for the
-      # selection to be runnable at all.
+      # Both opt-in flags: --run-integration (all container tests) and --run-release
+      # (the subset that needs a published release asset). Serial, NOT `-n auto`:
+      # the module-scoped image fixture builds the container once; xdist would
+      # rebuild it per worker. GITHUB_TOKEN authenticates the in-container
+      # `reg-meta update` GitHub API call (forwarded by the native runner) — the
+      # unauthenticated 60/hr-per-IP limit is easily exhausted from shared runner
+      # IPs. The separate conformance jobs select assets with --artifact-dir.
+      #
+      # `--install-mode registry` is explicit even though it is the module's
+      # default: this job is the post-publish check of the PUBLISHED consumer's
+      # install, so reg_schema must come from PyPI, never from the checkout.
+      #
+      # A failure during a release-owed window (main's SCHEMA_VERSION past the
+      # newest published asset) is expected and informative — a release-drift
+      # signal, not a code regression. The post-release call never hits this (the
+      # matching asset was just published).
+      - name: Run Podman integration + release tests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          uv run python -m pytest reg_meta/tests/test_integration.py \
+            --run-integration --run-release \
+            --install-mode registry -m "integration or release"
+
+  artifact-conformance:
+    name: Artifact conformance (${{ matrix.catalog }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    # Keep both artifact kinds and the native registry boundary independent:
+    # schema drift in one asset must not suppress the other gates.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - catalog: global
+            asset: reg_meta.db.zst
+          - catalog: swecov
+            asset: reg_meta_swecov.db.zst
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          version: "0.12.11"
+      - run: uv sync --frozen
+      # Tier 3 admits the downloaded artifact and its embedded import_manifest,
+      # never synthetic data. Each kind uses its own job and directory.
       #
       # It must come from the EXACT release under test: the reg_meta/v* release
       # that called this workflow (a `workflow_call` inherits the CALLER's
@@ -60,15 +101,15 @@ jobs:
       #
       # The SHA-256 digest GitHub records for the asset is verified BEFORE
       # decompression. A missing or duplicated asset, a malformed or mismatched
-      # digest, a schema-incompatible DB (`open_db` raises, exactly as boot
-      # would) and unresolved mappings all fail this job. There is deliberately
-      # no fallback to an older flavored asset, to the global DB or to synthetic
-      # data — each would turn the gate green against something the SWECOV
-      # deployment never serves.
-      - name: Provision the release's flavored SWECOV DB
-        id: swecov-db
+      # digest, a schema-incompatible DB, nonpublishable manifest or mismatched
+      # catalog selection all fail before conformance. There is deliberately
+      # no fallback to an older asset, another artifact kind or synthetic data.
+      - name: Provision the selected release DB
+        id: release-db
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ASSET: ${{ matrix.asset }}
+          CATALOG: ${{ matrix.catalog }}
           TRIGGER_TAG: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
         run: |
           set -euo pipefail
@@ -77,57 +118,44 @@ jobs:
             tag=$(gh release list --repo "$GITHUB_REPOSITORY" --limit 100 --exclude-drafts \
               --json tagName -q '[.[].tagName | select(startswith("reg_meta/v"))][0] // empty')
           fi
-          [ -n "$tag" ] || { echo "::error::no published reg_meta/v* release to take the SWECOV asset from"; exit 1; }
-          echo "SWECOV flavored DB source release: $tag"
+          [ -n "$tag" ] || { echo "::error::no published reg_meta/v* release to take the artifact from"; exit 1; }
+          echo "$CATALOG DB source release: $tag"
           digest=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets \
-            --jq '[.assets[] | select(.name == "reg_meta_swecov.db.zst") | .digest]
+            | jq -r --arg name "$ASSET" '[.assets[] | select(.name == $name) | .digest]
                   | if length == 1 then .[0] else "" end' | tr '[:upper:]' '[:lower:]')
           if ! printf '%s' "$digest" | grep -Eq '^sha256:[0-9a-f]{64}$'; then
-            echo "::error::release $tag has no single sha256-digested reg_meta_swecov.db.zst asset"
+            echo "::error::release $tag has no single sha256-digested $ASSET asset"
             exit 1
           fi
-          db_dir="$RUNNER_TEMP/swecov-db"
+          db_dir="$RUNNER_TEMP/$CATALOG-db"
           mkdir -p "$db_dir"
           gh release download "$tag" --repo "$GITHUB_REPOSITORY" \
-            --pattern reg_meta_swecov.db.zst --dir "$db_dir"
-          zst="$db_dir/reg_meta_swecov.db.zst"
+            --pattern "$ASSET" --dir "$db_dir"
+          zst="$db_dir/$ASSET"
           actual="sha256:$(sha256sum "$zst" | cut -d ' ' -f 1)"
           if [ "$actual" != "$digest" ]; then
-            echo "::error::reg_meta_swecov.db.zst digest mismatch: $actual != $digest"
+            echo "::error::$ASSET digest mismatch: $actual != $digest"
             exit 1
           fi
-          uv run python - "$zst" "$db_dir/reg_meta.db" <<'PY'
+          uv run python - "$zst" "$db_dir/reg_meta.db" "$CATALOG" <<'PY'
           import sys
           from pathlib import Path
 
           import zstandard
+          from reg_meta.db import open_db, validate_catalog_selection
 
           src, dest = (Path(arg) for arg in sys.argv[1:3])
           with src.open("rb") as fh, dest.open("wb") as out:
               zstandard.ZstdDecompressor().copy_stream(fh, out)
+          # Admit schema/publication identity and the exact selected kind before
+          # publishing the directory output. Current schema admission stays strict.
+          with open_db(dest) as conn:
+              validate_catalog_selection(conn, sys.argv[3])
           PY
           rm "$zst"
           echo "db_dir=$db_dir" >> "$GITHUB_OUTPUT"
-      # Both opt-in flags: --run-integration (all container tests) and --run-release
-      # (the subset that needs a published release asset). Serial, NOT `-n auto`:
-      # the module-scoped image fixture builds the container once; xdist would
-      # rebuild it per worker. GITHUB_TOKEN authenticates the in-container
-      # `reg-meta update` GitHub API call (forwarded by the native runner) — the
-      # unauthenticated 60/hr-per-IP limit is easily exhausted from shared runner
-      # IPs. REG_META_DB points the §12 gate at the flavored DB provisioned above.
-      #
-      # `--install-mode registry` is explicit even though it is the module's
-      # default: this job is the post-publish check of the PUBLISHED consumer's
-      # install, so reg_schema must come from PyPI, never from the checkout.
-      #
-      # A failure during a release-owed window (main's SCHEMA_VERSION past the
-      # newest published asset) is expected and informative — a release-drift
-      # signal, not a code regression. The post-release call never hits this (the
-      # matching asset was just published).
-      - name: Run Podman integration + release tests
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REG_META_DB: ${{ steps.swecov-db.outputs.db_dir }}
+      # Schema drift against a published asset is a release-drift failure.
+      - name: Run artifact conformance against the downloaded DB
         run: |
-          uv run python -m pytest --run-integration --run-release \
-            --install-mode registry -m "integration or release"
+          uv run python -m pytest conformance --run-release \
+            --artifact-dir="${{ steps.release-db.outputs.db_dir }}" -q

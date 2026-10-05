@@ -1,0 +1,23 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "AIndependent"
+edition = "_default"
+period_scope = "year_independent"
+[[table.column]]
+name = "Observed"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/value"
+representation = "Value"
+
+[[table]]
+id = "BInterval"
+edition = 2018
+[[table.column]]
+name = "Observed"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/value"
+representation = "Value"

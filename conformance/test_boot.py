@@ -8,9 +8,9 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
+from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
 from reg_meta.errors import RegMetaError
 from reg_webapp.app import create_app
-from webapp_fixture_support import fixture_db
 
 CASES = Path(__file__).parent / "cases/boot"
 
@@ -19,8 +19,11 @@ CASES = Path(__file__).parent / "cases/boot"
 def test_artifact_boot(case, tmp_path, monkeypatch):
     request = json.loads((case / "request.json").read_text())
     expected = json.loads((case / "expected.json").read_text())
-    path = fixture_db.build_reader_fixture_db(
-        tmp_path / "catalog", kind=request["kind"]
+    path = build_reader_artifact(
+        tmp_path / "catalog",
+        "reader",
+        request["kind"],
+        identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     )
     with sqlite3.connect(path) as conn:
         conn.executemany(
@@ -33,7 +36,7 @@ def test_artifact_boot(case, tmp_path, monkeypatch):
         stewards = tmp_path / "stewards"
         directory = stewards / "swecov"
         directory.mkdir(parents=True)
-        source = Path(__file__).parents[2] / "stewards/swecov/steward.toml"
+        source = Path(__file__).parents[1] / "reg_webapp/stewards/swecov/steward.toml"
         (directory / "steward.toml").write_bytes(source.read_bytes())
         (directory / "inventory.toml").write_text(
             "this is deliberately invalid TOML [[[\n"
