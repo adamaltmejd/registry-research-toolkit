@@ -2,8 +2,10 @@
 
 The case corpus has one home here. CLI JSON, public library return models, order
 manifests, HTTP responses, application boot and project validation are the boundaries.
-The library cases retain public contracts that have no equivalent adapter projection. No
-private product imports or internal patches are allowed.
+The library cases retain documented public contracts that have no equivalent adapter
+projection. Public naming alone is insufficient: cases compare domain outputs or located
+errors, not object internals or query implementation. Product adapters are not added
+solely for testing. No private product imports or internal patches are allowed.
 
 ```sh
 uv run python -m pytest conformance -q
@@ -72,3 +74,8 @@ Plan 02 manifests do not contain mapping, period or unmapped-reason totals. Comp
 of those relation counts to manifest fields cannot run until that contract exists.
 Accepted-private-input census and performance acceptance remain maintainer checks in
 plan 05. This suite makes no release or private-input acceptance claim.
+
+The inherited `catalog_method`/`method` request fields name Python APIs. A later
+portability pass can replace those with language-neutral domain operation names and
+explicit input/output contracts. That is a separate corpus content review; this move
+preserves every existing request and expected byte.

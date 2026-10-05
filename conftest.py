@@ -26,9 +26,9 @@ INSTALL_MODES = ("registry", "workspace")
 OPTIONAL_MARKERS: dict[str, str] = {
     "integration": "run native container integration tests",
     # Tests that need a PUBLISHED release asset: either downloaded from GitHub
-    # (a subset of the container integration tests) or already fetched and pointed
-    # at by the runner (the §12 inventory ↔ flavored-DB gate, which needs no
-    # container). Gated separately so the pre-push hook (which opts into
+    # (a subset of the container integration tests) or already fetched and selected
+    # with --artifact-dir for conformance checks (which need no container).
+    # Gated separately so the pre-push hook (which opts into
     # `integration` as a hard native container gate) does NOT block a push when
     # a release is merely owed — these belong in a post-release / scheduled CI job.
     "release": "run tests that need a published release asset",

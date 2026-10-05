@@ -312,11 +312,14 @@ return-model cases retain contracts that have no equivalent CLI or HTTP projecti
 
 Tiers 2 and 3 share `conformance/` at the repository root. Its readable case data moved
 byte-identically from the reader and backend suites; thin loaders execute CLI JSON,
-public library return models, order manifests and HTTP/boot/validation boundaries.
-Fixture-bound cases always use their named source-built synthetic artifacts, including
-in a tier 3 run. Artifact-parametrized checks default to session-built catalog/steward
-artifacts and use exactly `--artifact-dir` under tier 3. They derive expectations from
-artifact content or cross-adapter agreement, never real-identifier goldens.
+documented public library return models, order manifests and HTTP/boot/validation
+boundaries. Public naming alone is insufficient: cases assert domain outputs or located
+errors, not object internals or query implementation. Product adapters are not added
+solely for testing. Fixture-bound cases always use their named source-built synthetic
+artifacts, including in a tier 3 run. Artifact-parametrized checks default to
+session-built catalog/steward artifacts and use exactly `--artifact-dir` under tier 3.
+They derive expectations from artifact content or cross-adapter agreement, never
+real-identifier goldens.
 
 The sole volatility policy is `conformance/normalization.py`. Order comparisons remove
 only its five declared provenance fields and preserve key/list order; repeated runs also

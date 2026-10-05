@@ -3,7 +3,7 @@ name: Integration (Podman)
 # Server-side home for the release-asset-dependent tests. The container half
 # (reg_meta/tests/test_integration.py) installs reg_meta into a clean
 # python:3.14-slim container and exercises install → `reg-meta update`
-# (downloads the DB from GitHub Releases) → query; the host half is
+# (downloads the DB from GitHub Releases) → query; the host half is the
 # conformance artifact gate. Both need a
 # published release asset matching the current SCHEMA_VERSION, so this workflow
 # deliberately does NOT run on push/PR — a red X on unrelated work when a
@@ -118,7 +118,7 @@ jobs:
       # rebuild it per worker. GITHUB_TOKEN authenticates the in-container
       # `reg-meta update` GitHub API call (forwarded by the native runner) — the
       # unauthenticated 60/hr-per-IP limit is easily exhausted from shared runner
-      # IPs. REG_META_DB points the §12 gate at the flavored DB provisioned above.
+      # IPs. The separate conformance step selects the asset with --artifact-dir.
       #
       # `--install-mode registry` is explicit even though it is the module's
       # default: this job is the post-publish check of the PUBLISHED consumer's
