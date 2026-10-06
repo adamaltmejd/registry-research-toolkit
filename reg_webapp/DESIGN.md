@@ -2423,11 +2423,15 @@ never schema inheritance: each `Source` keeps its own explicit `period` in
 
 - **Where it lives: the existing `window` field, no schema change.**
   `ProjectData.window` (reg_schema `StudyWindow`, optional since #611) already persists
-  the window with the draft, so it survives download, open and the autosave. reg_schema
-  documents it as an authoring seed and no backend layer reads it — so the rules below
-  are SPA authoring rules, enforced where the window is authored. A CLI order for a
-  downloaded file is not gated by them; making them a contract rule would be a
-  reg_schema structural code and a `schema_version` change, not taken here.
+  the window with the draft, so it survives download, open and the autosave.
+- **The rules are SPA authoring rules; nothing past the SPA enforces them (decision
+  2026-10-07).** The window is an authoring default and every source carries its own
+  explicit period, so the period is the whole order request: neither `reg-meta order`
+  nor the HTTP `/api/project/order` endpoint reads `window`, and neither refuses a
+  project whose source is disjoint from it. The SPA's block is a gate on its own
+  download control, not a contract on the file. Enforcing it everywhere would make the
+  window a constraint on the order — a reg_schema structural rule and a `schema_version`
+  change — which is deliberately not taken.
 - **An add persists the full available intersection.** A catalog Add clips each picked
   column's delivery windows to the add window (the rail's window, or a subject page's
   own `?period`) and commits every surviving era (`windowsAddPeriod`), so an interrupted
@@ -2457,7 +2461,9 @@ never schema inheritance: each `Source` keeps its own explicit `period` in
   whose columns reach the window are rewritten, in one period-only `applyStagedDiff`; a
   source with no overlap keeps its period, and keeps blocking if it is disjoint. A draft
   that moves while the reads are out drops the plan rather than writing it onto a
-  project nobody looked at.
+  project nobody looked at. Once a plan has left nothing to change (a press that changed
+  nothing, or a rewrite that just landed), the action stays frozen (`aria-disabled`, so
+  focus stays put) until a source or the window moves.
 
 ## API surface
 

@@ -398,6 +398,11 @@ describe("common study window — project page", () => {
       { from: 2015, to: 2020 },
       { from: 2001, to: 2003 },
     ]);
+    // Nothing is left for a second press to change (RTB has no overlap), so the
+    // action is frozen rather than offered again.
+    await expect
+      .element(page.getByRole("button", { name: "Apply window overlap" }))
+      .toHaveAttribute("aria-disabled", "true");
     // RTB is still disjoint, so the order stays blocked.
     await projectStore.validate();
     await expect.element(orderButton()).toBeDisabled();

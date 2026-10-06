@@ -6,6 +6,7 @@ import {
   type SafeSource,
   type StudyWindow,
   safeSourcePeriod,
+  safeSourceSlots,
 } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import {
@@ -91,11 +92,24 @@ $effect(() => {
   outcome = null;
 });
 
+/** The sources and window the last plan found NOTHING more to change in — set by a
+ * press that changed nothing, and by an applied rewrite (which leaves every source
+ * that has an overlap holding exactly it). While the project still matches it, the
+ * action is frozen: a second press could only report "no period changed". Keyed on
+ * the content, so any edit to a source or a window move lifts it. */
+let settledKey = $state<string | null>(null);
+function contentKey(slots: readonly SafeSource[]): string {
+  return `${windowKey}|${JSON.stringify(slots)}`;
+}
+const nothingToApply = $derived(
+  settledKey !== null && settledKey === contentKey(sources),
+);
+
 /** Read the availability of every dated source's register, then plan. The draft
  * may move while the reads are out (an edit, a New, a window drag): the plan is
  * then for a project that no longer exists, so it is dropped rather than shown. */
 async function prepare(): Promise<void> {
-  if (checking || studyWindow === null) {
+  if (checking || nothingToApply || studyWindow === null) {
     return;
   }
   const window = studyWindow;
@@ -134,6 +148,7 @@ async function prepare(): Promise<void> {
     const plan = planWindowOverlap(sources, window, children);
     if (plan.changes.length === 0) {
       outcome = { kind: "unchanged", plan };
+      settledKey = contentKey(sources);
       return;
     }
     pendingFor = target;
@@ -163,6 +178,9 @@ function confirm(): void {
     })),
   });
   outcome = { kind: "applied", count: plan.changes.length, plan };
+  // The rewrite just landed, so the project now holds the plan's result: read it
+  // back through the same coercion the page hands this component.
+  settledKey = contentKey(safeSourceSlots(projectStore.draft?.sources));
 }
 
 /** The sources the plan left alone, and why: their columns are delivered in no year
@@ -191,12 +209,13 @@ function missNote(plan: OverlapPlan, window: StudyWindow): string {
         {#if summary}<span class="summary">{summary}</span>{/if}
       </p>
       {#if differing + disjoint > 0}
-        <!-- Never natively disabled while it checks (a disabled button drops keyboard
-             focus to the page top): `aria-disabled` freezes it and `prepare` ignores
-             a second press. -->
+        <!-- Never natively disabled (a disabled button drops keyboard focus to the
+             page top, and the dialog returns focus HERE): `aria-disabled` freezes it
+             while it checks, and once the last plan left nothing to change — the
+             status row below then says why — and `prepare` ignores the press. -->
         <Button
           size="sm"
-          aria-disabled={checking}
+          aria-disabled={checking || nothingToApply}
           aria-busy={checking ? "true" : undefined}
           onclick={() => void prepare()}
         >
