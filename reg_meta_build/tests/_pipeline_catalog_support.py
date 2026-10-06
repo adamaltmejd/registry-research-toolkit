@@ -5,7 +5,9 @@ from __future__ import annotations
 import gzip
 import json
 import sqlite3
+from contextlib import closing
 from dataclasses import dataclass
+from functools import cached_property
 from typing import TYPE_CHECKING
 
 import pytest
@@ -189,6 +191,56 @@ def catalog(tmp_path: Path, request) -> CatalogFixture:
                 encoding="utf-8",
             )
     return CatalogFixture(prepared, commit, manifest.sha256, curation)
+
+
+def prepare_accepted(tmp_path: Path, source: Path) -> tuple[Path, str, str]:
+    """Bundle, prepare and accept ``source``; return (prepared dir, commit, digest)."""
+    bundle = write_input_bundle(tmp_path / "inputs", source)
+    prepared = tmp_path / "prepared" / "catalog"
+    manifest = prepare_catalog_sources(bundle, prepared)
+    return prepared, accept_prepared(prepared), manifest.sha256
+
+
+def write_curation_tree(root: Path, files: dict[str, str]) -> Path:
+    """Write an authored curation tree; ``files`` maps root-relative paths to text."""
+    (root / "classifications").mkdir(parents=True)
+    for relative, text in files.items():
+        path = root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+    return root
+
+
+@dataclass(frozen=True)
+class BuiltCatalog:
+    """A finished build: its result dict, report ledger and SQLite artifact.
+
+    The one reader of a build's boundary outputs for the curation boundary cases.
+    """
+
+    result: dict
+    report: Path
+    db: Path
+
+    @cached_property
+    def events(self) -> list[dict]:
+        return report_events(self.report)
+
+    def issues(self, code: str | None = None) -> list[dict]:
+        """Every ledger issue, or those with ``code``, in ledger order."""
+        return [
+            e
+            for e in self.events
+            if e["kind"] == "issue" and (code is None or e["code"] == code)
+        ]
+
+    def errors(self) -> list[dict]:
+        """The error-severity ledger issues, in ledger order."""
+        return [issue for issue in self.issues() if issue["severity"] == "error"]
+
+    def rows(self, sql: str, *params) -> list[tuple]:
+        with closing(sqlite3.connect(self.db)) as conn:
+            return conn.execute(sql, params).fetchall()
 
 
 def report_events(report: Path) -> list[dict]:

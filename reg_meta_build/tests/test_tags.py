@@ -14,7 +14,6 @@ from typing import TYPE_CHECKING
 import pytest
 from _slugged_db import build_slugged_db, seed_tags
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta_build._curation import repo_curation_path
 from reg_meta_build.tags import (
     CuratedTag,
     TagMember,
@@ -67,46 +66,6 @@ description = "Income measures"
 
 def test_load_tags_empty_when_no_file() -> None:
     assert load_tags(None) == ()
-
-
-def test_repo_tags_toml_seeds_scb_subset() -> None:
-    tags = load_tags(repo_curation_path("tags.toml"))
-    assert [tag.slug for tag in tags] == [
-        "income",
-        "economic-assistance-amount",
-        "economic-assistance-months",
-        "earned-income",
-        "employment",
-        "education",
-        "family-household",
-        "geography",
-    ]
-    assert all(any(member.starred for member in tag.members) for tag in tags)
-
-    refs = {
-        f"{member.provider}/{member.register}"
-        + (f"/{member.variable}" if member.variable is not None else "")
-        for tag in tags
-        for member in tag.members
-    }
-    assert {
-        "scb/lisa",
-        "scb/iot",
-        "scb/ureg",
-        "scb/hreg",
-        "scb/rams",
-        "scb/iot/disponibel-inkomst",
-        "scb/ekonomiskt-bistand/utbetalt-belopp-till-hushallet",
-        "sos/ekb/ekbbelopp",
-        "scb/ekonomiskt-bistand/antmanad",
-        "sos/ekb/ekbantmanad",
-        "scb/lisa/sammanraknad-forvarvsinkomst",
-        "scb/rams/arbink",
-        "scb/lisa/arbetsmarknadsstatus",
-        "scb/ureg/sun2020niva",
-        "scb/iot/familjetyp",
-        "scb/lisa/kommun-for-bostaden",
-    }.issubset(refs)
 
 
 @pytest.mark.parametrize(

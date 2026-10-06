@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from reg_meta.fqid import period_token_to_bounds
-from reg_meta_build._curation import _data_type_class, _looks_like_code_label_pair
 from reg_meta_build.edition_bounds import (
     edition_bounds,
     edition_claims,
@@ -302,31 +301,6 @@ class TestVintageClaim:
     def test_yearless_claims_nothing(self) -> None:
         assert vintage_claim(None) == ()
         assert vintage_claim("Senaste versionen") == ()
-
-
-class TestDataTypeClass:
-    def test_classes(self) -> None:
-        assert _data_type_class("Heltal") == "numeric"
-        assert _data_type_class("Sträng (text)") == "text"  # locks the ä→a fold
-        assert _data_type_class("Datum") == "other"
-        assert _data_type_class(None) == "other"
-
-
-# from the concept-group fold; nothing persists them since the researcher-facing
-# `variable_related_to` edge was retired). ───────────────────────────────────
-
-
-class TestLooksLikeCodeLabelPair:
-    def test_two_namn_columns_are_not_a_pair(self) -> None:
-        assert not _looks_like_code_label_pair("Fornamn", "Efternamn")
-
-    def test_code_label_pairs(self) -> None:
-        assert _looks_like_code_label_pair("Lid", "LNamn")  # code suffix vs namn
-        assert _looks_like_code_label_pair("Sun2000Kod", "Sun2000Namn")  # kod vs namn
-        assert _looks_like_code_label_pair("Kommun", "Kommunnamn")  # bare stem vs namn
-
-    def test_order_independent(self) -> None:
-        assert _looks_like_code_label_pair("Kommunnamn", "Kommun")
 
 
 # Two disjoint 3-code value sets — distinct value_set_ids with symmetric diff 6
