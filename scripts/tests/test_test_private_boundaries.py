@@ -17,14 +17,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 ALLOWLIST = {
     "reg_meta_build/tests/_shared_fixtures.py",
-    "reg_meta_build/tests/test_alias_windows.py",
-    "reg_meta_build/tests/test_convert_matrix.py",
-    "reg_meta_build/tests/test_curated_source_records.py",
-    "reg_meta_build/tests/test_curation_compile.py",
-    "reg_meta_build/tests/test_doc_db.py",
-    "reg_meta_build/tests/test_period_family_merges.py",
     "reg_meta_build/tests/test_pipeline.py",
-    "reg_meta_build/tests/test_repo_curation_tomls.py",
     "reg_meta_build/tests/test_source_classification_bindings.py",
     "reg_meta_build/tests/test_source_coding_choices.py",
     "reg_meta_build/tests/test_source_curation.py",
@@ -35,8 +28,6 @@ ALLOWLIST = {
     "reg_meta_build/tests/test_source_representations.py",
     "reg_meta_build/tests/test_source_scope.py",
     "reg_meta_build/tests/test_source_value_bindings.py",
-    "reg_meta_build/tests/test_tags.py",
-    "reg_meta_build/tests/test_triage.py",
     "reg_schema/tests/test_structural.py",
     "scripts/tests/test_gh_issue.py",
     "scripts/tests/test_prototype_scb_inputs.py",
