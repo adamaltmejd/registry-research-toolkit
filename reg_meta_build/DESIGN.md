@@ -481,38 +481,14 @@ that same context, keyed by the entire immutable validated projection value. Dif
 expected values, masks and native coordinate types remain independent. New evidence
 requires a fresh context. No cached source state survives a build.
 
-Compiled-scope JSON reads also share identical immutable `RecordProjection` and
-`RecordExpectation` objects within that read. Every nested value, projection shape and
-alternative is validated before interning. Projection keys contain the exact model class
-and complete normalized JSON value, including native coordinates, scopes, parents and
-coding references. Expectation keys contain the exact model class, complete reference
-JSON and ordered identities of those canonical projections. The context and retained
-expectations own the projections, keeping those identities stable for that read without
-duplicating their JSON in expectation keys. Separate scopes receive separate contexts.
-Expectation subclasses retain complete JSON keys so their additional facts stay
-distinct. This restores sharing lost by serialization without bypassing contract
-validation or changing garbage-collector settings; it avoids retaining a full duplicate
-guard graph for each reviewed case. Scope serialization passes existing model objects
-directly to Pydantic's JSON adapter, avoiding an intermediate nested Python dictionary
-tree. Serialization warnings are errors, and nonfinite raw numbers remain explicit
-tokens for strict rejection rather than becoming null. Final JSON validation still
-rejects unexpected subclass fields.
-
-After a scope's JSON contract validates, its raw compiled cases, naming and supporting
-declarations are released as the validated scope takes ownership. Decision dumps retain
-those originals only until their requested serialization. Global raw fields and their
-JSON buffer are released after validation and any requested dump. Coding guards still
+Compiled scopes and globals are strict Pydantic models built directly from the compiled
+declarations (`CompiledScope(...)`, `CompiledGlobals(...)`); they are never serialized
+and re-read in memory. Nested model instances are not revalidated (Pydantic's default
+`revalidate_instances`), so each case keeps the compiled guard graph rather than a
+duplicate. Decision dumps serialize the globals only when requested. Once a scope model
+is built, its raw entries are dropped from the compiled mappings. Coding guards still
 check the complete register before variable formation; afterward, raw coding claims are
 consumed per variable rather than retaining every processed column through scope end.
-
-Serialized scope contracts still validate all nested inputs. Scope collection entries
-cross the strict JSON contract individually, sharing one guard validation context for
-the scope. This bounds temporary serialization and parser buffers by the largest
-complete entry instead of the whole collection. Each case retains all targets and peer
-guards for its own validation. The assembled scope receives normal strict model
-validation as well. Dynamic serialization retains subclass fields and nonfinite scalar
-tokens, so malformed nested contracts cannot disappear through a typed serializer. Error
-locations retain the original field and collection index.
 
 Field expectations reuse the source model's single-field type guard instead of
 constructing every absent field again. A singleton record alternative needs no

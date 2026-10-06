@@ -734,12 +734,23 @@ def _clean_body_for_search(body: str) -> str:
     return text.strip()
 
 
-def build_doc_db(docs_dir: Path, db_dir: Path) -> Path:
+def build_doc_db(
+    docs_dir: Path,
+    db_dir: Path,
+    *,
+    related_documents: dict[str, list[RelatedDocument]] | None = None,
+    related_docs_dir: Path | None = None,
+) -> Path:
     """Build the doc search index from markdown files.
 
     Scans docs_dir for register subdirectories (e.g. lisa/),
     parses frontmatter from each .md file, and populates the
     FTS5 index.
+
+    Related documents come only from the arguments: the curated map
+    (``load_related_documents``) and the directory holding their binaries.
+    Both default to none, so a library build never reads the repository's
+    untracked seed; the ``build-docs`` CLI passes the repository paths.
 
     Returns the path to the created DB.
     """
@@ -753,8 +764,7 @@ def build_doc_db(docs_dir: Path, db_dir: Path) -> Path:
     conn.executescript(DOC_DDL)
 
     source_map = load_doc_sources()
-    related_documents = load_related_documents()
-    related_docs_dir = repo_related_document_binaries_dir()
+    related_documents = related_documents or {}
     unmapped_sources: set[str] = set()
 
     total = 0

@@ -152,7 +152,6 @@ def validate_built_db(
     *,
     corpus: bool = False,
     flavored: bool = False,
-    bootstrap: bool = False,
     slug_dir: Path | None = None,
 ) -> ValidationResult:
     """Run the build invariants against ``db_path``.
@@ -184,21 +183,6 @@ def validate_built_db(
     stays unchanged — every SCB id, minted or source-derived, is below 2^62.
     ``flavored`` is independent of ``corpus``; a flavor build never sets
     ``corpus`` (it has no full SCB/SOS corpus to floor-check).
-
-    ``bootstrap`` marks a ``--skip-slugs`` build — the documented pre-curation
-    bootstrap that gives ``seed-slugs`` a DB to read before the slug TOMLs exist.
-    That build deliberately skips every slug-dependent producer pass, so the
-    corpus volume floors measuring those passes' output — merged sub-annual
-    alias-window families, concept groups (edge and curated), classification
-    succession, the variable vintage lift — skip themselves, each reporting the
-    omission in its own section the way the #595 SCB gate does. It also skips the
-    entity-key curation gate, whose ``panel_entity_key`` subject that same slug
-    population writes (see ``_check_entity_key_vars_curated``). Nothing else
-    relaxes: the full structural / FK / contract suite runs, and so do the
-    producer-INDEPENDENT corpus floors (SOS volume, value-code search) — a
-    bootstrap build is still a real maintainer build, so the advertised workflow
-    needs no ``--no-validate``. Independent of ``corpus``, but only ``corpus``
-    builds carry the floors it drops.
 
     ``slug_dir`` (#546) is the resolved curation directory the build loaded; it
     feeds the mandatory entity-key curation gate
@@ -235,10 +219,11 @@ def validate_built_db(
         _check_variable_alias_covers_state_columns(conn, result, tables)
         _check_delivery_column_hygiene(conn, result, tables)
         _check_name_field_hygiene(conn, result, tables)
+        _check_slugs_present(conn, result, tables)
         _check_panel_refs_resolve(conn, result, tables)
         _check_panel_refs_have_states(conn, result, tables)
         _check_entity_key_vars_curated(
-            conn, result, tables, slug_dir, flavored=flavored, bootstrap=bootstrap
+            conn, result, tables, slug_dir, flavored=flavored
         )
         _check_minted_id_bands(conn, result, tables, flavored=flavored)
         _check_errata_column_band(conn, result, tables)
@@ -253,22 +238,15 @@ def validate_built_db(
         if corpus:
             _check_sos_sanity(conn, result, tables)
         _check_value_code_search(conn, result, tables, corpus=corpus)
+        _check_classification_search(conn, result, tables)
+        _check_planner_statistics(conn, result, tables)
         _check_tags(conn, result, tables)
-        # The four checks below floor a derivation `--skip-slugs` does not run, so
-        # they take `bootstrap` and skip THAT floor (only) with a line of their own,
-        # exactly as they already do when SCB is out of the build (#595).
-        _check_variable_alias_window(
-            conn, result, tables, corpus=corpus, bootstrap=bootstrap
-        )
+        _check_variable_alias_window(conn, result, tables, corpus=corpus)
         _check_sos_stateless_variables(conn, result, tables)
-        _check_concept_groups(conn, result, tables, corpus=corpus, bootstrap=bootstrap)
-        _check_classification_replaced_by(
-            conn, result, tables, corpus=corpus, bootstrap=bootstrap
-        )
+        _check_concept_groups(conn, result, tables, corpus=corpus)
+        _check_classification_replaced_by(conn, result, tables, corpus=corpus)
         _check_classification_derived_from(conn, result, tables, corpus=corpus)
-        _check_variable_replaced_by_vintage_lift(
-            conn, result, tables, corpus=corpus, bootstrap=bootstrap
-        )
+        _check_variable_replaced_by_vintage_lift(conn, result, tables, corpus=corpus)
         _check_representation_replaced_by(conn, result, tables, corpus=corpus)
         result.section("[compiled holdings]")
         from .holdings_validation import validate_compiled_holdings
@@ -330,8 +308,8 @@ def _check_schema_shape(
             result.ok(f"{required} present")
         else:
             result.fail(f"{required} missing")
-    # A2.7 adds variable_instance / variable_alias_build / variable_context to
-    # the dropped-before-ship set (build-time-only, like unika_summary).
+    # Build-time-only staging tables, dropped before ship (A2.7 added
+    # variable_instance / variable_alias_build / variable_context).
     for absent in (
         "cvid_value_code",
         "value_item",
@@ -339,6 +317,8 @@ def _check_schema_shape(
         "variable_instance",
         "variable_alias_build",
         "variable_context",
+        "classification_candidate",
+        "unika_summary",
     ):
         if absent in tables:
             result.fail(f"{absent} should have been dropped")
@@ -1052,6 +1032,29 @@ def _check_name_field_hygiene(
             result.ok(f"no {table}.{column} with surrounding whitespace")
 
 
+def _check_slugs_present(
+    conn: sqlite3.Connection,
+    result: ValidationResult,
+    tables: set[str],
+) -> None:
+    """Every register and variable carries a slug, so every one has an FQID.
+
+    The columns are nullable because ``populate_slugs`` fills them after the rows
+    are written."""
+    result.section("[slugs: present]")
+    for table in ("register", "variable"):
+        if table not in tables:
+            result.fail(f"{table} missing")
+            continue
+        missing = conn.execute(
+            f"SELECT COUNT(*) FROM {table} WHERE slug IS NULL"
+        ).fetchone()[0]
+        if missing:
+            result.fail(f"{missing:,} {table} row(s) have a NULL slug")
+        else:
+            result.ok(f"every {table} row has a slug")
+
+
 def _check_panel_refs_resolve(
     conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
 ) -> None:
@@ -1208,7 +1211,6 @@ def _check_entity_key_vars_curated(
     slug_dir: Path | None,
     *,
     flavored: bool = False,
-    bootstrap: bool = False,
 ) -> None:
     """#546/#554: every panel entity-key variable must carry a curated
     ``[variable]`` slug pin so the slug its ``panel_entity_key`` ref binds to
@@ -1245,20 +1247,8 @@ def _check_entity_key_vars_curated(
     ``slug_dir is None`` (synthetic CI, direct ``validate_built_db(corpus=False)``
     calls) SKIPS the gate — there's no curated dir to read. Local imports dodge
     any build-time import cycle (the pattern this module already uses for
-    build-side helpers).
-
-    ``bootstrap`` (``--skip-slugs``) skips the gate too: ``populate_slugs`` writes
-    ``panel_entity_key`` and is one of the passes that build omits, so no variant
-    can carry an entity key. The skip must come BEFORE the ``slug_dir`` read —
-    ``--skip-slugs`` documents ``--slug-dir`` as ignored, so an unreadable TOML in
-    it must not fail publication (``slug_toml_unreadable``)."""
+    build-side helpers)."""
     result.section("[panel: entity-key variables are curated]")
-    if bootstrap:
-        result.ok(
-            "entity-key curation gate skipped — --skip-slugs bootstrap build "
-            "(slug population did not run, so no variant carries an entity key)"
-        )
-        return
     if slug_dir is None:
         result.ok("entity-key curation gate skipped (no slug_dir)")
         return
@@ -1523,6 +1513,68 @@ def _check_value_code_search(
             result.fail("value_code_fts is EMPTY on a corpus build")
 
 
+def _check_classification_search(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """Every classification row is indexed in ``classification_fts`` by its id.
+
+    ``classification_fts`` reads the external content table, so the index itself
+    is the ``_docsize`` shadow table (as for value codes). Matching by rowid, not
+    by count, also catches index entries that point at no classification."""
+    result.section("[classification search]")
+    if "classification" not in tables or "classification_fts" not in tables:
+        result.fail("classification / classification_fts missing")
+        return
+    unindexed = [
+        row[0]
+        for row in conn.execute(
+            "SELECT c.id FROM classification c "
+            "LEFT JOIN classification_fts_docsize d ON d.id = c.id "
+            "WHERE d.id IS NULL ORDER BY c.id"
+        )
+    ]
+    stray = [
+        row[0]
+        for row in conn.execute(
+            "SELECT d.id FROM classification_fts_docsize d "
+            "LEFT JOIN classification c ON c.id = d.id "
+            "WHERE c.id IS NULL ORDER BY d.id"
+        )
+    ]
+    if unindexed:
+        result.fail(
+            f"{len(unindexed):,} classification(s) not in classification_fts: "
+            f"ids {unindexed[:10]}"
+        )
+    if stray:
+        result.fail(
+            f"{len(stray):,} classification_fts entr(ies) match no classification: "
+            f"ids {stray[:10]}"
+        )
+    if not unindexed and not stray:
+        (n_rows,) = conn.execute("SELECT COUNT(*) FROM classification").fetchone()
+        result.ok(f"classification_fts indexes all {n_rows:,} classifications")
+
+
+def _check_planner_statistics(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """The artifact ships ``sqlite_stat1``: the build's last write is ``ANALYZE``.
+
+    Without statistics the reader's planner picks indexes by heuristic, which
+    chose a far less selective ``variable_state`` index in plan 04b. Freshness is
+    not checked: damaged-artifact cases add rows after the fixture's ANALYZE."""
+    result.section("[planner statistics]")
+    if "sqlite_stat1" not in tables:
+        result.fail("sqlite_stat1 missing — the build must end with ANALYZE")
+        return
+    n_rows = conn.execute("SELECT COUNT(*) FROM sqlite_stat1").fetchone()[0]
+    if n_rows:
+        result.ok(f"sqlite_stat1 present ({n_rows:,} rows)")
+    else:
+        result.fail("sqlite_stat1 is empty — the build must end with ANALYZE")
+
+
 def _check_tags(
     conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
 ) -> None:
@@ -1732,7 +1784,6 @@ def _check_variable_alias_window(
     tables: set[str],
     *,
     corpus: bool,
-    bootstrap: bool = False,
 ) -> None:
     """Alias-window structural closure (corpus-independent). EMPTY without
     `curation/registers/<provider>/<slug>.toml` or SCB multi-alias cvids, so no volume
@@ -1753,8 +1804,7 @@ def _check_variable_alias_window(
     `_check_concept_groups` is gone — the merge consumes every month-suffixed
     family pre-fold. The floor is additionally gated on SCB being in the build
     (#595) — the merged families are all SCB-sourced, so a non-SCB `--providers`
-    subset SKIPS rather than false-fails — and on the merge pass having run:
-    `bootstrap` (a `--skip-slugs` build) skips it for the same reason."""
+    subset SKIPS rather than false-fails."""
     result.section("[alias windows]")
     if "variable_alias_window" not in tables:
         result.ok("variable_alias_window absent — window check skipped")
@@ -1894,16 +1944,8 @@ def _check_variable_alias_window(
         ).fetchone()[0]
         # Gated on SCB presence (#595): the merged monthly families are all
         # SCB-sourced (period_family_merges.toml is entirely scb/...), so a non-SCB
-        # `--providers` subset SKIPS rather than false-fails this floor. A
-        # `--skip-slugs` bootstrap build never ran the family-merge pass at all, so
-        # it SKIPS for the same reason: nothing produced what this floor measures.
-        if bootstrap:
-            result.info(
-                f"{n_families} sub-annual alias-window families — --skip-slugs "
-                f"bootstrap build (family merge did not run), floor "
-                f"(>= {_AW_MIN_MERGED_FAMILIES}) skipped"
-            )
-        elif not _scb_in_build(conn):
+        # `--providers` subset SKIPS rather than false-fails this floor.
+        if not _scb_in_build(conn):
             result.info(
                 f"{n_families} sub-annual alias-window families — SCB not in this build, "
                 f"floor (>= {_AW_MIN_MERGED_FAMILIES}) skipped (#595)"
@@ -2119,7 +2161,6 @@ def _check_concept_groups(
     tables: set[str],
     *,
     corpus: bool,
-    bootstrap: bool = False,
 ) -> None:
     """#303 derived concept-group invariants (presentation-only layer; see
     `concept_groups.py`).
@@ -2133,9 +2174,8 @@ def _check_concept_groups(
 
     Corpus (real build only): volume floors per derivation source, so a pass
     that silently stops matching (slug-vocabulary drift, edge-kind rename)
-    fails the gate instead of shipping an ungrouped browse. `bootstrap` (a
-    `--skip-slugs` build, which never ran the derivation) skips those volume
-    floors only — the assert-empty token-classification guard stays armed."""
+    fails the gate instead of shipping an ungrouped browse. The assert-empty
+    token-classification guard runs on every build."""
     result.section("[concept groups]")
     required = {
         "concept_group",
@@ -2298,58 +2338,49 @@ def _check_concept_groups(
 
     if not corpus:
         return
-    if bootstrap:
-        # `--skip-slugs`: the derivation pass never ran, so the per-source volume
-        # floors have nothing to measure. The token-classification assertion below
-        # is NOT a volume floor, so it stays armed.
-        result.info(
-            "edge / curated concept-group floors skipped — --skip-slugs bootstrap "
-            "build (the concept-group derivation did not run)"
+    by_source = {
+        (r[0], r[1]): r[2]
+        for r in conn.execute(
+            "SELECT source, kind, COUNT(*) FROM concept_group GROUP BY source, kind"
         )
+    }
+    n_edge = by_source.get(("edge", "variable"), 0)
+    n_month = by_source.get(("token", "variable"), 0)
+    n_curated = by_source.get(("curated", "variable"), 0)
+    # Edge-group volume floor (#591): replaces the retired exact-parity check —
+    # the foldable sibling rows are no longer persisted, so there's nothing to
+    # recompute; a volume floor catches a derivation collapse instead. Gated on
+    # SCB presence (#595): the split-sibling bulk is SCB-sourced, so a non-SCB
+    # `--providers` subset SKIPS rather than false-fails this floor.
+    if not _scb_in_build(conn):
+        result.info(
+            f"{n_edge:,} edge group(s) — SCB not in this build, floor "
+            f"(>= {_CG_MIN_EDGE_GROUPS:,}) skipped (#595)"
+        )
+    elif n_edge >= _CG_MIN_EDGE_GROUPS:
+        result.ok(f"{n_edge:,} edge group(s) (>= {_CG_MIN_EDGE_GROUPS:,})")
     else:
-        by_source = {
-            (r[0], r[1]): r[2]
-            for r in conn.execute(
-                "SELECT source, kind, COUNT(*) FROM concept_group GROUP BY source, kind"
-            )
-        }
-        n_edge = by_source.get(("edge", "variable"), 0)
-        n_month = by_source.get(("token", "variable"), 0)
-        n_curated = by_source.get(("curated", "variable"), 0)
-        # Edge-group volume floor (#591): replaces the retired exact-parity check —
-        # the foldable sibling rows are no longer persisted, so there's nothing to
-        # recompute; a volume floor catches a derivation collapse instead. Gated on
-        # SCB presence (#595): the split-sibling bulk is SCB-sourced, so a non-SCB
-        # `--providers` subset SKIPS rather than false-fails this floor.
-        if not _scb_in_build(conn):
-            result.info(
-                f"{n_edge:,} edge group(s) — SCB not in this build, floor "
-                f"(>= {_CG_MIN_EDGE_GROUPS:,}) skipped (#595)"
-            )
-        elif n_edge >= _CG_MIN_EDGE_GROUPS:
-            result.ok(f"{n_edge:,} edge group(s) (>= {_CG_MIN_EDGE_GROUPS:,})")
-        else:
-            result.fail(
-                f"{n_edge:,} edge group(s) (< {_CG_MIN_EDGE_GROUPS:,}) — edge "
-                "derivation collapse (empty sibling sets / slug regression)?"
-            )
-        # No month-token-group floor: the #319/#383 family merge runs BEFORE the
-        # concept-group month-fold and consumes every month-suffixed family in the
-        # corpus, so `source='token'` month groups are 0 by design (a non-zero count
-        # would mean family-merge silently stopped merging). The merged families are
-        # guarded at their true home — `_check_variable_alias_window` (>= N survivors).
-        result.info(f"{n_month} token month group(s) (superseded by family merge)")
-        if not _curated_source_in_build(conn):
-            result.info(
-                f"{n_curated} curated group(s) — no scb/sos source in this build, "
-                "floor (>= 1) skipped (#600)"
-            )
-        elif n_curated >= 1:
-            result.ok(f"{n_curated} curated group(s) (>= 1)")
-        else:
-            result.fail(
-                "no curated concept groups (curation/registers/<provider>/<slug>.toml not applied?)"
-            )
+        result.fail(
+            f"{n_edge:,} edge group(s) (< {_CG_MIN_EDGE_GROUPS:,}) — edge "
+            "derivation collapse (empty sibling sets / slug regression)?"
+        )
+    # No month-token-group floor: the #319/#383 family merge runs BEFORE the
+    # concept-group month-fold and consumes every month-suffixed family in the
+    # corpus, so `source='token'` month groups are 0 by design (a non-zero count
+    # would mean family-merge silently stopped merging). The merged families are
+    # guarded at their true home — `_check_variable_alias_window` (>= N survivors).
+    result.info(f"{n_month} token month group(s) (superseded by family merge)")
+    if not _curated_source_in_build(conn):
+        result.info(
+            f"{n_curated} curated group(s) — no scb/sos source in this build, "
+            "floor (>= 1) skipped (#600)"
+        )
+    elif n_curated >= 1:
+        result.ok(f"{n_curated} curated group(s) (>= 1)")
+    else:
+        result.fail(
+            "no curated concept groups (curation/registers/<provider>/<slug>.toml not applied?)"
+        )
     # Derived (`source='token'`) classification vintage families no longer fold
     # here (#571) — they materialize as succession edges, asserted-empty
     # (structural) above and floored in `_check_classification_replaced_by`. Only
@@ -2379,7 +2410,6 @@ def _check_classification_replaced_by(
     tables: set[str],
     *,
     corpus: bool,
-    bootstrap: bool = False,
 ) -> None:
     """#571 classification EDITION succession invariants.
 
@@ -2391,8 +2421,7 @@ def _check_classification_replaced_by(
     must carry >= `_CG_MIN_CLASSIFICATION_SUCCESSION_EDGES` edges — a pass that
     silently stops deriving (slug-tail drift, name-guard regression) fails the
     gate. Synthetic builds carry no vintage classifications, so this floor is
-    corpus-gated; a `bootstrap` (`--skip-slugs`) build never ran the derivation,
-    so it skips the floor too."""
+    corpus-gated."""
     result.section("[classification succession]")
     if "classification_replaced_by" not in tables:
         result.fail("classification_replaced_by missing (schema 5.5.0 #571 table)")
@@ -2472,13 +2501,6 @@ def _check_classification_replaced_by(
     if not corpus:
         result.info(f"{n_edges} classification succession edge(s)")
         return
-    if bootstrap:
-        result.info(
-            f"{n_edges} classification succession edge(s) — --skip-slugs bootstrap "
-            f"build (the succession derivation did not run), floor "
-            f"(>= {_CG_MIN_CLASSIFICATION_SUCCESSION_EDGES}) skipped"
-        )
-        return
     # Gated on SCB presence (#595): the lkf vintage chain is SCB-sourced, so a
     # non-SCB `--providers` subset SKIPS rather than false-fails this floor.
     if not _scb_in_build(conn):
@@ -2552,7 +2574,6 @@ def _check_variable_replaced_by_vintage_lift(
     tables: set[str],
     *,
     corpus: bool,
-    bootstrap: bool = False,
 ) -> None:
     """#584/#592 derived variable vintage-succession invariants — the
     stream-guarded lift of `classification_replaced_by` editions to the variable
@@ -2568,8 +2589,7 @@ def _check_variable_replaced_by_vintage_lift(
     `_MIN_VARIABLE_VINTAGE_LIFT_EDGES` derived edges, so a pass that silently
     stops lifting (classification-binding backfill drift, stream-guard
     regression) fails the gate. Synthetic builds carry no vintage classifications,
-    so this floor is corpus-gated; a `bootstrap` (`--skip-slugs`) build never ran
-    the lift, so it skips the floor too."""
+    so this floor is corpus-gated."""
     result.section("[variable vintage lift]")
     if "variable_replaced_by" not in tables:
         result.fail("variable_replaced_by missing")
@@ -2630,13 +2650,6 @@ def _check_variable_replaced_by_vintage_lift(
     ).fetchone()[0]
     if not corpus:
         result.info(f"{n_edges} variable vintage-lift edge(s)")
-        return
-    if bootstrap:
-        result.info(
-            f"{n_edges} variable vintage-lift edge(s) — --skip-slugs bootstrap "
-            f"build (the lift did not run), floor "
-            f"(>= {_MIN_VARIABLE_VINTAGE_LIFT_EDGES}) skipped"
-        )
         return
     # Gated on SCB presence (#595): the SCB classification-derived lifts are
     # SCB-sourced, so a non-SCB `--providers` subset SKIPS rather than

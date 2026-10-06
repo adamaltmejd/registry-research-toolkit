@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "unika_summary should have been dropped"
+  ]
+}

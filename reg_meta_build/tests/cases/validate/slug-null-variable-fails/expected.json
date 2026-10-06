@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "1 variable row(s) have a NULL slug"
+  ]
+}

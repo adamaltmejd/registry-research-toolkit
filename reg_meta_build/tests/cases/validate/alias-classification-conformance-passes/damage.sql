@@ -18,3 +18,5 @@ INSERT INTO classification_code (classification_id, code_id, level, is_valid) VA
 INSERT INTO alias_window_classification (
     variable_id, register_variant_id, delivery_column_name, valid_from, classification_id, provenance, conformance
 ) VALUES (2, 10, 'TestCol', '2020-01-01', 1, NULL, '{"declared_classification": "testklass", "status": "extended", "checked_codes": ["1", "9"], "nonconforming_members": [], "sentinel_members": [["9", "Okänt"]], "scoped_sentinels": [{"valid_from": "2020-01-01", "valid_to": "2020-12-31", "delivery_column_name": "TestCol", "classification_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "source_fingerprints": ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"], "members": [["9", "Okänt"]], "provenance": "checked-source-sentinel: synthetic case"}]}');
+-- The writer indexes every classification row for name search.
+INSERT INTO classification_fts(classification_fts) VALUES ('rebuild');

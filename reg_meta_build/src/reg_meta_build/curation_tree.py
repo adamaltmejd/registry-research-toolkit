@@ -2101,8 +2101,18 @@ def load_classifications(root: Path) -> tuple[CuratedClassification, ...]:
                 "Keep only <short_name>.toml files in curation/classifications/.",
             )
         entry = _load_classification(path, file)
+        metadata = entry.classification
+        # One namespace: a source spelling must name exactly one book or family.
         claims = [
-            ("slug", entry.classification.slug),
+            ("slug", metadata.slug),
+            *(
+                ("classification reference", name)
+                for name in (
+                    metadata.short_name,
+                    *metadata.aliases,
+                    *metadata.family_aliases,
+                )
+            ),
             *(("label", label) for label in entry.binding.value_set_labels),
             *(("variable", bound.variable) for bound in entry.binding.variable),
         ]

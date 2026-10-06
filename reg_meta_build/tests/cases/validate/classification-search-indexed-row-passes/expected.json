@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "report_contains": [
+    "classification_fts indexes all 1 classifications"
+  ]
+}

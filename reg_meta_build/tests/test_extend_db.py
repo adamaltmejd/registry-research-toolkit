@@ -15,6 +15,8 @@ from reg_meta_build.extend_db import (
 )
 from reg_meta_build.id import mint
 from reg_meta_build.resolved_catalog import (
+    ResolvedClassification,
+    ResolvedClassificationCode,
     ResolvedCodeSet,
     ResolvedRegister,
     ResolvedState,
@@ -139,41 +141,57 @@ def _write_slug_dir(path: Path) -> None:
     )
 
 
+def _global_variable() -> ResolvedVariable:
+    return ResolvedVariable(
+        register=ResolvedRegister(provider="scb", slug="testreg", name="Test register"),
+        slug="category",
+        provider_key="44",
+        name="Category",
+        definition=None,
+        description=None,
+        operational_definition=None,
+        measurement_unit=None,
+        is_identifier=False,
+        is_sensitive=False,
+        states=(
+            ResolvedState(
+                variant=ResolvedVariant(slug="individuals", name="Individuals"),
+                valid_from="2020-01-01",
+                valid_to="2020-12-31",
+                delivery_column_name="Category",
+                data_type="integer",
+                data_length="1",
+                operational_definition=None,
+                provenance=None,
+                value_set=ResolvedCodeSet(members=(("1", "One"), ("2", "Two"))),
+            ),
+        ),
+    )
+
+
 @pytest.fixture()
 def global_db(tmp_path: Path) -> Path:
     output = tmp_path / "global" / "reg_meta.db"
+    write_resolved_catalog((_global_variable(),), output, manifest=synthetic_manifest())
+    return output
+
+
+@pytest.fixture()
+def classified_global_db(tmp_path: Path) -> Path:
+    """The global base plus one classification book."""
+    output = tmp_path / "classified" / "reg_meta.db"
     write_resolved_catalog(
-        (
-            ResolvedVariable(
-                register=ResolvedRegister(
-                    provider="scb", slug="testreg", name="Test register"
-                ),
-                slug="category",
-                provider_key="44",
-                name="Category",
-                definition=None,
-                description=None,
-                operational_definition=None,
-                measurement_unit=None,
-                is_identifier=False,
-                is_sensitive=False,
-                states=(
-                    ResolvedState(
-                        variant=ResolvedVariant(slug="individuals", name="Individuals"),
-                        valid_from="2020-01-01",
-                        valid_to="2020-12-31",
-                        delivery_column_name="Category",
-                        data_type="integer",
-                        data_length="1",
-                        operational_definition=None,
-                        provenance=None,
-                        value_set=ResolvedCodeSet(members=(("1", "One"), ("2", "Two"))),
-                    ),
-                ),
-            ),
-        ),
+        (_global_variable(),),
         output,
         manifest=synthetic_manifest(),
+        classifications=(
+            ResolvedClassification(
+                slug="alpha",
+                short_name="ALPHA",
+                name="Alpha nomenclature",
+                codes=(ResolvedClassificationCode(code="1", label="One"),),
+            ),
+        ),
     )
     return output
 
@@ -391,6 +409,28 @@ def test_flavored_db_validates(tmp_path: Path, global_db: Path) -> None:
     _, out = _run(tmp_path, global_db)
     result = validate_built_db(out, flavored=True, corpus=False)
     assert not result.failures, result.failures
+
+
+def test_overlay_keeps_base_classifications_searchable_and_reanalyzes(
+    tmp_path: Path, classified_global_db: Path
+) -> None:
+    _, out = _run(tmp_path, classified_global_db)
+    with closing(sqlite3.connect(out)) as conn:
+        hits = conn.execute(
+            "SELECT COUNT(*) FROM classification_fts WHERE classification_fts MATCH ?",
+            ('"nomenclature"',),
+        ).fetchone()[0]
+        (variables,) = conn.execute("SELECT COUNT(*) FROM variable").fetchone()
+        stats = [
+            int(stat.split()[0])
+            for (stat,) in conn.execute(
+                "SELECT stat FROM sqlite_stat1 WHERE tbl = 'variable'"
+            )
+        ]
+    assert hits == 1
+    # The overlay's statistics count its own rows, not the base's.
+    assert stats and set(stats) == {variables}
+    assert validate_built_db(out, flavored=True, corpus=False).passed
 
 
 def _assert_rejected_without_output(

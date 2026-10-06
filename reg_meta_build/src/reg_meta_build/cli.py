@@ -58,7 +58,12 @@ from .db import (
     open_built_db,
 )
 from .doc_coverage import compute_doc_coverage, render_doc_coverage_toml
-from .doc_db import build_doc_db, repo_docs_dir
+from .doc_db import (
+    build_doc_db,
+    load_related_documents,
+    repo_docs_dir,
+    repo_related_document_binaries_dir,
+)
 from .extend_db import (
     extend_db,
 )
@@ -1329,7 +1334,12 @@ def _cmd_build_docs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
                 ),
             )
     db_dir = Path(args.db).resolve() if args.db else default_db_dir().resolve()
-    db_path = build_doc_db(docs_dir, db_dir)
+    db_path = build_doc_db(
+        docs_dir,
+        db_dir,
+        related_documents=load_related_documents(),
+        related_docs_dir=repo_related_document_binaries_dir(),
+    )
     duration_ms = int((time.perf_counter() - start) * 1000)
     return success_envelope(
         command="build-docs",

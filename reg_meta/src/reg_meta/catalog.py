@@ -429,9 +429,11 @@ def representative_columns(
 def _delivery_column_spellings(
     conn: sqlite3.Connection, variable_id: int, variant_id: int
 ) -> dict[str, str]:
-    # The artifact ships no sqlite_stat1, so the planner otherwise picks the
-    # register-variant index and filters every state of the variant. INDEXED BY
-    # fails loudly if the schema ever renames the index.
+    # Without sqlite_stat1 the planner picks the register-variant index and
+    # filters every state of the variant. Builds now end with ANALYZE, and on an
+    # analyzed artifact the planner picks this index unaided. The hint stays until
+    # the latency oracle is re-run on an analyzed artifact. INDEXED BY fails
+    # loudly if the schema ever renames the index.
     stated = conn.execute(
         "SELECT delivery_column_name FROM variable_state "
         "INDEXED BY idx_variable_state_variable "
