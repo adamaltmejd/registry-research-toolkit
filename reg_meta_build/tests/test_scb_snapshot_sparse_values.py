@@ -6,7 +6,8 @@ import hashlib
 import json
 import os
 import subprocess
-from typing import TYPE_CHECKING
+import sys
+from pathlib import Path
 
 import pytest
 from _csv_fixtures import (
@@ -15,6 +16,7 @@ from _csv_fixtures import (
     sparsify_scb_values,
     write_input_bundle,
     write_scb_input,
+    write_scb_snapshot,
 )
 from _snapshot_fixtures import git
 from reg_meta_build.input_snapshot import (
@@ -29,8 +31,7 @@ from reg_meta_build.input_snapshot import (
     verify_snapshot,
 )
 
-if TYPE_CHECKING:
-    from pathlib import Path
+PROTOTYPE_CLI = Path(__file__).resolve().parents[2] / "scripts/prototype_scb_inputs.py"
 
 
 def _git_index_evidence(repo: Path) -> tuple[bytes, bytes]:
@@ -300,6 +301,33 @@ def test_sparse_bundle_verifier_cli_reports_materialization_error(
     assert error["code"] == "scb_snapshot_materialization_required"
     assert selection.input_commit in error["message"]
     assert "sparse-checkout add --stdin" in error["remediation"]
+
+
+def test_prototype_verify_cli_reports_the_sparse_hydration_action(
+    tmp_path: Path,
+) -> None:
+    selection = write_scb_snapshot(
+        tmp_path / "accepted", write_scb_input(tmp_path / "source")
+    )
+    sparsify_scb_values(selection)
+
+    process = subprocess.run(
+        [sys.executable, str(PROTOTYPE_CLI), "verify", str(selection.path)],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert process.returncode == 2, process.stdout
+    assert process.stdout == ""
+    assert process.stderr.startswith("error: ")
+    for detail in (
+        str(selection.path.parent),
+        selection.input_commit,
+        scb_values_role(selection),
+        "sparse-checkout add --stdin",
+    ):
+        assert detail in process.stderr
 
 
 @pytest.mark.parametrize(
