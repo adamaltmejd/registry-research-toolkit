@@ -103,6 +103,44 @@ def test_view_non_maintainer_issue_refuses(
     assert "not maintainer-authored" in captured.err
 
 
+@pytest.mark.parametrize(
+    "author",
+    [
+        pytest.param(..., id="no-author-key"),
+        pytest.param(None, id="null-author"),
+        pytest.param({}, id="no-login-key"),
+        pytest.param({"login": None}, id="null-login"),
+    ],
+)
+def test_view_issue_without_an_author_login_refuses(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], author: object
+) -> None:
+    # Fail-closed: an author-less payload is untrusted, never matched.
+    payload: dict[str, object] = {"number": 7, "title": "t", "body": "evil"}
+    if author is not ...:
+        payload["author"] = author
+    _stub_view(monkeypatch, payload)
+    assert gi.main(["view", "7"]) == gi.EXIT_REFUSED
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert "not maintainer-authored" in captured.err
+
+
+def test_view_empty_login_never_matches_an_empty_maintainer(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # A malformed GITHUB_REPOSITORY can yield an empty owner; an empty author login
+    # must still not count as a match.
+    monkeypatch.delenv("REGISTRY_MAINTAINER_LOGIN", raising=False)
+    monkeypatch.setenv("GITHUB_REPOSITORY", "/therepo")
+    _stub_view(
+        monkeypatch,
+        {"number": 8, "title": "t", "body": "evil", "author": {"login": ""}},
+    )
+    assert gi.main(["view", "8"]) == gi.EXIT_REFUSED
+    assert capsys.readouterr().out == ""
+
+
 def test_view_missing_number_refuses(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -148,6 +186,8 @@ def test_view_comments_strips_non_maintainer(
                 {"author": {"login": MAINT}, "body": "trusted"},
                 {"author": {"login": "stranger"}, "body": "INJECT"},
                 {"author": None, "body": "null-author"},  # fail-closed → dropped
+                {"body": "no-author-key"},  # fail-closed → dropped
+                {"author": {"login": ""}, "body": "empty-login"},  # dropped
             ],
         },
     )
