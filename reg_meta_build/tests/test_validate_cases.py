@@ -3,7 +3,7 @@ passes) `validate_built_db` with a located message.
 
 Each directory under `cases/validate/` holds `request.json` and `expected.json`.
 The request names the SQL damage applied to a copy of the synthetic fixture
-artifact, the validator mode (`corpus`, `flavored`, `bootstrap`) and, optionally, a slug
+artifact, the validator mode (`corpus`, `flavored`) and, optionally, a slug
 directory shipped beside the case. The expectation lists substrings that must (or
 must not) appear in a FAIL line or anywhere in the rendered report.
 """
@@ -43,7 +43,6 @@ def test_damaged_artifact_validation(case: Path, fixture_db: Path, tmp_path: Pat
         damaged,
         corpus=request.get("corpus", False),
         flavored=request.get("flavored", False),
-        bootstrap=request.get("bootstrap", False),
         slug_dir=slug_dir,
     )
 
