@@ -242,6 +242,21 @@ class TestPopulateVariableSlugs(PopulateVariableSlugsHelpers):
         assert self._slug_of_vid(conn, vid) == "kon"  # latest-column, not drift
         assert self._stored_slug(conn, 44) == "alder"  # isolation holds
 
+    @pytest.mark.parametrize(
+        ("cols", "slug"), [(["KON", "Kon"], "kon"), (["Ålder", "Alder"], "alder")]
+    )
+    def test_case_only_or_diacritic_only_wobble_is_not_drift(
+        self, tmp_path: Path, cols: list[str], slug: str
+    ) -> None:
+        # #539, each half of the slug-space fold on its own: a column pair that
+        # differs only in case, or only in diacritics, is one distinct slug, so
+        # the variable keeps the latest-column basis instead of drifting to the
+        # name slug (`identitet`).
+        conn = self._db(kol="Varde", name="Värde")
+        vid = self._add_drift_variable(conn, var_id=67, name="Identitet", cols=cols)
+        populate_variable_slugs(conn, self._slug_dir(tmp_path))
+        assert self._slug_of_vid(conn, vid) == slug
+
     def test_mixed_wobble_and_rename_still_drifts(self, tmp_path: Path) -> None:
         # #539: a partial-wobble set with ≥2 distinct slugs still drifts. The
         # case/diacritic pair `PersonNr`/`personnr` collapses in slug-space, but

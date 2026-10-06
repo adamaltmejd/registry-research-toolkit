@@ -8,8 +8,9 @@ import tomllib
 from typing import TYPE_CHECKING
 
 import pytest
-from _slugged_db import build_slugged_db
+from _slugged_db import add_state, add_variable, build_slugged_db
 from reg_meta.errors import RegMetaError
+from reg_meta.fqid import validate_slug
 
 from reg_meta_build.fqid_slugs import (
     GLOBAL_FREEZE_STATE_FILE,
@@ -139,3 +140,28 @@ def test_name_derived_slug(tmp_path: Path, name: str, slug: str) -> None:
         "SELECT slug FROM variable WHERE provider_key = '44'"
     ).fetchone()[0]
     assert stored == slug
+
+
+def test_underivable_text_keyed_variable_gets_folded_v_provider_key(
+    tmp_path: Path,
+) -> None:
+    # A non-SCB provider keys variables by name (TEXT provider_key). When neither
+    # the column nor the name yields a slug (both lead with a digit), the
+    # last-resort `v<provider_key>` must still be folded into the slug grammar.
+    conn = build_slugged_db(variable=None)
+    add_variable(conn, register_id=1, var_id=200, name="3D-område")
+    add_state(
+        conn,
+        register_id=1,
+        var_id=200,
+        register_variant_id=10,
+        valid_from="2000-01-01",
+        valid_to="2000-12-31",
+        delivery_column_name="3DOMR",
+    )
+    conn.execute("UPDATE variable SET provider_key = 'Födelseår_X'")
+    conn.commit()
+    populate_variable_slugs(conn, tmp_path)
+    [slug] = [row[0] for row in conn.execute("SELECT slug FROM variable")]
+    assert slug == "vfodelsear-x"
+    validate_slug(slug, "variable")
