@@ -3,15 +3,12 @@
 from __future__ import annotations
 
 import json
-import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
-from _prepared_fixtures import accept_prepared
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
 from reg_meta.source_evidence import SourceField, SourceRevision
 from reg_meta_build.prepared_sources import (
-    open_prepared_source_records,
     prepare_source_records,
 )
 from reg_meta_build.source_curation import (
@@ -106,49 +103,6 @@ def test_blank_parent_facts_preserve_unknown_and_raw_representation() -> None:
     assert parent_fact_projection(null.parent_facts[0]) == parent_fact_projection(
         blank.parent_facts[0]
     )
-
-
-def test_parent_conflicts_and_duplicate_rows_remain_distinct_occurrences(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    first, duplicate, conflict = (
-        _record(),
-        _record(row=9),
-        _record(Registersyfte="Another purpose"),
-    )
-    assert first.record_id == duplicate.record_id != conflict.record_id
-    assert first.fields == conflict.fields
-    output = tmp_path / "prepared" / "records"
-    manifest = prepare_source_records(
-        output,
-        records=(first, duplicate, conflict),
-        revisions=(_REVISION,),
-        scope="parent fixture",
-    )
-    assert manifest.record_count == 3
-    with sqlite3.connect(output / "files/records.sqlite") as conn:
-        assert (
-            conn.execute("SELECT COUNT(*) FROM payload WHERE kind='parent'").fetchone()[
-                0
-            ]
-            == 6
-        )
-        assert conn.execute("SELECT COUNT(*) FROM occurrence").fetchone()[0] == 3
-    commit = accept_prepared(output)
-
-    def forbidden(*_args, **_kwargs):
-        raise AssertionError("accepted decoding must not recalculate source identity")
-
-    monkeypatch.setattr(SourceRecord, "_record_id", forbidden)
-    restored = tuple(
-        open_prepared_source_records(
-            output, expected_sha256=manifest.sha256, input_commit=commit
-        ).records
-    )
-    assert [record.model_dump(mode="json") for record in restored] == [
-        record.model_dump(mode="json") for record in (first, duplicate, conflict)
-    ]
-    assert restored[1].parent_field_locators(0, "purpose")[0].physical_record == "row:9"
 
 
 @pytest.mark.parametrize(

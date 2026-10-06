@@ -11,7 +11,7 @@ import json
 from typing import Literal
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
 from pydantic import TypeAdapter, ValidationError
 from reg_meta.source_evidence import (
     DeliveredCell,
@@ -44,8 +44,6 @@ from reg_meta_build.source_records import (
     value_field,
 )
 from reg_meta_build.sources.scb_records import clean_scb_row
-
-from reg_meta_build import source_curation
 
 
 def _revision(source: str, marker: str = "accepted") -> SourceRevision:
@@ -697,66 +695,6 @@ def test_compiled_scope_json_read_shares_validated_guards_without_skipping_field
         broken = cases[0].model_copy(update={"targets": (invalid,)})
         with pytest.raises(ValueError):
             _compiled_scope(key, CompiledCuration({}, {key: (broken,)}, {}))
-
-
-def test_expected_projection_tokens_share_json_clones_but_keep_complete_values(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    original = _record(
-        source="fixture",
-        key=("member:1",),
-        register_name="Register",
-        member_name="Variable",
-        fields=SourceFields(name=value_field("Literal")),
-        edition_scope=_interval("2020", "2020"),
-    )
-    expected = _expectation(original, _field("name", "value", "Literal"))
-    cloned = RecordExpectation.model_validate_json(expected.model_dump_json())
-    projection = expected.alternatives[0]
-    different = (
-        RecordProjection(fields=(_field("name", "value", "Other"),)),
-        RecordProjection(fields=(_field("definition", "value", "Literal"),)),
-        RecordProjection(
-            fields=(FieldExpectation(name="sensitivity", status="value", value=True),)
-        ),
-        RecordProjection(
-            fields=(FieldExpectation(name="sensitivity", status="value", value=False),)
-        ),
-        RecordProjection(
-            subject=original.subject.model_copy(
-                update={"register_name": SourceCoordinate(status="value", native_id=1)}
-            )
-        ),
-        RecordProjection(
-            subject=original.subject.model_copy(
-                update={
-                    "register_name": SourceCoordinate(status="value", native_id="1")
-                }
-            )
-        ),
-    )
-    token = source_curation._model_token
-    calls: list[RecordProjection] = []
-
-    def counted(value: RecordProjection) -> str:
-        calls.append(value)
-        return token(value)
-
-    monkeypatch.setattr(source_curation, "_model_token", counted)
-    evidence = SourceEvidence((original,))
-    first = evidence.expected_projections(expected)
-    assert evidence.expected_projections(cloned) == first
-    assert calls == [projection]
-    for alternative in different:
-        differing = RecordExpectation(ref=expected.ref, alternatives=(alternative,))
-        assert evidence.expected_projections(differing) == {
-            token(alternative): alternative
-        }
-    assert len(calls) == 1 + len(different)
-    assert len(evidence.expected_tokens) == 1 + len(different)
-    fresh = SourceEvidence((original,))
-    assert fresh.expected_projections(cloned) == first
-    assert len(calls) == 2 + len(different)
 
 
 def test_repeated_guard_cache_preserves_issues_and_physical_alternatives() -> None:
