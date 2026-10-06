@@ -59,7 +59,7 @@ def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
 
     from catalog_manifest import synthetic_manifest
     from reg_meta_build.artifact_identity import generation_id
-    from reg_meta_build.db import DDL, SCHEMA_VERSION, _populate_fts, seed_providers
+    from reg_meta_build.db import DDL, SCHEMA_VERSION, seed_providers
 
     db_dir = tmp_path_factory.mktemp("db")
     output = db_dir / "reg_meta.db"
@@ -90,7 +90,6 @@ def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
                 ("row_counts", json.dumps({"variables": 8, "states": 9})),
             ),
         )
-        _populate_fts(conn)
         conn.execute("ANALYZE")
         conn.commit()
         conn.execute("VACUUM")

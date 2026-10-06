@@ -16,7 +16,6 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 ALLOWLIST = {
-    "reg_meta_build/tests/_shared_fixtures.py",
     "reg_meta_build/tests/test_source_scope.py",
     "reg_schema/tests/test_structural.py",
     "scripts/tests/test_gh_issue.py",
