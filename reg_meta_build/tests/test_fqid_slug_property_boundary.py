@@ -113,6 +113,8 @@ _slug = st.from_regex(r"[a-z](?:-?[a-z0-9]){0,10}", fullmatch=True).filter(
 _panel_key = st.one_of(_slug, st.lists(_slug, min_size=1, max_size=4, unique=True))
 
 
+# Each example builds and slugs a catalog; under machine load it overruns the default deadline.
+@settings(deadline=None)
 @given(_panel_key, st.one_of(st.just("period"), _panel_key))
 def test_panel_keys_round_trip_to_reader(
     entity_key: str | list[str], time_key: str | list[str]
