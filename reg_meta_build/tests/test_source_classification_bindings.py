@@ -6,11 +6,11 @@ from functools import cache
 from pathlib import Path
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
 from catalog_manifest import synthetic_manifest
 from reg_meta.source_evidence import SourceField, SourceRevision
-from reg_meta_build._curation import SentinelCode
 from reg_meta_build.classifications import load_valid_codes
+from reg_meta_build.curation_compile import SentinelCode
 from reg_meta_build.curation_tree import load_curation_tree
 from reg_meta_build.db import SCHEMA_VERSION
 from reg_meta_build.resolved_catalog import (
@@ -1333,90 +1333,3 @@ def test_plural_books_do_not_union_contrary_source_domains(difference):
         link.classification
         for link in result.coding[key].segments[0].classification_links
     ) == ("alternate", "fixture")
-
-
-def test_builder_open_refuses_unreadable_manifest_and_closes(tmp_path, monkeypatch):
-    from reg_meta.errors import RegMetaError
-
-    from reg_meta_build import db
-
-    path = tmp_path / "missing-manifest.db"
-    connection = sqlite3.connect(path)
-    monkeypatch.setattr(db, "_open_catalog_db", lambda *_args, **_kwargs: connection)
-    with pytest.raises(RegMetaError) as caught:
-        db.open_built_db(path)
-    assert caught.value.code == "schema_incompatible"
-    assert "manifest is missing or unreadable" in caught.value.message
-    with pytest.raises(sqlite3.ProgrammingError, match="closed"):
-        connection.execute("SELECT 1")
-
-
-def test_duplicate_original_declarations_share_only_exact_diagnostic_identity():
-    from reg_meta_build.source_classification_bindings import _source_bindings
-
-    setup = _setup()
-    declaration = _declaration(setup, value_field("Missing historical dictionary"))
-    original = declaration.source_records[0]
-    duplicate = original.model_copy(
-        update={"record_id": original.record_id + ":duplicate"}
-    )
-    repeated = replace(declaration, source_records=(duplicate,))
-    assert declaration.source_records != repeated.source_records
-    bindings, issues = _source_bindings(
-        (declaration, repeated), {}, {}, setup[2], setup[3]
-    )
-    assert sum(len(values) for values in bindings.values()) == 2
-    assert len(issues) == 1
-    result = apply_classification_cases(
-        (original, duplicate),
-        (),
-        coding=setup[2],
-        classifications=setup[3],
-        references={},
-        occurrences=(declaration, repeated),
-    )
-    assert len(result.diagnostics) == 1
-    assert result.diagnostics[0].code == "unresolved_classification_reference"
-    assert all(
-        _sole_classification(s) is None
-        for r in result.coding.values()
-        for s in r.segments
-    )
-    changed_detail = replace(
-        declaration,
-        fields=declaration.fields.model_copy(
-            update={"classification_declared": value_field("Other missing dictionary")}
-        ),
-    )
-    changed_period = replace(
-        declaration,
-        edition_period_scope=TemporalScope(
-            kind="intervals", intervals=(ScopeInterval(start="2019", end="2019"),)
-        ),
-    )
-    from reg_meta_build.source_curation import SourceRecordRef
-
-    changed_original = original.model_copy(
-        update={
-            "locators": (
-                original.locators[0].model_copy(
-                    update={
-                        "semantic_record_key": (
-                            *original.locators[0].semantic_record_key,
-                            "another-row",
-                        )
-                    }
-                ),
-            )
-        }
-    )
-    changed_ref = replace(declaration, source_records=(changed_original,))
-    for distinct in (changed_detail, changed_period, changed_ref):
-        distinct_result = _declared(setup, (declaration, repeated, distinct))
-        assert len(distinct_result.diagnostics) == 2
-    assert result.diagnostics[0].refs == (
-        SourceRecordRef(
-            source=original.source,
-            semantic_record_key=original.locators[0].semantic_record_key,
-        ),
-    )

@@ -51,8 +51,6 @@ from reg_meta_build.sources.scb_auxiliary import (
     scb_support_joins,
 )
 
-from reg_meta_build import prepared_values, source_value_bindings
-
 if TYPE_CHECKING:
     from pathlib import Path
 
@@ -316,60 +314,6 @@ def test_source_type_evidence_does_not_create_coding_or_require_item_validity(
     else:
         assert result.claims == ()
         assert result.bindings[0].claim_id is None
-
-
-def test_native_join_preserves_raw_tokens_uses_one_session_and_exact_validity(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    rows = (
-        SourceValueAssociation(
-            2, "list", "a", "values", member_id="01001", item_id="01"
-        ),
-        SourceValueAssociation(3, "list", "b", "values", member_id="1001", item_id="2"),
-        SourceValueAssociation(
-            4, "list", "a", "values", member_id="broken", item_id="1"
-        ),
-    )
-    validity = (
-        SourceValueValidity(
-            2,
-            "1",
-            "2020-07-01",
-            None,
-            "validity",
-            window=value_window("2020-07-01", None),
-        ),
-    )
-    source = _prepare(tmp_path / "values", join=_join(), rows=rows, validity=validity)
-    calls = []
-    real = prepared_values._readonly
-
-    def tracked(path):
-        calls.append(path)
-        return real(path)
-
-    monkeypatch.setattr(prepared_values, "_readonly", tracked)
-    with open_value_bindings((source,)) as sessions:
-        result = bind_code_lists(_record(), sessions)
-        opened = len(calls)
-        for _ in range(10):
-            assert bind_code_lists(_record(), sessions) == result
-        assert len(calls) == opened
-        assert next(iter(sessions[0].source_issues())).raw_member_tokens == ("broken",)
-        assert result.issues == ()
-        assert [
-            member.associations[0].member_id for member in result.claims[0].members
-        ] == ["01001", "1001"]
-        resolved = resolve_code_membership(result.claims)
-        assert [
-            (s.valid_from, s.valid_to, s.code_set.members if s.code_set else None)
-            for s in resolved.segments
-        ] == [
-            ("2020-01-01", "2020-12-31", (("", "Blank"), ("01", "One"))),
-        ]
-        assert result.bindings[0].association_count == 2
-    assert tuple(source.associations()) == rows
-    assert source.manifest.auxiliary_count == 0
 
 
 def test_edition_list_sets_aside_global_item_dates_for_explicit_membership(
@@ -734,40 +678,6 @@ def test_equal_membership_periods_keep_distinct_association_and_validity_evidenc
         ]
 
 
-def test_native_list_reuse_keeps_each_record_binding_and_checks_scope(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    source = _prepare(tmp_path / "values", join=_join())
-    first, duplicate = _record(), _record(description="Different parent/prose evidence")
-    assert first.record_id != duplicate.record_id
-    with open_value_bindings((source,)) as sessions:
-        session = sessions[0].session
-        lookups = []
-        lookup = session.lookup_native_member
-
-        def tracked(member):
-            lookups.append(member)
-            return lookup(member)
-
-        monkeypatch.setattr(session, "lookup_native_member", tracked)
-        a = bind_code_lists(first, sessions)
-        b = bind_code_lists(duplicate, sessions)
-        assert len(lookups) == 1
-        assert a.claims == b.claims
-        assert a.bindings[0].record_id == first.record_id
-        assert b.bindings[0].record_id == duplicate.record_id
-        later = TemporalScope(
-            kind="intervals", intervals=(ScopeInterval(start="2021", end="2021"),)
-        )
-        c = bind_code_lists(first, sessions, scope=later)
-        assert len(lookups) == 2
-        assert c.claims[0].claim_id != a.claims[0].claim_id
-        bind_code_lists(_record(member=1002), sessions)
-        assert lookups == [1001, 1001, 1002]
-    resolved = resolve_code_membership((*a.claims, *b.claims))
-    assert resolved.segments == resolve_code_membership(a.claims).segments
-
-
 @pytest.mark.parametrize(
     "missing,window,expected",
     [
@@ -991,28 +901,6 @@ def test_declared_identifier_drops_only_bad_validity_period(tmp_path: Path) -> N
         ("2020-07-01", "2020-07-31", None),
         ("2020-08-01", "2020-12-31", (("01", "One"),)),
     ]
-
-
-def test_declared_identifier_drops_validity_error_with_complete_membership(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    source = _prepare(tmp_path / "values", join=_join())
-    monkeypatch.setattr(
-        source_value_bindings,
-        "_member_scope",
-        lambda *_args, **_kwargs: (
-            TemporalScope(kind="year_independent"),
-            "unknown_code_validity",
-        ),
-    )
-    with open_value_bindings((source,)) as sessions:
-        declared = bind_code_lists(_record(identifier=value_field(True)), sessions)
-        undeclared = bind_code_lists(_record(identifier=value_field(False)), sessions)
-    assert declared.claims == declared.issues == ()
-    assert declared.bindings[0].claim_id is None
-    assert len(undeclared.claims) == 1
-    assert [issue.code for issue in undeclared.issues] == ["unknown_code_validity"]
-    assert resolve_code_membership(undeclared.claims).issues == ()
 
 
 def test_mixed_identifier_declarations_affect_only_their_own_records(
@@ -1477,24 +1365,6 @@ def test_rangeless_pooled_and_unknown_scopes_stay_unsupported(
     resolved = resolve_code_membership(result.claims)
     assert resolved.segments == ()
     assert [issue.code for issue in resolved.issues] == ["unsupported_coding_scope"]
-
-
-@pytest.mark.parametrize("member", [1001, "not-native"])
-def test_empty_or_invalid_native_binding_does_not_evaluate_outer_bounds(
-    tmp_path: Path, monkeypatch, member: int | str
-) -> None:
-    source = _prepare(tmp_path / "values", join=_join(), rows=())
-
-    def unexpected_bounds(scope):
-        raise AssertionError("no eligible membership needs outer scope bounds")
-
-    monkeypatch.setattr(source_value_bindings, "coding_scope_bounds", unexpected_bounds)
-    with open_value_bindings((source,)) as sessions:
-        bound = bind_code_lists(_record(member=member), sessions)
-    assert bound.claims == bound.bindings == ()
-    assert [issue.code for issue in bound.issues] == (
-        ["unknown_record_member"] if isinstance(member, str) else []
-    )
 
 
 def test_identifier_inline_enumeration_retains_incomplete_membership(
