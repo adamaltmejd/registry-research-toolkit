@@ -6,7 +6,6 @@ input pipeline and asserts on the report ledger and the built SQLite artifact.
 
 from __future__ import annotations
 
-import gzip
 import json
 import sqlite3
 from dataclasses import dataclass
@@ -14,6 +13,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import var_row, write_input_bundle, write_scb_input
+from _pipeline_catalog_support import report_events
 from _prepared_fixtures import accept_prepared
 from _sos_fixtures import DEFAULT_REGISTERS, write_sos_input
 from openpyxl import load_workbook
@@ -72,16 +72,14 @@ class Sources:
             registers=registers,
             diagnostic=True,
         )
-        with gzip.open(report / "events.jsonl.gz", "rt", encoding="utf-8") as stream:
-            events = [json.loads(line) for line in stream]
-        return result, events, output
+        return result, report_events(report), output
 
     def append(self, register: str, text: str) -> None:
         path = self.curation / "registers" / register
         path.write_text(path.read_text(encoding="utf-8") + text, encoding="utf-8")
 
 
-def _issues(events: list[dict], code: str) -> list[dict]:
+def _issues_with_code(events: list[dict], code: str) -> list[dict]:
     return [e for e in events if e["kind"] == "issue" and e["code"] == code]
 
 
@@ -222,9 +220,9 @@ def test_retained_crosswalk_persists_literal_without_catalog_link(
     _, events, output = sources.build(tmp_path, "retained")
     assert [
         (e["severity"], e["detail"])
-        for e in _issues(events, "retained_unattached_source_relationship")
+        for e in _issues_with_code(events, "retained_unattached_source_relationship")
     ] == [("warning", RETAINED_REASON)]
-    assert not _issues(events, "unbound_source_relationship")
+    assert not _issues_with_code(events, "unbound_source_relationship")
     assert _crosswalk_dispositions(events) == ["retained_unattached"]
     with sqlite3.connect(output) as conn:
         assert conn.execute(
@@ -269,7 +267,7 @@ def test_unbound_code_list_issue_identity_is_its_exact_source_evidence(
         )
         for e in evidence
     )
-    issues = _issues(events, "unresolved_list_reference")
+    issues = _issues_with_code(events, "unresolved_list_reference")
     assert {i["severity"] for i in issues} == {"error"}
     assert sorted(i["subject"] for i in issues) == expected
     assert all(e["revision_id"].startswith(f"{SOS}@sha256:") for e in evidence)
@@ -297,7 +295,7 @@ def test_unassigned_original_column_finding_reaches_exact_ack(
     case_id = "curation/registers/scb/sample.toml#/acknowledge/1"
     assert [
         (i["severity"], i["acknowledged_by"], i["refs"])
-        for i in _issues(events, "unassigned_original_columns")
+        for i in _issues_with_code(events, "unassigned_original_columns")
     ] == [
         (
             "warning" if acknowledged else "error",
@@ -305,5 +303,5 @@ def test_unassigned_original_column_finding_reaches_exact_ack(
             [json.loads(ALTVALUE_REF)],
         )
     ]
-    stale = [i["case_id"] for i in _issues(events, "stale_curation_entry")]
+    stale = [i["case_id"] for i in _issues_with_code(events, "stale_curation_entry")]
     assert stale == ([] if acknowledged else [case_id])

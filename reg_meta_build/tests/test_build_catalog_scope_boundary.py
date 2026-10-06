@@ -65,6 +65,8 @@ def _with_errata(catalog: CatalogFixture) -> None:
 
 
 def _ledger(report: Path) -> list[bytes]:
+    # Raw ledger lines, not `report_events`: the check-is-a-prefix-of-the-build
+    # assertions compare bytes, which decoding would not.
     with gzip.open(report / "events.jsonl.gz", "rb") as stream:
         return stream.read().splitlines()
 

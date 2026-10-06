@@ -191,9 +191,14 @@ def catalog(tmp_path: Path, request) -> CatalogFixture:
     return CatalogFixture(prepared, commit, manifest.sha256, curation)
 
 
-def report_issues(report: Path) -> list[dict]:
+def report_events(report: Path) -> list[dict]:
+    """Every event of a build or check report ledger, decoded, in ledger order."""
     with gzip.open(report / "events.jsonl.gz", "rt", encoding="utf-8") as stream:
-        return [row for line in stream if (row := json.loads(line))["kind"] == "issue"]
+        return [json.loads(line) for line in stream]
+
+
+def report_issues(report: Path) -> list[dict]:
+    return [row for row in report_events(report) if row["kind"] == "issue"]
 
 
 def import_manifest(path: Path) -> dict[str, str]:

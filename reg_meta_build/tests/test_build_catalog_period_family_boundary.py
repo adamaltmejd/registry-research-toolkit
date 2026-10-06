@@ -2,14 +2,13 @@
 
 from __future__ import annotations
 
-import gzip
-import json
 import sqlite3
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import var_row, write_input_bundle, write_scb_input
+from _pipeline_catalog_support import report_issues
 from _prepared_fixtures import accept_prepared
 from reg_meta_build.pipeline import build_catalog
 from reg_meta_build.prepared_catalog import prepare_catalog_sources
@@ -103,12 +102,6 @@ def family_catalog(tmp_path: Path) -> FamilyCatalog:
     return FamilyCatalog(prepared, commit, manifest.sha256, curation)
 
 
-def _issues(report: Path) -> list[tuple[str, str]]:
-    with gzip.open(report / "events.jsonl.gz", "rt", encoding="utf-8") as stream:
-        rows = [json.loads(line) for line in stream]
-    return [(row["code"], row["severity"]) for row in rows if row["kind"] == "issue"]
-
-
 def test_relation_resolves_to_curated_period_family_variable(
     family_catalog: FamilyCatalog, tmp_path: Path
 ) -> None:
@@ -133,6 +126,8 @@ def test_slice_defers_relation_into_unselected_period_family(
     result = family_catalog.build(output, report, registers=("1",), diagnostic=True)
     assert result["counts"].get("error", 0) == 0
     assert result["counts"]["deferred_references"] == 1
-    assert _issues(report) == [("deferred_out_of_slice_reference", "warning")]
+    assert [(i["code"], i["severity"]) for i in report_issues(report)] == [
+        ("deferred_out_of_slice_reference", "warning")
+    ]
     with sqlite3.connect(output) as conn:
         assert conn.execute("SELECT COUNT(*) FROM variable_same_as").fetchone() == (0,)

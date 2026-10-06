@@ -9,13 +9,13 @@ reference. Curated classification files live under
 
 from __future__ import annotations
 
-import gzip
 import json
 import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import var_row, write_input_bundle, write_scb_input
+from _pipeline_catalog_support import report_issues
 from _prepared_fixtures import accept_prepared
 from reg_meta_build.pipeline import build_catalog, check_curation
 from reg_meta_build.prepared_catalog import prepare_catalog_sources
@@ -123,13 +123,7 @@ def amount_classifications(db: Path) -> list[str]:
 
 
 def issue_codes(report: Path) -> list[tuple[str, str, str]]:
-    with gzip.open(report / "events.jsonl.gz", "rt", encoding="utf-8") as stream:
-        rows = [json.loads(line) for line in stream]
-    return [
-        (row["code"], row["severity"], row["subject"])
-        for row in rows
-        if row["kind"] == "issue"
-    ]
+    return [(i["code"], i["severity"], i["subject"]) for i in report_issues(report)]
 
 
 @pytest.mark.parametrize("declared", ["A", "Source A"])
