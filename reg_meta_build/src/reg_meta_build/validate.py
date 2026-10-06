@@ -333,8 +333,8 @@ def _check_schema_shape(
             result.ok(f"{required} present")
         else:
             result.fail(f"{required} missing")
-    # A2.7 adds variable_instance / variable_alias_build / variable_context to
-    # the dropped-before-ship set (build-time-only, like unika_summary).
+    # Build-time-only staging tables, dropped before ship (A2.7 added
+    # variable_instance / variable_alias_build / variable_context).
     for absent in (
         "cvid_value_code",
         "value_item",
@@ -342,6 +342,8 @@ def _check_schema_shape(
         "variable_instance",
         "variable_alias_build",
         "variable_context",
+        "classification_candidate",
+        "unika_summary",
     ):
         if absent in tables:
             result.fail(f"{absent} should have been dropped")
