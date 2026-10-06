@@ -1,13 +1,13 @@
 """Source claims and accepted identity are separate requirements for lineage."""
 
 import pytest
+from _catalog_dependency_support import variable as _variable
 from catalog_manifest import synthetic_manifest
 from reg_meta_build.catalog_dependencies import CatalogDependencyError
 from reg_meta_build.catalog_lineage import resolve_catalog_lineage
 from reg_meta_build.resolved_catalog import ResolvedRegister, ResolvedVariant
 from reg_meta_build.resolved_metadata import ResolvedMetadata, ResolvedVariableSameAs
 from reg_meta_build.source_curation import SourceRecordRef
-from test_catalog_dependencies import _variable
 
 
 def fixture(
