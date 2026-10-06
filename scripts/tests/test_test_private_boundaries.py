@@ -17,16 +17,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 ALLOWLIST = {
     "reg_meta_build/tests/_shared_fixtures.py",
-    "reg_meta_build/tests/test_source_classification_bindings.py",
-    "reg_meta_build/tests/test_source_coding_choices.py",
-    "reg_meta_build/tests/test_source_curation.py",
-    "reg_meta_build/tests/test_source_documentary.py",
-    "reg_meta_build/tests/test_source_effects.py",
-    "reg_meta_build/tests/test_source_naming.py",
-    "reg_meta_build/tests/test_source_parent_facts.py",
-    "reg_meta_build/tests/test_source_representations.py",
     "reg_meta_build/tests/test_source_scope.py",
-    "reg_meta_build/tests/test_source_value_bindings.py",
     "reg_schema/tests/test_structural.py",
     "scripts/tests/test_gh_issue.py",
     "scripts/tests/test_prototype_scb_inputs.py",

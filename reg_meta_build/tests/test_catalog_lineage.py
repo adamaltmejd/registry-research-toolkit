@@ -396,11 +396,11 @@ def test_independent_register_only_attribution_retains_missing_endpoint_warning(
 
 
 def _guarded_ambiguous_lineage():
+    from _source_scope_support import record
     from reg_meta.source_evidence import canonical_sha256
     from reg_meta_build.catalog_lineage import lineage_acknowledgement_sha256
     from reg_meta_build.source_coordinates import source_register_key
     from reg_meta_build.source_curation import AcknowledgeDecision, CurationCase
-    from test_source_scope import record
 
     variables, options = fixture(second_variant=True)
     options["variants"] += (

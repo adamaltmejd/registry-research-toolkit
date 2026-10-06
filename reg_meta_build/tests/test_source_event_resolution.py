@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import replace
 
 import pytest
+from _source_scope_support import record, resolve
 from catalog_manifest import synthetic_manifest
 from reg_meta.errors import RegMetaError
 from reg_meta.source_evidence import DeliveredCell, canonical_sha256
@@ -22,7 +23,6 @@ from reg_meta_build.source_event_resolution import SourceEventBindings
 from reg_meta_build.source_records import NativeCoordinates, value_field
 from reg_meta_build.source_reference_records import SourceEventDeclaration
 from test_source_reference_resolution import LOCATOR, REVISION
-from test_source_scope import record, resolve
 
 
 def _event(
