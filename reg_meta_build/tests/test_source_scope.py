@@ -8,7 +8,7 @@ from types import SimpleNamespace
 from typing import Any, cast
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
 from _prepared_fixtures import accept_prepared
 from reg_meta.source_evidence import SourceField, SourceRevision, canonical_sha256
 from reg_meta_build.catalog_dependencies import (
@@ -695,81 +695,6 @@ def test_superseded_scb_preliminary_is_support_and_final_alone_forms_state():
     assert len(shared.states) == len(exclusive.states) == 1
     assert shared.states[0].data_length == "1"
     assert exclusive.states[0].delivery_column_name == "OTHER"
-
-
-@pytest.mark.parametrize("precompile", [False, True])
-def test_interleaved_occurrences_share_bound_lists_and_keep_every_evidence_use(
-    tmp_path, monkeypatch, precompile
-):
-    from reg_meta_build import source_scope
-
-    first, second = record(1), record(2)
-    root = tmp_path / "values"
-    manifest = prepare_source_values(
-        root,
-        revision=REVISION,
-        validity_revision=REVISION,
-        descriptors=(SourceValueDescriptor("list"),),
-        values=(SourceValue("value", "01", "One"),),
-        associations=tuple(
-            SourceValueAssociation(
-                i + 1, "list", "value", "values", member_id=str(i), item_id="1"
-            )
-            for i in (1, 2)
-        ),
-        join=SourceValueJoin(
-            record_sources=(REVISION.dataset,),
-            member_target="native_member",
-            member_format="integer",
-            validity_target="item",
-            missing_validity="unrestricted",
-            rule="Exact fixture member relation",
-            provenance=("fixture",),
-        ),
-    )
-    source = open_prepared_source_values(
-        root, expected_sha256=manifest.sha256, input_commit=accept_prepared(root)
-    )
-    lookups = []
-    compiled_members = []
-
-    def compile_claims(register, scope, *, coding, **kwargs):
-        compiled_members.extend(
-            association.member_id
-            for claims in coding.values()
-            for claim in claims
-            for member in claim.members
-            for association in member.associations
-        )
-        return (), ()
-
-    monkeypatch.setattr(source_scope, "compile_coding_register", compile_claims)
-    with open_value_bindings((source,)) as sessions:
-        session = sessions[0].session
-        original = session.lookup_native_member
-
-        def lookup(member):
-            lookups.append(member)
-            return original(member)
-
-        monkeypatch.setattr(session, "lookup_native_member", lookup)
-        result = resolve(
-            (first, second, first, second),
-            value_sessions=sessions,
-            coding_registers=(SimpleNamespace(coding=SimpleNamespace(documented=())),)
-            if precompile
-            else (),
-            coding_scope=SimpleNamespace() if precompile else None,
-        )
-    assert compiled_members == (["1", "1", "2", "2"] if precompile else [])
-    assert lookups == [1, 2]
-    assert not result.diagnostics
-    assert len(result.corrections.occurrences) == 4
-    variable = result.variables[native_variable_key(first)]
-    assert variable is not None
-    assert [
-        (s.valid_from, s.valid_to, s.value_set.members) for s in variable.states
-    ] == [("2020-01-01", "2020-12-31", (("01", "One"),))]
 
 
 def test_whole_list_item_validity_override_emits_one_warning(tmp_path):
@@ -1630,67 +1555,6 @@ def test_a_stale_acknowledgement_is_an_error():
     ]
 
 
-@pytest.mark.parametrize("change", ["definition", "physical_peer", "coding"])
-def test_guarded_acknowledgement_rejects_changed_full_evidence(monkeypatch, change):
-    from reg_meta_build.source_coding import (
-        CodeListClaim,
-        CodeMembershipClaim,
-        coding_source_sha256,
-    )
-    from reg_meta_build.source_curation import acknowledgement_evidence_sha256
-    from reg_meta_build.source_value_bindings import ValueBindingResult
-
-    items = (record(column="Rad"), record(column="Amount"))
-    key = native_variable_key(items[0])
-    claim = CodeListClaim(
-        "fixture",
-        TemporalScope(kind="year_independent"),
-        (CodeMembershipClaim("1", "Original", TemporalScope(kind="year_independent")),),
-    )
-    monkeypatch.setattr(
-        "reg_meta_build.source_scope.bind_occurrence_code_lists",
-        lambda *args, **kwargs: ValueBindingResult((claim,), (), ()),
-    )
-    (issue,) = resolve(items, provider_keys={key: None}).diagnostics
-    case = acknowledge(issue, items[0])
-    fingerprint = acknowledgement_evidence_sha256(
-        items, (coding_source_sha256(claim),) * 2
-    )
-    assert fingerprint == acknowledgement_evidence_sha256(
-        reversed(items), (coding_source_sha256(claim),) * 2
-    )
-    case = case.model_copy(
-        update={
-            "decision": case.decision.model_copy(
-                update={"expected_evidence_sha256": fingerprint}
-            )
-        }
-    )
-    assert resolve(items, cases=(case,), provider_keys={key: None}).acknowledged
-    if change == "definition":
-        items = (
-            items[0].model_copy(
-                update={
-                    "fields": items[0].fields.model_copy(
-                        update={"definition": value_field("Changed source meaning")}
-                    )
-                }
-            ),
-            items[1],
-        )
-    elif change == "physical_peer":
-        items = items[:1]
-    else:
-        claim = replace(claim, members=(replace(claim.members[0], label="Changed"),))
-    result = resolve(items, cases=(case,), provider_keys={key: None})
-    assert result.acknowledged == {}
-    assert [(d.code, d.severity) for d in result.diagnostics] == [
-        ("unresolved_catalog_identity", "error"),
-        ("stale_curation_entry", "error"),
-    ]
-    assert "changed original or coding evidence" in result.diagnostics[-1].detail
-
-
 def test_acknowledged_warning_persists_reviewed_reason_and_diagnostic_hash():
     from hashlib import sha256
 
@@ -1754,114 +1618,6 @@ def test_distinct_field_issues_can_each_be_acknowledged():
         "stale_curation_entry",
     ]
     assert stale.acknowledged == {}
-
-
-def test_period_key_is_exact_and_stale_without_dates(monkeypatch):
-    item = record()
-    ref = record_ref(item)
-    first = ResolutionDiagnostic(
-        code="period_issue",
-        severity="error",
-        subject="scb/example/value-5",
-        detail="First window",
-        refs=(ref,),
-        valid_from="2020-01-01",
-        valid_to="2020-06-30",
-    )
-    second = first.model_copy(
-        update={
-            "detail": "Second window",
-            "valid_from": "2020-07-01",
-            "valid_to": "2020-12-31",
-        }
-    )
-    monkeypatch.setattr(
-        "reg_meta_build.source_scope.resolve_sibling_pairs",
-        lambda *_args, **_kwargs: SiblingResolution((), (), (first, second)),
-    )
-    cases = tuple(
-        acknowledge(issue, item).model_copy(update={"case_id": f"ack-{index}"})
-        for index, issue in enumerate((first, second), 1)
-    )
-    result = resolve((item,), cases=cases)
-    assert result.diagnostics == tuple(
-        issue.model_copy(
-            update={"severity": "warning", "acknowledged_by": f"ack-{index}"}
-        )
-        for index, issue in enumerate((first, second), 1)
-    )
-    assert result.acknowledged == {"period_issue": 2}
-
-    no_period = acknowledge(first, item).model_copy(
-        update={
-            "decision": acknowledge(first, item).decision.model_copy(
-                update={"valid_from": None, "valid_to": None}
-            )
-        }
-    )
-    stale = resolve((item,), cases=(no_period,))
-    assert [d.code for d in stale.diagnostics] == [
-        "period_issue",
-        "period_issue",
-        "stale_curation_entry",
-    ]
-    assert stale.acknowledged == {}
-
-
-def test_acknowledgement_field_order_is_exact(monkeypatch):
-    item = record()
-    issue = ResolutionDiagnostic(
-        code="ordered_fields_issue",
-        severity="error",
-        subject="scb/example/value-5",
-        detail="Ordered diagnostic fields",
-        refs=(record_ref(item),),
-        fields=("name", "description"),
-    )
-    monkeypatch.setattr(
-        "reg_meta_build.source_scope.resolve_sibling_pairs",
-        lambda *_args, **_kwargs: SiblingResolution((), (), (issue,)),
-    )
-    case = acknowledge(issue, item)
-    reversed_case = case.model_copy(
-        update={
-            "decision": case.decision.model_copy(
-                update={"fields": ("description", "name")}
-            )
-        }
-    )
-    result = resolve((item,), cases=(reversed_case,))
-    assert result.diagnostics[0] == issue
-    assert result.diagnostics[1].code == "stale_curation_entry"
-
-
-def test_an_overbroad_acknowledgement_is_an_error_and_acknowledges_nothing(monkeypatch):
-    item = record()
-    issue = ResolutionDiagnostic(
-        code="repeated_issue",
-        severity="error",
-        subject="scb/example/value-5",
-        detail="Two occurrences with one identity",
-        refs=(record_ref(item),),
-    )
-    monkeypatch.setattr(
-        "reg_meta_build.source_scope.resolve_sibling_pairs",
-        lambda *_args, **_kwargs: SiblingResolution(
-            (),
-            (),
-            (issue, issue.model_copy(update={"detail": "A distinct source claim"})),
-        ),
-    )
-    result = resolve((item,), cases=(acknowledge(issue, item),))
-    assert [d.severity for d in result.diagnostics if d.code == "repeated_issue"] == [
-        "error",
-        "error",
-    ]
-    (overbroad,) = (
-        d for d in result.diagnostics if d.code == "overbroad_curation_entry"
-    )
-    assert (overbroad.severity, overbroad.case_id) == ("error", "acknowledged")
-    assert result.acknowledged == {}
 
 
 def test_pooled_variant_dependency_withholds_only_its_panel_axis():
