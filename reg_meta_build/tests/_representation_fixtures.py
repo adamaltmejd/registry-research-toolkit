@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import sqlite3
 from calendar import monthrange
 from contextlib import closing
 from typing import TYPE_CHECKING
 
 from reg_meta.db import SCHEMA_VERSION
-from reg_meta_build.db import DDL, _populate_fts, _value_set_hash, seed_providers
+from reg_meta_build.db import DDL, seed_providers
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -44,7 +46,8 @@ def _build(tmp_path, *, slug, name, years, codes, windows):
         )
         conn.execute(
             "INSERT INTO value_set (value_set_id, member_hash) VALUES (1, ?)",
-            (_value_set_hash(codes),),
+            # The DDL only needs a unique 32-byte digest; reg_meta never reads it.
+            (hashlib.sha256(json.dumps(sorted(codes)).encode()).digest(),),
         )
         for code_id, (code, label) in enumerate(codes):
             conn.execute(
@@ -67,7 +70,7 @@ def _build(tmp_path, *, slug, name, years, codes, windows):
             "delivery_column_name, valid_from, valid_to) VALUES (1, 10, ?, ?, ?)",
             windows,
         )
-        _populate_fts(conn)
+        # No FTS rows: the importers resolve periods and aliases, they never search.
         conn.commit()
     return output
 

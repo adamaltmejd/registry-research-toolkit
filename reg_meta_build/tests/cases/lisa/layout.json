@@ -1,0 +1,160 @@
+{
+  "Individ": {
+    "title": "Individvariabler",
+    "headers": [
+      "Kolumnnamn",
+      "Beskrivning",
+      "År",
+      "Register",
+      "Känslig1",
+      "Grundregister"
+    ],
+    "text_rows": {
+      "5": "Demografiska variabler",
+      "6": "Årsoberoende variabler, baseras på uppgifter avseende senast året av LISA",
+      "7": "Födelseland",
+      "31": "Avlidna",
+      "34": "In- och utvandring",
+      "70": "För hushåll:",
+      "105": "För familj:",
+      "120": "Utbildningsvariabler",
+      "138": "Sysselsättningsvariabler",
+      "139": "Befolkningens arbetsmarknadsstatus (BAS) är källa från 2022 om inget annat år anges",
+      "201": "Yrke 7)",
+      "218": "För största förvärvskälla:",
+      "284": "För näst största förvärvskälla:",
+      "351": "För tredje största förvärvskälla:",
+      "405": "Inkomstvariabler",
+      "406": "Inkomst av förvärvskälla",
+      "446": "Arbetstidsrelaterad social inkomst",
+      "447": "Studier:",
+      "468": "Värnplikt/Grundläggande militär utbildning:",
+      "477": "Föräldraledighet:",
+      "503": "Sjukdom/Arbetsskada/Rehabilitering:",
+      "573": "Arbetslöshet:",
+      "587": "Arbetsmarknadspolitisk åtgärd:",
+      "613": "Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag):",
+      "648": "Delpension:",
+      "652": "Övrig arbetstidrelaterad social inkomst:",
+      "658": "Övrig inkomst",
+      "659": "Kapitalinkomst",
+      "663": "Annan inkomst",
+      "664": "Pension:",
+      "681": "Tjänstepension:",
+      "694": "Övrig pension:",
+      "699": "Summa inkomst av pensioner:",
+      "703": "Yrkes- och arbetsskadelivränta:",
+      "709": "Annan livränta:",
+      "712": "Efterlevandeförmån:",
+      "719": "Familjerelaterade inkomster:",
+      "732": "Övriga inkomster/ersättningar:",
+      "749": "Disponibel inkomst",
+      "766": "Huvudsaklig inkomstkälla, Befolkningens abetsmarknadsstatus",
+      "788": "Registerbaserad aktivitetsstatistik, RAKS"
+    },
+    "context_rows": {
+      "323": [
+        null,
+        "Före 2010 finns inte kod 5 (företagare i eget AB). För åren 1993- finns istället variabeln KU1Faman som anges som 1 om personen är en företagare i eget AB.",
+        null,
+        null,
+        null,
+        "RAMS-Jobb"
+      ],
+      "815": [
+        null,
+        "_ftnref2",
+        null,
+        null,
+        null,
+        null
+      ],
+      "816": [
+        null,
+        "1 Markering för variabler som innehåller känsliga personuppgifter (Ja/Nej/I vissa fall). Variabeln betraktas som en känslig personuppgift och kräver godkänd etikprövning hos Etikprövningsmyndigheten om utlämnandet görs för forskningsändamål.",
+        null,
+        null,
+        null,
+        null
+      ],
+      "817": [
+        null,
+        "2 Variabeln finns i två typer, kontakta SCB:s handläggare för vidare information",
+        null,
+        null,
+        null,
+        null
+      ],
+      "818": [
+        null,
+        "5 Fr.o.m. 2014 fördelas familjeinkomster mellan sökande och medsökande, tidigare ingick dessa ersättningar endast för den sökande",
+        null,
+        null,
+        null,
+        null
+      ],
+      "819": [
+        null,
+        "7 Från och med årgång 2020 används inte längre yrkeskoderna 01, 02, 03 (militärer) och 3360 (poliser), individer med dessa yrkeskoder ingår i stället i gruppen med okänt yrke.",
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  "Individ årsoberoende": {
+    "title": "Årgångsoberoende individvariabler, 3 tabeller",
+    "headers": [
+      "Kolumnamn",
+      "Beskrivning",
+      "Register",
+      "Grundregister"
+    ],
+    "text_rows": {
+      "5": "Födelseland",
+      "30": "Avlidna",
+      "34": "In- och Utvandring"
+    },
+    "context_rows": {}
+  },
+  "Företag": {
+    "title": "Företags- och organisationsvariabler",
+    "headers": [
+      "Kolumnnamn",
+      "Beskrivning",
+      "År",
+      "Register",
+      "Grundregister"
+    ],
+    "text_rows": {
+      "5": "Populationen i LISA:s företagstabell är företag med minst 1 sysselsatt enligt RAMS/BAS.",
+      "6": "1990-2001: 16 år och äldre, 2002-2011: 16-84 år, 2012-: 16-74 år",
+      "8": "Karaktäristikor för organisationer",
+      "48": "Ekonomiska nyckeltal och ekonomisk grunddata finns för företag som ingår i Företagens ekonomi (FEK).",
+      "49": "FEK täcker näringslivet (exklusive de finansiella och offentliga sektorerna samt hushållens icke-vinstdrivande",
+      "50": " organisationer).",
+      "52": "Ekonomiska nyckeltal för företag",
+      "90": "Ekonomisk grunddata för företag",
+      "91": "Från 2024 inkluderas godkända resultaträkningar även om balansräkning är underkänd och tvärtom.",
+      "93": "Resultaträkning",
+      "111": "Balansräkning"
+    },
+    "context_rows": {}
+  },
+  "Arbetsställe": {
+    "title": "Arbetsställevariabler",
+    "headers": [
+      "VariabelNamn",
+      "Variabel i klartext",
+      "Årgång",
+      "Register",
+      "Grundregister"
+    ],
+    "text_rows": {
+      "5": "Populationen i LISA:s företagstabell är företag med minst 1 sysselsatt enligt RAMS/BAS.",
+      "6": "1990-2001: 16 år och äldre, 2002-2011: 16-84 år, 2012-: 16-74 år"
+    },
+    "context_rows": {}
+  }
+}

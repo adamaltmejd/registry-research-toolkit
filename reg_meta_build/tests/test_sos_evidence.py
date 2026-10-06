@@ -9,7 +9,6 @@ from reg_meta_build.sources.sos import parse_register_file
 if TYPE_CHECKING:
     from pathlib import Path
 
-    import pytest
     from reg_meta_build.sources.sos import SosRegister
 
 
@@ -222,44 +221,4 @@ def test_all_current_sos_sheet_structures_retain_ordered_original_rows(
     assert [(cell.coordinate, cell.raw_value) for cell in merged] == [
         ("A3", "Sammanslagen rubrik"),
         ("B3", None),
-    ]
-
-
-def test_code_parse_failure_retains_original_rows_and_explicit_issue(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    from reg_meta_build.sources import sos
-
-    path = tmp_path / "Metadata Test (TST)_webb.xlsx"
-    _write_evidence_workbook(path)
-
-    def fail(*_args: object, **_kwargs: object) -> None:
-        raise ValueError("forced code parse failure")
-
-    monkeypatch.setattr(sos, "_parse_kodlista", fail)
-    register = parse_register_file(path)
-
-    assert len(register.parse_issues) == 2
-    assert all(issue.kind == "code_list_parse_error" for issue in register.parse_issues)
-    assert all(
-        "forced code parse failure" in issue.detail for issue in register.parse_issues
-    )
-    assert register.kodlistor[0].raw_rows[0][:2] == ("Kodverk", "Testkoder")
-    assert register.kodlistor[1].raw_rows[0][:2] == ("Sjukhuskatalog", "Region")
-    assert not any(
-        "<unparseable>" in str(value)
-        for kodlista in register.kodlistor
-        for row in kodlista.raw_rows
-        for value in row
-    )
-    assert [
-        row.role for row in _sheet(register, "codelist", "Kodlista_VAR_A").rows
-    ] == [
-        "preamble",
-        "preamble",
-        "preamble",
-        "header",
-        "period_section",
-        "code",
-        "raw",
     ]

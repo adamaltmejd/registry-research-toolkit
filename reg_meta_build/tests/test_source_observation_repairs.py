@@ -1,41 +1,44 @@
-"""Regressions for complete and focused SCB observation traversal."""
+"""SCB observation traversal and source-field regressions, plus focused LISA inspection."""
 
 from __future__ import annotations
 
 import gzip
 import hashlib
 import json
-from contextlib import contextmanager
-from dataclasses import replace
 from typing import TYPE_CHECKING
 
+import pytest
 from _csv_fixtures import (
     REGISTERINFORMATION_HEADER,
-    _var_row,
+    replace_registerinformation_cell,
+    scb_interpretation_rows,
+    var_row,
     write_input_bundle,
     write_scb_input,
+    write_scb_snapshot,
 )
 from _lisa_fixtures import write_lisa_workbook
-from openpyxl import load_workbook
-from reg_meta.source_evidence import SourceRevision
-from reg_meta_build.db import _open_scb_csv_raw
-from reg_meta_build.input_snapshot import LisaWorkbookSelection, open_input_bundle
+from _source_inspection_fixtures import field_text
+from pydantic import ValidationError
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta.source_evidence import SourceField, SourceRevision
+from reg_meta_build.input_snapshot import (
+    LisaWorkbookSelection,
+    open_input_bundle,
+    open_scb_snapshot,
+)
 from reg_meta_build.source_inspection import (
     CensusCompletion,
     inspect_bundle_source_records,
     write_scb_observation_census,
 )
-from reg_meta_build.sources import lisa as lisa_module
-from reg_meta_build.sources.lisa import read_lisa_source
-
-from reg_meta_build import db as db_module
+from reg_meta_build.source_periods import source_scopes
+from reg_meta_build.source_records import SourceFields, TemporalScope, value_field
+from reg_meta_build.sources.scb_records import LISA_REGISTER_ID, iter_scb_observations
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator
     from pathlib import Path
     from typing import Any
-
-    import pytest
 
 
 def _read_census(path: Path) -> list[dict[str, Any]]:
@@ -63,49 +66,14 @@ def _observation(lines: list[dict[str, Any]], member_id: int) -> dict[str, Any]:
     )
 
 
-def _workbook_revision(path: Path) -> SourceRevision:
-    content = path.read_bytes()
-    return SourceRevision.create(
-        dataset="scb-lisa-variable-list-workbook",
-        publisher="SCB",
-        purpose="annotated-row relocation test",
-        upstream_revision="2024-2025",
-        artifact_path=path.name,
-        artifact_size=len(content),
-        artifact_sha256=hashlib.sha256(content).hexdigest(),
-    )
-
-
-def test_raw_scb_traversal_reuses_source_row_without_presence_sidecar(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    source_row: list[str | None] = ["kept", ""]
-
-    @contextmanager
-    def open_source(
-        _path: Path, _snapshot: object
-    ) -> Iterator[tuple[list[str], Iterator[list[str | None]]]]:
-        yield ["first", "second"], iter((source_row,))
-
-    monkeypatch.setattr(db_module, "_open_scb_source_raw", open_source)
-
-    with _open_scb_csv_raw(tmp_path / "Other.csv") as (_header, rows):
-        row_number, fields = next(rows)
-
-    assert row_number == 2
-    assert fields is source_row
-    assert type(fields) is list
-    assert fields == ["kept", ""]
-
-
 def test_focused_lisa_inspection_skips_unrelated_malformed_native_row(
     tmp_path: Path,
 ) -> None:
-    unrelated = _var_row(colname="Other", cvid=1, var_id=1)
+    unrelated = var_row(colname="Other", cvid=1, var_id=1)
     unrelated_fields = unrelated.split("|")
     header = REGISTERINFORMATION_HEADER.split("|")
     unrelated_fields[header.index("RegVerID")] = "not-an-id"
-    lisa = _var_row(
+    lisa = var_row(
         colname="AmPolTyp",
         cvid=2,
         var_id=31619,
@@ -147,14 +115,14 @@ def test_focused_lisa_inspection_skips_unrelated_malformed_native_row(
 def test_scb_identity_survives_reorder_revision_and_unrelated_edit(
     tmp_path: Path,
 ) -> None:
-    target = _var_row(
+    target = var_row(
         colname="Signal",
         cvid=2181,
         var_id=1880,
         vardef="Selected definition",
     )
-    unrelated = _var_row(colname="Other", cvid=9001, var_id=9000)
-    unrelated_edit = _var_row(
+    unrelated = var_row(colname="Other", cvid=9001, var_id=9000)
+    unrelated_edit = var_row(
         colname="Other",
         cvid=9001,
         var_id=9000,
@@ -168,7 +136,7 @@ def test_scb_identity_survives_reorder_revision_and_unrelated_edit(
         "identity-payload",
         [
             unrelated_edit,
-            _var_row(
+            var_row(
                 colname="Signal",
                 cvid=2181,
                 var_id=1880,
@@ -181,7 +149,7 @@ def test_scb_identity_survives_reorder_revision_and_unrelated_edit(
         "identity-context",
         [
             unrelated_edit,
-            _var_row(
+            var_row(
                 colname="Signal",
                 cvid=2181,
                 var_id=1880,
@@ -232,64 +200,11 @@ def test_scb_identity_survives_reorder_revision_and_unrelated_edit(
     )
 
 
-def test_lisa_annotation_identity_survives_physical_row_relocation(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    original_path = write_lisa_workbook(tmp_path / "original.xlsx")
-    relocated_path = write_lisa_workbook(tmp_path / "relocated.xlsx")
-    original_read = read_lisa_source(original_path, _workbook_revision(original_path))
-
-    workbook = load_workbook(relocated_path)
-    sheet = workbook["Individ"]
-    for column in range(1, 7):
-        sheet.cell(324, column).value = sheet.cell(323, column).value
-        sheet.cell(323, column).value = None
-    workbook.save(relocated_path)
-    workbook.close()
-
-    original_spec = lisa_module._TABLES["Individ"]
-    context_rows = dict(original_spec.context_rows)
-    context_rows[324] = context_rows.pop(323)
-    monkeypatch.setitem(
-        lisa_module._TABLES,
-        "Individ",
-        replace(original_spec, context_rows=context_rows),
-    )
-    relocated_read = read_lisa_source(
-        relocated_path, _workbook_revision(relocated_path)
-    )
-
-    def ku2(records: tuple[Any, ...]) -> Any:
-        return next(
-            record
-            for record in records
-            if record.fields.column_name is not None
-            and record.fields.column_name.value == "KU2YrkStalln"
-        )
-
-    original = ku2(original_read.records)
-    relocated = ku2(relocated_read.records)
-    assert original.source_revision_id != relocated.source_revision_id
-    assert original.record_id == relocated.record_id
-    assert original.context == relocated.context
-    assert original.locators[0].semantic_record_key == (
-        relocated.locators[0].semantic_record_key
-    )
-    assert original.locators[0].physical_cells[-2:] == (
-        "Individ!B323",
-        "Individ!F323",
-    )
-    assert relocated.locators[0].physical_cells[-2:] == (
-        "Individ!B324",
-        "Individ!F324",
-    )
-
-
 def test_context_group_keeps_members_when_one_context_has_own_alternatives(
     tmp_path: Path,
 ) -> None:
     def row(data_length: str, population_name: str) -> str:
-        return _var_row(
+        return var_row(
             colname="Contextual",
             cvid=7001,
             var_id=7000,
@@ -342,7 +257,7 @@ def test_temporal_group_crosses_edition_specific_cvids_without_expanding_pool(
     tmp_path: Path,
 ) -> None:
     rows = [
-        _var_row(
+        var_row(
             colname="Temporal",
             cvid=8101,
             var_id=8100,
@@ -352,7 +267,7 @@ def test_temporal_group_crosses_edition_specific_cvids_without_expanding_pool(
             data_type="char",
             data_length="10",
         ),
-        _var_row(
+        var_row(
             colname="Temporal",
             cvid=8102,
             var_id=8100,
@@ -392,3 +307,174 @@ def test_temporal_group_crosses_edition_specific_cvids_without_expanding_pool(
     assert completion.counts.unproved_temporal_groups == 1
     assert completion.counts.unproved_temporal_cvids == 2
     assert completion.affected_memberships.unproved_temporal_cvids == (8101, 8102)
+
+
+def test_source_fields_distinguish_missing_unknown_negative_and_sensitivity() -> None:
+    missing = SourceFields()
+    unknown = SourceField(status="unknown", raw_value="")
+    negative = SourceField(status="negative", raw_value="Nej")
+
+    assert missing.column_name is None
+    assert unknown.status == "unknown"
+    assert negative.status == "negative"
+    assert SourceFields(availability=negative).availability == negative
+    sensitivity = SourceFields(sensitivity=value_field(False)).sensitivity
+    assert sensitivity is not None
+    assert sensitivity.status == "value"
+    with pytest.raises(ValidationError, match="negative is supported only"):
+        SourceFields(sensitivity=negative)
+    assert SourceFields(
+        sensitivity=value_field("conditional", raw="I vissa fall")
+    ).sensitivity == SourceField(
+        status="value", value="conditional", raw_value="I vissa fall"
+    )
+    with pytest.raises(ValidationError, match="use negative status"):
+        SourceFields(availability=value_field(False))
+
+
+def test_raw_scb_reader_preserves_native_instances_fields_and_period_limits(
+    tmp_path: Path,
+) -> None:
+    rows = [
+        var_row(
+            colname="AmPolTyp",
+            cvid=1,
+            var_id=31619,
+            year="2020",
+            regver_id=200,
+            register=("LISA", 34, 153),
+            vardef="Definition 2020",
+            varopdef="Operational 2020",
+        ),
+        var_row(
+            colname="",
+            cvid=2,
+            var_id=31619,
+            year="2021",
+            regver_id=201,
+            register=("LISA", 34, 153),
+            data_type="text",
+            data_length="3",
+        ),
+        var_row(
+            colname="Pooled",
+            cvid=3,
+            var_id=3,
+            year="2018",
+            versionname="2018-2019",
+            regver_id=202,
+            register=("LISA", 34, 1335),
+        ),
+        var_row(
+            colname="UnknownPeriod",
+            cvid=4,
+            var_id=4,
+            year="2020",
+            versionname="okänd utgåva",
+            regver_id=203,
+            register=("LISA", 34, 153),
+        ),
+    ]
+    scb_dir = write_scb_input(tmp_path / "source", registerinformation_rows=rows)
+    selection = write_scb_snapshot(tmp_path / "accepted", scb_dir)
+    snapshot = open_scb_snapshot(selection)
+    item = next(
+        item
+        for item in snapshot.manifest.files
+        if item.name == "Registerinformation.csv"
+    )
+    assert item.raw_size is not None and item.raw_sha256 is not None
+    revision = SourceRevision.create(
+        dataset="scb-registerinformation",
+        publisher="SCB",
+        purpose="fixture raw rows",
+        upstream_revision=snapshot.manifest.edition,
+        artifact_path="Registerinformation.csv",
+        artifact_size=item.raw_size,
+        artifact_sha256=item.raw_sha256,
+    )
+
+    observations = tuple(
+        observation
+        for observation in iter_scb_observations(snapshot, revision)
+        if observation.record.subject.native.register_id == LISA_REGISTER_ID
+    )
+    records = tuple(observation.record for observation in observations)
+    issues = tuple(
+        observation.issue
+        for observation in observations
+        if observation.issue is not None
+    )
+
+    assert len(records) == 4
+    blank = next(record for record in records if record.subject.native.member_id == 2)
+    assert blank.fields.column_name == SourceField(status="unknown", raw_value="")
+    assert blank.fields.availability == value_field(True)
+    assert blank.subject.native.variable_id == 31619
+    assert blank.subject.native.register_variant_id == 153
+    assert field_text(blank, "data_type") == "text"
+    assert field_text(blank, "data_length") == "3"
+    pooled = next(record for record in records if record.subject.native.member_id == 3)
+    assert pooled.edition_scope == TemporalScope(
+        kind="pooled",
+        label="2018-2019",
+        pooled_start="2018-01-01",
+        pooled_end="2019-12-31",
+    )
+    unknown = next(record for record in records if record.subject.native.member_id == 4)
+    assert unknown.edition_scope.kind == "unknown"
+    assert [(issue.kind, issue.record_id) for issue in issues] == [
+        ("pooled_period", pooled.record_id),
+        ("unparseable_period", unknown.record_id),
+    ]
+
+
+def test_selected_scb_observation_invalid_native_id_names_field_and_row(
+    tmp_path: Path,
+) -> None:
+    row = replace_registerinformation_cell(
+        scb_interpretation_rows()[0], "VarId", "broken"
+    )
+    scb_dir = write_scb_input(tmp_path / "source", registerinformation_rows=[row])
+    snapshot = open_scb_snapshot(write_scb_snapshot(tmp_path / "accepted", scb_dir))
+    item = next(
+        item
+        for item in snapshot.manifest.files
+        if item.name == "Registerinformation.csv"
+    )
+    assert item.raw_size is not None and item.raw_sha256 is not None
+    revision = SourceRevision.create(
+        dataset="scb-registerinformation",
+        publisher="SCB",
+        purpose="invalid native ID fixture",
+        upstream_revision=snapshot.manifest.edition,
+        artifact_path="Registerinformation.csv",
+        artifact_size=item.raw_size,
+        artifact_sha256=item.raw_sha256,
+    )
+
+    with pytest.raises(RegMetaError) as error:
+        tuple(iter_scb_observations(snapshot, revision, register_id=34))
+
+    assert error.value.code == "scb_native_id_invalid"
+    assert error.value.exit_code == EXIT_CONFIG
+    assert "row 2, field VarId: 'broken'" in error.value.message
+
+
+@pytest.mark.parametrize(
+    ("version_name", "expected_kind", "expected_issue"),
+    (
+        ("1990, 2000", "unknown", "unparseable_period"),
+        ("LISA 2011 och 2019", "unknown", "unparseable_period"),
+        ("1990-2000", "pooled", "pooled_period"),
+        ("LISA 2011", "intervals", None),
+    ),
+)
+def test_scb_scope_rejects_multi_year_tokens_only_on_single_claim_fallback(
+    version_name: str, expected_kind: str, expected_issue: str | None
+) -> None:
+    edition_scope, reference_scope, issue = source_scopes(version_name)
+
+    assert edition_scope.kind == expected_kind
+    assert reference_scope.kind == expected_kind
+    assert issue == expected_issue

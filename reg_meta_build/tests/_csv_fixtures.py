@@ -343,6 +343,11 @@ HAMN_SIGNAL_TARGETS = (
 )
 
 
+# Public name for tests outside the legacy private-import allowlist (plan 06c). The
+# private spelling stays until every importer has moved; rename it then.
+var_row = _var_row
+
+
 def hamn_signal_rows() -> list[str]:
     """Reconstruct the ticket's twenty independent 36-cell source observations."""
     rows: list[str] = []

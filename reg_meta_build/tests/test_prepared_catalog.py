@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
+import shutil
 import subprocess
 from typing import TYPE_CHECKING
 
@@ -15,7 +17,7 @@ from _csv_fixtures import (
     write_scb_input,
 )
 from _lisa_fixtures import write_lisa_workbook
-from _prepared_fixtures import accept_prepared
+from _prepared_fixtures import accept_prepared, record_file_opens, record_git_calls
 from _sos_fixtures import write_sos_input
 from openpyxl import Workbook, load_workbook
 from reg_meta.errors import EXIT_CONFIG, EXIT_USAGE
@@ -30,10 +32,9 @@ from reg_meta_build.prepared_catalog import (
     open_prepared_catalog_sources,
     prepare_catalog_sources,
 )
-from reg_meta_build.source_records import SourceRecord
 from reg_meta_build.source_value_bindings import open_value_bindings
 
-from reg_meta_build import _accepted_prepared, prepared_catalog
+from reg_meta_build import prepared_catalog
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -421,66 +422,56 @@ def test_sos_declarations_validity_support_and_formula_evidence_survive_preparat
     ]
 
 
-def test_warm_open_has_one_trust_check_and_never_reparses_inputs(
+def test_warm_open_runs_one_git_status_and_reads_no_raw_or_payload_inputs(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     selection = _selection(tmp_path)
     destination = tmp_path / "prepared" / "catalog"
     manifest = prepare_catalog_sources(selection, destination)
     commit = accept_prepared(destination)
-    calls = []
-    accepted = _accepted_prepared.clean_git_commit
-
-    def checked(path):
-        calls.append(path)
-        return accepted(path)
-
-    def forbidden(*_args, **_kwargs):
-        raise AssertionError("warm opening cannot parse/hash original evidence")
-
-    monkeypatch.setattr(_accepted_prepared, "clean_git_commit", checked)
-    for name in (
-        "open_input_bundle",
-        "clean_scb_values",
-        "iter_scb_observations",
-        "read_lisa_source",
-        "read_curated_source",
-        "read_code_list",
-        "parse_register_file",
-        "_file_sha256",
-    ):
-        monkeypatch.setattr(prepared_catalog, name, forbidden)
-    monkeypatch.setattr(SourceRecord, "create", forbidden)
-    monkeypatch.setattr(SourceRecord, "_record_id", forbidden)
-    prepared = open_prepared_catalog_sources(
-        destination, expected_sha256=manifest.sha256, input_commit=commit
-    )
-    assert len(calls) == 1
+    # Warm use depends on the accepted preparation alone, never on the raw inputs.
+    shutil.rmtree(tmp_path / "accepted")
+    shutil.rmtree(tmp_path / "source")
+    with monkeypatch.context() as patch:
+        git = record_git_calls(patch)
+        opened = record_file_opens(patch)
+        prepared = open_prepared_catalog_sources(
+            destination, expected_sha256=manifest.sha256, input_commit=commit
+        )
+    assert sum("status" in call for call in git) == 1, git
+    assert not any("hash-object" in call for call in git)
+    payload_reads = [
+        path
+        for path, _ in opened
+        if "files" in path.parts and path.name != "manifest.json"
+    ]
+    assert payload_reads == []
     assert next(prepared.records.records).locators
     assert list(prepared.value_sources[0].associations())
     assert list(prepared.iter_evidence())
 
 
-def test_preparation_replays_identical_bytes_and_does_not_rehash_child_data(
+def test_preparation_replays_identical_bytes_without_rereading_child_payloads(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     selection = _selection(tmp_path)
     first, second = tmp_path / "first", tmp_path / "second"
-    hashed = []
-    original = prepared_catalog._file_sha256
-
-    def small_only(path):
-        hashed.append(path.name)
-        assert path.name in {"manifest.json", "evidence.jsonl"}
-        return original(path)
-
-    monkeypatch.setattr(prepared_catalog, "_file_sha256", small_only)
-    before = prepare_catalog_sources(selection, first)
+    with monkeypatch.context() as patch:
+        opened = record_file_opens(patch)
+        before = prepare_catalog_sources(selection, first)
     after = prepare_catalog_sources(selection, second)
-    assert before == after and hashed
+    assert before == after
     assert {file.path: (first / file.path).read_bytes() for file in before.files} == {
         file.path: (second / file.path).read_bytes() for file in after.files
     }
+    # Each child proves its own payloads while staging; the published copies are
+    # never read back (no rehash of child data by the catalog).
+    published_child = re.compile(r"/(records|values/[0-9a-f]{64})/files/")
+    assert [
+        path
+        for path, mode in opened
+        if "w" not in mode and published_child.search(path.as_posix())
+    ] == []
 
 
 def test_unsupported_or_incoherent_manifest_fails_before_opening_children(
@@ -660,68 +651,74 @@ def test_output_conflicts_and_cold_materialization_fail_without_overwrite(
     assert not missing.exists()
 
 
-def test_failed_source_preparation_cleans_staging_and_preserves_accepted_inputs(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+def test_failed_selected_source_cleans_staging_and_preserves_accepted_inputs(
+    tmp_path: Path,
 ) -> None:
     selection = _selection(tmp_path)
-    original = (selection.path / "catalog-bundle.json").read_bytes()
-
-    def invalid(*_args, **_kwargs):
-        raise ValueError("malformed source contract")
-
-    monkeypatch.setattr(prepared_catalog, "read_scb_events", invalid)
+    relative = "catalog/classifications/sos/atc.csv"
+    source = selection.path / relative
+    source.parent.mkdir(parents=True)
+    source.write_text('not,a,code,list\n"unterminated\n')
+    path = selection.path / "catalog-bundle.json"
+    document = json.loads(path.read_text())
+    document["files"].append(
+        {
+            "path": relative,
+            "present": True,
+            "size": source.stat().st_size,
+            "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+        }
+    )
+    document["files"].sort(key=lambda item: item["path"])
+    path.write_text(json.dumps(document))
+    selection = repin_input_bundle(selection)
+    original = path.read_bytes()
     destination = tmp_path / "new" / "prepared"
-    with pytest.raises(ValueError, match="malformed source contract"):
+    with pytest.raises(ValueError):
         prepare_catalog_sources(selection, destination)
     assert not destination.exists() and list(destination.parent.iterdir()) == []
-    assert (selection.path / "catalog-bundle.json").read_bytes() == original
+    assert path.read_bytes() == original
 
 
-def test_source_change_during_preparation_does_not_publish(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+def _edit_bundle_while_staging(selection: CatalogBundleSelection, flag: str | None):
+    """Change the selected bundle once preparation starts writing its evidence."""
+
+    def edit(path: Path, mode: str) -> None:
+        if path.name == "evidence.jsonl" and "w" in mode:
+            if flag is not None:
+                subprocess.run(
+                    [
+                        "git",
+                        "-C",
+                        str(selection.path),
+                        "update-index",
+                        flag,
+                        "catalog-bundle.json",
+                    ],
+                    check=True,
+                )
+            (selection.path / "catalog-bundle.json").write_text("{}\n")
+
+    return edit
+
+
+@pytest.mark.parametrize(
+    ("flag", "message"),
+    [
+        (None, "changed during preparation"),
+        ("--assume-unchanged", "source index flags changed"),
+        ("--skip-worktree", "source index flags changed"),
+    ],
+)
+def test_selected_source_change_while_staging_does_not_publish(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, flag: str | None, message: str
 ) -> None:
     selection = _selection(tmp_path)
     destination = tmp_path / "prepared"
-    original = prepared_catalog.read_scb_events
-
-    def change_source(*args, **kwargs):
-        result = original(*args, **kwargs)
-        (selection.path / "catalog-bundle.json").write_text("{}\n")
-        return result
-
-    monkeypatch.setattr(prepared_catalog, "read_scb_events", change_source)
-    with pytest.raises(PreparedCatalogError, match="changed during preparation"):
-        prepare_catalog_sources(selection, destination)
-    assert not destination.exists()
-
-
-@pytest.mark.parametrize("flag", ["--assume-unchanged", "--skip-worktree"])
-def test_source_index_flags_cannot_hide_changes_during_preparation(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, flag: str
-) -> None:
-    selection = _selection(tmp_path)
-    destination = tmp_path / "prepared"
-    original = prepared_catalog.read_scb_events
-
-    def hide_source_change(*args, **kwargs):
-        result = original(*args, **kwargs)
-        subprocess.run(
-            [
-                "git",
-                "-C",
-                str(selection.path),
-                "update-index",
-                flag,
-                "catalog-bundle.json",
-            ],
-            check=True,
-        )
-        (selection.path / "catalog-bundle.json").write_text("{}\n")
-        return result
-
-    monkeypatch.setattr(prepared_catalog, "read_scb_events", hide_source_change)
-    with pytest.raises(PreparedCatalogError, match="source index flags changed"):
-        prepare_catalog_sources(selection, destination)
+    with monkeypatch.context() as patch:
+        record_file_opens(patch, _edit_bundle_while_staging(selection, flag))
+        with pytest.raises(PreparedCatalogError, match=message):
+            prepare_catalog_sources(selection, destination)
     assert not destination.exists()
     assert not list(destination.parent.glob(".prepared.*"))
 

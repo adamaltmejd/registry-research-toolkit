@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "report_contains": [
+    "all 1 SOS variables have >= 1 variable_state"
+  ],
+  "report_absent": [
+    "ZERO variable_state"
+  ]
+}
