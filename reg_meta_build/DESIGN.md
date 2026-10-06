@@ -482,12 +482,13 @@ expected values, masks and native coordinate types remain independent. New evide
 requires a fresh context. No cached source state survives a build.
 
 Compiled scopes and globals are strict Pydantic models built directly from the compiled
-declarations; they are never serialized and re-read in memory, so the guard graph each
-case retains is the compiled one, not a duplicate. Decision dumps serialize the globals
-only when requested. After a scope model is built, the raw compiled mappings drop their
-references to it. Coding guards still check the complete register before variable
-formation; afterward, raw coding claims are consumed per variable rather than retaining
-every processed column through scope end.
+declarations (`CompiledScope(...)`, `CompiledGlobals(...)`); they are never serialized
+and re-read in memory. Nested model instances are not revalidated (Pydantic's default
+`revalidate_instances`), so each case keeps the compiled guard graph rather than a
+duplicate. Decision dumps serialize the globals only when requested. Once a scope model
+is built, its raw entries are dropped from the compiled mappings. Coding guards still
+check the complete register before variable formation; afterward, raw coding claims are
+consumed per variable rather than retaining every processed column through scope end.
 
 Field expectations reuse the source model's single-field type guard instead of
 constructing every absent field again. A singleton record alternative needs no
