@@ -28,7 +28,6 @@ ALLOWLIST = {
     "reg_meta_build/tests/test_source_representations.py",
     "reg_meta_build/tests/test_source_scope.py",
     "reg_meta_build/tests/test_source_value_bindings.py",
-    "reg_meta_build/tests/test_swecov_build_catalog.py",
     "reg_schema/tests/test_structural.py",
     "scripts/tests/test_gh_issue.py",
     "scripts/tests/test_prototype_scb_inputs.py",
