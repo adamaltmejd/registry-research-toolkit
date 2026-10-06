@@ -1,10 +1,17 @@
-"""Project validation: the CLI and HTTP adapters emit byte-identical findings.
+"""Project adapters: the CLI and HTTP doors give the same answer for the same bytes.
 
-Every `/api/project/validate` step of the readable `cases/validate` corpus is
-also run through `reg-meta validate` against the same artifact. The HTTP oracle
-(`test_http.py`) pins the findings; this pins that both adapters of the shared
-`reg_meta.semantic.validate_project` serialize them to the same bytes, and that
-the CLI's exit code follows the findings' `ok`.
+Every `/api/project/validate` and `/api/project/order` step of the readable
+`cases/validate` corpus is also run through `reg-meta validate` /
+`reg-meta order` against the same artifact. The HTTP oracle (`test_http.py`)
+pins the answers; this pins that both adapters of the shared `reg_meta` code
+give them identically:
+
+- 200: the CLI's stdout is the HTTP body byte for byte (`validation_json` or
+  `OrderManifest.to_json`); `validate` exits 0 when `ok` and 17 otherwise,
+  `order` exits 0.
+- 400 (a malformed project document, refused by the shared
+  `order.parse_project`): exit 10 with `error.code` `project_unreadable` and
+  `error.message` equal to the HTTP `detail`.
 """
 
 from __future__ import annotations
@@ -14,13 +21,15 @@ from typing import TYPE_CHECKING
 
 import pytest
 from fastapi.testclient import TestClient
-from http_cases import CASES, case_artifact
+from http_cases import CASES, case_artifact, request_body
 from reg_meta.cli import run
-from reg_meta.errors import EXIT_NO_MATCH, EXIT_SUCCESS
+from reg_meta.errors import EXIT_CONFIG, EXIT_NO_MATCH, EXIT_SUCCESS
 from reg_webapp.app import create_app
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+_COMMANDS = {"/api/project/validate": "validate", "/api/project/order": "order"}
 
 
 @pytest.mark.parametrize(
@@ -28,19 +37,27 @@ if TYPE_CHECKING:
     sorted(p.parent for p in (CASES / "validate").glob("*/request.json")),
     ids=lambda p: p.name,
 )
-def test_cli_and_http_validation_bytes_agree(
+def test_cli_and_http_project_adapters_agree(
     case: Path, tmp_path: Path, monkeypatch, capsys
 ) -> None:
     request = json.loads((case / "request.json").read_text())
     path = case_artifact(request, tmp_path, monkeypatch)
-    steps = [s for s in request["requests"] if s["path"] == "/api/project/validate"]
+    steps = [s for s in request["requests"] if s["path"] in _COMMANDS]
     assert steps
     project = tmp_path / "project.json"
     with TestClient(create_app(rate_limit_per_minute=1000)) as client:
         for step in steps:
-            response = client.post(step["path"], json=step["body"])
-            assert response.status_code == 200
-            project.write_text(json.dumps(step["body"]))
-            code = run(["--db", str(path.parent), "validate", str(project)])
-            assert capsys.readouterr().out == response.text
-            assert code == (EXIT_SUCCESS if response.json()["ok"] else EXIT_NO_MATCH)
+            response = client.post(step["path"], **request_body(step))
+            project.write_text(step.get("content") or json.dumps(step["body"]))
+            command = _COMMANDS[step["path"]]
+            code = run(["--db", str(path.parent), command, str(project)])
+            out = capsys.readouterr().out
+            if response.status_code == 200:
+                assert out == response.text
+                ok = command == "order" or response.json()["ok"]
+                assert code == (EXIT_SUCCESS if ok else EXIT_NO_MATCH)
+                continue
+            assert response.status_code == 400
+            error = json.loads(out)["error"]
+            assert error["message"] == response.json()["detail"]
+            assert (code, error["code"]) == (EXIT_CONFIG, "project_unreadable")

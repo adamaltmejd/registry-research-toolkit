@@ -1952,8 +1952,10 @@ boundary unchanged.
 - **`/validate` status discipline.** A spec that FAILS validation is a *successful
   validation response* — **HTTP 200 with `ok=false` + the issues**. 4xx is reserved for
   a malformed REQUEST (non-JSON, duplicate JSON keys, a too-deeply-nested or non-object
-  body, an oversized body). Everything after the body read is a thin adapter over
-  reg_meta's `semantic.validate_project` (supported version → structural → semantic, the
+  body, an oversized body). Apart from the size cap, that refusal is reg_meta's shared
+  `order.parse_project`, the same reader the CLI applies to a file, and the 400 `detail`
+  is its message. Everything after the body read is a thin adapter over reg_meta's
+  `semantic.validate_project` (supported version → structural → semantic, the
   **concatenated** issue list; see `reg_meta/DESIGN.md` → Project semantic validation).
   The adapter hands it `per_request_conn` as the opener, so the DB-free layers still run
   first and a rejected body costs no DB hit. The 200 body is `semantic.validation_json`

@@ -750,27 +750,79 @@ def load_project(path: Path) -> ProjectData:
 def read_project(path: Path) -> dict[str, Any]:
     """Read a `project_data.json` file as the raw JSON object both CLI doors
     take — `project_from_raw` (order) and `semantic.validate_project` (validate),
-    the CLI counterparts of the FastAPI adapters' raw request body.
+    the CLI counterparts of the FastAPI adapters' raw request body. The bytes go
+    through `parse_project`, the same reader the FastAPI body uses.
 
-    Fail-closed: an unreadable or non-JSON-object file raises `RegMetaError`
-    (`project_unreadable`, EXIT_CONFIG)."""
+    Fail-closed: an unreadable file or a malformed document raises
+    `RegMetaError` (`project_unreadable`, EXIT_CONFIG)."""
     try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        data = path.read_bytes()
+    except OSError as exc:
         raise _order_config_error(
             "project_unreadable",
             f"Could not read project {path}: {exc}",
-            "The project must be a UTF-8 `project_data.json` document (see "
-            "reg_schema/DESIGN.md).",
+            _PROJECT_DOCUMENT_REMEDIATION,
         ) from exc
-    if not isinstance(raw, dict):
-        raise _order_config_error(
-            "project_unreadable",
-            f"Project {path} is not a JSON object (got {type(raw).__name__}).",
-            "The project must be a UTF-8 `project_data.json` document (see "
-            "reg_schema/DESIGN.md).",
+    return parse_project(data)
+
+
+_PROJECT_DOCUMENT_REMEDIATION = (
+    "The project must be a UTF-8 `project_data.json` document (see "
+    "reg_schema/DESIGN.md)."
+)
+
+
+def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    """``json.loads`` ``object_pairs_hook`` that raises on a duplicate JSON key.
+
+    The default keeps the last value silently — a hand-edited project_data.json
+    with a duplicated field would validate against the wrong (last-wins) value.
+    Fires at every nesting depth (the hook runs per object)."""
+    seen: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in seen:
+            raise ValueError(f"duplicate key {key!r} in project JSON")
+        seen[key] = value
+    return seen
+
+
+def parse_project(data: bytes) -> dict[str, Any]:
+    """Parse untrusted `project_data.json` bytes into the raw JSON object every
+    door takes, or raise `RegMetaError` (`project_unreadable`, EXIT_CONFIG).
+
+    The ONE read boundary for both adapters (§12): the CLI's file
+    (`read_project`) and the FastAPI request body, which maps the raise to a
+    400 whose `detail` is this error's `message` — so the two refuse the same
+    bytes with the same words. Malformed means: not UTF-8 JSON, a duplicate key
+    at any depth (last-wins would silently validate or order the wrong value),
+    nesting deep enough to exhaust the recursion limit, or a non-object top
+    level. A well-formed object that fails the contract is NOT malformed: that
+    is the version/structural layers' diagnosis, not a read failure."""
+
+    def unreadable(message: str) -> RegMetaError:
+        return _order_config_error(
+            "project_unreadable", message, _PROJECT_DOCUMENT_REMEDIATION
         )
-    return raw
+
+    try:
+        parsed = json.loads(data, object_pairs_hook=_reject_duplicate_keys)
+    except json.JSONDecodeError as exc:
+        raise unreadable(f"project is not valid JSON: {exc}") from exc
+    except RecursionError as exc:
+        # A small document can still nest past the recursion limit; that is a
+        # malformed input, not a crash. `RecursionError` is a `RuntimeError`,
+        # so it needs its own clause.
+        raise unreadable("project JSON is nested too deeply") from exc
+    except ValueError as exc:
+        # The duplicate-key hook's ValueError, and `UnicodeDecodeError` (a
+        # `ValueError` subclass) for bytes that are not UTF-8.
+        raise unreadable(str(exc)) from exc
+    if not isinstance(parsed, dict):
+        raise unreadable(
+            "project must be a JSON object (project_data.json shape), got "
+            f"{type(parsed).__name__}"
+        )
+    return parsed
 
 
 def project_from_raw(raw: dict[str, Any]) -> ProjectData:

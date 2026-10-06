@@ -28,11 +28,13 @@ configuration. The documented equals form selects the current checkout reliably.
 Each case directory has `request.json` and `expected.json`. `observe` fields and JSON
 pointer projections define the compared public result; errors also pin the exit/status
 and located findings. Orders additionally compare CLI and materializer serialization and
-repeat raw bytes, including provenance. Every validate step also runs through
-`reg-meta validate` and compares its bytes and exit code with the HTTP response. No
-volatile fields are removed from those comparisons. Keys and lists retain their order.
-Path placeholders in the selection oracle expand to the test filesystem before
-comparison.
+repeat raw bytes, including provenance. Every validate and order step in the validate
+surface also runs through `reg-meta validate` or `reg-meta order`: a 200 compares bytes
+and exit code with the HTTP response, and a 400 (a malformed document, sent verbatim
+from a step's `content` string) compares the CLI's exit 10 envelope message with the
+HTTP `detail`. No volatile fields are removed from those comparisons. Keys and lists
+retain their order. Path placeholders in the selection oracle expand to the test
+filesystem before comparison.
 
   | Surface directory                                             | Boundary and request interpretation                                                |
   | ------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
@@ -45,7 +47,7 @@ comparison.
   | update                                                        | Downloaded-artifact identity via CLI/update library; implicit annual-series source |
   | boot                                                          | App startup; implicit reader source, kind and manifest mutation                    |
   | http_catalog, http_context, http_scope, http_search, validate | HTTP request sequence and status/pointer oracle; implicit compiled source          |
-  | validate (also)                                               | CLI validate bytes and exit code against each HTTP validate response               |
+  | validate (also)                                               | CLI validate/order bytes or refusal against each HTTP project response             |
   | fixtures                                                      | HTTP readable sources, not independently executed cases                            |
 
 Reader fixtures named `reader` or `reader/<name>` live under `cases/reader`; other named

@@ -107,6 +107,18 @@ def assert_http_case(case, tmp_path, monkeypatch):
         )
 
 
+def request_body(step):
+    """A step's body: `body` is sent as JSON; `content` is a raw string sent
+    verbatim (as application/json), for bytes a JSON value cannot spell, such as
+    a duplicate key."""
+    if "content" in step:
+        return {
+            "content": step["content"].encode(),
+            "headers": {"content-type": "application/json"},
+        }
+    return {"json": step.get("body")}
+
+
 def run_http_requests(steps):
     """Exercise app responses, including fail-fast packaged configuration errors."""
     responses = []
@@ -123,7 +135,7 @@ def run_http_requests(steps):
                 step.get("method", "GET"),
                 step["path"],
                 params=params,
-                json=step.get("body"),
+                **request_body(step),
                 follow_redirects=False,
             )
             body = (

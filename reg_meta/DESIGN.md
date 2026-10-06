@@ -1150,6 +1150,15 @@ period segment without a special case.
 only if the adapters are genuinely thin, so the two things they would otherwise each
 re-type live here too, beside the materializer:
 
+- `parse_project(data)` is the ONE read boundary for untrusted project bytes, used by
+  the CLI's `read_project(path)` and the FastAPI body reader alike. It refuses a
+  malformed document — not UTF-8 JSON, a duplicate key at any depth (last-wins would
+  silently validate or order the wrong value), nesting past the recursion limit, or a
+  non-object top level — with `RegMetaError` (`project_unreadable`, `EXIT_CONFIG`). The
+  adapters map that one refusal onto their transports rather than serializing it
+  byte-identically: the CLI writes its error envelope and exits 10, and HTTP answers 400
+  with `detail` equal to the error's `message`. The conformance corpus pins that the two
+  messages are equal for every refused document, for `validate` and `order` alike.
 - `project_from_raw(raw)` (and `load_project(path)`, the CLI's file-reading wrapper) is
   the ONE door into `materialize_order` for an untrusted `project_data.json`. The
   `ProjectData` model enforces field TYPES only, so it runs `reg_schema`'s
