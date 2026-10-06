@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.14"
 
 [manifest]
@@ -392,7 +392,7 @@ wheels = [
 
 [[package]]
 name = "reg-meta"
-version = "0.40.1"
+version = "0.41.0"
 source = { editable = "reg_meta" }
 dependencies = [
     { name = "pydantic" },
