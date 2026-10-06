@@ -17,6 +17,7 @@ import pytest
 from _csv_fixtures import var_row, write_input_bundle, write_scb_input
 from _pipeline_catalog_support import report_issues
 from _prepared_fixtures import accept_prepared
+from reg_meta.errors import RegMetaError
 from reg_meta.queries import search
 from reg_meta_build.db import open_built_db
 from reg_meta_build.pipeline import build_catalog, check_curation
@@ -176,7 +177,8 @@ def test_classification_is_found_by_name_search_on_the_built_artifact(
     [
         pytest.param(
             {"A": ("a", 'aliases = ["B"]\n'), "B": ("b", "")},
-            "duplicate classification reference",
+            "classifications/B.toml: classification reference 'B' is also "
+            "declared in classifications/A.toml.",
             id="alias-repeats-short-name",
         ),
         pytest.param(
@@ -184,7 +186,8 @@ def test_classification_is_found_by_name_search_on_the_built_artifact(
                 "A": ("a", 'aliases = ["Shared"]\n'),
                 "B": ("b", 'aliases = ["Shared"]\n'),
             },
-            "duplicate classification reference",
+            "classifications/B.toml: classification reference 'Shared' is also "
+            "declared in classifications/A.toml.",
             id="alias-repeated-across-books",
         ),
         pytest.param(
@@ -192,7 +195,8 @@ def test_classification_is_found_by_name_search_on_the_built_artifact(
                 "A": ("a", 'family = "pair"\nfamily_aliases = ["B"]\n'),
                 "B": ("b", 'family = "pair"\n'),
             },
-            "duplicate classification reference and family alias",
+            "classifications/B.toml: classification reference 'B' is also "
+            "declared in classifications/A.toml.",
             id="family-alias-repeats-short-name",
         ),
         pytest.param(
@@ -202,16 +206,19 @@ def test_classification_is_found_by_name_search_on_the_built_artifact(
                 "C": ("c", 'family = "second"\nfamily_aliases = ["Shared"]\n'),
                 "D": ("d", 'family = "second"\n'),
             },
-            "duplicate classification family alias",
+            "classifications/C.toml: classification reference 'Shared' is also "
+            "declared in classifications/A.toml.",
             id="family-alias-repeated-across-families",
         ),
     ],
 )
-def test_ambiguous_classification_reference_spelling_fails_the_build(
+def test_ambiguous_classification_reference_spelling_fails_at_its_file(
     tmp_path: Path, books: Books, message: str
 ) -> None:
-    with pytest.raises(ValueError, match=rf"^{message}$"):
+    with pytest.raises(RegMetaError) as caught:
         diagnostic_build(tmp_path, books)
+    assert caught.value.code == "classification_curation_invalid"
+    assert caught.value.message == message
 
 
 def test_full_build_reports_value_set_label_matching_no_descriptor(

@@ -209,24 +209,17 @@ def _unique_pairs[K, V](items: tuple[tuple[K, V], ...], description: str) -> dic
 def _classification_references(
     tree: CurationTree,
 ) -> tuple[dict[str, str], dict[str, tuple[str, ...]]]:
-    references = _unique_pairs(
-        tuple(
-            (name, entry.classification.slug)
-            for entry in tree.classifications
-            for name in (entry.classification.short_name, *entry.classification.aliases)
-        ),
-        "classification reference",
-    )
-    families = _unique_pairs(
-        tuple(
-            (alias, family.members)
-            for family in tree.classification_families.family
-            for alias in family.aliases
-        ),
-        "classification family alias",
-    )
-    if set(references) & set(families):
-        raise ValueError("duplicate classification reference and family alias")
+    # `load_classifications` refuses a spelling claimed twice, at its file.
+    references = {
+        name: entry.classification.slug
+        for entry in tree.classifications
+        for name in (entry.classification.short_name, *entry.classification.aliases)
+    }
+    families = {
+        alias: family.members
+        for family in tree.classification_families.family
+        for alias in family.aliases
+    }
     return references, families
 
 
