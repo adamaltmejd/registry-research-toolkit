@@ -6,8 +6,8 @@ SCB register 257 (variant 553) delivers one blank-column source instance (var_id
 15662, CVID 400684, edition "2012 - 2014") whose value set is the single code
 ``1``/``Yes``. The register's curation TOML activates a reviewed
 ``documented_blank`` matrix evidence file (the deleted test's ``_matrix(blank=True)``
-payload) that names two answers, CO11 and CO12, with decimal storage and both flags
-false.
+payload, with its two free-text evidence strings reworded to generic fixture wording)
+that names two answers, CO11 and CO12, with decimal storage and both flags false.
 """
 
 from __future__ import annotations

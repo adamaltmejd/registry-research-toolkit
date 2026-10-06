@@ -9,6 +9,7 @@ Deldatamängd shares one semantic source record key.
 
 from __future__ import annotations
 
+from ast import literal_eval
 from typing import TYPE_CHECKING
 
 import pytest
@@ -161,6 +162,25 @@ def test_subset_split_groups_subsets_by_declared_owner(tmp_path: Path, reverse):
         ("other", "par-tv", "ATC", "text", "ATC"),
         ("shared", "par-ov", "ATC", "text", "ATC"),
         ("shared", "par-sv", "ATC", "text", "ATC"),
+    ]
+    # The shared owner's native identity carries its first declared subset
+    # (PAR_OV, the deleted IR test's literal) whichever order the parts are
+    # declared in; each row's classification warning subject in the ledger (a
+    # tuple rendered as text) names the row's subset and that native key.
+    native_subset = sorted(
+        (
+            subject[subject.index("variant") + 2],
+            subject[subject.index("accepted-shape") + 1],
+        )
+        for subject in (
+            literal_eval(issue["subject"])
+            for issue in built.issues("unknown_classification_declaration")
+        )
+    )
+    assert native_subset == [
+        ("PAR_OV", "PAR_OV"),
+        ("PAR_SV", "PAR_OV"),
+        ("PAR_TV", "PAR_TV"),
     ]
 
 
