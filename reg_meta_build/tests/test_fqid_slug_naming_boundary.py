@@ -131,6 +131,10 @@ def test_reseed_keeps_first_sight_pin(tmp_path: Path) -> None:
         # Truncating to the 60-char cap would leave the reserved `class`: keep
         # the full slug rather than store an unaddressable one.
         ("Class " + "x" * 70, "class-" + "x" * 70),
+        # Exactly at the 60-char cap the slug stays whole; one character over,
+        # it is cut back to the last hyphen.
+        ("a" * 29 + " " + "b" * 30, "a" * 29 + "-" + "b" * 30),
+        ("a" * 30 + " " + "b" * 30, "a" * 30),
     ],
 )
 def test_name_derived_slug(tmp_path: Path, name: str, slug: str) -> None:
@@ -164,4 +168,28 @@ def test_underivable_text_keyed_variable_gets_folded_v_provider_key(
     populate_variable_slugs(conn, tmp_path)
     [slug] = [row[0] for row in conn.execute("SELECT slug FROM variable")]
     assert slug == "vfodelsear-x"
+    validate_slug(slug, "variable")
+
+
+def test_underivable_text_key_folding_to_a_reserved_token_gets_bare_v(
+    tmp_path: Path,
+) -> None:
+    # `v` + `ARIANTS` folds to the reserved variable token `variants`, so even the
+    # last resort is unaddressable and the slug falls back to a bare `v`.
+    conn = build_slugged_db(variable=None)
+    add_variable(conn, register_id=1, var_id=200, name="3D-område")
+    add_state(
+        conn,
+        register_id=1,
+        var_id=200,
+        register_variant_id=10,
+        valid_from="2000-01-01",
+        valid_to="2000-12-31",
+        delivery_column_name="3DOMR",
+    )
+    conn.execute("UPDATE variable SET provider_key = 'ARIANTS'")
+    conn.commit()
+    populate_variable_slugs(conn, tmp_path)
+    [slug] = [row[0] for row in conn.execute("SELECT slug FROM variable")]
+    assert slug == "v"
     validate_slug(slug, "variable")
