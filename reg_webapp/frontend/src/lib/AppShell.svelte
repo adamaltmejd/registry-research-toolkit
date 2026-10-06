@@ -144,17 +144,30 @@ const projectTitle = $derived.by(() => {
     typeof projectDraft.name === "string" ? projectDraft.name.trim() : "";
   return name.length > 0 ? name : "Untitled project";
 });
-const projectStatus = $derived(projectStore.validationStatus);
+/** The rail's verdict: the draft's validation, except that a source the study
+ * window has moved off blocks the ORDER whatever validation said — the panel's
+ * own "Order blocked" wording, so the chip never reads "Warnings" or "Draft
+ * valid" beside a closed order download. A failing or in-flight validation still
+ * wins: it is the more specific thing to fix first. */
+type RailStatus = ValidationStatus | "blocked";
+const projectStatus = $derived.by((): RailStatus => {
+  const status = projectStore.validationStatus;
+  return projectStore.windowBlocked &&
+    (status === "ok" || status === "warnings")
+    ? "blocked"
+    : status;
+});
 
 // Same vocabulary as the ValidationPanel's verdict: the chip rides along on every
 // route, so a bare "Valid" beside a blocked order would claim more than the check
 // that actually completed (it validated the DRAFT, not the order).
-const STATUS_LABEL: Record<ValidationStatus, string> = {
+const STATUS_LABEL: Record<RailStatus, string> = {
   unchecked: "Unchecked",
   checking: "Checking",
   ok: "Draft valid",
   warnings: "Warnings",
   errors: "Errors",
+  blocked: "Order blocked",
 };
 
 function isCurrent(active: boolean): "page" | undefined {
@@ -521,7 +534,8 @@ function plural(count: number, singular: string, pluralLabel: string): string {
   .project-status.warnings {
     color: var(--warn);
   }
-  .project-status.errors {
+  .project-status.errors,
+  .project-status.blocked {
     color: var(--err);
   }
 

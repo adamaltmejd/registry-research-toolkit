@@ -247,7 +247,23 @@ if [ -n "$fixture_db" ]; then
 fi
 
 # .venv/bin/uvicorn (not `uv run`) binds THIS checkout's venv directly.
-.venv/bin/uvicorn reg_webapp.app:create_app --factory --port "$backend_port" &
+case "$mode" in
+smoke | flows | shot)
+	# The one-shot driver modes replay a whole scenario matrix from ONE client IP
+	# in a minute or two — more writes than the production 30/min/IP limiter
+	# (limits.py) allows, so a full `flows` run would 429 by its last viewport.
+	# They build the app with a raised budget through the factory parameter that
+	# exists for exactly this (tests use it too). Deliberately NOT an env var or
+	# CLI flag: nothing a deployment can set reaches it, and serve/preview keep the
+	# production limit.
+	.venv/bin/python -c 'import sys, uvicorn
+from reg_webapp.app import create_app
+uvicorn.run(create_app(rate_limit_per_minute=600), port=int(sys.argv[1]))' "$backend_port" &
+	;;
+*)
+	.venv/bin/uvicorn reg_webapp.app:create_app --factory --port "$backend_port" &
+	;;
+esac
 pids+=($!)
 (
 	cd reg_webapp/frontend &&

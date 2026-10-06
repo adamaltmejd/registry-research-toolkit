@@ -937,25 +937,10 @@ function confirmRemove(): void {
   .problem {
     margin: 0;
   }
-  /* The same row, reporting rather than refusing — the cool OK roles, as
-     ValidationPanel's clean verdict wears them. */
-  .problem.applied {
-    padding: var(--space-1) var(--space-2);
-    border: 1px solid var(--ok);
-    border-radius: var(--radius-sm);
-    background: var(--ok-bg);
-    color: var(--ok);
-  }
-  /* Neither a refusal nor a change: the write is still waiting on the restore
-     gate, or the entry already names the stored period. Cool info, not ok or err —
-     nothing failed and nothing happened. */
-  .problem.info {
-    padding: var(--space-1) var(--space-2);
-    border: 1px solid var(--info);
-    border-radius: var(--radius-sm);
-    background: var(--info-bg);
-    color: var(--info);
-  }
+  /* This card's line wears the shared report rows (ui/utilities.css): `.applied`
+     for a write that landed, `.info` for neither a refusal nor a change — the write
+     still waiting on the restore gate, or the entry already naming the stored
+     period. Cool info, not ok or err: nothing failed and nothing happened. */
   .stale {
     display: flex;
     align-items: baseline;

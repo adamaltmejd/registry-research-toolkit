@@ -40,11 +40,16 @@ export interface OverlapChange {
   to: Period;
 }
 
-/** One dated source the window reaches none of its columns' years in — it keeps
- * its period (and, when that period is disjoint too, keeps blocking the order). */
+/** One dated source the plan leaves alone — it keeps its period (and, when that
+ * period is disjoint, keeps blocking the order). `no-overlap`: its columns are
+ * delivered in no year of the window. `unknown-column`: the register read lists no
+ * delivery for one of its columns at its variant, so its overlap cannot be worked
+ * out, and narrowing to the columns that WERE found would silently drop the years
+ * of the one that was not. */
 export interface OverlapMiss {
   sourceName: string;
   period: Period;
+  reason: "no-overlap" | "unknown-column";
 }
 
 export interface OverlapPlan {
@@ -74,8 +79,9 @@ export function overlapRegisters(
 /** Plan the rewrite. `childrenByRegister` holds each `overlapRegisters` register's
  * binding children (the register read). A source is CHANGED when its columns'
  * delivery windows at its own variant reach the study window and the overlap
- * differs from its period; MISSED when they reach none of it. A binding pinned to
- * a delivery column (`representation`) contributes that column's eras only. */
+ * differs from its period; MISSED when they reach none of it, or when any one of
+ * its columns has no delivery at that variant in the read. A binding pinned to a
+ * delivery column (`representation`) contributes that column's eras only. */
 export function planWindowOverlap(
   sources: readonly SafeSource[],
   window: StudyWindow,
@@ -97,7 +103,9 @@ export function planWindowOverlap(
     const children =
       childrenByRegister.get(registerPrefixOf(registerVariant)) ?? [];
     const eras: { from: string; to: string }[] = [];
+    let unknown = false;
     for (const binding of safeSourceBindings(source)) {
+      const before = eras.length;
       const child = children.find((c) => c.fqid === binding.variable);
       const pinned =
         typeof binding.representation === "string"
@@ -114,14 +122,16 @@ export function planWindowOverlap(
           }
         }
       }
+      unknown ||= eras.length === before;
     }
     const sourceName = safeSourceName(source);
-    const wire =
-      eras.length === 0
-        ? null
-        : windowsAddPeriod(deliveryWindows(eras), bounds);
+    if (unknown || eras.length === 0) {
+      plan.misses.push({ sourceName, period, reason: "unknown-column" });
+      continue;
+    }
+    const wire = windowsAddPeriod(deliveryWindows(eras), bounds);
     if (wire === null) {
-      plan.misses.push({ sourceName, period });
+      plan.misses.push({ sourceName, period, reason: "no-overlap" });
       continue;
     }
     const next = periodFromWire(wire);

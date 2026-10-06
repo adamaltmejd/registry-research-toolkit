@@ -704,6 +704,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   const scope = { period: activePickerPeriod, window: pickerWindow };
   const result = await applyStagedPicks(payload, {
     scope,
+    studyWindow: boundedProjectWindow,
     seed: { regMetaVersion, steward },
     cancelled: unmounted,
   });

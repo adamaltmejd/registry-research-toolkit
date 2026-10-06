@@ -183,16 +183,26 @@ function confirm(): void {
   settledKey = contentKey(safeSourceSlots(projectStore.draft?.sources));
 }
 
-/** The sources the plan left alone, and why: their columns are delivered in no year
- * of the window, so there is no overlap to apply — and the two ways out. One
- * spelling for the status row and the dialog. */
+/** The sources the plan left alone, and why — their columns are delivered in no
+ * year of the window, or the catalog lists no delivery for one of their columns —
+ * and the ways out. One spelling for the status row and the dialog. */
 function missNote(plan: OverlapPlan, window: StudyWindow): string {
-  if (plan.misses.length === 0) {
-    return "";
+  const sentences: string[] = [];
+  const noOverlap = plan.misses.filter((m) => m.reason === "no-overlap");
+  const unknown = plan.misses.filter((m) => m.reason === "unknown-column");
+  if (noOverlap.length > 0) {
+    const one = noOverlap.length === 1;
+    sentences.push(
+      `${noOverlap.map((m) => m.sourceName).join(", ")} ${one ? "keeps its period" : "keep their periods"}: ${one ? "its" : "their"} columns are not delivered in any year of ${yearWindowLabel(window)}. Remove ${one ? "the source" : "them"} or widen the study window.`,
+    );
   }
-  const names = plan.misses.map((m) => m.sourceName).join(", ");
-  const one = plan.misses.length === 1;
-  return `${names} ${one ? "keeps its period" : "keep their periods"}: ${one ? "its" : "their"} columns are not delivered in any year of ${yearWindowLabel(window)}. Remove ${one ? "the source" : "them"} or widen the study window.`;
+  if (unknown.length > 0) {
+    const one = unknown.length === 1;
+    sentences.push(
+      `${unknown.map((m) => m.sourceName).join(", ")} ${one ? "keeps its period" : "keep their periods"}: the catalog lists no delivery for one of ${one ? "its" : "their"} columns, so the overlap can't be worked out. Set the period on the source card.`,
+    );
+  }
+  return sentences.join(" ");
 }
 </script>
 
@@ -226,8 +236,8 @@ function missNote(plan: OverlapPlan, window: StudyWindow): string {
 
     <!-- Always rendered, so the verdict lands in a live region that already exists. -->
     <p
-      class="outcome"
-      class:ok={outcome?.kind === "applied"}
+      class="problem outcome"
+      class:applied={outcome?.kind === "applied"}
       class:info={outcome?.kind === "unchanged"}
       class:warn={outcome?.kind === "unreadable" || outcome?.kind === "stale"}
       role="status"
@@ -337,32 +347,10 @@ function missNote(plan: OverlapPlan, window: StudyWindow): string {
     color: var(--text-muted);
     font-size: var(--text-sm);
   }
-  /* The verdict row: no fill and no height while it says nothing; the status tint,
-     foreground and a glyph first once it does (DESIGN.md → Banners and status rows). */
+  /* The verdict row is the shared status row (ui/utilities.css `.problem` and its
+     report variants): no fill and no height while it says nothing. */
   .outcome {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-2);
     margin: 0;
-    font-size: var(--text-sm);
-  }
-  .outcome.ok,
-  .outcome.info,
-  .outcome.warn {
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--radius-sm);
-  }
-  .outcome.ok {
-    background: var(--ok-bg);
-    color: var(--ok);
-  }
-  .outcome.info {
-    background: var(--info-bg);
-    color: var(--info);
-  }
-  .outcome.warn {
-    background: var(--warn-bg);
-    color: var(--warn);
   }
   .dialog-lead {
     margin: 0 0 var(--space-2);

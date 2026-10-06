@@ -583,13 +583,28 @@ export function stagedDiffSummary(counts: StagedApplyOutcome): string {
  *    years inside the active add window (the common study window, or the page's
  *    own period): there is no overlap to persist, and the batch is not half-applied.
  *    `columns` names them for `outsideScopeMessage`;
+ *  - `outside-study-window` — refused BEFORE any mutation because a page's own
+ *    `?period` resolved a picked column to years wholly outside the project's
+ *    study window: the add would author a source the window already blocks;
  *  - `abandoned` — the page was left, or the draft replaced, while the picks were
  *    in flight; nothing was written. */
 export type StagedApplyResult =
   | { kind: "applied"; outcome: StagedApplyOutcome | null }
   | { kind: "period-required" }
   | { kind: "outside-scope"; columns: string[] }
+  | {
+      kind: "outside-study-window";
+      columns: string[];
+      studyWindow: StudyWindow;
+    }
   | { kind: "abandoned" };
+
+/** "Kon", "Kon and Sni", "Kon, Sni and Lan" — the columns a refusal names. */
+function columnList(columns: readonly string[]): string {
+  return columns.length <= 1
+    ? (columns[0] ?? "This column")
+    : `${columns.slice(0, -1).join(", ")} and ${columns.at(-1)}`;
+}
 
 /** The refusal an `outside-scope` Apply shows in the picker: which columns, the
  * window they miss, and the two ways out — untick them, or move the period that
@@ -599,10 +614,7 @@ export function outsideScopeMessage(
   columns: readonly string[],
   scope: PickerCommitScope,
 ): string {
-  const names =
-    columns.length <= 1
-      ? (columns[0] ?? "This column")
-      : `${columns.slice(0, -1).join(", ")} and ${columns.at(-1)}`;
+  const names = columnList(columns);
   const verb = columns.length > 1 ? "have" : "has";
   if (scope.period) {
     return `Not added: ${names} ${verb} no years inside the selected period ${periodLabel(periodFromWire(scope.period)) ?? scope.period}. Untick ${columns.length > 1 ? "them" : "it"}, or change the period above.`;
@@ -626,6 +638,10 @@ export function stagedApplyRefusal(
   }
   if (result.kind === "outside-scope") {
     return outsideScopeMessage(result.columns, scope);
+  }
+  if (result.kind === "outside-study-window") {
+    const many = result.columns.length > 1;
+    return `Not added: under the selected period, ${columnList(result.columns)} ${many ? "have" : "has"} no years inside the study window ${yearWindowLabel(result.studyWindow)}. Choose a period that overlaps the study window, or widen the study window in the rail.`;
   }
   return null;
 }
@@ -709,6 +725,10 @@ export async function applyStagedPicks(
   payload: StagedApplyPayload,
   ctx: {
     scope: PickerCommitScope;
+    /** The project's common study window, when one is set. A page's own
+     * `?period` can override the add window (`scope`), so it is judged here too:
+     * an add wholly outside it would author a source that blocks the order. */
+    studyWindow?: StudyWindow | null;
     seed: StagedApplySeed;
     cancelled: () => boolean;
   },
@@ -748,6 +768,26 @@ export async function applyStagedPicks(
   ];
   if (outside.length > 0) {
     return { kind: "outside-scope", columns: outside };
+  }
+  // The add window may be the page's own `?period`, not the study window. An add
+  // it resolves wholly outside the study window is the disjoint source §12 blocks —
+  // refused here, naming the window, rather than "applied" into a blocked project.
+  const studyWindow = ctx.studyWindow ?? null;
+  if (studyWindow !== null) {
+    const disjoint = [
+      ...new Set(
+        candidates
+          .filter(
+            (candidate) =>
+              periodWindowRelation(candidate.period, studyWindow) ===
+              "disjoint",
+          )
+          .map((candidate) => candidate.pick.row.column),
+      ),
+    ];
+    if (disjoint.length > 0) {
+      return { kind: "outside-study-window", columns: disjoint, studyWindow };
+    }
   }
   const addPeriods = finalAddPeriodWires(
     sourcePeriodsFromDraft(projectStore.draft),

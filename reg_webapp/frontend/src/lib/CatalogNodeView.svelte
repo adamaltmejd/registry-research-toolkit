@@ -44,7 +44,7 @@ import {
 } from "./catalog";
 import DataWarnings from "./DataWarnings.svelte";
 import FilterInput from "./FilterInput.svelte";
-import { clampYearWindow } from "./period";
+import { clampYearWindow, yearWindowLabel } from "./period";
 import { projectStore } from "./project_store.svelte";
 import RelatedDocumentsPanel from "./RelatedDocumentsPanel.svelte";
 import StagedAddStatus from "./StagedAddStatus.svelte";
@@ -304,12 +304,12 @@ function eraYears(window: { from: string; to: string }): string {
     return open ? "" : `–${window.to.slice(0, 4)}`;
   }
   const from = window.from.slice(0, 4);
-  return open ? `${from}–` : yearRange(from, window.to.slice(0, 4));
-}
-
-/** A closed year range as this page spells it: "2018", or "1990–2021". */
-function yearRange(from: string, to: string): string {
-  return from === to ? from : `${from}–${to}`;
+  return open
+    ? `${from}–`
+    : yearWindowLabel({
+        from: Number(from),
+        to: Number(window.to.slice(0, 4)),
+      });
 }
 
 /** Above this many eras, the label folds (Y-110): an interrupted delivery can run
@@ -707,7 +707,7 @@ function columnOffered(column: DeliveryColumn): boolean {
 /** A scope's window in years — how a row and a refusal name it ("1990–2021"). */
 function scopeYears(scope: { window?: [number, number] | null }): string {
   return scope.window
-    ? yearRange(`${scope.window[0]}`, `${scope.window[1]}`)
+    ? yearWindowLabel({ from: scope.window[0], to: scope.window[1] })
     : "";
 }
 const windowYears = $derived(scopeYears(addScope));
@@ -965,6 +965,7 @@ async function addSelected(): Promise<void> {
       { adds, removes: [] },
       {
         scope,
+        studyWindow: boundedProjectWindow,
         seed: { regMetaVersion, steward },
         cancelled: lapsed,
       },

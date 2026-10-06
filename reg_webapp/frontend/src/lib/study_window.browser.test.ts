@@ -224,6 +224,25 @@ describe("common study window — catalog picker", () => {
     expect(projectStore.draft?.sources).toEqual([]);
   });
 
+  it("blocks a page-period add that falls wholly outside the study window", async () => {
+    windowStore.set({ from: 2018, to: 2024 });
+    router.navigate("/catalog/scb/lisa/kon?period=1960..1970");
+    await renderLeaf([
+      state({ valid_from: "1952-01-01", valid_to: "2023-12-31" }),
+    ]);
+
+    await addKon();
+
+    await expect
+      .element(
+        page.getByText(
+          "Not added: under the selected period, Kon has no years inside the study window 2018–2024. Choose a period that overlaps the study window, or widen the study window in the rail.",
+        ),
+      )
+      .toBeVisible();
+    expect(projectStore.draft?.sources).toEqual([]);
+  });
+
   it("marks a committed column whose source period differs from the window", async () => {
     loadDraft(
       [
@@ -260,6 +279,10 @@ describe("common study window — catalog picker", () => {
     await expect
       .element(page.getByText("In project, outside study window"))
       .toBeVisible();
+    // The row's delivery is outside the window too, but the blocking marker keeps
+    // full contrast: the row is not dimmed.
+    const row = page.getByRole("checkbox", { name: /Kon/ }).element();
+    expect(row.closest(".row-btn")?.classList.contains("dimmed")).toBe(false);
   });
 });
 
@@ -337,6 +360,56 @@ describe("common study window — project page", () => {
     await expect
       .element(page.getByText(/No years inside the study window 2015–2020/))
       .toBeVisible();
+  });
+
+  it("leaves a source alone when the catalog lists no delivery for one of its columns", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue({
+      kind: "register",
+      fqid: "scb/lisa",
+      children: [
+        {
+          kind: "binding",
+          fqid: "scb/lisa/kon",
+          deliveries: [
+            {
+              column: "Kon",
+              variant: "individer",
+              period_scope: "intervals",
+              windows: [{ valid_from: "2000-01-01", valid_to: "9999-12-31" }],
+            },
+          ],
+        },
+      ],
+    } as never);
+    loadDraft(
+      [
+        {
+          name: "LISA",
+          register_variant: "scb/lisa/individer",
+          period: { from: 2010, to: 2012 },
+          bindings: [
+            { variable: "scb/lisa/kon", type: "categorical" },
+            { variable: "scb/lisa/gone", type: "categorical" },
+          ],
+        },
+      ],
+      { from: 2015, to: 2020 },
+    );
+    await renderProject();
+
+    await page.getByRole("button", { name: "Apply window overlap" }).click();
+
+    // Kon alone would narrow the source to 2015–2020; the unread column's years
+    // would be lost with it, so the source keeps its period.
+    await expect
+      .element(
+        page.getByText(
+          "LISA keeps its period: the catalog lists no delivery for one of its columns, so the overlap can't be worked out. Set the period on the source card.",
+        ),
+      )
+      .toBeVisible();
+    expect(page.getByRole("alertdialog").query()).toBeNull();
+    expect(sourcePeriods()).toEqual([{ from: 2010, to: 2012 }]);
   });
 
   it("applies the window overlap only to the sources that have one", async () => {

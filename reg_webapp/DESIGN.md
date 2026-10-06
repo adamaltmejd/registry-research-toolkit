@@ -2441,13 +2441,18 @@ never schema inheritance: each `Source` keeps its own explicit `period` in
   period to commit, and none is invented from its own span (the earlier dimmed-row
   fallback is gone). The register list does not offer the tick; a subject page refuses
   the whole Apply before the store is touched (`applyStagedPicks` → `outside-scope`) and
-  names the columns and the window in the picker's status row.
+  names the columns and the window in the picker's status row. A subject page's own
+  `?period` overrides the add window, so the study window is checked as well: an add the
+  page period resolves wholly outside it would author a source that blocks the order,
+  and is refused the same way (`outside-study-window`), naming the study window.
 - **A window edit never rewrites a source period.** The rail writes `window` and nothing
   else. A source the new window leaves with no years inside it keeps its period and
   blocks the order: `projectStore.canDownloadOrder` closes and `downloadOrder` refuses,
   the card shows an error row, and the validation panel lists each such source
   (`windowDisjointFindings`) with the same locate and catalog links a finding gets. The
-  draft itself stays valid and downloadable.
+  rail's project chip says "Order blocked" (the panel's own wording) wherever validation
+  alone would read "Draft valid" or "Warnings". The draft itself stays valid and
+  downloadable.
 - **Every divergence is marked.** On `/project` the card marks a differing period and,
   at error tone, a disjoint one; the head of the sources list names the window and
   counts both kinds. In the catalog, a committed column's "In project" tag says when its
@@ -2459,7 +2464,9 @@ never schema inheritance: each `Source` keeps its own explicit `period` in
   own columns at its own variant (`planWindowOverlap`), and asks before writing: the
   dialog lists every period it replaces and every source it leaves alone. Only sources
   whose columns reach the window are rewritten, in one period-only `applyStagedDiff`; a
-  source with no overlap keeps its period, and keeps blocking if it is disjoint. A draft
+  source with no overlap keeps its period, and keeps blocking if it is disjoint. So does
+  a source one of whose columns has no delivery at its variant in the read: narrowing it
+  to the columns that were found would silently drop the missing column's years. A draft
   that moves while the reads are out drops the plan rather than writing it onto a
   project nobody looked at. Once a plan has left nothing to change (a press that changed
   nothing, or a rewrite that just landed), the action stays frozen (`aria-disabled`, so

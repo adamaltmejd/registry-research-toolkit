@@ -404,6 +404,22 @@ function rowStage(band: PickerBand, row: PickerRepresentation): RowStage {
   return committedRows.has(key) ? "committed" : "none";
 }
 
+/** Whether this row is in the project through a source the study window has
+ * moved off — the blocking divergence its error-tone tag reports. Such a row is
+ * never dimmed: opacity on the row would fade that tag with it, and the one marker
+ * that blocks the order must keep its full contrast. */
+function committedOutsideWindow(
+  band: PickerBand,
+  row: PickerRepresentation,
+): boolean {
+  const committed = committedRows.get(rowKey(band, row));
+  return (
+    committed !== undefined &&
+    !stagedRemoveKeys.has(rowKey(band, row)) &&
+    committedMarker(committed.sourcePeriod, studyWindow).tone === "error"
+  );
+}
+
 function rowStageLabel(stage: RowStage): string {
   if (stage === "committed") {
     return "In project";
@@ -2315,7 +2331,7 @@ function codingsVaryHref(
                       class:committed={stage === "committed"}
                       class:staged-add={stage === "staged-add"}
                       class:staged-remove={stage === "staged-remove"}
-                      class:dimmed={!inWindow}
+                      class:dimmed={!inWindow && !committedOutsideWindow(predecessorBand, row)}
                     >
                       <input
                         type="checkbox"
@@ -2674,7 +2690,7 @@ function codingsVaryHref(
                             class:committed={stage === "committed"}
                             class:staged-add={stage === "staged-add"}
                             class:staged-remove={stage === "staged-remove"}
-                            class:dimmed={!inWindow}
+                            class:dimmed={!inWindow && !committedOutsideWindow(band, row)}
                             class:open-start={cell.openStart}
                             class:open-end={cell.openEnd}
                             style={`left:${left}px; width:${width}px; top:${cellTopValue}px`}
@@ -2900,7 +2916,7 @@ function codingsVaryHref(
               class:committed={stage === "committed"}
               class:staged-add={stage === "staged-add"}
               class:staged-remove={stage === "staged-remove"}
-              class:dimmed={!inWindow}
+              class:dimmed={!inWindow && !committedOutsideWindow(band, row)}
             >
               <!-- No aria-label: the wrapping <label>'s text content (the column chip +
                    population + value set + period) names the checkbox for AT. -->
@@ -3135,7 +3151,7 @@ function codingsVaryHref(
                 class:committed={stage === "committed"}
                 class:staged-add={stage === "staged-add"}
                 class:staged-remove={stage === "staged-remove"}
-                class:dimmed={!inWindow}
+                class:dimmed={!inWindow && !committedOutsideWindow(band, row)}
                 class:band-hover={hoveredBandKey === band.key}
               >
                 <!-- No aria-label: the <label> text (column chip + value-set + period)
