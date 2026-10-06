@@ -7,7 +7,7 @@ from types import SimpleNamespace
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
 from catalog_manifest import synthetic_manifest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.source_evidence import SourceRevision

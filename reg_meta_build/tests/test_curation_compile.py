@@ -8,7 +8,7 @@ from types import SimpleNamespace
 from typing import TYPE_CHECKING, Any, Literal, cast
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
 from _prepared_fixtures import accept_prepared
 from reg_meta.errors import RegMetaError
 from reg_meta.source_evidence import (
