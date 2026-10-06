@@ -99,10 +99,6 @@ class TestListBindings:
         ]
         assert all(isinstance(b, BindingSummary) for b in bindings)
 
-    def test_excludes_null_slug_variables(self) -> None:
-        # rams has 3 variables but only 2 are slugged/addressable.
-        assert len(_catalog().list_bindings("scb", "rams")) == 2
-
     def test_carries_fqid_and_name(self) -> None:
         syss = next(
             b
@@ -366,10 +362,6 @@ class TestListVariants:
         assert len(version.object_types) == 1
         assert version.object_types[0].name == "Person"
         assert version.object_types[0].definition == "Individual worker"
-
-    def test_excludes_null_slug_variants(self) -> None:
-        # rams has 4 register_variants but only 3 are slugged/browse-addressable.
-        assert len(_variants_catalog().list_variants("scb", "rams")) == 3
 
     def test_unknown_register_is_empty(self) -> None:
         assert _variants_catalog().list_variants("scb", "nope") == []

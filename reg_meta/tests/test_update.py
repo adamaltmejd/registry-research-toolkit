@@ -1,64 +1,209 @@
-"""Tests for the update module (version parsing and release resolution)."""
+"""Update decisions at the public boundary: network at urlopen, uv at subprocess.run.
 
-import shutil
+The fake network serves a configurable GitHub releases list, a PyPI version and
+zstd assets built from readable sources. Version cases are relative to the
+installed ``reg_meta.__version__`` and assume it is a final ``X.Y.Z`` release.
+"""
+
+from __future__ import annotations
+
+import io
+import json
+import os
+import re
 import sqlite3
+import subprocess
+import sys
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+from email.message import Message
 from typing import TYPE_CHECKING
 
 import pytest
 import zstandard
-from reader_artifacts import build_reader_artifact
-from reg_meta.db import DB_FILENAME, SCHEMA_VERSION
-from reg_meta.doc_db import (
-    DOC_DB_FILENAME,
-    DOC_SCHEMA_VERSION,
-)
-from reg_meta.download import _is_reg_meta_release, _pick_release, version_from_tag
-from reg_meta.errors import RegMetaError
-from reg_meta.update import (
-    _clear_pending_update,
-    _parse_version,
-    _set_pending_update,
-    read_pending_update,
-)
+from reader_artifacts import CASES, build_reader_artifact
+from reg_meta.cli import run
+from reg_meta.doc_db import DOC_SCHEMA_VERSION
+from reg_meta.download import version_from_tag
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta.update import UpdateChecker, read_pending_update, run_update
+from reg_meta_build.doc_db import build_doc_db
 
-from reg_meta import download
+from reg_meta import __version__
 
 if TYPE_CHECKING:
     from pathlib import Path
 
+DB = "reg_meta.db.zst"
+DOCS = "reg_meta_docs.db.zst"
+UV_TOOL_DIR = "/x/uv/tools"
+UV_TOOL_PREFIX = "/x/uv/tools/reg-meta"
+VENV_PREFIX = "/app/.venv"
+UPGRADE = ["uv", "tool", "upgrade", "reg_meta"]
 
-class TestParseVersion:
-    """_parse_version produces comparable tuples for X.Y.Z, X.Y.ZaN, X.Y.Z.devN."""
 
-    def test_final_release(self):
-        assert _parse_version("0.4.0") == (0, 4, 0, 0, 0)
+def _installed() -> tuple[int, int, int]:
+    match = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)", __version__)
+    assert match, f"version cases assume a final installed version, got {__version__}"
+    major, minor, patch = (int(part) for part in match.groups())
+    return major, minor, patch
 
-    def test_alpha(self):
-        assert _parse_version("0.5.0a1") == (0, 5, 0, -1, 1)
 
-    def test_dev(self):
-        assert _parse_version("0.5.0.dev3") == (0, 5, 0, -2, 3)
+MAJOR, MINOR, PATCH = _installed()
+SAME = f"{MAJOR}.{MINOR}.{PATCH}"
+NEXT_PATCH = f"{MAJOR}.{MINOR}.{PATCH + 1}"
 
-    def test_strips_v_prefix(self):
-        assert _parse_version("v1.2.3") == (1, 2, 3, 0, 0)
 
-    def test_unparseable_returns_lowest(self):
-        assert _parse_version("garbage") == (0, 0, 0, -99, 0)
+def release(tag: str, *assets: str) -> dict:
+    return {"tag_name": tag, "assets": [{"name": name} for name in assets]}
 
-    @pytest.mark.parametrize(
-        "older, newer",
-        [
-            ("0.4.0.dev1", "0.4.0a1"),
-            ("0.4.0a1", "0.4.0"),
-            ("0.4.0", "0.5.0"),
-            ("0.4.0.dev1", "0.4.0"),
-            ("0.4.0a1", "0.4.0a2"),
-            ("0.4.0.dev1", "0.4.0.dev2"),
-            ("0.4.0", "1.0.0"),
-        ],
-    )
-    def test_ordering(self, older: str, newer: str):
-        assert _parse_version(older) < _parse_version(newer)
+
+class Response(io.BytesIO):
+    @property
+    def headers(self):
+        return {"Content-Length": str(len(self.getvalue()))}
+
+
+@pytest.fixture(scope="module")
+def payloads(tmp_path_factory) -> dict[str, bytes]:
+    root = tmp_path_factory.mktemp("assets")
+    catalog = build_reader_artifact(root / "catalog", "annual-series", "catalog")
+    docs = build_doc_db(CASES / "selection/docs", root / "docs")
+    incompatible = build_doc_db(CASES / "selection/docs", root / "incompatible")
+    major = int(DOC_SCHEMA_VERSION.split(".")[0])
+    with sqlite3.connect(incompatible) as conn:
+        conn.execute(
+            "UPDATE doc_meta SET value=? WHERE key='schema_version'",
+            (f"{major + 1}.0.0",),
+        )
+    compress = zstandard.ZstdCompressor().compress
+    return {
+        DB: compress(catalog.read_bytes()),
+        DOCS: compress(docs.read_bytes()),
+        "incompatible-docs": compress(incompatible.read_bytes()),
+    }
+
+
+class FakeNetwork:
+    """GitHub releases, PyPI JSON and release downloads behind urlopen."""
+
+    def __init__(self, payloads: dict[str, bytes]) -> None:
+        self.payloads = payloads
+        self.releases: list[dict] = []
+        self.pypi: str | None = SAME  # None: PyPI unreachable
+        self.docs_payload = DOCS
+        self.urls: list[str] = []
+
+    def __call__(self, request, **kwargs):
+        url = request.full_url
+        self.urls.append(url)
+        if "api.github.com" in url:
+            return Response(json.dumps(self.releases).encode())
+        if "pypi.org" in url:
+            if self.pypi is None:
+                raise urllib.error.URLError("offline")
+            return Response(json.dumps({"info": {"version": self.pypi}}).encode())
+        tag, name = url.split("/releases/download/", 1)[1].rsplit("/", 1)
+        carried = [
+            asset["name"]
+            for item in self.releases
+            if item["tag_name"] == tag
+            for asset in item["assets"]
+        ]
+        if name not in carried:
+            raise urllib.error.HTTPError(url, 404, "Not Found", Message(), None)
+        return Response(self.payloads[self.docs_payload if name == DOCS else name])
+
+    @property
+    def hosts(self) -> list[str]:
+        return [urllib.parse.urlsplit(url).hostname or "" for url in self.urls]
+
+    @property
+    def downloads(self) -> list[str]:
+        return [url for url in self.urls if "/releases/download/" in url]
+
+
+class FakeUv:
+    """`uv tool dir` and `uv tool upgrade` behind subprocess.run."""
+
+    def __init__(self) -> None:
+        self.tool_dir = UV_TOOL_DIR + "\n"
+        self.returncode = 0
+        self.missing = False
+        self.upgrade_output = ("Upgraded reg-meta\n", "")
+        self.calls: list[list[str]] = []
+
+    def __call__(self, cmd, **kwargs):
+        self.calls.append(cmd)
+        if self.missing:
+            raise FileNotFoundError("uv")
+        if cmd == ["uv", "tool", "dir"]:
+            return subprocess.CompletedProcess(cmd, self.returncode, self.tool_dir, "")
+        if cmd == UPGRADE:
+            stdout, stderr = self.upgrade_output
+            return subprocess.CompletedProcess(cmd, 0, stdout, stderr)
+        raise AssertionError(f"unexpected subprocess: {cmd!r}")
+
+
+@pytest.fixture
+def net(payloads, tmp_path: Path, monkeypatch) -> FakeNetwork:
+    network = FakeNetwork(payloads)
+    monkeypatch.setattr(urllib.request, "urlopen", network)
+    monkeypatch.setenv("XDG_DATA_HOME", str(tmp_path / "data"))
+    monkeypatch.delenv("REG_META_DB", raising=False)
+    monkeypatch.setattr(sys, "prefix", VENV_PREFIX)
+    return network
+
+
+@pytest.fixture
+def uv(monkeypatch) -> FakeUv:
+    fake = FakeUv()
+    monkeypatch.setattr(subprocess, "run", fake)
+    return fake
+
+
+def install(net: FakeNetwork, tag: str) -> None:
+    """Install both assets through a real update from a release carrying them."""
+    pypi = net.pypi
+    net.releases, net.pypi = [release(tag, DB, DOCS)], SAME
+    run_update(yes=True)
+    net.pypi = pypi
+
+
+def check() -> str | None:
+    return UpdateChecker(http_timeout=5).get_newer_version(timeout=5)
+
+
+# --- version ordering through the upgrade decision ------------------------
+
+
+@pytest.mark.parametrize(
+    "candidate, offered",
+    [
+        pytest.param(SAME, False, id="same"),
+        pytest.param(f"v{SAME}", False, id="v-same"),
+        pytest.param(NEXT_PATCH, True, id="next-patch"),
+        pytest.param(f"v{NEXT_PATCH}", True, id="v-next-patch"),
+        pytest.param(f"{SAME}a1", False, id="alpha-of-same"),
+        pytest.param(f"{SAME}.dev1", False, id="dev-of-same"),
+        pytest.param(f"{NEXT_PATCH}a1", True, id="alpha-of-next"),
+        pytest.param(f"{NEXT_PATCH}.dev1", True, id="dev-of-next"),
+        pytest.param(f"{MAJOR}.{MINOR + 1}.0", True, id="next-minor"),
+        pytest.param(f"{MAJOR + 1}.0.0", True, id="next-major"),
+        pytest.param("garbage", False, id="unparseable"),
+    ],
+)
+def test_checker_offers_only_a_newer_pypi_version(net, uv, candidate, offered):
+    net.pypi = candidate
+    assert check() == (candidate if offered else None)
+
+
+def test_checker_asks_pypi_not_github_for_the_version(net, uv):
+    net.pypi = NEXT_PATCH
+    assert check() == NEXT_PATCH
+    assert net.hosts == ["pypi.org"]
 
 
 class TestVersionFromTag:
@@ -72,661 +217,235 @@ class TestVersionFromTag:
         assert version_from_tag("reg_meta/0.5.0") == "0.5.0"
 
 
-class TestIsRegMetaRelease:
-    def test_prefixed_tag(self):
-        assert _is_reg_meta_release({"tag_name": "reg_meta/v0.5.0"})
-
-    def test_legacy_bare_tag(self):
-        assert _is_reg_meta_release({"tag_name": "v0.4.0"})
-
-    def test_other_package_tag(self):
-        assert not _is_reg_meta_release({"tag_name": "mock-data-wizard/v0.4.0"})
-
-    def test_non_semver_v_tag(self):
-        assert not _is_reg_meta_release({"tag_name": "vNext"})
+# --- pending-update flag ---------------------------------------------------
 
 
-def _release(tag: str, *, has_db: bool = False, has_docs: bool = False) -> dict:
-    """Build a minimal GitHub release dict for testing."""
-    assets: list[dict] = []
-    if has_db:
-        assets.append({"name": "reg_meta.db.zst"})
-    if has_docs:
-        assets.append({"name": "reg_meta_docs.db.zst"})
-    return {"tag_name": tag, "assets": assets}
+def test_newer_check_records_pending_update(net, uv):
+    assert read_pending_update() is None
+    net.pypi = NEXT_PATCH
+    check()
+    assert read_pending_update() == NEXT_PATCH
 
 
-class TestPickRelease:
-    def test_picks_latest_prefixed(self):
-        releases = [
-            _release("reg_meta/v0.6.0"),
-            _release("reg_meta/v0.5.0", has_db=True, has_docs=True),
-        ]
-        resolution = _pick_release(releases)
-        assert resolution.release_tag == "reg_meta/v0.6.0"
-        assert resolution.version == "0.6.0"
-        assert resolution.db_tag == "reg_meta/v0.5.0"
-        assert resolution.docs_tag == "reg_meta/v0.5.0"
-
-    def test_db_on_latest(self):
-        releases = [_release("reg_meta/v0.5.0", has_db=True, has_docs=True)]
-        resolution = _pick_release(releases)
-        assert resolution.release_tag == "reg_meta/v0.5.0"
-        assert resolution.db_tag == "reg_meta/v0.5.0"
-        assert resolution.docs_tag == "reg_meta/v0.5.0"
-
-    def test_no_db_in_any_release(self):
-        releases = [_release("reg_meta/v0.6.0"), _release("reg_meta/v0.5.0")]
-        resolution = _pick_release(releases)
-        assert resolution.release_tag == "reg_meta/v0.6.0"
-        assert resolution.db_tag is None
-        assert resolution.docs_tag is None
-
-    def test_ignores_other_package_tags(self):
-        releases = [
-            _release("mock-data-wizard/v1.0.0", has_db=True, has_docs=True),
-            _release("reg_meta/v0.5.0"),
-        ]
-        resolution = _pick_release(releases)
-        assert resolution.release_tag == "reg_meta/v0.5.0"
-        assert resolution.version == "0.5.0"
-        assert resolution.db_tag is None
-        assert resolution.docs_tag is None
-
-    def test_legacy_bare_tags(self):
-        releases = [_release("v0.4.0", has_db=True, has_docs=True)]
-        resolution = _pick_release(releases)
-        assert resolution.release_tag == "v0.4.0"
-        assert resolution.version == "0.4.0"
-        assert resolution.db_tag == "v0.4.0"
-        assert resolution.docs_tag == "v0.4.0"
-
-    def test_prefers_prefixed_over_legacy(self):
-        releases = [
-            _release("reg_meta/v0.6.0"),
-            _release("v0.5.0", has_db=True, has_docs=True),
-        ]
-        resolution = _pick_release(releases)
-        assert resolution.release_tag == "reg_meta/v0.6.0"
-        assert resolution.version == "0.6.0"
-        assert resolution.db_tag == "v0.5.0"
-        assert resolution.docs_tag == "v0.5.0"
-
-    def test_db_and_docs_tracked_independently(self):
-        """Walker picks the newest release per asset — asset presence varies by release."""
-        releases = [
-            _release("reg_meta/v0.8.0"),  # no assets
-            _release("reg_meta/v0.7.0", has_docs=True),  # docs-only refresh
-            _release("reg_meta/v0.6.0", has_db=True),  # main-db-only (schema bump)
-        ]
-        resolution = _pick_release(releases)
-        assert resolution.release_tag == "reg_meta/v0.8.0"
-        assert resolution.db_tag == "reg_meta/v0.6.0"
-        assert resolution.docs_tag == "reg_meta/v0.7.0"
-
-    def test_empty_raises(self):
-        with pytest.raises(RegMetaError) as exc_info:
-            _pick_release([])
-        assert exc_info.value.code == "no_releases"
+def test_non_newer_check_clears_pending_update(net, uv, monkeypatch):
+    net.pypi = NEXT_PATCH
+    check()
+    real_time = time.time
+    monkeypatch.setattr(time, "time", lambda: real_time() + 8 * 24 * 3600)
+    net.pypi = SAME
+    assert check() is None
+    assert read_pending_update() is None
 
 
-class TestPendingUpdate:
-    """Persistent update-available flag read/write/clear."""
-
-    @pytest.fixture(autouse=True)
-    def _isolate_flag(self, monkeypatch, tmp_path):
-        flag = tmp_path / ".update_available"
-        monkeypatch.setattr("reg_meta.update._update_available_path", lambda: flag)
-        self.flag_path = flag
-
-    def test_roundtrip(self):
-        assert read_pending_update() is None
-        _set_pending_update("0.7.0")
-        assert read_pending_update() == "0.7.0"
-
-    def test_clear(self):
-        _set_pending_update("0.7.0")
-        _clear_pending_update()
-        assert read_pending_update() is None
-
-    def test_clear_when_missing(self):
-        _clear_pending_update()  # should not raise
+def test_run_update_clears_pending_update(net, uv):
+    net.pypi = NEXT_PATCH
+    check()
+    install(net, "reg_meta/v99.0.0")
+    assert read_pending_update() is None
 
 
-def _write_fake_db_zst(dest_zst: Path, schema_version: str) -> None:
-    """Build a minimal sqlite DB with the given schema_version and zstd it to dest."""
-    directory = dest_zst.parent / "download-fixture"
-    db_path = build_reader_artifact(directory, "annual-series", "catalog")
-    with sqlite3.connect(db_path) as conn:
-        conn.execute(
-            "UPDATE import_manifest SET value=? WHERE key='schema_version'",
-            (schema_version,),
-        )
-    cctx = zstandard.ZstdCompressor()
-    with db_path.open("rb") as src, dest_zst.open("wb") as out:
-        cctx.copy_stream(src, out)
-    shutil.rmtree(directory)
+# --- release walk ------------------------------------------------------------
 
 
-def _install_catalog(path: Path) -> None:
-    directory = path.parent / "installed-fixture"
-    built = build_reader_artifact(directory, "annual-series", "catalog")
-    path.parent.mkdir(parents=True, exist_ok=True)
-    shutil.move(built, path)
-    shutil.rmtree(directory)
-
-
-class TestDownloadDbSchemaGuard:
-    """download_db refuses to overwrite an existing DB with an incompatible asset."""
-
-    def _patch_download(
-        self, monkeypatch: pytest.MonkeyPatch, schema_version: str
-    ) -> None:
-        """Replace the network download with a local zstd-ed DB having *schema_version*."""
-
-        def fake_download(url: str, dest: Path) -> None:
-            _write_fake_db_zst(dest, schema_version)
-
-        monkeypatch.setattr(download, "_download_file", fake_download)
-
-    def test_incompatible_asset_aborts_without_overwriting(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        """Stale DB asset (old minor) must not replace a working local DB."""
-        db_dir = tmp_path / "share"
-        db_dir.mkdir()
-        existing = db_dir / DB_FILENAME
-        existing.write_bytes(b"existing-db-sentinel")
-
-        major = int(SCHEMA_VERSION.split(".")[0])
-        self._patch_download(monkeypatch, f"{major - 1}.0.0")
-
-        with pytest.raises(RegMetaError) as exc_info:
-            download.download_db(
-                db_dir=db_dir, tag="reg_meta/vX.Y.Z", force=True, yes=True
-            )
-        assert exc_info.value.code == "incompatible_db_asset"
-        # Existing DB left untouched.
-        assert existing.read_bytes() == b"existing-db-sentinel"
-        # No tmp files leftover.
-        assert not (db_dir / "reg_meta.db.tmp").exists()
-        assert not (db_dir / "reg_meta.db.zst.tmp").exists()
-
-    def test_compatible_asset_replaces_existing(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        """Matching schema version is installed normally."""
-        db_dir = tmp_path / "share"
-        db_dir.mkdir()
-        existing = db_dir / DB_FILENAME
-        existing.write_bytes(b"existing-db-sentinel")
-
-        self._patch_download(monkeypatch, SCHEMA_VERSION)
-
-        result = download.download_db(
-            db_dir=db_dir, tag="reg_meta/vX.Y.Z", force=True, yes=True
-        )
-        assert result["tag"] == "reg_meta/vX.Y.Z"
-        assert existing.exists()
-        assert existing.read_bytes() != b"existing-db-sentinel"
-
-
-def _write_fake_docs_db_zst(dest_zst: Path, schema_version: str) -> None:
-    """Build a minimal doc DB with given schema_version and zstd it to dest."""
-    from reg_meta_build.doc_db import DOC_DDL
-
-    db_path = dest_zst.with_suffix(".db.source")
-    conn = sqlite3.connect(db_path)
-    conn.executescript(DOC_DDL)
-    conn.execute(
-        "INSERT INTO doc_meta (key, value) VALUES ('schema_version', ?)",
-        (schema_version,),
+@pytest.mark.parametrize(
+    "releases, expected",
+    [
+        pytest.param(
+            [release("reg_meta/v99.2.0"), release("reg_meta/v99.1.0", DB, DOCS)],
+            ("99.2.0", "reg_meta/v99.1.0", "reg_meta/v99.1.0"),
+            id="latest-sets-version-assets-from-older",
+        ),
+        pytest.param(
+            [release("v98.0.0", DB, DOCS)],
+            ("98.0.0", "v98.0.0", "v98.0.0"),
+            id="legacy-bare-tags",
+        ),
+        pytest.param(
+            [release("reg_meta/v99.0.0"), release("v98.0.0", DB, DOCS)],
+            ("99.0.0", "v98.0.0", "v98.0.0"),
+            id="prefixed-version-legacy-assets",
+        ),
+        pytest.param(
+            [
+                release("reg_meta_build/v100.0.0", DB, DOCS),
+                release("reg_meta/v99.0.0"),
+                release("reg_meta/v98.0.0", DB, DOCS),
+            ],
+            ("99.0.0", "reg_meta/v98.0.0", "reg_meta/v98.0.0"),
+            id="foreign-package-ignored",
+        ),
+        pytest.param(
+            [release("vNext", DB, DOCS), release("reg_meta/v99.0.0", DB, DOCS)],
+            ("99.0.0", "reg_meta/v99.0.0", "reg_meta/v99.0.0"),
+            id="non-semver-v-tag-ignored",
+        ),
+        pytest.param(
+            [
+                release("reg_meta/v99.2.0"),
+                release("reg_meta/v99.1.0", DOCS),
+                release("reg_meta/v99.0.0", DB),
+            ],
+            ("99.2.0", "reg_meta/v99.0.0", "reg_meta/v99.1.0"),
+            id="db-and-docs-walked-independently",
+        ),
+    ],
+)
+def test_release_walk_resolves_version_and_asset_tags(
+    net, uv, monkeypatch, releases, expected
+):
+    # PyPI offline: the walked release version is the upgrade target.
+    monkeypatch.setattr(sys, "prefix", UV_TOOL_PREFIX)
+    net.releases, net.pypi = releases, None
+    result = run_update(yes=True)
+    actual = (
+        result["package"]["new_version"],
+        result["database"]["tag"],
+        result["docs"]["tag"],
     )
-    conn.commit()
-    conn.close()
-    cctx = zstandard.ZstdCompressor()
-    with db_path.open("rb") as src, dest_zst.open("wb") as out:
-        cctx.copy_stream(src, out)
-    db_path.unlink()
-
-
-class TestDownloadDocsDbSchemaGuard:
-    """download_docs_db refuses to overwrite an existing doc DB with an incompatible asset."""
-
-    def _patch_download(
-        self, monkeypatch: pytest.MonkeyPatch, schema_version: str
-    ) -> None:
-        def fake_download(url: str, dest: Path) -> None:
-            _write_fake_docs_db_zst(dest, schema_version)
-
-        monkeypatch.setattr(download, "_download_file", fake_download)
-
-    def test_incompatible_docs_asset_aborts_without_overwriting(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        db_dir = tmp_path / "share"
-        db_dir.mkdir()
-        existing = db_dir / DOC_DB_FILENAME
-        existing.write_bytes(b"existing-docs-sentinel")
-
-        major, _minor = (int(x) for x in DOC_SCHEMA_VERSION.split(".")[:2])
-        # Force incompatibility by claiming a different major version.
-        self._patch_download(monkeypatch, f"{major + 1}.0.0")
-
-        with pytest.raises(RegMetaError) as exc_info:
-            download.download_docs_db(db_dir=db_dir, tag="reg_meta/vX.Y.Z", force=True)
-        assert exc_info.value.code == "incompatible_docs_asset"
-        assert existing.read_bytes() == b"existing-docs-sentinel"
-        assert not (db_dir / "reg_meta_docs.db.tmp").exists()
-        assert not (db_dir / "reg_meta_docs.db.zst.tmp").exists()
-
-    def test_compatible_docs_asset_replaces_existing(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        db_dir = tmp_path / "share"
-        db_dir.mkdir()
-        existing = db_dir / DOC_DB_FILENAME
-        existing.write_bytes(b"existing-docs-sentinel")
-
-        self._patch_download(monkeypatch, DOC_SCHEMA_VERSION)
-
-        result = download.download_docs_db(
-            db_dir=db_dir, tag="reg_meta/vX.Y.Z", force=True
-        )
-        assert result["tag"] == "reg_meta/vX.Y.Z"
-        assert existing.exists()
-        assert existing.read_bytes() != b"existing-docs-sentinel"
-        # .docs_source written so the walker can detect future updates.
-        assert (db_dir / ".docs_source").exists()
-
-    def test_no_docs_asset_in_release_raises(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        """tag=latest when walker finds no doc asset raises no_docs_in_release."""
-        from reg_meta.download import ReleaseResolution
-
-        def fake_resolve(
-            *, timeout: float = 15, catalog: str = "global"
-        ) -> ReleaseResolution:
-            return ReleaseResolution(
-                release_tag="reg_meta/v0.7.0",
-                version="0.7.0",
-                db_tag="reg_meta/v0.7.0",
-                docs_tag=None,
-            )
-
-        monkeypatch.setattr(download, "resolve_latest_release", fake_resolve)
-        db_dir = tmp_path / "share"
-        db_dir.mkdir()
-
-        with pytest.raises(RegMetaError) as exc_info:
-            download.download_docs_db(db_dir=db_dir, tag="latest")
-        assert exc_info.value.code == "no_docs_in_release"
-
-
-class TestRunUpdateFailFast:
-    """Updates require an admitted main catalog; its docs asset is optional."""
-
-    def _fake_resolve(
-        self,
-        monkeypatch: pytest.MonkeyPatch,
-        *,
-        db_tag: str | None,
-        docs_tag: str | None,
-    ) -> None:
-        # Match __version__ so run_update skips the package-upgrade branch
-        # entirely — we're testing asset-resolution behaviour, not uv.
-        # (CI doesn't have reg_meta installed as a uv tool, so invoking
-        # `uv tool upgrade reg-meta` would fail before any assertion.)
-        from reg_meta.download import ReleaseResolution
-
-        from reg_meta import __version__, update
-
-        def fake_resolve(
-            *, timeout: float = 15, catalog: str = "global"
-        ) -> ReleaseResolution:
-            return ReleaseResolution(
-                release_tag=f"reg_meta/v{__version__}",
-                version=__version__,
-                db_tag=db_tag,
-                docs_tag=docs_tag,
-            )
-
-        monkeypatch.setattr(update, "resolve_latest_release", fake_resolve)
-        monkeypatch.setattr(
-            update, "fetch_pypi_latest_version", lambda *, timeout=15: __version__
-        )
-
-    def test_missing_main_asset_and_no_local_db_raises(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        from reg_meta.update import run_update
-
-        self._fake_resolve(monkeypatch, db_tag=None, docs_tag=None)
-        with pytest.raises(RegMetaError) as exc_info:
-            run_update(db_dir=tmp_path, yes=True)
-        assert exc_info.value.code == "catalog_bootstrap_required"
-
-    def test_missing_optional_docs_asset_reports_absence(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        """An admitted main DB remains usable without its optional docs asset."""
-        from reg_meta.update import run_update
-
-        # An admitted main DB remains usable when the walker finds no docs asset.
-        _install_catalog(tmp_path / DB_FILENAME)
-        (tmp_path / ".db_source").write_text('{"tag": "reg_meta/v0.7.0"}')
-
-        self._fake_resolve(monkeypatch, db_tag="reg_meta/v0.7.0", docs_tag=None)
-        result = run_update(db_dir=tmp_path, yes=True)
-        assert result["docs"] == "no_docs_in_release"
-
-    def test_missing_asset_but_local_copy_present_reports_no_in_release(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        """If user already has both artifacts locally, missing assets are OK."""
-        from reg_meta.update import run_update
-
-        _install_catalog(tmp_path / DB_FILENAME)
-        (tmp_path / ".db_source").write_text('{"tag": "reg_meta/v0.7.0"}')
-        (tmp_path / DOC_DB_FILENAME).write_bytes(b"doc-db-placeholder")
-        (tmp_path / ".docs_source").write_text('{"tag": "reg_meta/v0.7.0"}')
-
-        self._fake_resolve(monkeypatch, db_tag=None, docs_tag=None)
-        # Should not raise: user has working local copies; up-to-date.
-        result = run_update(db_dir=tmp_path, yes=True)
-        assert result["database"] == "no_db_in_release"
-        assert result["docs"] == "no_docs_in_release"
-
-
-class TestRunUpdatePypiBehind:
-    """GitHub tag can land before the gated PyPI publish. PyPI is the
-    source of truth for "what's installable"; GitHub drives asset tags."""
-
-    def test_pypi_behind_github_no_upgrade_offered(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        """PyPI says installed == latest; GitHub advertises a newer tag.
-        The package upgrade is skipped and existing local assets matching
-        the GitHub tag are treated as up-to-date."""
-        from reg_meta.download import ReleaseResolution
-        from reg_meta.update import run_update
-
-        from reg_meta import __version__, update
-
-        newer_tag = "reg_meta/v99.99.99"
-        _install_catalog(tmp_path / DB_FILENAME)
-        (tmp_path / ".db_source").write_text(f'{{"tag": "{newer_tag}"}}')
-        (tmp_path / DOC_DB_FILENAME).write_bytes(b"docs-placeholder")
-        (tmp_path / ".docs_source").write_text(f'{{"tag": "{newer_tag}"}}')
-
-        monkeypatch.setattr(
-            update,
-            "resolve_latest_release",
-            lambda *, timeout=15, catalog="global": ReleaseResolution(
-                release_tag=newer_tag,
-                version="99.99.99",
-                db_tag=newer_tag,
-                docs_tag=newer_tag,
-            ),
-        )
-        monkeypatch.setattr(
-            update, "fetch_pypi_latest_version", lambda *, timeout=15: __version__
-        )
-
-        result = run_update(db_dir=tmp_path, yes=True)
-        assert result["package"] == "up_to_date"
-        assert result["database"] == "up_to_date"
-        assert result["docs"] == "up_to_date"
-
-    def test_uv_nothing_to_upgrade_reports_no_upgrade(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        """Belt-and-braces: if PyPI says newer but `uv tool upgrade` reports
-        'Nothing to upgrade' (e.g. uv's index cache lags), don't lie about
-        a successful upgrade."""
-        import subprocess as _subprocess
-
-        from reg_meta.download import ReleaseResolution
-        from reg_meta.update import run_update
-
-        from reg_meta import update
-
-        target_tag = "reg_meta/v99.99.99"
-        _install_catalog(tmp_path / DB_FILENAME)
-        (tmp_path / ".db_source").write_text(f'{{"tag": "{target_tag}"}}')
-        (tmp_path / DOC_DB_FILENAME).write_bytes(b"docs-placeholder")
-        (tmp_path / ".docs_source").write_text(f'{{"tag": "{target_tag}"}}')
-
-        monkeypatch.setattr(
-            update,
-            "resolve_latest_release",
-            lambda *, timeout=15, catalog="global": ReleaseResolution(
-                release_tag=target_tag,
-                version="99.99.99",
-                db_tag=target_tag,
-                docs_tag=target_tag,
-            ),
-        )
-        monkeypatch.setattr(
-            update, "fetch_pypi_latest_version", lambda *, timeout=15: "99.99.99"
-        )
-        # This test exercises the uv-tool upgrade path; declare it's a uv-tool
-        # install so the non-uv-tool skip branch doesn't short-circuit it.
-        monkeypatch.setattr(update, "_is_uv_tool_install", lambda: True)
-
-        def fake_run(cmd, capture_output, text, check):
-            return _subprocess.CompletedProcess(
-                cmd, returncode=0, stdout="", stderr="Nothing to upgrade\n"
-            )
-
-        monkeypatch.setattr(update.subprocess, "run", fake_run)
-
-        result = run_update(db_dir=tmp_path, yes=True)
-        assert result["package"] == "no_upgrade"
-
-
-class TestIsUvToolInstall:
-    """_is_uv_tool_install asks whether the CURRENTLY-RUNNING env lives under
-    `uv tool dir`. It compares `sys.prefix` against the `uv tool dir` output;
-    any failure → False."""
-
-    @staticmethod
-    def _patch(monkeypatch, *, tool_dir_out, returncode=0, raises=None):
-        import subprocess as _subprocess
-
-        from reg_meta import update
-
-        def fake_run(cmd, capture_output, text, check):
-            if raises is not None:
-                raise raises
-            return _subprocess.CompletedProcess(
-                cmd, returncode=returncode, stdout=tool_dir_out, stderr=""
-            )
-
-        monkeypatch.setattr(update.subprocess, "run", fake_run)
-        return update
-
-    def test_prefix_under_tool_dir_returns_true(self, monkeypatch: pytest.MonkeyPatch):
-        from reg_meta import update
-
-        u = self._patch(monkeypatch, tool_dir_out="/x/uv/tools\n")
-        monkeypatch.setattr(update.sys, "prefix", "/x/uv/tools/reg-meta")
-        assert u._is_uv_tool_install() is True
-
-    def test_prefix_not_under_tool_dir_returns_false(
-        self, monkeypatch: pytest.MonkeyPatch
-    ):
-        # The Docker-bake / `uv sync` case: a venv prefix that is not a uv tool.
-        from reg_meta import update
-
-        u = self._patch(monkeypatch, tool_dir_out="/x/uv/tools\n")
-        monkeypatch.setattr(update.sys, "prefix", "/app/.venv")
-        assert u._is_uv_tool_install() is False
-
-    def test_sibling_string_prefix_returns_false(self, monkeypatch: pytest.MonkeyPatch):
-        # `/x/uv/tools-evil` shares a string prefix with `/x/uv/tools` but is
-        # NOT a real subpath — the `+ os.sep` guard must reject it.
-        from reg_meta import update
-
-        u = self._patch(monkeypatch, tool_dir_out="/x/uv/tools\n")
-        monkeypatch.setattr(update.sys, "prefix", "/x/uv/tools-evil")
-        assert u._is_uv_tool_install() is False
-
-    def test_nonzero_returncode_returns_false(self, monkeypatch: pytest.MonkeyPatch):
-        from reg_meta import update
-
-        u = self._patch(monkeypatch, tool_dir_out="/x/uv/tools\n", returncode=1)
-        monkeypatch.setattr(update.sys, "prefix", "/x/uv/tools/reg-meta")
-        assert u._is_uv_tool_install() is False
-
-    def test_empty_stdout_returns_false(self, monkeypatch: pytest.MonkeyPatch):
-        from reg_meta import update
-
-        u = self._patch(monkeypatch, tool_dir_out="")
-        monkeypatch.setattr(update.sys, "prefix", "/x/uv/tools/reg-meta")
-        assert u._is_uv_tool_install() is False
-
-    def test_uv_not_found_returns_false(self, monkeypatch: pytest.MonkeyPatch):
-        u = self._patch(monkeypatch, tool_dir_out="", raises=FileNotFoundError("uv"))
-        assert u._is_uv_tool_install() is False
-
-
-class TestRunUpdateNonUvToolSkip:
-    """When source reg_meta is behind the latest release but is NOT a uv-tool
-    install (Docker bake / `uv sync`), the package upgrade is skipped (it can
-    only fail) and the DB/doc assets are still fetched."""
-
-    def test_non_uv_tool_skips_upgrade_still_fetches_assets(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        from reg_meta.download import ReleaseResolution
-        from reg_meta.update import run_update
-
-        from reg_meta import update
-
-        newer_tag = "reg_meta/v99.99.99"
-        # No local DB/doc DB present → both asset branches must fetch.
-        monkeypatch.setattr(
-            update,
-            "resolve_latest_release",
-            lambda *, timeout=15, catalog="global": ReleaseResolution(
-                release_tag=newer_tag,
-                version="99.99.99",
-                db_tag=newer_tag,
-                docs_tag=newer_tag,
-            ),
-        )
-        monkeypatch.setattr(
-            update, "fetch_pypi_latest_version", lambda *, timeout=15: "99.99.99"
-        )
-        # Not a uv-tool install → upgrade must be skipped.
-        monkeypatch.setattr(update, "_is_uv_tool_install", lambda: False)
-
-        # `uv tool upgrade` must never be invoked from run_update.
-        def forbid_run(cmd, *args, **kwargs):
-            raise AssertionError(f"subprocess.run must not be called: {cmd!r}")
-
-        monkeypatch.setattr(update.subprocess, "run", forbid_run)
-
-        # Stub the asset downloads so they "succeed" without network.
-        def fake_download_db(*, db_dir, tag, catalog, force, yes):
-            return {"tag": tag}
-
-        def fake_download_docs_db(*, db_dir, tag, force):
-            return {"tag": tag}
-
-        monkeypatch.setattr(update, "download_db", fake_download_db)
-        monkeypatch.setattr(update, "download_docs_db", fake_download_docs_db)
-
-        monkeypatch.setenv("XDG_DATA_HOME", str(tmp_path))
-        monkeypatch.delenv("REG_META_DB", raising=False)
-        result = run_update(catalog="global", yes=True)
-
-        assert result["package"] == "skipped_not_uv_tool"
-        # DB/doc fetch happened (not left broken / up_to_date).
-        assert result["database"] == {"tag": newer_tag}
-        assert result["docs"] == {"tag": newer_tag}
-
-    def test_uv_tool_install_still_attempts_upgrade(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        import subprocess as _subprocess
-
-        from reg_meta.download import ReleaseResolution
-        from reg_meta.update import run_update
-
-        from reg_meta import update
-
-        newer_tag = "reg_meta/v99.99.99"
-        # Local assets already match the target tag → asset branches no-op.
-        _install_catalog(tmp_path / DB_FILENAME)
-        (tmp_path / ".db_source").write_text(f'{{"tag": "{newer_tag}"}}')
-        (tmp_path / DOC_DB_FILENAME).write_bytes(b"docs-placeholder")
-        (tmp_path / ".docs_source").write_text(f'{{"tag": "{newer_tag}"}}')
-
-        monkeypatch.setattr(
-            update,
-            "resolve_latest_release",
-            lambda *, timeout=15, catalog="global": ReleaseResolution(
-                release_tag=newer_tag,
-                version="99.99.99",
-                db_tag=newer_tag,
-                docs_tag=newer_tag,
-            ),
-        )
-        monkeypatch.setattr(
-            update, "fetch_pypi_latest_version", lambda *, timeout=15: "99.99.99"
-        )
-        # A genuine uv-tool install → upgrade path runs.
-        monkeypatch.setattr(update, "_is_uv_tool_install", lambda: True)
-
-        upgrade_calls: list[list[str]] = []
-
-        def fake_run(cmd, capture_output, text, check):
-            upgrade_calls.append(cmd)
-            return _subprocess.CompletedProcess(
-                cmd, returncode=0, stdout="Upgraded reg-meta\n", stderr=""
-            )
-
-        monkeypatch.setattr(update.subprocess, "run", fake_run)
-
-        result = run_update(db_dir=tmp_path, yes=True)
-
-        assert ["uv", "tool", "upgrade", "reg_meta"] in upgrade_calls
-        assert result["package"] == {
-            "old_version": update.__version__,
-            "new_version": "99.99.99",
-        }
-
-
-class TestUpdateCheckerUsesPypi:
-    """UpdateChecker must compare installed version against PyPI, not GitHub."""
-
-    def test_checker_queries_pypi(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        from reg_meta import update
-
-        # Isolate filesystem writes.
-        monkeypatch.setattr(update, "default_db_dir", lambda: tmp_path)
-
-        calls = {"pypi": 0, "github": 0}
-
-        def fake_pypi(*, timeout=15):
-            calls["pypi"] += 1
-            return "99.99.99"
-
-        def fake_github(*, timeout=15):
-            calls["github"] += 1
-            raise AssertionError("UpdateChecker must not hit GitHub for version")
-
-        monkeypatch.setattr(update, "fetch_pypi_latest_version", fake_pypi)
-        monkeypatch.setattr(update, "resolve_latest_release", fake_github)
-
-        checker = update.UpdateChecker(http_timeout=5)
-        newer = checker.get_newer_version(timeout=5)
-
-        assert newer == "99.99.99"
-        assert calls["pypi"] == 1
-        assert calls["github"] == 0
+    assert actual == expected
+
+
+@pytest.mark.parametrize(
+    "releases",
+    [[], [release("reg_meta_build/v1.0.0", DB, DOCS)]],
+    ids=["empty", "foreign-only"],
+)
+def test_no_reg_meta_release_fails(net, uv, releases):
+    net.releases = releases
+    with pytest.raises(RegMetaError) as exc_info:
+        run_update(yes=True)
+    assert exc_info.value.code == "no_releases"
+
+
+def test_no_asset_anywhere_without_local_catalog_fails(net, uv):
+    net.releases = [release("reg_meta/v99.0.0"), release("reg_meta/v98.0.0")]
+    with pytest.raises(RegMetaError) as exc_info:
+        run_update(yes=True)
+    assert exc_info.value.code == "no_db_in_release"
+
+
+def test_no_asset_anywhere_keeps_admitted_local_copies(net, uv):
+    install(net, "reg_meta/v98.0.0")
+    net.releases = [release("reg_meta/v99.0.0")]
+    result = run_update(yes=True)
+    assert (result["database"], result["docs"]) == (
+        "no_db_in_release",
+        "no_docs_in_release",
+    )
+
+
+# --- docs asset admission -----------------------------------------------------
+
+
+def test_incompatible_docs_asset_is_refused_without_overwriting(net, uv, tmp_path):
+    install(net, "reg_meta/v98.0.0")
+    data = tmp_path / "data/reg_meta"
+    before = (data / "reg_meta_docs.db").read_bytes()
+    net.releases = [release("reg_meta/v99.0.0", DOCS), release("reg_meta/v98.0.0", DB)]
+    net.docs_payload = "incompatible-docs"
+    with pytest.raises(RegMetaError) as exc_info:
+        run_update(yes=True)
+    assert exc_info.value.code == "incompatible_docs_asset"
+    assert (data / "reg_meta_docs.db").read_bytes() == before
+    assert sorted(path.name for path in data.glob("*.tmp")) == []
+
+
+def test_compatible_docs_asset_replaces_and_records_its_tag(net, uv):
+    install(net, "reg_meta/v98.0.0")
+    net.releases = [release("reg_meta/v99.0.0", DOCS), release("reg_meta/v98.0.0", DB)]
+    assert run_update(yes=True)["docs"]["tag"] == "reg_meta/v99.0.0"
+    downloads = len(net.downloads)
+    assert run_update(yes=True)["docs"] == "up_to_date"
+    assert len(net.downloads) == downloads
+
+
+def test_first_run_docs_download_reports_missing_docs_asset(
+    net, uv, monkeypatch, capsys
+):
+    # The interactive bootstrap is the route that downloads docs at tag "latest".
+    net.releases = [release("reg_meta/v99.0.0", DB)]
+    assert run_update(yes=True)["docs"] == "no_docs_in_release"
+
+    class TtyInput(io.StringIO):
+        def isatty(self) -> bool:
+            return True
+
+    monkeypatch.setattr(sys, "stdin", TtyInput("y\n"))
+    monkeypatch.setenv("REG_META_QUIET", "1")
+    capsys.readouterr()
+    code = run(["docs", "list"])
+    error = json.loads(capsys.readouterr().out)["error"]
+    assert (code, error["code"]) == (EXIT_CONFIG, "no_docs_in_release")
+
+
+# --- package upgrade decision -------------------------------------------------
+
+
+def test_pypi_behind_github_offers_no_upgrade(net, uv, monkeypatch):
+    monkeypatch.setattr(sys, "prefix", UV_TOOL_PREFIX)
+    install(net, "reg_meta/v99.0.0")
+    result = run_update(yes=True)
+    assert result == {
+        "package": "up_to_date",
+        "database": "up_to_date",
+        "docs": "up_to_date",
+    }
+    assert UPGRADE not in uv.calls
+
+
+def test_uv_nothing_to_upgrade_reports_no_upgrade(net, uv, monkeypatch):
+    monkeypatch.setattr(sys, "prefix", UV_TOOL_PREFIX)
+    install(net, "reg_meta/v99.0.0")
+    net.pypi = NEXT_PATCH
+    uv.upgrade_output = ("", "Nothing to upgrade\n")
+    assert run_update(yes=True)["package"] == "no_upgrade"
+
+
+@pytest.mark.parametrize(
+    "tool_dir, returncode, missing, prefix, attempted",
+    [
+        pytest.param(UV_TOOL_DIR, 0, False, UV_TOOL_PREFIX, True, id="under-tool-dir"),
+        pytest.param(UV_TOOL_DIR, 0, False, UV_TOOL_DIR, True, id="is-tool-dir"),
+        pytest.param(UV_TOOL_DIR, 0, False, VENV_PREFIX, False, id="outside"),
+        pytest.param(
+            UV_TOOL_DIR, 0, False, UV_TOOL_DIR + "-evil", False, id="sibling-prefix"
+        ),
+        pytest.param(UV_TOOL_DIR, 1, False, UV_TOOL_PREFIX, False, id="nonzero-exit"),
+        # realpath("") is the working directory; empty output must not match it.
+        pytest.param("", 0, False, "<cwd>/reg-meta", False, id="empty-stdout"),
+        pytest.param(UV_TOOL_DIR, 0, True, UV_TOOL_PREFIX, False, id="uv-missing"),
+    ],
+)
+def test_upgrade_runs_only_for_a_uv_tool_install(
+    net, uv, monkeypatch, tmp_path, tool_dir, returncode, missing, prefix, attempted
+):
+    monkeypatch.chdir(tmp_path)
+    prefix = prefix.replace("<cwd>", os.path.realpath(tmp_path))
+    install(net, "reg_meta/v99.0.0")
+    net.pypi = NEXT_PATCH
+    uv.tool_dir, uv.returncode, uv.missing = tool_dir + "\n", returncode, missing
+    monkeypatch.setattr(sys, "prefix", prefix)
+    expected = (
+        {"old_version": __version__, "new_version": NEXT_PATCH}
+        if attempted
+        else "skipped_not_uv_tool"
+    )
+    assert run_update(yes=True)["package"] == expected
+
+
+def test_non_uv_tool_install_still_fetches_assets(net, uv):
+    net.pypi = NEXT_PATCH
+    net.releases = [release("reg_meta/v99.0.0", DB, DOCS)]
+    result = run_update(yes=True)
+    actual = (result["package"], result["database"]["tag"], result["docs"]["tag"])
+    assert actual == ("skipped_not_uv_tool", "reg_meta/v99.0.0", "reg_meta/v99.0.0")
+    assert UPGRADE not in uv.calls
+
+
+def test_uv_tool_install_runs_uv_tool_upgrade(net, uv, monkeypatch):
+    install(net, "reg_meta/v99.0.0")
+    net.pypi = NEXT_PATCH
+    monkeypatch.setattr(sys, "prefix", UV_TOOL_PREFIX)
+    result = run_update(yes=True)
+    assert result["package"] == {"old_version": __version__, "new_version": NEXT_PATCH}
+    assert uv.calls[-1] == UPGRADE

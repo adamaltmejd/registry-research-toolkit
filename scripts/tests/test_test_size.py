@@ -10,12 +10,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 ALLOWLIST = {
-    "reg_meta/tests/test_catalog.py",
-    "reg_meta/tests/test_commands.py",
-    "reg_meta/tests/test_concept_group_surfaces.py",
-    "reg_meta/tests/test_graph.py",
-    "reg_meta/tests/test_search_classifications.py",
-    "reg_meta/tests/test_value_code_search.py",
     "reg_meta_build/tests/test_catalog_dependencies.py",
     "reg_meta_build/tests/test_classifications.py",
     "reg_meta_build/tests/test_curation_compile.py",

@@ -271,16 +271,16 @@ oracle each one uses, and the three cost tiers tests run in.
 
 ### Boundaries and oracles
 
-  | Boundary                                 | Oracle (data, not code)                                                                                 | Status                              |
-  | ---------------------------------------- | ------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-  | Prepared inputs + curation → artifact    | synthetic source fixtures → `validate_built_db` + content snapshot                                      | shipped                             |
-  | Artifact → CLI JSON / library models     | golden `request → response` cases over the synthetic artifact                                           | partial                             |
-  | Artifact → HTTP                          | `openapi.json` snapshot + TestClient goldens over the fixture DB                                        | shipped                             |
-  | `project_data.json` → validation result  | `reg_schema/test_corpus/` run by Python and TS consumers                                                | shipped                             |
-  | Project + artifact → order manifest      | byte-identical `order.json` goldens, cross-adapter identity                                             | shipped                             |
-  | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                                              | shipped                             |
-  | FQID / period grammars, interval algebra | Hypothesis properties + round-trip snapshots                                                            | shipped                             |
-  | Real artifact ↔ accepted inputs          | conformance artifact checks and explicit accepted-input table/cell census, policy and authored mappings | shipped (opt-in `--holdings-input`) |
+  | Boundary                                 | Oracle (data, not code)                                                                                 | Status  |
+  | ---------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------- |
+  | Prepared inputs + curation → artifact    | synthetic source fixtures → `validate_built_db` + content snapshot                                      | shipped |
+  | Artifact → CLI JSON / library models     | golden `request → response` cases over the synthetic artifact                                           | partial |
+  | Artifact → HTTP                          | `openapi.json` snapshot + TestClient goldens over the fixture DB                                        | shipped |
+  | `project_data.json` → validation result  | `reg_schema/test_corpus/` run by Python and TS consumers                                                | shipped |
+  | Project + artifact → order manifest      | byte-identical `order.json` goldens, cross-adapter identity                                             | shipped |
+  | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                                              | shipped |
+  | FQID / period grammars, interval algebra | Hypothesis properties + round-trip snapshots                                                            | shipped |
+  | Real artifact ↔ accepted inputs          | conformance artifact checks and explicit accepted-input table/cell census, policy and authored mappings | shipped |
 
 A function that is not one of these is reached through one that is. Structural artifact
 invariants have one authority, `validate_built_db`; tests run it, they do not re-derive
@@ -337,8 +337,8 @@ steward reference visibility does not grant orderability. The existing
 
 The corpus depends on public contracts rather than private Python internals. Private
 imports/internal patches and oversized test modules are gated by repo lints: zero
-conformance exemptions, frozen package file allowlists that only shrink in plan 06. A
-future language-independent reader port reuses these oracles after the schema cut.
+conformance exemptions, frozen package file allowlists that only shrink as the package
+test sweep proceeds. A future language-independent reader port reuses these oracles.
 
 ### Discipline against ballooning
 

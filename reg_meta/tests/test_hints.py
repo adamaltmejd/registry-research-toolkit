@@ -4,8 +4,15 @@ from __future__ import annotations
 
 import io
 import sys
+from typing import TYPE_CHECKING
 
+from cli_test_support import build_cli_source
 from reg_meta.cli import run
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    import pytest
 
 
 def _run_capture(argv: list[str]) -> tuple[str, str, int]:
@@ -77,21 +84,17 @@ class TestQuiet:
         assert "hint:" not in err
 
 
-class TestHintCap:
-    def test_max_three_hints(self, db_path: str):
-        """Even when many hints could fire, at most 3 are shown."""
-        import reg_meta.cli_common
-
-        old_max = reg_meta.cli_common.MAX_DISPLAY_ROWS
-        try:
-            reg_meta.cli_common.MAX_DISPLAY_ROWS = 1
-            _, err, _ = _run_capture(
-                ["--db", db_path, "search", "--query", "Kommun"],
-            )
-            hint_count = err.count("hint:")
-            assert 0 < hint_count <= 3
-        finally:
-            reg_meta.cli_common.MAX_DISPLAY_ROWS = old_max
+def test_hints_capped_at_three_per_invocation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Four hints apply (no value set, several registers, long values, row cap)."""
+    monkeypatch.setenv("COLUMNS", "80")
+    db = build_cli_source(tmp_path, "cli-display-limits")
+    _, err, code = _run_capture(
+        ["--db", db, "--format", "table", "get", "values", "Category"]
+    )
+    assert code == 0
+    assert err.count("hint:") == 3
 
 
 class TestJsonClean:

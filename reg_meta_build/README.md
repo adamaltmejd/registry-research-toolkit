@@ -23,8 +23,8 @@ columns and their authored reason, with no periods or mappings. Exact disjoint c
 accounting, resolver-based representation canonicalization and structural validation are
 mandatory before scratch artifact placement. The manifest records semantic generation
 identity, accepted input pins, base provenance and accounting counts/digests. Rebuild
-schema-9 bases; schema-8.1 artifacts are comparison evidence only. No release is
-permitted until the staged consumer cut and acceptance gate complete.
+schema-9 bases; schema-8.1 artifacts are comparison evidence only. Release is a
+separate, separately authorized step (acceptance passed 2026-10-06).
 
 ## Catalog workflow
 

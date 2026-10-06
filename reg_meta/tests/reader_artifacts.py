@@ -15,6 +15,7 @@ from reg_meta_build.artifact_identity import generation_id
 from reg_meta_build.holdings_compile import compile_holdings
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
+    ResolvedClassificationSuccession,
     ResolvedVariable,
     write_resolved_catalog,
 )
@@ -61,6 +62,15 @@ def build_reader_artifact(
         if classification_source.exists()
         else ()
     )
+    succession_source = source / "classification_successions.json"
+    successions = (
+        tuple(
+            ResolvedClassificationSuccession.model_validate_json(json.dumps(value))
+            for value in json.loads(succession_source.read_text())
+        )
+        if succession_source.exists()
+        else ()
+    )
     metadata_source = source / "metadata.json"
     metadata = (
         ResolvedMetadata.model_validate_json(metadata_source.read_text())
@@ -81,6 +91,7 @@ def build_reader_artifact(
         path,
         manifest=identity,
         classifications=classifications,
+        classification_successions=successions,
         metadata=metadata,
         data_warnings=warnings,
     )

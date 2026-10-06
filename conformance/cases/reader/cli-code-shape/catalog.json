@@ -1,0 +1,45 @@
+[
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "coded",
+      "name": "Coded"
+    },
+    "slug": "status",
+    "provider_key": "44",
+    "name": "Status",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2020-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Status",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "ZQX9",
+              "Alpha"
+            ],
+            [
+              "Q71",
+              "Beta"
+            ]
+          ]
+        }
+      }
+    ]
+  }
+]

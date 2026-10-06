@@ -421,16 +421,6 @@ class TestPeriodTokenForBounds:
 
 
 class TestSegmentCount:
-    def test_kind_from_segment_count(self) -> None:
-        # Same slugs, different counts → different kinds.
-        assert parse("scb").kind is FqidKind.PROVIDER
-        assert parse("scb/lisa").kind is FqidKind.REGISTER
-        assert parse("scb/lisa/kon").kind is FqidKind.VARIABLE_BINDING
-
-    def test_class_prefix_forces_classification(self) -> None:
-        # 2 segments with `class/` first → classification, not a register.
-        assert parse("class/sun2020").kind is FqidKind.CLASSIFICATION
-
     def test_four_plus_segments_rejected(self) -> None:
         # The old 4-seg version and 5-seg binding forms no longer parse.
         with pytest.raises(FqidError, match="4 segments"):
@@ -668,13 +658,6 @@ class TestDerivePeriod:
 
 
 class TestBindingFqid:
-    def test_binding_is_three_segment(self) -> None:
-        f = Fqid.binding_fqid("scb", "lisa", "kon")
-        assert str(f) == "scb/lisa/kon"
-        # No variant/period fields exist on the dataclass anymore.
-        assert not hasattr(f, "variant")
-        assert not hasattr(f, "period")
-
     def test_register_stays_two_segment(self) -> None:
         f = parse("sos/lss")
         assert f.kind is FqidKind.REGISTER

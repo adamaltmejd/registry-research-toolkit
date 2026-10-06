@@ -204,33 +204,6 @@ def test_alias_classification_counts_only_overlapping_states():
     assert row["instance_count"] == 1
 
 
-def test_graph_keeps_full_metadata_without_hydrating_codes(monkeypatch):
-    from reg_meta.graph import _graph_states
-
-    conn, _, _ = _coded_db()
-    add_state(
-        conn,
-        register_id=1,
-        variable_slug="kon",
-        register_variant_id=10,
-        valid_from="2019-01-01",
-        valid_to="2019-12-31",
-        delivery_column_name="KonNew",
-        value_set_id=3,
-    )
-    cat = Catalog(conn)
-    expected = _graph_states(tuple(cat.states("scb/lisa/kon")))
-
-    def unexpected_codes(*args, **kwargs):
-        raise AssertionError("graph must not hydrate value-set membership")
-
-    monkeypatch.setattr(cat, "_value_set_codes", unexpected_codes)
-    graph = cat.graph_for_fqid("scb/lisa/kon")
-    [node] = graph.nodes
-    assert node.states == expected
-    assert len(node.states) == 2
-
-
 def test_warning_scope_filters_preserve_default_and_exact_variable_evidence():
     import pytest
     from reg_meta.catalog import DataWarning
@@ -282,8 +255,10 @@ def test_warning_scope_filters_preserve_default_and_exact_variable_evidence():
         cat.data_warnings("scb/lisa")
 
 
-def test_variable_lookup_preserves_all_matching_register_candidates():
+def test_variable_resolves_through_every_register_matching_the_coordinate():
+    import pytest
     from _slugged_db import add_variable
+    from reg_meta.errors import EXIT_NOT_FOUND, RegMetaError
 
     conn = build_slugged_db()
     conn.execute(
@@ -296,9 +271,13 @@ def test_variable_lookup_preserves_all_matching_register_candidates():
         slug="second-register-only",
         name="Only in second register",
     )
-    row = Catalog(conn)._lookup_variable("scb", "lisa", "second-register-only")
-    assert row is not None
-    assert row["register_id"] == 99
-    assert (
-        Catalog(conn)._lookup_variable("scb", "missing", "second-register-only") is None
+    resolved = Catalog(conn).resolve("scb/lisa/second-register-only")
+    assert isinstance(resolved, ResolvedVariable)
+    assert (str(resolved.canonical_fqid), resolved.provider_key, resolved.name) == (
+        "scb/lisa/second-register-only",
+        "900",
+        "Only in second register",
     )
+    with pytest.raises(RegMetaError) as missing:
+        Catalog(conn).resolve("scb/missing/second-register-only")
+    assert missing.value.exit_code == EXIT_NOT_FOUND

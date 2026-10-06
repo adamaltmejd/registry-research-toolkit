@@ -1995,7 +1995,7 @@ class Catalog:
         found by — and NOT the resolver's: unlike `_expand_state_windows` it does
         not drop a window that no state contains, because a browse row names
         columns rather than promising a resolution (what a steward can actually
-        deliver is `check_inventory`'s question, and it reads the resolver).
+        deliver is the order materializer's question, and it reads the resolver).
         Columns are identified case-INSENSITIVELY (`py_lower`'s rule, which the
         build validates `variable_alias ⊇ state columns` with), so an alias that
         only re-spells a listed column is that one delivery, not a second. Where

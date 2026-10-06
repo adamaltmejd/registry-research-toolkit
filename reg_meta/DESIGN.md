@@ -1025,9 +1025,9 @@ selected artifact and records its generation identity.
 `materialize_order(project, conn)` is the one place a logical `project_data.json`
 selection meets a steward's physical delivery topology. It returns either a complete
 `OrderManifest` or a non-empty set of `OrderFinding`s — never a partial order. The
-compiled contract above owns the facts; `REFACTOR_SPEC.md` §12 tracks the cut. The
-FastAPI endpoint and the CLI/plugin are thin adapters over this one function, which is
-what makes their results byte-identical; all logic (and all fail-closing) lives here.
+compiled contract above owns the facts. The FastAPI endpoint and the CLI/plugin are thin
+adapters over this one function, which is what makes their results byte-identical; all
+logic (and all fail-closing) lives here.
 
 **Artifact-driven materialization.** `import_manifest.catalog_artifact_kind = "catalog"`
 selects the **global-deployment fallback**: it has no physical delivery topology, so
@@ -1108,12 +1108,11 @@ deployment's steward — the manifest's, or `"global"` in fallback mode (provena
 checked before anything resolves; retargeting is deliberately not a feature) — and an
 empty project stays a valid draft that cannot produce a header-only manifest.
 
-**The manifest is a versioned JSON contract.** Version 1 is **in definition** until the
-§12 boundary ships: it has no external consumer yet, so shape changes while the
-remaining §12 lanes land stay within version 1 rather than churning the number (operator
-decision, Y-19/1 review). Bump discipline — an incompatible change bumps
-`ORDER_MANIFEST_VERSION`, pre-v1 changed-not-migrated — binds from the first external
-reader (the steward-side extract system). `OrderManifest` (version
+**The manifest is a versioned JSON contract.** Version 1 is **in definition** while it
+has no external consumer: shape changes stay within version 1 rather than churning the
+number (operator decision, Y-19/1 review). Bump discipline — an incompatible change
+bumps `ORDER_MANIFEST_VERSION`, pre-v1 changed-not-migrated — binds from the first
+external reader (the steward-side extract system). `OrderManifest` (version
 `ORDER_MANIFEST_VERSION`) carries provenance (mode, steward, project name / schema
 version / declared reg_meta version / SHA-256 of the project's canonical JSON, plus the
 catalog DB's `schema_version` and `generation_id`), the resolved entries — logical
@@ -1840,6 +1839,6 @@ directly when this contract changes.
 Storage identifiers remain exact SQLite/Python integers. All JSON surfaces serialize
 these identifiers as opaque decimal strings, including CLI SQL rows and API models.
 Counts, years and local representation-run ordinals remain numbers. Readers require
-schema 8.1; old catalogs must be regenerated. The `0001-01-01` unknown coverage sentinel
+schema 9; old catalogs must be regenerated. The `0001-01-01` unknown coverage sentinel
 is presented as an absent coverage start; source declarations and warnings remain
 available separately and do not establish observation availability.

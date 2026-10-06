@@ -1,0 +1,18 @@
+{
+  "variable_groups": [
+    {
+      "register": "scb/punct",
+      "key": "inkomst-family",
+      "label": "Inkomst -- brutto/netto",
+      "source": "curated",
+      "members": [
+        {
+          "variable": "scb/punct/brutto"
+        },
+        {
+          "variable": "scb/punct/netto"
+        }
+      ]
+    }
+  ]
+}

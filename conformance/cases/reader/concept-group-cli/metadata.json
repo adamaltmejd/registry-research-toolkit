@@ -1,0 +1,49 @@
+{
+  "variable_groups": [
+    {
+      "register": "scb/example",
+      "key": "payroll",
+      "label": "Lönesumma per månad",
+      "source": "curated",
+      "axes": [
+        {
+          "axis": "month",
+          "ordinal": 0,
+          "label": "månad"
+        }
+      ],
+      "members": [
+        {
+          "variable": "scb/example/payroll-jan",
+          "facets": [
+            {
+              "axis": "month",
+              "value": "01",
+              "label": "januari"
+            }
+          ]
+        },
+        {
+          "variable": "scb/example/payroll-feb",
+          "facets": [
+            {
+              "axis": "month",
+              "value": "02",
+              "label": "februari"
+            }
+          ]
+        },
+        {
+          "variable": "scb/example/payroll-mar",
+          "facets": [
+            {
+              "axis": "month",
+              "value": "03",
+              "label": "mars"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

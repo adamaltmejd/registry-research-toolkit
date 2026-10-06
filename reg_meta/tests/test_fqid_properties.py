@@ -12,9 +12,9 @@ from datetime import date
 
 from hypothesis import given, strategies as st
 from reg_meta.fqid import (
-    _SLUG_RE,
     derive_variable_slug,
     is_period,
+    is_slug,
     period_token_for_bounds,
     period_token_to_bounds,
 )
@@ -54,11 +54,11 @@ def test_period_token_bounds_round_trip(token: str) -> None:
 
 
 @given(slug_inputs)
-def test_output_is_none_or_valid_slug(name: str | None) -> None:
-    """Any non-None output fully matches the module slug grammar."""
+def test_output_is_none_or_grammar_slug(name: str | None) -> None:
+    """Any non-None output is a slug under the public grammar predicate."""
     out = derive_variable_slug(name)
     if out is not None:
-        assert _SLUG_RE.match(out), f"{out!r} from {name!r} fails _SLUG_RE"
+        assert is_slug(out), f"{out!r} from {name!r} is not a grammar slug"
 
 
 @given(slug_inputs)

@@ -205,9 +205,10 @@ def test_tags_for_register() -> None:
 
 
 def test_tags_for_register_empty_for_untagged() -> None:
-    cat = Catalog(_seeded_conn())
+    conn = _seeded_conn()
     # A register that exists but carries no register-grain tag membership.
-    add_register(cat._conn, register_id=3, slug="bas", name="BAS")
+    add_register(conn, register_id=3, slug="bas", name="BAS")
+    cat = Catalog(conn)
     assert cat.tags_for_register(Fqid.register_fqid("scb", "bas")) == []
 
 
