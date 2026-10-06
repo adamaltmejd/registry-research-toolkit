@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import hashlib
+import re
+import zipfile
 from typing import TYPE_CHECKING
 
 import pytest
@@ -249,3 +251,28 @@ def test_lisa_cleaning_uses_shared_text_rules_without_changing_code_spelling(
     assert record.fields.sensitivity.value is True
     assert record.fields.sensitivity.raw_value == " I\u00a0  vissa\tfall "
     assert record.fields.base_register.value == "Arbets förmedlingen"
+
+
+def test_lisa_reader_does_not_trust_stale_sheet_dimensions(tmp_path: Path) -> None:
+    # A workbook whose stored <dimension> understates the used range still reads
+    # completely: the reader loads the cells, not the declared extent.
+    path = write_lisa_workbook(tmp_path / "lisa.xlsx")
+    expected = [
+        record.record_id for record in read_lisa_source(path, _revision(path)).records
+    ]
+    stale = tmp_path / "stale.xlsx"
+    with (
+        zipfile.ZipFile(path) as source,
+        zipfile.ZipFile(stale, "w", zipfile.ZIP_DEFLATED) as target,
+    ):
+        for info in source.infolist():
+            data = source.read(info)
+            if info.filename.startswith("xl/worksheets/sheet"):
+                data = re.sub(
+                    rb'<dimension ref="[^"]*"\s*/>', b'<dimension ref="A1"/>', data
+                )
+            target.writestr(info, data)
+
+    records = read_lisa_source(stale, _revision(stale)).records
+
+    assert [record.record_id for record in records] == expected

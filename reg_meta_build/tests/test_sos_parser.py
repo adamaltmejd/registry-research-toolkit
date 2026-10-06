@@ -14,7 +14,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+import openpyxl
 import pytest
+from _sos_fixtures import write_source_workbook
 from reg_meta_build.sources.sos import (
     SosDcatAp,
     SosParseError,
@@ -469,3 +471,24 @@ def test_code_cells_keep_their_displayed_identity(tmp_path: Path) -> None:
             ).display_value
         )
     assert displayed == ["001", "07", "7.5", "001", "7"]
+
+
+@pytest.mark.parametrize(
+    "sheet_name", ["Metadata - Variabel nivå", "Metadata - Variabel-nivå"]
+)
+def test_variable_sheet_is_found_when_its_name_splits_the_token(
+    tmp_path: Path, sheet_name: str
+) -> None:
+    # Sheet lookup ignores spaces, hyphens and parentheses inside a name, so a
+    # renamed variable-level sheet still delivers the same variables.
+    path = tmp_path / "Metadata Test (TST)_webb.xlsx"
+    write_source_workbook(path)
+    baseline = parse_register_file(path)
+    workbook = openpyxl.load_workbook(path)
+    workbook["Metadata - Variabelnivå"].title = sheet_name
+    workbook.save(path)
+
+    parsed = parse_register_file(path)
+
+    assert parsed.variables
+    assert [v.name for v in parsed.variables] == [v.name for v in baseline.variables]
