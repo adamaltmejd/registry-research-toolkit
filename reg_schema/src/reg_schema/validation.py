@@ -66,7 +66,7 @@ class ValidationResult:
     @property
     def ok(self) -> bool:
         # `ok = True` means no error-level issues — it does NOT mean the
-        # result was complete. At catalog-load time (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)) unresolved
+        # result was complete. At catalog-load time (see reg_meta/DESIGN.md → Project semantic validation (semantic.py)) unresolved
         # FQIDs are downgraded to `warning`; affected bindings drop out
         # of the in-memory index but `ok` stays True. Callers that need
         # completeness must inspect the warnings list.

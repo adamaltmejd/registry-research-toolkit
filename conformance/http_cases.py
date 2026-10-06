@@ -34,11 +34,10 @@ def select_json(value, path):
     return walk(value, parts)
 
 
-def assert_http_case(case, tmp_path, monkeypatch):
+def case_artifact(request, tmp_path, monkeypatch):
+    """Build a case's readable source and point the app at it; return its path."""
     from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
 
-    request = json.loads((case / "request.json").read_text())
-    expected = json.loads((case / "expected.json").read_text())
     kind = request.get("kind", "steward")
     fixture = request.get("fixture", "compiled")
     source = fixture if fixture.startswith("reader") else CASES / "fixtures" / fixture
@@ -52,6 +51,14 @@ def assert_http_case(case, tmp_path, monkeypatch):
     monkeypatch.setenv(
         "REG_WEBAPP_STEWARD", "swecov" if kind == "steward" else "global"
     )
+    return path
+
+
+def assert_http_case(case, tmp_path, monkeypatch):
+    request = json.loads((case / "request.json").read_text())
+    expected = json.loads((case / "expected.json").read_text())
+    kind = request.get("kind", "steward")
+    path = case_artifact(request, tmp_path, monkeypatch)
     if "golden_config" in request:
         # Pins are loaded at import, so exercise packaged files in a fresh runtime.
         runtime = tmp_path / "runtime"

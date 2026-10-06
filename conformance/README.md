@@ -28,9 +28,11 @@ configuration. The documented equals form selects the current checkout reliably.
 Each case directory has `request.json` and `expected.json`. `observe` fields and JSON
 pointer projections define the compared public result; errors also pin the exit/status
 and located findings. Orders additionally compare CLI and materializer serialization and
-repeat raw bytes, including provenance. No volatile fields are removed from those
-comparisons. Keys and lists retain their order. Path placeholders in the selection
-oracle expand to the test filesystem before comparison.
+repeat raw bytes, including provenance. Every validate step also runs through
+`reg-meta validate` and compares its bytes and exit code with the HTTP response. No
+volatile fields are removed from those comparisons. Keys and lists retain their order.
+Path placeholders in the selection oracle expand to the test filesystem before
+comparison.
 
   | Surface directory                                             | Boundary and request interpretation                                                |
   | ------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
@@ -43,6 +45,7 @@ oracle expand to the test filesystem before comparison.
   | update                                                        | Downloaded-artifact identity via CLI/update library; implicit annual-series source |
   | boot                                                          | App startup; implicit reader source, kind and manifest mutation                    |
   | http_catalog, http_context, http_scope, http_search, validate | HTTP request sequence and status/pointer oracle; implicit compiled source          |
+  | validate (also)                                               | CLI validate bytes and exit code against each HTTP validate response               |
   | fixtures                                                      | HTTP readable sources, not independently executed cases                            |
 
 Reader fixtures named `reader` or `reader/<name>` live under `cases/reader`; other named
@@ -64,11 +67,11 @@ bytes remain unchanged.
 
 SQLite integrity and FKs, reader admission, existing manifest table/column scope
 accounting, deterministic search/order, sampled browse/search/validate agreement,
-CLI/HTTP/materializer order bytes, and located unheld/unresolved refusal run on both
-synthetic kinds by default. A real run uses one admitted schema-9 artifact. Real
-identifiers stay in memory and temporary test request files; failure messages omit them.
-Catalog artifacts support global-fallback orders; steward artifacts only order compiled
-holdings regardless of reference browsing.
+CLI/HTTP/materializer order bytes, CLI/HTTP validation bytes, and located
+unheld/unresolved refusal run on both synthetic kinds by default. A real run uses one
+admitted schema-9 artifact. Real identifiers stay in memory and temporary test request
+files; failure messages omit them. Catalog artifacts support global-fallback orders;
+steward artifacts only order compiled holdings regardless of reference browsing.
 
 Complete HTTP register-child membership is compared with an independently derived
 whole-variable admission set. CLI browse, search and order agreement uses a generation-

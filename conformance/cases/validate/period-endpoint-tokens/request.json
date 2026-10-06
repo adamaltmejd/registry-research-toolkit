@@ -1,0 +1,130 @@
+{
+  "kind": "catalog",
+  "fixture": "semantic",
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Synthetic semantic",
+        "sources": [
+          {
+            "name": "to-2019-02",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2019,
+              "to": "2019-02"
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/kon",
+                "type": "categorical"
+              }
+            ]
+          },
+          {
+            "name": "to-2020-02",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2019,
+              "to": "2020-02"
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/kon",
+                "type": "categorical"
+              }
+            ]
+          },
+          {
+            "name": "to-2019-12",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2019,
+              "to": "2019-12"
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/kon",
+                "type": "categorical"
+              }
+            ]
+          },
+          {
+            "name": "to-2019-Q1",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2019,
+              "to": "2019-Q1"
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/kon",
+                "type": "categorical"
+              }
+            ]
+          },
+          {
+            "name": "to-2019-H1",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2019,
+              "to": "2019-H1"
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/kon",
+                "type": "categorical"
+              }
+            ]
+          },
+          {
+            "name": "to-HT2019",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2019,
+              "to": "HT2019"
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/kon",
+                "type": "categorical"
+              }
+            ]
+          },
+          {
+            "name": "to-VT2019",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2019,
+              "to": "VT2019"
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/kon",
+                "type": "categorical"
+              }
+            ]
+          },
+          {
+            "name": "to-2019-02-28",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2019,
+              "to": "2019-02-28"
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/kon",
+                "type": "categorical"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

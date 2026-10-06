@@ -1,0 +1,38 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/ok": true,
+      "/issues": [
+        {
+          "code": "range_period_partially_covered",
+          "level": "info",
+          "message": "column 'scb/example/lucka' is available for only part of requested period 2010..2020 at scb/example/annual; it is ordered for 2010..2012,2018..2020",
+          "path": "/sources/0/bindings/0/variable",
+          "successor_fqid": null
+        },
+        {
+          "code": "binding_state_drifts_within_period",
+          "level": "info",
+          "message": "column 'scb/example/lucka' spans 2 states across a transition within period 2010..2020",
+          "path": "/sources/0/bindings/0/variable",
+          "successor_fqid": null
+        },
+        {
+          "code": "range_period_partially_covered",
+          "level": "info",
+          "message": "column 'scb/example/lucka' is available for only part of requested period 2010..2020,2022 at scb/example/annual; it is ordered for 2010..2012,2018..2020,2022",
+          "path": "/sources/1/bindings/0/variable",
+          "successor_fqid": null
+        },
+        {
+          "code": "binding_state_drifts_within_period",
+          "level": "info",
+          "message": "column 'scb/example/lucka' spans 2 states across a transition within period 2010..2020,2022",
+          "path": "/sources/1/bindings/0/variable",
+          "successor_fqid": null
+        }
+      ]
+    }
+  }
+]

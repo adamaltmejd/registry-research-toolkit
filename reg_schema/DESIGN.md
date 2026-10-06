@@ -93,10 +93,11 @@ without migration code. If a real future consumer needs extension data, add one 
   extension consumer must introduce its explicit container and owner-specific contract
   rather than reopening the project root.
 - **§6.8.3 semantic rules (reg_meta-backed).** FQID resolution against a live reg_meta
-  DB, classification existence, steward-holdings membership, drift detection. The
-  current web-only implementation lives in `reg_webapp/semantic.py`; the v1 target moves
-  it into shared `reg_meta` project code used by the webapp and CLI. The dependency
-  remains one-way, so `reg_schema` still ships reg_meta-free.
+  DB, classification existence, steward-holdings membership, drift detection. They live
+  in shared `reg_meta` project code (`reg_meta/semantic.py`; see `reg_meta/DESIGN.md` →
+  "Project semantic validation"), served by the webapp's `/api/project/validate` and
+  `reg-meta validate`. The dependency is one-way, so `reg_schema` still ships
+  reg_meta-free.
 - The `project_data.codes.json` sibling file. Codes live alongside the spec and are
   dereferenced from reg_meta at kit-build time; deferred to the MONA rebuild (see
   REFACTOR_SPEC.md §8/9/10a — archived). It may grow a schema dataclass here later;

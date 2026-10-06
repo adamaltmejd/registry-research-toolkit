@@ -1,0 +1,17 @@
+[
+  {
+    "slug": "kon",
+    "short_name": "Kön",
+    "name": "Kön",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Man"
+      },
+      {
+        "code": "2",
+        "label": "Kvinna"
+      }
+    ]
+  }
+]

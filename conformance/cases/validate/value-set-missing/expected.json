@@ -1,0 +1,17 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/ok": false,
+      "/issues": [
+        {
+          "code": "value_set_missing",
+          "level": "error",
+          "message": "value_set 'class/nosuchclass' resolves to no classification in reg_meta",
+          "path": "/sources/0/bindings/0/value_set",
+          "successor_fqid": null
+        }
+      ]
+    }
+  }
+]

@@ -3,12 +3,13 @@
 See DESIGN.md → Project-write surface (routes/project.py).
 Two endpoints:
 
-- ``POST /api/project/validate`` — runs the validator over a raw
-  ``project_data.json`` and returns the CONCATENATED issue list (structural ⧺
-  semantic) as a ``ValidationResultModel``. A ``schema_version`` this build does
-  not read is answered by that one issue alone (``order.schema_version_issue``,
-  shared with ``/order`` and the CLI), before any layer interprets the document
-  as the current contract.
+- ``POST /api/project/validate`` — a thin adapter over reg_meta's shared
+  ``semantic.validate_project``: the CONCATENATED issue list (structural ⧺
+  semantic) served as ``semantic.validation_json`` VERBATIM, typed as a
+  ``ValidationResultModel``, byte-identical to ``reg-meta validate``. A
+  ``schema_version`` this build does not read is answered by that one issue
+  alone (``order.schema_version_issue``, shared with ``/order`` and the CLI),
+  before any layer interprets the document as the current contract.
 - ``POST /api/project/order`` — materializes the JSON order manifest through
   reg_meta's shared ``order.materialize_order`` and serves it as an
   ``order.json`` download; anything that is not an order is a 422 carrying the
@@ -22,8 +23,8 @@ oversized body (the last handled by ``BodySizeLimitMiddleware`` before the handl
 runs). The body is parsed as JSON regardless of ``Content-Type`` (lenient — a
 researcher tool, not a strict public API). An extra/typo KEY on a closed object
 (ProjectData/Source/Binding/Panel/PanelMember) surfaces as the structural ``unexpected_field``
-issue; a residual model-construction failure is a thin defensive issue (still coded
-``invalid_field``) — a 200 ISSUE either way, NEVER a 500.
+issue; a residual model-construction failure is reg_meta's thin defensive issue (still
+coded ``invalid_field``) — a 200 ISSUE either way, NEVER a 500.
 
 **Connection model = per-request open ON ONE THREAD** (LOCKED). ``/validate`` is
 ``async`` only to read the body off the wire; the BLOCKING work (structural parse
@@ -35,7 +36,8 @@ worker thread (``/order``'s blocking half runs on its threadpool thread too):
 open + query + close stay on ONE thread — NOT a generator ``Depends``, which would run on
 a possibly-different AnyIO thread → cross-thread ``sqlite3.ProgrammingError`` (the
 A5.2a/b-i P1). The body parse + structural layer are DB-FREE and run BEFORE the
-open, so a malformed or structurally-rejected body costs no DB hit.
+open (``validate_project`` calls the adapter's opener only after they pass), so a
+malformed or structurally-rejected body costs no DB hit.
 """
 
 from __future__ import annotations
@@ -45,7 +47,6 @@ from typing import TYPE_CHECKING, Any
 from fastapi import APIRouter, Depends, Request
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import JSONResponse, Response
-from pydantic import ValidationError
 from reg_meta.errors import RegMetaError
 from reg_meta.order import (
     OrderFinding,
@@ -53,29 +54,21 @@ from reg_meta.order import (
     blocked_message,
     materialize_order,
     project_from_raw,
-    schema_version_issue,
 )
-from reg_schema.project_data import ProjectData
-from reg_schema.structural import validate_structural
-from reg_schema.validation import ValidationIssue, ValidationResult
 
-from reg_webapp.models import (
-    OrderBlockedModel,
-    ValidationIssueModel,
-    ValidationResultModel,
-)
-from reg_webapp.project_validation import (
-    per_request_conn,
-    semantic_issues,
-)
+# Aliased: the route handler below is also named `validate_project`, and its
+# name is the published OpenAPI operationId.
+from reg_meta.semantic import validate_project as validate_raw_project, validation_json
+from reg_schema.project_data import ProjectData
+
+from reg_webapp.models import OrderBlockedModel, ValidationResultModel
+from reg_webapp.project_validation import per_request_conn
 from reg_webapp.request_body import read_raw_json_object
 from reg_webapp.scope import reject_project_scope
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
     from pathlib import Path
-
-    from reg_meta.catalog import Catalog
 
 
 router = APIRouter(prefix="/api/project", dependencies=[Depends(reject_project_scope)])
@@ -99,65 +92,6 @@ def openapi_schemas() -> dict[str, dict[str, Any]]:
 _PROJECT_BODY_SCHEMA = {"$ref": "#/components/schemas/ProjectData"}
 
 
-def _model_issue(message: str, exc: ValidationError) -> ValidationIssue:
-    """Turn a residual ``ProjectData.model_validate`` failure into an error issue.
-
-    THIN DEFENSIVE catch. ``validate_structural`` now owns the structural problems
-    (missing / mistyped / unexpected keys — incl. ``unexpected_field`` on all closed
-    project objects), and the caller only builds the model
-    once structural passed. So the common extra-key case never reaches here (it is
-    ``unexpected_field`` from reg_schema); a model ``ValidationError`` here is a
-    constraint structural did NOT replicate (rare — effectively unreachable under
-    today's models) — surfaced as a 200 issue (code ``invalid_field``), never a 500.
-    The path points at the first offending field."""
-    errors = exc.errors()
-    loc = errors[0]["loc"] if errors else ()
-    # RFC 6901: "" points at the whole document; "/" would mean a property keyed
-    # by the empty string (unresolvable). A model-level error has an empty loc.
-    path = "/" + "/".join(str(p) for p in loc) if loc else ""
-    return ValidationIssue(
-        level="error", code="invalid_field", path=path, message=message
-    )
-
-
-def _to_result_model(result: ValidationResult) -> ValidationResultModel:
-    """Wrap reg_schema's frozen ``ValidationResult`` in the webapp response model."""
-    return ValidationResultModel(
-        ok=result.ok,
-        issues=[
-            ValidationIssueModel(
-                level=i.level,
-                code=i.code,
-                path=i.path,
-                message=i.message,
-                successor_fqid=i.successor_fqid,
-            )
-            for i in result.issues
-        ],
-    )
-
-
-def _semantic_issues(raw: dict[str, Any], catalog: Catalog) -> list[ValidationIssue]:
-    """Build the ``ProjectData`` model, then run the reg_meta-backed semantic layer
-    (``project_validation.semantic_issues``).
-
-    Reached only when the structural layer passed. A residual model
-    ``ValidationError`` is a constraint structural didn't replicate — surfaced as a
-    200 ISSUE (NOT a 500), and the semantic step is skipped (it needs a built
-    model)."""
-    try:
-        project = ProjectData.model_validate(raw)
-    except ValidationError as exc:
-        return [
-            _model_issue(
-                "project_data failed model construction (a constraint the "
-                f"structural layer did not catch?): {exc}",
-                exc,
-            )
-        ]
-    return semantic_issues(project, catalog)
-
-
 # The body is read RAW (not a typed param), so FastAPI emits no `requestBody` in
 # the OpenAPI schema. Document the canonical closed ProjectData schema explicitly;
 # runtime ingress remains raw so invalid values and unknown keys survive long
@@ -172,12 +106,19 @@ def _semantic_issues(raw: dict[str, Any], catalog: Catalog) -> list[ValidationIs
         }
     },
 )
-async def validate_project(request: Request) -> ValidationResultModel:
+async def validate_project(request: Request) -> Response:
     """Validate a ``project_data.json``. Returns 200 with the concatenated
     structural ⧺ semantic issue list + the derived ``ok`` flag; a 4xx is
     reserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).
 
-    This is the SEMANTIC validator (reg_meta-backed).
+    A THIN adapter over reg_meta's ``semantic.validate_project``
+    (REFACTOR_SPEC.md §12): the composition, every issue and the serialization
+    live there, so this endpoint and ``reg-meta validate`` emit byte-identical
+    findings. The 200 body is ``semantic.validation_json`` VERBATIM, returned
+    as a raw ``Response`` (FastAPI passes it through without re-serializing)
+    while ``response_model=`` still publishes ``ValidationResultModel`` as the
+    typed contract for the OpenAPI snapshot + the SPA codegen — the ``/order``
+    pattern.
 
     ``async`` only to read the body off the wire; the BLOCKING work (the structural
     parse + the semantic layer's per-binding sqlite resolution) is offloaded to the
@@ -193,31 +134,14 @@ async def validate_project(request: Request) -> ValidationResultModel:
     )
 
 
-def _validate_blocking(db_path: Path, raw: dict[str, Any]) -> ValidationResultModel:
-    """The layered composition, run on a threadpool thread (off the
-    event loop). Layer order (DB-free first, so a structurally-rejected body costs
-    no DB hit): supported version → structural → (model build + semantic). When
-    structural fails we SKIP the model build + semantic step (they assume a
-    structurally valid spec).
+def _validate_blocking(db_path: Path, raw: dict[str, Any]) -> Response:
+    """Validate and serialize, on a threadpool thread (off the event loop).
 
-    """
-    unsupported = schema_version_issue(raw)
-    if unsupported is not None:
-        return _to_result_model(ValidationResult(issues=(unsupported,)))
-
-    issues: list[ValidationIssue] = []
-    structural = validate_structural(raw)
-    issues.extend(structural.issues)
-
-    if structural.ok:
-        # The connection opens HERE on this threadpool thread (one thread), AFTER
-        # the DB-free layers — a structurally invalid body never reaches the open.
-        from reg_meta.catalog import Catalog
-
-        with per_request_conn(db_path) as conn:
-            issues.extend(_semantic_issues(raw, Catalog(conn, scope="reference")))
-
-    return _to_result_model(ValidationResult(issues=tuple(issues)))
+    ``per_request_conn`` is handed over as the opener, not opened here: the
+    shared door calls it only after the DB-free layers pass, and on THIS thread,
+    so a structurally invalid body never reaches the open."""
+    result = validate_raw_project(raw, lambda: per_request_conn(db_path))
+    return Response(content=validation_json(result), media_type="application/json")
 
 
 # The 200 body IS `OrderManifest.to_json()` VERBATIM — the manifest's own

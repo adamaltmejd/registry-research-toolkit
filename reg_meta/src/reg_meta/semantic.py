@@ -1,73 +1,166 @@
-"""Semantic validation — reg_meta-backed.
+"""Project semantic validation — the reg_meta-backed layer of `/validate`.
 
-See DESIGN.md → Semantic validation (semantic.py). The third validation layer:
-structural (``reg_schema``) validation runs first;
-this one resolves every
-FQID in a *structurally valid* ``project_data.json`` against a live reg_meta
-``Catalog``. It lives in the webapp — NOT ``reg_schema`` — because ``reg_schema``
-is reg_meta-free by design (the shared validation surface stays importable
-without pulling reg_meta); semantic rules need the DB, so they belong where the
-DB is (the webapp backend, and any local tool that has loaded reg_meta).
+See DESIGN.md → Project semantic validation (`semantic.py`). The third
+validation layer: the supported-version decision and `reg_schema`'s structural
+layer run first; this one resolves every FQID in a *structurally valid*
+``project_data.json`` against a reg_meta ``Catalog``. It lives in reg_meta —
+NOT ``reg_schema`` — because ``reg_schema`` is reg_meta-free by design (the
+shared validation surface stays importable without pulling reg_meta); semantic
+rules need the DB. It is shared domain code beside the order materializer
+(REFACTOR_SPEC.md §12): the FastAPI ``POST /api/project/validate`` and the
+``reg-meta validate`` CLI are thin adapters over ``validate_project`` and emit
+its canonical bytes (``validation_json``).
 
 It emits the same frozen ``reg_schema.ValidationIssue`` shape the other layers
-do — composition is tuple concatenation, no merge semantics. It takes a
-``Catalog`` (never opens a connection): A5.2b-ii's ``POST /api/project/validate``
-calls it per-request with an in-handler connection.
+do — composition is tuple concatenation, no merge semantics.
+``validate_semantic`` takes a ``Catalog`` (never opens a connection);
+``validate_project`` opens one through its caller's ``connect`` only after the
+DB-free layers pass, so a rejected body costs no DB hit.
 
 Validation resolves reference semantics and then probes the artifact's compiled
 mappings at the source's exact variant. The two steward membership warning codes
 remain nonblocking; validation is never a claim of physical order readiness.
 
 Inputs are the ``reg_schema`` Pydantic models (``ProjectData`` / ``Source`` /
-``Binding``), which the webapp constructs only AFTER ``validate_structural``
-passes — so this layer assumes well-formed FQIDs / period grammar and resolves
-them, rather than re-checking shape. In particular, calendar-day validity of the
-AUTHOR-supplied period endpoints (rejecting an impossible author day like
-``2019-02-29``) is a STRUCTURAL guarantee (see reg_schema/DESIGN.md → Structural
-rules and issue codes) — every caller runs structural
-first and short-circuits before semantic — so this layer no longer pre-checks it.
+``Binding``), which ``validate_project`` constructs only AFTER
+``validate_structural`` passes — so this layer assumes well-formed FQIDs /
+period grammar and resolves them, rather than re-checking shape. In particular,
+calendar-day validity of the AUTHOR-supplied period endpoints (rejecting an
+impossible author day like ``2019-02-29``) is a STRUCTURAL guarantee (see
+reg_schema/DESIGN.md → Structural rules and issue codes), so this layer does
+not pre-check it.
 
 **AVAILABILITY IS NOT DECIDED HERE.** The source period is expanded
 (``order.requested_intervals``) and each binding resolved
-(``order.resolve_binding``) by the SHARED reg_meta pass the order materializer
-runs, and this layer only translates those facts into issues. That is what makes
-the two agree: under REFACTOR_SPEC.md §12 intersection semantics a binding is
-requested wherever it is available inside the source window, so availability
-narrower than the request is an INFO clip here and a clipped order there, while
-only a binding available nowhere in the request blocks both. The period grammar,
-the interval algebra and the synthesized-month-end snap all live behind that
-pass; the arithmetic left on this side reads the intervals that pass already
-clipped, through those same shared helpers. Steps 3+4 of the
-materializer (the steward's physical topology and its coverage gate) do NOT run
-here: a clean validation is a resolvable project, never a proof of physical
-order readiness.
+(``order.resolve_binding``) by the SHARED pass the order materializer runs, and
+this layer only translates those facts into issues. That is what makes the two
+agree: under REFACTOR_SPEC.md §12 intersection semantics a binding is requested
+wherever it is available inside the source window, so availability narrower
+than the request is an INFO clip here and a clipped order there, while only a
+binding available nowhere in the request blocks both. The period grammar, the
+interval algebra and the synthesized-month-end snap all live behind that pass;
+the arithmetic left on this side reads the intervals that pass already clipped,
+through those same shared helpers. Steps 3+4 of the materializer (the steward's
+physical topology and its coverage gate) do NOT run here: a clean validation is
+a resolvable project, never a proof of physical order readiness.
 """
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal
+import dataclasses
+import json
+from typing import TYPE_CHECKING, Any, Literal
 
-from reg_meta.db import get_manifest
-from reg_meta.errors import RegMetaError
-from reg_meta.fqid import FqidError, parse
-
-# The SHARED availability/slicing pass (REFACTOR_SPEC.md §12 steps 1+2) the order
-# materializer runs — see the module docstring. `reg_meta.inventory` owns the
-# interval grammar an edition, a project period and an availability clip all
-# speak, so this layer renders (`_render`) and intersects (`_overlap`) through it
-# rather than keeping a second speller or a second overlap rule.
-from reg_meta.inventory import _overlap, _render
-from reg_meta.order import requested_intervals, resolve_binding
+from pydantic import ValidationError
+from reg_schema.project_data import ProjectData
+from reg_schema.structural import validate_structural
 from reg_schema.validation import ValidationIssue, ValidationResult
 
-if TYPE_CHECKING:
-    from collections.abc import Iterable
+from .catalog import Catalog
+from .db import get_manifest
+from .errors import RegMetaError
+from .fqid import FqidError, parse
 
-    from reg_meta.catalog import Catalog, VariableIdentity
-    from reg_meta.order import StateWindow
-    from reg_schema.project_data import Binding, ProjectData, Source
+# `inventory` owns the interval grammar an edition, a project period and an
+# availability clip all speak, so this layer renders (`_render`) and intersects
+# (`_overlap`) through it rather than keeping a second speller or overlap rule.
+from .inventory import _overlap, _render
+
+# The SHARED availability/slicing pass (REFACTOR_SPEC.md §12 steps 1+2) and the
+# supported-version decision — see the module docstring.
+from .order import requested_intervals, resolve_binding, schema_version_issue
+
+if TYPE_CHECKING:
+    import sqlite3
+    from collections.abc import Callable, Iterable
+    from contextlib import AbstractContextManager
+
+    from reg_schema.project_data import Binding, Source
+
+    from .catalog import VariableIdentity
+    from .order import StateWindow
 
 type Interval = tuple[str, str]
+
+
+def validate_project(
+    raw: dict[str, Any],
+    connect: Callable[[], AbstractContextManager[sqlite3.Connection]],
+) -> ValidationResult:
+    """The §6.8.0 composition over a raw ``project_data.json``: supported
+    version → structural → model build → semantic. The adapters' ONE door.
+
+    A FAILING project is a result, never a raise: this is a diagnostic, and
+    every issue of every layer that ran comes back concatenated. The
+    supported-version issue (``order.schema_version_issue``, the decision the
+    order door gates on too) returns ALONE — the layers under it read the
+    document as the current contract, which is the claim it just rejected. The
+    structural layer's failure skips the semantic layer (it assumes a
+    structurally valid spec).
+
+    ``connect`` opens the selected artifact for this call only, and only once
+    the DB-free layers have passed, so a rejected body costs no DB hit. The
+    adapter owns how (the webapp's per-request thread-confined open, the CLI's
+    catalog selection); this function closes it by leaving the ``with``."""
+    unsupported = schema_version_issue(raw)
+    if unsupported is not None:
+        return ValidationResult(issues=(unsupported,))
+    structural = validate_structural(raw)
+    if not structural.ok:
+        return structural
+    try:
+        project = ProjectData.model_validate(raw)
+    except ValidationError as exc:
+        return ValidationResult(issues=(*structural.issues, _model_issue(exc)))
+    with connect() as conn:
+        semantic = validate_semantic(project, Catalog(conn, scope="reference"))
+    return ValidationResult(issues=structural.issues + semantic.issues)
+
+
+def validation_json(result: ValidationResult) -> str:
+    """The canonical serialization both adapters emit VERBATIM: ``ok`` plus
+    every issue in layer order, sorted keys, UTF-8, trailing newline — the
+    ``OrderManifest.to_json`` conventions, so the FastAPI body and the CLI's
+    stdout are byte-identical (§12). An absent ``successor_fqid`` is an explicit
+    ``null``: the wire shape the SPA's codegen'd type reads."""
+    return (
+        json.dumps(
+            {
+                "ok": result.ok,
+                "issues": [dataclasses.asdict(issue) for issue in result.issues],
+            },
+            sort_keys=True,
+            indent=2,
+            ensure_ascii=False,
+        )
+        + "\n"
+    )
+
+
+def _model_issue(exc: ValidationError) -> ValidationIssue:
+    """A residual ``ProjectData.model_validate`` failure as an error issue.
+
+    THIN DEFENSIVE catch. ``validate_structural`` owns the structural problems
+    (missing / mistyped / unexpected keys — incl. ``unexpected_field`` on every
+    closed project object), and the model is built only once structural passed,
+    so this is a constraint structural did NOT replicate — effectively
+    unreachable under today's models, and surfaced as an issue (code
+    ``invalid_field``), never a crash. The path points at the first offending
+    field."""
+    errors = exc.errors()
+    loc = errors[0]["loc"] if errors else ()
+    # RFC 6901: "" points at the whole document; "/" would mean a property keyed
+    # by the empty string (unresolvable). A model-level error has an empty loc.
+    path = "/" + "/".join(str(p) for p in loc) if loc else ""
+    return ValidationIssue(
+        level="error",
+        code="invalid_field",
+        path=path,
+        message=(
+            "project_data failed model construction (a constraint the "
+            f"structural layer did not catch?): {exc}"
+        ),
+    )
 
 
 def validate_semantic(

@@ -96,7 +96,7 @@ _SUBTYPE_FIELDS: dict[str, str] = {
 # segment (see reg_meta/DESIGN.md → FQID grammar) — it is the ``Source.period`` field, checked separately by
 # ``_check_period``. This layer only checks a segment is non-empty and free
 # of stray characters. The value set is determined by the resolved
-# ``(variable, variant, period)`` (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)), never pinned on the FQID, so a
+# ``(variable, variant, period)`` (see reg_meta/DESIGN.md → Project semantic validation (semantic.py)), never pinned on the FQID, so a
 # binding leaf is a bare slug — there is no ``@version`` suffix to split off.
 _FQID_TOKEN: re.Pattern[str] = re.compile(r"^[A-Za-z0-9_-]+$")
 
@@ -110,8 +110,8 @@ def validate_structural(data: Mapping[str, object]) -> ValidationResult:
     Accepts a ``Mapping`` (typically a dict from ``json.loads``).
     Returns a ``ValidationResult`` whose ``issues`` capture every
     structural problem found. The result is dependency-free: nothing
-    here consults reg_meta. Semantic resolution (see reg_webapp/DESIGN.md
-    → Semantic validation (semantic.py)) is owned by another layer.
+    here consults reg_meta. Semantic resolution (see reg_meta/DESIGN.md
+    → Project semantic validation (semantic.py)) is owned by another layer.
     """
 
     issues: list[ValidationIssue] = []
@@ -242,7 +242,7 @@ def _is_register_variant_coord(value: object) -> bool:
 
     Not an FQID *kind* (the variant is not addressable as an FQID), but the
     same 3-part grammar. The structural layer only checks shape; resolution
-    to a real ``variant`` row is reg_meta's job (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)).
+    to a real ``variant`` row is reg_meta's job (see reg_meta/DESIGN.md → Project semantic validation (semantic.py)).
     """
     if not isinstance(value, str):
         return False
@@ -255,7 +255,7 @@ def _parse_binding_fqid(value: object) -> list[str] | None:
 
     3-segment ``<provider>/<register>/<slug>`` (see reg_meta/DESIGN.md → FQID grammar): the FQID names the
     variable; its value set is determined by the resolved ``(variable, variant,
-    period)`` (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)), not pinned on the FQID. Returns the three parts, else
+    period)`` (see reg_meta/DESIGN.md → Project semantic validation (semantic.py)), not pinned on the FQID. Returns the three parts, else
     ``None`` (wrong arity, a ``class/`` prefix, or a stray character — including
     the retired ``@`` version delimiter, which ``_FQID_TOKEN`` rejects).
     """
@@ -786,8 +786,8 @@ def _check_source(
     # Per-source explicit-display_name collisions (`display_name_collision`;
     # see DESIGN.md → Structural rules and issue codes). The other half of
     # the spec — one explicit + one resolving to the same reg_meta default —
-    # needs reg_meta and lives in the semantic layer (see reg_webapp/DESIGN.md
-    # → Semantic validation (semantic.py)).
+    # needs reg_meta and lives in the semantic layer (see reg_meta/DESIGN.md
+    # → Project semantic validation (semantic.py)).
     seen_display_names: dict[str, str] = {}
     for j, binding in enumerate(bindings):
         bbase = f"{base}/bindings/{j}"
@@ -955,7 +955,7 @@ def _is_literal_period_obj(value: object) -> bool:
     period = value["period"]
     # The object form's job is to disambiguate a literal period from a bare
     # column ref; unlike Source.period, the string's period-token validity is
-    # NOT grammar-checked here — that is a reg_meta semantic concern (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)).
+    # NOT grammar-checked here — that is a reg_meta semantic concern (see reg_meta/DESIGN.md → Project semantic validation (semantic.py)).
     return _is_int_literal(period) or isinstance(period, str)
 
 

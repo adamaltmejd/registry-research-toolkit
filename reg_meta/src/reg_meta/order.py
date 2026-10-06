@@ -18,8 +18,8 @@ Pipeline, per `sources[*].bindings[*]` in project declaration order:
    not re-derived here. Two columns co-existing at one instant with no
    `Binding.representation` pin is ambiguity, and blocks. Every clip is reported
    per binding (`OrderResult.clips`, and on the manifest itself when one is
-   produced), never silently, and never as an error. The webapp's
-   `/api/project/validate` calls `resolve_binding` too, so validation and
+   produced), never silently, and never as an error. Project validation
+   (`semantic.py`) calls `resolve_binding` too, so validation and
    ordering answer the availability question ONCE, and a clip alone is
    informational on both sides. It is not a clean bill of health: the same
    binding can still block here on representation ambiguity, and below on the
@@ -285,8 +285,8 @@ class StateWindow(_OrderModel):
 
 class BindingResolution(_OrderModel):
     """What one binding resolves to inside one requested period — the SHARED
-    availability/slicing facts `materialize_order` and the webapp's
-    `/api/project/validate` both read (`resolve_binding`, steps 1+2).
+    availability/slicing facts `materialize_order` and project validation
+    (`semantic.py`) both read (`resolve_binding`, steps 1+2).
 
     `finding` is the blocking reason there is nothing orderable here, or `None`.
     A resolution can carry BOTH a `clip` and a `finding`: §12 reports every clip
@@ -450,7 +450,7 @@ def resolve_binding(
     §12's steps 1+2, and the ONE place the availability question is answered.
 
     `materialize_order` consumes the slices to match the steward's topology;
-    the webapp's `/api/project/validate` consumes the same facts to report
+    project validation (`semantic.py`) consumes the same facts to report
     them, so the two never disagree about what is available. §12 intersection
     semantics: each selected binding is requested wherever it is available
     inside the source window, so availability NARROWER than the request is a
@@ -563,7 +563,7 @@ def resolve_binding(
                 {"from": req[0], "to": req[1]},
                 variant=source.register_variant.split("/")[2],
                 # State METADATA only: nothing below reads code membership, and
-                # the webapp's validate path must not hydrate a geography
+                # the validate path must not hydrate a geography
                 # variable's code lists to answer a question about its windows.
                 with_codes=False,
             ):
@@ -743,8 +743,17 @@ def load_project(path: Path) -> ProjectData:
 
     The CLI adapter's input door (mirrors `inventory.load_inventory`); the
     FastAPI adapter already holds the raw body and calls `project_from_raw`
-    directly. Fail-closed: an unreadable or non-JSON-object file raises
-    `RegMetaError` (`project_unreadable`, EXIT_CONFIG)."""
+    directly."""
+    return project_from_raw(read_project(path))
+
+
+def read_project(path: Path) -> dict[str, Any]:
+    """Read a `project_data.json` file as the raw JSON object both CLI doors
+    take — `project_from_raw` (order) and `semantic.validate_project` (validate),
+    the CLI counterparts of the FastAPI adapters' raw request body.
+
+    Fail-closed: an unreadable or non-JSON-object file raises `RegMetaError`
+    (`project_unreadable`, EXIT_CONFIG)."""
     try:
         raw = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
@@ -761,7 +770,7 @@ def load_project(path: Path) -> ProjectData:
             "The project must be a UTF-8 `project_data.json` document (see "
             "reg_schema/DESIGN.md).",
         )
-    return project_from_raw(raw)
+    return raw
 
 
 def project_from_raw(raw: dict[str, Any]) -> ProjectData:
@@ -815,9 +824,9 @@ def project_from_raw(raw: dict[str, Any]) -> ProjectData:
 
 def schema_version_issue(raw: dict[str, Any]) -> ValidationIssue | None:
     """The ONE supported-version decision every SERVER-SIDE consumer of a raw
-    project applies: `project_from_raw` above (both order adapters) and the
-    webapp's `/api/project/validate`, which needs the finding as an ISSUE rather
-    than a raise. (The SPA keeps its own partial open-time gate over a file the
+    project applies: `project_from_raw` above (both order adapters) and
+    `semantic.validate_project` (both validate adapters), which needs the
+    finding as an ISSUE rather than a raise. (The SPA keeps its own partial open-time gate over a file the
     researcher picks; the backend stays the canonical answer.) Returns `None`
     when the project is on the contract this build reads.
 

@@ -205,6 +205,11 @@ def check_generation_seeded_stratified_binding_agreement(
         )
         project_path = tmp_path / "acceptance-project.json"
         project_path.write_text(json.dumps(project))
+        code = run(["--db", str(artifact_dir), "validate", str(project_path)])
+        require(
+            code == 0 and capsys.readouterr().out == validated.text,
+            "Sample CLI/HTTP validation bytes disagree",
+        )
         code = run(["--db", str(artifact_dir), "order", str(project_path)])
         cli_bytes = capsys.readouterr().out
         require(code == 0, "Sample CLI order disagrees with admission")

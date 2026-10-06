@@ -597,7 +597,8 @@ class ValidationIssueModel(BaseModel):
 
 class ValidationResultModel(BaseModel):
     """`POST /api/project/validate` response — the concatenated issue list
-    (structural ⧺ block ⧺ semantic) plus the derived ``ok`` flag.
+    (structural ⧺ semantic) plus the derived ``ok`` flag. The body is reg_meta's
+    ``semantic.validation_json`` verbatim; this model types it for OpenAPI.
 
     ``ok`` mirrors ``reg_schema.ValidationResult.ok``: True iff NO error-level
     issue is present (warnings/info do not flip it). A validation FAILURE is a
