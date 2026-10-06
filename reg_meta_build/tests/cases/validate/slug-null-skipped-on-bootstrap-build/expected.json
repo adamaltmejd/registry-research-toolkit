@@ -1,0 +1,8 @@
+{
+  "failures_absent": [
+    "have a NULL slug"
+  ],
+  "report_contains": [
+    "slug presence skipped — --skip-slugs bootstrap build"
+  ]
+}

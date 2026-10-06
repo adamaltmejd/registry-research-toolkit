@@ -235,6 +235,7 @@ def validate_built_db(
         _check_variable_alias_covers_state_columns(conn, result, tables)
         _check_delivery_column_hygiene(conn, result, tables)
         _check_name_field_hygiene(conn, result, tables)
+        _check_slugs_present(conn, result, tables, bootstrap=bootstrap)
         _check_panel_refs_resolve(conn, result, tables)
         _check_panel_refs_have_states(conn, result, tables)
         _check_entity_key_vars_curated(
@@ -1052,6 +1053,34 @@ def _check_name_field_hygiene(
             )
         else:
             result.ok(f"no {table}.{column} with surrounding whitespace")
+
+
+def _check_slugs_present(
+    conn: sqlite3.Connection,
+    result: ValidationResult,
+    tables: set[str],
+    *,
+    bootstrap: bool,
+) -> None:
+    """Every register and variable carries a slug, so every one has an FQID.
+
+    The columns are nullable because ``populate_slugs`` fills them after the rows
+    are written; a ``--skip-slugs`` bootstrap build leaves them NULL by design."""
+    result.section("[slugs: present]")
+    if bootstrap:
+        result.ok("slug presence skipped — --skip-slugs bootstrap build")
+        return
+    for table in ("register", "variable"):
+        if table not in tables:
+            result.fail(f"{table} missing")
+            continue
+        missing = conn.execute(
+            f"SELECT COUNT(*) FROM {table} WHERE slug IS NULL"
+        ).fetchone()[0]
+        if missing:
+            result.fail(f"{missing:,} {table} row(s) have a NULL slug")
+        else:
+            result.ok(f"every {table} row has a slug")
 
 
 def _check_panel_refs_resolve(
