@@ -7,7 +7,7 @@ from dataclasses import replace
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
 from catalog_manifest import synthetic_manifest
 from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.catalog_resolution import resolve_parents
