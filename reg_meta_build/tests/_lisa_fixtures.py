@@ -1,9 +1,15 @@
 """Synthetic workbook matching the four observed LISA delivery layouts.
 
 The layout (titles, headers, keyed text rows and observed unkeyed context rows per
-sheet) is readable data in `cases/lisa/layout.json`, transcribed from the delivered
-workbook. It is deliberately independent of the reader's own layout table, so a reader
-change that drifts from the documented workbook fails instead of agreeing with itself.
+sheet) is readable data in `cases/lisa/layout.json`. It was frozen from the reader's
+layout table (`sources.lisa._TABLES`) at 093a15fb and cross-checked against the
+delivered SCB LISA variable-list workbook: titles, headers, the 57 text rows and the 6
+context rows match. The one difference is Individ!B815, which holds a footnote
+reference that openpyxl's read-only mode returns as None.
+
+The fixture is a frozen copy, not an independent source. A later reader change no
+longer agrees with the fixture automatically; it fails until the layout file is
+updated in the same diff.
 """
 
 from __future__ import annotations

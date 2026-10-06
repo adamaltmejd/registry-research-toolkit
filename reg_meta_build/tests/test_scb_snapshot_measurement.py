@@ -127,10 +127,10 @@ def test_git_measurement_reports_effective_command_scope_config(
 def test_codec_sample_ordinals_span_the_whole_stream(tmp_path: Path) -> None:
     source_dir = write_scb_input(tmp_path / "source")
     sample = source_dir / "Sample.csv"
-    # Ten records whose widths 1..10 identify them in the escaped byte count.
-    sample.write_bytes(
-        b"v\r\n" + b"".join(b"x" * width + b"\r\n" for width in range(1, 11))
-    )
+    # Ten records of widths 1, 2, 4, ..., 512: every set of the same number of
+    # records has a distinct escaped byte count, so the count names the ordinals.
+    widths = [2**ordinal for ordinal in range(10)]
+    sample.write_bytes(b"v\r\n" + b"".join(b"x" * width + b"\r\n" for width in widths))
     inventory = scb_inventory(tmp_path, source_dir, extra=("Sample.csv",))
 
     def sampled(limit: int) -> tuple[int, int]:
@@ -141,6 +141,6 @@ def test_codec_sample_ordinals_span_the_whole_stream(tmp_path: Path) -> None:
         )
 
     # Each record is escaped as "t<value>\n" (width + 2 bytes).
-    assert sampled(3) == (3, 3 + 7 + 12)  # records 0, 4 and 9
-    assert sampled(1) == (1, 8)  # the middle record 5
-    assert sampled(20) == (10, sum(width + 2 for width in range(1, 11)))
+    assert sampled(3) == (3, (1 + 2) + (16 + 2) + (512 + 2))  # records 0, 4 and 9
+    assert sampled(1) == (1, 32 + 2)  # the middle record 5
+    assert sampled(20) == (10, sum(width + 2 for width in widths))
