@@ -23,6 +23,7 @@ curation entry the ledger reports stale.
 from __future__ import annotations
 
 import json
+import re
 import sqlite3
 from dataclasses import dataclass, replace
 from typing import TYPE_CHECKING, Literal
@@ -663,16 +664,36 @@ def test_certificate_refuses_a_column_that_now_has_a_source_code_list(
 
 
 @pytest.mark.parametrize(
-    "members,scope_end,separators",
+    "members,scope_end,separators,reason",
     [
-        (None, "9999-12-31", None),
-        ((("0", "giltigt pnr"), ("0", "Ogiltigt pnr")), None, None),
-        ((("0", "giltigt pnr"), ("x", "Ogiltigt pnr")), None, None),
-        ((("0", "giltigt pnr, annat"), ("8", "Ogiltigt pnr")), None, None),
-        (None, None, (",", ",")),
-        (None, None, ("|",)),
-        (None, None, ()),
-        ((("0", "giltigt pnr; annat"), ("8", "Ogiltigt pnr")), None, (",", ";")),
+        (None, "9999-12-31", None, "requires one exact supplied interval"),
+        (
+            (("0", "giltigt pnr"), ("0", "Ogiltigt pnr")),
+            None,
+            None,
+            "enumeration codes must be unique",
+        ),
+        (
+            (("0", "giltigt pnr"), ("x", "Ogiltigt pnr")),
+            None,
+            None,
+            "literal ASCII decimal code and label lines",
+        ),
+        (
+            (("0", "giltigt pnr, annat"), ("8", "Ogiltigt pnr")),
+            None,
+            None,
+            "literal ASCII decimal code and label lines",
+        ),
+        (None, None, (",", ","), "separators require literal decimal assignments"),
+        (None, None, ("|",), "assignment_separators.*Input should be ',' or ';'"),
+        (None, None, (), "assignment_separators.*at least 1 item"),
+        (
+            (("0", "giltigt pnr; annat"), ("8", "Ogiltigt pnr")),
+            None,
+            (",", ";"),
+            "literal ASCII decimal code and label lines",
+        ),
     ],
     ids=[
         "literal-open-end",
@@ -690,9 +711,12 @@ def test_malformed_certificate_fails_curation_load_at_its_entry(
     members: tuple[tuple[str, str], ...] | None,
     scope_end: str | None,
     separators: tuple[str, ...] | None,
+    reason: str,
 ) -> None:
     """The entry's `members` and its enumeration lines agree, so only the
-    malformed part named by the case id can reject it."""
+    malformed part named by the case id can reject it; `reason` pins that part's
+    own located message (read from a run of each case, then checked against the
+    validator that owns the rule)."""
     cell, pairs, default_separators = SINGLE
     sources = prepare_sos(tmp_path, "src", cell, data_to=None)
     body = certificate(
@@ -705,3 +729,4 @@ def test_malformed_certificate_fails_curation_load_at_its_entry(
     with pytest.raises(RegMetaError) as caught:
         load_curation_tree(sos_curation(tmp_path, "cur", body))
     assert "curation/registers/sos/syn.toml [[coding.documented" in caught.value.message
+    assert re.search(reason, caught.value.message)
