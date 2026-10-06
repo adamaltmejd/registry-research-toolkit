@@ -16,19 +16,14 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 ALLOWLIST = {
-    "reg_meta_build/tests/test_classifications.py",
     "reg_meta_build/tests/_lisa_fixtures.py",
     "reg_meta_build/tests/_representation_fixtures.py",
     "reg_meta_build/tests/_shared_fixtures.py",
     "reg_meta_build/tests/test_alias_windows.py",
-    "reg_meta_build/tests/test_catalog_lineage.py",
-    "reg_meta_build/tests/test_catalog_resolution.py",
     "reg_meta_build/tests/test_convert_matrix.py",
     "reg_meta_build/tests/test_curated_source_records.py",
     "reg_meta_build/tests/test_curation_compile.py",
     "reg_meta_build/tests/test_doc_db.py",
-    "reg_meta_build/tests/test_fqid_slugs.py",
-    "reg_meta_build/tests/test_fqid_slugs_properties.py",
     "reg_meta_build/tests/test_input_snapshot.py",
     "reg_meta_build/tests/test_period_family_merges.py",
     "reg_meta_build/tests/test_pipeline.py",
@@ -36,7 +31,6 @@ ALLOWLIST = {
     "reg_meta_build/tests/test_prepared_sources.py",
     "reg_meta_build/tests/test_prepared_values.py",
     "reg_meta_build/tests/test_repo_curation_tomls.py",
-    "reg_meta_build/tests/test_resolved_catalog.py",
     "reg_meta_build/tests/test_sos_adapter.py",
     "reg_meta_build/tests/test_sos_evidence.py",
     "reg_meta_build/tests/test_sos_parser.py",
