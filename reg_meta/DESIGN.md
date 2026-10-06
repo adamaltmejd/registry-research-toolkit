@@ -1738,11 +1738,12 @@ and prints a hint on interactive runs when a newer release exists.
 **Auto-download on first use**: metadata, holdings and order reads require only the
 selected catalog artifact. Docs operations additionally require its paired sibling doc
 DB. Interactive query commands offer missing downloads; non-interactive invocations fail
-with actionable `db_not_found` / `doc_db_not_found` errors. Both bootstrap downloads
-resolve the latest release for the selected catalog. Their missing-asset remediation
-names only end-user actions (`reg-meta update --tag`, an issue report), never the
-maintainer-only `reg-meta-build` commands. Updates preserve explicit catalog selection
-and do not attach an unrelated installed docs artifact.
+with actionable `db_not_found` / `doc_db_not_found` errors. The bootstrap catalog
+download resolves the newest release carrying the selected catalog's asset; the docs
+download takes the newest release carrying the shared docs asset, whatever the catalog.
+Their missing-asset remediation names only end-user actions (`reg-meta update --tag`, an
+issue report), never the maintainer-only `reg-meta-build` commands. Updates preserve
+explicit catalog selection and do not attach an unrelated installed docs artifact.
 
 ### Package version format
 

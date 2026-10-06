@@ -401,15 +401,15 @@ def download_docs_db(
     db_dir: Path | None = None,
     *,
     tag: str = "latest",
-    catalog: str = "global",
     force: bool = False,
 ) -> dict[str, Any]:
     """Download pre-built doc-index database from GitHub Releases.
 
     Mirrors :func:`download_db` but for the doc asset. The asset is small
     (~600 KB compressed → ~3 MB on disk) so there is no confirmation
-    prompt. ``tag="latest"`` resolves via the release walker for the selected
-    ``catalog``, the same resolution its paired catalog download uses.
+    prompt. ``tag="latest"`` resolves via the release walker to the newest
+    release carrying the shared docs asset; that pick does not depend on the
+    selected catalog.
     """
     if db_dir is None:
         db_dir = default_db_dir()
@@ -425,7 +425,7 @@ def download_docs_db(
         )
 
     if tag == "latest":
-        resolution = resolve_latest_release(catalog=catalog)
+        resolution = resolve_latest_release()
         if not resolution.docs_tag:
             raise RegMetaError(
                 exit_code=EXIT_CONFIG,

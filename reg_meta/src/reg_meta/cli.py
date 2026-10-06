@@ -2469,13 +2469,14 @@ def _collect_hints(
     if key == ("search", None):
         results = data.get("results", [])
         group_rows = [r for r in results if r.get("type") == "group"]
-        # The typed group rows (#701) carry the scalar `matched_count` (the raw
-        # `matched` leaf list is folded away in reg_meta — not on the wire).
+        # The typed group rows (#701) carry the scalar `matched_count` (distinct
+        # members hit; the raw `matched` leaf list is folded away in reg_meta —
+        # not on the wire).
         folded = sum(r.get("matched_count") or 0 for r in group_rows)
         if folded:
             hint_add(
                 hints,
-                f"{folded} hit(s) folded into {len(group_rows)} concept group(s) "
+                f"{folded} member(s) folded into {len(group_rows)} concept group(s) "
                 "(--no-fold to flatten; members in --format json)",
             )
         if getattr(args, "field", "all") == "all":
@@ -3221,7 +3222,7 @@ def _prompt_first_run_download(
     if missing_main:
         download_db(db_dir=db_path.parent, catalog=catalog, yes=True)
     if missing_docs:
-        download_docs_db(db_dir=docs_path.parent, catalog=catalog)
+        download_docs_db(db_dir=docs_path.parent)
     sys.stderr.write("\n")
 
 

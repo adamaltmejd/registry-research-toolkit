@@ -2587,8 +2587,9 @@ def _classification_succession_row(
         "classification_name": terminal["name"] if terminal else None,
         "editions": editions,
         "matched": matched,
-        # Distinct editions, not hit rows: one edition can arrive through more
-        # than one search arm.
+        # Distinct editions, not hit rows. The code-containment arm excludes
+        # editions the name arm already returned, so today each edition arrives
+        # once; counting ids keeps the count right if an arm stops excluding.
         "matched_count": len({h["_classification_id"] for h in matched}),
         "fts_rank": min((h.get("fts_rank", 0) for h in matched), default=0),
         "_classification_id": terminal["id"] if terminal else None,
