@@ -198,6 +198,9 @@ def test_builder_refuses_a_catalog_without_a_manifest(tmp_path: Path) -> None:
     with sqlite3.connect(path) as connection:
         connection.execute("CREATE TABLE dummy (x TEXT)")
     connection.close()
+    # Collect first so connections leaked by earlier tests in this worker are not
+    # attributed to this refusal.
+    gc.collect()
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always", ResourceWarning)
         code, exit_code, message = _refusal(path)
