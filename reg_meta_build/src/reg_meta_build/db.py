@@ -1959,7 +1959,7 @@ def _populate_fts(conn: sqlite3.Connection, *, include_value_code: bool = True) 
     """Populate FTS5 search indexes.
 
     ``include_value_code=False`` skips ONLY the ``value_code_fts`` INSERT — the
-    register_fts + variable_fts inserts always run. The extend-db overlay
+    register_fts, variable_fts and classification_fts inserts always run. The extend-db overlay
     (#365 PR2) uses this: it never inserts ``value_code`` rows, so the
     value_code_fts index copied from the base DB is already in sync and
     re-populating its ~4M rows would be pure build-time waste. The full build
@@ -1990,6 +1990,12 @@ def _populate_fts(conn: sqlite3.Connection, *, include_value_code: bool = True) 
             delivery_column_names
         FROM variable_fts_content
     """)
+
+    # classification_fts: content-synced — rowid must match classification.id.
+    conn.execute(
+        "INSERT INTO classification_fts(rowid, short_name, name, name_en, description) "
+        "SELECT id, short_name, name, name_en, description FROM classification"
+    )
 
     if include_value_code:
         # value_code_fts (#352): content-synced — rowid must match

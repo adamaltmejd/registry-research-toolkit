@@ -21,6 +21,7 @@
     "status": 200,
     "json": {
       "/groups/*/group": [
+        "top_results",
         "registers",
         "variables",
         "classifications",
@@ -28,7 +29,8 @@
         "register_value_sets"
       ],
       "/groups/0/results/*/fqid": [
-        "scb/example"
+        "scb/example",
+        "class/example-codes"
       ],
       "/groups/0/has_more": false
     }

@@ -253,6 +253,7 @@ def validate_built_db(
         if corpus:
             _check_sos_sanity(conn, result, tables)
         _check_value_code_search(conn, result, tables, corpus=corpus)
+        _check_classification_search(conn, result, tables)
         _check_tags(conn, result, tables)
         # The four checks below floor a derivation `--skip-slugs` does not run, so
         # they take `bootstrap` and skip THAT floor (only) with a line of their own,
@@ -1521,6 +1522,30 @@ def _check_value_code_search(
             result.ok(f"value_code_fts populated ({n_idx:,} labels)")
         else:
             result.fail("value_code_fts is EMPTY on a corpus build")
+
+
+def _check_classification_search(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """Every classification row is indexed in ``classification_fts``.
+
+    ``COUNT(*) FROM classification_fts`` reads the external content table, so the
+    honest indexed count is the ``_docsize`` shadow table (as for value codes).
+    Unlike value codes nothing is stoplisted, so the counts must be equal."""
+    result.section("[classification search]")
+    if "classification" not in tables or "classification_fts" not in tables:
+        result.fail("classification / classification_fts missing")
+        return
+    n_rows = conn.execute("SELECT COUNT(*) FROM classification").fetchone()[0]
+    n_idx = conn.execute("SELECT COUNT(*) FROM classification_fts_docsize").fetchone()[
+        0
+    ]
+    if n_idx == n_rows:
+        result.ok(f"classification_fts indexes all {n_rows:,} classifications")
+    else:
+        result.fail(
+            f"classification_fts indexes {n_idx:,} of {n_rows:,} classifications"
+        )
 
 
 def _check_tags(

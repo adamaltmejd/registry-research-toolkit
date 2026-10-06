@@ -501,7 +501,7 @@ def extend_db(
                     holding_mappings=compiled.mappings,
                 )
 
-            for fts in ("register_fts", "variable_fts"):
+            for fts in ("register_fts", "variable_fts", "classification_fts"):
                 conn.execute(f"INSERT INTO {fts}({fts}) VALUES('delete-all')")
             _populate_fts(conn, include_value_code=False)
 

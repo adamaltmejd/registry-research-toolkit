@@ -17,6 +17,8 @@ import pytest
 from _csv_fixtures import var_row, write_input_bundle, write_scb_input
 from _pipeline_catalog_support import report_issues
 from _prepared_fixtures import accept_prepared
+from reg_meta.queries import search
+from reg_meta_build.db import open_built_db
 from reg_meta_build.pipeline import build_catalog, check_curation
 from reg_meta_build.prepared_catalog import prepare_catalog_sources
 from reg_meta_build.source_naming import authored_naming_id
@@ -150,6 +152,23 @@ def test_declared_family_alias_binds_state_to_the_covering_edition(
     diagnostic_build(tmp_path, books, "Source pair")
     assert amount_classifications(tmp_path / "out.db") == ["new"]
     assert issue_codes(tmp_path / "report") == []
+
+
+def test_classification_is_found_by_name_search_on_the_built_artifact(
+    tmp_path: Path,
+) -> None:
+    books = {"ALPHA": ("alpha", 'name_en = "Distinctive nomenclature"\n')}
+    diagnostic_build(tmp_path, books)
+    conn = open_built_db(tmp_path / "out.db")
+    try:
+        by_name = search(conn, "alpha", field="description", type="classification")
+        by_name_en = search(
+            conn, "nomenclature", field="description", type="classification"
+        )
+    finally:
+        conn.close()
+    assert [str(row.fqid) for row in by_name.results] == ["class/alpha"]
+    assert [str(row.fqid) for row in by_name_en.results] == ["class/alpha"]
 
 
 @pytest.mark.parametrize(

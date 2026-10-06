@@ -2,11 +2,9 @@
 stability across cursor pages, and scope/exclusion applied before the bounded
 candidate prefix.
 
-The readable sources surface classifications through the code-containment arm:
-the resolved-catalog writer leaves `classification_fts` unpopulated, so the
-classification name arm returns nothing on a pipeline-built artifact. The
-ordering, promotion and cursor properties under test live in the merged
-final sort, which every arm feeds.
+The ordering, promotion and cursor properties under test live in the merged
+final sort, which every arm (classification name and code containment alike)
+feeds.
 """
 
 from __future__ import annotations
@@ -127,8 +125,9 @@ def test_generic_identity_matches_do_not_swamp_the_ranked_order(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:
     """51 classifications named exactly `C12` (owning only `C120`) and one
-    `zz-discriminative` owning `C12` itself, which the code arm ranks first. More
-    than 50 identity matches switch identity promotion off."""
+    `zz-discriminative` whose description repeats `C12`, which makes it the
+    best-ranked name hit without an identity match. More than 50 identity matches
+    switch identity promotion off, so the ranked order stands."""
     conn = reader_search_conn(tmp_path_factory, "search-identity-swamp")
     first = search(conn, "C12", field="description", type="classification", limit=25)
     assert str(first.results[0].fqid) == "class/zz-discriminative"

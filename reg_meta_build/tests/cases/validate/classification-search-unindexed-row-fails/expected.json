@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "classification_fts indexes 0 of 1 classifications"
+  ]
+}
