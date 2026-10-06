@@ -1,15 +1,17 @@
 """Structural validator for ``project_data.json`` (see DESIGN.md → Structural rules and issue codes).
 
-Pure-stdlib, reg_meta-free. The entrypoint operates on a parsed dict
-(typically ``json.loads(...)`` output), not on the model-layer
-dataclasses (see DESIGN.md → Two layers: models vs. validator), because
-rules like "type is one of the enum values" must
-fire on raw JSON values before any ``Literal`` cast — the dataclass
-constructors deliberately don't enforce them (see ``project_data.py``).
+Stdlib-only rules, reg_meta-free. The entrypoint operates on a parsed dict
+(typically ``json.loads(...)`` output), not on the Pydantic models (see
+DESIGN.md → Two layers: models vs. validator), because rules like "type is
+one of the enum values" must fire on raw JSON values before any ``Literal``
+cast — the models deliberately don't enforce them (see ``project_data.py``).
+From the model layer it reads only names: the ``Literal`` values and each
+closed object's wire keys.
 
-Same code is consumed by multiple runtimes (browser SPA via TS mirror,
-webapp via direct import); see ``DESIGN.md`` for the dependency
-direction. FQID well-formedness is checked locally (segment count +
+This is the one implementation. The webapp backend (project routes and the
+semantic pass) and ``reg_meta.order`` import it directly; the SPA receives its
+issues over HTTP and renders them by ``code``. See ``DESIGN.md`` for the
+dependency direction. FQID well-formedness is checked locally (segment count +
 per-segment chars) rather than importing reg_meta — reg_schema is the
 lightweight canonical-schema package and depending on the heavier
 catalog-query reg_meta would invert the layering, so the dependency
