@@ -1,6 +1,6 @@
-"""Enforce public test boundaries. The frozen file allowlist only shrinks.
+"""Enforce public test boundaries in every test and test-support file.
 
-Existing package violations are drained in plan 06; conformance has zero tolerance.
+Conformance additionally rejects private attribute access and product mutation.
 Public protocol dunders are allowed. Bare private fixture modules importing public
 names are legacy test support; private imported names are still violations.
 Only network, filesystem, subprocess, environment, clock and platform patches pass.
@@ -15,12 +15,6 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
-ALLOWLIST = {
-    "reg_meta_build/tests/test_source_scope.py",
-    "reg_schema/tests/test_structural.py",
-    "scripts/tests/test_gh_issue.py",
-    "scripts/tests/test_prototype_scb_inputs.py",
-}
 PROCESS_ROOTS = {
     "os",
     "sys",
@@ -229,14 +223,7 @@ def test_existing_tests_use_public_boundaries(python_test_files):
         )
         if hits:
             observed[relative] = hits
-    new = set(observed) - ALLOWLIST
-    stale = ALLOWLIST - set(observed)
-    assert not new and not stale, (
-        "New violations: "
-        + repr({name: observed[name] for name in sorted(new)})
-        + "; remove stale allowlist entries: "
-        + repr(sorted(stale))
-    )
+    assert not observed, f"Assert at a public boundary instead: {observed!r}"
 
 
 @pytest.mark.parametrize(
