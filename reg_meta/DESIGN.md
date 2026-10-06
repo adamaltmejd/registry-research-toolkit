@@ -1152,13 +1152,24 @@ re-type live here too, beside the materializer:
 
 - `parse_project(data)` is the ONE read boundary for untrusted project bytes, used by
   the CLI's `read_project(path)` and the FastAPI body reader alike. It refuses a
-  malformed document — not UTF-8 JSON, a duplicate key at any depth (last-wins would
-  silently validate or order the wrong value), nesting past the recursion limit, or a
-  non-object top level — with `RegMetaError` (`project_unreadable`, `EXIT_CONFIG`). The
-  adapters map that one refusal onto their transports rather than serializing it
+  malformed document with `RegMetaError` (`project_unreadable`, `EXIT_CONFIG`). The
+  refusal classes are:
+  - bytes that are not strict UTF-8 (RFC 8259 §8.1). A byte-order mark or UTF-16/32 is
+    refused, although `json.loads(bytes)` would sniff and accept it.
+  - text that is not JSON.
+  - a duplicate key at any depth. Last-wins would silently validate or order the wrong
+    value.
+  - nesting past the recursion limit.
+  - a non-object top level.
+
+  The adapters map that one refusal onto their transports rather than serializing it
   byte-identically: the CLI writes its error envelope and exits 10, and HTTP answers 400
-  with `detail` equal to the error's `message`. The conformance corpus pins that the two
-  messages are equal for every refused document, for `validate` and `order` alike.
+  with `detail` equal to the error's `message`. The conformance corpus has one case per
+  refusal class, each run through `validate` and `order` on both adapters, and pins the
+  two messages equal. That parity is why a parse message never names the file path. The
+  CLI names the path only when the file cannot be read at all (`OSError`), a failure
+  that has no HTTP counterpart.
+
 - `project_from_raw(raw)` (and `load_project(path)`, the CLI's file-reading wrapper) is
   the ONE door into `materialize_order` for an untrusted `project_data.json`. The
   `ProjectData` model enforces field TYPES only, so it runs `reg_schema`'s
@@ -1167,6 +1178,7 @@ re-type live here too, beside the materializer:
   provider order. An invalid spec raises `RegMetaError` (`project_invalid` /
   `project_unreadable`, `EXIT_CONFIG`), so both adapters reject the same specs with the
   same words.
+
 - `schema_version_issue(raw)` is the door's FIRST question and the one piece of it
   shared beyond ordering: is this project written for the contract this build reads?
   Supported is EXACTLY `SUPPORTED_SCHEMA_VERSION` — `reg_schema.__version__` itself,
@@ -1187,6 +1199,7 @@ re-type live here too, beside the materializer:
   gate is a separate, partial pre-flight on the file a researcher picks, not this
   decision — see reg_webapp/DESIGN.md → "Project-file version gate"; the backend stays
   canonical.)
+
 - `blocked_message(result)` renders every blocking finding, in the materializer's own
   accumulation order, each prefixed with the source/variable/period it names. The
   fail-closed path is byte-identical across adapters too, not just a produced manifest.
@@ -1322,7 +1335,10 @@ every historical state's code list to answer a question about one period — on 
 geography variable whose yearly states share one large code list that is most of the
 request. Diagnostics are unchanged: aliases, expanded monthly windows, representation
 identity (`state_id`, `delivery_column_name`, `valid_from`) and code-set identity
-(`value_set_id`) all come from the same code path.
+(`value_set_id`) all come from the same code path. The conformance suite pins the rule
+by tracing every statement validation issues over the readable semantic fixture and
+refusing any read of a code-list table (`value_set_member`, `value_code`,
+`classification_code`, `classification_conformance_code`).
 
 **Representation, not `@version`.** A FQID names one concept, but a concept may carry
 several **co-existing delivery columns** at the same instant — parallel representations
@@ -1336,12 +1352,29 @@ exactly the job the retired `@version` pin used to do, now keyed on the delivery
 A `representation` reg_meta no longer delivers as a column →
 `binding_representation_unknown` (error). Crucially, the co-existence test keys on
 **overlapping** windows: distinct columns in *non*-overlapping windows are a sequential
-rename (drift), NOT ambiguity, and must not demand a `representation`. A separate
-defensive backstop (`binding_value_set_version_ambiguous` on ≥2 distinct `value_set_id`s
-on **one** column) should be unreachable against a clean catalog — the reg_meta build
-enforces one value set per `(variable, variant, period, delivery_column)`. For the same
-reason it has no conformance case: `validate_built_db` rejects the only artifact that
-could reach it (`overlapping_distinct_value_sets`).
+rename (drift), NOT ambiguity, and must not demand a `representation`.
+
+A separate defensive backstop (`binding_value_set_version_ambiguous` when two kept
+states with different `value_set_id`s are available at one requested instant) is
+unreachable from any admitted artifact, so it has no conformance case. Co-existing
+columns block as ambiguity before it runs, so any two states it sees overlapping inside
+the request share one column, and two build invariants close that:
+
+- `overlapping_distinct_value_sets` (`_check_one_value_set_per_period`): no two
+  overlapping states of one column carry distinct non-null value sets.
+  `validate_built_db` runs it on every build, flavored included.
+- `overlapping_codeless_codebearing_states` (`_check_no_codeless_codebearing_overlap`):
+  no code-less (`NULL`) state overlaps a code-bearing one on one column. The backstop
+  compares `value_set_id`s with `!=`, so this NULL-vs-non-NULL pair would also fire it.
+  The check runs on global builds and is SKIPPED on flavored (`extend-db`) builds. That
+  skip opens no path: the flavored base is a released global DB whose own build ran the
+  check, and the steward overlay can add no such pair. It inserts only states it mints
+  for its own steward-provider variables, never for a base variable, and every one is
+  code-less (steward extensions cannot declare value sets). Two code-less states compare
+  equal, so they never fire the backstop.
+
+If a steward overlay ever gains value sets or states on base variables, the flavored
+skip must be revisited with it.
 
 **Onboarding.** Stewards declare a subset of what reg_meta knows; data without an FQID
 can't be authored (no `{display_name + type, no FQID}` escape hatch in v1). New
@@ -1889,15 +1922,15 @@ format for version comparison.
 
 ## Exit codes
 
-  | Code | Meaning                                        |
-  | ---- | ---------------------------------------------- |
-  | 0    | Success                                        |
-  | 2    | Usage/argument error                           |
-  | 10   | Configuration error (missing DB, bad encoding) |
-  | 16   | Not found                                      |
-  | 17   | No match with `--require-match`; blocked order |
-  | 25   | Network error (`reg-meta update`)              |
-  | 30   | Unexpected internal error                      |
+  | Code | Meaning                                                                                    |
+  | ---- | ------------------------------------------------------------------------------------------ |
+  | 0    | Success                                                                                    |
+  | 2    | Usage/argument error                                                                       |
+  | 10   | Configuration error (missing DB, bad encoding)                                             |
+  | 16   | Not found                                                                                  |
+  | 17   | No match with `--require-match`; blocked order; validate: project has an error-level issue |
+  | 25   | Network error (`reg-meta update`)                                                          |
+  | 30   | Unexpected internal error                                                                  |
 
 ## Determinism
 

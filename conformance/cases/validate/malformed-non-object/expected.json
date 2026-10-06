@@ -1,0 +1,14 @@
+[
+  {
+    "status": 400,
+    "json": {
+      "/detail": "project must be a JSON object (project_data.json shape), got list"
+    }
+  },
+  {
+    "status": 400,
+    "json": {
+      "/detail": "project must be a JSON object (project_data.json shape), got list"
+    }
+  }
+]

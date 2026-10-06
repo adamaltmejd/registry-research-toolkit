@@ -1,0 +1,14 @@
+[
+  {
+    "status": 400,
+    "json": {
+      "/detail": "project JSON must be UTF-8 without a byte-order mark"
+    }
+  },
+  {
+    "status": 400,
+    "json": {
+      "/detail": "project JSON must be UTF-8 without a byte-order mark"
+    }
+  }
+]

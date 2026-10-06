@@ -31,10 +31,11 @@ and located findings. Orders additionally compare CLI and materializer serializa
 repeat raw bytes, including provenance. Every validate and order step in the validate
 surface also runs through `reg-meta validate` or `reg-meta order`: a 200 compares bytes
 and exit code with the HTTP response, and a 400 (a malformed document, sent verbatim
-from a step's `content` string) compares the CLI's exit 10 envelope message with the
-HTTP `detail`. No volatile fields are removed from those comparisons. Keys and lists
-retain their order. Path placeholders in the selection oracle expand to the test
-filesystem before comparison.
+from a step's `content` string, encoded with its optional `encoding`, or built by
+`nested_arrays: N` as an object nesting N arrays deep) compares the CLI's exit 10
+envelope message with the HTTP `detail`. No volatile fields are removed from those
+comparisons. Keys and lists retain their order. Path placeholders in the selection
+oracle expand to the test filesystem before comparison.
 
   | Surface directory                                             | Boundary and request interpretation                                                |
   | ------------------------------------------------------------- | ---------------------------------------------------------------------------------- |

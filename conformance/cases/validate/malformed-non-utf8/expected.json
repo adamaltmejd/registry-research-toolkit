@@ -1,0 +1,14 @@
+[
+  {
+    "status": 400,
+    "json": {
+      "/detail": "project JSON is not valid UTF-8: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte"
+    }
+  },
+  {
+    "status": 400,
+    "json": {
+      "/detail": "project JSON is not valid UTF-8: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte"
+    }
+  }
+]

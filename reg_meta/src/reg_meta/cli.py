@@ -649,9 +649,10 @@ def _build_parser() -> argparse.ArgumentParser:
             "(REFACTOR_SPEC.md §12).\n\n"
             "Writes the findings JSON ({ok, issues}) to stdout, or to --output.\n"
             "Exits 0 when the project has no error-level issue and 17 when it\n"
-            "has one (the findings are written either way); an unreadable\n"
-            "project file exits 10. A valid project is resolvable, not proven\n"
-            "orderable: `reg-meta order` still gates physical coverage.\n\n"
+            "has one (the findings are written either way). An unreadable or\n"
+            "malformed project file, a missing catalog or another catalog\n"
+            "configuration error exits 10. A valid project is resolvable, not\n"
+            "proven orderable: `reg-meta order` still gates physical coverage.\n\n"
             "Examples:\n"
             "  reg-meta validate project_data.json\n"
             "  reg-meta validate project_data.json --output findings.json"
@@ -868,22 +869,23 @@ def _cmd_validate(args: argparse.Namespace) -> int:
     A failing project is the command's RESULT, not an error, so its findings
     are written like a passing one's; the exit code says which: 0 no
     error-level issue, 17 (`EXIT_NO_MATCH`, the blocked-order code) at least
-    one. An unreadable project file is 10 (`EXIT_CONFIG`) through the envelope.
+    one. An unreadable or malformed project file, a missing catalog or another
+    catalog configuration error is 10 (`EXIT_CONFIG`) through the envelope.
     The artifact is opened only if the DB-free layers pass, as on the web."""
     from contextlib import closing
 
+    from .db import require_db_file
     from .order import read_project
     from .semantic import validate_project, validation_json
 
+    # The catalog is resolved and its file required up front, so a usage error
+    # or a missing catalog fails fast whatever the project; it is OPENED only
+    # if the DB-free layers pass.
+    db_path = db_path_from_args(args.db, catalog=args.catalog)
+    require_db_file(db_path)
     raw = read_project(Path(args.project))
     result = validate_project(
-        raw,
-        lambda: closing(
-            open_db(
-                db_path_from_args(args.db, catalog=args.catalog),
-                catalog=_selected_name(args),
-            )
-        ),
+        raw, lambda: closing(open_db(db_path, catalog=_selected_name(args)))
     )
     write_to(validation_json(result), args.output, truncate=True)
     return EXIT_SUCCESS if result.ok else EXIT_NO_MATCH

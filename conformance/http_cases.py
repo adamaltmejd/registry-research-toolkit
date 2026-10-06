@@ -107,15 +107,26 @@ def assert_http_case(case, tmp_path, monkeypatch):
         )
 
 
-def request_body(step):
-    """A step's body: `body` is sent as JSON; `content` is a raw string sent
-    verbatim (as application/json), for bytes a JSON value cannot spell, such as
-    a duplicate key."""
+def raw_body(step):
+    """A step's raw request bytes, or None when it sends `body` as JSON.
+
+    `content` is a string sent verbatim, encoded with the step's `encoding`
+    (default UTF-8), for documents a JSON value cannot spell: a duplicate key,
+    a byte-order mark, another encoding. `nested_arrays: N` is a root object
+    whose one value nests N arrays deep, too large to spell literally."""
+    if "nested_arrays" in step:
+        depth = step["nested_arrays"]
+        return b'{"nested": ' + b"[" * depth + b"]" * depth + b"}"
     if "content" in step:
-        return {
-            "content": step["content"].encode(),
-            "headers": {"content-type": "application/json"},
-        }
+        return step["content"].encode(step.get("encoding", "utf-8"))
+    return None
+
+
+def request_body(step):
+    """The `TestClient.request` keyword arguments for a step's body."""
+    raw = raw_body(step)
+    if raw is not None:
+        return {"content": raw, "headers": {"content-type": "application/json"}}
     return {"json": step.get("body")}
 
 

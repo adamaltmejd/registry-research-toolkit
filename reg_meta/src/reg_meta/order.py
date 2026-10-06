@@ -31,6 +31,7 @@ Pipeline, per `sources[*].bindings[*]` in project declaration order:
 
 from __future__ import annotations
 
+import codecs
 import hashlib
 import json
 from datetime import date, timedelta
@@ -793,19 +794,31 @@ def parse_project(data: bytes) -> dict[str, Any]:
     The ONE read boundary for both adapters (§12): the CLI's file
     (`read_project`) and the FastAPI request body, which maps the raise to a
     400 whose `detail` is this error's `message` — so the two refuse the same
-    bytes with the same words. Malformed means: not UTF-8 JSON, a duplicate key
-    at any depth (last-wins would silently validate or order the wrong value),
-    nesting deep enough to exhaust the recursion limit, or a non-object top
-    level. A well-formed object that fails the contract is NOT malformed: that
-    is the version/structural layers' diagnosis, not a read failure."""
+    bytes with the same words. The message therefore never names a file path.
+
+    Malformed means: not strict UTF-8 (RFC 8259 §8.1 — no byte-order mark, and
+    no UTF-16/32, which `json.loads(bytes)` would otherwise sniff and accept),
+    not JSON, a duplicate key at any depth (last-wins would silently validate or
+    order the wrong value), nesting deep enough to exhaust the recursion limit,
+    or a non-object top level. A well-formed object that fails the contract is
+    NOT malformed: that is the version/structural layers' diagnosis, not a read
+    failure."""
 
     def unreadable(message: str) -> RegMetaError:
         return _order_config_error(
             "project_unreadable", message, _PROJECT_DOCUMENT_REMEDIATION
         )
 
+    if data.startswith(codecs.BOM_UTF8):
+        raise unreadable("project JSON must be UTF-8 without a byte-order mark")
     try:
-        parsed = json.loads(data, object_pairs_hook=_reject_duplicate_keys)
+        # Decoding first is what makes the reader strict: a `str` reaches
+        # `json.loads` with no encoding left to detect.
+        text = data.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise unreadable(f"project JSON is not valid UTF-8: {exc}") from exc
+    try:
+        parsed = json.loads(text, object_pairs_hook=_reject_duplicate_keys)
     except json.JSONDecodeError as exc:
         raise unreadable(f"project is not valid JSON: {exc}") from exc
     except RecursionError as exc:
@@ -814,8 +827,7 @@ def parse_project(data: bytes) -> dict[str, Any]:
         # so it needs its own clause.
         raise unreadable("project JSON is nested too deeply") from exc
     except ValueError as exc:
-        # The duplicate-key hook's ValueError, and `UnicodeDecodeError` (a
-        # `ValueError` subclass) for bytes that are not UTF-8.
+        # The duplicate-key hook's ValueError.
         raise unreadable(str(exc)) from exc
     if not isinstance(parsed, dict):
         raise unreadable(

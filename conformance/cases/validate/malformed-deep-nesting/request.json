@@ -1,0 +1,16 @@
+{
+  "kind": "catalog",
+  "fixture": "semantic",
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/api/project/validate",
+      "nested_arrays": 500000
+    },
+    {
+      "method": "POST",
+      "path": "/api/project/order",
+      "nested_arrays": 500000
+    }
+  ]
+}
