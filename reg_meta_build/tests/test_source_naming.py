@@ -6,7 +6,7 @@ import hashlib
 from typing import TYPE_CHECKING, Any, Literal
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
 from _curation_fixtures import write_fdb_partition_curation
 from pydantic import ValidationError
 from reg_meta.source_evidence import SourceRevision, canonical_sha256
