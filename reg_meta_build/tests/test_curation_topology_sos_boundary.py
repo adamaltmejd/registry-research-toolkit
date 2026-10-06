@@ -36,11 +36,7 @@ def _build(tmp_path: Path, rows):
 
 
 def _errors(built) -> list[tuple[str, str]]:
-    return [
-        (issue["code"], issue["detail"])
-        for issue in built.issues()
-        if issue["severity"] == "error"
-    ]
+    return [(issue["code"], issue["detail"]) for issue in built.errors()]
 
 
 def test_named_subsets_without_a_subset_sheet_keep_their_variants(tmp_path: Path):

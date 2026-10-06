@@ -10,7 +10,6 @@ event ledger.
 from __future__ import annotations
 
 import json
-import sqlite3
 from dataclasses import dataclass, replace
 from typing import TYPE_CHECKING, Literal
 
@@ -20,8 +19,8 @@ from _csv_fixtures import (
     write_scb_input,
 )
 from _pipeline_catalog_support import (
+    BuiltCatalog,
     prepare_accepted,
-    report_events,
     write_curation_tree,
 )
 from _sos_fixtures import DEFAULT_REGISTERS, write_sos_input
@@ -88,18 +87,8 @@ def sos_head(register: str, title: str, subsets=()) -> str:
     )
 
 
-@dataclass(frozen=True)
-class Built:
-    result: dict
-    events: list[dict]
-    db: Path
-
-    def issues(self, code: str | None = None) -> list[dict]:
-        return [
-            e
-            for e in self.events
-            if e["kind"] == "issue" and (code is None or e["code"] == code)
-        ]
+class Built(BuiltCatalog):
+    """A finished support-fixture build with disposition and column readers."""
 
     def uses(self, records, field: str = "column_name") -> list[tuple]:
         """``(field value, key, use, variable)`` per source occurrence disposition.
@@ -127,10 +116,6 @@ class Built:
             ),
             key=repr,
         )
-
-    def rows(self, sql: str, *params) -> list[tuple]:
-        with sqlite3.connect(self.db) as conn:
-            return conn.execute(sql, params).fetchall()
 
     def columns(self, register: str) -> dict[str, set[str]]:
         """Each built variable slug of ``register`` and its delivery columns."""
@@ -170,7 +155,7 @@ class Sources:
             registers=registers,
             diagnostic=True,
         )
-        return Built(result, report_events(report), output)
+        return Built(result, report, output)
 
     def records(self, source: str = "scb-registerinformation") -> tuple:
         """The accepted prepared source records of ``source``, as a curator reads them."""

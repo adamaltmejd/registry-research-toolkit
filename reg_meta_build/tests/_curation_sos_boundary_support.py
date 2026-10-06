@@ -9,14 +9,13 @@ report event ledger and the built SQLite artifact only.
 
 from __future__ import annotations
 
-import sqlite3
 from dataclasses import dataclass, replace
 from typing import TYPE_CHECKING
 
 from _csv_fixtures import var_row, write_scb_input
 from _pipeline_catalog_support import (
+    BuiltCatalog,
     prepare_accepted,
-    report_events,
     write_curation_tree,
 )
 from _sos_fixtures import DEFAULT_REGISTERS, write_sos_input
@@ -196,18 +195,8 @@ def _named(members: Iterable[str | tuple[str, str]]) -> list[tuple[str, str]]:
     ]
 
 
-@dataclass(frozen=True)
-class Build:
-    result: dict
-    events: list[dict]
-    db: Path
-
-    def issues(self, code: str | None = None) -> list[dict]:
-        return [
-            e
-            for e in self.events
-            if e["kind"] == "issue" and (code is None or e["code"] == code)
-        ]
+class Build(BuiltCatalog):
+    """A finished SOS-fixture build with case and state readers."""
 
     def issue_cases(self, code: str) -> list[str]:
         return sorted(e["case_id"] for e in self.issues(code))
@@ -224,10 +213,6 @@ class Build:
             for disposition in e["dispositions"]
             for case in disposition["cases"]
         )
-
-    def rows(self, sql: str, *params) -> list[tuple]:
-        with sqlite3.connect(self.db) as conn:
-            return conn.execute(sql, params).fetchall()
 
     def states(self, register: str) -> list[tuple]:
         """(variable slug, variant slug, data_type, valid_from, valid_to) per state."""
@@ -280,7 +265,7 @@ class Prepared:
             registers=registers,
             diagnostic=True,
         )
-        return Build(result, report_events(report), output)
+        return Build(result, report, output)
 
 
 def prepare(tmp_path: Path, write_sources: Callable[[Path], object]) -> Prepared:

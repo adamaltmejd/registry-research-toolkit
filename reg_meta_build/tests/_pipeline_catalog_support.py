@@ -5,7 +5,9 @@ from __future__ import annotations
 import gzip
 import json
 import sqlite3
+from contextlib import closing
 from dataclasses import dataclass
+from functools import cached_property
 from typing import TYPE_CHECKING
 
 import pytest
@@ -207,6 +209,38 @@ def write_curation_tree(root: Path, files: dict[str, str]) -> Path:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(text, encoding="utf-8")
     return root
+
+
+@dataclass(frozen=True)
+class BuiltCatalog:
+    """A finished build: its result dict, report ledger and SQLite artifact.
+
+    The one reader of a build's boundary outputs for the curation boundary cases.
+    """
+
+    result: dict
+    report: Path
+    db: Path
+
+    @cached_property
+    def events(self) -> list[dict]:
+        return report_events(self.report)
+
+    def issues(self, code: str | None = None) -> list[dict]:
+        """Every ledger issue, or those with ``code``, in ledger order."""
+        return [
+            e
+            for e in self.events
+            if e["kind"] == "issue" and (code is None or e["code"] == code)
+        ]
+
+    def errors(self) -> list[dict]:
+        """The error-severity ledger issues, in ledger order."""
+        return [issue for issue in self.issues() if issue["severity"] == "error"]
+
+    def rows(self, sql: str, *params) -> list[tuple]:
+        with closing(sqlite3.connect(self.db)) as conn:
+            return conn.execute(sql, params).fetchall()
 
 
 def report_events(report: Path) -> list[dict]:

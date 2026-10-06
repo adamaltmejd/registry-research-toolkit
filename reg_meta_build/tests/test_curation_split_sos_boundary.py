@@ -119,9 +119,7 @@ def _states(built) -> list[tuple]:
 
 def _errors(built) -> list[tuple[str, str]]:
     return [
-        (issue["code"], issue["detail"].split(":", 1)[0])
-        for issue in built.issues()
-        if issue["severity"] == "error"
+        (issue["code"], issue["detail"].split(":", 1)[0]) for issue in built.errors()
     ]
 
 

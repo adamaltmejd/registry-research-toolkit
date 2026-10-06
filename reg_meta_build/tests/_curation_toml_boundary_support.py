@@ -24,7 +24,11 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from _csv_fixtures import write_scb_input
-from _pipeline_catalog_support import prepare_accepted, write_curation_tree
+from _pipeline_catalog_support import (
+    BuiltCatalog,
+    prepare_accepted,
+    write_curation_tree,
+)
 from _snapshot_fixtures import copied_builder_checkout
 from reg_meta_build.pipeline import build_catalog
 
@@ -35,13 +39,6 @@ SCB_SAMPLE_REGISTER = (
     '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
     '[[variant]]\nnative_id = "1.10"\nslug = "people"\n'
 )
-
-
-@dataclass(frozen=True)
-class BuiltCatalog:
-    db: Path
-    report: Path
-    result: dict
 
 
 def build_scb_catalog(
@@ -93,7 +90,7 @@ def build_scb_catalog(
         curation_dir=root,
         diagnostic=True,
     )
-    return BuiltCatalog(db, report, result)
+    return BuiltCatalog(result, report, db)
 
 
 def builder_copy(tmp_path: Path) -> Path:

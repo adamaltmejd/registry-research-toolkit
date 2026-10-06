@@ -10,15 +10,13 @@ below are built-artifact rows and the build report's issue ledger.
 
 from __future__ import annotations
 
-import sqlite3
-from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from _csv_fixtures import var_row, write_scb_input
 from _pipeline_catalog_support import (
+    BuiltCatalog,
     CatalogFixture,
     prepare_accepted,
-    report_issues,
     write_curation_tree,
 )
 
@@ -96,20 +94,15 @@ def summary(column: str, *, year: str = "2020", register: str = "TEST") -> str:
     )
 
 
-@dataclass(frozen=True)
-class Built:
-    counts: dict
-    issues: list[dict]
-    db: Path
+class Built(BuiltCatalog):
+    """A finished partition-fixture build with sorted issue and row readers."""
 
     def codes(self) -> list[tuple[str, str]]:
         """Each reported issue as ``(code, subject)``, sorted."""
-        return sorted((issue["code"], str(issue["subject"])) for issue in self.issues)
+        return sorted((issue["code"], str(issue["subject"])) for issue in self.issues())
 
     def details(self, code: str) -> list[str]:
-        return sorted(
-            str(issue["detail"]) for issue in self.issues if issue["code"] == code
-        )
+        return sorted(str(issue["detail"]) for issue in self.issues(code))
 
     def states(self) -> list[tuple[str, str, str, str]]:
         """``(variable, variant, valid_from, delivery column)`` of every built state."""
@@ -147,8 +140,7 @@ class Built:
         )
 
     def _rows(self, sql: str, params: tuple = ()) -> list:
-        with sqlite3.connect(self.db) as conn:
-            return sorted(conn.execute(sql, params).fetchall())
+        return sorted(self.rows(sql, *params))
 
 
 def build(
@@ -177,7 +169,7 @@ def build(
     output, report = tmp_path / "catalog.db", tmp_path / "report"
     kwargs = {} if registers is None else {"registers": registers}
     result = fixture.build(output, report, diagnostic=True, **kwargs)
-    return Built(result["counts"], report_issues(report), output)
+    return Built(result, report, output)
 
 
 def build_sample(
