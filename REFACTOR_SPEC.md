@@ -117,8 +117,9 @@ command generates the physical inventory; no concrete inventory is shipped as a 
 runtime file. Schema-9 runtime holdings, scoped admission and ordering read the selected
 compiled steward artifact. The builder compiles one validated global base with steward
 metadata and holdings; no loose inventory, runtime reconciliation or drift gate is
-shipped. Publication of the unreleased compiled series remains gated by §12 independent
-acceptance.
+shipped. The compiled series was released as `reg_meta/v0.41.0` (with
+`reg_meta_build/v0.31.0`) and deployed to `catalog.swecov.se` and `data.swecov.se` on
+2026-10-06.
 
 Deployment configuration targets `data.swecov.se` through the separate
 `reg-webapp-swecov` Fly app, using app-scoped `FLY_API_TOKEN_SWECOV`. Its reader
@@ -140,22 +141,22 @@ normalized JSON order manifest documented in the owning reader design.
 
 ## 12 — Steward delivery inventory + normalized order manifest
 
-**Compiled holdings shipped (schema 9, accepted 2026-10-06).** One self-identifying
-SQLite generation carries catalog, holdings and order facts; there is no runtime
-inventory. Owning contracts live in `ARCHITECTURE.md`, `reg_meta/DESIGN.md` and
-`reg_meta_build/DESIGN.md`. The ratified decision text below remains only because
-product comments cite it as `REFACTOR_SPEC.md` §12; the open items are listed at the end
-of this section. One common manifest, no per-steward export templates. A
-`project_data.json` source is a logical selection; a steward's physical delivery
-topology is separate data. Each inventory table has an opaque identifier (an exact
-filename or schema-qualified SQL table), one explicit physical edition, and its literal,
-case-preserving physical columns. Edition uses the existing finite period grammar —
-year, month, day, quarter, semester, or a finite multi-period range/list. Explicit
-year-independent scope uses `"_default"` without date intervals; retained unknown scope
-carries authored evidence and is nonorderable. Neither scope is inferred as an unbounded
-"all periods" sentinel. A table without an edition encoded in its name still requires an
-explicit curated edition; filename inference must fail for review on zero or ambiguous
-period tokens rather than guess.
+**Compiled holdings shipped (schema 9, accepted, released as `reg_meta/v0.41.0` and
+deployed 2026-10-06).** One self-identifying SQLite generation carries catalog, holdings
+and order facts; there is no runtime inventory. Owning contracts live in
+`ARCHITECTURE.md`, `reg_meta/DESIGN.md` and `reg_meta_build/DESIGN.md`. The ratified
+decision text below remains only because product comments cite it as `REFACTOR_SPEC.md`
+§12; the open items are listed at the end of this section. One common manifest, no
+per-steward export templates. A `project_data.json` source is a logical selection; a
+steward's physical delivery topology is separate data. Each inventory table has an
+opaque identifier (an exact filename or schema-qualified SQL table), one explicit
+physical edition, and its literal, case-preserving physical columns. Edition uses the
+existing finite period grammar — year, month, day, quarter, semester, or a finite
+multi-period range/list. Explicit year-independent scope uses `"_default"` without date
+intervals; retained unknown scope carries authored evidence and is nonorderable. Neither
+scope is inferred as an unbounded "all periods" sentinel. A table without an edition
+encoded in its name still requires an explicit curated edition; filename inference must
+fail for review on zero or ambiguous period tokens rather than guess.
 
 Each physical column has zero or more semantic mappings. A mapping names
 `register_variant`, variable FQID and required literal `representation`. The compiler
@@ -321,17 +322,20 @@ will need period-column `WHERE` clauses later.
 
 The compiled-holdings cut shipped through plans 00 to 05b of the series and passed
 independent acceptance on 2026-10-06 against the pinned schema-9 public and SWECOV
-steward artifacts. No `reg_meta/v*` or `reg_webapp/v*` tag has been cut for it;
-publishing those artifacts with matching readers is a separate, separately authorized
-release. Until it ships, main is schema 9 while the latest release is 8.1: readers
-reject the released 8.1 assets, `container-build.yml`'s schema-guard blocks deploys, and
-local work uses the schema-9 scratch builds via `REG_META_DB`. The closed project root
-(#1134) and the 2026-07-14 interface decisions now live in `reg_schema/DESIGN.md`,
-`reg_meta/DESIGN.md` and `reg_webapp/DESIGN.md`.
+steward artifacts. It was released the same day as `reg_meta/v0.41.0` and
+`reg_meta_build/v0.31.0`, after the builder defect fix (#1160) refilled
+`classification_fts` and added `ANALYZE` to builds, and both deployments serve schema 9.
+The closed project root (#1134) and the 2026-07-14 interface decisions now live in
+`reg_schema/DESIGN.md`, `reg_meta/DESIGN.md` and `reg_webapp/DESIGN.md`.
 
 Still open under this section:
 
 - **Package test sweep:** see "Remaining test coverage" below.
+- **Reader defects found by the sweep:** CLI alias fallback returns unheld reference
+  metadata under holdings scope; concept-group `matched_count` counts hit rows, not
+  distinct members; `--no-fold` page-1 order depends on `limit`; the three-hint cap
+  drops the "Table view truncated" hint; the first-run docs download ignores the
+  selected catalog. Each needs a regression case in the owning reader corpus.
 - **Shared semantic pass:** the project semantic layer still lives in the webapp
   (`reg_webapp/DESIGN.md` → "Current semantic validation"); the rules above place it in
   shared `reg_meta` code.
@@ -464,15 +468,18 @@ Carried from the testing strategy; the shipped categories are in
   evidence; and probe immutable hashed assets plus the search edge MISS→HIT contract.
   See `ARCHITECTURE.md` → Repo-wide invariants.
 - **Per-package test sweep** — root `conformance/` now owns the relocated corpora and
-  synthetic/real artifact checks. Sweep existing package suites one package at a time
-  under the `AGENTS.md` policy: delete tests pinning internals covered by a boundary
-  case, rewrite the rest against artifacts, and shrink the private-import/size lint
-  allowlists. Accepted-private-input census is shipped via opt-in `--holdings-input`.
-  Historical-order comparisons, latency and cold-boot measurements remain separate
-  maintainer checks. At the schema-9 acceptance, local TestClient measurements were
-  within every holdings budget and cold boot showed no regression against `b45f916d` in
-  the same environment; nothing was measured on Fly. See `ARCHITECTURE.md` → Testing
-  strategy.
+  synthetic/real artifact checks. The `reg_webapp` backend, `reg_meta` and
+  `reg_meta_build` suites were swept under the `AGENTS.md` policy (plans 06a–06c, #1153
+  to #1162). Left: sweep `reg_schema`, and drain the remaining allowlist entries
+  (private boundaries: `reg_meta_build/tests/_shared_fixtures.py`,
+  `reg_meta_build/tests/test_source_scope.py`, `reg_schema/tests/test_structural.py`,
+  `scripts/tests/test_gh_issue.py`, `scripts/tests/test_prototype_scb_inputs.py`; size:
+  `reg_schema/tests/test_structural.py`). Accepted-private-input census is shipped via
+  opt-in `--holdings-input`. Historical-order comparisons, latency and cold-boot
+  measurements remain separate maintainer checks. At the schema-9 acceptance, local
+  TestClient measurements were within every holdings budget and cold boot showed no
+  regression against `b45f916d` in the same environment; nothing was measured on Fly.
+  See `ARCHITECTURE.md` → Testing strategy.
 
 ## Open / deferred decisions
 
