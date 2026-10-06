@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_field_type",
+      "path": "/window",
+      "message": "window must be an object {'from': <year>, 'to': <year>}"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_window",
+      "path": "/window",
+      "message": "window 'to' (2000) must be >= 'from' (2020)"
+    }
+  ]
+}

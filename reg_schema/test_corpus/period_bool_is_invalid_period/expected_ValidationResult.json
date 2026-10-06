@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_period",
+      "path": "/sources/0/period",
+      "message": "period must be an int, a period-token string, a {'from','to'} range object, or a list of those segment forms"
+    }
+  ]
+}

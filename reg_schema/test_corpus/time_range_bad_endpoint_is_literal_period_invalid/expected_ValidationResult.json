@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "literal_period_invalid",
+      "path": "/panels/0/members/0/time_key",
+      "message": "time_key object form must be {'period': int|str} or {'range': {'from','to'}} with period-token endpoints"
+    }
+  ]
+}

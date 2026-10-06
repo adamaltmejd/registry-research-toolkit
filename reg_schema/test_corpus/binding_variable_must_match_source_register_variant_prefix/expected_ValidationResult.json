@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "fqid_register_variant_mismatch",
+      "path": "/sources/0/bindings/0/variable",
+      "message": "binding FQID prefix ['ifau', 'lisa'] must equal the source register_variant prefix ['scb', 'lisa']"
+    }
+  ]
+}

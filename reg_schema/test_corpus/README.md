@@ -75,25 +75,25 @@ future use case needs ordering guarantees, that becomes a separate corpus dimens
 
 ## Consumers
 
-The runtimes that validate `project_data.json` all read this corpus to confirm they
-produce the same `ValidationResult` for the same input:
-
 1. **`reg_schema` Python tests** — `reg_schema/tests/test_corpus.py` discovers cases and
    runs `validate_structural()` on each `input.json`.
-2. **SPA TypeScript tests** — the SPA imports the corpus as JSON fixtures and runs its
-   TS port of the structural validator against them.
+2. **SPA TypeScript tests** — `reg_webapp/frontend/src/lib/validation.test.ts` imports a
+   case's `expected_ValidationResult.json` directly to pin the issue shape the SPA
+   decodes.
 
 Any other runtime that re-validates `project_data.json` is expected to read the same
 corpus. All consumers read the same JSON, so if any one diverges, the corpus catches it
 before downstream consumers do.
 
-## Growth
+## Coverage
 
-The corpus starts with well-formed inputs and an empty-issues expectation — these prove
-the format, harness, and round-trip work end-to-end before §6.8.1 rule-emission cases
-pile on. Phase 3 grows the corpus alongside `validate_structural()`, adding one (or
-more) cases per rule. Negative cases for §6.8.3 (reg_meta-backed semantic) rules land in
-their owning packages, not here — `reg_schema` only owns the structural layer's corpus.
+The corpus is the oracle for every structural rule: one or more cases per rule, positive
+and negative, each a whole payload with its complete expected issue set. Case names
+state the behavior; a rule exercised over several values carries the value as a
+`__<value>` suffix (`period_out_of_bounds_tokens_are_invalid__2018_q5`).
+`reg_schema/tests/test_structural.py` keeps only what a JSON payload cannot carry.
+Negative cases for §6.8.3 (reg_meta-backed semantic) rules land in their owning
+packages, not here — `reg_schema` only owns the structural layer's corpus.
 
 ## Adding a case
 
