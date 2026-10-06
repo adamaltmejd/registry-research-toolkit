@@ -84,17 +84,25 @@ class TestQuiet:
         assert "hint:" not in err
 
 
-def test_hints_capped_at_three_per_invocation(
+def test_hints_capped_at_three_with_truncation_hints_first(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Four hints apply (no value set, several registers, long values, row cap)."""
+    """Four hints apply (no value set, several registers, long values, row cap).
+    The two that say the table omits data lead, so the cap drops the last
+    advisory hint instead of the row-truncation notice."""
     monkeypatch.setenv("COLUMNS", "80")
     db = build_cli_source(tmp_path, "cli-display-limits")
     _, err, code = _run_capture(
         ["--db", db, "--format", "table", "get", "values", "Category"]
     )
     assert code == 0
-    assert err.count("hint:") == 3
+    assert err == (
+        "\n"
+        "  hint: Table view truncated 1 rows (--format json for full output)\n"
+        "  hint: Long values truncated (--format list for full text)\n"
+        "  hint: 1/2 instance(s) had no value set "
+        "(elided from table; see JSON for full picture).\n"
+    )
 
 
 class TestJsonClean:

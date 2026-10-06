@@ -48,6 +48,10 @@ supported but secondary. This drives several choices:
 - Errors are structured with codes, not just messages
 - Exit codes are meaningful (see below)
 - Core query functions are importable as a Python library, not just CLI
+- Text output prints at most three contextual hints on stderr. A hint that says the
+  rendered table omits data outranks every advisory hint: "Table view truncated" first,
+  then "Long values truncated", then command hints in the order they were added. The cap
+  drops advisory hints, never a truncation notice.
 
 ## SQLite backend
 
@@ -595,16 +599,22 @@ Steward delivery-column scope narrows that field and representation group member
 scoring, so unheld aliases cannot affect order or cursor identity. Invalid or mismatched
 cursors fail at the library boundary. Cursor integrity is checked before query work and
 continuation has a hard 1,000-result depth ceiling, so a forged token cannot request an
-unbounded prefix; researchers reaching the ceiling must refine the broad query.
-Non-foldable branches use an adaptive `limit + 1` prefix and backfill when in-scope
-shaping consumes a page. Foldable variable/classification/group branches instead use one
-fixed 1,001-row horizon: every cursor sees the same complete bounded fold universe, so a
-later sibling cannot turn an already-consumed leaf into a group or succession row.
-Type/register/year/group eligibility, classification-code exclusions, and the value
-surface's published bm25-plus-mapping-count rank are applied inside SQL before each
-branch's bound. This is the search-surface analog of the catalog-typing move (#681): the
-webapp's per-result mapper functions and `models.py` search wrappers are deleted; the
-FastAPI response models embed reg_meta's search types directly.
+unbounded prefix; researchers reaching the ceiling must refine the broad query. Every
+branch whose rows can carry an identity score (registers, variable names, delivery
+columns, classification names and code containment, group labels) uses one fixed
+1,001-row horizon, folded or not: every cursor sees the same complete bounded fold
+universe, so a later sibling cannot turn an already-consumed leaf into a group or
+succession row. The identity-promotion gate counts that same universe. It switches
+exact/prefix promotion off when more than 50 rows match by identity, so generic exact
+matches cannot swamp the ranked order, and the page size cannot change that decision
+(`--no-fold` included). The cost is the default folded search's SQL bound. Only the
+value branch, whose code rows carry no identity score, keeps an adaptive `limit + 1`
+prefix and backfills when in-scope shaping consumes a page. Type/register/year/group
+eligibility, classification-code exclusions, and the value surface's published
+bm25-plus-mapping-count rank are applied inside SQL before each branch's bound. This is
+the search-surface analog of the catalog-typing move (#681): the webapp's per-result
+mapper functions and `models.py` search wrappers are deleted; the FastAPI response
+models embed reg_meta's search types directly.
 
 An optional cursor-bound `exclude_fqids` set removes register/classification identities
 inside their SQL branches before the bound. Presentation layers use it when they inject
@@ -952,6 +962,9 @@ per-request allow-list reconstruction. Search cursors bind to query, period, var
 read scope and `generation_id`. A changed context rejects continuation. Unheld direct
 links return 404 in holdings; any existing canonical redirect targets only an admitted
 node. Reference scope permits inspecting the same node without making it selectable.
+Logical lookups that fall back from var_id and name to a delivery-column alias
+(`get varinfo`, `get values`) apply the predicate to that arm too: an unheld variable
+named by its column header is not found (exit 16), exactly as under its canonical name.
 
 Exceptions are explicit:
 
@@ -1393,8 +1406,9 @@ result-shaping over the 5.3.0 tables (`reg_meta.queries`). `get groups REGISTER`
 `get groups --classifications`) lists groups with members-with-facets, JSON-able like
 every other command. `search` folds sibling hits: when ≥2 distinct member variables of
 one group match, the leaf hits collapse into a single `type: "group"` result row (the
-facet-ordered member list under `members`, and the count of folded hits as
-`matched_count` on the typed model); a lone member hit stays a leaf annotated with
+facet-ordered member list under `members`, and the number of distinct members hit as
+`matched_count` on the typed model; a member reached through both the variable and the
+varname arm counts once); a lone member hit stays a leaf annotated with
 `concept_group`/`concept_group_label`; and group LABELS themselves match (searching a
 family label finds its group row even though no single leaf row matches). `--no-fold`
 flattens. `get schema` carries `concept_group`(`_label`) per column so the fold is
@@ -1405,21 +1419,21 @@ concept-group fold, `_fold_classification_succession` collapses classification e
 hits that share a `classification_replaced_by` chain into one
 `type: "classification_succession"` result row — the terminal (current) edition's
 identity, plus the full `editions` list (terminal-first by BFS depth — date-independent,
-so robust to undated `effective_year` edges; #588) and the count of folded hits as
-`matched_count`. The internal dict pipeline carries the raw `matched` leaf list for fold
-arithmetic and `_strip_internal_keys` drops `_classification_id` from it;
-`_row_to_model` reads `matched` to compute `matched_count` and does not put `matched` on
-the typed model. This fold is terminal-centric (it collapses a whole family onto its
-terminal, with no queried node), so collect-all-ancestors is correct here — unlike
-`Catalog.classification_chain` / `variable_chain`, which anchor on the QUERIED node's
-path (also #588) so a merge sibling on a different inbound branch is excluded. A lone
-edition hit (whether terminal or an old vintage) stays a leaf; an old-vintage lone hit
-is annotated with `terminal_fqid` so the webapp can link "current". This fold runs
-**before** the concept-group fold so collapsed terminals can then fold into a curated
-umbrella group (e.g. `group:sun`, #516) cleanly — the succession row keeps the
-terminal's `_classification_id` so the umbrella pass treats it as that classification.
-All folds happen before pagination — a succession row and a group row each count as one
-result.
+so robust to undated `effective_year` edges; #588) and the number of distinct editions
+hit as `matched_count`. The internal dict pipeline carries the raw `matched` leaf list
+for fold arithmetic and `_strip_internal_keys` drops `_classification_id` from it; each
+fold computes `matched_count` from the distinct member ids when it builds the row, and
+`_row_to_model` does not put `matched` on the typed model. This fold is terminal-centric
+(it collapses a whole family onto its terminal, with no queried node), so
+collect-all-ancestors is correct here — unlike `Catalog.classification_chain` /
+`variable_chain`, which anchor on the QUERIED node's path (also #588) so a merge sibling
+on a different inbound branch is excluded. A lone edition hit (whether terminal or an
+old vintage) stays a leaf; an old-vintage lone hit is annotated with `terminal_fqid` so
+the webapp can link "current". This fold runs **before** the concept-group fold so
+collapsed terminals can then fold into a curated umbrella group (e.g. `group:sun`, #516)
+cleanly — the succession row keeps the terminal's `_classification_id` so the umbrella
+pass treats it as that classification. All folds happen before pagination — a succession
+row and a group row each count as one result.
 
 ## Relationship graph (#761)
 
@@ -1724,8 +1738,11 @@ and prints a hint on interactive runs when a newer release exists.
 **Auto-download on first use**: metadata, holdings and order reads require only the
 selected catalog artifact. Docs operations additionally require its paired sibling doc
 DB. Interactive query commands offer missing downloads; non-interactive invocations fail
-with actionable `db_not_found` / `doc_db_not_found` errors. Updates preserve explicit
-catalog selection and do not attach an unrelated installed docs artifact.
+with actionable `db_not_found` / `doc_db_not_found` errors. Both bootstrap downloads
+resolve the latest release for the selected catalog. Their missing-asset remediation
+names only end-user actions (`reg-meta update --tag`, an issue report), never the
+maintainer-only `reg-meta-build` commands. Updates preserve explicit catalog selection
+and do not attach an unrelated installed docs artifact.
 
 ### Package version format
 

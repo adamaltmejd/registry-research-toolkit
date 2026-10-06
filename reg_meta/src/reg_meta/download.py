@@ -320,8 +320,10 @@ def download_db(
                 code="no_db_in_release",
                 error_class="configuration",
                 message="No recent release includes a database asset.",
-                remediation="Specify --tag explicitly, or build from CSV with "
-                "`reg-meta-build build-db`.",
+                remediation=(
+                    "Pass a release that carries one to `reg-meta update --tag`, "
+                    f"or report the missing asset at https://github.com/{GITHUB_REPO}/issues."
+                ),
             )
         resolved_tag = resolution.db_tag
     else:
@@ -399,13 +401,15 @@ def download_docs_db(
     db_dir: Path | None = None,
     *,
     tag: str = "latest",
+    catalog: str = "global",
     force: bool = False,
 ) -> dict[str, Any]:
     """Download pre-built doc-index database from GitHub Releases.
 
     Mirrors :func:`download_db` but for the doc asset. The asset is small
     (~600 KB compressed → ~3 MB on disk) so there is no confirmation
-    prompt. ``tag="latest"`` resolves via the release walker.
+    prompt. ``tag="latest"`` resolves via the release walker for the selected
+    ``catalog``, the same resolution its paired catalog download uses.
     """
     if db_dir is None:
         db_dir = default_db_dir()
@@ -421,7 +425,7 @@ def download_docs_db(
         )
 
     if tag == "latest":
-        resolution = resolve_latest_release()
+        resolution = resolve_latest_release(catalog=catalog)
         if not resolution.docs_tag:
             raise RegMetaError(
                 exit_code=EXIT_CONFIG,
@@ -429,8 +433,9 @@ def download_docs_db(
                 error_class="configuration",
                 message="No recent release includes a doc DB asset.",
                 remediation=(
-                    "Specify --tag explicitly, or build from markdown with "
-                    "`reg-meta-build build-docs`."
+                    "Metadata commands work without the doc DB. Pass a release "
+                    "that carries one to `reg-meta update --tag`, or report the "
+                    f"missing asset at https://github.com/{GITHUB_REPO}/issues."
                 ),
             )
         resolved_tag = resolution.docs_tag

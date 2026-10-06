@@ -146,6 +146,35 @@ def test_generic_identity_matches_do_not_swamp_the_ranked_order(
     assert combined[0] == "class/zz-discriminative"
 
 
+def test_unfolded_identity_swamp_gate_does_not_depend_on_page_size(
+    tmp_path_factory: pytest.TempPathFactory,
+) -> None:
+    """51 classifications reach the query only through the code arm (`C120`)
+    and match it by slug prefix (`c12-generic-NN`); `zz-discriminative` is the
+    only name hit. Unfolded, the swamp gate must count the whole bounded match
+    set, so a small page sees the same order as a large one."""
+    conn = reader_search_conn(tmp_path_factory, "search-identity-swamp-code")
+    small = search(
+        conn,
+        "C12",
+        field="description",
+        type="classification",
+        limit=25,
+        fold_groups=False,
+    )
+    large = search(
+        conn,
+        "C12",
+        field="description",
+        type="classification",
+        limit=60,
+        fold_groups=False,
+    )
+
+    assert _fqids(small)[0] == "class/zz-discriminative"
+    assert _fqids(small) == _fqids(large)[:25]
+
+
 def test_delivery_alias_identity_participates_in_relevance_order(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:

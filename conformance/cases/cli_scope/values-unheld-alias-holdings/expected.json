@@ -1,0 +1,9 @@
+{
+  "exit_code": 16,
+  "error": {
+    "class": "query",
+    "code": "not_found",
+    "message": "No variable matching 'Valuereference'.",
+    "remediation": "Use `reg-meta search --query <term>` to find variables."
+  }
+}
