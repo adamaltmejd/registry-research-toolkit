@@ -2,13 +2,14 @@
 
 The gate is fail-closed: a missing/None/non-maintainer author is dropped, never
 surfaced. These pin that on the one ingestion read (the `view` CLI) and the
-`REGISTRY_MAINTAINER_LOGIN` override. The gh calls are stubbed by patching
-`gh_issue.subprocess.run`.
+`REGISTRY_MAINTAINER_LOGIN` override. The `gh` process is the one boundary stubbed:
+`subprocess.run` is replaced, and the repo-owner fallback reads `GITHUB_REPOSITORY`.
 """
 
 from __future__ import annotations
 
 import json
+import subprocess
 import types
 
 import pytest
@@ -38,7 +39,7 @@ def test_maintainer_login_falls_back_to_repo_owner(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.delenv("REGISTRY_MAINTAINER_LOGIN", raising=False)
-    monkeypatch.setattr(gi, "repo_owner_name", lambda: ("theowner", "therepo"))
+    monkeypatch.setenv("GITHUB_REPOSITORY", "theowner/therepo")
     assert gi.maintainer_login() == "theowner"
 
 
@@ -48,7 +49,7 @@ def test_maintainer_login_empty_override_falls_back(
     # An empty env var is not a login — fall back, don't allowlist "" (which matches no
     # author but would still be a footgun).
     monkeypatch.setenv("REGISTRY_MAINTAINER_LOGIN", "")
-    monkeypatch.setattr(gi, "repo_owner_name", lambda: ("theowner", "therepo"))
+    monkeypatch.setenv("GITHUB_REPOSITORY", "theowner/therepo")
     assert gi.maintainer_login() == "theowner"
 
 
@@ -68,7 +69,7 @@ def _stub_view(monkeypatch: pytest.MonkeyPatch, payload: dict | None) -> None:
             returncode=0, stdout=json.dumps(payload), stderr=""
         )
 
-    monkeypatch.setattr(gi.subprocess, "run", fake_run)
+    monkeypatch.setattr(subprocess, "run", fake_run)
 
 
 def test_view_maintainer_issue_prints_json(
@@ -181,7 +182,7 @@ def test_view_comments_requests_comments_field(
             stderr="",
         )
 
-    monkeypatch.setattr(gi.subprocess, "run", fake_run)
+    monkeypatch.setattr(subprocess, "run", fake_run)
     gi.main(["view", "1", "--comments"])
     assert "state" in captured["cmd"][-1]
     assert "comments" in captured["cmd"][-1]
