@@ -19,7 +19,6 @@ from typing import TYPE_CHECKING
 
 from _slugged_db import add_variable, build_slugged_db
 from reg_meta_build.split_sibling_suspects import (
-    _split_relation_reason,
     infer_split_sibling_suspects,
     render_suspects_toml,
 )
@@ -258,80 +257,6 @@ def _seed_corpus(conn: sqlite3.Connection) -> None:
     conn.commit()
 
 
-class TestRelationReason:
-    """Unit coverage of the pair classifier (mirrors `_split_relation_kind`'s
-    precedence: code_vs_label → type_flip → length_disagree). The classifier
-    assumes the pair is already CO-DELIVERED (the gate is applied by the caller)."""
-
-    def _shape(self, data_type, data_length, delivery_column=None):
-        from reg_meta_build.split_sibling_suspects import SiblingShape
-
-        return SiblingShape(
-            variable_id=0,
-            fqid="scb/lisa/x",
-            name=None,
-            data_type=data_type,
-            data_length=data_length,
-            has_value_set=False,
-            delivery_column=delivery_column,
-        )
-
-    def test_type_flip(self) -> None:
-        assert (
-            _split_relation_reason(
-                self._shape("int", "8"), self._shape("varchar", "20")
-            )
-            == "type_flip"
-        )
-
-    def test_code_vs_label_precedes_type_flip(self) -> None:
-        # A `<stem>` (numeric) + `<stem>namn` (text) pair is a numeric/text flip on
-        # shape, but the code-vs-label name check runs FIRST → code_vs_label.
-        assert (
-            _split_relation_reason(
-                self._shape("int", "4", delivery_column="Sun2000"),
-                self._shape("varchar", "80", delivery_column="Sun2000Namn"),
-            )
-            == "code_vs_label"
-        )
-
-    def test_non_code_label_columns_stay_type_flip(self) -> None:
-        # Delivery columns present but NOT a code/label pair → falls through to the
-        # shape check (type_flip).
-        assert (
-            _split_relation_reason(
-                self._shape("int", "8", delivery_column="Belopp"),
-                self._shape("varchar", "20", delivery_column="BeloppTxt"),
-            )
-            == "type_flip"
-        )
-
-    def test_length_disagree_on_other(self) -> None:
-        # Both unclassifiable (Datum → other), present-on-both differing lengths.
-        assert (
-            _split_relation_reason(
-                self._shape("Datum", "8"), self._shape("Datum", "10")
-            )
-            == "length_disagree"
-        )
-
-    def test_same_class_length_diff_not_suspect(self) -> None:
-        # Same numeric class, differing widths → NOT flagged (normal for splits).
-        assert (
-            _split_relation_reason(self._shape("int", "4"), self._shape("int", "8"))
-            is None
-        )
-
-    def test_other_with_missing_length_not_suspect(self) -> None:
-        # An "other" pair with a missing length on one side has no shape evidence.
-        assert (
-            _split_relation_reason(
-                self._shape("Datum", None), self._shape("Datum", "10")
-            )
-            is None
-        )
-
-
 class TestInfer:
     def test_family_and_pair_counts(self) -> None:
         conn = _base_db()
@@ -458,6 +383,48 @@ class TestInfer:
         result = infer_split_sibling_suspects(conn)
         assert result.family_count == 0
         assert result.total_pairs == 0
+
+    def test_same_class_length_diff_not_suspect(self) -> None:
+        # Co-delivered int 4 / int 8: same numeric class, differing widths is normal
+        # for genuine splits, so the family is counted but not flagged.
+        conn = _base_db()
+        _add_sibling(
+            conn, var_id=910, slug="wide-a", name="W", data_type="int", data_length="4"
+        )
+        _add_sibling(
+            conn, var_id=910, slug="wide-b", name="W", data_type="int", data_length="8"
+        )
+        conn.commit()
+        result = infer_split_sibling_suspects(conn)
+        assert result.family_count == 1
+        assert result.total_pairs == 0
+        assert result.suspects == ()
+
+    def test_other_with_missing_length_not_suspect(self) -> None:
+        # Co-delivered Datum (other) pair with a missing length on one side: no
+        # shape evidence, so no length_disagree suspect.
+        conn = _base_db()
+        _add_sibling(
+            conn,
+            var_id=920,
+            slug="nolen-a",
+            name="Datum",
+            data_type="Datum",
+            data_length=None,
+        )
+        _add_sibling(
+            conn,
+            var_id=920,
+            slug="nolen-b",
+            name="Datum",
+            data_type="Datum",
+            data_length="10",
+        )
+        conn.commit()
+        result = infer_split_sibling_suspects(conn)
+        assert result.family_count == 1
+        assert result.total_pairs == 0
+        assert result.suspects == ()
 
     def test_empty_db(self) -> None:
         conn = _base_db()

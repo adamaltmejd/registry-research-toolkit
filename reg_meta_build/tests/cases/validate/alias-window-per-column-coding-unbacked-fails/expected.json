@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "2 per-column metadata window(s) lack complete backing states"
+  ]
+}

@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from reg_meta.db import register_py_lower
-from reg_meta_build.db import DDL, _value_set_hash
+from reg_meta_build.db import DDL
 from reg_meta_build.semantic_diff import (
     UnsupportedSemanticSurface,
     diff_catalog_semantics,
@@ -17,6 +17,14 @@ from reg_meta_build.semantic_diff import (
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+
+def _member_hash(pairs: list[tuple[str, str]]) -> bytes:
+    """A deterministic 32-byte content digest for `value_set.member_hash`.
+
+    The semantic diff keys value sets by this column, so the fixtures need only a
+    stable digest that differs when the members differ."""
+    return hashlib.sha256(repr(sorted(pairs)).encode("utf-8")).digest()
 
 
 def _catalog(path: Path, *, offset: int = 0, split: bool = False) -> None:
@@ -73,7 +81,7 @@ def _catalog(path: Path, *, offset: int = 0, split: bool = False) -> None:
         )
         conn.execute(
             "INSERT INTO value_set VALUES (?, ?)",
-            (key(9), _value_set_hash([("01", "Employment")])),
+            (key(9), _member_hash([("01", "Employment")])),
         )
         conn.execute("INSERT INTO value_set_member VALUES (?, ?)", (key(9), key(8)))
         conn.execute(
@@ -153,7 +161,7 @@ def _linked_facts(path: Path, *, offset: int = 0, split_source: bool = False) ->
         conn.execute("INSERT INTO value_set_member VALUES (?, ?)", (key(9), key(13)))
         conn.execute(
             "UPDATE value_set SET member_hash = ?",
-            (_value_set_hash([("01", "Employment"), ("02", "Unclassified")]),),
+            (_member_hash([("01", "Employment"), ("02", "Unclassified")]),),
         )
         conn.executemany(
             "INSERT INTO code_variable_map VALUES (?, ?)",
@@ -614,7 +622,7 @@ def test_per_column_alias_coding_semantics_resolve_value_set_ids(tmp_path, chang
                 conn.execute("UPDATE value_code SET label='Different'")
                 conn.execute(
                     "UPDATE value_set SET member_hash=?",
-                    (_value_set_hash([("01", "Different")]),),
+                    (_member_hash([("01", "Different")]),),
                 )
             elif path == right and change == "version":
                 conn.execute(

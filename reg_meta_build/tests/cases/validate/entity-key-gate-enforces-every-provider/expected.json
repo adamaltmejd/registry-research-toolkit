@@ -1,0 +1,7 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "testreg/kon (source_id 1.44, panel_entity_key 'kon') has no curated [variable] slug pin",
+    "dors/sosvar (source_id 500.LOPNR, panel_entity_key 'sosvar') has no curated [variable] slug pin"
+  ]
+}

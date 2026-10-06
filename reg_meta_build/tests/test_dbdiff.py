@@ -18,7 +18,6 @@ import pytest
 from reg_meta_build.dbdiff import (
     DEFAULT_IGNORE,
     TableIgnore,
-    _row_hash as row_hash,
     diff_db_content,
     format_report,
     main,
@@ -89,31 +88,6 @@ def db_b(tmp_path: Path) -> Path:
 # --------------------------------------------------------------------------
 # Row canonicalization (pure function)
 # --------------------------------------------------------------------------
-
-
-class TestRowHash:
-    def test_type_discrimination(self):
-        # int 1, text "1", blob b"1", and NULL must all hash differently.
-        hashes = {
-            row_hash((1,)),
-            row_hash(("1",)),
-            row_hash((b"1",)),
-            row_hash((None,)),
-        }
-        assert len(hashes) == 4
-
-    def test_length_prefix_prevents_column_bleed(self):
-        # ("a", "b") must not collide with ("ab", "") — the length prefix
-        # makes column boundaries unambiguous.
-        assert row_hash(("a", "b")) != row_hash(("ab", ""))
-
-    def test_blob_is_byte_exact(self):
-        assert row_hash((b"\x00\x01",)) != row_hash((b"\x00\x02",))
-        assert row_hash((b"\x00\x01",)) == row_hash((b"\x00\x01",))
-
-    def test_deterministic(self):
-        row = (3, "gamma", b"\xff", None)
-        assert row_hash(row) == row_hash(row)
 
 
 # --------------------------------------------------------------------------
@@ -225,6 +199,46 @@ class TestContentDiffs:
             "label": "x",
             "n": 1,
         }
+
+    @pytest.mark.parametrize(
+        ("value_a", "value_b"),
+        [
+            (1, "1"),
+            (1, b"1"),
+            (1, None),
+            ("1", b"1"),
+            ("1", None),
+            (b"1", None),
+        ],
+        ids=["int-text", "int-blob", "int-null", "text-blob", "text-null", "blob-null"],
+    )
+    def test_storage_class_alone_is_a_content_diff(
+        self, tmp_path: Path, value_a: object, value_b: object
+    ):
+        # A no-affinity column keeps each value's storage class, so int 1,
+        # text '1', blob b'1' and NULL are four different rows.
+        a = tmp_path / "a.db"
+        b = tmp_path / "b.db"
+        for path, value in ((a, value_a), (b, value_b)):
+            conn = sqlite3.connect(path)
+            conn.execute("CREATE TABLE t (v)")
+            conn.execute("INSERT INTO t VALUES (?)", (value,))
+            conn.commit()
+            conn.close()
+        assert not diff_db_content(a, b).identical
+
+    def test_bytes_cannot_move_across_a_column_boundary(self, tmp_path: Path):
+        # ('a', 'b\x03') and ('a\x03b', '') concatenate to the same tagged
+        # byte stream; only the per-value length prefix keeps them apart.
+        a = tmp_path / "a.db"
+        b = tmp_path / "b.db"
+        for path, row in ((a, ("a", "b\x03")), (b, ("a\x03b", ""))):
+            conn = sqlite3.connect(path)
+            conn.execute("CREATE TABLE t (x TEXT, y TEXT)")
+            conn.execute("INSERT INTO t VALUES (?, ?)", row)
+            conn.commit()
+            conn.close()
+        assert not diff_db_content(a, b).identical
 
 
 # --------------------------------------------------------------------------

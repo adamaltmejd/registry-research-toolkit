@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "1 dangling register_id + 0 dangling variable_id in tag_member"
+  ]
+}

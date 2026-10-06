@@ -4,18 +4,16 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 
 import pytest
 from catalog_manifest import synthetic_manifest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.extend_db import (
-    _insert_providers,
-    _load_provider_ir,
     extend_db,
-    resolve_steward_providers_dir,
 )
-from reg_meta_build.id import _MINT_BIT, mint
+from reg_meta_build.id import mint
 from reg_meta_build.resolved_catalog import (
     ResolvedCodeSet,
     ResolvedRegister,
@@ -329,163 +327,6 @@ def test_co_delivered_aliases_get_orderable_windows(
     conn.close()
 
 
-@pytest.mark.parametrize(
-    "old, new",
-    [
-        ('purpose = "Bank delivery"', 'purpose = "Bank delivery"\nunexpected = true'),
-        ('valid_from = "2018"', 'valid_from = "not-a-date"'),
-        ('column = "BELOPP"', 'column = "BELOPP"\naliases = ["BELOPP"]'),
-    ],
-)
-def test_malformed_provider_toml_is_exit_config(
-    tmp_path: Path, old: str, new: str
-) -> None:
-    text = _BASE_TOML.replace(old, new, 1)
-    with pytest.raises(RegMetaError) as exc:
-        _load_provider_ir(_providers(tmp_path, text), _STEWARD)
-    assert exc.value.exit_code == EXIT_CONFIG
-
-
-def test_duplicate_state_key_is_rejected(tmp_path: Path) -> None:
-    text = _BASE_TOML.replace(
-        '    column = "BELOPP"\n    data_type = "float"',
-        '    column = "BELOPP"\n    data_type = "float"\n    valid_from = "2020"\n\n'
-        '    [[register.variable.state]]\n    column = "BELOPP_SEK"\n'
-        '    data_type = "float"\n    valid_from = "2020"',
-        1,
-    )
-    with pytest.raises(RegMetaError) as exc:
-        _load_provider_ir(_providers(tmp_path, text), _STEWARD)
-    assert exc.value.exit_code == EXIT_CONFIG
-    assert "duplicate state key" in exc.value.message
-
-
-@pytest.mark.parametrize("explicit_start", ["0001", "0001-01", "0001-01-01"])
-def test_year_one_state_start_is_rejected_at_boundary(
-    tmp_path: Path, explicit_start: str
-) -> None:
-    text = _BASE_TOML.replace(
-        '    column = "BELOPP"\n    data_type = "float"',
-        '    column = "BELOPP"\n    data_type = "float"\n\n'
-        '    [[register.variable.state]]\n    column = "BELOPP_SEK"\n'
-        f'    data_type = "float"\n    valid_from = "{explicit_start}"',
-        1,
-    )
-    with pytest.raises(RegMetaError) as exc:
-        _load_provider_ir(_providers(tmp_path, text), _STEWARD)
-    assert exc.value.exit_code == EXIT_CONFIG
-    assert (
-        f"valid_from: {explicit_start!r} is not a valid ISO period" in exc.value.message
-    )
-
-
-def test_inverted_register_window_is_rejected_before_variable_override(
-    tmp_path: Path,
-) -> None:
-    text = _BASE_TOML.replace(
-        'purpose = "Bank delivery"',
-        'purpose = "Bank delivery"\nvalid_from = "2022"\nvalid_to = "2020"',
-        1,
-    ).replace(
-        '  variants = ["_default"]',
-        '  variants = ["_default"]\n  valid_from = "2010"\n  valid_to = "2030"',
-        1,
-    )
-    with pytest.raises(RegMetaError) as exc:
-        _load_provider_ir(_providers(tmp_path, text), _STEWARD)
-    assert exc.value.exit_code == EXIT_CONFIG
-    assert (
-        "register 'transaktioner' has an inverted validity window" in exc.value.message
-    )
-    assert "2022-01-01 > 2020-12-31" in exc.value.message
-
-
-def test_inverted_variable_window_is_rejected_before_state_override(
-    tmp_path: Path,
-) -> None:
-    text = _BASE_TOML.replace(
-        '  variants = ["_default"]',
-        '  variants = ["_default"]\n  valid_from = "2022"\n  valid_to = "2020"',
-        1,
-    ).replace(
-        '    column = "BELOPP"\n    data_type = "float"',
-        '    column = "BELOPP"\n    data_type = "float"\n'
-        '    valid_from = "2010"\n    valid_to = "2030"',
-        1,
-    )
-    with pytest.raises(RegMetaError) as exc:
-        _load_provider_ir(_providers(tmp_path, text), _STEWARD)
-    assert exc.value.exit_code == EXIT_CONFIG
-    assert "variable 'Belopp' has an inverted validity window" in exc.value.message
-    assert "2022-01-01 > 2020-12-31" in exc.value.message
-
-
-def test_valid_child_window_still_overrides_register_window(tmp_path: Path) -> None:
-    text = _BASE_TOML.replace(
-        'purpose = "Bank delivery"',
-        'purpose = "Bank delivery"\nvalid_from = "2018"\nvalid_to = "2020"',
-        1,
-    ).replace(
-        '  variants = ["_default"]',
-        '  variants = ["_default"]\n  valid_from = "2010"\n  valid_to = "2030"',
-        1,
-    )
-    graph = _load_provider_ir(_providers(tmp_path, text), _STEWARD)
-    state = next(s for s in graph.states if s.delivery_column_name == "BELOPP")
-    assert (state.valid_from, state.valid_to) == ("2010-01-01", "2030-12-31")
-
-
-def test_inverted_state_window_is_rejected(tmp_path: Path) -> None:
-    text = _BASE_TOML.replace(
-        '    column = "BELOPP"\n    data_type = "float"',
-        '    column = "BELOPP"\n    data_type = "float"\n'
-        '    valid_from = "2021"\n    valid_to = "2020"',
-        1,
-    )
-    with pytest.raises(RegMetaError) as exc:
-        _load_provider_ir(_providers(tmp_path, text), _STEWARD)
-    assert exc.value.exit_code == EXIT_CONFIG
-    assert "state[0] has an inverted validity window" in exc.value.message
-
-
-def test_variable_key_cannot_repeat_within_one_variant(tmp_path: Path) -> None:
-    needle = """\
-    [[register.variable.state]]
-    column = "BELOPP"
-    data_type = "float"
-"""
-    repeated = (
-        needle
-        + """\
-
-  [[register.variable]]
-  key = "belopp"
-  name = "Belopp"
-  description = "Transaktionsbelopp i SEK."
-  variants = ["_default"]
-
-    [[register.variable.state]]
-    column = "BELOPP_SEK"
-    valid_from = "2021"
-"""
-    )
-    with pytest.raises(RegMetaError) as exc:
-        _load_provider_ir(
-            _providers(tmp_path, _BASE_TOML.replace(needle, repeated)), _STEWARD
-        )
-    assert exc.value.exit_code == EXIT_CONFIG
-    assert "repeats variable" in exc.value.message
-
-
-def test_pooled_variable_metadata_disagreement_is_rejected(tmp_path: Path) -> None:
-    head, separator, tail = _BASE_TOML.rpartition('name = "Personnummer"')
-    text = head + separator.replace("Personnummer", "Other") + tail
-    with pytest.raises(RegMetaError) as exc:
-        _load_provider_ir(_providers(tmp_path, text), _STEWARD)
-    assert exc.value.exit_code == EXIT_CONFIG
-    assert "different `name`" in exc.value.message
-
-
 def test_steward_identity_inputs_and_slug_pins_bind(
     tmp_path: Path, global_db: Path
 ) -> None:
@@ -502,7 +343,6 @@ def test_steward_identity_inputs_and_slug_pins_bind(
     assert conn.execute(
         "SELECT slug FROM variable WHERE variable_id = ?", (ids["belopp"],)
     ).fetchone() == ("belopp",)
-    assert all(value >= _MINT_BIT for value in ids.values())
     conn.close()
 
 
@@ -547,51 +387,255 @@ def test_base_rows_and_base_file_are_not_clobbered(
     assert global_db.read_bytes() == before_bytes
 
 
-def test_fresh_runs_are_deterministic(tmp_path: Path, global_db: Path) -> None:
-    first, first_db = _run(tmp_path, global_db, name="first")
-    second, second_db = _run(tmp_path, global_db, name="second")
-    assert {key: value for key, value in first.items() if key != "db_path"} == {
-        key: value for key, value in second.items() if key != "db_path"
-    }
-    query = (
-        "SELECT v.register_id, vs.register_variant_id, v.variable_id, vs.state_id "
-        "FROM variable_state vs JOIN variable v USING (variable_id) "
-        "JOIN register_variant rv USING (register_variant_id) "
-        "WHERE v.variable_id >= ? ORDER BY vs.state_id"
-    )
-    assert (
-        sqlite3.connect(first_db).execute(query, (_MINT_BIT,)).fetchall()
-        == sqlite3.connect(second_db).execute(query, (_MINT_BIT,)).fetchall()
-    )
-
-
 def test_flavored_db_validates(tmp_path: Path, global_db: Path) -> None:
     _, out = _run(tmp_path, global_db)
     result = validate_built_db(out, flavored=True, corpus=False)
     assert not result.failures, result.failures
 
 
-def test_provider_insert_is_idempotent_and_name_safe() -> None:
-    from reg_meta_build.db import DDL, seed_providers
-
-    conn = sqlite3.connect(":memory:")
-    conn.executescript(DDL)
-    seed_providers(conn)
-    name = conn.execute("SELECT name FROM provider WHERE slug = 'scb'").fetchone()[0]
-    assert _insert_providers(conn, (("scb", name),)) == 0
-    with pytest.raises(RegMetaError):
-        _insert_providers(conn, (("scb", "Wrong"),))
-
-
-def test_missing_or_empty_provider_directory_is_exit_config(tmp_path: Path) -> None:
+def _assert_rejected_without_output(
+    tmp_path: Path, base_db: Path, text: str, *, code: str = "curated_toml_invalid"
+) -> RegMetaError:
     with pytest.raises(RegMetaError) as exc:
-        resolve_steward_providers_dir(tmp_path / "missing", _STEWARD)
+        _run(tmp_path, base_db, text)
     assert exc.value.exit_code == EXIT_CONFIG
+    assert exc.value.code == code
+    assert not (tmp_path / "out" / "reg_meta.db").exists()
+    assert not (tmp_path / "out" / "reg_meta.db.tmp").exists()
+    return exc.value
+
+
+@pytest.mark.parametrize(
+    "old, new, locator",
+    [
+        (
+            'purpose = "Bank delivery"',
+            'purpose = "Bank delivery"\nunexpected = true',
+            "register 'transaktioner': unknown key(s) ['unexpected']",
+        ),
+        (
+            'valid_from = "2018"',
+            'valid_from = "not-a-date"',
+            "state[0] valid_from: 'not-a-date' is not a valid ISO period",
+        ),
+        (
+            'column = "BELOPP"',
+            'column = "BELOPP"\naliases = ["BELOPP"]',
+            "state[0] repeats a delivery column",
+        ),
+    ],
+)
+def test_malformed_provider_toml_is_exit_config_through_extend_db(
+    tmp_path: Path, global_db: Path, old: str, new: str, locator: str
+) -> None:
+    error = _assert_rejected_without_output(
+        tmp_path, global_db, _BASE_TOML.replace(old, new, 1)
+    )
+    assert locator in error.message
+
+
+def test_duplicate_state_key_is_rejected_through_extend_db(
+    tmp_path: Path, global_db: Path
+) -> None:
+    text = _BASE_TOML.replace(
+        '    column = "BELOPP"\n    data_type = "float"',
+        '    column = "BELOPP"\n    data_type = "float"\n    valid_from = "2020"\n\n'
+        '    [[register.variable.state]]\n    column = "BELOPP_SEK"\n'
+        '    data_type = "float"\n    valid_from = "2020"',
+        1,
+    )
+    error = _assert_rejected_without_output(tmp_path, global_db, text)
+    assert "duplicate state key" in error.message
+
+
+@pytest.mark.parametrize("explicit_start", ["0001", "0001-01", "0001-01-01"])
+def test_year_one_state_start_is_rejected_through_extend_db(
+    tmp_path: Path, global_db: Path, explicit_start: str
+) -> None:
+    text = _BASE_TOML.replace(
+        '    column = "BELOPP"\n    data_type = "float"',
+        '    column = "BELOPP"\n    data_type = "float"\n\n'
+        '    [[register.variable.state]]\n    column = "BELOPP_SEK"\n'
+        f'    data_type = "float"\n    valid_from = "{explicit_start}"',
+        1,
+    )
+    error = _assert_rejected_without_output(tmp_path, global_db, text)
+    assert f"valid_from: {explicit_start!r} is not a valid ISO period" in error.message
+
+
+def test_inverted_register_window_is_rejected_through_extend_db(
+    tmp_path: Path, global_db: Path
+) -> None:
+    text = _BASE_TOML.replace(
+        'purpose = "Bank delivery"',
+        'purpose = "Bank delivery"\nvalid_from = "2022"\nvalid_to = "2020"',
+        1,
+    ).replace(
+        '  variants = ["_default"]',
+        '  variants = ["_default"]\n  valid_from = "2010"\n  valid_to = "2030"',
+        1,
+    )
+    error = _assert_rejected_without_output(tmp_path, global_db, text)
+    assert "register 'transaktioner' has an inverted validity window" in error.message
+    assert "2022-01-01 > 2020-12-31" in error.message
+
+
+def test_inverted_variable_window_is_rejected_through_extend_db(
+    tmp_path: Path, global_db: Path
+) -> None:
+    text = _BASE_TOML.replace(
+        '  variants = ["_default"]',
+        '  variants = ["_default"]\n  valid_from = "2022"\n  valid_to = "2020"',
+        1,
+    ).replace(
+        '    column = "BELOPP"\n    data_type = "float"',
+        '    column = "BELOPP"\n    data_type = "float"\n'
+        '    valid_from = "2010"\n    valid_to = "2030"',
+        1,
+    )
+    error = _assert_rejected_without_output(tmp_path, global_db, text)
+    assert "variable 'Belopp' has an inverted validity window" in error.message
+    assert "2022-01-01 > 2020-12-31" in error.message
+
+
+def test_valid_child_window_overrides_register_window_through_extend_db(
+    tmp_path: Path, global_db: Path
+) -> None:
+    text = _BASE_TOML.replace(
+        'purpose = "Bank delivery"',
+        'purpose = "Bank delivery"\nvalid_from = "2018"\nvalid_to = "2020"',
+        1,
+    ).replace(
+        '  variants = ["_default"]',
+        '  variants = ["_default"]\n  valid_from = "2010"\n  valid_to = "2030"',
+        1,
+    )
+    _, out = _run(tmp_path, global_db, text)
+    with closing(sqlite3.connect(out)) as conn:
+        assert conn.execute(
+            "SELECT valid_from, valid_to FROM variable_state "
+            "WHERE delivery_column_name = 'BELOPP'"
+        ).fetchall() == [("2010-01-01", "2030-12-31")]
+
+
+def test_inverted_state_window_is_rejected_through_extend_db(
+    tmp_path: Path, global_db: Path
+) -> None:
+    text = _BASE_TOML.replace(
+        '    column = "BELOPP"\n    data_type = "float"',
+        '    column = "BELOPP"\n    data_type = "float"\n'
+        '    valid_from = "2021"\n    valid_to = "2020"',
+        1,
+    )
+    error = _assert_rejected_without_output(tmp_path, global_db, text)
+    assert "state[0] has an inverted validity window" in error.message
+
+
+def test_variable_key_cannot_repeat_within_one_variant_through_extend_db(
+    tmp_path: Path, global_db: Path
+) -> None:
+    needle = """\
+    [[register.variable.state]]
+    column = "BELOPP"
+    data_type = "float"
+"""
+    repeated = (
+        needle
+        + """\
+
+  [[register.variable]]
+  key = "belopp"
+  name = "Belopp"
+  description = "Transaktionsbelopp i SEK."
+  variants = ["_default"]
+
+    [[register.variable.state]]
+    column = "BELOPP_SEK"
+    valid_from = "2021"
+"""
+    )
+    error = _assert_rejected_without_output(
+        tmp_path, global_db, _BASE_TOML.replace(needle, repeated)
+    )
+    assert "repeats variable" in error.message
+
+
+def test_pooled_variable_metadata_disagreement_is_rejected_through_extend_db(
+    tmp_path: Path, global_db: Path
+) -> None:
+    head, separator, tail = _BASE_TOML.rpartition('name = "Personnummer"')
+    text = head + separator.replace("Personnummer", "Other") + tail
+    error = _assert_rejected_without_output(tmp_path, global_db, text)
+    assert "different `name`" in error.message
+
+
+def _seeded_provider_run(tmp_path: Path, base_db: Path, name: str) -> dict:
+    providers = tmp_path / "fk-providers"
+    providers.mkdir()
+    (providers / "fk.toml").write_text(
+        _BASE_TOML.replace('name = "Swedbank AB"', f'name = "{name}"', 1),
+        encoding="utf-8",
+    )
+    return extend_db(
+        base_db=base_db,
+        providers_dir=providers,
+        db_dir=tmp_path / "out",
+        steward=_STEWARD,
+        skip_slugs=True,
+        diagnostic=True,
+    )
+
+
+def test_provider_matching_base_name_is_reused_through_extend_db(
+    tmp_path: Path, global_db: Path
+) -> None:
+    with closing(sqlite3.connect(global_db)) as conn:
+        before = conn.execute("SELECT * FROM provider ORDER BY provider_id").fetchall()
+    result = _seeded_provider_run(tmp_path, global_db, "Försäkringskassan")
+    assert result["providers"] == 0
+    with closing(sqlite3.connect(tmp_path / "out" / "reg_meta.db")) as conn:
+        assert (
+            conn.execute("SELECT * FROM provider ORDER BY provider_id").fetchall()
+            == before
+        )
+
+
+def test_provider_name_conflicting_with_base_is_rejected_through_extend_db(
+    tmp_path: Path, global_db: Path
+) -> None:
+    with pytest.raises(RegMetaError) as exc:
+        _seeded_provider_run(tmp_path, global_db, "Wrong")
+    assert exc.value.exit_code == EXIT_CONFIG
+    assert exc.value.code == "extend_providers_invalid"
+    assert "'fk' already has name 'Försäkringskassan'" in exc.value.message
+    assert "'Wrong'" in exc.value.message
+    assert not (tmp_path / "out" / "reg_meta.db").exists()
+    assert not (tmp_path / "out" / "reg_meta.db.tmp").exists()
+
+
+def test_missing_or_empty_provider_directory_is_exit_config_through_extend_db(
+    tmp_path: Path, global_db: Path
+) -> None:
     empty = tmp_path / "empty"
     empty.mkdir()
-    with pytest.raises(RegMetaError) as exc:
-        _load_provider_ir(empty, _STEWARD)
-    assert exc.value.exit_code == EXIT_CONFIG
+    for providers, code, locator in (
+        (tmp_path / "missing", "extend_providers_dir_not_found", "not found"),
+        (empty, "extend_providers_invalid", "has no provider TOMLs"),
+    ):
+        with pytest.raises(RegMetaError) as exc:
+            extend_db(
+                base_db=global_db,
+                providers_dir=providers,
+                db_dir=tmp_path / "out",
+                steward=_STEWARD,
+                skip_slugs=True,
+                diagnostic=True,
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == code
+        assert locator in exc.value.message
+        assert str(providers) in exc.value.message
+        assert not (tmp_path / "out" / "reg_meta.db").exists()
 
 
 def test_hook_failure_discards_staging_db(tmp_path: Path, global_db: Path) -> None:

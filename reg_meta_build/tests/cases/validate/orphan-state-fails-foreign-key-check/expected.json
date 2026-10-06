@@ -1,0 +1,4 @@
+{
+  "passed": false,
+  "failures_contain": ["PRAGMA foreign_key_check returned 1 violation(s)"]
+}

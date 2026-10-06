@@ -12,9 +12,9 @@ slug dir under tmp_path; never reads the shipped fqid_slugs TOMLs."""
 from __future__ import annotations
 
 import json
+import sqlite3
 import tomllib
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import pytest
 from _slugged_db import (
@@ -34,9 +34,6 @@ from reg_meta_build.fqid_slugs import (
     render_entity_key_pins_toml,
     write_entity_key_pins,
 )
-
-if TYPE_CHECKING:
-    import sqlite3
 
 
 def _global_pin_file(
@@ -108,40 +105,6 @@ def _slug_dir(tmp_path: Path, scb_body: str = "") -> Path:
     d.mkdir()
     (d / "scb.toml").write_text(scb_body, encoding="utf-8")
     return d
-
-
-def _run_entity_key_pins_cli(
-    monkeypatch: pytest.MonkeyPatch,
-    *,
-    conn: sqlite3.Connection,
-    slug_dir: Path,
-    out_dir: Path | None = None,
-    output_toml: Path | None = None,
-    force: bool = False,
-    flavored: bool = False,
-) -> tuple[dict, int]:
-    """Drive `cli._cmd_entity_key_pins` against an in-memory fixture DB.
-
-    The handler opens its own DB via the schema-checked `open_built_db`; the synthetic
-    `build_slugged_db` conns carry no manifest, so we stub `cli.open_built_db` to return
-    the fixture conn. This exercises the handler's real `--out-dir` grouping,
-    per-provider file writing, the `--out-dir`/`--output-toml` mutual-exclusion
-    guard, and the `flavored=args.flavored` wiring — everything past the DB open."""
-    import argparse
-
-    from reg_meta_build import cli
-
-    monkeypatch.setattr(cli, "open_built_db", lambda _db: conn)
-    args = argparse.Namespace(
-        db=None,
-        slug_dir=str(slug_dir),
-        out_dir=str(out_dir) if out_dir is not None else None,
-        output_toml=str(output_toml) if output_toml is not None else None,
-        force=force,
-        flavored=flavored,
-    )
-    payload, code = cli._cmd_entity_key_pins(args)
-    return payload["data"], code
 
 
 def _db_with_split_sibling_entity_key(
@@ -474,225 +437,6 @@ class TestGenerator:
         unscoped = infer_entity_key_pins(conn, steward_dir, flavored=False)
         assert {p.provider_slug for p in unscoped} == {"scb", "sos"}
 
-    def test_cmd_flavored_flag_binds_through_handler(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        """#559: `cli._cmd_entity_key_pins` threads `args.flavored` into
-        `infer_entity_key_pins`. Driving the handler with `flavored=True` and a
-        steward-scoped slug dir (sos only) must scope the emitted pins/counts to the
-        steward provider alone — the global scb var is excluded entirely. Guards the
-        `flavored=args.flavored` wiring the direct-call test can't reach (the helper
-        hardcoded `flavored=False`)."""
-        # Fresh fixture: the handler closes its own conn.
-        conn = _db_with_entity_key("kon")  # scb register 1, 1.44/kon
-        _add_sos_entity_key(conn)  # sos register 500, 500.LOPNR/lopnr
-        # Steward dir scoped to register 500: a `[register]` slug entry puts that
-        # register in scope without pinning the entity-key VARIABLE (so it's still
-        # emitted).
-        steward_dir = tmp_path / "steward"
-        steward_dir.mkdir()
-        (steward_dir / "sos.toml").write_text(
-            '[register."500"]\nslug = "dors"\n', encoding="utf-8"
-        )
-
-        data, code = _run_entity_key_pins_cli(
-            monkeypatch, conn=conn, slug_dir=steward_dir, flavored=True
-        )
-        assert code == 0
-        # Steward-scoped: only the sos pin survives; scb is absent.
-        assert data["counts"] == {"sos": 1}
-        assert data["count"] == 1
-
-    def test_cmd_flavored_without_slug_dir_is_usage_error(
-        self, monkeypatch: pytest.MonkeyPatch
-    ):
-        """#559: `--flavored` with no `--slug-dir` is a fast-fail usage error.
-        Without an explicit steward dir the resolver would fall back to the global
-        repo fqid_slugs/, silently scoping the flavored generator to GLOBAL
-        registers and emitting zero/wrong steward pins — so the handler refuses
-        BEFORE opening the DB."""
-        import argparse
-
-        from reg_meta_build import cli
-
-        # Sentinel conn: the guard must fire before any DB open, so a stub that
-        # raises proves open_db is never reached.
-        def _boom(_db):
-            raise AssertionError("open_db must not run when the guard fires")
-
-        monkeypatch.setattr(cli, "open_built_db", _boom)
-        args = argparse.Namespace(
-            db=None,
-            slug_dir=None,
-            out_dir=None,
-            output_toml=None,
-            force=False,
-            flavored=True,
-        )
-        with pytest.raises(RegMetaError) as exc:
-            cli._cmd_entity_key_pins(args)
-        assert exc.value.code == "entity_key_pins_flavored_needs_slug_dir"
-        assert exc.value.exit_code == 2  # EXIT_USAGE
-
-    def test_cmd_explicit_bad_slug_dir_is_usage_error(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        """An explicit `--slug-dir` that isn't a directory (typo / file path)
-        globs zero curated entries — in `--flavored` mode that silently yields an
-        empty register scope and `count: 0`. The handler fails fast BEFORE opening
-        the DB rather than reading an unreadable dir as empty."""
-        import argparse
-
-        from reg_meta_build import cli
-
-        # Sentinel conn: the guard must fire before any DB open, so a stub that
-        # raises proves open_db is never reached.
-        def _boom(_db):
-            raise AssertionError("open_db must not run when the guard fires")
-
-        monkeypatch.setattr(cli, "open_built_db", _boom)
-        missing = tmp_path / "does-not-exist"
-        args = argparse.Namespace(
-            db=None,
-            slug_dir=str(missing),
-            out_dir=None,
-            output_toml=None,
-            force=False,
-            flavored=True,
-        )
-        with pytest.raises(RegMetaError) as exc:
-            cli._cmd_entity_key_pins(args)
-        assert exc.value.code == "slug_dir_not_a_directory"
-        assert exc.value.exit_code == 2  # EXIT_USAGE
-
-    def test_cmd_flavored_slug_dir_is_global_root_is_usage_error(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        """#559 Fix C: `--flavored --slug-dir <global root>` is a fast-fail usage
-        error. Pointing at the global fqid_slugs/ root (not a nested steward dir)
-        scopes the flavored generator to GLOBAL providers and emits zero steward
-        pins — so the handler refuses BEFORE opening the DB. The global root is
-        whatever `repo_slug_dir()` returns; stub it to a tmp dir we also pass as
-        --slug-dir so the equality check is deterministic and checkout-independent.
-        The dir even carries a `[register]` entry to prove the global-root compare
-        (Fix C) fires before the empty-scope scan (Fix B)."""
-        import argparse
-
-        from reg_meta_build import cli
-
-        global_root = tmp_path / "fqid_slugs"
-        global_root.mkdir()
-        # A real [register] entry: Fix B would pass on this dir, so reaching the
-        # global_slug_dir error proves Fix C is the gate that fires.
-        (global_root / "sos.toml").write_text(
-            '[register."500"]\nslug = "dors"\n', encoding="utf-8"
-        )
-        monkeypatch.setattr(cli, "repo_slug_dir", lambda: global_root)
-
-        def _boom(_db):
-            raise AssertionError("open_db must not run when the guard fires")
-
-        monkeypatch.setattr(cli, "open_built_db", _boom)
-        args = argparse.Namespace(
-            db=None,
-            slug_dir=str(global_root),
-            out_dir=None,
-            output_toml=None,
-            force=False,
-            flavored=True,
-        )
-        with pytest.raises(RegMetaError) as exc:
-            cli._cmd_entity_key_pins(args)
-        assert exc.value.code == "entity_key_pins_flavored_global_slug_dir"
-        assert exc.value.exit_code == 2  # EXIT_USAGE
-
-    def test_cmd_flavored_slug_dir_global_root_by_nested_steward_marker(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        """#559 Fix 2: a global-root --slug-dir is rejected by its CONTENTS, not
-        just path-equality. From an installed package `repo_slug_dir()` is None (the
-        path-equality check can't fire) yet an explicit global fqid_slugs/ root —
-        which nests steward dirs AND carries [register] entries — would fall
-        through to GLOBAL register scope and silently emit `count: 0`. The
-        nested-steward-dir marker (only the global root has subdirectories, never a
-        steward dir) makes the handler refuse BEFORE opening the DB with the SAME
-        `entity_key_pins_flavored_global_slug_dir` usage error. The dir also carries
-        a `[register]` entry so reaching that error proves the content marker (not
-        the empty-scope guard) is what fires."""
-        import argparse
-
-        from reg_meta_build import cli
-
-        global_root = tmp_path / "fqid_slugs"
-        global_root.mkdir()
-        # The global-root content markers: a provider TOML with a [register] entry
-        # (so the empty-scope guard would PASS) AND a nested steward dir (the marker
-        # only the global root carries).
-        (global_root / "sos.toml").write_text(
-            '[register."500"]\nslug = "dors"\n', encoding="utf-8"
-        )
-        (global_root / "swecov").mkdir()
-        # Installed-package case: repo_slug_dir() is None, so path-equality can't
-        # catch this — only the content marker can.
-        monkeypatch.setattr(cli, "repo_slug_dir", lambda: None)
-
-        def _boom(_db):
-            raise AssertionError("open_db must not run when the guard fires")
-
-        monkeypatch.setattr(cli, "open_built_db", _boom)
-        args = argparse.Namespace(
-            db=None,
-            slug_dir=str(global_root),
-            out_dir=None,
-            output_toml=None,
-            force=False,
-            flavored=True,
-        )
-        with pytest.raises(RegMetaError) as exc:
-            cli._cmd_entity_key_pins(args)
-        assert exc.value.code == "entity_key_pins_flavored_global_slug_dir"
-        assert exc.value.exit_code == 2  # EXIT_USAGE
-
-    def test_cmd_flavored_slug_dir_without_register_entries_is_usage_error(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        """#559 Fix B: `--flavored --slug-dir <dir without [register] entries>` is a
-        fast-fail usage error. A dir carrying only a non-register provider TOML
-        (here a `[variable]`-only file) yields an EMPTY steward register scope, so
-        the flavored generator would emit zero pins. The handler refuses BEFORE
-        opening the DB. Stub `repo_slug_dir` to a DIFFERENT dir so the global-root
-        compare (Fix C) doesn't short-circuit — proving the empty-scope scan fires."""
-        import argparse
-
-        from reg_meta_build import cli
-
-        steward_dir = tmp_path / "steward"
-        steward_dir.mkdir()
-        # Only a [variable] entry — NO [register] entry, so the flavored scope is
-        # empty.
-        (steward_dir / "sos.toml").write_text(
-            '[variable."500.LOPNR"]\nslug = "sosvar"\n', encoding="utf-8"
-        )
-        # Distinct global root so Fix C's equality check is False.
-        monkeypatch.setattr(cli, "repo_slug_dir", lambda: tmp_path / "global")
-
-        def _boom(_db):
-            raise AssertionError("open_db must not run when the guard fires")
-
-        monkeypatch.setattr(cli, "open_built_db", _boom)
-        args = argparse.Namespace(
-            db=None,
-            slug_dir=str(steward_dir),
-            out_dir=None,
-            output_toml=None,
-            force=False,
-            flavored=True,
-        )
-        with pytest.raises(RegMetaError) as exc:
-            cli._cmd_entity_key_pins(args)
-        assert exc.value.code == "entity_key_pins_flavored_empty_scope"
-        assert exc.value.exit_code == 2  # EXIT_USAGE
-
     def test_non_scb_entity_key_emitted(self, tmp_path: Path):
         """#554: ALL global providers are under mandatory curation, so a non-SCB
         (sos) entity-key var IS emitted alongside the SCB one — the generator no
@@ -704,73 +448,6 @@ class TestGenerator:
             ("scb", "1.44"),
             ("sos", "500.LOPNR"),
         ]
-
-    def test_multi_provider_pins_and_out_dir(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        """#554: entity-key vars in two providers → pins for both, grouped per
-        provider; the CLI `--out-dir` handler writes one correct `<provider>.toml`
-        per provider, each re-parsing to that provider's pin."""
-        conn = _db_with_entity_key("kon")
-        _add_sos_entity_key(conn)
-        slug_dir = _slug_dir(tmp_path)
-        # sos.toml must exist for the curated-glob load (load_provider_toml reads
-        # every <provider>.toml); an empty one keeps both providers un-pinned.
-        (slug_dir / "sos.toml").write_text("", encoding="utf-8")
-
-        pins = infer_entity_key_pins(conn, slug_dir)
-        assert {p.provider_slug for p in pins} == {"scb", "sos"}
-
-        out_dir = tmp_path / "pins"
-        data, code = _run_entity_key_pins_cli(
-            monkeypatch,
-            conn=conn,
-            slug_dir=slug_dir,
-            out_dir=out_dir,
-        )
-        assert code == 0
-        assert data["counts"] == {"scb": 1, "sos": 1}
-        assert set(data["files"]) == {"scb/lisa", "sos/dors"}
-        # Each file re-parses to exactly its own provider's pin.
-        assert _pin_values(out_dir / "registers" / "scb" / "lisa.toml") == {
-            "1.44": "kon"
-        }
-        assert _pin_values(out_dir / "registers" / "sos" / "dors.toml") == {
-            "500.LOPNR": "lopnr"
-        }
-
-    def test_counts_present_in_no_target_and_output_toml_modes(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ):
-        """Per-provider `counts` is part of the JSON summary for ALL modes, not
-        just `--out-dir` (the help advertises it everywhere — "counts only" /
-        "JSON count summary still prints"). Covers the no-target and
-        `--output-toml` branches the `--out-dir` test doesn't, guarding the
-        regression that moved `counts` inside the `--out-dir` branch."""
-        slug_dir = _slug_dir(tmp_path)
-        (slug_dir / "sos.toml").write_text("", encoding="utf-8")
-
-        # No-target: counts present alongside the carried TOML, no file fields.
-        # The handler closes its conn, so build a fresh fixture per CLI run.
-        conn = _db_with_entity_key("kon")
-        _add_sos_entity_key(conn)
-        data, code = _run_entity_key_pins_cli(monkeypatch, conn=conn, slug_dir=slug_dir)
-        assert code == 0
-        assert data["count"] == 2
-        assert data["counts"] == {"scb": 1, "sos": 1}
-        assert "toml" in data
-        assert "out_dir" not in data and "files" not in data
-
-        # --output-toml: counts still present alongside the written path.
-        conn = _db_with_entity_key("kon")
-        _add_sos_entity_key(conn)
-        out_toml = tmp_path / "combined.toml"
-        data, code = _run_entity_key_pins_cli(
-            monkeypatch, conn=conn, slug_dir=slug_dir, output_toml=out_toml
-        )
-        assert code == 0
-        assert data["counts"] == {"scb": 1, "sos": 1}
-        assert data["output_toml"] == str(out_toml.resolve())
 
     def test_write_groups_per_provider_regardless_of_order(self, tmp_path: Path):
         """`write_entity_key_pins` groups by provider via dict accumulation, so a
@@ -836,18 +513,183 @@ class TestGenerator:
             "1.44": "kon"
         }
 
-    def test_out_dir_and_output_toml_mutually_exclusive(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+
+def _file_db(conn: sqlite3.Connection, tmp_path: Path) -> Path:
+    """Persist a fixture conn as the `--db` directory the CLI opens.
+
+    `open_built_db` checks the `import_manifest` schema_version, so stamp the
+    current one, COMMIT (the sqlite backup API stalls on an open write
+    transaction) and copy into `<dir>/reg_meta.db`."""
+    from reg_meta_build.db import SCHEMA_VERSION
+
+    db_dir = tmp_path / "db"
+    db_dir.mkdir()
+    conn.execute(
+        "INSERT INTO import_manifest (key, value) VALUES ('schema_version', ?)",
+        (SCHEMA_VERSION,),
+    )
+    conn.commit()
+    dest = sqlite3.connect(db_dir / "reg_meta.db")
+    conn.backup(dest)
+    dest.close()
+    conn.close()
+    return db_dir
+
+
+def _cli(
+    capsys: pytest.CaptureFixture[str], db: Path, *args: str | Path
+) -> tuple[int, dict]:
+    """Run `reg-meta-build --db <db> entity-key-pins <args>`; return the exit code
+    and the JSON written to stdout (the data payload, or the `error` envelope)."""
+    from reg_meta_build.cli import run
+
+    code = run(["--db", str(db), "entity-key-pins", *map(str, args)])
+    return code, json.loads(capsys.readouterr().out)
+
+
+class TestCli:
+    """`reg-meta-build entity-key-pins` driven through `cli.run` against a file
+    DB. Usage-guard cases point `--db` at a missing directory: each guard fires
+    before the DB open, so a missing guard surfaces a different error code."""
+
+    def test_flavored_counts_only_the_steward_provider(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
     ):
-        """`--out-dir` and `--output-toml` together is a fast-fail usage error,
-        not a silent precedence pick."""
+        # The DB carries an scb and an sos entity key; the steward dir curates only
+        # sos register 500, so `--flavored` scopes the pins to sos alone.
         conn = _db_with_entity_key("kon")
-        with pytest.raises(RegMetaError) as exc:
-            _run_entity_key_pins_cli(
-                monkeypatch,
-                conn=conn,
-                slug_dir=_slug_dir(tmp_path),
-                out_dir=tmp_path / "pins",
-                output_toml=tmp_path / "combined.toml",
-            )
-        assert exc.value.code == "entity_key_pins_output_conflict"
+        _add_sos_entity_key(conn)
+        db = _file_db(conn, tmp_path)
+        steward_dir = tmp_path / "steward"
+        steward_dir.mkdir()
+        (steward_dir / "sos.toml").write_text(
+            '[register."500"]\nslug = "dors"\n', encoding="utf-8"
+        )
+        code, data = _cli(capsys, db, "--slug-dir", steward_dir, "--flavored")
+        assert code == 0
+        assert data["counts"] == {"sos": 1}
+        assert data["count"] == 1
+
+    def test_flavored_without_slug_dir_is_usage_error(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ):
+        code, data = _cli(capsys, tmp_path / "missing", "--flavored")
+        assert code == 2
+        assert data["error"]["code"] == "entity_key_pins_flavored_needs_slug_dir"
+
+    def test_slug_dir_that_is_not_a_directory_is_usage_error(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ):
+        code, data = _cli(
+            capsys,
+            tmp_path / "missing",
+            "--flavored",
+            "--slug-dir",
+            tmp_path / "does-not-exist",
+        )
+        assert code == 2
+        assert data["error"]["code"] == "slug_dir_not_a_directory"
+
+    def test_flavored_checkout_global_slug_root_is_usage_error(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ):
+        # The checkout's global curation root (read only). It both equals the
+        # repo slug dir and nests subdirectories, so either global-root marker
+        # rejects it; the boundary observes the shared error, not which fired.
+        global_root = Path(__file__).resolve().parents[1] / "curation"
+        assert any(child.is_dir() for child in global_root.iterdir())
+        code, data = _cli(
+            capsys, tmp_path / "missing", "--flavored", "--slug-dir", global_root
+        )
+        assert code == 2
+        assert data["error"]["code"] == "entity_key_pins_flavored_global_slug_dir"
+
+    def test_flavored_slug_dir_nesting_a_directory_is_global_root(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ):
+        # Not the checkout's root, but it nests a steward dir (only the global
+        # root does) and carries a [register] entry, so the empty-scope guard
+        # would pass: the content marker is what rejects it.
+        global_root = tmp_path / "fqid_slugs"
+        global_root.mkdir()
+        (global_root / "sos.toml").write_text(
+            '[register."500"]\nslug = "dors"\n', encoding="utf-8"
+        )
+        (global_root / "swecov").mkdir()
+        code, data = _cli(
+            capsys, tmp_path / "missing", "--flavored", "--slug-dir", global_root
+        )
+        assert code == 2
+        assert data["error"]["code"] == "entity_key_pins_flavored_global_slug_dir"
+
+    def test_flavored_slug_dir_without_register_entries_is_usage_error(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ):
+        steward_dir = tmp_path / "steward"
+        steward_dir.mkdir()
+        (steward_dir / "sos.toml").write_text(
+            '[variable."500.LOPNR"]\nslug = "sosvar"\n', encoding="utf-8"
+        )
+        code, data = _cli(
+            capsys, tmp_path / "missing", "--flavored", "--slug-dir", steward_dir
+        )
+        assert code == 2
+        assert data["error"]["code"] == "entity_key_pins_flavored_empty_scope"
+
+    def test_out_dir_writes_one_file_per_provider_register(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ):
+        conn = _db_with_entity_key("kon")
+        _add_sos_entity_key(conn)
+        db = _file_db(conn, tmp_path)
+        slug_dir = _slug_dir(tmp_path)
+        (slug_dir / "sos.toml").write_text("", encoding="utf-8")
+        out_dir = tmp_path / "pins"
+        code, data = _cli(capsys, db, "--slug-dir", slug_dir, "--out-dir", out_dir)
+        assert code == 0
+        assert data["counts"] == {"scb": 1, "sos": 1}
+        assert set(data["files"]) == {"scb/lisa", "sos/dors"}
+        assert _pin_values(out_dir / "registers" / "scb" / "lisa.toml") == {
+            "1.44": "kon"
+        }
+        assert _pin_values(out_dir / "registers" / "sos" / "dors.toml") == {
+            "500.LOPNR": "lopnr"
+        }
+
+    def test_counts_in_no_target_and_output_toml_modes(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ):
+        conn = _db_with_entity_key("kon")
+        _add_sos_entity_key(conn)
+        db = _file_db(conn, tmp_path)
+        slug_dir = _slug_dir(tmp_path)
+        (slug_dir / "sos.toml").write_text("", encoding="utf-8")
+
+        code, data = _cli(capsys, db, "--slug-dir", slug_dir)
+        assert code == 0
+        assert data["count"] == 2
+        assert data["counts"] == {"scb": 1, "sos": 1}
+        assert "toml" in data
+        assert "out_dir" not in data and "files" not in data
+
+        out_toml = tmp_path / "combined.toml"
+        code, data = _cli(capsys, db, "--slug-dir", slug_dir, "--output-toml", out_toml)
+        assert code == 0
+        assert data["counts"] == {"scb": 1, "sos": 1}
+        assert data["output_toml"] == str(out_toml.resolve())
+
+    def test_out_dir_and_output_toml_is_usage_error(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ):
+        code, data = _cli(
+            capsys,
+            tmp_path / "missing",
+            "--slug-dir",
+            _slug_dir(tmp_path),
+            "--out-dir",
+            tmp_path / "pins",
+            "--output-toml",
+            tmp_path / "combined.toml",
+        )
+        assert code == 2
+        assert data["error"]["code"] == "entity_key_pins_output_conflict"

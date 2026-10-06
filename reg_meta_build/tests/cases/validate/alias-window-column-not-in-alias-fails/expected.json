@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "1 window column(s) missing from variable_alias"
+  ]
+}

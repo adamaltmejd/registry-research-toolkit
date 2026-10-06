@@ -1,0 +1,8 @@
+{
+  "report_contains": [
+    "no code-less state overlaps a code-bearing state on one column"
+  ],
+  "failures_absent": [
+    "code-less ↔ code-bearing overlapping state pair"
+  ]
+}

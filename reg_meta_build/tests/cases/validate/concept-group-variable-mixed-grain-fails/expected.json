@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "1 variable(s) mixing whole-variable and representation members within one group"
+  ]
+}

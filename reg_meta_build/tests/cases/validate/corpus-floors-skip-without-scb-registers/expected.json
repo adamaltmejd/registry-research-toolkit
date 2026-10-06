@@ -1,0 +1,14 @@
+{
+  "report_contains": [
+    "edge group(s) — SCB not in this build",
+    "classification succession edge(s) — SCB not in this build",
+    "variable vintage-lift edge(s) — SCB not in this build",
+    "sub-annual alias-window families — SCB not in this build"
+  ],
+  "failures_absent": [
+    "edge derivation collapse",
+    "vintage-chain derivation regression",
+    "vintage-lift derivation regression",
+    "family-merge regression"
+  ]
+}

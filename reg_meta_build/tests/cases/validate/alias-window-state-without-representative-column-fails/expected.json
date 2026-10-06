@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "1 exact source-window state(s) missing their representative column"
+  ]
+}

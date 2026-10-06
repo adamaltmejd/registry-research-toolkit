@@ -1,0 +1,8 @@
+{
+  "report_contains": [
+    "state delivery scopes have exact conditional date bounds"
+  ],
+  "failures_absent": [
+    "invalid delivery scope or date bounds"
+  ]
+}
