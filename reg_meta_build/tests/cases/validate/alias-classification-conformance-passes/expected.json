@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "report_contains": [
+    "[OK] alias classification associations preserve their exact physical domains and books"
+  ],
+  "failures_absent": [
+    "alias classification association"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "report_contains": [
+    "[OK] state classification members retain their scoped sentinel evidence"
+  ],
+  "failures_absent": [
+    "invalid scoped sentinel evidence"
+  ]
+}

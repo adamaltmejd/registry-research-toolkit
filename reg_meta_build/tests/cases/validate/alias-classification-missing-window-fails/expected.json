@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "1 alias classification association(s) have invalid physical-domain conformance"
+  ]
+}

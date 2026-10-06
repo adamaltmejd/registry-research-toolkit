@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "1 state classification member(s) have invalid scoped sentinel evidence"
+  ]
+}
