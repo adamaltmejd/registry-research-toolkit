@@ -1559,25 +1559,44 @@ def _check_value_code_search(
 def _check_classification_search(
     conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
 ) -> None:
-    """Every classification row is indexed in ``classification_fts``.
+    """Every classification row is indexed in ``classification_fts`` by its id.
 
-    ``COUNT(*) FROM classification_fts`` reads the external content table, so the
-    honest indexed count is the ``_docsize`` shadow table (as for value codes).
-    Unlike value codes nothing is stoplisted, so the counts must be equal."""
+    ``classification_fts`` reads the external content table, so the index itself
+    is the ``_docsize`` shadow table (as for value codes). Matching by rowid, not
+    by count, also catches index entries that point at no classification."""
     result.section("[classification search]")
     if "classification" not in tables or "classification_fts" not in tables:
         result.fail("classification / classification_fts missing")
         return
-    n_rows = conn.execute("SELECT COUNT(*) FROM classification").fetchone()[0]
-    n_idx = conn.execute("SELECT COUNT(*) FROM classification_fts_docsize").fetchone()[
-        0
-    ]
-    if n_idx == n_rows:
-        result.ok(f"classification_fts indexes all {n_rows:,} classifications")
-    else:
-        result.fail(
-            f"classification_fts indexes {n_idx:,} of {n_rows:,} classifications"
+    unindexed = [
+        row[0]
+        for row in conn.execute(
+            "SELECT c.id FROM classification c "
+            "LEFT JOIN classification_fts_docsize d ON d.id = c.id "
+            "WHERE d.id IS NULL ORDER BY c.id"
         )
+    ]
+    stray = [
+        row[0]
+        for row in conn.execute(
+            "SELECT d.id FROM classification_fts_docsize d "
+            "LEFT JOIN classification c ON c.id = d.id "
+            "WHERE c.id IS NULL ORDER BY d.id"
+        )
+    ]
+    if unindexed:
+        result.fail(
+            f"{len(unindexed):,} classification(s) not in classification_fts: "
+            f"ids {unindexed[:10]}"
+        )
+    if stray:
+        result.fail(
+            f"{len(stray):,} classification_fts entr(ies) match no classification: "
+            f"ids {stray[:10]}"
+        )
+    if not unindexed and not stray:
+        (n_rows,) = conn.execute("SELECT COUNT(*) FROM classification").fetchone()
+        result.ok(f"classification_fts indexes all {n_rows:,} classifications")
 
 
 def _check_planner_statistics(
