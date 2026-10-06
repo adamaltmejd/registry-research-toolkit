@@ -32,7 +32,10 @@
         "scb/example",
         "class/example-codes"
       ],
-      "/groups/0/has_more": false
+      "/groups/0/has_more": false,
+      "/groups/1/results/*/fqid": [
+        "scb/example"
+      ]
     }
   }
 ]
