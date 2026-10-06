@@ -305,9 +305,10 @@ jobs:
     # DB release artifact, which is deployment state and not available to
     # fork-safe PR builds. SWECOV metadata is non-confidential for the current
     # testing steward, so the artifact lives on the public reg_meta/v* release
-    # beside the global DB. Main/dispatch builds resolve it from that same tag
-    # and fail loudly if the release has no matching SWECOV artifact rather than
-    # shipping the steward against the public global DB.
+    # beside the global DB. The bake fetches it from that same tag with
+    # `reg-meta update --catalog swecov` and fails loudly (exit 10) if the
+    # release has no reg_meta_swecov.db.zst, rather than shipping the steward
+    # against the public global DB (#1091).
     if: >-
       !cancelled() && github.event_name != 'pull_request' &&
       needs.schema-guard.result == 'success' &&
@@ -326,83 +327,8 @@ jobs:
           registry: registry.fly.io
           username: x
           password: ${{ secrets.FLY_API_TOKEN_SWECOV }}
-      - name: Resolve SWECOV DB release artifact
-        id: swecov-db
-        if: needs.schema-guard.outputs.pending_bump != 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REG_META_TAG: ${{ needs.schema-guard.outputs.tag }}
-        run: |
-          set -euo pipefail
-          release_json="$RUNNER_TEMP/swecov-release.json"
-          gh release view "$REG_META_TAG" --json assets > "$release_json"
-          python3 - <<'PY' >> "$GITHUB_OUTPUT"
-          import hashlib
-          import json
-          import os
-          import sys
-          from pathlib import Path
-
-          tag = os.environ["REG_META_TAG"]
-          release_json = Path(os.environ["RUNNER_TEMP"]) / "swecov-release.json"
-          release = json.loads(release_json.read_text(encoding="utf-8"))
-          assets = [
-              asset
-              for asset in release.get("assets", [])
-              if asset.get("name") == "reg_meta_swecov.db.zst"
-          ]
-          if not assets:
-              print(
-                  f"::error::reg_meta_swecov.db.zst is missing from release {tag}.",
-                  file=sys.stderr,
-              )
-              sys.exit(1)
-          if len(assets) != 1:
-              print(
-                  f"::error::release {tag} has multiple reg_meta_swecov.db.zst assets.",
-                  file=sys.stderr,
-              )
-              sys.exit(1)
-          asset = assets[0]
-          missing = [
-              key for key in ("url", "digest")
-              if not isinstance(asset.get(key), str) or not asset[key]
-          ]
-          if missing:
-              print(
-                  "::error::reg_meta_swecov.db.zst asset missing non-empty key(s): "
-                  + ", ".join(missing),
-                  file=sys.stderr,
-              )
-              sys.exit(1)
-          digest = asset["digest"]
-          if not digest.startswith("sha256:"):
-              print(
-                  "::error::reg_meta_swecov.db.zst asset digest must be sha256-prefixed.",
-                  file=sys.stderr,
-              )
-              sys.exit(1)
-          sha256 = digest.removeprefix("sha256:").lower()
-          try:
-              int(sha256, 16)
-          except ValueError:
-              print("::error::SWECOV artifact sha256 is not hexadecimal.", file=sys.stderr)
-              sys.exit(1)
-          if len(sha256) != 64:
-              print("::error::SWECOV artifact sha256 must be 64 hex characters.", file=sys.stderr)
-              sys.exit(1)
-          manifest = {"tag": tag, "url": asset["url"], "sha256": sha256}
-          cache_key = {"tag": manifest["tag"], "sha256": manifest["sha256"]}
-          fingerprint = hashlib.sha256(
-              json.dumps(cache_key, sort_keys=True).encode()
-          ).hexdigest()
-          print(f"manifest={json.dumps(manifest, separators=(',', ':'))}")
-          print(f"fingerprint={fingerprint}")
-          PY
       - if: needs.schema-guard.outputs.pending_bump != 'true'
         uses: docker/build-push-action@v7.3.0
-        env:
-          SWECOV_REG_META_DB_ZST_MANIFEST: ${{ steps.swecov-db.outputs.manifest }}
         with:
           context: .
           file: reg_webapp/Dockerfile
@@ -412,9 +338,6 @@ jobs:
             REG_META_TAG=${{ needs.schema-guard.outputs.tag }}
             REG_META_FLAVOR=swecov
             REG_WEBAPP_STEWARD=swecov
-            SWECOV_REG_META_DB_REV=${{ steps.swecov-db.outputs.fingerprint }}
-          secret-envs: |
-            swecov_reg_meta_db_zst_manifest=SWECOV_REG_META_DB_ZST_MANIFEST
 
   deploy:
     needs: [build-image, wait-ci, schema-guard]
