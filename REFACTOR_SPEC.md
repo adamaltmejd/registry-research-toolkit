@@ -127,10 +127,10 @@ requires a publishable artifact whose manifest steward matches the deployment. A
 artifact cannot substitute for that steward artifact. `reg_meta_swecov.db.zst` remains a
 public GitHub release asset on the same `reg_meta/v*` tag as the global catalog and
 public docs asset. The release skill produces and uploads it; `integration.yml` verifies
-and admits it, and `container-build.yml` supplies its `tag`, `url` and `sha256` through
-the BuildKit manifest. The bake refuses tag or digest mismatches. Selected sibling docs
-preserve the same release identity; local acceptance does not verify live deployment or
-publication.
+and admits it, and the SWECOV image bakes it through
+`reg-meta update --catalog swecov --tag <tag>` (#1164); boot-time steward admission
+refuses a mismatched artifact. Selected sibling docs preserve the same release identity.
+See `reg_webapp/DESIGN.md` → Deployment.
 
 IFAU authoring remains deferred. Before v1, extract SWECOV branding and its delivery
 pipeline into its own steward system and make that system copyable for future stewards.
@@ -323,7 +323,7 @@ will need period-column `WHERE` clauses later.
 The compiled-holdings cut shipped through plans 00 to 05b of the series and passed
 independent acceptance on 2026-10-06 against the pinned schema-9 public and SWECOV
 steward artifacts. It was released the same day as `reg_meta/v0.41.0` and
-`reg_meta_build/v0.31.0`, after the builder defect fix (#1160) refilled
+`reg_meta_build/v0.31.0`, after the builder defect fix (#1160) filled
 `classification_fts` and added `ANALYZE` to builds, and both deployments serve schema 9.
 The closed project root (#1134) and the 2026-07-14 interface decisions now live in
 `reg_schema/DESIGN.md`, `reg_meta/DESIGN.md` and `reg_webapp/DESIGN.md`.
@@ -469,9 +469,9 @@ Carried from the testing strategy; the shipped categories are in
   See `ARCHITECTURE.md` → Repo-wide invariants.
 - **Per-package test sweep** — root `conformance/` now owns the relocated corpora and
   synthetic/real artifact checks. The `reg_webapp` backend, `reg_meta` and
-  `reg_meta_build` suites were swept under the `AGENTS.md` policy (plans 06a–06c, #1153
-  to #1162). Left: sweep `reg_schema`, and drain the remaining allowlist entries
-  (private boundaries: `reg_meta_build/tests/_shared_fixtures.py`,
+  `reg_meta_build` suites were swept under the `AGENTS.md` policy (plans 06a–06c: #1153,
+  #1155 to #1159, #1161 and #1162). Left: sweep `reg_schema`, and drain the remaining
+  allowlist entries (private boundaries: `reg_meta_build/tests/_shared_fixtures.py`,
   `reg_meta_build/tests/test_source_scope.py`, `reg_schema/tests/test_structural.py`,
   `scripts/tests/test_gh_issue.py`, `scripts/tests/test_prototype_scb_inputs.py`; size:
   `reg_schema/tests/test_structural.py`). Accepted-private-input census is shipped via
