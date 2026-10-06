@@ -6,7 +6,7 @@ import gzip
 import json
 from typing import TYPE_CHECKING
 
-from _csv_fixtures import _var_row, write_input_bundle, write_scb_input
+from _csv_fixtures import var_row, write_input_bundle, write_scb_input
 from reg_meta_build.input_snapshot import open_input_bundle
 from reg_meta_build.source_inspection import (
     CENSUS_INTERPRETATION_ID,
@@ -27,7 +27,7 @@ def _read_census(path: Path) -> list[dict[str, Any]]:
 def test_census_reports_same_shape_non_shape_scalar_disagreements(
     tmp_path: Path,
 ) -> None:
-    first = _var_row(
+    first = var_row(
         colname="Scalar",
         cvid=4242,
         var_id=77,
@@ -37,7 +37,7 @@ def test_census_reports_same_shape_non_shape_scalar_disagreements(
         data_length="10",
         vardef="Definition A",
     )
-    changed = _var_row(
+    changed = var_row(
         colname="Scalar",
         cvid=4242,
         var_id=77,

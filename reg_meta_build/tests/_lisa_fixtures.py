@@ -1,30 +1,62 @@
-"""Synthetic workbook matching the four observed LISA delivery layouts."""
+"""Synthetic workbook matching the four observed LISA delivery layouts.
+
+The layout (titles, headers, keyed text rows and observed unkeyed context rows per
+sheet) is readable data in `cases/lisa/layout.json`, transcribed from the delivered
+workbook. It is deliberately independent of the reader's own layout table, so a reader
+change that drifts from the documented workbook fails instead of agreeing with itself.
+"""
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+import json
+from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
 from openpyxl import Workbook
-from reg_meta_build.sources.lisa import _TABLES
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from openpyxl.worksheet.worksheet import Worksheet
+
+LISA_LAYOUT: dict[str, dict[str, Any]] = json.loads(
+    (Path(__file__).parent / "cases" / "lisa" / "layout.json").read_text(
+        encoding="utf-8"
+    )
+)
+
+# Worksheet context rows of the fixture workbook that qualify a whole table section.
+QUALIFICATION_CONTEXT = {
+    (
+        "worksheet-context Individ!A139: Befolkningens arbetsmarknadsstatus "
+        "(BAS) är källa från 2022 om inget annat år anges"
+    ),
+    (
+        "worksheet-context Företag!A48: Ekonomiska nyckeltal och ekonomisk "
+        "grunddata finns för företag som ingår i Företagens ekonomi (FEK)."
+    ),
+    (
+        "worksheet-context Företag!A49: FEK täcker näringslivet (exklusive de "
+        "finansiella och offentliga sektorerna samt hushållens icke-vinstdrivande"
+    ),
+    "worksheet-context Företag!A50:  organisationer).",
+    (
+        "worksheet-context Företag!A91: Från 2024 inkluderas godkända "
+        "resultaträkningar även om balansräkning är underkänd och tvärtom."
+    ),
+}
 
 
 def write_lisa_workbook(path: Path) -> Path:
     workbook = Workbook()
     workbook.remove(workbook.active)
-    for sheet_name, spec in _TABLES.items():
+    for sheet_name, spec in LISA_LAYOUT.items():
         sheet = workbook.create_sheet(sheet_name)
-        sheet.cell(1, 1, spec.title)
-        for column, header in enumerate(spec.headers, start=1):
+        sheet.cell(1, 1, spec["title"])
+        for column, header in enumerate(spec["headers"], start=1):
             sheet.cell(3, column, header)
-        for row, text in spec.text_rows.items():
-            sheet.cell(row, 1, text)
-        for row, context in spec.context_rows.items():
-            _write_row(sheet, row, context.cells)
+        for row, text in spec["text_rows"].items():
+            sheet.cell(int(row), 1, text)
+        for row, cells in spec["context_rows"].items():
+            _write_row(sheet, int(row), tuple(cells))
 
     individual = workbook["Individ"]
     _write_row(
@@ -105,4 +137,4 @@ def _write_row(sheet: Worksheet, row: int, values: tuple[object, ...]) -> None:
         sheet.cell(row, column, value)
 
 
-__all__ = ["write_lisa_workbook"]
+__all__ = ["LISA_LAYOUT", "QUALIFICATION_CONTEXT", "write_lisa_workbook"]
