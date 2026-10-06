@@ -11,16 +11,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 ALLOWLIST = {
     "reg_meta_build/tests/test_curation_compile.py",
-    "reg_meta_build/tests/test_input_snapshot.py",
-    "reg_meta_build/tests/test_prepared_sources.py",
     "reg_meta_build/tests/test_repo_curation_tomls.py",
-    "reg_meta_build/tests/test_sos_source_records.py",
     "reg_meta_build/tests/test_source_classification_bindings.py",
     "reg_meta_build/tests/test_source_coding_choices.py",
     "reg_meta_build/tests/test_source_curation.py",
     "reg_meta_build/tests/test_source_effects.py",
     "reg_meta_build/tests/test_source_formation.py",
-    "reg_meta_build/tests/test_source_inspection.py",
     "reg_meta_build/tests/test_source_intervals.py",
     "reg_meta_build/tests/test_source_representations.py",
     "reg_meta_build/tests/test_source_scope.py",

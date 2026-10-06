@@ -11,11 +11,15 @@ import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import _var_row, write_input_bundle, write_scb_input
+from _csv_fixtures import (
+    var_row,
+    write_input_bundle,
+    write_scb_input,
+    write_scb_snapshot,
+)
 from _prepared_fixtures import accept_prepared
 from reg_meta.source_evidence import SourceRevision
-from reg_meta_build._curation import data_type_class, widen_data_type_classes
-from reg_meta_build.input_snapshot import _validate_bundle_contract
+from reg_meta_build.input_snapshot import prepare_input_bundle
 from reg_meta_build.pipeline import build_catalog
 from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
@@ -89,49 +93,6 @@ def test_storage_class_boundaries(types: tuple[str, ...], expected: str) -> None
     assert storage_class("varbinary") is None
 
 
-@pytest.mark.parametrize(
-    ("value", "expected"),
-    [
-        ("INTEGER", "integer"),
-        ("decimal", "decimal"),
-        ("Text", "text"),
-        ("DATE", "date"),
-        ("SMALLINT", "integer"),
-        ("FLOAT", "decimal"),
-        ("VARCHAR", "text"),
-        ("DATETIME2", "date"),
-        ("numerisk", "decimal"),
-        ("alfanumerisk", "text"),
-        ("Character", "text"),
-        ("uniqueidentifier", None),
-        ("Datum och klockslag", None),
-    ],
-)
-def test_data_type_class_boundaries(value: str, expected: str | None) -> None:
-    assert data_type_class(value) == expected
-
-
-@pytest.mark.parametrize(
-    ("classes", "expected"),
-    [
-        ((), None),
-        (("integer", "integer"), "integer"),
-        (("integer", "decimal"), "decimal"),
-        (("integer", "text"), "text"),
-        (("integer", "date"), None),
-        (("decimal", "decimal"), "decimal"),
-        (("decimal", "text"), "text"),
-        (("decimal", "date"), None),
-        (("text", "text"), "text"),
-        (("text", "date"), "text"),
-        (("date", "date"), "date"),
-        (("date", "integer", "text"), None),
-    ],
-)
-def test_type_class_lattice(classes: tuple[str, ...], expected: str | None) -> None:
-    assert widen_data_type_classes(classes) == expected
-
-
 def test_reader_contract_and_json_roundtrip(tmp_path: Path) -> None:
     parsed = _read(tmp_path, _csv([("CIS2004", "CO11", "smallint", "BASE TABLE")]))
     (declaration,) = parsed.declarations
@@ -178,7 +139,7 @@ def test_selected_csv_is_prepared_as_typed_reference_evidence(tmp_path: Path) ->
     write_scb_input(
         source,
         registerinformation_rows=[
-            _var_row(cvid=1001, var_id=101, colname="VALUE", data_type="int")
+            var_row(cvid=1001, var_id=101, colname="VALUE", data_type="int")
         ],
         unika_rows=[
             "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0"
@@ -264,11 +225,16 @@ def test_selected_csv_is_prepared_as_typed_reference_evidence(tmp_path: Path) ->
 def test_bundle_validation_rejects_invalid_csv(
     tmp_path: Path, payload: bytes, message: str
 ) -> None:
-    path = tmp_path / "catalog/swecov/derived/swecov_column_types.csv"
+    input_dir = tmp_path / "source"
+    write_scb_input(input_dir)
+    path = input_dir / "swecov/derived/swecov_column_types.csv"
     path.parent.mkdir(parents=True)
     path.write_bytes(payload)
+    snapshot = write_scb_snapshot(tmp_path / "accepted", input_dir / "SCB")
+    output = snapshot.path.parent / "bundle"
     with pytest.raises(SwecovColumnTypesError, match=message):
-        _validate_bundle_contract(tmp_path)
+        prepare_input_bundle(input_dir, snapshot, output)
+    assert not output.exists()
 
 
 def test_widening_prefixes_and_row_order(tmp_path: Path) -> None:

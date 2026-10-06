@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "report_contains": [
+    "no SOS variables — state-less check skipped (SCB-only build)"
+  ]
+}

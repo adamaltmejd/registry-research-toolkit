@@ -1,0 +1,37 @@
+{
+  "logical_rows": 31,
+  "logical_tables": 14,
+  "ordering": "zero-based occurrence ordinal per logical table",
+  "table_field_counts": {
+    "Identifierare.csv:records": 3,
+    "Registerinformation.csv:context": 7,
+    "Registerinformation.csv:delivery": 4,
+    "Registerinformation.csv:records": 11,
+    "Registerinformation.csv:register": 4,
+    "Registerinformation.csv:variable": 10,
+    "Registerinformation.csv:variant": 5,
+    "Registerinformation.csv:version": 7,
+    "Timeseries.csv:records": 7,
+    "UnikaRegisterOchVariabler.csv:records": 11,
+    "Vardemangder.csv:records": 4,
+    "Vardemangder.csv:value": 3,
+    "Vardemangder.csv:value_set": 3,
+    "VardemangderValidDates.csv:records": 3
+  },
+  "table_rows": {
+    "Identifierare.csv:records": 1,
+    "Registerinformation.csv:context": 2,
+    "Registerinformation.csv:delivery": 2,
+    "Registerinformation.csv:records": 2,
+    "Registerinformation.csv:register": 2,
+    "Registerinformation.csv:variable": 2,
+    "Registerinformation.csv:variant": 2,
+    "Registerinformation.csv:version": 2,
+    "Timeseries.csv:records": 1,
+    "UnikaRegisterOchVariabler.csv:records": 5,
+    "Vardemangder.csv:records": 3,
+    "Vardemangder.csv:value": 3,
+    "Vardemangder.csv:value_set": 2,
+    "VardemangderValidDates.csv:records": 2
+  }
+}

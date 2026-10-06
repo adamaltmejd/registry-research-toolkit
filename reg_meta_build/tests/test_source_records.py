@@ -8,9 +8,9 @@ import pytest
 from _csv_fixtures import (
     HAMN_SIGNAL_TARGETS,
     REGISTERINFORMATION_HEADER,
-    _var_row,
     hamn_signal_rows,
     scb_interpretation_rows,
+    var_row,
     write_scb_input,
     write_scb_snapshot,
 )
@@ -379,7 +379,7 @@ def test_hamn_fixture_yields_twenty_lossless_observations_for_ten_exact_members(
 
 def _clean_row(*, reference_period: str | None = "", **changes: object) -> SourceRecord:
     header = REGISTERINFORMATION_HEADER.split("|")
-    row = _var_row(colname="Example", cvid=1001, var_id=101, **changes).split("|")
+    row = var_row(colname="Example", cvid=1001, var_id=101, **changes).split("|")
     cells = {
         name: (True, value, value) for name, value in zip(header, row, strict=True)
     }
@@ -559,7 +559,7 @@ def test_flag_declarations_reject_nonboolean_values(
 
 def _clean_column_row(*, cell: tuple[bool, str | None, str]) -> SourceRecord:
     header = REGISTERINFORMATION_HEADER.split("|")
-    row = _var_row(colname="", cvid=1001, var_id=101).split("|")
+    row = var_row(colname="", cvid=1001, var_id=101).split("|")
     cells = {
         name: (True, value, value) for name, value in zip(header, row, strict=True)
     }

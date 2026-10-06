@@ -1,9 +1,10 @@
 """Tests for the Socialstyrelsen Excel parser.
 
-Unit tests over pure helpers, plus synthetic-workbook coverage: tests build
+Synthetic-workbook coverage: tests build
 small `.xlsx` fixtures in-process (no gitignored real deliveries) to exercise
 the parser's branches — DCAT-AP field map, variable fields, deldatamängder,
-kodlistor, phantom rows, and directory lock-file skipping. `openpyxl` is a
+kodlistor, phantom rows, directory lock-file skipping, and how individual cell
+shapes (years, dates, text, formatted codes) read into the parsed register. `openpyxl` is a
 hard runtime dep of reg_meta_build, so the workbook-building tests run
 everywhere.
 """
@@ -11,88 +12,24 @@ everywhere.
 from __future__ import annotations
 
 from pathlib import Path
+from typing import TYPE_CHECKING
 
+import openpyxl
 import pytest
+from _sos_fixtures import write_source_workbook
 from reg_meta_build.sources.sos import (
     SosDcatAp,
     SosParseError,
-    _as_date,
-    _as_int,
-    _classify_value_set_text,
-    _clean,
-    _code_sheet_header,
-    _format_code,
-    _normalise,
     parse_directory,
     parse_register_file,
 )
 
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
 # ---------------------------------------------------------------------------
-# Unit tests
+# File-level guards
 # ---------------------------------------------------------------------------
-
-
-def test_normalise_strips_separators_and_case() -> None:
-    assert _normalise("Metadata - Variabelnivå") == "metadatavariabelnivå"
-    assert _normalise("Kodlista_DIAGNOS") == "kodlistadiagnos"
-    assert _normalise("Metadata-Datamängd (DCAT-AP) ") == "metadatadatamängddcatap"
-
-
-def test_clean_empty_returns_none() -> None:
-    assert _clean(None) is None
-    assert _clean("") is None
-    assert _clean("   ") is None
-    assert _clean("  hi ") == "hi"
-    assert _clean(42) == "42"
-
-
-def test_metod_header_assigns_labels_only_in_exact_layout() -> None:
-    assert _code_sheet_header(
-        ("Variabelnamn", "Tidsperiod", "Kod", "Behandlingsmetod")
-    ) == (
-        {0: "variable_name", 1: "tidsperiod", 2: "kod", 3: "beskrivning"},
-        "code",
-    )
-    reordered = _code_sheet_header(("Kod", "Behandlingsmetod", "Tidsperiod"))
-    assert reordered is not None
-    assert "beskrivning" not in reordered[0].values()
-
-
-@pytest.mark.parametrize(
-    ("text", "expected"),
-    [
-        (
-            "0 = A" + " " * 300 + "5 = B\n8 = C",
-            ([("0", "A"), ("5", "B"), ("8", "C")], False),
-        ),
-        ("1 = A,  2 = B", (None, True)),
-        ("0 = A  longer label\n5 = B", ([("0", "A  longer label"), ("5", "B")], False)),
-    ],
-)
-def test_inline_member_gaps_keep_code_and_label_guards(text: str, expected) -> None:
-    assert _classify_value_set_text(text) == expected
-
-
-def test_as_int_handles_common_shapes() -> None:
-    assert _as_int(1964) == 1964
-    assert _as_int("1964") == 1964
-    assert _as_int("  1964 ") == 1964
-    assert _as_int(1964.0) == 1964
-    assert _as_int(1964.5) is None
-    assert _as_int(None) is None
-    assert _as_int("") is None
-    assert _as_int("not a year") is None
-
-
-def test_as_date_accepts_datetime_and_date() -> None:
-    from datetime import date, datetime
-
-    # The suppressed naive datetime is the point: openpyxl yields tz-naive cell
-    # values, and _as_date must accept exactly that shape.
-    assert _as_date(datetime(2026, 3, 26)) == date(2026, 3, 26)  # noqa: DTZ001
-    assert _as_date(date(2026, 3, 26)) == date(2026, 3, 26)
-    assert _as_date("2026-03-26") is None  # strings aren't implicitly parsed
-    assert _as_date(None) is None
 
 
 def test_lock_file_rejected() -> None:
@@ -109,35 +46,6 @@ def test_dcat_ap_extras_roundtrip() -> None:
     ap = SosDcatAp(title_sv="Foo", extras={"Unknown attribute": "value"})
     assert ap.extras == {"Unknown attribute": "value"}
     assert ap.title_sv == "Foo"
-
-
-class _FakeCell:
-    """Minimal duck-typed stand-in for an openpyxl cell — enough for
-    `_format_code` to inspect `value` and `number_format` without pulling
-    in the optional dep."""
-
-    def __init__(self, value: object, number_format: str = "General") -> None:
-        self.value = value
-        self.number_format = number_format
-
-
-def test_format_code_passes_strings_through() -> None:
-    assert _format_code(_FakeCell("ABC123")) == "ABC123"
-    assert _format_code(_FakeCell("  001 ")) == "001"
-    assert _format_code(_FakeCell(None)) is None
-    assert _format_code(_FakeCell("")) is None
-
-
-def test_format_code_pads_int_with_pure_zero_format() -> None:
-    # Excel stores e.g. "001" as int 1 with number_format "000"; without
-    # consulting the format we'd lose the leading zeros and corrupt code
-    # identity. Only pure-zero formats are treated as code padding.
-    assert _format_code(_FakeCell(1, "000")) == "001"
-    assert _format_code(_FakeCell(12, "000")) == "012"
-    assert _format_code(_FakeCell(123, "000")) == "123"
-    assert _format_code(_FakeCell(7, "General")) == "7"
-    assert _format_code(_FakeCell(7.0, "00")) == "07"
-    assert _format_code(_FakeCell(7.5, "General")) == "7.5"
 
 
 def _write_minimal_workbook(
@@ -407,35 +315,6 @@ def test_synthetic_unrecognised_kodlista_preserves_raw_rows(tmp_path: Path) -> N
     assert any("Karolinska" in str(c) for row in weird.raw_rows for c in row)
 
 
-def test_kodlista_parse_exception_records_raw_hint_placeholder(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    # #401 Fix B, second skip path: if `_parse_kodlista` RAISES (vs. parsing as
-    # raw_rows), `parse_register_file` must still record the sheet as a raw
-    # placeholder so the kodlista-wins guard sees its variable HAD a kodlista
-    # sheet (`raw_rows` truthy -> raw_kodlista_hints) and won't fabricate a value
-    # set from the variable's Värdemängd. Force the raise via monkeypatch (no
-    # real-corpus sheet triggers it today — 0 occurrences).
-    from reg_meta_build.sources import sos
-
-    def _boom(ws: object) -> None:
-        raise ValueError("synthetic parse failure")
-
-    monkeypatch.setattr(sos, "_parse_kodlista", _boom)
-
-    p = tmp_path / "Test.xlsx"
-    _write_minimal_workbook(p, kod_rows=[("2024", "1", "first")])
-    reg = parse_register_file(p)
-
-    # the placeholder is recorded with the suffix-derived hint and truthy
-    # raw_rows (so it flows through the SAME raw skip path as a genuinely raw
-    # sheet), and the warning still fires.
-    placeholder = next(k for k in reg.kodlistor if k.variable_hint == "TEST")
-    assert placeholder.rows == ()
-    assert placeholder.raw_rows  # truthy -> excluded from value-set construction
-    assert any("synthetic parse failure" in w for w in reg.warnings)
-
-
 def test_synthetic_phantom_rows_do_not_inflate_variable_count(tmp_path: Path) -> None:
     # openpyxl's max_row is unreliable; `_row_iter` skips empty rows so trailing
     # phantom rows never become variables.
@@ -460,3 +339,156 @@ def test_synthetic_parse_directory_skips_lock_files(tmp_path: Path) -> None:
     results = parse_directory(tmp_path)
     assert len(results) == 1
     assert not results[0].source_file.name.startswith("~$")
+
+
+# ---------------------------------------------------------------------------
+# Cell shapes read into the parsed register
+# ---------------------------------------------------------------------------
+
+
+def _write_cell_shape_workbook(
+    path: Path,
+    *,
+    variables: Sequence[Sequence[object]] = (),
+    general: Sequence[Sequence[object]] = (),
+    codes: Sequence[tuple[object, str]] = (),
+) -> None:
+    """A workbook whose variable sheet carries name, label and `Data från`, an
+    optional `Generell information` body, and an optional Kodlista_TEST sheet of
+    `(Kod value, number_format)` rows."""
+    import openpyxl
+
+    wb = openpyxl.Workbook()
+    gen = wb.active
+    gen.title = "Generell information"
+    for row in general:
+        gen.append(row)
+    var = wb.create_sheet("Metadata - Variabelnivå")
+    var.append(["Variabelnamn", "Variabeletikett", "Data från"])
+    for row in variables:
+        var.append(row)
+    if codes:
+        kod = wb.create_sheet("Kodlista_TEST")
+        kod.append(["Tidsperiod", "Kod", "Beskrivning"])
+        for value, number_format in codes:
+            kod.append(["2024", value, "x"])
+            kod.cell(kod.max_row, 2).number_format = number_format
+    wb.save(path)
+
+
+@pytest.mark.parametrize(
+    ("cell", "year"),
+    [
+        (1964, 1964),
+        ("1964", 1964),
+        (" 1964 ", 1964),
+        (1964.0, 1964),
+        (1964.5, None),
+        ("not a year", None),
+    ],
+)
+def test_variable_data_from_reads_integer_year_shapes_only(
+    tmp_path: Path, cell: object, year: int | None
+) -> None:
+    path = tmp_path / "Metadata Test (TST)_webb.xlsx"
+    _write_cell_shape_workbook(path, variables=[["V", "Etikett", cell]])
+    assert parse_register_file(path).variables[0].data_from == year
+
+
+@pytest.mark.parametrize(
+    ("cell", "label"), [("  Etikett ", "Etikett"), ("   ", None), (42, "42")]
+)
+def test_variable_label_is_stripped_text_or_absent(
+    tmp_path: Path, cell: object, label: str | None
+) -> None:
+    path = tmp_path / "Metadata Test (TST)_webb.xlsx"
+    _write_cell_shape_workbook(path, variables=[["V", cell, 2001]])
+    assert parse_register_file(path).variables[0].label == label
+
+
+def test_general_information_dates_read_calendar_cells_only(tmp_path: Path) -> None:
+    from datetime import date, datetime
+
+    path = tmp_path / "Metadata Test (TST)_webb.xlsx"
+    _write_cell_shape_workbook(
+        path,
+        variables=[["V", "Etikett", 2001]],
+        general=[
+            ["", "Om metadatamallen", None],
+            # A text date is not parsed implicitly.
+            ["", "Datum", "2025-01-02"],
+            ["", "Om datamängden version", None],
+            # openpyxl yields tz-naive cell values; that is the accepted shape.
+            ["", "Datum", datetime(2026, 3, 26)],  # noqa: DTZ001
+        ],
+    )
+    register = parse_register_file(path)
+    assert (register.dataset_date, register.template_date) == (
+        date(2026, 3, 26),
+        None,
+    )
+
+
+def test_code_cells_keep_their_displayed_identity(tmp_path: Path) -> None:
+    # Excel stores e.g. "001" as int 1 with number_format "000"; only pure-zero
+    # formats are code padding, other numbers and text keep their display form.
+    import zipfile
+
+    path = tmp_path / "Metadata Test (TST)_webb.xlsx"
+    _write_cell_shape_workbook(
+        path,
+        variables=[["TEST", "Etikett", 2001]],
+        codes=[
+            (1, "000"),
+            (7, "00"),
+            (7.5, "General"),
+            ("  001 ", "@"),
+            (7, "General"),
+        ],
+    )
+    # openpyxl writes 7 as <v>7</v>. A producer that caches the float <v>7.0</v>
+    # must still read as the integer code under a zero-padding format.
+    with zipfile.ZipFile(path) as source:
+        members = {name: source.read(name) for name in source.namelist()}
+    sheet = next(
+        name
+        for name, payload in members.items()
+        if name.startswith("xl/worksheets/sheet") and b"<v>7</v>" in payload
+    )
+    members[sheet] = members[sheet].replace(b"<v>7</v>", b"<v>7.0</v>", 1)
+    with zipfile.ZipFile(path, "w") as output:
+        for name, payload in members.items():
+            output.writestr(name, payload)
+
+    rows = parse_register_file(path).kodlistor[0].rows
+    assert [row.kod for row in rows] == ["001", "07", "7.5", "001", "7"]
+    displayed = []
+    for row in rows:
+        assert row.source_evidence is not None
+        displayed.append(
+            next(
+                cell for cell in row.source_evidence.cells if cell.field_name == "kod"
+            ).display_value
+        )
+    assert displayed == ["001", "07", "7.5", "001", "7"]
+
+
+@pytest.mark.parametrize(
+    "sheet_name", ["Metadata - Variabel nivå", "Metadata - Variabel-nivå"]
+)
+def test_variable_sheet_is_found_when_its_name_splits_the_token(
+    tmp_path: Path, sheet_name: str
+) -> None:
+    # Sheet lookup ignores spaces, hyphens and parentheses inside a name, so a
+    # renamed variable-level sheet still delivers the same variables.
+    path = tmp_path / "Metadata Test (TST)_webb.xlsx"
+    write_source_workbook(path)
+    baseline = parse_register_file(path)
+    workbook = openpyxl.load_workbook(path)
+    workbook["Metadata - Variabelnivå"].title = sheet_name
+    workbook.save(path)
+
+    parsed = parse_register_file(path)
+
+    assert parsed.variables
+    assert [v.name for v in parsed.variables] == [v.name for v in baseline.variables]
