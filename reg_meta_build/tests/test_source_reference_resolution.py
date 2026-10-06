@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import cast
 
 import pytest
+from _source_scope_support import record
 from pydantic import ValidationError
 from reg_meta.documentary import SourceCodeCrosswalkDeclaration
 from reg_meta.source_evidence import (
@@ -24,7 +25,6 @@ from reg_meta_build.source_reference_resolution import (
     resolve_export_metadata,
     resolve_identifier_metadata,
 )
-from test_source_scope import record
 
 REVISION = SourceRevision.create(
     dataset="schema",
