@@ -5,7 +5,9 @@ values follow the column-owner contract: the owner takes exactly the rows of its
 variant and named source editions; every other row of the native family keeps its
 original identity, which the build then withholds as unresolved rather than folding
 into the owner. A reviewed owner replaces a generated name only when it covers every
-row.
+row. The issue codes asserted here (for example `unresolved_catalog_identity` for an
+uncovered original row) were recorded from a build run, not authored from
+documentation.
 """
 
 from __future__ import annotations

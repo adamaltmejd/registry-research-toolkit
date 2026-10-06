@@ -1,7 +1,7 @@
 """Curation-TOML load and located-failure cases for the relations and doc-source maps.
 
-- A curated same_as identity component may hold up to the documented cap of 32
-  FQIDs (the committed ``curation/relations.toml`` is checked against the same
+- A curated same_as identity component may hold up to 32 FQIDs, the cap stated only in
+  the comment on ``relations.py``'s private cap constant (the committed ``curation/relations.toml`` is checked against the same
   literal in ``test_repo_curation_overlays.py::test_repo_relations_parses``).
 - The build refuses a curated same_as component above that cap (synthetic SCB
   register whose curated relations chain N variables).

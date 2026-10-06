@@ -329,7 +329,8 @@ def test_repo_relations_parses() -> None:
     # (2) COMPONENT CAP — the actual safety property same_as exists to protect: a
     #     mistaken edge welds two identity components into a runaway resolver blob.
     #     Recompute connected components (union-find over the endpoint FQIDs) and
-    #     assert the max <= 32 (the documented same_as component cap), so a bad curation edge fails the
+    #     assert the max <= 32 (the same_as component cap, stated only in the comment on
+    #     relations.py's private cap constant), so a bad curation edge fails the
     #     unit suite, not only the maintainer build's `materialize_same_as` guard.
     parent: dict[str, str] = {}
 

@@ -4,7 +4,9 @@ Fixtures are synthetic SCB rows (see `_curation_partition_boundary_support`). Ex
 values follow the enrichment contract: a description fills an empty source description
 and is stale when the source already carries one; a search alias attaches to every
 variant the named variable occurs in, including a variable that exists only through a
-partition split or an `[[errata.column]]` declaration.
+partition split or an `[[errata.column]]` declaration. The exact stale detail strings
+and issue codes asserted here were recorded from a build run, not authored from
+documentation.
 """
 
 from __future__ import annotations
