@@ -93,9 +93,11 @@ def write_flavored_db(db_path: Path) -> Path:
     one row below is deliberately one `extend-db` never writes). `T_kolumn` is
     the single-spelling control: one state, its own alias row, no window.
 
-    Provenance: Python-literal SQL, carried from the pre-split module; recorded
-    as fixture debt in plan 06c-6's findings (tests derive their variants from
-    it by row edits that address these literal ids)."""
+    Provenance: Python-literal SQL, carried from the pre-split module. It is
+    fixture debt that is not mechanical to convert: building it through
+    `extend-db` needs a base build and mints hash ids, while tests derive their
+    variants by row edits addressing these literal ids, and one row is one
+    `extend-db` never writes."""
     conn = sqlite3.connect(db_path)
     conn.executescript(DDL)
     conn.execute(

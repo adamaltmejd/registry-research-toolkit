@@ -112,9 +112,14 @@ def test_inventory_refuses_incomplete_ambiguous_or_unknown_owner_scopes(
     owners: dict[str, list[tuple[str, str] | None]],
     issue: str,
 ) -> None:
-    """An owner whose windows cover only part of the edition, two owners covering
-    it together, and an owner with no calendar window at all each leave the
-    column unmapped: the inventory is not replaced and the worklist names why."""
+    """An owner whose windows cover only part of the edition, and two owners
+    covering it together, each leave the column unmapped: the inventory is not
+    replaced and the worklist names why.
+
+    The `year-independent` case pins CURRENT behaviour, not a settled rule: an
+    owner whose only state has no calendar window is refused the same way,
+    because owner choice reads interval windows only. Whether a year-independent
+    state should map regardless of edition awaits the maintainer's ruling."""
     db = _owner_db(tmp_path, flavored_db, owners)
 
     with pytest.raises(SystemExit, match="Inventory not replaced"):

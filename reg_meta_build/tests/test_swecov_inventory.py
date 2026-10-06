@@ -19,6 +19,7 @@ from _swecov_fixtures import (
     build_catalog,
     copied_layout,
     flavored_db_fixture,  # noqa: F401
+    inventory_worklist as _inventory_worklist,
     run_generator,
     run_inventory as _run_inventory,
     synthetic_enriched as _synthetic_enriched,
@@ -260,8 +261,7 @@ def test_inventory_unmapped_route_retains_holdings_without_inferred_assignment(
     table = load_delivery_inventory(steward / "inventory.toml").tables[0]
     assert table.id == "T2019" and table.edition == "2019"
     assert [column.name for column in table.columns] == ["T_kolumn", "Unknown"]
-    worklist = json.loads((tmp_path / "derived/inventory_worklist.json").read_text())
-    assert not worklist["assignment_needed"]
+    assert not _inventory_worklist(tmp_path)["assignment_needed"]
     if assigned:
         assert len(table.columns[0].mappings) == 1
     else:

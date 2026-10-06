@@ -35,6 +35,7 @@ _VARIABLE_OF = {
     "Errata_utan_variant": "errata-utan-variant",
 }
 
+# The fixture's own variant coordinate — on `inera`, the steward's flavor provider.
 _INERA = "inera/bestallda-prover/_default"
 
 
