@@ -13,13 +13,15 @@ import sqlite3
 from dataclasses import dataclass, replace
 from typing import TYPE_CHECKING
 
-from _csv_fixtures import var_row, write_input_bundle, write_scb_input
-from _pipeline_catalog_support import report_events
-from _prepared_fixtures import accept_prepared
+from _csv_fixtures import var_row, write_scb_input
+from _pipeline_catalog_support import (
+    prepare_accepted,
+    report_events,
+    write_curation_tree,
+)
 from _sos_fixtures import DEFAULT_REGISTERS, write_sos_input
 from openpyxl import load_workbook
 from reg_meta_build.pipeline import build_catalog
-from reg_meta_build.prepared_catalog import prepare_catalog_sources
 from reg_meta_build.source_naming import authored_naming_id
 
 if TYPE_CHECKING:
@@ -256,12 +258,16 @@ class Prepared:
     ) -> Build:
         """Build with an authored curation tree; ``curation`` maps register paths
         (``sos/x.toml``) to their text. The SCB sample register is always present."""
-        root = tmp_path / f"{label}-curation"
-        (root / "classifications").mkdir(parents=True)
-        for relative, text in {"scb/sample.toml": SCB_SAMPLE_TOML, **curation}.items():
-            path = root / "registers" / relative
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(text, encoding="utf-8")
+        root = write_curation_tree(
+            tmp_path / f"{label}-curation",
+            {
+                f"registers/{relative}": text
+                for relative, text in {
+                    "scb/sample.toml": SCB_SAMPLE_TOML,
+                    **curation,
+                }.items()
+            },
+        )
         report = tmp_path / f"{label}-report"
         output = tmp_path / f"{label}.db"
         result = build_catalog(
@@ -289,7 +295,4 @@ def prepare(tmp_path: Path, write_sources: Callable[[Path], object]) -> Prepared
         include=("registerinformation", "unika"),
     )
     write_sources(source)
-    bundle = write_input_bundle(tmp_path / "inputs", source)
-    prepared = tmp_path / "prepared" / "catalog"
-    manifest = prepare_catalog_sources(bundle, prepared)
-    return Prepared(prepared, accept_prepared(prepared), manifest.sha256)
+    return Prepared(*prepare_accepted(tmp_path, source))

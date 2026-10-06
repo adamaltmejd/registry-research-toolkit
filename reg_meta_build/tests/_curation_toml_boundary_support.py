@@ -23,11 +23,10 @@ import sys
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from _csv_fixtures import write_input_bundle, write_scb_input
-from _prepared_fixtures import accept_prepared
+from _csv_fixtures import write_scb_input
+from _pipeline_catalog_support import prepare_accepted, write_curation_tree
 from _snapshot_fixtures import copied_builder_checkout
 from reg_meta_build.pipeline import build_catalog
-from reg_meta_build.prepared_catalog import prepare_catalog_sources
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -81,22 +80,14 @@ def build_scb_catalog(
     if fk_toml is not None:
         (source / "Forsakringskassan").mkdir()
         (source / "Forsakringskassan" / "fk.toml").write_text(fk_toml, encoding="utf-8")
-    bundle = write_input_bundle(tmp_path / "inputs", source)
-    prepared = tmp_path / "prepared" / "catalog"
-    manifest = prepare_catalog_sources(bundle, prepared)
-    commit = accept_prepared(prepared)
-    root = tmp_path / "curation"
-    (root / "classifications").mkdir(parents=True)
-    for relative, text in curation.items():
-        path = root / relative
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(text, encoding="utf-8")
+    prepared, commit, digest = prepare_accepted(tmp_path, source)
+    root = write_curation_tree(tmp_path / "curation", curation)
     db = tmp_path / "db" / "reg_meta.db"
     report = tmp_path / "report"
     result = build_catalog(
         prepared,
         commit,
-        manifest.sha256,
+        digest,
         db,
         report,
         curation_dir=root,

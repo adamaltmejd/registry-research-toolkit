@@ -17,16 +17,17 @@ from typing import TYPE_CHECKING, Literal
 from _csv_fixtures import (
     REGISTERINFORMATION_HEADER,
     var_row,
-    write_input_bundle,
     write_scb_input,
 )
-from _pipeline_catalog_support import report_events
-from _prepared_fixtures import accept_prepared
+from _pipeline_catalog_support import (
+    prepare_accepted,
+    report_events,
+    write_curation_tree,
+)
 from _sos_fixtures import DEFAULT_REGISTERS, write_sos_input
 from reg_meta_build.pipeline import build_catalog
 from reg_meta_build.prepared_catalog import (
     open_prepared_catalog_sources,
-    prepare_catalog_sources,
 )
 from reg_meta_build.source_naming import authored_naming_id
 
@@ -300,13 +301,9 @@ def prepare_sources(
     if sos_registers:
         for path in write_sos_input(source, registers=sos_registers).glob("*.xlsx"):
             _deliver_blank_join_markers(path)
-    bundle = write_input_bundle(tmp_path / "inputs", source)
-    prepared = tmp_path / "prepared" / "catalog"
-    manifest = prepare_catalog_sources(bundle, prepared)
-    commit = accept_prepared(prepared)
-    root = tmp_path / "curation"
-    (root / "classifications").mkdir(parents=True)
-    sources = Sources(prepared, commit, manifest.sha256, root)
-    for relative, text in curation.items():
-        sources.write(relative, text)
-    return sources
+    prepared, commit, digest = prepare_accepted(tmp_path, source)
+    root = write_curation_tree(
+        tmp_path / "curation",
+        {f"registers/{relative}": text for relative, text in curation.items()},
+    )
+    return Sources(prepared, commit, digest, root)

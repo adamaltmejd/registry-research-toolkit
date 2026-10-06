@@ -14,10 +14,13 @@ import sqlite3
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from _csv_fixtures import var_row, write_input_bundle, write_scb_input
-from _pipeline_catalog_support import CatalogFixture, report_issues
-from _prepared_fixtures import accept_prepared
-from reg_meta_build.prepared_catalog import prepare_catalog_sources
+from _csv_fixtures import var_row, write_scb_input
+from _pipeline_catalog_support import (
+    CatalogFixture,
+    prepare_accepted,
+    report_issues,
+    write_curation_tree,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -168,17 +171,9 @@ def build(
         unika_rows=summaries,
         include=("registerinformation", "unika"),
     )
-    bundle = write_input_bundle(tmp_path / "inputs", source)
-    prepared = tmp_path / "prepared" / "catalog"
-    manifest = prepare_catalog_sources(bundle, prepared)
-    commit = accept_prepared(prepared)
-    root = tmp_path / "curation"
-    (root / "classifications").mkdir(parents=True)
-    for relative, text in curation.items():
-        path = root / relative
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(text, encoding="utf-8")
-    fixture = CatalogFixture(prepared, commit, manifest.sha256, root)
+    prepared, commit, digest = prepare_accepted(tmp_path, source)
+    root = write_curation_tree(tmp_path / "curation", curation)
+    fixture = CatalogFixture(prepared, commit, digest, root)
     output, report = tmp_path / "catalog.db", tmp_path / "report"
     kwargs = {} if registers is None else {"registers": registers}
     result = fixture.build(output, report, diagnostic=True, **kwargs)
