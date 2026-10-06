@@ -1844,39 +1844,12 @@ def _emit_timing(label: str, t0: float) -> None:
         _progress(f"[timing] {label}: {time.perf_counter() - t0:.1f}s")
 
 
-# A2.3: SCB ships succession in `timeseries_event` under two handelse values.
-# `Ersatt av` is the canonical direction (id1 was replaced by id2); `Ersätter`
-# is the inverse (id1 replaces id2). SCB usually emits both rows for a single
-# transition, so the materializer collapses them onto one predecessor →
-# successor edge.
-# Four entity grains. `Register` / `RegisterVariant` land in their own tables;
-# `AktuellVariabel` (cvid) and `Variabel` (var_id) both resolve to the variable
-# grain and land in `variable_replaced_by`.
-# Source-of-truth marker for the auto-derive path. Distinguishes from the
-# TOML-curated rows (#440 — cross-provider / dead-predecessor succession not
-# visible in SCB's `timeseries_event`).
-# Provenance marker for the curated-TOML path (#440). A row's own `note` (the
-# human transition reason) lands in `beskrivning`; this fixed marker lands in
-# `note`, mirroring the auto path so a consumer can tell curated from auto-derived.
-
-# Manifest stat keys for replaced_by materialization. Single source so the
-# `skip_slugs` zero-fill (in `build_db`) and the materializer's real return
-# can't drift apart — `test_replaced_by_stats_in_manifest` pins the exact set.
-
-
-# A4.4e: the SCB feed of the provider-blind `classification_candidate` table — a
-# verbatim projection of exactly the rows `_backfill_state_classifications` used
-# to read directly off `variable_instance`. Shared as a single source of truth so
-# the byte-identical-gated filter (`classification_id IS NOT NULL AND variable_id
-# IS NOT NULL`) cannot drift between the build feed and its test.
-
-
 def _populate_fts(conn: sqlite3.Connection, *, include_value_code: bool = True) -> None:
     """Populate FTS5 search indexes.
 
     ``include_value_code=False`` skips ONLY the ``value_code_fts`` INSERT — the
-    register_fts, variable_fts and classification_fts inserts always run. The extend-db overlay
-    (#365 PR2) uses this: it never inserts ``value_code`` rows, so the
+    register_fts, variable_fts and classification_fts inserts always run. The
+    extend-db overlay (#365 PR2) uses this: it never inserts ``value_code`` rows, so the
     value_code_fts index copied from the base DB is already in sync and
     re-populating its ~4M rows would be pure build-time waste. The full build
     keeps the default ``True``, so its ``_populate_fts(conn)`` call is unchanged.
