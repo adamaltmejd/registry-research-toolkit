@@ -39,10 +39,10 @@ def client(docs_db):
 def client_built_docs(catalog_db, tmp_path):
     """App with a docs index built from the readable `docs_source/` markdown only.
 
-    `build_doc_db` also reads the checkout's doc-source and related-document
-    curation and its untracked PDF seed (paths beside the package). Building with
-    a copy of the installed package under `<tmp>/runtime/src` leaves those absent,
-    so the index holds exactly the docs in `docs_source/` in every checkout."""
+    `build_doc_db` also reads the checkout's doc-source curation (a path beside
+    the package). Building with a copy of the installed package under
+    `<tmp>/runtime/src` leaves it absent, so the index holds exactly the docs in
+    `docs_source/` in every checkout."""
     src = tmp_path / "runtime" / "src"
     shutil.copytree(
         Path(reg_meta_build.__file__).parent,
