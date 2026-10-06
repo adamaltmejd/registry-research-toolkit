@@ -23,7 +23,6 @@ ALLOWLIST = {
     "reg_meta_build/tests/test_curation_compile.py",
     "reg_meta_build/tests/test_doc_db.py",
     "reg_meta_build/tests/test_period_family_merges.py",
-    "reg_meta_build/tests/test_pipeline.py",
     "reg_meta_build/tests/test_repo_curation_tomls.py",
     "reg_meta_build/tests/test_source_classification_bindings.py",
     "reg_meta_build/tests/test_source_coding_choices.py",
