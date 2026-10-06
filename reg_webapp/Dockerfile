@@ -114,6 +114,8 @@ RUN uv sync --frozen --no-dev --package reg-meta
 # REG_META_TAG is a cache-bust knob: a DATA-only reg_meta release reuses the same
 # code/lockfile, so the bake layer's cache key would otherwise never change and a
 # cached rebuild (GHA cache-from / local cache) would silently keep a stale DB.
+# The tag is the ONLY cache key for the bake: re-uploading an asset under an
+# existing tag needs a `no-cache` build (or a fresh tag) to be picked up.
 # Default `latest` resolves whatever release is newest at build time; CI always
 # passes the resolved concrete tag (`--build-arg REG_META_TAG=reg_meta/vX.Y.Z`).
 # A concrete tag fetches BOTH assets from that single release — valid because

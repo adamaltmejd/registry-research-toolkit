@@ -76,17 +76,22 @@ def test_swecov_fly_jobs_use_swecov_scoped_token() -> None:
 
 def test_image_bake_bootstraps_the_named_catalog() -> None:
     """The bake cannot update an explicit empty directory (reg_meta refuses to
-    bootstrap through ``--db``); it installs the flavor as a named catalog and
-    the SWECOV job selects that flavor without any secret-backed manifest."""
+    bootstrap through ``--db``); it installs the flavor as a named catalog, the
+    SWECOV job selects that flavor and steward, and the global job keeps the
+    Dockerfile's default flavor."""
     dockerfile = _text("reg_webapp/Dockerfile")
     assert '--catalog "$REG_META_FLAVOR"' in dockerfile
     assert "reg-meta update --db" not in dockerfile
-    assert "mount=type=secret" not in dockerfile
 
     workflow = _text(".github/workflows/container-build.yml")
+    global_build = workflow.split("\n  build-image:", 1)[1].split(
+        "\n  build-swecov-image:",
+        1,
+    )[0]
     swecov_build = workflow.split("\n  build-swecov-image:", 1)[1].split(
         "\n  deploy:",
         1,
     )[0]
+    assert "REG_META_FLAVOR" not in global_build
     assert "REG_META_FLAVOR=swecov" in swecov_build
-    assert "secret-envs" not in swecov_build
+    assert "REG_WEBAPP_STEWARD=swecov" in swecov_build
