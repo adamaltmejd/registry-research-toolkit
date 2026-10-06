@@ -2248,6 +2248,7 @@ def write_scb_observation_census(
 
 
 __all__ = [
+    "CENSUS_INTERPRETATION_ID",
     "CensusAlternativeGroup",
     "CensusCompletion",
     "CensusScalarAlternativeGroup",

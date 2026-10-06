@@ -356,40 +356,9 @@ def parse_register_file(path: Path | str) -> SosRegister:
         for sheet_name in wb.sheetnames:
             low = sheet_name.lower()
             if low.startswith("kodlista"):
-                try:
-                    kod, kod_warnings, code_evidence = _parse_kodlista(wb[sheet_name])
-                    kodlistor.append(kod)
-                    warnings.extend(kod_warnings)
-                except Exception as exc:  # noqa: BLE001 — best-effort parse boundary: any sheet failure downgrades to a raw-hint warning
-                    warnings.append(f"kodlista {sheet_name!r}: {exc}")
-                    all_cell_rows = list(_cell_row_iter(wb[sheet_name]))
-                    code_evidence = _code_sheet_evidence(wb[sheet_name], all_cell_rows)
-                    issue = SosParseIssue(
-                        sheet_name=sheet_name,
-                        kind="code_list_parse_error",
-                        detail=f"{type(exc).__name__}: {exc}",
-                    )
-                    parse_issues.append(issue)
-                    # Keep the legacy raw-sheet guard supplied with real original
-                    # rows while the source-facing boundary exposes the parse issue.
-                    hint = (
-                        sheet_name.split("_", 1)[1] if "_" in sheet_name else sheet_name
-                    )
-                    hint = hint.split("!", 1)[0].strip()
-                    kodlistor.append(
-                        SosKodlista(
-                            sheet_name=sheet_name,
-                            variable_hint=hint,
-                            codeset_name=None,
-                            variable_header=None,
-                            background=None,
-                            rows=(),
-                            raw_rows=tuple(
-                                tuple(cell.value for cell in cells)
-                                for cells in all_cell_rows
-                            ),
-                        )
-                    )
+                kod, kod_warnings, code_evidence = _parse_kodlista(wb[sheet_name])
+                kodlistor.append(kod)
+                warnings.extend(kod_warnings)
                 evidence_by_sheet[sheet_name] = code_evidence
             elif low.startswith("kvalitet"):
                 quality, quality_evidence = _parse_quality_sheet(wb[sheet_name])

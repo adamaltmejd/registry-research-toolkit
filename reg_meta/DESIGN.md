@@ -535,11 +535,13 @@ verdict/declaration/counts with an EMPTY `nonconforming_codes`.
 lifetime, so a history whose 290 states share one coding pays for one membership scan
 rather than 290. `Catalog` likewise memoizes the holdings delivery fusion behind
 coverage and deliveries for its lifetime, and the delivery-column spelling lookup pins
-`idx_variable_state_variable` by name (`INDEXED BY`), because the artifact ships no
-planner statistics. `dense_integer_range` is the denseness test itself: enough members,
-every code a distinct canonical decimal integer inside JS's safe-integer range, every
-label restating its own code, and the values covering enough of their own span — a set
-whose labels carry meaning stays a table.
+`idx_variable_state_variable` by name (`INDEXED BY`). Without `sqlite_stat1` the planner
+picks the register-variant index; builds now end with ANALYZE, and on an analyzed
+artifact the planner picks this index unaided, but the hint stays until the latency
+oracle is re-run on an analyzed artifact. `dense_integer_range` is the denseness test
+itself: enough members, every code a distinct canonical decimal integer inside JS's
+safe-integer range, every label restating its own code, and the values covering enough
+of their own span — a set whose labels carry meaning stays a table.
 
 The members themselves are then read explicitly and narrowly:
 `Catalog.value_set_codes(value_set_id)` is the full membership of ONE coding (None for

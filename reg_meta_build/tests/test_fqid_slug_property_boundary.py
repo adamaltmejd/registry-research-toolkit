@@ -11,7 +11,7 @@ import tempfile
 from pathlib import Path
 
 from _slugged_db import add_state, add_variable, build_slugged_db
-from hypothesis import assume, example, given, strategies as st
+from hypothesis import assume, example, given, settings, strategies as st
 from reg_meta.catalog import Catalog
 from reg_meta.fqid import derive_variable_slug, validate_slug
 
@@ -60,6 +60,8 @@ def _populate(
     }
 
 
+# Each example builds and slugs a catalog; under machine load it overruns the default deadline.
+@settings(deadline=None)
 @given(variables)
 # Four variables on one shared column and name: the fourth must skip every
 # taken `-N` suffix, not just the first.
@@ -80,6 +82,8 @@ def test_auto_slugs_valid_unique_and_deterministic(
     assert auto_a == auto_b
 
 
+# Each example builds and slugs a catalog; under machine load it overruns the default deadline.
+@settings(deadline=None)
 @given(names)
 @example("Utgifter för egen FoU efter finansieringskälla EU ramprogram forskning")
 def test_name_slug_capped_and_stable(name: str) -> None:
@@ -109,6 +113,8 @@ _slug = st.from_regex(r"[a-z](?:-?[a-z0-9]){0,10}", fullmatch=True).filter(
 _panel_key = st.one_of(_slug, st.lists(_slug, min_size=1, max_size=4, unique=True))
 
 
+# Each example builds and slugs a catalog; under machine load it overruns the default deadline.
+@settings(deadline=None)
 @given(_panel_key, st.one_of(st.just("period"), _panel_key))
 def test_panel_keys_round_trip_to_reader(
     entity_key: str | list[str], time_key: str | list[str]

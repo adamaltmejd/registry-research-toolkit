@@ -1,0 +1,16 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "steward",
+  "argv": [
+    "--scope",
+    "reference",
+    "search",
+    "--query",
+    "codes",
+    "--field",
+    "description",
+    "--type",
+    "classification"
+  ],
+  "observe": "search-page"
+}

@@ -1101,6 +1101,8 @@ def _prepare_file(
             record_handle = None
             record_files.append(_normalized_file(root, record_path, record_lines))
         conn.commit()
+        # Untested by design: content keys are 128-bit BLAKE2b digests, so only a
+        # real hash collision reaches this. It stays as a fail-fast guard.
         collision = conn.execute(
             "SELECT group_name, key, COUNT(*) FROM payload "
             "GROUP BY group_name, key HAVING COUNT(*) > 1 LIMIT 1"

@@ -564,6 +564,7 @@
     "slug": "zz-discriminative",
     "short_name": "A",
     "name": "Grupperat",
+    "description": "C12 C12 C12, grouped",
     "codes": [
       {
         "code": "C12",

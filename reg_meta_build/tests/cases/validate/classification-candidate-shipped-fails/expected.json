@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "classification_candidate should have been dropped"
+  ]
+}

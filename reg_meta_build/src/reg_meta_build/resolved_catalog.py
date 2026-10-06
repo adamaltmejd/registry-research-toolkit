@@ -1414,6 +1414,9 @@ def write_resolved_catalog(
             ):
                 conn.execute(f"DROP TABLE {table}")
             _populate_fts(conn)
+            # Last write: readers plan with these statistics. ANALYZE is a pure
+            # function of the table contents, so rebuilds stay byte-identical.
+            conn.execute("ANALYZE")
             conn.commit()
             conn.execute("VACUUM")
         validation = validate_built_db(staged, corpus=corpus)

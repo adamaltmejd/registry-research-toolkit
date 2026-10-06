@@ -11,9 +11,9 @@ from dataclasses import asdict
 from datetime import UTC, datetime
 from io import TextIOWrapper
 from pathlib import Path
-from typing import TYPE_CHECKING, cast, get_args, get_origin
+from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict, TypeAdapter, ValidationError
+from pydantic import BaseModel, ConfigDict
 from reg_meta.source_evidence import canonical_sha256
 
 from reg_meta_build.catalog_dependencies import (
@@ -69,7 +69,6 @@ from reg_meta_build.source_coordinates import (
 from reg_meta_build.source_curation import (
     AcknowledgeDecision,
     CurationCase,
-    GuardValidationContext,
     ResolutionDiagnostic,
     SourceRecordRef,
 )
@@ -107,8 +106,6 @@ from reg_meta_build.validate import validate_built_db
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
-
-    from pydantic_core import InitErrorDetails
 
     from reg_meta_build.curation_tree import CurationTree
     from reg_meta_build.source_value_bindings import (
@@ -157,19 +154,6 @@ class CompiledScope(_Model):
     variants: tuple[tuple[NativeKey, ResolvedVariant], ...] = ()
 
 
-_COMPILED_SCOPE_JSON = TypeAdapter(
-    object, config=ConfigDict(ser_json_inf_nan="constants")
-)
-# Only variadic tuples can be validated entry by entry. Collection constraints
-# belong to the final normal scope validation, not the single-entry adapters.
-_COMPILED_SCOPE_COLLECTIONS = {
-    name: TypeAdapter(field.annotation, config=ConfigDict(strict=True))
-    for name, field in CompiledScope.model_fields.items()
-    if get_origin(field.annotation) is tuple
-    and get_args(field.annotation)[-1:] == (Ellipsis,)
-}
-
-
 class CompiledGlobals(_Model):
     """Strict contract for the declarations compiled from tracked curation."""
 
@@ -199,75 +183,19 @@ LOCAL_CHECKS_NOT_RUN = (
 )
 
 
-def _validate_compiled_scope(values: dict[str, object]) -> CompiledScope:
-    """Validate complete JSON entries without retaining a whole-scope wire buffer."""
-    context = GuardValidationContext()
-    # simplify: CompiledScope has no cross-field validators. Revisit header parsing
-    # if it gains one; final normal validation checks the assembled scope below.
-    header = CompiledScope.model_validate_json(
-        _COMPILED_SCOPE_JSON.dump_json(
-            {
-                name: value
-                for name, value in values.items()
-                if name not in _COMPILED_SCOPE_COLLECTIONS
-            },
-            warnings="error",
-        ),
-        context=context,
-    )
-    parsed = header.model_dump(mode="python")
-    for name, adapter in _COMPILED_SCOPE_COLLECTIONS.items():
-        supplied = values.get(name, ())
-        # Real compiled collections are tuples. Other containers still cross the
-        # complete JSON contract so, for example, an empty dict cannot disappear.
-        chunks = (
-            ((index, (item,)) for index, item in enumerate(supplied))
-            if type(supplied) is tuple
-            else ((0, supplied),)
-        )
-        items = []
-        for offset, chunk in chunks:
-            try:
-                items.extend(
-                    adapter.validate_json(
-                        _COMPILED_SCOPE_JSON.dump_json(chunk, warnings="error"),
-                        strict=True,
-                        context=context,
-                    )
-                )
-            except ValidationError as exc:
-                errors = exc.errors(include_url=False)
-                for error in errors:
-                    loc = error["loc"]
-                    error["loc"] = (
-                        (name, offset + loc[0], *loc[1:])
-                        if loc and isinstance(loc[0], int)
-                        else (name, *loc)
-                    )
-                raise ValidationError.from_exception_data(
-                    CompiledScope.__name__, cast("list[InitErrorDetails]", errors)
-                ) from exc
-        parsed[name] = tuple(items)
-    # Every supplied value has crossed strict JSON validation; normal final model
-    # validation still checks the assembled scope, including any scope validators.
-    return CompiledScope.model_validate(parsed, context=context)
-
-
 def _compiled_scope(
     key: tuple[str, NativeKey | None], compiled: CompiledCuration
 ) -> CompiledScope:
-    """Validate one compiled scope through its serialized JSON contract."""
-    return _validate_compiled_scope(
-        {
-            "source": key[0],
-            "register_key": key[1],
-            "cases": compiled.cases.get(key, ()),
-            "source_diagnostics": (compiled.source_diagnostics or {}).get(key, ()),
-            "naming": (compiled.naming or {}).get(key, ()),
-            "naming_ambiguities": (compiled.naming_ambiguities or {}).get(key, ()),
-            "provider_keys": (compiled.provider_keys or {}).get(key, ()),
-            "variants": (compiled.variants or {}).get(key, ()),
-        }
+    """Collect one compiled scope's declarations into its strict model."""
+    return CompiledScope(
+        source=key[0],
+        register_key=key[1],
+        cases=compiled.cases.get(key, ()),
+        source_diagnostics=(compiled.source_diagnostics or {}).get(key, ()),
+        naming=(compiled.naming or {}).get(key, ()),
+        naming_ambiguities=(compiled.naming_ambiguities or {}).get(key, ()),
+        provider_keys=(compiled.provider_keys or {}).get(key, ()),
+        variants=(compiled.variants or {}).get(key, ()),
     )
 
 
@@ -281,24 +209,17 @@ def _unique_pairs[K, V](items: tuple[tuple[K, V], ...], description: str) -> dic
 def _classification_references(
     tree: CurationTree,
 ) -> tuple[dict[str, str], dict[str, tuple[str, ...]]]:
-    references = _unique_pairs(
-        tuple(
-            (name, entry.classification.slug)
-            for entry in tree.classifications
-            for name in (entry.classification.short_name, *entry.classification.aliases)
-        ),
-        "classification reference",
-    )
-    families = _unique_pairs(
-        tuple(
-            (alias, family.members)
-            for family in tree.classification_families.family
-            for alias in family.aliases
-        ),
-        "classification family alias",
-    )
-    if set(references) & set(families):
-        raise ValueError("duplicate classification reference and family alias")
+    # `load_classifications` refuses a spelling claimed twice, at its file.
+    references = {
+        name: entry.classification.slug
+        for entry in tree.classifications
+        for name in (entry.classification.short_name, *entry.classification.aliases)
+    }
+    families = {
+        alias: family.members
+        for family in tree.classification_families.family
+        for alias in family.aliases
+    }
     return references, families
 
 
@@ -520,6 +441,9 @@ def _run_pipeline(
         source_registers = {
             register for register, _, _ in prepared.records.register_coordinates(source)
         }
+        # Invariant kept as a fail-fast guard: prepared readers key every record
+        # of a source either by register or not at all, so no public input mixes
+        # the two. A mixed source would silently double-count its records.
         if None in source_registers and len(source_registers) > 1:
             raise ValueError(
                 f"a source cannot select both whole-source and register scopes: {source}"
@@ -569,23 +493,12 @@ def _run_pipeline(
             for fqid, binding in classification_overrides.items()
             if binding[1] in valid_overrides
         }
-    global_json = json.dumps(
-        compiled.fields,
-        default=lambda item: (
-            item.model_dump(mode="json")
-            if hasattr(item, "model_dump")
-            else item.__dict__
-        ),
-        ensure_ascii=False,
-        sort_keys=True,
-        separators=(",", ":"),
-    )
-    selected = CompiledGlobals.model_validate_json(global_json)
+    selected = CompiledGlobals(**compiled.fields)
     scopes: dict[tuple[str, NativeKey | None], CompiledScope] = {}
     for key in visit:
         scopes[key] = _compiled_scope(key, compiled)
         if dump_decisions is None:
-            # Release each raw graph as its validated replacement becomes available.
+            # The validated scope owns its declarations; drop the raw mappings.
             for mapping in (
                 compiled.cases,
                 compiled.source_diagnostics,
@@ -677,6 +590,17 @@ def _run_pipeline(
     curation_hash = tree_sha256(curation_dir)
     if dump_decisions is not None:
         dump_decisions.mkdir()
+        global_json = json.dumps(
+            compiled.fields,
+            default=lambda item: (
+                item.model_dump(mode="json")
+                if hasattr(item, "model_dump")
+                else item.__dict__
+            ),
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
         (dump_decisions / "global.json").write_text(
             global_json + "\n",
             encoding="utf-8",
@@ -693,7 +617,6 @@ def _run_pipeline(
         )
     # Global contracts are validated and any requested dump is written now.
     compiled.fields.clear()
-    del global_json
     # The accepted preparation's immutable commit dates the catalog vintage;
     # rebuild wall time would make identical selected inputs produce new bytes.
     import_date = (
@@ -1172,13 +1095,6 @@ def _run_pipeline(
                     def record_coding_compilation(
                         register, new_cases, new_diagnostics, scope_key=scope_key
                     ) -> None:
-                        _validate_compiled_scope(
-                            {
-                                "source": scope_key[0],
-                                "register_key": scope_key[1],
-                                "cases": new_cases,
-                            }
-                        )
                         name = f"{register.register_info.provider}/{register.register_info.slug}"
                         if name in seen_coding:
                             raise ValueError(f"coding register compiled twice: {name}")
@@ -1347,6 +1263,9 @@ def _run_pipeline(
                                 (r.source, r.locators[0].semantic_record_key)
                                 for r in occurrence.evidence
                             )
+                    # Invariant kept as a fail-fast guard: source-scope resolution
+                    # accounts for every original record, so no public input reaches
+                    # this. A dropped record would vanish from the catalog silently.
                     if set(uses) != {r.record_id for r in originals} or len(
                         uses
                     ) != len(originals):

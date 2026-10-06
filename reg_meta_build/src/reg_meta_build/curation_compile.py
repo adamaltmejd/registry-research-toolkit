@@ -6868,11 +6868,11 @@ def compile_deferred_naming(
     dict[Any, tuple[NamingAmbiguity, ...]],
 ]:
     """Compile only declarations used to classify out-of-slice references."""
-    from .pipeline import _validate_compiled_scope
+    from .pipeline import CompiledScope
 
     naming, _, _, _, _ = compile_native_naming(tree, prepared, scopes, subset=True)
     scopes = tuple(
-        _validate_compiled_scope(
+        CompiledScope.model_validate(
             {
                 **dict(scope),
                 "naming": naming.get((scope.source, scope.register_key), ()),
@@ -6910,13 +6910,13 @@ def compile_curation(
     storage_columns: dict[tuple[str, str], SourceColumnTypeDeclaration] | None = None,
 ) -> CompiledCuration:
     """Compile global families, wiring, and exact issue acknowledgements."""
-    from .pipeline import _validate_compiled_scope
+    from .pipeline import CompiledScope
 
     naming, variants, provider_keys, naming_diagnostics, naming_report = (
         compile_native_naming(tree, prepared, scopes, subset=subset)
     )
     scopes = tuple(
-        _validate_compiled_scope(
+        CompiledScope.model_validate(
             {
                 **dict(scope),
                 "naming": naming.get((scope.source, scope.register_key), ()),
