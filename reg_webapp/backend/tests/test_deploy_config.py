@@ -74,23 +74,24 @@ def test_swecov_fly_jobs_use_swecov_scoped_token() -> None:
     assert "secrets.FLY_API_TOKEN }}" not in swecov_deploy
 
 
-def test_swecov_image_job_resolves_release_artifact() -> None:
-    workflow = _text(".github/workflows/container-build.yml")
-    swecov_build = workflow.split("\n  build-swecov-image:", 1)[1].split(
-        "\n  deploy:",
-        1,
-    )[0]
+def test_image_bake_bootstraps_the_named_catalog() -> None:
+    """The bake cannot update an explicit empty directory (reg_meta refuses to
+    bootstrap through ``--db``); it installs the flavor as a named catalog, the
+    SWECOV job selects that flavor and steward, and the global job keeps the
+    Dockerfile's default flavor."""
+    dockerfile = _text("reg_webapp/Dockerfile")
+    assert '--catalog "$REG_META_FLAVOR"' in dockerfile
+    assert "reg-meta update --db" not in dockerfile
 
-    assert 'gh release view "$REG_META_TAG" --json assets' in swecov_build
-    assert 'asset.get("name") == "reg_meta_swecov.db.zst"' in swecov_build
-    assert "secrets.SWECOV_REG_META_DB_ZST" not in swecov_build
-
-
-def test_global_image_job_does_not_receive_swecov_manifest_secret() -> None:
     workflow = _text(".github/workflows/container-build.yml")
     global_build = workflow.split("\n  build-image:", 1)[1].split(
         "\n  build-swecov-image:",
         1,
     )[0]
-
-    assert "SWECOV_REG_META_DB_ZST" not in global_build
+    swecov_build = workflow.split("\n  build-swecov-image:", 1)[1].split(
+        "\n  deploy:",
+        1,
+    )[0]
+    assert "REG_META_FLAVOR" not in global_build
+    assert "REG_META_FLAVOR=swecov" in swecov_build
+    assert "REG_WEBAPP_STEWARD=swecov" in swecov_build

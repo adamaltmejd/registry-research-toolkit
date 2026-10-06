@@ -386,9 +386,9 @@ rm -rf "$docs_dir" reg_meta_docs.db.zst
 
 The SWECOV steward app (`data.swecov.se`) bakes one **compiled steward artifact** — the
 global catalog, accepted steward provider overlays, and compiled physical holdings — as
-its `REG_META_DB`. `container-build.yml`'s `build-swecov-image` job resolves this asset
-(by url + sha256) from the newest published `reg_meta/v*` release; **absent, the SWECOV
-deploy fails** at "Resolve SWECOV DB release artifact" and `deploy-swecov` /
+its `REG_META_DB`. `container-build.yml`'s `build-swecov-image` job bakes this asset
+with `reg-meta update --catalog swecov --tag <newest reg_meta/v*>`; **absent, the SWECOV
+image build fails** (exit 10, `release_not_found`) and `deploy-swecov` /
 `edge-deploy-swecov` skip. The consumer side is PR #1014; this producer step must run on
 **every** reg_meta release (#1091 — omitting it broke v0.36.0–v0.38.0's SWECOV deploys
 silently, since the global apps deploy fine without it).
