@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
+from _source_curation_support import curation_decision as _decision
 from reg_meta.source_evidence import SourceField, SourceRevision
 from reg_meta_build.prepared_sources import (
     prepare_source_records,
@@ -22,7 +23,6 @@ from reg_meta_build.source_curation import (
 )
 from reg_meta_build.source_records import SourceRecord
 from reg_meta_build.sources.scb_records import clean_scb_row
-from test_source_curation import _decision
 
 if TYPE_CHECKING:
     from pathlib import Path
