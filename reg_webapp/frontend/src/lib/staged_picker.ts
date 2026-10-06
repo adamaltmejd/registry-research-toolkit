@@ -17,13 +17,17 @@ import {
   type PeriodBounds,
   periodCoverageUnion,
   periodFromWire,
+  periodLabel,
   periodToWire,
+  periodWindowRelation,
+  yearWindowLabel,
 } from "./period";
 import {
   isPlainObject,
   type Period,
   type ProjectData,
   regMetaReleaseTag,
+  type StudyWindow,
   safeSourceBindings,
   safeSourceName,
   safeSourcePeriod,
@@ -158,43 +162,40 @@ function rowVariantSegments(row: PickerRepresentation): CommitVariantSegment[] {
  * (the #376 whack-a-mole seam). A single-segment (unfolded) row is always fully
  * relevant; a folded family narrows to the segments whose delivery windows overlap the
  * active add window, falling back to ALL segments when none do (an explicitly-selected
- * out-of-window row is never silently dropped). */
+ * out-of-window row is never silently dropped: its staging match still finds it, and
+ * its Apply is refused by name rather than skipped). */
 function relevantSegments(
   row: PickerRepresentation,
   scope: PickerCommitScope,
 ): {
   segments: CommitVariantSegment[];
   addWindow: { from: string; to: string } | null;
-  clipped: boolean;
   folded: boolean;
 } {
   const addWindow = addWindowBounds(scope.period, scope.window ?? null);
   const segments = rowVariantSegments(row);
   if (segments.length === 1) {
-    return { segments, addWindow, clipped: true, folded: false };
+    return { segments, addWindow, folded: false };
   }
   const overlapping = segments.filter((segment) =>
     windowsOverlapWindow(segment.windows, addWindow),
   );
-  const clipped = overlapping.length > 0;
   return {
-    segments: clipped ? overlapping : segments,
+    segments: overlapping.length > 0 ? overlapping : segments,
     addWindow,
-    clipped,
     folded: true,
   };
 }
 
-/** Whether a picker row has a delivery era inside `scope`'s add window — the gate a
- * host must apply when that window IS the only period it can commit under.
- * `rowAddSegments` deliberately FALLS BACK to a row's whole span where the window
- * clips it to nothing, so a subject page's explicitly-picked dimmed row still commits
- * something; that page has a Period control to say what. The register list (Y-83) has
- * none — the study window is the only period there is — so inheriting that fallback
- * would author years the researcher never asked for, and it refuses the row instead.
- * Reads the add window through the SAME `addWindowBounds` derivation `relevantSegments`
- * does (#678: a sub-annual `?period` wins over the year window), so a gate and the
- * commit it gates can never disagree about which window a row was judged against. With
+/** Whether a picker row has a delivery era inside `scope`'s add window — the gate
+ * the register list (Y-83) applies before a tick is even offered, since the study
+ * window is the only period it has. A subject page instead keeps every row
+ * selectable and lets `applyStagedPicks` refuse the Add (`outside-scope`): a row
+ * the window clips to nothing has no period to commit, and inventing one from the
+ * row's own span is what the common-study-window decision rules out. Reads the add
+ * window through the SAME `addWindowBounds` derivation `relevantSegments` does (#678:
+ * a sub-annual `?period` wins over the year window), so a gate and the commit it
+ * gates can never disagree about which window a row was judged against. With
  * no window nothing is clipped, every row passes, and `finalAddPeriodWires` is the one
  * that asks for a period. */
 export function rowDeliversInScope(
@@ -220,11 +221,14 @@ function rowRelevantSegments(
 }
 
 /** One concrete `register_variant` an Apply must stage for a (folded or plain) picker
- * row, with its scope-clipped add period. */
+ * row, with its scope-clipped add period. `outsideScope` marks a dated segment the
+ * active add window clips to NOTHING — its `periodWire` is then null, and the Apply
+ * is refused rather than given a period nobody asked for. */
 export interface RowAddSegment {
   variant: string;
   registerVariant: string;
   periodWire: string | null;
+  outsideScope: boolean;
 }
 
 /** The per-concrete-segment Apply plan for a picker row (#376): ONE source per concrete
@@ -232,24 +236,35 @@ export interface RowAddSegment {
  * period. The single home for the picker-row → staged-add fan-out, consumed by every
  * view's `stagedAddCandidates` so the per-concrete-segment invariant (catalog.ts) is
  * enforced once, not re-derived per view.
- *   - An UNFOLDED row stages its one variant with `rowAddPeriod` (the whole-row window,
- *     fallback allowed so an out-of-window add still commits the row's own span).
+ *   - An UNFOLDED row stages its one variant with `rowAddPeriod` (the whole-row
+ *     windows clipped to the add window).
  *   - A FOLDED family stages each relevant concrete segment with its OWN delivery
- *     windows clipped to the add window (no fallback: a family segment's period is
- *     era-precise so a partial-family add can't leak coverage into the other era). */
+ *     windows clipped to the add window (era-precise, so a partial-family add can't
+ *     leak coverage into the other era).
+ * Either way the clip keeps EVERY disjoint era the window reaches — the full
+ * available intersection the common study window defaults an add to — and a
+ * segment it reaches none of is `outsideScope` (`relevantSegments` still hands
+ * back a family's every segment then, so the refusal can name the row). */
 export function rowAddSegments(
   band: StagedPickerBand,
   row: PickerRepresentation,
   scope: PickerCommitScope,
 ): RowAddSegment[] {
-  const { segments, addWindow, clipped, folded } = relevantSegments(row, scope);
-  return segments.map((segment) => ({
-    variant: segment.variant,
-    registerVariant: rowRegisterVariantForVariant(band, segment.variant),
-    periodWire: folded
-      ? windowsAddPeriod(segment.windows, clipped ? addWindow : null, false)
-      : rowAddPeriod(row, addWindow),
-  }));
+  const { segments, addWindow, folded } = relevantSegments(row, scope);
+  return segments.map((segment) => {
+    const periodWire = folded
+      ? windowsAddPeriod(segment.windows, addWindow)
+      : rowAddPeriod(row, addWindow);
+    return {
+      variant: segment.variant,
+      registerVariant: rowRegisterVariantForVariant(band, segment.variant),
+      periodWire,
+      outsideScope:
+        addWindow !== null &&
+        row.period_scope !== "year_independent" &&
+        periodWire === null,
+    };
+  });
 }
 
 function rowMatchesBinding(
@@ -332,6 +347,47 @@ export function committedPickerRows(
     }
   }
   return committed;
+}
+
+/** How a picker's "In project" marker reads against the common study window — the
+ * picker half of "highlight every divergence" (the `/project` source card is the
+ * other). A source whose period is the window's own years says nothing more; one
+ * that differs says so; one with no years inside the window says it is outside, at
+ * error tone, because that is what blocks the order. The label stays short — it is a
+ * one-line tag inside a picker row, down to 375px — and `detail` names both periods
+ * for assistive tech (visually hidden: the window is on screen in the rail and the
+ * source period on the `/project` card); null when there is none. */
+export interface CommittedMarker {
+  tone: "info" | "error";
+  glyph: string;
+  label: string;
+  detail: string | null;
+}
+
+export function committedMarker(
+  sourcePeriod: Period,
+  studyWindow: StudyWindow | null,
+): CommittedMarker {
+  const relation = periodWindowRelation(sourcePeriod, studyWindow);
+  const period = periodLabel(sourcePeriod);
+  if (relation === null || relation === "same" || studyWindow === null) {
+    return { tone: "info", glyph: "i", label: "In project", detail: null };
+  }
+  const window = yearWindowLabel(studyWindow);
+  if (relation === "disjoint") {
+    return {
+      tone: "error",
+      glyph: "✕",
+      label: "In project, outside study window",
+      detail: `(source period ${period}; study window ${window})`,
+    };
+  }
+  return {
+    tone: "info",
+    glyph: "i",
+    label: "In project, years differ",
+    detail: `(source period ${period}; study window ${window})`,
+  };
 }
 
 export function sourcePeriodsFromDraft(
@@ -518,17 +574,61 @@ export function stagedDiffSummary(counts: StagedApplyOutcome): string {
   return parts.join(" · ");
 }
 
-/** The three ways an Apply can end:
+/** The ways an Apply can end:
  *  - `applied` — the diff is committed (the host clears its staging);
  *  - `period-required` — refused BEFORE any mutation because an add resolved no
  *    finite period (the host shows `ADD_PERIOD_REQUIRED_MESSAGE` and keeps the
  *    staging, so an Apply that authored nothing never looks like one that did);
+ *  - `outside-scope` — refused BEFORE any mutation because a picked column has no
+ *    years inside the active add window (the common study window, or the page's
+ *    own period): there is no overlap to persist, and the batch is not half-applied.
+ *    `columns` names them for `outsideScopeMessage`;
  *  - `abandoned` — the page was left, or the draft replaced, while the picks were
  *    in flight; nothing was written. */
 export type StagedApplyResult =
   | { kind: "applied"; outcome: StagedApplyOutcome | null }
   | { kind: "period-required" }
+  | { kind: "outside-scope"; columns: string[] }
   | { kind: "abandoned" };
+
+/** The refusal an `outside-scope` Apply shows in the picker: which columns, the
+ * window they miss, and the two ways out — untick them, or move the period that
+ * excludes them. `scope` is the one the Apply ran under, so the copy names the
+ * page's own period when that is what clipped them, else the study window. */
+export function outsideScopeMessage(
+  columns: readonly string[],
+  scope: PickerCommitScope,
+): string {
+  const names =
+    columns.length <= 1
+      ? (columns[0] ?? "This column")
+      : `${columns.slice(0, -1).join(", ")} and ${columns.at(-1)}`;
+  const verb = columns.length > 1 ? "have" : "has";
+  if (scope.period) {
+    return `Not added: ${names} ${verb} no years inside the selected period ${periodLabel(periodFromWire(scope.period)) ?? scope.period}. Untick ${columns.length > 1 ? "them" : "it"}, or change the period above.`;
+  }
+  const window = scope.window
+    ? ` ${yearWindowLabel({ from: scope.window[0], to: scope.window[1] })}`
+    : "";
+  return `Not added: ${names} ${verb} no years inside the study window${window}. Untick ${columns.length > 1 ? "them" : "it"}, or widen the study window in the rail.`;
+}
+
+/** The refusal line a host shows for an Apply that authored nothing, or null when
+ * there is none to show (applied, or abandoned). `periodRequired` is the host's own
+ * wording for that gate — it names the controls THAT page has. */
+export function stagedApplyRefusal(
+  result: StagedApplyResult,
+  scope: PickerCommitScope,
+  periodRequired: string,
+): string | null {
+  if (result.kind === "period-required") {
+    return periodRequired;
+  }
+  if (result.kind === "outside-scope") {
+    return outsideScopeMessage(result.columns, scope);
+  }
+  return null;
+}
 
 /** One staged add, resolved down to a concrete `register_variant` + period. */
 export interface StagedAddCandidate {
@@ -537,6 +637,7 @@ export interface StagedAddCandidate {
   registerVariant: string;
   periodWire: string | null;
   period: Period;
+  outsideScope: boolean;
 }
 
 /** Fan ONE picked row out to a staged add per concrete `register_variant` its
@@ -553,6 +654,7 @@ export function stagedAddCandidates(
     registerVariant: segment.registerVariant,
     periodWire: segment.periodWire,
     period: periodFromWire(segment.periodWire),
+    outsideScope: segment.outsideScope,
   }));
 }
 
@@ -633,6 +735,20 @@ export async function applyStagedPicks(
   const candidates = payload.adds.flatMap((pick) =>
     stagedAddCandidates(pick, ctx.scope),
   );
+  // A column with NO years inside the add window has no overlap to persist: the
+  // common study window blocks it rather than inventing a period (reg_webapp/
+  // DESIGN.md → "Common study window"), and the whole batch with it, so nothing
+  // is half-applied.
+  const outside = [
+    ...new Set(
+      candidates
+        .filter((candidate) => candidate.outsideScope)
+        .map((candidate) => candidate.pick.row.column),
+    ),
+  ];
+  if (outside.length > 0) {
+    return { kind: "outside-scope", columns: outside };
+  }
   const addPeriods = finalAddPeriodWires(
     sourcePeriodsFromDraft(projectStore.draft),
     candidates,

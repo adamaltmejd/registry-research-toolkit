@@ -42,8 +42,10 @@ import {
   type YearScale,
   yearScaleOf,
 } from "./picker_graph";
+import type { StudyWindow } from "./project_data";
 import { router } from "./router.svelte";
 import {
+  committedMarker,
   nullBindingCommittedRowKeys,
   type PickerCommittedRow,
   pickerRowKey,
@@ -159,6 +161,7 @@ let {
   window,
   canAdd,
   committedRows = new Map<string, PickerCommittedRow>(),
+  studyWindow = null,
   activePeriod = null,
   focusKey = null,
   graph = null,
@@ -186,6 +189,10 @@ let {
   canAdd: boolean;
   /** Rows already present in the active project, keyed by `pickerRowKey`. */
   committedRows?: ReadonlyMap<string, PickerCommittedRow>;
+  /** The project's common study window (null when none is set) — what a committed
+   * row's source period is MARKED against (`committedMarker`). Distinct from
+   * `window`, which may be this page's own `?period` lens. */
+  studyWindow?: StudyWindow | null;
   /** The explicit `?period` value. The picker uses it only as parent-supplied
    * context; partial leaf/group views must not stage source-level period
    * replacements because a source period applies to every binding on the source. */
@@ -2321,7 +2328,10 @@ function codingsVaryHref(
                         {@render colChip(row.column)}
                         {@render renameHint(row.renamedColumns)}
                         {#if stage !== "none"}
-                          {@render stageTag(stage)}
+                          {@render stageTag(
+                            stage,
+                            committedRows.get(rowKey(predecessorBand, row)),
+                          )}
                         {/if}
                       </span>
                       {#if row.codingsVary}
@@ -2368,11 +2378,18 @@ function codingsVaryHref(
   {/if}
 {/snippet}
 
-{#snippet stageTag(stage: RowStage)}
+{#snippet stageTag(stage: RowStage, committed?: PickerCommittedRow)}
   {#if stage === "committed"}
-    <Tag tone="info">
-      {#snippet glyph()}{rowStageGlyph(stage)}{/snippet}
-      {rowStageLabel(stage)}
+    <!-- Marked against the common study window: a source period whose years differ
+         says so, one outside the window says so at error tone (`committedMarker`). -->
+    {@const marker = committed
+      ? committedMarker(committed.sourcePeriod, studyWindow)
+      : null}
+    <Tag tone={marker?.tone ?? "info"}>
+      {#snippet glyph()}{marker?.glyph ?? rowStageGlyph(stage)}{/snippet}
+      <span>{marker?.label ?? rowStageLabel(stage)}</span>{#if marker?.detail}<span
+          class="visually-hidden">{marker.detail}</span
+        >{/if}
     </Tag>
   {:else if stage === "staged-add"}
     <Tag tone="ok">
@@ -2696,7 +2713,7 @@ function codingsVaryHref(
                               {@render renameHint(graphRenameHint(item.match))}
                             </span>
                             {#if stage !== "none"}
-                              {@render stageTag(stage)}
+                              {@render stageTag(stage, committedRows.get(rowKey(band, row)))}
                             {/if}
                             {#if row.codingsVary}
                               {@render codingsVaryNudge(
@@ -2919,7 +2936,7 @@ function codingsVaryHref(
                     >
                   {/if}
                   {#if stage !== "none"}
-                    {@render stageTag(stage)}
+                    {@render stageTag(stage, committedRows.get(rowKey(band, row)))}
                   {/if}
                 </span>
                 <!-- #908/#1121: per-axis facet value pills. The hidden/title axis label
@@ -3145,7 +3162,7 @@ function codingsVaryHref(
                       {@render variantKeyTag(label.variantKey)}
                     {/if}
                     {#if stage !== "none"}
-                      {@render stageTag(stage)}
+                      {@render stageTag(stage, committedRows.get(rowKey(band, row)))}
                     {/if}
                   </span>
                   <!-- #908/#1121: per-axis facet value pills. The hidden/title axis

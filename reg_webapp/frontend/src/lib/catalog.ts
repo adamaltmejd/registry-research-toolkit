@@ -1394,20 +1394,23 @@ export function addWindowBounds(
  * bounds treated as unbounded); the surviving windows render as the comma-union via
  * the same `rowWirePeriod` path (so an interrupted series stays interrupted, #678).
  * An empty intersection (the row lies wholly outside the window — only reachable for
- * an explicitly-selected dimmed row) falls back to the row's own `wirePeriod` so the
- * add is never dropped. Pure — unit-tested. */
+ * an explicitly-selected dimmed row) is null: there is no period to commit, and the
+ * common-study-window decision blocks that add rather than inventing one from the
+ * row's own span (reg_webapp/DESIGN.md → "Common study window"). Pure — unit-tested. */
 export function rowAddPeriod(
   row: PickerRepresentation,
   window: { from: string; to: string } | null,
 ): string | null {
   if (row.period_scope === "year_independent") return "_default";
-  return windowsAddPeriod(row.windows, window, true);
+  return windowsAddPeriod(row.windows, window);
 }
 
+/** `rowAddPeriod` over bare delivery windows: each clamped into `window` and the
+ * survivors rendered as the comma-union — every disjoint era kept — or null when
+ * none survives. With no window, the windows' own wire period. */
 export function windowsAddPeriod(
   windows: readonly { from: string; to: string }[],
   window: { from: string; to: string } | null,
-  fallbackOnEmpty: boolean,
 ): string | null {
   if (!window) {
     return rowWirePeriod(windows);
@@ -1427,12 +1430,8 @@ export function windowsAddPeriod(
       clamped.push({ from: lo, to: hi });
     }
   }
-  // Wholly outside the window (no surviving window): keep the row's own span so an
-  // explicitly-selected dimmed row still adds something sensible.
-  if (clamped.length === 0) {
-    return fallbackOnEmpty ? rowWirePeriod(windows) : null;
-  }
-  return rowWirePeriod(clamped);
+  // Wholly outside the window (no surviving window): nothing to commit.
+  return clamped.length === 0 ? null : rowWirePeriod(clamped);
 }
 
 export function windowsOverlapWindow(

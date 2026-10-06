@@ -1181,7 +1181,26 @@ describe("SourceEditor source period list segments (Y-101)", () => {
     ]);
   });
 
-  it("marks a list period's overall span — first From to last To — against the study window", async () => {
+  it("marks a list period against the study window by the years it covers", async () => {
+    // Touching segments cover the window's years exactly: no mark, however the wire
+    // spells them.
+    const touching = await renderCard(
+      {
+        name: "LISA",
+        register_variant: "scb/lisa/arbetsstallen",
+        period: [
+          { from: 2015, to: 2017 },
+          { from: 2018, to: 2020 },
+        ],
+        bindings: [],
+      } as unknown as Source,
+      { studyWindow: { from: 2015, to: 2020 } },
+    );
+    expect(page.getByText(/Differs from study window/).query()).toBeNull();
+    touching.unmount();
+
+    // A hole (2018) inside the window is a divergence too — the source does not
+    // cover every year of it — so it is marked, like a narrower or wider span.
     const spanning = {
       name: "LISA",
       register_variant: "scb/lisa/arbetsstallen",
@@ -1191,13 +1210,13 @@ describe("SourceEditor source period list segments (Y-101)", () => {
       ],
       bindings: [],
     } as unknown as Source;
-    const matching = await renderCard(spanning, {
+    const holed = await renderCard(spanning, {
       studyWindow: { from: 2015, to: 2020 },
     });
-    // The internal gap (2018) doesn't matter — only the outer span does, same as
-    // a single range.
-    expect(page.getByText(/Differs from study window/).query()).toBeNull();
-    matching.unmount();
+    await expect
+      .element(page.getByText("Differs from study window 2015–2020"))
+      .toBeVisible();
+    holed.unmount();
 
     await renderCard(spanning, { studyWindow: { from: 2010, to: 2020 } });
     await expect

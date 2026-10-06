@@ -318,7 +318,9 @@ describe("ProjectEditor renders the ValidationPanel", () => {
 
   it("passes project-window coverage hints into the panel", async () => {
     seedSources(["scb/lisa/v1"]);
-    projectStore.updateField("window", { from: 2010, to: 2020 });
+    // A window the 2000 source overlaps but does not fill (one wholly outside it
+    // is a blocking finding instead — study_window.browser.test.ts).
+    projectStore.updateField("window", { from: 1995, to: 2005 });
     await renderEditor();
 
     await expect

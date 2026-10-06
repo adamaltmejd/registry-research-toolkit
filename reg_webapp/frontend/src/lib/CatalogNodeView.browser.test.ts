@@ -1867,11 +1867,12 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
       { from: 1998, to: 2015 },
     ]);
     // …and the row reads as in the project off those same eras: the marker matches
-    // the committed source era by era, with no second read of the states.
+    // the committed source era by era, with no second read of the states. The 1997
+    // hole is a divergence from the study window, and the marker says so.
     await expect
       .element(
         page.getByRole("checkbox", {
-          name: "Lan 1968, 1995–1996, 1998– In project",
+          name: "Lan 1968, 1995–1996, 1998– In project, years differ (source period 1995–1996, 1998–2015; study window 1995–2015)",
           exact: true,
         }),
       )

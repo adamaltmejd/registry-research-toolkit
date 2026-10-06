@@ -13,6 +13,7 @@ import {
   orderFindingPointer,
   type ValidationIssue,
   type WindowCoverageHint,
+  type WindowDisjointFinding,
 } from "./validation";
 
 // The validation echo (see reg_schema/DESIGN.md → Structural rules and issue
@@ -34,6 +35,7 @@ const {
   requestErrorSource,
   orderFindings = [],
   windowHints,
+  windowFindings = [],
   sources,
   onRetry,
   onRetryOrder,
@@ -48,6 +50,10 @@ const {
    * shape as a validation issue — they are findings, not a message. */
   orderFindings?: readonly OrderFinding[];
   windowHints: readonly WindowCoverageHint[];
+  /** Sources the common study window has left with no years inside it — the SPA's
+   * own blocking authoring finding (`windowDisjointFindings`), rendered like a
+   * blocked order's findings because it blocks the order the same way. */
+  windowFindings?: readonly WindowDisjointFinding[];
   sources: readonly SafeSource[];
   /** Re-runs `/validate`. Offered ONLY for a failed validation REQUEST — see the
    * banner below. */
@@ -192,6 +198,31 @@ const LEVEL_LABEL: Record<Level, string> = {
             {/if}
             {#if loc}
               {@render locators(loc)}
+            {/if}
+          </li>
+        {/each}
+      </ul>
+    </div>
+  {/if}
+
+  <!-- Sources the study window has moved off: each keeps its explicit period (a
+       window edit never rewrites one), so the ORDER is blocked until the researcher
+       decides — an authoring finding, not a validator's, ahead of the validator's
+       verdict because it is the one that closes the download. -->
+  {#if windowFindings.length > 0}
+    <div class="group error" role="group" aria-labelledby="window-findings-heading">
+      <h4 class="micro-label" id="window-findings-heading">
+        Blocking the order: outside the study window ({windowFindings.length})
+      </h4>
+      <ul>
+        {#each windowFindings as finding, i (i)}
+          <li>
+            <div class="issue-head">
+              <span class="label">No years inside the study window</span>
+            </div>
+            <p class="message">{finding.message}</p>
+            {#if finding.location}
+              {@render locators(finding.location)}
             {/if}
           </li>
         {/each}

@@ -2655,10 +2655,10 @@ describe("rowAddPeriod (#678 finding 3: honor the active period on add)", () => 
     expect(rowAddPeriod(row(), yr(2000, 2030))).toBe("2010..2020");
   });
 
-  it("a window wholly OUTSIDE the row span falls back to the row's own wire period", () => {
-    // An explicitly-selected dimmed row (out of window) still adds something sensible
-    // rather than an empty/inverted intersection.
-    expect(rowAddPeriod(row(), yr(2030, 2031))).toBe("2010..2020");
+  it("a window wholly OUTSIDE the row span has no period to commit", () => {
+    // The common-study-window decision: no overlap blocks the add rather than
+    // inventing a period from the row's own span.
+    expect(rowAddPeriod(row(), yr(2030, 2031))).toBeNull();
   });
 
   // #678 finding 1: a SUB-ANNUAL `?period` must commit at its real grain, NOT the
@@ -2715,10 +2715,8 @@ describe("rowAddPeriod (#678 finding 3: honor the active period on add)", () => 
     expect(rowAddPeriod(disjoint, yr(2008, 2017))).toBe(
       "2008..2010,2015..2017",
     );
-    // A window inside the GAP keeps neither era → fall back to the row's own wire.
-    expect(rowAddPeriod(disjoint, yr(2012, 2013))).toBe(
-      "2005..2010,2015..2020",
-    );
+    // A window inside the GAP keeps neither era → nothing to commit.
+    expect(rowAddPeriod(disjoint, yr(2012, 2013))).toBeNull();
     // A window over only the first era keeps just it.
     expect(rowAddPeriod(disjoint, yr(2006, 2009))).toBe("2006..2009");
   });
