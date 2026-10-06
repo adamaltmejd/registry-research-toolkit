@@ -6,16 +6,14 @@ IR graph inserter here; global builds write resolved_catalog directly.
 
 from __future__ import annotations
 
-import csv
 import hashlib
-import io
 import os
 import sqlite3
 import struct
 import sys
 import time
 from contextlib import closing, contextmanager
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
 from reg_meta.db import (
     get_manifest,
@@ -137,16 +135,6 @@ def _value_set_hash(pairs: list[tuple[str, str]]) -> bytes:
 # Map to their cp850 equivalents rather than rejecting.
 _CP850_FIXUP = {0x8F: "Å", 0x90: "É", 0x9D: "Ø", 0x81: "ü", 0x8D: "ì"}
 
-# str.translate table mapping each DOS-remnant byte (read as a latin-1
-# codepoint) to its cp1252-twin codepoint — the same char a normal cp1252 byte
-# would decode to (0x8F→Å is also reachable as 0xC5→Å, etc.). Applying it to a
-# raw latin-1 string yields a dedup key whose equality is IDENTICAL to comparing
-# `_decode_cp1252` results: `_decode_cp1252` is injective on every byte EXCEPT it
-# folds each fixup byte onto its twin, so canonicalizing exactly those five bytes
-# induces the same equivalence — without paying a full per-row decode. Lets the
-# Vardemangder hot loop key value_code dedup on raw fields and defer decode to
-# first-occurrence while staying byte-identical to the decoded-key build.
-_CP850_CANON = {b: ord(ch) for b, ch in _CP850_FIXUP.items()}
 
 EXPECTED_HEADERS: dict[str, list[str]] = {
     "Registerinformation.csv": [
@@ -1728,26 +1716,8 @@ def _file_sha256(path: Path) -> str:
 
 @contextmanager
 def _open_scb_source_raw(
-    path: Path, snapshot: ScbSnapshotReader | None
+    path: Path, snapshot: ScbSnapshotReader
 ) -> Iterator[tuple[list[str], Iterator[list[str | None]]]]:
-    if snapshot is None:
-        with path.open("rb") as raw_handle:
-            text_handle = io.TextIOWrapper(raw_handle, encoding="latin-1", newline="")
-            reader = csv.reader(text_handle, delimiter="|", quotechar='"')
-            try:
-                header = next(reader)
-            except StopIteration as exc:
-                raise RegMetaError(
-                    exit_code=EXIT_CONFIG,
-                    code="csv_empty",
-                    error_class="configuration",
-                    message=f"CSV file is empty: {path.name}",
-                    remediation="Re-export the file from mikrometadata.scb.se.",
-                ) from exc
-
-            yield header, cast("Iterator[list[str | None]]", reader)
-        return
-
     from .input_snapshot import SnapshotError
 
     try:
@@ -1762,7 +1732,7 @@ def _open_scb_source_raw(
 @contextmanager
 def _open_scb_csv_rows(
     path: Path,
-    snapshot: ScbSnapshotReader | None = None,
+    snapshot: ScbSnapshotReader,
 ) -> Iterator[tuple[list[str], Iterator[tuple[int, list[str | None]]]]]:
     """Share SCB header and row-width validation before cell interpretation."""
     with _open_scb_source_raw(path, snapshot) as (raw_header, reader):
@@ -1784,36 +1754,6 @@ def _open_scb_csv_rows(
         yield header, rows()
 
 
-@contextmanager
-def _open_scb_csv_raw(
-    path: Path,
-    snapshot: ScbSnapshotReader | None = None,
-) -> Iterator[tuple[list[str], Iterator[tuple[int, list[str]]]]]:
-    """Open a pipe-delimited cp1252 CSV; yield (header, raw-field-list iterator).
-
-    Same open + header/field-count validation as `_open_scb_csv`, but each row
-    is the RAW latin-1 field LIST — NOT decoded, NOT keyed into a dict. The
-    102M-row Vardemangder loop indexes columns positionally and decodes only the
-    few it keeps; per-row dict-building and per-field `_decode_cp1252` otherwise
-    dominate the whole build. Prepared NULLs are normalized in place so this
-    hot default traversal retains the source row list without a per-row copy or
-    presence sidecar. The header IS decoded (cheap, once).
-    """
-    with _open_scb_csv_rows(path, snapshot) as (header, source_rows):
-        if snapshot is None:
-            yield header, cast("Iterator[tuple[int, list[str]]]", source_rows)
-            return
-
-        def raw_rows() -> Iterator[tuple[int, list[str]]]:
-            for row_number, fields in source_rows:
-                for index, value in enumerate(fields):
-                    if value is None:
-                        fields[index] = ""
-                yield row_number, cast("list[str]", fields)
-
-        yield header, raw_rows()
-
-
 def _validated_scb_header(filename: str, raw_header: Sequence[str]) -> list[str]:
     """Decode and validate one SCB CSV header at the interpretation boundary."""
     header = [_decode_cp1252(value) for value in raw_header]
@@ -1830,30 +1770,6 @@ def _validated_scb_header(filename: str, raw_header: Sequence[str]) -> list[str]
 
 
 @contextmanager
-def _open_scb_csv(
-    path: Path,
-    snapshot: ScbSnapshotReader | None = None,
-) -> Iterator[tuple[list[str], Iterator[tuple[int, dict[str, str]]]]]:
-    """Open a pipe-delimited cp1252 CSV and yield (header, row_iterator).
-
-    Reads bytes as latin-1 (single-byte passthrough), validates against
-    known-invalid cp1252 bytes, then decodes to proper cp1252 text. Each row is
-    a fully-decoded ``{column: value}`` dict. Built on `_open_scb_csv_raw`; hot
-    paths that don't need every column decoded should use the raw helper.
-    """
-    with _open_scb_csv_raw(path, snapshot) as (header, raw_rows):
-
-        def row_iter() -> Iterator[tuple[int, dict[str, str]]]:
-            for row_number, fields in raw_rows:
-                yield (
-                    row_number,
-                    {h: _decode_cp1252(v) for h, v in zip(header, fields, strict=True)},
-                )
-
-        yield header, row_iter()
-
-
-@contextmanager
 def _open_scb_csv_prepared(
     path: Path,
     snapshot: ScbSnapshotReader,
@@ -1864,7 +1780,7 @@ def _open_scb_csv_prepared(
 
     Each cell is ``(present, raw, interpreted)``.  ``present`` distinguishes a
     prepared NULL from a supplied empty scalar; interpreted values use the same
-    cp1252 repair as :func:`_open_scb_csv`.
+    cp1252 repair as :func:`_decode_cp1252`.
     """
     with _open_scb_csv_rows(path, snapshot) as (header, raw_rows):
 
