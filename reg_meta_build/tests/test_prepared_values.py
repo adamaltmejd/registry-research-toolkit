@@ -9,7 +9,7 @@ from dataclasses import replace
 from typing import TYPE_CHECKING
 
 import pytest
-from _prepared_fixtures import accept_prepared
+from _prepared_fixtures import accept_prepared, record_file_opens, record_git_calls
 from reg_meta.source_evidence import DeliveredCell, RecordLocator, SourceRevision
 from reg_meta_build.prepared_values import (
     PreparedValueError,
@@ -25,8 +25,6 @@ from reg_meta_build.source_values import (
     SourceValueJoin,
     SourceValueValidity,
 )
-
-from reg_meta_build import prepared_values
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -251,8 +249,9 @@ def test_point_lookups_do_not_scan_unrelated_member_or_item_tokens(tmp_path):
         ),
     )
     reader = _open(root, manifest)
-    # Dictionary loading is a single session startup cost, outside point lookups.
-    _ = reader._references
+    # Dictionary loading is a single reader startup cost, outside point lookups; the
+    # first decoded association loads them.
+    assert next(reader.associations()) == rows[0]
     with reader.session() as session:
         # Abort a query that scans the 10,000 unrelated tokens. This exercises the
         # cost bound without depending on SQLite's version-specific plan text.
@@ -334,17 +333,32 @@ def test_validity_requires_explicit_provenance(tmp_path):
         _prepare(tmp_path / "invalid", validity=rows, validity_revision=revision)
 
 
-def test_uint32_ceiling_and_existing_output_are_fail_closed(tmp_path, monkeypatch):
+def test_existing_output_is_never_overwritten(tmp_path):
     root = tmp_path / "values"
-    monkeypatch.setattr(prepared_values, "_UINT32_MAX", 3)
-    with pytest.raises(PreparedValueError, match="uint32"):
-        _prepare(root, associations=(_association(i + 2) for i in range(4)))
-    assert not root.exists()
     _prepare(root)
     before = [path.read_bytes() for path in prepared_value_paths(root)]
     with pytest.raises(PreparedValueError, match="already exists"):
         _prepare(root)
     assert before == [path.read_bytes() for path in prepared_value_paths(root)]
+
+
+def test_manifest_count_beyond_the_uint32_format_is_rejected(tmp_path):
+    # The stored streams address items with uint32; a count the format cannot hold is
+    # refused wherever it appears, here in an accepted manifest.
+    root = tmp_path / "inputs" / "values"
+    _prepare(root)
+    path = root / "manifest.json"
+    document = json.loads(path.read_text())
+    document["item_count"] = 2**32
+    payload = json.dumps(document).encode()
+    path.write_bytes(payload)
+    commit = accept_prepared(root)
+    with pytest.raises(PreparedValueError, match="uint32"):
+        open_prepared_source_values(
+            root,
+            expected_sha256=hashlib.sha256(payload).hexdigest(),
+            input_commit=commit,
+        )
 
 
 @pytest.mark.parametrize(
@@ -398,7 +412,7 @@ def test_warm_selection_rejects_invalid_worktree(tmp_path, change):
         )
 
 
-def test_warm_access_does_not_rehash_or_reclean_payloads(tmp_path, monkeypatch):
+def test_warm_open_reads_no_payload_and_returns_stored_values(tmp_path, monkeypatch):
     root = tmp_path / "inputs" / "values"
     rows = (
         _association(),
@@ -406,16 +420,15 @@ def test_warm_access_does_not_rehash_or_reclean_payloads(tmp_path, monkeypatch):
     )
     manifest = _prepare(root, associations=rows)
     commit = accept_prepared(root)
-
-    def forbidden(*args, **kwargs):
-        pytest.fail("warm reader re-ran preparation")
-
-    monkeypatch.setattr(prepared_values, "_file_sha256", forbidden)
-    monkeypatch.setattr(prepared_values, "_checked", forbidden)
-    monkeypatch.setattr(prepared_values, "_check_association", forbidden)
-    reader = open_prepared_source_values(
-        root, expected_sha256=manifest.sha256, input_commit=commit
-    )
+    with monkeypatch.context() as patch:
+        git = record_git_calls(patch)
+        opened = record_file_opens(patch)
+        reader = open_prepared_source_values(
+            root, expected_sha256=manifest.sha256, input_commit=commit
+        )
+    assert not any("hash-object" in call for call in git)
+    # Payload streams are opened only by a reader session, never to rehash at open.
+    assert [path for path, _ in opened if "files" in path.parts] == []
     assert tuple(reader.associations()) == rows
     assert tuple(reader.lookup_member("001")) == rows
     assert len(tuple(reader.values())) == len(tuple(reader.descriptors())) == 1
@@ -440,21 +453,23 @@ def test_manifest_and_commit_pins_reject_updates(tmp_path):
 # Every older version carried an interpretation this one supersedes: 2 read source
 # type markers as enumerated codes, 3 read a wrapped SOS inline list as the partial
 # code list its first `=` per segment produced.
-@pytest.mark.parametrize("superseded", range(2, prepared_values._VERSION))
-def test_old_preparation_cannot_reuse_a_superseded_value_interpretation(
-    tmp_path, superseded
-):
+def test_old_preparation_cannot_reuse_a_superseded_value_interpretation(tmp_path):
     root = tmp_path / "inputs" / "values"
     _prepare(root)
     path = root / "manifest.json"
-    document = json.loads(path.read_text())
-    document["schema_version"] = superseded
-    payload = json.dumps(document).encode()
-    path.write_bytes(payload)
-    commit = accept_prepared(root)
-    with pytest.raises(ValueError, match="schema_version"):
-        open_prepared_source_values(
-            root,
-            expected_sha256=hashlib.sha256(payload).hexdigest(),
-            input_commit=commit,
-        )
+    original = json.loads(path.read_text())
+    # The current version is whatever a fresh preparation writes; every older one
+    # from 2 up is superseded.
+    current = original["schema_version"]
+    assert current > 2
+    for superseded in range(2, current):
+        document = dict(original, schema_version=superseded)
+        payload = json.dumps(document).encode()
+        path.write_bytes(payload)
+        commit = accept_prepared(root)
+        with pytest.raises(ValueError, match="schema_version"):
+            open_prepared_source_values(
+                root,
+                expected_sha256=hashlib.sha256(payload).hexdigest(),
+                input_commit=commit,
+            )
