@@ -25,10 +25,24 @@ import re
 from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import date
-from typing import Any, get_args
+from typing import TYPE_CHECKING, Any, get_args
 
-from .project_data import ColumnType, IdSubtype, NumericSubtype, Steward
+from .project_data import (
+    Binding,
+    ColumnType,
+    IdSubtype,
+    NumericSubtype,
+    Panel,
+    PanelMember,
+    ProjectData,
+    Source,
+    Steward,
+    StudyWindow,
+)
 from .validation import ValidationIssue, ValidationResult
+
+if TYPE_CHECKING:
+    from pydantic import BaseModel
 
 # Mirror the model Literal types (see DESIGN.md → Two layers: models vs. validator) at runtime so the structural layer
 # can't drift from the dataclass declarations. Same drift-protection
@@ -39,45 +53,33 @@ _COLUMN_TYPES: frozenset[str] = frozenset(get_args(ColumnType))
 _ID_SUBTYPES: frozenset[str] = frozenset(get_args(IdSubtype))
 _NUMERIC_SUBTYPES: frozenset[str] = frozenset(get_args(NumericSubtype))
 
-_TOP_LEVEL_REQUIRED: tuple[str, ...] = (
-    "schema_version",
-    "steward",
-    "reg_meta_version",
-    "name",
-    "sources",
-)
-_TOP_LEVEL_OPTIONAL: tuple[str, ...] = ("panels", "window")
-_PROJECT_KEYS: frozenset[str] = frozenset(_TOP_LEVEL_REQUIRED + _TOP_LEVEL_OPTIONAL)
-
 # Allowed-key sets for the CLOSED objects (`_Model` subclasses with
 # ``extra="forbid"`` in ``project_data.py``). An unrecognized key on any of
-# these emits ``unexpected_field``. Mirror the Pydantic model field sets
-# exactly — the drift guard is ``test_structural.py``'s pinning test, which
-# asserts each frozenset equals ``Model.model_fields``.
-_SOURCE_KEYS: frozenset[str] = frozenset(
-    {"name", "register_variant", "period", "bindings"}
-)
-_BINDING_KEYS: frozenset[str] = frozenset(
-    {
-        "variable",
-        "type",
-        "display_name",
-        "id_subtype",
-        "numeric_subtype",
-        "date_format",
-        "datetime_format",
-        "value_set",
-        "representation",
-    }
-)
-_PANEL_KEYS: frozenset[str] = frozenset(
-    {"panel_id", "members", "entity_key", "time_key", "comment"}
-)
-_PANEL_MEMBER_KEYS: frozenset[str] = frozenset({"source", "entity_key", "time_key"})
-# ``StudyWindow`` is a CLOSED object (``extra="forbid"``) — like Source/Binding,
-# an unknown key is ``unexpected_field``. Wire keys: ``from`` is the alias of the
-# Python-safe ``from_`` field.
-_WINDOW_KEYS: frozenset[str] = frozenset({"from", "to"})
+# these emits ``unexpected_field``. Read from the models' WIRE keys
+# (``field.alias or name``: ``StudyWindow``'s ``from`` is the alias of the
+# Python-safe ``from_``) for the same drift-protection as the Literal mirrors
+# above: a field added to a model is accepted here with no second edit. Only the
+# key names are read; validation itself never touches the models.
+
+
+def _wire_keys(
+    model: type[BaseModel], *, required: bool | None = None
+) -> tuple[str, ...]:
+    return tuple(
+        field.alias or name
+        for name, field in model.model_fields.items()
+        if required is None or field.is_required() == required
+    )
+
+
+_TOP_LEVEL_REQUIRED: tuple[str, ...] = _wire_keys(ProjectData, required=True)
+_TOP_LEVEL_OPTIONAL: tuple[str, ...] = _wire_keys(ProjectData, required=False)
+_PROJECT_KEYS: frozenset[str] = frozenset(_wire_keys(ProjectData))
+_SOURCE_KEYS: frozenset[str] = frozenset(_wire_keys(Source))
+_BINDING_KEYS: frozenset[str] = frozenset(_wire_keys(Binding))
+_PANEL_KEYS: frozenset[str] = frozenset(_wire_keys(Panel))
+_PANEL_MEMBER_KEYS: frozenset[str] = frozenset(_wire_keys(PanelMember))
+_WINDOW_KEYS: frozenset[str] = frozenset(_wire_keys(StudyWindow))
 
 # Subtype/format fields are only valid on the matching column type
 # (see DESIGN.md → Structural rules and issue codes). Mapping a field to its owning type keeps the per-field check
