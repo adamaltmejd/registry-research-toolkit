@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
 from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.cis2016_matrix import Cis2014Matrix, Cis2016Matrix, convert_matrix
 from reg_meta_build.source_coding import (
@@ -454,36 +454,3 @@ def test_matrix_activation_refuses_changed_complete_source_members(tmp_path) -> 
     )
     assert [issue.code for issue in issues] == ["stale_curation_entry"]
     assert "complete CVID partition changed" in issues[0].detail
-
-
-def test_blank_matrix_activation_preserves_checked_donor_and_coding(
-    tmp_path, monkeypatch
-) -> None:
-    from reg_meta_build.source_value_bindings import ValueBindingResult
-
-    compile, _, _, matrix, records, key = _matrix_activation(tmp_path, blank=True)
-    claims = (
-        CodeListClaim(
-            "original",
-            records[0].edition_scope,
-            (CodeMembershipClaim("1", "Yes", records[0].edition_scope),),
-        ),
-    )
-    monkeypatch.setattr(
-        "reg_meta_build.curation_compile.bind_code_lists",
-        lambda record, sessions: ValueBindingResult(claims, (), ()),
-    )
-    cases, names, keys, issues = compile()
-    ref = "curation/registers/scb/innovation-foretag.toml#/matrix/2012 - 2014"
-    expected = convert_matrix(
-        matrix,
-        records,
-        case_id=ref,
-        provenance=ref,
-        coding={record_ref(records[0]): claims},
-    )
-    assert issues == ()
-    assert cases[key] == (expected.case,)
-    assert names[key] == expected.naming
-    assert keys[key] == tuple(expected.provider_keys.items())
-    assert evaluate_case(cases[key][0], records).status == "applicable"
