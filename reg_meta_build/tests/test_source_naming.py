@@ -6,7 +6,7 @@ import hashlib
 from typing import TYPE_CHECKING, Any, Literal
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from _curation_fixtures import write_fdb_partition_curation
 from pydantic import ValidationError
 from reg_meta.source_evidence import SourceRevision, canonical_sha256
@@ -129,7 +129,7 @@ def _record(
     cvid: int = 1001, var_id: int = 101, *, description: str = "label"
 ) -> SourceRecord:
     header = REGISTERINFORMATION_HEADER.split("|")
-    row = _var_row(colname="COL", cvid=cvid, var_id=var_id, vardesc=description).split(
+    row = var_row(colname="COL", cvid=cvid, var_id=var_id, vardesc=description).split(
         "|"
     )
     cells: dict[str, tuple[bool, str | None, str]] = {
@@ -403,7 +403,7 @@ def test_naming_selection_entries_feed_declared_partition_conversion(
     header = REGISTERINFORMATION_HEADER.split("|")
 
     def record(column: str, cvid: int) -> SourceRecord:
-        row = _var_row(colname=column, cvid=cvid, var_id=830).split("|")
+        row = var_row(colname=column, cvid=cvid, var_id=830).split("|")
         cells: dict[str, tuple[bool, str | None, str]] = {
             name: (True, value, value) for name, value in zip(header, row, strict=True)
         }

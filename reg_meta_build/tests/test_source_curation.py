@@ -7,7 +7,7 @@ fixtures, not accepted curation decisions.
 from __future__ import annotations
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from _source_curation_support import (
     curation_decision as _decision,
     curation_record as _record,
@@ -343,7 +343,7 @@ def test_raw_registerinformation_whitespace_does_not_stale_clean_projection() ->
     header = REGISTERINFORMATION_HEADER.split("|")
 
     def clean(register_name: str, population_name: str) -> SourceRecord:
-        row = _var_row(
+        row = var_row(
             colname="Example",
             cvid=1001,
             var_id=101,

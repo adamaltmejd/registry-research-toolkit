@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.cis2016_matrix import Cis2014Matrix, Cis2016Matrix, convert_matrix
 from reg_meta_build.source_coding import (
@@ -85,7 +85,7 @@ def _rows(matrix, columns, *, cvid=None, edition=None):
     header = REGISTERINFORMATION_HEADER.split("|")
     result = []
     for index, column in enumerate(columns, 1):
-        values = _var_row(
+        values = var_row(
             cvid=cvid or selector.cvid,
             var_id=selector.var_id,
             colname=column,

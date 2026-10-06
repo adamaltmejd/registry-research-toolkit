@@ -7,7 +7,7 @@ from dataclasses import replace
 from types import SimpleNamespace
 from typing import TYPE_CHECKING, Any, Literal, cast
 
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from reg_meta.source_evidence import (
     DeliveredCell,
     RecordLocator,
@@ -430,7 +430,7 @@ def scb_partition_records(
     revision = make_revision("scb-registerinformation")
     records = []
     for index, column in enumerate(columns, 1):
-        row = _var_row(
+        row = var_row(
             cvid=20 + index,
             var_id=variable_id,
             colname=column,
@@ -459,7 +459,7 @@ def errata_record(
     data_type: str = "int",
 ) -> SourceRecord:
     header = REGISTERINFORMATION_HEADER.split("|")
-    row = _var_row(
+    row = var_row(
         colname=column,
         cvid=member,
         var_id=variable,
@@ -660,7 +660,7 @@ def pooled_parallel_fixture(tmp_path, *, co_delivered=False):
         if co_delivered
         else (("First", "2020-2022"), ("Second", "2022-2024"))
     ):
-        values = _var_row(
+        values = var_row(
             colname=column,
             cvid=100 if co_delivered else 100 + i,
             var_id=1,

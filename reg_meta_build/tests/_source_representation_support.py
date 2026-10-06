@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.resolved_catalog import (
     ResolvedRegister,
@@ -61,7 +61,7 @@ def representation_records(
     header = REGISTERINFORMATION_HEADER.split("|")
     result = []
     for i, column in enumerate(("First", "Second")):
-        values = _var_row(
+        values = var_row(
             colname=column,
             cvid=100 + i,
             var_id=i + 1,

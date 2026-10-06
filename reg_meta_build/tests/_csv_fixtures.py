@@ -144,7 +144,7 @@ def _ri_row(
     )
 
 
-def _var_row(
+def var_row(
     *,
     colname: str,
     cvid: int,
@@ -343,11 +343,6 @@ HAMN_SIGNAL_TARGETS = (
 )
 
 
-# Public name for tests outside the legacy private-import allowlist (plan 06c). The
-# private spelling stays until every importer has moved; rename it then.
-var_row = _var_row
-
-
 def hamn_signal_rows() -> list[str]:
     """Reconstruct the ticket's twenty independent 36-cell source observations."""
     rows: list[str] = []
@@ -416,7 +411,7 @@ def replace_registerinformation_cell(row: str, name: str, value: str) -> str:
 
 def scb_interpretation_rows() -> list[str]:
     """Rows exercising the catalog/evidence Registerinformation boundary."""
-    pooled = _var_row(
+    pooled = var_row(
         colname=" Signal ",
         cvid=9001,
         var_id=1880,
@@ -442,7 +437,7 @@ def scb_interpretation_rows() -> list[str]:
     another_column = replace_registerinformation_cell(
         pooled, "Kolumnnamn", " SignalAlt "
     )
-    unparseable = _var_row(
+    unparseable = var_row(
         colname="UnknownPeriod",
         cvid=9002,
         var_id=1881,

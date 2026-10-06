@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.curation_compile import compile_coding_register
 from reg_meta_build.curation_tree import RegisterCuration
@@ -72,7 +72,7 @@ def choice_record(
         artifact_sha256="a" * 64,
     )
     header = REGISTERINFORMATION_HEADER.split("|")
-    values = _var_row(
+    values = var_row(
         cvid=year,
         var_id=variable,
         colname=column,

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.source_coordinates import (
     native_parent_key,
@@ -56,7 +56,7 @@ def record(
     data_length="1",
 ):
     header = REGISTERINFORMATION_HEADER.split("|")
-    values = _var_row(
+    values = var_row(
         cvid=member,
         var_id=variable,
         colname=column,

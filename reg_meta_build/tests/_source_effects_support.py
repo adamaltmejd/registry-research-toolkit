@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from reg_meta.source_evidence import RecordLocator, SourceField, SourceRevision
 from reg_meta_build.source_curation import (
     CheckedFieldChange,
@@ -61,7 +61,7 @@ def effect_record(
     variable: int = 5,
     data_type: str = "int",
 ) -> SourceRecord:
-    values = _var_row(
+    values = var_row(
         cvid=cvid,
         var_id=variable,
         colname=column,

@@ -2,7 +2,7 @@
 
 from dataclasses import replace
 
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
@@ -66,7 +66,7 @@ def binding_setup(*, code="01", inline=True, sentinels=()):
         artifact_sha256="a" * 64,
     )
     header = REGISTERINFORMATION_HEADER.split("|")
-    values = _var_row(
+    values = var_row(
         colname="Column",
         var_id=1,
         cvid=100,

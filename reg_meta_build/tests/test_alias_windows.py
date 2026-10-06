@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.curation_compile import compile_alias_windows
@@ -111,7 +111,7 @@ def test_alias_window_uses_named_keys_and_source_edition(tmp_path: Path) -> None
             name: (True, value, value)
             for name, value in zip(
                 header,
-                _var_row(colname="E_AWBUY", cvid=100, var_id=5, year="2018").split("|"),
+                var_row(colname="E_AWBUY", cvid=100, var_id=5, year="2018").split("|"),
                 strict=True,
             )
         },
@@ -161,9 +161,7 @@ def _alias_record(cvid: int) -> SourceRecord:
             name: (True, value, value)
             for name, value in zip(
                 header,
-                _var_row(colname="E_AWBUY", cvid=cvid, var_id=5, year="2018").split(
-                    "|"
-                ),
+                var_row(colname="E_AWBUY", cvid=cvid, var_id=5, year="2018").split("|"),
                 strict=True,
             )
         },

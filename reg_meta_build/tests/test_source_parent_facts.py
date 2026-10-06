@@ -6,7 +6,7 @@ import json
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from _source_curation_support import curation_decision as _decision
 from reg_meta.source_evidence import SourceField, SourceRevision
 from reg_meta_build.prepared_sources import (
@@ -41,7 +41,7 @@ _REVISION = SourceRevision.create(
 
 def _record(row: int = 2, **changes: str | None) -> SourceRecord:
     header = REGISTERINFORMATION_HEADER.split("|")
-    values = _var_row(colname="Example", cvid=1001, var_id=101).split("|")
+    values = var_row(colname="Example", cvid=1001, var_id=101).split("|")
     raw = dict(zip(header, values, strict=True)) | changes
     cells = {
         name: (value is not None, value, value or "") for name, value in raw.items()

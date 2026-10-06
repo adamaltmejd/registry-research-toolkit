@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from reg_meta_build.curation_compile import convert_column_partitions
 from reg_meta_build.source_effects import (
     apply_occurrence_cases,
@@ -44,7 +44,7 @@ _FDB_DECLARATION = (
 def _fdb_record(
     column: str, *, row: int = 1, cvid: int = 20, year: str = "2020", variant: int = 424
 ) -> SourceRecord:
-    values = _var_row(
+    values = var_row(
         cvid=cvid,
         var_id=830,
         colname=column,

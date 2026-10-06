@@ -8,7 +8,7 @@ from types import SimpleNamespace
 from typing import TYPE_CHECKING, Any, cast
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from _curation_compile_support import (
     checked_correction_fixture as _checked_correction_fixture,
     make_revision as _revision,
@@ -168,7 +168,7 @@ def test_parallel_representation_selects_checked_owner_without_literal_changes(
 
     path, selected, naming = _pooled_parallel_fixture(tmp_path)
     header = REGISTERINFORMATION_HEADER.split("|")
-    values = _var_row(
+    values = var_row(
         colname="Sibling",
         cvid=102,
         var_id=1,

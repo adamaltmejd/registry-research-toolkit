@@ -11,7 +11,7 @@ from functools import cached_property
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import var_row as _var_row, write_input_bundle, write_scb_input
+from _csv_fixtures import var_row, write_input_bundle, write_scb_input
 from _prepared_fixtures import accept_prepared
 from _sos_fixtures import DEFAULT_REGISTERS, write_sos_input
 from reg_meta_build.pipeline import (
@@ -64,13 +64,13 @@ def catalog(tmp_path: Path, request) -> CatalogFixture:
     second = mode is True or mode == "unknown_support"
     thin = mode in {"thin", "thin_two"}
     source = tmp_path / "source"
-    records = [_var_row(cvid=1001, var_id=101, colname="VALUE", data_type="int")]
+    records = [var_row(cvid=1001, var_id=101, colname="VALUE", data_type="int")]
     summaries = [
         "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0"
     ]
     if second:
         records.append(
-            _var_row(
+            var_row(
                 cvid=2001,
                 var_id=201,
                 colname="OTHER",

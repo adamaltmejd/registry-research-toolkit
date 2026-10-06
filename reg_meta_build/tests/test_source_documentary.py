@@ -7,7 +7,7 @@ from contextlib import closing
 from types import SimpleNamespace
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from catalog_manifest import synthetic_manifest
 from pydantic import ValidationError
 from reg_meta.documentary import (
@@ -57,7 +57,7 @@ def _setup(kind="derivation"):
     records = []
     header = REGISTERINFORMATION_HEADER.split("|")
     for native in (1, 2):
-        values = _var_row(
+        values = var_row(
             colname=str(native),
             var_id=native,
             cvid=100 + native,

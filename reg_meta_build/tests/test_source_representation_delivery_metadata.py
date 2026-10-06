@@ -6,7 +6,7 @@ from contextlib import closing
 from dataclasses import replace
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from _source_representation_support import coding_claim as _claim
 from catalog_manifest import synthetic_manifest
 from reg_meta.source_evidence import SourceRevision
@@ -69,7 +69,7 @@ def _unit_fixture(*, overlap=False):
     for index, (year, unit) in enumerate(
         (("2020", "100-tal kronor"), ("2020" if overlap else "2021", "Kronor (SEK)"))
     ):
-        values = _var_row(
+        values = var_row(
             colname="VALUE",
             var_id=1,
             cvid=100 + index,

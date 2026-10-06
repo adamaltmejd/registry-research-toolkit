@@ -7,7 +7,7 @@ from types import SimpleNamespace
 from typing import TYPE_CHECKING, Any, cast
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row as _var_row
+from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from _curation_compile_support import (
     errata_fixture as _errata_fixture,
     errata_record as _errata_record,
@@ -98,7 +98,7 @@ def _edition_record(
     column: str = "VALUE",
 ) -> SourceRecord:
     header = REGISTERINFORMATION_HEADER.split("|")
-    row = _var_row(
+    row = var_row(
         colname=column,
         cvid=member,
         var_id=variable,
@@ -419,7 +419,7 @@ def test_split_variant_naming_accepts_source_parent_and_keeps_states(
                 name: (True, value, value)
                 for name, value in zip(
                     header,
-                    _var_row(
+                    var_row(
                         colname="SHARED",
                         cvid=member,
                         var_id=5,
