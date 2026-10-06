@@ -254,6 +254,7 @@ def validate_built_db(
             _check_sos_sanity(conn, result, tables)
         _check_value_code_search(conn, result, tables, corpus=corpus)
         _check_classification_search(conn, result, tables)
+        _check_planner_statistics(conn, result, tables)
         _check_tags(conn, result, tables)
         # The four checks below floor a derivation `--skip-slugs` does not run, so
         # they take `bootstrap` and skip THAT floor (only) with a line of their own,
@@ -1546,6 +1547,25 @@ def _check_classification_search(
         result.fail(
             f"classification_fts indexes {n_idx:,} of {n_rows:,} classifications"
         )
+
+
+def _check_planner_statistics(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """The artifact ships ``sqlite_stat1``: the build's last write is ``ANALYZE``.
+
+    Without statistics the reader's planner picks indexes by heuristic, which
+    chose a far less selective ``variable_state`` index in plan 04b. Freshness is
+    not checked: damaged-artifact cases add rows after the fixture's ANALYZE."""
+    result.section("[planner statistics]")
+    if "sqlite_stat1" not in tables:
+        result.fail("sqlite_stat1 missing — the build must end with ANALYZE")
+        return
+    n_rows = conn.execute("SELECT COUNT(*) FROM sqlite_stat1").fetchone()[0]
+    if n_rows:
+        result.ok(f"sqlite_stat1 present ({n_rows:,} rows)")
+    else:
+        result.fail("sqlite_stat1 is empty — the build must end with ANALYZE")
 
 
 def _check_tags(

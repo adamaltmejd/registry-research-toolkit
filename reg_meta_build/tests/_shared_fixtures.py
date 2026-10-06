@@ -91,6 +91,7 @@ def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
             ),
         )
         _populate_fts(conn)
+        conn.execute("ANALYZE")
         conn.commit()
         conn.execute("VACUUM")
     _build_stub_doc_db(db_dir, tmp_path_factory)

@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "sqlite_stat1 missing"
+  ]
+}

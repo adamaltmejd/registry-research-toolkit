@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import sqlite3
+from contextlib import closing
 from typing import TYPE_CHECKING
 
 import pytest
@@ -84,6 +86,14 @@ def test_rerun_is_byte_identical_regardless_of_input_order(tmp_path: Path) -> No
     )
     assert output.read_bytes() == original
     assert output.with_name("reg_meta.db.prev").read_bytes() == original
+
+
+def test_published_artifact_carries_planner_statistics(tmp_path: Path) -> None:
+    output = tmp_path / "reg_meta.db"
+    write_resolved_catalog((_variable(),), output, manifest=synthetic_manifest())
+    with closing(sqlite3.connect(output)) as conn:
+        analyzed = set(conn.execute("SELECT tbl, idx FROM sqlite_stat1"))
+    assert ("variable_state", "idx_variable_state_variable") in analyzed
 
 
 @pytest.mark.parametrize("key", (CURATION_TREE_SHA256_KEY,))
