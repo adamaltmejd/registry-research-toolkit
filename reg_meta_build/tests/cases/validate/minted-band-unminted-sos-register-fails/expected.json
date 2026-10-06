@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "1 register non-SCB id(s) below the minted band (< 2^62) — un-minted?"
+  ]
+}

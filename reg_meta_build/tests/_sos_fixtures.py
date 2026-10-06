@@ -22,11 +22,15 @@ The abbrev the adapter mints from is the parenthesized code in the FILENAME stem
 
 from __future__ import annotations
 
+import hashlib
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from reg_meta.source_evidence import SourceRevision
+from reg_meta_build.sources.sos import parse_register_file
+from reg_meta_build.sources.sos_records import clean_sos_source
+
 if TYPE_CHECKING:
-    import sqlite3
     from pathlib import Path
 
 
@@ -169,61 +173,6 @@ DEFAULT_REGISTERS: tuple[_Register, ...] = (
 )
 
 
-# A register that triggers the ("par", "ATC") KNOWN_SPLIT_ALLOWLIST split: ATC
-# arrives under two deldatamängder with incompatible data_types, so the adapter
-# splits it into two sibling variables and records a sibling pair between them
-# (the in-build fold input — the surface the P3#1 leaked-loop-var regression
-# polluted). Append to DEFAULT_REGISTERS for the with-slugs combined test.
-PAR_SPLIT_REGISTER = _Register(
-    abbrev="PAR",
-    title_sv="Syntetiskt patientregister",
-    description_sv="Split-test: ATC under två deldatamängder med olika datatyp.",
-    deldatamangder=(
-        _Deldat("PAR_OV", label="Öppenvård", data_from=2001),
-        _Deldat("PAR_SV", label="Slutenvård", data_from=2001),
-    ),
-    variables=(
-        _Var("ATC", deldatamangd="PAR_OV", data_type="Sträng (text)", data_from=2001),
-        _Var("ATC", deldatamangd="PAR_SV", data_type="Heltal", data_from=2001),
-    ),
-)
-
-
-# A register whose only variable declares its code list inline in the
-# `Värdemängd` cell and has no `Kodlista_*` sheet — the #401 inline fallback the
-# classifier decides, so the delivered cell is the whole of the coding evidence.
-def inline_value_set_register(
-    value_set: str, *, external_classification: str | None = None
-) -> _Register:
-    return _Register(
-        abbrev="SYU",
-        title_sv="Syntetiskt kodregister",
-        description_sv="Inline kodlista i Värdemängd-cellen.",
-        deldatamangder=(
-            _Deldat(
-                "SYU_A",
-                label="Vy A",
-                description="Enda vyn",
-                data_from=2005,
-                data_to=2015,
-            ),
-        ),
-        variables=(
-            _Var(
-                "SPEC",
-                deldatamangd="SYU_A",
-                label="Specificering",
-                description="Insatsens specificering",
-                data_type="Heltal",
-                data_from=2005,
-                data_to=2015,
-                value_set=value_set,
-                external_classification=external_classification,
-            ),
-        ),
-    )
-
-
 def _write_register(path: Path, reg: _Register) -> None:
     import openpyxl
 
@@ -328,92 +277,174 @@ def write_sos_input(
     return sos_dir
 
 
-# ---------------------------------------------------------------------------
-# Synthetic slug curation
-#
-# `build_db(skip_slugs=False)` calls `populate_slugs(strict=True)`, which refuses
-# unless EVERY live register + register_variant carries a curated slug entry
-# (register/variant slugs don't auto-derive; only variable slugs do). Hand-keying
-# the minted SOS ids would be brittle, so we harvest them from a throwaway no-slug
-# "probe" build (ids are deterministic, so the probe and the real with-slugs build
-# share them) and emit one entry per row. The TOML keys are the source ids, which
-# equal the register_id / register_variant_id for BOTH providers (SCB uses its
-# low-band source ids directly; SOS's minted id IS its source id — see sos.toml).
-# ---------------------------------------------------------------------------
+# Source-record workbook fixtures shared by the SOS source-record test modules.
+CLASSIFICATION_URL = "https://example.test/classifications/ssyk"
 
 
-def _kebab(name: str) -> str:
-    """Best-effort valid slug (`^[a-z][a-z0-9-]*[a-z0-9]$`) from a display name.
+def write_source_workbook(path: Path) -> None:
+    import openpyxl
+    from openpyxl.worksheet.hyperlink import Hyperlink
 
-    Legibility is irrelevant for tests; this only has to satisfy `validate_slug`.
-    """
-    import re
+    workbook = openpyxl.Workbook()
+    general = workbook.active
+    general.title = "Generell information"
+    general.append(["", "Om datamängden version", None])
+    general.append(["", "Datamängd", "Patientregistret källa"])
+    general.append(["", "Version", "2026:1"])
 
-    s = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
-    if not s:
-        return "x"
-    if not s[0].isalpha():
-        s = "r" + s
-    if len(s) > 1 and not s[-1].isalnum():
-        s = s + "x"
-    return s
+    variables = workbook.create_sheet("Metadata - Variabelnivå")
+    variables.append(
+        [
+            "Deldatamängdsnamn",
+            "Variabelnamn",
+            "Variabeletikett",
+            "Variabelbeskrivning",
+            "Värdemängd",
+            "Länk kodverk",
+            "Datatyp",
+            "Data från",
+            "Data till",
+            "Specificera källa",
+            "Eget källfält",
+            "Kopplingsvariabel",
+        ]
+    )
+    base = [
+        "PAR_OV",
+        "HDIA",
+        " Huvuddiagnos ",
+        "Första raden\r\nandra raden  ",
+        "Se kodlista",
+        CLASSIFICATION_URL,
+        "Heltal",
+        2001,
+        2020,
+        "Patientregistret",
+        "bevaras",
+        None,
+    ]
+    variables.append(base)
+    variables.append(base)
+    variables.append([*base[:2], "Annan etikett", *base[3:]])
+    variables.append([*base[:7], "2001", 2020, *base[9:]])
+    for row_number in range(2, 6):
+        variables[f"F{row_number}"].hyperlink = CLASSIFICATION_URL
+    variables.append(
+        [
+            "PAR_OV",
+            "PARTIELL",
+            "Partiell",
+            None,
+            None,
+            None,
+            "Sträng (text)",
+            2010,
+            None,
+            None,
+            None,
+            None,
+        ]
+    )
+    variables["F6"] = "Visad kodlista"
+    variables["F6"].hyperlink = Hyperlink(
+        ref="F6",
+        location="'Kodlista_HDIA'!A1",
+        display="Visad kodlista",
+    )
+    variables.append(
+        [
+            "PAR_OV",
+            "MALFORMED",
+            "Malformed",
+            None,
+            None,
+            None,
+            "Heltal",
+            "+2001",
+            "2020",
+            None,
+            None,
+            None,
+        ]
+    )
+    variables.append(
+        [
+            None,
+            "UTAN_DEL",
+            "Utan deldatamängd",
+            None,
+            None,
+            None,
+            "Datum",
+            None,
+            None,
+            None,
+            None,
+            None,
+        ]
+    )
+
+    codes = workbook.create_sheet("Kodlista_HDIA")
+    codes.append(["Tidsperiod", "Kod", "Beskrivning"])
+    codes.append(["2001-2020", 1, "Kod ett"])
+    codes["B2"].number_format = "000"
+    workbook.save(path)
 
 
-def write_slug_dir_from_db(conn: sqlite3.Connection, slug_dir: Path) -> Path:
-    """Generate ``<provider>.toml`` slug files covering every register + variant
-    in ``conn`` (a built reg_meta DB), so a with-slugs build over the same inputs
-    passes `populate_slugs(strict=True)`. Returns ``slug_dir``.
-    """
-    slug_dir.mkdir(parents=True, exist_ok=True)
-
-    registers = conn.execute(
-        "SELECT r.register_id, p.slug, r.name FROM register r "
-        "JOIN provider p ON r.provider_id = p.provider_id ORDER BY r.register_id"
-    ).fetchall()
-    variants = conn.execute(
-        "SELECT rv.register_id, rv.register_variant_id, rv.name, p.slug "
-        "FROM register_variant rv JOIN register r USING (register_id) "
-        "JOIN provider p ON r.provider_id = p.provider_id "
-        "ORDER BY rv.register_id, rv.register_variant_id"
-    ).fetchall()
-
-    variants_by_reg: dict[int, list[tuple[int, str | None]]] = {}
-    for register_id, variant_id, vname, _prov in variants:
-        variants_by_reg.setdefault(register_id, []).append((variant_id, vname))
-
-    lines_by_provider: dict[str, list[str]] = {}
-    reg_slugs_seen: dict[str, set[str]] = {}
-    for register_id, provider, rname in registers:
-        lines = lines_by_provider.setdefault(provider, [])
-        seen = reg_slugs_seen.setdefault(provider, set())
-        rslug = _uniquify(_kebab(rname or f"reg{register_id}"), seen)
-        lines.append(f'[register."{register_id}"]')
-        lines.append(f'slug = "{rslug}"')
-        lines.append("")
-        variant_seen: set[str] = set()
-        for variant_id, vname in variants_by_reg.get(register_id, []):
-            # The synthesized default variant keeps the reserved `_default` slug.
-            vslug = (
-                "_default"
-                if vname == "_default"
-                else _uniquify(_kebab(vname or f"v{variant_id}"), variant_seen)
-            )
-            lines.append(f'[register_variant."{register_id}.{variant_id}"]')
-            lines.append(f'slug = "{vslug}"')
-            lines.append("")
-
-    for provider, lines in lines_by_provider.items():
-        (slug_dir / f"{provider}.toml").write_text(
-            "\n".join(lines) + "\n", encoding="utf-8"
-        )
-    return slug_dir
+def source_revision(path: Path) -> SourceRevision:
+    payload = path.read_bytes()
+    return SourceRevision.create(
+        dataset="sos-metadata",
+        publisher="Socialstyrelsen",
+        purpose="Socialstyrelsen source-record fixture",
+        upstream_revision="2026:1",
+        artifact_path=path.name,
+        artifact_size=len(payload),
+        artifact_sha256=hashlib.sha256(payload).hexdigest(),
+    )
 
 
-def _uniquify(base: str, seen: set[str]) -> str:
-    slug = base
-    n = 2
-    while slug in seen:
-        slug = f"{base}-{n}"
-        n += 1
-    seen.add(slug)
-    return slug
+def write_complete_workbook(path: Path) -> None:
+    import openpyxl
+
+    write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    dcat = workbook.create_sheet("Metadata-Datamängd (DCAT-AP)")
+    dcat.append(["Attribut", "Definition", "Svenska", "Engelska"])
+    dcat.append(["Titel", None, "Första titeln", "First title"])
+    dcat.append(["Titel", None, "Andra titeln", "Second title"])
+    dcat.append(["Beskrivning", None, "  indragen rad\n    tabell  kolumn", None])
+    dcat.append(["Okänt attribut", None, "Obehandlad uppgift", "Unmapped fact"])
+    subsets = workbook.create_sheet("Deldatamängder")
+    subsets.append(
+        ["Deldatamängdsnamn", "Deldatamängdsetikett", "Data från", "Data till"]
+    )
+    subsets.append(["PAR_OV", "Öppenvård", 1900, 2025])
+    codes = workbook["Kodlista_HDIA"]
+    codes.delete_rows(1, codes.max_row)
+    codes.append(["Variabelnamn", "HDIA"])
+    codes.append(["Variabelnamn", "ANNAN_VAR"])
+    codes.append(["Tidsperiod", "Kod", "Beskrivning (kliniknamn)"])
+    codes.append(["2010-2012", None, None])
+    for description in ["Klinik ett", "Klinik ett", "Annan klinik"]:
+        codes.append([None, 1, description])
+        codes.cell(codes.max_row, 2).number_format = "000"
+    raw = workbook.create_sheet("Kodlista_RAW")
+    raw.append(["Sjukhus", "Adress"])
+    raw.append(["Klinik", "Gatan 1"])
+    workbook.save(path)
+    workbook.close()
+
+
+def clean_code_rows(tmp_path: Path, rows: list[list[object]]):
+    import openpyxl
+
+    path = tmp_path / "Metadata Test.xlsx"
+    write_source_workbook(path)
+    workbook = openpyxl.load_workbook(path)
+    del workbook["Kodlista_HDIA"]
+    sheet = workbook.create_sheet("Kodlista_Arbitrary")
+    for row in rows:
+        sheet.append(row)
+    workbook.save(path)
+    return clean_sos_source(parse_register_file(path), source_revision(path))

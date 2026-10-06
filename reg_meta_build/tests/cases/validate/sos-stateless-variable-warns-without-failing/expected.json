@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "failures_absent": [
+    "ZERO variable_state"
+  ],
+  "report_contains": [
+    "1 of 1 SOS variables have ZERO variable_state rows",
+    "1 SOS register(s) with ZERO states across all variables: LOVA"
+  ]
+}

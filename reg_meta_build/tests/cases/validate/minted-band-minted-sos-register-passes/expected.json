@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "failures_absent": [
+    "below the minted band",
+    "overflow the minted band"
+  ],
+  "report_contains": [
+    "all SCB ids < 2^62 and all non-SCB ids >= 2^62"
+  ]
+}

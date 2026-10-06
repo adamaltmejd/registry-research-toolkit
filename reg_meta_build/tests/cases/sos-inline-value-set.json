@@ -1,0 +1,248 @@
+[
+  {
+    "id": "blank-cell",
+    "cell": null,
+    "members": [],
+    "unresolved": null
+  },
+  {
+    "id": "whitespace-only",
+    "cell": "   ",
+    "members": [],
+    "unresolved": null
+  },
+  {
+    "id": "single-descriptor",
+    "cell": "Fritext",
+    "members": [],
+    "unresolved": null
+  },
+  {
+    "id": "single-pair",
+    "cell": "1=ja",
+    "members": [],
+    "unresolved": null
+  },
+  {
+    "id": "semicolon-pairs",
+    "cell": "1=ja; 0=nej; 9=uppgift saknas",
+    "members": [
+      ["1", "ja"],
+      ["0", "nej"],
+      ["9", "uppgift saknas"]
+    ],
+    "unresolved": false
+  },
+  {
+    "id": "newline-pairs",
+    "cell": "0 = Korrekt personnummer\n4 = Samordningsnummer\n8 = Ogiltigt personnummer",
+    "members": [
+      ["0", "Korrekt personnummer"],
+      ["4", "Samordningsnummer"],
+      ["8", "Ogiltigt personnummer"]
+    ],
+    "unresolved": false
+  },
+  {
+    "id": "label-comma-colon",
+    "cell": "1=riksavtal; 2=regionalt, flerregionalt: avtal",
+    "members": [
+      ["1", "riksavtal"],
+      ["2", "regionalt, flerregionalt: avtal"]
+    ],
+    "unresolved": false
+  },
+  {
+    "id": "label-equals",
+    "cell": "1=a=b; 2=c",
+    "members": [
+      ["1", "a=b"],
+      ["2", "c"]
+    ],
+    "unresolved": false
+  },
+  {
+    "id": "label-prose-equals-paren",
+    "cell": "1=grupp A (n=25); 2=grupp B",
+    "members": [
+      ["1", "grupp A (n=25)"],
+      ["2", "grupp B"]
+    ],
+    "unresolved": false
+  },
+  {
+    "id": "label-prose-equals-range",
+    "cell": "1=intervallet 2-3 = mellan; 2=annat",
+    "members": [
+      ["1", "intervallet 2-3 = mellan"],
+      ["2", "annat"]
+    ],
+    "unresolved": false
+  },
+  {
+    "id": "colon-quoted-code-is-label",
+    "cell": "ZRFR = BTB Avtal  (1/7 2008-31/12 2012: ZCON=BTB Avtal); ZCFR = BTB Avtal fritt; ZCON = BTB Avtal",
+    "members": [
+      ["ZRFR", "BTB Avtal (1/7 2008-31/12 2012: ZCON=BTB Avtal)"],
+      ["ZCFR", "BTB Avtal fritt"],
+      ["ZCON", "BTB Avtal"]
+    ],
+    "unresolved": false
+  },
+  {
+    "id": "gap-before-non-code",
+    "cell": "1=ja; 2=nej  (0-744=intervall)",
+    "members": [
+      ["1", "ja"],
+      ["2", "nej (0-744=intervall)"]
+    ],
+    "unresolved": false
+  },
+  {
+    "id": "gap-before-non-assignment",
+    "cell": "0 = A  longer label\n5 = B",
+    "members": [
+      ["0", "A longer label"],
+      ["5", "B"]
+    ],
+    "unresolved": false
+  },
+  {
+    "id": "swedish-letter-codes",
+    "cell": "Å=alternativ; Ö=övrigt",
+    "members": [
+      ["Å", "alternativ"],
+      ["Ö", "övrigt"]
+    ],
+    "unresolved": false
+  },
+  {
+    "id": "bare-codes",
+    "cell": "1;2;3;4;5;9",
+    "members": [
+      ["1", null],
+      ["2", null],
+      ["3", null],
+      ["4", null],
+      ["5", null],
+      ["9", null]
+    ],
+    "unresolved": false
+  },
+  {
+    "id": "bare-alpha-codes",
+    "cell": "LEG;SPEC",
+    "members": [
+      ["LEG", null],
+      ["SPEC", null]
+    ],
+    "unresolved": false
+  },
+  {
+    "id": "numeric-range-single-pair",
+    "cell": "0-744 = antal timmar",
+    "members": [],
+    "unresolved": null
+  },
+  {
+    "id": "year-prose",
+    "cell": "1964-1968: ICD-7 i Klassifikation",
+    "members": [],
+    "unresolved": null
+  },
+  {
+    "id": "trailing-prose-mixed",
+    "cell": "0=giltigt pnr; 4=samordningsnummer; strängen är tom",
+    "members": [],
+    "unresolved": null
+  },
+  {
+    "id": "comma-in-code",
+    "cell": "1;5,6;7;8",
+    "members": [],
+    "unresolved": null
+  },
+  {
+    "id": "duplicate-bare-code",
+    "cell": "1;2;1",
+    "members": [],
+    "unresolved": null
+  },
+  {
+    "id": "blank-label",
+    "cell": "1= ; 2=nej",
+    "members": [],
+    "unresolved": null
+  },
+  {
+    "id": "gap-list-with-invalid-code",
+    "cell": "1=a  2=b; invalid code=x",
+    "members": [],
+    "unresolved": null
+  },
+  {
+    "id": "gap-list-with-duplicate-code",
+    "cell": "1=a  2=b; 1=duplicate",
+    "members": [],
+    "unresolved": null
+  },
+  {
+    "id": "single-space-prose-equals",
+    "cell": "1=sample n = 25; 2=other",
+    "members": [
+      ["1", "sample n = 25"],
+      ["2", "other"]
+    ],
+    "unresolved": false
+  },
+  {
+    "id": "single-space-is-not-a-gap",
+    "cell": "1=ja; 2=nej 3=kanske",
+    "members": [
+      ["1", "ja"],
+      ["2", "nej 3=kanske"]
+    ],
+    "unresolved": false
+  },
+  {
+    "id": "comma-run-together-unresolved",
+    "cell": "0=(ogitligt), 1=enbart trygghetslarm; 2=trygghetslarm som delinsats",
+    "members": [],
+    "unresolved": true
+  },
+  {
+    "id": "comma-gap-unresolved",
+    "cell": "1 = A,  2 = B",
+    "members": [],
+    "unresolved": true
+  },
+  {
+    "id": "gap-only-pairs",
+    "cell": "01=till moder  02=till fader",
+    "members": [
+      ["01", "till moder"],
+      ["02", "till fader"]
+    ],
+    "unresolved": false
+  },
+  {
+    "id": "gap-after-semicolon-list",
+    "cell": "1=ja; 2=nej  3=kanske",
+    "members": [
+      ["1", "ja"],
+      ["2", "nej"],
+      ["3", "kanske"]
+    ],
+    "unresolved": false
+  },
+  {
+    "id": "very-long-gap",
+    "cell": "0 = A                                                                                                                                                                                                                                                                                                            5 = B\n8 = C",
+    "members": [
+      ["0", "A"],
+      ["5", "B"],
+      ["8", "C"]
+    ],
+    "unresolved": false
+  }
+]
