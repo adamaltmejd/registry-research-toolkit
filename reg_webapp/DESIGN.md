@@ -297,11 +297,13 @@ bounded route this added, declared next to the catalog routes (it is not a `{fqi
 suffix, so ordering is not at stake). It answers ONE coding, `?offset`/`?limit`-windowed
 (default 200, max 1000, clamped not 422'd — the shared `clamp_limit`), in stable
 code/label order, with `total` counted over the WHOLE set. `?q=` filters BEFORE the
-window using `query_input.matches_filter` — a character-for-character port of the SPA's
-`foldText`/`matchesFilter` (NFD-decompose, drop combining marks, lowercase, plain
-substring, `%`/`_` literal), because SQLite's LIKE folds neither non-ASCII case nor
-diacritics and an "N of M" that disagreed with the in-browser filters would be a lie.
-`?state=` requires `?classification=<slug>` and reads that exact state's declared book.
+window using `query_input.matches_filter` — the same matcher as the SPA's
+`foldText`/`matchesFilter`: both sides fold with `fold_search` (case fold, NFKD, drop
+combining marks, one space between words; the oracle is
+`conformance/cases/folds/fold_search.jsonl`), then a plain substring test with `%`/`_`
+literal, because SQLite's LIKE folds neither non-ASCII case nor diacritics and an "N of
+M" that disagreed with the in-browser filters would be a lie. `?state=` requires
+`?classification=<slug>` and reads that exact state's declared book.
 `?partition=canonical` returns only delivered source codes that occur in the book;
 `nonstandard` and `sentinels` return separate stored extensions. Special codes retain
 reviewed global meanings or scoped certificates; none becomes an official book code.
