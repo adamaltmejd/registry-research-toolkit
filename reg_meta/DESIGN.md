@@ -578,11 +578,11 @@ Pydantic so FastAPI can consume its catalog models directly. The hard no-Pydanti
 applied only to `reg_monabundle`'s amalgamated bundle (now archived); reg_meta was never
 subject to it. See root CLAUDE.md "Stack" and ARCHITECTURE.md.
 
-When a caller constructs `Catalog` with a docs-DB connection, `ResolvedRegister` and
-`ResolvedVariable` also carry `related_documents`: register-version PDF metadata
-(`title`, `filename`, `source_url`, `license`, `fetched`, `sha256`, `byte_size`) read
-from `reg_meta_docs.db`. The list is metadata only; binary content is fetched by exact
-`(register, filename)` through `doc_queries.related_document_content`.
+Register-version PDF metadata (`title`, `filename`, `source_url`, `license`, `fetched`,
+`sha256`, `byte_size`) is read from `reg_meta_docs.db` by
+`doc_queries.related_documents_for_register`, not embedded on resolved models. The list
+is metadata only; binary content is fetched by exact `(register, filename)` through
+`doc_queries.related_document_content`.
 
 **`search.py` — the typed search surface (#701).** `queries.search` builds its result
 rows as plain dicts through the internal pipeline and converts ONCE at the end into the

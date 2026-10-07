@@ -1,9 +1,8 @@
-"""Catalog.resolve(): related documents, binding metadata, split siblings and
-parsed FQID objects."""
+"""Catalog.resolve(): binding metadata, split siblings and parsed FQID objects."""
 
 from __future__ import annotations
 
-import sqlite3
+from typing import TYPE_CHECKING
 
 import catalog_test_support
 import pytest
@@ -13,54 +12,16 @@ from _slugged_db import (
 )
 from reg_meta.catalog import (
     Catalog,
-    ResolvedRegister,
     ResolvedVariable,
 )
-from reg_meta.doc_db import DOC_SCHEMA_VERSION
 from reg_meta.fqid import Fqid, FqidError
-from reg_meta_build.doc_db import DOC_DDL
+
+if TYPE_CHECKING:
+    import sqlite3
 
 # The shared fixture, bound by assignment: an imported name used only as a
 # test parameter reads as an unused import redefined (ruff F401/F811).
 slugged_conn = catalog_test_support.slugged_conn
-
-
-def _related_doc_conn(register: str = "lisa") -> sqlite3.Connection:
-    conn = sqlite3.connect(":memory:")
-    conn.row_factory = sqlite3.Row
-    conn.executescript(DOC_DDL)
-    conn.execute(
-        "INSERT INTO doc_meta (key, value) VALUES ('schema_version', ?)",
-        (DOC_SCHEMA_VERSION,),
-    )
-    conn.execute(
-        "INSERT INTO related_document ("
-        "register, title, filename, source_url, license, fetched, "
-        "sha256, byte_size, content"
-        ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        (
-            register,
-            "LISA manual",
-            "lisa_manual.pdf",
-            "https://example.test/lisa_manual.pdf",
-            "CC BY 4.0",
-            "2026-06-29",
-            "c" * 64,
-            7,
-            b"manual",
-        ),
-    )
-    conn.commit()
-    return conn
-
-
-class TestResolveRegister:
-    def test_resolves_with_related_documents(
-        self, slugged_conn: sqlite3.Connection
-    ) -> None:
-        r = Catalog(slugged_conn, doc_conn=_related_doc_conn()).resolve("scb/lisa")
-        assert isinstance(r, ResolvedRegister)
-        assert [doc.filename for doc in r.related_documents] == ["lisa_manual.pdf"]
 
 
 class TestResolveBinding:
@@ -68,13 +29,6 @@ class TestResolveBinding:
     the variable's shared metadata + its `variable_state` history, no per-edition
     cvid. The interim `ResolvedVariableBinding` and the `editions()` path that
     returned it were removed in A2.6."""
-
-    def test_resolves_register_related_documents(
-        self, slugged_conn: sqlite3.Connection
-    ) -> None:
-        r = Catalog(slugged_conn, doc_conn=_related_doc_conn()).resolve("scb/lisa/kon")
-        assert isinstance(r, ResolvedVariable)
-        assert [doc.filename for doc in r.related_documents] == ["lisa_manual.pdf"]
 
     def test_variant_label_is_none_for_a_null_named_variant(self) -> None:
         # A NULL-named variant → variant_label None (the consumer falls back to the

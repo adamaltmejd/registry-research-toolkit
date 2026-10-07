@@ -29,9 +29,6 @@ from .db import (
     db_path_from_args,
     open_db,
 )
-from .doc_db import (
-    RelatedDocument,  # noqa: TC001 - Pydantic resolves model fields at runtime.
-)
 from .documentary import DocumentaryRelationship
 from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
 from .fqid import (
@@ -207,7 +204,6 @@ class ResolvedRegister(_CatalogModel):
     # `registerrubrik` is dropped (redundant with name).
     name: str
     purpose: str | None
-    related_documents: tuple[RelatedDocument, ...] = ()
     tags: tuple[TagMembership, ...] = ()
     warnings: tuple[DataWarning, ...] = ()
 
@@ -1312,7 +1308,6 @@ class ResolvedVariable(_CatalogModel):
     deprecated: bool = False
     source_register_id: CatalogStorageId | None
     source_register_text: str | None
-    related_documents: tuple[RelatedDocument, ...] = ()
     # Full state history, chronological ascending (oldest first). Each state
     # carries its variant coordinate + period range.
     states: tuple[VariableState, ...]
@@ -1505,7 +1500,6 @@ class Catalog:
     def __init__(
         self,
         conn: sqlite3.Connection,
-        doc_conn: sqlite3.Connection | None = None,
         *,
         classification_as_of_year: int | None = None,
         scope: ReadScope | None = None,
@@ -1513,7 +1507,6 @@ class Catalog:
         self._conn = conn
         self.scope = resolve_scope(conn, scope)
         self.holdings = Holdings(conn)
-        self._doc_conn = doc_conn
         self._classification_as_of_year = (
             classification_as_of_year
             if classification_as_of_year is not None
@@ -1665,7 +1658,6 @@ class Catalog:
         cls,
         db_arg: str | Path | None = None,
         *,
-        with_docs: bool = False,
         classification_as_of_year: int | None = None,
         scope: ReadScope | None = None,
         catalog: str | None = None,
@@ -1677,28 +1669,18 @@ class Catalog:
         if selected is None and db_arg is None and not os.environ.get("REG_META_DB"):
             selected = "global"
         conn = open_db(path, catalog=selected)
-        doc_conn = None
         try:
-            if with_docs:
-                from .doc_db import ensure_doc_db
-
-                doc_conn = ensure_doc_db(str(path.parent))
             return cls(
                 conn,
-                doc_conn=doc_conn,
                 classification_as_of_year=classification_as_of_year,
                 scope=scope,
             )
         except Exception:
             conn.close()
-            if doc_conn is not None:
-                doc_conn.close()
             raise
 
     def close(self) -> None:
         self._conn.close()
-        if self._doc_conn is not None:
-            self._doc_conn.close()
 
     def resolve(self, fqid: str | Fqid) -> ResolvedEntity:
         if isinstance(fqid, str):
@@ -3094,7 +3076,6 @@ class Catalog:
             provider_id=row["provider_id"],
             name=row["name"],
             purpose=row["purpose"],
-            related_documents=self._related_documents_for_register(fqid.register),
             tags=tuple(self.tags_for_register(fqid)),
             warnings=tuple(
                 w for w in self.data_warnings(fqid) if w.variable_fqid is None
@@ -3247,9 +3228,6 @@ class Catalog:
             deprecated=bool(meta["deprecated"]),
             source_register_id=meta["source_register_id"],
             source_register_text=meta["source_register_text"],
-            related_documents=self._related_documents_for_register(
-                meta["register_slug"]
-            ),
             states=self._states_for_variable(
                 var["variable_id"],
                 with_codes=with_codes,
@@ -3267,15 +3245,6 @@ class Catalog:
                 if w.variable_fqid == canonical_fqid
             ),
         )
-
-    def _related_documents_for_register(
-        self, register_slug: str | None
-    ) -> tuple[RelatedDocument, ...]:
-        if self._doc_conn is None or register_slug is None:
-            return ()
-        from .doc_queries import related_documents_for_register
-
-        return related_documents_for_register(self._doc_conn, register_slug)
 
     def _group_ref_for_variable(
         self, variable_id: int, provider_slug: str, register_slug: str
