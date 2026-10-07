@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import hashlib
+import os
 import shutil
 import sqlite3
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -14,11 +16,12 @@ from reader_artifacts import (
     BUILD_PACKAGES,
     CASES,
     FIXTURE_CACHE_ENV,
-    LOCKFILE,
+    FIXTURE_CACHE_RETENTION_SECONDS,
     artifact_key,
     build_inputs_digest,
     build_reader_artifact,
     cached_reader_artifact,
+    installed_distributions,
     runtime_versions,
 )
 
@@ -30,18 +33,38 @@ def _sha256(path: Path) -> str:
 
 
 def test_a_cached_artifact_is_never_rebuilt(tmp_path, monkeypatch):
+    monkeypatch.setenv(FIXTURE_CACHE_ENV, str(tmp_path / "cache"))
+    first = cached_reader_artifact("reader", "catalog")
+    before = first.stat()
+    second = cached_reader_artifact("reader", "catalog")
+    after = second.stat()
+    assert second == first
+    assert (after.st_ino, after.st_mtime_ns) == (before.st_ino, before.st_mtime_ns)
+
+
+def test_only_idle_generations_are_pruned(tmp_path, monkeypatch):
     cache = tmp_path / "cache"
     monkeypatch.setenv(FIXTURE_CACHE_ENV, str(cache))
-    first = cached_reader_artifact("reader", "catalog")
-    directories = [cache, *(path for path in cache.rglob("*") if path.is_dir())]
-    # A rebuild must stage a new entry, which a read-only cache refuses.
-    for directory in directories:
-        directory.chmod(0o555)
-    try:
-        assert cached_reader_artifact("reader", "catalog") == first
-    finally:
-        for directory in directories:
-            directory.chmod(0o755)
+    idle = time.time() - FIXTURE_CACHE_RETENTION_SECONDS - 60
+    recent = time.time() - FIXTURE_CACHE_RETENTION_SECONDS + 600
+    stale = cache / "generations/stale"
+    active = cache / "generations/active"
+    neighbour = cache / "neighbour"
+    for directory, stamp in ((stale, idle), (active, recent), (neighbour, idle)):
+        directory.mkdir(parents=True)
+        os.utime(directory, (stamp, stamp))
+    # Creating this checkout's generation prunes; only idle generations go.
+    path = cached_reader_artifact("reader", "catalog")
+    assert path.is_relative_to(cache / "generations")
+    assert (stale.exists(), active.exists(), neighbour.exists()) == (False, True, True)
+
+
+def test_a_lookup_rebuilds_a_removed_generation(tmp_path, monkeypatch):
+    monkeypatch.setenv(FIXTURE_CACHE_ENV, str(tmp_path / "cache"))
+    path = cached_reader_artifact("reader", "catalog")
+    shutil.rmtree(path.parents[1])
+    assert cached_reader_artifact("reader", "catalog") == path
+    assert path.exists()
 
 
 def test_a_cached_artifact_is_read_only(tmp_path, monkeypatch):
@@ -97,8 +120,7 @@ def test_every_build_input_class_changes_the_key(tmp_path):
     shutil.copyfile(
         Path(__file__).parents[1] / "reg_meta/tests/reader_artifacts.py", builder
     )
-    lockfile = tmp_path / "uv.lock"
-    shutil.copyfile(LOCKFILE, lockfile)
+    distributions = installed_distributions()
     fixture = tmp_path / "fixture"
     shutil.copytree(CASES / "reader/fixture", fixture)
     runtime = runtime_versions()
@@ -108,7 +130,7 @@ def test_every_build_input_class_changes_the_key(tmp_path):
             **{
                 "packages": packages,
                 "builder": builder,
-                "lockfile": lockfile,
+                "distributions": distributions,
                 "runtime": runtime,
                 **changed,
             }
@@ -131,11 +153,13 @@ def test_every_build_input_class_changes_the_key(tmp_path):
         "identity_overrides": key(identity_overrides={"import_date": "2024-01-02"}),
         "python": key(build_inputs=inputs(runtime={**runtime, "python": "3.99"})),
         "sqlite": key(build_inputs=inputs(runtime={**runtime, "sqlite": "9.0.0"})),
+        "distributions": key(
+            build_inputs=inputs(distributions=[*distributions, "extra==1.0"])
+        ),
     }
     for label, path in [
         ("fixture", fixture / "catalog.json"),
         ("builder", builder),
-        ("lockfile", lockfile),
         *((package.name, min(package.rglob("*.py"))) for package in packages),
     ]:
         # Cumulative edits: each must move the key off every earlier one.

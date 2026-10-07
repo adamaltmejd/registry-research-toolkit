@@ -1,13 +1,15 @@
-"""Build one synthetic artifact into the per-user fixture cache; print its path.
+"""Build one synthetic artifact into the fixture cache; print its path.
 
     uv run python conformance/fixture_cache.py --fixture reader catalog
     uv run python conformance/fixture_cache.py --source DIR steward --identity K=V
 
 Conformance and the reader tests build through the same cache in-process; this
 script is for consumers outside pytest (and for pre-warming). It prints the
-read-only `reg_meta.db` path, building it only on a miss. The cache directory is
-`$REG_FIXTURE_CACHE`, else `$XDG_CACHE_HOME` (or `~/.cache`) under
-`registry-research-toolkit/fixture-artifacts`.
+read-only `reg_meta.db` path, building it only on a miss. The path stays valid for
+6 hours after its last lookup; after that a new build generation may prune it, so
+look it up again rather than keeping it. The cache directory is
+`$REG_FIXTURE_CACHE`, else `registry-research-toolkit-fixtures` in the system temp
+directory.
 """
 
 from __future__ import annotations
@@ -18,11 +20,17 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "reg_meta/tests"))
 
-from reader_artifacts import cached_reader_artifact
+from reader_artifacts import FIXTURE_CACHE_RETENTION_SECONDS, cached_reader_artifact
+
+VALIDITY_HOURS = FIXTURE_CACHE_RETENTION_SECONDS // 3600
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser = argparse.ArgumentParser(
+        description=__doc__.splitlines()[0],
+        epilog=f"The printed path stays valid for {VALIDITY_HOURS} hours after its "
+        "last lookup; look it up again rather than keeping it.",
+    )
     fixture = parser.add_mutually_exclusive_group(required=True)
     fixture.add_argument(
         "--fixture",
@@ -46,6 +54,11 @@ def main(argv: list[str] | None = None) -> int:
         identity_overrides=dict(item.split("=", 1) for item in args.identity),
     )
     print(path)
+    print(
+        f"valid for {VALIDITY_HOURS} hours after this lookup; look it up again "
+        "rather than keeping it",
+        file=sys.stderr,
+    )
     return 0
 
 

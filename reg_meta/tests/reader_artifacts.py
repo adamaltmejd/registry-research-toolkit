@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import functools
 import hashlib
+import importlib.metadata
 import json
 import os
 import platform
-import re
 import shutil
 import sqlite3
 import sys
@@ -35,7 +35,7 @@ import reg_meta_build
 import reg_schema
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence
+    from collections.abc import Callable, Mapping, Sequence
 
 CASES = Path(__file__).resolve().parents[2] / "conformance/cases"
 BUILDER_CASES = CASES.parents[1] / "reg_meta_build/tests/cases/holdings"
@@ -46,13 +46,13 @@ FIXTURE_IMPORT_DATE = json.loads(
 FIXTURE_CACHE_ENV = "REG_FIXTURE_CACHE"
 # Bump when the cache layout or key composition changes.
 FIXTURE_CACHE_LAYOUT = 1
-# A generation unused this long is pruned when a new one is created. Every
-# lookup marks its generation as used, so only idle generations go.
-FIXTURE_CACHE_RETENTION_SECONDS = 3600
+# A generation idle this long is pruned when a new one is created. Every lookup
+# marks its generation as used, so a returned path stays valid this long after
+# its last lookup.
+FIXTURE_CACHE_RETENTION_SECONDS = 6 * 3600
 BUILD_PACKAGES = tuple(
     Path(package.__file__).parent for package in (reg_meta_build, reg_meta, reg_schema)
 )
-LOCKFILE = CASES.parents[1] / "uv.lock"
 
 
 def replicate_filler(case: Path, destination: Path) -> Path:
@@ -133,12 +133,14 @@ def fixture_source(fixture: str | Path) -> Path:
 
 
 def fixture_cache_dir() -> Path:
-    """Per-user artifact cache, shared by worktrees and pytest-xdist workers."""
+    """Artifact cache shared by worktrees and pytest-xdist workers.
+
+    The temp directory is writable inside agent sandboxes and cleared on reboot.
+    """
     configured = os.environ.get(FIXTURE_CACHE_ENV)
     if configured:
         return Path(configured).expanduser()
-    base = os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache"
-    return Path(base) / "registry-research-toolkit/fixture-artifacts"
+    return Path(tempfile.gettempdir()) / "registry-research-toolkit-fixtures"
 
 
 def _tree_digest(root: Path) -> str:
@@ -171,25 +173,40 @@ def runtime_versions() -> dict[str, str]:
     }
 
 
+def installed_distributions() -> list[str]:
+    """Every installed distribution as a sorted `name==version` pair."""
+    return sorted(
+        {
+            f"{distribution.metadata['Name']}=={distribution.version}"
+            for distribution in importlib.metadata.distributions()
+        }
+    )
+
+
 def build_inputs_digest(
     *,
     packages: Sequence[Path] = BUILD_PACKAGES,
     builder: Path = Path(__file__),
-    lockfile: Path = LOCKFILE,
+    distributions: Sequence[str] | None = None,
     runtime: Mapping[str, str] | None = None,
 ) -> str:
     """Digest of every fixture-independent build input.
 
     The defaults are the imported `reg_meta_build`, `reg_meta` and `reg_schema`
-    sources (file contents, so uncommitted edits count), this builder, `uv.lock`
-    and `runtime_versions()`; the arguments let a caller digest other copies.
+    sources (file contents, so uncommitted edits count), this builder,
+    `installed_distributions()` and `runtime_versions()`: what actually runs,
+    not what a lockfile asks for. The arguments let a caller digest other copies.
     """
     return canonical_sha256(
         {
             "layout": FIXTURE_CACHE_LAYOUT,
             "packages": [_tree_digest(package) for package in packages],
             "builder": _tree_digest(builder),
-            "lockfile": _tree_digest(lockfile),
+            "distributions": list(
+                distributions
+                if distributions is not None
+                else installed_distributions()
+            ),
             "runtime": dict(runtime if runtime is not None else runtime_versions()),
         }
     )
@@ -225,23 +242,31 @@ def artifact_key(
 
 def _generation_dir() -> Path:
     """This build-input generation's cache directory, marked as in use."""
-    root = fixture_cache_dir()
-    generation = root / _live_build_inputs()
+    generations = fixture_cache_dir() / "generations"
+    generation = generations / _live_build_inputs()
     if not generation.is_dir():
         generation.mkdir(parents=True, exist_ok=True)
-        # simplify: every source edit starts a generation (~35 MB), so idle ones
-        # are pruned by age; switch to size-based eviction if that still grows.
+        # simplify: every source edit starts a generation (~35 MB), so ones idle
+        # for 6 hours are pruned; switch to size-based eviction if that still grows.
+        # Pruning only ever touches `generations/`, never the cache's parent.
         cutoff = time.time() - FIXTURE_CACHE_RETENTION_SECONDS
-        for stale in root.iterdir():
-            # Only generation directories: the override may name a shared parent.
-            if (
-                re.fullmatch("[0-9a-f]{64}", stale.name)
-                and stale.is_dir()
-                and stale.stat().st_mtime < cutoff
-            ):
+        for stale in generations.iterdir():
+            if stale.is_dir() and stale.stat().st_mtime < cutoff:
                 shutil.rmtree(stale, ignore_errors=True)
     os.utime(generation)
     return generation
+
+
+def _retry_if_pruned[T](lookup: Callable[[], T]) -> T:
+    """Run a cache lookup, once more if a concurrent prune removed its generation.
+
+    A prune can read a generation's old mtime just before a lookup touches it;
+    the retry recreates the generation and rebuilds the entry.
+    """
+    try:
+        return lookup()
+    except FileNotFoundError:
+        return lookup()
 
 
 def cached_reader_artifact(
@@ -257,6 +282,14 @@ def cached_reader_artifact(
     staging directory and renames it into place, so concurrent builders of the
     same key never expose a partial entry; the loser discards its copy.
     """
+    return _retry_if_pruned(lambda: _cached_artifact(fixture, kind, identity_overrides))
+
+
+def _cached_artifact(
+    fixture: str | Path,
+    kind: str,
+    identity_overrides: Mapping[str, str] | None,
+) -> Path:
     entry = _generation_dir() / artifact_key(
         fixture, kind, identity_overrides=identity_overrides
     )
@@ -285,13 +318,14 @@ def build_reader_artifact(
     identity_overrides: Mapping[str, str] | None = None,
 ) -> Path:
     """Copy the cached artifact into `directory` as a private, writable file."""
-    cached = cached_reader_artifact(
-        fixture, kind, identity_overrides=identity_overrides
-    )
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / "reg_meta.db"
-    shutil.copyfile(cached, path)
-    return path
+
+    def copy() -> Path:
+        shutil.copyfile(_cached_artifact(fixture, kind, identity_overrides), path)
+        return path
+
+    return _retry_if_pruned(copy)
 
 
 def _build_artifact(

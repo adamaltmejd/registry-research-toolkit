@@ -53,15 +53,18 @@ oracle expand to the test filesystem before comparison.
 
 ## Fixture cache
 
-Every synthetic artifact is built once through the real pipeline into a per-user cache:
-`$REG_FIXTURE_CACHE`, else `$XDG_CACHE_HOME` (or `~/.cache`) under
-`registry-research-toolkit/fixture-artifacts`. Worktrees and pytest-xdist workers share
-it. The key hashes the fixture source, the shared `cases/reader/fixture` defaults, the
-kind, identity overrides, the `reg_meta_build`, `reg_meta` and `reg_schema` sources, the
-builder, `uv.lock` and the Python and SQLite versions, so any edit is a new entry.
-Entries are read-only; `build_reader_artifact` hands a mutating case its own copy. A
-miss builds into a staging directory and renames it into place. Generations idle for an
-hour are pruned when a new one starts; deleting the directory between runs is safe.
+Every synthetic artifact is built once through the real pipeline into a cache:
+`$REG_FIXTURE_CACHE`, else `registry-research-toolkit-fixtures` in the system temp
+directory (writable inside agent sandboxes, cleared on reboot). Worktrees and
+pytest-xdist workers share it. The key hashes the fixture source, the shared
+`cases/reader/fixture` defaults, the kind, identity overrides, the `reg_meta_build`,
+`reg_meta` and `reg_schema` sources, the builder, the installed distributions and the
+Python and SQLite versions, so any edit is a new entry. Entries live under
+`generations/<build-inputs digest>/`, are read-only, and `build_reader_artifact` hands a
+mutating case its own copy. A miss builds into a staging directory and renames it into
+place. Creating a generation prunes generations idle for 6 hours, and only those, so a
+returned path stays valid for 6 hours after its last lookup. Deleting the directory
+between runs is safe.
 `uv run python conformance/fixture_cache.py --fixture reader catalog` builds one entry
 and prints its path for consumers outside pytest.
 
