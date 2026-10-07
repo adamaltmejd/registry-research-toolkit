@@ -696,7 +696,9 @@ is deleted".
   its CLI JSON. The compared operations are every `reg-meta` read command: `search`, the
   `get` subcommands, `resolve`, `validate`, `order` and `doc`. Queries cover every
   register, seeded variable samples, holdings strata and the search-eval corpus terms,
-  in both scopes, run by parallel workers. Seeded from `parity_fts.py`.
+  in both scopes, run by parallel workers. Seeded from `parity_fts.py`, which compares
+  only one FTS arm's SQL; G1 compares the public `search` command, exact-name promotion
+  included.
 - Deletes `spike/stage0/` and the workspace `exclude`.
 - Paths: `conformance/differential/`, section 4 of this file, root `Cargo.toml`,
   `spike/stage0/` (deleted).
