@@ -91,9 +91,16 @@ Tests pin **contracts and behavior**, never implementation. The toolkit is a
 deterministic compiler (`reg_meta_build`) that feeds an immutable artifact to stateless
 readers (`reg_meta`, `reg_webapp`), so nearly every behavior is observable at a boundary
 that outlives the code behind it. `ARCHITECTURE.md` → "Testing strategy" names the
-boundaries, the oracles and the tiers; the rules below are what an agent must follow
-when writing, changing or deleting a test.
+boundaries, the oracles, the tiers and each package's time budget; the rules below are
+what an agent must follow when writing, changing or deleting a test. The `test-audit`
+skill applies them to a change and to a sweep.
 
+- **End-to-end and integration first.** A test drives the real pipeline, reader or
+  server from a boundary and observes its output. A unit test is the exception: allowed
+  only where it pins behavior a boundary case cannot reach well (a grammar, interval
+  algebra, a pure fold), stated as input → expected output, and it must survive a
+  rewrite of the code behind it. A test that breaks on a refactor that changes no
+  boundary is the defect, not the refactor.
 - **Assert only at a named boundary**: built-artifact content, CLI JSON, library return
   models, HTTP responses, `project_data.json` validation results, order-manifest bytes,
   curation-TOML load or located failure, the FQID and period grammars. Anything else is
@@ -114,8 +121,16 @@ when writing, changing or deleting a test.
   reading what changed and saying why in the commit.
 - **Fixtures come from readable source** (TOML/JSON/CSV run through the real pipeline),
   never from Python literals of database rows. The synthetic artifact is the unit.
-- **One behavior per test, named by behavior.** No test file over 800 lines; split by
-  contract surface, not by helper.
+- **About one test per stated behavior, at its hardest case**: a second run, reordered
+  input, an interval edge, a refusal beside its allowed twin. Not the first case that
+  passes. Named by behavior; no test file over 800 lines, split by contract surface.
+- **Expected values come from outside the code under test**: a golden, the source
+  fixture, the spec, or agreement between two adapters. Never its own output or a copy
+  of its logic.
+- **Every test can fail.** A new or changed test's comment names the product change
+  that makes it fail. A refusal asserts the located error code, not only that something
+  failed. A contract is asserted once, at the outermost boundary that reaches it; a twin
+  is deleted.
 - **Delete with the code.** A test that pinned deleted behavior is deleted, not
   retargeted. A refactor that changes no boundary changes no test; if it does, the
   boundary moved and the design note says so.
@@ -123,8 +138,11 @@ when writing, changing or deleting a test.
   Hypothesis for grammars and interval algebra.
 - **Structural validation has one authority.** `validate_built_db` owns artifact
   invariants; tests run it on the synthetic artifact, they do not re-derive its checks.
-- **Bug fix = a regression case in the owning corpus**, not a new assertion block in a
-  helper test.
+- **Bug fix = a regression case in the owning corpus**, extending its behavior's test,
+  not a new assertion block in a helper test.
+- **Within budget.** Each package's suite stays inside its time budget in
+  `ARCHITECTURE.md` → "Tiers". A check that costs more than its behavior is worth moves
+  to a slower tier (real-seed or release gate) or goes.
 - **Frontend follows the same rule**: assert on rendered DOM, the accessibility tree and
   the codegen'd API types, not component internals. No screenshot regression. A
   UI-specific regime is a separate, later decision.

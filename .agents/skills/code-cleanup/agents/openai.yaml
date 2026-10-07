@@ -1,0 +1,6 @@
+interface:
+  display_name: "Registry Code Cleanup"
+  short_description: "Audit the tree for dead code, duplication and YAGNI"
+  default_prompt: "Use $code-cleanup to audit the registry toolkit for deletions and land them one commit per module."
+policy:
+  allow_implicit_invocation: true
