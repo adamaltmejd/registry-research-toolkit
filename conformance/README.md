@@ -64,9 +64,8 @@ Python and SQLite versions, so any edit is a new entry. Entries live under
 mutating case its own copy. A miss builds into a staging directory and renames it into
 place. Creating a generation prunes generations idle for 6 hours, and only those, so a
 returned path stays valid for 6 hours after its last lookup. Deleting the directory
-between runs is safe.
-`uv run python conformance/fixture_cache.py --fixture reader catalog` builds one entry
-and prints its path for consumers outside pytest.
+between runs is safe. `uv run python conformance/fixture_cache.py reader catalog` builds
+one entry and prints its path for consumers outside pytest.
 
 Reader fixtures named `reader` or `reader/<name>` live under `cases/reader`; other named
 sources live under `reg_meta_build/tests/cases/holdings`. HTTP fixture names resolve

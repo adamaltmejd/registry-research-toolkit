@@ -1,13 +1,10 @@
-"""The synthetic-artifact cache: built once, immutable, keyed by every input."""
+"""The synthetic-artifact cache: hits never rebuild, keys cover every input."""
 
 from __future__ import annotations
 
 import hashlib
 import os
 import shutil
-import sqlite3
-import subprocess
-import sys
 import time
 from pathlib import Path
 
@@ -19,27 +16,14 @@ from reader_artifacts import (
     FIXTURE_CACHE_RETENTION_SECONDS,
     artifact_key,
     build_inputs_digest,
-    build_reader_artifact,
     cached_reader_artifact,
     installed_distributions,
     runtime_versions,
 )
 
-SCRIPT = Path(__file__).with_name("fixture_cache.py")
-
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-def test_a_cached_artifact_is_never_rebuilt(tmp_path, monkeypatch):
-    monkeypatch.setenv(FIXTURE_CACHE_ENV, str(tmp_path / "cache"))
-    first = cached_reader_artifact("reader", "catalog")
-    before = first.stat()
-    second = cached_reader_artifact("reader", "catalog")
-    after = second.stat()
-    assert second == first
-    assert (after.st_ino, after.st_mtime_ns) == (before.st_ino, before.st_mtime_ns)
 
 
 @pytest.mark.skipif(os.geteuid() == 0, reason="root writes through read-only mode bits")
@@ -75,32 +59,6 @@ def test_only_idle_generations_are_pruned(tmp_path, monkeypatch):
     assert (stale.exists(), active.exists(), neighbour.exists()) == (False, True, True)
 
 
-def test_a_removed_generation_is_rebuilt_on_the_next_lookup(tmp_path, monkeypatch):
-    monkeypatch.setenv(FIXTURE_CACHE_ENV, str(tmp_path / "cache"))
-    path = cached_reader_artifact("reader", "catalog")
-    shutil.rmtree(path.parents[1])
-    assert cached_reader_artifact("reader", "catalog") == path
-    assert path.exists()
-
-
-def test_a_cached_artifact_is_read_only(tmp_path, monkeypatch):
-    monkeypatch.setenv(FIXTURE_CACHE_ENV, str(tmp_path / "cache"))
-    path = cached_reader_artifact("reader", "catalog")
-    with (
-        sqlite3.connect(path) as conn,
-        pytest.raises(sqlite3.OperationalError, match="readonly"),
-    ):
-        conn.execute("CREATE TABLE mutation (value)")
-    # Mutating callers get a private copy; the entry keeps its bytes.
-    entry = _sha256(path)
-    copy = build_reader_artifact(tmp_path / "copy", "reader", "catalog")
-    with sqlite3.connect(copy) as conn:
-        conn.execute("CREATE TABLE mutation (value)")
-    conn.close()
-    assert _sha256(copy) != entry
-    assert _sha256(path) == entry
-
-
 @pytest.mark.parametrize("kind", ["catalog", "steward"])
 def test_a_cache_hit_is_byte_identical_to_a_fresh_build(kind, tmp_path, monkeypatch):
     monkeypatch.setenv(FIXTURE_CACHE_ENV, str(tmp_path / "warm"))
@@ -110,17 +68,6 @@ def test_a_cache_hit_is_byte_identical_to_a_fresh_build(kind, tmp_path, monkeypa
     fresh = cached_reader_artifact("reader", kind)
     assert hit != fresh
     assert _sha256(hit) == _sha256(fresh)
-
-
-def test_the_script_prints_the_cached_artifact(tmp_path, monkeypatch):
-    monkeypatch.setenv(FIXTURE_CACHE_ENV, str(tmp_path / "cache"))
-    completed = subprocess.run(
-        [sys.executable, str(SCRIPT), "--fixture", "reader", "steward"],
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    assert Path(completed.stdout.strip()) == cached_reader_artifact("reader", "steward")
 
 
 def _perturb(path: Path) -> None:

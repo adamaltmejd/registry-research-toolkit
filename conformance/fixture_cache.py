@@ -1,15 +1,12 @@
 """Build one synthetic artifact into the fixture cache; print its path.
 
-    uv run python conformance/fixture_cache.py --fixture reader catalog
-    uv run python conformance/fixture_cache.py --source DIR steward --identity K=V
+    uv run python conformance/fixture_cache.py reader catalog
 
-Conformance and the reader tests build through the same cache in-process; this
-script is for consumers outside pytest (and for pre-warming). It prints the
-read-only `reg_meta.db` path, building it only on a miss. The path stays valid for
-6 hours after its last lookup; after that a new build generation may prune it, so
-look it up again rather than keeping it. The cache directory is
-`$REG_FIXTURE_CACHE`, else `registry-research-toolkit-fixtures` in the system temp
-directory.
+FIXTURE is `reader`, `reader/<case>` or a reg_meta_build holdings case name. The
+artifact gets the same identity as conformance's, so this prints the entry the
+suite reads, building it only on a miss. Conformance builds in-process; this is
+for consumers outside pytest. The path stays valid for 6 hours after its last
+lookup, so look it up again rather than keeping it.
 """
 
 from __future__ import annotations
@@ -20,45 +17,25 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "reg_meta/tests"))
 
-from reader_artifacts import FIXTURE_CACHE_RETENTION_SECONDS, cached_reader_artifact
-
-VALIDITY_HOURS = FIXTURE_CACHE_RETENTION_SECONDS // 3600
+from reader_artifacts import FIXTURE_IMPORT_DATE, cached_reader_artifact
 
 
-def main(argv: list[str] | None = None) -> int:
+def main() -> int:
     parser = argparse.ArgumentParser(
         description=__doc__.splitlines()[0],
-        epilog=f"The printed path stays valid for {VALIDITY_HOURS} hours after its "
-        "last lookup; look it up again rather than keeping it.",
+        epilog="The printed path stays valid for 6 hours after its last lookup.",
     )
-    fixture = parser.add_mutually_exclusive_group(required=True)
-    fixture.add_argument(
-        "--fixture",
-        help="`reader`, `reader/<case>` or a reg_meta_build holdings case name",
-    )
-    fixture.add_argument("--source", type=Path, help="a readable source directory")
+    parser.add_argument("fixture")
     parser.add_argument("kind", choices=("catalog", "steward"))
-    parser.add_argument(
-        "--identity",
-        action="append",
-        default=[],
-        metavar="KEY=VALUE",
-        help="manifest identity override (repeatable)",
-    )
-    args = parser.parse_args(argv)
-    if any("=" not in item for item in args.identity):
-        parser.error("--identity takes KEY=VALUE")
-    path = cached_reader_artifact(
-        args.source.resolve() if args.source else args.fixture,
-        args.kind,
-        identity_overrides=dict(item.split("=", 1) for item in args.identity),
-    )
-    print(path)
+    args = parser.parse_args()
     print(
-        f"valid for {VALIDITY_HOURS} hours after this lookup; look it up again "
-        "rather than keeping it",
-        file=sys.stderr,
+        cached_reader_artifact(
+            args.fixture,
+            args.kind,
+            identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
+        )
     )
+    print("valid for 6 hours after this lookup", file=sys.stderr)
     return 0
 
 

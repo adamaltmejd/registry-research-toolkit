@@ -7,7 +7,6 @@ import hashlib
 import importlib.metadata
 import json
 import os
-import platform
 import shutil
 import sqlite3
 import sys
@@ -35,7 +34,7 @@ import reg_meta_build
 import reg_schema
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping, Sequence
+    from collections.abc import Mapping, Sequence
 
 CASES = Path(__file__).resolve().parents[2] / "conformance/cases"
 BUILDER_CASES = CASES.parents[1] / "reg_meta_build/tests/cases/holdings"
@@ -44,8 +43,6 @@ FIXTURE_IMPORT_DATE = json.loads(
 )["import_date"]
 
 FIXTURE_CACHE_ENV = "REG_FIXTURE_CACHE"
-# Bump when the cache layout or key composition changes.
-FIXTURE_CACHE_LAYOUT = 1
 # A generation idle this long is pruned when a new one is created. Every lookup
 # marks its generation as used, so a returned path stays valid this long after
 # its last lookup.
@@ -169,7 +166,6 @@ def runtime_versions() -> dict[str, str]:
     return {
         "python": sys.version,
         "sqlite": sqlite3.sqlite_version,
-        "platform": f"{sys.platform}-{platform.machine()}",
     }
 
 
@@ -196,10 +192,10 @@ def build_inputs_digest(
     sources (file contents, so uncommitted edits count), this builder,
     `installed_distributions()` and `runtime_versions()`: what actually runs,
     not what a lockfile asks for. The arguments let a caller digest other copies.
+    Any change to this builder, the cache code included, is a new key.
     """
     return canonical_sha256(
         {
-            "layout": FIXTURE_CACHE_LAYOUT,
             "packages": [_tree_digest(package) for package in packages],
             "builder": _tree_digest(builder),
             "distributions": list(
@@ -240,14 +236,10 @@ def artifact_key(
     )
 
 
-def _generation_path() -> Path:
-    return fixture_cache_dir() / "generations" / _live_build_inputs()
-
-
 def _generation_dir() -> Path:
     """This build-input generation's cache directory, marked as in use."""
-    generation = _generation_path()
-    generations = generation.parent
+    generations = fixture_cache_dir() / "generations"
+    generation = generations / _live_build_inputs()
     if not generation.is_dir():
         generation.mkdir(parents=True, exist_ok=True)
         # simplify: every source edit starts a generation (~35 MB), so ones idle
@@ -259,21 +251,6 @@ def _generation_dir() -> Path:
                 shutil.rmtree(stale, ignore_errors=True)
     os.utime(generation)
     return generation
-
-
-def _retry_if_pruned[T](lookup: Callable[[], T]) -> T:
-    """Run a cache lookup, once more if a concurrent prune removed its generation.
-
-    A prune can read a generation's old mtime just before a lookup touches it;
-    the retry recreates the generation and rebuilds the entry. Any other missing
-    file (a fixture without `catalog.json`, say) is a real error and raises.
-    """
-    try:
-        return lookup()
-    except FileNotFoundError:
-        if _generation_path().is_dir():
-            raise
-    return lookup()
 
 
 def cached_reader_artifact(
@@ -289,14 +266,6 @@ def cached_reader_artifact(
     staging directory and renames it into place, so concurrent builders of the
     same key never expose a partial entry; the loser discards its copy.
     """
-    return _retry_if_pruned(lambda: _cached_artifact(fixture, kind, identity_overrides))
-
-
-def _cached_artifact(
-    fixture: str | Path,
-    kind: str,
-    identity_overrides: Mapping[str, str] | None,
-) -> Path:
     entry = _generation_dir() / artifact_key(
         fixture, kind, identity_overrides=identity_overrides
     )
@@ -325,14 +294,13 @@ def build_reader_artifact(
     identity_overrides: Mapping[str, str] | None = None,
 ) -> Path:
     """Copy the cached artifact into `directory` as a private, writable file."""
+    cached = cached_reader_artifact(
+        fixture, kind, identity_overrides=identity_overrides
+    )
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / "reg_meta.db"
-
-    def copy() -> Path:
-        shutil.copyfile(_cached_artifact(fixture, kind, identity_overrides), path)
-        return path
-
-    return _retry_if_pruned(copy)
+    shutil.copyfile(cached, path)
+    return path
 
 
 def _build_artifact(
