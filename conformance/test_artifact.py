@@ -22,10 +22,17 @@ def test_sqlite_integrity(artifact_dir):
 
 def test_selected_artifact_passes_the_build_validator(artifact_dir, request):
     """`validate_built_db` is the one structural authority: foreign keys,
-    manifest identity and the holdings accounting included."""
+    manifest identity and the holdings accounting included. It runs in the
+    mode each published asset is built in: a catalog with the real-corpus
+    floors, a steward artifact with the minted-id band for steward providers.
+    The curation `slug_dir` is build input that no asset ships, so the
+    entity-key curation gate stays with the build."""
     if request.config.getoption("--artifact-dir") is None:
         pytest.skip("synthetic artifacts are validated when they are built")
-    result = validate_built_db(artifact_dir / "reg_meta.db")
+    db = artifact_dir / "reg_meta.db"
+    with open_db(db) as conn:
+        kind = get_manifest(conn)["catalog_artifact_kind"]
+    result = validate_built_db(db, corpus=kind == "catalog", flavored=kind == "steward")
     # Counts only: the report can name private physical identifiers.
     require(result.passed, f"{len(result.failures)} build validator checks failed")
 
