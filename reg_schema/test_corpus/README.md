@@ -38,6 +38,12 @@ deliberately-malformed inputs live here — the case ID indicates which. The pay
 **not** required to be deserializable into the `reg_schema` Pydantic models; the
 structural validator accepts and reports on parsed-dict input directly.
 
+A string `schema_version` must be the current contract version
+(`reg_schema.__version__`) so every input reads as a project the `/validate` door would
+accept; the harness fails on a stale one. Structural validation ignores the value, so a
+contract bump re-authors the corpus by rewriting that one line. Only cases about the
+field's shape (absent, null, non-string, or a non-object root) carry anything else.
+
 ### `expected_ValidationResult.json`
 
 The `ValidationResult` the structural validator must produce for the paired
@@ -58,7 +64,7 @@ The `ValidationResult` the structural validator must produce for the paired
 ```
 
 - `level` ∈ `{"error", "warning", "info"}`. Mis-cased or unknown values are rejected at
-  deserialization — see `ValidationIssue.__post_init__`.
+  deserialization: the Python harness refuses them when it decodes the file.
 - `code` is a namespaced, stable identifier. Tests pin codes; the SPA maps codes to UI
   affordances. New codes are additive.
 - `path` is an RFC 6901 JSON pointer into the paired `input.json` root; empty string for
@@ -90,10 +96,9 @@ before downstream consumers do.
 The corpus is the oracle for every structural rule: one or more cases per rule, positive
 and negative, each a whole payload with its complete expected issue set. Case names
 state the behavior; a rule exercised over several values carries the value as a
-`__<value>` suffix (`period_out_of_bounds_tokens_are_invalid__2018_q5`).
-`reg_schema/tests/test_structural.py` keeps only what a JSON payload cannot carry.
-Negative cases for §6.8.3 (reg_meta-backed semantic) rules land in their owning
-packages, not here — `reg_schema` only owns the structural layer's corpus.
+`__<value>` suffix (`period_out_of_bounds_tokens_are_invalid__2018_q5`). Negative cases
+for §6.8.3 (reg_meta-backed semantic) rules land in their owning packages, not here —
+`reg_schema` only owns the structural layer's corpus.
 
 ## Adding a case
 

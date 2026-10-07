@@ -131,6 +131,10 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     hint: "error",
   },
   invalid_period: { label: "Invalid period", hint: "error" },
+  invalid_window: {
+    label: "Study window ends before it starts",
+    hint: "error",
+  },
   subtype_on_wrong_type: {
     label: "Subtype/format field set on a column type that doesn't own it",
     hint: "error",

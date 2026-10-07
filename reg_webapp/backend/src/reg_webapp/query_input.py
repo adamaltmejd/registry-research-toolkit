@@ -13,10 +13,8 @@ rather than in FTS.
 
 from __future__ import annotations
 
-import re
-import unicodedata
-
 from fastapi import HTTPException
+from reg_meta.queries import fold_search
 
 # Cap the query length to bound work; the FTS builder neutralizes operators.
 QUERY_MAX_LEN = 200
@@ -43,24 +41,17 @@ def clamp_limit(limit: int, *, maximum: int) -> int:
     return max(1, min(limit, maximum))
 
 
-# The SPA's `foldText` (frontend/src/lib/catalog.ts), character for character:
-# NFD-decompose, drop the combining diacritical marks block, lowercase — so a
-# server-side filter answers "lon" for "Lön" exactly as the in-browser list
-# filters do. SQLite's LIKE folds neither case beyond ASCII nor diacritics, which
-# is why this runs in Python over the rows rather than in SQL.
-_COMBINING_MARKS = re.compile(r"[\u0300-\u036f]")
-
-
-def fold_text(value: str) -> str:
-    """Fold for diacritic-blind, case-insensitive substring matching."""
-    return _COMBINING_MARKS.sub("", unicodedata.normalize("NFD", value)).lower()
-
-
 def matches_filter(needle: str, *haystacks: str | None) -> bool:
     """Whether any haystack CONTAINS the folded `needle`. An empty (or
     whitespace-only) needle matches everything — the unfiltered list. `%` and `_`
-    are ordinary characters here: this is a substring test, not LIKE."""
-    folded = fold_text(needle).strip()
+    are ordinary characters here: this is a substring test, not LIKE.
+
+    Both sides fold with `fold_search`, which the SPA's `foldText`
+    (frontend/src/lib/catalog.ts) also ports, so a server-side filter answers
+    "lon" for "Lön" and "strasse" for "Straße" exactly as the in-browser list
+    filters do. SQLite's LIKE folds neither case beyond ASCII nor diacritics,
+    which is why this runs in Python over the rows rather than in SQL."""
+    folded = fold_search(needle)
     if not folded:
         return True
-    return any(h is not None and folded in fold_text(h) for h in haystacks)
+    return any(h is not None and folded in fold_search(h) for h in haystacks)

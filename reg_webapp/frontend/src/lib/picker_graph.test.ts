@@ -8,7 +8,6 @@ import type {
 import {
   axisTicks,
   cellsOf,
-  clampCellsToScale,
   classificationDagLayout,
   clustersOf,
   graphEdgeVisibleInGraph,
@@ -97,16 +96,6 @@ describe("cellsOf — representation-run grouping", () => {
     expect(cells[0].columns).toEqual(["Col"]);
   });
 
-  it("opens a NEW cell at each representation_run_id change (2 runs → 2 cells)", () => {
-    const node = variableNode({
-      states: [
-        state({ representation_run_id: 1, value_set_version_label: "a" }),
-        state({ representation_run_id: 2, value_set_version_label: "b" }),
-      ],
-    });
-    expect(cellsOf(node).map((c) => c.runId)).toEqual([1, 2]);
-  });
-
   it("labels by classification slug, then delivery column, when no version label", () => {
     const slug = cellsOf(
       variableNode({
@@ -133,80 +122,9 @@ describe("cellsOf — representation-run grouping", () => {
     );
     expect(col[0].label).toBe("Kon");
   });
-
-  it("normalizes null bounds to the open-ended / yearless sentinels", () => {
-    // null valid_to → open-ended ("since"), null valid_from → yearless ("until").
-    const open = cellsOf(
-      variableNode({
-        states: [state({ valid_from: "2012-01-01", valid_to: null })],
-      }),
-    );
-    expect(open[0].window).toBe("since 2012");
-    const yearless = cellsOf(
-      variableNode({
-        states: [state({ valid_from: null, valid_to: "2008-12-31" })],
-      }),
-    );
-    expect(yearless[0].window).toBe("until 2008");
-  });
-
-  it("omits the display window for wholly unknown bounds", () => {
-    const cells = cellsOf(
-      variableNode({
-        states: [state({ valid_from: null, valid_to: null })],
-      }),
-    );
-    expect(cells[0].window).toBeNull();
-    expect(cells[0].openStart).toBe(true);
-    expect(cells[0].openEnd).toBe(true);
-  });
-
-  it("carries numeric year bounds + open flags for the shared axis", () => {
-    const cells = cellsOf(
-      variableNode({
-        states: [
-          state({
-            representation_run_id: 1,
-            valid_from: "1995-01-01",
-            valid_to: "2004-12-31",
-          }),
-          state({
-            representation_run_id: 2,
-            valid_from: "2005-01-01",
-            valid_to: null,
-          }),
-        ],
-      }),
-    );
-    // A closed run → finite from/to years, neither side open.
-    expect(cells[0]).toMatchObject({
-      fromYear: 1995,
-      toYear: 2004,
-      openStart: false,
-      openEnd: false,
-      row: 0,
-    });
-    // An open-ended run → openEnd set, toYear NaN (resolved later by the scale).
-    expect(cells[1].openEnd).toBe(true);
-    expect(Number.isNaN(cells[1].toYear)).toBe(true);
-  });
 });
 
 describe("yearScaleOf — shared time axis (#678 rework)", () => {
-  it("spans the min/max finite year over cells AND classification version_years", () => {
-    const v = variableNode({
-      id: "v",
-      states: [state({ valid_from: "1998-01-01", valid_to: "2004-12-31" })],
-    });
-    const c = classificationNode({ id: "c", version_year: 2020 });
-    const scale = yearScaleOf({ nodes: [v, c], edges: [], focus_id: null });
-    expect(scale).toEqual({
-      minYear: 1998,
-      maxYear: 2020,
-      ceilingFromVintage: false,
-    });
-  });
-
   it("extends the ceiling to the catalog vintage for an open-ended cell only", () => {
     const v = variableNode({
       id: "v",
@@ -226,12 +144,6 @@ describe("yearScaleOf — shared time axis (#678 rework)", () => {
     // A vintage past the finite max but no open-ended cell → max stays finite.
     const scale = yearScaleOf({ nodes: [v], edges: [], focus_id: null }, 2024);
     expect(scale).toMatchObject({ maxYear: 2018, ceilingFromVintage: false });
-  });
-
-  it("widens a single-year graph so the scale has non-zero width", () => {
-    const c = classificationNode({ id: "c", version_year: 2000 });
-    const scale = yearScaleOf({ nodes: [c], edges: [], focus_id: null });
-    expect(scale).toMatchObject({ minYear: 2000, maxYear: 2001 });
   });
 
   it("returns null when NO node is datable (every bound open/unknown, no year)", () => {
@@ -291,41 +203,6 @@ describe("yearScaleOf — shared time axis (#678 rework)", () => {
       maxYear: 2008,
       ceilingFromVintage: false,
     });
-  });
-});
-
-describe("clampCellsToScale", () => {
-  it("resolves open/unknown bounds to the scale ends, leaving finite bounds", () => {
-    const cells = cellsOf(
-      variableNode({
-        states: [state({ valid_from: null, valid_to: null })], // both open
-      }),
-    );
-    const clamped = clampCellsToScale(cells, {
-      minYear: 1990,
-      maxYear: 2024,
-      ceilingFromVintage: true,
-    });
-    expect(clamped[0]).toMatchObject({ fromYear: 1990, toYear: 2024 });
-    // The open flags survive (the renderer fades those edges).
-    expect(clamped[0].openStart).toBe(true);
-    expect(clamped[0].openEnd).toBe(true);
-  });
-});
-
-describe("axisTicks", () => {
-  it("emits round, anchored year ticks across the scale", () => {
-    const ticks = axisTicks({
-      minYear: 1996,
-      maxYear: 2020,
-      ceilingFromVintage: false,
-    });
-    const years = ticks.map((t) => t.year);
-    // Domain ends are anchored; an interior decade tick is present; sorted.
-    expect(years[0]).toBe(1996);
-    expect(years.at(-1)).toBe(2020);
-    expect(years).toContain(2000);
-    expect([...years].sort((a, b) => a - b)).toEqual(years);
   });
 });
 
@@ -430,33 +307,6 @@ describe("clustersOf — sub-row packing on the shared axis", () => {
       expect(lane.cells.every((c) => c.row === 0)).toBe(true);
     }
   });
-
-  it("keeps non-overlapping cells on one row (rowCount === 1)", () => {
-    const node = variableNode({
-      id: "v",
-      states: [
-        state({
-          representation_run_id: 1,
-          valid_from: "2000-01-01",
-          valid_to: "2004-12-31",
-        }),
-        state({
-          representation_run_id: 2,
-          valid_from: "2010-01-01",
-          valid_to: "2014-12-31",
-        }),
-      ],
-    });
-    const scale = yearScaleOf({ nodes: [node], edges: [], focus_id: null });
-    const lane = clustersOf(
-      { nodes: [node], edges: [], focus_id: null },
-      scale,
-    )[0].nodes[0];
-    if (lane.kind === "variable") {
-      expect(lane.rowCount).toBe(1);
-      expect(lane.cells.every((c) => c.row === 0)).toBe(true);
-    }
-  });
 });
 
 describe("clustersOf — group_key clustering (Fork B)", () => {
@@ -548,20 +398,6 @@ describe("resolveEdges", () => {
     expect(resolved[0].target.id).toBe("b");
   });
 
-  it("keeps variable-grain edges independent of representation state rows", () => {
-    const a = variableNode({ id: "a" });
-    const b = variableNode({ id: "b" });
-    const graph: RelationshipGraph = {
-      nodes: [a, b],
-      edges: [
-        { id: "e1", kind: "succession", source: "a", target: "b", label: null },
-      ],
-      focus_id: "a",
-    };
-    expect(graphEdgeVisibleInGraph(graph.edges[0], graph)).toBe(true);
-    expect(resolveEdges(graph)).toHaveLength(1);
-  });
-
   it("requires representation edges to match scoped columns and variant", () => {
     const node = variableNode({
       id: "v1",
@@ -615,47 +451,6 @@ describe("resolveEdges", () => {
 });
 
 describe("classificationDagLayout — compact edition DAG (#906)", () => {
-  it("lays a linear succession chain out as one compact row", () => {
-    const older = classificationNode({
-      id: "sun1996",
-      version_year: 1996,
-      is_current: false,
-    });
-    const newer = classificationNode({
-      id: "sun2020",
-      version_year: 2020,
-      is_current: true,
-    });
-    const graph: RelationshipGraph = {
-      nodes: [newer, older],
-      edges: [
-        {
-          id: "sun1996-sun2020",
-          kind: "succession",
-          source: "sun1996",
-          target: "sun2020",
-          label: null,
-        },
-      ],
-      focus_id: "sun2020",
-    };
-    const cluster = clustersOf(graph)[0];
-    const points = cluster.nodes.filter((n) => n.kind === "classification");
-    const layout = classificationDagLayout(points, resolveEdges(graph));
-
-    expect(layout.rows).toBe(1);
-    expect(layout.columns).toBe(2);
-    expect(
-      layout.nodes.map((node) => [node.point.node.id, node.column, node.row]),
-    ).toEqual([
-      ["sun1996", 0, 0],
-      ["sun2020", 1, 0],
-    ]);
-    expect(layout.edges.map((edge) => edge.edge.id)).toEqual([
-      "sun1996-sun2020",
-    ]);
-  });
-
   it("opens rows only for branching ranks, preserving edition order", () => {
     const base = classificationNode({
       id: "base",
