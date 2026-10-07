@@ -269,6 +269,12 @@ the loop:
   stated behavior, rule violations and simplifications; an idea that adds scope goes in
   one line under "Not requested", and the orchestrating session declines it unless it
   fixes a defect.
+- **Tests are end-to-end or integration, at a public boundary**: the built artifact,
+  HTTP, MCP, order bytes, `project_data.json` validation. No unit tests of internal
+  functions; they make code harder to change without proving behavior. One test per
+  guarantee, at its hardest case, with expected values from outside the code under test
+  and a comment naming the change that would make it fail. A bug fix extends its
+  guarantee's test rather than adding one. G0 stays fast enough to run on every change.
 - **Escalate, don't decide.** An agent stops instead of changing any of: the operation
   table or error catalog (`conformance/api/`), a decision in section 13, the meaning of
   an existing golden expected file, the schema major version, a gate budget, or a new
