@@ -1,0 +1,26 @@
+{
+  "kind": "catalog",
+  "fixture": "code-ranking",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Bulkval",
+        "type": "classification_code"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Bulkval",
+        "type": "classification_code"
+      },
+      "cursor_from": [
+        0,
+        "/data/next_cursor"
+      ]
+    }
+  ]
+}

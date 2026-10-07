@@ -1,0 +1,19 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "scb/example/value"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "scb/example/second"
+      ],
+      "/data/next_cursor": null
+    }
+  }
+]

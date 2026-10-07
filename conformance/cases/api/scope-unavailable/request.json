@@ -1,0 +1,14 @@
+{
+  "fixture": "reader",
+  "kind": "catalog",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Value",
+        "scope": "holdings"
+      }
+    }
+  ]
+}

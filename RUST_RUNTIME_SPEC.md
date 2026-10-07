@@ -452,10 +452,10 @@ OpenAPI and MCP `tools/list` are the self-description; there is no separate `des
 
 Rules (settled 2026-10-07; first agreed for the CLI, carried over to the API):
 
-- **JSON only, `{data, meta}` on every response**, except raw-bytes downloads (document
-  PDFs, the order manifest file), which carry their media type and have a JSON operation
-  for their metadata. `data` is the result; `meta` holds the contract version, catalog
-  generation and scope. Agents always know which catalog answered.
+- **JSON only, `{data, meta}` on every successful response**, except raw-bytes downloads
+  (document PDFs, the order manifest file), which carry their media type and have a JSON
+  operation for their metadata. `data` is the result; `meta` holds the contract version,
+  catalog generation and scope. Agents always know which catalog answered.
 - **Deterministic responses.** `meta` carries no timing, so the same request on the same
   catalog returns the same bytes and goldens compare raw output. Performance is measured
   by the G1 harness.
@@ -470,17 +470,19 @@ Rules (settled 2026-10-07; first agreed for the CLI, carried over to the API):
   parsed by the FQID/project period grammar in `reg-core` (`2019`, `2015..2019`,
   `LA2019`, `2019-03`, `2019-01-01..2019-06-30`). `diff` takes two periods, `from` and
   `to`, in the same grammar.
-- **Cursor paging everywhere.** Every list takes `limit` (one default, 50) and `cursor`,
-  and returns `next_cursor`. Cursors are bound to the catalog generation, so a stale
-  cursor fails loudly instead of skipping rows. No offsets.
+- **Cursor paging for open-ended lists.** Every such list takes `limit` (one default,
+  50) and `cursor`, and returns `next_cursor`. A list bounded by the request or the
+      entity (a register's documents, a variable's variants) is a plain array. Cursors
+      are bound to the catalog generation, so a stale cursor fails loudly instead of
+      skipping rows. No offsets.
 - **One parameter per concept, the same everywhere.** `register` and `scope` mean the
   same on every operation; `scope` is valid on every read because scope is reader state.
 - **One result shape per operation.** The shape does not depend on result count. Every
-  list is `{"items": [...], "next_cursor": ...}` inside `data`.
-- **Errors** are `{code, class, message, remediation, fields}`, with a stable `code`
-  catalog. HTTP maps each class to a status (usage 400/422, not found 404, ambiguous ref
-  or no match 409, order blocked 422, catalog unavailable 503, internal 500); MCP
-  returns the same document as a tool error.
+  paged list is `{"items": [...], "next_cursor": ...}` inside `data`.
+- **Errors** are `{error, meta}`, where `error` is
+  `{code, class, message, remediation, fields}` with a stable `code` catalog.
+  `conformance/api/errors.toml` maps each code to its class and HTTP status; MCP returns
+  the same document as a tool error.
 - **Order manifests keep their bytes.** The order operation returns
   `{data: manifest, meta}`; the HTTP download route serves the exact manifest bytes,
   which is what the byte-identity contract and the SPA download use.
@@ -497,8 +499,9 @@ catalog.swecov.se, so agents need no install and no 1.2 GB download. Its rate li
 sized for tool calls, separately from the SPA's. Private steward catalogs are never
 served there; they stay on local `reg-meta mcp`.
 
-Still open for the stage-1 API spec: the exact operation and tool names, and each
-operation's parameter and result schemas.
+The operation and tool names, parameters, result shapes and routes are in
+`conformance/api/operations.toml`; the error codes with their classes and statuses are
+in `conformance/api/errors.toml` (package 1.1).
 
 ## 8. Distribution
 

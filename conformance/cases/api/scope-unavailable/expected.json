@@ -1,0 +1,9 @@
+[
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "scope_unavailable",
+      "/error/fields/scope": "holdings"
+    }
+  }
+]

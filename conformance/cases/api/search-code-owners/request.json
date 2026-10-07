@@ -1,0 +1,15 @@
+{
+  "kind": "catalog",
+  "fixture": "many-code-owners",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Shared choice",
+        "type": "register_value",
+        "limit": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "fixture": "reader",
+  "artifacts": {
+    "regenerated": {
+      "identity": {
+        "curation_tree_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      }
+    }
+  },
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Value",
+        "type": "variable",
+        "limit": 1
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Value",
+        "type": "variable",
+        "limit": 1
+      },
+      "artifact": "regenerated",
+      "cursor_from": [
+        0,
+        "/data/next_cursor"
+      ]
+    }
+  ]
+}

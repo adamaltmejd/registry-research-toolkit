@@ -1,0 +1,12 @@
+[
+  {
+    "status": 200
+  },
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "stale_cursor",
+      "/error/fields/generation": "aabdf20ca1dbebcc20028387ec3a467c69d3493e8e07145b0f220d8b6ed5d709"
+    }
+  }
+]

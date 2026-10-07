@@ -1,0 +1,39 @@
+{
+  "fixture": "reader",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Value",
+        "type": "variable",
+        "limit": 1,
+        "cursor": "not-a-cursor"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Value",
+        "type": "variable",
+        "limit": 1,
+        "scope": "holdings"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Value",
+        "type": "variable",
+        "limit": 1,
+        "scope": "reference"
+      },
+      "cursor_from": [
+        1,
+        "/data/next_cursor"
+      ]
+    }
+  ]
+}
