@@ -218,10 +218,9 @@ COPY reg_webapp/stewards/ /opt/reg_webapp/stewards/
 COPY reg_webapp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# #224 provenance-confinement assertion #3 (deployment-side). Assertion #2 (no
-# FastAPI route references the provenance path — backend/tests/test_write_boundary.py)
-# already ships; this is the third. (Assertion #1 lived in the now-archived MONA
-# bundle build.) `reg-meta update` only fetches reg_meta.db.zst /
+# #224 provenance-confinement assertion (deployment-side). The earlier route-source
+# check was vacuous and is retired, and assertion #1 lived in the now-archived MONA
+# bundle build, so this is the one that remains. `reg-meta update` only fetches reg_meta.db.zst /
 # reg_meta_docs.db.zst (verified in reg_meta/download.py — no provenance asset),
 # so the maintainer-only reg_meta.provenance.db* debug sibling should never enter
 # the image. This RUN is defense in depth: it FAILS THE BUILD if any

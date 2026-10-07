@@ -59,8 +59,8 @@ DEFAULT_VARIANT_SLUG = "_default"
 # to one of these would mint an FQID whose URL is permanently captured by the
 # route, so they're reserved in the slot(s) whose canonical URL position the
 # route occupies. Source of truth for the route list:
-# `reg_webapp/backend/src/reg_webapp/routes/catalog.py` (pinned in
-# `reg_webapp/backend/tests/test_boot.py` as `_ROUTES_BEFORE_CATCH_ALL`).
+# `reg_webapp/backend/src/reg_webapp/routes/catalog.py` (kept in lockstep with these
+# sets by `reg_webapp/backend/tests/test_reserved_slugs.py` via `openapi.json`).
 #
 # The binding-suffix routes `/catalog/{fqid:path}/<suffix>` greedy-match ANY
 # fqid path, so `<suffix>` shadows a 3-seg variable leaf (`scb/lisa/states`), a

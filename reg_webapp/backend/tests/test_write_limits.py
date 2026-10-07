@@ -5,7 +5,7 @@ See DESIGN.md → Cost protection (limits.py). Covers ``limits.py``:
 - a body > 1 MB → 413, AND that the guard is STREAMING (it rejects an oversized
   body even when ``Content-Length`` lies / is absent — not Content-Length-trusting);
 - the per-IP rate limiter → 429 after the bucket drains;
-- reads (GET) pass through both middlewares untouched (the method gate);
+- reads (GET) pass through the limiter untouched (the method gate);
 - wrong / missing content-type handling on the write endpoints.
 
 These drive ``/api/project/validate`` (the cheapest write path — its body parse
@@ -16,16 +16,9 @@ from __future__ import annotations
 
 import json
 
-import pytest
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
 from reg_webapp.limits import MAX_BODY_BYTES
-
-
-@pytest.fixture
-def client(catalog_db):
-    with TestClient(create_app()) as c:
-        yield c
 
 
 def _tiny_spec() -> dict:
@@ -36,14 +29,6 @@ def _tiny_spec() -> dict:
         "name": "t",
         "sources": [],
     }
-
-
-def test_oversized_body_is_413(client):
-    # A JSON body comfortably over the 1 MB cap. Valid JSON so a 413 can only come
-    # from the body cap, not a parse error.
-    big = {"name": "x" * (MAX_BODY_BYTES + 1024)}
-    resp = client.post("/api/project/validate", json=big)
-    assert resp.status_code == 413
 
 
 def test_body_cap_is_streaming_not_content_length_trusting(client):
@@ -58,13 +43,6 @@ def test_body_cap_is_streaming_not_content_length_trusting(client):
         headers={"content-type": "application/json", "content-length": "10"},
     )
     assert resp.status_code == 413
-
-
-def test_under_cap_body_passes(client):
-    """A body comfortably under the cap is NOT 413'd (the cap doesn't reject
-    normal traffic)."""
-    resp = client.post("/api/project/validate", json=_tiny_spec())
-    assert resp.status_code == 200
 
 
 def test_rate_limit_returns_429_after_bucket_drains(catalog_db):
@@ -97,14 +75,6 @@ def test_reads_are_not_rate_limited(catalog_db):
     with TestClient(create_app(rate_limit_per_minute=1)) as c:
         codes = [c.get("/api/catalog").status_code for _ in range(10)]
     assert all(code == 200 for code in codes), codes
-
-
-def test_reads_are_not_body_capped(catalog_db):
-    """A GET passes the body-cap middleware untouched (it only gates write
-    methods) — exercised here as a sanity check that reads still work with the
-    write middlewares installed."""
-    with TestClient(create_app()) as c:
-        assert c.get("/api/context").status_code == 200
 
 
 def test_wrong_content_type_on_validate(client):

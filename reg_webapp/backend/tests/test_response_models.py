@@ -1,67 +1,59 @@
-"""Every ``/api`` route declares a typed response contract.
+"""Every ``/api`` route declares a typed response contract in ``openapi.json``.
 
-See DESIGN.md → OpenAPI snapshot + TS codegen (the drift gate). Lint-enforced
-invariant: the SPA codegens TS types from the OpenAPI schema, so an
-endpoint without a typed contract is a hole.
+See DESIGN.md → OpenAPI snapshot + TS codegen (the drift gate). The SPA codegens
+TS types from the OpenAPI schema, so an endpoint without a typed contract is a
+hole. The committed snapshot is pinned to the live app by
+``test_openapi_snapshot.py``, so it is the contract read here.
 
 Two contract shapes are allowed:
 
-- a Pydantic ``response_model`` (the JSON endpoints, including
-  ``/api/project/order`` — it returns the manifest's own canonical bytes but
-  still declares the reg_meta ``OrderManifest`` as its contract), OR
-- a documented BINARY/DOWNLOAD media type (the PDF file route). These cannot
-  declare a Pydantic ``response_model`` (they return opaque bytes), but they DO
-  declare their media type in the route's ``responses=`` so the OpenAPI contract
-  (and the SPA codegen) sees a download, not an untyped JSON body. This is the
-  sanctioned carve-out.
+- every media type the route advertises carries a schema (a Pydantic
+  ``response_model``; a route without one renders as an empty ``{}`` schema), OR
+- the route is an allowlisted BINARY/DOWNLOAD endpoint (the PDF file route),
+  pinned by method, path and media type. It returns opaque bytes, so it
+  declares its media type in the route's ``responses=`` — and then ONLY that
+  media type — so the SPA codegen sees a download, not an untyped JSON body.
+  A new download endpoint is a deliberate addition to the allowlist.
 """
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+import json
+from pathlib import Path
 
-from _route_helpers import flat_api_routes
-from reg_webapp.app import create_app
+_OPENAPI = Path(__file__).resolve().parents[1] / "openapi.json"
 
-if TYPE_CHECKING:
-    from fastapi.routing import APIRoute
-
-# The binary/download endpoints: no Pydantic response_model (raw bytes), but
-# each MUST declare its download media type in OpenAPI instead. Pinned by path,
-# method, and expected media type so a new download endpoint is a deliberate
-# addition here.
-_DOWNLOAD_ENDPOINTS: dict[str, tuple[str, str]] = {
-    "/api/docs/file/{register}/{filename}": ("get", "application/pdf"),
+_DOWNLOAD_ENDPOINTS: dict[tuple[str, str], str] = {
+    ("get", "/api/docs/file/{register}/{filename}"): "application/pdf",
 }
 
 
-def _api_routes() -> list[APIRoute]:
-    routes = [r for r in flat_api_routes(create_app()) if r.path.startswith("/api")]
-    assert routes, "expected at least one /api route"
-    return routes
+def _api_operations() -> dict[tuple[str, str], dict]:
+    paths = json.loads(_OPENAPI.read_text(encoding="utf-8"))["paths"]
+    return {
+        (method, path): operation
+        for path, operations in paths.items()
+        if path.startswith("/api")
+        for method, operation in operations.items()
+    }
 
 
-def test_every_json_api_route_has_response_model():
-    """Every JSON ``/api`` route (i.e. not a documented download) declares a
-    Pydantic ``response_model``."""
-    missing = [
-        r.path
-        for r in _api_routes()
-        if r.path not in _DOWNLOAD_ENDPOINTS and r.response_model is None
+def test_every_api_route_declares_a_typed_200_body():
+    untyped = [
+        f"{method.upper()} {path}"
+        for (method, path), operation in _api_operations().items()
+        if (method, path) not in _DOWNLOAD_ENDPOINTS
+        for content in [operation["responses"]["200"].get("content", {})]
+        if not content or not all(entry.get("schema") for entry in content.values())
     ]
-    assert not missing, f"JSON routes missing response_model: {missing}"
+    assert not untyped, f"routes without a typed 200 contract: {untyped}"
 
 
-def test_download_endpoints_declare_their_media_type():
-    """The download carve-outs declare their media type in OpenAPI (a typed
-    contract for the SPA) — they don't silently fall back to ``application/json``."""
-    schema = create_app().openapi()
-    for path, (method, media_type) in _DOWNLOAD_ENDPOINTS.items():
-        content = schema["paths"][path][method]["responses"]["200"]["content"]
-        assert media_type in content, (
-            f"{path} should declare 200 content-type {media_type!r}, got "
-            f"{list(content)}"
-        )
-        assert "application/json" not in content, (
-            f"{path} is a download — it must not also advertise application/json"
+def test_download_endpoints_declare_only_their_media_type():
+    operations = _api_operations()
+    for (method, path), media_type in _DOWNLOAD_ENDPOINTS.items():
+        content = operations[(method, path)]["responses"]["200"].get("content", {})
+        assert list(content) == [media_type], (
+            f"{method.upper()} {path} should declare only {media_type!r}, "
+            f"got {list(content)}"
         )

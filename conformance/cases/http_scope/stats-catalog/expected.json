@@ -1,0 +1,15 @@
+[
+  {
+    "status": 200,
+    "headers": {
+      "cache-control": "public, max-age=60, must-revalidate"
+    },
+    "json": {
+      "/": {
+        "providers": 8,
+        "registers": 2,
+        "variables": 4
+      }
+    }
+  }
+]

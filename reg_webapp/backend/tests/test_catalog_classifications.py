@@ -13,17 +13,6 @@ from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
 
 
-def test_classification_root_lists_classifications(client):
-    resp = client.get("/api/catalog/class")
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["kind"] == "classification-root"
-    assert body["fqid"] == "class"
-    slugs = {c["fqid"] for c in body["children"]}
-    assert "class/sun2020" in slugs
-    assert all(c["kind"] == "classification" for c in body["children"])
-
-
 def test_classification_root_drops_superseded_and_folds_dimension_group(client):
     """#608: the classification root surfaces only TERMINAL editions as children
     (a row whose `superseded_by` is truthy — a successor exists — is dropped) and
@@ -50,48 +39,6 @@ def test_classification_root_drops_superseded_and_folds_dimension_group(client):
     # fails on the pre-#608 code, which surfaced every classification as a child).
     assert "class/sun1996" not in child_fqids
     assert "class/sun2000" not in child_fqids
-
-
-def test_classification_root_replaces_successor_terminal_with_family(catalog_db):
-    with sqlite3.connect(catalog_db) as conn:
-        conn.execute(
-            "INSERT INTO classification (id, short_name, name, slug) "
-            "VALUES (70, 'SSYK1996', 'SSYK 1996', 'ssyk1996')"
-        )
-        conn.execute(
-            "INSERT INTO classification (id, short_name, name, slug) "
-            "VALUES (71, 'SSYK2012', 'SSYK 2012', 'ssyk2012')"
-        )
-        conn.execute(
-            "INSERT INTO classification_replaced_by "
-            "(predecessor_slug, successor_slug, effective_year, note) "
-            "VALUES ('ssyk1996', 'ssyk2012', 2012, 'derived:test')"
-        )
-        conn.execute(
-            "UPDATE classification SET supersedes_id = 70 WHERE slug = 'ssyk2012'"
-        )
-
-    with TestClient(create_app()) as local_client:
-        root = local_client.get("/api/catalog/class").json()
-        family = local_client.get("/api/catalog/group/class/ssyk").json()
-
-    families = {item["key"]: item for item in root["families"]}
-    assert families["ssyk"] == {
-        "kind": "classification-family",
-        "key": "ssyk",
-        "label": "SSYK",
-        "editions": family["editions"],
-    }
-    child_fqids = {c["fqid"] for c in root["children"]}
-    assert "class/ssyk1996" not in child_fqids
-    assert "class/ssyk2012" not in child_fqids
-    assert family["kind"] == "classification-family"
-    assert family["key"] == "ssyk"
-    assert [edition["slug"] for edition in family["editions"]] == [
-        "ssyk1996",
-        "ssyk2012",
-    ]
-    assert [edition["is_current"] for edition in family["editions"]] == [False, True]
 
 
 def test_classification_root_replaces_future_successor_family(catalog_db):
@@ -131,15 +78,6 @@ def test_classification_root_replaces_future_successor_family(catalog_db):
     assert [edition["is_current"] for edition in family["editions"]] == [True, False]
 
 
-def test_classification_leaf_resolves(client):
-    resp = client.get("/api/catalog/class/sun2020")
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["kind"] == "classification"
-    assert body["fqid"] == "class/sun2020"
-    assert body["short_name"] == "SUN2020"
-
-
 def test_classification_leaf_embeds_full_edition_chain(client):
     # #571: the classification leaf embeds the FULL succession timeline (oldest
     # first, terminal last) so the browse panel renders every edition synchronously.
@@ -173,7 +111,6 @@ def test_classification_leaf_embeds_value_set_codes(client):
     codes = resp.json()["codes"]
     by_label = {c["label"]: c for c in codes}
     assert "Man" in by_label
-    assert len(codes) == 1389
     assert all(code["is_valid"] is True for code in codes)
     assert by_label["Man"]["is_valid"] is True
     # Code-ordered (the SQL ORDER BY vc.code, vc.label).

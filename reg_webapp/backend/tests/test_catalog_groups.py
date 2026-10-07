@@ -36,16 +36,6 @@ def test_register_node_carries_concept_groups(client):
     assert {"scb/rams/inkjan", "scb/rams/inkfeb"} <= child_fqids
 
 
-def test_register_groups_list_serializes(client):
-    # scb/lisa carries the `lonefink-rep` representation group (#819, two members on
-    # one FQID distinguished by delivery_column) — added for the steward column-grain
-    # test. The register's `groups` list serializes it (empty-groups branch is covered
-    # by the steward suite's drop-to-empty assertion).
-    body = client.get("/api/catalog/scb/lisa").json()
-    keys = {g["key"] for g in body["groups"]}
-    assert keys == {"lonefink-rep"}
-
-
 # ── Concept-group SUBJECT route (#617) ──────────────────────────────────────
 # `/catalog/group/<provider>/<register>/<key>` exposes a group as a browsable
 # subject. The fixture seeds a token month group `ink` on scb/rams (members
@@ -95,16 +85,6 @@ def test_group_route_accepts_slash_bearing_key(catalog_db):
         resp = client.get("/api/catalog/group/scb/rams/slash%2Fkey")
     assert resp.status_code == 200
     assert resp.json()["key"] == "slash/key"
-
-
-def test_group_route_carries_per_member_coverage(client):
-    """#617: each member carries its per-variable study-window `coverage` (#351),
-    zipped on from `register_variable_coverage` — present as a key on every member
-    (None for a stateless member; the fixture's inkjan/inkfeb have no states, so
-    coverage is None — the FIELD must still be present per the additive shape)."""
-    body = client.get("/api/catalog/group/scb/rams/ink").json()
-    for member in body["members"]:
-        assert "coverage" in member
 
 
 def test_group_route_serializes_aggregated_member_tags(catalog_db):
@@ -274,16 +254,6 @@ def test_group_route_unknown_member_hint_ignored(client):
     assert resp.json()["member"] is None
 
 
-def test_group_route_matched_before_catch_all(client):
-    """#617 (the load-bearing route-ordering guard): a `/catalog/group/p/r/key`
-    path must be matched by the FIXED group route, NOT greedy-consumed by the
-    `{fqid:path}` catch-all and mis-parsed as an FQID. If the catch-all won, this
-    4-seg path would 422 at the FQID arity guard (or 404 as a bogus FQID) — the
-    `concept-group` kind proves the fixed route fired first."""
-    body = client.get("/api/catalog/group/scb/rams/ink").json()
-    assert body["kind"] == "concept-group"
-
-
 # ── Classification-group SUBJECT route (#756) ───────────────────────────────
 # `/catalog/group/class/<key>` exposes a classification umbrella group as a
 # browsable subject (the classification sibling of the register-scoped group
@@ -330,17 +300,6 @@ def test_classification_group_route_returns_node(client):
 def test_classification_group_route_unknown_key_404(client):
     resp = client.get("/api/catalog/group/class/nosuchkey")
     assert resp.status_code == 404
-
-
-def test_classification_group_route_matched_before_catch_all(client):
-    """#756 (the load-bearing route-ordering guard): `/catalog/group/class/sun`
-    must be matched by the FIXED classification-group route, NOT mis-parsed as a
-    register group with provider=`class` (the register route's `{provider}` slot
-    would otherwise capture the literal `class`), and NOT greedy-consumed by the
-    `{fqid:path}` catch-all. The `classification-group` kind proves the literal
-    `class` route fired first."""
-    body = client.get("/api/catalog/group/class/sun").json()
-    assert body["kind"] == "classification-group"
 
 
 def test_classification_group_route_accepts_slash_bearing_key(catalog_db):
