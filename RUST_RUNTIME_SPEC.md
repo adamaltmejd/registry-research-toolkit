@@ -657,8 +657,9 @@ steward ordering).
   and its gate (same major, minor ≥) admits 9.1.0. The reader's constant moves in the
   slice that first reads a derived table.
 - Paths:
-  `reg_meta_build/src/reg_meta_build/{derive,resolved_catalog,extend_db, holdings_compile,holdings_validation,validate,db}.py`,
-  the tests those touch, this file.
+  `reg_meta_build/src/reg_meta_build/{derive,resolved_catalog,extend_db, holdings_compile,holdings_validation,validate,db,semantic_diff}.py`,
+  the tests and goldens those touch (including the test fixtures that build or extend
+  catalogs, and the steward order golden's provenance), this file.
 - Out of scope: a standalone `derive` command (2.2); any other derived table.
 - Goldens: the schema version and generation ids in manifest goldens change, as a
   reviewed metadata update; no query or holdings result changes.
