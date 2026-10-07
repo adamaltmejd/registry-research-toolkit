@@ -11,7 +11,8 @@
 #                     (plugins/microdata-tools-se/skills/register-metadata-search/SKILL.md),
 #                     id = its text as written there.
 #              import: a `reg_meta` name imported by any git-visible .py file outside
-#                     reg_meta/ (tests, scripts, tools and the spike included).
+#                     reg_meta/ (tests, scripts and tools included; the throwaway stage-0
+#                     spike, which package 1.5 deletes, is skipped).
 #                     `from M import N` is "M.N"; `import M` is "M".
 # disposition  route, command, skill:
 #                retained  the same surface stays.
@@ -27,8 +28,7 @@
 #                removed   no Python consumer remains; the Rust reader owns the behavior.
 # owner        the stage-3 slice that ports the surface (3a admission + search, 3b show /
 #              states / values, 3c schema / diff / coverage / coded, 3d chains and graph,
-#              3e order and project validation), or stage 4 / 5; "1" for the stage-0
-#              spike, which package 1.5 deletes. For an import only the
+#              3e order and project validation), or stage 4 / 5. For an import only the
 #              webapp or conformance uses, the slice whose route deletions remove its last
 #              importer; anything imported by a module several slices share (models.py,
 #              app wiring) goes in stage 4. Build-side imports are always stage 4.
@@ -36,9 +36,6 @@
 #              (paths; empty means none). For imports this is a proxy: the nearest test of
 #              the name's behavior, not of each consumer's use of it.
 # used_by      import rows: the top-level directories whose files import the name.
-# pending      temporary: true while an in-flight PR adds the item (its covered_by may
-#              name paths that PR adds). The test fails once the item exists; drop the
-#              key then. The mechanism goes once package 1.2 (#1189) merges.
 
 # Routes
 
@@ -858,7 +855,7 @@ note = "Build-side artifact IO (extend-db, validate_built_db, derive); conforman
 [[row]]
 kind = "import"
 id = "reg_meta.db.open_db"
-used_by = ["conformance", "reg_meta_build", "reg_webapp", "scripts", "spike"]
+used_by = ["conformance", "reg_meta_build", "reg_webapp", "scripts"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_artifact.py"]
@@ -1400,7 +1397,7 @@ covered_by = ["conformance/test_order.py", "reg_webapp/backend/tests/test_projec
 [[row]]
 kind = "import"
 id = "reg_meta.queries"
-used_by = ["conformance", "reg_meta_build", "spike"]
+used_by = ["conformance", "reg_meta_build"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_logical.py", "reg_meta_build/tests/test_source_inspection.py"]
@@ -1416,39 +1413,21 @@ covered_by = ["conformance/cases/http_search"]
 
 [[row]]
 kind = "import"
-id = "reg_meta.queries._FTS_WORD_CHAR"
-used_by = ["spike"]
-disposition = "removed"
-owner = "1"
-covered_by = ["reg_meta/tests/test_search_ranking.py"]
-note = "Private-name import, which the repo rules forbid. Imported by the stage-0 spike (spike/stage0/scripts/), which package 1.5 deletes."
-
-[[row]]
-kind = "import"
-id = "reg_meta.queries._fold_search_text"
-used_by = ["spike"]
-disposition = "removed"
-owner = "1"
-covered_by = ["conformance/cases/http_search/golden-normalization"]
-note = "Private-name import, which the repo rules forbid. Imported by the stage-0 spike (spike/stage0/scripts/), which package 1.5 deletes."
-
-[[row]]
-kind = "import"
 id = "reg_meta.queries._fts_match_query"
-used_by = ["spike"]
+used_by = ["crates"]
 disposition = "removed"
 owner = "4"
 covered_by = ["reg_meta/tests/test_search_ranking.py"]
-note = "Private-name import, which the repo rules forbid. Imported by the stage-0 spike (spike/stage0/scripts/), which package 1.5 deletes. The fold corpus generator (crates/reg-core/tools/gen_fold_corpus.py, package 1.2) imports it too. The corpus is frozen data and the generator is only rerun deliberately, so its rows go when stage 4 deletes reg_meta. used_by gains `crates` when 1.2 lands."
+note = "Private-name import, which the repo rules forbid, by the fold corpus generator (crates/reg-core/tools/gen_fold_corpus.py), a tool, not a test. The corpus is frozen data and the generator is only rerun deliberately, so the row goes when stage 4 deletes reg_meta."
 
 [[row]]
 kind = "import"
 id = "reg_meta.queries._normalized_search_query"
-used_by = ["spike"]
+used_by = ["crates"]
 disposition = "removed"
 owner = "4"
 covered_by = ["conformance/cases/http_search/golden-normalization"]
-note = "Private-name import, which the repo rules forbid. Imported by the stage-0 spike (spike/stage0/scripts/), which package 1.5 deletes. The fold corpus generator (crates/reg-core/tools/gen_fold_corpus.py, package 1.2) imports it too. The corpus is frozen data and the generator is only rerun deliberately, so its rows go when stage 4 deletes reg_meta. used_by gains `crates` when 1.2 lands."
+note = "Private-name import, which the repo rules forbid, by the fold corpus generator (crates/reg-core/tools/gen_fold_corpus.py), a tool, not a test. The corpus is frozen data and the generator is only rerun deliberately, so the row goes when stage 4 deletes reg_meta."
 
 [[row]]
 kind = "import"
@@ -1466,8 +1445,7 @@ used_by = ["conformance", "crates", "reg_webapp"]
 disposition = "removed"
 owner = "4"
 covered_by = ["conformance/cases/http_search/top-results-exact-spacing-accent", "conformance/cases/http_search/golden-normalization"]
-note = "Package 1.2 makes it public. The webapp search route's import is removed in 3a with that route, unless checkpoint 1 decides the index is pre-folded, in which case reg-core-py provides `fold_search` to the build. The fold corpus generator and conformance/test_folds.py import it until stage 4 (see the generator's rows), so the row is owned by stage 4. used_by is the value once 1.2 lands."
-pending = true
+note = "The webapp search route's import goes in 3a with that route, unless checkpoint 1 decides the index is pre-folded, in which case reg-core-py provides `fold_search` to the build. The fold corpus generator and conformance/test_folds.py import it until stage 4, so the row is owned by stage 4."
 
 [[row]]
 kind = "import"

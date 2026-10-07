@@ -23,13 +23,10 @@ PROVIDER = "reg_meta"
 
 KINDS = {"route", "command", "import", "skill"}
 DISPOSITIONS = {"retained", "replaced", "removed"}
-# "1": the stage-0 spike, deleted by stage-1 package 1.5.
-OWNERS = {"1", "3a", "3b", "3c", "3d", "3e", "4", "5"}
+OWNERS = {"3a", "3b", "3c", "3d", "3e", "4", "5"}
 REQUIRED = {"kind", "id", "disposition", "owner", "covered_by"}
 # `operation` is added by package 1.1 and checked by its test_api_spec.py.
-# `pending = true` marks a row whose item (and covered_by paths) an in-flight PR adds;
-# drop it once the item exists. simplify: temporary, removed after #1189 merges.
-OPTIONAL = {"note", "used_by", "operation", "pending"}
+OPTIONAL = {"note", "used_by", "operation"}
 
 
 def _rows(kind: str | None = None) -> list[dict]:
@@ -109,7 +106,7 @@ def _discover_commands() -> set[str]:
 def _consumer_files() -> list[Path]:
     """Every git-visible `.py` file (tracked, or untracked and not ignored) outside
     `reg_meta/` itself, so ignored trees such as the build seed and virtualenvs are
-    never walked."""
+    never walked. The throwaway stage-0 spike is skipped; package 1.5 deletes it."""
     listed = subprocess.run(
         ["git", "ls-files", "-z", "-co", "--exclude-standard"],
         cwd=ROOT,
@@ -120,7 +117,7 @@ def _consumer_files() -> list[Path]:
         ROOT / p
         for p in listed.split("\0")
         if p.endswith(".py")
-        and not p.startswith(f"{PROVIDER}/")
+        and not p.startswith((f"{PROVIDER}/", "spike/"))
         and (ROOT / p).exists()
     )
 
@@ -157,12 +154,9 @@ def _ids(kind: str) -> set[str]:
 
 def _assert_same(kind: str, discovered: set[str]) -> None:
     rows = _ids(kind)
-    pending = {r["id"] for r in _rows(kind) if r.get("pending")}
     assert not discovered - rows, f"{kind} without a row: {sorted(discovered - rows)}"
-    stale = rows - discovered - pending
+    stale = rows - discovered
     assert not stale, f"stale {kind} rows: {sorted(stale)}"
-    landed = pending & discovered
-    assert not landed, f"{kind} rows still marked pending: {sorted(landed)}"
 
 
 def test_rows_are_well_formed():
@@ -176,9 +170,7 @@ def test_rows_are_well_formed():
         assert row["disposition"] in DISPOSITIONS, label
         assert row["owner"] in OWNERS, label
         missing = [p for p in row["covered_by"] if not (ROOT / p).exists()]
-        assert row.get("pending") or not missing, (
-            f"{label} covered_by paths do not exist: {missing}"
-        )
+        assert not missing, f"{label} covered_by paths do not exist: {missing}"
         if row["kind"] == "import":
             assert row["used_by"] and PROVIDER not in row["used_by"], label
             # Build-side names move (or go) when stage 4 deletes reg_meta.
