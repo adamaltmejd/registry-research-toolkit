@@ -59,12 +59,14 @@ family's mid tier (in Claude, Sonnet); the work is lookup.
 
 Do not read the modules yourself. Launch one subagent per module through the harness's
 subagent tool (in Claude Code, the Agent tool with the `general-purpose` type; Explore
-locates code and does not audit it), all in one message, told to edit nothing. Set the
-model on every call: the family's mid tier (in Claude, Opus) for code, the tier below
-for docs. Modules: `reg_meta/src`, `reg_meta_build/src` split as `sources/`, `ir/` and
-the top-level modules by size, `reg_schema/src`, `reg_webapp/backend/src`,
-`reg_webapp/frontend/src/lib`, `scripts/`. The test trees are the `test-audit` skill's:
-run its sweep in the same message and merge its list into step 3.
+locates code and does not audit it), told to edit nothing. Launch as many at once as the
+harness allows (Codex runs three children at a time) and the rest in waves. Where the
+harness lets a call choose its model, set it on every call: the family's mid tier (in
+Claude, Opus) for code, the tier below for docs. Modules: `reg_meta/src`,
+`reg_meta_build/src` split as `sources/`, `ir/` and the top-level modules by size,
+`reg_schema/src`, `reg_webapp/backend/src`, `reg_webapp/frontend/src/lib`, `scripts/`.
+The test trees are the `test-audit` skill's: run its sweep in the same waves and merge
+its list into step 3.
 
 Each prompt carries the module's paths, an instruction to read CLAUDE.md,
 ARCHITECTURE.md and the package's DESIGN.md first and the module's files whole, the step
@@ -97,7 +99,7 @@ bugs (reproduce at a boundary and file them), test assertions, and wording of er
 logs. The agent ranks its list biggest cut first and ends `net: -<N> lines, -<M> deps.`
 or `Lean already.`
 
-In the same message, one more agent reads what a user reads: the README files and each
+In the same waves, one more agent reads what a user reads: the README files and each
 CLI's `--help`. The bar: every sentence says how to use the current tooling, as briefly
 as it can. It hunts history, ticket references, restated design, and drift between help,
 README and behavior, with tags `cut:`, `shrink:` (quoting the new text) and `drift:`.
