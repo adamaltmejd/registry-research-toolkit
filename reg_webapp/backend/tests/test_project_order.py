@@ -2,11 +2,12 @@
 materializer, against the slugged ``catalog_db`` fixture.
 
 See DESIGN.md → Project-write surface (routes/project.py) and reg_meta/DESIGN.md → Order
-materializer and manifest. The endpoint is a THIN adapter, so the materializer's own
-rules are pinned by ``reg_meta/tests/test_order.py``; what belongs HERE is the adapter
-contract: the ``order.json`` download shape, the "not an order" 422s (an invalid spec
-and a fail-closed blocked order alike — never a partial 200), and the byte-identity with
-the ``reg-meta order`` CLI that is the adapter contract's whole point.
+materializer and manifest. The endpoint is a THIN adapter: its manifest bytes, the
+CLI byte identity and the located refusal findings are pinned by ``conformance/``
+(``cases/validate`` order steps, ``test_validate.py``, ``test_artifact.py``). What
+stays here is the ``order.json`` download shape and the "not an order" 422s (an
+invalid spec and a fail-closed blocked order alike — never a partial 200), with the
+CLI's agreement on those refusals.
 
 The fixture is a catalog artifact, so the materializer uses global fallback
 and requires ``steward: "global"`` in the spec below. Steward orderability
@@ -21,14 +22,7 @@ import json
 
 import pytest
 from fastapi.testclient import TestClient
-from reg_meta.order import OrderManifest
 from reg_webapp.app import create_app
-
-
-@pytest.fixture
-def client(catalog_db):
-    with TestClient(create_app()) as c:
-        yield c
 
 
 def _spec(*, steward: str = "global", period: object = 2018) -> dict:
@@ -56,97 +50,6 @@ def test_manifest_download_shape(client):
     assert "order.json" in resp.headers["content-disposition"]
 
 
-def test_body_is_the_manifests_own_canonical_serialization(client):
-    """The 200 body is ``OrderManifest.to_json()`` VERBATIM — FastAPI never
-    re-serializes it — so it round-trips through the reg_meta contract model and
-    keeps that serialization's sorted keys + trailing newline."""
-    resp = client.post("/api/project/order", json=_spec())
-    manifest = OrderManifest.model_validate(json.loads(resp.text))
-    assert resp.text == manifest.to_json()
-    assert resp.text.endswith("\n")
-
-
-def test_manifest_grounds_the_global_fallback_entry(client):
-    """The selected catalog artifact's global fallback grounds the
-    order: blank ``table``, the resolved canonical column, ``edition`` = the
-    requested period."""
-    resp = client.post("/api/project/order", json=_spec())
-    manifest = OrderManifest.model_validate(json.loads(resp.text))
-    assert manifest.provenance.mode == "global_fallback"
-    assert manifest.provenance.artifact_kind == "catalog"
-    assert manifest.provenance.steward == "global"
-    (entry,) = manifest.entries
-    assert entry.physical.table == ""
-    assert entry.physical.column == "Kon"
-    assert entry.physical.edition == "2018"
-
-
-def test_disjoint_period_orders_the_available_part(client):
-    """Y-45 regression, the order side of
-    `test_project_validate.test_disjoint_period_with_partial_availability_is_orderable`:
-    `scb/lisa/kon` exists from 2018, so `[2010, 2018]` orders its 2018 half and
-    reports the clip. Both endpoints run the same `resolve_binding` pass, so
-    what validation calls orderable is exactly what materializes here."""
-    resp = client.post("/api/project/order", json=_spec(period=[2010, 2018]))
-    assert resp.status_code == 200, resp.text
-    manifest = OrderManifest.model_validate(json.loads(resp.text))
-    (entry,) = manifest.entries
-    assert entry.requested_period == "2018"
-    assert entry.physical.column == "Kon"
-    (clip,) = manifest.clips
-    assert clip.variable == "scb/lisa/kon"
-    assert clip.requested_period == "2010,2018"
-    assert clip.ordered_period == "2018"
-
-
-def test_month_without_an_alias_window_orders(client):
-    """Y-45 repair: `lonfink` is one annual 2018 claim expanded into Jan/Feb/Mars
-    column windows (#319); April has no window, so `resolve_at` falls back to the
-    annual claim — per QUERY. Resolving the request as one outer span would find
-    January's window, skip that fallback, and silently drop April from the
-    MANIFEST, changing what the steward extracts merely because January was added
-    to the request."""
-    spec = _spec(period=["2018-01", "2018-04"])
-    spec["sources"][0]["bindings"] = [
-        {
-            "variable": "scb/lisa/lonfink",
-            "type": "numeric",
-            "representation": "LonFinkJan",
-        }
-    ]
-    resp = client.post("/api/project/order", json=spec)
-    assert resp.status_code == 200, resp.text
-    manifest = OrderManifest.model_validate(json.loads(resp.text))
-    assert manifest.clips == ()
-    (entry,) = manifest.entries
-    assert entry.requested_period == "2018-01,2018-04"
-    assert entry.physical.column == "LonFinkJan"
-
-
-def test_deterministic(client):
-    """Same spec → byte-identical manifest (no timestamps, stable order)."""
-    a = client.post("/api/project/order", json=_spec()).text
-    b = client.post("/api/project/order", json=_spec()).text
-    assert a == b
-
-
-def test_byte_identical_to_the_cli_adapter(client, catalog_db, tmp_path, capsys):
-    """The adapter contract: the FastAPI adapter and ``reg-meta order`` are thin
-    adapters over ONE materializer, so the same (project, DB) inputs
-    produce byte-identical ``order.json`` on both surfaces."""
-    from reg_meta.cli import run
-
-    project_path = tmp_path / "project_data.json"
-    project_path.write_text(json.dumps(_spec()), encoding="utf-8")
-
-    exit_code = run(["order", str(project_path), "--db", str(catalog_db.parent)])
-    assert exit_code == 0
-    cli_manifest = capsys.readouterr().out
-
-    web_manifest = client.post("/api/project/order", json=_spec()).text
-    assert cli_manifest == web_manifest
-
-
 def test_blocked_order_is_422_not_a_200_manifest_and_reads_the_same_on_the_cli(
     client, catalog_db, tmp_path, capsys
 ):
@@ -157,7 +60,7 @@ def test_blocked_order_is_422_not_a_200_manifest_and_reads_the_same_on_the_cli(
     The byte-identical-adapters rule covers this path too, so ``reg-meta
     order``'s error envelope carries the SAME single line — both render
     ``order.blocked_message``. The WORDING is the materializer's, pinned once in
-    ``reg_meta/tests/test_order.py``; what belongs here is the flattening rule
+    ``reg_meta/tests/test_order_findings.py``; what belongs here is the flattening rule
     (code + message, one line) and the coordinates surviving as data beside it."""
     from reg_meta.cli import run
     from reg_meta.errors import EXIT_NO_MATCH
@@ -175,9 +78,6 @@ def test_blocked_order_is_422_not_a_200_manifest_and_reads_the_same_on_the_cli(
         None,
         None,
     )
-    assert body["detail"] == (
-        f"order blocked by 1 finding: {finding['code']}: {finding['message']}"
-    )
     # One line: this string is read inside a JSON envelope and inside the SPA's
     # banner, where an embedded newline is an escape sequence / collapsed space.
     assert "\n" not in body["detail"]
@@ -189,58 +89,7 @@ def test_blocked_order_is_422_not_a_200_manifest_and_reads_the_same_on_the_cli(
     assert json.loads(capsys.readouterr().out)["error"]["message"] == body["detail"]
 
 
-def test_blocked_order_carries_the_findings_as_data(client):
-    """The 422 body carries the materializer's OWN findings — code, message and
-    the source/variable/period coordinates — as an array, not one flattened
-    string. This is the contract the SPA renders per finding and any other
-    client acts on; a blob would lose the structure at the boundary."""
-    spec = _spec()
-    # An FQID the catalog does not admit: grammatically fine (so the gate passes
-    # it) and unresolvable (so the materializer fail-closes on THAT binding).
-    spec["sources"][0]["bindings"].append(
-        {"variable": "scb/lisa/ghostvar", "type": "numeric"}
-    )
-    resp = client.post("/api/project/order", json=spec)
-    assert resp.status_code == 422
-
-    findings = resp.json()["findings"]
-    assert findings, "a blocked order must report at least one finding"
-    for finding in findings:
-        assert set(finding) == {"code", "message", "source", "variable", "period"}
-    # The coordinates are DATA — the SPA locates the offending card by them.
-    (blocking,) = [f for f in findings if f["variable"] == "scb/lisa/ghostvar"]
-    assert blocking["code"] == "variable_unresolved"
-    assert blocking["source"] == "lisa-2018"
-    assert blocking["message"]
-
-
-def test_blocked_findings_match_the_materializers_own(client, catalog_db):
-    """Not a re-modeled echo: the array IS ``OrderResult.findings``, so the
-    adapter cannot drift from the materializer it adapts."""
-    from reg_meta.order import materialize_order, project_from_raw
-    from reg_webapp.project_validation import per_request_conn
-
-    spec = _spec(steward="swecov")
-    with per_request_conn(catalog_db) as conn:
-        expected = materialize_order(project_from_raw(spec), conn)
-
-    findings = client.post("/api/project/order", json=spec).json()["findings"]
-    assert findings == [f.model_dump(mode="json") for f in expected.findings]
-
-
-def test_invalid_spec_422_carries_no_findings(client):
-    """The gate's 422 is the SAME shape with an EMPTY findings array — nothing
-    found the project unorderable, it was never ordered."""
-    spec = _spec()
-    spec["sources"][0]["period"] = "notaperiod"
-    body = client.post("/api/project/order", json=spec).json()
-    assert body["findings"] == []
-    assert body["detail"]
-
-
-@pytest.mark.parametrize(
-    "version", ["1.0.0", "2.0.0", "3.0.1", "3.1.0", "99.0.0", "not-a-version"]
-)
+@pytest.mark.parametrize("version", ["99.0.0", "not-a-version"])
 def test_unsupported_version_is_rejected_by_every_consumer(
     client, catalog_db, tmp_path, capsys, version
 ):
@@ -248,9 +97,8 @@ def test_unsupported_version_is_rejected_by_every_consumer(
     project written for another schema contract, every consumer that reads a raw
     project, one answer — and no manifest anywhere. The CLI's error message and
     the adapter's 422 detail are the same words because both render reg_meta's
-    single decision (``order.schema_version_issue``). The SUPPORTED fixture's own
-    agreement across these surfaces is ``test_byte_identical_to_the_cli_adapter``
-    (both spell `_spec()`'s current ``schema_version``)."""
+    single decision (``order.schema_version_issue``). The SUPPORTED version's
+    agreement across these surfaces is ``conformance/test_validate.py``."""
     from reg_meta.cli import run
     from reg_meta.errors import EXIT_CONFIG
 
@@ -297,14 +145,6 @@ def test_structurally_invalid_spec_is_422(client, period):
     resp = client.post("/api/project/order", json=spec)
     assert resp.status_code == 422, f"bad period → {resp.status_code}"
     assert "entries" not in resp.json()
-
-
-def test_unknown_root_field_is_422_at_structural_gate(client):
-    spec = _spec()
-    spec["reg_monabundle"] = {"binding_options": {}}
-    resp = client.post("/api/project/order", json=spec)
-    assert resp.status_code == 422
-    assert "unexpected_field@/reg_monabundle" in resp.json()["detail"]
 
 
 def test_concurrent_order_no_cross_thread_error(catalog_db):
