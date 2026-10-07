@@ -17,7 +17,12 @@ from reg_meta_build.concept_groups import load_worklist_concept_groups
 from reg_meta_build.doc_db import load_doc_sources, load_related_documents
 from reg_meta_build.scb_errata import resolve_scb_errata
 
-from reg_meta_build.fqid_slugs import load_slug_dir, repo_slug_dir
+from reg_meta_build.fqid_slugs import (
+    load_freeze_states,
+    load_slug_dir,
+    pinned_zones,
+    repo_slug_dir,
+)
 
 if TYPE_CHECKING:
     from reg_meta_build.curation_tree import CurationTree
@@ -33,9 +38,15 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
     assert tree.classifications
     assert tree.relations.same_as and tree.relations.replaced_by
     assert tree.tags
+    assert tree.classification_groups.classification_group
+    assert tree.lineage.defaults
 
     slug_dir = repo_slug_dir()
     assert slug_dir == REPO_CURATION
+    # A missing or emptied slug_state.toml reads as every provider churning, which
+    # skips the committed auto pins and leaves the snapshot guards nothing to guard.
+    # The committed file advances the global providers to curating (#759).
+    assert pinned_zones(load_freeze_states(slug_dir))
     assert load_slug_dir(slug_dir)
 
     # The build's own call: errata resolve against the already-loaded registers.
