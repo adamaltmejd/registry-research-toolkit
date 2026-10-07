@@ -88,6 +88,9 @@ first; read through `scripts/gh_issue.py`), never delete it.
 
 Before pushing: `uv run python -m pytest <package> conformance -n auto -q`, or for the
 frontend `bun run check && bun run lint && bun run test && bun run build` in
-`reg_webapp/frontend`, and compare the wall time with the package budget. Report in the
-PR body, or in the code-cleanup report when run inside that pass: each disposition with
-its boundary, test lines removed beside product lines, suite time before and after.
+`reg_webapp/frontend`, or for `crates/` `cargo fmt --all --check`,
+`cargo clippy --workspace --all-targets --locked -- -D warnings` and
+`cargo test --workspace --locked`, and compare the wall time with the package budget.
+Report in the PR body, or in the code-cleanup report when run inside that pass: each
+disposition with its boundary, test lines removed beside product lines, suite time
+before and after.

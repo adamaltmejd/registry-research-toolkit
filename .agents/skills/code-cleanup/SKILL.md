@@ -116,7 +116,8 @@ Merge the lists, dedup findings on the same mechanism, keep the ranking. Sort ea
 one of three piles.
 
 - **Land it.** One module, no change at a public boundary, no test assertion changes,
-  and it names what it removes.
+  and it names what it removes. Test-audit deletions land through that skill's "Judge
+  and land" step, not this criterion.
 - **Maintainer's.** Every `guard:` finding, and anything mistagged that should have been
   one. List each with the DESIGN.md line it would change and the reason, and stop there
   until answered. A yes lands with the DESIGN.md edit in the same commit.
@@ -129,8 +130,9 @@ Edit directly, in an isolated worktree. One commit per module, the message namin
 was removed. Before each push: `uv run ruff check`, `uv run ruff format --check`,
 `uvx --from ty==0.0.79 ty check`, and
 `uv run python -m pytest <dir> conformance -n auto -q`; for `crates/`,
-`cargo fmt --check`, `cargo clippy --workspace -- -D warnings` and
-`cargo test --workspace`; for the frontend,
+`cargo fmt --all --check`,
+`cargo clippy --workspace --all-targets --locked -- -D warnings` and
+`cargo test --workspace --locked`, as CI runs them; for the frontend,
 `bun run check && bun run lint && bun run test && bun run build` in
 `reg_webapp/frontend`, as CI runs them. A change that redesigns a module rather than
 deleting from it, or needs more than one sitting, becomes a GitHub issue instead (search

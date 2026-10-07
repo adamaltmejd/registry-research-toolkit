@@ -104,7 +104,8 @@ skill applies them to a change and to a sweep.
 - **Assert only at a named boundary**: built-artifact content, CLI JSON, library return
   models, HTTP responses, `project_data.json` validation results, order-manifest bytes,
   curation-TOML load or located failure, the FQID and period grammars. Anything else is
-  reached through one of those, not tested on its own.
+  reached through one of those, not tested on its own. Repository tooling under
+  `scripts/tests` asserts that tool's own contract (skill discovery, a lint's verdict).
 - **Conformance uses public contracts.** Cases may exercise CLI JSON, HTTP responses,
   order manifests, or documented public library return-model contracts. A public
   function name alone does not establish a contract: assert observable domain results or
