@@ -225,12 +225,11 @@ def _repo(*args: str) -> str:
 def ensure_derived(pins: Pins, dirs: dict[str, Path]) -> dict[str, Path]:
     """Return ``{catalog: directory}`` of the derived copies, deriving as needed.
 
-    Derive stamps the builder commit into each copy, so G1 runs on a committed tree.
+    Derive stamps the builder commit into each copy and refuses a tree with tracked
+    changes, so G1 runs on a committed tree.
     """
-    if _repo("status", "--porcelain", "--untracked-files=no", "--", *DERIVE_SOURCES):
-        raise RuntimeError(
-            f"G1 derives from committed sources; commit {', '.join(DERIVE_SOURCES)}"
-        )
+    if _repo("status", "--porcelain", "--untracked-files=no"):
+        raise RuntimeError("G1 derives with the committed builder; commit first")
     source = _repo("rev-parse", *(f"HEAD:{path}" for path in DERIVE_SOURCES))
     derived: dict[str, Path] = {}
     for catalog, directory in sorted(dirs.items()):
@@ -244,7 +243,7 @@ def ensure_derived(pins: Pins, dirs: dict[str, Path]) -> dict[str, Path]:
         if not _stamp_ok(out, key):
             sys.stderr.write(f"g1: deriving {catalog}\n")
             _stamp_path(out).unlink(missing_ok=True)
-            subprocess.run(
+            result = subprocess.run(
                 [
                     sys.executable,
                     "-m",
@@ -255,9 +254,12 @@ def ensure_derived(pins: Pins, dirs: dict[str, Path]) -> dict[str, Path]:
                     "--out",
                     str(out),
                 ],
-                stdout=subprocess.DEVNULL,
-                check=True,
+                stdout=subprocess.PIPE,
+                text=True,
+                check=False,
             )
+            if result.returncode:
+                raise RuntimeError(f"derive {catalog} failed: {result.stdout}")
             # The atomic publish keeps the replaced copy aside; disk is tight.
             out.with_name(out.name + ".prev").unlink(missing_ok=True)
             _write_stamp(out, key)
