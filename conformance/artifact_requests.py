@@ -123,12 +123,13 @@ def _fold(text):
     """The documented search fold (`fold_search`, RUST_RUNTIME_SPEC.md section 5),
     restated so the oracle does not share the reader's code: casefold, NFKD, drop
     combining marks, until nothing changes; then one space between words."""
-    while True:
+    for _ in range(3):
         decomposed = unicodedata.normalize("NFKD", text.casefold())
         folded = "".join(ch for ch in decomposed if not unicodedata.combining(ch))
         if folded == text:
             return " ".join(text.split())
         text = folded
+    raise AssertionError(f"search fold did not settle in 3 passes: {text!r}")
 
 
 def _identity_texts(row):

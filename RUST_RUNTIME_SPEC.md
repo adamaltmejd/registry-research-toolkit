@@ -648,9 +648,10 @@ is deleted".
   functions.
 - Fold corpus: a generator script (adapted from `spike/stage0/scripts/parity_folds.py`;
   a tool, not a test, so it may call Python's folds) writes a sampled corpus to
-  `conformance/cases/folds/`: every scalar whose fold is not the identity, seeded
-  samples, and hand-verified Unicode 17 cases, under about 1 MB. It excludes scalars
-  that Python's UCD (16.0) leaves unassigned or folds differently from 17.0, as
+  `conformance/cases/folds/`: every scalar whose fold is not the identity (Hangul
+  syllables with a final consonant sampled, their decomposition being algorithmic),
+  seeded samples, and hand-verified Unicode 17 cases, under about 1 MB. It excludes
+  scalars that Python's UCD (16.0) leaves unassigned or folds differently from 17.0, as
   `parity_folds.py` already classifies them; the hand-verified cases cover those.
 - CI: a Rust job (`cargo fmt --check`, `cargo clippy --workspace -- -D warnings`,
   `cargo test --workspace`); the lint job installs the Rust toolchain because pre-commit
