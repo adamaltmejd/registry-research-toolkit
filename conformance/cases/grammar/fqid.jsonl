@@ -1,0 +1,35 @@
+{"in": "scb", "out": {"kind": "provider", "provider": "scb"}}
+{"in": "a", "out": {"kind": "provider", "provider": "a"}}
+{"in": "scb/lisa", "out": {"kind": "register", "provider": "scb", "register": "lisa"}}
+{"in": "scb/lisa/kon", "out": {"kind": "variable", "provider": "scb", "register": "lisa", "variable": "kon"}}
+{"in": "scb/lisa/individer-15plus", "out": {"kind": "variable", "provider": "scb", "register": "lisa", "variable": "individer-15plus"}}
+{"in": "a/b/c", "out": {"kind": "variable", "provider": "a", "register": "b", "variable": "c"}}
+{"in": "class/sun2020", "out": {"kind": "classification", "classification": "sun2020"}}
+{"in": "class/icd10", "out": {"kind": "classification", "classification": "icd10"}}
+{"in": "scb/lisa/states", "out": {"kind": "variable", "provider": "scb", "register": "lisa", "variable": "states"}, "note": "Python reserves route slugs that would shadow FastAPI catalog routes; section 7's /api/<operation>/{ref} routes cannot be shadowed."}
+{"in": "", "error": "invalid_ref"}
+{"in": "/scb", "error": "invalid_ref"}
+{"in": "scb/", "error": "invalid_ref"}
+{"in": "scb//lisa", "error": "invalid_ref"}
+{"in": "scb/lisa/kon/x", "error": "invalid_ref", "note": "At most three segments."}
+{"in": "class", "error": "invalid_ref"}
+{"in": "class/", "error": "invalid_ref"}
+{"in": "class/sun/2020", "error": "invalid_ref"}
+{"in": "scb/class", "error": "invalid_ref", "note": "`class` is reserved in every slot."}
+{"in": "scb/lisa/class", "error": "invalid_ref"}
+{"in": "group", "error": "invalid_ref", "note": "`group` is reserved as a first segment for group refs (conformance/api/operations.toml, `show`)."}
+{"in": "group/lisa", "error": "invalid_ref"}
+{"in": "scb/group/group", "out": {"kind": "variable", "provider": "scb", "register": "group", "variable": "group"}, "note": "`group` is reserved only as the first segment."}
+{"in": "_default", "error": "invalid_ref"}
+{"in": "scb/lisa/_default", "error": "invalid_ref"}
+{"in": "LISA", "error": "invalid_ref", "note": "Not an FQID; a ref resolver may still try it as a bare name."}
+{"in": "scb/Lisa", "error": "invalid_ref"}
+{"in": "scb/1lisa", "error": "invalid_ref"}
+{"in": "scb/2019", "error": "invalid_ref"}
+{"in": "scb/-lisa", "error": "invalid_ref"}
+{"in": "scb/lisa-", "error": "invalid_ref"}
+{"in": "scb/li--sa", "error": "invalid_ref"}
+{"in": "scb/li_sa", "error": "invalid_ref"}
+{"in": "scb/li sa", "error": "invalid_ref"}
+{"in": "scb/lisa/kön", "error": "invalid_ref"}
+{"in": "scb/lisa/kon\n", "error": "invalid_ref"}
