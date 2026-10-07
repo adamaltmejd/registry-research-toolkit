@@ -687,6 +687,7 @@ contract, G1).
   hash) into its cache; the baseline arm reads the originals and the checkout arm reads
   the derived copies.
 - Paths: `reg_meta_build/src/reg_meta_build/{cli,derive,artifact_identity,db}.py`,
+  `reg_meta_build/tests/test_holdings_identity.py` (the identity boundary case),
   `conformance/differential/`, this file.
 - Out of scope: wiring derive into the release skill (the release builds through
   `build-db`/`extend-db`, which already derive after 2.1).
