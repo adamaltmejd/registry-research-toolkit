@@ -133,8 +133,18 @@ describe("ValidationPanel — researcher-language findings", () => {
   });
 
   it("clicking the location label brings the target binding card into view", async () => {
-    // Place a stand-in binding card, below the fold, with the anchor id the panel
-    // will resolve to, mirroring what BindingEditor mounts in the real tree.
+    await render(ValidationPanel, {
+      result: DRIFT_RESULT,
+      status: "warnings",
+      requestError: null,
+      requestErrorSource: null,
+      windowHints: [],
+      sources: SOURCES,
+    });
+    // A stand-in binding card with the anchor id the panel resolves to, mirroring
+    // what BindingEditor mounts in the real tree. It is appended AFTER the panel and
+    // far below the fold, so the locate button needs no scroll to be clicked and
+    // only the panel's own scroll can bring the card into view.
     const card = document.createElement("div");
     card.id = bindingAnchorId(0, 0);
     card.textContent = "binding card";
@@ -142,15 +152,6 @@ describe("ValidationPanel — researcher-language findings", () => {
     document.body.appendChild(card);
 
     try {
-      await render(ValidationPanel, {
-        result: DRIFT_RESULT,
-        status: "warnings",
-        requestError: null,
-        requestErrorSource: null,
-        windowHints: [],
-        sources: SOURCES,
-      });
-
       const locate = page.getByRole("button", {
         name: "Source 'lisa_main' → column scb/lisa/adeldag",
       });
