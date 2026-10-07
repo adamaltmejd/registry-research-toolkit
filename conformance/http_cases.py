@@ -208,32 +208,32 @@ class ServerPool:
     what `uv run` launched) and logs to `log_dir`."""
 
     def __init__(self, template, log_dir):
-        self._template = shlex.split(template)
-        self._log_dir = log_dir
-        self._servers = {}
+        self.template = shlex.split(template)
+        self.log_dir = log_dir
+        self.servers = {}
 
     def client(self, env):
         db = env["REG_META_DB"]
-        if db not in self._servers:
+        if db not in self.servers:
             # A failed start is remembered, so later cases on the artifact fail
             # at once instead of waiting out the readiness deadline again.
             try:
-                self._servers[db] = self._start(env)
+                self.servers[db] = self.start(env)
             except RuntimeError as exc:
-                self._servers[db] = exc
-        if isinstance(self._servers[db], RuntimeError):
-            raise self._servers[db]
-        return self._servers[db][1]
+                self.servers[db] = exc
+        if isinstance(self.servers[db], RuntimeError):
+            raise self.servers[db]
+        return self.servers[db][1]
 
     def close(self):
-        while self._servers:
-            _, server = self._servers.popitem()
+        while self.servers:
+            _, server = self.servers.popitem()
             if not isinstance(server, RuntimeError):
                 server[1].close()
                 _stop(server[0])
 
-    def _start(self, env):
-        log = self._log_dir / f"server-{len(self._servers)}.log"
+    def start(self, env):
+        log = self.log_dir / f"server-{len(self.servers)}.log"
         deadline = time.monotonic() + SERVER_READY_SECONDS
         # A server that exits before answering may have lost its port to another
         # process between `_free_port` and its bind: retry on a fresh port.
@@ -241,7 +241,7 @@ class ServerPool:
             port = str(_free_port())
             argv = [
                 word.replace("{db}", env["REG_META_DB"]).replace("{port}", port)
-                for word in self._template
+                for word in self.template
             ]
             with log.open("ab") as output:
                 process = subprocess.Popen(
