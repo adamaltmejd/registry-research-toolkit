@@ -376,6 +376,12 @@ def test_first_run_docs_download_reports_missing_docs_asset(
     code = run(["docs", "list"])
     error = json.loads(capsys.readouterr().out)["error"]
     assert (code, error["code"]) == (EXIT_CONFIG, "no_docs_in_release")
+    # End users cannot run the maintainer-only `reg-meta-build build-docs`.
+    assert error["remediation"] == (
+        "Metadata commands work without the doc DB. Pass a release that carries "
+        "one to `reg-meta update --tag`, or report the missing asset at "
+        "https://github.com/adamaltmejd/registry-research-toolkit/issues."
+    )
 
 
 # --- package upgrade decision -------------------------------------------------

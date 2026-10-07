@@ -2469,13 +2469,14 @@ def _collect_hints(
     if key == ("search", None):
         results = data.get("results", [])
         group_rows = [r for r in results if r.get("type") == "group"]
-        # The typed group rows (#701) carry the scalar `matched_count` (the raw
-        # `matched` leaf list is folded away in reg_meta — not on the wire).
+        # The typed group rows (#701) carry the scalar `matched_count` (distinct
+        # members hit; the raw `matched` leaf list is folded away in reg_meta —
+        # not on the wire).
         folded = sum(r.get("matched_count") or 0 for r in group_rows)
         if folded:
             hint_add(
                 hints,
-                f"{folded} hit(s) folded into {len(group_rows)} concept group(s) "
+                f"{folded} member(s) folded into {len(group_rows)} concept group(s) "
                 "(--no-fold to flatten; members in --format json)",
             )
         if getattr(args, "field", "all") == "all":
@@ -3217,10 +3218,9 @@ def _prompt_first_run_download(
 
     from .download import download_db, download_docs_db
 
+    catalog = _selected_name(args) or "global"
     if missing_main:
-        download_db(
-            db_dir=db_path.parent, catalog=_selected_name(args) or "global", yes=True
-        )
+        download_db(db_dir=db_path.parent, catalog=catalog, yes=True)
     if missing_docs:
         download_docs_db(db_dir=docs_path.parent)
     sys.stderr.write("\n")
@@ -3366,14 +3366,9 @@ def run(argv: list[str] | None = None) -> int:
                 new_ver = update_checker.get_newer_version()
                 if not new_ver and not update_checker.completed:
                     # Background check timed out — fall back to persistent flag
-                    from . import __version__
-                    from .update import _parse_version, read_pending_update
+                    from .update import read_pending_update
 
-                    flagged = read_pending_update()
-                    if flagged and _parse_version(flagged) > _parse_version(
-                        __version__
-                    ):
-                        new_ver = flagged
+                    new_ver = read_pending_update()
                 if new_ver:
                     from . import __version__
 

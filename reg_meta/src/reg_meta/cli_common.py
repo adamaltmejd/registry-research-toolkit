@@ -74,6 +74,19 @@ def hint_add(hints: list[str] | None, msg: str) -> None:
         hints.append(msg)
 
 
+def hint_add_lossy(hints: list[str] | None, msg: str) -> None:
+    """Add a hint that says the rendered output omits data.
+
+    Lossy-display hints outrank every advisory hint under the cap: each goes to
+    the front and the cap evicts the last advisory hint. The latest lossy hint
+    leads, so `write_formatted` adds the clipped-cells hint before the
+    dropped-rows hint to show dropped rows first.
+    """
+    if hints is not None:
+        hints.insert(0, msg)
+        del hints[_MAX_HINTS:]
+
+
 def emit_hints(hints: list[str]) -> None:
     sys.stderr.write("\n")
     for h in hints:
@@ -268,13 +281,13 @@ def write_formatted(
         table_content, table_width = render_table(rows, columns)
         if table_width > term_w:
             table_content, _ = render_table(rows, columns, max_width=term_w)
-            hint_add(hints, "Long values truncated (--format list for full text)")
+            hint_add_lossy(hints, "Long values truncated (--format list for full text)")
             content = table_content
         else:
             content = table_content
 
     if truncated:
-        hint_add(
+        hint_add_lossy(
             hints,
             f"Table view truncated {truncated} rows (--format json for full output)",
         )

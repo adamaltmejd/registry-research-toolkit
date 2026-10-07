@@ -105,6 +105,17 @@ def test_scoped_cli_json(case: Path, tmp_path: Path, capsys) -> None:
                 "names": [row["name"] for row in output["results"]],
                 "has_more": output["has_more"],
             }
+        elif observe == "search-groups":
+            actual = {
+                "groups": [
+                    {
+                        key: row[key]
+                        for key in ("group_key", "matched_count", "member_count")
+                    }
+                    for row in output["results"]
+                    if row["type"] == "group"
+                ]
+            }
         else:
             actual = {field: output[field] for field in observe}
     assert actual == expected
