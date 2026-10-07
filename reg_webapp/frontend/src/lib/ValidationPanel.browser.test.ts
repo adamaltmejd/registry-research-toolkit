@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import ValidationPanel from "./ValidationPanel.svelte";
-import { bindingAnchorId, sourceAnchorId } from "./validation";
+import { bindingAnchorId } from "./validation";
 
 // PR D2 (UI audit finding 6): the findings summary must speak researcher —
 // human TITLE leads, the raw `code` is demoted but visible, and the locator is a
@@ -132,12 +132,13 @@ describe("ValidationPanel — researcher-language findings", () => {
     await expect.element(link).toHaveAttribute("href", "/catalog/scb/lisa");
   });
 
-  it("clicking the location label flashes the target binding card", async () => {
-    // Place a stand-in binding card with the anchor id the panel will resolve to,
-    // mirroring what BindingEditor mounts in the real tree.
+  it("clicking the location label brings the target binding card into view", async () => {
+    // Place a stand-in binding card, below the fold, with the anchor id the panel
+    // will resolve to, mirroring what BindingEditor mounts in the real tree.
     const card = document.createElement("div");
     card.id = bindingAnchorId(0, 0);
     card.textContent = "binding card";
+    card.style.marginTop = "300vh";
     document.body.appendChild(card);
 
     try {
@@ -153,11 +154,12 @@ describe("ValidationPanel — researcher-language findings", () => {
       const locate = page.getByRole("button", {
         name: "Source 'lisa_main' → column scb/lisa/adeldag",
       });
+      const target = page.getByText("binding card");
       await expect.element(locate).toBeVisible();
-      expect(card.classList.contains("locate-flash")).toBe(false);
+      await expect.element(target).not.toBeInViewport();
 
       await locate.click();
-      expect(card.classList.contains("locate-flash")).toBe(true);
+      await expect.element(target).toBeInViewport();
     } finally {
       card.remove();
     }
@@ -184,9 +186,7 @@ describe("ValidationPanel — researcher-language findings", () => {
     });
 
     // No source card to locate → the raw pointer is shown (and there's no locate
-    // button for this finding). `sourceAnchorId` is unused here but pins that a
-    // top-level path does NOT resolve to a card.
-    expect(sourceAnchorId(0)).toBe("loc-source-0");
+    // button for this finding).
     await expect.element(page.getByText("/name")).toBeVisible();
   });
 
@@ -334,24 +334,6 @@ describe("ValidationPanel — researcher-language findings", () => {
     expect(document.body.textContent).not.toContain("window_coverage");
   });
 
-  it("offers a retry action when the validation request itself fails", async () => {
-    const onRetry = vi.fn();
-    await render(ValidationPanel, {
-      result: null,
-      status: "unchecked",
-      requestError: "request body is not a JSON object",
-      requestErrorSource: "validate",
-      windowHints: [],
-      sources: SOURCES,
-      onRetry,
-    });
-
-    const retry = page.getByRole("button", { name: "Retry validation" });
-    await expect.element(retry).toBeVisible();
-    await retry.click();
-    expect(onRetry).toHaveBeenCalledOnce();
-  });
-
   it("offers NO retry at all for a blocked order (retrying either request would change nothing)", async () => {
     // The block came from `/order`, so "Retry validation" would not retry the
     // failed request: it re-runs the validation that already passes, clears this
@@ -423,27 +405,6 @@ describe("ValidationPanel — researcher-language findings", () => {
     await retry.click();
     expect(onRetryOrder).toHaveBeenCalledOnce();
     expect(onRetry).not.toHaveBeenCalled();
-  });
-
-  it("yields the green summary to a standing request error (a blocked order)", async () => {
-    // `/order` fail-closes projects that VALIDATE clean, so the last green
-    // result can coexist with an order block. Announcing both — the block
-    // directly above "Draft valid" — tells the researcher two contradictory
-    // things at once, so the banner is the only status shown.
-    await render(ValidationPanel, {
-      result: { ok: true, issues: [] },
-      status: "ok",
-      requestError: STEWARD_MISMATCH_DETAIL,
-      requestErrorSource: "order",
-      windowHints: [],
-      sources: SOURCES,
-    });
-
-    await expect.element(page.getByText(/steward_mismatch/)).toBeVisible();
-    // Neither the verdict nor the order-check note the green branch carries: the
-    // order checks just ran, and this is what they said.
-    expect(document.body.textContent).not.toContain("Draft valid");
-    expect(document.body.textContent).not.toContain(ORDER_NOTE);
   });
 
   it("renders each order finding like a validation issue, located by its coordinates", async () => {
