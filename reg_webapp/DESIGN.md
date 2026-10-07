@@ -54,12 +54,13 @@ conn = reg_meta.db.open_db(db_path)  # mode=ro + _check_schema_compat
 
 `open_db` already opens `mode=ro` and runs `_check_schema_compat` — a real
 `SCHEMA_VERSION` assert vs the DB manifest. That is the **load-bearing** schema gate (a
-wrong major / too-old minor raises at startup; `test_boot.py` covers it). The boot
-connection is closed once the manifest is read; the parsed manifest AND the resolved
-`db_path` are stashed on `app.state` (the keys `/api/context` surfaces are validated at
-boot so a malformed DB fails fast). The lifespan holds **no** long-lived query
-connection — see the connection model below. The boot also loads the steward and builds
-its in-memory catalog index (below), stashing both on `app.state`.
+wrong major / too-old minor raises at startup;
+`conformance/cases/boot/schema-major-mismatch` covers it). The boot connection is closed
+once the manifest is read; the parsed manifest AND the resolved `db_path` are stashed on
+`app.state` (the keys `/api/context` surfaces are validated at boot so a malformed DB
+fails fast). The lifespan holds **no** long-lived query connection — see the connection
+model below. The boot also loads the steward and builds its in-memory catalog index
+(below), stashing both on `app.state`.
 
 The webapp reads reg_meta read-only and ships no DDL, so it owns no `SCHEMA_VERSION` —
 the only schema gate is `open_db`'s boot compat check against reg_meta's manifest.
@@ -134,12 +135,12 @@ Catalog routes live in one `routes/catalog.py` APIRouter, declaring `/catalog`, 
 suffixed routes, then `/catalog/{fqid:path}` (the catch-all **last**). Starlette matches
 in **declaration order** and the `{fqid:path}` converter greedy-consumes any suffix, so
 the suffixed routes must declare ABOVE the catch-all or the catch-all swallows the
-suffix into `fqid` and the suffix handler never fires. A CI router-introspection test
-(`test_boot.py::test_suffixed_routes_declared_before_catch_all`) pins the order. The
-suffix tokens (and `variants`) are also **reserved in the variable slot** of the slug
-grammar (see reg_meta/DESIGN.md → FQID grammar) at build time, so a variable slugged
-`states` can't shadow a sub-endpoint. The validate→parse→Catalog-dispatch→Pydantic-map
-flow is factored into reusable helpers.
+suffix into `fqid` and the suffix handler never fires. Each suffixed route answering
+with its own shape over HTTP (`conformance/cases/http_catalog`,
+`test_catalog_subendpoints.py`) pins the order. The suffix tokens (and `variants`) are
+also **reserved in the variable slot** of the slug grammar (see reg_meta/DESIGN.md →
+FQID grammar) at build time, so a variable slugged `states` can't shadow a sub-endpoint.
+The validate→parse→Catalog-dispatch→Pydantic-map flow is factored into reusable helpers.
 
 The suffixed surface has one family declared above the catch-all: seven **binding-suffix
 routes** (`/states`, `/predecessors`, `/successors`, `/lineage`, `/lineage_warnings`,

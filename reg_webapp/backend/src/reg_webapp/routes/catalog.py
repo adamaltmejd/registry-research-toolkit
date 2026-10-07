@@ -709,7 +709,8 @@ def _parsed_binding(validated: ValidatedFqidPath) -> Fqid:
 # register-sub-resource `/{provider}/{register}/variants` MUST be declared ABOVE
 # the `{fqid:path}` catch-all — Starlette matches in declaration order and the
 # `{fqid:path}` converter greedy-consumes any suffix into `fqid`. The catch-all
-# MUST stay last. `test_boot.py` (`routes_declared_before`) pins the order in CI.
+# MUST stay last. Each suffixed route answering with its own shape over HTTP
+# (conformance/cases/http_catalog, test_catalog_subendpoints.py) pins the order.
 
 
 @router.get("/catalog", response_model=RootResponse)
@@ -769,7 +770,8 @@ def get_register_variants(
 # `…/{key:path}` subject route — otherwise `group/class/sun/graph` is captured as
 # `key="sun/graph"` by the subject route. And the literal-`class` graph route goes
 # above the register `{provider}` graph route (mirroring #756's `class` beats
-# `{provider}` ordering), all above the catch-all. `test_boot.py` pins the order.
+# `{provider}` ordering), all above the catch-all. The group and graph requests in
+# conformance/cases/http_catalog and test_catalog_groups.py pin the order.
 
 
 @router.get("/catalog/group/class/{key:path}/graph", response_model=RelationshipGraph)
