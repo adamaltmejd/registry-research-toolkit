@@ -269,9 +269,10 @@ the loop:
   stated behavior, rule violations and simplifications; an idea that adds scope goes in
   one line under "Not requested", and the orchestrating session declines it unless it
   fixes a defect.
-- **Tests are end-to-end or integration, at a public boundary**: the built artifact,
-  HTTP, MCP, order bytes, `project_data.json` validation. No unit tests of internal
-  functions; they make code harder to change without proving behavior. One test per
+- **Tests are end-to-end or integration by default, at a public boundary**: the built
+  artifact, HTTP, MCP, order bytes, `project_data.json` validation. Unit tests are the
+  exception: one is allowed only where it pins behavior a boundary test cannot reach
+  well, never an implementation shape that makes the code harder to change. One test per
   guarantee, at its hardest case, with expected values from outside the code under test
   and a comment naming the change that would make it fail. A bug fix extends its
   guarantee's test rather than adding one. G0 stays fast enough to run on every change.
