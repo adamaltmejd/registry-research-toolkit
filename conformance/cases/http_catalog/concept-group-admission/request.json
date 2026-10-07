@@ -1,0 +1,14 @@
+{
+  "fixture": "reader/concept-group-admission",
+  "requests": [
+    {
+      "path": "/api/catalog/group/scb/example/value-family"
+    },
+    {
+      "path": "/api/catalog/group/scb/example/value-family",
+      "query": {
+        "scope": "reference"
+      }
+    }
+  ]
+}

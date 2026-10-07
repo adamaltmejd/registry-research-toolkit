@@ -427,7 +427,7 @@ id = "search"
 disposition = "replaced"
 operation = "search"
 owner = "3a"
-covered_by = ["conformance/cases/cli_scope/search-reference-1", "conformance/cases/cli_scope/search-holdings-1", "reg_meta/tests/test_cli_search.py"]
+covered_by = ["conformance/cases/cli_scope/search-holdings-1", "conformance/cases/cli_scope/search-reference-2", "reg_meta/tests/test_cli_search.py"]
 
 [[row]]
 kind = "command"
@@ -536,7 +536,7 @@ id = "reg_meta.catalog.BindingGroupRef"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/test_concept_groups.py"]
+covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/cases/http_catalog/concept-group-admission"]
 
 [[row]]
 kind = "import"
@@ -593,7 +593,7 @@ id = "reg_meta.catalog.ConceptGroupMember"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/test_concept_groups.py"]
+covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/cases/http_catalog/concept-group-admission"]
 
 [[row]]
 kind = "import"
@@ -601,7 +601,7 @@ id = "reg_meta.catalog.ConceptGroupSummary"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/test_concept_groups.py"]
+covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/cases/http_catalog/concept-group-admission"]
 
 [[row]]
 kind = "import"
@@ -618,7 +618,7 @@ id = "reg_meta.catalog.GroupAxis"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/test_concept_groups.py"]
+covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/cases/http_catalog/concept-group-admission"]
 
 [[row]]
 kind = "import"
@@ -1570,7 +1570,7 @@ covered_by = ["reg_meta/tests/test_search_ranking.py", "conformance/cases/http_s
 [[row]]
 kind = "import"
 id = "reg_meta.semantic.validate_project"
-used_by = ["conformance", "reg_webapp"]
+used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "3e"
 covered_by = ["conformance/test_validate.py", "conformance/cases/validate"]

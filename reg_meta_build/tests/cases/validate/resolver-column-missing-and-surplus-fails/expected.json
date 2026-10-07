@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "resolver_column disagrees with the resolver: 1 missing, 1 surplus row(s)"
+  ]
+}

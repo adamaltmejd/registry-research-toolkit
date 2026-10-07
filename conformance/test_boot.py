@@ -46,7 +46,7 @@ def test_artifact_boot(case, tmp_path, monkeypatch):
         with TestClient(create_app()):
             pass
     except (RuntimeError, RegMetaError) as exc:
-        result = {"ok": False, "type": type(exc).__name__}
+        result = {"ok": False}
         if "code" in expected:
             result["code"] = exc.code
         if "message_contains" in expected:

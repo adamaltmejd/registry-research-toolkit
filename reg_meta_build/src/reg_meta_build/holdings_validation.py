@@ -90,7 +90,8 @@ def validate_compiled_holdings(conn: sqlite3.Connection) -> None:
     stored_canonical = []
     # simplify: per-column indexed reads fit the accepted 38k-column corpus;
     # batch relation reads if inventories exceed 100k columns or profiling shows
-    # validation dominating the build. Canonicalization remains resolver-owned.
+    # validation dominating the build. Canonicalization reads `resolver_column`,
+    # which validate_built_db checks against a recomputation.
     for table in tables:
         scope = table["scope"]
         if table["partition"] is not None:

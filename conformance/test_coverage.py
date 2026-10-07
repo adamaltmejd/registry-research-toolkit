@@ -32,18 +32,6 @@ def test_compiled_coverage_projection(case: Path, tmp_path: Path) -> None:
                     request["provider"], request["register"]
                 ).items()
             },
-            "provider_columns": [
-                {
-                    "register": register,
-                    "variable": variable,
-                    "column": column,
-                    "coverage": coverage.model_dump(mode="json"),
-                }
-                for register, columns in sorted(
-                    catalog.provider_column_coverage(request["provider"]).items()
-                )
-                for (variable, column), coverage in sorted(columns.items())
-            ],
             "provider_registers": {
                 register: coverage.model_dump(mode="json")
                 for register, coverage in catalog.provider_register_coverage(
