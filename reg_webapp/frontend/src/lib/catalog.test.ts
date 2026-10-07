@@ -34,7 +34,6 @@ import {
   facetAxisStyle,
   facetAxisTone,
   facetLabelJoin,
-  foldText,
   formatDataType,
   formatStateWindow,
   formatWindow,
@@ -44,7 +43,6 @@ import {
   humanizeClassificationSlug,
   labelSuffix,
   leafSlug,
-  matchesFilter,
   memberKey,
   narrowCatalogNode,
   narrowStatesByModifier,
@@ -129,45 +127,6 @@ const classification = {
   name: "Education",
   short_name: "SUN",
 } as unknown as CatalogNode;
-
-describe("foldText", () => {
-  it("strips diacritics and lowercases", () => {
-    expect(foldText("Löne")).toBe("lone");
-    expect(foldText("lön")).toBe("lon");
-    expect(foldText("ÅÄÖ")).toBe("aao");
-    expect(foldText("Kön")).toBe("kon");
-  });
-});
-
-describe("matchesFilter", () => {
-  it("empty / whitespace-only needle matches everything", () => {
-    expect(matchesFilter("", "anything")).toBe(true);
-    expect(matchesFilter("   ", "anything")).toBe(true);
-  });
-
-  it("is case-insensitive and diacritic-blind on both needle and haystack", () => {
-    // "lon" matches "Löne…" (haystack has diacritic) and "lön" (needle-side).
-    expect(matchesFilter("lon", "Löneutbetalning")).toBe(true);
-    expect(matchesFilter("lön", "Loneutbetalning")).toBe(true);
-    expect(matchesFilter("KON", "Kön")).toBe(true);
-  });
-
-  it("matches a substring against ANY of the haystacks (name OR slug/fqid)", () => {
-    // Needle hits the FQID but not the display name.
-    expect(matchesFilter("agi", "Annual income", "scb/lisa/agi_2019")).toBe(
-      true,
-    );
-    // Needle hits neither.
-    expect(matchesFilter("xyz", "Annual income", "scb/lisa/agi_2019")).toBe(
-      false,
-    );
-  });
-
-  it("skips null/undefined haystacks", () => {
-    expect(matchesFilter("kon", null, undefined, "Kön")).toBe(true);
-    expect(matchesFilter("kon", null, undefined)).toBe(false);
-  });
-});
 
 describe("rankFilter", () => {
   // Alphabetical input (the picker's incoming order) with a few "kon" matches.

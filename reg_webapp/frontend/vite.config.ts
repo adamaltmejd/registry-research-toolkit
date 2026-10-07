@@ -52,6 +52,10 @@ export default defineConfig({
     projects: [
       {
         extends: true,
+        // catalog.fold.test.ts reads the server fold's corpus as text (`?raw`),
+        // which Vite refuses outside the allowed roots (default: this package).
+        // Allow that one directory beside the package, not the whole repo.
+        server: { fs: { allow: [".", "../../conformance/cases/folds"] } },
         test: {
           name: "unit",
           environment: "jsdom",
