@@ -1,0 +1,1652 @@
+# Surface inventory (RUST_RUNTIME_SPEC.md package 1.1a): every surface the Python
+# runtime exposes today, and where it goes. `conformance/test_api_surface.py` fails when
+# a route, `reg-meta` subcommand or imported `reg_meta` name lacks a row, or a row names
+# something that no longer exists. Reviewed at checkpoint 1; judgment calls say so in
+# `note`.
+#
+# kind         route: an operation in the committed reg_webapp/backend/openapi.json,
+#                     id = "METHOD /path" as OpenAPI writes it (no `:path` converter).
+#              command: an `add_parser` in reg_meta/src/reg_meta/cli.py, id = the argv path.
+#              skill: a command the register-metadata-search skill documents
+#                     (plugins/microdata-tools-se/skills/register-metadata-search/SKILL.md),
+#                     id = its text as written there.
+#              import: a `reg_meta` name imported by any git-visible .py file outside
+#                     reg_meta/ (tests, scripts and tools included; the throwaway stage-0
+#                     spike, which package 1.5 deletes, is skipped).
+#                     `from M import N` is "M.N"; `import M` is "M".
+# disposition  route, command, skill:
+#                retained  the same surface stays.
+#                replaced  route and command rows: a Rust operation covers it (HTTP and
+#                          MCP, section 7); package 1.1 adds its name as `operation`, this
+#                          file does not choose names. Skill rows: `note` names the
+#                          replacement (the binary, `fetch`, MCP `tools/list`).
+#                removed   nothing replaces it; `note` says why.
+#              import (the name's fate in Python):
+#                retained  moves into reg_meta_build in stage 4.
+#                replaced  reg-core-py provides it (FQID and period grammar, folds,
+#                          canonical JSON and hashing; section 5).
+#                removed   no Python consumer remains; the Rust reader owns the behavior.
+# owner        the stage-3 slice that ports the surface (3a admission + search, 3b show /
+#              states / values, 3c schema / diff / coverage / coded, 3d chains and graph,
+#              3e order and project validation), or stage 4 / 5. For an import only the
+#              webapp or conformance uses, the slice whose route deletions remove its last
+#              importer; anything imported by a module several slices share (models.py,
+#              app wiring) goes in stage 4. Build-side imports are always stage 4.
+# covered_by   the existing tests or conformance cases that exercise the surface today
+#              (paths; empty means none). For imports this is a proxy: the nearest test of
+#              the name's behavior, not of each consumer's use of it.
+# used_by      import rows: the top-level directories whose files import the name.
+
+# Routes
+
+[[row]]
+kind = "route"
+id = "GET /api/catalog"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["conformance/cases/http_catalog/admission", "reg_webapp/backend/tests/test_catalog_tree.py"]
+note = "Scoped provider list plus the classification root: show on the catalog root."
+
+[[row]]
+kind = "route"
+id = "GET /api/catalog/group/class/{key}"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["reg_webapp/backend/tests/test_catalog_classifications.py", "reg_webapp/backend/tests/test_catalog_groups.py"]
+note = "Show on a classification umbrella group or succession family. Judgment: the family's chain itself is graph data (3d)."
+
+[[row]]
+kind = "route"
+id = "GET /api/catalog/group/class/{key}/graph"
+disposition = "replaced"
+owner = "3d"
+covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
+
+[[row]]
+kind = "route"
+id = "GET /api/catalog/group/{provider}/{register}/{key}"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["conformance/cases/http_catalog/group-coverage", "conformance/cases/http_catalog/unheld-group", "reg_webapp/backend/tests/test_catalog_groups.py"]
+note = "Show on a register concept group."
+
+[[row]]
+kind = "route"
+id = "GET /api/catalog/group/{provider}/{register}/{key}/graph"
+disposition = "replaced"
+owner = "3d"
+covered_by = ["conformance/cases/http_catalog/whole-variable-group-graph", "conformance/cases/http_catalog/unheld-group"]
+
+[[row]]
+kind = "route"
+id = "GET /api/catalog/{fqid}"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "conformance/cases/http_catalog/redirects", "reg_webapp/backend/tests/test_catalog_tree.py"]
+note = "Show for every ref kind. The `?period` states subset becomes the states operation's `period` filter."
+
+[[row]]
+kind = "route"
+id = "GET /api/catalog/{fqid}/data_warnings"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["conformance/cases/http_catalog/warnings", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
+note = "Judgment: warnings render on the register and binding pages, so they ship with show."
+
+[[row]]
+kind = "route"
+id = "GET /api/catalog/{fqid}/dimensions"
+disposition = "removed"
+owner = "3d"
+covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
+note = "The SPA stopped fetching it (#678); the graph carries group membership. Deleted with the 3d routes."
+
+[[row]]
+kind = "route"
+id = "GET /api/catalog/{fqid}/graph"
+disposition = "replaced"
+owner = "3d"
+covered_by = ["conformance/cases/http_catalog/reference-edges", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
+
+[[row]]
+kind = "route"
+id = "GET /api/catalog/{fqid}/lineage"
+disposition = "removed"
+owner = "3d"
+covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
+note = "The SPA does not call it (the graph replaced the lineage panel). Agents keep lineage through the operation that replaces `get lineage`."
+
+[[row]]
+kind = "route"
+id = "GET /api/catalog/{fqid}/lineage_warnings"
+disposition = "replaced"
+owner = "3d"
+covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
+note = "The SPA's lineage details fetch it."
+
+[[row]]
+kind = "route"
+id = "GET /api/catalog/{fqid}/predecessors"
+disposition = "removed"
+owner = "3d"
+covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
+note = "The SPA stopped fetching it: the node's embedded succession chain and the graph carry predecessors."
+
+[[row]]
+kind = "route"
+id = "GET /api/catalog/{fqid}/states"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "conformance/cases/http_catalog/redirects", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
+
+[[row]]
+kind = "route"
+id = "GET /api/catalog/{fqid}/successors"
+disposition = "removed"
+owner = "3d"
+covered_by = ["conformance/cases/http_catalog/reference-edges", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
+note = "The SPA does not fetch it: the node's embedded succession chain and the graph carry successors."
+
+[[row]]
+kind = "route"
+id = "GET /api/catalog/{provider}/{register}/variants"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "conformance/cases/http_catalog/redirects", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
+note = "A register's variant list for the variant browser, a show facet."
+
+[[row]]
+kind = "route"
+id = "GET /api/context"
+disposition = "replaced"
+owner = "3a"
+covered_by = ["conformance/cases/http_context", "reg_webapp/backend/tests/test_context.py"]
+note = "Judgment: catalog identity (schema, generation, artifact kind, default scope) is admission state, and 3a builds admission and the `meta` block. Steward branding and the period span ride along."
+
+[[row]]
+kind = "route"
+id = "GET /api/docs/doc/{identifier}"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["reg_webapp/backend/tests/test_docs.py", "reg_meta/tests/test_doc_queries.py"]
+note = "Docs judgment, all five docs routes: they read their own DB but render on register and variable pages, and docs search reuses the 3a FTS builder, so they land with show after 3a."
+
+[[row]]
+kind = "route"
+id = "GET /api/docs/file/{register}/{filename}"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["reg_webapp/backend/tests/test_docs.py"]
+note = "Raw-bytes download (section 7): media type and bytes kept; its metadata comes from the related-documents operation."
+
+[[row]]
+kind = "route"
+id = "GET /api/docs/for-variable"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["reg_webapp/backend/tests/test_docs.py"]
+
+[[row]]
+kind = "route"
+id = "GET /api/docs/related/{register}"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["reg_webapp/backend/tests/test_docs.py"]
+
+[[row]]
+kind = "route"
+id = "GET /api/docs/search"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["reg_webapp/backend/tests/test_docs.py", "reg_meta/tests/test_doc_queries.py"]
+
+[[row]]
+kind = "route"
+id = "POST /api/project/order"
+disposition = "replaced"
+owner = "3e"
+covered_by = ["conformance/cases/validate", "reg_webapp/backend/tests/test_project_order.py"]
+note = "The download keeps the exact manifest bytes (section 7)."
+
+[[row]]
+kind = "route"
+id = "POST /api/project/validate"
+disposition = "replaced"
+owner = "3e"
+covered_by = ["conformance/cases/validate", "reg_webapp/backend/tests/test_project_validate.py"]
+
+[[row]]
+kind = "route"
+id = "GET /api/search"
+disposition = "replaced"
+owner = "3a"
+covered_by = ["conformance/cases/http_search", "reg_webapp/backend/tests/test_search_results.py", "reg_webapp/backend/tests/test_search_golden_config.py"]
+
+[[row]]
+kind = "route"
+id = "GET /api/stats"
+disposition = "replaced"
+owner = "3a"
+covered_by = ["conformance/cases/http_scope/stats", "reg_webapp/backend/tests/test_stats.py"]
+note = "Judgment: scoped headline counts for the landing page that hosts search; they need only admission and the scope predicate, both 3a."
+
+[[row]]
+kind = "route"
+id = "GET /api/value-sets/{value_set_id}/codes"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["reg_webapp/backend/tests/test_value_set_codes.py"]
+note = "The values operation; offset paging becomes cursor paging (section 7)."
+
+# reg-meta subcommands
+
+[[row]]
+kind = "command"
+id = "docs"
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_meta/tests/test_doc_commands.py"]
+note = "Command group only; its subcommands carry the dispositions. The CLI is deleted in stage 4 (decision 11)."
+
+[[row]]
+kind = "command"
+id = "docs get"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["reg_meta/tests/test_doc_commands.py"]
+
+[[row]]
+kind = "command"
+id = "docs list"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["reg_meta/tests/test_doc_commands.py", "conformance/cases/selection/docs-default-mismatch"]
+note = "The SPA has no docs listing route; the docs operations need one for agents."
+
+[[row]]
+kind = "command"
+id = "docs search"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["reg_meta/tests/test_doc_commands.py"]
+note = "Docs go with show; see the docs route rows."
+
+[[row]]
+kind = "command"
+id = "get"
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_meta/tests/test_cli_get.py"]
+note = "Command group only; its subcommands carry the dispositions. The CLI is deleted in stage 4 (decision 11)."
+
+[[row]]
+kind = "command"
+id = "get availability"
+disposition = "replaced"
+owner = "3c"
+covered_by = ["conformance/cases/cli_scope/availability-reference", "conformance/cases/cli_scope/availability-holdings"]
+note = "The coverage operation."
+
+[[row]]
+kind = "command"
+id = "get classification"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["conformance/cases/cli_scope/classification-variables-reference", "conformance/cases/cli_scope/classification-variables-holdings"]
+note = "Judgment: show on a classification (codes, owning variables); its edition succession chain is 3d."
+
+[[row]]
+kind = "command"
+id = "get coded-variables"
+disposition = "replaced"
+owner = "3c"
+covered_by = ["conformance/cases/cli_scope/coded-variables-explicit-reference"]
+
+[[row]]
+kind = "command"
+id = "get datacolumns"
+disposition = "replaced"
+owner = "3c"
+covered_by = ["conformance/cases/cli_scope/datacolumns-explicit-reference", "conformance/cases/cli_scope/datacolumns-unheld-explicit-reference"]
+note = "Judgment: column aliases are delivered-schema facts, so they go with schema; a show facet in 3b would also fit."
+
+[[row]]
+kind = "command"
+id = "get diff"
+disposition = "replaced"
+owner = "3c"
+covered_by = ["conformance/cases/cli_scope/diff-explicit-reference"]
+
+[[row]]
+kind = "command"
+id = "get groups"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["conformance/cases/cli_scope/groups-reference", "conformance/cases/cli_scope/groups-holdings"]
+note = "Show on a concept group (members and facets)."
+
+[[row]]
+kind = "command"
+id = "get lineage"
+disposition = "replaced"
+owner = "3d"
+covered_by = ["conformance/cases/cli_scope/lineage-unheld-reference"]
+
+[[row]]
+kind = "command"
+id = "get register"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["conformance/cases/cli_scope/register-reference", "conformance/cases/cli_scope/register-holdings", "reg_meta/tests/test_cli_get.py"]
+
+[[row]]
+kind = "command"
+id = "get schema"
+disposition = "replaced"
+owner = "3c"
+covered_by = ["conformance/cases/cli_scope/schema-reference", "conformance/cases/cli_scope/schema-holdings", "reg_meta/tests/test_cli_get_schema.py"]
+
+[[row]]
+kind = "command"
+id = "get values"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["conformance/cases/cli_scope/values-explicit-reference", "reg_meta/tests/test_cli_get_values.py"]
+
+[[row]]
+kind = "command"
+id = "get varinfo"
+disposition = "replaced"
+owner = "3b"
+covered_by = ["conformance/cases/cli_scope/varinfo-explicit-reference", "conformance/cases/cli_scope/varinfo-unheld-holdings", "reg_meta/tests/test_cli_get.py"]
+
+[[row]]
+kind = "command"
+id = "info"
+disposition = "removed"
+owner = "4"
+covered_by = []
+note = "No test covers it. Every response's `meta` carries contract version, generation and scope (section 7) and the context operation carries schema and import date; per-table row counts have no agent or SPA use."
+
+[[row]]
+kind = "command"
+id = "order"
+disposition = "replaced"
+owner = "3e"
+covered_by = ["conformance/cases/order", "conformance/test_order.py", "conformance/cases/validate"]
+note = "`POST /api/project/order` and an MCP tool (section 7)."
+
+[[row]]
+kind = "command"
+id = "resolve"
+disposition = "replaced"
+owner = "3c"
+covered_by = ["conformance/cases/cli_scope/resolve-explicit-reference", "reg_meta/tests/test_cli_resolve.py"]
+note = "Judgment: exact column-name to variable lookup over delivered aliases, beside datacolumns and schema. Not ref resolution, which is 3a's `ambiguous_ref`."
+
+[[row]]
+kind = "command"
+id = "search"
+disposition = "replaced"
+owner = "3a"
+covered_by = ["conformance/cases/cli_scope/search-reference-1", "conformance/cases/cli_scope/search-holdings-1", "reg_meta/tests/test_cli_search.py"]
+
+[[row]]
+kind = "command"
+id = "update"
+disposition = "replaced"
+owner = "3a"
+covered_by = ["conformance/cases/selection/empty-explicit-update", "conformance/cases/update", "reg_meta/tests/test_update.py"]
+note = "Replaced by the `reg-meta fetch` run mode (section 6), owned by 3a because local `reg-meta mcp` needs a catalog from 3a on; the Docker bake moves to curl, SHA-256 and zstd (section 7). The Dockerfile, publish workflow and agent plugin keep using `update` until stage 4 drops the CLI."
+
+[[row]]
+kind = "command"
+id = "validate"
+disposition = "replaced"
+owner = "3e"
+covered_by = ["conformance/cases/validate", "conformance/test_validate.py"]
+
+# Commands the register-metadata-search skill documents (listed by hand)
+
+[[row]]
+kind = "skill"
+id = "uv tool install reg-meta"
+disposition = "replaced"
+owner = "4"
+covered_by = []
+note = "Section 8: the `reg-meta` binary, or no install against the hosted MCP endpoint (decision 12). The skill moves to MCP in stage 4."
+
+[[row]]
+kind = "skill"
+id = "reg-meta update --yes"
+disposition = "replaced"
+owner = "4"
+covered_by = ["reg_meta/tests/test_update.py"]
+note = "`reg-meta fetch` (section 6); see the `update` command row."
+
+[[row]]
+kind = "skill"
+id = "reg-meta --examples"
+disposition = "removed"
+owner = "4"
+covered_by = []
+note = "Documented but not implemented: the CLI has no `--examples` flag today. MCP `tools/list` and OpenAPI are the self-description; there is no separate describe (section 7)."
+
+[[row]]
+kind = "skill"
+id = "reg-meta --help"
+disposition = "replaced"
+owner = "4"
+covered_by = ["reg_meta/tests/test_integration.py"]
+note = "MCP `tools/list` and OpenAPI are the self-description; there is no separate describe (section 7)."
+
+[[row]]
+kind = "skill"
+id = "reg-meta <command> --help"
+disposition = "replaced"
+owner = "4"
+covered_by = []
+note = "MCP `tools/list` and OpenAPI are the self-description; there is no separate describe (section 7)."
+
+[[row]]
+kind = "skill"
+id = "reg-meta <command> --examples"
+disposition = "removed"
+owner = "4"
+covered_by = []
+note = "Not implemented today; see `reg-meta --examples`."
+
+[[row]]
+kind = "skill"
+id = "--format json"
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/test_cli_scope.py"]
+note = "Responses are JSON only (section 7), so the flag has nothing to select."
+
+# reg_meta names imported outside reg_meta/
+
+[[row]]
+kind = "import"
+id = "reg_meta"
+used_by = ["reg_meta_build", "reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_webapp/backend/tests/test_context.py", "reg_meta_build/tests/test_source_inspection.py"]
+note = "The source-inspection test fixture copies the whole package because `source_interpreter_commit` hashes `reg_meta.fqid` and `reg_meta.queries`; it goes when those modules move. The webapp imports it for `__version__`."
+
+[[row]]
+kind = "import"
+id = "reg_meta.ClassificationDerivedFromRef"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_webapp/backend/tests/test_catalog_classifications.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.ResolvedClassification"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_webapp/backend/tests/test_catalog_classifications.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.BindingGroupRef"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/test_concept_groups.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.Catalog"
+used_by = ["conformance", "reg_meta_build", "reg_webapp"]
+disposition = "retained"
+owner = "4"
+covered_by = ["conformance/test_reader.py", "conformance/test_logical.py", "reg_meta/tests/test_catalog_resolve.py"]
+note = "Section 4: derive bootstraps from reader functions moved into reg_meta_build; holdings_compile and the SWECOV generator call it today. Only what derive and holdings call moves."
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.CatalogSizes"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "3a"
+covered_by = ["conformance/cases/http_scope/stats", "reg_webapp/backend/tests/test_stats.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.CatalogStorageId"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "reg_meta/tests/test_catalog_states.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.ClassificationCode"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_webapp/backend/tests/test_catalog_classifications.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.ClassificationEdition"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_webapp/backend/tests/test_catalog_classifications.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.ClassificationExtensionMember"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_webapp/backend/tests/test_catalog_classifications.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.ConceptGroupMember"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/test_concept_groups.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.ConceptGroupSummary"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/test_concept_groups.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.DataWarning"
+used_by = ["reg_meta_build", "reg_webapp"]
+disposition = "retained"
+owner = "4"
+covered_by = ["conformance/cases/http_catalog/warnings", "reg_meta_build/tests/test_resolved_writer_data_warnings.py"]
+note = "The build writes data warnings; the model moves with the writer."
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.GroupAxis"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/test_concept_groups.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.LineageEdge"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.LineageWarning"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.Period"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_webapp/backend/tests/test_period_param.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.RegisterCoverage"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/test_coverage.py", "reg_webapp/backend/tests/test_coverage_payload.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.ResolvedProvider"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/cases/http_catalog/admission", "reg_webapp/backend/tests/test_catalog_tree.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.ResolvedRegister"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/cases/http_catalog/admission", "reg_webapp/backend/tests/test_catalog_tree.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.ResolvedVariable"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "reg_meta/tests/test_catalog_states.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.TagMembership"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_meta/tests/test_tags_catalog.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.ValueSetMember"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_webapp/backend/tests/test_value_set_codes.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.VariableCoverage"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/test_coverage.py", "reg_webapp/backend/tests/test_coverage_payload.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.VariableDelivery"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "reg_meta/tests/test_catalog_states.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.VariableEdition"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "reg_meta/tests/test_catalog_states.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.VariableRef"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/cases/http_catalog/reference-edges"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.VariableState"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "reg_meta/tests/test_catalog_states.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog.VariantSummary"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.catalog._decode_panel_entity_key"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_entity_key_pins.py", "reg_meta/tests/test_catalog_listing.py"]
+note = "Private-name import, which the repo rules forbid; it moves with its module. The decoder belongs beside the build's panel-key encoder."
+
+[[row]]
+kind = "import"
+id = "reg_meta.cli.run"
+used_by = ["conformance", "reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/test_cli_scope.py", "conformance/test_validate.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.cli_common.NoRepeatParser"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_build_db_cli_outputs.py"]
+note = "reg-meta-build's CLI shares the envelope and exit helpers; they move into its cli."
+
+[[row]]
+kind = "import"
+id = "reg_meta.cli_common.apply_leaf_help"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_build_db_cli_outputs.py"]
+note = "reg-meta-build's CLI shares the envelope and exit helpers; they move into its cli."
+
+[[row]]
+kind = "import"
+id = "reg_meta.cli_common.handle_cli_exception"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_build_db_cli_outputs.py"]
+note = "reg-meta-build's CLI shares the envelope and exit helpers; they move into its cli."
+
+[[row]]
+kind = "import"
+id = "reg_meta.cli_common.reorder_global_flags"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_build_db_cli_outputs.py"]
+note = "reg-meta-build's CLI shares the envelope and exit helpers; they move into its cli."
+
+[[row]]
+kind = "import"
+id = "reg_meta.cli_common.success_envelope"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_build_db_cli_outputs.py"]
+note = "reg-meta-build's CLI shares the envelope and exit helpers; they move into its cli."
+
+[[row]]
+kind = "import"
+id = "reg_meta.cli_common.write_json"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_build_db_cli_outputs.py"]
+note = "reg-meta-build's CLI shares the envelope and exit helpers; they move into its cli."
+
+[[row]]
+kind = "import"
+id = "reg_meta.db"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/test_boot.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.db.CLASSIFICATION_SUCCESSION_AS_OF_YEAR"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_resolved_writer_classifications.py"]
+note = "The artifact schema and its gate have one home, reg_meta_build (section 5)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.db.CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_resolved_writer_classifications.py"]
+note = "The artifact schema and its gate have one home, reg_meta_build (section 5)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.db.DB_FILENAME"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_build_catalog_cli_output_boundary.py"]
+note = "The artifact schema and its gate have one home, reg_meta_build (section 5)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.db.SCHEMA_VERSION"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_build_db.py"]
+note = "The artifact schema and its gate have one home, reg_meta_build (section 5)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.db.classification_succession_as_of_year"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_resolved_writer_classifications.py"]
+note = "The artifact schema and its gate have one home, reg_meta_build (section 5)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.db.db_path_from_args"
+used_by = ["reg_meta_build", "reg_webapp", "scripts"]
+disposition = "retained"
+owner = "4"
+covered_by = ["conformance/cases/selection"]
+note = "Default artifact directory for build output; the webapp's search-eval script also uses it."
+
+[[row]]
+kind = "import"
+id = "reg_meta.db.default_db_dir"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["conformance/cases/selection"]
+note = "Default artifact directory for build output."
+
+[[row]]
+kind = "import"
+id = "reg_meta.db.get_manifest"
+used_by = ["conformance", "reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["conformance/test_artifact.py"]
+note = "Build-side artifact IO (extend-db, validate_built_db, derive); conformance's artifact checks then import it from reg_meta_build."
+
+[[row]]
+kind = "import"
+id = "reg_meta.db.open_db"
+used_by = ["conformance", "reg_meta_build", "reg_webapp", "scripts"]
+disposition = "retained"
+owner = "4"
+covered_by = ["conformance/test_artifact.py"]
+note = "Build-side artifact IO (extend-db, validate_built_db, derive); conformance's artifact checks then import it from reg_meta_build."
+
+[[row]]
+kind = "import"
+id = "reg_meta.db.register_py_lower"
+used_by = ["reg_meta_build"]
+disposition = "replaced"
+owner = "4"
+covered_by = ["reg_meta/tests/test_value_code_search.py", "reg_meta/tests/test_cli_resolve.py"]
+note = "`fold_identity` (section 5), registered as the SQLite function."
+
+[[row]]
+kind = "import"
+id = "reg_meta.doc_db"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_webapp/backend/tests/test_docs.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.doc_db.DOC_DB_FILENAME"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta/tests/test_doc_queries.py", "reg_meta_build/tests/test_doc_coverage.py"]
+note = "The docs DB schema has one home, reg_meta_build."
+
+[[row]]
+kind = "import"
+id = "reg_meta.doc_db.DOC_SCHEMA_VERSION"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta/tests/test_doc_queries.py", "reg_meta_build/tests/test_doc_coverage.py"]
+note = "The docs DB schema has one home, reg_meta_build."
+
+[[row]]
+kind = "import"
+id = "reg_meta.doc_db.RelatedDocument"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "3b"
+covered_by = ["reg_webapp/backend/tests/test_docs.py", "reg_meta_build/tests/test_doc_db_related_documents_boundary.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.doc_db.doc_db_path"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta/tests/test_doc_queries.py", "reg_meta_build/tests/test_doc_coverage.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.doc_db.open_doc_db"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta/tests/test_doc_queries.py", "reg_meta_build/tests/test_doc_coverage.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.doc_queries.doc_get"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "3b"
+covered_by = ["reg_meta/tests/test_doc_queries.py", "reg_webapp/backend/tests/test_docs.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.doc_queries.doc_registers"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "3b"
+covered_by = ["reg_meta/tests/test_doc_queries.py", "reg_webapp/backend/tests/test_docs.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.doc_queries.doc_search"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "3b"
+covered_by = ["reg_meta/tests/test_doc_queries.py", "reg_webapp/backend/tests/test_docs.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.doc_queries.related_document_content"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "3b"
+covered_by = ["reg_meta/tests/test_doc_queries.py", "reg_webapp/backend/tests/test_docs.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.doc_queries.related_documents_for_register"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "3b"
+covered_by = ["reg_meta/tests/test_doc_queries.py", "reg_webapp/backend/tests/test_docs.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.documentary.DocumentaryRelationship"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_source_documentary.py"]
+note = "Build-time documentary relationship models."
+
+[[row]]
+kind = "import"
+id = "reg_meta.documentary.DocumentaryVariableReference"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_source_documentary.py"]
+note = "Build-time documentary relationship models."
+
+[[row]]
+kind = "import"
+id = "reg_meta.documentary.LiteralSourceRelationship"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_source_documentary.py"]
+note = "Build-time documentary relationship models."
+
+[[row]]
+kind = "import"
+id = "reg_meta.documentary.SourceCodeCrosswalkDeclaration"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_source_documentary.py"]
+note = "Build-time documentary relationship models."
+
+[[row]]
+kind = "import"
+id = "reg_meta.documentary.SourceCodeOperand"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_source_documentary.py"]
+note = "Build-time documentary relationship models."
+
+[[row]]
+kind = "import"
+id = "reg_meta.documentary.SourceDerivationClause"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_source_documentary.py"]
+note = "Build-time documentary relationship models."
+
+[[row]]
+kind = "import"
+id = "reg_meta.documentary.SourceDerivationDeclaration"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_source_documentary.py"]
+note = "Build-time documentary relationship models."
+
+[[row]]
+kind = "import"
+id = "reg_meta.documentary.UnresolvedDocumentaryReference"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_source_documentary.py"]
+note = "Build-time documentary relationship models."
+
+[[row]]
+kind = "import"
+id = "reg_meta.documentary._SourceDeclaration"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_source_documentary.py"]
+note = "Private-name import, which the repo rules forbid; it moves with its module. Build-time documentary relationship models."
+
+[[row]]
+kind = "import"
+id = "reg_meta.errors.EXIT_CONFIG"
+used_by = ["conformance", "reg_meta_build", "reg_webapp"]
+disposition = "retained"
+owner = "4"
+covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
+note = "The build's error class and exit codes; the Rust reader has its own error catalog (package 1.1)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.errors.EXIT_NOT_FOUND"
+used_by = ["reg_meta_build", "reg_webapp"]
+disposition = "retained"
+owner = "4"
+covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
+note = "The build's error class and exit codes; the Rust reader has its own error catalog (package 1.1)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.errors.EXIT_NO_MATCH"
+used_by = ["conformance", "reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.errors.EXIT_OUTPUT"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
+note = "The build's error class and exit codes; the Rust reader has its own error catalog (package 1.1)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.errors.EXIT_SUCCESS"
+used_by = ["conformance"]
+disposition = "removed"
+owner = "3e"
+covered_by = ["conformance/test_validate.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.errors.EXIT_USAGE"
+used_by = ["reg_meta_build", "reg_webapp"]
+disposition = "retained"
+owner = "4"
+covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
+note = "The build's error class and exit codes; the Rust reader has its own error catalog (package 1.1)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.errors.RegMetaError"
+used_by = ["conformance", "reg_meta_build", "reg_webapp", "scripts"]
+disposition = "retained"
+owner = "4"
+covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
+note = "The build's error class and exit codes; the Rust reader has its own error catalog (package 1.1)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.fqid"
+used_by = ["reg_meta_build"]
+disposition = "replaced"
+owner = "4"
+covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
+note = "FQID and period grammar move to reg-core; the build reaches them through reg-core-py (section 5). `source_interpreter_commit` hashes this module's file; it must pin the reg-core-py version instead."
+
+[[row]]
+kind = "import"
+id = "reg_meta.fqid.CLASSIFICATION_PREFIX"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.fqid.DEFAULT_VARIANT_SLUG"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.fqid.Fqid"
+used_by = ["reg_meta_build", "reg_webapp"]
+disposition = "replaced"
+owner = "4"
+covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
+note = "FQID and period grammar move to reg-core; the build reaches them through reg-core-py (section 5)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.fqid.FqidError"
+used_by = ["reg_meta_build", "reg_webapp"]
+disposition = "replaced"
+owner = "4"
+covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
+note = "FQID and period grammar move to reg-core; the build reaches them through reg-core-py (section 5)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.fqid.FqidKind"
+used_by = ["reg_meta_build", "reg_webapp"]
+disposition = "replaced"
+owner = "4"
+covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
+note = "FQID and period grammar move to reg-core; the build reaches them through reg-core-py (section 5)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.fqid.RESERVED_GROUP_SLUG"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_webapp/backend/tests/test_boot.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.fqid.RESERVED_HTTP_SUFFIX_SLUGS"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_webapp/backend/tests/test_boot.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.fqid.RESERVED_VARIANTS_SLUG"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_webapp/backend/tests/test_boot.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.fqid._YEAR"
+used_by = ["reg_meta_build"]
+disposition = "replaced"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_triage.py"]
+note = "Private-name import, which the repo rules forbid; it moves with its module. Judgment: use reg-core's year token, or inline the regex in edition_bounds and source_periods if reg-core exposes none."
+
+[[row]]
+kind = "import"
+id = "reg_meta.fqid.derive_variable_slug"
+used_by = ["reg_meta_build"]
+disposition = "replaced"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_fqid_slug_property_boundary.py"]
+note = "FQID and period grammar move to reg-core; the build reaches them through reg-core-py (section 5)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.fqid.is_period"
+used_by = ["reg_meta_build", "reg_webapp"]
+disposition = "replaced"
+owner = "4"
+covered_by = ["reg_webapp/backend/tests/test_period_grammar_parity.py", "reg_meta/tests/test_fqid.py"]
+note = "FQID and period grammar move to reg-core; the build reaches them through reg-core-py (section 5)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.fqid.parse"
+used_by = ["reg_meta_build", "reg_webapp"]
+disposition = "replaced"
+owner = "4"
+covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
+note = "FQID and period grammar move to reg-core; the build reaches them through reg-core-py (section 5)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.fqid.period_token_to_bounds"
+used_by = ["reg_meta_build", "reg_webapp"]
+disposition = "replaced"
+owner = "4"
+covered_by = ["reg_webapp/backend/tests/test_period_grammar_parity.py", "reg_meta_build/tests/test_triage.py"]
+note = "FQID and period grammar move to reg-core; the build reaches them through reg-core-py (section 5)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.fqid.validate_slug"
+used_by = ["reg_meta_build", "reg_webapp"]
+disposition = "replaced"
+owner = "4"
+covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
+note = "FQID and period grammar move to reg-core; the build reaches them through reg-core-py (section 5)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.graph.RelationshipGraph"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_meta/tests/test_graph_nodes.py", "conformance/cases/http_catalog/whole-variable-group-graph"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.holdings.ReadScope"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/cases/http_scope", "conformance/test_cli_scope.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.holdings.resolve_scope"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/cases/http_scope", "conformance/test_cli_scope.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.inventory.ColumnMapping"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta/tests/test_inventory.py", "reg_meta_build/tests/test_swecov_inventory.py"]
+note = "Holdings inventory input, compiled into the artifact by holdings_compile."
+
+[[row]]
+kind = "import"
+id = "reg_meta.inventory.DeliveryInventory"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_coverage_index.py", "reg_meta_build/tests/test_holdings_steward_boundary.py"]
+note = "Holdings inventory input, compiled into the artifact by holdings_compile."
+
+[[row]]
+kind = "import"
+id = "reg_meta.inventory.InventoryColumn"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta/tests/test_inventory.py", "reg_meta_build/tests/test_swecov_inventory.py"]
+note = "Holdings inventory input, compiled into the artifact by holdings_compile."
+
+[[row]]
+kind = "import"
+id = "reg_meta.inventory.InventoryTable"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_holdings_steward_boundary.py"]
+note = "Holdings inventory input, compiled into the artifact by holdings_compile."
+
+[[row]]
+kind = "import"
+id = "reg_meta.inventory._intersect"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta/tests/test_inventory.py", "reg_meta_build/tests/test_swecov_inventory.py"]
+note = "Private-name import, which the repo rules forbid; it moves with its module. Holdings inventory input, compiled into the artifact by holdings_compile."
+
+[[row]]
+kind = "import"
+id = "reg_meta.inventory._merge"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta/tests/test_inventory.py", "reg_meta_build/tests/test_swecov_inventory.py"]
+note = "Private-name import, which the repo rules forbid; it moves with its module. Holdings inventory input, compiled into the artifact by holdings_compile."
+
+[[row]]
+kind = "import"
+id = "reg_meta.inventory._render"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta/tests/test_inventory.py", "reg_meta_build/tests/test_swecov_inventory.py"]
+note = "Private-name import, which the repo rules forbid; it moves with its module. Holdings inventory input, compiled into the artifact by holdings_compile."
+
+[[row]]
+kind = "import"
+id = "reg_meta.inventory.edition_bounds"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta/tests/test_inventory.py", "reg_meta_build/tests/test_triage.py"]
+note = "Holdings inventory input, compiled into the artifact by holdings_compile."
+
+[[row]]
+kind = "import"
+id = "reg_meta.inventory.load_inventory"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta/tests/test_inventory.py", "reg_meta_build/tests/test_swecov_inventory.py"]
+note = "Holdings inventory input, compiled into the artifact by holdings_compile."
+
+[[row]]
+kind = "import"
+id = "reg_meta.inventory.validate_inventory_placements"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_holdings_steward_boundary.py"]
+note = "Holdings inventory input, compiled into the artifact by holdings_compile."
+
+[[row]]
+kind = "import"
+id = "reg_meta.order.OrderFinding"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/test_order.py", "reg_webapp/backend/tests/test_project_order.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.order.OrderManifest"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "3e"
+covered_by = ["conformance/test_order.py", "reg_webapp/backend/tests/test_project_order.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.order.blocked_message"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "3e"
+covered_by = ["conformance/cases/validate"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.order.materialize_order"
+used_by = ["conformance", "reg_webapp"]
+disposition = "removed"
+owner = "3e"
+covered_by = ["conformance/test_order.py", "reg_webapp/backend/tests/test_project_order.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.order.parse_project"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "3e"
+covered_by = ["conformance/test_order.py", "reg_webapp/backend/tests/test_project_order.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.order.project_from_raw"
+used_by = ["conformance", "reg_webapp"]
+disposition = "removed"
+owner = "3e"
+covered_by = ["conformance/test_order.py", "reg_webapp/backend/tests/test_project_order.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.queries"
+used_by = ["conformance", "reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["conformance/test_logical.py", "reg_meta_build/tests/test_source_inspection.py"]
+note = "`source_interpreter_commit` hashes queries.py for `extract_year`; conformance's test_logical calls queries directly and becomes api cases."
+
+[[row]]
+kind = "import"
+id = "reg_meta.queries.SEARCH_TYPES"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "3a"
+covered_by = ["conformance/cases/http_search"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.queries._fts_match_query"
+used_by = ["crates"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_meta/tests/test_search_ranking.py"]
+note = "Private-name import, which the repo rules forbid, by the fold corpus generator (crates/reg-core/tools/gen_fold_corpus.py), a tool, not a test. The corpus is frozen data and the generator is only rerun deliberately, so the row goes when stage 4 deletes reg_meta."
+
+[[row]]
+kind = "import"
+id = "reg_meta.queries._normalized_search_query"
+used_by = ["crates"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/cases/http_search/golden-normalization"]
+note = "Private-name import, which the repo rules forbid, by the fold corpus generator (crates/reg-core/tools/gen_fold_corpus.py), a tool, not a test. The corpus is frozen data and the generator is only rerun deliberately, so the row goes when stage 4 deletes reg_meta."
+
+[[row]]
+kind = "import"
+id = "reg_meta.queries.extract_year"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_build_db.py"]
+note = "Judgment: a version-name year heuristic, not the period grammar, so it moves rather than going to reg-core-py."
+
+[[row]]
+kind = "import"
+id = "reg_meta.queries.fold_search"
+used_by = ["conformance", "crates", "reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/cases/http_search/top-results-exact-spacing-accent", "conformance/cases/http_search/golden-normalization"]
+note = "The webapp search route's import goes in 3a with that route, unless checkpoint 1 decides the index is pre-folded, in which case reg-core-py provides `fold_search` to the build. The fold corpus generator and conformance/test_folds.py import it until stage 4, so the row is owned by stage 4."
+
+[[row]]
+kind = "import"
+id = "reg_meta.queries.list_classifications"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_webapp/backend/tests/test_catalog_classifications.py"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.queries.search"
+used_by = ["conformance", "reg_meta_build", "reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/cases/http_search", "reg_meta/tests/test_search_ranking.py", "reg_meta_build/tests/test_build_catalog_classification_boundary.py"]
+note = "The search core: the webapp's search route and conformance's reader cases switch to the 3a search operation. The build's only importer is a test (test_build_catalog_classification_boundary asserts search hits on a built catalog), which becomes a 3a search api case or goes."
+
+[[row]]
+kind = "import"
+id = "reg_meta.search.ClassificationSearchResult"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_meta/tests/test_search_ranking.py", "conformance/cases/http_search"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.search.ClassificationSuccessionSearchResult"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_meta/tests/test_search_ranking.py", "conformance/cases/http_search"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.search.CodeSearchResult"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_meta/tests/test_search_ranking.py", "conformance/cases/http_search"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.search.ConceptGroupSearchResult"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_meta/tests/test_search_ranking.py", "conformance/cases/http_search"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.search.RegisterSearchResult"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_meta/tests/test_search_ranking.py", "conformance/cases/http_search"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.search.SearchResult"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "3a"
+covered_by = ["reg_meta/tests/test_search_ranking.py", "conformance/cases/http_search"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.search.SearchResults"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "3a"
+covered_by = ["reg_meta/tests/test_search_ranking.py", "conformance/cases/http_search"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.search.VariableSearchResult"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_meta/tests/test_search_ranking.py", "conformance/cases/http_search"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.semantic.validate_project"
+used_by = ["conformance", "reg_webapp"]
+disposition = "removed"
+owner = "3e"
+covered_by = ["conformance/test_validate.py", "conformance/cases/validate"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.semantic.validation_json"
+used_by = ["reg_webapp"]
+disposition = "removed"
+owner = "3e"
+covered_by = ["conformance/cases/validate"]
+
+[[row]]
+kind = "import"
+id = "reg_meta.source_evidence.DeliveredCell"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_source_records.py"]
+note = "Build-input source evidence models."
+
+[[row]]
+kind = "import"
+id = "reg_meta.source_evidence.FieldScalar"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_source_records.py"]
+note = "Build-input source evidence models."
+
+[[row]]
+kind = "import"
+id = "reg_meta.source_evidence.FieldState"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_source_records.py"]
+note = "Build-input source evidence models."
+
+[[row]]
+kind = "import"
+id = "reg_meta.source_evidence.RecordLocator"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_source_records.py"]
+note = "Build-input source evidence models."
+
+[[row]]
+kind = "import"
+id = "reg_meta.source_evidence.SourceField"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_source_records.py"]
+note = "Build-input source evidence models."
+
+[[row]]
+kind = "import"
+id = "reg_meta.source_evidence.SourceRecordRef"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_curation_compile_tree.py"]
+note = "Build-input source evidence models."
+
+[[row]]
+kind = "import"
+id = "reg_meta.source_evidence.SourceRevision"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_source_records.py"]
+note = "Build-input source evidence models."
+
+[[row]]
+kind = "import"
+id = "reg_meta.source_evidence._HASH_RE"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_source_records.py"]
+note = "Private-name import, which the repo rules forbid; it moves with its module. Build-input source evidence models."
+
+[[row]]
+kind = "import"
+id = "reg_meta.source_evidence._SourceModel"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_source_records.py"]
+note = "Private-name import, which the repo rules forbid; it moves with its module. Build-input source evidence models."
+
+[[row]]
+kind = "import"
+id = "reg_meta.source_evidence.canonical_json"
+used_by = ["reg_meta_build"]
+disposition = "replaced"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_source_coding.py"]
+note = "Canonical JSON (section 5)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.source_evidence.canonical_sha256"
+used_by = ["reg_meta_build", "reg_webapp"]
+disposition = "replaced"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_source_coding.py", "reg_meta_build/tests/test_source_event_resolution.py"]
+note = "Canonical JSON SHA-256 (section 5)."
+
+[[row]]
+kind = "import"
+id = "reg_meta.update.run_update"
+used_by = ["conformance"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/cases/update", "conformance/test_selection_update.py"]

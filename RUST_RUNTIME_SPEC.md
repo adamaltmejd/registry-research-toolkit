@@ -609,17 +609,19 @@ branches from main.
 is deleted".
 
 - Changes: `conformance/api/surface.toml`, one row per current HTTP route, `reg-meta`
-  subcommand, and `reg_meta` name imported by `reg_webapp`, `reg_meta_build` or
-  `conformance/`, plus the commands the `register-metadata-search` skill documents
-  (listed by hand). Each row: disposition (retained, replaced, removed), owning slice or
-  stage, and the existing test or conformance case that covers it today (1.1 adds the
-  `api` case for each `replaced` row). Every build-side import gets its stage-4
+  subcommand, and `reg_meta` name imported by any git-visible Python file outside
+  `reg_meta/` (tests, scripts and tools included; the stage-0 spike skipped), plus the
+  commands the `register-metadata-search` skill documents (listed by hand). Each row:
+  disposition (retained, replaced, removed), owning slice or stage, and the existing
+  test or conformance case that covers it today (1.1 adds the `api` case for each
+  `replaced` route or command row). Every build-side import gets its stage-4
   destination.
-- Paths: `conformance/api/`, `conformance/test_api_surface.py`.
+- Paths: `conformance/api/`, `conformance/test_api_surface.py`, this package's text.
 - Acceptance: `uv run python -m pytest conformance/test_api_surface.py -q`, which fails
-  if any route decorator under `reg_webapp/backend/src/reg_webapp/routes/`, any
-  `add_parser` name in `reg_meta/src/reg_meta/cli.py`, or any imported `reg_meta` name
-  lacks a row.
+  if any route in the committed `reg_webapp/backend/openapi.json`, any `add_parser` name
+  in `reg_meta/src/reg_meta/cli.py`, or any imported `reg_meta` name lacks a row, or a
+  row names something that no longer exists. Discovery fails closed on source forms it
+  does not model.
 
 **1.1 Operation table and error catalog.** Implements section 7.
 
@@ -634,8 +636,9 @@ is deleted".
 - Out of scope: any runner or implementation.
 - Acceptance: `uv run python -m pytest conformance/test_api_spec.py -q`, which checks
   that every `api` case parses, names an operation in `operations.toml`, uses only codes
-  in `errors.toml` and references an existing fixture, and that every `replaced` row in
-  `surface.toml` names an existing operation.
+  in `errors.toml` and references an existing fixture, and that every `replaced` `route`
+  or `command` row in `surface.toml` names an existing operation (import and skill rows
+  are replaced by `reg-core-py`, `fetch` or MCP `tools/list`, not by operations).
 
 **1.2 `reg-core` with the folds.** Implements the fold spec (section 5).
 
