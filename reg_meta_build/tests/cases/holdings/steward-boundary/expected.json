@@ -3,7 +3,7 @@
     "catalog_artifact_kind": "steward",
     "catalog_publishable": "true",
     "catalog_completeness": "complete",
-    "schema_version": "9.0.0",
+    "schema_version": "9.1.0",
     "steward": "swecov"
   },
   "counts": {

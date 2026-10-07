@@ -1,6 +1,6 @@
 import "fake-indexeddb/auto";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { IndexedDBPersistence, restoredDraft } from "./indexeddb_persistence";
+import { IndexedDBPersistence } from "./indexeddb_persistence";
 import { newProjectData, type ProjectData } from "./project_data";
 
 const SEED = {
@@ -21,22 +21,6 @@ beforeEach(async () => {
     req.onsuccess = () => resolve();
     req.onerror = () => resolve();
     req.onblocked = () => resolve();
-  });
-});
-
-describe("restoredDraft (pure gate)", () => {
-  it("returns the draft when the stamped schemaVersion matches", () => {
-    const draft = makeDraft("matched");
-    expect(restoredDraft({ draft, schemaVersion: 1 }, 1)).toBe(draft);
-  });
-
-  it("returns null when the stamped schemaVersion differs", () => {
-    const draft = makeDraft("stale");
-    expect(restoredDraft({ draft, schemaVersion: 1 }, 2)).toBeNull();
-  });
-
-  it("returns null for a missing record", () => {
-    expect(restoredDraft(undefined, 1)).toBeNull();
   });
 });
 

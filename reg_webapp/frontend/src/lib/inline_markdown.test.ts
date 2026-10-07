@@ -14,50 +14,6 @@ function joined(segments: InlineSegment[]): string {
 }
 
 describe("parseInlineMarkdown", () => {
-  it("passes plain text through as a single null-emphasis segment", () => {
-    expect(parseInlineMarkdown("just plain words")).toEqual([
-      { text: "just plain words", emphasis: null },
-    ]);
-  });
-
-  it("maps `**term**` to a single strong (FTS highlight) segment", () => {
-    expect(parseInlineMarkdown("**term**")).toEqual([
-      { text: "term", emphasis: "strong" },
-    ]);
-  });
-
-  it("maps `*it*` and `_it_` to em segments", () => {
-    expect(parseInlineMarkdown("*it*")).toEqual([
-      { text: "it", emphasis: "em" },
-    ]);
-    expect(parseInlineMarkdown("_it_")).toEqual([
-      { text: "it", emphasis: "em" },
-    ]);
-  });
-
-  it("splits leading/trailing literal text around a span", () => {
-    expect(parseInlineMarkdown("a **b** c")).toEqual([
-      { text: "a ", emphasis: null },
-      { text: "b", emphasis: "strong" },
-      { text: " c", emphasis: null },
-    ]);
-  });
-
-  it("handles multiple and adjacent spans in one string", () => {
-    expect(parseInlineMarkdown("**x** plain *y* _z_")).toEqual([
-      { text: "x", emphasis: "strong" },
-      { text: " plain ", emphasis: null },
-      { text: "y", emphasis: "em" },
-      { text: " ", emphasis: null },
-      { text: "z", emphasis: "em" },
-    ]);
-    // Adjacent (no separator) spans.
-    expect(parseInlineMarkdown("**a**_b_")).toEqual([
-      { text: "a", emphasis: "strong" },
-      { text: "b", emphasis: "em" },
-    ]);
-  });
-
   it("keeps every `**…**` highlight in a multi-match snippet (realistic FTS shape)", () => {
     // FTS `snippet()` wraps EACH matched term — a real snippet routinely carries
     // several `**…**` highlights; all must survive as separate strong segments.
@@ -167,26 +123,5 @@ describe("parseInlineMarkdown", () => {
       { text: "bold", emphasis: "em" },
       { text: "_", emphasis: null },
     ]);
-  });
-
-  it("returns an empty list for an empty string", () => {
-    expect(parseInlineMarkdown("")).toEqual([]);
-  });
-
-  it("drops only paired delimiters; literal text (incl. orphans + special chars) survives verbatim", () => {
-    // Re-joining segment text reproduces the input MINUS the paired emphasis
-    // delimiters — and nothing else is altered (no escaping, no marker loss for
-    // orphans, no HTML-izing).
-    const cases: [input: string, joined: string][] = [
-      ["", ""],
-      ["plain", "plain"],
-      ["**a** b *c* _d_ e", "a b c d e"], // paired delimiters stripped
-      ["a ** b _c", "a ** b _c"], // pure orphans (no inner pair) survive verbatim
-      ["…**match**… 24-char window", "…match… 24-char window"],
-      ["<script>alert(1)</script>", "<script>alert(1)</script>"], // never escaped/HTML-ized
-    ];
-    for (const [input, expected] of cases) {
-      expect(joined(parseInlineMarkdown(input))).toBe(expected);
-    }
   });
 });

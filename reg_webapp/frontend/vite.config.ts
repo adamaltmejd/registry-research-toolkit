@@ -52,15 +52,21 @@ export default defineConfig({
     projects: [
       {
         extends: true,
+        // Unit tests read two cross-package oracles as text (`?raw`), which Vite
+        // refuses outside the allowed roots (default: this package): the server
+        // fold's corpus (catalog.fold.test.ts) and reg_schema's version
+        // (project_data.test.ts). Allow those directories, not the whole repo. A
+        // single-file entry does not work here: Vite compares it against the id
+        // with its `?raw` query attached.
+        server: {
+          fs: {
+            allow: [".", "../../conformance/cases/folds", "../../reg_schema"],
+          },
+        },
         test: {
           name: "unit",
           environment: "jsdom",
           include: ["src/**/*.test.ts"],
-          // Vitest blanks every CSS import by default. src/design_md.test.ts
-          // reads tokens.css as TEXT (`?raw`) to check it against DESIGN.md, so
-          // that one file must survive the blanking — nothing here evaluates it
-          // as a stylesheet.
-          css: { include: [/tokens\.css/] },
           // Component tests belong to the `browser` project below — exclude them
           // here (their `.browser.test.ts` suffix also matches `*.test.ts`). A
           // custom `exclude` REPLACES Vitest's default (node_modules, .git), so

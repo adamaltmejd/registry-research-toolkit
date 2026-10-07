@@ -349,7 +349,7 @@ and are composed before anything new is styled: `Panel`, `DataTable`, `Breadcrum
 ## Do's and Don'ts
 
 - Do read roles only: `var(--text)`, never `var(--gray-1)`, never a literal. The
-  `style_tokens` test fails on literals and raw font stacks in any `<style>` block.
+  `lint:tokens` script fails on literals and raw font stacks in any `<style>` block.
 - Do keep the accent monochrome and reserve every chromatic color for a meaning (status,
   type, data). Do not tint headings, counts or emphasis.
 - Do pair every status with a glyph and text. Don't rely on hue.

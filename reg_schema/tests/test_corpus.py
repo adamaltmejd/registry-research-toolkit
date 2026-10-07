@@ -11,15 +11,23 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import cast, get_args
 
 import pytest
 
-from reg_schema import ValidationIssue, ValidationResult, validate_structural
+import reg_schema
+from reg_schema import (
+    IssueLevel,
+    ValidationIssue,
+    ValidationResult,
+    validate_structural,
+)
 
 CORPUS_ROOT = Path(__file__).resolve().parent.parent / "test_corpus"
 
 _ISSUE_KEYS = frozenset({"level", "code", "path", "message"})
 _RESULT_KEYS = frozenset({"issues"})
+_LEVELS = frozenset(get_args(IssueLevel))
 
 
 def _discover_cases() -> list[Path]:
@@ -44,11 +52,11 @@ def _decode_expected(payload: object) -> ValidationResult:
 
     Drift-protection: shape mismatches and unknown keys raise so a
     silent schema addition (or a corpus file whose top-level shape
-    diverges from the contract) cannot slip past. ``code``, ``path``,
-    and ``message`` are runtime-typed as ``str`` because the Python
-    dataclass only enforces ``level`` — without that check a corpus
-    case like ``{"code": 123}`` would pass here while still failing
-    the SPA's typed import of the same expected JSON.
+    diverges from the contract) cannot slip past. The issue fields are
+    checked here because the dataclass annotations are typing hints only:
+    without the check a corpus case like ``{"code": 123}`` or
+    ``{"level": "ERROR"}`` would pass here while still failing the SPA's
+    typed import of the same expected JSON.
     """
 
     if not isinstance(payload, dict):
@@ -72,6 +80,11 @@ def _decode_expected(payload: object) -> ValidationResult:
         extra = set(raw) - _ISSUE_KEYS
         if extra:
             raise ValueError(f"issues[{i}] has unexpected keys {sorted(extra)}")
+        if raw.get("level") not in _LEVELS:
+            raise ValueError(
+                f"issues[{i}].level must be one of {sorted(_LEVELS)}, "
+                f"got {raw.get('level')!r}"
+            )
         for key in ("code", "path", "message"):
             value = raw.get(key)
             if not isinstance(value, str):
@@ -92,16 +105,31 @@ def test_corpus_is_not_empty() -> None:
     assert _CASES, f"no corpus cases found under {CORPUS_ROOT}"
 
 
-@pytest.mark.parametrize("case_dir", _CASES, ids=_CASE_IDS)
-def test_expected_result_decodes(case_dir: Path) -> None:
-    """Every case's expected payload parses against the cross-runtime contract —
-    the cross-runtime shape coherence the corpus exists to pin."""
+def test_corpus_inputs_carry_the_current_schema_version() -> None:
+    # Structural validation ignores the version value, so a stale corpus still
+    # passes the matcher while describing documents the /validate door refuses
+    # (`unsupported_schema_version`). Fails when `reg_schema.__version__` bumps
+    # without the corpus being re-authored. Version-shape cases (no object
+    # root, absent / null / non-string `schema_version`) are exempt: their
+    # point is the malformed field, not the contract version.
+    stale = []
+    for case_dir in _CASES:
+        payload = json.loads((case_dir / "input.json").read_text(encoding="utf-8"))
+        version = payload.get("schema_version") if isinstance(payload, dict) else None
+        if isinstance(version, str) and version != reg_schema.__version__:
+            stale.append(f"{case_dir.name}: {version}")
+    assert not stale, f"corpus inputs not on {reg_schema.__version__}: {stale}"
 
-    payload = json.loads(
-        (case_dir / "expected_ValidationResult.json").read_text(encoding="utf-8")
+
+def test_unknown_issue_level_blocks_ok() -> None:
+    # `ok` fails closed. A level outside `IssueLevel` (here mis-cased) is what a
+    # JSON decode could smuggle past the `Literal` hint, and it must block
+    # rather than pass. No corpus case reaches this: the structural validator
+    # only emits typed levels.
+    issue = ValidationIssue(
+        level=cast("IssueLevel", "ERROR"), code="x", path="", message="x"
     )
-    result = _decode_expected(payload)
-    assert isinstance(result.ok, bool)
+    assert not ValidationResult(issues=(issue,)).ok
 
 
 def _issue_key(i: ValidationIssue) -> tuple[str, str, str, str]:

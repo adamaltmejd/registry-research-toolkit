@@ -7,8 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "check": "svelte-check --tsconfig ./tsconfig.json --tsgo",
-    "lint": "biome check && bun run lint:design",
+    "lint": "biome check && bun run lint:design && bun run lint:tokens",
     "lint:design": "bunx @google/design.md lint DESIGN.md",
+    "lint:tokens": "bun scripts/lint_tokens.ts",
     "format": "biome format --write .",
     "test": "vitest run",
     "gen:types": "openapi-typescript ../backend/openapi.json -o src/lib/api-types.ts"

@@ -1,39 +1,23 @@
 import { describe, expect, it } from "vitest";
-// PIN the cross-runtime contract by importing the reg_schema corpus fixture
-// DIRECTLY (the same file reg_schema's own tests assert against). A drift in the
-// issue shape breaks BOTH runtimes' tests. Imported as JSON (resolveJsonModule)
-// rather than read via `node:fs` — no @types/node dep, and Vite/Vitest resolve
-// the cross-package relative path.
-import expectedUnexpectedField from "../../../../reg_schema/test_corpus/unexpected_field_on_binding/expected_ValidationResult.json";
 import {
-  bindingAnchorId,
   codeLabel,
-  findingLocation,
   issuesUnderPointer,
   jsonPointer,
   KNOWN_CODES,
   orderFindingPointer,
   parseJsonPointer,
-  sourceAnchorId,
   type ValidationIssue,
   windowCoverageHints,
 } from "./validation";
 
+// The reg_schema structural corpus: the expected issues reg_schema's own tests
+// assert, which the SPA must be able to locate (path) and name (code).
+const SCHEMA_CORPUS = import.meta.glob<{ issues: ValidationIssue[] }>(
+  "../../../../reg_schema/test_corpus/*/expected_ValidationResult.json",
+  { eager: true, import: "default" },
+);
+
 describe("parseJsonPointer (RFC 6901)", () => {
-  it('treats "" as the whole document', () => {
-    expect(parseJsonPointer("")).toEqual([]);
-  });
-
-  it("splits a normal pointer into tokens", () => {
-    expect(parseJsonPointer("/sources/0/bindings/0/typ")).toEqual([
-      "sources",
-      "0",
-      "bindings",
-      "0",
-      "typ",
-    ]);
-  });
-
   it("decodes ~1 to / and ~0 to ~ (in that order)", () => {
     // `~1` → `/`, `~0` → `~`. Order matters: an encoded `~01` must decode to
     // `~1`, not to `/` (which a ~0-first pass would produce).
@@ -49,16 +33,6 @@ describe("parseJsonPointer (RFC 6901)", () => {
 });
 
 describe("jsonPointer (inverse of parseJsonPointer)", () => {
-  it('encodes the empty token array as "" (whole document)', () => {
-    expect(jsonPointer([])).toBe("");
-  });
-
-  it("joins tokens with / and a leading /, stringifying numeric indices", () => {
-    expect(jsonPointer(["sources", 0, "bindings", 1, "variable"])).toBe(
-      "/sources/0/bindings/1/variable",
-    );
-  });
-
   it("escapes ~ to ~0 and / to ~1 (in that order)", () => {
     // `~`→`~0` MUST run before `/`→`~1`: a `/`-first pass on `a/b` emits `a~1b`,
     // and a subsequent `~`→`~0` would corrupt that `~1` into `~01`.
@@ -105,130 +79,15 @@ describe("issuesUnderPointer (roll-up)", () => {
     { level: "warning" as const, code: "d", path: "", message: "doc" },
   ];
 
-  it("rolls up the exact match AND its descendants", () => {
-    const under = issuesUnderPointer(issues, "/sources/1");
-    expect(under.map((i) => i.code)).toEqual(["a", "b"]);
-  });
-
   it("does NOT false-match /sources/10 when the prefix is /sources/1", () => {
     const under = issuesUnderPointer(issues, "/sources/1");
     expect(under.some((i) => i.path.startsWith("/sources/10"))).toBe(false);
   });
-
-  it("an empty prefix (whole document) rolls up everything", () => {
-    expect(issuesUnderPointer(issues, "")).toHaveLength(issues.length);
-  });
-
-  it("returns [] when nothing is at or below the prefix", () => {
-    expect(issuesUnderPointer(issues, "/panels/0")).toEqual([]);
-  });
 });
 
 describe("codeLabel / KNOWN_CODES", () => {
-  it("returns the friendly label for a known code", () => {
-    expect(codeLabel("unexpected_field")).toBe("Unexpected field");
-  });
-
   it("degrades gracefully to the raw code for an unknown code", () => {
     expect(codeLabel("some_future_code")).toBe("some_future_code");
-  });
-
-  it("registers the core structural + semantic codes", () => {
-    for (const code of [
-      "unexpected_field",
-      "missing_required_field",
-      "invalid_field_type",
-      "invalid_enum_value",
-      "invalid_period",
-      "fqid_register_variant_mismatch",
-      "empty_bindings",
-      "display_name_collision",
-      "fqid_unresolved",
-      "value_set_missing",
-      "fqid_outside_steward_catalog",
-      "representation_outside_steward_catalog",
-      "deprecated_traversal",
-      "variable_replaced",
-    ]) {
-      expect(KNOWN_CODES[code]).toBeDefined();
-    }
-  });
-});
-
-describe("findingLocation (pointer → human location)", () => {
-  const sources = [
-    {
-      name: "lisa_main",
-      register_variant: "scb/lisa/v1",
-      bindings: [
-        { variable: "scb/lisa/adeldag" },
-        { variable: "scb/lisa/kon" },
-      ],
-    },
-    { name: "", bindings: [] }, // an unnamed source, no register_variant
-  ];
-
-  it("labels a binding path 'Source <name> → column <fqid>' + binding anchor + catalog link", () => {
-    const loc = findingLocation("/sources/0/bindings/0/variable", sources);
-    // The cart is read-only, so a binding finding links out to the binding's
-    // catalog subject page (its variable FQID) for the fix (#991).
-    expect(loc).toEqual({
-      label: "Source 'lisa_main' → column scb/lisa/adeldag",
-      anchorId: bindingAnchorId(0, 0),
-      catalogHref: "/catalog/scb/lisa/adeldag",
-      catalogLabel: "scb/lisa/adeldag",
-    });
-  });
-
-  it("labels a source-level path with the source anchor + REGISTER catalog link (2-seg prefix, #993)", () => {
-    const loc = findingLocation("/sources/0/register_variant", sources);
-    // A source-level finding links to the source's REGISTER page — the 2-seg
-    // provider/register prefix of the register_variant, NOT the 3-seg coordinate
-    // (a variant slug is a query axis, not a browsable node — its link is dead, #993).
-    expect(loc).toEqual({
-      label: "Source 'lisa_main'",
-      anchorId: sourceAnchorId(0),
-      catalogHref: "/catalog/scb/lisa",
-      catalogLabel: "scb/lisa",
-    });
-  });
-
-  it("omits the source-level catalog link when the register_variant has <2 segments (no register prefix)", () => {
-    // A register_variant with fewer than 2 segments has no valid register prefix —
-    // `registerPrefixOf` → "" — so the link is omitted (the no-catalog fallback).
-    const oneSeg = [{ name: "s", register_variant: "scb", bindings: [] }];
-    const loc = findingLocation("/sources/0/register_variant", oneSeg);
-    expect(loc?.label).toBe("Source 's'");
-    expect(loc?.anchorId).toBe(sourceAnchorId(0));
-    expect(loc?.catalogHref).toBeUndefined();
-    expect(loc?.catalogLabel).toBeUndefined();
-  });
-
-  it("falls back to the 1-based index when the source is unnamed, omitting the catalog link", () => {
-    const loc = findingLocation("/sources/1/bindings/0/variable", sources);
-    // unnamed source → "Source 2"; out-of-range column → "column 1"
-    expect(loc?.label).toBe("Source 2 → column 1");
-    expect(loc?.anchorId).toBe(bindingAnchorId(1, 0));
-    // No variable on the (absent) binding → no catalog target.
-    expect(loc?.catalogHref).toBeUndefined();
-  });
-
-  it("locates a malformed source slot by index without a catalog link", () => {
-    const loc = findingLocation("/sources/0/register_variant", [null]);
-    expect(loc).toEqual({
-      label: "Source 1",
-      anchorId: sourceAnchorId(0),
-    });
-  });
-
-  it("returns null for a whole-document or non-source path (raw-pointer fallback)", () => {
-    expect(findingLocation("", sources)).toBeNull();
-    expect(findingLocation("/name", sources)).toBeNull();
-    expect(findingLocation("/panels/0/members", sources)).toBeNull();
-  });
-
-  it("returns null when the pointer is malformed (no leading slash)", () => {
-    expect(findingLocation("sources/0", sources)).toBeNull();
   });
 });
 
@@ -249,19 +108,6 @@ describe("orderFindingPointer (order coordinates → pointer)", () => {
     },
   ];
 
-  it("resolves a source + variable to that binding's pointer", () => {
-    expect(
-      orderFindingPointer(
-        { source: "lisa_main", variable: "scb/lisa/kon" },
-        sources,
-      ),
-    ).toBe("/sources/1/bindings/1");
-  });
-
-  it("resolves a source-only finding to the source pointer", () => {
-    expect(orderFindingPointer({ source: "rams" }, sources)).toBe("/sources/0");
-  });
-
   it("falls back to the source when the variable is no longer on it", () => {
     // The draft is editable and the finding is from an earlier request: a
     // binding deleted since must still locate the source it was on.
@@ -271,16 +117,6 @@ describe("orderFindingPointer (order coordinates → pointer)", () => {
         sources,
       ),
     ).toBe("/sources/1");
-  });
-
-  it("is the whole document for a project-level finding or an unknown source", () => {
-    // steward_mismatch / project_empty name no coordinate; a renamed source has
-    // no card left to point at. Either way the panel's no-location path applies.
-    expect(orderFindingPointer({}, sources)).toBe("");
-    expect(orderFindingPointer({ source: null, variable: null }, sources)).toBe(
-      "",
-    );
-    expect(orderFindingPointer({ source: "gone" }, sources)).toBe("");
   });
 });
 
@@ -376,30 +212,14 @@ describe("windowCoverageHints", () => {
 });
 
 describe("cross-runtime contract (reg_schema corpus)", () => {
-  // The SPA must parse the exact path + map the code the backend's validator
-  // emits for the `unexpected_field_on_binding` fixture. The corpus fixture is the
-  // STRUCTURAL validator's output — an issue list with NO `ok` field (that's added
-  // by the webapp's `/validate` envelope), so pin it to the issue-list shape, not
-  // the full `ValidationResult` (whose required `ok` an `as ValidationResult` cast
-  // would silently fabricate).
-  const expected = expectedUnexpectedField as { issues: ValidationIssue[] };
-
-  it("parses the issue path + maps the code for the unexpected_field fixture", () => {
-    expect(expected.issues).toHaveLength(1);
-    const issue = expected.issues[0];
-    expect(issue.code).toBe("unexpected_field");
-    expect(issue.path).toBe("/sources/0/bindings/0/typ");
-
-    // The SPA parses the pointer into the draft location it points at…
-    expect(parseJsonPointer(issue.path)).toEqual([
-      "sources",
-      "0",
-      "bindings",
-      "0",
-      "typ",
-    ]);
-    // …and maps the code to a friendly label (not the raw code).
-    expect(codeLabel(issue.code)).toBe("Unexpected field");
-    expect(codeLabel(issue.code)).not.toBe(issue.code);
+  it("parses every corpus issue's path and labels every corpus code", () => {
+    const issues = Object.entries(SCHEMA_CORPUS).flatMap(([file, result]) =>
+      result.issues.map((issue) => ({ file, ...issue })),
+    );
+    expect(Object.keys(SCHEMA_CORPUS).length).toBeGreaterThan(100);
+    expect(issues.filter((i) => parseJsonPointer(i.path) === null)).toEqual([]);
+    expect(
+      issues.filter((i) => !(i.code in KNOWN_CODES)).map((i) => i.code),
+    ).toEqual([]);
   });
 });

@@ -297,11 +297,13 @@ bounded route this added, declared next to the catalog routes (it is not a `{fqi
 suffix, so ordering is not at stake). It answers ONE coding, `?offset`/`?limit`-windowed
 (default 200, max 1000, clamped not 422'd — the shared `clamp_limit`), in stable
 code/label order, with `total` counted over the WHOLE set. `?q=` filters BEFORE the
-window using `query_input.matches_filter` — a character-for-character port of the SPA's
-`foldText`/`matchesFilter` (NFD-decompose, drop combining marks, lowercase, plain
-substring, `%`/`_` literal), because SQLite's LIKE folds neither non-ASCII case nor
-diacritics and an "N of M" that disagreed with the in-browser filters would be a lie.
-`?state=` requires `?classification=<slug>` and reads that exact state's declared book.
+window using `query_input.matches_filter` — the same matcher as the SPA's
+`foldText`/`matchesFilter`: both sides fold with `fold_search` (case fold, NFKD, drop
+combining marks, one space between words; the oracle is
+`conformance/cases/folds/fold_search.jsonl`), then a plain substring test with `%`/`_`
+literal, because SQLite's LIKE folds neither non-ASCII case nor diacritics and an "N of
+M" that disagreed with the in-browser filters would be a lie. `?state=` requires
+`?classification=<slug>` and reads that exact state's declared book.
 `?partition=canonical` returns only delivered source codes that occur in the book;
 `nonstandard` and `sentinels` return separate stored extensions. Special codes retain
 reviewed global meanings or scoped certificates; none becomes an official book code.
@@ -1269,8 +1271,8 @@ geometry, elevation, focus and motion). Dark mode and the planned per-provider t
 are role remaps under `[data-theme]` / `[data-provider]` — no component CSS changes. The
 tokens live in `frontend/src/tokens.css`, imported once in `main.ts`.
 
-**Enforced deterministically** by `frontend/src/style_tokens.test.ts` (part of
-`bun run test`, so it runs in the `reg-webapp-frontend` CI job with no extra wiring):
+**Enforced deterministically** by `frontend/scripts/lint_tokens.ts` (`lint:tokens`, part
+of `bun run lint`, so it runs in the `reg-webapp-frontend` CI job with no extra wiring):
 every `<style>` block in every `.svelte` under `src/` must be free of raw color literals
 (hex, `rgb()`, `hsl()`, `oklch()`, …) and raw `font-family` stacks — a literal that
 renders identically today still escapes the `[data-theme="dark"]` remap. `mask-image`
@@ -1567,10 +1569,10 @@ kind:
     windows. Earlier column names appear as a quiet inline hint ("was DINF, DINF83, …")
     via `renamedColumns` on `PickerRepresentation`. Genuinely parallel
     (overlapping-window) columns stay separate rows. The coexist-vs-rename test is the
-    shared `coexistingColumns` leaf — also used by the binding-leaf editor's
-    `representationsFromStates` chooser — so the two surfaces can never drift on the
-    distinction. The #904 graph/time-band mode renders those eras as selectable cells
-    when the graph gate chooses the graph renderer.
+    shared `coexistingColumns` leaf — also `resolveBindingAt`'s gate for an ambiguous
+    add — so the two surfaces can never drift on the distinction. The #904
+    graph/time-band mode renders those eras as selectable cells when the graph gate
+    chooses the graph renderer.
 
   - **Inter-variable succession fold** (`successionFold` derived in
     `ConceptGroupView.svelte`): the group graph's `succession` edges (#761 contract) are
