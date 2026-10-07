@@ -44,6 +44,7 @@ import unicodedata
 from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from pydantic import (
     Field,
@@ -52,6 +53,9 @@ from pydantic import (
 from reg_meta.inventory import ColumnMapping, InventoryColumn, edition_bounds
 from reg_meta_build.holdings_census import census_rows
 from reg_meta_build.swecov_policy import load_source_policy as _load_source_policy
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 DEFAULT_CSV = max(
     Path(__file__).parent.glob("SWECOV_variables_full_*.csv"),
@@ -1903,6 +1907,79 @@ def _inventory_period_records(
     return admitted, None
 
 
+def _representative_spelling(db_path: Path) -> Callable[[str, str, str], str | None]:
+    """The holdings compiler's representative spelling of a delivery column,
+    read through the same public `Catalog` rule (`canonical_delivery_column`) and
+    exact-coordinate resolution (`catalog_coordinate_ids`) it canonicalizes with.
+    Opened lazily: only a case-only twin without its physical literal needs it."""
+    from functools import cache
+
+    from reg_meta.catalog import Catalog
+    from reg_meta.db import register_py_lower
+    from reg_meta_build.db import catalog_coordinate_ids
+
+    @cache
+    def opened() -> tuple[Catalog, dict[str, int], dict[str, int]]:
+        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        conn.row_factory = sqlite3.Row
+        register_py_lower(conn)
+        return Catalog(conn), *catalog_coordinate_ids(conn)
+
+    def representative(coord: str, vslug: str, column: str) -> str | None:
+        catalog, variables, variants = opened()
+        provider, register, _variant = coord.split("/")
+        variable_id = variables.get(f"{provider}/{register}/{vslug}")
+        variant_id = variants.get(coord)
+        if variable_id is None or variant_id is None:
+            return None
+        return catalog.canonical_delivery_column(variable_id, variant_id, column)
+
+    return representative
+
+
+def _fold_case_twins(
+    records: list[dict],
+    physical: str,
+    representative: Callable[[str, str, str], str | None],
+) -> tuple[list[dict], str | None]:
+    """Keep ONE literal per owner where admitted spellings differ only in case.
+
+    The holdings compiler folds each representation with `str.lower()` and
+    rejects two mappings of one physical column naming the same canonical
+    triple (`reg_meta_build.holdings_compile.canonical_inventory`), so case-only
+    twins are one delivery declared twice, not two holdings. Keep the literal
+    equal to the physical field (LopNr prefix stripped); otherwise the
+    representative spelling the compiler stores; otherwise fail for review.
+    Only records of the dropped spellings are removed — order is unchanged, so
+    the result equals deleting the redundant mapping blocks by hand (plan 02's
+    reviewed correction, #1170).
+    """
+    spellings: dict[tuple[str, str, str], set[str]] = defaultdict(set)
+    for record in records:
+        spellings[record["coord"], record["vslug"], record["col"].lower()].add(
+            record["col"]
+        )
+    keep: dict[tuple[str, str, str], str] = {}
+    for key, literals in spellings.items():
+        if len(literals) == 1:
+            continue
+        coord, vslug, _fold = key
+        if physical in literals:
+            keep[key] = physical
+        elif (spelling := representative(coord, vslug, min(literals))) in literals:
+            keep[key] = spelling
+        else:
+            return [], "case_twin_without_physical_or_representative_literal"
+    return [
+        record
+        for record in records
+        if keep.get(
+            (record["coord"], record["vslug"], record["col"].lower()), record["col"]
+        )
+        == record["col"]
+    ], None
+
+
 def _steward_scope(key: str, mapping: dict) -> tuple[set[str], set[str]]:
     """(register coords `provider/register`, provider slugs) to resolve a
     holding's columns against. SCB/SOS mappings give register coords; flavor
@@ -2205,6 +2282,7 @@ def cmd_inventory(args: argparse.Namespace) -> None:
         overlay["unmap"].update(additions["unmap"])
         retained_unknown = {entry.table: entry for entry in entries}
     by_regcol = _steward_load_db(args.db)
+    representative = _representative_spelling(args.db)
     # coord -> {UPPER(col): [(coord, vslug, canonical col)]} narrowed per lookup.
     by_coordcol: dict[tuple[str, str], list] = defaultdict(list)
     # Auto-assign support (maintainer-approved 2026-09-01): a table whose
@@ -2439,6 +2517,10 @@ def cmd_inventory(args: argparse.Namespace) -> None:
                 lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
                 continue
             recs, scope_issue = _inventory_period_records(recs, edition)
+            if not scope_issue:
+                recs, scope_issue = _fold_case_twins(
+                    recs, LOPNR_PREFIX.sub("", col), representative
+                )
             if scope_issue:
                 worklist["mapping_scope_needed"].append(
                     {

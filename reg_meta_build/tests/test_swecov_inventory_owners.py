@@ -404,3 +404,60 @@ def test_inventory_column_windows_preserve_source_and_curated_scope(
     assert actual == expected
     if case == "source_replacement":
         assert {r[1:3] for r in actual} == {("2019-03-01", "2019-08-31")}
+
+
+def _case_twin_db(tmp_path: Path, flavored_db: Path, windows: tuple[str, ...]) -> Path:
+    """A copy of the flavored DB where `t-kolumn` (state spelling `T_kolumn`) is
+    co-delivered under `windows`, spellings that differ only in case."""
+    db = tmp_path / "case-twins.db"
+    shutil.copyfile(flavored_db, db)
+    with sqlite3.connect(db) as conn:
+        conn.executemany(
+            "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
+            "delivery_column_name, valid_from, valid_to) "
+            "VALUES (904, 902, ?, '0001-01-01', '9999-12-31')",
+            [(window,) for window in windows],
+        )
+    return db
+
+
+@pytest.mark.parametrize(
+    ("physical", "expected"),
+    [
+        ("T_KOLUMN", "T_KOLUMN"),
+        ("P1105_LopNr_T_KOLUMN", "T_KOLUMN"),
+        ("t_kolumn", "T_kolumn"),
+    ],
+    ids=["physical-literal", "lopnr-physical-literal", "representative"],
+)
+def test_inventory_emits_one_mapping_for_case_only_twin_spellings(
+    tmp_path: Path, flavored_db: Path, physical: str, expected: str
+) -> None:
+    """Case-only twins fold to one canonical triple at holdings compilation, so
+    the generator emits one mapping: the physical literal when it is one of the
+    twins, otherwise the representative (state) spelling (#1170)."""
+    db = _case_twin_db(tmp_path, flavored_db, ("T_kolumn", "T_KOLUMN"))
+
+    steward = _run_inventory(tmp_path, db, "", "T2019", [physical])
+
+    (column,) = load_delivery_inventory(steward / "inventory.toml").tables[0].columns
+    assert [(str(m.variable), m.representation) for m in column.mappings] == [
+        ("inera/bestallda-prover/t-kolumn", expected)
+    ]
+
+
+def test_inventory_refuses_case_only_twins_without_physical_or_representative(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """With neither the physical literal nor the representative spelling among
+    the twins, no spelling is chosen: the column goes to the worklist."""
+    db = _case_twin_db(tmp_path, flavored_db, ("T_KOLUMN", "t_KOLUMN"))
+
+    with pytest.raises(SystemExit, match="Inventory not replaced"):
+        _run_inventory(tmp_path, db, "", "T2019", ["t_kolumn"])
+
+    (entry,) = _inventory_worklist(tmp_path)["mapping_scope_needed"]
+    assert (entry["column"], entry["code"]) == (
+        "t_kolumn",
+        "case_twin_without_physical_or_representative_literal",
+    )
