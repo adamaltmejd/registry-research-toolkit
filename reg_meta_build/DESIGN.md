@@ -1395,9 +1395,9 @@ include the source revision, complete descriptor digest, literal lookup tokens a
 physical association count, so an empty target reference cannot become a general future
 acknowledgment. Explicit source-diagnostic acknowledgments require equality with the
 positively observed delivery register. An ordinary issue is acknowledgeable only when it
-names source refs; its scope resolves one register, so those refs are already that
-register's originals. No support flags, coding domains or missing variable targets are
-inferred.
+names source refs that are all present among its scope's originals, so a stale case
+naming an absent record stays an error. No support flags, coding domains or missing
+variable targets are inferred.
 
 The scoped output is create-only and marked incomplete and nonpublishable in both modes.
 The summary records the register list, `publication_ready` false and `corpus_validation`
