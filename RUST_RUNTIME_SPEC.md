@@ -715,11 +715,12 @@ is deleted".
   headers. The `api` corpus is collected only with this option. Startup-failure and
   `golden_config` cases stay in-process.
 - Paths: `conformance/conftest.py`, `conformance/http_cases.py`,
-  `conformance/README.md`.
+  `conformance/test_http.py` (which collects the HTTP cases), `conformance/README.md`.
 - Out of scope: rewriting existing cases.
 - Acceptance: `uv run python -m pytest conformance -q --server-cmd='uv run uvicorn …'`
-  (the exact command recorded in `conformance/README.md`) passes the existing HTTP and
-  validate cases; the default in-process run is unchanged.
+  (the exact command, a `python -c` uvicorn launcher with a raised write limit, recorded
+  in `conformance/README.md`) passes the existing HTTP and validate cases; the default
+  in-process run is unchanged.
 
 **1.5 G1 differential harness.** Implements section 4, G1.
 

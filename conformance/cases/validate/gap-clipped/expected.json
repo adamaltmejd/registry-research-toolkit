@@ -11,6 +11,11 @@
   },
   {
     "status": 200,
+    "media_type": "application/json",
+    "headers": {
+      "content-disposition": "attachment; filename=\"order.json\""
+    },
+    "bytes": "order.json",
     "json": {
       "/entries/*/logical/representation": [
         "Valueold",

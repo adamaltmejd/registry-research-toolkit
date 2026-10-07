@@ -1,0 +1,56 @@
+{
+  "clips": [
+    {
+      "ordered_period": "2018..2019",
+      "requested_period": "2017..2019",
+      "source": "source",
+      "variable": "scb/example/value"
+    }
+  ],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Valueold",
+        "variable": "scb/example/value",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Observed",
+        "edition": "2018",
+        "table": "Annual2018"
+      },
+      "requested_period": "2018",
+      "source": "source"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Valuenew",
+        "variable": "scb/example/value",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Observed",
+        "edition": "2019",
+        "table": "Annual2019"
+      },
+      "requested_period": "2019",
+      "source": "source"
+    }
+  ],
+  "provenance": {
+    "artifact_kind": "steward",
+    "catalog_generation_id": "cb1d1a33f303f93eb34aafe6000a6558756c5375d05b3995eea1020d7b557b07",
+    "catalog_schema_version": "9.0.0",
+    "mode": "steward_holdings",
+    "project_hash": "5511acbf5cb4e01aa40457ca926c50e33a948492bb8ed663ab301d737c02e073",
+    "project_name": "Synthetic rename",
+    "project_reg_meta_version": "5.1.0",
+    "project_schema_version": "3.0.0",
+    "steward": "swecov"
+  },
+  "version": 1
+}
