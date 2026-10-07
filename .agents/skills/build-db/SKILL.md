@@ -23,8 +23,9 @@ During the SWECOV restoration, the builder produces schema 8 databases while rea
 still require schema 6. Keep restoration changes in `reg_meta_build`; reader and UI
 adaptation is a later task. Verify candidate outputs with builder-owned openers or
 read-only SQLite, rather than changing consumer compatibility to make a proof pass.
-`precheck-slugs --update-snapshot` can refresh the naming snapshot, but its legacy
-native-ID comparisons are not a validation gate for the new generated database IDs.
+`precheck-slugs` matches the slug tree against a built catalog by slug path: every
+register and variant row must be pinned and every pin must name a row.
+`--update-snapshot` also refreshes the naming snapshot.
 
 ## Select inputs
 

@@ -18,7 +18,8 @@ import subprocess
 from typing import TYPE_CHECKING
 
 import pytest
-from reg_meta_build.cli import run
+from _fqid_slug_support import assert_precheck_clean, run_precheck
+from _pipeline_catalog_support import built_db_dir
 
 from reg_meta_build.fqid_slugs import (
     FREEZE_STATE_FILE,
@@ -53,24 +54,13 @@ def _commit_all(root: Path, message: str) -> None:
     _git(root, "commit", "-m", message)
 
 
-def _built_db(catalog: CatalogFixture, tmp_path: Path) -> Path:
-    """The `--db` dir of a catalog built from the synthetic SCB source."""
-    output = tmp_path / "db" / "reg_meta.db"
-    output.parent.mkdir()
-    assert (
-        catalog.build(output, tmp_path / "report", registers=("1",))["status"]
-        == "complete"
-    )
-    return output.parent
-
-
 def _layout(
     catalog: CatalogFixture, tmp_path: Path, *, freeze: str, auto: bool
 ) -> tuple[Path, Path]:
     """The built catalog and a committed flat slug dir pinning ``scb`` to
     ``freeze``, one level below its repo root as in the toolkit checkout. The auto
     file, when written, is left uncommitted."""
-    db_dir = _built_db(catalog, tmp_path)
+    db_dir = built_db_dir(catalog, tmp_path)
     slug_dir = tmp_path / "repo" / "slugs"
     slug_dir.mkdir(parents=True)
     (slug_dir / FREEZE_STATE_FILE).write_text(f'scb = "{freeze}"\n', encoding="utf-8")
@@ -82,29 +72,6 @@ def _layout(
     if auto:
         (slug_dir / _AUTO).write_text(_PIN, encoding="utf-8")
     return db_dir, slug_dir
-
-
-def _precheck(
-    db_dir: Path, slug_dir: Path, capsys: pytest.CaptureFixture[str]
-) -> tuple[int, dict]:
-    """Run ``precheck-slugs --update-snapshot``.
-
-    The exit code alone cannot tell a refused pin from an accepted one: the
-    precheck's missing/stale check keys the catalog by surrogate ``register_id``
-    and the slug TOMLs by native id, so every run against a built catalog exits
-    10. The tests read the refusal from ``parse_errors`` and the snapshot status."""
-    capsys.readouterr()
-    code = run(
-        [
-            "--db",
-            str(db_dir),
-            "precheck-slugs",
-            "--slug-dir",
-            str(slug_dir),
-            "--update-snapshot",
-        ]
-    )
-    return code, json.loads(capsys.readouterr().out)
 
 
 def _snapshot_variables(slug_dir: Path) -> dict[str, str]:
@@ -142,18 +109,22 @@ def test_uncommitted_pinned_auto_refused(catalog, tmp_path, capsys, state):
             _git(slug_dir, "add", "-f", _AUTO)
             (slug_dir / _AUTO).write_text(committed, encoding="utf-8")
 
-    code, data = _precheck(db_dir, slug_dir, capsys)
+    code, data = run_precheck(db_dir, slug_dir, capsys)
 
     _assert_refused(code, data, slug_dir, slug_dir / _AUTO)
 
 
 def test_committed_pinned_auto_accepted(catalog, tmp_path, capsys):
+    """Exits 0 on the built catalog its pins name; fails (exit 10, every row
+    missing and every pin stale) if precheck keys the catalog by its surrogate
+    ``register_id`` instead of the slug path (#1215)."""
     db_dir, slug_dir = _layout(catalog, tmp_path, freeze="curating", auto=True)
     _git(slug_dir, "add", "-f", _AUTO)
     _git(slug_dir, "commit", "-m", "pin")
 
-    _, data = _precheck(db_dir, slug_dir, capsys)
+    code, data = run_precheck(db_dir, slug_dir, capsys)
 
+    assert_precheck_clean(code, data)
     assert data["parse_errors"] == []
     assert data["snapshot"]["updated"] is True
     assert _snapshot_variables(slug_dir) == {"scb/1.44": "kon"}
@@ -170,8 +141,9 @@ def test_unpinned_or_absent_auto_not_refused(catalog, tmp_path, capsys, freeze, 
     guard's case (it exempts providers without variables), not this check's."""
     db_dir, slug_dir = _layout(catalog, tmp_path, freeze=freeze, auto=auto)
 
-    _, data = _precheck(db_dir, slug_dir, capsys)
+    code, data = run_precheck(db_dir, slug_dir, capsys)
 
+    assert_precheck_clean(code, data)
     assert data["parse_errors"] == []
     assert data["snapshot"]["updated"] is True
     assert _snapshot_variables(slug_dir) == {}
@@ -193,7 +165,7 @@ def test_inherited_git_routing_ignored(catalog, tmp_path, capsys, monkeypatch):
     monkeypatch.setenv("GIT_CONFIG_KEY_1", "safe.directory")
     monkeypatch.setenv("GIT_CONFIG_VALUE_1", str(slug_dir.parent))
 
-    code, data = _precheck(db_dir, slug_dir, capsys)
+    code, data = run_precheck(db_dir, slug_dir, capsys)
 
     _assert_refused(code, data, slug_dir, slug_dir / _AUTO)
 
@@ -209,7 +181,7 @@ def test_unreadable_git_fails_closed(catalog, tmp_path, capsys):
         f"gitdir: {tmp_path / 'missing'}\n", encoding="utf-8"
     )
 
-    code, data = _precheck(db_dir, slug_dir, capsys)
+    code, data = run_precheck(db_dir, slug_dir, capsys)
 
     assert code == 10
     error = data["error"]
@@ -223,8 +195,12 @@ def test_unreadable_git_fails_closed(catalog, tmp_path, capsys):
 def test_register_tree_guard_reads_the_loaders_pin_path(catalog, tmp_path, capsys):
     """In the register-owned layout a register's pin sits at the provider root,
     keyed by register slug, even when its TOML is in a family folder. An auto file
-    beside the nested TOML pins nothing, so it is neither refused nor loaded."""
-    db_dir = _built_db(catalog, tmp_path)
+    beside the nested TOML pins nothing, so it is neither refused nor loaded.
+
+    Once committed, the tree that built the catalog prechecks clean: fails if
+    precheck keys the catalog by its surrogate ``register_id`` instead of the
+    slug path (#1215)."""
+    db_dir = built_db_dir(catalog, tmp_path)
     root = catalog.curation
     provider = root / "registers" / "scb"
     (provider / "family").mkdir()
@@ -237,14 +213,15 @@ def test_register_tree_guard_reads_the_loaders_pin_path(catalog, tmp_path, capsy
         '[[variable]]\nnative_id = "1.45"\nslug = "alder"\n', encoding="utf-8"
     )
 
-    code, data = _precheck(db_dir, root, capsys)
+    code, data = run_precheck(db_dir, root, capsys)
 
     _assert_refused(code, data, root, pin)
 
     _git(root, "add", "-f", str(pin))
     _git(root, "commit", "-m", "pin")
-    _, data = _precheck(db_dir, root, capsys)
+    code, data = run_precheck(db_dir, root, capsys)
 
+    assert_precheck_clean(code, data)
     assert data["parse_errors"] == []
     assert data["snapshot"]["updated"] is True
     assert _snapshot_variables(root) == {"scb/1.101": "value", "scb/1.44": "kon"}

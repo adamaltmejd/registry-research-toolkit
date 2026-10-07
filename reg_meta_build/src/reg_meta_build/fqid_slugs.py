@@ -3675,13 +3675,15 @@ def seed_all(conn: sqlite3.Connection, out_dir: Path) -> dict[str, Path]:
 class PrecheckResult:
     # A2.6: register_version dropped from the FQID grammar — no missing/stale/
     # colliding version checks; version slugs are neither curated nor persisted.
-    missing_registers: tuple[tuple[str, str, str], ...]  # (provider, id, name)
+    # Catalog rows no TOML entry pins, by slug path: (provider, "<register>",
+    # name) and (provider, "<register>/<variant>", name). A catalog row has no
+    # native id to report.
+    missing_registers: tuple[tuple[str, str, str], ...]
     missing_variants: tuple[tuple[str, str, str], ...]
     # Each a `RegMetaError.to_dict()`: code, class, message, remediation.
     parse_errors: tuple[dict[str, str], ...]
-    # Reverse direction: TOML source IDs that don't (or no longer) exist in
-    # the DB and would fail `populate_slugs(strict=True)` at build time.
-    # Deprecated entries are excluded — they're allowed to outlive their DB
+    # Reverse direction: TOML source IDs whose slug path no catalog row
+    # carries. Deprecated entries are excluded — they're allowed to outlive their DB
     # row. Non-fatal: precheck surfaces them so maintainers can drop or mark
     # them before a build attempt.
     stale_registers: tuple[tuple[str, str], ...] = ()  # (provider, source_id)
@@ -3717,9 +3719,9 @@ class PrecheckResult:
 
 
 def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
-    """Enumerate live source IDs that lack a slug entry, plus any TOML
-    parse / validation errors. Does not raise on missing slugs — callers
-    decide whether to exit on the result.
+    """Enumerate catalog registers / variants that no slug entry pins, entries
+    that pin no catalog row, plus any TOML parse / validation errors. Does not
+    raise on missing slugs — callers decide whether to exit on the result.
     """
     from .curation_tree import load_register_files
 
@@ -3742,59 +3744,51 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
             for exc in _uncommitted_pin_errors(slug_dir, registers=registers)
         )
 
-    by_provider_kind: dict[tuple[str, str], set[str]] = {}
-    for entry in entries:
-        if entry.provider is not None and entry.slug is not None:
-            by_provider_kind.setdefault((entry.provider, entry.kind), set()).add(
-                entry.source_id
-            )
+    # The built catalog keeps no provider-native id: the build mints
+    # `register_id` / `register_variant_id` from the slug path
+    # (`_resolved_common._storage_id`). Both directions therefore join on the
+    # slug path the TOMLs pin, `(register slug,)` or `(register slug, variant
+    # slug)`, never on the integer ids (#1215).
+    pinned = _pinned_slug_paths(entries)
+    covered_by_provider: dict[str, set[tuple[str, ...]]] = {}
+    for provider, _entry, path in pinned:
+        if path is not None:
+            covered_by_provider.setdefault(provider, set()).add(path)
 
-    # One pass per kind. The same row sets feed both the missing-slug check
+    # One pass per provider. The same row sets feed both the missing-slug check
     # (live row, no TOML entry) and the stale-entry check (TOML entry, no live
     # row), so we materialize each once.
-    live_regs_by_provider: dict[str, set[int]] = {}
-    live_vars_by_provider: dict[str, set[tuple[int, int]]] = {}
+    live_by_provider: dict[str, set[tuple[str, ...]]] = {}
     missing_regs: list[tuple[str, str, str]] = []
     missing_variants: list[tuple[str, str, str]] = []
     for provider_slug in _live_providers(conn):
-        slugged_regs = by_provider_kind.get((provider_slug, "register"), set())
-        reg_rows = conn.execute(
-            "SELECT r.register_id, r.name FROM register r "
-            "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = ? ORDER BY r.register_id",
-            (provider_slug,),
-        ).fetchall()
-        live_regs_by_provider[provider_slug] = {rid for (rid, _) in reg_rows}
+        covered = covered_by_provider.get(provider_slug, set())
+        live = live_by_provider.setdefault(provider_slug, set())
         # `name` here is the renamed register.registernamn (universal English
         # column, provider-native value); the variable name mirrors the SQL.
-        for register_id, name in reg_rows:
-            if str(register_id) not in slugged_regs:
-                missing_regs.append((provider_slug, str(register_id), name or ""))
-
-        slugged_variants = by_provider_kind.get(
-            (provider_slug, "register_variant"), set()
-        )
-        var_rows = conn.execute(
-            "SELECT rv.register_id, rv.register_variant_id, rv.name, rv.slug "
-            "FROM register_variant rv "
+        for register_slug, name in conn.execute(
+            "SELECT r.slug, r.name FROM register r "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE p.slug = ? ORDER BY r.slug",
+            (provider_slug,),
+        ):
+            path = (register_slug or "",)
+            live.add(path)
+            if path not in covered:
+                missing_regs.append((provider_slug, path[0], name or ""))
+        for register_slug, variant_slug, name in conn.execute(
+            "SELECT r.slug, rv.slug, rv.name FROM register_variant rv "
             "JOIN register r ON rv.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = ? ORDER BY rv.register_id, rv.register_variant_id",
+            "WHERE p.slug = ? ORDER BY r.slug, rv.slug",
             (provider_slug,),
-        ).fetchall()
-        live_vars_by_provider[provider_slug] = {
-            (rid, vid) for (rid, vid, _, _) in var_rows
-        }
-        for register_id, register_variant_id, name, _slug in var_rows:
-            key = f"{register_id}.{register_variant_id}"
-            if key not in slugged_variants:
-                missing_variants.append((provider_slug, key, name or ""))
+        ):
+            path = (register_slug or "", variant_slug or "")
+            live.add(path)
+            if path not in covered:
+                missing_variants.append((provider_slug, "/".join(path), name or ""))
 
-    stale_regs, stale_vars = _stale_toml_entries(
-        entries,
-        live_regs_by_provider=live_regs_by_provider,
-        live_vars_by_provider=live_vars_by_provider,
-    )
+    stale_regs, stale_vars = _stale_toml_entries(pinned, live_by_provider)
 
     return PrecheckResult(
         missing_registers=tuple(missing_regs),
@@ -3982,44 +3976,64 @@ def _auto_source_sort_key(source_id: str) -> tuple[int, int, int, str]:
     return (1, 0, 0, source_id)
 
 
+def _pinned_slug_paths(
+    entries: Sequence[SlugEntry],
+) -> list[tuple[str, SlugEntry, tuple[str, ...] | None]]:
+    """Each provider-scoped register / variant entry, with its provider and the
+    slug path a built catalog row carries for it: ``(register slug,)`` or
+    ``(register slug, variant slug)``.
+
+    A variant's register slug comes from the same provider's register entry for
+    its ``<RegisterId>`` prefix (variant slugs are unique only within their
+    register). A variant whose prefix has no register entry resolves to
+    ``None``: no catalog row can carry it."""
+    register_slugs = {
+        (entry.provider, entry.source_id): entry.slug
+        for entry in entries
+        if entry.kind == "register" and entry.slug is not None
+    }
+    pinned: list[tuple[str, SlugEntry, tuple[str, ...] | None]] = []
+    for entry in entries:
+        provider = entry.provider
+        if provider is None or entry.slug is None:
+            continue
+        if entry.kind == "register":
+            pinned.append((provider, entry, (entry.slug,)))
+        elif entry.kind == "register_variant":
+            register_slug = register_slugs.get(
+                (provider, entry.source_id.partition(".")[0])
+            )
+            path = None if register_slug is None else (register_slug, entry.slug)
+            pinned.append((provider, entry, path))
+    return pinned
+
+
 def _stale_toml_entries(
-    entries: list[SlugEntry],
-    *,
-    live_regs_by_provider: dict[str, set[int]],
-    live_vars_by_provider: dict[str, set[tuple[int, int]]],
+    pinned: list[tuple[str, SlugEntry, tuple[str, ...] | None]],
+    live_by_provider: dict[str, set[tuple[str, ...]]],
 ) -> tuple[list[tuple[str, str]], list[tuple[str, str]]]:
-    """Find TOML entries whose source IDs don't exist in the DB.
+    """Find register / variant TOML entries whose slug path no catalog row
+    carries, reported by their TOML source id.
 
-    Mirrors the `slug_unknown_source_id` check inside `populate_slugs`, but
-    surfaces every stale entry at once instead of failing on the first.
-    Deprecated entries are excluded — they're allowed to outlive their DB row.
-    Variable entries are excluded from the staleness precheck: the bulk are
-    build-generated `<provider>.auto.toml` rows, which the
-    grow-only snapshot (`snapshot_payload`) already covers, and an auto entry
-    may legitimately outlive a variable pruned from a later delivery. Stale
-    *hand-curated* `[variable]` slug overrides (typo'd keys) are instead caught
-    at build time by `populate_variable_slugs` (`slug_variable_override_stale`),
-    which has the live-variable set in hand.
-
-    Source IDs are guaranteed parseable here: `_validate_entry` calls
-    `_parse_register_id` / `_parse_variant_id` at TOML load.
+    Surfaces every stale entry at once. Deprecated entries are excluded —
+    they're allowed to outlive their DB row. Variable entries are excluded from
+    the staleness precheck: the bulk are build-generated `<provider>.auto.toml`
+    rows, which the grow-only snapshot (`snapshot_payload`) already covers, and
+    an auto entry may legitimately outlive a variable pruned from a later
+    delivery. Stale *hand-curated* `[variable]` slug overrides (typo'd keys) are
+    instead caught at build time by `populate_variable_slugs`
+    (`slug_variable_override_stale`), which has the live-variable set in hand.
+    A curated edition-split variant (`<RegisterId>.<RegVarID>.<slug>`) is a
+    catalog row like any other variant, so it is checked the same way.
     """
     stale_regs: list[tuple[str, str]] = []
     stale_vars: list[tuple[str, str]] = []
-
-    for entry in entries:
+    for provider, entry, path in pinned:
         if entry.deprecated:
             continue
-        if entry.kind == "register" and entry.provider is not None:
-            live = live_regs_by_provider.get(entry.provider, set())
-            if _parse_register_id(entry.source_id) not in live:
-                stale_regs.append((entry.provider, entry.source_id))
-        elif entry.kind == "register_variant" and entry.provider is not None:
-            live = live_vars_by_provider.get(entry.provider, set())
-            key = _parse_variant_id(entry.source_id)
-            if len(key) == 2 and key not in live:
-                stale_vars.append((entry.provider, entry.source_id))
-
+        if path is None or path not in live_by_provider.get(provider, set()):
+            stale = stale_regs if entry.kind == "register" else stale_vars
+            stale.append((provider, entry.source_id))
     return stale_regs, stale_vars
 
 

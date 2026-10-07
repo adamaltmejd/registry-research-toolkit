@@ -193,6 +193,17 @@ def catalog(tmp_path: Path, request) -> CatalogFixture:
     return CatalogFixture(prepared, commit, manifest.sha256, curation)
 
 
+def built_db_dir(
+    catalog: CatalogFixture, tmp_path: Path, registers: tuple[str, ...] = ("1",)
+) -> Path:
+    """The ``--db`` dir of a complete catalog built from the synthetic source."""
+    output = tmp_path / "db" / "reg_meta.db"
+    output.parent.mkdir()
+    result = catalog.build(output, tmp_path / "report", registers=registers)
+    assert result["status"] == "complete"
+    return output.parent
+
+
 def prepare_accepted(tmp_path: Path, source: Path) -> tuple[Path, str, str]:
     """Bundle, prepare and accept ``source``; return (prepared dir, commit, digest)."""
     bundle = write_input_bundle(tmp_path / "inputs", source)
