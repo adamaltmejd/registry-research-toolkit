@@ -46,8 +46,9 @@ family's mid tier (in Claude, Sonnet); the work is lookup.
 - **Dependencies.** Each package's `[project] dependencies` against what its `src/`
   imports and what runs it outside Python imports: entry points, Dockerfiles and
   entrypoint scripts, CI workflows (`uvicorn` is only invoked from
-  `reg_webapp/docker-entrypoint.sh`). A dependency in one and not the other is a
-  finding.
+  `reg_webapp/docker-entrypoint.sh`). For the frontend, `package.json` dependencies and
+  devDependencies against imports, package scripts, `vite.config.ts` and CI steps. A
+  dependency in one and not the other is a finding.
 - **Dead code.** `uvx --from vulture==2.16 vulture <dir>/src --min-confidence 80`.
   Confirm each hit with `rg` across the workspace and the frontend before calling it
   dead.
@@ -67,12 +68,14 @@ subagent tool (in Claude Code, the Agent tool with the `general-purpose` type; E
 locates code and does not audit it), told to edit nothing. Launch as many at once as the
 harness allows (Codex runs three children at a time) and the rest in waves. Where the
 harness lets a call choose its model, set it on every call: the family's mid tier (in
-Claude, Opus) for code, the tier below for docs. Modules: `reg_meta/src`,
-`reg_meta_build/src` split as `sources/`, `ir/` and the top-level modules by size,
-`reg_schema/src`, `reg_webapp/backend/src`, `reg_webapp/frontend/src/lib`, `scripts/`,
-and `crates/` (Rust; while `RUST_RUNTIME_SPEC.md` is open, its findings go to that
-refactor's owner, not to land here). The test trees are the `test-audit` skill's: run
-its sweep in the same waves and merge its list into step 3.
+Claude, Opus) for code, the tier below for docs. Modules are every tracked non-test
+production tree (check with `git ls-files`); today: `reg_meta/src`, `reg_meta_build/src`
+split as `sources/`, `ir/` and the top-level modules by size, `reg_schema/src`,
+`reg_webapp/backend/src` with `reg_webapp/backend/scripts`, `reg_webapp/frontend/src`
+(the app root and `lib/`), `reg_webapp/edge`, `scripts/`, and `crates/` (Rust; while
+`RUST_RUNTIME_SPEC.md` is open, its findings go to that refactor's owner, not to land
+here). The test trees are the `test-audit` skill's: run its sweep in the same waves and
+merge its list into step 3.
 
 Each prompt carries the module's paths, an instruction to read CLAUDE.md,
 ARCHITECTURE.md and the package's DESIGN.md first and the module's files whole, the step
