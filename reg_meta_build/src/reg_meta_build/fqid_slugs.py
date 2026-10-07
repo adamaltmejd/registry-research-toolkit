@@ -862,8 +862,8 @@ def _git_unreadable(directory: Path, detail: str) -> RegMetaError:
 
 def _git_paths_unlike_head(directory: Path) -> tuple[set[str], set[str]] | None:
     """``(committed, changed)``: paths under ``directory`` (relative to it) in the
-    committed HEAD tree, and those whose working-tree copy differs from HEAD (a
-    staged or unstaged edit). ``None`` when no ``.git`` sits at or above
+    committed HEAD tree, and those whose working-tree or index copy differs from
+    HEAD (a staged or unstaged edit). ``None`` when no ``.git`` sits at or above
     ``directory`` (a wheel install) or HEAD is unborn.
 
     Reads HEAD, not the index: a staged-but-uncommitted file or edit would not
@@ -908,18 +908,12 @@ def _git_paths_unlike_head(directory: Path) -> tuple[set[str], set[str]] | None:
     committed = names(git("ls-tree", "-z", "-r", "--name-only", "HEAD", "--", "."))
     # `--relative`: diff prints repo-root paths by default, ls-tree cwd-relative
     # ones; without it a slug dir below the repo root would never match.
-    changed = names(
-        git(
-            "diff",
-            "--name-only",
-            "-z",
-            "--relative",
-            "--no-renames",
-            "--no-ext-diff",
-            "HEAD",
-            "--",
-            ".",
-        )
+    diff = ("diff", "--name-only", "-z", "--relative", "--no-renames", "--no-ext-diff")
+    # `diff HEAD` compares the working tree only; a staged edit whose working copy
+    # was restored to HEAD shows up only under `--cached`, and the next commit
+    # would publish it.
+    changed = names(git(*diff, "HEAD", "--", ".")) | names(
+        git(*diff, "--cached", "HEAD", "--", ".")
     )
     return committed, changed
 

@@ -120,20 +120,27 @@ def _assert_refused(code: int, data: dict, slug_dir: Path, pin: Path) -> None:
     assert not snapshot_path(slug_dir).exists()
 
 
-@pytest.mark.parametrize("state", ["untracked", "staged", "edited"])
+@pytest.mark.parametrize("state", ["untracked", "staged", "edited", "edit-staged"])
 def test_uncommitted_pinned_auto_refused(catalog, tmp_path, capsys, state):
-    """Fails if the guard reads the index instead of HEAD (staged), or checks
-    only that the path is in HEAD rather than its content (edited)."""
+    """Fails if the guard reads the index instead of HEAD (staged), checks only
+    that the path is in HEAD rather than its content (edited), or compares only
+    the working tree to HEAD (edit-staged)."""
     db_dir, slug_dir = _layout(catalog, tmp_path, freeze="curating", auto=True)
     if state != "untracked":
         # Staging is not enough: the push publishes HEAD, not the index.
         _git(slug_dir, "add", "-f", _AUTO)
-    if state == "edited":
+    if state in ("edited", "edit-staged"):
         # The committed pin is edited but not committed: a clean checkout would
         # restore the old slugs.
         _git(slug_dir, "commit", "-m", "pin")
+        committed = (slug_dir / _AUTO).read_text(encoding="utf-8")
         with (slug_dir / _AUTO).open("a", encoding="utf-8") as fh:
             fh.write('[variable."1.45"]\nslug = "alder"\n')
+        if state == "edit-staged":
+            # Stage the edit, then restore the working copy: the next commit
+            # publishes the staged pin, though the working tree matches HEAD.
+            _git(slug_dir, "add", "-f", _AUTO)
+            (slug_dir / _AUTO).write_text(committed, encoding="utf-8")
 
     code, data = _precheck(db_dir, slug_dir, capsys)
 
