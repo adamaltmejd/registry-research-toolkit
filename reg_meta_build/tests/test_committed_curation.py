@@ -8,9 +8,10 @@ real exports) is checked by the maintainer's real-seed strict build, not here.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, get_origin
 
 from _repo_curation_support import REPO_CURATION, REPO_ROOT
+from pydantic import BaseModel
 from reg_meta_build.cis2016_matrix import load_matrix
 from reg_meta_build.classifications import load_valid_codes
 from reg_meta_build.concept_groups import load_worklist_concept_groups
@@ -25,7 +26,32 @@ from reg_meta_build.fqid_slugs import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
+
     from reg_meta_build.curation_tree import CurationTree
+
+
+# Overlay families the model accepts but no committed register declares yet. Remove
+# an entry when its first declaration lands.
+_NOT_YET_DECLARED = {"errata.edition_period"}
+
+
+def _overlay_families(
+    model: type[BaseModel], path: tuple[str, ...] = ()
+) -> Iterator[tuple[str, ...]]:
+    for name, info in model.model_fields.items():
+        if get_origin(info.annotation) is list:
+            yield (*path, name)
+        elif isinstance(info.annotation, type) and issubclass(
+            info.annotation, BaseModel
+        ):
+            yield from _overlay_families(info.annotation, (*path, name))
+
+
+def _field(register: object, path: tuple[str, ...]) -> object:
+    for name in path:
+        register = getattr(register, name)
+    return register
 
 
 # One test on purpose: xdist spreads a module's tests across workers, and every
@@ -40,11 +66,16 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
     assert tree.tags
     assert tree.classification_groups.classification_group
     assert tree.lineage.defaults
-    # Register-scoped overlays default to empty lists, and a strict real-seed build
-    # accepts their absence, so dropping every declaration would pass silently.
-    assert any(register.group for register in tree.registers)
-    assert any(register.code_label_pair for register in tree.registers)
-    assert any(register.representation.period_family for register in tree.registers)
+    # Register-scoped overlay families default to empty lists, and a strict real-seed
+    # build accepts their absence, so deleting every declaration of one would pass
+    # silently. Each family the register model defines must be declared somewhere.
+    families = _overlay_families(type(tree.registers[0]))
+    undeclared = {
+        ".".join(path)
+        for path in families
+        if not any(_field(register, path) for register in tree.registers)
+    }
+    assert undeclared == _NOT_YET_DECLARED, sorted(undeclared ^ _NOT_YET_DECLARED)
 
     slug_dir = repo_slug_dir()
     assert slug_dir == REPO_CURATION
