@@ -9,6 +9,7 @@ import shutil
 import sqlite3
 import subprocess
 import sys
+from contextlib import closing
 from pathlib import Path
 
 import pytest
@@ -174,6 +175,54 @@ def test_cli_refuses_unpinned_builder_sources(
     assert error["code"] == expected["error_code"]
     assert expected["error_contains"] in error["message"]
     assert not (tmp_path / "output").exists()
+
+
+def test_derive_keeps_inputs_differing_only_in_identity_distinct(
+    tmp_path: Path,
+) -> None:
+    # Derive rewrites schema_version and builder_commit, so two bases that differ
+    # only in builder_commit stay distinct through derived_from_generation_id alone.
+    # Fails if derived_from_generation_id leaves the generation hash.
+    _checkout, package_dir = _copied_builder_checkout(tmp_path)
+    variables = tuple(
+        ResolvedVariable.model_validate_json(json.dumps(value))
+        for value in json.loads((CASES / "annual-series/catalog.json").read_text())
+    )
+    manifests = []
+    for builder in ("0" * 40, "1" * 40):
+        base = tmp_path / builder[0] / "base.db"
+        base.parent.mkdir()
+        write_resolved_catalog(
+            variables,
+            base,
+            manifest={**synthetic_manifest(), "builder_commit": builder},
+        )
+        out = base.with_name("derived.db")
+        subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "reg_meta_build.cli",
+                "derive",
+                "--base",
+                str(base),
+                "--out",
+                str(out),
+            ],
+            env={**os.environ, "PYTHONPATH": str(package_dir)},
+            capture_output=True,
+            check=True,
+        )
+        for path in (base, out):
+            with closing(sqlite3.connect(path)) as conn:
+                manifests.append(
+                    dict(conn.execute("SELECT key, value FROM import_manifest"))
+                )
+    base_a, derived_a, base_b, derived_b = manifests
+    assert derived_a["derived_from_generation_id"] == base_a["generation_id"]
+    assert derived_b["derived_from_generation_id"] == base_b["generation_id"]
+    assert derived_a["builder_commit"] == derived_b["builder_commit"]
+    assert derived_a["generation_id"] != derived_b["generation_id"]
 
 
 def test_compilation_consumes_snapshot_after_accepted_source_changes(

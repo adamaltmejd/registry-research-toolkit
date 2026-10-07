@@ -210,8 +210,21 @@ EXPECTED_HEADERS: dict[str, list[str]] = {
 }
 
 
-def open_built_db(db_path: Path) -> sqlite3.Connection:
-    """Open only the schema produced by this builder, independently of readers."""
+def _admits_older_minor(version: str | None) -> bool:
+    try:
+        major, minor = map(int, (version or "").split(".")[:2])
+    except ValueError:
+        return False
+    builder_major, builder_minor = map(int, SCHEMA_VERSION.split(".")[:2])
+    return major == builder_major and minor <= builder_minor
+
+
+def open_built_db(db_path: Path, *, older_minor: bool = False) -> sqlite3.Connection:
+    """Open only the schema produced by this builder, independently of readers.
+
+    `older_minor` admits the same major with a minor up to the builder's: the
+    input gate of `derive`, which lifts an older base to this schema.
+    """
     conn = _open_catalog_db(db_path, check_schema=False)
     try:
         try:
@@ -224,7 +237,9 @@ def open_built_db(db_path: Path) -> sqlite3.Connection:
                 message=f"Catalog manifest is missing or unreadable: {db_path}.",
                 remediation=f"Rebuild with reg-meta-build to produce schema {SCHEMA_VERSION}.",
             ) from exc
-        if version != SCHEMA_VERSION:
+        if version != SCHEMA_VERSION and not (
+            older_minor and _admits_older_minor(version)
+        ):
             raise RegMetaError(
                 exit_code=EXIT_CONFIG,
                 code="schema_incompatible",
@@ -268,7 +283,29 @@ def catalog_coordinate_ids(
     return maps[0], maps[1]
 
 
-DDL = """\
+# Derived tables (derive.py). `IF NOT EXISTS` lets a standalone derive add them to
+# an older-minor base; SQLite stores the statement without it, so the table reads
+# the same as in a fresh build.
+DERIVED_DDL = """\
+-- Derived (derive.py): the whole-history universe of resolver-emitted delivery
+-- columns, the only relation that authorizes a holdings mapping. Browse eligibility
+-- is a different contract and never reads it.
+CREATE TABLE IF NOT EXISTS resolver_column (
+    -- Owning variable; never a same_as donor.
+    variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
+    -- Variant the resolver emits the column at; never a selected state or window ID.
+    register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
+    -- Python str.lower() of the name; the lookup key, never displayed.
+    delivery_column_lower TEXT NOT NULL,
+    -- Representative spelling; never applicability to one holding edition.
+    delivery_column_name TEXT NOT NULL CHECK (length(delivery_column_name) > 0),
+    PRIMARY KEY (variable_id, register_variant_id, delivery_column_lower)
+) WITHOUT ROWID;
+"""
+
+
+DDL = (
+    """\
 -- Core tables (all IDs stored as INTEGER for compact storage)
 
 -- Data providers (publishers): scb, sos, ... See _PROVIDER_SEED for the seed.
@@ -1567,26 +1604,15 @@ CREATE TABLE holding_mapping (
 CREATE INDEX idx_holding_mapping_variable_variant
     ON holding_mapping(variable_id, variant_id);
 
--- Derived (derive.py): the whole-history universe of resolver-emitted delivery
--- columns, the only relation that authorizes a holdings mapping. Browse eligibility
--- is a different contract and never reads it.
-CREATE TABLE resolver_column (
-    -- Owning variable; never a same_as donor.
-    variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
-    -- Variant the resolver emits the column at; never a selected state or window ID.
-    register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
-    -- Python str.lower() of the name; the lookup key, never displayed.
-    delivery_column_lower TEXT NOT NULL,
-    -- Representative spelling; never applicability to one holding edition.
-    delivery_column_name TEXT NOT NULL CHECK (length(delivery_column_name) > 0),
-    PRIMARY KEY (variable_id, register_variant_id, delivery_column_lower)
-) WITHOUT ROWID;
-
+"""
+    + DERIVED_DDL
+    + """
 CREATE TABLE import_manifest (
     key TEXT PRIMARY KEY,
     value TEXT NOT NULL
 );
 """
+)
 
 
 # Sibling provenance DB (see DESIGN.md → Provenance DB sibling). Maintainer-only artifact;

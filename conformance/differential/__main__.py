@@ -3,11 +3,13 @@
     uv run python -m conformance.differential
 
 Fetches (once) the pinned artifacts and the baseline reader environment into the
-shared cache, generates the seeded cases, runs each case through both readers'
-``reg-meta`` CLI JSON in parallel worker processes, and compares exit code, stdout
-bytes and stderr per case. Writes ``report.json`` into ``<cache>/report/`` and prints a
-plain-text summary. Exit 0 when no case differs (outside a named exception), 1 when
-any does.
+shared cache, derives a copy of each artifact with the checkout's builder (once per
+base and builder source, so on a committed tree), generates the seeded cases, runs
+each case through both readers' ``reg-meta`` CLI JSON in parallel worker processes
+(the baseline on the originals, the checkout on the derived copies), and compares
+exit code, stdout bytes and stderr per case. Writes ``report.json`` into
+``<cache>/report/`` and prints a plain-text summary. Exit 0 when no case differs
+(outside a named exception), 1 when any does.
 
 The arm under test is this interpreter's ``reg_meta`` with the caller's environment,
 so a perturbed copy is tested with ``PYTHONPATH=<copy>/src uv run python -m
@@ -106,9 +108,9 @@ def _excepted(diff: dict, exceptions: list[dict]) -> str | None:
     for exc in exceptions:
         if not fnmatch.fnmatchcase(diff["id"], exc["case"]):
             continue
-        prefix = exc.get("path", "")
+        prefixes = exc.get("paths", [""])
         if diff["fields"] == ["stdout"] and all(
-            not prefix or p == prefix or p.startswith(prefix + "/")
+            any(not pre or p == pre or p.startswith(pre + "/") for pre in prefixes)
             for p in diff["paths"]
         ):
             return exc["name"]
@@ -118,6 +120,7 @@ def _excepted(diff: dict, exceptions: list[dict]) -> str | None:
 def _worker(
     python: list[str],
     env: dict[str, str],
+    db_dirs: dict[str, str],
     todo: queue.Queue,
     done: queue.Queue,
     arm: str,
@@ -137,6 +140,9 @@ def _worker(
                 case = todo.get_nowait()
             except queue.Empty:
                 break
+            case = cases.Case(
+                case.id, [db_dirs.get(arg, arg) for arg in case.argv], case.page2
+            )
             proc.stdin.write(case.to_json() + "\n")
             proc.stdin.flush()
             line = proc.stdout.readline()
@@ -155,6 +161,8 @@ def run(config: dict) -> int:
     pins = cache.Pins.from_config(config)
     baseline_python = cache.ensure_baseline(pins)
     dirs = cache.ensure_artifacts(pins)
+    derived = cache.ensure_derived(pins, dirs)
+    setup_seconds = time.monotonic() - started
     report_dir = cache.cache_root() / "report"
     shutil.rmtree(report_dir, ignore_errors=True)
     all_cases = cases.generate(dirs, config, report_dir / "projects")
@@ -162,12 +170,16 @@ def run(config: dict) -> int:
     # Half the cores per arm; both arms run at once.
     workers = max(1, (os.cpu_count() or 2) // 2)
     arms = {
-        "baseline": ([str(baseline_python), "-I"], cache.isolated_env()),
-        "checkout": ([sys.executable, "-P"], dict(os.environ)),
+        "baseline": ([str(baseline_python), "-I"], cache.isolated_env(), {}),
+        "checkout": (
+            [sys.executable, "-P"],
+            dict(os.environ),
+            {str(dirs[c]): str(derived[c]) for c in dirs},
+        ),
     }
     done: queue.Queue = queue.Queue()
     threads = []
-    for arm, (python, env) in arms.items():
+    for arm, (python, env, db_dirs) in arms.items():
         todo: queue.Queue = queue.Queue()
         # Holdings-scope cases hold the slowest reads; queue them first so they
         # do not form the tail.
@@ -175,7 +187,9 @@ def run(config: dict) -> int:
             todo.put(case)
         for _ in range(workers):
             t = threading.Thread(
-                target=_worker, args=(python, env, todo, done, arm), daemon=True
+                target=_worker,
+                args=(python, env, db_dirs, todo, done, arm),
+                daemon=True,
             )
             t.start()
             threads.append(t)
@@ -224,6 +238,7 @@ def run(config: dict) -> int:
         "differences": len(unexcepted),
         "excepted": len(differences) - len(unexcepted),
         "wall_seconds": round(wall, 1),
+        "setup_seconds": round(setup_seconds, 1),
         "workers_per_arm": workers,
         "baseline_seconds_by_command": {
             k: round(v, 1) for k, v in seconds.most_common()
@@ -240,7 +255,8 @@ def run(config: dict) -> int:
     )
     print(
         f"{report['cases']} cases compared in {report['wall_seconds']} s "
-        f"({workers} workers per arm): {len(unexcepted)} differences, "
+        f"({report['setup_seconds']} s fetching and deriving, {workers} workers "
+        f"per arm): {len(unexcepted)} differences, "
         f"{report['excepted']} excepted"
     )
     if unexcepted:

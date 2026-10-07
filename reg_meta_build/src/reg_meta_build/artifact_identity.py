@@ -47,6 +47,11 @@ def generation_id(manifest: Mapping[str, str]) -> str:
     keys = GENERATION_KEYS
     if manifest["catalog_artifact_kind"] == "steward":
         keys += STEWARD_GENERATION_KEYS
+    # Only a standalone derive records it, so built artifacts keep their ids. Derive
+    # rewrites schema_version and builder_commit; this keeps two inputs that differ
+    # only in those distinct.
+    if "derived_from_generation_id" in manifest:
+        keys += ("derived_from_generation_id",)
     return canonical_sha256({key: manifest[key] for key in keys})
 
 
