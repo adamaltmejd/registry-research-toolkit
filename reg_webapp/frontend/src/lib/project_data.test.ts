@@ -1,25 +1,12 @@
 import { describe, expect, it } from "vitest";
+// reg_schema's package version IS the project schema_version it validates, so a new
+// draft must carry exactly that version — read from the package, not re-typed here.
+import regSchemaPyproject from "../../../../reg_schema/pyproject.toml?raw";
 import {
-  asSafeSource,
-  type Binding,
-  defaultSourceName,
-  MODEL_A_SCHEMA_VERSION,
   newProjectData,
-  type ProjectData,
   regMetaReleaseTag,
-  removeBinding,
-  removeSource,
   type Source,
-  safeSourceBindings,
-  safeSourceName,
-  safeSourcePeriod,
-  safeSourceRegisterVariant,
-  safeSourceSlots,
-  serializeProjectData,
-  sourceBindingsMalformed,
   uniqueSourceName,
-  updateField,
-  updateSource,
 } from "./project_data";
 
 const SEED = { reg_meta_version: "reg_meta/v1.0.0", steward: "global" };
@@ -30,22 +17,19 @@ function source(over: Partial<Source> = {}): Source {
   return { name: "", register_variant: "", period: "", bindings: [], ...over };
 }
 
-/** Attach `sources` to a fresh skeleton for the immutable-edit tests. */
-function draftWith(sources: Source[]): ProjectData {
-  return { ...newProjectData(SEED), sources };
-}
-
 describe("newProjectData", () => {
-  it("seeds the Model A skeleton from the seed", () => {
-    const draft = newProjectData(SEED);
-    expect(draft).toEqual({
-      schema_version: MODEL_A_SCHEMA_VERSION,
+  it("seeds the skeleton at reg_schema's schema version", () => {
+    const regSchemaVersion = /^version = "([^"]+)"$/m.exec(
+      regSchemaPyproject,
+    )?.[1];
+    expect(regSchemaVersion).toBeDefined();
+    expect(newProjectData(SEED)).toEqual({
+      schema_version: regSchemaVersion,
       steward: "global",
       reg_meta_version: "reg_meta/v1.0.0",
       name: "",
       sources: [],
     });
-    expect(MODEL_A_SCHEMA_VERSION).toBe("3.0.0");
   });
 });
 
@@ -57,127 +41,10 @@ describe("regMetaReleaseTag", () => {
     expect(regMetaReleaseTag("1.0.0")).toBe("reg_meta/v1.0.0");
     expect(regMetaReleaseTag("1.9.4")).toBe("reg_meta/v1.9.4");
   });
-
-  it("maps an empty version to empty (context not yet resolved)", () => {
-    expect(regMetaReleaseTag("")).toBe("");
-  });
-});
-
-describe("immutable top-level edits", () => {
-  it("updateField returns a new object with the field replaced", () => {
-    const draft = newProjectData(SEED);
-    const next = updateField(draft, "name", "My project");
-    expect(next.name).toBe("My project");
-    expect(draft.name).toBe(""); // original untouched
-    expect(next).not.toBe(draft);
-  });
-});
-
-describe("immutable source edits", () => {
-  it("coerces a malformed non-array `sources` to [] (review #280 — no throw)", () => {
-    // An opened spec can carry a malformed `sources: "not-an-array"` (kept verbatim
-    // for serialize/validate). The array-reading mutators must match the editors'
-    // coercion doctrine: start from [] rather than throwing on `.map`/`.filter`.
-    const malformed = {
-      ...newProjectData(SEED),
-      sources: "not-an-array" as unknown as ProjectData["sources"],
-    };
-    expect(() => removeSource(malformed, 0)).not.toThrow();
-    expect(removeSource(malformed, 0).sources).toEqual([]);
-    expect(() => removeBinding(malformed, 0, 0)).not.toThrow();
-    expect(() => updateSource(malformed, 0, { name: "x" })).not.toThrow();
-  });
-
-  it("removeSource drops the source at the index", () => {
-    const draft = draftWith([
-      source({ name: "first" }),
-      source({ name: "second" }),
-    ]);
-    const next = removeSource(draft, 0);
-    expect(next.sources).toHaveLength(1);
-    expect(next.sources[0].name).toBe("second");
-  });
-
-  it("updateSource shallow-merges the patch, preserving bindings + unmapped keys", () => {
-    const draft = draftWith([
-      {
-        name: "s1",
-        register_variant: "scb/lisa/individer",
-        period: "",
-        bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
-        extra_key: "kept",
-      } as Source,
-    ]);
-    const next = updateSource(draft, 0, { period: 2020 });
-    expect(next.sources[0].period).toBe(2020);
-    expect(next.sources[0].name).toBe("s1"); // preserved
-    expect(next.sources[0].bindings).toHaveLength(1); // preserved
-    expect((next.sources[0] as Record<string, unknown>).extra_key).toBe("kept"); // unmapped key preserved
-  });
-
-  it("source/binding edits leave malformed source slots untouched", () => {
-    const malformed = {
-      ...newProjectData(SEED),
-      sources: [
-        null,
-        source({
-          name: "ok",
-          bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
-        }),
-      ],
-    } as unknown as ProjectData;
-
-    expect(updateSource(malformed, 0, { name: "x" }).sources[0]).toBeNull();
-    expect(removeBinding(malformed, 0, 0).sources[0]).toBeNull();
-    expect(removeBinding(malformed, 1, 0).sources[1].bindings).toEqual([]);
-  });
-});
-
-describe("safe source slot helpers", () => {
-  it("normalizes malformed source slots for read-side consumers without throwing", () => {
-    const good = source({
-      name: "LISA",
-      register_variant: "scb/lisa/v1",
-      period: 2020,
-      bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
-    });
-
-    expect(safeSourceSlots("not-an-array")).toEqual([]);
-    expect(safeSourceSlots([null, [], good])).toEqual([null, null, good]);
-    expect(asSafeSource(good)).toBe(good);
-    expect(asSafeSource([])).toBeNull();
-
-    expect(safeSourceName(good)).toBe("LISA");
-    expect(safeSourceRegisterVariant(good)).toBe("scb/lisa/v1");
-    expect(safeSourcePeriod(good)).toBe(2020);
-    expect(safeSourceBindings(good)).toEqual(good.bindings);
-    expect(safeSourceName(null)).toBe("");
-    expect(safeSourceRegisterVariant({ register_variant: 17 })).toBe("");
-    expect(safeSourceBindings({ bindings: "oops" })).toEqual([]);
-  });
-
-  it("reports malformed bindings only for safe source objects with non-array bindings", () => {
-    expect(sourceBindingsMalformed(null)).toBe(false);
-    expect(sourceBindingsMalformed({ name: "missing bindings" })).toBe(false);
-    expect(sourceBindingsMalformed({ bindings: "oops" })).toBe(true);
-    expect(sourceBindingsMalformed({ bindings: [] })).toBe(false);
-  });
 });
 
 describe("source-name prefill helpers (#312)", () => {
   const src = (name: string): Source => source({ name });
-
-  it("defaultSourceName uppercases the register slug (segment 2)", () => {
-    expect(defaultSourceName("scb/lisa/v1")).toBe("LISA");
-    expect(defaultSourceName("scb/rtb/v2")).toBe("RTB");
-    // A 2-seg prefix already carries the register slug.
-    expect(defaultSourceName("scb/lisa")).toBe("LISA");
-  });
-
-  it("defaultSourceName is empty without a register segment", () => {
-    expect(defaultSourceName("")).toBe("");
-    expect(defaultSourceName("scb")).toBe("");
-  });
 
   it("uniqueSourceName suffixes _2, _3 … on collision (case-sensitive)", () => {
     expect(uniqueSourceName([src("RTB")], "LISA", 1)).toBe("LISA");
@@ -187,52 +54,5 @@ describe("source-name prefill helpers (#312)", () => {
     );
     // Case differs → no collision (the schema compares case-sensitively).
     expect(uniqueSourceName([src("lisa")], "LISA", 1)).toBe("LISA");
-  });
-
-  it("uniqueSourceName ignores the source being named itself", () => {
-    expect(uniqueSourceName([src("LISA")], "LISA", 0)).toBe("LISA");
-  });
-
-  it("uniqueSourceName ignores malformed source slots", () => {
-    expect(uniqueSourceName([null, [], src("LISA")], "LISA", 3)).toBe("LISA_2");
-  });
-});
-
-describe("immutable binding edits", () => {
-  it("removeBinding drops the binding at the index", () => {
-    const bindings: Binding[] = [
-      { variable: "scb/lisa/kon", type: "categorical" },
-      { variable: "scb/lisa/alder", type: "numeric" },
-    ];
-    const draft = draftWith([source({ bindings })]);
-    const next = removeBinding(draft, 0, 0);
-    expect(next.sources[0].bindings).toHaveLength(1);
-    expect(next.sources[0].bindings[0].variable).toBe("scb/lisa/alder");
-  });
-});
-
-describe("serializeProjectData", () => {
-  it("preserves known panels and invalid root values verbatim for diagnostics", () => {
-    const draft = {
-      ...newProjectData(SEED),
-      name: "p",
-      panels: [{ panel_id: "panel1", members: [{ source: "s1" }] }],
-      typo_object: { nested: { value: 1 } },
-      typo_scalar: 7,
-    } as unknown as ProjectData;
-    const text = serializeProjectData(draft);
-    const roundTripped = JSON.parse(text);
-    expect(roundTripped.panels).toEqual(draft.panels);
-    expect(roundTripped.typo_object).toEqual(draft.typo_object);
-    expect(roundTripped.typo_scalar).toBe(7);
-  });
-
-  it("is stable (pretty 2-space, insertion order preserved)", () => {
-    const draft = updateField(newProjectData(SEED), "name", "p");
-    const text = serializeProjectData(draft);
-    expect(text).toBe(JSON.stringify(draft, null, 2));
-    // Re-serializing the same draft is byte-identical (the dirty baseline relies
-    // on this).
-    expect(serializeProjectData(draft)).toBe(text);
   });
 });

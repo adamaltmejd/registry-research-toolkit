@@ -114,6 +114,11 @@ jobs:
               - 'reg_webapp/frontend/**'
               - 'reg_webapp/backend/openapi.json'
               - 'reg_webapp/backend/src/**'
+              # Oracles the frontend unit tests read: the fold corpus
+              # (catalog.fold.test.ts) and reg_schema's corpus + version
+              # (validation.test.ts, project_data.test.ts).
+              - 'conformance/cases/folds/**'
+              - 'reg_schema/**'
               - '.github/workflows/ci.yml'
 
   reg-webapp-frontend:

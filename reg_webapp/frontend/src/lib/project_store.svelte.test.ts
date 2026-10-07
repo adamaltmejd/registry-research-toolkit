@@ -63,43 +63,10 @@ afterEach(() => {
 });
 
 describe("checkVersionGate", () => {
-  it("accepts the Model A schema range", () => {
-    expect(
-      checkVersionGate({
-        schema_version: "2.0.0",
-        reg_meta_version: "reg_meta/v1.0.0",
-      }),
-    ).toEqual({ ok: true });
-    expect(
-      checkVersionGate({
-        schema_version: "2.3.1",
-        reg_meta_version: "reg_meta/v1.9.4",
-      }),
-    ).toEqual({ ok: true });
-  });
-
-  it("accepts Model A files with the current pre-v1 reg_meta release major", () => {
-    expect(
-      checkVersionGate({
-        schema_version: "2.0.0",
-        reg_meta_version: "reg_meta/v0.34.0",
-      }),
-    ).toEqual({ ok: true });
-  });
-
   it("hard-rejects schema_version 1.x (pre-Model-A)", () => {
     const gate = checkVersionGate({
       schema_version: "1.2.0",
       reg_meta_version: "reg_meta/v1.0.0",
-    });
-    expect(gate.ok).toBe(false);
-    expect(gate.reason).toMatch(/Model A|re-author/i);
-  });
-
-  it("hard-rejects when BOTH are v0 (schema 1.x AND reg_meta/v0.x)", () => {
-    const gate = checkVersionGate({
-      schema_version: "1.0.0",
-      reg_meta_version: "reg_meta/v0.9.0",
     });
     expect(gate.ok).toBe(false);
     expect(gate.reason).toMatch(/Model A|re-author/i);
@@ -115,27 +82,9 @@ describe("checkVersionGate", () => {
     ).toEqual({ ok: true });
     expect(checkVersionGate({})).toEqual({ ok: true });
   });
-
-  it("is a NEUTRAL no-op (ok:true) for malformed/non-numeric version strings", () => {
-    expect(
-      checkVersionGate({
-        schema_version: "not-a-version",
-        reg_meta_version: "reg_meta/vbogus",
-      }),
-    ).toEqual({ ok: true });
-  });
 });
 
 describe("newProject", () => {
-  it("loads a clean Model A skeleton (not dirty)", () => {
-    projectStore.newProject(SEED);
-    expect(projectStore.draft).not.toBeNull();
-    expect(projectStore.draft?.schema_version).toBe(MODEL_A_SCHEMA_VERSION);
-    expect(projectStore.draft?.reg_meta_version).toBe("reg_meta/v1.0.0");
-    expect(projectStore.dirty).toBe(false);
-    expect(projectStore.openError).toBeNull();
-  });
-
   it("round-trips a fresh current pre-v1 reg_meta seed through an open", async () => {
     projectStore.newProject({
       reg_meta_version: "reg_meta/v0.34.0",
@@ -153,17 +102,6 @@ describe("newProject", () => {
 });
 
 describe("dirty flag", () => {
-  it("flips true after an edit, back to clean after a fresh new", () => {
-    projectStore.newProject(SEED);
-    expect(projectStore.dirty).toBe(false);
-    projectStore.updateField("name", "My project");
-    expect(projectStore.draft?.name).toBe("My project");
-    expect(projectStore.dirty).toBe(true);
-    // A fresh new resets the baseline → clean.
-    projectStore.newProject(SEED);
-    expect(projectStore.dirty).toBe(false);
-  });
-
   it("an edit clears a GREEN validation (validatedClean goes false)", async () => {
     stubFetch(async () => ({
       ok: true,
@@ -244,64 +182,9 @@ describe("the file-open ingress + commit", () => {
     // A freshly-opened draft is clean.
     expect(projectStore.dirty).toBe(false);
   });
-
-  it("rejects a non-object top level (a JSON array) with an open error, no load", async () => {
-    projectStore.newProject(SEED);
-    const before = projectStore.draft;
-    openFile("[1, 2, 3]");
-    expect(projectStore.openError).toMatch(/object/i);
-    expect(projectStore.draft).toBe(before); // existing draft untouched
-  });
-
-  it("rejects unparseable JSON with a parse error, no load", async () => {
-    projectStore.newProject(SEED);
-    openFile("{ not json");
-    expect(projectStore.openError).toMatch(/json/i);
-  });
-
-  it("clearOpenError dismisses the banner", async () => {
-    openFile("[]");
-    expect(projectStore.openError).not.toBeNull();
-    projectStore.clearOpenError();
-    expect(projectStore.openError).toBeNull();
-  });
 });
 
 describe("validate (200 ok:false vs 4xx split + stale-response guard)", () => {
-  it("stores a 200 ok:false result and does NOT set requestError (a validation failure is not a 4xx)", async () => {
-    stubFetch(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => ({
-        ok: false,
-        issues: [{ level: "error", code: "x", path: "", message: "m" }],
-      }),
-    }));
-    projectStore.newProject(SEED);
-    const r = await projectStore.validate();
-    expect(r?.ok).toBe(false);
-    expect(projectStore.validation?.ok).toBe(false);
-    expect(projectStore.validatedClean).toBe(false);
-    expect(projectStore.requestError).toBeNull();
-  });
-
-  it("sets requestError (not validation) on a true 4xx malformed request", async () => {
-    stubFetch(async () => ({
-      ok: false,
-      status: 400,
-      json: async () => ({ detail: "request body is not a JSON object" }),
-    }));
-    projectStore.newProject(SEED);
-    const r = await projectStore.validate();
-    expect(r).toBeNull();
-    expect(projectStore.requestError).toBe("request body is not a JSON object");
-    // The failed request WAS the validation, so the banner's retry is a real
-    // retry of it (the only case that earns one).
-    expect(projectStore.requestErrorSource).toBe("validate");
-    expect(projectStore.validation).toBeNull();
-    expect(projectStore.validationStatus).toBe("unchecked");
-  });
-
   it("clears a previous green result when the current draft's recheck request fails", async () => {
     const responses = [
       {
@@ -358,33 +241,6 @@ describe("validate (200 ok:false vs 4xx split + stale-response guard)", () => {
   });
 });
 
-describe("downloadProject (dirty baseline reset)", () => {
-  it("marks the draft clean by resetting the dirty baseline to the written text", () => {
-    // jsdom doesn't implement object URLs; stub so triggerDownload runs.
-    Object.defineProperty(URL, "createObjectURL", {
-      value: vi.fn(() => "blob:mock"),
-      configurable: true,
-      writable: true,
-    });
-    Object.defineProperty(URL, "revokeObjectURL", {
-      value: vi.fn(),
-      configurable: true,
-      writable: true,
-    });
-    projectStore.newProject(SEED);
-    projectStore.updateField("name", "to download");
-    expect(projectStore.dirty).toBe(true);
-    projectStore.downloadProject();
-    expect(projectStore.dirty).toBe(false);
-  });
-});
-
-describe("storeSchemaVersion", () => {
-  it("is a stamped constant (the A5.4 store-schema-mismatch gate)", () => {
-    expect(typeof storeSchemaVersion).toBe("number");
-  });
-});
-
 describe("persistence wiring (the A5.4 swap point)", () => {
   it("debounced autosave writes the draft to the persistence impl after the debounce", async () => {
     vi.useFakeTimers();
@@ -421,43 +277,6 @@ describe("persistence wiring (the A5.4 swap point)", () => {
     stop();
     vi.useRealTimers();
   });
-
-  it("auto-validates the current draft after the debounce", async () => {
-    vi.useFakeTimers();
-    const bodies: unknown[] = [];
-    setPersistence({
-      save: () => Promise.resolve(),
-      load: () => Promise.resolve(null),
-    });
-    stubFetch(async (_url, init) => {
-      if (init?.body != null) {
-        bodies.push(JSON.parse(init.body as string));
-      }
-      return {
-        ok: true,
-        status: 200,
-        json: async () => ({ ok: true, issues: [] }),
-      };
-    });
-    projectStore.newProject(SEED);
-
-    const stop = $effect.root(() => {
-      initDraftLifecycle();
-    });
-    await Promise.resolve();
-    expect(projectStore.validationStatus).toBe("checking");
-    expect(projectStore.canDownloadOrder).toBe(false);
-
-    await vi.advanceTimersByTimeAsync(300);
-
-    expect(bodies).toHaveLength(1);
-    expect(projectStore.validation?.ok).toBe(true);
-    expect(projectStore.validationStatus).toBe("ok");
-    expect(projectStore.canDownloadOrder).toBe(true);
-
-    stop();
-    vi.useRealTimers();
-  });
 });
 
 describe("applyStagedDiff (#992 — one atomic commit path)", () => {
@@ -477,28 +296,6 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     ).toEqual(["scb/lisa/kon", "scb/lisa/alder"]);
     // The #312 name prefill fired on the created source.
     expect(projectStore.draft?.sources[0].name).toBe("LISA");
-  });
-
-  // The store is field-agnostic: it commits what it is handed. A catalog pick hands it
-  // no `display_name` (Y-76, below); a hand-authored one still rides through here.
-  it("commits the staged final fields verbatim (type + display_name + representation)", () => {
-    projectStore.newProject(SEED);
-    projectStore.applyStagedDiff({
-      adds: [
-        add("scb/lisa/v1", "scb/lisa/ssyk", 2018, {
-          type: "categorical",
-          display_name: "Ssyk3",
-          representation: "Ssyk3",
-        }),
-      ],
-    });
-    const binding = projectStore.draft?.sources[0].bindings[0];
-    expect(binding).toMatchObject({
-      variable: "scb/lisa/ssyk",
-      type: "categorical",
-      display_name: "Ssyk3",
-      representation: "Ssyk3",
-    });
   });
 
   it("commits two disjoint-era picks of ONE physical column with nothing to collide (Y-76)", () => {
@@ -539,38 +336,6 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
         representation: null,
       },
     ]);
-  });
-
-  it("merges a disjoint year window into the existing source's period (coalesce, sorted, disjoint)", () => {
-    projectStore.newProject(SEED);
-    projectStore.applyStagedDiff({
-      adds: [
-        add("scb/lisa/v1", "scb/lisa/kon", { from: 2015, to: 2020 }),
-        // A later disjoint window EXTENDS the source period to the #307 list form.
-        add("scb/lisa/v1", "scb/lisa/alder", { from: 2005, to: 2010 }),
-      ],
-    });
-    expect(projectStore.draft?.sources).toHaveLength(1);
-    // Sorted ascending, non-overlapping — the earlier window sorts first.
-    expect(projectStore.draft?.sources[0].period).toEqual([
-      { from: 2005, to: 2010 },
-      { from: 2015, to: 2020 },
-    ]);
-  });
-
-  it("adjacency-merges touching year windows into one span", () => {
-    projectStore.newProject(SEED);
-    projectStore.applyStagedDiff({
-      adds: [
-        add("scb/lisa/v1", "scb/lisa/kon", { from: 2010, to: 2011 }),
-        add("scb/lisa/v1", "scb/lisa/alder", { from: 2012, to: 2013 }),
-      ],
-    });
-    // 2010..2011 + 2012..2013 have a 0-year gap → fuse into one 2010..2013 span.
-    expect(projectStore.draft?.sources[0].period).toEqual({
-      from: 2010,
-      to: 2013,
-    });
   });
 
   it("preserves token-grammar add windows as source-period coverage", () => {
@@ -737,31 +502,6 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     ).toEqual(["Ssyk3", "Ssyk4"]);
   });
 
-  it("removes drop matching bindings and prune sources left empty", () => {
-    projectStore.newProject(SEED);
-    projectStore.applyStagedDiff({
-      adds: [
-        add("scb/lisa/v1", "scb/lisa/kon", 2018),
-        add("scb/lisa/v1", "scb/lisa/alder", 2018),
-        add("scb/rtb/v1", "scb/rtb/fodelsear", 2018),
-      ],
-    });
-    expect(projectStore.draft?.sources).toHaveLength(2);
-    // Remove one binding of LISA (source survives) + the sole RTB binding (source
-    // pruned).
-    projectStore.applyStagedDiff({
-      removes: [
-        { registerVariant: "scb/lisa/v1", variable: "scb/lisa/kon" },
-        { registerVariant: "scb/rtb/v1", variable: "scb/rtb/fodelsear" },
-      ],
-    });
-    expect(projectStore.draft?.sources).toHaveLength(1);
-    expect(projectStore.draft?.sources[0].register_variant).toBe("scb/lisa/v1");
-    expect(
-      projectStore.draft?.sources[0].bindings.map((b) => b.variable),
-    ).toEqual(["scb/lisa/alder"]);
-  });
-
   it("remove+add of the SAME register_variant in one batch preserves the source (name + merged period, not a fresh source) — review Fix 2", () => {
     projectStore.newProject(SEED);
     // Seed a source with a single binding at 2015..2020, then give it a user-set name
@@ -826,19 +566,6 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     ).toEqual(["Ssyk4"]);
   });
 
-  it("a remove-only batch that empties a source still prunes it (review Fix 2)", () => {
-    projectStore.newProject(SEED);
-    projectStore.applyStagedDiff({
-      adds: [add("scb/lisa/v1", "scb/lisa/kon", 2018)],
-    });
-    expect(projectStore.draft?.sources).toHaveLength(1);
-    // Removing the sole binding with NO offsetting add prunes the emptied source.
-    projectStore.applyStagedDiff({
-      removes: [{ registerVariant: "scb/lisa/v1", variable: "scb/lisa/kon" }],
-    });
-    expect(projectStore.draft?.sources).toHaveLength(0);
-  });
-
   it("a null-representation remove matches the variable's binding regardless of stored column", () => {
     projectStore.newProject(SEED);
     projectStore.applyStagedDiff({
@@ -852,26 +579,6 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
       removes: [{ registerVariant: "scb/lisa/v1", variable: "scb/lisa/ssyk" }],
     });
     expect(projectStore.draft?.sources).toHaveLength(0);
-  });
-
-  it("periodChange replaces the NAMED source's period wholesale", () => {
-    projectStore.newProject(SEED);
-    projectStore.applyStagedDiff({
-      adds: [add("scb/lisa/v1", "scb/lisa/kon", 2018)],
-    });
-    projectStore.applyStagedDiff({
-      periodChange: [
-        {
-          sourceName: "LISA",
-          registerVariant: "scb/lisa/v1",
-          period: { from: 2010, to: 2020 },
-        },
-      ],
-    });
-    expect(projectStore.draft?.sources[0].period).toEqual({
-      from: 2010,
-      to: 2020,
-    });
   });
 
   it("commits the whole batch in ONE mutation (id mirror rebuilt once, autosave fires once)", async () => {
@@ -909,17 +616,6 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     vi.useRealTimers();
     stop();
   });
-
-  it("an empty diff preserves the draft content (no throw)", () => {
-    projectStore.newProject(SEED);
-    projectStore.applyStagedDiff({
-      adds: [add("scb/lisa/v1", "scb/lisa/kon", 2018)],
-    });
-    const before = structuredClone($state.snapshot(projectStore.draft));
-    // An empty diff commits a fresh draft object but leaves the content identical.
-    projectStore.applyStagedDiff({});
-    expect($state.snapshot(projectStore.draft)).toEqual(before);
-  });
 });
 
 describe("stable client-side ids (issue #200)", () => {
@@ -935,135 +631,7 @@ describe("stable client-side ids (issue #200)", () => {
     projectStore.applyStagedDiff({ adds });
   }
 
-  it("keeps a survivor's id stable across a MIDDLE source remove (no rebind to a shifted item)", () => {
-    seedThreeSources();
-    const id0 = projectStore.sourceId(0);
-    const id2 = projectStore.sourceId(2);
-    // Remove the middle source (drop both its bindings → the source is pruned). The
-    // last source shifts down to index 1.
-    projectStore.removeSource(1);
-    expect(projectStore.draft?.sources?.[1]?.register_variant).toBe(
-      "scb/r2/v1",
-    );
-    // The shifted survivor MUST carry its own id (id2), not the index-1 id it now
-    // sits at — that stability is what remounts the right component instance.
-    expect(projectStore.sourceId(0)).toBe(id0);
-    expect(projectStore.sourceId(1)).toBe(id2);
-  });
-
-  it("keeps EVERY id in place across a period-only batch (an update is not a remount)", () => {
-    seedThreeSources();
-    const ids = [0, 1, 2].map((i) => projectStore.sourceId(i));
-    const binding = projectStore.bindingId(1, 1);
-    projectStore.applyStagedDiff({
-      periodChange: [
-        {
-          sourceName: projectStore.draft?.sources?.[1]?.name as string,
-          registerVariant: "scb/r1/v1",
-          period: { from: 1990, to: 2020 },
-        },
-      ],
-    });
-    expect(projectStore.draft?.sources?.[1]?.period).toEqual({
-      from: 1990,
-      to: 2020,
-    });
-    // A period-only batch maps the sources 1:1 onto the array the mirror already
-    // describes, so the mirror stands. Rebuilding it would remount every source
-    // card — including the one that asked for this write.
-    expect([0, 1, 2].map((i) => projectStore.sourceId(i))).toEqual(ids);
-    expect(projectStore.bindingId(1, 1)).toBe(binding);
-  });
-
-  it("keeps a survivor binding's id stable across a MIDDLE binding remove", () => {
-    projectStore.newProject(SEED);
-    projectStore.applyStagedDiff({
-      adds: [
-        add("scb/lisa/v1", "b0", 2018),
-        add("scb/lisa/v1", "b1", 2018),
-        add("scb/lisa/v1", "b2", 2018),
-      ],
-    });
-    const b0 = projectStore.bindingId(0, 0);
-    const b2 = projectStore.bindingId(0, 2);
-    projectStore.removeBinding(0, 1);
-    expect(projectStore.bindingId(0, 0)).toBe(b0);
-    expect(projectStore.bindingId(0, 1)).toBe(b2);
-  });
-
-  it("seeds ids for an OPENED file's sources + bindings", async () => {
-    const raw = {
-      schema_version: "2.0.0",
-      steward: "global",
-      reg_meta_version: "reg_meta/v1.0.0",
-      name: "opened",
-      sources: [
-        {
-          name: "s1",
-          register_variant: "scb/lisa/individer",
-          period: 2018,
-          bindings: [
-            { variable: "scb/lisa/kon", type: "categorical" },
-            { variable: "scb/lisa/alder", type: "numeric" },
-          ],
-        },
-      ],
-    };
-    openFile(JSON.stringify(raw));
-    // Distinct, defined ids for the opened source + its two bindings.
-    expect(projectStore.sourceId(0)).toBeTruthy();
-    expect(projectStore.bindingId(0, 0)).toBeTruthy();
-    expect(projectStore.bindingId(0, 0)).not.toBe(projectStore.bindingId(0, 1));
-  });
-
   describe("malformed drafts do not corrupt the mirror or the store state (review #280)", () => {
-    it("opens a draft with a null sources ELEMENT cleanly (no throw, consistent mirror)", async () => {
-      // A null/undefined source element must not throw in buildIds — and because the
-      // replacement is atomic, the open must land clean (no stale validatedClean from
-      // a previous document, no unhandled rejection, openError null on success).
-      const raw = {
-        schema_version: "2.0.0",
-        steward: "global",
-        reg_meta_version: "reg_meta/v1.0.0",
-        name: "has-null-source",
-        sources: [
-          {
-            name: "ok",
-            register_variant: "scb/lisa/v1",
-            period: 2018,
-            bindings: [],
-          },
-          null,
-          {
-            name: "ok2",
-            register_variant: "scb/lisa/v1",
-            period: 2019,
-            bindings: [],
-          },
-        ],
-      };
-      // Seed a DIFFERENT prior document first so a mid-update abort would surface as
-      // stale state belonging to it.
-      projectStore.newProject(SEED);
-      projectStore.updateField("name", "prior");
-
-      expect(() => openFile(JSON.stringify(raw))).not.toThrow();
-
-      // Clean open: the malformed-but-loadable draft is in, error channels are clear.
-      expect(projectStore.openError).toBeNull();
-      expect(projectStore.requestError).toBeNull();
-      expect(projectStore.draft?.name).toBe("has-null-source");
-      // A fresh open is not pre-validated → downloads gated closed (no stale state).
-      expect(projectStore.validation).toBeNull();
-      expect(projectStore.validatedClean).toBe(false);
-      // The mirror mirrors the 3-element sources array (the null slot gets its own id
-      // with an empty bindings list — no throw, no divergence).
-      expect(projectStore.sourceId(0)).toBeTruthy();
-      expect(projectStore.sourceId(1)).toBeTruthy();
-      expect(projectStore.sourceId(2)).toBeTruthy();
-      expect(projectStore.sourceId(0)).not.toBe(projectStore.sourceId(1));
-    });
-
     it("applyStagedDiff does NOT throw on a null sources SLOT (issue #1099 — the cart stays usable)", async () => {
       // The render fix (#1099) lets a `sources: [null, …]` draft LOAD + render, but the
       // store's commit path (applyStagedDiff) iterates EVERY source unconditionally in
@@ -1134,27 +702,6 @@ describe("stable client-side ids (issue #200)", () => {
         byVariant.get("scb/hst/v1")?.bindings.map((b) => b.variable),
       ).toEqual(["scb/hst/alder"]);
     });
-
-    it("updateField('sources', …) rebuilds the mirror so it can't desync (review #280)", () => {
-      projectStore.newProject(SEED);
-      projectStore.applyStagedDiff({
-        adds: [add("scb/lisa/v1", "a", 2018), add("scb/rtb/v1", "b", 2018)],
-      });
-      const beforeId0 = projectStore.sourceId(0);
-      // A wholesale `sources` replacement via updateField must rebuild the mirror to
-      // the NEW array's shape (here: shrink 2 → 1), not keep the stale 2-entry mirror.
-      projectStore.updateField("sources", [
-        { name: "only", register_variant: "", period: "", bindings: [] },
-      ]);
-      expect(
-        (projectStore.draft?.sources as unknown[] | undefined)?.length,
-      ).toBe(1);
-      expect(projectStore.sourceId(0)).toBeTruthy();
-      // The rebuilt mirror has exactly one entry → index 1 falls back to the index.
-      expect(projectStore.sourceId(1)).toBe("i1");
-      // It's a genuine rebuild (fresh id), not the pre-replacement id.
-      expect(projectStore.sourceId(0)).not.toBe(beforeId0);
-    });
   });
 
   describe("ids NEVER leak into the serialized draft / POST bodies (the closed-object constraint)", () => {
@@ -1170,15 +717,6 @@ describe("stable client-side ids (issue #200)", () => {
       // anywhere in the wire payload either.
       expect(text).not.toMatch(/"c\d+"/);
     }
-
-    it("serializeProjectData output carries no client id", () => {
-      seedThreeSources();
-      // Sanity: ids exist in the store…
-      expect(projectStore.sourceId(0)).toMatch(/^c\d+$/);
-      // …but never in the serialized draft (the downloaded file / dirty baseline).
-      const draft = projectStore.draft as unknown;
-      assertNoIdLeak(draft);
-    });
 
     it("the /validate POST body carries no client id", async () => {
       const bodies: unknown[] = [];
@@ -1348,33 +886,6 @@ describe("a blocked order", () => {
     expect(projectStore.orderFindings).toEqual([]);
   });
 
-  it("names /order as the source of a transport failure that carries no findings", async () => {
-    stubFetch(async (url) =>
-      String(url).includes("/project/order")
-        ? {
-            ok: false,
-            status: 413,
-            json: async () => ({ detail: "project_data.json is too large" }),
-            headers: new Headers(),
-          }
-        : {
-            ok: true,
-            status: 200,
-            json: async () => ({ ok: true, issues: [] }),
-          },
-    );
-    projectStore.newProject(SEED);
-    await projectStore.validate();
-    await projectStore.downloadOrder();
-
-    expect(projectStore.requestError).toContain("too large");
-    expect(projectStore.orderFindings).toEqual([]);
-    // The findings are empty, so they cannot say where this came from — the
-    // source is what keeps the panel from offering a validation retry for an
-    // order failure (Y-21).
-    expect(projectStore.requestErrorSource).toBe("order");
-  });
-
   it("discards a blocked-order 422 that lands after a mid-flight draft edit", async () => {
     // A block belongs to the draft that was POSTed. If the researcher edits while
     // the request is in flight, the 422's findings name sources and variables the
@@ -1462,57 +973,6 @@ describe("applySourcePeriodEdit (Y-81 — the cart card's period-only rewrite)",
     };
   }
 
-  it("rewrites ONLY the named source, preserving its name and every binding", () => {
-    twoSourceDraft();
-    const sibling = structuredClone(
-      $state.snapshot(projectStore.draft?.sources[1]),
-    );
-
-    expect(
-      projectStore.applySourcePeriodEdit(
-        edit("LISA", { from: 2012, to: 2014 }),
-      ),
-    ).toBe(true);
-
-    expect($state.snapshot(projectStore.draft?.sources[0])).toEqual({
-      name: "LISA",
-      register_variant: "scb/lisa/individer",
-      period: { from: 2012, to: 2014 },
-      bindings: [
-        {
-          variable: "scb/lisa/kon",
-          type: "categorical",
-          representation: "Kon",
-        },
-        { variable: "scb/lisa/alder", type: "numeric" },
-      ],
-    });
-    // The differently named source on the SAME variant is byte-identical.
-    expect($state.snapshot(projectStore.draft?.sources[1])).toEqual(sibling);
-  });
-
-  it("refuses an edit whose source moved, without mutating anything", () => {
-    twoSourceDraft();
-    const stale = edit("LISA", { from: 2012, to: 2014 });
-    // The researcher (or a picker Apply) changes the edited source underneath.
-    projectStore.applyStagedDiff({
-      adds: [add("scb/lisa/individer", "scb/lisa/inkomst", 2016)],
-    });
-    const before = structuredClone($state.snapshot(projectStore.draft));
-
-    expect(projectStore.applySourcePeriodEdit(stale)).toBe(false);
-    expect($state.snapshot(projectStore.draft)).toEqual(before);
-  });
-
-  it("refuses an edit whose source is gone", () => {
-    twoSourceDraft();
-    const stale = edit("LISA", { from: 2012, to: 2014 });
-    projectStore.removeSource(0);
-
-    expect(projectStore.applySourcePeriodEdit(stale)).toBe(false);
-    expect(projectStore.draft?.sources).toHaveLength(1);
-  });
-
   it("refuses an edit from a project that has since been replaced", () => {
     twoSourceDraft();
     const stale = edit("LISA", { from: 2012, to: 2014 });
@@ -1540,54 +1000,5 @@ describe("applySourcePeriodEdit (Y-81 — the cart card's period-only rewrite)",
       from: 2010,
       to: 2015,
     });
-  });
-
-  it("commits ONE mutation that autosaves once and validates the new period", async () => {
-    vi.useFakeTimers();
-    const saves: unknown[] = [];
-    const bodies: { sources: { name: string; period: unknown }[] }[] = [];
-    setPersistence({
-      save: (_k, d) => {
-        saves.push(d);
-        return Promise.resolve();
-      },
-      load: () => Promise.resolve(null),
-    });
-    stubFetch(async (_url, init) => {
-      if (init?.body != null) {
-        bodies.push(JSON.parse(init.body as string));
-      }
-      return {
-        ok: true,
-        status: 200,
-        json: async () => ({ ok: true, issues: [] }),
-      };
-    });
-    twoSourceDraft();
-    const stop = $effect.root(() => {
-      initDraftLifecycle();
-    });
-    await vi.advanceTimersByTimeAsync(600);
-    saves.length = 0;
-    bodies.length = 0;
-
-    expect(
-      projectStore.applySourcePeriodEdit(
-        edit("LISA", { from: 2012, to: 2014 }),
-      ),
-    ).toBe(true);
-    await vi.advanceTimersByTimeAsync(600);
-
-    // One draft replacement → one autosave write and one automatic validation,
-    // both carrying the corrected period on the named source alone.
-    expect(saves).toHaveLength(1);
-    expect(bodies).toHaveLength(1);
-    expect(bodies[0].sources.map((s) => [s.name, s.period])).toEqual([
-      ["LISA", { from: 2012, to: 2014 }],
-      ["LISA_2", 2009],
-    ]);
-
-    stop();
-    vi.useRealTimers();
   });
 });

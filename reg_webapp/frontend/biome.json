@@ -4,6 +4,7 @@
   "files": {
     "includes": [
       "src/**",
+      "scripts/**",
       "*.ts",
       "*.js",
       "*.json",

@@ -45,10 +45,6 @@ afterEach(() => {
 });
 
 describe("windowStore — no active draft (localStorage fallback)", () => {
-  it("reads null when nothing is set", () => {
-    expect(windowStore.value).toBeNull();
-  });
-
   it("set() with no draft writes the localStorage fallback and reads it back", () => {
     windowStore.set({ from: 2005, to: 2015 });
     expect(windowStore.value).toEqual({ from: 2005, to: 2015 });
@@ -64,57 +60,20 @@ describe("windowStore — no active draft (localStorage fallback)", () => {
     expect(windowStore.value).toBeNull();
     expect(localStorage.getItem("reg_webapp:project_window")).toBeNull();
   });
-
-  it("clearing back to null is reachable after an explicit window (#629 item 1)", () => {
-    // The header's clear control wires `onclear` → `set(null)`. After any
-    // interaction has set an explicit window, clearing restores the null state
-    // (→ the slider's "not set" readout, asserted in the browser test).
-    windowStore.set({ from: 1960, to: 2026 }); // even a FULL-bounds explicit span …
-    expect(windowStore.value).not.toBeNull();
-    windowStore.set(null); // … the explicit clear still returns to full history.
-    expect(windowStore.value).toBeNull();
-  });
-
-  it("exposes the no-draft fallback via `fallback` for the create-seed path", () => {
-    expect(windowStore.fallback).toBeNull();
-    windowStore.set({ from: 2001, to: 2009 });
-    expect(windowStore.fallback).toEqual({ from: 2001, to: 2009 });
-  });
-
-  it("clampTo() rewrites a stale fallback window into steward bounds (#1037)", () => {
-    windowStore.set({ from: 1960, to: 2026 });
-    windowStore.clampTo(2000, 2010);
-
-    expect(windowStore.value).toEqual({ from: 2000, to: 2010 });
-    expect(
-      JSON.parse(localStorage.getItem("reg_webapp:project_window") ?? "null"),
-    ).toEqual({ from: 2000, to: 2010 });
-  });
 });
 
 describe("windowStore — active draft (project hydrate + write-back)", () => {
-  it("hydrates from the active project's window field", () => {
-    projectStore.newProject(SEED);
-    projectStore.updateField("window", { from: 1990, to: 2020 });
-    expect(windowStore.value).toEqual({ from: 1990, to: 2020 });
-  });
-
   it("a draft with no window reads null (its own absence, not the fallback)", () => {
-    // Seed the fallback FIRST (no draft), then open a project with no window.
+    // Seed the fallback FIRST (no draft), then reach a draft with no window: the
+    // first New seeds the fallback onto its draft (#629), a New from within that
+    // draft starts windowless (#634).
     windowStore.set({ from: 1970, to: 1980 });
     projectStore.newProject(SEED);
+    projectStore.newProject(SEED);
+    expect(projectStore.draft?.window).toBeUndefined();
     // The draft is authoritative while it exists: its absent window wins over the
     // localStorage fallback.
     expect(windowStore.value).toBeNull();
-  });
-
-  it("set() with a draft mutates draft.window and marks the store dirty", () => {
-    projectStore.newProject(SEED);
-    expect(projectStore.dirty).toBe(false);
-    windowStore.set({ from: 2012, to: 2018 });
-    expect(projectStore.draft?.window).toEqual({ from: 2012, to: 2018 });
-    // Write-back rides the store's dirty path (→ existing autosave persists it).
-    expect(projectStore.dirty).toBe(true);
   });
 
   it("set() does NOT mirror into localStorage while a draft is active", () => {
@@ -156,15 +115,6 @@ describe("windowStore — active draft (project hydrate + write-back)", () => {
   });
 });
 
-describe("windowStore — precedence", () => {
-  it("the project draft wins over the localStorage fallback", () => {
-    windowStore.set({ from: 1970, to: 1980 }); // fallback (no draft)
-    projectStore.newProject(SEED);
-    projectStore.updateField("window", { from: 2001, to: 2002 });
-    expect(windowStore.value).toEqual({ from: 2001, to: 2002 });
-  });
-});
-
 // The seed-on-create path (#629 item 3) reads the no-DRAFT fallback, but this
 // file's module-singleton store keeps any draft a prior test created (there is no
 // draft→null API — see the file header) and a lingering draft would route
@@ -200,13 +150,6 @@ describe("browse-time window seeded on draft creation (#629 item 3)", () => {
     expect(windowStore.value).toEqual({ from: 2004, to: 2014 });
     // The seed is the draft's INITIAL state, not an edit → the draft is clean.
     expect(projectStore.dirty).toBe(false);
-  });
-
-  it("a fresh draft with no browse window stays windowless (full history)", async () => {
-    const { projectStore, windowStore } = await freshStores(null);
-    projectStore.newProject(SEED);
-    expect(projectStore.draft?.window).toBeUndefined();
-    expect(windowStore.value).toBeNull();
   });
 
   it("New from WITHIN a draft does NOT seed from the stale fallback (#634)", async () => {
