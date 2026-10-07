@@ -17,15 +17,18 @@ package. The pass reads the whole tree, not a diff.
 
 ## 0. Measure
 
-Take the numbers before anything moves, and again at the end.
+Take the numbers before anything moves, and again at the end. `<tag>` is the release tag
+prefix and `<dir>` the package directory: `reg_meta`, `reg_meta_build` and `reg_schema`
+use their name for both; the web backend is `<dir>` = `reg_webapp/backend` with no
+release tag (the fallback counts from the root).
 
 ```sh
-last=$(git describe --tags --abbrev=0 --match '<package>/v*' 2>/dev/null ||
+last=$(git describe --tags --abbrev=0 --match '<tag>/v*' 2>/dev/null ||
   git rev-list --max-parents=0 HEAD)  # no reachable tag: count from the root
-git log --oneline "$last"..HEAD -- <package> | wc -l
-git ls-files '<package>/src/*.py' | xargs wc -l | tail -1
-git ls-files '<package>/tests/*.py' | xargs wc -l | tail -1
-uv run python -m pytest <package> -n auto -q --durations=20
+git log --oneline "$last"..HEAD -- <dir> | wc -l
+git ls-files '<dir>/src/*.py' | xargs wc -l | tail -1
+git ls-files '<dir>/tests/*.py' | xargs wc -l | tail -1
+uv run python -m pytest <dir> -n auto -q --durations=20
 ```
 
 The frontend:
@@ -43,7 +46,7 @@ family's mid tier (in Claude, Sonnet); the work is lookup.
   entrypoint scripts, CI workflows (`uvicorn` is only invoked from
   `reg_webapp/docker-entrypoint.sh`). A dependency in one and not the other is a
   finding.
-- **Dead code.** `uvx --from vulture==2.16 vulture <package>/src --min-confidence 80`.
+- **Dead code.** `uvx --from vulture==2.16 vulture <dir>/src --min-confidence 80`.
   Confirm each hit with `rg` across the workspace and the frontend before calling it
   dead.
 - **Trace tables**, kept in the scratchpad: every argparse flag and subcommand, to its
@@ -121,9 +124,11 @@ one of three piles.
 
 Edit directly, in an isolated worktree. One commit per module, the message naming what
 was removed. Before each push: `uv run ruff check`, `uv run ruff format --check`,
-`uvx --from ty==0.0.79 ty check`, and `uv run python -m pytest <package> -n auto -q`. A
-change that redesigns a module rather than deleting from it, or needs more than one
-sitting, becomes a GitHub issue instead (search open and closed first).
+`uvx --from ty==0.0.79 ty check`, and `uv run python -m pytest <dir> -n auto -q`; for
+the frontend, `bun run check && bun run lint && bun run test && bun run build` in
+`reg_webapp/frontend`, as CI runs them. A change that redesigns a module rather than
+deleting from it, or needs more than one sitting, becomes a GitHub issue instead (search
+open and closed first).
 
 ## 5. Report
 
