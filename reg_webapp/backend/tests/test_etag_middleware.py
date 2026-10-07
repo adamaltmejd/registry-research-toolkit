@@ -1,8 +1,6 @@
-"""ETag middleware wiring, end-to-end through the app.
+"""ETag / Cache-Control, end-to-end through the app.
 
-See DESIGN.md → ETag / Cache-Control (etag.py + middleware.py). The pure logic is
-unit-tested in ``test_etag.py``; here we pin the middleware
-behavior: GET reads get ETag + the per-route Cache-Control tier, error
+See DESIGN.md → ETag / Cache-Control (etag.py + middleware.py). GET reads get ETag + the per-route Cache-Control tier, error
 responses and writes do NOT (an error body is not a cacheable representation), a
 matching If-None-Match (weak, list or wildcard form) yields a 304 with no body,
 and the ETag prefix is the INSTALLED reg_meta version (NOT the DB
