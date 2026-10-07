@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "unexpected_field",
+      "path": "/window/bogus",
+      "message": "unexpected key 'bogus' on window"
+    }
+  ]
+}

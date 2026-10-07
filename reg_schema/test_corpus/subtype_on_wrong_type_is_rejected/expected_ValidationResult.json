@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "subtype_on_wrong_type",
+      "path": "/sources/0/bindings/1/id_subtype",
+      "message": "'id_subtype' is only valid on type='id'; binding type is 'categorical'"
+    }
+  ]
+}

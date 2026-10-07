@@ -575,7 +575,14 @@ export interface paths {
          *     structural ⧺ semantic issue list + the derived ``ok`` flag; a 4xx is
          *     reserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).
          *
-         *     This is the SEMANTIC validator (reg_meta-backed).
+         *     A THIN adapter over reg_meta's ``semantic.validate_project``
+         *     (REFACTOR_SPEC.md §12): the composition, every issue and the serialization
+         *     live there, so this endpoint and ``reg-meta validate`` emit byte-identical
+         *     findings. The 200 body is ``semantic.validation_json`` VERBATIM, returned
+         *     as a raw ``Response`` (FastAPI passes it through without re-serializing)
+         *     while ``response_model=`` still publishes ``ValidationResultModel`` as the
+         *     typed contract for the OpenAPI snapshot + the SPA codegen — the ``/order``
+         *     pattern.
          *
          *     ``async`` only to read the body off the wire; the BLOCKING work (the structural
          *     parse + the semantic layer's per-binding sqlite resolution) is offloaded to the
@@ -695,7 +702,7 @@ export interface components {
          *     3/4/5-digit, age 5/10-yr brackets). ``representation`` selects which one (by
          *     its ``variable_alias.delivery_column_name``); it is required only when the
          *     concept resolves to >1 column at the source's ``(variant, period)`` — the
-         *     semantic validator (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)) flags an ambiguous binding that omits it, and the
+         *     semantic validator (see reg_meta/DESIGN.md → Project semantic validation (semantic.py)) flags an ambiguous binding that omits it, and the
          *     SPA offers a chooser. A single-representation concept leaves it ``None``.
          *
          *     ``display_name`` is optional: when absent, reg_meta-backed consumers
@@ -2940,7 +2947,8 @@ export interface components {
         /**
          * ValidationResultModel
          * @description `POST /api/project/validate` response — the concatenated issue list
-         *     (structural ⧺ block ⧺ semantic) plus the derived ``ok`` flag.
+         *     (structural ⧺ semantic) plus the derived ``ok`` flag. The body is reg_meta's
+         *     ``semantic.validation_json`` verbatim; this model types it for OpenAPI.
          *
          *     ``ok`` mirrors ``reg_schema.ValidationResult.ok``: True iff NO error-level
          *     issue is present (warnings/info do not flip it). A validation FAILURE is a

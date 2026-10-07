@@ -13,8 +13,8 @@
  * 2. The `KNOWN_CODES` registry: every stable validation code → a friendly label +
  *    the level it's typically raised at. Hand-maintained from the validator
  *    sources: structural (`reg_schema/structural.py`; see reg_schema/DESIGN.md →
- *    Structural rules and issue codes), semantic (see reg_webapp/DESIGN.md →
- *    Semantic validation (semantic.py)) and the ORDER MATERIALIZER's findings
+ *    Structural rules and issue codes), semantic (see reg_meta/DESIGN.md →
+ *    Project semantic validation (semantic.py)) and the ORDER MATERIALIZER's findings
  *    (`reg_meta/order.py`), which the panel renders through the same path. An
  *    UNKNOWN code degrades gracefully (the issue is still shown with its raw
  *    code + level).
@@ -115,7 +115,7 @@ export interface CodeInfo {
  * new codes are ADDITIVE, so a code missing here is not a bug, it just
  * renders with its raw code (see `codeLabel`). Sourced from:
  * - structural (`reg_schema/structural.py`; see reg_schema/DESIGN.md → Structural rules and issue codes)
- * - semantic (`reg_webapp.semantic`; see reg_webapp/DESIGN.md → Semantic validation (semantic.py))
+ * - semantic (`reg_meta/semantic.py`; see reg_meta/DESIGN.md → Project semantic validation (semantic.py))
  * - the order materializer's findings (`reg_meta/order.py`; see reg_meta/DESIGN.md → Order materializer and manifest)
  */
 export const KNOWN_CODES: Record<string, CodeInfo> = {

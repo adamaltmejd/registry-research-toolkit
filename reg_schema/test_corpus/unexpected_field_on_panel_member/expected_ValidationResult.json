@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "unexpected_field",
+      "path": "/panels/0/members/0/time_kye",
+      "message": "unexpected key 'time_kye' on panel member"
+    }
+  ]
+}

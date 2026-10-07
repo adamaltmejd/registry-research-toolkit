@@ -1,0 +1,9 @@
+{
+  "successions": [
+    {
+      "predecessor": "scb/example/bransch",
+      "successor": "scb/example/bransch-ny",
+      "effective_year": 2019
+    }
+  ]
+}

@@ -141,3 +141,14 @@ INSERT INTO timeseries_event (
     timeseries_event_id, namn, handelse, beskrivning, entitet, id1, id2, fil_id
 ) VALUES
     (1, 'TESTREG', 'Kodändring', 'Kod 3 ändrad', 'Variabel', '100', '', '1');
+
+-- Search indexes. Every FTS table is content-synced, so FTS5's own `rebuild`
+-- command repopulates it from its content table. The build's population step
+-- additionally leaves stoplisted and ownerless value-code labels out of
+-- value_code_fts; this fixture has neither kind, so the rebuilt indexes hold
+-- exactly what the build would index. Adding such a label here needs its own
+-- index rows instead of a rebuild.
+INSERT INTO register_fts(register_fts) VALUES ('rebuild');
+INSERT INTO variable_fts(variable_fts) VALUES ('rebuild');
+INSERT INTO classification_fts(classification_fts) VALUES ('rebuild');
+INSERT INTO value_code_fts(value_code_fts) VALUES ('rebuild');

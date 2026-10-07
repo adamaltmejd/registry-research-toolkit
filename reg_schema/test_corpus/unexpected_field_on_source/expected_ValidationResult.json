@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "unexpected_field",
+      "path": "/sources/0/registr_variant",
+      "message": "unexpected key 'registr_variant' on source"
+    }
+  ]
+}

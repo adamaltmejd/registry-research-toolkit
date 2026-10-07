@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "empty_members",
+      "path": "/panels/0/members",
+      "message": "panel must have at least one member"
+    }
+  ]
+}

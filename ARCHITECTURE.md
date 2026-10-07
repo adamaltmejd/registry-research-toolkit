@@ -64,11 +64,13 @@ A web application (FastAPI + Svelte SPA), designed for three steward-scoped flav
 one image, that lets researchers browse a catalog, author a per-project variable list,
 and export it as a data order. The human SPA and agent/CLI are equal v1 product
 surfaces: `POST /api/project/order` and `reg-meta order` are both thin adapters over the
-same `reg_meta.order.materialize_order`, pinned byte-identical by a cross-adapter test.
-`reg-meta` ships no separate `validate` subcommand — `reg-meta order` fails closed on
-any bad input, exit 10 for an unreadable/invalid project or catalog configuration and
-exit 17 for an order blocked by materialization findings — while the SPA validates the
-draft automatically on every edit.
+same `reg_meta.order.materialize_order`, and `POST /api/project/validate` and
+`reg-meta validate` over the same `reg_meta.semantic.validate_project`; each pair is
+pinned byte-identical by cross-adapter conformance tests. `reg-meta order` fails closed
+on any bad input, exit 10 for an unreadable/invalid project or catalog configuration and
+exit 17 for an order blocked by materialization findings; `reg-meta validate` writes its
+findings either way and exits 17 when one is an error. The SPA validates the draft
+automatically on every edit.
 
 The unifying research-intent artifact is **`project_data.json`** — written by the
 webapp, consumed by the shared materializer above and the planned MONA runner rebuild.

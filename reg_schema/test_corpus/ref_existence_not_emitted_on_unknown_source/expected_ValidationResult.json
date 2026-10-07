@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "panel_member_unknown_source",
+      "path": "/panels/0/members/0/source",
+      "message": "panel member references source 'ghost' which is not defined in /sources"
+    }
+  ]
+}

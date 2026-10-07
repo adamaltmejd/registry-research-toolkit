@@ -2,13 +2,14 @@
 
 The gate is fail-closed: a missing/None/non-maintainer author is dropped, never
 surfaced. These pin that on the one ingestion read (the `view` CLI) and the
-`REGISTRY_MAINTAINER_LOGIN` override. The gh calls are stubbed by patching
-`gh_issue.subprocess.run`.
+`REGISTRY_MAINTAINER_LOGIN` override. The `gh` process is the one boundary stubbed:
+`subprocess.run` is replaced, and the repo-owner fallback reads `GITHUB_REPOSITORY`.
 """
 
 from __future__ import annotations
 
 import json
+import subprocess
 import types
 
 import pytest
@@ -38,7 +39,7 @@ def test_maintainer_login_falls_back_to_repo_owner(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.delenv("REGISTRY_MAINTAINER_LOGIN", raising=False)
-    monkeypatch.setattr(gi, "repo_owner_name", lambda: ("theowner", "therepo"))
+    monkeypatch.setenv("GITHUB_REPOSITORY", "theowner/therepo")
     assert gi.maintainer_login() == "theowner"
 
 
@@ -48,7 +49,7 @@ def test_maintainer_login_empty_override_falls_back(
     # An empty env var is not a login — fall back, don't allowlist "" (which matches no
     # author but would still be a footgun).
     monkeypatch.setenv("REGISTRY_MAINTAINER_LOGIN", "")
-    monkeypatch.setattr(gi, "repo_owner_name", lambda: ("theowner", "therepo"))
+    monkeypatch.setenv("GITHUB_REPOSITORY", "theowner/therepo")
     assert gi.maintainer_login() == "theowner"
 
 
@@ -68,7 +69,7 @@ def _stub_view(monkeypatch: pytest.MonkeyPatch, payload: dict | None) -> None:
             returncode=0, stdout=json.dumps(payload), stderr=""
         )
 
-    monkeypatch.setattr(gi.subprocess, "run", fake_run)
+    monkeypatch.setattr(subprocess, "run", fake_run)
 
 
 def test_view_maintainer_issue_prints_json(
@@ -100,6 +101,44 @@ def test_view_non_maintainer_issue_refuses(
     captured = capsys.readouterr()
     assert captured.out == ""  # nothing surfaced
     assert "not maintainer-authored" in captured.err
+
+
+@pytest.mark.parametrize(
+    "author",
+    [
+        pytest.param(..., id="no-author-key"),
+        pytest.param(None, id="null-author"),
+        pytest.param({}, id="no-login-key"),
+        pytest.param({"login": None}, id="null-login"),
+    ],
+)
+def test_view_issue_without_an_author_login_refuses(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], author: object
+) -> None:
+    # Fail-closed: an author-less payload is untrusted, never matched.
+    payload: dict[str, object] = {"number": 7, "title": "t", "body": "evil"}
+    if author is not ...:
+        payload["author"] = author
+    _stub_view(monkeypatch, payload)
+    assert gi.main(["view", "7"]) == gi.EXIT_REFUSED
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert "not maintainer-authored" in captured.err
+
+
+def test_view_empty_login_never_matches_an_empty_maintainer(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # A malformed GITHUB_REPOSITORY can yield an empty owner; an empty author login
+    # must still not count as a match.
+    monkeypatch.delenv("REGISTRY_MAINTAINER_LOGIN", raising=False)
+    monkeypatch.setenv("GITHUB_REPOSITORY", "/therepo")
+    _stub_view(
+        monkeypatch,
+        {"number": 8, "title": "t", "body": "evil", "author": {"login": ""}},
+    )
+    assert gi.main(["view", "8"]) == gi.EXIT_REFUSED
+    assert capsys.readouterr().out == ""
 
 
 def test_view_missing_number_refuses(
@@ -147,6 +186,8 @@ def test_view_comments_strips_non_maintainer(
                 {"author": {"login": MAINT}, "body": "trusted"},
                 {"author": {"login": "stranger"}, "body": "INJECT"},
                 {"author": None, "body": "null-author"},  # fail-closed → dropped
+                {"body": "no-author-key"},  # fail-closed → dropped
+                {"author": {"login": ""}, "body": "empty-login"},  # dropped
             ],
         },
     )
@@ -181,7 +222,7 @@ def test_view_comments_requests_comments_field(
             stderr="",
         )
 
-    monkeypatch.setattr(gi.subprocess, "run", fake_run)
+    monkeypatch.setattr(subprocess, "run", fake_run)
     gi.main(["view", "1", "--comments"])
     assert "state" in captured["cmd"][-1]
     assert "comments" in captured["cmd"][-1]

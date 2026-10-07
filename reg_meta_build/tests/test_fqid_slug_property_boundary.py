@@ -99,6 +99,8 @@ def test_name_slug_capped_and_stable(name: str) -> None:
     assert len(slug) <= 60 or derive_variable_slug(slug[:60].rsplit("-", 1)[0]) is None
 
 
+# Each example builds and slugs a catalog; under machine load it overruns the default deadline.
+@settings(deadline=None)
 @given(st.integers(min_value=0, max_value=10**18))
 def test_underivable_variable_gets_v_provider_key(var_id: int) -> None:
     # Neither the column nor the name yields a slug (both lead with a digit).

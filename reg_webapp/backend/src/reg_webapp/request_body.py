@@ -7,7 +7,7 @@ Pydantic body: ``/validate`` must DIAGNOSE a malformed spec (a typed body would
 make FastAPI 422 the very inputs it exists to report). In particular, unknown
 root keys must reach the structural validator verbatim so it can emit one stable
 ``unexpected_field`` issue per key; they must not be dropped by typed model
-construction first. This reader json.loads the body ourselves and maps a malformed
+construction first. This reader parses the body through reg_meta's shared reader and maps a malformed
 REQUEST (non-JSON, duplicate key, non-object, pathologically nested) to a 4xx —
 distinct from a well-formed object that simply fails validation (a 200 with
 ``ok=false`` on ``/validate``).
@@ -15,63 +15,29 @@ distinct from a well-formed object that simply fails validation (a 200 with
 
 from __future__ import annotations
 
-import json
 from typing import TYPE_CHECKING, Any
 
 from fastapi import HTTPException
+from reg_meta.errors import RegMetaError
+from reg_meta.order import parse_project
 
 if TYPE_CHECKING:
     from fastapi import Request
 
 
-def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
-    """``json.loads`` ``object_pairs_hook`` that raises on a duplicate JSON key.
-
-    The default keeps the last value silently — a hand-edited project_data.json
-    with a duplicated field would validate against the wrong (last-wins) value.
-    Fires at every nesting depth (the hook runs per object)."""
-    seen: dict[str, Any] = {}
-    for key, value in pairs:
-        if key in seen:
-            raise ValueError(f"duplicate key {key!r} in request body")
-        seen[key] = value
-    return seen
-
-
 async def read_raw_json_object(request: Request) -> dict[str, Any]:
-    """Read the request body as a RAW JSON object (dict), or raise 4xx.
+    """Read the request body as a RAW JSON object (dict), or raise 400.
 
     Reads the bytes via the async ``request.body()`` (so the caller stays an
-    ``async def`` handler that then offloads blocking work to the threadpool),
-    json.loads them ourselves, and rejects a malformed REQUEST with 400:
-    non-JSON, a duplicate key, a non-object top level, or a pathologically nested
-    body. ``RecursionError`` (a ``RuntimeError``, NOT a ``ValueError`` /
-    ``JSONDecodeError``) is caught explicitly — a deeply-nested array that fits
-    under the body-size cap would otherwise escape as a 500 (a write-side
-    input crash — see DESIGN.md → input-validation gates (security boundary))."""
-    raw_bytes = await request.body()
+    ``async def`` handler that then offloads blocking work to the threadpool)
+    and parses them with reg_meta's shared ``order.parse_project`` — the same
+    reader ``reg-meta validate`` / ``reg-meta order`` use for a file, so both
+    adapters refuse the same malformed bytes (non-JSON, a duplicate key, a
+    non-object top level, a pathologically nested body — see DESIGN.md →
+    input-validation gates (security boundary)) with the same words: the 400
+    ``detail`` is the shared error's ``message``, which the CLI envelopes under
+    ``error.message`` with exit 10."""
     try:
-        parsed = json.loads(raw_bytes, object_pairs_hook=_reject_duplicate_keys)
-    except json.JSONDecodeError as exc:
-        raise HTTPException(
-            status_code=400, detail=f"request body is not valid JSON: {exc}"
-        ) from exc
-    except RecursionError as exc:
-        # Deeply-nested JSON exhausts the recursion limit before the cap notices
-        # (a small body, huge depth). A malformed REQUEST, not a server fault.
-        raise HTTPException(
-            status_code=400, detail="request body is nested too deeply"
-        ) from exc
-    except ValueError as exc:
-        # Two malformed-body cases, both caught here as ValueError: the
-        # `_reject_duplicate_keys` duplicate-key ValueError (raised inside
-        # json.loads), AND a UnicodeDecodeError from invalid-UTF-8 bytes —
-        # `UnicodeDecodeError` IS a `ValueError` subclass (json.loads decodes the
-        # bytes before parsing), so this clause covers it. Both → 400.
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-    if not isinstance(parsed, dict):
-        raise HTTPException(
-            status_code=400,
-            detail="request body must be a JSON object (project_data.json shape)",
-        )
-    return parsed
+        return parse_project(await request.body())
+    except RegMetaError as exc:
+        raise HTTPException(status_code=400, detail=exc.message) from exc

@@ -1,0 +1,16 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "time_key_unknown_column",
+      "path": "/panels/0/time_key",
+      "message": "time_key 'NOT_A_COLUMN' does not match any display_name on source 'lisa_2018'"
+    },
+    {
+      "level": "error",
+      "code": "time_key_unknown_column",
+      "path": "/panels/0/time_key",
+      "message": "time_key 'NOT_A_COLUMN' does not match any display_name on source 'lisa_2019'"
+    }
+  ]
+}

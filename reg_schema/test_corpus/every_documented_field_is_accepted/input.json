@@ -1,0 +1,58 @@
+{
+  "schema_version": "2.0.0",
+  "steward": "global",
+  "reg_meta_version": "reg_meta/v1.0.0",
+  "name": "every_documented_field",
+  "window": {"from": 2018, "to": 2019},
+  "sources": [
+    {
+      "name": "lisa_2018",
+      "register_variant": "scb/lisa/individer-15plus",
+      "period": 2018,
+      "bindings": [
+        {
+          "variable": "scb/lisa/lopnr",
+          "type": "id",
+          "display_name": "LopNr_PersonNr",
+          "id_subtype": "integer"
+        },
+        {
+          "variable": "scb/lisa/ar",
+          "type": "numeric",
+          "display_name": "AR",
+          "numeric_subtype": "integer"
+        },
+        {
+          "variable": "scb/lisa/fodelsedatum",
+          "type": "date",
+          "display_name": "FodelseDatum",
+          "date_format": "%Y%m%d"
+        },
+        {
+          "variable": "scb/lisa/registreringstid",
+          "type": "datetime",
+          "display_name": "RegistreringsTid",
+          "datetime_format": "%Y-%m-%dT%H:%M:%S"
+        },
+        {
+          "variable": "scb/lisa/ssyk",
+          "type": "categorical",
+          "display_name": "Ssyk4",
+          "value_set": "class/ssyk2012",
+          "representation": "Ssyk4_2012_J16"
+        }
+      ]
+    }
+  ],
+  "panels": [
+    {
+      "panel_id": "lisa",
+      "entity_key": "LopNr_PersonNr",
+      "time_key": "AR",
+      "comment": "every panel and member field",
+      "members": [
+        {"source": "lisa_2018", "entity_key": "LopNr_PersonNr", "time_key": 2018}
+      ]
+    }
+  ]
+}

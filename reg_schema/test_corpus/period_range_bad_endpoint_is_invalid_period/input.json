@@ -1,0 +1,30 @@
+{
+  "schema_version": "2.0.0",
+  "steward": "global",
+  "reg_meta_version": "reg_meta/v1.0.0",
+  "name": "demo",
+  "sources": [
+    {
+      "name": "lisa_2018",
+      "register_variant": "scb/lisa/individer-15plus",
+      "period": {
+        "from": "2018-01-01",
+        "to": "nope"
+      },
+      "bindings": [
+        {
+          "variable": "scb/lisa/lopnr",
+          "display_name": "LopNr_PersonNr",
+          "type": "id",
+          "id_subtype": "integer"
+        },
+        {
+          "variable": "scb/lisa/kon",
+          "display_name": "Kon",
+          "type": "categorical",
+          "value_set": "class/sun2020"
+        }
+      ]
+    }
+  ]
+}

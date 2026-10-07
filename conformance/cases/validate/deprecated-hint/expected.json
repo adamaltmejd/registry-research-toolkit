@@ -1,0 +1,17 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/ok": true,
+      "/issues": [
+        {
+          "code": "deprecated_traversal",
+          "level": "info",
+          "message": "column 'scb/example/utgangen' resolves to a deprecated catalog variable; prefer a current successor when one is available",
+          "path": "/sources/0/bindings/0/variable",
+          "successor_fqid": null
+        }
+      ]
+    }
+  }
+]

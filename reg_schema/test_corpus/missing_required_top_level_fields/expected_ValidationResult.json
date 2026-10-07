@@ -1,0 +1,34 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "missing_required_field",
+      "path": "/schema_version",
+      "message": "required top-level field 'schema_version' is missing"
+    },
+    {
+      "level": "error",
+      "code": "missing_required_field",
+      "path": "/steward",
+      "message": "required top-level field 'steward' is missing"
+    },
+    {
+      "level": "error",
+      "code": "missing_required_field",
+      "path": "/reg_meta_version",
+      "message": "required top-level field 'reg_meta_version' is missing"
+    },
+    {
+      "level": "error",
+      "code": "missing_required_field",
+      "path": "/name",
+      "message": "required top-level field 'name' is missing"
+    },
+    {
+      "level": "error",
+      "code": "missing_required_field",
+      "path": "/sources",
+      "message": "required top-level field 'sources' is missing"
+    }
+  ]
+}

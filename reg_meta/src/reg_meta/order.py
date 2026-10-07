@@ -18,8 +18,8 @@ Pipeline, per `sources[*].bindings[*]` in project declaration order:
    not re-derived here. Two columns co-existing at one instant with no
    `Binding.representation` pin is ambiguity, and blocks. Every clip is reported
    per binding (`OrderResult.clips`, and on the manifest itself when one is
-   produced), never silently, and never as an error. The webapp's
-   `/api/project/validate` calls `resolve_binding` too, so validation and
+   produced), never silently, and never as an error. Project validation
+   (`semantic.py`) calls `resolve_binding` too, so validation and
    ordering answer the availability question ONCE, and a clip alone is
    informational on both sides. It is not a clean bill of health: the same
    binding can still block here on representation ambiguity, and below on the
@@ -31,6 +31,7 @@ Pipeline, per `sources[*].bindings[*]` in project declaration order:
 
 from __future__ import annotations
 
+import codecs
 import hashlib
 import json
 from datetime import date, timedelta
@@ -285,8 +286,8 @@ class StateWindow(_OrderModel):
 
 class BindingResolution(_OrderModel):
     """What one binding resolves to inside one requested period — the SHARED
-    availability/slicing facts `materialize_order` and the webapp's
-    `/api/project/validate` both read (`resolve_binding`, steps 1+2).
+    availability/slicing facts `materialize_order` and project validation
+    (`semantic.py`) both read (`resolve_binding`, steps 1+2).
 
     `finding` is the blocking reason there is nothing orderable here, or `None`.
     A resolution can carry BOTH a `clip` and a `finding`: §12 reports every clip
@@ -450,7 +451,7 @@ def resolve_binding(
     §12's steps 1+2, and the ONE place the availability question is answered.
 
     `materialize_order` consumes the slices to match the steward's topology;
-    the webapp's `/api/project/validate` consumes the same facts to report
+    project validation (`semantic.py`) consumes the same facts to report
     them, so the two never disagree about what is available. §12 intersection
     semantics: each selected binding is requested wherever it is available
     inside the source window, so availability NARROWER than the request is a
@@ -563,7 +564,7 @@ def resolve_binding(
                 {"from": req[0], "to": req[1]},
                 variant=source.register_variant.split("/")[2],
                 # State METADATA only: nothing below reads code membership, and
-                # the webapp's validate path must not hydrate a geography
+                # the validate path must not hydrate a geography
                 # variable's code lists to answer a question about its windows.
                 with_codes=False,
             ):
@@ -743,25 +744,97 @@ def load_project(path: Path) -> ProjectData:
 
     The CLI adapter's input door (mirrors `inventory.load_inventory`); the
     FastAPI adapter already holds the raw body and calls `project_from_raw`
-    directly. Fail-closed: an unreadable or non-JSON-object file raises
+    directly."""
+    return project_from_raw(read_project(path))
+
+
+def read_project(path: Path) -> dict[str, Any]:
+    """Read a `project_data.json` file as the raw JSON object both CLI doors
+    take — `project_from_raw` (order) and `semantic.validate_project` (validate),
+    the CLI counterparts of the FastAPI adapters' raw request body. The bytes go
+    through `parse_project`, the same reader the FastAPI body uses.
+
+    Fail-closed: an unreadable file or a malformed document raises
     `RegMetaError` (`project_unreadable`, EXIT_CONFIG)."""
     try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        data = path.read_bytes()
+    except OSError as exc:
         raise _order_config_error(
             "project_unreadable",
             f"Could not read project {path}: {exc}",
-            "The project must be a UTF-8 `project_data.json` document (see "
-            "reg_schema/DESIGN.md).",
+            _PROJECT_DOCUMENT_REMEDIATION,
         ) from exc
-    if not isinstance(raw, dict):
-        raise _order_config_error(
-            "project_unreadable",
-            f"Project {path} is not a JSON object (got {type(raw).__name__}).",
-            "The project must be a UTF-8 `project_data.json` document (see "
-            "reg_schema/DESIGN.md).",
+    return parse_project(data)
+
+
+_PROJECT_DOCUMENT_REMEDIATION = (
+    "The project must be a UTF-8 `project_data.json` document (see "
+    "reg_schema/DESIGN.md)."
+)
+
+
+def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    """``json.loads`` ``object_pairs_hook`` that raises on a duplicate JSON key.
+
+    The default keeps the last value silently — a hand-edited project_data.json
+    with a duplicated field would validate against the wrong (last-wins) value.
+    Fires at every nesting depth (the hook runs per object)."""
+    seen: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in seen:
+            raise ValueError(f"duplicate key {key!r} in project JSON")
+        seen[key] = value
+    return seen
+
+
+def parse_project(data: bytes) -> dict[str, Any]:
+    """Parse untrusted `project_data.json` bytes into the raw JSON object every
+    door takes, or raise `RegMetaError` (`project_unreadable`, EXIT_CONFIG).
+
+    The ONE read boundary for both adapters (§12): the CLI's file
+    (`read_project`) and the FastAPI request body, which maps the raise to a
+    400 whose `detail` is this error's `message` — so the two refuse the same
+    bytes with the same words. The message therefore never names a file path.
+
+    Malformed means: not strict UTF-8 (RFC 8259 §8.1 — no byte-order mark, and
+    no UTF-16/32, which `json.loads(bytes)` would otherwise sniff and accept),
+    not JSON, a duplicate key at any depth (last-wins would silently validate or
+    order the wrong value), nesting deep enough to exhaust the recursion limit,
+    or a non-object top level. A well-formed object that fails the contract is
+    NOT malformed: that is the version/structural layers' diagnosis, not a read
+    failure."""
+
+    def unreadable(message: str) -> RegMetaError:
+        return _order_config_error(
+            "project_unreadable", message, _PROJECT_DOCUMENT_REMEDIATION
         )
-    return project_from_raw(raw)
+
+    if data.startswith(codecs.BOM_UTF8):
+        raise unreadable("project JSON must be UTF-8 without a byte-order mark")
+    try:
+        # Decoding first is what makes the reader strict: a `str` reaches
+        # `json.loads` with no encoding left to detect.
+        text = data.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise unreadable(f"project JSON is not valid UTF-8: {exc}") from exc
+    try:
+        parsed = json.loads(text, object_pairs_hook=_reject_duplicate_keys)
+    except json.JSONDecodeError as exc:
+        raise unreadable(f"project is not valid JSON: {exc}") from exc
+    except RecursionError as exc:
+        # A small document can still nest past the recursion limit; that is a
+        # malformed input, not a crash. `RecursionError` is a `RuntimeError`,
+        # so it needs its own clause.
+        raise unreadable("project JSON is nested too deeply") from exc
+    except ValueError as exc:
+        # The duplicate-key hook's ValueError.
+        raise unreadable(str(exc)) from exc
+    if not isinstance(parsed, dict):
+        raise unreadable(
+            "project must be a JSON object (project_data.json shape), got "
+            f"{type(parsed).__name__}"
+        )
+    return parsed
 
 
 def project_from_raw(raw: dict[str, Any]) -> ProjectData:
@@ -815,9 +888,9 @@ def project_from_raw(raw: dict[str, Any]) -> ProjectData:
 
 def schema_version_issue(raw: dict[str, Any]) -> ValidationIssue | None:
     """The ONE supported-version decision every SERVER-SIDE consumer of a raw
-    project applies: `project_from_raw` above (both order adapters) and the
-    webapp's `/api/project/validate`, which needs the finding as an ISSUE rather
-    than a raise. (The SPA keeps its own partial open-time gate over a file the
+    project applies: `project_from_raw` above (both order adapters) and
+    `semantic.validate_project` (both validate adapters), which needs the
+    finding as an ISSUE rather than a raise. (The SPA keeps its own partial open-time gate over a file the
     researcher picks; the backend stays the canonical answer.) Returns `None`
     when the project is on the contract this build reads.
 

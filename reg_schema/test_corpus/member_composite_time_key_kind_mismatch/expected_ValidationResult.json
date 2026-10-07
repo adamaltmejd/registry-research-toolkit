@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "time_key_member_kind_mismatch",
+      "path": "/panels/0/members/1/time_key",
+      "message": "member composite time_key kind 'ref_composite' must match panel-level kind 'literal_composite'"
+    }
+  ]
+}

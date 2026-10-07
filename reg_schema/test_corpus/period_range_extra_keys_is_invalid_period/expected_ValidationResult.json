@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_period",
+      "path": "/sources/0/period",
+      "message": "period object must be {'from': ..., 'to': ...} with int or period-token endpoints"
+    }
+  ]
+}

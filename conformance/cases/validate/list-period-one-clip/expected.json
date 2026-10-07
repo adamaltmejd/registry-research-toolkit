@@ -1,0 +1,31 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/ok": true,
+      "/issues": [
+        {
+          "code": "range_period_partially_covered",
+          "level": "info",
+          "message": "column 'scb/example/kon' is available for only part of requested period 2010..2012,2018 at scb/example/annual; it is ordered for 2018",
+          "path": "/sources/0/bindings/0/variable",
+          "successor_fqid": null
+        },
+        {
+          "code": "range_period_partially_covered",
+          "level": "info",
+          "message": "column 'scb/example/kon' is available for only part of requested period 2015..2016,2018 at scb/example/annual; it is ordered for 2018",
+          "path": "/sources/1/bindings/0/variable",
+          "successor_fqid": null
+        },
+        {
+          "code": "range_period_partially_covered",
+          "level": "info",
+          "message": "column 'scb/example/kon' is available for only part of requested period 2017..2019,2021..2022 at scb/example/annual; it is ordered for 2018..2019,2021..2022",
+          "path": "/sources/2/bindings/0/variable",
+          "successor_fqid": null
+        }
+      ]
+    }
+  }
+]

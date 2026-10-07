@@ -1,0 +1,26 @@
+[
+  {
+    "status": 400,
+    "json": {
+      "/detail": "duplicate key 'name' in project JSON"
+    }
+  },
+  {
+    "status": 400,
+    "json": {
+      "/detail": "duplicate key 'name' in project JSON"
+    }
+  },
+  {
+    "status": 400,
+    "json": {
+      "/detail": "duplicate key 'type' in project JSON"
+    }
+  },
+  {
+    "status": 400,
+    "json": {
+      "/detail": "duplicate key 'type' in project JSON"
+    }
+  }
+]

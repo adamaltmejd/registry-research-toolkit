@@ -1,0 +1,68 @@
+{
+  "schema_version": "2.0.0",
+  "steward": "global",
+  "reg_meta_version": "reg_meta/v1.0.0",
+  "name": "demo",
+  "sources": [
+    {
+      "name": "lisa_2018",
+      "register_variant": "scb/lisa/individer-15plus",
+      "period": 2018,
+      "bindings": [
+        {
+          "variable": "scb/lisa/lopnr",
+          "display_name": "LopNr_PersonNr",
+          "type": "id",
+          "id_subtype": "integer"
+        },
+        {
+          "variable": "scb/lisa/kon",
+          "display_name": "Kon",
+          "type": "categorical",
+          "value_set": "class/sun2020"
+        },
+        {
+          "variable": "scb/lisa/ar",
+          "display_name": "AR",
+          "type": "numeric",
+          "numeric_subtype": "integer"
+        }
+      ]
+    },
+    {
+      "name": "lisa_2019",
+      "register_variant": "scb/lisa/individer-15plus",
+      "period": 2019,
+      "bindings": [
+        {
+          "variable": "scb/lisa/lopnr",
+          "display_name": "LopNr_PersonNr",
+          "type": "id",
+          "id_subtype": "integer"
+        },
+        {
+          "variable": "scb/lisa/ar",
+          "display_name": "AR",
+          "type": "numeric",
+          "numeric_subtype": "integer"
+        }
+      ]
+    }
+  ],
+  "panels": [
+    {
+      "panel_id": "lisa",
+      "entity_key": "LopNr_PersonNr",
+      "members": [
+        {
+          "source": null,
+          "time_key": 2018
+        },
+        {
+          "source": "lisa_2019",
+          "time_key": 2019
+        }
+      ]
+    }
+  ]
+}

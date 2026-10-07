@@ -65,9 +65,12 @@ class ValidationResult:
 
     @property
     def ok(self) -> bool:
-        # `ok = True` means no error-level issues — it does NOT mean the
-        # result was complete. At catalog-load time (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)) unresolved
-        # FQIDs are downgraded to `warning`; affected bindings drop out
-        # of the in-memory index but `ok` stays True. Callers that need
-        # completeness must inspect the warnings list.
+        # `ok = True` means no error-level issues — warnings and infos never
+        # flip it. It is NOT a clean bill of health: the semantic layer (see
+        # reg_meta/DESIGN.md → Project semantic validation (semantic.py))
+        # reports a binding the steward does not hold as a `warning`
+        # (`*_outside_steward_catalog`) and an availability clip as `info`,
+        # and a valid project is resolvable, not proven orderable — the order
+        # materializer still gates physical coverage. Callers that care must
+        # inspect the non-error issues.
         return not any(i.level == "error" for i in self.issues)

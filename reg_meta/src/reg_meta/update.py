@@ -37,7 +37,8 @@ def _parse_version(v: str) -> tuple[int, ...]:
 
     Supports ``X.Y.Z``, ``X.Y.ZaN`` (alpha), and ``X.Y.Z.devN`` (dev).
     Ordering: ``0.4.0.dev1 < 0.4.0a1 < 0.4.0 < 0.5.0``.
-    Unparseable strings sort lowest so they always trigger an update.
+    Unparseable strings sort lowest, so an unparseable candidate version is
+    never offered as an update.
     """
     v = v.lstrip("v")
     m = re.match(
@@ -87,11 +88,19 @@ def _update_available_path() -> Path:
 
 
 def read_pending_update() -> str | None:
-    """Read the persistent update-available flag. Returns version or None."""
+    """Read the persistent update-available flag.
+
+    Returns the flagged version when it is newer than the installed package,
+    else None: a flag left behind by an upgrade made outside `reg-meta update`
+    offers nothing.
+    """
     try:
-        return _update_available_path().read_text().strip() or None
+        flagged = _update_available_path().read_text().strip()
     except OSError:
         return None
+    if flagged and _parse_version(flagged) > _parse_version(__version__):
+        return flagged
+    return None
 
 
 def _set_pending_update(version: str) -> None:

@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_field_type",
+      "path": "/sources/0/name",
+      "message": "source 'name' must not be null"
+    }
+  ]
+}

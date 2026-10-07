@@ -48,6 +48,10 @@ supported but secondary. This drives several choices:
 - Errors are structured with codes, not just messages
 - Exit codes are meaningful (see below)
 - Core query functions are importable as a Python library, not just CLI
+- Text output prints at most three contextual hints on stderr. A hint that says the
+  rendered table omits data outranks every advisory hint: "Table view truncated" first,
+  then "Long values truncated", then command hints in the order they were added. The cap
+  drops advisory hints, never a truncation notice.
 
 ## SQLite backend
 
@@ -510,19 +514,19 @@ surface (see `reg_webapp/DESIGN.md`).
 **Narrow reads for consumers that don't want the codes.** The binding arm is
 history-hydrating by construction: `resolve` builds every state, and each state costs a
 value-set code-list query. Two entry points serve a consumer that reads identity and
-state *metadata* only — project validation is the one that asks for them (see
-`reg_webapp/DESIGN.md` → Current semantic validation); other metadata-only readers still
-take the default hydration. `variable_identity(fqid)` returns a `VariableIdentity` —
-canonical FQID, `deprecated`, `replaced_by`, `via_same_as` — resolving through the same
-`same_as` traversal and raising the same errors as `resolve`, but stopping before the
-states. `resolve_at(..., with_codes=False)` runs the ordinary period/variant resolution
-and skips only the two per-state CODE-LIST queries (`value_set` members and the
-conformance report's nonconforming codes), leaving those two fields None; `value_set_id`
-still carries the code-set identity. `resolve_binding(fqid, ...)` IS `resolve`'s binding
-arm, public so the same two hydration keywords reach the period-less whole record. Both
-reuse the canonical identity and window expansion — there is no second resolver — so a
-narrow read's query work scales with the identities and states asked for, not with how
-many codes they share.
+state *metadata* only — project validation is the one that asks for them (see "Project
+semantic validation (`semantic.py`)" below); other metadata-only readers still take the
+default hydration. `variable_identity(fqid)` returns a `VariableIdentity` — canonical
+FQID, `deprecated`, `replaced_by`, `via_same_as` — resolving through the same `same_as`
+traversal and raising the same errors as `resolve`, but stopping before the states.
+`resolve_at(..., with_codes=False)` runs the ordinary period/variant resolution and
+skips only the two per-state CODE-LIST queries (`value_set` members and the conformance
+report's nonconforming codes), leaving those two fields None; `value_set_id` still
+carries the code-set identity. `resolve_binding(fqid, ...)` IS `resolve`'s binding arm,
+public so the same two hydration keywords reach the period-less whole record. Both reuse
+the canonical identity and window expansion — there is no second resolver — so a narrow
+read's query work scales with the identities and states asked for, not with how many
+codes they share.
 
 **Presentation summaries and the reads that replace the members** (Y-46, 2026-09-08). A
 consumer that RENDERS a coding needs two facts the members carry incidentally: how many
@@ -595,16 +599,22 @@ Steward delivery-column scope narrows that field and representation group member
 scoring, so unheld aliases cannot affect order or cursor identity. Invalid or mismatched
 cursors fail at the library boundary. Cursor integrity is checked before query work and
 continuation has a hard 1,000-result depth ceiling, so a forged token cannot request an
-unbounded prefix; researchers reaching the ceiling must refine the broad query.
-Non-foldable branches use an adaptive `limit + 1` prefix and backfill when in-scope
-shaping consumes a page. Foldable variable/classification/group branches instead use one
-fixed 1,001-row horizon: every cursor sees the same complete bounded fold universe, so a
-later sibling cannot turn an already-consumed leaf into a group or succession row.
-Type/register/year/group eligibility, classification-code exclusions, and the value
-surface's published bm25-plus-mapping-count rank are applied inside SQL before each
-branch's bound. This is the search-surface analog of the catalog-typing move (#681): the
-webapp's per-result mapper functions and `models.py` search wrappers are deleted; the
-FastAPI response models embed reg_meta's search types directly.
+unbounded prefix; researchers reaching the ceiling must refine the broad query. Every
+branch whose rows can carry an identity score (registers, variable names, delivery
+columns, classification names and code containment, group labels) uses one fixed
+1,001-row horizon, folded or not: every cursor sees the same complete bounded fold
+universe, so a later sibling cannot turn an already-consumed leaf into a group or
+succession row. The identity-promotion gate counts that same universe. It switches
+exact/prefix promotion off when more than 50 rows match by identity, so generic exact
+matches cannot swamp the ranked order, and the page size cannot change that decision
+(`--no-fold` included). The cost is the default folded search's SQL bound. Only the
+value branch, whose code rows carry no identity score, keeps an adaptive `limit + 1`
+prefix and backfills when in-scope shaping consumes a page. Type/register/year/group
+eligibility, classification-code exclusions, and the value surface's published
+bm25-plus-mapping-count rank are applied inside SQL before each branch's bound. This is
+the search-surface analog of the catalog-typing move (#681): the webapp's per-result
+mapper functions and `models.py` search wrappers are deleted; the FastAPI response
+models embed reg_meta's search types directly.
 
 An optional cursor-bound `exclude_fqids` set removes register/classification identities
 inside their SQL branches before the bound. Presentation layers use it when they inject
@@ -952,6 +962,9 @@ per-request allow-list reconstruction. Search cursors bind to query, period, var
 read scope and `generation_id`. A changed context rejects continuation. Unheld direct
 links return 404 in holdings; any existing canonical redirect targets only an admitted
 node. Reference scope permits inspecting the same node without making it selectable.
+Logical lookups that fall back from var_id and name to a delivery-column alias
+(`get varinfo`, `get values`) apply the predicate to that arm too: an unheld variable
+named by its column header is not found (exit 16), exactly as under its canonical name.
 
 Exceptions are explicit:
 
@@ -1063,10 +1076,10 @@ Per `sources[*].bindings[*]`, in project declaration order:
    does deliver. Segments union on the compound window identity
    `(state_id, delivery column, valid_from)`, so a state reaching two segments stays one
    state. Steps 1 and 2 together are one function, `resolve_binding`, and it is
-   **shared**: the webapp's `/api/project/validate` calls it and only translates its
-   facts into issues, so the two never disagree about what is available and a clip alone
-   is never a validation error. A clip is not a clean bill of health, though — the same
-   binding can still block on representation ambiguity, and validation consumes
+   **shared**: project validation (`semantic.py`, below) calls it and only translates
+   its facts into issues, so the two never disagree about what is available and a clip
+   alone is never a validation error. A clip is not a clean bill of health, though — the
+   same binding can still block on representation ambiguity, and validation consumes
    availability and slicing ONLY: steps 3 and 4 are the steward's physical topology and
    do not run there, so a clean validation is a resolvable project, never a proof of
    physical order readiness.
@@ -1150,6 +1163,26 @@ period segment without a special case.
 only if the adapters are genuinely thin, so the two things they would otherwise each
 re-type live here too, beside the materializer:
 
+- `parse_project(data)` is the ONE read boundary for untrusted project bytes, used by
+  the CLI's `read_project(path)` and the FastAPI body reader alike. It refuses a
+  malformed document with `RegMetaError` (`project_unreadable`, `EXIT_CONFIG`). The
+  refusal classes are:
+  - bytes that are not strict UTF-8 (RFC 8259 §8.1). A byte-order mark or UTF-16/32 is
+    refused, although `json.loads(bytes)` would sniff and accept it.
+  - text that is not JSON.
+  - a duplicate key at any depth. Last-wins would silently validate or order the wrong
+    value.
+  - nesting past the recursion limit.
+  - a non-object top level.
+
+  The adapters map that one refusal onto their transports rather than serializing it
+  byte-identically: the CLI writes its error envelope and exits 10, and HTTP answers 400
+  with `detail` equal to the error's `message`. The conformance corpus has one case per
+  refusal class, each run through `validate` and `order` on both adapters, and pins the
+  two messages equal. That parity is why a parse message never names the file path. The
+  CLI names the path only when the file cannot be read at all (`OSError`), a failure
+  that has no HTTP counterpart.
+
 - `project_from_raw(raw)` (and `load_project(path)`, the CLI's file-reading wrapper) is
   the ONE door into `materialize_order` for an untrusted `project_data.json`. The
   `ProjectData` model enforces field TYPES only, so it runs `reg_schema`'s
@@ -1158,6 +1191,7 @@ re-type live here too, beside the materializer:
   provider order. An invalid spec raises `RegMetaError` (`project_invalid` /
   `project_unreadable`, `EXIT_CONFIG`), so both adapters reject the same specs with the
   same words.
+
 - `schema_version_issue(raw)` is the door's FIRST question and the one piece of it
   shared beyond ordering: is this project written for the contract this build reads?
   Supported is EXACTLY `SUPPORTED_SCHEMA_VERSION` — `reg_schema.__version__` itself,
@@ -1172,11 +1206,13 @@ re-type live here too, beside the materializer:
   migrated or reinterpreted; pre-v1 carries no migration path. An ABSENT or non-string
   `schema_version` is deliberately left to `validate_structural`'s precise
   `missing_required_field` / `invalid_field_type` — that is a malformed document, not a
-  version claim. The webapp's `/api/project/validate` reuses this same function for its
-  200 diagnostic (it needs the `ValidationIssue`, not the raise), so every SERVER-SIDE
-  consumer of a raw project gives one answer. (The SPA's own open-time gate is a
-  separate, partial pre-flight on the file a researcher picks, not this decision — see
-  reg_webapp/DESIGN.md → "Project-file version gate"; the backend stays canonical.)
+  version claim. Project validation (`semantic.validate_project`, below) reuses this
+  same function for its diagnostic (it needs the `ValidationIssue`, not the raise), so
+  every SERVER-SIDE consumer of a raw project gives one answer. (The SPA's own open-time
+  gate is a separate, partial pre-flight on the file a researcher picks, not this
+  decision — see reg_webapp/DESIGN.md → "Project-file version gate"; the backend stays
+  canonical.)
+
 - `blocked_message(result)` renders every blocking finding, in the materializer's own
   accumulation order, each prefixed with the source/variable/period it names. The
   fail-closed path is byte-identical across adapters too, not just a produced manifest.
@@ -1222,6 +1258,165 @@ built when the first real extraction needs a companion file:
   may deserve a deliberate access decision rather than an automatic ride-along. The
   FEK_JE and SaBo key tables are parked behind this mechanism (deliberately NOT minted
   as flavor linkage variants).
+
+## Project semantic validation (`semantic.py`)
+
+The §6.8.3 reg_meta-backed validation layer is shared `reg_meta` project code beside the
+order materializer (§12: "the materializer and semantic resolution are shared `reg_meta`
+domain code, with thin FastAPI and CLI/plugin adapters"). It cannot live in
+`reg_schema`: `reg_schema` stays reg_meta-free and cannot resolve against a live DB, and
+lists these codes as defined-but-not-emitted on its own surface. The dependency
+direction is `reg_meta → reg_schema`, never the reverse.
+`validate_semantic(project, catalog)` emits the same frozen `reg_schema.ValidationIssue`
+shape as the structural layer, takes a `Catalog`, and leaves connection ownership to its
+caller.
+
+**The adapter door.** Like `order.py`, the module owns everything the adapters would
+otherwise each re-type, so they stay thin and byte-identical:
+
+- `validate_project(raw, connect)` is the §6.8.0 composition over a raw
+  `project_data.json`: the supported-version decision (`order.schema_version_issue`,
+  returned ALONE — the layers under it read the document as the current contract, which
+  is the claim it just rejected) → `reg_schema.validate_structural` → `ProjectData`
+  model construction → `validate_semantic`, with the issues of every layer that ran
+  concatenated in that order. A failing project is a result, never a raise: this is a
+  diagnostic. A structural failure skips the semantic layer. A residual model-
+  construction failure (a constraint structural did not replicate, effectively
+  unreachable) is one defensive `invalid_field` issue, never a crash. `connect` is the
+  adapter's opener for the selected artifact, called only once the DB-free layers have
+  passed, so a rejected body costs no DB hit; the adapter decides HOW it opens (the
+  webapp's thread-confined per-request open, the CLI's catalog selection).
+- `validation_json(result)` is the canonical serialization both adapters emit VERBATIM:
+  `{issues, ok}` with sorted keys, two-space indent, UTF-8 and a trailing newline (the
+  `OrderManifest.to_json` conventions). An absent `successor_fqid` is an explicit
+  `null`, the wire shape the SPA's codegen'd type reads.
+
+The adapters are `reg_webapp`'s `POST /api/project/validate` (HTTP 200 for any diagnosed
+project, 4xx only for a malformed request; see `reg_webapp/DESIGN.md` → Project-write
+surface) and `reg-meta validate <project.json>`, which writes the same bytes to stdout
+or `--output` and exits 0 with no error-level issue, 17 with one (the blocked-order
+code; the findings are written either way) and 10 for an unreadable file. The
+conformance corpus runs every `cases/validate` case through both and compares the bytes;
+the sampled artifact agreement does the same on admitted real artifacts.
+
+Rules, walking each source's `register_variant` + every binding:
+
+- The `register_variant` coordinate resolves to a known variant; the binding `variable`
+  (3-segment FQID) resolves to a known variable (following `same_as` links —
+  `Catalog.variable_identity` does that). Unresolved → `fqid_unresolved` (error).
+- **Availability is not decided here.** The source period is expanded
+  (`order.requested_intervals`) and each binding resolved by the SHARED reg_meta pass
+  the order materializer runs (`order.resolve_binding` — steps 1+2 in "Order
+  materializer and manifest" above); this layer only translates those facts into issues,
+  so the two never disagree about what is available. Intersection semantics apply: a
+  binding is requested wherever it IS available inside the source window, so narrower
+  availability — a leading/trailing shortfall, an **internal** gap, or a pinned
+  `representation` that covers only part of the request — is an informational clip
+  (`range_period_partially_covered`, naming the period actually ordered), never an error
+  by itself. A clip is not a clean bill of health: the same binding can still block on
+  representation/value-set ambiguity here, and on the steward's coverage gate at order
+  time. A **#307 list period** (interrupted series; structurally sorted + disjoint, wire
+  form comma-joined — `2005..2010,2015..2020`) is one request with holes, not a series
+  of independent ones: it reports ONE clip for the whole request, and its holes are
+  genuinely absent from the question — a request that skips a year is NOT equivalent to
+  the range enclosing it, since a column co-existing only inside a hole is not ambiguity
+  and a column delivered only inside a hole is not availability. Availability empty
+  across the whole request still blocks. The pass's blocking findings map onto this
+  surface's codes — `variable_unresolved` → `fqid_unresolved`, `binding_unavailable` →
+  `period_outside_state_validity`, `representation_unknown` →
+  `binding_representation_unknown`, `representation_ambiguous` →
+  `binding_value_set_version_ambiguous`, and `representation_unresolved` under its own
+  name. The kept states still carry the request instants they are available for, so the
+  per-instant probes (the co-delivered-value-set backstop) keep segment precision
+  without re-deriving the clip, and `binding_state_drifts_within_period` (info) reports
+  a request spanning a sequential state transition. Steps 3+4 of the materializer (the
+  steward's physical topology and its coverage gate) do NOT run here: a clean validation
+  is a resolvable project, never a proof of physical order readiness.
+- Resolved variable metadata can emit non-blocking hints. `deprecated_traversal` (info)
+  fires when the binding resolves to a variable marked deprecated; the binding remains
+  valid. `variable_replaced` (info) fires when a `variable_replaced_by` edge is
+  effective at or before the requested period and carries `successor_fqid` when the
+  successor resolves to a binding FQID.
+- The binding's `value_set` (a `class/<slug>` FQID) resolves to a known classification →
+  else `value_set_missing` (error).
+
+**This layer reads identity and state metadata, never code membership.** So it takes the
+narrow reg_meta reads (see "Catalog API surface" above): `Catalog.variable_identity` for
+the FQID and its replacement hints, and (inside the shared pass)
+`resolve_at(..., with_codes=False)` for the states. The full `resolve` would hydrate
+every historical state's code list to answer a question about one period — on a
+geography variable whose yearly states share one large code list that is most of the
+request. Diagnostics are unchanged: aliases, expanded monthly windows, representation
+identity (`state_id`, `delivery_column_name`, `valid_from`) and code-set identity
+(`value_set_id`) all come from the same code path. The conformance suite pins the rule
+by tracing every statement validation issues over the readable semantic fixture and
+refusing any read of a code-list table (`value_set_member`, `value_code`,
+`classification_code`, `classification_conformance_code`).
+
+**Representation, not `@version`.** A FQID names one concept, but a concept may carry
+several **co-existing delivery columns** at the same instant — parallel representations
+(SSYK 3/4/5-digit, age brackets). When ≥2 distinct delivery columns co-exist
+(overlapping windows inside the REQUESTED instants — the shared pass's test, so a
+sibling that overlaps only in a hole of a list period is not co-existence) and the
+binding sets no `representation`, the extract would pull more than one column →
+`binding_value_set_version_ambiguous` (error); the author must pick one via
+`Binding.representation` (the delivery column name; the SPA offers a chooser). This is
+exactly the job the retired `@version` pin used to do, now keyed on the delivery column.
+A `representation` reg_meta no longer delivers as a column →
+`binding_representation_unknown` (error). Crucially, the co-existence test keys on
+**overlapping** windows: distinct columns in *non*-overlapping windows are a sequential
+rename (drift), NOT ambiguity, and must not demand a `representation`.
+
+A separate defensive backstop (`binding_value_set_version_ambiguous` when two kept
+states with different `value_set_id`s are available at one requested instant) is
+unreachable from any admitted artifact, so it has no conformance case. Co-existing
+columns block as ambiguity before it runs, so any two states it sees overlapping inside
+the request share one column, and two build invariants close that:
+
+- `overlapping_distinct_value_sets` (`_check_one_value_set_per_period`): no two
+  overlapping states of one column carry distinct non-null value sets.
+  `validate_built_db` runs it on every build, flavored included.
+- `overlapping_codeless_codebearing_states` (`_check_no_codeless_codebearing_overlap`):
+  no code-less (`NULL`) state overlaps a code-bearing one on one column. The backstop
+  compares `value_set_id`s with `!=`, so this NULL-vs-non-NULL pair would also fire it.
+  The check runs on global builds and is SKIPPED on flavored (`extend-db`) builds. That
+  skip opens no path: the flavored base is a released global DB whose own build ran the
+  check, and the steward overlay can add no such pair. It inserts only states it mints
+  for its own steward-provider variables, never for a base variable, and every one is
+  code-less (steward extensions cannot declare value sets). Two code-less states compare
+  equal, so they never fire the backstop.
+
+If a steward overlay ever gains value sets or states on base variables, the flavored
+skip must be revisited with it.
+
+**Onboarding.** Stewards declare a subset of what reg_meta knows; data without an FQID
+can't be authored (no `{display_name + type, no FQID}` escape hatch in v1). New
+variables/registers/classifications onboard via slug-TOML PRs against `reg_meta_build`;
+the steward authors accepted builder inventory and publishes a new compiled generation.
+
+**Steward catalog filtering — `fqid_outside_steward_catalog` /
+`representation_outside_steward_catalog`.** When a researcher's project references a
+binding outside the loaded steward catalog, the column-based admission check (#206)
+emits one of two **warnings** (not errors): `fqid_outside_steward_catalog` when the
+steward holds *no* column of the concept, and the distinct
+`representation_outside_steward_catalog` when the steward holds the concept but not the
+column the binding **resolves** to — its message enumerates what the steward *does* hold
+("available there as 'Ssyk1' only" is the actionable form of "not available"). These are
+warnings during editing so an uploaded project can be inspected, but ordering does not
+consume them: the materializer runs its fail-closed compiled-holdings/resolution gate
+and blocks these conditions with its own findings, so a steward-catalog warning never
+silently becomes an order. There is no cross- steward preview, retarget, or one-click
+mutation feature: the active deployment is the validation target, and the user edits and
+re-uploads the JSON if they intend to change it. The warning codes remain; the
+implementation reads compiled SQL mappings at the source's exact variant. It runs after
+shared period/representation resolution. `Holdings.binding_ids` and `Holdings.columns`
+distinguish an unheld binding or variant from a held binding with an unheld
+representation. Canonical column lookup handles spelling without granting a sibling
+variant or representation. If resolution is indeterminate, its existing error remains
+and only the binding-level admission check runs. Catalog artifacts emit neither steward
+warning. An unresolved source variant skips the probe. Admission uses the literal
+authored FQID; a same-as relationship is reference evidence and grants no physical
+membership. Physical period gaps remain the order materializer's responsibility.
 
 ## Value sets are year-projected
 
@@ -1393,8 +1588,9 @@ result-shaping over the 5.3.0 tables (`reg_meta.queries`). `get groups REGISTER`
 `get groups --classifications`) lists groups with members-with-facets, JSON-able like
 every other command. `search` folds sibling hits: when ≥2 distinct member variables of
 one group match, the leaf hits collapse into a single `type: "group"` result row (the
-facet-ordered member list under `members`, and the count of folded hits as
-`matched_count` on the typed model); a lone member hit stays a leaf annotated with
+facet-ordered member list under `members`, and the number of distinct members hit as
+`matched_count` on the typed model; a member reached through both the variable and the
+varname arm counts once); a lone member hit stays a leaf annotated with
 `concept_group`/`concept_group_label`; and group LABELS themselves match (searching a
 family label finds its group row even though no single leaf row matches). `--no-fold`
 flattens. `get schema` carries `concept_group`(`_label`) per column so the fold is
@@ -1405,21 +1601,21 @@ concept-group fold, `_fold_classification_succession` collapses classification e
 hits that share a `classification_replaced_by` chain into one
 `type: "classification_succession"` result row — the terminal (current) edition's
 identity, plus the full `editions` list (terminal-first by BFS depth — date-independent,
-so robust to undated `effective_year` edges; #588) and the count of folded hits as
-`matched_count`. The internal dict pipeline carries the raw `matched` leaf list for fold
-arithmetic and `_strip_internal_keys` drops `_classification_id` from it;
-`_row_to_model` reads `matched` to compute `matched_count` and does not put `matched` on
-the typed model. This fold is terminal-centric (it collapses a whole family onto its
-terminal, with no queried node), so collect-all-ancestors is correct here — unlike
-`Catalog.classification_chain` / `variable_chain`, which anchor on the QUERIED node's
-path (also #588) so a merge sibling on a different inbound branch is excluded. A lone
-edition hit (whether terminal or an old vintage) stays a leaf; an old-vintage lone hit
-is annotated with `terminal_fqid` so the webapp can link "current". This fold runs
-**before** the concept-group fold so collapsed terminals can then fold into a curated
-umbrella group (e.g. `group:sun`, #516) cleanly — the succession row keeps the
-terminal's `_classification_id` so the umbrella pass treats it as that classification.
-All folds happen before pagination — a succession row and a group row each count as one
-result.
+so robust to undated `effective_year` edges; #588) and the number of distinct editions
+hit as `matched_count`. The internal dict pipeline carries the raw `matched` leaf list
+for fold arithmetic and `_strip_internal_keys` drops `_classification_id` from it; each
+fold computes `matched_count` from the distinct member ids when it builds the row, and
+`_row_to_model` does not put `matched` on the typed model. This fold is terminal-centric
+(it collapses a whole family onto its terminal, with no queried node), so
+collect-all-ancestors is correct here — unlike `Catalog.classification_chain` /
+`variable_chain`, which anchor on the QUERIED node's path (also #588) so a merge sibling
+on a different inbound branch is excluded. A lone edition hit (whether terminal or an
+old vintage) stays a leaf; an old-vintage lone hit is annotated with `terminal_fqid` so
+the webapp can link "current". This fold runs **before** the concept-group fold so
+collapsed terminals can then fold into a curated umbrella group (e.g. `group:sun`, #516)
+cleanly — the succession row keeps the terminal's `_classification_id` so the umbrella
+pass treats it as that classification. All folds happen before pagination — a succession
+row and a group row each count as one result.
 
 ## Relationship graph (#761)
 
@@ -1724,8 +1920,12 @@ and prints a hint on interactive runs when a newer release exists.
 **Auto-download on first use**: metadata, holdings and order reads require only the
 selected catalog artifact. Docs operations additionally require its paired sibling doc
 DB. Interactive query commands offer missing downloads; non-interactive invocations fail
-with actionable `db_not_found` / `doc_db_not_found` errors. Updates preserve explicit
-catalog selection and do not attach an unrelated installed docs artifact.
+with actionable `db_not_found` / `doc_db_not_found` errors. The bootstrap catalog
+download resolves the newest release carrying the selected catalog's asset; the docs
+download takes the newest release carrying the shared docs asset, whatever the catalog.
+Their missing-asset remediation names only end-user actions (`reg-meta update --tag`, an
+issue report), never the maintainer-only `reg-meta-build` commands. Updates preserve
+explicit catalog selection and do not attach an unrelated installed docs artifact.
 
 ### Package version format
 
@@ -1740,15 +1940,15 @@ format for version comparison.
 
 ## Exit codes
 
-  | Code | Meaning                                        |
-  | ---- | ---------------------------------------------- |
-  | 0    | Success                                        |
-  | 2    | Usage/argument error                           |
-  | 10   | Configuration error (missing DB, bad encoding) |
-  | 16   | Not found                                      |
-  | 17   | No match with `--require-match`; blocked order |
-  | 25   | Network error (`reg-meta update`)              |
-  | 30   | Unexpected internal error                      |
+  | Code | Meaning                                                                                    |
+  | ---- | ------------------------------------------------------------------------------------------ |
+  | 0    | Success                                                                                    |
+  | 2    | Usage/argument error                                                                       |
+  | 10   | Configuration error (missing DB, bad encoding)                                             |
+  | 16   | Not found                                                                                  |
+  | 17   | No match with `--require-match`; blocked order; validate: project has an error-level issue |
+  | 25   | Network error (`reg-meta update`)                                                          |
+  | 30   | Unexpected internal error                                                                  |
 
 ## Determinism
 
