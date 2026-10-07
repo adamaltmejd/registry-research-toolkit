@@ -16,6 +16,9 @@ seed = 0
 #   reason = "why the new behavior is correct"
 #   case = "*/search/*"              # fnmatch glob over `<catalog>/<scope>/<command>/<key>`
 #   paths = ["/results"]             # JSON pointer prefixes
+#
+# The fold sweep's one exception, `baseline-ucd-unassigned`, is defined in `folds.py`:
+# its scalar set comes from the baseline interpreter's `unicodedata`.
 
 [[exception]]
 name = "derived-generation-cursor"

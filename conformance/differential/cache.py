@@ -57,9 +57,17 @@ BASELINE_PATHS = (
 )
 CHUNK = 1 << 20
 REPO_ROOT = Path(__file__).resolve().parents[2]
-# What a derived copy depends on: the builder, the reader code derive moved, and the
-# locked dependencies.
-DERIVE_SOURCES = ("reg_meta_build/src", "reg_meta/src", "uv.lock")
+# What a derived copy depends on: the builder, the reader code derive moved, the
+# locked dependencies, and the Rust sources of `reg-core-py` (its uv `cache-keys`).
+DERIVE_SOURCES = (
+    "reg_meta_build/src",
+    "reg_meta/src",
+    "uv.lock",
+    "crates/reg-core",
+    "crates/reg-core-py",
+    "Cargo.toml",
+    "Cargo.lock",
+)
 
 
 @dataclass(frozen=True)

@@ -50,6 +50,12 @@ FIXTURE_CACHE_RETENTION_SECONDS = 6 * 3600
 BUILD_PACKAGES = tuple(
     Path(package.__file__).parent for package in (reg_meta_build, reg_meta, reg_schema)
 )
+# The sources `reg-core-py` is built from (its uv `cache-keys`): `uv run` rebuilds the
+# extension when they change, and so must the cache.
+NATIVE_SOURCES = tuple(
+    CASES.parents[1] / path
+    for path in ("crates/reg-core", "crates/reg-core-py", "Cargo.toml", "Cargo.lock")
+)
 
 
 def replicate_filler(case: Path, destination: Path) -> Path:
@@ -189,7 +195,8 @@ def build_inputs_digest(
     """Digest of every fixture-independent build input.
 
     The defaults are the imported `reg_meta_build`, `reg_meta` and `reg_schema`
-    sources (file contents, so uncommitted edits count), this builder,
+    sources (file contents, so uncommitted edits count), the Rust sources of
+    `reg-core-py`, this builder,
     `installed_distributions()` and `runtime_versions()`: what actually runs,
     not what a lockfile asks for. The arguments let a caller digest other copies.
     Any change to this builder, the cache code included, is a new key.
@@ -197,6 +204,7 @@ def build_inputs_digest(
     return canonical_sha256(
         {
             "packages": [_tree_digest(package) for package in packages],
+            "native": [_tree_digest(path) for path in NATIVE_SOURCES],
             "builder": _tree_digest(builder),
             "distributions": list(
                 distributions

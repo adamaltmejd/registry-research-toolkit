@@ -21,13 +21,15 @@ jobs:
       - uses: astral-sh/setup-uv@v10.0.1
         with:
           version: "0.12.11"
-      - run: uv sync --frozen
-      - run: uv run ruff check
-      - run: uv run ruff format --check
+      # `uv sync` builds the reg-core-py extension (maturin) from crates/;
       # pre-commit's `cargo fmt` hook needs rustfmt.
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt
+      - uses: Swatinem/rust-cache@v2.9.2
+      - run: uv sync --frozen
+      - run: uv run ruff check
+      - run: uv run ruff format --check
       # Backstop: run the pre-commit-stage hooks that an agent could have
       # bypassed locally with `--no-verify`. Covers panache + ty + ruff. There
       # is no local pytest hook; the `test` and `package-integration` jobs
@@ -62,6 +64,9 @@ jobs:
       - uses: astral-sh/setup-uv@v10.0.1
         with:
           version: "0.12.11"
+      # `uv sync` builds the reg-core-py extension (maturin) from crates/.
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2.9.2
       - run: uv sync --frozen
       - run: bash scripts/check_versions.sh
 
@@ -72,6 +77,9 @@ jobs:
       - uses: astral-sh/setup-uv@v10.0.1
         with:
           version: "0.12.11"
+      # `uv sync` builds the reg-core-py extension (maturin) from crates/.
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2.9.2
       - run: uv sync --frozen
       - run: uv run python -m pytest -m "not integration"
 
@@ -86,6 +94,9 @@ jobs:
       - uses: astral-sh/setup-uv@v10.0.1
         with:
           version: "0.12.11"
+      # `uv sync` builds the reg-core-py extension (maturin) from crates/.
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2.9.2
       - run: uv sync --frozen
       # The ubuntu-24.04 runner image ships Podman (4.9.3), so there is no
       # apt step: `apt-get update` only exposed the job to Ubuntu mirror

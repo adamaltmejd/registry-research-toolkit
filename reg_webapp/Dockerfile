@@ -90,6 +90,7 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 COPY reg_meta/ ./reg_meta/
 COPY reg_meta_build/pyproject.toml reg_meta_build/README.md ./reg_meta_build/
+COPY crates/reg-core-py/pyproject.toml ./crates/reg-core-py/
 COPY reg_schema/pyproject.toml reg_schema/README.md ./reg_schema/
 COPY reg_webapp/backend/pyproject.toml reg_webapp/backend/README.md ./reg_webapp/backend/
 
@@ -165,11 +166,13 @@ WORKDIR /app
 # pyproject + uv.lock define the workspace; every member listed in
 # [tool.uv.workspace].members must have its pyproject present for the locked
 # resolution to validate. Full source trees only for the members this stage
-# actually installs (reg-webapp's dep closure); reg_meta_build stays
-# pyproject-only so its churn doesn't bust the sync layer (#290).
+# actually installs (reg-webapp's dep closure); reg_meta_build and its native
+# dependency reg-core-py stay pyproject-only so their churn doesn't bust the sync
+# layer (#290), and no Rust toolchain is needed.
 COPY pyproject.toml uv.lock ./
 COPY reg_meta/ ./reg_meta/
 COPY reg_meta_build/pyproject.toml reg_meta_build/README.md ./reg_meta_build/
+COPY crates/reg-core-py/pyproject.toml ./crates/reg-core-py/
 COPY reg_schema/ ./reg_schema/
 COPY reg_webapp/backend/ ./reg_webapp/backend/
 

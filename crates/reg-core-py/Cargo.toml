@@ -1,0 +1,22 @@
+[package]
+name = "reg-core-py"
+version = "0.0.0"
+edition.workspace = true
+publish.workspace = true
+
+[lib]
+name = "reg_core_py"
+crate-type = ["cdylib"]
+# No Rust tests: G1's fold sweep tests the module through Python. Without a test
+# harness, `cargo test` never links this crate against libpython.
+test = false
+doctest = false
+
+[dependencies]
+# No `extension-module` feature (deprecated in PyO3 0.29): maturin sets
+# `PYO3_BUILD_EXTENSION_MODULE` for its builds, and plain cargo builds link normally.
+pyo3 = "0.29.3"
+reg-core = { path = "../reg-core" }
+
+[lints]
+workspace = true
