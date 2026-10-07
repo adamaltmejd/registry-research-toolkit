@@ -1398,10 +1398,7 @@ def _resolve_slug_dir(slug_arg: str | None) -> Path:
                 "Slug TOMLs not found. Pass --slug-dir or run from a reg_meta "
                 "checkout containing reg_meta_build/curation/."
             ),
-            remediation=(
-                "Run from a repo checkout, or `reg-meta-build seed-slugs` "
-                "to bootstrap a new slug directory."
-            ),
+            remediation=("Run from a repo checkout, or pass --slug-dir."),
         )
     return resolved
 
@@ -1550,13 +1547,14 @@ def _cmd_precheck_slugs(
             "missing_registers": [
                 # `name` mirrors the renamed `register.name` column (was
                 # SCB `registernamn`); the JSON envelope uses the universal
-                # English key like the other entity arrays.
-                {"provider": p, "source_id": sid, "name": name}
-                for (p, sid, name) in result.missing_registers
+                # English key like the other entity arrays. A catalog row has
+                # no native id, so it is named by its slug path (#1215).
+                {"provider": p, "slug": slug, "name": name}
+                for (p, slug, name) in result.missing_registers
             ],
             "missing_variants": [
-                {"provider": p, "source_id": sid, "name": name}
-                for (p, sid, name) in result.missing_variants
+                {"provider": p, "slug": slug, "name": name}
+                for (p, slug, name) in result.missing_variants
             ],
             # A2.6: register_version left the FQID grammar — no version slug
             # missing/stale/collision arrays in the precheck payload.
