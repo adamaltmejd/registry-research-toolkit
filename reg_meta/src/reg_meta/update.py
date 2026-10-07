@@ -16,6 +16,7 @@ from .db import DB_FILENAME, default_db_dir
 from .doc_db import DOC_DB_FILENAME, DOCS_SOURCE_FILE
 from .download import (
     DB_SOURCE_FILE,
+    confirm_db_download,
     download_db,
     download_docs_db,
     fetch_pypi_latest_version,
@@ -307,6 +308,17 @@ def run_update(
         db_tag = tag
         docs_tag = tag
 
+    # Confirm before any side effect: the package upgrade below must not run
+    # when the database download it accompanies is then refused.
+    local_db_tag = _read_source_tag(db_dir / DB_SOURCE_FILE)
+    need_db = not installed_admitted or force or (db_tag and local_db_tag != db_tag)
+    db_declined = bool(
+        need_db
+        and db_tag
+        and not yes
+        and not confirm_db_download(db_tag, db_dir / DB_FILENAME)
+    )
+
     result: dict[str, Any] = {}
 
     # --- Package upgrade ---
@@ -375,12 +387,12 @@ def run_update(
 
     # --- Main database ---
     db_path = db_dir / DB_FILENAME
-    local_db_tag = _read_source_tag(db_dir / DB_SOURCE_FILE)
-    need_db = not installed_admitted or force or (db_tag and local_db_tag != db_tag)
-    if need_db and db_tag:
+    if db_declined:
+        result["database"] = {"aborted": True}
+    elif need_db and db_tag:
         sys.stderr.write("Updating main database...\n")
         db_result = download_db(
-            db_dir=db_dir, tag=db_tag, catalog=catalog, force=db_path.exists(), yes=yes
+            db_dir=db_dir, tag=db_tag, catalog=catalog, force=db_path.exists()
         )
         result["database"] = db_result
     elif need_db and not db_tag:

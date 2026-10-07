@@ -149,6 +149,14 @@ def test_logical_export_scope(case: Path, tmp_path: Path) -> None:
                     "names": [r["variable_name"] for r in result],
                     "code_counts": [r["n_distinct_codes"] for r in result],
                 }
+            elif observe == "coded-ranked":
+                # Result order is the contract here: tiers, ties and the cut.
+                actual = {
+                    "rows": [
+                        [r["variable_name"], r["n_registers"], r["n_distinct_codes"]]
+                        for r in result
+                    ]
+                }
             elif observe == "classified":
                 actual = {"names": [r["variable_name"] for r in result]}
             elif observe == "states":

@@ -3289,7 +3289,7 @@ def _prompt_first_run_download(
 
     catalog = _selected_name(args) or "global"
     if missing_main:
-        download_db(db_dir=db_path.parent, catalog=catalog, yes=True)
+        download_db(db_dir=db_path.parent, catalog=catalog)
     if missing_docs:
         download_docs_db(db_dir=docs_path.parent)
     sys.stderr.write("\n")

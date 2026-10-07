@@ -4483,6 +4483,8 @@ def get_coded_variables(
     `n_instances` counts distinct states now — the per-era shape is the unit the
     shipped DB carries.
     """
+    if limit == 0:
+        return []
     scope = resolve_scope(conn, scope)
     register_catalog_udfs(conn)
     # Counting distinct codes is the expensive part: joining every coded state
@@ -4553,7 +4555,7 @@ def get_coded_variables(
         # Stable sort: equal code counts keep the tier query's name order.
         found.sort(key=lambda r: -r["n_distinct_codes"])
         ranked.extend(found)
-        if 0 <= limit <= len(ranked):
+        if 0 < limit <= len(ranked):
             break
     # A negative limit means no limit, as SQLite's LIMIT read it.
     return ranked if limit < 0 else ranked[:limit]
