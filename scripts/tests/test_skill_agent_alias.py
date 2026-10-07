@@ -8,8 +8,9 @@ impossible — the skills in these trees that are still copies have already drif
 
 Two link directions exist:
 
-- The hand-authored `upgrade-deps` maintenance skill lives under `.agents/skills/`,
-  so `.claude/skills/upgrade-deps` aliases `../../.agents/skills/upgrade-deps`.
+- The hand-authored maintenance skills (`upgrade-deps`, `build-db`, `test-audit`,
+  `code-cleanup`) live under `.agents/skills/`, so `.claude/skills/<name>` aliases
+  `../../.agents/skills/<name>`.
 - The specialized design skills are hand-authored under `.claude/skills/`, so
   `.agents/skills/<name>` is the alias — `.agents/skills/<name>` → `../../.claude/skills/<name>`.
 
@@ -27,13 +28,15 @@ import pytest
 
 _ROOT = Path(__file__).resolve().parents[2]
 # skill name -> (canonical catalog, alias catalog). The specialized design skills are
-# hand-authored under `.claude/skills/`; upgrade-deps lives under `.agents/skills/`.
-# Either way, the alias catalog holds only the symlink.
+# hand-authored under `.claude/skills/`; the maintenance skills live under
+# `.agents/skills/`. Either way, the alias catalog holds only the symlink.
 _SKILLS = {
     "reg-webapp-frontend-design": (".claude", ".agents"),
     "reg-webapp-design-reviewer": (".claude", ".agents"),
     "upgrade-deps": (".agents", ".claude"),
     "build-db": (".agents", ".claude"),
+    "test-audit": (".agents", ".claude"),
+    "code-cleanup": (".agents", ".claude"),
 }
 
 
