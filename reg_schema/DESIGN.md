@@ -110,16 +110,20 @@ without migration code. If a real future consumer needs extension data, add one 
 
 ## What this layer does NOT validate
 
-`ValidationResult` and `ValidationIssue` are plain frozen dataclasses with no runtime
-checks: no tuple coercion of `issues`, no `level` allowlist. Every producer is Python
-code passing a literal `level` and a tuple, which ty checks, and no product path decodes
-JSON into these dataclasses. JSON deserialization belongs at read/write boundaries, not
-in the contract module itself: the webapp types the wire shape for OpenAPI
-(`ValidationResultModel`, `level` a `Literal`), and a reader that decodes it from JSON
-(the corpus harness, for each expected file) rejects an unknown `level` there, because a
-mis-cased one would silently flip `ok`. If `result.ok` ever crashes with
-`AttributeError` on `.level`, that is a boundary bug to fix upstream, not a defensive
-check to add here.
+`ValidationResult` and `ValidationIssue` are plain frozen dataclasses with no
+construction-time checks: no tuple coercion of `issues`, no `level` allowlist. Every
+producer is Python code passing a literal `level` and a tuple, which ty checks, and no
+product path decodes JSON into these dataclasses. JSON deserialization belongs at
+read/write boundaries, not in the contract module itself: the webapp types the wire
+shape for OpenAPI (`ValidationResultModel`, `level` a `Literal`), and a reader that
+decodes it from JSON (the corpus harness, for each expected file) rejects an unknown
+`level` there. If `result.ok` ever crashes with `AttributeError` on `.level`, that is a
+boundary bug to fix upstream, not a defensive check to add here.
+
+`ok` fails closed instead. An issue blocks unless its `level` is explicitly non-blocking
+(`warning` or `info`), so an unknown or mis-cased level (`"ERROR"`) blocks rather than
+passes. A level that slips past the `Literal` hint cannot weaken `ok` into `True` for a
+result that should block.
 
 **`schema_version` is not value-checked here.** The structural layer only requires
 `schema_version` to be a present, non-null string — it does **not** compare it to any

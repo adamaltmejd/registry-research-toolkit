@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import get_args
+from typing import cast, get_args
 
 import pytest
 
@@ -56,8 +56,7 @@ def _decode_expected(payload: object) -> ValidationResult:
     checked here because the dataclass annotations are typing hints only:
     without the check a corpus case like ``{"code": 123}`` or
     ``{"level": "ERROR"}`` would pass here while still failing the SPA's
-    typed import of the same expected JSON (and a mis-cased level would
-    silently flip ``ok``).
+    typed import of the same expected JSON.
     """
 
     if not isinstance(payload, dict):
@@ -120,6 +119,17 @@ def test_corpus_inputs_carry_the_current_schema_version() -> None:
         if isinstance(version, str) and version != reg_schema.__version__:
             stale.append(f"{case_dir.name}: {version}")
     assert not stale, f"corpus inputs not on {reg_schema.__version__}: {stale}"
+
+
+def test_unknown_issue_level_blocks_ok() -> None:
+    # `ok` fails closed. A level outside `IssueLevel` (here mis-cased) is what a
+    # JSON decode could smuggle past the `Literal` hint, and it must block
+    # rather than pass. No corpus case reaches this: the structural validator
+    # only emits typed levels.
+    issue = ValidationIssue(
+        level=cast("IssueLevel", "ERROR"), code="x", path="", message="x"
+    )
+    assert not ValidationResult(issues=(issue,)).ok
 
 
 def _issue_key(i: ValidationIssue) -> tuple[str, str, str, str]:

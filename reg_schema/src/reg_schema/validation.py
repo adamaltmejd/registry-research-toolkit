@@ -24,8 +24,13 @@ from typing import Literal
 # A typing hint only, like the tuple `issues`: every producer passes a literal
 # level and a tuple (checked by ty), and no product path decodes JSON into these
 # dataclasses. JSON is checked where it is read (see DESIGN.md → What this layer
-# does NOT validate).
+# does NOT validate). `ok` does not rely on the hint: it fails closed below.
 IssueLevel = Literal["error", "warning", "info"]
+
+# The `IssueLevel` values that do not block `ok`. Listed by hand rather than
+# derived (`IssueLevel` minus "error") so that a level added to `IssueLevel`
+# blocks until someone decides it should not.
+_NON_BLOCKING: frozenset[str] = frozenset({"warning", "info"})
 
 
 @dataclass(frozen=True)
@@ -49,12 +54,14 @@ class ValidationResult:
 
     @property
     def ok(self) -> bool:
-        # `ok = True` means no error-level issues — warnings and infos never
-        # flip it. It is NOT a clean bill of health: the semantic layer (see
+        # `ok = True` means every issue is explicitly non-blocking (`warning`
+        # or `info`). It fails closed: an unknown or mis-cased level
+        # (`"ERROR"`, smuggled past the `Literal` hint) blocks rather than
+        # passes. It is NOT a clean bill of health: the semantic layer (see
         # reg_meta/DESIGN.md → Project semantic validation (semantic.py))
         # reports a binding the steward does not hold as a `warning`
         # (`*_outside_steward_catalog`) and an availability clip as `info`,
         # and a valid project is resolvable, not proven orderable — the order
         # materializer still gates physical coverage. Callers that care must
         # inspect the non-error issues.
-        return not any(i.level == "error" for i in self.issues)
+        return all(i.level in _NON_BLOCKING for i in self.issues)
