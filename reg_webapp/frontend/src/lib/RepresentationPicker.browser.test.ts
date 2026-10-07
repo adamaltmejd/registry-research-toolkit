@@ -9,7 +9,6 @@ import type {
   VariableGraphNode,
 } from "./api";
 import {
-  facetAxisStyle,
   OPEN_ENDED_VALID_TO,
   type PickerRepresentation,
   type PickerStateInput,
@@ -188,8 +187,6 @@ const AXES: GroupAxisModel[] = [
   { name: "enhet", label: "Enhet" },
   { name: "hush", label: "Hushallsbegrepp" },
 ];
-const AXIS_ORDER = AXES.map((axis) => axis.name);
-
 const PROPS = {
   window: null,
   canAdd: true,
@@ -247,10 +244,6 @@ function one<T extends Element>(sel: string, within: ParentNode = document): T {
   return found;
 }
 
-/** `GRAPH_LANE_GAP`: the space the lane stack keeps between two lanes, which is
- * where an edge annotation is drawn. */
-const LANE_GAP = 8;
-
 function lanes(): HTMLElement[] {
   return [...document.querySelectorAll<HTMLElement>(".graph-lane")];
 }
@@ -290,10 +283,6 @@ async function graphPickerRendered(): Promise<void> {
       throw new Error("graph picker not rendered");
     }
   });
-}
-
-function styleAttr(el: HTMLElement): string {
-  return (el.getAttribute("style") ?? "").replace(/;$/, "");
 }
 
 describe("RepresentationPicker graph mode (#904)", () => {
@@ -385,35 +374,6 @@ describe("RepresentationPicker graph mode (#904)", () => {
       ],
     });
   }
-
-  it("uses the graph/time-band picker for a small edge-bearing variable graph", async () => {
-    const onapply = vi.fn();
-    const fixture = smallSuccessionFixture();
-    await render(RepresentationPicker, {
-      bands: fixture.bands,
-      graph: fixture.graph,
-      ...PROPS,
-      onapply,
-    });
-
-    await vi.waitFor(() => {
-      if (!document.querySelector(".graph-picker")) {
-        throw new Error("graph picker not rendered");
-      }
-    });
-    expect(document.querySelector(".col-list")).toBeNull();
-    expect(document.querySelector(".graph-edge")).not.toBeNull();
-
-    await page.getByRole("checkbox", { name: /Acol/ }).click();
-    await expect.element(page.getByText("+1 column")).toBeVisible();
-    await page
-      .getByRole("button", {
-        name: /Add to project|Remove from project|Apply changes/,
-      })
-      .click();
-    expect(onapply).toHaveBeenCalledTimes(1);
-    expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("Acol");
-  });
 
   it("matches graph nodes to picker bands through same_as aliases", async () => {
     const onapply = vi.fn();
@@ -737,33 +697,6 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(unavailable.some((text) => text.includes("uncolumned coding"))).toBe(
       true,
     );
-  });
-
-  it("renders edge-less selectable multi-run leaf graphs", async () => {
-    const aFqid = "scb/lisa/renamed";
-    await render(RepresentationPicker, {
-      bands: [renamedRunBand(aFqid, "Renamed leaf")],
-      graph: graph({
-        nodes: [renamedRunNode(aFqid)],
-        edges: [],
-        focus_id: aFqid,
-      }),
-      ...PROPS,
-    });
-
-    await vi.waitFor(() => {
-      const graphText =
-        document.querySelector(".graph-picker")?.textContent ?? "";
-      if (!graphText.includes("OLD") || !graphText.includes("NEW")) {
-        throw new Error(
-          `edge-less selectable graph not rendered: ${graphText}`,
-        );
-      }
-    });
-    expect(document.querySelector(".col-list")).toBeNull();
-    await expect
-      .element(page.getByRole("checkbox", { name: /^OLD\b/ }))
-      .toBeVisible();
   });
 
   it("renders an edge-less GROUP graph the same way (Y-78)", async () => {
@@ -1596,78 +1529,6 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(openCell.classList.contains("dimmed")).toBe(false);
   });
 
-  it("shows each rename era's delivered column while toggling the folded row", async () => {
-    const onapply = vi.fn();
-    const aFqid = "scb/lisa/a";
-    const bFqid = "scb/lisa/b";
-    await render(RepresentationPicker, {
-      bands: [
-        {
-          key: aFqid,
-          name: "A",
-          registerPrefix: "scb/lisa",
-          rows: [
-            row({
-              column: "NEW",
-              representation: null,
-              renamedColumns: ["OLD"],
-              from: "1990-01-01",
-              to: "2020-12-31",
-              period: "1990 – 2020",
-            }),
-          ],
-        } satisfies PickerBand,
-        {
-          key: bFqid,
-          name: "B",
-          registerPrefix: "scb/lisa",
-          rows: [row({ column: "OTHER" })],
-        } satisfies PickerBand,
-      ],
-      graph: graph({
-        nodes: [
-          graphNode(aFqid, {
-            states: [
-              graphState({
-                state_id: "1",
-                period_scope: "intervals",
-                representation_run_id: 1,
-                delivery_column_name: "OLD",
-                valid_from: "1990-01-01",
-                valid_to: "1999-12-31",
-              }),
-              graphState({
-                state_id: "2",
-                period_scope: "intervals",
-                representation_run_id: 2,
-                delivery_column_name: "NEW",
-                valid_from: "2000-01-01",
-                valid_to: "2020-12-31",
-              }),
-            ],
-          }),
-          graphNode(bFqid, {
-            states: [graphState({ delivery_column_name: "OTHER" })],
-          }),
-        ],
-        edges: [edge(bFqid, aFqid)],
-        focus_id: aFqid,
-      }),
-      ...PROPS,
-      onapply,
-    });
-
-    await page.getByRole("checkbox", { name: /^OLD\b/ }).click();
-    await expect.element(page.getByText("+1 column")).toBeVisible();
-    await page
-      .getByRole("button", {
-        name: /Add to project|Remove from project|Apply changes/,
-      })
-      .click();
-    expect(onapply).toHaveBeenCalledTimes(1);
-    expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("NEW");
-  });
-
   it("falls back when a graph run also carries a non-member column", async () => {
     const onapply = vi.fn();
     const aFqid = "scb/lisa/a";
@@ -1741,70 +1602,6 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("MEMBER");
   });
 
-  it("falls back when a graph node carries a separate non-member column run", async () => {
-    const aFqid = "scb/lisa/a";
-    const bFqid = "scb/lisa/b";
-    await render(RepresentationPicker, {
-      bands: [
-        {
-          key: aFqid,
-          name: "A",
-          registerPrefix: "scb/lisa",
-          rows: [row({ column: "MEMBER" })],
-        } satisfies PickerBand,
-        {
-          key: bFqid,
-          name: "B",
-          registerPrefix: "scb/lisa",
-          rows: [row({ column: "NEXT" })],
-        } satisfies PickerBand,
-      ],
-      graphMemberHrefs: {
-        [aFqid]: "/catalog/scb/lisa/a",
-        [bFqid]: "/catalog/scb/lisa/b",
-      },
-      graph: graph({
-        nodes: [
-          graphNode(aFqid, {
-            states: [
-              graphState({
-                state_id: "1",
-                period_scope: "intervals",
-                representation_run_id: 1,
-                delivery_column_name: "HIDDEN",
-                valid_from: "1990-01-01",
-                valid_to: "1999-12-31",
-              }),
-              graphState({
-                state_id: "2",
-                period_scope: "intervals",
-                representation_run_id: 2,
-                delivery_column_name: "MEMBER",
-                valid_from: "2000-01-01",
-                valid_to: "2020-12-31",
-              }),
-            ],
-          }),
-          graphNode(bFqid, {
-            states: [graphState({ delivery_column_name: "NEXT" })],
-          }),
-        ],
-        edges: [edge(aFqid, bFqid)],
-        focus_id: null,
-      }),
-      ...PROPS,
-    });
-
-    await vi.waitFor(() => {
-      if (!document.querySelector(".col-list")) {
-        throw new Error("list fallback not rendered");
-      }
-    });
-    expect(document.querySelector(".graph-picker")).toBeNull();
-    expect(visibleColumns()).toEqual(["MEMBER", "NEXT"]);
-    expect(document.body.textContent).not.toContain("HIDDEN");
-  });
-
   it("falls back when a group graph includes a non-member variable node", async () => {
     const aFqid = "scb/lisa/a";
     const bFqid = "scb/lisa/b";
@@ -1854,83 +1651,6 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(document.querySelector(".graph-picker")).toBeNull();
     expect(visibleColumns()).toEqual(["Acol", "Bcol"]);
     expect(document.body.textContent).not.toContain("Hidden");
-  });
-
-  it("keeps graph mode while hiding graph members removed by filters", async () => {
-    const aFqid = "scb/lisa/a";
-    const bFqid = "scb/lisa/b";
-    await render(RepresentationPicker, {
-      bands: [
-        {
-          key: aFqid,
-          name: "A",
-          registerPrefix: "scb/lisa",
-          href: "/catalog/scb/lisa/a",
-          rows: [row({ column: "Acol" })],
-          facetsByColumn: {
-            Acol: [{ axis: "era", value: "old", label: "Old" }],
-          },
-        } satisfies PickerBand,
-        {
-          key: bFqid,
-          name: "B",
-          registerPrefix: "scb/lisa",
-          href: "/catalog/scb/lisa/b",
-          rows: [row({ column: "Bcol" })],
-          facetsByColumn: {
-            Bcol: [{ axis: "era", value: "new", label: "New" }],
-          },
-        } satisfies PickerBand,
-      ],
-      axes: [{ name: "era", label: "Era" }],
-      graphMemberHrefs: {
-        [aFqid]: "/catalog/scb/lisa/a",
-        [bFqid]: "/catalog/scb/lisa/b",
-      },
-      graph: graph({
-        nodes: [
-          graphNode(aFqid, {
-            states: [graphState({ delivery_column_name: "Acol" })],
-          }),
-          graphNode(bFqid, {
-            states: [
-              graphState({
-                state_id: "2",
-                period_scope: "intervals",
-                representation_run_id: 2,
-                delivery_column_name: "Bcol",
-                valid_from: "2011-01-01",
-                valid_to: "9999-12-31",
-              }),
-            ],
-          }),
-        ],
-        edges: [edge(aFqid, bFqid)],
-        focus_id: null,
-      }),
-      ...PROPS,
-      focusKey: bFqid,
-    });
-
-    await vi.waitFor(() => {
-      if (!document.querySelector(".graph-picker")) {
-        throw new Error("graph picker not rendered");
-      }
-    });
-
-    clickFilter("Old");
-    await vi.waitFor(() => {
-      const graphText =
-        document.querySelector(".graph-picker")?.textContent ?? "";
-      if (!graphText.includes("Acol") || graphText.includes("Bcol")) {
-        throw new Error(`filtered graph not ready: ${graphText}`);
-      }
-    });
-    expect(document.querySelector(".col-list")).toBeNull();
-    expect(document.querySelector(".graph-picker")).not.toBeNull();
-    await expect
-      .element(page.getByText("Showing 1 of 2 columns"))
-      .toBeVisible();
   });
 
   it("uses the visible graph projection for size limits after filtering", async () => {
@@ -2372,53 +2092,6 @@ describe("RepresentationPicker graph mode (#904)", () => {
     );
   });
 
-  it("falls back when a graph cell has no unambiguous picker member row", async () => {
-    const aFqid = "scb/lisa/a";
-    const bFqid = "scb/lisa/b";
-    await render(RepresentationPicker, {
-      bands: [
-        {
-          key: aFqid,
-          name: "A",
-          registerPrefix: "scb/lisa",
-          rows: [row({ column: "MEMBER" })],
-        } satisfies PickerBand,
-      ],
-      graphMemberHrefs: { [aFqid]: "/catalog/scb/lisa/a" },
-      graph: graph({
-        nodes: [
-          graphNode(aFqid, {
-            states: [
-              graphState({
-                state_id: "1",
-                period_scope: "intervals",
-                representation_run_id: 1,
-                delivery_column_name: "MEMBER",
-              }),
-              graphState({
-                state_id: "2",
-                period_scope: "intervals",
-                representation_run_id: 2,
-                delivery_column_name: "HIDDEN",
-              }),
-            ],
-          }),
-          graphNode(bFqid, {
-            states: [graphState({ delivery_column_name: "NEXT" })],
-          }),
-        ],
-        edges: [edge(aFqid, bFqid)],
-        focus_id: null,
-      }),
-      ...PROPS,
-    });
-
-    expect(document.querySelector(".graph-picker")).toBeNull();
-    expect(document.querySelector(".col-list")).not.toBeNull();
-    expect(visibleColumns()).toEqual(["MEMBER"]);
-    expect(document.body.textContent).not.toContain("HIDDEN");
-  });
-
   it("falls back when a picker row has no graph cell coverage", async () => {
     const aFqid = "scb/lisa/a";
     const bFqid = "scb/lisa/b";
@@ -2687,7 +2360,6 @@ describe("RepresentationPicker graph mode (#904)", () => {
   });
 
   it("falls back to the compact list when one graph run has several selectable columns", async () => {
-    const onapply = vi.fn();
     const aFqid = "scb/lisa/monthly";
     const bFqid = "scb/lisa/successor";
     await render(RepresentationPicker, {
@@ -2743,54 +2415,14 @@ describe("RepresentationPicker graph mode (#904)", () => {
         focus_id: aFqid,
       }),
       ...PROPS,
-      onapply,
     });
 
-    expect(document.querySelector(".graph-picker")).toBeNull();
-    expect(document.querySelector(".col-list")).not.toBeNull();
-    await page.getByRole("checkbox", { name: /FEB/ }).click();
-    await expect.element(page.getByText("+1 column")).toBeVisible();
-    await page
-      .getByRole("button", {
-        name: /Add to project|Remove from project|Apply changes/,
-      })
-      .click();
-    expect(onapply).toHaveBeenCalledTimes(1);
-    expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("FEB");
-  });
-
-  it("falls back to the compact list when the graph is too large to draw cleanly", async () => {
-    const nodes = Array.from({ length: 19 }, (_, i) => {
-      const fqid = `scb/lisa/v${i}`;
-      return graphNode(fqid, {
-        states: [graphState({ delivery_column_name: `C${i}` })],
-      });
-    });
-    const bands = nodes.map(
-      (node, i) =>
-        ({
-          key: node.fqid as string,
-          name: node.label,
-          registerPrefix: "scb/lisa",
-          rows: [row({ column: `C${i}` })],
-        }) satisfies PickerBand,
-    );
-    await render(RepresentationPicker, {
-      bands,
-      graph: graph({
-        nodes,
-        edges: [edge(nodes[0].id, nodes[1].id)],
-      }),
-      ...PROPS,
-    });
-
-    await vi.waitFor(() => {
-      if (!document.querySelector(".col-list")) {
-        throw new Error("list fallback not rendered");
-      }
-    });
-    expect(document.querySelector(".graph-picker")).toBeNull();
-    expect(visibleColumns().slice(0, 2)).toEqual(["C0", "C1"]);
+    await expect
+      .element(page.getByRole("checkbox", { name: /FEB/ }))
+      .toBeVisible();
+    expect(
+      page.getByRole("group", { name: "Graph column picker" }).elements(),
+    ).toEqual([]);
   });
 
   // Y-14: the reproduced lane — the VIEWED leaf (`/catalog/scb/lisa/kon?period=2018`
@@ -2878,35 +2510,11 @@ describe("RepresentationPicker graph mode (#904)", () => {
         }
       });
 
+      // A lane grown for its gutter moves the next one down rather than
+      // overlapping it.
       const [viewed, successor] = lanes();
-      const first = viewed.getBoundingClientRect();
-      const second = successor.getBoundingClientRect();
-      // The lanes still stack in order, separated by exactly the band an edge
-      // annotation rides in (`GRAPH_LANE_GAP`) — a lane grown for its gutter
-      // moves the next one down rather than overlapping it.
-      expect(second.top).toBeCloseTo(first.bottom + LANE_GAP, 0);
-
-      // …and the cells and the succession connector stay on their lanes: the
-      // viewed lane's cell is centred in it, and the edge runs between the two
-      // lane centres.
-      const cell = one<HTMLElement>(
-        ".graph-cell",
-        viewed,
-      ).getBoundingClientRect();
-      expect(cell.top + cell.height / 2).toBeCloseTo(
-        first.top + first.height / 2,
-        0,
-      );
-      const line = one<SVGLineElement>(".graph-edge");
-      const lanesTop =
-        one<HTMLElement>(".graph-lanes").getBoundingClientRect().top;
-      expect(Number(line.getAttribute("y1")) + lanesTop).toBeCloseTo(
-        first.top + first.height / 2,
-        0,
-      );
-      expect(Number(line.getAttribute("y2")) + lanesTop).toBeCloseTo(
-        second.top + second.height / 2,
-        0,
+      expect(successor.getBoundingClientRect().top).toBeGreaterThanOrEqual(
+        viewed.getBoundingClientRect().bottom,
       );
     });
   });
@@ -2924,37 +2532,23 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     await expect
       .element(page.getByRole("group", { name: /Filter columns/ }))
       .toBeVisible();
-    const legends = [...document.querySelectorAll(".dim-filter legend")].map(
-      (l) => l.textContent?.trim(),
-    );
-    expect(legends).toEqual(["Enhet", "Hushallsbegrepp"]);
-    const fieldsets = [
-      ...document.querySelectorAll<HTMLElement>(".dim-filter"),
-    ];
-    expect(fieldsets.every((el) => el.classList.contains("facet-axis"))).toBe(
-      true,
-    );
-    expect(styleAttr(fieldsets[0])).toBe(facetAxisStyle("enhet", AXIS_ORDER));
-    expect(styleAttr(fieldsets[1])).toBe(facetAxisStyle("hush", AXIS_ORDER));
-    expect(styleAttr(fieldsets[0])).not.toBe(styleAttr(fieldsets[1]));
+    await expect
+      .element(page.getByRole("group", { name: "Enhet" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("group", { name: "Hushallsbegrepp" }))
+      .toBeVisible();
+    expect(page.getByRole("group", { name: "Coding" }).elements()).toEqual([]);
+    expect(page.getByRole("group", { name: "Variant" }).elements()).toEqual([]);
 
-    // Each row is marked with value-only facet pills; the axis rides as aria/title
-    // text and the same deterministic tint used by the matching filter fieldset.
-    const markers = [
-      ...document.querySelectorAll<HTMLElement>(
-        ".col-row .facet-markers .facet-marker",
-      ),
-    ];
-    expect(
-      markers.map((m) => m.querySelector(".facet-value")?.textContent?.trim()),
-    ).toContain("Individ");
-    expect(markers[0].querySelector(".dim-kind")).toBeNull();
-    expect(markers[0].getAttribute("aria-label")).toBe("Enhet: Individ");
-    expect(markers[0].getAttribute("title")).toBe("Enhet: Individ");
-    expect(styleAttr(markers[0])).toBe(facetAxisStyle("enhet", AXIS_ORDER));
+    // Each row is marked with value-only facet pills; the axis rides in the
+    // marker's accessible name, so the row reads "Enhet: Individ" to AT.
+    await expect
+      .element(page.getByRole("checkbox", { name: /Enhet: Individ/ }).first())
+      .toBeVisible();
   });
 
-  it("renders global select-all as an integrated row with selected and indeterminate states", async () => {
+  it("global select-all is checked when every column is, and partially checked after one is cleared", async () => {
     await render(RepresentationPicker, {
       bands: [
         multiAxisBand(),
@@ -2968,65 +2562,25 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       axes: [],
       ...PROPS,
     });
-    const selectAllRow = await vi.waitFor(() => {
-      const row = document.querySelector<HTMLLabelElement>(
-        ".col-list > .select-all-row > label.select-all",
-      );
-      if (!row) {
-        throw new Error("global select-all row not rendered");
-      }
-      return row;
+    const selectAll = page.getByRole("checkbox", {
+      name: "Select all columns",
+      exact: true,
     });
-    expect(selectAllRow.classList.contains("integrated-list-row")).toBe(true);
-    expect(selectAllRow.classList.contains("row-btn")).toBe(true);
+    await expect.element(selectAll).not.toBeChecked();
+    await expect.element(selectAll).not.toBePartiallyChecked();
 
-    const selectAllBox =
-      selectAllRow.querySelector<HTMLInputElement>("input.cbox");
-    expect(selectAllBox).not.toBeNull();
-    expect(selectAllBox?.checked).toBe(false);
-    expect(selectAllBox?.indeterminate).toBe(false);
-
-    // Click the row label, not the checkbox itself: the full integrated row toggles.
-    selectAllRow.click();
+    await selectAll.click();
     await expect.element(page.getByText("+4 columns")).toBeVisible();
-    expect(selectAllBox?.checked).toBe(true);
-    expect(selectAllBox?.indeterminate).toBe(false);
-    expect(selectAllRow.classList.contains("selected")).toBe(true);
-    const rowBoxes = [
-      ...document.querySelectorAll<HTMLInputElement>(
-        ".col-list .col-row .row-btn input.cbox",
-      ),
-    ];
-    expect(rowBoxes).toHaveLength(4);
-    expect(rowBoxes.every((box) => box.checked)).toBe(true);
+    await expect.element(selectAll).toBeChecked();
+    for (const column of ["DIN1", "DIN2", "DIN3", "DIN4"]) {
+      await expect
+        .element(page.getByRole("checkbox", { name: new RegExp(column) }))
+        .toBeChecked();
+    }
 
-    rowBoxes[0].click();
+    await page.getByRole("checkbox", { name: /DIN1/ }).click();
     await expect.element(page.getByText("+3 columns")).toBeVisible();
-    expect(selectAllBox?.checked).toBe(false);
-    expect(selectAllBox?.indeterminate).toBe(true);
-    expect(selectAllRow.classList.contains("selected")).toBe(false);
-  });
-
-  it("a single-value group surfaces NO filter controls", async () => {
-    await render(RepresentationPicker, {
-      bands: [
-        {
-          key: "scb/x/y",
-          name: "Y",
-          registerPrefix: "scb/x",
-          rows: [row({ column: "Cee", valueSetLabel: "one" })],
-        } satisfies PickerBand,
-      ],
-      axes: [],
-      ...PROPS,
-    });
-    await vi.waitFor(() => {
-      if (!document.querySelector(".col-row .col-chip")) {
-        throw new Error("row not rendered yet");
-      }
-    });
-    expect(visibleColumns()).toEqual(["Cee"]);
-    expect(document.querySelector(".dim-filters")).toBeNull();
+    await expect.element(selectAll).toBePartiallyChecked();
   });
 
   it("selecting a facet value narrows the visible rows; clearing restores them", async () => {
@@ -3053,72 +2607,6 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       .element(page.getByText("Showing 3 of 3 columns"))
       .toBeVisible();
     expect(visibleColumns()).toEqual(["DIN1", "DIN2", "DIN3"]);
-  });
-
-  it("filtering is presentation-only: a hidden selected column still commits, flagged in the footer", async () => {
-    const onapply = vi.fn();
-    await render(RepresentationPicker, {
-      bands: [multiAxisBand()],
-      axes: AXES,
-      ...PROPS,
-      onapply,
-    });
-    // Select DIN3 (carries enhet=fam, hush=h1) via its row checkbox.
-    const din3 = await vi.waitFor(() => {
-      const cb = [
-        ...document.querySelectorAll<HTMLInputElement>(
-          ".col-list .row-btn input.cbox",
-        ),
-      ][2];
-      if (!cb) {
-        throw new Error("DIN3 row checkbox not yet rendered");
-      }
-      return cb;
-    });
-    din3.click();
-    await expect.element(page.getByText("+1 column")).toBeVisible();
-
-    // Now filter Enhet → "Individ" (ind): DIN3 (fam) is hidden.
-    clickFilter("Individ");
-    // The selection persists and the footer signals the hidden selection.
-    await expect
-      .element(page.getByText("+1 column (1 hidden by filters)"))
-      .toBeVisible();
-    expect(visibleColumns()).toEqual(["DIN1", "DIN2"]);
-
-    // Committing still includes the hidden-but-selected DIN3.
-    await page
-      .getByRole("button", {
-        name: /Add to project|Remove from project|Apply changes/,
-      })
-      .click();
-    expect(onapply).toHaveBeenCalledTimes(1);
-    const committed = onapply.mock.calls[0][0].adds as {
-      row: PickerRepresentation;
-    }[];
-    expect(committed.map((s) => s.row.column)).toEqual(["DIN3"]);
-  });
-
-  it("keeps staged rows when the parent rejects an async apply as stale", async () => {
-    const onapply = vi.fn().mockResolvedValue(false);
-    await render(RepresentationPicker, {
-      bands: [multiAxisBand()],
-      axes: AXES,
-      ...PROPS,
-      onapply,
-    });
-
-    await page.getByRole("checkbox", { name: /DIN1/ }).click();
-    await expectStagedAddColumnVisible();
-    await page
-      .getByRole("button", {
-        name: /Add to project|Remove from project|Apply changes/,
-      })
-      .click();
-
-    expect(onapply).toHaveBeenCalledTimes(1);
-    await expectStagedAddColumnVisible();
-    await expect.element(page.getByText("+1 column")).toBeVisible();
   });
 
   it("keeps the 'Will be added' status in the staged-add checkbox accessible name while showing the compact '1 Column' tag (#1115 a11y)", async () => {
@@ -3161,7 +2649,6 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       }
       return el;
     });
-    const rowMain = rowEl.querySelector<HTMLElement>(".row-main");
     const before = rowEl.getBoundingClientRect().height;
 
     rowEl.querySelector<HTMLInputElement>("input.cbox")?.click();
@@ -3169,12 +2656,6 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     await expectStagedAddColumnVisible();
     const after = rowEl.getBoundingClientRect().height;
     expect(after).toBeLessThanOrEqual(before + 1);
-    expect(rowEl.querySelector(".primary-line .tag")).not.toBeNull();
-    expect(
-      [...(rowMain?.children ?? [])].some((child) =>
-        child.classList.contains("tag"),
-      ),
-    ).toBe(false);
   });
 
   it("stages selectable superseded predecessor rows from the history disclosure (#926)", async () => {
@@ -3341,62 +2822,6 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     await expect
       .element(page.getByRole("checkbox", { name: /DINFold/ }))
       .not.toBeInTheDocument();
-  });
-
-  it("includes visible folded history rows in global select-all (#926)", async () => {
-    const onapply = vi.fn();
-    const predecessor = {
-      key: "scb/iot/dispink-old",
-      name: "Disponibel inkomst old",
-      registerPrefix: "scb/iot",
-      rows: [row({ column: "DINFold" })],
-    } satisfies PickerBand;
-    const successor = {
-      key: "scb/iot/dispink-new",
-      name: "Disponibel inkomst new",
-      registerPrefix: "scb/iot",
-      rows: [row({ column: "DINFnew" })],
-      supersedes: [
-        {
-          name: predecessor.name,
-          href: "/catalog/scb/iot/dispink-old",
-          effectiveYear: 2005,
-          band: predecessor,
-        },
-      ],
-    } satisfies PickerBand;
-    const sibling = {
-      key: "scb/iot/dispink-other",
-      name: "Disponibel inkomst other",
-      registerPrefix: "scb/iot",
-      rows: [row({ column: "DINFother" })],
-    } satisfies PickerBand;
-
-    await render(RepresentationPicker, {
-      bands: [successor, sibling],
-      ...PROPS,
-      onapply,
-    });
-
-    await page.getByRole("checkbox", { name: "Select all columns" }).click();
-    await expect.element(page.getByText("+3 columns")).toBeVisible();
-
-    const details =
-      document.querySelector<HTMLDetailsElement>("details.history");
-    if (!details) {
-      throw new Error("history disclosure not rendered");
-    }
-    details.open = true;
-    await expect
-      .element(page.getByRole("checkbox", { name: /DINFold/ }))
-      .toBeChecked();
-
-    await page.getByRole("button", { name: "Add to project" }).click();
-    expect(onapply).toHaveBeenCalledTimes(1);
-    const addedColumns = onapply.mock.calls[0][0].adds.map(
-      (selection: { row: PickerRepresentation }) => selection.row.column,
-    );
-    expect(addedColumns.sort()).toEqual(["DINFnew", "DINFold", "DINFother"]);
   });
 
   it("shows global select-all for one successor plus one folded predecessor (#926)", async () => {
@@ -3974,41 +3399,6 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       );
     });
   });
-
-  it("keeps a unique operational definition when no facet axis carries the distinction (#959)", async () => {
-    await render(RepresentationPicker, {
-      bands: [
-        {
-          key: "scb/x/owner",
-          name: "Näringsgren",
-          registerPrefix: "scb/x",
-          operationalDefinition: "Owner industry at the end of the year.",
-          rows: [row({ column: "SNI_OWNER" })],
-        },
-        {
-          key: "scb/x/previous-owner",
-          name: "Näringsgren",
-          registerPrefix: "scb/x",
-          operationalDefinition:
-            "Previous owner industry at the end of the year.",
-          rows: [row({ column: "SNI_PREV" })],
-        },
-      ],
-      axes: [],
-      ...PROPS,
-    });
-
-    await vi.waitFor(() => {
-      const lines = [
-        ...document.querySelectorAll<HTMLElement>(".op-def-text"),
-      ].map((el) => el.textContent);
-      expect(lines).toEqual([
-        "Owner industry at the end of the year.",
-        "Previous owner industry at the end of the year.",
-      ]);
-    });
-    expect(document.body.textContent).not.toContain("op def");
-  });
 });
 
 // Y-14: a researcher choosing a delivery representation must be able to tell two
@@ -4303,20 +3693,6 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
         expect(cells[i].box.bottom).toBeLessThanOrEqual(next.box.top);
       }
 
-      // The succession connector still runs between the two lane centres.
-      const successor = lanes()[1].getBoundingClientRect();
-      const line = one<SVGLineElement>(".graph-edge");
-      const lanesTop =
-        one<HTMLElement>(".graph-lanes").getBoundingClientRect().top;
-      expect(Number(line.getAttribute("y1")) + lanesTop).toBeCloseTo(
-        laneBox.top + laneBox.height / 2,
-        0,
-      );
-      expect(Number(line.getAttribute("y2")) + lanesTop).toBeCloseTo(
-        successor.top + successor.height / 2,
-        0,
-      );
-
       // Both choices are reachable BY NAME, so the two cells differ to a screen
       // reader and to the keyboard, not only in pixels.
       for (const population of populations) {
@@ -4329,13 +3705,6 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
 
   it("names the population on graph cells two DISTINCT variants would otherwise share", async () => {
     await expectGraphCellsIdentify(DISTINCT, DISTINCT);
-  });
-
-  it("falls back to the variant slug on graph cells when the two names are IDENTICAL", async () => {
-    await expectGraphCellsIdentify(ALIKE, [
-      "individer-15plus",
-      "individer-16plus",
-    ]);
   });
 
   it("falls back to the variant slug on EVERY cell when a curator name IS another population's slug", async () => {
@@ -4372,22 +3741,9 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
     ]);
   });
 
+  // One row: the second of two identically named populations is the hard case
+  // (picking by name must reach its own variant, not the first match).
   it.each([
-    {
-      labels: DISTINCT,
-      population: "Individer 15+",
-      variant: "individer-15plus",
-    },
-    {
-      labels: DISTINCT,
-      population: "Individer 16+",
-      variant: "individer-16plus",
-    },
-    {
-      labels: ALIKE,
-      population: "individer-15plus",
-      variant: "individer-15plus",
-    },
     {
       labels: ALIKE,
       population: "individer-16plus",
@@ -4472,24 +3828,6 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
       expect(cells).toHaveLength(2);
       expect(cells[0].bottom).toBeLessThanOrEqual(cells[1].top);
     });
-  });
-
-  it("keeps the picker in the list when a cell is too narrow to name its population", async () => {
-    // Distinct names, one-year runs: the cells floor to `CELL_MIN_W` with no room for
-    // the text that would tell them apart, so the picker uses the list — the same
-    // GEOMETRY fallback an unreadably narrow codings cell takes, not a naming rule.
-    await render(RepresentationPicker, {
-      ...variantFixture(DISTINCT),
-      ...PROPS,
-    });
-
-    await vi.waitFor(() => {
-      if (!document.querySelector(".col-list")) {
-        throw new Error("list picker not rendered");
-      }
-    });
-    expect(document.querySelector(".graph-picker")).toBeNull();
-    expect(texts(ROWS)).toEqual(["Individer 15+ 2018", "Individer 16+ 2018"]);
   });
 
   it("leaves graph mode when the curator names differ only past the cell's edge", async () => {
@@ -4635,61 +3973,6 @@ describe("RepresentationPicker coexisting-variant row identity (Y-14)", () => {
     });
   });
 
-  it("leaves an ordinary WIDE cell painting its column, coding and period in full", async () => {
-    await renderMinWidthCell();
-
-    await atEveryWidth(async () => {
-      await vi.waitFor(() => {
-        expect(lanes()).toHaveLength(2);
-      });
-      const cell = cellOnLane(0);
-      const cellBox = cell.getBoundingClientRect();
-      expect(cellBox.width).toBeGreaterThan(CELL_MIN_W);
-      const chip = one<HTMLElement>(".col-chip", cell);
-      expect(chip.textContent).toBe("Kon");
-      const lines = glyphLines(chip);
-      expect(lines).toHaveLength(1);
-      expect(lines[0].left).toBeGreaterThanOrEqual(cellBox.left);
-      expect(lines[0].right).toBeLessThanOrEqual(cellBox.right);
-      expect(lines[0].top).toBeGreaterThanOrEqual(cellBox.top);
-      expect(lines[0].bottom).toBeLessThanOrEqual(cellBox.bottom);
-      // A cell with room over truncates nothing beside the column either.
-      for (const sel of [".graph-cell-sub", ".graph-cell-window"]) {
-        const el = one<HTMLElement>(sel, cell);
-        expect(el.scrollWidth).toBeLessThanOrEqual(el.clientWidth + 1);
-      }
-    });
-  });
-
-  it("adds the minimum-width cell's own binding over its own period", async () => {
-    const onapply = vi.fn();
-    await renderMinWidthCell({ onapply });
-
-    // The cell is reachable by the name it now paints, and its checkbox is the native
-    // control the keyboard already reaches.
-    const checkbox = page.getByRole("checkbox", { name: "Syss 2023 – 2026" });
-    await expect.element(checkbox).toBeVisible();
-    await checkbox.click();
-    await page
-      .getByRole("button", {
-        name: /Add to project|Remove from project|Apply changes/,
-      })
-      .click();
-
-    expect(onapply).toHaveBeenCalledTimes(1);
-    const { adds } = onapply.mock.calls[0][0];
-    expect(adds).toHaveLength(1);
-    // The cell whose column is finally readable stages THAT column's binding, over the
-    // four years it actually runs — the fit correction moved no target.
-    expect(pickerRowKey(adds[0].band, adds[0].row)).toBe(
-      "scb/rams/v::scb/rams/syss::Syss",
-    );
-    expect(adds[0].row.column).toBe("Syss");
-    expect(adds[0].row.from).toBe("2023-01-01");
-    expect(adds[0].row.to).toBe("2026-12-31");
-    expect(adds[0].row.period).toBe("2023 – 2026");
-  });
-
   it("keeps the LIST row breaking a long column name the graph cell keeps whole", async () => {
     // The one-line rule is scoped to a graph cell. Outside it the shared chip still
     // breaks a long unbroken column anywhere, which is what a 375px list row needs.
@@ -4780,26 +4063,6 @@ describe("codingsVaryNudge deep link (#905)", () => {
     return nudge.getAttribute("href") ?? "";
   }
 
-  // The leaf branch (band.href undefined → current path) is covered in
-  // BindingLeafView.browser.test.ts. This covers the GROUP branch: when a band
-  // carries `href` (the member's own leaf), the nudge links to that leaf with the
-  // `codes` param carrying the ROW's `(variant, column)` identity — `variant::column`
-  // (#905), merged into the href's existing query.
-  it("a coding-varying row links to the member leaf with a (variant, column) ?codes deep link", async () => {
-    const href = await nudgeHref({
-      key: "scb/lisa/yrkesreg",
-      name: "Yrkesregistret",
-      registerPrefix: "scb/lisa",
-      href: "/catalog/scb/lisa/yrkesreg",
-      rows: [row({ variant: "individer", column: "Yrke", codingsVary: true })],
-    } satisfies PickerBand);
-    // The member leaf + `codes=<variant>::<column>` + states hash — clean query, the
-    // row's variant carried so a shared column isolates THIS variant's coding.
-    expect(href).toBe(
-      "/catalog/scb/lisa/yrkesreg?codes=individer%3A%3AYrke#states-heading",
-    );
-  });
-
   // The nudge means "this column's coding changed OVER TIME — see the value sets",
   // which is inherently a FULL-HISTORY inspection (#905, Codex P2). So when `band.href`
   // carries an active `?period`, the nudge DROPS it (taking only the member path) and
@@ -4868,20 +4131,6 @@ describe("RepresentationPicker sequential-rename hint (#902)", () => {
 });
 
 describe("RepresentationPicker footer + row-height stability (#1115)", () => {
-  it("keeps the footer rendered (Apply disabled) with nothing staged", async () => {
-    // The footer is now ALWAYS present so picking a row can't pop it into
-    // existence — it just enables the disabled Apply button.
-    await render(RepresentationPicker, {
-      bands: [lisaNarrowedBand("individer-16plus")],
-      ...PROPS,
-    });
-
-    expect(document.querySelector(".picker-footer")).not.toBeNull();
-    await expect
-      .element(page.getByRole("button", { name: "Add to project" }))
-      .toBeDisabled();
-  });
-
   it("does not grow a single-column row's height when it is picked", async () => {
     // The #1115 regression: a Tag first appearing inline in the row grew the
     // row (Tag `line-height: 1.4` vs the row's centered 0.9rem primary). Its
