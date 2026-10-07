@@ -13,6 +13,7 @@ import unicodedata
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 from binascii import Error as Base64Error
 from hashlib import sha256
+from itertools import groupby
 from typing import TYPE_CHECKING, Any
 
 from .catalog import (
@@ -4484,11 +4485,15 @@ def get_coded_variables(
     """
     scope = resolve_scope(conn, scope)
     register_catalog_udfs(conn)
+    # Counting distinct codes is the expensive part: joining every coded state
+    # to its value-set members fans out to ~50M rows on the release catalog
+    # (~70 s). So aggregate at state grain first, carrying each name's distinct
+    # value sets, and count codes only for the n_registers tiers the ranking
+    # reaches. A state counts only when its value set has a member, exactly as
+    # the member join used to require.
     rows = conn.execute(
-        "SELECT v.name AS variable_name, "
-        "COUNT(DISTINCT vc.code) as n_distinct_codes, "
-        "COUNT(DISTINCT v.register_id) as n_registers, "
-        "COUNT(DISTINCT vs.state_id) as n_instances "
+        "WITH coded AS ("
+        "SELECT v.name, v.register_id, vs.state_id, coding.value_set_id "
         "FROM variable v "
         "JOIN variable_state vs ON vs.variable_id = v.variable_id "
         "JOIN (SELECT state_id, value_set_id FROM variable_state WHERE value_set_id IS NOT NULL "
@@ -4497,8 +4502,6 @@ def get_coded_variables(
         "AND w.register_variant_id = vs.register_variant_id "
         "AND w.valid_from <= vs.valid_to AND w.valid_to >= vs.valid_from "
         "WHERE w.coding_metadata = 'per_column') coding ON coding.state_id = vs.state_id "
-        "JOIN value_set_member vsm ON coding.value_set_id = vsm.value_set_id "
-        "JOIN value_code vc ON vsm.code_id = vc.code_id "
         "WHERE "
         + scope_predicate(
             scope,
@@ -4509,22 +4512,51 @@ def get_coded_variables(
             period_scope_sql="vs.period_scope",
             bounds_sql=("vs.valid_from", "vs.valid_to"),
         )
-        + " "
-        "GROUP BY v.name "
-        "HAVING n_distinct_codes >= ? AND n_registers >= ? "
-        "ORDER BY n_registers DESC, n_distinct_codes DESC "
-        "LIMIT ?",
-        (min_codes, min_registers, limit),
+        + " AND EXISTS (SELECT 1 FROM value_set_member vsm "
+        "WHERE vsm.value_set_id = coding.value_set_id)) "
+        "SELECT name AS variable_name, "
+        "COUNT(DISTINCT register_id) AS n_registers, "
+        "COUNT(DISTINCT state_id) AS n_instances, "
+        "json_group_array(DISTINCT value_set_id) AS value_set_ids "
+        "FROM coded GROUP BY name "
+        "HAVING n_registers >= ? "
+        "ORDER BY n_registers DESC, name",
+        (min_registers,),
     ).fetchall()
-    return [
-        {
-            "variable_name": r["variable_name"],
-            "n_distinct_codes": r["n_distinct_codes"],
-            "n_registers": r["n_registers"],
-            "n_instances": r["n_instances"],
-        }
-        for r in rows
-    ]
+    ranked: list[dict[str, Any]] = []
+    for _, group in groupby(rows, key=lambda r: r["n_registers"]):
+        tier = list(group)
+        # One query per tier, one value-set list per name, in tier order. The
+        # `IN` subqueries dedupe integer code_ids before any code text is
+        # compared, which is several times cheaper than COUNT(DISTINCT) over
+        # every member row of a name with many overlapping vintages.
+        counts = [
+            count
+            for (count,) in conn.execute(
+                "SELECT (SELECT COUNT(DISTINCT vc.code) FROM value_code vc "
+                "WHERE vc.code_id IN (SELECT vsm.code_id FROM value_set_member vsm "
+                "WHERE vsm.value_set_id IN (SELECT value FROM json_each(t.value)))) "
+                "FROM json_each(?) t ORDER BY t.key",
+                ("[" + ",".join(r["value_set_ids"] for r in tier) + "]",),
+            )
+        ]
+        found = [
+            {
+                "variable_name": r["variable_name"],
+                "n_distinct_codes": counts[position],
+                "n_registers": r["n_registers"],
+                "n_instances": r["n_instances"],
+            }
+            for position, r in enumerate(tier)
+            if counts[position] >= min_codes
+        ]
+        # Stable sort: equal code counts keep the tier query's name order.
+        found.sort(key=lambda r: -r["n_distinct_codes"])
+        ranked.extend(found)
+        if 0 <= limit <= len(ranked):
+            break
+    # A negative limit means no limit, as SQLite's LIMIT read it.
+    return ranked if limit < 0 else ranked[:limit]
 
 
 def resolve(
