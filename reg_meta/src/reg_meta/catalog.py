@@ -2223,23 +2223,20 @@ class Catalog:
         return out
 
     def provider_column_coverage(
-        self, provider_slug: str, register_slugs: Iterable[str] | None = None
+        self, provider_slug: str
     ) -> dict[str, dict[tuple[str, str | None], VariableCoverage]]:
-        """Column coverage for a provider, optionally restricted to register slugs.
+        """Column coverage for every register of a provider.
 
         Named keys match `register_column_coverage`; `(variable, None)` keys match
         `register_unnamed_column_coverage`. Registers without slugged state-bearing
         variables are absent. The artifact's read scope applies before coverage.
         """
         if self.scope == "holdings":
-            selected = frozenset(register_slugs) if register_slugs is not None else None
-            deliveries = self._provider_held_deliveries(provider_slug, selected)
+            deliveries = self._provider_held_deliveries(provider_slug)
             out = {}
             for register in self.list_registers(provider_slug):
                 slug = register.fqid.register
                 assert slug is not None
-                if selected is not None and slug not in selected:
-                    continue
                 columns: dict[tuple[str, str | None], VariableCoverage] = {}
                 for variable, offered in deliveries.get(slug, {}).items():
                     for column in sorted(
@@ -2251,14 +2248,6 @@ class Catalog:
                 out[slug] = columns
             return out
 
-        params = [provider_slug]
-        register_filter = ""
-        if register_slugs is not None:
-            slugs = sorted(set(register_slugs))
-            if not slugs:
-                return {}
-            register_filter = f" AND r.slug IN ({','.join('?' for _ in slugs)})"
-            params.extend(slugs)
         # LEFT joins keep register selection ahead of indexed variable/state
         # lookups; the live per-register inner-join queries can scan catalog-wide
         # tables. HAVING drops the stateless rows those joins retain.
@@ -2271,10 +2260,9 @@ class Catalog:
             "ON v.register_id = r.register_id AND v.slug IS NOT NULL "
             "LEFT JOIN variable_state vs ON vs.variable_id = v.variable_id "
             "WHERE p.slug = ? AND r.slug IS NOT NULL "
-            + register_filter
-            + " GROUP BY r.register_id, v.variable_id, vs.delivery_column_name "
+            "GROUP BY r.register_id, v.variable_id, vs.delivery_column_name "
             "HAVING COUNT(vs.state_id) > 0",
-            params,
+            (provider_slug,),
         ).fetchall()
         by_register: dict[str, list[sqlite3.Row]] = {}
         for row in rows:

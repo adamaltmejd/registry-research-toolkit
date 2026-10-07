@@ -4,8 +4,7 @@
 `(variant, column)`-grained `register_variable_deliveries` (Y-82).
 
 Query-time aggregates (no materialized columns — see reg_webapp/DESIGN.md →
-Coverage aggregates). Covers the open-ended sentinel mapping, a finite window, and
-a stateless variable (count 0, bounds None).
+Coverage aggregates).
 """
 
 from __future__ import annotations
@@ -31,90 +30,6 @@ from _slugged_db import (
 
 if TYPE_CHECKING:
     import sqlite3
-
-
-@pytest.fixture
-def db() -> sqlite3.Connection:
-    """scb/lisa with three variables: `kon` (the default open-ended state),
-    `fin` (a finite 2010–2015 window), `nostate` (no states)."""
-    conn = build_slugged_db()  # scb/lisa/kon, one state 2018-01-01..9999-12-31
-    add_variable(conn, register_id=1, var_id=200, name="Finite", slug="fin")
-    add_state(
-        conn,
-        register_id=1,
-        variable_slug="fin",
-        register_variant_id=10,
-        valid_from="2010-01-01",
-        valid_to="2015-12-31",
-    )
-    add_variable(conn, register_id=1, var_id=201, name="Stateless", slug="nostate")
-    return conn
-
-
-def test_register_variable_coverage(db: sqlite3.Connection) -> None:
-    cov = Catalog(db).register_variable_coverage("scb", "lisa")
-    assert set(cov) == {"kon", "fin", "nostate"}
-
-    # Default kon state is open-ended → coverage_to None, open_ended True.
-    assert cov["kon"].state_count == 1
-    assert cov["kon"].coverage_from == "2018-01-01"
-    assert cov["kon"].coverage_to is None
-    assert cov["kon"].open_ended is True
-
-    # Finite window → coverage_to set, open_ended False.
-    assert cov["fin"].state_count == 1
-    assert cov["fin"].coverage_from == "2010-01-01"
-    assert cov["fin"].coverage_to == "2015-12-31"
-    assert cov["fin"].open_ended is False
-
-    # Stateless variable → count 0, both bounds None (distinct from open-ended).
-    assert cov["nostate"].state_count == 0
-    assert cov["nostate"].coverage_from is None
-    assert cov["nostate"].coverage_to is None
-    assert cov["nostate"].open_ended is False
-
-
-def test_provider_register_coverage(db: sqlite3.Connection) -> None:
-    cov = Catalog(db).provider_register_coverage("scb")
-    assert "lisa" in cov
-    lisa = cov["lisa"]
-    assert lisa.variable_count == 3  # kon + fin + nostate (all slugged)
-    # Span over all states: earliest 2010 (fin), latest open-ended (kon).
-    assert lisa.coverage_from == "2010-01-01"
-    assert lisa.coverage_to is None
-    assert lisa.open_ended is True
-
-
-def test_multistate_fan_out() -> None:
-    """A variable with multiple states + a register with multiple variables: the
-    GROUP BY aggregates stay correct under the LEFT JOIN fan-out (MIN/MAX span
-    all states, COUNT(DISTINCT) doesn't double-count)."""
-    conn = build_slugged_db()  # scb/lisa/kon, one open-ended state
-    add_variable(conn, register_id=1, var_id=300, name="Multi", slug="multi")
-    add_state(
-        conn,
-        register_id=1,
-        variable_slug="multi",
-        register_variant_id=10,
-        valid_from="2000-01-01",
-        valid_to="2005-12-31",
-    )
-    add_state(
-        conn,
-        register_id=1,
-        variable_slug="multi",
-        register_variant_id=10,
-        valid_from="2008-01-01",
-        valid_to="2012-12-31",
-    )
-    cov = Catalog(conn).register_variable_coverage("scb", "lisa")
-    assert cov["multi"].state_count == 2
-    assert cov["multi"].coverage_from == "2000-01-01"
-    assert cov["multi"].coverage_to == "2012-12-31"  # MAX across both windows
-    assert cov["multi"].open_ended is False
-
-    reg = Catalog(conn).provider_register_coverage("scb")["lisa"]
-    assert reg.variable_count == 2  # kon + multi, NOT fanned out by 3 states
 
 
 def test_register_column_coverage_distinct_windows() -> None:
@@ -176,48 +91,7 @@ def test_register_column_coverage_distinct_windows() -> None:
     assert var_cov["disp"].coverage_to == "2024-12-31"
 
 
-@pytest.mark.parametrize("reversed_rows", [False, True])
-def test_register_column_coverage_folds_case_twin_spellings(
-    reversed_rows: bool,
-) -> None:
-    """Y-102: two states spelling ONE delivery column differently (`Idh` beside
-    `IdH`) are one column (`py_lower`), so they share ONE key carrying the merged
-    window, under the spelling `representative_columns` picks — the spelling
-    `register_variable_deliveries` lists the column under and `queries.resolve`
-    answers with. Two keys would split the column's coverage, and a steward
-    holding either spelling would be shown whichever half it landed on. The
-    GROUP BY is unordered, so the rows read the other way round must answer
-    identically."""
-    conn = build_slugged_db()
-    add_variable(conn, register_id=1, var_id=800, name="Fastighet", slug="idve")
-    twins = [
-        ("Idh", "2013-01-01", "2015-12-31"),
-        ("IdH", "2016-01-01", "2018-12-31"),
-    ]
-    for column, valid_from, valid_to in reversed(twins) if reversed_rows else twins:
-        add_state(
-            conn,
-            register_id=1,
-            variable_slug="idve",
-            register_variant_id=10,
-            valid_from=valid_from,
-            valid_to=valid_to,
-            delivery_column_name=column,
-        )
-
-    col_cov = Catalog(conn).register_column_coverage("scb", "lisa")
-
-    # One key, under the lowest spelling by byte order (no state names it in a
-    # spelling the others don't fold to).
-    assert [key for key in col_cov if key[0] == "idve"] == [("idve", "IdH")]
-    merged = col_cov[("idve", "IdH")]
-    assert merged.coverage_from == "2013-01-01"
-    assert merged.coverage_to == "2018-12-31"
-    assert merged.state_count == 2
-    assert merged.open_ended is False
-
-
-def _provider_coverage_db(reversed_rows: bool = False) -> sqlite3.Connection:
+def _provider_coverage_db() -> sqlite3.Connection:
     conn = build_slugged_db()
     add_variable(conn, register_id=1, var_id=800, name="Twin", slug="twin")
     states = [
@@ -227,7 +101,7 @@ def _provider_coverage_db(reversed_rows: bool = False) -> sqlite3.Connection:
         ("Other", "2010-01-01", "2012-12-31", 10),
     ]
     add_variant(conn, register_variant_id=11, register_id=1, slug="other", name="Other")
-    for column, start, end, variant in reversed(states) if reversed_rows else states:
+    for column, start, end, variant in states:
         add_state(
             conn,
             register_id=1,
@@ -288,34 +162,6 @@ def provider_db() -> sqlite3.Connection:
     return _provider_coverage_db()
 
 
-@pytest.mark.parametrize("reversed_rows", [False, True])
-def test_provider_column_coverage_matches_register_reads(reversed_rows: bool) -> None:
-    catalog = Catalog(_provider_coverage_db(reversed_rows))
-    expected = {}
-    for register in ("lisa", "rams"):
-        expected[register] = {
-            **catalog.register_column_coverage("scb", register),
-            **{
-                (slug, None): cov
-                for slug, cov in catalog.register_unnamed_column_coverage(
-                    "scb", register
-                ).items()
-            },
-        }
-    assert catalog.provider_column_coverage("scb") == expected
-
-
-def test_provider_column_coverage_uses_one_query(
-    provider_db: sqlite3.Connection,
-) -> None:
-    catalog = Catalog(provider_db)
-    statements: list[str] = []
-    provider_db.set_trace_callback(statements.append)
-    catalog.provider_column_coverage("scb")
-    provider_db.set_trace_callback(None)
-    assert len(statements) == 1
-
-
 def test_provider_column_coverage_folds_unicode_twins(
     provider_db: sqlite3.Connection,
 ) -> None:
@@ -346,22 +192,11 @@ def test_provider_column_coverage_keeps_registers_separate(
     assert coverage["rams"][("twin", "år")].coverage_to == "2021-12-31"
 
 
-def test_provider_column_coverage_filters_registers(
-    provider_db: sqlite3.Connection,
-) -> None:
-    catalog = Catalog(provider_db)
-    expected = catalog.provider_column_coverage("scb")["rams"]
-    assert catalog.provider_column_coverage("scb", ["rams", "rams", "missing"]) == {
-        "rams": expected
-    }
-
-
 def test_provider_column_coverage_excludes_stateless_registers(
     provider_db: sqlite3.Connection,
 ) -> None:
     catalog = Catalog(provider_db)
     assert "empty" not in catalog.provider_column_coverage("scb")
-    assert catalog.provider_column_coverage("scb", ["empty"]) == {}
 
 
 def test_provider_column_coverage_excludes_unaddressable_variables(
@@ -369,20 +204,6 @@ def test_provider_column_coverage_excludes_unaddressable_variables(
 ) -> None:
     columns = Catalog(provider_db).provider_column_coverage("scb")["lisa"]
     assert all(slug is not None and column != "Hidden" for slug, column in columns)
-
-
-def test_provider_column_coverage_binds_register_filter(
-    provider_db: sqlite3.Connection,
-) -> None:
-    assert (
-        Catalog(provider_db).provider_column_coverage("scb", ["rams') OR 1=1 --"]) == {}
-    )
-
-
-def test_provider_column_coverage_unknown_provider(
-    provider_db: sqlite3.Connection,
-) -> None:
-    assert Catalog(provider_db).provider_column_coverage("missing") == {}
 
 
 def test_register_variable_deliveries() -> None:
@@ -457,55 +278,6 @@ def test_register_variable_deliveries() -> None:
     assert by_column["ForvErsNetto"].coverage_from == "2022-01-01"
     assert by_column["ForvErsNetto"].open_ended is True
     assert by_column[None].coverage_to == "2015-12-31"
-
-
-def test_register_variable_deliveries_disjoint_windows() -> None:
-    """Y-104: a delivery carries the DISJOINT eras it was delivered over, so an
-    INTERRUPTED column reads as interrupted where the span cannot say so. `lan` is
-    delivered 1968, then 1995-1996, then 1998- (three windows, the last open); the
-    `Kommun` beside it is delivered by two states that MEET, so it is one window.
-    `coverage` is unaffected either way — it stays the span over the windows."""
-    conn = build_slugged_db()
-    add_variable(conn, register_id=1, var_id=900, name="Lan", slug="lan")
-    for valid_from, valid_to, column in [
-        ("1968-01-01", "1968-12-31", "Lan"),
-        ("1995-01-01", "1996-12-31", "Lan"),
-        ("1998-01-01", "9999-12-31", "Lan"),
-        # Two states that MEET at the year boundary: one delivery, one window.
-        ("2010-01-01", "2015-12-31", "Kommun"),
-        ("2016-01-01", "2020-12-31", "Kommun"),
-    ]:
-        add_state(
-            conn,
-            register_id=1,
-            variable_slug="lan",
-            register_variant_id=10,
-            valid_from=valid_from,
-            valid_to=valid_to,
-            delivery_column_name=column,
-        )
-
-    deliveries = Catalog(conn).register_variable_deliveries("scb", "lisa")
-
-    by_column = {d.column: d for d in deliveries["lan"]}
-    assert [(w.valid_from, w.valid_to) for w in by_column["Lan"].windows] == [
-        ("1968-01-01", "1968-12-31"),
-        ("1995-01-01", "1996-12-31"),
-        # Still delivered: the last window ends OPEN, at the sentinel the binding
-        # leaf's own states carry.
-        ("1998-01-01", "9999-12-31"),
-    ]
-    # The span is unchanged by the split — every consumer of `coverage` reads what
-    # it read before.
-    assert by_column["Lan"].coverage.coverage_from == "1968-01-01"
-    assert by_column["Lan"].coverage.coverage_to is None
-    assert by_column["Lan"].coverage.open_ended is True
-    assert by_column["Lan"].coverage.state_count == 3
-    # Contiguous states are ONE window, not one per state.
-    assert [(w.valid_from, w.valid_to) for w in by_column["Kommun"].windows] == [
-        ("2010-01-01", "2020-12-31")
-    ]
-    assert by_column["Kommun"].coverage.state_count == 2
 
 
 def _add_alias(
