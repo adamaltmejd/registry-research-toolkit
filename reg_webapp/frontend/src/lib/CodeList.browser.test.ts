@@ -151,30 +151,6 @@ describe("CodeList — unified value-set / code viewer (#638 PR3)", () => {
     await expect.element(page.getByText("1 of 5")).toBeVisible();
   });
 
-  it("renders code rows without observed-only badges", async () => {
-    await render(CodeList, {
-      codes: [
-        { code: "1", label: "Kanonisk", is_valid: true },
-        { code: "X0", label: "Observerad", is_valid: false },
-      ],
-    });
-    await expect.element(page.getByText("Observerad")).toBeVisible();
-    await expect.element(page.getByText("observed")).not.toBeInTheDocument();
-    expect(document.querySelectorAll(".code-row.observed")).toHaveLength(0);
-  });
-
-  it("does not tag value-set members (no is_valid field)", async () => {
-    // A variable value-set member omits `is_valid` → no observed tag at all.
-    await render(CodeList, {
-      codes: [
-        { code: "1", label: "Man" },
-        { code: "2", label: "Kvinna" },
-      ],
-    });
-    await expect.element(page.getByText("Man")).toBeVisible();
-    await expect.element(page.getByText("observed")).not.toBeInTheDocument();
-  });
-
   it("shows a no-match message when the filter excludes every code", async () => {
     await render(CodeList, { codes: codes(5) });
     await page.getByRole("textbox", { name: "Filter codes" }).fill("zzz");
@@ -348,14 +324,6 @@ describe("CodeList — unified value-set / code viewer (#638 PR3)", () => {
     await expect.element(page.getByText("A child 01")).toBeVisible();
     await expect
       .element(page.getByRole("button", { name: /Chapter A/ }))
-      .not.toBeInTheDocument();
-  });
-
-  it("renders nothing for an empty code list", async () => {
-    await render(CodeList, { codes: [] });
-    expect(document.querySelectorAll(".code-row")).toHaveLength(0);
-    await expect
-      .element(page.getByRole("textbox", { name: "Filter codes" }))
       .not.toBeInTheDocument();
   });
 

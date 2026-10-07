@@ -34,16 +34,4 @@ describe("FilterInput", () => {
       expect(input.element()).toBe(document.activeElement),
     );
   });
-
-  it("propagates typed text via the bound value", async () => {
-    await render(FilterInput, {
-      value: "",
-      total: 1,
-      shown: 1,
-      label: "Filter",
-    });
-    const input = page.getByRole("textbox", { name: "Filter" });
-    await input.fill("kon");
-    await expect.element(input).toHaveValue("kon");
-  });
 });

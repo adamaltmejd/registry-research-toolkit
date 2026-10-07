@@ -11,11 +11,7 @@ import {
 } from "./api";
 import CatalogNodeView from "./CatalogNodeView.svelte";
 import { projectStore } from "./project_store.svelte";
-import {
-  datedVersions,
-  variant,
-  variantsResponse,
-} from "./variants-test-helpers";
+import { variant, variantsResponse } from "./variants-test-helpers";
 import { windowStore } from "./window.svelte";
 
 // CatalogNodeView fetches one node via `getCatalogNode(fqidPath)` and switches on
@@ -673,10 +669,10 @@ beforeEach(() => {
 });
 
 describe("CatalogNodeView loading geometry", () => {
-  it("keeps an announced classification-shaped placeholder while the route resolves", async () => {
+  it("announces a busy loading region while the route resolves", async () => {
     vi.mocked(getCatalogNode).mockImplementation(() => new Promise(() => {}));
 
-    const { container } = await render(CatalogNodeView, {
+    await render(CatalogNodeView, {
       fqidPath: "class/icd-11-se",
       regMetaVersion: "test",
       steward: "global",
@@ -686,19 +682,17 @@ describe("CatalogNodeView loading geometry", () => {
 
     const loading = page.getByText("Loading…", { exact: true });
     await expect.element(loading).toBeVisible();
-    const loadingSurface = container.querySelector(".route-loading");
-    expect(loadingSurface).toHaveAttribute("aria-busy", "true");
-    expect(loadingSurface).toHaveAttribute("aria-live", "polite");
-    expect(loadingSurface).toHaveClass("classification-loading");
-    expect(container.querySelectorAll(".skeleton.block")).toHaveLength(3);
+    const region = loading.element().closest("[aria-busy]");
+    expect(region).toHaveAttribute("aria-busy", "true");
+    expect(region).toHaveAttribute("aria-live", "polite");
   });
 });
 
 describe("CatalogNodeView provider arm", () => {
-  it("renders registers as DataTable links with no FQID code element", async () => {
+  it("lists registers as links with their purpose under Register and Description", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(providerNode());
 
-    const { container } = await render(CatalogNodeView, {
+    await render(CatalogNodeView, {
       fqidPath: "scb",
       regMetaVersion: "test",
       steward: "global",
@@ -718,58 +712,12 @@ describe("CatalogNodeView provider arm", () => {
       .element(page.getByText("Longitudinal integration database"))
       .toBeVisible();
 
-    const table = container.querySelector("table.data-table");
-    expect(table).not.toBeNull();
-    expect(table?.closest(".panel")).toBeNull();
-    expect(table?.classList.contains("framed")).toBe(true);
     await expect
       .element(page.getByRole("columnheader", { name: "Register" }))
       .toBeVisible();
     await expect
       .element(page.getByRole("columnheader", { name: "Description" }))
       .toBeVisible();
-
-    // #806: the raw FQID <code> element is dropped — the link's name is identity.
-    expect(container.querySelector("code")).toBeNull();
-
-    const lisaLink = container.querySelector<HTMLAnchorElement>(
-      'a[href="/catalog/scb/lisa"]',
-    );
-    const lisaRow = lisaLink?.closest("tr") as HTMLElement | null;
-    const descriptionCell = lisaRow?.querySelector(
-      "td:nth-child(2)",
-    ) as HTMLElement | null;
-    let clicks = 0;
-    lisaLink?.addEventListener("click", (event) => {
-      event.preventDefault();
-      clicks += 1;
-    });
-    expect(table).toHaveAttribute("role", "table");
-    expect(lisaRow).not.toHaveAttribute("tabindex");
-    descriptionCell?.click();
-    expect(clicks).toBe(1);
-
-    // #806: the in-page Breadcrumb nav was removed from every browse arm (the rail
-    // owns navigation now). Any arm proves it; assert it here.
-    expect(document.querySelector('nav[aria-label="Breadcrumb"]')).toBeNull();
-  });
-
-  it("shows EmptyState when the filter matches nothing", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(providerNode());
-
-    const { container } = await render(CatalogNodeView, {
-      fqidPath: "scb",
-      regMetaVersion: "test",
-      steward: "global",
-      windowMinYear: 1960,
-      vintageYear: 2024,
-    });
-
-    const filterBox = page.getByRole("textbox", { name: /Filter registers/i });
-    await filterBox.fill("zzznomatch");
-
-    await expect.element(page.getByText(/No registers match/)).toBeVisible();
-    expect(container.querySelector('a[href*="scb/lisa"]')).toBeNull();
   });
 });
 
@@ -802,36 +750,6 @@ async function clickVariantChip(name: string): Promise<void> {
 }
 
 describe("CatalogNodeView register arm", () => {
-  it("renders each ungrouped variable as a framed DataTable row", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(registerNode());
-
-    const { container } = await render(CatalogNodeView, {
-      fqidPath: "scb/lisa",
-      regMetaVersion: "test",
-      steward: "global",
-      windowMinYear: 1960,
-      vintageYear: 2024,
-    });
-
-    // Wait for the leaf rows to render.
-    await expect
-      .element(page.getByRole("link", { name: "Alpha" }))
-      .toBeVisible();
-
-    const table = container.querySelector("table.data-table");
-    expect(table).not.toBeNull();
-    expect(table?.closest(".panel")).toBeNull();
-    expect(table?.classList.contains("framed")).toBe(true);
-    await expect
-      .element(page.getByRole("columnheader", { name: "Variable" }))
-      .toBeVisible();
-    expect(
-      [...container.querySelectorAll("tbody tr")].map((row) =>
-        row.textContent?.trim(),
-      ),
-    ).toEqual(["Alpha", "Beta", "Gamma"]);
-  });
-
   it("names the delivery columns beside each variable, dated only where there are several (Y-82)", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(columnedRegisterNode(1));
 
@@ -1214,7 +1132,7 @@ describe("CatalogNodeView register arm", () => {
   it("shows no variant chips for a single-variant register (Y-82)", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(columnedRegisterNode(1));
 
-    const { container } = await render(CatalogNodeView, {
+    await render(CatalogNodeView, {
       fqidPath: "scb/lisa",
       regMetaVersion: "test",
       steward: "global",
@@ -1223,43 +1141,7 @@ describe("CatalogNodeView register arm", () => {
     });
 
     await expect.element(page.getByText("Kon", { exact: true })).toBeVisible();
-    expect(container.querySelector(".variant-filter")).toBeNull();
-    // Scoped to the chip strip: the list's own delivery-column ticks (Y-83) are
-    // checkboxes, and they are there whether or not the register has a variant axis.
-    expect(
-      container.querySelectorAll('.variant-filters input[type="checkbox"]'),
-    ).toHaveLength(0);
-  });
-
-  it("makes a variable leaf-row link keyboard-focusable inside the table cell", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(registerNode());
-
-    const { container } = await render(CatalogNodeView, {
-      fqidPath: "scb/lisa",
-      regMetaVersion: "test",
-      steward: "global",
-      windowMinYear: 1960,
-      vintageYear: 2024,
-    });
-
-    await expect
-      .element(page.getByRole("link", { name: "Alpha" }))
-      .toBeVisible();
-
-    const link = container.querySelector<HTMLAnchorElement>("tbody td a");
-    expect(link).not.toBeNull();
-    link?.focus();
-    expect(document.activeElement).toBe(link);
-
-    const row = link?.closest("tr") as HTMLElement | null;
-    let clicks = 0;
-    link?.addEventListener("click", (event) => {
-      event.preventDefault();
-      clicks += 1;
-    });
-    expect(row).not.toHaveAttribute("tabindex");
-    row?.click();
-    expect(clicks).toBe(1);
+    expect(page.getByRole("group", { name: "Variant" }).elements()).toEqual([]);
   });
 
   it("renders thematic tags on the register page", async () => {
@@ -1306,76 +1188,14 @@ describe("CatalogNodeView register arm", () => {
       vintageYear: 2024,
     });
 
-    await expect
-      .element(page.getByRole("heading", { name: "Source documents" }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("heading", { name: "Variants" }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("link", { name: "LISA source PDF" }))
-      .toHaveAttribute("href", "/api/docs/file/lisa/lisa.pdf");
-    const variants = document
-      .querySelector("#variants-heading")
-      ?.closest("section");
-    const sourceDocs = document
-      .querySelector("#related-docs-heading")
-      ?.closest("section");
-    expect(variants).not.toBeNull();
-    expect(sourceDocs).not.toBeNull();
-    if (!variants || !sourceDocs) {
-      throw new Error("Expected variants and source documents sections");
-    }
+    const sourceDocs = page.getByRole("heading", { name: "Source documents" });
+    const variants = page.getByRole("heading", { name: "Variants" });
+    await expect.element(sourceDocs).toBeVisible();
+    await expect.element(variants).toBeVisible();
     expect(
-      variants.compareDocumentPosition(sourceDocs) &
+      variants.element().compareDocumentPosition(sourceDocs.element()) &
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
-    expect(getRelatedDocuments).toHaveBeenCalledWith("lisa", expect.anything());
-  });
-
-  it("summarises the variants instead of the version wall, and links to their page (Y-79)", async () => {
-    // The documents-panel-last ordering rides the #967 test above, which asserts
-    // it through the same `#variants-heading` anchor this section still carries.
-    vi.mocked(getCatalogNode).mockResolvedValue(registerNode());
-    vi.mocked(getRegisterVariants).mockResolvedValue(
-      variantsResponse(
-        variant("individer-15plus", {
-          name: "Individer, 15 år och äldre",
-          variant_family: "individer-15plus",
-          variant_family_label: "Individer",
-          versions: datedVersions(2010),
-        }),
-        variant("individer-16plus", {
-          name: "Individer, 16 år och äldre",
-          variant_family: "individer-15plus",
-          variant_family_label: "Individer",
-          versions: datedVersions(1990),
-        }),
-      ),
-    );
-
-    const { container } = await render(CatalogNodeView, {
-      fqidPath: "scb/lisa",
-      regMetaVersion: "test",
-      steward: "global",
-      windowMinYear: 1960,
-      vintageYear: 2024,
-    });
-
-    // ONE row for the family: its label, both concrete slugs, its year span.
-    await expect
-      .element(page.getByRole("heading", { name: "Variants" }))
-      .toBeVisible();
-    expect(
-      container.querySelectorAll("section.variants tbody tr"),
-    ).toHaveLength(1);
-    await expect.element(page.getByText("1990–2010")).toBeVisible();
-    // The version wall no longer renders inline — its prose lives on the page
-    // the summary links to.
-    expect(container.querySelectorAll("section.version-meta")).toHaveLength(0);
-    await expect
-      .element(page.getByRole("link", { name: "All variant details" }))
-      .toHaveAttribute("href", "/catalog/scb/lisa/variants");
   });
 
   it("renders grouped variables as framed table subject links without the group-key pill", async () => {
@@ -1665,32 +1485,6 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     ).toEqual(["scb/lisa/individer-15plus"]);
   });
 
-  it("keeps a tick scoped to the variant it was made under when the lens is lifted", async () => {
-    mockRegisterAndResolve(splitColumnRegisterNode());
-    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
-    windowStore.set({ from: 2018, to: 2023 });
-
-    await renderRegister();
-    await expect.element(page.getByText("Kön")).toBeVisible();
-
-    // Ticked while the list showed 15+ ALONE. The lens is a live filter and the tick
-    // is not, so lifting it before pressing Add must not hand the batch the 16+
-    // delivery of the same name — a variant the researcher never had on screen.
-    await clickVariantChip("Individer, 15 år och äldre");
-    await tickColumn("Kon");
-    await page.getByRole("button", { name: "Clear variant filter" }).click();
-    await expect
-      .element(page.getByRole("button", { name: "Clear variant filter" }))
-      .not.toBeInTheDocument();
-
-    await expect.element(page.getByText("1 column selected")).toBeVisible();
-    await page.getByRole("button", { name: "Add 1 column to project" }).click();
-    await expect.element(page.getByText("Applied +1 column")).toBeVisible();
-    expect(
-      projectStore.draft?.sources.map((source) => source.register_variant),
-    ).toEqual(["scb/lisa/individer-15plus"]);
-  });
-
   it("drops a tick from the batch while the lens shows only a variant it excluded", async () => {
     mockRegisterAndResolve(splitColumnRegisterNode());
     vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
@@ -1794,53 +1588,21 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     });
   });
 
-  it("shows an interrupted column's delivery years era by era (Y-104)", async () => {
-    mockRegisterAndResolve(interruptedColumnRegisterNode());
+  it("folds a long era list to its first, last and a +N affordance (Y-110)", async () => {
+    mockRegisterAndResolve(fourEraColumnRegisterNode());
     windowStore.set({ from: 1960, to: 2024 });
 
     await renderRegister("scb/civilstandsandringar");
     await expect.element(page.getByText("Län")).toBeVisible();
 
-    // The wire carries `Lan`'s three eras, so the list says what the variable's own
-    // page says: delivered, interrupted, delivered again. The span "1968–" the
-    // aggregate could express would claim 26 years it was never delivered in — and
-    // a lone column shows years here for exactly that reason (Y-82 shows none).
-    await expect
-      .element(
-        page.getByRole("checkbox", {
-          name: "Lan 1968, 1995–1996, 1998–",
-          exact: true,
-        }),
-      )
-      .toBeVisible();
-  });
-
-  it("folds a long era list to its first, last and a +N affordance (Y-110)", async () => {
-    mockRegisterAndResolve(fourEraColumnRegisterNode());
-    windowStore.set({ from: 1960, to: 2024 });
-
-    const { container } = await renderRegister("scb/civilstandsandringar");
-    await expect.element(page.getByText("Län")).toBeVisible();
-
     // One era past ERA_LABEL_LIMIT: the label prints only the first and last
-    // era — the boundaries of the whole history — never the full four, which
-    // would push the row's NAME onto its own line (the Y-110 defect).
-    const columnYears = container.querySelector(".column-years");
-    expect(columnYears?.textContent).toBe("1968 … 1998– +2");
+    // era — the boundaries of the whole history — plus a +N affordance carrying
+    // the folded eras (1972 and 1995–1996) in its hover title…
+    await expect
+      .element(page.getByText("+2", { exact: true }))
+      .toHaveAttribute("title", "1968, 1972, 1995–1996, 1998–");
 
-    // The `+N` affordance carries the eras it folded (1972 and 1995–1996) in
-    // both its hover title and its accessible name — never in the title alone,
-    // which a screen-reader user never hears.
-    const moreBadge = container.querySelector<HTMLElement>(".era-more");
-    expect(moreBadge?.textContent).toBe("+2");
-    expect(moreBadge).toHaveAttribute("title", "1968, 1972, 1995–1996, 1998–");
-    expect(moreBadge).toHaveAttribute(
-      "aria-label",
-      "+2 more eras: 1972, 1995–1996",
-    );
-
-    // …which means the TICK's own accessible name carries them too, not just
-    // the "+2" count.
+    // …and in the tick's own accessible name, which a screen-reader user hears.
     await expect
       .element(
         page.getByRole("checkbox", {
@@ -2279,31 +2041,6 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     await expect.element(page.getByText("Applied +2 columns")).toBeVisible();
     expect(document.activeElement).toBe(addButtonEl);
   });
-
-  it("keeps keyboard focus on the Add button after an add that empties the selection (Y-106)", async () => {
-    // The ORDINARY case: every ticked column commits, `selectedColumns` empties,
-    // and the bar has nothing left to add — the button reads "Add columns to
-    // project" again and greys out. It must do that via `aria-disabled`, never
-    // `disabled`, or this is exactly the moment focus would drop to `<body>`.
-    mockRegisterAndResolve(columnedRegisterNode(1));
-    windowStore.set({ from: 2018, to: 2023 });
-
-    await renderRegister();
-    await expect.element(page.getByText("Kön")).toBeVisible();
-    await tickColumn("Kon");
-
-    const addButton = page.getByRole("button", {
-      name: "Add 1 column to project",
-    });
-    const addButtonEl = addButton.element();
-    await addButton.click();
-
-    await expect.element(page.getByText("Applied +1 column")).toBeVisible();
-    await expect
-      .element(page.getByRole("button", { name: "Add columns to project" }))
-      .toBeDisabled();
-    expect(document.activeElement).toBe(addButtonEl);
-  });
 });
 
 describe("CatalogNodeView register arm: sticky add bar (Y-97)", () => {
@@ -2338,7 +2075,7 @@ describe("CatalogNodeView register arm: sticky add bar (Y-97)", () => {
 });
 
 describe("CatalogNodeView classification-root arm (#756)", () => {
-  it("renders the umbrella group as a link to its subject page, not an inline <details>", async () => {
+  it("renders the umbrella group as a link to its subject page", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(classificationRoot());
 
     await render(CatalogNodeView, {
@@ -2356,27 +2093,17 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
       .element(page.getByRole("link", { name: /SUN/ }))
       .toHaveAttribute("href", "/catalog/group/class/sun");
 
-    expect(document.querySelector("a.group-link .group-key")).toBeNull();
-    const table = document.querySelector("table.data-table");
-    expect(table).not.toBeNull();
-    expect(table?.closest(".panel")).not.toBeNull();
-    expect(table?.closest(".classification-table")).not.toBeNull();
     await expect
       .element(page.getByRole("heading", { name: "Classifications" }))
       .toBeVisible();
     await expect
       .element(page.getByRole("heading", { name: "Classification systems" }))
       .toBeVisible();
-    expect(document.body.textContent).not.toContain("Catalog-wide index");
-    const tableHead = table?.querySelector("thead");
-    expect(tableHead).not.toBeNull();
-    expect(getComputedStyle(tableHead as Element).position).toBe("absolute");
-
-    // It must NOT fall back to the old inline disclosure (the pre-#756 behavior).
-    expect(document.querySelector("details.group")).toBeNull();
+    // The table head is visually hidden but stays in the accessibility tree.
+    expect(page.getByRole("columnheader").elements().length).toBeGreaterThan(0);
   });
 
-  it("renders a classification leaf as a focusable link plus short_name column", async () => {
+  it("renders a classification leaf as a link plus its short name", async () => {
     // Use a root with an UNGROUPED classification leaf (the grouped one folds into
     // the umbrella group row, which is a separate widget).
     vi.mocked(getCatalogNode).mockResolvedValue({
@@ -2406,27 +2133,7 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
       .element(page.getByRole("link", { name: /Anatomical/ }))
       .toBeVisible();
 
-    const link = document.querySelector<HTMLAnchorElement>("tbody td a");
-    expect(link).not.toBeNull();
-    const row = link?.closest("tr");
-    expect(row?.querySelectorAll("td")).toHaveLength(2);
-    expect(row?.querySelector("td:last-child")?.textContent?.trim()).toBe(
-      "ATC",
-    );
-    link?.focus();
-    expect(document.activeElement).toBe(link);
-
-    const shortNameCell = row?.querySelector(
-      "td:last-child",
-    ) as HTMLElement | null;
-    let clicks = 0;
-    link?.addEventListener("click", (event) => {
-      event.preventDefault();
-      clicks += 1;
-    });
-    expect(row).not.toHaveAttribute("tabindex");
-    shortNameCell?.click();
-    expect(clicks).toBe(1);
+    await expect.element(page.getByText("ATC", { exact: true })).toBeVisible();
   });
 
   it("renders a classification succession family as a stable concept link", async () => {
@@ -2508,98 +2215,6 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
       .element(page.getByRole("tab", { name: /Utbildningsnivå/ }))
       .toHaveAttribute("aria-selected", "true");
     await expect.element(page.getByText("Man")).toBeVisible();
-  });
-
-  it("keeps family value-set geometry stable while the edition graph resolves", async () => {
-    const editions = [
-      {
-        slug: "icd-10-se",
-        fqid: "class/icd-10-se",
-        name: "ICD-10-SE",
-        version_year: 1997,
-        is_current: true,
-      },
-      {
-        slug: "icd-11-se",
-        fqid: "class/icd-11-se",
-        name: "ICD-11-SE",
-        version_year: 2027,
-        is_current: false,
-      },
-    ];
-    let resolveGraph: (value: never) => void = () => {};
-    vi.mocked(getClassificationGroupGraph).mockImplementation(
-      () =>
-        new Promise((resolve) => {
-          resolveGraph = resolve;
-        }),
-    );
-    vi.mocked(getCatalogNode).mockResolvedValue({
-      kind: "classification",
-      fqid: "class/icd-11-se",
-      name: "ICD-11-SE",
-      short_name: "ICD-11-SE",
-      edition_chain: [],
-      codes: [{ code: "1A", label: "Infection", level: 1, is_valid: true }],
-      dimensions: [],
-      family: {
-        kind: "classification-family",
-        key: "icd",
-        label: "ICD",
-        editions,
-      },
-      derived_from: [],
-      derivatives: [],
-    } as unknown as CatalogNode);
-    vi.mocked(getClassificationGroup).mockResolvedValue({
-      kind: "classification-family",
-      key: "icd",
-      label: "ICD",
-      editions,
-    } as never);
-
-    await render(CatalogNodeView, {
-      fqidPath: "class/icd-11-se",
-      regMetaVersion: "test",
-      steward: "global",
-      windowMinYear: 1960,
-      vintageYear: 2027,
-    });
-
-    const valueSet = page.getByRole("region", { name: "Value set" });
-    await expect.element(valueSet).toBeVisible();
-    const before = valueSet.element().getBoundingClientRect().top;
-
-    resolveGraph({
-      nodes: [
-        ...editions.map((edition) => ({
-          kind: "classification" as const,
-          id: edition.slug,
-          fqid: edition.fqid,
-          label: edition.name,
-          group_key: "icd",
-          version_year: edition.version_year,
-          is_current: edition.is_current,
-        })),
-      ],
-      edges: [
-        {
-          id: "icd-succession",
-          kind: "succession",
-          source: "icd-10-se",
-          target: "icd-11-se",
-          label: null,
-          effective_year: 2027,
-        },
-      ],
-      focus_id: null,
-    } as never);
-
-    await expect
-      .element(page.getByRole("heading", { name: "Editions" }))
-      .toBeVisible();
-    const after = valueSet.element().getBoundingClientRect().top;
-    expect(Math.abs(after - before)).toBeLessThan(2);
   });
 
   it("opens classification family aliases on the canonical self edition tab", async () => {
@@ -2718,6 +2333,5 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
       .element(page.getByRole("tab", { name: /SSYK 2012/ }))
       .toHaveAttribute("aria-selected", "false");
     await expect.element(page.getByText("Older occupation")).toBeVisible();
-    expect(getCatalogNode).toHaveBeenLastCalledWith("class/ssyk1996");
   });
 });

@@ -259,7 +259,7 @@ describe("getDoc (#394)", () => {
 });
 
 describe("getDocsForVariable (#402)", () => {
-  // Mirror the `docSearch`/`search` harness: capture the URL + fetch init for one
+  // Mirror the `search` harness: capture the URL + fetch init for one
   // call. `getDocsForVariable` shares the same `searchGet` plumbing against the
   // `/docs/for-variable` path, plus the `register` filter the for-variable hook
   // appends — so the encoding/abort assertions are the same shape.

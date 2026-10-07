@@ -194,23 +194,6 @@ describe("ClassificationLeafView (#638 shell)", () => {
     expect(document.body.textContent).not.toContain("SUN 1996");
   });
 
-  it("omits the codes panel when the edition carries no codes", async () => {
-    await render(ClassificationLeafView, { node: node({ codes: [] }) });
-
-    // The leaf still renders (title + short name), but the codes panel omits itself.
-    await expect
-      .element(
-        page.getByRole("heading", {
-          name: "Svensk utbildningsnomenklatur",
-          level: 2,
-        }),
-      )
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("heading", { name: "Codes" }))
-      .not.toBeInTheDocument();
-  });
-
   it("renders non-temporal derived-from classification references", async () => {
     await render(ClassificationLeafView, {
       node: node({

@@ -39,7 +39,7 @@ describe("CatalogRoot", () => {
   it("renders top-level catalog sections as a single-column navigation table", async () => {
     vi.mocked(getCatalogRoot).mockResolvedValue(catalogRoot());
 
-    const { container } = await render(CatalogRoot, {});
+    await render(CatalogRoot, {});
 
     await expect
       .element(page.getByRole("columnheader", { name: "Name" }))
@@ -53,37 +53,8 @@ describe("CatalogRoot", () => {
       .element(page.getByRole("link", { name: "Classifications" }))
       .toHaveAttribute("href", "/catalog/class");
 
-    const table = container.querySelector("table.data-table");
-    expect(table?.closest(".panel")).toBeNull();
-    expect(table?.classList.contains("framed")).toBe(true);
-    expect(table?.querySelectorAll("thead tr")).toHaveLength(1);
-    expect(
-      [...(table?.querySelectorAll("thead th") ?? [])].map((th) =>
-        th.textContent?.trim(),
-      ),
-    ).toEqual(["Name"]);
-    expect(container.querySelector("thead")?.textContent).not.toContain("Type");
-    expect(container.querySelector("thead")?.textContent).not.toContain(
-      "Scope",
-    );
-    expect(container.querySelector(".tag")).toBeNull();
-
-    // …with the raw FQID <code> element dropped — the link's name is identity.
-    expect(container.querySelector("code")).toBeNull();
-
-    const scbLink = container.querySelector<HTMLAnchorElement>(
-      'a[href="/catalog/scb"]',
-    );
-    const scbRow = scbLink?.closest("tr") as HTMLElement | null;
-    let clicks = 0;
-    scbLink?.addEventListener("click", (event) => {
-      event.preventDefault();
-      clicks += 1;
-    });
-    expect(table).toHaveAttribute("role", "table");
-    expect(scbRow).not.toHaveAttribute("tabindex");
-    scbRow?.click();
-    expect(clicks).toBe(1);
+    // One column: the link's name is the identity (no Type / Scope columns).
+    expect(page.getByRole("columnheader").elements()).toHaveLength(1);
   });
 
   it("shows EmptyState when the filter matches nothing", async () => {

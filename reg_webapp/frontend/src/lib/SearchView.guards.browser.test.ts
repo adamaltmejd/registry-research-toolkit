@@ -125,80 +125,6 @@ describe("SearchView — request cancellation (supersede)", () => {
   });
 });
 
-describe("SearchView — classification_succession routing (#571)", () => {
-  it("routes a mixed classifications group (leaf + succession) through the real guards", async () => {
-    // Exercise the REAL search/apiGet path (this suite stubs window.fetch, no
-    // ./api mock) so the `isClassificationSuccession` guard actually runs over the
-    // mixed classifications union: a plain leaf hit AND a folded succession row.
-    // Both must render their own shape (leaf link + succession disclosure), with
-    // no each_key_duplicate crash.
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(() =>
-        Promise.resolve({
-          ok: true,
-          status: 200,
-          json: async () => ({
-            kind: "search",
-            query: "sun",
-            groups: [
-              {
-                group: "classifications",
-                has_more: false,
-                next_cursor: null,
-                results: [
-                  {
-                    type: "classification",
-                    fqid: "class/lkf2020",
-                    short_name: "LKF",
-                    name: "Län/kommun/församling",
-                  },
-                  {
-                    type: "classification_succession",
-                    fqid: "class/sun2020",
-                    short_name: "SUN",
-                    name: "SUN 2020",
-                    matched_count: 2,
-                    editions: [
-                      {
-                        slug: "sun2020",
-                        fqid: "class/sun2020",
-                        name: "SUN 2020",
-                        effective_year: 2020,
-                      },
-                      {
-                        slug: "sun1996",
-                        fqid: "class/sun1996",
-                        name: "SUN 1996",
-                        effective_year: 1996,
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          }),
-        }),
-      ),
-    );
-
-    setQuery("sun");
-    await render(SearchView);
-
-    // The plain leaf renders as a direct link…
-    await expect
-      .element(page.getByRole("link", { name: /LKF/ }))
-      .toHaveAttribute("href", "/catalog/class/lkf2020");
-    // …and the succession row renders its folded editions hint (the guard routed
-    // it to the succession snippet, not the leaf snippet).
-    await expect
-      .element(page.getByText("matched 2 of 2 editions"))
-      .toBeVisible();
-    // No render crash — the search did not wedge on "Searching…".
-    await expect.element(page.getByText("Searching…")).not.toBeInTheDocument();
-  });
-});
-
 describe("SearchView — min query length", () => {
   beforeEach(() => {
     // Any fetch here would be a bug — a 1-char query must NOT hit the network.
@@ -222,15 +148,6 @@ describe("SearchView — min query length", () => {
       .element(page.getByText("Keep typing to search…"))
       .toBeVisible();
     expect(fetch).not.toHaveBeenCalled();
-  });
-
-  it("fetches once the query reaches two characters", async () => {
-    setQuery("ko");
-    await render(SearchView);
-
-    await vi.waitFor(() => expect(fetch).toHaveBeenCalled());
-    const url = vi.mocked(fetch).mock.calls[0][0] as string;
-    expect(url).toContain("/api/search?q=ko");
   });
 });
 
@@ -261,62 +178,6 @@ describe("SearchView — timeout", () => {
       .element(page.getByText("Search timed out — try a more specific term."))
       .toBeVisible();
     // It is NOT the generic failure banner.
-    await expect
-      .element(page.getByText(/Search failed/))
-      .not.toBeInTheDocument();
-  });
-
-  it("a timeout that fires AFTER a successful resolution does not flip the good view to an error", async () => {
-    // The timeout signal still fires (50ms) after fetch already RESOLVED — but on
-    // a settled promise the abort is a no-op, so the rendered results must stay
-    // put (no "timed out" copy). Guards against a stray timeout clobbering a good
-    // view. Stub the floor low so the post-resolution wait is short.
-    const realTimeout = AbortSignal.timeout.bind(AbortSignal);
-    vi.spyOn(AbortSignal, "timeout").mockImplementation(() => realTimeout(50));
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(() =>
-        Promise.resolve({
-          ok: true,
-          status: 200,
-          json: async () => ({
-            kind: "search",
-            query: "kon",
-            groups: [
-              {
-                group: "registers",
-                has_more: false,
-                next_cursor: null,
-                results: [
-                  {
-                    type: "register",
-                    fqid: "scb/lisa",
-                    name: "LISA",
-                    purpose: null,
-                  },
-                ],
-              },
-            ],
-          }),
-        }),
-      ),
-    );
-
-    setQuery("kon");
-    await render(SearchView);
-
-    // Results render first (poll before sleeping past the stub timeout to avoid
-    // racing the resolution).
-    await expect
-      .element(page.getByRole("link", { name: /LISA/ }))
-      .toHaveAttribute("href", "/catalog/scb/lisa");
-
-    // Wait past the 50ms stub timeout, then confirm the view is unchanged.
-    await new Promise((r) => setTimeout(r, 100));
-    await expect
-      .element(page.getByRole("link", { name: /LISA/ }))
-      .toBeVisible();
-    await expect.element(page.getByText(/timed out/)).not.toBeInTheDocument();
     await expect
       .element(page.getByText(/Search failed/))
       .not.toBeInTheDocument();

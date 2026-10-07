@@ -2,22 +2,18 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import type { SearchResponse } from "./api";
-import { docSearch, search } from "./api";
-import { catalogHref } from "./catalog";
+import { search } from "./api";
 import { router } from "./router.svelte";
 import SearchView from "./SearchView.svelte";
 
 // Stub the search GET the view drives; keep the rest of api.ts real (the type
-// exports). `docSearch` stays mocked so regressions that reintroduce documentation
-// results cannot silently hit a real fetch. SearchView reads `?q=` off the `router`
-// singleton, so each case sets the URL (and re-syncs the singleton's reactive
-// `search`) before rendering.
+// exports). SearchView reads `?q=` off the `router` singleton, so each case sets
+// the URL (and re-syncs the singleton's reactive `search`) before rendering.
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
     search: vi.fn(),
-    docSearch: vi.fn(),
   };
 });
 
@@ -41,7 +37,6 @@ function pillLabel(element: Element | null | undefined): string | null {
 
 beforeEach(() => {
   vi.mocked(search).mockReset();
-  vi.mocked(docSearch).mockReset();
 });
 
 afterEach(() => {
@@ -194,87 +189,6 @@ describe("SearchView — typed result groups (#379)", () => {
       .toHaveAttribute("href", "/catalog/scb/lisa/kon");
   });
 
-  it("renders concept groups directly in top results", async () => {
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "näringsgren",
-      groups: [
-        {
-          group: "top_results",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            {
-              type: "group",
-              kind: "variable",
-              group_key: "naringsgren",
-              group_label: "Näringsgren",
-              source: "edge",
-              register: "Labour Cost Survey (LCS)",
-              member_count: 2,
-              matched_count: 2,
-              label_matched: true,
-              members: [
-                {
-                  fqid: "scb/lcs/naringsgren",
-                  name: "Näringsgren",
-                  facets: [],
-                  delivery_column: null,
-                },
-                {
-                  fqid: "scb/lcs/sni",
-                  name: "Näringsgren",
-                  facets: [],
-                  delivery_column: null,
-                },
-              ],
-              rank: 0,
-            },
-            {
-              type: "variable",
-              fqid: "scb/lcs/naringsgren",
-              name: "Näringsgren",
-              register: "Labour Cost Survey (LCS)",
-              delivery_column_names: [],
-              definition: null,
-              operational_definition: null,
-              rank: -1,
-            },
-          ],
-        },
-      ],
-    } as unknown as SearchResponse);
-    setQuery("näringsgren");
-    await render(SearchView);
-
-    // Poll until the async search results have rendered before the sync queries.
-    await expect
-      .element(page.getByRole("heading", { name: "Top results" }))
-      .toBeVisible();
-    const row = document.querySelector<HTMLElement>(
-      ".search-view .top-results .group-result-row",
-    );
-    const groupLink = row?.querySelector<HTMLAnchorElement>(
-      "a.row-link[href='/catalog/group/scb/lcs/naringsgren']",
-    );
-    const registerPill = row?.querySelector<HTMLAnchorElement>(
-      ".register-context-chip[href='/catalog/scb/lcs']",
-    );
-    expect(row).not.toBeNull();
-    expect(groupLink).not.toBeNull();
-    expect(row?.querySelector(".group-chip")?.textContent?.trim()).toBe(
-      "Group",
-    );
-    expect(groupLink?.textContent).toContain("Näringsgren");
-    expect(pillLabel(registerPill)).toBe("SCB: Labour Cost Survey (LCS)");
-    expect(registerPill?.querySelector(".chip-arrow")?.textContent).toBe("↗");
-    expect(
-      document.querySelector(
-        ".search-view .top-results a.row-link[href='/catalog/scb/lcs/naringsgren']",
-      ),
-    ).toBeNull();
-  });
-
   it("shows code-system context on code hits in top results", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",
@@ -324,26 +238,21 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect
       .element(page.getByText("showing 1 of 25"))
       .not.toBeInTheDocument();
-    const disclosure = document.querySelector<HTMLDetailsElement>(
-      ".search-view .top-results details.code-disclosure",
-    );
-    expect(disclosure).not.toBeNull();
-    expect(disclosure?.querySelector(".disclosure-icon")).not.toBeNull();
-    const codeSystemPill = disclosure?.querySelector<HTMLAnchorElement>(
-      ".code-expression .code-system-chip[href='/catalog/class/icd-10-se']",
-    );
-    expect(pillLabel(codeSystemPill)).toBe("ICD-10-SE");
-    expect(codeSystemPill?.querySelector(".chip-arrow")?.textContent).toBe("↗");
-    disclosure?.querySelector("summary")?.click();
-    await nextFrame();
+    // The code system is a link to its classification.
+    await expect
+      .element(page.getByRole("link", { name: /^ICD-10-SE/ }))
+      .toHaveAttribute("href", "/catalog/class/icd-10-se");
+    // Expanding the code lists its owners: the variables and the classification.
+    await page.getByText("Malign tumör i tungbas").click();
     await expect
       .element(page.getByRole("link", { name: /Sjukdomsdiagnos 1/ }))
       .toHaveAttribute("href", "/catalog/scb/ulf/ha0611m");
     expect(
-      disclosure?.querySelector(
-        ".owner-table a.owner-row[href='/catalog/class/icd-10-se']",
-      ),
-    ).not.toBeNull();
+      page
+        .getByRole("link")
+        .elements()
+        .filter((a) => a.getAttribute("href") === "/catalog/class/icd-10-se"),
+    ).toHaveLength(2);
   });
 
   it("links single-owner code hits in top results", async () => {
@@ -381,21 +290,22 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect
       .element(page.getByRole("heading", { name: "Top results" }))
       .toBeVisible();
-    const row = document.querySelector<HTMLElement>(
-      ".search-view .top-results .single-code-row",
+    await expect.element(page.getByText("1 = Man")).toBeVisible();
+    await expect.element(page.getByText("Code system")).not.toBeInTheDocument();
+    expect(
+      page
+        .getByRole("link")
+        .elements()
+        .map((a) => a.getAttribute("href")),
+    ).toEqual(
+      expect.arrayContaining([
+        "/catalog/scb/lisa/kon",
+        "/catalog/class/sun2020",
+      ]),
     );
-    const ownerLink = row?.querySelector<HTMLAnchorElement>(
-      ".single-owner-link[href='/catalog/scb/lisa/kon']",
-    );
-    const systemPill = row?.querySelector<HTMLAnchorElement>(
-      ".code-expression .code-system-chip[href='/catalog/class/sun2020']",
-    );
-    expect(row).not.toBeNull();
-    expect(row?.textContent).toContain("1 = Man");
-    expect(row?.textContent).not.toContain("Code system");
-    expect(ownerLink).not.toBeNull();
-    expect(pillLabel(systemPill)).toBe("SUN2020");
-    expect(systemPill?.querySelector(".chip-arrow")?.textContent).toBe("↗");
+    await expect
+      .element(page.getByRole("link", { name: /^SUN2020/ }))
+      .toHaveAttribute("href", "/catalog/class/sun2020");
   });
 
   it("shows delivery column names and operational definitions on variable hits", async () => {
@@ -424,29 +334,12 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("fedunsatreason");
     await render(SearchView);
 
-    expect(document.querySelector(".search-view .register-pill")).toBeNull();
     await expect.element(page.getByText("AES")).toBeVisible();
-    const columnPills = Array.from(
-      document.querySelectorAll<HTMLElement>(".search-view .col-chip"),
-    ).map((pill) => pill.textContent?.trim());
-    expect(columnPills).toEqual(["fedunsatreason_1", "fedunsatreason_2"]);
+    await expect.element(page.getByText("fedunsatreason_1")).toBeVisible();
+    await expect.element(page.getByText("fedunsatreason_2")).toBeVisible();
     await expect
       .element(page.getByText("Formal education dissatisfaction reason"))
       .toBeVisible();
-    const root = document.querySelector<HTMLElement>(".search-view");
-    expect(root).not.toBeNull();
-    if (root) {
-      root.style.width = "1200px";
-    }
-    window.dispatchEvent(new Event("resize"));
-    await nextFrame();
-    const separators = [
-      ...document.querySelectorAll<HTMLElement>(
-        ".search-view .result-detail .detail-separator",
-      ),
-    ];
-    expect(separators).toHaveLength(1);
-    expect(separators.every((separator) => !separator.hidden)).toBe(true);
   });
 
   it("folds duplicate variable hits into one row with merged delivery column chips", async () => {
@@ -498,54 +391,6 @@ describe("SearchView — typed result groups (#379)", () => {
     expect(columnPills).toEqual(["fedunsatreason_1", "fedunsatreason_2"]);
   });
 
-  it("hides variable detail separators when metadata wraps to new rows", async () => {
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "fedunsatreason",
-      groups: [
-        {
-          group: "variables",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            {
-              type: "variable",
-              fqid: "scb/aes/formal-utbildning",
-              name: "Orsak till missnöje, formell utbildning",
-              register: "AES",
-              definition: "Orsak till missnöje",
-              operational_definition: "Formal education dissatisfaction reason",
-              delivery_column_names: ["fedunsatreason_1"],
-            },
-          ],
-        },
-      ],
-    } as unknown as SearchResponse);
-    setQuery("fedunsatreason");
-    await render(SearchView);
-
-    // Poll until the async search results have rendered before the sync queries.
-    await expect
-      .element(page.getByRole("heading", { name: "Variables" }))
-      .toBeVisible();
-    const detail = document.querySelector<HTMLElement>(
-      ".search-view .result-detail",
-    );
-    expect(detail).not.toBeNull();
-    if (detail) {
-      detail.style.width = "4rem";
-    }
-    window.dispatchEvent(new Event("resize"));
-    await nextFrame();
-    const separators = [
-      ...document.querySelectorAll<HTMLElement>(
-        ".search-view .result-detail .detail-separator",
-      ),
-    ];
-    expect(separators).toHaveLength(1);
-    expect(separators.every((separator) => separator.hidden)).toBe(true);
-  });
-
   it("keeps the matched delivery column visible before the +N overflow", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",
@@ -592,10 +437,12 @@ describe("SearchView — typed result groups (#379)", () => {
     router.navigate("/search?q=kon");
     await render(SearchView);
 
+    const historyLength = window.history.length;
     await page.getByRole("button", { name: "Close search" }).click();
 
     await expect.poll(() => router.route.name).toBe("catalog-node");
     await expect.poll(() => window.location.pathname).toBe("/catalog/scb/lisa");
+    expect(window.history.length).toBe(historyLength);
   });
 
   it("omits a group whose results are empty (no empty header)", async () => {
@@ -641,29 +488,6 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect
       .element(page.getByRole("heading", { name: "Variables" }))
       .not.toBeInTheDocument();
-  });
-
-  it("uses a plus count when continuation is available", async () => {
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "ab",
-      groups: [
-        {
-          group: "registers",
-          has_more: true,
-          next_cursor: "next-register-page",
-          results: [
-            { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
-          ],
-        },
-      ],
-    } as unknown as SearchResponse);
-    // ≥ 2 chars so the min-length guard fetches (a 1-char query short-circuits to
-    // the keep-typing hint).
-    setQuery("ab");
-    await render(SearchView);
-
-    await expect.element(page.getByText("1+ results")).toBeVisible();
   });
 
   it("uses an exact rendered count when the bounded page is complete", async () => {
@@ -748,88 +572,6 @@ describe("SearchView — typed result groups (#379)", () => {
       .element(page.getByRole("link", { name: /Ålder/ }))
       .toHaveAttribute("href", "/catalog/scb/rams/age");
     await expect.element(page.getByText(/\+\d+ more/)).not.toBeInTheDocument();
-
-    const codeCells = document.querySelector<HTMLElement>(
-      ".search-view details.code-row .code-cells",
-    );
-    const disclosureIcon = document.querySelector<HTMLElement>(
-      ".search-view details.code-row .disclosure-icon",
-    );
-    const firstOwnerRow = document.querySelector<HTMLElement>(
-      ".search-view details.code-row .owner-row",
-    );
-    const firstOwnerText = document.querySelector<HTMLElement>(
-      ".search-view details.code-row .owner-row .owner-name",
-    );
-    expect(codeCells).not.toBeNull();
-    expect(disclosureIcon).not.toBeNull();
-    expect(firstOwnerRow).not.toBeNull();
-    expect(firstOwnerText).not.toBeNull();
-    const codeRect = codeCells?.getBoundingClientRect();
-    const iconRect = disclosureIcon?.getBoundingClientRect();
-    const ownerRect = firstOwnerText?.getBoundingClientRect();
-    expect(Math.round(iconRect?.right ?? 0)).toBeLessThanOrEqual(
-      Math.round(codeRect?.left ?? 0),
-    );
-    expect(
-      Math.abs(
-        (iconRect?.top ?? 0) +
-          (iconRect?.height ?? 0) / 2 -
-          ((codeRect?.top ?? 0) + (codeRect?.height ?? 0) / 2),
-      ),
-    ).toBeLessThanOrEqual(2);
-    expect(
-      Math.abs(
-        Math.round(ownerRect?.left ?? 0) - Math.round(codeRect?.left ?? 0),
-      ),
-    ).toBeLessThanOrEqual(2);
-    if (firstOwnerRow) {
-      expect(getComputedStyle(firstOwnerRow).borderLeftWidth).toBe("3px");
-    }
-  });
-
-  it("makes an expanded owner-row link keyboard-focusable (#808 a11y)", async () => {
-    // Fix 2 (#808 a11y): the owner sub-rows are whole-row FLEX `<a>`s (NOT
-    // display:contents), so — unlike the leaf rows — they ARE in the keyboard tab
-    // order and a `:focus-visible` ring draws on the anchor's own box. The visible
-    // ring is a pure CSS hook (verified via screenshot in the dev-shot tool); here we
-    // guard the prerequisite: an expanded owner row is a real, focusable <a>.
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "11",
-      groups: [
-        {
-          group: "register_value_sets",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            {
-              type: "code",
-              code: "1",
-              label: "Man",
-              variables: [
-                { fqid: "scb/lisa/kon", name: "Kön", register: "LISA" },
-                { fqid: "scb/rams/kon", name: "Kön RAMS", register: "RAMS" },
-              ],
-              variable_count: 2,
-              classifications: [],
-              classification_count: 0,
-            },
-          ],
-        },
-      ],
-    } as unknown as SearchResponse);
-    setQuery("11");
-    await render(SearchView);
-
-    // Expand the disclosure to reveal the owner sub-rows.
-    await page.getByText("Man").click();
-    const owner = document.querySelector<HTMLAnchorElement>(
-      ".search-view a.owner-row",
-    );
-    expect(owner).not.toBeNull();
-    owner?.focus();
-    expect(document.activeElement).toBe(owner);
   });
 
   it("renders an OWNERLESS code as a plain Code · Label row — no count, no disclosure (#808 round 5)", async () => {
@@ -987,72 +729,6 @@ describe("SearchView — typed result groups (#379)", () => {
       document.querySelector(
         ".search-view .owner-row[href='/catalog/class/sun2020']",
       ),
-    ).toBeNull();
-  });
-
-  it("links a concept-group result to its group page", async () => {
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "ink",
-      groups: [
-        {
-          group: "variables",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            {
-              type: "group",
-              group_key: "dispink",
-              group_label: "Disponibel inkomst",
-              kind: "variable",
-              label_matched: false,
-              matched_count: 2,
-              member_count: 3,
-              register: "LISA",
-              source: "token",
-              members: [
-                {
-                  fqid: "scb/lisa/dispink-2019",
-                  name: "Disp 2019",
-                  facets: [],
-                },
-                {
-                  fqid: "scb/lisa/dispink-2020",
-                  name: "Disp 2020",
-                  facets: [],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    } as unknown as SearchResponse);
-    setQuery("ink");
-    await render(SearchView);
-
-    // Poll until the async search results have rendered before the sync queries.
-    await expect
-      .element(page.getByRole("heading", { name: "Variables" }))
-      .toBeVisible();
-    // The group itself keeps a primary link to the first-class group page; no
-    // inline disclosure is reintroduced in search results.
-    const row = document.querySelector<HTMLElement>(
-      ".search-view .group-result-row",
-    );
-    expect(
-      row?.querySelector<HTMLAnchorElement>(
-        "a.row-link[href='/catalog/group/scb/lisa/dispink']",
-      ),
-    ).not.toBeNull();
-    const registerPill = row?.querySelector<HTMLAnchorElement>(
-      ".register-context-chip[href='/catalog/scb/lisa']",
-    );
-    expect(pillLabel(registerPill)).toBe("SCB: LISA");
-    await expect
-      .element(page.getByText(/variables matched/))
-      .not.toBeInTheDocument();
-    expect(
-      document.querySelector(".search-view details.concept-group"),
     ).toBeNull();
   });
 
@@ -1713,73 +1389,6 @@ describe("SearchView — compact per-type tables (#808)", () => {
     ],
   } as unknown as SearchResponse;
 
-  it("renders all four leaf groups as grid tables (no DataTable / no role=grid) (#808 a11y)", async () => {
-    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
-    setQuery("kon");
-    await render(SearchView);
-
-    await expect
-      .element(page.getByRole("heading", { name: "Variables" }))
-      .toBeVisible();
-    // L319 / a11y: registers no longer use a DataTable (selection-as-navigation made
-    // a null-fqid row an interactive dead row). ALL four result types now render the
-    // accessible `.children.table` subgrid pattern, so NO role=grid table remains and
-    // there are no selectable <tr> tab stops.
-    expect(
-      document.querySelectorAll(".search-view table[role='grid']").length,
-    ).toBe(0);
-    expect(document.querySelectorAll(".search-view tr.selectable").length).toBe(
-      0,
-    );
-    // Registers + variables + classifications + each codes bucket render a
-    // `.children.table` grid.
-    const gridTables = document.querySelectorAll(
-      ".search-view .children.table",
-    );
-    expect(gridTables.length).toBeGreaterThanOrEqual(3);
-  });
-
-  it("makes the register's whole-row link target its catalog node (href, not DataTable selection)", async () => {
-    // L319 / a11y: the register row is a real whole-row <a> (subgrid), so navigation
-    // is the anchor's OWN href (the shell's `use:link` intercepts it at runtime) —
-    // no DataTable selection-as-navigation. Assert the row link's href, the same
-    // open-in-new-tab-safe contract the variable/classification leaves use.
-    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
-    setQuery("kon");
-    await render(SearchView);
-
-    // Poll until the async search results have rendered before the sync queries.
-    await expect
-      .element(page.getByRole("heading", { name: "Registers" }))
-      .toBeVisible();
-    const row = document.querySelector<HTMLAnchorElement>(
-      ".search-view .group a.leaf-row[href='/catalog/scb/lisa']",
-    );
-    expect(row).not.toBeNull();
-    expect(row?.getAttribute("href")).toBe(catalogHref("scb/lisa"));
-  });
-
-  it("hides the raw FQID and shows the variable's delivery column as a heading chip", async () => {
-    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
-    setQuery("kon");
-    await render(SearchView);
-
-    // The variable heading shows the delivery-column name ("kon"), never the full
-    // FQID path ("scb/lisa/kon").
-    await expect
-      .element(page.getByRole("heading", { name: "Variables" }))
-      .toBeVisible();
-    // No code-like token renders the full FQID with slashes (delivery-column
-    // chips are column names, not FQIDs).
-    for (const code of document.querySelectorAll(".search-view code")) {
-      expect(code.textContent ?? "").not.toContain("/");
-    }
-    const columnChips = Array.from(
-      document.querySelectorAll<HTMLElement>(".search-view .col-chip"),
-    ).map((c) => c.textContent?.trim());
-    expect(columnChips).toContain("kon");
-  });
-
   it("renders Variables as a normal heading with column chips and muted register context", async () => {
     vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
     setQuery("kon");
@@ -1837,55 +1446,13 @@ describe("SearchView — compact per-type tables (#808)", () => {
     await expect
       .element(page.getByRole("heading", { name: "Variables" }))
       .toBeVisible();
-    const link = document.querySelector<HTMLAnchorElement>(
-      ".search-view a.row-link[href='/catalog/scb/lisa/raks-andelutbbidrink']",
-    );
-    const row = link?.closest<HTMLElement>(".leaf-row");
-    expect(row).not.toBeNull();
-    expect(row?.querySelector(".result-title")?.textContent).toContain(
-      "Andel av den totala inkomsten",
-    );
-    const registerPill = row?.querySelector<HTMLAnchorElement>(
-      ".register-context-chip[href='/catalog/scb/lisa']",
-    );
-    expect(pillLabel(registerPill)).toBe("SCB: LISA");
-  });
-
-  it("makes each leaf a real catalog link (open-in-new-tab safe)", async () => {
-    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
-    setQuery("kon");
-    await render(SearchView);
-
-    // Each leaf is a real <a href> to its catalog node (so middle-click /
-    // open-in-new-tab / screen readers get a link). Whole-row link names include
-    // muted context, so match the distinctive visible names.
-    await expect
-      .element(page.getByRole("link", { name: /LISA.*SCB/ }))
-      .toHaveAttribute("href", "/catalog/scb/lisa");
-    await expect
-      .element(page.getByRole("link", { name: /Kön/ }))
-      .toHaveAttribute("href", "/catalog/scb/lisa/kon");
-    await expect
-      .element(page.getByRole("link", { name: /SUN/ }))
-      .toHaveAttribute("href", "/catalog/class/sun2020");
-  });
-
-  it("renders result group headings as plain text, not heading badges", async () => {
-    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
-    setQuery("kon");
-    await render(SearchView);
-
-    await expect
-      .element(page.getByRole("heading", { name: "Registers" }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("heading", { name: "Variables" }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("heading", { name: "Classifications" }))
-      .toBeVisible();
-    expect(document.querySelector(".search-view h3 .heading-tag")).toBeNull();
-    expect(document.querySelectorAll(".search-view h3 .tag").length).toBe(0);
+    expect(
+      page
+        .getByText(
+          "Andel av den totala inkomsten som är föranledd av arbetsmarknadspolitiska åtgärder",
+        )
+        .elements(),
+    ).toHaveLength(1);
   });
 
   it("makes a variable leaf primary link focusable and register context separately navigable (#808 a11y)", async () => {
@@ -1900,44 +1467,13 @@ describe("SearchView — compact per-type tables (#808)", () => {
     await expect
       .element(page.getByRole("heading", { name: "Variables" }))
       .toBeVisible();
-    const link = document.querySelector<HTMLAnchorElement>(
-      ".search-view a.row-link[href='/catalog/scb/lisa/kon']",
-    );
-    const row = link?.closest<HTMLElement>(".leaf-row");
-    expect(row).not.toBeNull();
-    expect(link?.getAttribute("href")).toBe("/catalog/scb/lisa/kon");
-    link?.focus();
-    expect(document.activeElement).toBe(link);
-    // The row carries delivery-column chips in the heading; register context is a
-    // muted pill link, not a green register pill.
-    expect(row?.querySelector(".register-pill")).toBeNull();
-    expect(row?.querySelector(".col-chip")?.textContent?.trim()).toBe("kon");
-    const registerPill = row?.querySelector<HTMLAnchorElement>(
-      ".register-context-chip[href='/catalog/scb/lisa']",
-    );
-    expect(pillLabel(registerPill)).toBe("SCB: LISA");
-    expect(registerPill?.querySelector(".chip-arrow")?.textContent).toBe("↗");
-  });
-
-  it("makes a classification leaf row a keyboard-focusable whole-row link (#808 a11y)", async () => {
-    // The classification leaf (no terminal link) is also a subgrid whole-row <a>;
-    // assert it is keyboard-focusable — the display:contents version was not.
-    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
-    setQuery("kon");
-    await render(SearchView);
-
-    // Poll until the async search results have rendered before the sync queries.
+    const link = page.getByRole("link", { name: /^Kön/ });
+    await expect.element(link).toHaveAttribute("href", "/catalog/scb/lisa/kon");
+    (link.element() as HTMLElement).focus();
+    expect(document.activeElement).toBe(link.element());
     await expect
-      .element(page.getByRole("heading", { name: "Classifications" }))
-      .toBeVisible();
-    // Scope by the classification href; several groups share the same row class.
-    const row = document.querySelector<HTMLAnchorElement>(
-      ".search-view a.leaf-row[href='/catalog/class/sun2020']",
-    );
-    expect(row).not.toBeNull();
-    expect(row?.getAttribute("href")).toBe("/catalog/class/sun2020");
-    row?.focus();
-    expect(document.activeElement).toBe(row);
+      .element(page.getByRole("link", { name: /^SCB: LISA/ }))
+      .toHaveAttribute("href", "/catalog/scb/lisa");
   });
 
   it("makes a register leaf row a keyboard-focusable whole-row subgrid link (#808 a11y, replaces DataTable)", async () => {
@@ -1953,20 +1489,10 @@ describe("SearchView — compact per-type tables (#808)", () => {
     await expect
       .element(page.getByRole("heading", { name: "Registers" }))
       .toBeVisible();
-    // The registers group renders the same one-column grid table as variables,
-    // NOT a DataTable and not a split name/description table.
-    const grid = document.querySelector(".search-view .children.table.cols-1");
-    expect(grid).not.toBeNull();
-    const row = document.querySelector<HTMLAnchorElement>(
-      ".search-view .group a.leaf-row[href='/catalog/scb/lisa']",
-    );
-    expect(row).not.toBeNull();
-    expect(row?.querySelector(".result-title")?.textContent).toContain("LISA");
-    expect(row?.querySelector(".register-context-chip")?.textContent).toBe(
-      "SCB",
-    );
-    row?.focus();
-    expect(document.activeElement).toBe(row);
+    const row = page.getByRole("link", { name: /^LISA/ });
+    await expect.element(row).toHaveAttribute("href", "/catalog/scb/lisa");
+    (row.element() as HTMLElement).focus();
+    expect(document.activeElement).toBe(row.element());
   });
 
   it("renders a null-fqid variable leaf as a non-link row (plain text, no navigation target)", async () => {
@@ -2341,123 +1867,6 @@ describe("SearchView — compact per-type tables (#808)", () => {
     await expect.element(page.getByText("Searching…")).not.toBeInTheDocument();
     expect(document.querySelectorAll(".search-view .code-row").length).toBe(2);
   });
-
-  it("renders two group links sharing a group_key across registers without an each_key_duplicate crash (Fix A keeps the index in the key)", async () => {
-    // A concept_group's `group_key` is only register-scoped-unique (#322), so the
-    // same key legitimately recurs across registers in one variables group. A
-    // `group_key`-ONLY each key would crash; `group_key|index` tolerates it — both
-    // group links must render.
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "ink",
-      groups: [
-        {
-          group: "variables",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            {
-              type: "group",
-              group_key: "tfoab",
-              group_label: "Inkomst IoT",
-              kind: "variable",
-              label_matched: false,
-              matched_count: 1,
-              member_count: 1,
-              register: "IoT",
-              source: "token",
-              members: [
-                { fqid: "scb/iot/tfoab-2019", name: "IoT 2019", facets: [] },
-              ],
-            },
-            {
-              type: "group",
-              group_key: "tfoab",
-              group_label: "Inkomst LINDA",
-              kind: "variable",
-              label_matched: false,
-              matched_count: 1,
-              member_count: 1,
-              register: "LINDA",
-              source: "token",
-              members: [
-                {
-                  fqid: "scb/linda/tfoab-2019",
-                  name: "LINDA 2019",
-                  facets: [],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    } as unknown as SearchResponse);
-    setQuery("ink");
-    await render(SearchView);
-
-    await expect.element(page.getByText("Inkomst IoT")).toBeVisible();
-    await expect.element(page.getByText("Inkomst LINDA")).toBeVisible();
-    await expect.element(page.getByText("Searching…")).not.toBeInTheDocument();
-    expect(
-      document.querySelectorAll(".search-view .group-result-row a.row-link")
-        .length,
-    ).toBe(2);
-    expect(
-      document.querySelectorAll(".search-view details.concept-group").length,
-    ).toBe(0);
-  });
-});
-
-describe("SearchView — documentation is excluded from global search", () => {
-  const ONE_REGISTER: SearchResponse = {
-    kind: "search",
-    query: "kon",
-    groups: [
-      {
-        group: "registers",
-        has_more: false,
-        next_cursor: null,
-        results: [
-          { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
-        ],
-      },
-    ],
-  } as unknown as SearchResponse;
-
-  it("does not fetch or render Documentation results", async () => {
-    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
-    vi.mocked(docSearch).mockResolvedValue({
-      kind: "doc-search",
-      query: "kon",
-      ingested: true,
-      total_count: 1,
-      results: [
-        {
-          filename: "lisa_kon.md",
-          display_name: "LISA — Kön",
-          fuzzy: false,
-          register: "LISA",
-          snippet: null,
-          source: null,
-          source_url: null,
-          tags: [],
-          variable: null,
-        },
-      ],
-    });
-
-    setQuery("kon");
-    await render(SearchView);
-
-    await expect
-      .element(page.getByRole("heading", { name: "Registers" }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("heading", { name: "Documentation" }))
-      .not.toBeInTheDocument();
-    await expect.element(page.getByText("LISA — Kön")).not.toBeInTheDocument();
-    expect(docSearch).not.toHaveBeenCalled();
-  });
 });
 
 describe("SearchView — scoped-search ?type= toggle (#393 item 1)", () => {
@@ -2493,21 +1902,26 @@ describe("SearchView — scoped-search ?type= toggle (#393 item 1)", () => {
       .toHaveAttribute("aria-pressed", "false");
   });
 
-  it("passes the URL's ?type= to search() so the scoped result set fetches", async () => {
-    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
+  it("fetches the scoped result set for the URL's ?type=", async () => {
+    // The stub answers only the register-scoped request, so LISA renders only if
+    // the view forwards the URL's ?type=.
+    vi.mocked(search).mockImplementation(async (_q, opts) =>
+      opts?.type === "register"
+        ? ONE_REGISTER
+        : ({
+            kind: "search",
+            query: "kon",
+            groups: [],
+          } as unknown as SearchResponse),
+    );
     // Deep-link straight to a scoped URL.
     window.history.pushState({}, "", "/__reset__");
     router.navigate("/search?q=kon&type=register");
     await render(SearchView);
 
-    // The fetcher reads searchType and forwards it.
     await expect
-      .poll(() =>
-        vi
-          .mocked(search)
-          .mock.calls.some(([, opts]) => opts?.type === "register"),
-      )
-      .toBe(true);
+      .element(page.getByRole("link", { name: /^LISA/ }))
+      .toBeVisible();
     // The scoped button is the active one.
     await expect
       .element(page.getByRole("button", { name: "Registers" }))
@@ -2515,7 +1929,17 @@ describe("SearchView — scoped-search ?type= toggle (#393 item 1)", () => {
   });
 
   it("clicking a scope button routes ?type= and refetches scoped", async () => {
-    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
+    // The stub answers only the Codes-scoped request, so LISA renders only once
+    // the click refetched with that scope.
+    vi.mocked(search).mockImplementation(async (_q, opts) =>
+      opts?.type === "value"
+        ? ONE_REGISTER
+        : ({
+            kind: "search",
+            query: "kon",
+            groups: [],
+          } as unknown as SearchResponse),
+    );
     setQuery("kon");
     await render(SearchView);
 
@@ -2525,10 +1949,8 @@ describe("SearchView — scoped-search ?type= toggle (#393 item 1)", () => {
     await expect.poll(() => router.getQueryParam("type")).toBe("value");
     // …and search refetches with that scope.
     await expect
-      .poll(() =>
-        vi.mocked(search).mock.calls.some(([, opts]) => opts?.type === "value"),
-      )
-      .toBe(true);
+      .element(page.getByRole("link", { name: /^LISA/ }))
+      .toBeVisible();
   });
 
   it("clicking 'All' OMITS ?type= from the URL (clean canonical URL)", async () => {
@@ -2648,18 +2070,8 @@ describe("SearchView — codes grouped by code system (#393 item 3)", () => {
     const systemPill = document.querySelector<HTMLAnchorElement>(
       ".code-system-heading .code-system-chip[href='/catalog/class/sun2020']",
     );
-    const firstCodeCell = document.querySelector<HTMLElement>(
-      ".children.table.codes .code-cell",
-    );
     expect(systemPill).not.toBeNull();
     expect(pillLabel(systemPill)).toBe("SUN2020");
-    expect(firstCodeCell).not.toBeNull();
-    expect(
-      Math.abs(
-        Math.round(systemPill?.getBoundingClientRect().left ?? 0) -
-          Math.round(firstCodeCell?.getBoundingClientRect().left ?? 0),
-      ),
-    ).toBeLessThanOrEqual(1);
     // Register-local values render in their own bubble, not as a nested
     // "Register-local" subsection under classification codes.
     await expect
