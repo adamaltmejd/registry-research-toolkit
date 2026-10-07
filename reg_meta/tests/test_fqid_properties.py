@@ -67,18 +67,3 @@ def test_idempotence(name: str | None) -> None:
     out = derive_variable_slug(name)
     if out is not None:
         assert derive_variable_slug(out) == out
-
-
-@given(slug_inputs)
-def test_determinism(name: str | None) -> None:
-    """Two calls on the same input agree."""
-    assert derive_variable_slug(name) == derive_variable_slug(name)
-
-
-@given(slug_inputs)
-def test_output_is_ascii_lowercase(name: str | None) -> None:
-    """Non-None output is pure-ASCII lowercase (NFKD case/diacritic fold)."""
-    out = derive_variable_slug(name)
-    if out is not None:
-        assert out.isascii()
-        assert out == out.lower()

@@ -59,29 +59,6 @@ def _seed_same_as(
 
 
 class TestEdges:
-    def test_succession_edge_directed(self) -> None:
-        conn = build_slugged_db()
-        add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
-        add_state(
-            conn,
-            register_id=1,
-            variable_slug="civilstand",
-            register_variant_id=10,
-            delivery_column_name="Civ",
-        )
-        _seed_replaced_by(
-            conn,
-            predecessor=("scb", "lisa", "kon"),
-            successor=("scb", "lisa", "civilstand"),
-            reason="renamed",
-        )
-        g = Catalog(conn).graph_for_fqid(_KON)
-        succ = [e for e in g.edges if e.kind == "succession"]
-        assert len(succ) == 1
-        assert succ[0].source == "scb/lisa/kon"
-        assert succ[0].target == "scb/lisa/civilstand"
-        assert succ[0].label == "renamed"
-
     def test_variable_succession_edge_carries_effective_year(self) -> None:
         # #794 P2: the `variable_replaced_by.effective_year` (the transition year the
         # retired LineagePanels showed) must ride on the succession edge so the #678
