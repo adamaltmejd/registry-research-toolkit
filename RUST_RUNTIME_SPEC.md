@@ -297,18 +297,28 @@ Design rules:
 - **`show` plus facet commands** *(settled)*. `show <ref>` returns a summary for any
   kind (register, variable, classification, group). Separate verbs fetch the heavy
   parts: states, values, lineage, graph, coverage.
-- **One flag per concept, the same everywhere.** `--register`, `--period` (the FQID
-  period grammar, replacing `--years`/`--year`/`--from`/`--to`), `--limit` and
-  `--cursor` on every list. `--scope` is valid on every read command because scope is
+- **One time filter: `--period`** *(settled)*. Every command that filters by time takes
+  `--period`, parsed by the FQID/project period grammar in `reg-core` (`2019`,
+  `2015..2019`, `LA2019`, `2019-03`, `2019-01-01..2019-06-30`). `diff` takes two periods
+  as `--from`/`--to` in the same grammar. Replaces `--years`, `--year` and the integer
+  `--from`/`--to`.
+- **Cursor paging everywhere** *(settled)*. Every list takes `--limit` (one default,
+  50) and `--cursor`, and returns `next_cursor`. Cursors are bound to the catalog
+      generation, so a stale cursor fails loudly instead of skipping rows. No
+      `--offset`.
+- **One flag per concept, the same everywhere.** `--register` and `--scope` mean the
+  same on every command; `--scope` is valid on every read command because scope is
   reader state.
 - **One output shape per command.** The shape does not depend on result count. Every
   list is `{"items": [...], "next_cursor": ...}` inside `data`.
 - **Errors** are always JSON on stderr: `{code, class, message, remediation, fields}`.
-- **Exit codes:** keep 0/2/10/16/25/30, split 17 into 17 (no match / ambiguous) and 18
-  (order blocked), and drop 20.
-- **Self-description.** `reg-meta describe` prints the command tree and the JSON Schema
-  of every output. Help text is generated from the same definitions. This replaces ~580
-  lines of hand-written help and examples.
+- **Exit codes** *(settled)*. Keep 0 ok, 2 usage, 10 catalog missing or incompatible, 16
+  not found, 25 network, 30 internal. 17 means no match or ambiguous ref only; new 18
+  means order blocked; unused 20 is dropped. `describe` lists every code.
+- **Generated help and `describe`** *(settled)*. Help text and examples live next to
+  each command's definition (one source); `--help` renders them and `--examples` folds
+  into it. `reg-meta describe` emits the command tree with argument and output JSON
+  Schemas for agents. This replaces ~580 lines of hand-written help and examples.
 
 Command sketch:
 
