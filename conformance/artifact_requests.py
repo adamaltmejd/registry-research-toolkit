@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 
+from acceptance_requests import response_fqids
 from reg_meta.cli import run
 from reg_meta.db import get_manifest, open_db
 from reg_meta.order import materialize_order, project_from_raw
@@ -102,6 +103,142 @@ def require(condition, message):
         raise AssertionError(message)
 
 
+def cli_json(directory, capsys, arguments):
+    code = run(["--db", str(directory), "--format", "json", *arguments])
+    captured = capsys.readouterr()
+    require(code == 0, "Acceptance CLI request failed")
+    return json.loads(captured.out)
+
+
+# reg_meta/DESIGN.md: search continuation has a hard 1,000-result depth ceiling and a
+# researcher who reaches it must refine the query. Exact/prefix promotion switches off
+# when more than 50 rows match the query by identity, so a binding whose generic name
+# (the real catalogs share "År" across dozens of registers) ranks it past that depth
+# is, by contract, unreachable through that name alone.
+SEARCH_DEPTH_CEILING = 1_000
+IDENTITY_PROMOTION_LIMIT = 50
+
+
+def identity_match_floor(query, rows):
+    """Lower bound on the reader's identity-match count over consumed rows.
+
+    Casefold-only equality/prefix on the published identity texts; the reader also
+    folds diacritics, so it counts at least these.
+    """
+    folded = " ".join(query.split()).casefold()
+    return sum(
+        any(
+            isinstance(text, str)
+            and " ".join(text.split()).casefold().startswith(folded)
+            for text in (row.get("name"), row.get("group_label"), row.get("datacolumn"))
+        )
+        for row in rows
+    )
+
+
+def ceiling_exhausted(query, rows):
+    """A miss is contractual only past the depth ceiling with promotion gated off."""
+    return (
+        len(rows) >= SEARCH_DEPTH_CEILING
+        and identity_match_floor(query, rows) > IDENTITY_PROMOTION_LIMIT
+    )
+
+
+def http_search_traversal(client, query, scope, binding):
+    """Follow HTTP variable cursors; return (found, top-level rows consumed)."""
+    params = {"q": query, "type": "variable", "limit": 100, "scope": scope}
+    cursors = set()
+    rows = []
+    while True:
+        response = client.get("/api/search", params=params)
+        require(response.status_code == 200, "Acceptance HTTP search failed")
+        groups = response.json()["groups"]
+        if binding in response_fqids(groups):
+            return True, rows
+        rows.extend(row for group in groups for row in group["results"])
+        group = next((group for group in groups if group["has_more"]), None)
+        if group is None:
+            return False, rows
+        cursor = group["next_cursor"]
+        require(
+            cursor and cursor not in cursors, "Acceptance HTTP search cursor stalled"
+        )
+        cursors.add(cursor)
+        params["cursor"] = cursor
+
+
+def http_search_contains(client, query, scope, binding):
+    return http_search_traversal(client, query, scope, binding)[0]
+
+
+def cli_search_traversal(directory, capsys, argv, binding):
+    """Follow CLI cursors; return (found, rows consumed)."""
+    page = cli_json(directory, capsys, argv)
+    cursors = set()
+    rows = []
+    while binding not in response_fqids(page["results"]):
+        rows.extend(page["results"])
+        if not page["has_more"]:
+            return False, rows
+        cursor = page["next_cursor"]
+        require(cursor and cursor not in cursors, "Sample CLI search cursor stalled")
+        cursors.add(cursor)
+        page = cli_json(directory, capsys, [*argv, "--cursor", cursor])
+    return True, rows
+
+
+def require_search_reaches(directory, client, capsys, query, scope, binding):
+    """Require CLI and HTTP name search to reach an admitted binding.
+
+    A traversal may miss it only when the miss is contractual: the traversal
+    consumed the whole depth ceiling and more than the promotion limit of its rows
+    match the query by identity, so the promotion gate is provably off. The
+    researcher's documented refinement, the reader's register-scoped search, must
+    then find the binding. That proves READER reachability, not HTTP search
+    reachability: HTTP search has no register refinement, and the binding's HTTP
+    reachability is proven by the caller's `/api/catalog/<fqid>` browse checks.
+
+    Edge cases: a query with exactly 1,000 results looks like a truncated one, and
+    HTTP rows include net-new golden pins (latent: no variable pins exist today).
+    Returns whether the refinement was needed.
+    """
+    argv = [
+        "--scope",
+        scope,
+        "search",
+        "--query",
+        query,
+        "--type",
+        "variable",
+        "--no-fold",
+        "--limit",
+        "100",
+    ]
+    # The pre-ceiling miss below is the guard for a genuine reader defect; no
+    # readable fixture can pin it without introducing one, so only the ceiling
+    # branch has a source-built case (reader/search-ceiling).
+    cli_found, cli_rows = cli_search_traversal(directory, capsys, argv, binding)
+    require(
+        cli_found or ceiling_exhausted(query, cli_rows),
+        "Sample missing from CLI search traversal",
+    )
+    http_found, http_rows = http_search_traversal(client, query, scope, binding)
+    require(
+        http_found or ceiling_exhausted(query, http_rows),
+        "Sample missing from HTTP search traversal",
+    )
+    if cli_found and http_found:
+        return False
+    refined, _ = cli_search_traversal(
+        directory, capsys, [*argv, "--register", binding.rsplit("/", 1)[0]], binding
+    )
+    require(
+        refined,
+        "Sample past the search depth ceiling missing from register-refined CLI search",
+    )
+    return True
+
+
 def assert_sampled_agreement(artifact_dir, artifact_client, tmp_path, capsys):
     """Observe the same adapter contracts for admitted and regression artifacts."""
     with open_db(artifact_dir / "reg_meta.db") as conn:
@@ -120,22 +257,6 @@ def assert_sampled_agreement(artifact_dir, artifact_client, tmp_path, capsys):
     require(
         search.content == artifact_client.get("/api/search", params=params).content,
         "Repeated HTTP first page differs",
-    )
-    hits = [hit for group in search.json()["groups"] for hit in group["results"]]
-    seen_cursors = set()
-    while not any(hit.get("fqid") == fqid for hit in hits):
-        group = search.json()["groups"][0]
-        if not group["has_more"]:
-            break
-        cursor = group["next_cursor"]
-        require(cursor and cursor not in seen_cursors, "HTTP search cursor stalled")
-        seen_cursors.add(cursor)
-        search = artifact_client.get("/api/search", params={**params, "cursor": cursor})
-        require(search.status_code == 200, "Sample search continuation failed")
-        hits = [hit for group in search.json()["groups"] for hit in group["results"]]
-    require(
-        any(hit.get("fqid") == fqid for hit in hits),
-        "Sample missing from HTTP search traversal",
     )
     argv = [
         "--db",
@@ -157,20 +278,7 @@ def assert_sampled_agreement(artifact_dir, artifact_client, tmp_path, capsys):
     first = capsys.readouterr().out
     require(run(argv) == 0, "Repeated CLI sample search failed")
     require(capsys.readouterr().out == first, "Repeated CLI first page differs")
-    page = json.loads(first)
-    seen_cursors = set()
-    while not any(hit.get("fqid") == fqid for hit in page["results"]):
-        if not page["has_more"]:
-            break
-        cursor = page["next_cursor"]
-        require(cursor and cursor not in seen_cursors, "CLI search cursor stalled")
-        seen_cursors.add(cursor)
-        require(run([*argv, "--cursor", cursor]) == 0, "CLI search continuation failed")
-        page = json.loads(capsys.readouterr().out)
-    require(
-        any(hit.get("fqid") == fqid for hit in page["results"]),
-        "CLI search identity disagrees",
-    )
+    require_search_reaches(artifact_dir, artifact_client, capsys, query, scope, fqid)
     validated = artifact_client.post("/api/project/validate", json=project)
     require(
         validated.status_code == 200 and validated.json()["ok"],

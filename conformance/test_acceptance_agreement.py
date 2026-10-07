@@ -17,112 +17,18 @@ from acceptance_requests import (
     identity_digest,
     response_fqids,
 )
-from artifact_requests import require, sample_project
+from artifact_requests import (
+    cli_json,
+    http_search_contains,
+    require,
+    require_search_reaches,
+    sample_project,
+)
 from fastapi.testclient import TestClient
 from reader_artifacts import CASES, FIXTURE_IMPORT_DATE, build_reader_artifact
 from reg_meta.cli import run
 from reg_meta.db import get_manifest, open_db
 from reg_webapp.app import create_app
-
-
-def cli_json(directory, capsys, arguments):
-    code = run(["--db", str(directory), "--format", "json", *arguments])
-    captured = capsys.readouterr()
-    require(code == 0, "Acceptance CLI request failed")
-    return json.loads(captured.out)
-
-
-# reg_meta/DESIGN.md: search continuation has a hard 1,000-result depth ceiling and a
-# researcher who reaches it must refine the query. A binding whose generic name (the
-# real catalogs share "År" across dozens of registers) ranks it past that depth is,
-# by contract, unreachable through that name alone.
-SEARCH_DEPTH_CEILING = 1_000
-
-
-def http_search_traversal(client, query, scope, binding):
-    """Follow HTTP variable cursors; return (found, top-level rows consumed)."""
-    params = {"q": query, "type": "variable", "limit": 100, "scope": scope}
-    cursors = set()
-    consumed = 0
-    while True:
-        response = client.get("/api/search", params=params)
-        require(response.status_code == 200, "Acceptance HTTP search failed")
-        groups = response.json()["groups"]
-        if binding in response_fqids(groups):
-            return True, consumed
-        consumed += sum(len(group["results"]) for group in groups)
-        group = next((group for group in groups if group["has_more"]), None)
-        if group is None:
-            return False, consumed
-        cursor = group["next_cursor"]
-        require(
-            cursor and cursor not in cursors, "Acceptance HTTP search cursor stalled"
-        )
-        cursors.add(cursor)
-        params["cursor"] = cursor
-
-
-def http_search_contains(client, query, scope, binding):
-    return http_search_traversal(client, query, scope, binding)[0]
-
-
-def cli_search_traversal(directory, capsys, argv, binding):
-    """Follow CLI cursors; return (found, rows consumed)."""
-    page = cli_json(directory, capsys, argv)
-    cursors = set()
-    consumed = 0
-    while binding not in response_fqids(page["results"]):
-        consumed += len(page["results"])
-        if not page["has_more"]:
-            return False, consumed
-        cursor = page["next_cursor"]
-        require(cursor and cursor not in cursors, "Sample CLI search cursor stalled")
-        cursors.add(cursor)
-        page = cli_json(directory, capsys, [*argv, "--cursor", cursor])
-    return True, consumed
-
-
-def require_search_reaches(directory, client, capsys, query, scope, binding):
-    """Require CLI and HTTP name search to reach an admitted binding.
-
-    A traversal may miss it only after consuming the whole depth ceiling; the
-    researcher's documented refinement, the reader's register-scoped search, must
-    then find it. HTTP search has no register refinement, so a ceiling-bound HTTP
-    miss is proven through that same refined reader search. Returns whether the
-    refinement was needed.
-    """
-    argv = [
-        "--scope",
-        scope,
-        "search",
-        "--query",
-        query,
-        "--type",
-        "variable",
-        "--no-fold",
-        "--limit",
-        "100",
-    ]
-    cli_found, cli_consumed = cli_search_traversal(directory, capsys, argv, binding)
-    require(
-        cli_found or cli_consumed >= SEARCH_DEPTH_CEILING,
-        "Sample missing from CLI search traversal",
-    )
-    http_found, http_consumed = http_search_traversal(client, query, scope, binding)
-    require(
-        http_found or http_consumed >= SEARCH_DEPTH_CEILING,
-        "Sample missing from HTTP search traversal",
-    )
-    if cli_found and http_found:
-        return False
-    refined, _ = cli_search_traversal(
-        directory, capsys, [*argv, "--register", binding.rsplit("/", 1)[0]], binding
-    )
-    require(
-        refined,
-        "Sample past the search depth ceiling missing from register-refined CLI search",
-    )
-    return True
 
 
 def scopes(manifest):
