@@ -138,12 +138,14 @@ was removed. Before each push: `uv run ruff check`, `uv run ruff format --check`
 `cargo fmt --all --check`,
 `cargo clippy --workspace --all-targets --locked -- -D warnings` and
 `cargo test --workspace --locked`, as CI runs them; for the frontend,
-`bun run check && bun run lint && bun run test && bun run build` in
-`reg_webapp/frontend`, as CI runs them; for the edge worker,
-`bunx wrangler@4.130.0 deploy --dry-run --config reg_webapp/edge/wrangler.jsonc` (the
-pin CI deploys with). A change that redesigns a module rather than deleting from it, or
-needs more than one sitting, becomes a GitHub issue instead (search open and closed
-first).
+`bun run check && bun run lint && bun run test && bun run build`, then
+`bun run gen:types && git diff --exit-code src/lib/api-types.ts`, in
+`reg_webapp/frontend`, as CI runs them; for the edge worker, after
+`bun run gen:types && bun run build` in `reg_webapp/frontend` (the worker binds its
+`dist/`), `bunx wrangler@4.130.0 deploy --dry-run --config <c>` for each of
+`reg_webapp/edge/wrangler.jsonc` and `wrangler.swecov.jsonc` (the pin CI deploys with).
+A change that redesigns a module rather than deleting from it, or needs more than one
+sitting, becomes a GitHub issue instead (search open and closed first).
 
 ## 5. Report
 

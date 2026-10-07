@@ -41,14 +41,15 @@ Do not run the sabotage by hand. Review the named change as the failure proof.
 
 ## The sweep
 
-Read-only. One subagent per package test tree, through the harness's subagent tool (in
-Claude Code, the Agent tool with the `general-purpose` type; Explore locates code and
-does not audit it), told to edit nothing. Launch as many at once as the harness allows
-(Codex runs three children at a time) and the rest in waves. Where the harness lets a
-call choose its model, use the family's mid tier (in Claude, Opus). Each prompt carries
-CLAUDE.md, the "Testing strategy" section, the tree's conftest and helpers, a scratchpad
-file name unique to the tree, and this section verbatim. The frontend gets two agents,
-browser tests and the rest.
+Read-only. One subagent per test tree (each package's, plus `conformance/` and
+`scripts/tests/`), through the harness's subagent tool (in Claude Code, the Agent tool
+with the `general-purpose` type; Explore locates code and does not audit it), told to
+edit nothing. Launch as many at once as the harness allows (Codex runs three children at
+a time) and the rest in waves. Where the harness lets a call choose its model, use the
+family's mid tier (in Claude, Opus). Each prompt carries CLAUDE.md, the "Testing
+strategy" section, the tree's conftest and helpers, a scratchpad file name unique to the
+tree, and this section verbatim. The frontend gets two agents, browser tests and the
+rest.
 
 A tree too large to read whole gets file-level triage instead. Per file: `keep` (already
 at a boundary), `delete` (name the boundary case that covers it), or `gap` (no corpus
@@ -88,7 +89,8 @@ that fails on main is a product bug: reproduce it at the boundary and file it (s
 first; read through `scripts/gh_issue.py`), never delete it.
 
 Before pushing: `uv run python -m pytest <package> conformance -n auto -q`, or for the
-frontend `bun run check && bun run lint && bun run test && bun run build` in
+frontend `bun run check && bun run lint && bun run test && bun run build`, then
+`bun run gen:types && git diff --exit-code src/lib/api-types.ts`, in
 `reg_webapp/frontend`, or for `crates/` `cargo fmt --all --check`,
 `cargo clippy --workspace --all-targets --locked -- -D warnings` and
 `cargo test --workspace --locked`, and compare the wall time with the package budget.
