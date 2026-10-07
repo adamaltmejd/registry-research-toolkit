@@ -83,10 +83,10 @@ and hooks instead of duplicating version pins in this skill:
   design-review skill. Extend coverage for changed rendered behavior; a source review
   does not establish browser behavior.
 
-Normal commit hooks, pre-push checks and CI remain in force. Reuse successful evidence
-when the tested source, dependency lock, environment and inputs are unchanged; rerun
-checks invalidated by a repair or integration change. Do not add repeated full audits
-merely to repeat a passing result.
+Normal commit hooks and CI remain in force. Reuse successful evidence when the tested
+source, dependency lock, environment and inputs are unchanged; rerun checks invalidated
+by a repair or integration change. Do not add repeated full audits merely to repeat a
+passing result.
 
 Once checks pass, use one independent review of the candidate diff, selected version
 constraints and verification evidence. Repair actionable findings and recheck the
