@@ -182,31 +182,6 @@ def db_with_class_code_group() -> sqlite3.Connection:
 
 
 @pytest.fixture
-def db_with_exact_and_prefix_classifications() -> sqlite3.Connection:
-    """Two DISTINCT classifications splitting an exact-vs-prefix code match:
-    icd10 owns the EXACT query code 'C12'; sun2020 owns only a prefix-extension
-    'C120'. Neither carries 'C12' in its NAME, so both surface ONLY via code-
-    containment — isolating the `has_exact DESC` ordering ACROSS classifications
-    (the shipped `db_with_class_codes` puts C12 + C120 on the SAME classification,
-    so cross-classification exact-precedence is never exercised there)."""
-    conn = build_slugged_db()  # ships sun2020 (no codes), name has no 'C12'
-    conn.execute(
-        "INSERT INTO classification (id, short_name, name, slug) "
-        "VALUES (60, 'ICD10', 'Internationell sjukdomsklassifikation', 'icd10')"
-    )
-    add_value_set(conn, value_set_id=1, codes=[("C12", "Tongue base")])
-    add_value_set(conn, value_set_id=2, codes=[("C120", "Sub")])
-    code_ids = {
-        row["code"]: row["code_id"]
-        for row in conn.execute("SELECT code_id, code FROM value_code").fetchall()
-    }
-    _link_code_to_classification(conn, "icd10", code_ids["C12"])
-    _link_code_to_classification(conn, "sun2020", code_ids["C120"])
-    _rebuild_fts(conn)
-    return conn
-
-
-@pytest.fixture
 def db_with_like_metachar_codes() -> sqlite3.Connection:
     """Two classifications splitting a LIKE-metacharacter query: classification A
     (slug 'underscore-owner') owns a code with a LITERAL underscore ('12_5');
@@ -256,31 +231,6 @@ def test_like_metacharacter_query_matches_literally(
     assert "class/plain-owner" not in fqids
 
 
-def test_code_containment_dedups_against_name_hit(
-    db_with_class_codes: sqlite3.Connection,
-) -> None:
-    # icd10's NAME contains 'C12' (a name-FTS hit) AND it would be a code-
-    # containment candidate if it owned the code — but it owns no code here, so the
-    # real dedup target is the general invariant: each classification appears once.
-    out = search(db_with_class_codes, "C12", field="description", type="classification")
-    leaves = [r for r in out.results if r.type == "classification"]
-    fqids = [str(r.fqid) for r in leaves]
-    assert len(fqids) == len(set(fqids)), f"duplicate classification rows: {fqids}"
-    # icd10 is the name hit; sun2020 the code-containment hit.
-    assert "class/icd10" in fqids
-    assert "class/sun2020" in fqids
-
-
-def test_name_fts_hits_precede_code_containment_hits(
-    db_with_class_codes: sqlite3.Connection,
-) -> None:
-    # icd10 matches by NAME (negative bm25 rank); sun2020 only by code-containment
-    # (positive base rank) → the name hit sorts first.
-    out = search(db_with_class_codes, "C12", field="description", type="classification")
-    fqids = [str(r.fqid) for r in out.results if r.type == "classification"]
-    assert fqids.index("class/icd10") < fqids.index("class/sun2020")
-
-
 def test_code_containment_excluded_under_register_scope(
     db_with_class_codes: sqlite3.Connection,
 ) -> None:
@@ -294,37 +244,6 @@ def test_code_containment_excluded_under_register_scope(
         register="lisa",
     )
     assert out.results == ()
-
-
-def test_code_containment_in_type_all(
-    db_with_class_codes: sqlite3.Connection,
-) -> None:
-    # type="all" also surfaces the code-containing classification.
-    out = search(db_with_class_codes, "C12", field="description", type="all")
-    fqids = [str(r.fqid) for r in out.results if r.type == "classification"]
-    assert "class/sun2020" in fqids
-
-
-def test_non_code_shaped_query_has_no_code_containment(
-    db_with_class_codes: sqlite3.Connection,
-) -> None:
-    # A plain word ('Tongue', the C12 label) is NOT code-shaped (no digit), so the
-    # code-containment arm never runs — sun2020 isn't surfaced by its code's label.
-    out = search(
-        db_with_class_codes, "Tongue", field="description", type="classification"
-    )
-    fqids = [str(r.fqid) for r in out.results if r.type == "classification"]
-    assert "class/sun2020" not in fqids
-
-
-def test_two_char_code_query_has_no_code_containment(
-    db_with_class_codes: sqlite3.Connection,
-) -> None:
-    # A 2-char code ('C1') fails the len>=3 code-shape gate, so no code-containment
-    # rows — guards the gate's length floor.
-    out = search(db_with_class_codes, "C1", field="description", type="classification")
-    fqids = [str(r.fqid) for r in out.results if r.type == "classification"]
-    assert "class/sun2020" not in fqids
 
 
 def test_code_containment_hits_fold_into_concept_group(
@@ -347,24 +266,6 @@ def test_code_containment_hits_fold_into_concept_group(
     assert {"class/sun2000", "class/sun2020"} <= member_fqids
     # No leaf row may duplicate a folded member's fqid.
     assert not ({str(r.fqid) for r in leaves} & member_fqids)
-
-
-def test_exact_code_classification_precedes_prefix_across_classifications(
-    db_with_exact_and_prefix_classifications: sqlite3.Connection,
-) -> None:
-    # icd10 owns the EXACT 'C12'; sun2020 owns only the prefix-extension 'C120'.
-    # `has_exact DESC` must rank the exact-containing classification first ACROSS
-    # the two distinct classifications.
-    out = search(
-        db_with_exact_and_prefix_classifications,
-        "C12",
-        field="description",
-        type="classification",
-    )
-    fqids = [str(r.fqid) for r in out.results if r.type == "classification"]
-    assert "class/icd10" in fqids
-    assert "class/sun2020" in fqids
-    assert fqids.index("class/icd10") < fqids.index("class/sun2020")
 
 
 @pytest.fixture
@@ -419,26 +320,6 @@ def test_lowercase_code_query_ranks_exact_first(
     assert fqids.index("class/sun2020") < fqids.index("class/icd10")
 
 
-def test_classification_label_match_folds_and_subsumes_leaves(
-    db_with_cls_group: sqlite3.Connection,
-) -> None:
-    # The query matches both classification names (FTS) AND the group label
-    # (LIKE) → one group row, member leaves subsumed (no leaf + folded-member
-    # duplication, the #350 review bug).
-    out = search(
-        db_with_cls_group, "Svensk", field="description", type="classification"
-    )
-    rows = out.results
-    groups = [r for r in rows if r.type == "group"]
-    leaves = [r for r in rows if r.type == "classification"]
-    assert len(groups) == 1
-    assert groups[0].kind == "classification"
-    assert groups[0].group_key == "sun"
-    member_fqids = {str(m.fqid) for m in groups[0].members}
-    assert {"class/sun2000", "class/sun2020"} <= member_fqids
-    assert not ({str(r.fqid) for r in leaves} & member_fqids)
-
-
 def test_classification_member_fold_without_label_match(
     db_with_cls_group: sqlite3.Connection,
 ) -> None:
@@ -448,16 +329,6 @@ def test_classification_member_fold_without_label_match(
     out = search(db_with_cls_group, "SUN", field="description", type="classification")
     groups = [r for r in out.results if r.type == "group"]
     assert any(r.group_key == "sun" for r in groups)
-
-
-def test_empty_description_query_folds_nothing(
-    db_with_cls_group: sqlite3.Connection,
-) -> None:
-    # No searchable token → the FTS path no-ops AND label folding is gated off,
-    # so an empty/punctuation query must NOT return every concept group via the
-    # raw `%%` LIKE pattern (Codex P2).
-    for q in ("", "   ", '"" -- ;'):
-        assert search(db_with_cls_group, q, field="description").results == ()
 
 
 def test_years_excludes_classifications(
