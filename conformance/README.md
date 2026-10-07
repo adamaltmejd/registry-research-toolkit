@@ -62,17 +62,19 @@ each word. The runner starts one server per cached artifact from the repository 
 with `REG_META_DB`, `REG_WEBAPP_STEWARD` and `REG_WEBAPP_STEWARDS_DIR` in its
 environment, waits until `GET /openapi.json` answers (120 s at most), reuses it for
 every case on that artifact and stops it at session end. A server that exits before
-answering is retried on a fresh port. Its output goes to `servers*/server-N.log` under
-the pytest base temp. The FastAPI app under uvicorn:
+answering is retried on a fresh port, and a start that fails is not retried for later
+cases on that artifact. Its output goes to `servers*/server-N.log` under the pytest base
+temp. The FastAPI app under uvicorn, without the `api` cases (they target the new API,
+which FastAPI does not serve):
 
 ```sh
-uv run python -m pytest conformance -q --server-cmd='uv run python -c "import sys, uvicorn; from reg_webapp.app import create_app; uvicorn.run(create_app(rate_limit_per_minute=1000), port=int(sys.argv[1]))" {port}'
+uv run python -m pytest conformance -q -k 'not [api/' --server-cmd='uv run python -c "import sys, uvicorn; from reg_webapp.app import create_app; uvicorn.run(create_app(rate_limit_per_minute=1000), port=int(sys.argv[1]))" {port}'
 ```
 
 The app reads its artifact from the environment, so this template needs no `{db}`. It is
 not `uvicorn reg_webapp.app:create_app --factory` because the production write limit (30
 per minute per IP) would refuse the validate cases, all sent from loopback; the
-in-process runner raises the limit the same way. The `api` corpus (`cases/api/`) is
+in-process runner uses the same raised limit. The `api` corpus (`cases/api/`) is
 collected only with `--server-cmd`, except its `startup_error` cases, which are
 process-level. Cases with `golden_config` swap a pins file the app reads at import, and
 stay in-process. Every other suite, boot and startup cases included, is unchanged.

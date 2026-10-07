@@ -718,8 +718,9 @@ is deleted".
   `conformance/test_http.py` (which collects the HTTP cases), `conformance/README.md`.
 - Out of scope: rewriting existing cases.
 - Acceptance: `uv run python -m pytest conformance -q --server-cmd='uv run uvicorn …'`
-  (the exact command recorded in `conformance/README.md`) passes the existing HTTP and
-  validate cases; the default in-process run is unchanged.
+  (the exact command, a `python -c` uvicorn launcher with a raised write limit, recorded
+  in `conformance/README.md`) passes the existing HTTP and validate cases; the default
+  in-process run is unchanged.
 
 **1.5 G1 differential harness.** Implements section 4, G1.
 

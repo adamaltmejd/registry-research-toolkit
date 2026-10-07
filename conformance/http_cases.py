@@ -215,14 +215,22 @@ class ServerPool:
     def client(self, env):
         db = env["REG_META_DB"]
         if db not in self._servers:
-            self._servers[db] = self._start(env)
+            # A failed start is remembered, so later cases on the artifact fail
+            # at once instead of waiting out the readiness deadline again.
+            try:
+                self._servers[db] = self._start(env)
+            except RuntimeError as exc:
+                self._servers[db] = exc
+        if isinstance(self._servers[db], RuntimeError):
+            raise self._servers[db]
         return self._servers[db][1]
 
     def close(self):
         while self._servers:
-            _, (process, client) = self._servers.popitem()
-            client.close()
-            _stop(process)
+            _, server = self._servers.popitem()
+            if not isinstance(server, RuntimeError):
+                server[1].close()
+                _stop(server[0])
 
     def _start(self, env):
         log = self._log_dir / f"server-{len(self._servers)}.log"
