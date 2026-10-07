@@ -54,20 +54,6 @@ def accept_prepared(root: Path) -> str:
     ).strip()
 
 
-def record_git_calls(monkeypatch: pytest.MonkeyPatch) -> list[tuple[str, ...]]:
-    """Record the argv of every Git process started through ``subprocess.run``."""
-    calls: list[tuple[str, ...]] = []
-    real = subprocess.run
-
-    def recorded(args, *rest, **kwargs):
-        if isinstance(args, list | tuple) and args and args[0] == "git":
-            calls.append(tuple(map(str, args)))
-        return real(args, *rest, **kwargs)
-
-    monkeypatch.setattr(subprocess, "run", recorded)
-    return calls
-
-
 def record_file_opens(
     monkeypatch: pytest.MonkeyPatch,
     on_open: Callable[[Path, str], None] | None = None,
