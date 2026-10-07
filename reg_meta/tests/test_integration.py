@@ -519,9 +519,9 @@ def test_update_and_query(runtime: NativeRuntime, image: str):
     """Full pipeline: update (downloads DB) from GitHub Releases and run a query.
 
     Carries the `release` marker on top of the module-level `integration` mark, so
-    it needs BOTH --run-integration AND --run-release. The pre-push hook passes
-    only the former (so this is skipped — a push isn't blocked when a release is
-    merely owed); a post-release / scheduled CI job passes both and runs it as a
+    it needs BOTH --run-integration AND --run-release. CI's package-integration
+    job passes only the former (so this is skipped — a PR isn't blocked when a
+    release is merely owed); a post-release / scheduled CI job passes both and runs it as a
     hard gate, where a compatible published asset is guaranteed to exist. That job
     runs in `registry` mode, so the container it queries from is the published
     consumer's install, not a locally built one."""

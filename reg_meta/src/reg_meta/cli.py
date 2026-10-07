@@ -628,7 +628,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "Materialize a project against this compiled catalog DB\n"
             "into the canonical JSON order\n"
             "manifest — the SAME materializer the webapp serves, so both emit\n"
-            "byte-identical manifests (REFACTOR_SPEC.md §12).\n\n"
+            "byte-identical manifests.\n\n"
             "Writes the manifest to stdout, or to --output. A blocked order\n"
             "writes the JSON error envelope naming every finding and exits 17;\n"
             "an unreadable/invalid project exits 10.\n\n"
@@ -645,8 +645,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Validate a project_data.json against this catalog DB.",
         description=(
             "Validate a project against this compiled catalog DB — the SAME\n"
-            "validator the webapp serves, so both emit byte-identical findings\n"
-            "(REFACTOR_SPEC.md §12).\n\n"
+            "validator the webapp serves, so both emit byte-identical findings.\n\n"
             "Writes the findings JSON ({ok, issues}) to stdout, or to --output.\n"
             "Exits 0 when the project has no error-level issue and 17 when it\n"
             "has one (the findings are written either way). An unreadable or\n"
@@ -823,7 +822,7 @@ def _cmd_update(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 def _cmd_order(args: argparse.Namespace) -> int:
     """`reg-meta order` — the CLI adapter over `order.materialize_order`.
 
-    A THIN adapter (§12): every gate, every finding and the serialization itself
+    A THIN adapter: every gate, every finding and the serialization itself
     belong to `order.py`, so this function only moves bytes. It writes
     `OrderManifest.to_json()` VERBATIM (not the CLI envelope, and not through
     `--format`) — that canonical serialization IS the artifact, and byte-identity
@@ -860,7 +859,7 @@ def _cmd_order(args: argparse.Namespace) -> int:
 def _cmd_validate(args: argparse.Namespace) -> int:
     """`reg-meta validate` — the CLI adapter over `semantic.validate_project`.
 
-    A THIN adapter (§12), the counterpart of `_cmd_order`: the composition,
+    A THIN adapter, the counterpart of `_cmd_order`: the composition,
     every issue and the serialization belong to `semantic.py`, so this function
     only moves bytes. It writes `semantic.validation_json` VERBATIM (not the CLI
     envelope, and not through `--format`) — byte-identity with the FastAPI
@@ -3372,7 +3371,7 @@ def run(argv: list[str] | None = None) -> int:
     # `order` and `validate` write their canonical bytes
     # (`OrderManifest.to_json`, `semantic.validation_json`) verbatim, so they
     # bypass the envelope/`--format` pipeline below — byte-identity with the
-    # FastAPI adapters is the §12 contract. Errors still render through the
+    # FastAPI adapters is the order contract. Errors still render through the
     # shared envelope + exit codes.
     if args.command in ("order", "validate"):
         try:

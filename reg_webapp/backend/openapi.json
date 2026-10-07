@@ -1337,7 +1337,7 @@
       },
       "ClipReport": {
         "additionalProperties": false,
-        "description": "One informational availability clip (\u00a712: reported, never silent, never\nan error): the binding asked for `requested_period` and is ordered for\n`ordered_period`, because that is where the column is documented as\navailable. Emitted only when the clip actually narrows the request.",
+        "description": "One informational availability clip (reported, never silent, never\nan error): the binding asked for `requested_period` and is ordered for\n`ordered_period`, because that is where the column is documented as\navailable. Emitted only when the clip actually narrows the request.",
         "properties": {
           "ordered_period": {
             "title": "Ordered Period",
@@ -2773,7 +2773,7 @@
       },
       "LogicalCoordinate": {
         "additionalProperties": false,
-        "description": "What the researcher asked for: the project-side coordinate of one entry.\n\n`variable` is the 3-segment binding FQID; `representation` is the canonical\nreg_meta `delivery_column_name` the slice resolved to \u2014 a join discriminator\ncarried for provenance, NOT the output column (that is\n`PhysicalCoordinate.column`).\n\n`register` is a `BaseModel` method, so the Python attr is `register_name`\nwith a `\"register\"` alias \u2014 the wire key stays the \u00a712 coordinate spelling\n(same pattern as `catalog.BindingGroupRef`).",
+        "description": "What the researcher asked for: the project-side coordinate of one entry.\n\n`variable` is the 3-segment binding FQID; `representation` is the canonical\nreg_meta `delivery_column_name` the slice resolved to \u2014 a join discriminator\ncarried for provenance, NOT the output column (that is\n`PhysicalCoordinate.column`).\n\n`register` is a `BaseModel` method, so the Python attr is `register_name`\nwith a `\"register\"` alias \u2014 the wire key stays the order-contract coordinate\nspelling (same pattern as `catalog.BindingGroupRef`).",
         "properties": {
           "provider": {
             "title": "Provider",
@@ -2857,7 +2857,7 @@
       },
       "OrderEntry": {
         "additionalProperties": false,
-        "description": "One resolved logical\u2192physical binding of the order.\n\n`source` is the project source name, so an entry stays traceable to the\nbinding that produced it. `requested_period` is the AVAILABILITY-CLIPPED\nperiod this table serves (canonically rendered), not the source's raw\ndeclared period \u2014 the table itself is ordered whole regardless (\u00a712).",
+        "description": "One resolved logical\u2192physical binding of the order.\n\n`source` is the project source name, so an entry stays traceable to the\nbinding that produced it. `requested_period` is the AVAILABILITY-CLIPPED\nperiod this table serves (canonically rendered), not the source's raw\ndeclared period \u2014 the table itself is ordered whole regardless.",
         "properties": {
           "logical": {
             "$ref": "#/components/schemas/LogicalCoordinate"
@@ -2974,7 +2974,7 @@
       },
       "OrderProvenance": {
         "additionalProperties": false,
-        "description": "Everything the steward-side extract system needs to know WHICH project,\nagainst WHICH catalog, for WHICH deployment \u2014 so the manifest is\nself-contained offline (\u00a712: no network, no catalog lookup at extract time).\n\n`project_hash` is the SHA-256 of the project's canonical JSON, so a manifest\ncan be tied back to the exact uploaded project bytes.\n\n`mode` names what GROUNDED the entries \u2014 a steward's compiled holdings or\n\u00a712's global fallback (canonical resolution alone, blank `table`) \u2014 so a\nreader never has to infer it from the entry shape.",
+        "description": "Everything the steward-side extract system needs to know WHICH project,\nagainst WHICH catalog, for WHICH deployment \u2014 so the manifest is\nself-contained offline (no network, no catalog lookup at extract time).\n\n`project_hash` is the SHA-256 of the project's canonical JSON, so a manifest\ncan be tied back to the exact uploaded project bytes.\n\n`mode` names what GROUNDED the entries \u2014 a steward's compiled holdings or\nthe global fallback (canonical resolution alone, blank `table`) \u2014 so a\nreader never has to infer it from the entry shape.",
         "properties": {
           "artifact_kind": {
             "enum": [
@@ -3244,7 +3244,7 @@
       },
       "PhysicalCoordinate": {
         "additionalProperties": false,
-        "description": "What the steward delivers: the entry's physical coordinate.\n\n`table` is the inventory's opaque exact identifier (a delivery filename or a\nschema-qualified SQL table), `column` its literal case-preserving physical\ncolumn, and `edition` the table's curated edition rendered canonically (a\nperiod token, an explicit `lo..hi` range, or a comma-joined list for an\ninterrupted series).\n\n`partition` is the table's \u00a712 disjoint-partition label when it carries one\n\u2014 the shard of the edition's population this table delivers \u2014 so the\nextractor can see it; it is absent from the JSON otherwise. Extraction\npreserves delivery topology: what goes in as two partitions comes out as two\nfiles, distinguished by the partition token `extraction_filenames` adds.\n\nIn \u00a712's global-deployment fallback there is no physical topology: `table`\nis blank, `column` carries the resolved canonical column, `edition` equals\nthe entry's requested period, and there is no partition.",
+        "description": "What the steward delivers: the entry's physical coordinate.\n\n`table` is the inventory's opaque exact identifier (a delivery filename or a\nschema-qualified SQL table), `column` its literal case-preserving physical\ncolumn, and `edition` the table's curated edition rendered canonically (a\nperiod token, an explicit `lo..hi` range, or a comma-joined list for an\ninterrupted series).\n\n`partition` is the table's disjoint-partition label when it carries one\n\u2014 the shard of the edition's population this table delivers \u2014 so the\nextractor can see it; it is absent from the JSON otherwise. Extraction\npreserves delivery topology: what goes in as two partitions comes out as two\nfiles, distinguished by the partition token `extraction_filenames` adds.\n\nIn the global-deployment fallback there is no physical topology: `table`\nis blank, `column` carries the resolved canonical column, `edition` equals\nthe entry's requested period, and there is no partition.",
         "properties": {
           "column": {
             "title": "Column",
@@ -7306,7 +7306,7 @@
     },
     "/api/project/order": {
       "post": {
-        "description": "Materialize a ``project_data.json`` into the JSON order manifest.\n\nA THIN adapter over ``reg_meta.order.materialize_order`` (REFACTOR_SPEC.md\n\u00a712): no gate, no fallback and no rendering lives here, so this endpoint and\nthe ``reg-meta order`` CLI emit byte-identical manifests. The selected\nartifact determines orderability: catalog artifacts use global fallback;\nsteward artifacts use their compiled holdings and steward identity.\n\n200 is the manifest \u2014 ``application/json``, downloaded as ``order.json``.\nAnything else is NOT AN ORDER: 422 either because the spec is invalid\n(``project_from_raw``) or because the materializer blocked it, carrying the\ntyped ``OrderBlockedModel`` \u2014 the findings as DATA (each with its code and\nits source/variable/period coordinates), not one flattened line. There is\ndeliberately no partial 200.\n\n``async`` + ``run_in_threadpool`` (blocking sqlite resolution off the event\nloop), mirroring ``/validate``.",
+        "description": "Materialize a ``project_data.json`` into the JSON order manifest.\n\nA THIN adapter over ``reg_meta.order.materialize_order`` (reg_meta/DESIGN.md \u2192 Order\nmaterializer and manifest): no gate, no fallback and no rendering lives here, so\nthis endpoint and the ``reg-meta order`` CLI emit byte-identical manifests. The\nselected artifact determines orderability: catalog artifacts use global fallback;\nsteward artifacts use their compiled holdings and steward identity.\n\n200 is the manifest \u2014 ``application/json``, downloaded as ``order.json``.\nAnything else is NOT AN ORDER: 422 either because the spec is invalid\n(``project_from_raw``) or because the materializer blocked it, carrying the\ntyped ``OrderBlockedModel`` \u2014 the findings as DATA (each with its code and\nits source/variable/period coordinates), not one flattened line. There is\ndeliberately no partial 200.\n\n``async`` + ``run_in_threadpool`` (blocking sqlite resolution off the event\nloop), mirroring ``/validate``.",
         "operationId": "order_project_api_project_order_post",
         "requestBody": {
           "content": {
@@ -7345,7 +7345,7 @@
     },
     "/api/project/validate": {
       "post": {
-        "description": "Validate a ``project_data.json``. Returns 200 with the concatenated\nstructural \u29fa semantic issue list + the derived ``ok`` flag; a 4xx is\nreserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).\n\nA THIN adapter over reg_meta's ``semantic.validate_project``\n(REFACTOR_SPEC.md \u00a712): the composition, every issue and the serialization\nlive there, so this endpoint and ``reg-meta validate`` emit byte-identical\nfindings. The 200 body is ``semantic.validation_json`` VERBATIM, returned\nas a raw ``Response`` (FastAPI passes it through without re-serializing)\nwhile ``response_model=`` still publishes ``ValidationResultModel`` as the\ntyped contract for the OpenAPI snapshot + the SPA codegen \u2014 the ``/order``\npattern.\n\n``async`` only to read the body off the wire; the BLOCKING work (the structural\nparse + the semantic layer's per-binding sqlite resolution) is offloaded to the\nthreadpool via ``run_in_threadpool`` so it never stalls the event loop (the\ncatalog routes are plain ``def`` for the same reason). The reg_meta connection\nopens on that threadpool thread (one thread \u2192 the cross-thread sqlite P1 can't\nrecur).",
+        "description": "Validate a ``project_data.json``. Returns 200 with the concatenated\nstructural \u29fa semantic issue list + the derived ``ok`` flag; a 4xx is\nreserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).\n\nA THIN adapter over reg_meta's ``semantic.validate_project`` (reg_meta/DESIGN.md \u2192\nProject semantic validation): the composition, every issue and the serialization\nlive there, so this endpoint and ``reg-meta validate`` emit byte-identical findings.\nThe 200 body is ``semantic.validation_json`` VERBATIM, returned as a raw\n``Response`` (FastAPI passes it through without re-serializing) while\n``response_model=`` still publishes ``ValidationResultModel`` as the typed contract\nfor the OpenAPI snapshot + the SPA codegen \u2014 the ``/order`` pattern.\n\n``async`` only to read the body off the wire; the BLOCKING work (the structural\nparse + the semantic layer's per-binding sqlite resolution) is offloaded to the\nthreadpool via ``run_in_threadpool`` so it never stalls the event loop (the\ncatalog routes are plain ``def`` for the same reason). The reg_meta connection\nopens on that threadpool thread (one thread \u2192 the cross-thread sqlite P1 can't\nrecur).",
         "operationId": "validate_project_api_project_validate_post",
         "requestBody": {
           "content": {

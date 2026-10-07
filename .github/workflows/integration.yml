@@ -7,9 +7,8 @@ name: Integration (Podman)
 # conformance artifact gate. These independent jobs need a
 # published release asset matching the current SCHEMA_VERSION, so this workflow
 # deliberately does NOT run on push/PR — a red X on unrelated work when a
-# release is merely owed would be noise. The package tests also run locally as a
-# pre-push gate (.pre-commit-config.yaml, `--run-integration --install-mode
-# workspace`); CI's `test` job runs `-m "not integration"`.
+# release is merely owed would be noise. The workspace-mode package tests run in
+# ci.yml's `package-integration` job; CI's `test` job runs `-m "not integration"`.
 on:
   # Weekly drift catch (GitHub Releases availability only — the base image and
   # uv are digest-pinned since Y-25). Off the top of the hour — GitHub

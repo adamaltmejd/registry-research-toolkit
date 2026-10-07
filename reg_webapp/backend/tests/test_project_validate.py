@@ -170,7 +170,7 @@ def test_extra_key_is_unexpected_field_not_500(client):
 
 def test_disjoint_period_with_partial_availability_is_orderable(client):
     """Y-45 regression: `scb/lisa/kon` exists from 2018, so the disjoint request
-    `[2010, 2018]` is available for its 2018 half. Under §12 intersection
+    `[2010, 2018]` is available for its 2018 half. Under intersection
     semantics that is an INFO clip (the shared `resolve_binding` pass the order
     materializer runs reaches the same verdict), never
     `period_outside_state_validity` — the SPA must not block an order the

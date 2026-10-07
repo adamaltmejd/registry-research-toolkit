@@ -7,9 +7,10 @@ layer run first; this one resolves every FQID in a *structurally valid*
 NOT ``reg_schema`` — because ``reg_schema`` is reg_meta-free by design (the
 shared validation surface stays importable without pulling reg_meta); semantic
 rules need the DB. It is shared domain code beside the order materializer
-(REFACTOR_SPEC.md §12): the FastAPI ``POST /api/project/validate`` and the
-``reg-meta validate`` CLI are thin adapters over ``validate_project`` and emit
-its canonical bytes (``validation_json``).
+(reg_meta/DESIGN.md → "Project semantic validation"): the FastAPI
+``POST /api/project/validate`` and the ``reg-meta validate`` CLI are thin
+adapters over ``validate_project`` and emit its canonical bytes
+(``validation_json``).
 
 It emits the same frozen ``reg_schema.ValidationIssue`` shape the other layers
 do — composition is tuple concatenation, no merge semantics.
@@ -34,10 +35,11 @@ not pre-check it.
 (``order.requested_intervals``) and each binding resolved
 (``order.resolve_binding``) by the SHARED pass the order materializer runs, and
 this layer only translates those facts into issues. That is what makes the two
-agree: under REFACTOR_SPEC.md §12 intersection semantics a binding is requested
-wherever it is available inside the source window, so availability narrower
-than the request is an INFO clip here and a clipped order there, while only a
-binding available nowhere in the request blocks both. The period grammar, the
+agree: under the materializer's intersection semantics (reg_meta/DESIGN.md →
+"Order materializer and manifest") a binding is requested wherever it is
+available inside the source window, so availability narrower than the request
+is an INFO clip here and a clipped order there, while only a binding available
+nowhere in the request blocks both. The period grammar, the
 interval algebra and the synthesized-month-end snap all live behind that pass;
 the arithmetic left on this side reads the intervals that pass already clipped,
 through those same shared helpers. Steps 3+4 of the materializer (the steward's
@@ -66,7 +68,7 @@ from .fqid import FqidError, parse
 # (`_overlap`) through it rather than keeping a second speller or overlap rule.
 from .inventory import _overlap, _render
 
-# The SHARED availability/slicing pass (REFACTOR_SPEC.md §12 steps 1+2) and the
+# The SHARED availability/slicing pass (the materializer's steps 1+2) and the
 # supported-version decision — see the module docstring.
 from .order import requested_intervals, resolve_binding, schema_version_issue
 
@@ -121,7 +123,7 @@ def validation_json(result: ValidationResult) -> str:
     """The canonical serialization both adapters emit VERBATIM: ``ok`` plus
     every issue in layer order, sorted keys, UTF-8, trailing newline — the
     ``OrderManifest.to_json`` conventions, so the FastAPI body and the CLI's
-    stdout are byte-identical (§12). An absent ``successor_fqid`` is an explicit
+    stdout are byte-identical. An absent ``successor_fqid`` is an explicit
     ``null``: the wire shape the SPA's codegen'd type reads."""
     return (
         json.dumps(
@@ -481,7 +483,7 @@ def _check_binding_period(
     (``order.resolve_binding``) into issues. Nothing about windows is decided
     here — the materializer\'s own pass decides, and this reports.
 
-    Under §12 intersection semantics the binding is requested wherever it is
+    Under intersection semantics the binding is requested wherever it is
     available inside the source window, so:
 
     - availability NARROWER than the request → ``range_period_partially_covered``

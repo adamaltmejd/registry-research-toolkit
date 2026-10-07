@@ -293,7 +293,7 @@ const LEVEL_LABEL: Record<Level, string> = {
       {/if}
     {/each}
     {#if status === "warnings"}
-      <!-- Order materialization is a SEPARATE check (§12): a draft that validates
+      <!-- Order materialization is a SEPARATE check: a draft that validates
            clean here can still be blocked there, and the banner above is where that
            verdict lands. Below the findings because it is what the NEXT step does —
            muted, and deliberately outside the live region so it isn't re-announced
@@ -349,7 +349,7 @@ const LEVEL_LABEL: Record<Level, string> = {
   .request-error {
     display: flex;
     /* Wraps because this banner now carries the order materializer's full
-       fail-closed message (§12), not just a short 4xx string — unwrapped, the
+       fail-closed message, not just a short 4xx string — unwrapped, the
        retry button holds its width and squeezes the text into a narrow gutter
        at 375px. Mirrors `.issue-head` / `.locators` below. */
     flex-wrap: wrap;

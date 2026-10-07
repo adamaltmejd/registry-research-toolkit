@@ -23,8 +23,8 @@ an entry to `OPTIONAL_MARKERS` in `conftest.py` and decorate tests with
 `--install-mode` picks which installation the package integration module builds.
 `registry` (the default) installs reg_meta alone with every dependency resolved from
 PyPI, so it is red for as long as a sibling release is owed; `workspace` builds this
-checkout's reg_schema and reg_meta wheels and installs both. The pre-push hook uses
-`workspace`.
+checkout's reg_schema and reg_meta wheels and installs both. CI's `package-integration`
+job uses `workspace`.
 
 Package integration tests require Apple `container` on macOS (`container system start`)
 or native Podman on Linux, preferably rootless (`podman info` must succeed). An opted-in
@@ -34,10 +34,9 @@ not restart or prune unrelated resources. Linux runs use temporary, owned Podman
 so interrupted builds can clean up their intermediate containers without touching the
 shared store. Linux image caches are not reused between runs.
 
-The pre-push range gate covers the whole push, including deleted code/data paths. A new
-branch includes ancestors not yet present on the remote, so a Markdown-only tip on an
-unpublished code base still runs the required Python/TOML/JSON gate. A docs-only range
-skips it.
+There is no pre-push test hook: CI (`ci.yml`) runs the full suite on every PR to main,
+and merges require it green. Run the relevant tests locally before pushing; the commit
+hook only runs the fast checks (ruff, ty, panache).
 
 ## Linting
 

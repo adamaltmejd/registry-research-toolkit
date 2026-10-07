@@ -129,17 +129,16 @@ class CoverageMiss:
     """One `(register, variant, column)` the steward holds in editions the
     catalog has no window for, grouped as one curation decision.
 
-    `register` is the 2-segment `provider/register` FQID and `variant` the variant
-    slug, the pair `[[errata.delivered]]` is keyed on. `column` is the CANONICAL delivery
-    column (the mapping's `representation`, SCB's own spelling), falling back to
-    the held spelling for a mapping that pins none. `versions` are the
-    `Registerversionnamn` the omitted rows must name, and `mint` the subset of
-    those the catalog does not know at all (each needs its own `[[errata.version]]`).
-    `editions` are the uncovered edition intervals and `windows` what the catalog
-    does carry for the column here. `errata_column` records that at least one
-    grouped mapping resolves to a variable minted by a `[[errata.column]]` entry; such a
-    group must never become a `[[errata.delivered]]` candidate because no source row
-    exists to clone.
+    `register` is the 2-segment `provider/register` FQID and `variant` the variant slug,
+    the pair `[[errata.delivered]]` is keyed on. `column` is the CANONICAL delivery
+    column (the mapping's required `representation`, SCB's own spelling). `versions` are
+    the `Registerversionnamn` the omitted rows must name, and `mint` the subset of those
+    the catalog does not know at all (each needs its own `[[errata.version]]`).
+    `editions` are the uncovered edition intervals and `windows` what the catalog does
+    carry for the column here. `errata_column` records that at least one grouped mapping
+    resolves to a variable minted by a `[[errata.column]]` entry; such a group must
+    never become a `[[errata.delivered]]` candidate because no source row exists to
+    clone.
     """
 
     register: str
@@ -309,7 +308,7 @@ def coverage_misses(
         for column in table.columns:
             placed = _placements(column, pair_ids, windows)
             unresolved += len(column.mappings) - len(placed)
-            # An unmapped column admits nothing (§12): it stays out of the
+            # An unmapped column admits nothing: it stays out of the
             # denominator because it is never ordered, so it cannot contradict the
             # catalog.
             if not placed:
@@ -544,23 +543,15 @@ def errata_worklist(report: CoverageReport) -> str:
 
 @dataclass(frozen=True)
 class _Windows:
-    """The catalog's merged delivery windows at the two grains the gate asks
-    about: one column of one binding, and any column of one binding (the
-    single-representation arm)."""
+    """The catalog's merged delivery windows per column of one binding, the
+    grain every mapping's required `representation` names."""
 
     by_column: dict[tuple[_PairIds, str], tuple[_Interval, ...]]
-    by_pair: dict[_PairIds, tuple[_Interval, ...]]
     independent_columns: frozenset[tuple[_PairIds, str]] = frozenset()
 
-    def for_mapping(
-        self, pair: _PairIds, representation: str | None
-    ) -> tuple[_Interval, ...]:
-        """The windows a mapping's coverage is judged against. An explicit
-        `representation` names ONE canonical column; `None` means "the concept's
-        single representation" (§12), which any of the binding's columns can
-        answer, so it is judged against the binding as a whole."""
-        if representation is None:
-            return self.by_pair.get(pair, ())
+    def for_mapping(self, pair: _PairIds, representation: str) -> tuple[_Interval, ...]:
+        """The windows a mapping's coverage is judged against: its required
+        `representation` names ONE canonical column of the binding."""
         return self.by_column.get((pair, _fold(representation)), ())
 
 
@@ -576,7 +567,6 @@ def _load_windows(conn: sqlite3.Connection, pairs: set[_PairIds]) -> _Windows:
     every comparison downstream fold against fold.
     """
     by_column: dict[tuple[_PairIds, str], list[_Interval]] = {}
-    by_pair: dict[_PairIds, list[_Interval]] = {}
     independent_columns = set()
     for delivery_table in ("variable_state", "variable_alias_window"):
         scope = "period_scope" if delivery_table == "variable_state" else "'intervals'"
@@ -598,14 +588,12 @@ def _load_windows(conn: sqlite3.Connection, pairs: set[_PairIds]) -> _Windows:
                 if column is not None:
                     independent_columns.add((pair, _fold(column)))
                 continue
-            by_pair.setdefault(pair, []).append((valid_from, valid_to))
             if column is not None:
                 by_column.setdefault((pair, _fold(column)), []).append(
                     (valid_from, valid_to)
                 )
     return _Windows(
         by_column={key: _merge(rows) for key, rows in by_column.items()},
-        by_pair={key: _merge(rows) for key, rows in by_pair.items()},
         independent_columns=frozenset(independent_columns),
     )
 
@@ -693,7 +681,7 @@ def _placements(
         register, _, variant = mapping.register_variant.rpartition("/")
         placed.append(
             _Placement(
-                key=(register, variant, mapping.representation or column.name),
+                key=(register, variant, mapping.representation),
                 windows=windows.for_mapping(pair, mapping.representation),
                 variable_id=pair[0],
                 variant_id=pair[1],

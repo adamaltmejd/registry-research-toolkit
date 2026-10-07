@@ -220,7 +220,7 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     hint: "info",
   },
   range_period_partially_covered: {
-    // Intersection semantics (§12): the clipped part IS ordered, so this reports
+    // Intersection semantics: the clipped part IS ordered, so this reports
     // what is available rather than a fault. It also covers a #307 list period's
     // uncovered segment, so the label must not read as "one continuous range".
     label: "The column is available for only part of the requested period",
@@ -234,7 +234,7 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     label: "The column has a replacement edge at/before this period",
     hint: "info",
   },
-  // ── order materializer (§12) ──────────────────────────────────────────────
+  // ── order materializer ────────────────────────────────────────────────────
   // Every one BLOCKS the order: the materializer is fail-closed and emits a
   // manifest or findings, never a partial order. Most reach the panel from
   // `/order`'s 422 — but `/validate` runs the materializer's own availability
