@@ -254,6 +254,39 @@ describe("AppShell — project chip", () => {
     await expect.element(drawer().getByText("Draft valid")).toBeVisible();
   });
 
+  it("says the order is blocked when the study window has moved off a source", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({
+        ok: true,
+        status: 200,
+        json: async () => ({ ok: true, issues: [] }),
+      })),
+    );
+    projectStore.newProject({
+      reg_meta_version: "reg_meta/v1.0.0",
+      steward: "global",
+    });
+    projectStore.applyStagedDiff({
+      adds: [
+        {
+          registerVariant: "scb/lisa/v1",
+          period: 2018,
+          binding: { variable: "scb/lisa/kon", type: "categorical" },
+        },
+      ],
+    });
+    projectStore.updateField("window", { from: 2020, to: 2024 });
+    await projectStore.validate();
+
+    await render(AppShell, minimalProps());
+    await openDrawer();
+
+    // The draft validates clean, but its only source has no years inside the
+    // study window: the chip reports the blocked order, not the validation.
+    await expect.element(drawer().getByText("Order blocked")).toBeVisible();
+  });
+
   it("tolerates malformed source slots while showing counts", async () => {
     // The two halves of an Open: the file ingress, then the commit (the toolbar
     // puts the replacement confirmation between them).

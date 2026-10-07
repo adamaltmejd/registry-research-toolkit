@@ -1015,6 +1015,64 @@ export function sameYearWindow(
   return a.from === b.from && a.to === b.to;
 }
 
+/** A year window as a reader sees it: a bare year when it is one year wide, else
+ * the en-dash range (`2015–2020`). */
+export function yearWindowLabel(window: StudyWindow): string {
+  return window.from === window.to
+    ? String(window.from)
+    : `${window.from}–${window.to}`;
+}
+
+/** A `Source.period` as a reader sees it: each segment of the wire with its range
+ * separator as an en dash, the segments comma-separated (`2005–2008, 2012–2015`).
+ * Null when the period has no wire (unset / malformed). */
+export function periodLabel(period: Period): string | null {
+  const wire = periodToWire(period);
+  return wire === null
+    ? null
+    : wire
+        .split(LIST_SEP)
+        .map((segment) => segment.trim().replace(RANGE_SEP, "–"))
+        .join(", ");
+}
+
+/** How a source period sits against the project's common study window:
+ *   - `same`     — it covers exactly the window's years, one unbroken span;
+ *   - `differs`  — it overlaps the window but covers more, less, or a holed part
+ *                  of it (a token period that overlaps always differs: its grain is
+ *                  not the window's);
+ *   - `disjoint` — not one day of it falls inside the window.
+ * Null when there is nothing to compare: no window, or a period with no dated
+ * bounds (unset, malformed, or the year-independent `_default`, which no window
+ * applies to). Disjointness is judged on ISO bounds (`boundedPeriodSegments`), so
+ * a sub-annual period is placed at its real grain; sameness on coalesced year
+ * intervals, so `2010..2014,2015..2020` is the same as `2010..2020`. */
+export type WindowRelation = "same" | "differs" | "disjoint";
+
+export function periodWindowRelation(
+  period: Period | null,
+  window: StudyWindow | null,
+): WindowRelation | null {
+  if (period === null || window === null) {
+    return null;
+  }
+  const segments = boundedPeriodSegments(period);
+  if (segments === null) {
+    return null;
+  }
+  const from = `${window.from}-01-01`;
+  const to = `${window.to}-12-31`;
+  if (!segments.some((s) => s.bounds.from <= to && from <= s.bounds.to)) {
+    return "disjoint";
+  }
+  const years = periodYearIntervals(period);
+  return years !== null &&
+    years.length === 1 &&
+    sameYearWindow(years[0], window)
+    ? "same"
+    : "differs";
+}
+
 // ── Exact-year entry (Y-16 PeriodPicker + Y-81 SourceEditor, hoisted Y-100) ──
 // Both the catalog's period card and the /project cart's per-source period
 // editor carry two typed year fields and resolve them the same way; this is

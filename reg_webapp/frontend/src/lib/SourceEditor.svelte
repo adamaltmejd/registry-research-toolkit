@@ -7,10 +7,10 @@ import {
   normalizePeriodRows,
   periodFromWire,
   periodToWire,
-  periodYearCoverage,
+  periodWindowRelation,
   resolveYearEntry,
-  sameYearWindow,
   yearSegmentsFromWire,
+  yearWindowLabel,
 } from "./period";
 import {
   type Period,
@@ -233,12 +233,6 @@ interface RowsProblem {
   rows: { index: number; from: boolean; to: boolean }[];
 }
 
-/** A window's ISO-year span as a reader sees it: a bare year when it's one year
- * wide, else the en-dash range. */
-function windowLabel(w: StudyWindow): string {
-  return w.from === w.to ? String(w.from) : `${w.from}–${w.to}`;
-}
-
 /** Each row resolved by the shared `resolveYearEntry` (no band — this card writes
  * the wire itself), or null for every row while nothing has been touched yet
  * (mirrors the untouched-entry null the single-row card used before Y-101). */
@@ -285,7 +279,7 @@ const overlapProblem = $derived.by((): RowsProblem | null => {
   }
   const { a, b } = normalized;
   return {
-    problem: `${windowLabel(rowWindows[a])} and ${windowLabel(rowWindows[b])} overlap — a year can only be in one segment.`,
+    problem: `${yearWindowLabel(rowWindows[a])} and ${yearWindowLabel(rowWindows[b])} overlap — a year can only be in one segment.`,
     rows: [
       { index: a, from: true, to: true },
       { index: b, from: true, to: true },
@@ -320,24 +314,17 @@ const proposedWire = $derived.by(() => {
 const appliedLabel = $derived(
   appliedWindows === null
     ? null
-    : `Period set to ${appliedWindows.map(windowLabel).join(", ")}.`,
+    : `Period set to ${appliedWindows.map(yearWindowLabel).join(", ")}.`,
 );
 
-/** The study window this source's period is MARKED against, or null when there is
- * nothing to mark — the whole point of a per-source period is that it MAY differ,
- * so the card says when it does instead of flagging it. A source with no period at
- * all differs from nothing; that it has none is the validator's finding, not this
- * marker's. Compared through `sameYearWindow` against the period's OVERALL span
- * (first From to last To, `periodYearCoverage` — the same span a single range is
- * its own span of), so a period is judged by what it covers rather than by how the
- * wire spells it or how many segments it has. */
-const deviation = $derived(
-  studyWindow !== null &&
-    periodWire !== null &&
-    !sameYearWindow(periodYearCoverage(period), studyWindow)
-    ? studyWindow
-    : null,
-);
+/** How this source's period sits against the study window (`periodWindowRelation`)
+ * — what the card MARKS, null when there is nothing to mark. The whole point of a
+ * per-source period is that it MAY differ, so a difference is said, not flagged;
+ * a period with NO years inside the window is the one divergence that blocks the
+ * order, and says so. A source with no period at all relates to nothing; that it
+ * has none is the validator's finding, not this marker's. Judged by the years the
+ * period covers, never by how the wire spells it or how many segments it has. */
+const windowRelation = $derived(periodWindowRelation(period, studyWindow));
 
 /** The edit starts HERE: capture the source as it is, so a write onto a source
  * that has moved since — a column removed from this very card, a project
@@ -719,13 +706,25 @@ function confirmRemove(): void {
         </p>
       {/if}
 
-      {#if deviation}
+      {#if studyWindow && windowRelation === "differs"}
         <!-- The window is an authoring SEED, not an inheritance (reg_schema/DESIGN.md):
              a source may deliberately cover more or less. So this MARKS the
              divergence rather than warning about it — whether the study window is
-             actually left uncovered is a validation finding, and it has one. -->
+             actually left uncovered is a coverage note, and it has one. -->
         <p class="deviation">
-          Differs from study window {deviation.from}–{deviation.to}
+          Differs from study window {yearWindowLabel(studyWindow)}
+        </p>
+      {:else if studyWindow && windowRelation === "disjoint"}
+        <!-- A window edit never rewrites this period (reg_webapp/DESIGN.md →
+             "Common study window"), so a source the window has moved off keeps it —
+             and blocks the order until the researcher decides. The shared error
+             status row (ui/utilities.css): the one divergence that is not just
+             shown. -->
+        <p class="problem refused">
+          <span aria-hidden="true">✕</span>
+          No years inside the study window {yearWindowLabel(studyWindow)}, so the
+          order is blocked. Change the period to overlap the window, or remove the
+          source.
         </p>
       {/if}
     </div>
@@ -938,25 +937,10 @@ function confirmRemove(): void {
   .problem {
     margin: 0;
   }
-  /* The same row, reporting rather than refusing — the cool OK roles, as
-     ValidationPanel's clean verdict wears them. */
-  .problem.applied {
-    padding: var(--space-1) var(--space-2);
-    border: 1px solid var(--ok);
-    border-radius: var(--radius-sm);
-    background: var(--ok-bg);
-    color: var(--ok);
-  }
-  /* Neither a refusal nor a change: the write is still waiting on the restore
-     gate, or the entry already names the stored period. Cool info, not ok or err —
-     nothing failed and nothing happened. */
-  .problem.info {
-    padding: var(--space-1) var(--space-2);
-    border: 1px solid var(--info);
-    border-radius: var(--radius-sm);
-    background: var(--info-bg);
-    color: var(--info);
-  }
+  /* This card's line wears the shared report rows (ui/utilities.css): `.applied`
+     for a write that landed, `.info` for neither a refusal nor a change — the write
+     still waiting on the restore gate, or the entry already naming the stored
+     period. Cool info, not ok or err: nothing failed and nothing happened. */
   .stale {
     display: flex;
     align-items: baseline;

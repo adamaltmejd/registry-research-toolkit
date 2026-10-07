@@ -38,7 +38,7 @@
    (period.ts) and a `role="status"` line reporting what they resolve to. The
    shared visual form lives here; layout-owned spacing (each host's own
    `.problem` margin) and states only one host has (`SourceEditor`'s
-   `.year:read-only`, `.problem.applied`, `.problem.info`) stay local to it. */
+   `.year:read-only`) stay local to it. */
 .year {
   box-sizing: border-box;
   width: 5rem;
@@ -77,6 +77,33 @@
   border: 1px solid var(--err-border);
   border-radius: var(--radius-sm);
   background: var(--err-bg);
+}
+/* The same row REPORTING rather than refusing: a write that landed (`.applied`, the
+   cool OK roles ValidationPanel's clean verdict wears), nothing to do or still
+   waiting (`.info`), and a press that changed nothing because something outside it
+   moved or failed (`.warn`). Hoisted from SourceEditor so the /project study-window
+   row (StudyWindowSummary) speaks in the same rows. */
+.problem.applied,
+.problem.info,
+.problem.warn {
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid;
+  border-radius: var(--radius-sm);
+}
+.problem.applied {
+  border-color: var(--ok);
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+.problem.info {
+  border-color: var(--info);
+  background: var(--info-bg);
+  color: var(--info);
+}
+.problem.warn {
+  border-color: var(--warn);
+  background: var(--warn-bg);
+  color: var(--warn);
 }
 
 /* Shared integrated-list surface.

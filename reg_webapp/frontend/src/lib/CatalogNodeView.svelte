@@ -44,19 +44,22 @@ import {
 } from "./catalog";
 import DataWarnings from "./DataWarnings.svelte";
 import FilterInput from "./FilterInput.svelte";
-import { clampYearWindow } from "./period";
+import { clampYearWindow, yearWindowLabel } from "./period";
 import { projectStore } from "./project_store.svelte";
 import RelatedDocumentsPanel from "./RelatedDocumentsPanel.svelte";
 import StagedAddStatus from "./StagedAddStatus.svelte";
 import {
   ADD_WINDOW_REQUIRED_MESSAGE,
   applyStagedPicks,
+  type CommittedMarker,
+  committedMarker,
   committedPickerRows,
   pickerRowKey,
   rowDeliversInScope,
   type StagedApplyOutcome,
   type StagedPick,
   type StagedPickerBand,
+  stagedApplyRefusal,
   windowsOverlapPeriod,
 } from "./staged_picker";
 import {
@@ -301,12 +304,12 @@ function eraYears(window: { from: string; to: string }): string {
     return open ? "" : `–${window.to.slice(0, 4)}`;
   }
   const from = window.from.slice(0, 4);
-  return open ? `${from}–` : yearRange(from, window.to.slice(0, 4));
-}
-
-/** A closed year range as this page spells it: "2018", or "1990–2021". */
-function yearRange(from: string, to: string): string {
-  return from === to ? from : `${from}–${to}`;
+  return open
+    ? `${from}–`
+    : yearWindowLabel({
+        from: Number(from),
+        to: Number(window.to.slice(0, 4)),
+      });
 }
 
 /** Above this many eras, the label folds (Y-110): an interrupted delivery can run
@@ -704,7 +707,7 @@ function columnOffered(column: DeliveryColumn): boolean {
 /** A scope's window in years — how a row and a refusal name it ("1990–2021"). */
 function scopeYears(scope: { window?: [number, number] | null }): string {
   return scope.window
-    ? yearRange(`${scope.window[0]}`, `${scope.window[1]}`)
+    ? yearWindowLabel({ from: scope.window[0], to: scope.window[1] })
     : "";
 }
 const windowYears = $derived(scopeYears(addScope));
@@ -763,23 +766,32 @@ function toggleColumn(fqid: string, column: DeliveryColumn): void {
   selectedColumns = next;
 }
 
-/** Which listed columns are ALREADY fully in the draft, by tick identity. Read off
+/** Which listed columns are ALREADY fully in the draft, by tick identity, each with
+ * the marker its "In project" tag wears against the study window (`committedMarker`;
+ * the most severe across the variants that deliver it — one source outside the
+ * window blocks the order however many others match it). Read off
  * `committedPickerRows` — the same match the commit is — and a column counts only
  * when EVERY variant's row for it is committed: partial cover (one variant added
  * from its own page) reads as NOT added, so the tick still has something to do.
  * Computed once per draft change rather than per rendered cell, and skipped
  * outright while nothing is committed (the ordinary browsing state). */
-const committedColumns = $derived.by((): Set<string> => {
-  const committed = new Set<string>();
+const committedColumns = $derived.by((): Map<string, CommittedMarker> => {
+  const committed = new Map<string, CommittedMarker>();
   if (committedRows.size === 0) {
     return committed;
   }
   for (const band of pickerBands) {
     for (const column of columnsByFqid.get(band.key) ?? []) {
+      const markers: CommittedMarker[] = [];
       if (
         column.rows.length > 0 &&
         column.rows.every((row) => {
           const match = committedRows.get(pickerRowKey(band, row));
+          if (match !== undefined) {
+            markers.push(
+              committedMarker(match.sourcePeriod, boundedProjectWindow),
+            );
+          }
           // THIS VARIANT's eras for the name must be inside what was committed, not
           // just the ROW's: a #902 rename chain is ONE row spanning the whole chain,
           // so a row-grain marker would say "In project" on a retired name whose
@@ -795,7 +807,12 @@ const committedColumns = $derived.by((): Set<string> => {
           );
         })
       ) {
-        committed.add(columnKey(band.key, column.name));
+        committed.set(
+          columnKey(band.key, column.name),
+          markers.find((m) => m.tone === "error") ??
+            markers.find((m) => m.detail !== null) ??
+            markers[0],
+        );
       }
     }
   }
@@ -948,6 +965,7 @@ async function addSelected(): Promise<void> {
       { adds, removes: [] },
       {
         scope,
+        studyWindow: boundedProjectWindow,
         seed: { regMetaVersion, steward },
         cancelled: lapsed,
       },
@@ -957,8 +975,11 @@ async function addSelected(): Promise<void> {
       // window moved or the page changed mid resolve): either way nothing was
       // authored, and a stale confirmation from an earlier, successful Add must not
       // go on reading as current.
-      addRefusal =
-        result.kind === "period-required" ? ADD_WINDOW_REQUIRED_MESSAGE : null;
+      addRefusal = stagedApplyRefusal(
+        result,
+        scope,
+        ADD_WINDOW_REQUIRED_MESSAGE,
+      );
       applyOutcome = null;
       return;
     }
@@ -1169,6 +1190,9 @@ async function addSelected(): Promise<void> {
                     <!-- Offered on the eras the label beside it prints, and on the
                          same predicate the batch stages by. -->
                     {@const addable = columnOffered(col)}
+                    {@const marker = committedColumns.get(
+                      columnKey(row.fqid, col.name),
+                    )}
                     <!-- The tick and the name it adds are ONE target (Y-83): the
                          label carries the checkbox, so the name a researcher is
                          already reading is what they click — and the "In project"
@@ -1213,13 +1237,16 @@ async function addSelected(): Promise<void> {
                               >{/if}</span
                           >
                         {/if}
-                        {#if committedColumns.has(columnKey(row.fqid, col.name))}
+                        {#if marker}
                           <!-- Already in the draft. It stays TICKABLE: adding it
                                again folds into the same source and changes nothing
-                               (`applyStagedDiff`'s duplicate-binding guard). -->
-                          <Tag tone="info">
-                            {#snippet glyph()}i{/snippet}
-                            In project
+                               (`applyStagedDiff`'s duplicate-binding guard). Marked
+                               against the study window like the picker's rows. -->
+                          <Tag tone={marker.tone}>
+                            {#snippet glyph()}{marker.glyph}{/snippet}
+                            <span>{marker.label}</span>{#if marker.detail}<span
+                                class="visually-hidden">{marker.detail}</span
+                              >{/if}
                           </Tag>
                         {/if}
                         {#if !addable}

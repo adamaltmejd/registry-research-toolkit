@@ -773,6 +773,7 @@ describe("rowAddSegments (#376 per-concrete-segment fan-out)", () => {
         variant: "ind",
         registerVariant: "scb/lisa/ind",
         periodWire: "1981..1995",
+        outsideScope: false,
       },
     ]);
   });
@@ -787,11 +788,13 @@ describe("rowAddSegments (#376 per-concrete-segment fan-out)", () => {
         variant: "individer-16plus",
         registerVariant: "scb/lisa/individer-16plus",
         periodWire: "1990..2009",
+        outsideScope: false,
       },
       {
         variant: "individer-15plus",
         registerVariant: "scb/lisa/individer-15plus",
         periodWire: "2010..2023",
+        outsideScope: false,
       },
     ]);
   });
@@ -807,7 +810,24 @@ describe("rowAddSegments (#376 per-concrete-segment fan-out)", () => {
         variant: "individer-16plus",
         registerVariant: "scb/lisa/individer-16plus",
         periodWire: "1995..2000",
+        outsideScope: false,
       },
+    ]);
+  });
+
+  it("marks every segment outside a scope that misses each era, with no period", () => {
+    const r = foldedFamilyRow();
+    const b = band([r]);
+    // No era reaches 1970–1980: nothing to commit, and nothing invented from the
+    // eras' own spans — the Apply is refused by name.
+    expect(
+      rowAddSegments(b, r, { window: [1970, 1980] }).map((s) => [
+        s.periodWire,
+        s.outsideScope,
+      ]),
+    ).toEqual([
+      [null, true],
+      [null, true],
     ]);
   });
 });

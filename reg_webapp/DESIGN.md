@@ -859,13 +859,12 @@ variable pages to add one column each.
   of its own — is refused on its own terms ("Not delivered", naming no window, since
   none would lift it): it has no row to stage, and a checkbox that ticks and commits
   nothing is a control that lies.
-- **The subject page's fallback stops at the list.** A subject page's picker only DIMS
-  such a row and still lets it be picked, and `rowAddSegments` deliberately FALLS BACK
-  to a row's whole span when the window clips it to nothing so that pick still adds
-  something — that page has a Period control to say what. Here the window is the only
-  period there is, so inheriting that fallback would author years the researcher never
-  asked for: the page refuses the row before staging it, and the bar's count never
-  promises a column an Add cannot commit.
+- **The list refuses before staging; a subject page refuses at Add.** Neither invents a
+  period for a column the window clips to nothing (see "Common study window" below). A
+  subject page's picker only DIMS such a row and still lets it be ticked, then refuses
+  the Add by name (`outside-scope`); here the window is the only period there is, so the
+  page refuses the row before staging it, and the bar's count never promises a column an
+  Add cannot commit.
 - **The list's windows are EXACT (Y-104), so an Add reads nothing extra.** Each delivery
   carries its own DISJOINT `windows` beside the MIN/MAX `coverage` span, so a column
   delivered 1968, then 1995–1996, then 1998– says so on the wire. `deliveryColumnRows`
@@ -1995,16 +1994,6 @@ directly. The pipeline and every fail-closed finding live in `reg_meta/DESIGN.md
   `validation.orderFindingPointer` resolves the materializer's by-VALUE coordinates to
   the by-POSITION pointer `findingLocation` already locates a card by).
 
-**Still to come (decision 2026-07-11).** The SPA will expose one common study window as
-the project-authoring default. When a source has any overlap, adding it will immediately
-persist the full available intersection, including every disjoint segment; this will be
-the default action, not a suggestion the user must accept. With no overlap, the picker
-will block the add and explain the incompatibility rather than inventing a period. If a
-later common-window edit leaves an existing source disjoint, its explicit period will
-remain and the project will become blocking. The picker and project page will highlight
-every divergence. The common window will never become hidden inheritance, and an
-explicit apply-to-all action will rewrite only sources with an overlap.
-
 **Connection model = per-request open ON ONE THREAD** (the locked cross-thread guard).
 `/validate` and `/order` are `async` only to read the body off the wire; the blocking
 work (structural parse + per-binding sqlite resolution) is offloaded via
@@ -2154,12 +2143,13 @@ Remove (hidden at one row) — and writes back through the same wire shaping a p
 Applying sorts and merges the rows into the disjoint ascending wire `mergePeriods` would
 produce, refusing a within-row disorder or a genuine cross-row overlap in the same
 status line rather than silently collapsing one; a token period (`HT2018`) is a
-different vocabulary the rows do not author, and is shown as it stands. Where the
-period's overall span (first From to last To) differs from the project's `window` the
-card MARKS it ("Differs from study window 2005–2020"): the window is an authoring seed,
-not an inheritance (reg_schema puts `period` on `Source` alone), so divergence is shown
-rather than warned about — whether the window is actually left uncovered is a validation
-finding and has one.
+different vocabulary the rows do not author, and is shown as it stands. Where the years
+the period covers differ from the project's `window` (narrower, wider, or holed;
+`periodWindowRelation`) the card MARKS it ("Differs from study window 2005–2020"): the
+window is an authoring seed, not an inheritance (reg_schema puts `period` on `Source`
+alone), so divergence is shown rather than warned about. The one divergence that is more
+than shown is a period with no years inside the window at all, which blocks the order
+(see "Common study window").
 
 The rewrite goes through `applySourcePeriodEdit`, keyed by source **name** as well as
 coordinate: a draft may carry several differently named sources on one register variant
@@ -2319,6 +2309,63 @@ deployments seed the rail and per-page picker bounds from
 admitted physical holding-period bounds and capped at the catalog import year. Catalog
 artifacts and holdings without dated periods fall back to the fixed 1960 →
 catalog-vintage bounds.
+
+## Common study window (decision 2026-07-11)
+
+The project's common study window is the authoring default for every dated source. It is
+never schema inheritance: each `Source` keeps its own explicit `period` in
+`project_data.json`, and nothing derives a period from the window at read time.
+
+- **Where it lives: the existing `window` field, no schema change.**
+  `ProjectData.window` (reg_schema `StudyWindow`, optional since #611) already persists
+  the window with the draft, so it survives download, open and the autosave.
+- **The rules are SPA authoring rules; nothing past the SPA enforces them (decision
+  2026-10-07).** The window is an authoring default and every source carries its own
+  explicit period, so the period is the whole order request: neither `reg-meta order`
+  nor the HTTP `/api/project/order` endpoint reads `window`, and neither refuses a
+  project whose source is disjoint from it. The SPA's block is a gate on its own
+  download control, not a contract on the file. Enforcing it everywhere would make the
+  window a constraint on the order — a reg_schema structural rule and a `schema_version`
+  change — which is deliberately not taken.
+- **An add persists the full available intersection.** A catalog Add clips each picked
+  column's delivery windows to the add window (the rail's window, or a subject page's
+  own `?period`) and commits every surviving era (`windowsAddPeriod`), so an interrupted
+  delivery keeps its gap as the #307 list form. This is the Add itself, not a
+  suggestion.
+- **No overlap blocks the add.** A column with no years inside the add window has no
+  period to commit, and none is invented from its own span (the earlier dimmed-row
+  fallback is gone). The register list does not offer the tick; a subject page refuses
+  the whole Apply before the store is touched (`applyStagedPicks` → `outside-scope`) and
+  names the columns and the window in the picker's status row. A subject page's own
+  `?period` overrides the add window, so the study window is checked as well: an add the
+  page period resolves wholly outside it would author a source that blocks the order,
+  and is refused the same way (`outside-study-window`), naming the study window.
+- **A window edit never rewrites a source period.** The rail writes `window` and nothing
+  else. A source the new window leaves with no years inside it keeps its period and
+  blocks the order: `projectStore.canDownloadOrder` closes and `downloadOrder` refuses,
+  the card shows an error row, and the validation panel lists each such source
+  (`windowDisjointFindings`) with the same locate and catalog links a finding gets. The
+  rail's project chip says "Order blocked" (the panel's own wording) wherever validation
+  alone would read "Draft valid" or "Warnings". The draft itself stays valid and
+  downloadable.
+- **Every divergence is marked.** On `/project` the card marks a differing period and,
+  at error tone, a disjoint one; the head of the sources list names the window and
+  counts both kinds. In the catalog, a committed column's "In project" tag says when its
+  source's years differ from the window, or that it is outside it (`committedMarker`,
+  shared by the subject-page picker and the register list); the subject page's own
+  `?period` deviation keeps the period picker's existing hint.
+- **"Apply window overlap" is the one rewrite.** It reads each dated source's register
+  (the register list's `VariableDelivery.windows`), plans each source's overlap from its
+  own columns at its own variant (`planWindowOverlap`), and asks before writing: the
+  dialog lists every period it replaces and every source it leaves alone. Only sources
+  whose columns reach the window are rewritten, in one period-only `applyStagedDiff`; a
+  source with no overlap keeps its period, and keeps blocking if it is disjoint. So does
+  a source one of whose columns has no delivery at its variant in the read: narrowing it
+  to the columns that were found would silently drop the missing column's years. A draft
+  that moves while the reads are out drops the plan rather than writing it onto a
+  project nobody looked at. Once a plan has left nothing to change (a press that changed
+  nothing, or a rewrite that just landed), the action stays frozen (`aria-disabled`, so
+  focus stays put) until a source or the window moves.
 
 ## API surface
 
