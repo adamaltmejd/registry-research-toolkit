@@ -1840,18 +1840,16 @@ materialize empty tag tables when the curation file is absent. The webapp consum
 memberships as catalog-node chips; tag-scoped search/facets and tag-backed search boost
 remain separate consumption work.
 
-**API**: `Catalog.list_tags()` → `TagSummary` (slug, label, description, `member_count`,
-`starred_count`) is the vocabulary with counts; `tags_for_variable(fqid)` /
-`tags_for_register(fqid)` → `TagMembership` (the tag's slug/label + this membership's
-`rank`/`starred`/`note`), ordered by rank then slug. `Catalog.resolve()` embeds those
-memberships on resolved register and variable nodes so consumers do not reimplement the
-reverse lookup. `ConceptGroupSummary.tags` aggregates member variable memberships, and
-`tags_for_variable()` also inherits group-level tag slugs onto untagged siblings as
-neutral memberships while direct variable memberships keep their rank/star/note. Callers
-that narrow a group first may supply that member set so aggregation/inheritance follows
-the narrowed surface; unscoped calls keep the full-catalog behavior. Build-side
-derivation + dangling-reference fail-fast live in `reg_meta_build/tags.py` (see
-`reg_meta_build/DESIGN.md`).
+**API**: `tags_for_variable(fqid)` / `tags_for_register(fqid)` → `TagMembership` (the
+tag's slug/label + this membership's `rank`/`starred`/`note`), ordered by rank then
+slug. `Catalog.resolve()` embeds those memberships on resolved register and variable
+nodes so consumers do not reimplement the reverse lookup. `ConceptGroupSummary.tags`
+aggregates member variable memberships, and `tags_for_variable()` also inherits
+group-level tag slugs onto untagged siblings as neutral memberships while direct
+variable memberships keep their rank/star/note. Callers that narrow a group first may
+supply that member set so aggregation follows the narrowed surface; unscoped calls keep
+the full-catalog behavior. Build-side derivation + dangling-reference fail-fast live in
+`reg_meta_build/tags.py` (see `reg_meta_build/DESIGN.md`).
 
 ## Storage optimization
 

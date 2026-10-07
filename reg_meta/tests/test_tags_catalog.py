@@ -1,5 +1,5 @@
 """Query-layer coverage for the curated tag layer (#311):
-`Catalog.list_tags` / `tags_for_variable` / `tags_for_register`.
+`Catalog.tags_for_variable` / `tags_for_register` and group tags.
 
 Seeds literal tag rows over the slugged fixture DB so the read path exercises
 the catalog contract independently of the retired build-time curation pass.
@@ -51,21 +51,6 @@ def _seeded_conn() -> sqlite3.Connection:
         ),
     )
     return conn
-
-
-def test_list_tags_vocab_with_counts() -> None:
-    cat = Catalog(_seeded_conn())
-    tags = cat.list_tags()
-    # Ordered by slug: employment, income.
-    assert [t.slug for t in tags] == ["employment", "income"]
-    income = next(t for t in tags if t.slug == "income")
-    assert income.label == "Income & earnings"
-    assert income.description == "Income measures"
-    assert income.member_count == 2
-    assert income.starred_count == 1
-    employment = next(t for t in tags if t.slug == "employment")
-    assert employment.member_count == 1
-    assert employment.starred_count == 0
 
 
 def test_concept_group_tags_aggregate_members_and_inherit_to_siblings() -> None:
@@ -185,20 +170,3 @@ def test_tags_for_register_orders_by_rank_then_slug() -> None:
     )
     memberships = Catalog(conn).tags_for_register(Fqid.register_fqid("scb", "lisa"))
     assert [m.slug for m in memberships] == ["income", "aaa"]
-
-
-def test_starred_count_counts_register_grain_starred_member() -> None:
-    # A tag whose ONLY member is register-grain AND starred → starred_count == 1.
-    # Locks the grain-agnostic `starred` design (starred isn't variable-only).
-    conn = build_slugged_db(classification=None)
-    seed_tags(
-        conn,
-        (
-            _multi_membership_tag(
-                "regstar", "RegStar", TagMember("scb", "lisa", None, 0, True, None)
-            ),
-        ),
-    )
-    (tag,) = Catalog(conn).list_tags()
-    assert tag.member_count == 1
-    assert tag.starred_count == 1
