@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "variable_state row(s) link a value_set that yields no projected codes"
+  ]
+}

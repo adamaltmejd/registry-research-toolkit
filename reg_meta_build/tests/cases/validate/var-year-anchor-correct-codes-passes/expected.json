@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "report_contains": [
+    "var_id 24193 year 2010 contains ['01', '02', '03', '04']",
+    "var_id 24193 year 2010 excludes 00/05"
+  ]
+}
