@@ -816,8 +816,14 @@ def pinned_zones(states: Mapping[str, SlugFreezeState]) -> frozenset[str]:
     return frozenset(z for z, s in states.items() if s != "churning")
 
 
-def load_slug_dir(slug_dir: Path) -> list[SlugEntry]:
+def load_slug_dir(
+    slug_dir: Path, *, registers: Sequence[RegisterCuration] | None = None
+) -> list[SlugEntry]:
     """Load every TOML under ``slug_dir`` into a flat ``SlugEntry`` list.
+
+    ``registers`` is ``load_register_files(slug_dir)`` when the caller already has
+    it (``CurationTree.registers``); passing it skips a second parse of the register
+    tree, the dominant cost. ``None`` parses it here.
 
     A ``churning`` zone's ``<provider>.auto.toml`` is SKIPPED: while churning the
     auto file is gitignored/ephemeral (rewritten every build, not committed — see
@@ -838,7 +844,7 @@ def load_slug_dir(slug_dir: Path) -> list[SlugEntry]:
         )
     states = load_freeze_states(slug_dir)
     if (slug_dir / "registers").is_dir():
-        return _load_register_slug_tree(slug_dir, states=states)
+        return _load_register_slug_tree(slug_dir, states=states, registers=registers)
     entries: list[SlugEntry] = []
     for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}")):
         if path.name == FREEZE_STATE_FILE:
@@ -856,15 +862,18 @@ def _load_register_slug_tree(
     *,
     states: Mapping[str, SlugFreezeState] | None = None,
     authored_only: bool = False,
+    registers: Sequence[RegisterCuration] | None = None,
 ) -> list[SlugEntry]:
     """Read register-owned slugs, with generated pins beside each register."""
     from .curation_tree import load_register_files
 
     states = states if states is not None else load_freeze_states(root)
+    if registers is None:
+        registers = load_register_files(root)
     entries: list[SlugEntry] = []
     source_owners: dict[tuple[str, str, str], str] = {}
     slug_owners: dict[tuple[str, ...], tuple[SlugEntry, str]] = {}
-    for register in load_register_files(root):
+    for register in registers:
         identity = register.register_info
         file = register.source_file
         if identity.native_id is None:
@@ -1328,14 +1337,19 @@ def _curated_variable_deprecations(entries: list[SlugEntry]) -> set[tuple[str, s
     }
 
 
-def iter_curated_provider_entries(slug_dir: Path) -> list[SlugEntry]:
+def iter_curated_provider_entries(
+    slug_dir: Path, *, registers: Sequence[RegisterCuration] | None = None
+) -> list[SlugEntry]:
     """Every `SlugEntry` from the hand-curated ``<provider>.toml`` files in
     ``slug_dir`` — the reserved non-provider TOMLs and the generated
     ``*.auto.toml`` files are excluded. The single source of the curated-file
     glob shared by `populate_variable_slugs` and `_entity_key_curation_basis`
-    (which backs the entity-key generator + gate)."""
+    (which backs the entity-key generator + gate). ``registers`` skips the
+    register-tree parse, as in :func:`load_slug_dir`."""
     if (slug_dir / "registers").is_dir():
-        return _load_register_slug_tree(slug_dir, authored_only=True)
+        return _load_register_slug_tree(
+            slug_dir, authored_only=True, registers=registers
+        )
     return [
         e
         for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}"))
@@ -3521,10 +3535,16 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
     parse / validation errors. Does not raise on missing slugs — callers
     decide whether to exit on the result.
     """
+    from .curation_tree import load_register_files
+
     parse_errors: list[str] = []
     entries: list[SlugEntry] = []
+    # Parse the register tree once for both readers below.
+    registers: tuple[RegisterCuration, ...] | None = None
     try:
-        entries = load_slug_dir(slug_dir)
+        if (slug_dir / "registers").is_dir():
+            registers = load_register_files(slug_dir)
+        entries = load_slug_dir(slug_dir, registers=registers)
     except RegMetaError as exc:
         parse_errors.append(exc.message)
 
@@ -3590,7 +3610,9 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
         stale_variants=tuple(stale_vars),
         entries=tuple(entries),
         drifting_variables=_drifting_variables(conn),
-        name_fallback_variables=_name_fallback_variables(conn, slug_dir),
+        name_fallback_variables=_name_fallback_variables(
+            conn, slug_dir, registers=registers
+        ),
     )
 
 
@@ -3677,7 +3699,10 @@ def _raw_variable_table(path: Path) -> dict[str, Any] | None:
 
 
 def _name_fallback_variables(
-    conn: sqlite3.Connection, slug_dir: Path
+    conn: sqlite3.Connection,
+    slug_dir: Path,
+    *,
+    registers: Sequence[RegisterCuration] | None = None,
 ) -> tuple[tuple[str, str, str, str], ...]:
     """Advisory worklist (A4.4a): auto-slugged variables in the name-fallback /
     ``-N`` disambiguator / ``v<provider_key>`` last-resort derivation classes —
@@ -3703,7 +3728,9 @@ def _name_fallback_variables(
     out: list[tuple[str, str, str, str]] = []
     register_owned = (slug_dir / "registers").is_dir()
     curated = (
-        _curated_variable_slugs(iter_curated_provider_entries(slug_dir))
+        _curated_variable_slugs(
+            iter_curated_provider_entries(slug_dir, registers=registers)
+        )
         if register_owned
         else {}
     )

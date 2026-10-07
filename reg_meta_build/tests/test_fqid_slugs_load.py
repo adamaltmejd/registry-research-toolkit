@@ -10,12 +10,14 @@ from _slugged_db import (
     build_slugged_db,
 )
 from reg_meta.errors import RegMetaError
+from reg_meta_build.curation_tree import load_register_files
 
 from reg_meta_build.fqid_slugs import (
     AUTO_FILE_SUFFIX,
     FREEZE_STATE_FILE,
     freeze_state,
     frozen_zones,
+    iter_curated_provider_entries,
     load_freeze_states,
     load_provider_toml,
     load_slug_dir,
@@ -25,6 +27,33 @@ from reg_meta_build.fqid_slugs import (
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+
+def test_preloaded_registers_load_the_same_entries(tmp_path: Path):
+    """A caller holding the parsed register tree passes it instead of a reparse;
+    the entries are the ones a fresh load returns."""
+    root = tmp_path / "curation"
+    directory = root / "registers" / "scb"
+    directory.mkdir(parents=True)
+    (root / "slug_state.toml").write_text('scb = "curating"\n')
+    (directory / "lisa.toml").write_text(
+        '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "1"\n'
+        '[[variable]]\nnative_id = "1.44"\nslug = "kon"\n'
+    )
+    (directory / "lisa.auto.toml").write_text(
+        '[[variable]]\nnative_id = "1.45"\nslug = "alder"\n'
+    )
+    registers = load_register_files(root)
+
+    entries = load_slug_dir(root, registers=registers)
+    assert entries == load_slug_dir(root)
+    assert {(e.source_id, e.slug) for e in entries} >= {
+        ("1.44", "kon"),
+        ("1.45", "alder"),
+    }
+    assert iter_curated_provider_entries(
+        root, registers=registers
+    ) == iter_curated_provider_entries(root)
 
 
 def test_register_slug_reused_across_files_fails(tmp_path: Path):
