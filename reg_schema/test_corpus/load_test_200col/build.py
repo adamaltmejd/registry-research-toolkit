@@ -137,7 +137,7 @@ def build() -> dict[str, object]:
     }
 
     return {
-        "schema_version": "2.0.0",
+        "schema_version": "3.0.0",
         "steward": "global",
         "reg_meta_version": "reg_meta/v1.0.0",
         "name": "load_test_200col",

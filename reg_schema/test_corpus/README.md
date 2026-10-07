@@ -38,6 +38,12 @@ deliberately-malformed inputs live here — the case ID indicates which. The pay
 **not** required to be deserializable into the `reg_schema` Pydantic models; the
 structural validator accepts and reports on parsed-dict input directly.
 
+A string `schema_version` must be the current contract version
+(`reg_schema.__version__`) so every input reads as a project the `/validate` door would
+accept; the harness fails on a stale one. Structural validation ignores the value, so a
+contract bump re-authors the corpus by rewriting that one line. Only cases about the
+field's shape (absent, null, non-string, or a non-object root) carry anything else.
+
 ### `expected_ValidationResult.json`
 
 The `ValidationResult` the structural validator must produce for the paired

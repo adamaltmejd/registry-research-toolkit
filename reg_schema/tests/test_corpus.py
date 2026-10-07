@@ -15,6 +15,7 @@ from typing import get_args
 
 import pytest
 
+import reg_schema
 from reg_schema import (
     IssueLevel,
     ValidationIssue,
@@ -103,6 +104,22 @@ def test_corpus_is_not_empty() -> None:
     # Catches a silent test_corpus/ deletion or move; without this the
     # parametrize below would degenerate to zero tests and pass quietly.
     assert _CASES, f"no corpus cases found under {CORPUS_ROOT}"
+
+
+def test_corpus_inputs_carry_the_current_schema_version() -> None:
+    # Structural validation ignores the version value, so a stale corpus still
+    # passes the matcher while describing documents the /validate door refuses
+    # (`unsupported_schema_version`). Fails when `reg_schema.__version__` bumps
+    # without the corpus being re-authored. Version-shape cases (no object
+    # root, absent / null / non-string `schema_version`) are exempt: their
+    # point is the malformed field, not the contract version.
+    stale = []
+    for case_dir in _CASES:
+        payload = json.loads((case_dir / "input.json").read_text(encoding="utf-8"))
+        version = payload.get("schema_version") if isinstance(payload, dict) else None
+        if isinstance(version, str) and version != reg_schema.__version__:
+            stale.append(f"{case_dir.name}: {version}")
+    assert not stale, f"corpus inputs not on {reg_schema.__version__}: {stale}"
 
 
 def _issue_key(i: ValidationIssue) -> tuple[str, str, str, str]:
