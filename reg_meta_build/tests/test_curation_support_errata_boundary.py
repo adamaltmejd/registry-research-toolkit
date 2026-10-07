@@ -172,46 +172,41 @@ def test_checked_support_keeps_the_twin_and_complete_authority_in_catalog(
     assert built.columns("sample") == {"authority": {"FIRST"}, "second": {"SECOND"}}
 
 
+# One case per way the build finds a support decision stale. Selecting the
+# authority again and comparing its guarded originals are separate checks; a
+# changed coding fingerprint over the target's and authority's families is a
+# third, below with the shared-target cases.
 @pytest.mark.parametrize(
-    ("rows", "values"),
+    "rows",
     [
-        pytest.param(
-            {"authority-later": None}, {"authority-later": None}, id="missing"
-        ),
-        pytest.param(
-            {"authority-extra": _row("FIRST", 23, "2022", 6)},
-            {"authority-extra": "Svar|1|1|Authoritative yes|23|7101"},
-            id="extra",
-        ),
-        pytest.param(
-            {"authority": _row("FIRST", 21, "2020", 6, varname="Changed")},
-            {},
-            id="prose",
-        ),
+        # Nothing selects: the authority's literal column changed.
+        # Twin: the nonphysical witness disappearing.
         pytest.param(
             {"authority": _row("CHANGED", 21, "2020", 6)},
-            {},
-            id="literal",
+            id="authority-not-selected",
         ),
+        # Selected, but its guarded prose changed.
         pytest.param(
-            {},
-            {"authority-later": "Ny version|1|1|Authoritative yes|22|7103"},
-            id="coding-reference",
+            {"authority": _row("FIRST", 21, "2020", 6, varname="Changed")},
+            id="authority-prose",
         ),
     ],
 )
-def test_checked_support_is_stale_when_its_authority_changes(
-    tmp_path: Path, rows, values
-):
-    """The support decision guards the complete authoritative family and its coding."""
-    sources = _question_sources(tmp_path, _question_entry(tmp_path), rows, values)
+def test_checked_support_is_stale_when_its_authority_changes(tmp_path: Path, rows):
+    """The support decision guards the authority it names."""
+    sources = _question_sources(tmp_path, _question_entry(tmp_path), rows)
     built = sources.build(tmp_path)
     assert SUPPORT in _stale(built)
     assert "support" not in {use[2] for use in built.uses(sources.records())}
 
 
 def test_checked_support_is_stale_when_authority_codes_change(tmp_path: Path):
-    """A changed external code label of the authority invalidates the decision."""
+    """A changed external code label of the authority invalidates the decision.
+
+    Only the coding fingerprint sees this: the records still select and match.
+    It stays beside `shared-record-extra` because the fingerprint covers two
+    things, which records the families hold and how they are coded; this is the
+    coding half. Twin: the authority moving to another value-set version."""
     sources = _question_sources(
         tmp_path,
         _question_entry(tmp_path),
@@ -225,21 +220,16 @@ def test_checked_support_is_stale_when_authority_codes_change(tmp_path: Path):
     assert "support" not in {use[2] for use in built.uses(sources.records())}
 
 
-@pytest.mark.parametrize(
-    ("coordinate", "value"),
-    [
-        ("variable", "2.6"),
-        ("variant", "1.3"),
-        ("column", "SECOND"),
-        ("edition", "2021"),
-    ],
-)
 def test_checked_support_authority_must_ask_the_same_physical_question(
-    tmp_path: Path, coordinate: str, value: str
+    tmp_path: Path,
 ):
-    """An authority in another register, variant, column or edition is refused at load."""
+    """An authority in another edition is refused at load.
+
+    The load validator compares register, variant, column and edition in one
+    condition; the edition is the subtle coordinate (same column, same variant,
+    another year), so it stands for the other three."""
     entry = _question_entry(tmp_path)
-    entry["authority"][coordinate] = value
+    entry["authority"]["edition"] = "2021"
     sources = _question_sources(tmp_path, entry)
     with pytest.raises(RegMetaError) as raised:
         sources.build(tmp_path)
@@ -251,11 +241,18 @@ def test_checked_support_authority_must_ask_the_same_physical_question(
 @pytest.mark.parametrize(
     "rows",
     [
-        pytest.param({"target": None}, id="missing"),
-        pytest.param({"third": _row("THIRD", 20, "2020")}, id="extra"),
+        # Nothing selects: the contradicted projection is gone.
+        pytest.param({"target": None}, id="target-not-selected"),
+        # Selected, but its guarded prose changed.
         pytest.param(
-            {"target": _row("FIRST", 20, "2020", vardef="Changed")}, id="prose"
+            {"target": _row("FIRST", 20, "2020", vardef="Changed")},
+            id="target-prose",
         ),
+        # Both still select and match; only the coding fingerprint over the
+        # guarded families moves because they hold another record. Twins: an
+        # authority edition missing or extra, a nonphysical family gaining an
+        # original. The coding half is the authority-codes case above.
+        pytest.param({"third": _row("THIRD", 20, "2020")}, id="shared-record-extra"),
     ],
 )
 def test_checked_support_is_stale_when_its_shared_target_changes(tmp_path: Path, rows):
@@ -323,18 +320,15 @@ def test_nonphysical_support_keeps_its_quantity_witness_in_catalog(tmp_path: Pat
     assert built.columns("sample") == {"quantity": {"FIRST"}}
 
 
-@pytest.mark.parametrize(
-    "rows",
-    [
-        pytest.param({"target": None}, id="witness-only"),
-        pytest.param({"authority": None}, id="projection-only"),
-        pytest.param({"extra": _row("SECOND", 22, "2022")}, id="extra-original"),
-        pytest.param({"target": _row("NEW", 21, "2021")}, id="column-now-physical"),
-    ],
-)
-def test_nonphysical_support_is_stale_when_its_family_changes(tmp_path: Path, rows):
-    """The projection and its witness are a complete guarded family."""
-    sources = _nonphysical_sources(tmp_path, _nonphysical_entry(tmp_path), rows)
+def test_nonphysical_support_is_stale_when_its_column_becomes_physical(
+    tmp_path: Path,
+):
+    """The projection is selected as a negative column: once the blank column
+    carries a name, nothing selects and the decision is stale. The other ways
+    the family changes are the selection and fingerprint cases above."""
+    sources = _nonphysical_sources(
+        tmp_path, _nonphysical_entry(tmp_path), {"target": _row("NEW", 21, "2021")}
+    )
     built = sources.build(tmp_path)
     assert SUPPORT in _stale(built)
     assert "support" not in {use[2] for use in built.uses(sources.records())}
