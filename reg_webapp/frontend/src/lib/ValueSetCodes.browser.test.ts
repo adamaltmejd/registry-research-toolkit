@@ -274,19 +274,41 @@ describe("ValueSetCodes — the bounded code read", () => {
   });
 
   it("reads a state's stored mismatch list when given one, and hides a pointless filter", async () => {
-    serve(members(3));
+    // The stub serves the stored mismatch list only for state 34 (value set 12);
+    // any other read gets the whole coding, so the rendered list shows which one
+    // the panel asked for.
+    const mismatches: ValueSetMemberModel[] = [
+      { code: "X1", label: "Stored mismatch one" },
+      { code: "X2", label: "Stored mismatch two" },
+    ];
+    vi.mocked(getValueSetCodes).mockImplementation(
+      async (valueSetId, { state = null, offset = 0, limit = 200 }) => {
+        const codes =
+          valueSetId === "12" && state === "34" ? mismatches : members(3);
+        return {
+          value_set_id: String(valueSetId),
+          state_id: state,
+          q: "",
+          total: codes.length,
+          offset,
+          limit,
+          codes,
+        };
+      },
+    );
     await render(ValueSetCodes, {
       valueSetId: "12",
       stateId: "34",
-      codeCount: 3,
+      codeCount: 2,
       filterLabel: "Filter nonconforming codes",
     });
-    await expect.element(page.getByText("Kommun 2")).toBeVisible();
-    expect(vi.mocked(getValueSetCodes).mock.calls[0][0]).toBe("12");
-    expect(vi.mocked(getValueSetCodes).mock.calls[0][1]).toMatchObject({
-      state: "34",
-    });
+    await expect.element(page.getByText("Stored mismatch one")).toBeVisible();
+    await expect.element(page.getByText("Kommun 0")).not.toBeInTheDocument();
     // Below the shared threshold a filter box is more chrome than help.
-    expect(document.querySelector(".filter-input")).toBeNull();
+    expect(
+      page
+        .getByRole("textbox", { name: "Filter nonconforming codes" })
+        .elements(),
+    ).toEqual([]);
   });
 });
