@@ -345,9 +345,10 @@ for the `test-audit` skill, not a reason to raise the number.
 
 G0 of `RUST_RUNTIME_SPEC.md` §4 runs conformance, the touched packages and
 `cargo test --workspace`. The reader-side rows, conformance and `crates/` sum to 59 s,
-so any change touching reader-side packages fits G0's 60 s. G1 (under 5 min) and G2 run
-on real artifacts in tier 3 and are not package budgets. `reg_meta_build` stays Python
-and is outside G0.
+so any change touching reader-side packages fits G0's 60 s. From slice 3a G0 also runs
+the Rust HTTP run (§10: `cargo build -p reg-meta`, then the `api` cases the Rust server
+implements, out of process), 8 s warm. G1 (under 5 min) and G2 run on real artifacts in
+tier 3 and are not package budgets. `reg_meta_build` stays Python and is outside G0.
 
 ### Conformance suite
 
