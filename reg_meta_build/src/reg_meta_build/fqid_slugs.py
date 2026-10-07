@@ -18,7 +18,9 @@ WITHIN-FILE slug-typo rename pointer, a different relation from succession.
 from __future__ import annotations
 
 import json
+import os
 import re
+import subprocess
 import tomllib
 import unicodedata
 from collections import Counter, defaultdict
@@ -816,6 +818,102 @@ def pinned_zones(states: Mapping[str, SlugFreezeState]) -> frozenset[str]:
     return frozenset(z for z, s in states.items() if s != "churning")
 
 
+_GIT_TRUST_KEY = "safe.directory"
+
+
+def _git_env() -> dict[str, str]:
+    """The environment with every ``GIT_*`` variable stripped, so git discovers the
+    repo from ``cwd`` alone. Git hooks export GIT_DIR / GIT_INDEX_FILE into the hook
+    process; inheriting them would point these calls at the hook's repo.
+
+    The one exception is an inherited ``safe.directory`` entry in the
+    GIT_CONFIG_COUNT/KEY_n/VALUE_n block, re-emitted densely: a container that
+    mounts the checkout under another uid grants ownership trust only that way, and
+    without it every call exits 128 "dubious ownership", which reads as "not a work
+    tree" and silently skips the check. Every other inherited config entry is
+    dropped with the routing variables."""
+    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    count = os.environ.get("GIT_CONFIG_COUNT", "")
+    trusted = [
+        os.environ[f"GIT_CONFIG_VALUE_{i}"]
+        for i in range(int(count) if count.isdigit() else 0)
+        if os.environ.get(f"GIT_CONFIG_KEY_{i}", "").casefold() == _GIT_TRUST_KEY
+        and f"GIT_CONFIG_VALUE_{i}" in os.environ
+    ]
+    if trusted:
+        env["GIT_CONFIG_COUNT"] = str(len(trusted))
+        for n, value in enumerate(trusted):
+            env[f"GIT_CONFIG_KEY_{n}"] = _GIT_TRUST_KEY
+            env[f"GIT_CONFIG_VALUE_{n}"] = value
+    return env
+
+
+def _git_committed_paths(directory: Path) -> set[str] | None:
+    """Paths under ``directory`` (relative to it) in the committed HEAD tree, or
+    ``None`` when ``directory`` is not in a git work tree or HEAD is unborn.
+
+    Reads HEAD, not the index: a staged-but-uncommitted file would not survive a
+    clean checkout either, and the index would report it as fine."""
+
+    def git(*args: str) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            ["git", *args],
+            cwd=directory,
+            capture_output=True,
+            text=True,
+            env=_git_env(),
+            check=False,  # nonzero = no work tree / unborn HEAD, read below
+        )
+
+    inside = git("rev-parse", "--is-inside-work-tree")
+    if inside.returncode != 0 or inside.stdout.strip() != "true":
+        return None
+    listed = git("ls-tree", "-z", "-r", "--name-only", "HEAD", "--", ".")
+    if listed.returncode != 0:
+        return None
+    return {name for name in listed.stdout.split("\0") if name}
+
+
+def untracked_pinned_autos(slug_dir: Path) -> list[Path]:
+    """Pinned (curating/frozen) auto files present on disk but absent from the
+    committed HEAD tree, sorted.
+
+    A pinned zone reads its slugs back from its ``*.auto.toml``. The file is
+    gitignored, so a leftover from a churning build, or one that was ``git add -f``'d
+    but never committed, passes every on-disk check and then vanishes on a clean
+    checkout, taking the pin with it. The build is git-agnostic, so ``precheck-slugs``
+    reports this. A pinned zone with no auto file on disk is not reported: the build's
+    ``slug_freeze_auto_missing`` guard owns that case and exempts a provider without
+    variables. Outside a git work tree (a wheel install) nothing is reported."""
+    pinned = pinned_zones(load_freeze_states(slug_dir))
+    if not pinned:
+        return []
+    registers = slug_dir / "registers"
+    if registers.is_dir():
+        # The zone is the provider directory; a register family nests one deeper.
+        candidates = [
+            path
+            for path in registers.rglob(f"*{AUTO_FILE_SUFFIX}")
+            if path.relative_to(registers).parts[0] in pinned
+        ]
+    else:
+        candidates = [
+            path
+            for zone in pinned
+            if (path := slug_dir / f"{zone}{AUTO_FILE_SUFFIX}").is_file()
+        ]
+    if not candidates:
+        return []
+    committed = _git_committed_paths(slug_dir)
+    if committed is None:
+        return []
+    return sorted(
+        path
+        for path in candidates
+        if path.relative_to(slug_dir).as_posix() not in committed
+    )
+
+
 def load_slug_dir(slug_dir: Path) -> list[SlugEntry]:
     """Load every TOML under ``slug_dir`` into a flat ``SlugEntry`` list.
 
@@ -823,9 +921,8 @@ def load_slug_dir(slug_dir: Path) -> list[SlugEntry]:
     auto file is gitignored/ephemeral (rewritten every build, not committed — see
     DESIGN.md § "Slug immutability"), so a leftover untracked file from a prior
     build is not part of the in-memory baseline. Loading it would inflate
-    ``snapshot_payload`` with phantom variable slugs and false-fail
-    ``test_snapshot_covers_committed_additions`` (the recurring ``git clean -fdX``
-    footgun). A pinned (curating/frozen) zone's committed ``<provider>.auto.toml``
+    ``snapshot_payload`` with phantom variable slugs and false-fail the
+    ``precheck-slugs`` snapshot diff (the recurring ``git clean -fdX`` footgun). A pinned (curating/frozen) zone's committed ``<provider>.auto.toml``
     IS the baseline and still loads. Mirrors the freeze gate in
     ``populate_variable_slugs``. Non-auto provider TOMLs are state-independent and
     always load.
@@ -3527,6 +3624,16 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
         entries = load_slug_dir(slug_dir)
     except RegMetaError as exc:
         parse_errors.append(exc.message)
+    else:
+        # Reported as parse errors: the slugs just loaded include a pin a clean
+        # checkout would not have, so `ok` must fail and `--update-snapshot` must
+        # not bake them into the baseline (it refuses on any parse error).
+        parse_errors.extend(
+            f"{path}: pinned auto file is not in the committed HEAD tree, so a "
+            "clean checkout would lose its slugs. Commit it: "
+            f"`git add -f {path} && git commit`."
+            for path in untracked_pinned_autos(slug_dir)
+        )
 
     by_provider_kind: dict[tuple[str, str], set[str]] = {}
     for entry in entries:
@@ -3935,6 +4042,7 @@ __all__ = (
     "seed_all",
     "seed_provider_toml",
     "snapshot_payload",
+    "untracked_pinned_autos",
     "write_auto_toml",
     "write_entity_key_pins",
     "write_snapshot",
