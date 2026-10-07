@@ -333,19 +333,21 @@ from the suite's current size. Local is wall time with `pytest <tree> -n auto -q
 `timeout-minutes` on `ubuntu-latest`, including setup. A suite over budget is a finding
 for the `test-audit` skill, not a reason to raise the number.
 
-  | Suite                      | Local | CI job | Rationale                                                                                                                            |
-  | -------------------------- | ----- | ------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-  | `reg_meta_build/tests`     | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation.  |
-  | `conformance`              | 25 s  | 4 min  | Session-built catalog and steward artifacts once, then data-driven CLI, HTTP, order and validate cases.                              |
-  | `reg_meta/tests`           | 15 s  | 3 min  | Stateless reader: CLI JSON and grammar cases over one session-built synthetic artifact.                                              |
-  | `reg_webapp/backend/tests` | 10 s  | 3 min  | Only what conformance cannot reach: boot, middleware, docs routes and the `openapi.json` snapshot, over a TestClient.                |
-  | `reg_schema/tests`         | 5 s   | 2 min  | One validator over `reg_schema/test_corpus/`, pure and in-process.                                                                   |
-  | frontend (`bun run test`)  | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds. |
+  | Suite                                | Local | CI job | Rationale                                                                                                                            |
+  | ------------------------------------ | ----- | ------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+  | `reg_meta_build/tests`               | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation.  |
+  | `conformance`                        | 20 s  | 4 min  | Session-built catalog and steward artifacts once, then data-driven CLI, HTTP, order and validate cases.                              |
+  | `reg_meta/tests`                     | 15 s  | 3 min  | Stateless reader: CLI JSON and grammar cases over one session-built synthetic artifact.                                              |
+  | `reg_webapp/backend/tests`           | 10 s  | 3 min  | Only what conformance cannot reach: boot, middleware, docs routes and the `openapi.json` snapshot, over a TestClient.                |
+  | `reg_schema/tests`                   | 4 s   | 2 min  | One validator over `reg_schema/test_corpus/`, pure and in-process.                                                                   |
+  | `crates/` (`cargo test --workspace`) | 10 s  | 3 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                     |
+  | frontend (`bun run test`)            | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds. |
 
-The reader-side rows plus conformance sum to under 60 s, so a change touching any of
-those packages fits G0 of `RUST_RUNTIME_SPEC.md` §4. G1 (under 5 min) and G2 run on real
-artifacts in tier 3 and are not package budgets. `reg_meta_build` stays Python and is
-outside G0.
+G0 of `RUST_RUNTIME_SPEC.md` §4 runs conformance, the touched packages and
+`cargo test --workspace`. The reader-side rows, conformance and `crates/` sum to 59 s,
+so any change touching reader-side packages fits G0's 60 s. G1 (under 5 min) and G2 run
+on real artifacts in tier 3 and are not package budgets. `reg_meta_build` stays Python
+and is outside G0.
 
 ### Conformance suite
 

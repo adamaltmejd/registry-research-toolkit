@@ -34,7 +34,9 @@ uv run python -m pytest <dir> -n auto -q --durations=20
 The frontend:
 `git ls-files 'reg_webapp/frontend/src/*.ts' 'reg_webapp/frontend/src/*.svelte' | xargs wc -l | tail -1`
 and `bun run test` from `reg_webapp/frontend`. Compare each suite's wall time with its
-budget in ARCHITECTURE.md → "Tiers".
+budget in ARCHITECTURE.md → "Tiers". Rust: `git ls-files 'crates/*.rs' | xargs wc -l`
+and `cargo test --workspace`; its dependency check is `cargo tree --workspace --depth 1`
+against each crate's `Cargo.toml`.
 
 ## 1. Mechanical checks
 
@@ -67,9 +69,10 @@ harness allows (Codex runs three children at a time) and the rest in waves. Wher
 harness lets a call choose its model, set it on every call: the family's mid tier (in
 Claude, Opus) for code, the tier below for docs. Modules: `reg_meta/src`,
 `reg_meta_build/src` split as `sources/`, `ir/` and the top-level modules by size,
-`reg_schema/src`, `reg_webapp/backend/src`, `reg_webapp/frontend/src/lib`, `scripts/`.
-The test trees are the `test-audit` skill's: run its sweep in the same waves and merge
-its list into step 3.
+`reg_schema/src`, `reg_webapp/backend/src`, `reg_webapp/frontend/src/lib`, `scripts/`,
+and `crates/` (Rust; while `RUST_RUNTIME_SPEC.md` is open, its findings go to that
+refactor's owner, not to land here). The test trees are the `test-audit` skill's: run
+its sweep in the same waves and merge its list into step 3.
 
 Each prompt carries the module's paths, an instruction to read CLAUDE.md,
 ARCHITECTURE.md and the package's DESIGN.md first and the module's files whole, the step
@@ -124,8 +127,11 @@ one of three piles.
 
 Edit directly, in an isolated worktree. One commit per module, the message naming what
 was removed. Before each push: `uv run ruff check`, `uv run ruff format --check`,
-`uvx --from ty==0.0.79 ty check`, and `uv run python -m pytest <dir> -n auto -q`; for
-the frontend, `bun run check && bun run lint && bun run test && bun run build` in
+`uvx --from ty==0.0.79 ty check`, and
+`uv run python -m pytest <dir> conformance -n auto -q`; for `crates/`,
+`cargo fmt --check`, `cargo clippy --workspace -- -D warnings` and
+`cargo test --workspace`; for the frontend,
+`bun run check && bun run lint && bun run test && bun run build` in
 `reg_webapp/frontend`, as CI runs them. A change that redesigns a module rather than
 deleting from it, or needs more than one sitting, becomes a GitHub issue instead (search
 open and closed first).
