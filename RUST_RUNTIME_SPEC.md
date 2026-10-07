@@ -597,11 +597,13 @@ both servers, and the edge sends each ported path to the Rust server *(decision 
      binary, the envelope, error, paging and MCP wiring, and `reg-core-py`, with a G0
      test that the generated OpenAPI and MCP `tools/list` match
      `conformance/api/operations.toml`; turns the webapp's search pins and best-bets
-     into curated build input (re-fixturing the eight `golden_config` cases); applies
-     the checkpoint-1 indexing decision; and has a deployment package (both servers in
-     one image, edge routing for `/mcp` and the ported paths, separate MCP rate limits,
-     a public-host MCP smoke test). The exhaustive Python-against-Rust fold sweep joins
-     G1 here. Hosted MCP goes live when (a) passes. Ends at checkpoint 2.
+     into curated build input (re-fixturing the eight `golden_config` cases); a pin that
+     does not resolve becomes a build error (today it is a runtime 500:
+     `http_search/golden-classification` and `golden-stale-register` expect one);
+     applies the checkpoint-1 indexing decision; and has a deployment package (both
+     servers in one image, edge routing for `/mcp` and the ported paths, separate MCP
+     rate limits, a public-host MCP smoke test). The exhaustive Python-against-Rust fold
+     sweep joins G1 here. Hosted MCP goes live when (a) passes. Ends at checkpoint 2.
    - **(b) show / states / values** starts with one PR for the `expanded_state` and
      `browse_delivery` schema, derivation and validator checks. That PR merges before
      anything in (c) consumes expanded states (schema, diff and held coverage all do).
