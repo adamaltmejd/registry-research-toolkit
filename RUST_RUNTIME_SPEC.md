@@ -196,10 +196,11 @@ derivation identity (derive code and schema minor) and the admitted schema versi
 feed the served generation. Changed derivation inputs change the generation, so no
 cursor outlives them; identical inputs give an identical generation and identical bytes.
 Derive reads an immutable base, publishes atomically, leaves base bytes unchanged and
-rejects a stale derivation. Today the builder requires exact schema equality
-(`reg_meta_build`'s `db.py`; the reader already accepts a higher minor) and the
-generation records one schema version and builder commit (`artifact_identity.py`); both
-change in stage 2.
+rejects a stale derivation. Since package 2.2, `derive` admits a base of the same major
+and a minor up to the builder's (`open_built_db(older_minor=True)` in `db.py`); every
+other builder input, `extend-db`'s base included, stays exact, so an older base is
+derived before it is extended. A derived generation hashes `derived_from_generation_id`
+(`artifact_identity.py`), which built artifacts lack, so their ids are unchanged.
 
 **Bootstrap derive by moving, not rewriting.** The first implementation of each derived
 table calls today's reader functions (`Catalog.states`, the delivery fusing, the chain
