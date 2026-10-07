@@ -1,0 +1,16 @@
+{
+  "fixture": "reader",
+  "kind": "catalog",
+  "serve": {
+    "catalog": "global"
+  },
+  "manifest": {
+    "schema_version": "8.0.0"
+  },
+  "requests": [
+    {
+      "operation": "context",
+      "path": "/api/context"
+    }
+  ]
+}

@@ -1,0 +1,295 @@
+# Operation table (RUST_RUNTIME_SPEC.md package 1.1): the API contract the Rust server
+# implements, defined once and exposed over HTTP and MCP (section 7). Error codes live in
+# `errors.toml`; `conformance/test_api_spec.py` lints both, the `api` cases and the
+# `operation` keys in `surface.toml`. Approved at checkpoint 1; choices section 7 does
+# not dictate say so in `note`.
+#
+# Every response is `{"data": <result>, "meta": <Meta>}`; an error is
+# `{"error": <Error>, "meta": <Meta>}` (shapes below). Raw-bytes downloads
+# (`[[download]]`) are the only exception.
+#
+# [[operation]]
+#   name     the operation, in reg-catalog and in MCP dispatch.
+#   slice    the stage-3 slice that ports it (surface.toml's owners).
+#   http     its routes, "METHOD /path". `{ref}` spans several path segments (a FQID);
+#            other placeholders are one segment. Query parameters for GET, a JSON body
+#            for POST.
+#   tool     the MCP tool that exposes it. A tool exposing several operations takes an
+#            `operation` argument naming one; its other arguments are that operation's
+#            params. No tool: HTTP only, and `note` says why.
+#   params   name = type. Types: ref (FQID or bare name, section 7), period (the
+#            FQID/project period grammar), scope ("holdings" | "reference", default the
+#            artifact's), limit (1..200, default 50), cursor (opaque `next_cursor`),
+#            string, integer, boolean, string[], enum(a|b), project (a project_data.json
+#            document as the body). A trailing `?` marks optional.
+#   result   the `data` shape: a [shape.*] name, `Page<T>` (= {items: [T], next_cursor:
+#            cursor | null}) or a description against today's model.
+#   errors   codes from errors.toml it can return beyond the ones every operation can:
+#            invalid_parameter, catalog_unavailable, internal_error.
+#   process  true for a run mode of the binary rather than a served operation.
+
+contract_version = "4.0.0"
+
+[[operation]]
+name = "search"
+slice = "3a"
+http = ["GET /api/search"]
+tool = "search"
+params = { q = "string", type = "enum(register|variable|classification|classification_code|register_value)?", register = "ref?", period = "period?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
+result = "Page<SearchHit>"
+errors = ["invalid_ref", "not_found", "ambiguous_ref", "invalid_period", "scope_unavailable", "invalid_cursor", "stale_cursor"]
+note = """One ranked list per call. Without `type` it ranks every type together with \
+today's best-bets ordering (exact identity first, then type priors), continued by the \
+cursor; with `type` it returns that type only. The SPA's top-results strip is a call \
+without `type` and its five typed groups are one call each, replacing today's grouped \
+response (rejected alternative: `data.groups[]`, each its own page, which breaks "every \
+list is {items, next_cursor}"). `q` is at most 200 characters with no NUL; a query with \
+no letter or digit returns no items, not an error. `field` and `--no-fold` go: the \
+description and value arms are chosen by `type`, exact column names are `resolve`, and \
+concept groups always fold. `register` and `period` replace the CLI's `--register` and \
+`--years`. Paging stops at depth 1000 (today's ceiling)."""
+
+[[operation]]
+name = "context"
+slice = "3a"
+http = ["GET /api/context"]
+params = { scope = "scope?" }
+result = "Context"
+note = """Merges today's /api/context and /api/stats (the counts take `scope`). No MCP \
+tool: an agent's catalog identity is in every response's `meta`, and the branding and \
+counts serve the SPA shell."""
+
+[[operation]]
+name = "show"
+slice = "3b"
+http = ["GET /api/catalog", "GET /api/catalog/{ref}"]
+tool = "show"
+params = { ref = "ref?", scope = "scope?" }
+result = "Show"
+errors = ["invalid_ref", "not_found", "ambiguous_ref", "scope_unavailable"]
+note = """The summary for any ref; no ref is the catalog root. Group refs are \
+`group/<provider>/<register>/<key>` and `group/class/<key>`, so `group` joins `class` as \
+a reserved first segment. A retired FQID resolves to its terminal successor on every \
+transport and the result carries the canonical `fqid` (no HTTP 301: MCP has none). \
+Today's `member` focus echo goes (the SPA has the member list)."""
+
+[[operation]]
+name = "states"
+slice = "3b"
+http = ["GET /api/states/{ref}"]
+tool = "states"
+params = { ref = "ref", period = "period?", variant = "string?", value_set_version = "string?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
+result = "Page<State>"
+errors = ["invalid_ref", "not_found", "ambiguous_ref", "invalid_period", "scope_unavailable", "invalid_cursor", "stale_cursor"]
+note = """A variable's states, today's VariableState unchanged. Replaces /states and the \
+catch-all's `?period` subset; `variant` and `value_set_version` narrow independently \
+(today they require `period`). Facet routes are `/api/<operation>/{ref}` rather than \
+today's `/api/catalog/{fqid}/<facet>`, which a variable slug such as `states` could \
+shadow."""
+
+[[operation]]
+name = "values"
+slice = "3b"
+http = ["GET /api/values/{ref}"]
+tool = "values"
+params = { ref = "ref", state = "integer?", partition = "enum(source_extensions|canonical|nonstandard|sentinels)?", classification = "string?", column = "string?", alias_window_from = "string?", q = "string?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
+result = "Page<Value> plus `total` (matches of `q` in the whole set)"
+errors = ["invalid_ref", "not_found", "ambiguous_ref", "scope_unavailable", "invalid_cursor", "stale_cursor"]
+note = """A classification's codes, or the value set of one state of a variable (`state` \
+required for a variable). Value is today's ValueSetMember | \
+ClassificationExtensionMember. Offset paging becomes cursor paging; `total` stays \
+because the SPA shows it. The CLI's per-instance grouping goes: an agent lists states, \
+then values per state."""
+
+[[operation]]
+name = "graph"
+slice = "3d"
+http = ["GET /api/graph/{ref}"]
+tool = "graph"
+params = { ref = "ref", scope = "scope?" }
+result = "today's RelationshipGraph {nodes, edges, focus_id}"
+errors = ["invalid_ref", "not_found", "ambiguous_ref", "scope_unavailable"]
+note = "For a variable, classification or group ref; one route replaces the three graph routes."
+
+[[operation]]
+name = "lineage"
+slice = "3d"
+http = ["GET /api/lineage/{ref}"]
+tool = "graph"
+params = { ref = "ref", scope = "scope?" }
+result = "{edges: [LineageEdge], warnings: [LineageWarning], registers: [the CLI's per-register provenance rows]}"
+errors = ["invalid_ref", "not_found", "ambiguous_ref", "scope_unavailable"]
+note = """A variable's lineage. Takes over `get lineage`, the lineage embedded in today's \
+binding node, and /lineage_warnings."""
+
+[[operation]]
+name = "coverage"
+slice = "3c"
+http = ["GET /api/coverage/{ref}"]
+tool = "coverage"
+params = { ref = "ref", scope = "scope?" }
+result = "the CLI's `get availability` data, without `target`/`target_type` (the ref's kind is in `fqid`)"
+errors = ["invalid_ref", "not_found", "ambiguous_ref", "scope_unavailable"]
+note = "For a variable or register ref."
+
+[[operation]]
+name = "schema"
+slice = "3c"
+http = ["GET /api/schema/{ref}"]
+tool = "schema"
+params = { ref = "ref", period = "period?", variant = "string?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
+result = "Page<the CLI's `get schema` column row, plus register variant and version window>"
+errors = ["invalid_ref", "not_found", "ambiguous_ref", "invalid_period", "scope_unavailable", "invalid_cursor", "stale_cursor"]
+note = """A register's delivered columns, or a variable's (which absorbs `get \
+datacolumns`). `--columns-like` and the table-only `--summary`/`--flat` go."""
+
+[[operation]]
+name = "diff"
+slice = "3c"
+http = ["GET /api/diff/{ref}"]
+tool = "schema"
+params = { ref = "ref", from = "period", to = "period", variant = "string?", scope = "scope?" }
+result = "the CLI's `get diff` data"
+errors = ["invalid_ref", "not_found", "ambiguous_ref", "invalid_period", "scope_unavailable"]
+note = "A register's schema between two periods. `--variable` goes; the caller filters."
+
+[[operation]]
+name = "coded_variables"
+slice = "3c"
+http = ["GET /api/coded-variables"]
+tool = "schema"
+params = { scope = "scope?", limit = "limit?", cursor = "cursor?" }
+result = "Page<the CLI's `get coded-variables` row>"
+errors = ["scope_unavailable", "invalid_cursor", "stale_cursor"]
+note = "`--min-codes` and `--min-registers` go: the page is ordered by distinct codes."
+
+[[operation]]
+name = "resolve"
+slice = "3c"
+http = ["GET /api/resolve"]
+tool = "resolve"
+params = { columns = "string[]", register = "ref?", scope = "scope?" }
+result = "{columns: [the CLI's `resolve` column row]}"
+errors = ["invalid_ref", "not_found", "ambiguous_ref", "scope_unavailable"]
+note = """Delivered column names to variables (at most 200 names). Not ref resolution, \
+which every operation does. `--require-match` and its `no_match` error go: each column \
+row has a status."""
+
+[[operation]]
+name = "validate"
+slice = "3e"
+http = ["POST /api/project/validate"]
+tool = "order"
+params = { project = "project" }
+result = "today's validation result {ok, issues}"
+note = "An invalid project is a 200 with `ok: false`, as today."
+
+[[operation]]
+name = "order"
+slice = "3e"
+http = ["POST /api/project/order"]
+tool = "order"
+params = { project = "project" }
+result = "the order manifest"
+errors = ["project_invalid", "order_blocked"]
+note = "The manifest's exact bytes come from the download route below."
+
+[[operation]]
+name = "docs_search"
+slice = "3b"
+http = ["GET /api/docs/search"]
+tool = "docs"
+params = { q = "string?", register = "ref?", limit = "limit?", cursor = "cursor?" }
+result = "Page<today's DocResult>"
+errors = ["docs_unavailable", "invalid_ref", "not_found", "ambiguous_ref", "invalid_cursor", "stale_cursor"]
+note = """Absorbs `docs list` (no `q`) and /docs/for-variable (`q` = the variable name). A \
+catalog without docs answers `docs_unavailable`, replacing `ingested: false`."""
+
+[[operation]]
+name = "docs_get"
+slice = "3b"
+http = ["GET /api/docs/doc/{identifier}"]
+tool = "docs"
+params = { identifier = "string" }
+result = "today's DocDetail with the full `body` instead of the 500-character excerpt"
+errors = ["docs_unavailable", "not_found"]
+
+[[operation]]
+name = "docs_related"
+slice = "3b"
+http = ["GET /api/docs/related/{register}"]
+tool = "docs"
+params = { register = "ref", limit = "limit?", cursor = "cursor?" }
+result = "Page<today's related document {title, filename, source_url, license, fetched, sha256, byte_size}>"
+errors = ["docs_unavailable", "invalid_ref", "not_found", "ambiguous_ref", "invalid_cursor", "stale_cursor"]
+note = "The JSON metadata for the document download route."
+
+[[operation]]
+name = "fetch"
+slice = "3a"
+process = true
+params = { catalog = "string?" }
+result = "exit 0 with the activated catalog's generation on stdout"
+errors = ["release_not_found", "download_failed", "no_db_in_release", "incompatible_db_asset", "checksum_mismatch"]
+note = """`reg-meta fetch` (section 6), which replaces `reg-meta update`: download the \
+release, verify SHA-256, activate atomically. A run mode, so no route or tool; listed \
+so the `update` surface row and the fetch codes have a home."""
+
+[[download]]
+route = "POST /api/project/order/manifest"
+media_type = "application/json"
+operation = "order"
+note = "The manifest bytes byte-identical to `order`'s `data`, as `attachment; filename=\"order.json\"`."
+
+[[download]]
+route = "GET /api/docs/file/{register}/{filename}"
+media_type = "application/pdf"
+operation = "docs_related"
+note = "Served inline, as today."
+
+# Shapes for slice 3a. Later slices name today's models above and fix their fields in
+# their own `api` cases.
+
+[shape.Meta]
+contract_version = "string; contract_version above"
+generation = "string; the catalog's generation_id (64 hex)"
+scope = "\"holdings\" | \"reference\"; the effective scope (project operations: the artifact's)"
+
+[shape.Error]
+code = "string; a code in errors.toml"
+class = "string; its class"
+message = "string; rendered from the code and fields"
+remediation = "string"
+fields = "object; the code's fields in errors.toml"
+
+[shape.SearchHit]
+type = "\"register\" | \"variable\" | \"group\" | \"classification\" | \"classification_succession\" | \"code\"; selects the fields below"
+note = """`rank` goes (the order is the contract), and so do the fields the SPA never reads: \
+`concept_group`, `concept_group_label`, `source`, `member_count`, `label_matched`. \
+`register` becomes `register_name`, since `register` is a ref everywhere else, and a \
+group's `group_key`/`group_label` become `key`/`label` as on concept-group nodes."""
+register = "fqid, name, purpose"
+variable = "fqid, name, register_name, definition, operational_definition, delivery_column_names"
+group = "kind (\"variable\" | \"classification\"), key, label, register_name, matched_count, members [{fqid, name, delivery_column}]"
+classification = "fqid, short_name, name, terminal_fqid"
+classification_succession = "fqid, short_name, name, matched_count, editions [{slug, fqid, name, effective_year}]"
+code = "code, label, code_system, variable_count, variables [{fqid, name, register_name}] (at most 5), classification_count, classifications [{fqid, short_name, name}] (at most 5)"
+
+[shape.Context]
+artifact_kind = "\"catalog\" | \"steward\""
+steward = "{id, name, long_name}"
+schema_version = "string"
+import_date = "string"
+default_scope = "\"holdings\" | \"reference\""
+period_span = "{from: integer, to: integer} | null; as today's catalog_period_span"
+reg_meta_version = "string; the server's version, which seeds a new project's reg_meta_version"
+sizes = "{providers, registers, variables} in the requested scope; today's /api/stats"
+
+[shape.Show]
+note = """A `kind`-tagged summary: root, provider, register, variable, classification_root, \
+classification, concept_group, classification_group, classification_family, from today's \
+CatalogNode and group node models. Heavy parts move to facets: a variable's states \
+(`states`), lineage and succession chain (`lineage`, `graph`), a classification's edition \
+chain (`graph`). A register carries its variants (today's /variants) and a register or \
+variable its data warnings (today's /data_warnings), which the project editor filters \
+by period, variant and column client-side."""

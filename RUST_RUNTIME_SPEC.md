@@ -463,8 +463,8 @@ Rules (settled 2026-10-07; first agreed for the CLI, carried over to the API):
   list is `{"items": [...], "next_cursor": ...}` inside `data`.
 - **Errors** are `{code, class, message, remediation, fields}`, with a stable `code`
   catalog. HTTP maps each class to a status (usage 400/422, not found 404, ambiguous ref
-  or no match 409, order blocked 422, catalog unavailable 503, internal 500); MCP
-  returns the same document as a tool error.
+  or no match 409, order blocked 422, catalog unavailable 503, internal 500; the codes
+  are in `conformance/api/errors.toml`); MCP returns the same document as a tool error.
 - **Order manifests keep their bytes.** The order operation returns
   `{data: manifest, meta}`; the HTTP download route serves the exact manifest bytes,
   which is what the byte-identity contract and the SPA download use.
@@ -481,8 +481,9 @@ catalog.swecov.se, so agents need no install and no 1.2 GB download. Its rate li
 sized for tool calls, separately from the SPA's. Private steward catalogs are never
 served there; they stay on local `reg-meta mcp`.
 
-Still open for the stage-1 API spec: the exact operation and tool names, and each
-operation's parameter and result schemas.
+The operation and tool names, parameters, result shapes and routes are in
+`conformance/api/operations.toml`; the error codes with their classes and statuses are
+in `conformance/api/errors.toml` (package 1.1).
 
 ## 8. Distribution
 

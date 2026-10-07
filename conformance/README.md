@@ -66,6 +66,26 @@ source-backed document case stays in its package; its fixture and oracle have on
 here. Requests without explicit fixture keys retain the defaults above so all relocated
 bytes remain unchanged.
 
+## API cases
+
+`cases/api` holds the cases for the new API (`api/operations.toml`, `api/errors.toml`),
+written red ahead of the Rust server. They use the HTTP case shape above, with these
+additions:
+
+- Every step names its `operation`. `test_api_spec.py` checks that the step's method and
+  path are a route of that operation, that each expected `/error/code` is one of its
+  codes with that code's status, and that the fixture exists.
+- Pointers address the new bodies: `{"data": ..., "meta": ...}` on success and
+  `{"error": ..., "meta": ...}` on failure, for example `/data/items/*/fqid`,
+  `/data/next_cursor` or `/error/fields/parameter`.
+- `artifacts` maps a name to `{"identity": {...}}`, a second artifact built from the
+  same fixture and kind with those `identity.json` overrides (a new generation); a step
+  with `artifact: <name>` is sent to it. The stale-cursor case uses this; the runner
+  side is a slice 3a extension.
+- A startup case sets `serve: {"catalog": <name>}` and optional `manifest` overrides,
+  and expects `{"startup_error": {"code": ...}}`: the server refuses to start and never
+  answers the probe step.
+
 ## Artifact checks
 
 SQLite integrity and FKs, reader admission, existing manifest table/column scope

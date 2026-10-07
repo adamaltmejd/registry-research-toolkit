@@ -1,0 +1,51 @@
+[
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "scope"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "limit"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "limit"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "type"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "q"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "q"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "years"
+    }
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items": []
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/0/delivery_column_names": [
+        "Secret"
+      ]
+    }
+  }
+]
