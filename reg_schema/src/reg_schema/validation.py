@@ -19,16 +19,13 @@ different shape; do not conflate.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Literal, get_args
+from typing import Literal
 
+# A typing hint only, like the tuple `issues`: every producer passes a literal
+# level and a tuple (checked by ty), and no product path decodes JSON into these
+# dataclasses. JSON is checked where it is read (see DESIGN.md → What this layer
+# does NOT validate).
 IssueLevel = Literal["error", "warning", "info"]
-
-# Mirrored at runtime because `Literal` is a typing hint, not a runtime
-# guard — JSON deserialization (SPA, bundle) and ignore-pragma paths can
-# otherwise smuggle in `"ERROR"` / `"fatal"` and silently flip
-# `ValidationResult.ok` to True for a result that should block.
-# Derived from `IssueLevel` so the two cannot drift.
-_VALID_LEVELS: frozenset[str] = frozenset(get_args(IssueLevel))
 
 
 @dataclass(frozen=True)
@@ -45,23 +42,10 @@ class ValidationIssue:
     # remains hashable for set/equality-based tests.
     successor_fqid: str | None = None
 
-    def __post_init__(self) -> None:
-        if self.level not in _VALID_LEVELS:
-            raise ValueError(
-                f"invalid level {self.level!r}; expected one of {sorted(_VALID_LEVELS)}"
-            )
-
 
 @dataclass(frozen=True)
 class ValidationResult:
     issues: tuple[ValidationIssue, ...]
-
-    def __post_init__(self) -> None:
-        # Coerce list/generator/etc. to tuple so the frozen+hashable
-        # contract holds regardless of how callers construct the value.
-        # `object.__setattr__` is the standard frozen-dataclass escape.
-        if not isinstance(self.issues, tuple):
-            object.__setattr__(self, "issues", tuple(self.issues))
 
     @property
     def ok(self) -> bool:

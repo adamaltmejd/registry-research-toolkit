@@ -58,7 +58,7 @@ The `ValidationResult` the structural validator must produce for the paired
 ```
 
 - `level` ∈ `{"error", "warning", "info"}`. Mis-cased or unknown values are rejected at
-  deserialization — see `ValidationIssue.__post_init__`.
+  deserialization: the Python harness refuses them when it decodes the file.
 - `code` is a namespaced, stable identifier. Tests pin codes; the SPA maps codes to UI
   affordances. New codes are additive.
 - `path` is an RFC 6901 JSON pointer into the paired `input.json` root; empty string for
@@ -90,10 +90,9 @@ before downstream consumers do.
 The corpus is the oracle for every structural rule: one or more cases per rule, positive
 and negative, each a whole payload with its complete expected issue set. Case names
 state the behavior; a rule exercised over several values carries the value as a
-`__<value>` suffix (`period_out_of_bounds_tokens_are_invalid__2018_q5`).
-`reg_schema/tests/test_structural.py` keeps only what a JSON payload cannot carry.
-Negative cases for §6.8.3 (reg_meta-backed semantic) rules land in their owning
-packages, not here — `reg_schema` only owns the structural layer's corpus.
+`__<value>` suffix (`period_out_of_bounds_tokens_are_invalid__2018_q5`). Negative cases
+for §6.8.3 (reg_meta-backed semantic) rules land in their owning packages, not here —
+`reg_schema` only owns the structural layer's corpus.
 
 ## Adding a case
 

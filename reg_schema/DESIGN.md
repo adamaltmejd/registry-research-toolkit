@@ -110,16 +110,16 @@ without migration code. If a real future consumer needs extension data, add one 
 
 ## What this layer does NOT validate
 
-`ValidationResult.__post_init__` coerces `issues` to a tuple but does **not** verify
-each element is a `ValidationIssue` instance. JSON deserialization belongs at read/write
-boundaries — the API ingress in `reg_webapp` — not in the contract module itself.
-Python-internal callers are type-checked; cross-runtime callers own their decode step.
-If `result.ok` ever crashes with `AttributeError` on `.level`, that is a boundary bug to
-fix upstream, not a defensive check to add here.
-
-The `level` allowlist *is* enforced at construction because the cost of a
-silently-weakened `ok` (returning `True` for a result that should block) is higher than
-the cost of one extra check on a 3-value frozenset.
+`ValidationResult` and `ValidationIssue` are plain frozen dataclasses with no runtime
+checks: no tuple coercion of `issues`, no `level` allowlist. Every producer is Python
+code passing a literal `level` and a tuple, which ty checks, and no product path decodes
+JSON into these dataclasses. JSON deserialization belongs at read/write boundaries, not
+in the contract module itself: the webapp types the wire shape for OpenAPI
+(`ValidationResultModel`, `level` a `Literal`), and a reader that decodes it from JSON
+(the corpus harness, for each expected file) rejects an unknown `level` there, because a
+mis-cased one would silently flip `ok`. If `result.ok` ever crashes with
+`AttributeError` on `.level`, that is a boundary bug to fix upstream, not a defensive
+check to add here.
 
 **`schema_version` is not value-checked here.** The structural layer only requires
 `schema_version` to be a present, non-null string — it does **not** compare it to any
@@ -173,7 +173,7 @@ two are kept apart on purpose:
   and every runtime that shares the contract (SPA, webapp) needs the full issue list,
   not the first exception.
 - **Structural validator** (`structural.py`, §6.8.1): the entrypoint
-  `validate_structural(data: Mapping[str, object]) -> ValidationResult` operates on a
+  `validate_structural(data: dict[str, object]) -> ValidationResult` operates on a
   **parsed dict, not the Pydantic models**, for two reasons. First, rules like "`type` ∈
   enum" must fire on raw JSON values *before* any `Literal` cast would coerce or reject
   them — a wrong enum value has to surface as an accumulated `invalid_enum_value` issue,
@@ -208,11 +208,10 @@ shape fails both runtimes.
 
 The corpus is the oracle for every structural rule: one or more cases per rule, positive
 and negative, each a whole payload with its complete expected issue set. The case
-directory name states the behavior. `reg_schema/tests/test_structural.py` keeps only
-what a JSON payload cannot carry (a non-dict `Mapping` input, the tuple return type,
-`unexpected_field` emission order). Negative cases for §6.8.3 (reg_meta-backed semantic)
-live in their owning packages, not here — `reg_schema` only owns the structural layer's
-corpus.
+directory name states the behavior. Emission order is not part of the corpus contract;
+the backend's HTTP tests pin the sorted `unexpected_field` order at the door. Negative
+cases for §6.8.3 (reg_meta-backed semantic) live in their owning packages, not here —
+`reg_schema` only owns the structural layer's corpus.
 
 ## Structural rules and issue codes
 

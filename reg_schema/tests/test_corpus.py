@@ -11,15 +11,22 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import get_args
 
 import pytest
 
-from reg_schema import ValidationIssue, ValidationResult, validate_structural
+from reg_schema import (
+    IssueLevel,
+    ValidationIssue,
+    ValidationResult,
+    validate_structural,
+)
 
 CORPUS_ROOT = Path(__file__).resolve().parent.parent / "test_corpus"
 
 _ISSUE_KEYS = frozenset({"level", "code", "path", "message"})
 _RESULT_KEYS = frozenset({"issues"})
+_LEVELS = frozenset(get_args(IssueLevel))
 
 
 def _discover_cases() -> list[Path]:
@@ -44,11 +51,12 @@ def _decode_expected(payload: object) -> ValidationResult:
 
     Drift-protection: shape mismatches and unknown keys raise so a
     silent schema addition (or a corpus file whose top-level shape
-    diverges from the contract) cannot slip past. ``code``, ``path``,
-    and ``message`` are runtime-typed as ``str`` because the Python
-    dataclass only enforces ``level`` — without that check a corpus
-    case like ``{"code": 123}`` would pass here while still failing
-    the SPA's typed import of the same expected JSON.
+    diverges from the contract) cannot slip past. The issue fields are
+    checked here because the dataclass annotations are typing hints only:
+    without the check a corpus case like ``{"code": 123}`` or
+    ``{"level": "ERROR"}`` would pass here while still failing the SPA's
+    typed import of the same expected JSON (and a mis-cased level would
+    silently flip ``ok``).
     """
 
     if not isinstance(payload, dict):
@@ -72,6 +80,11 @@ def _decode_expected(payload: object) -> ValidationResult:
         extra = set(raw) - _ISSUE_KEYS
         if extra:
             raise ValueError(f"issues[{i}] has unexpected keys {sorted(extra)}")
+        if raw.get("level") not in _LEVELS:
+            raise ValueError(
+                f"issues[{i}].level must be one of {sorted(_LEVELS)}, "
+                f"got {raw.get('level')!r}"
+            )
         for key in ("code", "path", "message"):
             value = raw.get(key)
             if not isinstance(value, str):
@@ -90,18 +103,6 @@ def test_corpus_is_not_empty() -> None:
     # Catches a silent test_corpus/ deletion or move; without this the
     # parametrize below would degenerate to zero tests and pass quietly.
     assert _CASES, f"no corpus cases found under {CORPUS_ROOT}"
-
-
-@pytest.mark.parametrize("case_dir", _CASES, ids=_CASE_IDS)
-def test_expected_result_decodes(case_dir: Path) -> None:
-    """Every case's expected payload parses against the cross-runtime contract —
-    the cross-runtime shape coherence the corpus exists to pin."""
-
-    payload = json.loads(
-        (case_dir / "expected_ValidationResult.json").read_text(encoding="utf-8")
-    )
-    result = _decode_expected(payload)
-    assert isinstance(result.ok, bool)
 
 
 def _issue_key(i: ValidationIssue) -> tuple[str, str, str, str]:
