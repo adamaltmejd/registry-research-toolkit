@@ -27,7 +27,8 @@ KINDS = {"route", "command", "import", "skill"}
 DISPOSITIONS = {"retained", "replaced", "removed"}
 OWNERS = {"3a", "3b", "3c", "3d", "3e", "4", "5"}
 REQUIRED = {"kind", "id", "disposition", "owner", "covered_by"}
-OPTIONAL = {"note", "used_by"}
+# `operation` is added by package 1.1 and checked by its test_api_spec.py.
+OPTIONAL = {"note", "used_by", "operation"}
 
 
 def _rows(kind: str | None = None) -> list[dict]:

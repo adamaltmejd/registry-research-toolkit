@@ -15,8 +15,10 @@
 #                     `import M` is "M".
 # disposition  route, command, skill:
 #                retained  the same surface stays.
-#                replaced  a Rust operation covers it (HTTP and MCP, section 7). Package 1.1
-#                          adds the operation name; this file does not choose names.
+#                replaced  route and command rows: a Rust operation covers it (HTTP and
+#                          MCP, section 7); package 1.1 adds its name as `operation`, this
+#                          file does not choose names. Skill rows: `note` names the
+#                          replacement (the binary, `fetch`, MCP `tools/list`).
 #                removed   nothing replaces it; `note` says why.
 #              import (the name's fate in Python):
 #                retained  moves into reg_meta_build in stage 4.
