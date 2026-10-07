@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import io
+
 from cli_test_support import run_json as _run_json
 from reg_meta.cli import run
 
@@ -225,6 +227,13 @@ class TestResolve:
             ["--db", db_path, "resolve", "--columns", "ZZZNOPE", "--require-match"]
         )
         assert code == 17
+
+    def test_malformed_stdin_json_is_a_usage_error(self, db_path: str, monkeypatch):
+        monkeypatch.setattr("sys.stdin", io.StringIO('["Kon",'))
+        data, code = _run_json(["--db", db_path, "resolve"])
+        assert code == 2
+        assert data["error"]["code"] == "usage_error"
+        assert "--columns" in data["error"]["remediation"]
 
     def test_batch(self, db_path: str):
         data, code = _run_json(

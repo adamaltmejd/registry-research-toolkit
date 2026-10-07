@@ -384,6 +384,21 @@ def test_first_run_docs_download_reports_missing_docs_asset(
     )
 
 
+def test_unconfirmed_update_without_tty_is_a_usage_error(net, uv, monkeypatch, capsys):
+    # A uv-tool install with a newer PyPI release would upgrade the package;
+    # the refusal must come before that side effect, not after it.
+    net.releases = [release("reg_meta/v99.0.0", DB, DOCS)]
+    net.pypi = NEXT_PATCH
+    monkeypatch.setattr(sys, "prefix", UV_TOOL_PREFIX)
+    monkeypatch.setattr(sys, "stdin", io.StringIO(""))
+    code = run(["--format", "json", "update"])
+    error = json.loads(capsys.readouterr().out)["error"]
+    assert (code, error["code"]) == (2, "usage_error")
+    assert "--yes" in error["remediation"]
+    assert net.downloads == []
+    assert UPGRADE not in uv.calls
+
+
 # --- package upgrade decision -------------------------------------------------
 
 

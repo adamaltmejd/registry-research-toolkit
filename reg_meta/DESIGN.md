@@ -1990,9 +1990,13 @@ reg-meta was installed as a uv tool) also runs `uv tool upgrade reg-meta` to upg
 package itself. On a venv/editable install (e.g. the Docker bake) the self-upgrade is
 skipped (`result["package"] = "skipped_not_uv_tool"`) and only the DB/doc assets are
 fetched; the package is managed by whatever installed the venv. Already-current assets
-are skipped (tracked via `.db_source` and `.docs_source` in the cache dir). A background
-version checker runs once per week (cached in `~/.local/share/reg_meta/.update_check`)
-and prints a hint on interactive runs when a newer release exists.
+are skipped (tracked via `.db_source` and `.docs_source` in the cache dir). A main-DB
+download is confirmed once, before any side effect (including the package upgrade):
+`--yes` skips the y/N prompt, and without a terminal `--yes` is required — the command
+fails with `usage_error` (exit 2) instead of prompting. EOF (Ctrl-D) at a prompt means
+no. A background version checker runs once per week (cached in
+`~/.local/share/reg_meta/.update_check`) and prints a hint on interactive runs when a
+newer release exists.
 
 **Auto-download on first use**: metadata, holdings and order reads require only the
 selected catalog artifact. Docs operations additionally require its paired sibling doc
