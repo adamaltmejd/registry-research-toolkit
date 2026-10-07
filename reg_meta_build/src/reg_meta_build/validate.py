@@ -1638,8 +1638,7 @@ def _check_resolver_column(
 ) -> None:
     """``resolver_column`` equals a recomputation, set and spelling.
 
-    Holdings canonicalize against it, so this check also guards their mappings.
-    Only an incomplete artifact may leave it empty (an unslugged extend-db)."""
+    Holdings canonicalize against it, so this check also guards their mappings."""
     result.section("[resolver_column]")
     if "resolver_column" not in tables:
         return  # _check_schema_shape already failed.
@@ -1652,14 +1651,6 @@ def _check_resolver_column(
             ),
         )
     )
-    manifest = dict(conn.execute("SELECT key, value FROM import_manifest"))
-    incomplete = (
-        manifest.get("catalog_artifact_kind") == "diagnostic"
-        or manifest.get("catalog_completeness") == "incomplete"
-    )
-    if not stored and incomplete:
-        result.ok("resolver_column empty on an incomplete artifact")
-        return
     try:
         expected = set(resolver_columns(conn))
     except (ValueError, TypeError) as exc:
