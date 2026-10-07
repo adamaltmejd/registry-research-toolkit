@@ -53,7 +53,7 @@ dependency and lineage resolution → `resolved_catalog.write_resolved_catalog`.
   | 3    | `source_annotations.py`, `source_representations.py`                                       | Checked aliases and parallel columns.                                                             |
   | 3    | `curation_tree.py`, `curation_compile.py`                                                  | Validate tracked entries and compile scoped decisions in memory.                                  |
   | 4    | `resolved_catalog.py`, `resolved_metadata.py`, `db.py`                                     | Direct materialization, SQL schema, indexes and atomic publication.                               |
-  | 4    | `validate.py`, `semantic_diff.py`, `dbdiff.py`                                             | Structural/corpus verification and comparison.                                                    |
+  | 4    | `validate.py`, `dbdiff.py`                                                                 | Structural/corpus verification and comparison.                                                    |
   | —    | `extend_db.py`, `sources/curated.py`, `ir/`                                                | Separate steward extension over a released global catalog.                                        |
   | —    | `doc_db.py`                                                                                | Document indexing; independent of source fact resolution.                                         |
 
@@ -1432,14 +1432,13 @@ index schemas remain checked. It is read-only and usable independently:
 python -m reg_meta_build.dbdiff OLD.db NEW.db
 ```
 
-`semantic_diff.py` supports semantic comparison when storage IDs change. Full refactor
-verification also maps foreign keys through catalog identities, compares exact cleaned
-code membership and interval unions, and preserves real gaps. A raw count delta or
-diagnostic completion is insufficient. Major discrepancy categories need representative
-source-backed evidence distinguishing data decisions from implementation defects.
-Investigate unexplained engineering changes; retain exact unresolved diagnostics for
-later curation. The baseline is comparison evidence, never an authority that supplies
-missing facts.
+When storage IDs change, full refactor verification maps foreign keys through catalog
+identities, compares exact cleaned code membership and interval unions, and preserves
+real gaps. A raw count delta or diagnostic completion is insufficient. Major discrepancy
+categories need representative source-backed evidence distinguishing data decisions from
+implementation defects. Investigate unexplained engineering changes; retain exact
+unresolved diagnostics for later curation. The baseline is comparison evidence, never an
+authority that supplies missing facts.
 
 Tests cover source layout/normalization, curation invalidation, overlapping decisions,
 optional unknowns, exact accounting, dependency withholding, deterministic repeated

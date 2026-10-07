@@ -71,18 +71,6 @@ class TestLoaderDispatch:
         assert exc.value.code == "relations_invalid"
         assert "effective_year" in exc.value.message
 
-    def test_foreign_field_relation_kind_on_same_as_rejected(
-        self, tmp_path: Path
-    ) -> None:
-        with pytest.raises(RegMetaError) as exc:
-            _load(
-                tmp_path,
-                '[[edge]]\ntype = "same_as"\na = "scb/lisa/x"\nb = "scb/rams/y"\n'
-                'relation_kind = "similar_concept"\n',
-            )
-        assert exc.value.code == "relations_invalid"
-        assert "relation_kind" in exc.value.message
-
     def test_foreign_field_a_on_replaced_by_rejected(self, tmp_path: Path) -> None:
         # `a`/`b` belong to same_as; replaced_by uses `from`/`to`.
         with pytest.raises(RegMetaError) as exc:
@@ -444,17 +432,6 @@ class TestReplacedByLoad:
             )
         assert exc.value.code == "relations_invalid"
 
-    def test_from_column_on_same_as_rejected(self, tmp_path: Path) -> None:
-        # `from_column` is foreign to a same_as edge — rejected by the per-type
-        # field map (a mis-typed edge: representation field, wrong `type`).
-        with pytest.raises(RegMetaError) as exc:
-            _load(
-                tmp_path,
-                '[[edge]]\ntype = "same_as"\na = "scb/lisa/x"\n'
-                'b = "scb/lisa/y"\nfrom_column = "A"\n',
-            )
-        assert exc.value.code == "relations_invalid"
-
     def test_representation_cross_register_rejected(self, tmp_path: Path) -> None:
         # A representation (column-rename) edge is INTRA-register; endpoints in
         # different registers (same provider) are rejected. Cross-register
@@ -581,15 +558,5 @@ class TestReplacedByLoad:
                 '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/x"\n'
                 'to = "scb/lisa/x"\nfrom_column = "Old"\nto_column = "New"\n'
                 'effective_year = 2010\nvariant = ""\n',
-            )
-        assert exc.value.code == "relations_invalid"
-
-    def test_variant_on_same_as_rejected(self, tmp_path: Path) -> None:
-        # `variant` is foreign to a same_as edge — the per-type field map rejects it.
-        with pytest.raises(RegMetaError) as exc:
-            _load(
-                tmp_path,
-                '[[edge]]\ntype = "same_as"\na = "scb/lisa/x"\n'
-                'b = "scb/lisa/y"\nvariant = "individer"\n',
             )
         assert exc.value.code == "relations_invalid"

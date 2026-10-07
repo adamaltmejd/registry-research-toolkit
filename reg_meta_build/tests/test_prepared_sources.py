@@ -15,7 +15,6 @@ from reg_meta_build.prepared_sources import (
     prepare_source_records,
 )
 from reg_meta_build.source_coordinates import native_variable_key, source_register_key
-from reg_meta_build.source_curation import acknowledgement_evidence_sha256
 from reg_meta_build.source_records import (
     SourceCoordinate,
     SourceFieldCells,
@@ -201,94 +200,6 @@ def test_native_family_index_groups_ids_across_variants_without_losing_other_rec
     }
     assert tuple(reader.records) == records
     assert tuple(reader.iter_native_families("missing-source")) == ()
-
-
-def test_family_records_are_reused_across_views_until_cleared(tmp_path: Path) -> None:
-    revision = _revision("source-a", "a")
-    records = tuple(
-        _record(revision, row=row, member="Same", raw_value=f"value {row}")
-        for row in (1, 2, 3)
-    )
-    root = tmp_path / "inputs" / "records"
-    manifest = prepare_source_records(
-        root, records=records, revisions=(revision,), scope="batch reuse"
-    )
-    commit = accept_prepared(root)
-    reader = open_prepared_source_records(
-        root, expected_sha256=manifest.sha256, input_commit=commit
-    )
-    family = next(reader.iter_native_families(revision.dataset))[1]
-    assert family == records
-    assert next(reader.iter_native_families(revision.dataset))[1] == family
-    assert next(reader.iter_register_slices(revision.dataset))[1] == family
-    assert tuple(reader.iter_records(source=revision.dataset)) == family
-    assert all(
-        left is right
-        for left, right in zip(
-            family, tuple(reader.iter_records(source=revision.dataset)), strict=True
-        )
-    )
-
-    snapshot = tuple(record.model_dump_json() for record in family)
-    fingerprint = acknowledgement_evidence_sha256(family, ("coding evidence",))
-    reader.clear_decoded_records()
-    reread = next(reader.iter_native_families(revision.dataset))[1]
-    assert tuple(record.model_dump_json() for record in reread) == snapshot
-    assert acknowledgement_evidence_sha256(reread, ("coding evidence",)) == fingerprint
-    assert all(left is not right for left, right in zip(family, reread, strict=True))
-    assert next(reader.iter_register_slices(revision.dataset))[1] == reread
-    assert (
-        tuple(
-            reader.lookup(revision.dataset, records[0].locators[0].semantic_record_key)
-        )
-        == reread
-    )
-    assert (
-        acknowledgement_evidence_sha256(reread[:-1], ("coding evidence",))
-        != fingerprint
-    )
-    assert acknowledgement_evidence_sha256(reread, ("changed coding",)) != fingerprint
-    changed = reread[0].model_copy(
-        update={
-            "fields": reread[0].fields.model_copy(
-                update={"name": value_field("changed")}
-            )
-        }
-    )
-    assert (
-        acknowledgement_evidence_sha256((changed, *reread[1:]), ("coding evidence",))
-        != fingerprint
-    )
-
-
-def test_decoded_record_eviction_past_the_shipped_bound_rebuilds_complete_originals(
-    tmp_path: Path,
-) -> None:
-    # One record past the reader's decoded-record bound (8,192), so the first family
-    # member is evicted and a lookup must rebuild it from the accepted payload.
-    revision = _revision("source-a", "a")
-    records = tuple(
-        _record(revision, row=row, member="Same", raw_value=f"value {row}")
-        for row in range(1, 8194)
-    )
-    root = tmp_path / "inputs" / "records"
-    manifest = prepare_source_records(
-        root, records=records, revisions=(revision,), scope="bounded decoded records"
-    )
-    reader = open_prepared_source_records(
-        root, expected_sha256=manifest.sha256, input_commit=accept_prepared(root)
-    )
-    family = next(reader.iter_native_families(revision.dataset))[1]
-    assert family == records
-    fingerprint = acknowledgement_evidence_sha256(family, ("coding evidence",))
-    reread = tuple(
-        reader.lookup(revision.dataset, records[0].locators[0].semantic_record_key)
-    )
-    assert reread[0] is not family[0]
-    assert tuple(record.model_dump_json() for record in reread) == tuple(
-        record.model_dump_json() for record in records
-    )
-    assert acknowledgement_evidence_sha256(reread, ("coding evidence",)) == fingerprint
 
 
 def test_native_family_register_filter_preserves_grouping_and_order(

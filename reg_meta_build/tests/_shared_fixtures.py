@@ -5,7 +5,6 @@ suites. Both conftests import these via the on-`sys.path` bare-name path
 from __future__ import annotations
 
 import json
-import os
 import sqlite3
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -27,25 +26,6 @@ def connect_built_db(db: Path | str) -> sqlite3.Connection:
     conn = sqlite3.connect(str(db))
     register_py_lower(conn)
     return conn
-
-
-def fail_replace_onto(monkeypatch: pytest.MonkeyPatch, live: Path) -> None:
-    """Make the final publication replacement onto `live` fail (Y-52).
-
-    `db.publish_db` installs a staged DB with one `Path.replace`, which
-    delegates to `os.replace` — so patching that, keyed on the destination,
-    injects the replacement failure and leaves every other replace alone.
-    The raised message is `injected replacement failure`.
-    """
-    real_replace = os.replace
-    live_target = str(live.resolve())
-
-    def _fail_on_live(src, dst, **kwargs):
-        if os.fspath(dst) == live_target:
-            raise OSError("injected replacement failure")
-        return real_replace(src, dst, **kwargs)
-
-    monkeypatch.setattr(os, "replace", _fail_on_live)
 
 
 @pytest.fixture(scope="session")
@@ -100,21 +80,6 @@ def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     return output
 
 
-def _write_fixture_slug_dir(slug_dir: Path) -> None:
-    """Minimal slug TOML for the synthetic fixture: register + variant
-    slugs for the two test registers. Version slugs auto-derive at build
-    time from the `YYYY` registerversionnamn values, so no
-    `[register_version]` entries are needed.
-    """
-    (slug_dir / "scb.toml").write_text(
-        '[register."1"]\nslug = "testreg"\n'
-        '[register."2"]\nslug = "otherreg"\n'
-        '[register_variant."1.10"]\nslug = "individer"\n'
-        '[register_variant."2.20"]\nslug = "foretag"\n',
-        encoding="utf-8",
-    )
-
-
 def _build_stub_doc_db(db_dir: Path, tmp_path_factory: pytest.TempPathFactory) -> None:
     """Write a minimally valid doc DB alongside the main DB.
 
@@ -148,72 +113,3 @@ def db_conn(fixture_db: Path) -> Iterator[sqlite3.Connection]:
 def db_path(fixture_db: Path) -> str:
     """`--db` arg pointing to the fixture database directory."""
     return str(fixture_db.parent)
-
-
-# ── build-driven test helpers (test_codelivery_build /
-#    test_coalesce_connectivity) — one definition, shared across suites ───────
-
-# Distinct, pairwise-disjoint coding domains and version labels. These fixtures
-# require explicit source evidence or checked curation to reconcile a shared column.
-CODING_A = [("11", "Alpha ett"), ("12", "Alpha två"), ("13", "Alpha tre")]
-CODING_B = [("21", "Beta ett"), ("22", "Beta två"), ("23", "Beta tre")]
-CODING_C = [("31", "Gamma ett"), ("32", "Gamma två"), ("33", "Gamma tre")]
-
-
-def vm_rows(cvid: int, version: str, codes: list[tuple[str, str]]) -> list[str]:
-    """Vardemangder rows for one cvid: [version, niva, kod, benämning, CVID, ItemId].
-    `niva="1"` is a non-historical grain (matches the default fixture); ItemId is
-    left empty (the importer accepts it, and no ValidDates row means always-valid).
-    The value_set_id is derived from the (kod, benämning) set, so two cvids sharing
-    identical codes fold into ONE value set; the `version` becomes the state's
-    `value_set_version_label`."""
-    from _csv_fixtures import PIPE
-
-    return [PIPE.join([version, "1", kod, ben, str(cvid), ""]) for kod, ben in codes]
-
-
-def errata_version(name: str) -> str:
-    """A `[[errata.version]]` entry in a register file (Y-114) naming an edition of
-    the fixture's TESTREG/individer variant."""
-    return (
-        "[[errata.version]]\n"
-        'variant = "individer"\n'
-        f'name = "{name}"\n'
-        f'evidence = "the steward holds the {name} delivery"\n'
-        'noted = "2026-09-11"\n'
-    )
-
-
-def errata_column(column: str, *versions: str, **fields: object) -> str:
-    """A `[[errata.column]]` entry in a register file (Y-116): `column` is delivered
-    on TESTREG/individer but SCB's export documents it NOWHERE, so the entry
-    mints the variable. With no `versions`, it claims every edition
-    (`all_versions = true`); `fields` overrides or adds any key."""
-    entry: dict[str, object] = {
-        "variant": "individer",
-        "column": column,
-        "name": f"{column} name",
-        "definition": f"{column} definition",
-        **({"versions": list(versions)} if versions else {"all_versions": True}),
-        "source": "steward-holdings",
-        "evidence": f"the steward holds {column}",
-        "noted": "2026-09-12",
-        **fields,
-    }
-    return "[[errata.column]]\n" + "".join(
-        f"{k} = {json.dumps(v, ensure_ascii=False)}\n" for k, v in entry.items()
-    )
-
-
-def errata_delivered(column: str, *versions: str) -> str:
-    """A `[[errata.delivered]]` entry in a register file (Y-114): `column` was
-    delivered in `versions` of TESTREG/individer but SCB's export omits the row."""
-    listed = ", ".join(f'"{v}"' for v in versions)
-    return (
-        "[[errata.delivered]]\n"
-        'variant = "individer"\n'
-        f'column = "{column}"\n'
-        f"versions = [{listed}]\n"
-        f'evidence = "the steward holds {column} for those years"\n'
-        'noted = "2026-09-11"\n'
-    )

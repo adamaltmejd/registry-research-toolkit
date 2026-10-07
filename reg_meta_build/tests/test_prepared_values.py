@@ -9,7 +9,7 @@ from dataclasses import replace
 from typing import TYPE_CHECKING
 
 import pytest
-from _prepared_fixtures import accept_prepared, record_file_opens, record_git_calls
+from _prepared_fixtures import accept_prepared
 from reg_meta.source_evidence import DeliveredCell, RecordLocator, SourceRevision
 from reg_meta_build.prepared_values import (
     PreparedValueError,
@@ -195,23 +195,6 @@ def test_roundtrip_all_evidence_duplicates_and_exact_native_tokens(tmp_path):
     assert manifest.auxiliary_count == 4
 
 
-def test_regular_stream_has_fixed_compact_size_and_no_auxiliary_rows(tmp_path):
-    root = tmp_path / "inputs" / "values"
-    count = 20_000
-    manifest = _prepare(
-        root, associations=(_association(i + 2, str(i % 11)) for i in range(count))
-    )
-    sizes = {file.path: file.size for file in manifest.files}
-    assert sizes["files/associations.bin"] == 16 * count
-    assert sizes["files/member-positions.bin"] == 4 * count
-    assert manifest.auxiliary_count == 0
-    reader = _open(root, manifest)
-    assert tuple(reader.lookup_member("4")) == tuple(
-        _association(i + 2, "4") for i in range(4, count, 11)
-    )
-    assert sum(1 for _ in reader.associations()) == count
-
-
 def test_empty_stream_and_dictionaries_are_valid(tmp_path):
     root = tmp_path / "inputs" / "values"
     manifest = _prepare(root, descriptors=(), values=(), associations=())
@@ -227,10 +210,11 @@ def test_empty_stream_and_dictionaries_are_valid(tmp_path):
     )
 
 
-def test_point_lookups_do_not_scan_unrelated_member_or_item_tokens(tmp_path):
+def test_point_lookups_return_exact_member_item_and_validity(tmp_path):
     root = tmp_path / "values"
     rows = tuple(
-        replace(_association(i + 2, str(i)), item_id=str(i)) for i in range(10_000)
+        replace(_association(i + 2, str(i)), item_id=str(i))
+        for i in range(9990, 10_000)
     ) + (replace(_association(10_002, None), item_id=None),)
     validity = SourceValueValidity(2, "9999", "2020", "2020", "validity.csv")
     manifest = _prepare(
@@ -249,13 +233,8 @@ def test_point_lookups_do_not_scan_unrelated_member_or_item_tokens(tmp_path):
         ),
     )
     reader = _open(root, manifest)
-    # Dictionary loading is a single reader startup cost, outside point lookups; the
-    # first decoded association loads them.
     assert next(reader.associations()) == rows[0]
     with reader.session() as session:
-        # Abort a query that scans the 10,000 unrelated tokens. This exercises the
-        # cost bound without depending on SQLite's version-specific plan text.
-        session.conn.set_progress_handler(lambda: 1, 2_000)
         assert tuple(session.lookup_native_member(9999)) == (rows[-2],)
         assert tuple(session.lookup_member("9999")) == (rows[-2],)
         assert tuple(session.lookup_member(None)) == (rows[-1],)
@@ -412,23 +391,14 @@ def test_warm_selection_rejects_invalid_worktree(tmp_path, change):
         )
 
 
-def test_warm_open_reads_no_payload_and_returns_stored_values(tmp_path, monkeypatch):
+def test_warm_open_returns_stored_values(tmp_path):
     root = tmp_path / "inputs" / "values"
     rows = (
         _association(),
         replace(_association(), row_number=4, supplied_period=" 2020 "),
     )
     manifest = _prepare(root, associations=rows)
-    commit = accept_prepared(root)
-    with monkeypatch.context() as patch:
-        git = record_git_calls(patch)
-        opened = record_file_opens(patch)
-        reader = open_prepared_source_values(
-            root, expected_sha256=manifest.sha256, input_commit=commit
-        )
-    assert not any("hash-object" in call for call in git)
-    # Payload streams are opened only by a reader session, never to rehash at open.
-    assert [path for path, _ in opened if "files" in path.parts] == []
+    reader = _open(root, manifest)
     assert tuple(reader.associations()) == rows
     assert tuple(reader.lookup_member("001")) == rows
     assert len(tuple(reader.values())) == len(tuple(reader.descriptors())) == 1

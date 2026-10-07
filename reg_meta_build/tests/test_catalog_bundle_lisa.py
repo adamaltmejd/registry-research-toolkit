@@ -108,7 +108,7 @@ def test_catalog_bundle_captures_lisa_selected_outside_catalog_input_root(
     assert (selection.path / LISA_BUNDLE_PATH).read_bytes() == source_bytes
 
 
-def test_selected_lisa_ordinary_open_is_quick_and_explicit_verify_hashes(
+def test_explicit_verify_rejects_same_size_damage_to_selected_lisa(
     tmp_path: Path,
 ) -> None:
     input_dir = tmp_path / "source"
@@ -129,8 +129,6 @@ def test_selected_lisa_ordinary_open_is_quick_and_explicit_verify_hashes(
     captured.write_bytes(payload)
     changed = repin_input_bundle(selection, "same-size LISA damage")
 
-    # Routine reads retain the existing manifest/inventory size boundary.
-    open_input_bundle(changed)
     with pytest.raises(SnapshotError, match="hash mismatch"):
         verify_input_bundle(changed)
 

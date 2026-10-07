@@ -112,6 +112,25 @@ class TestDeliveredEntry:
         (entry,) = _load(tmp_path, slug_dir, body).delivered
         assert entry.native_variable_id == 39310
 
+    def test_entry_naming_one_version_twice_fails(
+        self, tmp_path: Path, slug_dir: Path
+    ) -> None:
+        # A version named twice in one `versions` list would mint the same synthetic
+        # row twice and die on the id collision mid-insert. Catch it at load, where
+        # the maintainer gets a remediation instead of a primary-key error.
+        body = (
+            "[[errata.delivered]]\n"
+            'variant = "individer-15plus"\n'
+            'column = "DispInkKE"\n'
+            'versions = ["2010", "2011", "2010"]\n'
+            'evidence = "SWECOV holds the column in those years"\n'
+            'noted = "2026-09-11"\n'
+        )
+        err = _refused(tmp_path, slug_dir, body)
+        assert err.code == "scb_errata_invalid"
+        assert "2010" in err.message
+        assert "once" in err.remediation
+
     @pytest.mark.parametrize("second_version", ["2011", "2010"])
     def test_delivered_subsets_require_disjoint_versions(
         self, tmp_path: Path, slug_dir: Path, second_version: str

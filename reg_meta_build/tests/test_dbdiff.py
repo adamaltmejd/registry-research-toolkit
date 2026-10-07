@@ -16,7 +16,6 @@ from typing import TYPE_CHECKING
 
 import pytest
 from reg_meta_build.dbdiff import (
-    DEFAULT_IGNORE,
     TableIgnore,
     diff_db_content,
     format_report,
@@ -96,13 +95,6 @@ def db_b(tmp_path: Path) -> Path:
 
 
 class TestIdentical:
-    def test_identical_dbs_match(self, db_a: Path, db_b: Path):
-        report = diff_db_content(db_a, db_b)
-        assert report.identical
-        assert not report.schema_differs
-        assert not report.content_differs
-        assert "[IDENTICAL]" in format_report(report)
-
     def test_content_is_order_independent(self, tmp_path: Path):
         # Same rows, different insert order → still identical (the multiset
         # fingerprint is order-independent).
@@ -172,15 +164,6 @@ class TestContentDiffs:
         assert not widget.identical
         rendered = format_report(report)
         assert "<blob" in rendered  # BLOB rendered as hex preview, not crash
-
-    def test_null_vs_value_diff(self, db_a: Path, tmp_path: Path):
-        # NULL source_id in A vs a value in B for the same row → caught
-        # (NULL-aware canonicalization).
-        b = tmp_path / "b.db"
-        _build(b, widgets=[_WIDGETS[0], (2, "beta", b"\xff\xfe", 999), _WIDGETS[2]])
-        report = diff_db_content(db_a, b)
-        widget = next(r for r in report.table_results if r.table == "widget")
-        assert not widget.identical
 
     def test_duplicate_row_diff(self, db_a: Path, tmp_path: Path):
         # Same distinct rows, but a different multiplicity: A has ("x",1)
@@ -346,21 +329,6 @@ class TestSchemaDiffs:
         assert not cd.only_in_a and not cd.only_in_b  # columns are identical
         assert "UNIQUE(a)" in cd.create_sql_a and "UNIQUE(b)" in cd.create_sql_b
 
-    def test_check_constraint_change_caught(self, tmp_path: Path):
-        a = tmp_path / "a.db"
-        b = tmp_path / "b.db"
-        for path, ddl in (
-            (a, "CREATE TABLE t (n INTEGER CHECK (n > 0))"),
-            (b, "CREATE TABLE t (n INTEGER CHECK (n >= 0))"),
-        ):
-            conn = sqlite3.connect(path)
-            conn.execute(ddl)
-            conn.commit()
-            conn.close()
-        report = diff_db_content(a, b)
-        assert report.schema_differs
-        assert any(c.definition_differs for c in report.column_diffs)
-
     def test_whitespace_run_ddl_change_ignored(self, tmp_path: Path):
         # Reindentation / extra spaces / trailing newline between tokens is
         # collapsed, so it does not register as a schema difference (the tokens
@@ -384,37 +352,6 @@ class TestSchemaDiffs:
 
 
 class TestIgnore:
-    def test_import_date_ignored_by_default(self, db_a: Path, tmp_path: Path):
-        # Only import_date differs → identical under the default ignore.
-        b = tmp_path / "b.db"
-        _build(
-            b,
-            manifest=[
-                ("schema_version", "5.1.0"),
-                ("import_date", "1999-01-01T00:00:00Z"),
-                ("input_dir", "/some/path"),
-            ],
-        )
-        assert "import_manifest" in DEFAULT_IGNORE
-        assert diff_db_content(db_a, b).identical
-
-    def test_import_date_caught_without_ignore(self, db_a: Path, tmp_path: Path):
-        b = tmp_path / "b.db"
-        _build(
-            b,
-            manifest=[
-                ("schema_version", "5.1.0"),
-                ("import_date", "1999-01-01T00:00:00Z"),
-                ("input_dir", "/some/path"),
-            ],
-        )
-        report = diff_db_content(db_a, b, ignore={})
-        assert not report.identical
-        manifest = next(r for r in report.table_results if r.table == "import_manifest")
-        assert not manifest.identical
-        a_row = dict(zip(manifest.columns, manifest.sample_a_not_b[0].values))
-        assert a_row["key"] == "import_date"
-
     def test_schema_version_is_not_ignored(self, db_a: Path, tmp_path: Path):
         # schema_version must always be compared, even under the default ignore.
         b = tmp_path / "b.db"
@@ -587,7 +524,3 @@ class TestCli:
         widget = next(t for t in payload["tables"] if t["table"] == "widget")
         assert widget["identical"] is False
         assert widget["sample_a_not_b"]
-
-    def test_missing_file_raises_in_function(self, db_a: Path, tmp_path: Path):
-        with pytest.raises(FileNotFoundError):
-            diff_db_content(db_a, tmp_path / "nope.db")

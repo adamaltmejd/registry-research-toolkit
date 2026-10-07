@@ -1310,7 +1310,7 @@ id = "reg_meta.inventory.DeliveryInventory"
 used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
-covered_by = ["reg_meta_build/tests/test_coverage_index.py", "reg_meta_build/tests/test_holdings_steward_boundary.py"]
+covered_by = ["reg_meta_build/tests/test_inventory_coverage_misses.py", "reg_meta_build/tests/test_holdings_steward_boundary.py"]
 note = "Holdings inventory input, compiled into the artifact by holdings_compile."
 
 [[row]]

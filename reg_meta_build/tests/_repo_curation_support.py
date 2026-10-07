@@ -1,4 +1,4 @@
-"""Shared locations and the loaded committed curation tree for the repo-curation TOML tests."""
+"""Shared locations and the loaded committed curation tree."""
 
 from __future__ import annotations
 
@@ -12,8 +12,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 REPO_CURATION = REPO_ROOT / "curation"
 
 
-# Session scope: loading the committed tree takes about 10 s and five split modules
-# share it (the tests only read it).
+# Session scope: loading the committed tree takes 10-20 s; tests only read it.
 @pytest.fixture(scope="session")
 def repo_tree() -> CurationTree:
     return load_curation_tree(REPO_CURATION)
