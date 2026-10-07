@@ -225,7 +225,7 @@ confused with the test tiers 1–3 in `ARCHITECTURE.md`.
 
   | Gate | What runs                                                                                                                                                                                                                                                     | Budget      | When                                   |
   | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | -------------------------------------- |
-  | G0   | `uv run python -m pytest conformance <touched packages> -n auto -q` and `cargo test --workspace`, all on synthetic artifacts. Conformance alone took 24 s serially (299 cases, 2026-10-07).                                                                   | under 60 s  | every change                           |
+  | G0   | `uv run python -m pytest conformance <touched packages> -n auto -q` and, once `crates/` exists, `cargo test --workspace`, all on synthetic artifacts. Conformance alone took 23 s serially (299 test items, 2026-10-07).                                      | under 60 s  | every change                           |
   | G1   | Derive on the pinned real artifacts, then the differential harness: the baseline reader against derived tables (from stage 2) and the Rust server (per operation, as it lands), on both artifact kinds. Runs locally from a shared artifact cache, not in CI. | under 5 min | every PR touching derive or the reader |
   | G2   | Full base build plus derive and G1 on the result.                                                                                                                                                                                                             | ~1 h today  | checkpoints and releases, never per PR |
 
@@ -262,12 +262,12 @@ the loop:
   list. The implementing agent never declares its own work done.
 - **Escalate, don't decide.** An agent stops instead of changing any of: the operation
   table or error catalog (`conformance/api/`), a decision in section 13, the meaning of
-  an existing golden expected file, the schema major version, a gate budget, or the
-  dependency list this file names. It records the question as a PR comment, marks the
-  package blocked, and the orchestrating session takes it to the maintainer. A golden
-  change that only converts a shape as the approved operation table prescribes is not an
-  escalation; it is reviewed like any diff. Everything else the agent decides, and
-  records in the PR.
+  an existing golden expected file, the schema major version, a gate budget, or a new
+  runtime dependency that this file does not name. It records the question as a PR
+  comment, marks the package blocked, and the orchestrating session takes it to the
+  maintainer. A golden change that only converts a shape as the approved operation table
+  prescribes is not an escalation; it is reviewed like any diff. Everything else the
+  agent decides, and records in the PR.
 - **Tracker corrections are not escalations.** A PR that fixes a verifiable code fact in
   this file (a wrong name, count or path) goes through like any other. A correction that
   changes a decision, a package's scope or its acceptance is an escalation.
@@ -323,7 +323,8 @@ Notes:
   The build computes folded columns with the same code the reader uses for the query
   string, through the bindings. Pin one Unicode version for all of `reg-core` (stage 0
   found Rust std and `unicode-normalization` on 17.0, `caseless` on 16.0, Python on
-  16.0). Keep the stage-0 parity sweep as a property test.
+  16.0). The stage-0 parity sweep becomes a G1 check (Python against Rust) from slice
+  3a; `reg-core`'s own tests carry a sampled corpus and property checks (package 1.2).
 
 - **Canonical JSON** has no floats today. Keep it that way. A float in a hashed payload
   is a build error.
@@ -604,7 +605,9 @@ is deleted".
   subcommand, and `reg_meta` name imported by `reg_webapp`, `reg_meta_build` or
   `conformance/`, plus the commands the `register-metadata-search` skill documents
   (listed by hand). Each row: disposition (retained, replaced, removed), owning slice or
-  stage, acceptance case. Every build-side import gets its stage-4 destination.
+  stage, and the existing test or conformance case that covers it today (1.1 adds the
+  `api` case for each `replaced` row). Every build-side import gets its stage-4
+  destination.
 - Paths: `conformance/api/`, `conformance/test_api_surface.py`.
 - Acceptance: `uv run python -m pytest conformance/test_api_surface.py -q`, which fails
   if any route decorator under `reg_webapp/backend/src/reg_webapp/routes/`, any
@@ -639,12 +642,15 @@ is deleted".
 - Fold corpus: a generator script (adapted from `spike/stage0/scripts/parity_folds.py`;
   a tool, not a test, so it may call Python's folds) writes a sampled corpus to
   `conformance/cases/folds/`: every scalar whose fold is not the identity, seeded
-  samples, and hand-verified Unicode 17 cases, under about 1 MB.
+  samples, and hand-verified Unicode 17 cases, under about 1 MB. It excludes scalars
+  that Python's UCD (16.0) leaves unassigned or folds differently from 17.0, as
+  `parity_folds.py` already classifies them; the hand-verified cases cover those.
 - CI: a Rust job (`cargo fmt --check`, `cargo clippy --workspace -- -D warnings`,
   `cargo test --workspace`); the lint job installs the Rust toolchain because pre-commit
   gains a `cargo fmt` hook.
-- Paths: `crates/`, root `Cargo.toml` and `Cargo.lock`, `conformance/cases/folds/`,
-  `.github/workflows/`, `.pre-commit-config.yaml`.
+- Paths: `crates/` (the corpus generator lives at `crates/reg-core/tools/`), root
+  `Cargo.toml` and `Cargo.lock`, `conformance/cases/folds/`, `.github/workflows/`,
+  `.pre-commit-config.yaml`.
 - Out of scope: Python bindings (slice 3a), the FQID and period grammars.
 - Acceptance: `cargo test --workspace` passes the corpus and a property sweep over every
   scalar value (total, no panic, `fold_search` idempotent); CI is green.

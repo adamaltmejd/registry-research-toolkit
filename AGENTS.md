@@ -156,7 +156,8 @@ when writing, changing or deleting a test.
 
 Current state (the Model A refactor through A5 has shipped). See `ARCHITECTURE.md` for
 the cross-package invariants and each `<package>/DESIGN.md` for the detail;
-`REFACTOR_SPEC.md` tracks the remaining work.
+`REFACTOR_SPEC.md` tracks the remaining work and `RUST_RUNTIME_SPEC.md` the Rust runtime
+refactor.
 
 - **Library packages** (`reg_meta`, `reg_meta_build`):
   - Modeling: `reg_meta` uses frozen Pydantic v2 (`_CatalogModel` base) so FastAPI can
@@ -259,4 +260,4 @@ For per-package design rationale, see `<package>/DESIGN.md` (the reg_meta object
 lives in `reg_meta/DESIGN.md`; per-provider source-delivery shapes in
 `reg_meta_build/DESIGN.md`). For the cross-package design (topology, dependency graph,
 repo-wide invariants), see `ARCHITECTURE.md`; for the remaining post-A5 work, see
-`REFACTOR_SPEC.md`.
+`REFACTOR_SPEC.md`; for the Rust runtime refactor, see `RUST_RUNTIME_SPEC.md`.
