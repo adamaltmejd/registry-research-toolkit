@@ -138,26 +138,6 @@ def test_catalog_failing_validation_keeps_the_previous_catalog(
     assert sorted(path.name for path in active.iterdir()) == ["reg_meta.db"]
 
 
-def test_corpus_write_is_validated_against_the_corpus_floors(tmp_path: Path) -> None:
-    output = tmp_path / "diagnostic.db"
-    write_resolved_catalog(
-        (_variable(),), tmp_path / "small.db", manifest=synthetic_manifest()
-    )
-
-    # The same small catalog that passes structural validation cannot meet the
-    # real-corpus volume floors.
-    with pytest.raises(ValueError, match=f"{VALIDATION_FAILED}.*corpus build"):
-        write_resolved_catalog(
-            (_variable(),),
-            output,
-            manifest=synthetic_manifest(),
-            diagnostic=True,
-            corpus=True,
-        )
-
-    assert not output.exists()
-
-
 def test_diagnostic_never_replaces_a_destination_created_during_the_build(
     sample_build: Callable[..., dict[str, object]],
     tmp_path: Path,

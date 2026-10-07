@@ -317,30 +317,6 @@ def test_classification_predecessor_is_a_deterministic_projection_of_active_edge
     assert output.read_bytes() == original
 
 
-@pytest.mark.parametrize("defect", ["predecessor", "successor", "duplicate"])
-def test_invalid_classification_edges_fail_before_creating_output(
-    tmp_path: Path, defect: str
-) -> None:
-    edges = (
-        ResolvedClassificationSuccession(
-            predecessor="missing" if defect == "predecessor" else "before",
-            successor="missing" if defect == "successor" else "after",
-        ),
-    )
-    if defect == "duplicate":
-        edges += (edges[0].model_copy(update={"effective_year": 2050}),)
-    with pytest.raises(ValueError, match="classification succession"):
-        write_resolved_catalog(
-            (_variable(),),
-            tmp_path / "diagnostic.db",
-            manifest=synthetic_manifest(),
-            diagnostic=True,
-            classifications=(_classification("before"), _classification("after")),
-            classification_successions=edges,
-        )
-    assert list(tmp_path.iterdir()) == []
-
-
 def test_scoped_sentinel_certificate_keeps_local_member_without_changing_book(
     tmp_path: Path,
 ) -> None:

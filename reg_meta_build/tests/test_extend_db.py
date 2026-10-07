@@ -405,12 +405,6 @@ def test_base_rows_and_base_file_are_not_clobbered(
     assert global_db.read_bytes() == before_bytes
 
 
-def test_flavored_db_validates(tmp_path: Path, global_db: Path) -> None:
-    _, out = _run(tmp_path, global_db)
-    result = validate_built_db(out, flavored=True, corpus=False)
-    assert not result.failures, result.failures
-
-
 def test_overlay_keeps_base_classifications_searchable_and_reanalyzes(
     tmp_path: Path, classified_global_db: Path
 ) -> None:

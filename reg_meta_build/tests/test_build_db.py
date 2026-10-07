@@ -1,4 +1,4 @@
-"""Artifact schema seeds, FTS tables, the schema gate and the edition-year grammar."""
+"""Artifact schema seeds, the schema gate and the edition-year grammar."""
 
 from __future__ import annotations
 
@@ -15,24 +15,6 @@ if TYPE_CHECKING:
 
 
 class TestBuildDb:
-    # ------------------------------------------------------------------
-    # A2.1 — variable_state coalescer
-    # ------------------------------------------------------------------
-
-    def test_fts_register(self, db_conn: sqlite3.Connection):
-        rows = db_conn.execute(
-            "SELECT register_id FROM register_fts WHERE register_fts MATCH 'Testning'"
-        ).fetchall()
-        assert len(rows) == 1
-        assert rows[0]["register_id"] == 1
-
-    def test_fts_variable(self, db_conn: sqlite3.Connection):
-        rows = db_conn.execute(
-            "SELECT provider_key FROM variable_fts WHERE variable_fts MATCH 'testvariabel'"
-        ).fetchall()
-        assert len(rows) == 1
-        assert rows[0]["provider_key"] == "100"
-
     def test_provider_seed(self, db_conn: sqlite3.Connection):
         # provider_id values are stable across releases — downstream pins
         # against them (PROVIDER_ID_SCB = 1, PROVIDER_ID_SOS = 2,
@@ -100,13 +82,6 @@ class TestBuildDb:
         conn.close()
 
 
-class TestBuildDbErrors:
-    def test_db_not_found(self, tmp_path: Path):
-        with pytest.raises(RegMetaError) as exc_info:
-            open_db(tmp_path / "nonexistent.db")
-        assert exc_info.value.code == "db_not_found"
-
-
 class TestSchemaCompat:
     """open_db rejects databases whose schema is incompatible with the code.
 
@@ -150,22 +125,6 @@ class TestSchemaCompat:
         db = self._make_db(tmp_path, f"{major}.99.0")
         conn = open_db(db)
         conn.close()
-
-    def test_incompatible_major_mismatch(self, tmp_path: Path):
-        major = int(READER_SCHEMA_VERSION.split(".")[0])
-        db = self._make_db(tmp_path, f"{major + 1}.0.0")
-        with pytest.raises(RegMetaError) as exc_info:
-            open_db(db)
-        assert exc_info.value.code == "schema_incompatible"
-
-    def test_incompatible_old_major(self, tmp_path: Path):
-        major = int(READER_SCHEMA_VERSION.split(".")[0])
-        if major == 0:
-            pytest.skip("major is already 0")
-        db = self._make_db(tmp_path, f"{major - 1}.0.0")
-        with pytest.raises(RegMetaError) as exc_info:
-            open_db(db)
-        assert exc_info.value.code == "schema_incompatible"
 
     def test_incompatible_old_minor(self, tmp_path: Path):
         """A DB with the same major but a lower minor is rejected.

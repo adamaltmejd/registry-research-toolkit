@@ -1,0 +1,9 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "3 delivery_column_name value(s) with surrounding whitespace"
+  ],
+  "failures_absent": [
+    "missing from variable_alias"
+  ]
+}

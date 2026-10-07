@@ -1,0 +1,9 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "panel_time_key 'ghost' resolves to no variable.slug"
+  ],
+  "failures_absent": [
+    "panel_time_key 'kon' resolves to no"
+  ]
+}

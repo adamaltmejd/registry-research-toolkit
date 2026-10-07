@@ -26,13 +26,8 @@ from ._curation import (
     require_str,
     widen_data_type_classes,
 )
-from .curation_tree import load_classifications, load_register_files
 from .edition_bounds import edition_claims
-from .fqid_slugs import (
-    _parse_register_id,
-    _parse_variant_id,
-    iter_curated_provider_entries,
-)
+from .fqid_slugs import _parse_variant_id
 from .normalization import normalize_text
 from .source_coordinates import native_variant_key, source_register_key
 from .source_curation import (
@@ -56,7 +51,6 @@ from .sources.swecov_column_types import (
 
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
-    from pathlib import Path
 
     from .curation_tree import RegisterCuration
     from .source_coordinates import NativeKey
@@ -219,45 +213,6 @@ class _CurationEntry:
     index: int
 
 
-def _scb_slug_ids(slug_dir: Path | None) -> tuple[dict[str, int], dict[str, int]]:
-    """`({register_slug: register_id}, {"<register_slug>/<variant_slug>":
-    register_variant_id})` from the curated `scb.toml`.
-
-    The errata applies inside the adapter, BEFORE `populate_slugs` — the DB's
-    slug columns are still NULL there, so the curated TOML (the same source
-    `populate_slugs` writes from) is what resolves the entries' FQIDs.
-    """
-    registers: dict[str, int] = {}
-    variants: dict[str, int] = {}
-    if slug_dir is None:
-        return registers, variants
-    # Deprecated entries are grow-only slug HISTORY, not live coordinates (the
-    # rule `populate_slugs` and `slug_dir_curates_canonical_scb` both apply): a
-    # retired slug must not shadow the live entry that replaced it.
-    entries = [
-        e
-        for e in iter_curated_provider_entries(slug_dir)
-        if e.provider == _PROVIDER and not e.deprecated
-    ]
-    by_register_id = {
-        _parse_register_id(e.source_id): e.slug
-        for e in entries
-        if e.kind == "register" and e.slug
-    }
-    registers = {slug: rid for rid, slug in by_register_id.items()}
-    for entry in entries:
-        if entry.kind != "register_variant" or not entry.slug:
-            continue
-        parsed = _parse_variant_id(entry.source_id)
-        if len(parsed) != 2:
-            continue  # Split variants are curated after native SCB errata loading.
-        register_id, variant_id = parsed
-        register_slug = by_register_id.get(register_id)
-        if register_slug is not None:
-            variants[f"{register_slug}/{entry.slug}"] = variant_id
-    return registers, variants
-
-
 def _entries(kind: str, registers: Sequence[RegisterCuration]) -> list[_CurationEntry]:
     """One entry kind flattened from the sorted register files."""
     entries: list[_CurationEntry] = []
@@ -366,20 +321,15 @@ def _resolve_variant(
     return register_id, variant_id, context
 
 
-def load_scb_errata(
-    path: Path | None,
-    slug_dir: Path | None,
+def resolve_scb_errata(
+    registers_curation: Sequence[RegisterCuration],
     *,
-    classifications: frozenset[str] | None = None,
+    classifications: frozenset[str],
 ) -> ScbErrata:
-    """Parse register-scoped errata, resolving each entry's `variant` slug
-    against the curated `scb.toml` in `slug_dir`. ``path`` is the curation root.
-    Empty when no curation tree (synthetic
-    builds, wheel installs).
-
-    The supplied classification names, or the classifications under ``path``,
-    are consulted only when a `[[column]]` names a classification. This lets a
-    candidate curation tree introduce a book without depending on the checkout.
+    """Resolve register-scoped errata from loaded register declarations, each
+    entry's `variant` slug against its register file's `[[variant]]` entries.
+    `classifications` is the loaded short_names, consulted only when a
+    `[[column]]` names a classification.
 
     Strict load, all EXIT_CONFIG with a remediation: only `[[errata.version]]` /
     `[[errata.delivered]]` / `[[errata.column]]` register-file tables; no unknown
@@ -395,27 +345,6 @@ def load_scb_errata(
     the record of what SCB missed. `[[delivered]]` and `[[column]]` share that
     column key: a column is one kind of omission or the other, never both.
     """
-    registers_curation = load_register_files(path) if path is not None else ()
-    return resolve_scb_errata(
-        registers_curation,
-        slug_dir,
-        classifications=classifications,
-        classification_root=path,
-    )
-
-
-def resolve_scb_errata(
-    registers_curation: Sequence[RegisterCuration],
-    slug_dir: Path | None = None,
-    *,
-    classifications: frozenset[str] | None = None,
-    classification_root: Path | None = None,
-) -> ScbErrata:
-    """Resolve loaded register declarations without reparsing their source files.
-
-    Compilers supply the loaded classification names. The path loader may use
-    classification_root for its existing lazy classification lookup.
-    """
     registers_curation = tuple(
         sorted(registers_curation, key=lambda row: row.source_file)
     )
@@ -423,13 +352,11 @@ def resolve_scb_errata(
     delivered_entries = _entries("delivered", registers_curation)
     column_entries = _entries("column", registers_curation)
     if not version_entries and not delivered_entries and not column_entries:
-        # Before touching the slug dir: resolving FQIDs parses the whole
-        # curated scb.toml (~20k entries), and the common case — no file, or a
-        # build whose provider set never reaches it — has nothing to resolve.
         return ScbErrata()
-    registers, variants = _scb_slug_ids(slug_dir)
-    # Register-scoped curation now carries the same native coordinates that the
-    # former provider-wide slug file supplied.
+    # Register-scoped curation carries each register's and variant's native
+    # coordinates.
+    registers: dict[str, int] = {}
+    variants: dict[str, int] = {}
     for register in registers_curation:
         if register.register_info.provider != _PROVIDER:
             continue
@@ -517,7 +444,6 @@ def resolve_scb_errata(
     # will BE one (`ErrataColumn.key`), and a disagreement would silently ship
     # whichever entry the materializer wrote first.
     identities: dict[tuple[int, str], tuple] = {}
-    declared_classifications: frozenset[str] | None = None
     for entry in column_entries:
         register_id, variant_id, context = _resolve_variant(
             entry, "column", registers, variants
@@ -529,26 +455,13 @@ def resolve_scb_errata(
         evidence = _require_evidence(values, ctx)
         placement = _column_placement(values, ctx)
         classification = _column_classification(values, ctx)
-        if classification is not None:
-            if declared_classifications is None:
-                declared_classifications = (
-                    classifications
-                    if classifications is not None
-                    else frozenset(
-                        item.classification.short_name
-                        for item in load_classifications(classification_root)
-                    )
-                    if classification_root is not None
-                    else frozenset()
-                )
-            if classification not in declared_classifications:
-                raise curation_error(
-                    _CODE,
-                    f"scb_errata {ctx} names undeclared classification "
-                    f"{classification!r}.",
-                    "Use an existing classification short_name (e.g. 'SSYK96') "
-                    "or declare it in reg_meta_build/curation/classifications/.",
-                )
+        if classification is not None and classification not in classifications:
+            raise curation_error(
+                _CODE,
+                f"scb_errata {ctx} names undeclared classification {classification!r}.",
+                "Use an existing classification short_name (e.g. 'SSYK96') "
+                "or declare it in reg_meta_build/curation/classifications/.",
+            )
         loaded = ErrataColumn(
             register_id=register_id,
             register_variant_id=variant_id,

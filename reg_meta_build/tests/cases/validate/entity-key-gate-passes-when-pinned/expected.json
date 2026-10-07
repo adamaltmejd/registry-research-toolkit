@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "report_contains": [
+    "all 1 entity-key var(s) are curated"
+  ]
+}

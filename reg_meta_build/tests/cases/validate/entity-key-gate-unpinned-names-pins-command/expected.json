@@ -1,0 +1,9 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "testreg/kon (source_id 1.44, panel_entity_key 'kon') has no curated [variable] slug pin"
+  ],
+  "report_contains": [
+    "reg-meta-build entity-key-pins --out-dir"
+  ]
+}
