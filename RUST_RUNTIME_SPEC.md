@@ -366,10 +366,13 @@ operation's parameter and result schemas.
 
 - **Server image:** one static binary plus the baked DBs, fetched in the Dockerfile with
   `curl`, SHA-256 verification and `zstd`.
-- **Local binary** for macOS, Linux and Windows on each `reg_meta/v*` release, built
-  with cargo-dist or a plain matrix workflow, with SHA-256 checksums. PyPI keeps
+- **Local binary** for macOS and Linux on each `reg_meta/v*` release, built with
+  cargo-dist or a plain matrix workflow, with SHA-256 checksums. PyPI keeps
   `uv tool install reg-meta` working through maturin with `bindings = "bin"`. It is used
   only for `reg-meta mcp` and `reg-meta fetch`.
+- **Windows** is a future target, not a build constraint now. Windows agents use the
+  hosted MCP endpoint; a local Windows binary is added only if it builds and runs
+  without special effort.
 - **Agent plugin:** the `microdata-tools-se` plugin declares the MCP server: the hosted
   endpoint by default, the local binary as an alternative. The skill text documents the
   tools, not shell commands.
@@ -500,8 +503,10 @@ Toolchain:
 
 Stage-1 consequences:
 
-1. Pin one Unicode version across `reg-core`: Rust std (17.0) sets it; replace or
-   regenerate the case-folding table that `caseless` pins at 16.0.
+1. Pin one Unicode version across `reg-core`: the latest, which Rust std (17.0) sets;
+   replace or regenerate the case-folding table that `caseless` pins at 16.0. Python's
+   older UCD only matters to the transitional differential harness, which tolerates
+   characters unassigned there.
 2. Give `reg-core-py` `cache-keys` from the start, and keep the parity sweep and the
    search-parity harness as the seed of the tier-1 harness.
 
@@ -586,17 +591,18 @@ moving. The first layer is cheap to fix in Python.
 
 ## 13. Decisions (2026-10-07)
 
-  | #   | Question                               | Decision                                                                                                                                                      |
-  | --- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | 1   | Where are catalog facts resolved? (§3) | **Compiled in the build**, in the derive step (§4). Reverses "No state/window resolution is compiled" in `reg_meta/DESIGN.md`.                                |
-  | 2   | What serves the webapp API? (§6)       | **Rust server** (`reg-meta serve`). The FastAPI backend is deleted in stage 4.                                                                                |
-  | 3   | `reg_schema`? (§5)                     | **Merged into `reg-core`.** The Python package is deleted in stage 4.                                                                                         |
-  | 4   | CLI v4 surface                         | **Superseded by decision 11.** Its settled rules carry over to the API (§7).                                                                                  |
-  | 5   | MCP server mode                        | **Yes. Now the primary agent interface** (decision 11), built with each operation slice in stage 3.                                                           |
-  | 6   | WASM in the SPA                        | **Yes, as the last stage** (stage 5).                                                                                                                         |
-  | 7   | Parallel per-register resolve (§11)    | **Yes**, after the family-scan fix lands.                                                                                                                     |
-  | 8   | Where this plan lives                  | **Its own root tracker**, with the governance rule amended to allow one tracker per concurrent refactor.                                                      |
-  | 9   | How to avoid full rebuilds per step    | **Base/derive split, pinned artifacts, three tiers with budgets, incremental base build** (§4, §11).                                                          |
-  | 10  | Who the runtime is designed for        | **Agents and the webapp only.** No human-oriented features (text output, prompts, progress, notebook import) while building; re-evaluated after stage 5 (§7). |
-  | 11  | Query CLI?                             | **None.** One operation set exposed over HTTP and MCP; the binary has run modes only (`serve`, `mcp`, `fetch`) (§6, §7).                                      |
-  | 12  | Where agents reach MCP                 | **Hosted and local.** Remote MCP endpoint on `serve` at catalog.swecov.se; `reg-meta mcp` over stdio for offline use and private steward catalogs (§7).       |
+  | #   | Question                               | Decision                                                                                                                                                                                                                       |
+  | --- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+  | 1   | Where are catalog facts resolved? (§3) | **Compiled in the build**, in the derive step (§4). Reverses "No state/window resolution is compiled" in `reg_meta/DESIGN.md`.                                                                                                 |
+  | 2   | What serves the webapp API? (§6)       | **Rust server** (`reg-meta serve`). The FastAPI backend is deleted in stage 4.                                                                                                                                                 |
+  | 3   | `reg_schema`? (§5)                     | **Merged into `reg-core`.** The Python package is deleted in stage 4.                                                                                                                                                          |
+  | 4   | CLI v4 surface                         | **Superseded by decision 11.** Its settled rules carry over to the API (§7).                                                                                                                                                   |
+  | 5   | MCP server mode                        | **Yes. Now the primary agent interface** (decision 11), built with each operation slice in stage 3.                                                                                                                            |
+  | 6   | WASM in the SPA                        | **Yes, as the last stage** (stage 5).                                                                                                                                                                                          |
+  | 7   | Parallel per-register resolve (§11)    | **Yes**, after the family-scan fix lands.                                                                                                                                                                                      |
+  | 8   | Where this plan lives                  | **Its own root tracker**, with the governance rule amended to allow one tracker per concurrent refactor.                                                                                                                       |
+  | 9   | How to avoid full rebuilds per step    | **Base/derive split, pinned artifacts, three tiers with budgets, incremental base build** (§4, §11).                                                                                                                           |
+  | 10  | Who the runtime is designed for        | **Agents and the webapp only.** No human-oriented features (text output, prompts, progress, notebook import) while building; re-evaluated after stage 5 (§7).                                                                  |
+  | 11  | Query CLI?                             | **None.** One operation set exposed over HTTP and MCP; the binary has run modes only (`serve`, `mcp`, `fetch`) (§6, §7).                                                                                                       |
+  | 12  | Where agents reach MCP                 | **Hosted and local.** Remote MCP endpoint on `serve` at catalog.swecov.se; `reg-meta mcp` over stdio for offline use and private steward catalogs (§7).                                                                        |
+  | 13  | Tooling and versions                   | **Latest everywhere.** Newest stable versions of languages, crates, packages and SDKs, and modern methods; no compatibility work for older toolchains. Windows later, via hosted MCP unless a local binary is effortless (§8). |
