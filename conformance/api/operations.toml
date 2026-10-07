@@ -228,7 +228,7 @@ slice = "3b"
 http = ["GET /api/docs/doc/{identifier}"]
 tool = "docs"
 params = { identifier = "string", scope = "scope?" }
-result = "today's DocDetail, with its 500-character `excerpt`"
+result = "today's DocDetail, with its 500-character `excerpt` (the SPA) and the full `body` (agents; today's `docs get` output)"
 errors = ["docs_unavailable", "not_found"]
 
 [[operation]]
