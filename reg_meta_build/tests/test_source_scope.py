@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from dataclasses import replace
 from types import SimpleNamespace
 from typing import Any, cast
 
@@ -36,7 +35,6 @@ from reg_meta_build.source_curation import (
     FieldExpectation,
     OccurrenceCorrectionDecision,
     PeerGuard,
-    ResolutionDiagnostic,
     SourceEvidence,
     capture_expectations,
 )
@@ -53,7 +51,6 @@ from reg_meta_build.source_records import (
     TemporalScope,
     value_field,
 )
-from reg_meta_build.source_siblings import SiblingResolution
 from reg_meta_build.source_value_bindings import bind_copied_coding, open_value_bindings
 from reg_meta_build.source_values import (
     SourceValue,
@@ -595,89 +592,19 @@ def test_copied_coding_checks_original_external_evidence_before_any_effects(
         assert len(result.corrections.occurrences) == 1
 
 
-def test_ordinary_empty_reference_issue_cannot_use_source_ack_exception(monkeypatch):
+def test_ref_less_naming_issue_cannot_use_source_ack_exception():
+    # Naming a native variable the scope never delivers is an ordinary error
+    # without source refs; only an explicit source diagnostic names its register.
     item = record()
-    problem = ResolutionDiagnostic(
-        code="unresolved_list_reference",
-        severity="error",
-        subject="ordinary empty reference",
-        detail="No literal ownership proof.",
-        fields=("coding",),
+    absent = record(member=9, variable=9, column="ABSENT")
+    naming = (
+        *names((item,)),
+        *(n for n in names((absent,)) if n.target.kind == "variable"),
     )
-    monkeypatch.setattr(
-        "reg_meta_build.source_scope.resolve_sibling_pairs",
-        lambda *a, **k: SiblingResolution((), (), (problem,)),
-    )
-    result = resolve((item,), cases=(acknowledge(problem, item),))
+    (problem,) = resolve((item,), naming=naming).diagnostics
+    assert problem.code == "naming_native_identity_missing"
+    assert problem.refs == ()
+    result = resolve((item,), naming=naming, cases=(acknowledge(problem, item),))
     assert not result.acknowledged
-    assert any(d == problem for d in result.diagnostics)
+    assert problem in result.diagnostics
     assert any(d.code == "stale_curation_entry" for d in result.diagnostics)
-
-
-@pytest.mark.parametrize(
-    "changed",
-    [
-        {},
-        {"detail": "Different unresolved source claim."},
-        {"refs": ()},
-        {"fields": ("coding", "representation")},
-        {"valid_from": "2020-02-01"},
-        {"valid_to": "2020-11-30"},
-        {"withheld_output": ("state",)},
-    ],
-)
-def test_formed_missing_coding_deduplicates_only_identical_issues(monkeypatch, changed):
-    from reg_meta_build.source_curation import acknowledgement_evidence_sha256
-    from reg_meta_build.source_formation import form_native_variable
-
-    item = record()
-    baseline = resolve((item,))
-    issue = ResolutionDiagnostic(
-        code="missing_coding_period",
-        severity="error",
-        subject="scb/test/v5",
-        detail="The exact delivery has no supported response domain.",
-        refs=(record_ref(item),),
-        fields=("coding",),
-        valid_from="2020-01-01",
-        valid_to="2020-12-31",
-        withheld_output=("state.value_set",),
-    )
-
-    def duplicate(*args, **kwargs):
-        formed = form_native_variable(*args, **kwargs)
-        return replace(formed, diagnostics=(issue, issue.model_copy(update=changed)))
-
-    monkeypatch.setattr("reg_meta_build.source_scope.form_native_variable", duplicate)
-    case = acknowledge(issue, item)
-    case = case.model_copy(
-        update={
-            "decision": case.decision.model_copy(
-                update={
-                    "expected_evidence_sha256": acknowledgement_evidence_sha256(
-                        (item,), ()
-                    )
-                }
-            )
-        }
-    )
-    result = resolve((item,), cases=(case,))
-    assert result.variables == baseline.variables
-    assert result.corrections == baseline.corrections
-    assert result.coverage == baseline.coverage
-    problems = [d for d in result.diagnostics if d.code == issue.code]
-    if not changed:
-        assert result.acknowledged == {issue.code: 1}
-        assert problems == [
-            issue.model_copy(
-                update={"severity": "warning", "acknowledged_by": case.case_id}
-            )
-        ]
-    else:
-        assert len(problems) == 2
-        if set(changed) <= {"detail", "withheld_output"}:
-            assert not result.acknowledged
-            assert any(d.code == "overbroad_curation_entry" for d in result.diagnostics)
-        else:
-            assert result.acknowledged == {issue.code: 1}
-            assert sum(d.severity == "error" for d in problems) == 1

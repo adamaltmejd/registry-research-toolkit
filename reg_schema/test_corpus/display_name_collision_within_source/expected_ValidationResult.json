@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "display_name_collision",
+      "path": "/sources/0/bindings/1/display_name",
+      "message": "display_name 'LopNr_PersonNr' duplicates the one at /sources/0/bindings/0/display_name"
+    }
+  ]
+}

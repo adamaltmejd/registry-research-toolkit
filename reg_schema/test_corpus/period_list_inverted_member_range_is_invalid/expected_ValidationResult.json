@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_period",
+      "path": "/sources/0/period/0",
+      "message": "period list member 0 is an inverted range (starts 2020-01-01, ends 2010-12-31)"
+    }
+  ]
+}

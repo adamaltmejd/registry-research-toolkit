@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "missing_required_field",
+      "path": "/window/to",
+      "message": "window 'to' is required"
+    }
+  ]
+}

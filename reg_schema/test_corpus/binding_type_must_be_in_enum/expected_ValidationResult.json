@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_enum_value",
+      "path": "/sources/0/bindings/0/type",
+      "message": "binding type must be one of ['categorical', 'date', 'datetime', 'id', 'numeric', 'opaque']; got 'boolean'"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_period",
+      "path": "/sources/0/period/1",
+      "message": "period list members must be sorted ascending: member 1 starts 2005-01-01, before member 0 (2015-01-01)"
+    }
+  ]
+}

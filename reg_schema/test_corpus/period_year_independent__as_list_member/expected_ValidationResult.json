@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_period",
+      "path": "/sources/0/period/0",
+      "message": "period list member must be an int year, a period-token string, or a {'from','to'} range object (a nested list is not a segment)"
+    }
+  ]
+}

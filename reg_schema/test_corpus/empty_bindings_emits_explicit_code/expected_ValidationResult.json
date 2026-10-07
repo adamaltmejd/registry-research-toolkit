@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "empty_bindings",
+      "path": "/sources/0/bindings",
+      "message": "source must have at least one column"
+    }
+  ]
+}

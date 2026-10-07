@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "duplicate_source_name",
+      "path": "/sources/1/name",
+      "message": "source name 'lisa_2018' duplicates /sources/0"
+    }
+  ]
+}

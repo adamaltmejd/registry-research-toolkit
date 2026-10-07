@@ -182,30 +182,35 @@ Models are constructed at boundaries (API ingress) only *after* `validate_struct
 has passed; a Pydantic raise at that point signals validator/model drift, not user
 error.
 
+The validator still reads two kinds of *names* from the model layer so that kind of
+drift cannot arise: the `Literal` enum values (`get_args`) and each closed object's
+allowed keys (the models' wire keys, `alias or name`, with the top-level required and
+optional split taken from `is_required()`). A field added to a model is accepted by the
+validator with no second edit. Values are never validated through the models.
+
 ## Shared validator corpus (`test_corpus/`)
 
-`reg_schema/test_corpus/` is the single artifact that keeps the §6.8.1 structural rules
-behaving identically in the two runtimes that carry a copy of them — the canonical
-Python `validate_structural` and the SPA's TypeScript port. Each case is a directory
-containing an `input.json` (a `project_data.json` payload) and an
+`reg_schema/test_corpus/` pins the §6.8.1 structural rules as data, readable without
+Python: the canonical `validate_structural` must produce each case's expected result,
+and any other runtime that consumes `ValidationResult` reads the same files. Each case
+is a directory containing an `input.json` (a `project_data.json` payload) and an
 `expected_ValidationResult.json` (the validator output the structural rules must
 produce). See `test_corpus/README.md` for the directory layout, file formats, and the
 rule for adding cases.
 
-**Two** consumers run the structural corpus — the two runtimes that own a copy of the
-§6.8.1 rules:
+`reg_schema/tests/test_corpus.py` runs `validate_structural(input)` against every case
+and asserts an unordered-issue equality match with the decoded
+`expected_ValidationResult.json`. The SPA's test suite imports a case's expected JSON
+directly (`reg_webapp/frontend/src/lib/validation.test.ts`), so a drift in the issue
+shape fails both runtimes.
 
-- `reg_schema/tests/test_corpus.py` runs `validate_structural(input)` against every case
-  and asserts an unordered-issue equality match with the decoded
-  `expected_ValidationResult.json` — the single Python source of truth that the SPA
-  mirrors.
-- The SPA's TypeScript test suite imports the JSON as fixtures and runs its TS port of
-  the validator against them.
-
-The corpus grows alongside the validator: at least one well-formed empty-issues case to
-prove the format/harness/round-trip, plus one (or more) negative case per structural
-rule. Negative cases for §6.8.3 (reg_meta-backed semantic) live in their owning
-packages, not here — `reg_schema` only owns the structural layer's corpus.
+The corpus is the oracle for every structural rule: one or more cases per rule, positive
+and negative, each a whole payload with its complete expected issue set. The case
+directory name states the behavior. `reg_schema/tests/test_structural.py` keeps only
+what a JSON payload cannot carry (a non-dict `Mapping` input, the tuple return type,
+`unexpected_field` emission order). Negative cases for §6.8.3 (reg_meta-backed semantic)
+live in their owning packages, not here — `reg_schema` only owns the structural layer's
+corpus.
 
 ## Structural rules and issue codes
 

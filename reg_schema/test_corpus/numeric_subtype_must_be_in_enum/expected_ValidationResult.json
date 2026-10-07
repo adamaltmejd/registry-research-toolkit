@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_enum_value",
+      "path": "/sources/0/bindings/0/numeric_subtype",
+      "message": "numeric_subtype must be one of ['double', 'integer']; got 'biginteger'"
+    }
+  ]
+}
