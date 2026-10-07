@@ -629,6 +629,8 @@ The build track (section 11) runs alongside, independent of these stages.
 ### Stage 2 packages
 
 Each package follows the execution protocol (section 4). 2.2 starts after 2.1 merges.
+2.1 is gated by G0 and review only: G1 needs 2.2's standalone derive, and 2.1 changes
+nothing the reader reads.
 
 **2.1 Derive step and `resolver_column`.** Implements sections 3 and 4 ("Derive",
 steward ordering).
@@ -643,10 +645,12 @@ steward ordering).
   `VACUUM` and `validate_built_db`, so `build-db` and the synthetic fixtures get it.
   `extend_db` runs it after `write_data_warnings` and before `compile_holdings`.
   `holdings_compile.canonical_inventory` reads the table; it no longer imports
-  `Catalog`.
+  `Catalog`. An unslugged diagnostic build (`extend-db` with `skip_slugs`) clears any
+  inherited rows and skips derive; a complete artifact must have the table complete.
 - `validate_built_db`: `resolver_column` joins `_check_schema_shape`, and one `_check_`
-  covers its foreign keys and one canonical spelling per (variable, variant, lowercase
-  name), in the existing flat sequence.
+  in the existing flat sequence recomputes it and requires set-and-spelling equality
+  (the holdings validation recomputed it the same way before), plus foreign keys. A
+  corrupted artifact with a missing and a surplus row fails it.
 - Schema: builder `SCHEMA_VERSION` 9.1.0. The reader stays 9.0.0; it reads nothing new,
   and its gate (same major, minor ≥) admits 9.1.0. The reader's constant moves in the
   slice that first reads a derived table.
@@ -654,7 +658,9 @@ steward ordering).
   `reg_meta_build/src/reg_meta_build/{derive,resolved_catalog,extend_db, holdings_compile,holdings_validation,validate,db}.py`,
   the tests those touch, this file.
 - Out of scope: a standalone `derive` command (2.2); any other derived table.
-- Acceptance: G0 with no golden changed
+- Goldens: the schema version and generation ids in manifest goldens change, as a
+  reviewed metadata update; no query or holdings result changes.
+- Acceptance: G0 with no other golden changed
   (`uv run python -m pytest conformance reg_meta_build -n auto -q`); the steward fixture
   passes `validate_built_db(flavored=True)`; the PR records derive's wall time on the
   pinned global artifact (measured with a scratch script; parallelize per register only
@@ -666,10 +672,13 @@ contract, G1).
 - Changes: `reg-meta-build derive --base <db> --out <db>` copies a published artifact,
   derives, and stamps identity. Its input gate is same major, minor ≤ the builder's; its
   output is the builder's schema version. It rewrites `schema_version` and
-  `builder_commit`, keeps every other identity key, and recomputes `generation_id`; no
-  new generation key. Steward bases re-run the steward-scoped derive only; holdings are
-  not recompiled. Like every publishable build, it needs a clean tracked builder source,
-  so G1 runs on a committed tree.
+  `builder_commit`, records the input's generation as `derived_from_generation_id`,
+  keeps every other identity key, and recomputes `generation_id`, which includes
+  `derived_from_generation_id` when present. Two inputs that differ only in identity
+  stay distinct. For a steward input it recomputes `resolver_column` over the full
+  copied global-plus-overlay graph and leaves the physical holdings unchanged. Like
+  every publishable build, it needs a clean tracked builder source, so G1 runs on a
+  committed tree.
 - G1: the harness derives each pinned artifact once per (base SHA-256, builder source
   hash) into its cache; the baseline arm reads the originals and the checkout arm reads
   the derived copies.
