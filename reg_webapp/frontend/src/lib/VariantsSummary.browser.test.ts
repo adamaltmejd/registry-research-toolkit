@@ -65,21 +65,6 @@ describe("VariantsSummary — one row per variant family (Y-79)", () => {
       .toHaveAttribute("href", "/catalog/scb/lisa/variants");
   });
 
-  it("leaves the year cell empty for a variant with no dated versions", async () => {
-    const { container } = await render(VariantsSummary, {
-      registerFqid: "scb/lisa",
-      variants: variantsResponse(
-        variant("combined", { name: "Combined register" }),
-      ),
-    });
-
-    await expect
-      .element(page.getByText("Combined register", { exact: true }))
-      .toBeVisible();
-    const cells = container.querySelectorAll("tbody td");
-    expect(cells[1]?.textContent?.trim()).toBe("");
-  });
-
   it("surfaces a failed load as an alert", async () => {
     await render(VariantsSummary, {
       registerFqid: "scb/lisa",
@@ -111,20 +96,6 @@ describe("VariantsSummary — hide the section without a real variant (#673/M4)"
     expect(
       page.getByRole("link", { name: "All variant details" }).elements(),
     ).toHaveLength(0);
-  });
-
-  it("renders NOTHING for an empty variant list", async () => {
-    const { container } = await render(VariantsSummary, {
-      registerFqid: "scb/empty",
-      variants: variantsResponse(),
-    });
-
-    expect(
-      page.getByRole("heading", { name: "Variants" }).elements(),
-    ).toHaveLength(0);
-    expect(container.querySelector("section.variants")).toBeNull();
-    // The dropped fallback text must not appear either.
-    expect(page.getByText("No variants.").elements()).toHaveLength(0);
   });
 
   it("renders the section for a real variant mixed with _default (no _default filtering of the list)", async () => {

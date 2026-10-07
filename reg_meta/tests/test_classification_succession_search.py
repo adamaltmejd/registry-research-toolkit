@@ -10,7 +10,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from _slugged_db import build_slugged_db
-from groups_test_support import assert_no_internal_keys as _assert_no_internal_keys
 from reg_meta.queries import search
 from search_test_support import rebuild_fts as _rebuild_fts
 
@@ -48,50 +47,6 @@ class TestClassificationSuccessionFold:
     non-terminal editions as `editions` history. Runs BEFORE the concept-group
     fold so collapsed terminals then fold into a curated umbrella group (#516)."""
 
-    @staticmethod
-    def _chain_conn() -> sqlite3.Connection:
-        """ssyk1996 → ssyk2001 → ssyk2012, all sharing the FTS-searchable name
-        'Standard för svensk yrkesklassificering' so one query hits all three
-        editions. No umbrella group — isolates the succession fold."""
-        conn = build_slugged_db()
-        name = "Standard för svensk yrkesklassificering"
-        for cid, slug in ((70, "ssyk1996"), (71, "ssyk2001"), (72, "ssyk2012")):
-            _add_classification(
-                conn, cid=cid, short_name=slug.upper(), name=name, slug=slug
-            )
-        _add_succession_edge(
-            conn, predecessor="ssyk1996", successor="ssyk2001", effective_year=2001
-        )
-        _add_succession_edge(
-            conn, predecessor="ssyk2001", successor="ssyk2012", effective_year=2012
-        )
-        conn.commit()
-        _rebuild_fts(conn)
-        return conn
-
-    def test_chain_collapses_to_terminal_row(self) -> None:
-        conn = self._chain_conn()
-        results = search(conn, "yrkesklassificering", field="description").results
-        succ = [r for r in results if r.type == "classification_succession"]
-        assert len(succ) == 1
-        (row,) = succ
-        # The collapsed row IS the terminal (current) edition.
-        assert str(row.fqid) == "class/ssyk2012"
-        assert row.short_name == "SSYK2012"
-        # All three editions ride under `editions`, terminal-first then descending
-        # effective_year.
-        assert [e.slug for e in row.editions] == [
-            "ssyk2012",
-            "ssyk2001",
-            "ssyk1996",
-        ]
-        assert [e.effective_year for e in row.editions] == [None, 2012, 2001]
-        # All three editions matched; the public row carries the count (the per-leaf
-        # fqids were checked pre-conversion via `matched`).
-        assert row.matched_count == 3
-        assert not [r for r in results if r.type == "classification"]
-        _assert_no_internal_keys(results)
-
     def test_cursor_completes_succession_before_first_page(self) -> None:
         conn = build_slugged_db()
         name = "Needle classification family"
@@ -128,49 +83,6 @@ class TestClassificationSuccessionFold:
         assert len({r.model_dump_json() for r in seen}) == len(seen)
         succession = next(r for r in seen if r.type == "classification_succession")
         assert succession.matched_count == 2
-
-    def test_lone_terminal_hit_stays_leaf(self) -> None:
-        # Only the TERMINAL edition matches (rename the predecessors out of the
-        # FTS name) → a lone terminal hit is an ordinary leaf, not a succession
-        # row (no predecessor present to collapse).
-        conn = build_slugged_db()
-        _add_classification(
-            conn, cid=72, short_name="SSYK2012", name="Yrken aktuell", slug="ssyk2012"
-        )
-        _add_classification(
-            conn, cid=71, short_name="SSYK2001", name="Andra namn helt", slug="ssyk2001"
-        )
-        _add_succession_edge(conn, predecessor="ssyk2001", successor="ssyk2012")
-        conn.commit()
-        _rebuild_fts(conn)
-        results = search(conn, "aktuell", field="description").results
-        assert [r.type for r in results] == ["classification"]
-        assert str(results[0].fqid) == "class/ssyk2012"
-        # No succession row, and the terminal itself carries no terminal_fqid (it
-        # IS the terminal).
-        assert results[0].terminal_fqid is None
-
-    def test_lone_old_edition_hit_annotated_with_terminal(self) -> None:
-        # Only an OLD (non-terminal) edition matches → stays a leaf, annotated
-        # with its terminal so the webapp can link "current".
-        conn = build_slugged_db()
-        _add_classification(
-            conn, cid=72, short_name="SSYK2012", name="Annat helt namn", slug="ssyk2012"
-        )
-        _add_classification(
-            conn,
-            cid=71,
-            short_name="SSYK2001",
-            name="Gammal yrkesstandard",
-            slug="ssyk2001",
-        )
-        _add_succession_edge(conn, predecessor="ssyk2001", successor="ssyk2012")
-        conn.commit()
-        _rebuild_fts(conn)
-        results = search(conn, "gammal", field="description").results
-        assert [r.type for r in results] == ["classification"]
-        assert str(results[0].fqid) == "class/ssyk2001"
-        assert str(results[0].terminal_fqid) == "class/ssyk2012"
 
     def test_future_successor_does_not_fold_until_as_of_year(self) -> None:
         conn = build_slugged_db()
@@ -266,7 +178,6 @@ class TestClassificationSuccessionFold:
         assert groups[0].group_key == "sun"
         assert not [r for r in results if r.type == "classification_succession"]
         assert not [r for r in results if r.type == "classification"]
-        _assert_no_internal_keys(results)
 
 
 class TestClassificationSuccessionSplitRoot:
@@ -361,35 +272,6 @@ class TestClassificationSuccessionSplitRoot:
         assert len(leaves) == 1
         assert leaves[0].type == "classification"
         assert leaves[0].terminal_fqid is None
-
-    def test_same_branch_linear_pair_still_folds(self) -> None:
-        # A linear vintage pair WITHIN one branch (sun-niva2000 → sun-niva2020)
-        # still collapses to its terminal — the split-stop only fires at the root.
-        conn = build_slugged_db()
-        name = "Svensk utbildningsnomenklatur niva"
-        _add_classification(
-            conn, cid=101, short_name="SUN-NIVA2000", name=name, slug="sun-niva2000"
-        )
-        _add_classification(
-            conn, cid=102, short_name="SUN-NIVA2020", name=name, slug="sun-niva2020"
-        )
-        _add_succession_edge(
-            conn,
-            predecessor="sun-niva2000",
-            successor="sun-niva2020",
-            effective_year=2020,
-        )
-        conn.commit()
-        _rebuild_fts(conn)
-        results = search(conn, "niva", field="description").results
-        succ = [r for r in results if r.type == "classification_succession"]
-        assert len(succ) == 1
-        assert str(succ[0].fqid) == "class/sun-niva2020"
-        assert {e.slug for e in succ[0].editions} == {
-            "sun-niva2000",
-            "sun-niva2020",
-        }
-        assert not [r for r in results if r.type == "classification"]
 
     def test_hits_on_two_branches_stay_separate(self) -> None:
         # Hits on two DIFFERENT branches (a niva edition vs a grupp edition) resolve

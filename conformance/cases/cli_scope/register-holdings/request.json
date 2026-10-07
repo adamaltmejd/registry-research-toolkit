@@ -1,5 +1,5 @@
 {
-  "fixture": "reader",
+  "fixture": "reader/logical",
   "artifact": "steward",
   "argv": [
     "--scope",

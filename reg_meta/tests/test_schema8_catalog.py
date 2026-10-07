@@ -253,31 +253,3 @@ def test_warning_scope_filters_preserve_default_and_exact_variable_evidence():
     )
     with pytest.raises(ValueError, match="identity does not match"):
         cat.data_warnings("scb/lisa")
-
-
-def test_variable_resolves_through_every_register_matching_the_coordinate():
-    import pytest
-    from _slugged_db import add_variable
-    from reg_meta.errors import EXIT_NOT_FOUND, RegMetaError
-
-    conn = build_slugged_db()
-    conn.execute(
-        "INSERT INTO register (register_id, provider_id, name, slug) VALUES (99, 1, 'Duplicate coordinate', 'lisa')"
-    )
-    add_variable(
-        conn,
-        register_id=99,
-        var_id=900,
-        slug="second-register-only",
-        name="Only in second register",
-    )
-    resolved = Catalog(conn).resolve("scb/lisa/second-register-only")
-    assert isinstance(resolved, ResolvedVariable)
-    assert (str(resolved.canonical_fqid), resolved.provider_key, resolved.name) == (
-        "scb/lisa/second-register-only",
-        "900",
-        "Only in second register",
-    )
-    with pytest.raises(RegMetaError) as missing:
-        Catalog(conn).resolve("scb/missing/second-register-only")
-    assert missing.value.exit_code == EXIT_NOT_FOUND

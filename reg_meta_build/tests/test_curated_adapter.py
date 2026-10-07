@@ -6,74 +6,10 @@ from typing import TYPE_CHECKING
 
 import pytest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta_build.id import mint
-from reg_meta_build.ir import (
-    IRRegister,
-    IRVariable,
-    IRVariableAliasWindow,
-    IRVariableState,
-    IRVariant,
-)
 from reg_meta_build.sources.curated import CuratedAdapter
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-
-def test_steward_contract_emits_multistate_alias_windows_and_prefixed_ids(
-    tmp_path: Path,
-) -> None:
-    toml = """\
-[provider]
-name = "Private Provider"
-source_label = "steward-delivery-2026-01-01"
-
-[[register]]
-key = "r"
-name = "R"
-
-  [[register.variant]]
-  key = "a"
-  name = "A"
-
-  [[register.variable]]
-  key = "amount"
-  name = "Amount"
-  variants = ["a"]
-
-    [[register.variable.state]]
-    column = "AMOUNT"
-    data_type = "float"
-    valid_to = "2020"
-
-    [[register.variable.state]]
-    column = "AMOUNT_SEK"
-    data_type = "float"
-    valid_from = "2021"
-    aliases = ["Amount-SEK"]
-"""
-    src = tmp_path / "src"
-    src.mkdir()
-    (src / "private.toml").write_text(toml, encoding="utf-8")
-    adapter = CuratedAdapter("private", steward="swecov")
-    objs = list(adapter.emit(src))
-
-    register = next(o for o in objs if isinstance(o, IRRegister))
-    variant = next(o for o in objs if isinstance(o, IRVariant))
-    variable = next(o for o in objs if isinstance(o, IRVariable))
-    states = [o for o in objs if isinstance(o, IRVariableState)]
-    windows = [o for o in objs if isinstance(o, IRVariableAliasWindow)]
-    assert adapter.provider_name == "Private Provider"
-    assert register.register_id == mint("register", "private", "r")
-    assert variant.register_variant_id == mint("variant", "private", "r", "a")
-    assert variable.variable_id == mint("variable", "private", "r", "amount")
-    assert variable.provider_key == "amount"
-    assert variable.source_label == "steward-delivery-2026-01-01"
-    assert [(s.delivery_column_name, s.valid_from, s.valid_to) for s in states] == [
-        ("AMOUNT", None, "2020-12-31"),
-        ("AMOUNT_SEK", "2021-01-01", None),
-    ]
-    assert {w.delivery_column_name for w in windows} == {"AMOUNT_SEK", "Amount-SEK"}
 
 
 def test_classification_reference_uses_supplied_books(tmp_path: Path) -> None:

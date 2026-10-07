@@ -238,17 +238,6 @@ export function groupFilterKeys(
   ];
 }
 
-// `axisValues`/`memberAt` are GENERIC over the member type (#638 PR2a): the
-// register-browse `ConceptGroupRow` passes a `ConceptGroup` (members lack
-// coverage), the group SUBJECT page passes a `ConceptGroupNodeData` (members ADD
-// `coverage`). Both shapes carry `members: { facets: GroupFacetModel[] }[]`, and
-// these helpers read ONLY `.facets`, so the minimal constraint is enough — and
-// `memberAt` preserves the caller's member type so the subject page gets its
-// `coverage` field back on the matched cell.
-
-/** A group member as far as the facet-grid helpers care: just its facets. */
-type FacetedMember = { facets: GroupFacetModel[] };
-
 /** The stable `{#each}` key for a group member (#819). An FQID is NO LONGER
  * unique within a group: a multi-axis family can carry two members on ONE
  * variable (two delivery columns), so keying `{#each ... (m.fqid)}` would throw a
@@ -263,84 +252,6 @@ export function memberKey(m: {
   delivery_column?: string | null;
 }): string {
   return `${m.fqid}::${m.delivery_column ?? ""}`;
-}
-
-/** The distinct (value, label) pairs a group's members carry on `axis`,
- * value-sorted — the rows/columns of the facet picker. */
-export function axisValues(
-  group: { members: readonly FacetedMember[] },
-  axis: string,
-): { value: string; label: string }[] {
-  const seen = new Map<string, string>();
-  for (const m of group.members) {
-    const facet = m.facets.find((f) => f.axis === axis);
-    if (facet && !seen.has(facet.value)) {
-      seen.set(facet.value, facet.label);
-    }
-  }
-  return [...seen.entries()]
-    .map(([value, label]) => ({ value, label }))
-    .sort((a, b) => a.value.localeCompare(b.value));
-}
-
-/** The member at a facet-coordinate (one value per axis, in `axes` order), or
- * undefined for an empty cell (partial families: a missing month/vintage).
- * Generic over `M` so the matched member keeps its concrete type (the subject
- * page's `coverage` survives). */
-export function memberAt<M extends FacetedMember>(
-  group: { members: readonly M[] },
-  coords: { axis: string; value: string }[],
-): M | undefined {
-  return group.members.find((m) =>
-    coords.every((c) =>
-      m.facets.some((f) => f.axis === c.axis && f.value === c.value),
-    ),
-  );
-}
-
-/** A member's facet on `axis` — the (value, label) the N-axis navigator pill
- * renders (#819), or undefined when the member carries no facet there (a partial
- * family; the pill is then omitted for that axis). Hoisted here (out of
- * ConceptGroupView) so the shared ConceptGroupNavigator reuses it. */
-export function memberFacet(
-  member: FacetedMember,
-  axis: string,
-): GroupFacetModel | undefined {
-  return member.facets.find((f) => f.axis === axis);
-}
-
-/** Whether every member of a group occupies a DISTINCT facet-coordinate tuple
- * (one value per axis, in `axes` order; a missing facet is its own slot). #819:
- * the 2D matrix renders only ONE member per (row, col) cell — `memberAt` returns
- * the first match — so two members sharing a full coordinate vector silently DROP
- * one (and they escape `ungridded`, which catches only members MISSING an axis,
- * not collisions on present ones). The schema permits representation members
- * (`delivery_column`-distinguished, same coords) for ANY axes length > 1, so a
- * 2-axis group can collide too. The host uses this to route a colliding group
- * through the no-member-dropped navigator instead of the matrix. Coordinate-only
- * (NOT delivery-column): the navigator lists every member regardless, so the test
- * is purely "would the matrix lose a member". */
-export function membersHaveUniqueCoords(
-  group: { members: readonly FacetedMember[] },
-  axes: readonly GroupAxisModel[],
-): boolean {
-  const seen = new Set<string>();
-  for (const m of group.members) {
-    // Join the per-axis values with a control-char separator (and a distinct
-    // control-char marker for an absent facet) so two DIFFERENT coordinate
-    // vectors can never alias by concatenation — facet values are SCB
-    // codes/tokens, never control characters.
-    const coords = axes
-      .map(
-        (axis) => m.facets.find((f) => f.axis === axis.name)?.value ?? "\u0000",
-      )
-      .join("\u0001");
-    if (seen.has(coords)) {
-      return false;
-    }
-    seen.add(coords);
-  }
-  return true;
 }
 
 // ── Member-distinguishing qualifier (#670, graph-sourced #678) ───────────────

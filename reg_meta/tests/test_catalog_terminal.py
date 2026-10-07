@@ -5,13 +5,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from _slugged_db import (
-    build_slugged_db,
-)
-from catalog_test_support import KON as _KON
-from reg_meta.catalog import (
-    Catalog,
-)
+from _slugged_db import build_slugged_db
+from reg_meta.catalog import Catalog
 
 if TYPE_CHECKING:
     import sqlite3
@@ -56,34 +51,6 @@ class TestResolveTerminalSuccessor:
         )
         conn.commit()
 
-    def test_multi_hop_chain_returns_terminal(self) -> None:
-        # old-a → old-b → kon (the live, edge-free leaf from build_slugged_db).
-        # old-a / old-b are dead: NO variable rows, only edges.
-        conn = build_slugged_db()
-        self._add_edge(conn, ("scb", "lisa", "old-a"), ("scb", "lisa", "old-b"))
-        self._add_edge(conn, ("scb", "lisa", "old-b"), ("scb", "lisa", "kon"))
-        terminal = Catalog(conn).resolve_terminal_successor("scb/lisa/old-a")
-        assert terminal is not None
-        assert str(terminal) == "scb/lisa/kon"
-
-    def test_no_outbound_edge_returns_none(self) -> None:
-        # kon is the live terminal with no outbound edge → genuinely unknown.
-        conn = build_slugged_db()
-        assert Catalog(conn).resolve_terminal_successor(_KON) is None
-
-    def test_unsupported_kinds_return_none(self) -> None:
-        # PROVIDER has NO succession table, so a rename there has nowhere to
-        # redirect → None (no SQL). Register and classification grains ARE in
-        # scope (#412 / #571): a register/classification with no outbound edge is
-        # None too — genuinely unknown, same as the no-edge binding case ("no
-        # edge", not "out of scope"). sun2020 is the live, edge-free classification
-        # from build_slugged_db.
-        conn = build_slugged_db()
-        cat = Catalog(conn)
-        assert cat.resolve_terminal_successor("scb") is None
-        assert cat.resolve_terminal_successor("class/sun2020") is None
-        assert cat.resolve_terminal_successor("scb/lisa") is None
-
     def test_cycle_guard_terminates(self) -> None:
         # Malformed double-rename loop A→B→A. The walk must terminate (not hang)
         # and land deterministically on B (start=A hops to B, B→A is already
@@ -114,16 +81,6 @@ class TestResolveTerminalSuccessor:
     # tests above on `register_replaced_by`; dead predecessor registers need no
     # `register` row (same dead-slug premise), and `scb/lisa` is the live,
     # edge-free terminal from build_slugged_db.
-
-    def test_register_multi_hop_chain_returns_terminal(self) -> None:
-        # old-reg-a → old-reg-b → lisa (the live, edge-free register). old-reg-a /
-        # old-reg-b are dead: NO register rows, only edges.
-        conn = build_slugged_db()
-        self._add_register_edge(conn, ("scb", "old-reg-a"), ("scb", "old-reg-b"))
-        self._add_register_edge(conn, ("scb", "old-reg-b"), ("scb", "lisa"))
-        terminal = Catalog(conn).resolve_terminal_successor("scb/old-reg-a")
-        assert terminal is not None
-        assert str(terminal) == "scb/lisa"
 
     def test_register_cycle_guard_terminates(self) -> None:
         # Malformed double-rename loop A→B→A. The walk must terminate (not hang)

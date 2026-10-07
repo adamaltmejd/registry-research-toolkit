@@ -1,36 +1,13 @@
 """Coverage aggregates in the catalog listing payloads (#351).
 
 Against the slugged ``catalog_db`` fixture: scb/lisa/kon (one open-ended state),
-scb/rams (syss one open-ended state; inkjan/inkfeb stateless). Asserts the
-additive `coverage` objects on the provider-children (register nodes) and
-register-children (binding nodes), including the open-ended and stateless cases.
+scb/rams (inkjan/inkfeb stateless). Asserts the additive `coverage` objects on
+the register-children (binding nodes), open-ended and stateless. The register
+coverage on provider children is pinned by
+``conformance/cases/http_catalog/provider-register-coverage``.
 """
 
 from __future__ import annotations
-
-import pytest
-from fastapi.testclient import TestClient
-from reg_webapp.app import create_app
-
-
-@pytest.fixture
-def client(catalog_db):
-    with TestClient(create_app()) as c:
-        yield c
-
-
-def test_provider_children_carry_register_coverage(client):
-    body = client.get("/api/catalog/scb").json()
-    by_fqid = {c["fqid"]: c for c in body["children"]}
-    lisa = by_fqid["scb/lisa"]["coverage"]
-    # kon + lonfink (merged monthly family, #319) + forsamling (many-state, Y-46)
-    # + lan (interrupted delivery, Y-109) + forvink-ers (rename chain, Y-109)
-    assert lisa["variable_count"] == 5
-    assert lisa["open_ended"] is True  # kon state is open-ended
-    assert lisa["coverage_to"] is None
-    rams = by_fqid["scb/rams"]["coverage"]
-    # syss + syss-kv (the quarterly-only variable, Y-82) + inkjan + inkfeb
-    assert rams["variable_count"] == 4
 
 
 def test_register_children_carry_variable_coverage(client):
@@ -52,10 +29,3 @@ def test_stateless_variable_coverage_is_zero(client):
         assert cov["coverage_from"] is None
         assert cov["coverage_to"] is None
         assert cov["open_ended"] is False
-
-
-def test_variants_ref_child_has_no_coverage(client):
-    # The variants-ref child is not a binding — it carries no coverage field.
-    body = client.get("/api/catalog/scb/lisa").json()
-    ref = next(c for c in body["children"] if c["kind"] == "variants-ref")
-    assert "coverage" not in ref

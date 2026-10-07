@@ -1,0 +1,6 @@
+interface:
+  display_name: "Registry Test Audit"
+  short_description: "Gate test changes and prune tests that fail the policy"
+  default_prompt: "Use $test-audit to judge this test change, or to sweep a package's tests against the Testing policy."
+policy:
+  allow_implicit_invocation: true

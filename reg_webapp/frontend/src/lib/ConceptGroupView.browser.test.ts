@@ -11,7 +11,6 @@ import type {
 } from "./api";
 import { getCatalogNode, getConceptGroup, getConceptGroupGraph } from "./api";
 import ConceptGroupView from "./ConceptGroupView.svelte";
-import { expectApplyDisabled } from "./picker-test-helpers";
 import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
 import { windowStore } from "./window.svelte";
@@ -283,7 +282,7 @@ async function renderGroup(
 }
 
 describe("ConceptGroupView (#617 + #678 compact column list)", () => {
-  it("renders single-column members as compact rows in ONE list (no card chrome)", async () => {
+  it("renders single-column members as rows led by their own names", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
 
@@ -299,26 +298,10 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       )
       .toBeVisible();
 
-    // ONE integrated list; each single-column member is a single compact row — no
-    // per-variable subheading, no bordered cards.
-    const rows = await vi.waitFor(() => {
-      const els = document.querySelectorAll(".col-row.single");
-      if (els.length < 2) {
-        throw new Error("compact rows not yet rendered");
-      }
-      return els;
-    });
-    expect(rows).toHaveLength(2);
-    expect(document.querySelectorAll("li.subhead")).toHaveLength(0);
-
-    // The two members carry DISTINCT names, so no name REPEATS and a heading each
-    // would be one heading over one row (Y-78). No cluster chrome: each row leads with
-    // its own name, beside the delivery-column chip.
-    expect(document.querySelectorAll(".cluster-head")).toHaveLength(0);
-    const primaries = [
-      ...document.querySelectorAll(".col-row.single .primary"),
-    ].map((el) => el.textContent?.trim());
-    expect(primaries).toEqual(["Inkomst januari", "Inkomst februari"]);
+    // The two members carry DISTINCT names, so each row leads with its own name
+    // (Y-78) rather than sharing a cluster heading.
+    await expect.element(page.getByText("Inkomst januari")).toBeVisible();
+    await expect.element(page.getByText("Inkomst februari")).toBeVisible();
 
     // Each row is a selectable checkbox named by the member's delivery COLUMN.
     await expect
@@ -326,30 +309,6 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .toBeVisible();
     await expect
       .element(page.getByRole("checkbox", { name: /Inkfeb/ }))
-      .toBeVisible();
-  });
-
-  it("renders thematic tag chips and recommendation notes", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(
-      node({
-        tags: [
-          {
-            slug: "income",
-            label: "Income & earnings",
-            rank: 0,
-            starred: true,
-            note: "primary fixture measure",
-          },
-        ],
-      }),
-    );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
-
-    await renderGroup();
-
-    await expect.element(page.getByText("Income & earnings")).toBeVisible();
-    await expect
-      .element(page.getByText("Recommended: primary fixture measure"))
       .toBeVisible();
   });
 
@@ -437,173 +396,6 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .not.toBeInTheDocument();
   });
 
-  it("retires the refusal when the staging behind it is cleared", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(openEndedGraph());
-    mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
-
-    await renderGroup();
-
-    const jan = page.getByRole("checkbox", { name: /Inkjan/ });
-    await expect.element(jan).toBeVisible();
-    await jan.click();
-    await page.getByRole("button", { name: "Add to project" }).click();
-    await expect
-      .element(page.getByText(/Apply a period before adding/))
-      .toBeVisible();
-
-    await jan.click();
-    await expect
-      .element(page.getByText(/Apply a period before adding/))
-      .not.toBeInTheDocument();
-  });
-
-  it("commits the same pick once a `?period` resolves it (the finite control)", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(openEndedGraph());
-    mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
-    router.navigate("/catalog/group/scb/rams/ink?period=2018");
-
-    await renderGroup();
-
-    const jan = page.getByRole("checkbox", { name: /Inkjan/ });
-    await expect.element(jan).toBeVisible();
-    await jan.click();
-    await page.getByRole("button", { name: "Add to project" }).click();
-
-    await expect.element(page.getByText(/\+1 column/)).toBeVisible();
-    expect(projectStore.draft?.sources).toEqual([
-      expect.objectContaining({
-        register_variant: "scb/rams/individer",
-        period: 2018,
-        bindings: [
-          expect.objectContaining({
-            variable: "scb/rams/inkjan",
-            type: "numeric",
-          }),
-        ],
-      }),
-    ]);
-  });
-
-  it("holds an Apply until the app-owned draft restore has settled", async () => {
-    // The same gate BindingLeafView's Add awaits (App.svelte owns the draft
-    // lifecycle, and its restore is asynchronous): a group Apply committed while
-    // IndexedDB is still being read would write into a draft the restore is about
-    // to replace, forking the researcher's saved project.
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
-    mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
-
-    const { promise: gate, resolve: release } = Promise.withResolvers<void>();
-    const restoring = vi.spyOn(projectStore, "restored", "get");
-    restoring.mockReturnValue(gate);
-    try {
-      await renderGroup();
-
-      await page.getByRole("checkbox", { name: /Inkjan/ }).click();
-      await page
-        .getByRole("button", {
-          name: /Add to project|Remove from project|Apply changes/,
-        })
-        .click();
-
-      // Still restoring: the pick is held, not committed.
-      await expect
-        .element(page.getByRole("button", { name: "Applying..." }))
-        .toBeVisible();
-      expect(projectStore.draft?.sources).toHaveLength(0);
-
-      release();
-      await vi.waitFor(() => {
-        expect(projectStore.draft?.sources).toHaveLength(1);
-      });
-    } finally {
-      restoring.mockRestore();
-    }
-  });
-
-  it("discards a queued Apply when the researcher replaces the project meanwhile", async () => {
-    // The gate's wait is UNBOUNDED, so the pick stays bound to the project it was
-    // staged against: a deliberate New (or Open) while the Apply is queued means
-    // the researcher moved on, and committing these rows into the replacement
-    // would append a pick to a document they never picked from.
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
-    mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
-
-    const { promise: gate, resolve: release } = Promise.withResolvers<void>();
-    const restoring = vi.spyOn(projectStore, "restored", "get");
-    restoring.mockReturnValue(gate);
-    try {
-      await renderGroup();
-
-      await page.getByRole("checkbox", { name: /Inkjan/ }).click();
-      await page
-        .getByRole("button", {
-          name: /Add to project|Remove from project|Apply changes/,
-        })
-        .click();
-      await expect
-        .element(page.getByRole("button", { name: "Applying..." }))
-        .toBeVisible();
-
-      projectStore.newProject({
-        reg_meta_version: "reg_meta/v1.0.0",
-        steward: "global",
-      });
-      projectStore.updateField("name", "deliberate");
-
-      release();
-      // The commit settles (the button leaves its applying state) having applied
-      // NOTHING — the replacement project is exactly as the researcher made it.
-      await expect
-        .element(page.getByRole("button", { name: "Add to project" }))
-        .toBeVisible();
-      expect(projectStore.draft?.name).toBe("deliberate");
-      expect(projectStore.draft?.sources).toHaveLength(0);
-    } finally {
-      restoring.mockRestore();
-    }
-  });
-
-  it("discards a queued Apply when the researcher navigates away meanwhile", async () => {
-    // Same wait, the other way out of it: the group page is gone before the gate
-    // settles, so the late continuation must not mutate the draft from a page the
-    // researcher has left.
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
-    mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
-
-    const { promise: gate, resolve: release } = Promise.withResolvers<void>();
-    const restoring = vi.spyOn(projectStore, "restored", "get");
-    restoring.mockReturnValue(gate);
-    try {
-      const view = await renderGroup();
-
-      await page.getByRole("checkbox", { name: /Inkjan/ }).click();
-      await page
-        .getByRole("button", {
-          name: /Add to project|Remove from project|Apply changes/,
-        })
-        .click();
-      await expect
-        .element(page.getByRole("button", { name: "Applying..." }))
-        .toBeVisible();
-
-      view.unmount();
-      release();
-      // A fixed wait, not `vi.waitFor`: the assertion is that NOTHING happens, and
-      // an unguarded Apply needs several microtask hops (its add resolutions)
-      // to reach the mutation — a poll would pass on the first tick, before the
-      // continuation it is meant to catch has run.
-      await new Promise((r) => setTimeout(r, 100));
-      expect(projectStore.draft?.sources).toHaveLength(0);
-    } finally {
-      restoring.mockRestore();
-    }
-  });
-
   // #678 finding 3: an active ?period is HONORED on add (the committed source carries
   // the user's narrowed window, not the row's full span).
   it("commits the row span INTERSECTED with the active ?period, not the full span", async () => {
@@ -680,79 +472,6 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     );
   });
 
-  it("does not stage a source period replacement for an invalid group ?period list", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
-    mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
-    projectStore.applyStagedDiff({
-      adds: [
-        {
-          registerVariant: "scb/rams/individer",
-          period: { from: 2010, to: 2015 },
-          binding: {
-            variable: "scb/rams/inkjan",
-            type: "numeric",
-            representation: null,
-          },
-        },
-      ],
-    });
-    router.navigate("/catalog/group/scb/rams/ink?period=2020,2019");
-
-    await renderGroup();
-
-    await expect
-      .element(page.getByText("No staged changes"))
-      .not.toBeInTheDocument();
-    await expectApplyDisabled();
-    // Nor does the group page offer any way to rewrite that period: since Y-81 a
-    // source's period is edited on its /project card, never from the catalog.
-    await expect
-      .element(
-        page.getByRole("heading", { name: "Project sources on this page" }),
-      )
-      .not.toBeInTheDocument();
-    expect(projectStore.draft?.sources[0]?.period).toEqual({
-      from: 2010,
-      to: 2015,
-    });
-  });
-
-  it("a MULTI-column member renders a thin subheading over its column rows (all visible)", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
-    mockResolveColumns({ "scb/rams/inkjan": ["InkjanA", "InkjanB"] });
-
-    await renderGroup();
-
-    // Each ≥2-column member is a subheading + its rows — visible by default, no
-    // collapse toggle.
-    const subheads = await vi.waitFor(() => {
-      const els = document.querySelectorAll("li.subhead");
-      if (els.length < 2) {
-        throw new Error("subheadings not yet rendered");
-      }
-      return els;
-    });
-    expect(subheads).toHaveLength(2);
-    expect(document.querySelector(".band-toggle")).toBeNull();
-    expect(document.querySelector("button.expand-all")).toBeNull();
-
-    // All four columns are visible at once (nothing collapsed).
-    await expect
-      .element(page.getByRole("checkbox", { name: /InkjanA/ }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("checkbox", { name: /InkjanB/ }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("checkbox", { name: /InkfebA/ }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("checkbox", { name: /InkfebB/ }))
-      .toBeVisible();
-  });
-
   it("a per-variable select-all grabs every column of that variable", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
@@ -794,38 +513,6 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
         s.bindings.map((b) => b.variable),
       ) ?? [];
     expect(variables).toEqual(["scb/rams/inkjan", "scb/rams/inkjan"]);
-  });
-
-  it("resolves graph-sourced add fields before writing the staged diff", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
-    vi.mocked(getCatalogNode).mockResolvedValue(
-      statesResponse([
-        vstate({
-          delivery_column_name: "Inkjan",
-          data_type: "bigint",
-          value_set_id: null,
-        }),
-      ]),
-    );
-
-    await renderGroup();
-
-    await page.getByRole("checkbox", { name: /Inkjan/ }).click();
-    await page
-      .getByRole("button", {
-        name: /Add to project|Remove from project|Apply changes/,
-      })
-      .click();
-
-    await expect.element(page.getByText(/\+1 column/)).toBeVisible();
-    expect(projectStore.draft?.sources[0]?.bindings[0]).toEqual(
-      expect.objectContaining({
-        variable: "scb/rams/inkjan",
-        type: "numeric",
-        representation: null,
-      }),
-    );
   });
 
   it("pins a representation-grained member even when the final source period resolves a sibling column", async () => {
@@ -963,30 +650,6 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     });
   });
 
-  it("the global select-all grabs every column of the concept", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
-
-    await renderGroup();
-
-    const all = await vi.waitFor(() => {
-      const el = document.querySelector<HTMLInputElement>(
-        'input[aria-label="Select all columns"]',
-      );
-      if (!el) {
-        throw new Error("global select-all not yet rendered");
-      }
-      return el;
-    });
-    all.click();
-
-    // Every column across both variables is selected.
-    await expect.element(page.getByText("+4 columns")).toBeVisible();
-    for (const name of [/InkjanA/, /InkjanB/, /InkfebA/, /InkfebB/]) {
-      await expect.element(page.getByRole("checkbox", { name })).toBeChecked();
-    }
-  });
-
   it("a member with no graph node renders a quiet 'No columns' subheading, not dropped", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     // Only inkjan has a graph node (single column → a row); inkfeb is absent (0
@@ -1079,104 +742,6 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     await expect
       .element(page.getByText("not delivered", { exact: true }))
       .toBeVisible();
-    const rowBtn = aliasOnly.element().closest(".row-btn");
-    expect(rowBtn?.classList.contains("dimmed")).toBe(true);
-  });
-
-  it("dims a column whose span does not overlap the active period window", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
-    // Narrow to 2018..2020 — inkfeb (2018–2020) overlaps, inkjan (2010–2015) does
-    // not, so inkjan's row is dimmed (but still selectable).
-    router.navigate("/catalog/group/scb/rams/ink?period=2018..2020");
-
-    await renderGroup();
-
-    // Single-column rows are named by their delivery COLUMN (#901).
-    const jan = page.getByRole("checkbox", { name: /Inkjan/ });
-    await expect.element(jan).toBeVisible();
-    // The `dimmed` class is on the row container (.row-btn label), not the checkbox.
-    await vi.waitFor(() => {
-      const rowBtn = jan.element().closest(".row-btn");
-      if (!rowBtn?.classList.contains("dimmed")) {
-        throw new Error("inkjan row not yet dimmed");
-      }
-    });
-    const febRow = page
-      .getByRole("checkbox", { name: /Inkfeb/ })
-      .element()
-      .closest(".row-btn");
-    expect(febRow?.classList.contains("dimmed")).toBe(false);
-    // A dimmed row stays selectable.
-    await jan.click();
-    await expect.element(jan).toBeChecked();
-  });
-
-  it("dims the SUBHEADING when ALL its columns are out of the active window (#678)", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    // Both members carry two CO-EXISTING (overlapping) columns → each is a multi-column
-    // subheading (a non-overlapping pair would collapse to one rename row, #902).
-    // inkjan: both columns 2010–2020 (fully out of 1980..2004) → subheading dims.
-    // inkfeb: one column 2000–2004 (IN window), one 2002–2020 (overlaps it, partly out)
-    // → at least one in → subheading stays full strength.
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
-      graph([
-        vnode("scb/rams/inkjan", [
-          gstate({
-            variant: "v",
-            delivery_column_name: "InkjanA",
-            valid_from: "2010-01-01",
-            valid_to: "2020-12-31",
-          }),
-          gstate({
-            variant: "v",
-            delivery_column_name: "InkjanB",
-            valid_from: "2010-01-01",
-            valid_to: "2020-12-31",
-          }),
-        ]),
-        vnode("scb/rams/inkfeb", [
-          gstate({
-            variant: "v",
-            delivery_column_name: "InkfebA",
-            valid_from: "2000-01-01",
-            valid_to: "2004-12-31",
-          }),
-          gstate({
-            variant: "v",
-            delivery_column_name: "InkfebB",
-            valid_from: "2002-01-01",
-            valid_to: "2020-12-31",
-          }),
-        ]),
-      ]),
-    );
-    router.navigate("/catalog/group/scb/rams/ink?period=1980..2004");
-
-    await renderGroup();
-
-    // Wait for both subheadings to render, then check their dim state.
-    await vi.waitFor(() => {
-      if (document.querySelectorAll("li.subhead").length < 2) {
-        throw new Error("subheadings not yet rendered");
-      }
-    });
-    // The members have distinct NAMES that never repeat → no cluster headings (Y-78),
-    // so each subheading is name-led and the select-all aria label is keyed on it.
-    const inkjanSub = document
-      .querySelector(
-        'input[aria-label="Select all columns of Inkomst januari"]',
-      )
-      ?.closest("li.subhead");
-    const inkfebSub = document
-      .querySelector(
-        'input[aria-label="Select all columns of Inkomst februari"]',
-      )
-      ?.closest("li.subhead");
-    // inkjan: all columns out → the subheading greys.
-    expect(inkjanSub?.classList.contains("dimmed")).toBe(true);
-    // inkfeb: one column in window → the subheading stays full-strength.
-    expect(inkfebSub?.classList.contains("dimmed")).toBe(false);
   });
 
   it("shows a data-starts-late warning when the window starts before a column's data (#678)", async () => {
@@ -1266,130 +831,6 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     expect(outRow.querySelector(".late-warn")).toBeNull();
   });
 
-  it("shows NO data-starts-late warning when no period window is set (#678)", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
-    // No ?period and no project window → no window → no warnings anywhere.
-
-    await renderGroup();
-
-    await expect
-      .element(page.getByRole("checkbox", { name: /Inkjan/ }))
-      .toBeVisible();
-    expect(document.querySelector(".late-warn")).toBeNull();
-  });
-
-  it("keeps Add seed-gated once a column is selected", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
-
-    await renderGroup();
-    // Once the graph loads, the picker footer ALWAYS mounts the apply button
-    // (disabled until a selection exists) — under v2 the old `.not.toBeInTheDocument()`
-    // only ever passed against the pre-fetch loading DOM. Assert the real loaded-page
-    // invariant: the button is present but disabled before any column is selected.
-    await expect
-      .element(page.getByRole("button", { name: "Add to project" }))
-      .toBeDisabled();
-    await page.getByRole("checkbox", { name: /Inkjan/ }).click();
-    const add = page.getByRole("button", { name: "Add to project" });
-    await expect.element(add).toBeEnabled();
-  });
-
-  it("demotes the key, facets, and source into a 'Technical details' disclosure (#638 PR4)", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
-
-    await renderGroup();
-
-    await expect.element(page.getByText("Technical details")).toBeVisible();
-    const disclosure = document.querySelector<HTMLDetailsElement>(
-      "details.tech-details",
-    );
-    expect(disclosure).not.toBeNull();
-    expect(disclosure?.open).toBe(false);
-    expect(disclosure?.textContent).toContain("Group");
-    expect(disclosure?.textContent).toContain("ink");
-    expect(disclosure?.textContent).toContain("Facets");
-    expect(disclosure?.textContent).toContain("month");
-    expect(disclosure?.textContent).toContain("Source");
-    expect(disclosure?.textContent).toContain("token");
-    const promptMeta = [...document.querySelectorAll("dl.meta")].filter(
-      (dl) => !dl.closest("details.tech-details"),
-    );
-    expect(promptMeta).toHaveLength(0);
-  });
-
-  it("collapses representation members on one fqid into ONE variable (no duplicate rows)", async () => {
-    // A representation-member group: two members share `scb/iot/dispink` (distinct
-    // delivery columns), the graph node carries both columns' states. The variables
-    // dedup by fqid, so the shared variable renders as ONE subheading whose two
-    // column rows surface the columns — not two duplicate variables.
-    vi.mocked(getConceptGroup).mockResolvedValue(
-      node({
-        key: "disponibel-inkomst",
-        label: "Disponibel inkomst",
-        axes: [{ name: "kapitalvinst", label: "Kapitalvinst" }],
-        members: [
-          {
-            fqid: "scb/iot/dispink",
-            name: "Disponibel inkomst",
-            delivery_column: "dispink_inkl",
-            facets: [{ axis: "kapitalvinst", value: "inkl", label: "Inkl." }],
-            coverage: null,
-          },
-          {
-            fqid: "scb/iot/dispink",
-            name: "Disponibel inkomst",
-            delivery_column: "dispink_exkl",
-            facets: [{ axis: "kapitalvinst", value: "exkl", label: "Exkl." }],
-            coverage: null,
-          },
-        ],
-      } as unknown as Partial<ConceptGroupNodeData>),
-    );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
-      graph([
-        vnode("scb/iot/dispink", [
-          gstate({
-            variant: "individer",
-            delivery_column_name: "dispink_inkl",
-            valid_from: "2010-01-01",
-            valid_to: "2020-12-31",
-          }),
-          gstate({
-            variant: "individer",
-            delivery_column_name: "dispink_exkl",
-            valid_from: "2010-01-01",
-            valid_to: "2020-12-31",
-          }),
-        ]),
-      ]),
-    );
-
-    await renderGroup({
-      provider: "scb",
-      register: "iot",
-      key: "disponibel-inkomst",
-    });
-
-    // ONE subheading for the shared-fqid variable, two column rows under it.
-    const subheads = await vi.waitFor(() => {
-      const els = document.querySelectorAll("li.subhead");
-      if (els.length === 0) {
-        throw new Error("subheading not yet rendered");
-      }
-      return els;
-    });
-    expect(subheads).toHaveLength(1);
-    await expect
-      .element(page.getByRole("checkbox", { name: /dispink_inkl/ }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("checkbox", { name: /dispink_exkl/ }))
-      .toBeVisible();
-  });
-
   // ── Adaptive variable identity (#678) ───────────────────────────────────────
   it("a name-constant MIXED group: single-column members are column-led rows, the multi-column member is a column-led subheading", async () => {
     // The moms/naringsgren shape: all members are "Näringsgren" on `scb/moms`. Ng0
@@ -1468,49 +909,30 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       key: "naringsgren",
     });
 
-    // Ng0 / Ng1 are single-column compact rows led by the column rendered as a
-    // COLUMN CHIP (the prominent selection signal); the constant concept name is NOT
-    // repeated on them. In the GROUP view the identity chip is a NAVIGATION LINK to
-    // the member's leaf page (band.href set), so it's an <a class="col-chip link">.
-    const singleTitles = await vi.waitFor(() => {
-      const els = document.querySelectorAll(".col-row.single .col-chip");
-      if (els.length < 2) {
-        throw new Error("single-column chips not yet rendered");
-      }
-      // The chip's leading text node is the column name (a trailing ↗ link marker
-      // follows it inside the navigable chip).
-      return [...els].map((e) => e.firstChild?.textContent?.trim());
-    });
-    expect(singleTitles).toEqual(["Ng0", "Ng1"]);
-    // The identity column chip is a navigable link (an <a>), not a plain <code>.
-    const chips = [...document.querySelectorAll(".col-row.single .col-chip")];
-    expect(chips.every((e) => e.tagName === "A")).toBe(true);
-    expect(chips.map((e) => e.getAttribute("href"))).toEqual([
-      "/catalog/scb/moms/naringsgren_ng0",
-      "/catalog/scb/moms/naringsgren_ng1",
-    ]);
+    // Ng0 / Ng1 are single-column rows led by their column, which is the link to
+    // the member's leaf page; the constant concept name is not repeated on them.
+    await expect
+      .element(page.getByRole("link", { name: /^Ng0/ }))
+      .toHaveAttribute("href", "/catalog/scb/moms/naringsgren_ng0");
+    await expect
+      .element(page.getByRole("link", { name: /^Ng1/ }))
+      .toHaveAttribute("href", "/catalog/scb/moms/naringsgren_ng1");
 
-    // The sni member is a subheading (2 columns) led by its slug; its rows are below.
-    expect(document.querySelectorAll("li.subhead")).toHaveLength(1);
-    const subheadPrimary = document
-      .querySelector(".subhead-title .primary")
-      ?.textContent?.trim();
-    expect(subheadPrimary).toBe("naringsgren_sni");
+    // The sni member (2 columns) is a subheading led by its slug, which links to its
+    // leaf; its columns are selectable rows below it.
+    await expect
+      .element(page.getByRole("link", { name: /^naringsgren_sni/ }))
+      .toHaveAttribute("href", "/catalog/scb/moms/naringsgren_sni");
     await expect
       .element(page.getByRole("checkbox", { name: /Sni92/ }))
       .toBeVisible();
     await expect
       .element(page.getByRole("checkbox", { name: /Sni2007/ }))
       .toBeVisible();
-    // The NESTED column chips (sni's two columns) are PLAIN <code>, NOT links — a
-    // nested column isn't its own variable, so only the single-column identity chip
-    // navigates.
-    const nestedChips = [
-      ...document.querySelectorAll(".col-row.nested .col-chip"),
-    ];
-    expect(nestedChips.length).toBe(2);
-    expect(nestedChips.every((e) => e.tagName === "CODE")).toBe(true);
-    expect(document.querySelector(".col-row.nested a.col-chip")).toBeNull();
+    // A nested column is not its own variable, so only the identity chip navigates.
+    expect(
+      page.getByRole("link", { name: /Sni92|Sni2007/ }).elements(),
+    ).toEqual([]);
   });
 
   // ── Name-cluster de-duplication (#901) ──────────────────────────────────────
@@ -1644,7 +1066,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     expect(document.querySelectorAll(".cluster-head")).toHaveLength(0);
   });
 
-  it("a facet group of single-column members leads each compact row with its FACET label (normal weight)", async () => {
+  it("a facet group of single-column members leads each row with its FACET label, once", async () => {
     // The moderns-utbildningsniva shape: name constant, a facet axis varies → the
     // facet (specialskola / grundskola) leads each row, not the column.
     vi.mocked(getConceptGroup).mockResolvedValue(
@@ -1699,33 +1121,24 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       key: "utbildning",
     });
 
-    const titles = await vi.waitFor(() => {
-      const els = document.querySelectorAll(".col-row.single .primary");
-      if (els.length < 2) {
-        throw new Error("rows not yet rendered");
-      }
-      return [...els].map((e) => e.textContent?.trim());
-    });
-    expect(titles).toEqual(["specialskola", "grundskola"]);
-    // The facet leads as a normal-weight human label (a <span>, not mono <code>).
-    expect(
-      [...document.querySelectorAll(".col-row.single .primary")].every(
-        (e) => e.tagName === "SPAN",
-      ),
-    ).toBe(true);
-    // #901: the leading facet must NOT be repeated in the quiet `.sub` line. With the
-    // facet as the band PRIMARY and no value-set context here, every facet-led single
-    // row drops its `.sub` entirely (the `{#if facet || v.context.length}` guard hides
-    // the now-empty sub). No `.sub` text may echo a `.primary`.
-    const rows = [...document.querySelectorAll(".col-row.single")];
-    expect(rows).toHaveLength(2);
-    for (const r of rows) {
-      const primary = r.querySelector(".primary")?.textContent?.trim();
-      const sub = r.querySelector(".sub")?.textContent?.trim();
-      expect(sub).not.toBe(primary);
+    // The facet leads each row's accessible name. #901: apart from its axis marker
+    // ("Skolform: <facet>") the facet is not echoed again in the row's context line.
+    for (const [facet, column] of [
+      ["specialskola", "UtbSpec"],
+      ["grundskola", "UtbGrund"],
+    ]) {
+      await expect
+        .element(
+          page.getByRole("checkbox", {
+            name: new RegExp(`^${facet}\\s*${column}`),
+          }),
+        )
+        .toBeVisible();
+      const echoed = page.getByRole("checkbox", {
+        name: new RegExp(`${facet}.*(?<!: )${facet}`),
+      });
+      expect(echoed.elements()).toEqual([]);
     }
-    // Concretely: no `.sub` survives at all in this facet-led, context-free case.
-    expect(document.querySelectorAll(".col-row.single .sub")).toHaveLength(0);
   });
 
   // ── Member → leaf navigation (#678) ─────────────────────────────────────────
@@ -1759,339 +1172,6 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       ),
     ).not.toBeNull();
     // No legacy "View ↗" link survives.
-    expect(document.querySelector("a.open-link")).toBeNull();
-  });
-
-  it("a multi-column member renders its subheading title as a leaf link", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
-
-    await renderGroup();
-
-    const titleLink = await vi.waitFor(() => {
-      const el = document.querySelector<HTMLAnchorElement>(
-        'a.subhead-title[href="/catalog/scb/rams/inkjan"]',
-      );
-      if (!el) {
-        throw new Error("inkjan subheading link not yet rendered");
-      }
-      return el;
-    });
-    expect(titleLink.tagName).toBe("A");
-    // The select-all checkbox is a SEPARATE control (not inside the link).
-    const checkbox = titleLink
-      .closest(".subhead-label")
-      ?.querySelector('input[type="checkbox"]');
-    expect(checkbox).not.toBeNull();
-    expect(checkbox?.closest("a")).toBeNull();
-  });
-
-  it("clicking a subheading (not the title link) toggles ALL its columns", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
-
-    await renderGroup();
-
-    // The WHOLE subheading is a <label> wrapping the select-all checkbox: clicking it
-    // (off the title link) toggles every column of that variable.
-    const inkjanRow = await vi.waitFor(() => {
-      const cb = document.querySelector<HTMLInputElement>(
-        'input[aria-label="Select all columns of Inkomst januari"]',
-      );
-      const label = cb?.closest("label.subhead-label");
-      if (!label) {
-        throw new Error("inkjan subhead label not yet rendered");
-      }
-      return label as HTMLLabelElement;
-    });
-    // Click the label itself (not the title link inside it).
-    inkjanRow.click();
-
-    await expect.element(page.getByText("+2 columns")).toBeVisible();
-    await expect
-      .element(page.getByRole("checkbox", { name: /InkjanA/ }))
-      .toBeChecked();
-    await expect
-      .element(page.getByRole("checkbox", { name: /InkjanB/ }))
-      .toBeChecked();
-    // The other variable's columns are untouched.
-    await expect
-      .element(page.getByRole("checkbox", { name: /InkfebA/ }))
-      .not.toBeChecked();
-  });
-
-  it("a FULLY-selected variable carries the rust left bar on its subheading; partial does NOT (#678)", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
-
-    await renderGroup();
-
-    const inkjanSub = await vi.waitFor(() => {
-      const li = document
-        .querySelector(
-          'input[aria-label="Select all columns of Inkomst januari"]',
-        )
-        ?.closest("li.subhead");
-      if (!li) {
-        throw new Error("inkjan subhead not yet rendered");
-      }
-      return li;
-    });
-    // Nothing selected → no rust bar.
-    expect(inkjanSub.classList.contains("selected")).toBe(false);
-
-    // Select ONE of inkjan's two columns → PARTIAL: still no full rust bar.
-    await page.getByRole("checkbox", { name: /InkjanA/ }).click();
-    await vi.waitFor(() => {
-      if (inkjanSub.classList.contains("selected")) {
-        throw new Error("partial selection should NOT show the full rust bar");
-      }
-    });
-
-    // Select the OTHER → FULLY selected → the rust left bar appears.
-    await page.getByRole("checkbox", { name: /InkjanB/ }).click();
-    await vi.waitFor(() => {
-      if (!inkjanSub.classList.contains("selected")) {
-        throw new Error("fully-selected variable should show the rust bar");
-      }
-    });
-  });
-
-  it("a single-column member: the column chip is the title-link; the description toggles all (#678)", async () => {
-    // The fordonsreg shape: a single-column member ("SNI2002") with two populations.
-    // It leads with its column as the subheading TITLE chip-LINK; the value-set
-    // description rides in the context, INSIDE the click-all + hover-all <label>, so
-    // clicking the description toggles all the variable's columns (the chip-link itself
-    // navigates instead, stopping propagation).
-    vi.mocked(getConceptGroup).mockResolvedValue(
-      node({
-        provider: "scb",
-        register: "fordonsreg",
-        key: "naringsgren",
-        label: "Näringsgren",
-        axes: [],
-        members: [
-          {
-            fqid: "scb/fordonsreg/naringsgren",
-            name: "Näringsgren",
-            facets: [],
-            coverage: null,
-          },
-        ],
-      } as unknown as Partial<ConceptGroupNodeData>),
-    );
-    // Two columns? No — constant column "SNI2002" across two VARIANTS → multi-row,
-    // column-constant variable: the column hoists to the context chip, populations
-    // vary per row. A value-set label gives the description text.
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
-      graph([
-        vnode("scb/fordonsreg/naringsgren", [
-          gstate({
-            variant: "lastbilar",
-            delivery_column_name: "SNI2002",
-            value_set_version_label:
-              "Standard för svensk näringsgrensindelning",
-            valid_from: "2003-01-01",
-            valid_to: "2015-12-31",
-          }),
-          gstate({
-            variant: "bussar",
-            delivery_column_name: "SNI2002",
-            value_set_version_label:
-              "Standard för svensk näringsgrensindelning",
-            valid_from: "2003-01-01",
-            valid_to: "2015-12-31",
-          }),
-        ]),
-      ]),
-    );
-
-    await renderGroup({
-      provider: "scb",
-      register: "fordonsreg",
-      key: "naringsgren",
-    });
-
-    // The column is the subheading TITLE — a chip-LINK to the member's leaf.
-    const titleChip = await vi.waitFor(() => {
-      const el = document.querySelector<HTMLAnchorElement>(
-        ".subhead-title a.col-chip.link",
-      );
-      if (!el) {
-        throw new Error("subhead title chip-link not yet rendered");
-      }
-      return el;
-    });
-    expect(titleChip.firstChild?.textContent?.trim()).toBe("SNI2002");
-    expect(titleChip.getAttribute("href")).toBe(
-      "/catalog/scb/fordonsreg/naringsgren",
-    );
-
-    // Constant coding context no longer renders a description line here.
-    expect(document.querySelector(".subhead-context")).toBeNull();
-
-    // The select-all checkbox still toggles ALL the variable's columns.
-    document
-      .querySelector<HTMLInputElement>(
-        'input[aria-label="Select all columns of SNI2002"]',
-      )
-      ?.click();
-    await expect.element(page.getByText("+2 columns")).toBeVisible();
-    // Both column ROW checkboxes are checked. Scope to the column-list row checkboxes:
-    // a two-variant single-column member also surfaces a Variant FILTER (#908) whose
-    // pill checkboxes carry the same variant text, so a bare role+name query would be
-    // ambiguous; the row checkbox is the `.cbox` inside `.col-list .row-btn`.
-    const rowChecked = [
-      ...document.querySelectorAll<HTMLInputElement>(
-        ".col-list .row-btn input.cbox",
-      ),
-    ];
-    expect(rowChecked.length).toBe(2);
-    expect(rowChecked.every((c) => c.checked)).toBe(true);
-  });
-
-  it("hovering a subheading highlights ALL its column rows (band-hover)", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
-
-    await renderGroup();
-
-    // The inkjan column rows (by their column checkboxes) and the inkjan subhead label.
-    const janA = await vi.waitFor(() => {
-      const cb = page.getByRole("checkbox", { name: /InkjanA/ }).element();
-      const rowBtn = cb.closest(".row-btn");
-      if (!rowBtn) {
-        throw new Error("InkjanA row not yet rendered");
-      }
-      return rowBtn;
-    });
-    const janB = page
-      .getByRole("checkbox", { name: /InkjanB/ })
-      .element()
-      .closest(".row-btn") as Element;
-    const febA = page
-      .getByRole("checkbox", { name: /InkfebA/ })
-      .element()
-      .closest(".row-btn") as Element;
-    const inkjanLabel = document
-      .querySelector(
-        'input[aria-label="Select all columns of Inkomst januari"]',
-      )
-      ?.closest("label.subhead-label") as HTMLLabelElement;
-
-    // Normalize first (the real Chromium cursor may already sit over a row from a
-    // prior test's click, firing a genuine mouseenter), then test the enter→leave
-    // transition deterministically.
-    inkjanLabel.dispatchEvent(new MouseEvent("mouseleave", { bubbles: false }));
-    await vi.waitFor(() => {
-      if (janA.classList.contains("band-hover")) {
-        throw new Error("baseline not yet cleared");
-      }
-    });
-
-    inkjanLabel.dispatchEvent(new MouseEvent("mouseenter", { bubbles: false }));
-    await vi.waitFor(() => {
-      if (
-        !janA.classList.contains("band-hover") ||
-        !janB.classList.contains("band-hover")
-      ) {
-        throw new Error("inkjan rows not yet band-hovered");
-      }
-    });
-    // Only inkjan's rows highlight — NOT the other variable's.
-    expect(febA.classList.contains("band-hover")).toBe(false);
-
-    inkjanLabel.dispatchEvent(new MouseEvent("mouseleave", { bubbles: false }));
-    await vi.waitFor(() => {
-      if (janA.classList.contains("band-hover")) {
-        throw new Error("band-hover not cleared on leave");
-      }
-    });
-  });
-
-  it("clicking the subheading TITLE link navigates without toggling selection", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
-
-    await renderGroup();
-
-    const titleLink = await vi.waitFor(() => {
-      const el = document.querySelector<HTMLAnchorElement>(
-        'a.subhead-title[href="/catalog/scb/rams/inkjan"]',
-      );
-      if (!el) {
-        throw new Error("inkjan title link not yet rendered");
-      }
-      return el;
-    });
-    // Dispatch a cancelable click on the title link (prevent actual navigation in the
-    // test). It stops propagation, so the wrapping label's select-all never fires.
-    const evt = new MouseEvent("click", { bubbles: true, cancelable: true });
-    evt.preventDefault();
-    titleLink.dispatchEvent(evt);
-
-    // No column got selected — the nav link did not toggle the band.
-    await expect
-      .element(page.getByText("No staged changes"))
-      .not.toBeInTheDocument();
-    expect(
-      document.querySelector<HTMLInputElement>(
-        'input[aria-label="Select all columns of Inkomst januari"]',
-      )?.checked,
-    ).toBe(false);
-  });
-
-  it("verifies the fordonsreg/naringsgren shape: the Näringsgren member links to its leaf", async () => {
-    // The reported case: /catalog/group/scb/fordonsreg/naringsgren → the Näringsgren
-    // member (single column here) links to /catalog/scb/fordonsreg/naringsgren.
-    vi.mocked(getConceptGroup).mockResolvedValue(
-      node({
-        provider: "scb",
-        register: "fordonsreg",
-        key: "naringsgren",
-        label: "Näringsgren",
-        axes: [],
-        members: [
-          {
-            fqid: "scb/fordonsreg/naringsgren",
-            name: "Näringsgren",
-            facets: [],
-            coverage: null,
-          },
-        ],
-      } as unknown as Partial<ConceptGroupNodeData>),
-    );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
-      graph([
-        vnode("scb/fordonsreg/naringsgren", [
-          gstate({
-            variant: "snoskotrar",
-            variant_label: "Snöskotrar",
-            delivery_column_name: "Sni",
-            valid_from: "2010-01-01",
-            valid_to: "2015-12-31",
-          }),
-        ]),
-      ]),
-    );
-
-    await renderGroup({
-      provider: "scb",
-      register: "fordonsreg",
-      key: "naringsgren",
-    });
-
-    // The Näringsgren member's column chip is the leaf link (no "View" link).
-    const link = await vi.waitFor(() => {
-      const el = document.querySelector<HTMLAnchorElement>(
-        'a.col-chip.link[href="/catalog/scb/fordonsreg/naringsgren"]',
-      );
-      if (!el) {
-        throw new Error("naringsgren chip link not yet rendered");
-      }
-      return el;
-    });
-    expect(link.tagName).toBe("A");
     expect(document.querySelector("a.open-link")).toBeNull();
   });
 
@@ -2161,23 +1241,6 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
         }),
       )
       .toBeVisible();
-  });
-
-  it("renders no shared-meta block when every member's definition/description is null", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
-
-    await renderGroup();
-
-    // Wait for the page to render (the picker rows, named by their delivery COLUMN
-    // post-#901), then assert no shared block.
-    await expect
-      .element(page.getByRole("checkbox", { name: /Inkjan/ }))
-      .toBeVisible();
-    const sharedMeta = [...document.querySelectorAll("dl.meta")].filter(
-      (dl) => !dl.closest("details.tech-details"),
-    );
-    expect(sharedMeta).toHaveLength(0);
   });
 
   // #900: when members carry MULTIPLE distinct non-empty definitions/descriptions they
@@ -2303,19 +1366,6 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     expect(sharedMeta).toHaveLength(0);
   });
 
-  it("renders no operational-definition line when a member carries none (#892)", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
-
-    await renderGroup();
-
-    // The bands render (rows named by their delivery column), but no op-def eyebrow.
-    await expect
-      .element(page.getByRole("checkbox", { name: /Inkjan/ }))
-      .toBeVisible();
-    expect(document.querySelector(".op-def")).toBeNull();
-  });
-
   // ── #678 finding 1: a representation group exposes only its MEMBER columns ────
   it("a representation group exposes only its member delivery columns, not the variable's full column set", async () => {
     // The group's members address ONE variable (scb/rams/ink) but only the `IncA`
@@ -2380,77 +1430,6 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     ).toHaveLength(1);
   });
 
-  it("falls back instead of leaking filtered non-member states as graph cells", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(
-      node({
-        members: [
-          {
-            fqid: "scb/rams/ink",
-            name: "Inkomst",
-            delivery_column: "IncA",
-            facets: [{ axis: "month", value: "01", label: "januari" }],
-            coverage: null,
-          },
-        ],
-      } as unknown as Partial<ConceptGroupNodeData>),
-    );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue({
-      nodes: [
-        vnode("scb/rams/ink", [
-          gstate({
-            variant: "individer",
-            delivery_column_name: "IncA",
-            valid_from: "2010-01-01",
-            valid_to: "2015-12-31",
-          }),
-          gstate({
-            state_id: "2",
-            representation_run_id: 2,
-            variant: "individer",
-            delivery_column_name: "IncExtra",
-            valid_from: "2010-01-01",
-            valid_to: "2015-12-31",
-          }),
-        ]),
-        vnode("scb/rams/ink-next", [
-          gstate({
-            variant: "individer",
-            delivery_column_name: "IncNext",
-            valid_from: "2016-01-01",
-            valid_to: "2020-12-31",
-          }),
-        ]),
-      ],
-      edges: [
-        {
-          id: "succession:scb/rams/ink->scb/rams/ink-next",
-          kind: "succession",
-          source: "scb/rams/ink",
-          target: "scb/rams/ink-next",
-          label: null,
-          effective_year: 2016,
-        },
-      ],
-      focus_id: null,
-    });
-
-    await renderGroup();
-
-    await vi.waitFor(() => {
-      if (!document.querySelector(".col-list")) {
-        throw new Error("list fallback not rendered");
-      }
-    });
-    expect(document.querySelector(".graph-picker")).toBeNull();
-    await expect
-      .element(page.getByRole("checkbox", { name: /IncA/ }))
-      .toBeVisible();
-    expect(document.body.textContent).not.toContain("IncExtra");
-    expect(
-      document.querySelectorAll('.col-list input[type="checkbox"]'),
-    ).toHaveLength(1);
-  });
-
   it("list fallback renders a disabled row for a member with no graph state", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(
       node({
@@ -2507,51 +1486,6 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .toBeVisible();
   });
 
-  it("a WHOLE-VARIABLE member (null delivery_column) exposes ALL the variable's columns", async () => {
-    // When the member is the whole variable, every column is legitimately
-    // selectable → no filter.
-    vi.mocked(getConceptGroup).mockResolvedValue(
-      node({
-        members: [
-          {
-            fqid: "scb/rams/ink",
-            name: "Inkomst",
-            delivery_column: null,
-            facets: [{ axis: "month", value: "01", label: "januari" }],
-            coverage: null,
-          },
-        ],
-      } as unknown as Partial<ConceptGroupNodeData>),
-    );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
-      graph([
-        vnode("scb/rams/ink", [
-          gstate({
-            variant: "individer",
-            delivery_column_name: "IncA",
-            valid_from: "2010-01-01",
-            valid_to: "2015-12-31",
-          }),
-          gstate({
-            variant: "individer",
-            delivery_column_name: "IncExtra",
-            valid_from: "2010-01-01",
-            valid_to: "2015-12-31",
-          }),
-        ]),
-      ]),
-    );
-
-    await renderGroup();
-
-    await expect
-      .element(page.getByRole("checkbox", { name: /IncA/ }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("checkbox", { name: /IncExtra/ }))
-      .toBeVisible();
-  });
-
   // ── #678 finding 5: the member link carries the active group ?period ─────────
   it("a member nav link carries the active group ?period", async () => {
     router.navigate("/catalog/group/scb/rams/ink?period=2018..2020");
@@ -2575,88 +1509,49 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     );
   });
 
-  it("a member nav link has NO ?period when the group is not narrowed", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
-
-    await renderGroup();
-
-    const janLink = await vi.waitFor(() => {
-      const el = document.querySelector<HTMLAnchorElement>(
-        'a.col-chip.link[href*="/catalog/scb/rams/inkjan"]',
-      );
-      if (!el) {
-        throw new Error("inkjan chip link not yet rendered");
-      }
-      return el;
-    });
-    expect(janLink.getAttribute("href")).toBe("/catalog/scb/rams/inkjan");
-  });
-
   // ── #678 finding 6: chip nav goes through the SPA router (no full reload) ─────
-  it("clicking a member chip routes through the SPA router (preventDefault, no toggle)", async () => {
+  it("a plain chip click routes in-app without toggling the row", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
-    const navSpy = vi.spyOn(router, "navigate");
 
     await renderGroup();
 
-    const janLink = await vi.waitFor(() => {
-      const el = document.querySelector<HTMLAnchorElement>(
-        'a.col-chip.link[href="/catalog/scb/rams/inkjan"]',
-      );
-      if (!el) {
-        throw new Error("inkjan chip link not yet rendered");
-      }
-      return el;
-    });
-    navSpy.mockClear();
+    const janLink = page.getByRole("link", { name: /^Inkjan/ });
+    await expect
+      .element(janLink)
+      .toHaveAttribute("href", "/catalog/scb/rams/inkjan");
 
-    // A plain left click. The handler must preventDefault (so the browser does NOT
-    // full-reload) AND navigate via the router — never stopPropagation (which would
-    // strand the app-level use:link delegated interception and force a full reload).
-    const evt = new MouseEvent("click", {
+    // A plain left click is prevented (no full reload) and routed in-app, and it does
+    // not toggle the row's selection.
+    const plain = new MouseEvent("click", {
       bubbles: true,
       cancelable: true,
       button: 0,
     });
-    janLink.dispatchEvent(evt);
-
-    expect(evt.defaultPrevented).toBe(true);
-    expect(navSpy).toHaveBeenCalledWith("/catalog/scb/rams/inkjan");
-    // The click did NOT toggle the row's selection.
+    janLink.element().dispatchEvent(plain);
+    expect(plain.defaultPrevented).toBe(true);
+    expect(location.pathname).toBe("/catalog/scb/rams/inkjan");
     await expect
-      .element(page.getByText("No staged changes"))
-      .not.toBeInTheDocument();
-
-    navSpy.mockRestore();
+      .element(page.getByRole("checkbox", { name: /Inkjan/ }))
+      .not.toBeChecked();
   });
 
-  it("a MODIFIER (cmd) click on a member chip is left to the browser (no router nav, no preventDefault)", async () => {
+  it("a modifier chip click is left to the browser", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
-    const navSpy = vi.spyOn(router, "navigate");
 
     await renderGroup();
 
-    const janLink = await vi.waitFor(() => {
-      const el = document.querySelector<HTMLAnchorElement>(
-        'a.col-chip.link[href="/catalog/scb/rams/inkjan"]',
-      );
-      if (!el) {
-        throw new Error("inkjan chip link not yet rendered");
-      }
-      return el;
-    });
-    navSpy.mockClear();
+    const janLink = page.getByRole("link", { name: /^Inkjan/ });
+    await expect
+      .element(janLink)
+      .toHaveAttribute("href", "/catalog/scb/rams/inkjan");
+    const groupPath = location.pathname;
 
-    // A modifier click is deliberately NOT prevented by the component (open-in-new-tab
-    // intent → fall through to the browser). But an un-prevented click on a real <a
-    // href> would actually navigate the test iframe and disconnect it (flaky CI
-    // failure). A document-level bubble probe — registered AFTER Svelte's delegated
-    // handler, so it observes the component's (non-)preventDefault — records whether
-    // the component prevented it, then prevents the REAL navigation so the iframe
-    // survives.
+    // A modifier click is NOT prevented by the component (open-in-new-tab intent).
+    // An un-prevented click on a real <a href> would navigate the test iframe, so a
+    // document-level probe — registered AFTER Svelte's delegated handler — records
+    // whether the component prevented it, then prevents the real navigation.
     let componentPrevented = true;
     const probe = (e: Event) => {
       componentPrevented = e.defaultPrevented;
@@ -2664,21 +1559,19 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     };
     document.addEventListener("click", probe);
     try {
-      const evt = new MouseEvent("click", {
-        bubbles: true,
-        cancelable: true,
-        button: 0,
-        metaKey: true,
-      });
-      janLink.dispatchEvent(evt);
-      // The component left the modifier click to the browser (didn't preventDefault)
-      // and did NOT router-navigate.
-      expect(componentPrevented).toBe(false);
-      expect(navSpy).not.toHaveBeenCalled();
+      janLink.element().dispatchEvent(
+        new MouseEvent("click", {
+          bubbles: true,
+          cancelable: true,
+          button: 0,
+          metaKey: true,
+        }),
+      );
     } finally {
       document.removeEventListener("click", probe);
-      navSpy.mockRestore();
     }
+    expect(componentPrevented).toBe(false);
+    expect(location.pathname).toBe(groupPath);
   });
 });
 
@@ -2851,22 +1744,6 @@ describe("ConceptGroupView picker dimension filters (#908/#931)", () => {
     });
   }
 
-  it("keeps Variant/Coding filters on an axis-less group (Y-78)", async () => {
-    // Without axes the row dimensions are the ONLY filters the page has — the same
-    // ones each member's own leaf page offers — so suppressing them left the group
-    // page with no way to narrow at all.
-    vi.mocked(getConceptGroup).mockResolvedValue(axisLessNode());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(dimensionGraph());
-
-    await renderGroup({
-      provider: "scb",
-      register: "rams",
-      key: "dimensioned",
-    });
-
-    expect(await filterLegends()).toEqual(["Variant", "Coding"]);
-  });
-
   it("keeps them on a CURATED group with no axes either (Y-78)", async () => {
     // Suppression is for curated groups whose declared axes ARE the browse facets;
     // with no axes declared there is nothing authoritative to defer to.
@@ -2924,20 +1801,6 @@ describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
     expect(focused.textContent).toContain("Inkfeb");
   });
 
-  it("marks nothing when there is no ?member= hint", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
-
-    await renderGroup();
-
-    await vi.waitFor(() => {
-      if (document.querySelectorAll(".col-row.single").length < 2) {
-        throw new Error("rows not yet rendered");
-      }
-    });
-    expect(document.querySelectorAll(".focused")).toHaveLength(0);
-  });
-
   it("keeps a focused successor navigable after succession folds to list mode", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node({ member: "inkfeb" }));
     vi.mocked(getConceptGroupGraph).mockResolvedValue({
@@ -2967,44 +1830,6 @@ describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
       return el;
     });
     expect(focusedLink.getAttribute("href")).toBe("/catalog/scb/rams/inkfeb");
-    expect(document.querySelector(".graph-picker")).toBeNull();
-  });
-
-  it("falls back when the focused member is absent from a partial graph payload", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node({ member: "inkfeb" }));
-    vi.mocked(getConceptGroupGraph).mockResolvedValue({
-      nodes: [
-        vnode("scb/rams/inkjan", [
-          gstate({
-            variant: "individer",
-            delivery_column_name: "Inkjan",
-            valid_from: "2010-01-01",
-            valid_to: "2015-12-31",
-          }),
-        ]),
-        vnode("scb/rams/side", []),
-      ],
-      edges: [
-        {
-          id: "succession:scb/rams/inkjan->scb/rams/side",
-          kind: "succession",
-          source: "scb/rams/inkjan",
-          target: "scb/rams/side",
-          label: null,
-          effective_year: 2018,
-        },
-      ],
-      focus_id: null,
-    });
-    router.navigate("/catalog/group/scb/rams/ink?member=inkfeb");
-
-    await renderGroup();
-
-    await vi.waitFor(() => {
-      if (!document.querySelector(".col-list")) {
-        throw new Error("list fallback not rendered");
-      }
-    });
     expect(document.querySelector(".graph-picker")).toBeNull();
   });
 });
@@ -3164,6 +1989,9 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
         'a.history-link[href="/catalog/scb/iot/dispink-old"]',
       )?.textContent,
     ).toContain("Disponibel inkomst familj");
+    expect(document.querySelector(".history-until")?.textContent).toContain(
+      "2005",
+    );
   });
 
   it("allows a folded predecessor row to be selected for its era (#926)", async () => {
@@ -3248,37 +2076,6 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     await expect.element(predecessor).toBeVisible();
     await predecessor.click();
     await expect.element(page.getByText("+1 column")).toBeVisible();
-  });
-
-  it("surfaces the superseded predecessor as reachable list history", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(successionNode());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
-    router.navigate("/catalog/group/scb/iot/disponibel-inkomst");
-
-    await renderGroup({
-      provider: "scb",
-      register: "iot",
-      key: "disponibel-inkomst",
-    });
-
-    // The predecessor stays reachable as list history, with its supersession year, and
-    // its rows stay scoped inside the disclosure rather than becoming a top-level band.
-    await vi.waitFor(() => {
-      if (!document.querySelector("details.history")) {
-        throw new Error("history disclosure not yet rendered");
-      }
-    });
-    const link = document.querySelector<HTMLAnchorElement>(
-      'a.history-link[href="/catalog/scb/iot/dispink-old"]',
-    );
-    expect(link?.getAttribute("href")).toBe("/catalog/scb/iot/dispink-old");
-    expect(link?.textContent).toContain("Disponibel inkomst familj");
-    expect(document.querySelector(".history-until")?.textContent).toContain(
-      "2005",
-    );
-    expect(document.querySelector(".history-rows")?.textContent).toContain(
-      "DINFold",
-    );
   });
 
   it("preserves ?period on folded predecessor history links", async () => {

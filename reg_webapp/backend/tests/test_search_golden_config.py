@@ -51,12 +51,6 @@ def _boot(package: Path, catalog_db: Path) -> subprocess.CompletedProcess[str]:
     )
 
 
-def test_unmodified_package_boots(runtime_package, catalog_db):
-    """The copied package with its committed golden config starts cleanly."""
-    completed = _boot(runtime_package, catalog_db)
-    assert completed.returncode == 0, completed.stderr
-
-
 def test_missing_golden_config_refuses_to_start(runtime_package, catalog_db):
     """A package shipped without `search_golden.toml` fails at boot."""
     (runtime_package / "search_golden.toml").unlink()

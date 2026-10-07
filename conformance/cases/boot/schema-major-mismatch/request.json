@@ -1,0 +1,7 @@
+{
+  "kind": "catalog",
+  "configured_steward": "global",
+  "manifest": {
+    "schema_version": "99.0.0"
+  }
+}

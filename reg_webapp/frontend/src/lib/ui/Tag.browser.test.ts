@@ -1,51 +1,13 @@
 import { createRawSnippet } from "svelte";
 import { describe, expect, it } from "vitest";
-import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import Tag from "./Tag.svelte";
 
-// Tag: the load-bearing hooks are the tone class (drives all three color
-// sub-systems) and the mono face. The glyph slot is the status pairing the
-// accent-vs-status rule mandates.
+// Tag: labels render through every consumer; this file keeps the glyph slot,
+// the status pairing the accent-vs-status rule mandates, which must stay hidden
+// from the a11y tree.
 describe("Tag", () => {
   const label = createRawSnippet(() => ({ render: () => "<span>VAR</span>" }));
-
-  it("renders its label", async () => {
-    await render(Tag, { children: label });
-    await expect.element(page.getByText("VAR")).toBeVisible();
-  });
-
-  it("applies the categorical tone class", async () => {
-    const { container } = await render(Tag, { tone: "var", children: label });
-    expect(container.querySelector(".tag")).toHaveClass("tone-var");
-  });
-
-  it("defaults to the neutral tone", async () => {
-    const { container } = await render(Tag, { children: label });
-    expect(container.querySelector(".tag")).toHaveClass("tone-neutral");
-  });
-
-  it("mono-faces a code-like tag", async () => {
-    const { container } = await render(Tag, { mono: true, children: label });
-    expect(container.querySelector(".tag")).toHaveClass("mono");
-  });
-
-  it("is copy-faced by default, mono only when opted in (Y-105)", async () => {
-    const { container: copy } = await render(Tag, { children: label });
-    const copyTag = copy.querySelector<HTMLElement>(".tag");
-    expect(getComputedStyle(copyTag as HTMLElement).fontFamily).toContain(
-      "Schibsted Grotesk",
-    );
-
-    const { container: mono } = await render(Tag, {
-      mono: true,
-      children: label,
-    });
-    const monoLabel = mono.querySelector<HTMLElement>(".tag .label");
-    expect(getComputedStyle(monoLabel as HTMLElement).fontFamily).toContain(
-      "IBM Plex Mono",
-    );
-  });
 
   it("renders a leading glyph for status tones, hidden from a11y", async () => {
     const glyph = createRawSnippet(() => ({ render: () => "<span>✕</span>" }));

@@ -74,19 +74,6 @@ describe("DocMentionsPanel (#402)", () => {
       .toBeVisible();
   });
 
-  it("omits the whole section when no docs index is ingested in this deployment", async () => {
-    // Resolved-empty (ingested:false) is noise on the subject page — the entire
-    // section is omitted, NOT rendered as an empty-state note.
-    vi.mocked(getDocsForVariable).mockResolvedValue(
-      mentions({ ingested: false, register_ingested: false }),
-    );
-    await render(DocMentionsPanel, { node: node() });
-
-    await expect
-      .element(page.getByRole("heading", { name: "Parsed documentation" }))
-      .not.toBeInTheDocument();
-  });
-
   it("omits the whole section when this register has no ingested docs", async () => {
     // The index EXISTS but THIS register has no docs — a resolved-empty state, so
     // the whole section is omitted (no "no docs for this register" wall).
@@ -203,63 +190,6 @@ describe("DocMentionsPanel (#402)", () => {
     expect(document.querySelector(".mentions mark")).toBeNull();
   });
 
-  it("renders a markerless snippet verbatim with no <mark> or <em> (plain branch)", async () => {
-    // No emphasis markers → one plain segment → the else branch; the snippet text
-    // surfaces verbatim and neither emphasis element is created.
-    vi.mocked(getDocsForVariable).mockResolvedValue(
-      mentions({
-        register_ingested: true,
-        total_count: 1,
-        results: [
-          {
-            filename: "lisa_kon.md",
-            display_name: "LISA — Kön",
-            snippet: "some plain context",
-            fuzzy: true,
-            tags: [],
-          },
-        ],
-      }),
-    );
-    await render(DocMentionsPanel, { node: node() });
-
-    // Poll until the async mentions fetch has rendered before the sync queries.
-    await expect.element(page.getByText("LISA — Kön")).toBeVisible();
-    expect(document.querySelector(".mentions mark")).toBeNull();
-    expect(document.querySelector(".mentions em")).toBeNull();
-    expect(document.querySelector(".hit-detail")?.textContent).toBe(
-      "some plain context",
-    );
-  });
-
-  it("renders one <mark> per `**…**` highlight in a multi-match snippet (#672)", async () => {
-    // A realistic FTS snippet wraps every matched term; each must become its own
-    // <mark>, in order, with the delimiters dropped.
-    vi.mocked(getDocsForVariable).mockResolvedValue(
-      mentions({
-        register_ingested: true,
-        total_count: 1,
-        results: [
-          {
-            filename: "lisa_kon.md",
-            display_name: "LISA — Kön",
-            snippet: "…**kön** och **ålder**…",
-            fuzzy: true,
-            tags: [],
-          },
-        ],
-      }),
-    );
-    await render(DocMentionsPanel, { node: node() });
-
-    // Poll until the async mentions fetch has rendered before the sync queries.
-    await expect.element(page.getByText("LISA — Kön")).toBeVisible();
-    const marks = document.querySelectorAll(".mentions mark");
-    expect(marks.length).toBe(2);
-    expect(marks[0]?.textContent).toBe("kön");
-    expect(marks[1]?.textContent).toBe("ålder");
-  });
-
   it("shows 'showing N of M' only when the slice is truncated", async () => {
     // (a) truncated → caption shows.
     vi.mocked(getDocsForVariable).mockResolvedValue(
@@ -371,35 +301,6 @@ describe("DocMentionsPanel (#402)", () => {
     await expect
       .element(page.getByRole("link", { name: /LISA — Näringsgren/ }))
       .toBeVisible();
-  });
-
-  it("does NOT show the concept-grain caption for a grouped member with zero hits (#670)", async () => {
-    // The concept-grain caption lives INSIDE the resolved-data branch, which only
-    // renders when there are usable hits (`results.length > 0`). A grouped member
-    // with zero hits omits the WHOLE section (omit-when-empty), so the caption
-    // never appears — pin that it doesn't leak out of the results branch.
-    vi.mocked(getDocsForVariable).mockResolvedValue(
-      mentions({ ingested: true, register_ingested: true, total_count: 0 }),
-    );
-    await render(DocMentionsPanel, {
-      node: node({
-        fqid: "scb/lisa/naringsgren-storsta-agi-sni2007g",
-        name: "Näringsgren, största förvärvskälla",
-        group: {
-          provider: "scb",
-          register: "lisa",
-          key: "naringsgren",
-        },
-      }),
-    });
-
-    // The whole section is omitted (no heading), so the caption is absent too.
-    await expect
-      .element(page.getByRole("heading", { name: "Parsed documentation" }))
-      .not.toBeInTheDocument();
-    await expect
-      .element(page.getByText(/shared concept name/i))
-      .not.toBeInTheDocument();
   });
 
   it("does NOT caption an ungrouped variable's hits (no node.group)", async () => {

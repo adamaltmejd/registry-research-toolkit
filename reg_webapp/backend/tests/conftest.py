@@ -4,8 +4,6 @@ CI has no real reg_meta asset (5.1.0 is unpublished), so the backend tests build
 fixture DBs and point the app at them via the highest-precedence ``REG_META_DB``
 override (``reg_meta.db.default_db_dir``).
 
-- ``/api/context`` reads ONLY ``import_manifest`` → the manifest-only fixture
-  (``compatible_db`` / ``mismatched_db``) needs nothing but that table.
 - ``/api/catalog`` resolves/lists against the full reg_meta schema → the
   ``catalog_db`` / ``docs_db`` fixtures delegate to ``scripts/fixture_db.py``,
   the builder ``dev.sh --fixture-db`` also runs, so the DB pair the tests assert
@@ -28,56 +26,10 @@ from webapp_fixture_support import fixture_db
 if TYPE_CHECKING:
     from pathlib import Path
 
-FIXTURE_IMPORT_DATE = fixture_db.FIXTURE_IMPORT_DATE
-FIXTURE_SCHEMA_VERSION = fixture_db.FIXTURE_SCHEMA_VERSION
-
-
-def _write_manifest_db(db_path: Path, schema_version: str) -> None:
-    conn = sqlite3.connect(db_path)
-    try:
-        conn.execute("CREATE TABLE import_manifest(key TEXT PRIMARY KEY, value TEXT)")
-        fixture_db.stamp_manifest(conn)
-        conn.execute(
-            "UPDATE import_manifest SET value = ? WHERE key = 'schema_version'",
-            (schema_version,),
-        )
-        conn.commit()
-    finally:
-        conn.close()
-
 
 def _point_app_at(monkeypatch: pytest.MonkeyPatch, db_dir: Path) -> None:
     # REG_META_DB is the highest-precedence dir in reg_meta.db.default_db_dir.
     monkeypatch.setenv("REG_META_DB", str(db_dir))
-
-
-@pytest.fixture
-def fixture_import_date() -> str:
-    return FIXTURE_IMPORT_DATE
-
-
-@pytest.fixture
-def fixture_schema_version() -> str:
-    return FIXTURE_SCHEMA_VERSION
-
-
-@pytest.fixture
-def compatible_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
-    """A fixture DB whose manifest is gate-compatible with the installed code."""
-    db_path = tmp_path / reg_meta.db.DB_FILENAME
-    _write_manifest_db(db_path, FIXTURE_SCHEMA_VERSION)
-    _point_app_at(monkeypatch, tmp_path)
-    return db_path
-
-
-@pytest.fixture
-def mismatched_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
-    """A fixture DB one MAJOR ahead — startup must reject it."""
-    db_path = tmp_path / reg_meta.db.DB_FILENAME
-    major = int(reg_meta.db.SCHEMA_VERSION.split(".")[0])
-    _write_manifest_db(db_path, f"{major + 1}.0.0")
-    _point_app_at(monkeypatch, tmp_path)
-    return db_path
 
 
 @pytest.fixture

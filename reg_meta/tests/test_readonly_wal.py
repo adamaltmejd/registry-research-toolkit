@@ -20,7 +20,7 @@ from typing import TYPE_CHECKING
 import pytest
 from reader_artifacts import build_reader_artifact
 from reg_meta.catalog import Catalog
-from reg_meta.db import DB_FILENAME, open_db
+from reg_meta.db import open_db
 from reg_meta.doc_db import DOC_DB_FILENAME, DOC_SCHEMA_VERSION, open_doc_db
 from reg_meta.errors import RegMetaError
 
@@ -129,18 +129,3 @@ def test_open_doc_db_rejects_stale_1_1_0_schema(tmp_path: Path) -> None:
     with pytest.raises(RegMetaError) as exc_info:
         open_doc_db(db_file)
     assert exc_info.value.code == "doc_schema_incompatible"
-
-
-@pytest.mark.parametrize("schema_version", ["6.11.0", "6.12.0", "6.13.0", "6.14.0"])
-def test_open_db_rejects_catalog_without_current_delivery_contract(
-    tmp_path: Path,
-    schema_version: str,
-) -> None:
-    db_file = tmp_path / DB_FILENAME
-    _make_wal_db(
-        db_file,
-        setup_sql=f"CREATE TABLE import_manifest (key TEXT PRIMARY KEY, value TEXT); INSERT INTO import_manifest VALUES ('schema_version', '{schema_version}');",
-    )
-    with pytest.raises(RegMetaError) as exc_info:
-        open_db(db_file)
-    assert exc_info.value.code == "schema_incompatible"

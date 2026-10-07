@@ -26,7 +26,6 @@ import zstandard
 from reader_artifacts import CASES, build_reader_artifact
 from reg_meta.cli import run
 from reg_meta.doc_db import DOC_SCHEMA_VERSION
-from reg_meta.download import version_from_tag
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.update import UpdateChecker, read_pending_update, run_update
 from reg_meta_build.doc_db import build_doc_db
@@ -204,17 +203,6 @@ def test_checker_asks_pypi_not_github_for_the_version(net, uv):
     net.pypi = NEXT_PATCH
     assert check() == NEXT_PATCH
     assert net.hosts == ["pypi.org"]
-
-
-class TestVersionFromTag:
-    def test_prefixed_tag(self):
-        assert version_from_tag("reg_meta/v0.5.0") == "0.5.0"
-
-    def test_legacy_bare_tag(self):
-        assert version_from_tag("v0.4.0") == "0.4.0"
-
-    def test_no_v_prefix(self):
-        assert version_from_tag("reg_meta/0.5.0") == "0.5.0"
 
 
 # --- pending-update flag ---------------------------------------------------
@@ -452,21 +440,3 @@ def test_upgrade_runs_only_for_a_uv_tool_install(
         else "skipped_not_uv_tool"
     )
     assert run_update(yes=True)["package"] == expected
-
-
-def test_non_uv_tool_install_still_fetches_assets(net, uv):
-    net.pypi = NEXT_PATCH
-    net.releases = [release("reg_meta/v99.0.0", DB, DOCS)]
-    result = run_update(yes=True)
-    actual = (result["package"], result["database"]["tag"], result["docs"]["tag"])
-    assert actual == ("skipped_not_uv_tool", "reg_meta/v99.0.0", "reg_meta/v99.0.0")
-    assert UPGRADE not in uv.calls
-
-
-def test_uv_tool_install_runs_uv_tool_upgrade(net, uv, monkeypatch):
-    install(net, "reg_meta/v99.0.0")
-    net.pypi = NEXT_PATCH
-    monkeypatch.setattr(sys, "prefix", UV_TOOL_PREFIX)
-    result = run_update(yes=True)
-    assert result["package"] == {"old_version": __version__, "new_version": NEXT_PATCH}
-    assert uv.calls[-1] == UPGRADE

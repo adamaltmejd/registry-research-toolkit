@@ -51,13 +51,9 @@ if TYPE_CHECKING:
 
 _YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
 
-# Default number of owning variables / classifications a single code hit carries
-# on the wire. Common codes can map to thousands of variables (`code_variable_map`
-# is large), so the library default stays bounded. Callers that render an explicit
-# expanded owner list can opt into all variable owners with
-# `code_variable_owner_limit=None`; classification owners remain bounded because
-# they are used for code-system identity/ranking, not as per-row navigation in the
-# webapp.
+# Number of owning variables / classifications a single code hit carries on the
+# wire. Common codes can map to thousands of variables (`code_variable_map` is
+# large), so the owner slice stays bounded; the full counts ride alongside.
 _CODE_OWNERS_PER_HIT = 5
 _MAX_IDENTITY_PROMOTION_MATCHES = 50
 _EXACT_IDENTITY_SCORE = 1000
@@ -564,7 +560,6 @@ def search(
     limit: int = 50,
     cursor: str | None = None,
     fold_groups: bool = True,
-    code_variable_owner_limit: int | None = _CODE_OWNERS_PER_HIT,
     code_owner_scope: str = "all",
     classification_as_of_year: int | None = None,
     _candidate_limit_override: int | None = None,
@@ -588,8 +583,8 @@ def search(
     (#352) returns `type: "code"` rows — each a (code, label) hit annotated with
     its owning variables/classifications plus the full `variable_count`/
     `classification_count`; the owning entity, not the bare code pair, is the
-    actionable target. Variable owners are bounded by
-    ``code_variable_owner_limit`` below.
+    actionable target. Variable and classification owner slices are bounded to
+    ``_CODE_OWNERS_PER_HIT``.
 
     fold_groups (#322): when hits land on ≥2 member variables of one concept
     group (see DESIGN.md → Concept groups), the sibling hits collapse into a
@@ -604,11 +599,6 @@ def search(
     their SQL branches before the bounded prefix. It is part of cursor context so
     callers that inject a curated identity separately cannot see it again on a
     continuation page.
-
-    ``code_variable_owner_limit`` controls the shown code rows' variable owner slice
-    (``None`` = all variable owners for the paginated code rows). Classification
-    owners stay bounded to preserve code-system identity without sending large
-    repeated owner lists.
 
     ``code_owner_scope`` narrows the value/code surface to ``"classification"``
     (codes owned by at least one classification), ``"register_local"`` (codes
@@ -992,7 +982,6 @@ def search(
             limit=limit,
             cursor=cursor,
             fold_groups=fold_groups,
-            code_variable_owner_limit=code_variable_owner_limit,
             code_owner_scope=code_owner_scope,
             classification_as_of_year=classification_as_of_year,
             _candidate_limit_override=min(
@@ -1019,12 +1008,7 @@ def search(
     # only run the owner-annotation queries for the ≤limit codes actually shown
     # (the omnibox-timeout fix for broad terms). No-op for the reg-scoped arm
     # (those rows are already annotated and carry no `_code_id`).
-    _annotate_value_page(
-        conn,
-        results,
-        reg_ids,
-        variable_limit=code_variable_owner_limit,
-    )
+    _annotate_value_page(conn, results, reg_ids)
     _annotate_variable_delivery_columns(
         conn, results, query, scope=scope, bounds=_year_bounds(year_range)
     )
@@ -1848,7 +1832,6 @@ def _code_owner_annotations_batch(
     code_ids: list[int],
     reg_ids: set[int] | None,
     *,
-    variable_limit: int | None = _CODE_OWNERS_PER_HIT,
     variable_counts: Mapping[int, int] | None = None,
 ) -> dict[int, dict[str, Any]]:
     """Resolve owning variables / classifications for a SET of codes at once (#352).
@@ -1858,10 +1841,9 @@ def _code_owner_annotations_batch(
     blowup. We materialize the matched `code_id`s into a TEMP table and JOIN
     `code_variable_map` / `classification_code` against it — JOIN (not
     `WHERE code_id IN (<thousands>)`, which risks SQLite's bound-param limit). Owner
-    variable slices are capped by `variable_limit` per code via a window
-    `ROW_NUMBER()`; pass `None` for the full variable owner list. Counts are always
-    the FULL per-code totals. Classification owner slices stay capped to
-    `_CODE_OWNERS_PER_HIT`.
+    variable and classification slices are capped to `_CODE_OWNERS_PER_HIT` per code
+    (variables via a window `ROW_NUMBER()`). Counts are always the FULL per-code
+    totals.
 
     Semantics preserved from the per-code version:
       - variables via `code_variable_map` (variable_id-grained, so a split sibling
@@ -1913,12 +1895,7 @@ def _code_owner_annotations_batch(
             ):
                 out[row["code_id"]]["variable_count"] = row["n"]
 
-        var_rank_filter = "" if variable_limit is None else " WHERE rn <= ?"
-        var_params: tuple[Any, ...] = (
-            tuple(reg_params)
-            if variable_limit is None
-            else (*reg_params, variable_limit)
-        )
+        var_params: tuple[Any, ...] = (*reg_params, _CODE_OWNERS_PER_HIT)
         var_rows = conn.execute(
             "WITH owners AS ("
             "  SELECT cvm.code_id, v.variable_id, v.name AS variable_name, "
@@ -1938,7 +1915,7 @@ def _code_owner_annotations_batch(
             "    PARTITION BY code_id ORDER BY var_code_count ASC, variable_slug, "
             "      provider_slug, register_slug, variable_id"
             "  ) AS rn FROM owners"
-            f") SELECT * FROM ranked{var_rank_filter} ORDER BY code_id, rn",
+            ") SELECT * FROM ranked WHERE rn <= ? ORDER BY code_id, rn",
             var_params,
         ).fetchall()
         for r in var_rows:
@@ -2196,8 +2173,6 @@ def _annotate_value_page(
     conn: sqlite3.Connection,
     page: list[dict[str, Any]],
     reg_ids: set[int] | None,
-    *,
-    variable_limit: int | None = _CODE_OWNERS_PER_HIT,
 ) -> None:
     """Annotate the value/code rows of a SHOWN page with their owning variables /
     classifications, in place (#352 perf, the annotate-only-the-page optimization).
@@ -2207,7 +2182,6 @@ def _annotate_value_page(
     `search()` can defer the (expensive) owner lookups to the ≤limit rows actually
     paginated. This runs one set-based `_code_owner_annotations_batch` over just
     those page code_ids and merges the result onto each row, then drops the marker.
-    `variable_limit=None` makes the paginated rows carry all variable owners.
 
     No-op when no row carries `_code_id` — i.e. the reg-scoped arm, where rows were
     already annotated up front (the reg-scope drop needed the full owner set). Only
@@ -2224,7 +2198,6 @@ def _annotate_value_page(
         conn,
         code_ids,
         reg_ids,
-        variable_limit=variable_limit,
         variable_counts={
             r["_code_id"]: r["mapping_count"]
             for r in page

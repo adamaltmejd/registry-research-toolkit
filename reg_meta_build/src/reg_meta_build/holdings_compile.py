@@ -1,4 +1,4 @@
-"""Compile physical holdings facts; semantic resolution stays in Catalog."""
+"""Compile physical holdings facts against the derived `resolver_column` universe."""
 
 from __future__ import annotations
 
@@ -7,8 +7,6 @@ import tomllib
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from reg_meta.catalog import Catalog
-from reg_meta.db import register_py_lower
 from reg_meta.inventory import (
     DeliveryInventory,
     InventoryColumn,
@@ -50,10 +48,7 @@ def canonical_inventory(
     *,
     coordinate_ids: tuple[dict[str, int], dict[str, int]] | None = None,
 ) -> DeliveryInventory:
-    """Canonicalize against the resolver's actual whole-history delivery universe."""
-    conn.row_factory = sqlite3.Row
-    register_py_lower(conn)
-    catalog = Catalog(conn)
+    """Canonicalize against the resolver's whole-history delivery universe."""
     variables, variants = coordinate_ids or catalog_coordinate_ids(conn)
     universes: dict[tuple[int, int], dict[str, str]] = {}
     rejections = []
@@ -74,10 +69,14 @@ def canonical_inventory(
                     continue
                 key = variable_id, variant_id
                 if key not in universes:
-                    universes[key] = {
-                        name.lower(): name
-                        for name in catalog.delivery_columns(variable_id, variant_id)
-                    }
+                    universes[key] = dict(
+                        conn.execute(
+                            "SELECT delivery_column_lower, delivery_column_name "
+                            "FROM resolver_column "
+                            "WHERE variable_id = ? AND register_variant_id = ?",
+                            key,
+                        )
+                    )
                 canonical = universes[key].get(mapping.representation.lower())
                 if canonical is None:
                     rejections.append(

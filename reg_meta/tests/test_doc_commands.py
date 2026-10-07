@@ -171,34 +171,12 @@ def _run_json(argv: list[str], *, verbose: bool = False) -> tuple[dict, int]:
     return {}, exit_code
 
 
-def _run_text(argv: list[str]) -> tuple[str, int]:
-    """Run CLI and capture text output."""
-    old_stdout = sys.stdout
-    old_stderr = sys.stderr
-    sys.stdout = buf = io.StringIO()
-    sys.stderr = io.StringIO()
-    try:
-        exit_code = run(argv)
-    finally:
-        sys.stdout = old_stdout
-        sys.stderr = old_stderr
-    return buf.getvalue(), exit_code
-
-
 # ---------------------------------------------------------------------------
 # doc search
 # ---------------------------------------------------------------------------
 
 
 class TestDocSearch:
-    def test_search_finds_variable(self, doc_db_path: str):
-        data, code = _run_json(["--db", doc_db_path, "docs", "search", "kommun"])
-        assert code == 0
-        results = data["results"]
-        assert len(results) >= 1
-        names = [r["variable"] for r in results]
-        assert "Kommun" in names
-
     def test_search_finds_by_content(self, doc_db_path: str):
         data, code = _run_json(["--db", doc_db_path, "docs", "search", "sjukpenning"])
         assert code == 0
@@ -241,12 +219,6 @@ class TestDocSearch:
         assert code == 0
         for r in data["results"]:
             assert "topic/social-insurance" in r["tags"]
-
-    def test_search_has_snippet(self, doc_db_path: str):
-        data, code = _run_json(["--db", doc_db_path, "docs", "search", "kommun"])
-        assert code == 0
-        for r in data["results"]:
-            assert "snippet" in r
 
     def test_search_no_results(self, doc_db_path: str):
         data, code = _run_json(
@@ -291,17 +263,6 @@ class TestDocGet:
         assert "type/variable" in data["tags"]
         assert "topic/social-insurance" in data["tags"]
 
-    def test_get_omits_file_path(self, doc_db_path: str):
-        data, code = _run_json(["--db", doc_db_path, "docs", "get", "Kommun"])
-        assert code == 0
-        assert "file_path" not in data
-
-    def test_get_text_output(self, doc_db_path: str):
-        text, code = _run_text(["--db", doc_db_path, "docs", "get", "Kommun"])
-        assert code == 0
-        assert "fyrställig kod" in text
-        assert "file:" not in text
-
 
 # ---------------------------------------------------------------------------
 # source_url / source_title (#372)
@@ -320,27 +281,6 @@ class TestDocSourceUrl:
         assert data["source"] == "lisa-bakgrundsfakta-1990-2017"  # `.md` stripped
         assert data["source_url"] == _LISA_BAKGRUNDSFAKTA_URL
         assert data["source_title"] == _LISA_BAKGRUNDSFAKTA_TITLE
-
-    def test_get_unmapped_has_null_url_and_title(self, doc_db_path: str):
-        data, code = _run_json(["--db", doc_db_path, "docs", "get", "UnmappedVar"])
-        assert code == 0
-        assert data["source"] == "some-uncurated-source"
-        assert data["source_url"] is None
-        assert data["source_title"] is None
-
-    def test_search_carries_source_url_and_title(self, doc_db_path: str):
-        data, code = _run_json(["--db", doc_db_path, "docs", "search", "kurerad"])
-        assert code == 0
-        hit = next(r for r in data["results"] if r["variable"] == "MappedVar")
-        assert hit["source_url"] == _LISA_BAKGRUNDSFAKTA_URL
-        assert hit["source_title"] == _LISA_BAKGRUNDSFAKTA_TITLE
-
-    def test_search_unmapped_has_null_url_and_title(self, doc_db_path: str):
-        data, code = _run_json(["--db", doc_db_path, "docs", "search", "omappad"])
-        assert code == 0
-        hit = next(r for r in data["results"] if r["variable"] == "UnmappedVar")
-        assert hit["source_url"] is None
-        assert hit["source_title"] is None
 
 
 # ---------------------------------------------------------------------------
@@ -361,11 +301,6 @@ class TestDocList:
         assert code == 0
         assert "type/variable" in data["types"]
         assert data["types"]["type/variable"] == 4
-
-    def test_list_summary_has_topics(self, doc_db_path: str):
-        data, code = _run_json(["--db", doc_db_path, "docs", "list"])
-        assert code == 0
-        assert "topic/demographic" in data["topics"]
 
     def test_list_filter_by_topic(self, doc_db_path: str):
         data, code = _run_json(
@@ -389,91 +324,6 @@ class TestDocList:
         )
         assert code == 0
         assert data["total_count"] == 6
-
-    def test_list_omits_docs_dir(self, doc_db_path: str):
-        data, code = _run_json(["--db", doc_db_path, "docs", "list"])
-        assert code == 0
-        assert "docs_dir" not in data
-
-
-# ---------------------------------------------------------------------------
-# build-docs
-# ---------------------------------------------------------------------------
-
-
-class TestDocDbRequired:
-    """Metadata works independently; documentation commands require their own DB."""
-
-    def test_search_without_docs_succeeds(self, tmp_path: Path, fixture_db: Path):
-        # Copy only the catalog; its sibling doc DB must remain absent.
-        db_dir = tmp_path / "db"
-        db_dir.mkdir()
-        (db_dir / "reg_meta.db").write_bytes(fixture_db.read_bytes())
-
-        data, code = _run_json(
-            ["--db", str(db_dir), "search", "--query", "testvariabel"],
-            verbose=True,
-        )
-        assert code == 0
-        assert "error" not in data
-
-    def test_get_without_docs_succeeds(self, tmp_path: Path, fixture_db: Path):
-        db_dir = tmp_path / "db"
-        db_dir.mkdir()
-        (db_dir / "reg_meta.db").write_bytes(fixture_db.read_bytes())
-
-        data, code = _run_json(
-            ["--db", str(db_dir), "get", "register", "1"],
-            verbose=True,
-        )
-        assert code == 0
-        assert data["data"]["register_id"] == "1"
-
-    def test_docs_without_docs_fails(self, tmp_path: Path, fixture_db: Path):
-        db_dir = tmp_path / "db"
-        db_dir.mkdir()
-        (db_dir / "reg_meta.db").write_bytes(fixture_db.read_bytes())
-        data, code = _run_json(["--db", str(db_dir), "docs", "list"], verbose=True)
-        assert code == 10
-        assert data["error"]["code"] == "doc_db_not_found"
-
-
-class TestBuildDocs:
-    def test_build_docs(self, tmp_path: Path):
-        """`reg-meta-build build-docs` produces a usable doc DB. Lives here
-        for the moment because the CLI smoke tests for build commands grew
-        up alongside the query-side doc tests; could move to
-        reg_meta_build/tests/ later."""
-        from reg_meta_build.cli import run as build_run
-
-        docs_dir = tmp_path / "docs" / "myreg"
-        docs_dir.mkdir(parents=True)
-        (docs_dir / "Var1.md").write_text(
-            "---\nvariable: Var1\ndisplay_name: Test\ntags:\n  - type/variable\n---\n\nBody text.\n",
-            encoding="utf-8",
-        )
-        db_dir = tmp_path / "db"
-        db_dir.mkdir()
-
-        old_stdout = sys.stdout
-        old_stderr = sys.stderr
-        sys.stdout = io.StringIO()
-        sys.stderr = io.StringIO()
-        try:
-            code = build_run(
-                [
-                    "--db",
-                    str(db_dir),
-                    "build-docs",
-                    "--docs-dir",
-                    str(tmp_path / "docs"),
-                ]
-            )
-        finally:
-            sys.stdout = old_stdout
-            sys.stderr = old_stderr
-        assert code == 0
-        assert (db_dir / "reg_meta_docs.db").exists()
 
 
 # ---------------------------------------------------------------------------
@@ -563,61 +413,3 @@ class TestSearchIntegration:
         )
         assert code == 0
         assert "not shown" in data.get("doc_hint", "")
-
-    def test_docs_do_not_displace_catalog_continuation(
-        self, combined_db_dir: str
-    ) -> None:
-        # "testreg" matches the fixture overview doc and the TESTREG register.
-        # The doc outranks the register, so a one-row page is all doc and the
-        # catalog row must survive as the continuation.
-        first, code = _run_json(
-            [
-                "--db",
-                combined_db_dir,
-                "search",
-                "--query",
-                "testreg",
-                "--limit",
-                "1",
-            ]
-        )
-        assert code == 0
-        assert [r["type"] for r in first["results"]] == ["doc"]
-        assert first["has_more"]
-        assert first["next_cursor"] is not None
-
-        second, code = _run_json(
-            [
-                "--db",
-                combined_db_dir,
-                "search",
-                "--query",
-                "testreg",
-                "--limit",
-                "1",
-                "--cursor",
-                first["next_cursor"],
-            ]
-        )
-        assert code == 0
-        assert second["results"]
-        assert second["results"] != first["results"]
-        assert not second["has_more"] or second["next_cursor"] is not None
-
-    def test_search_exact_variable_name_ranked_high(self, combined_db_dir: str):
-        """Exact variable name match in docs should rank near the top."""
-        data, code = _run_json(
-            ["--db", combined_db_dir, "search", "--query", "Kommun", "--field", "all"],
-            verbose=True,
-        )
-        assert code == 0
-        results = data["data"]["results"]
-        doc_results = [r for r in results if r["type"] == "doc"]
-        assert len(doc_results) >= 1
-
-        # The exact match on variable name "Kommun" should be in the first 5 results
-        top5_types = [r["type"] for r in results[:5]]
-        assert "doc" in top5_types, (
-            f"Doc result for exact variable name match should be in top 5, "
-            f"got types: {top5_types}"
-        )

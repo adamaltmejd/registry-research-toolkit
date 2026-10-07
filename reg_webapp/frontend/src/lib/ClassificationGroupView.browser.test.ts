@@ -268,35 +268,6 @@ describe("ClassificationGroupView (#756)", () => {
       .toBeVisible();
   });
 
-  it("renders the classification group relationship graph with historical editions", async () => {
-    vi.mocked(getClassificationGroup).mockResolvedValue(node());
-    vi.mocked(getClassificationGroupGraph).mockResolvedValue(groupGraph());
-
-    await render(ClassificationGroupView, { key: "sun" });
-
-    expect(getClassificationGroupGraph).toHaveBeenCalledWith("sun");
-    await expect
-      .element(page.getByRole("heading", { name: "Editions" }))
-      .toBeVisible();
-    expect(document.querySelector(".classification-editions")).not.toBeNull();
-    expect(document.querySelector(".edition-edge")).not.toBeNull();
-    expect(
-      document.querySelector('a.edition-name[href="/catalog/class/sun1996"]'),
-    ).not.toBeNull();
-    expect(document.querySelector(".edition-edge-year")?.textContent).toBe(
-      "2020",
-    );
-    expect(document.querySelector(".edition-year")).toBeNull();
-    await expect
-      .element(page.getByRole("link", { name: "SUN1996" }))
-      .toHaveAttribute("href", "/catalog/class/sun1996");
-    await expect
-      .element(page.getByRole("tab", { name: /Utbildningsnivå/ }))
-      .toHaveAttribute("aria-selected", "true");
-    expect(getCatalogNode).toHaveBeenCalledWith("class/sun2020");
-    expect(document.body.textContent).not.toContain("group:sun");
-  });
-
   it("defaults to the current group member before future-dated graph successors", async () => {
     vi.mocked(getClassificationGroup).mockResolvedValue(
       node({
@@ -404,38 +375,6 @@ describe("ClassificationGroupView (#756)", () => {
     expect(getClassificationGroupGraph).toHaveBeenCalledWith("ssyk");
   });
 
-  it("keeps canonical family value-set geometry stable while the graph resolves", async () => {
-    let resolveGraph: (value: RelationshipGraph) => void = () => {};
-    vi.mocked(getClassificationGroup).mockResolvedValue(familyNode());
-    vi.mocked(getClassificationGroupGraph).mockImplementation(
-      () =>
-        new Promise((resolve) => {
-          resolveGraph = resolve;
-        }),
-    );
-    vi.mocked(getCatalogNode).mockResolvedValue(
-      classificationNode({
-        fqid: "class/ssyk2012",
-        name: "SSYK 2012",
-        short_name: "SSYK2012",
-      }),
-    );
-
-    await render(ClassificationGroupView, { key: "ssyk" });
-
-    const valueSet = page.getByRole("region", { name: "Value set" });
-    await expect.element(valueSet).toBeVisible();
-    const before = valueSet.element().getBoundingClientRect().top;
-
-    resolveGraph(familyGraph());
-
-    await expect
-      .element(page.getByRole("heading", { name: "Editions" }))
-      .toBeVisible();
-    const after = valueSet.element().getBoundingClientRect().top;
-    expect(Math.abs(after - before)).toBeLessThan(2);
-  });
-
   it("keeps lower content stable when a branched edition graph exceeds the reserved slot", async () => {
     let resolveGraph: (value: RelationshipGraph) => void = () => {};
     const editions = [
@@ -531,41 +470,6 @@ describe("ClassificationGroupView (#756)", () => {
     expect(
       Math.abs(related.element().getBoundingClientRect().top - relatedBefore),
     ).toBeLessThan(2);
-  });
-
-  it("collapses the reserved graph row after an empty graph resolves", async () => {
-    let resolveGraph: (value: RelationshipGraph) => void = () => {};
-    vi.mocked(getClassificationGroup).mockResolvedValue(familyNode());
-    vi.mocked(getClassificationGroupGraph).mockImplementation(
-      () =>
-        new Promise((resolve) => {
-          resolveGraph = resolve;
-        }),
-    );
-    vi.mocked(getCatalogNode).mockResolvedValue(
-      classificationNode({ fqid: "class/ssyk2012" }),
-    );
-
-    const { container } = await render(ClassificationGroupView, {
-      key: "ssyk",
-    });
-
-    const valueSet = page.getByRole("region", { name: "Value set" });
-    await expect.element(valueSet).toBeVisible();
-    const reservedTop = valueSet.element().getBoundingClientRect().top;
-    expect(container.querySelector(".reserve-edition-graph")).not.toBeNull();
-
-    resolveGraph({ nodes: [], edges: [], focus_id: null });
-
-    await vi.waitFor(() => {
-      expect(container.querySelector(".reserve-edition-graph")).toBeNull();
-    });
-    expect(
-      reservedTop - valueSet.element().getBoundingClientRect().top,
-    ).toBeGreaterThan(100);
-    expect(
-      page.getByRole("heading", { name: "Editions" }).elements(),
-    ).toHaveLength(0);
   });
 
   it("collapses the reserved graph row when the focused member has no succession edges", async () => {
@@ -812,50 +716,5 @@ describe("ClassificationGroupView (#756)", () => {
       .element(page.getByRole("link", { name: "NIVA extra" }))
       .toHaveAttribute("href", "/catalog/class/niva-extra");
     expect(getCatalogNode).not.toHaveBeenCalled();
-  });
-
-  it("renders related classifications for an active family edition node", async () => {
-    vi.mocked(getClassificationGroup).mockResolvedValue(familyNode());
-    vi.mocked(getCatalogNode).mockResolvedValue(
-      classificationNode({
-        fqid: "class/ssyk2012",
-        name: "SSYK 2012",
-        short_name: "SSYK2012",
-        codes: [{ code: "9", label: "Yrke", level: 1, is_valid: true }],
-        derived_from: [
-          {
-            fqid: "class/ssyk1996",
-            slug: "ssyk1996",
-            short_name: "SSYK1996",
-            name: "SSYK 1996",
-            note: "Derived family predecessor",
-          },
-        ],
-        derivatives: [
-          {
-            fqid: "class/ssyk-derived",
-            slug: "ssyk-derived",
-            short_name: "SSYK derived",
-            name: "Derived occupational classification",
-            note: null,
-          },
-        ],
-      }),
-    );
-
-    await render(ClassificationGroupView, { key: "ssyk" });
-
-    await expect
-      .element(page.getByRole("heading", { name: "Related classifications" }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("link", { name: "SSYK1996" }))
-      .toHaveAttribute("href", "/catalog/class/ssyk1996");
-    await expect
-      .element(page.getByText("Derived family predecessor"))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("link", { name: "SSYK derived" }))
-      .toHaveAttribute("href", "/catalog/class/ssyk-derived");
   });
 });

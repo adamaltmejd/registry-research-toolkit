@@ -348,7 +348,7 @@ def test_two_book_conformance_and_extensions_are_stored_independently(tmp_path):
             ).fetchone()[0]
             == SCHEMA_VERSION
         )
-    from reg_meta.db import open_db
+    from reg_meta.db import SCHEMA_VERSION as READER_SCHEMA_VERSION, open_db
     from reg_meta.errors import RegMetaError
 
     with open_db(output) as conn:
@@ -367,11 +367,15 @@ def test_two_book_conformance_and_extensions_are_stored_independently(tmp_path):
         conn.execute(
             "UPDATE import_manifest SET value='6.18.0' WHERE key='schema_version'"
         )
-    for opener in (open_db, open_built_db):
+    # The reader and the builder each name the schema version they gate on.
+    for opener, version in (
+        (open_db, READER_SCHEMA_VERSION),
+        (open_built_db, SCHEMA_VERSION),
+    ):
         with pytest.raises(RegMetaError) as stale:
             opener(output)
         assert stale.value.code == "schema_incompatible"
-        assert "6.18.0" in stale.value.message and SCHEMA_VERSION in stale.value.message
+        assert "6.18.0" in stale.value.message and version in stale.value.message
 
 
 @pytest.mark.parametrize("difference", ["code", "label"])

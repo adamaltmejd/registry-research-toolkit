@@ -1,15 +1,16 @@
 """A5.2a-ii catalog-READ sub-endpoints against the slugged ``catalog_db`` fixture.
 
-Covers the suffixed / sub-resource routes (`/states`, `/predecessors`,
-`/successors`, `/lineage`, `/lineage_warnings`, and the
+Covers the suffixed / sub-resource routes (`/predecessors`, `/lineage`,
+`/lineage_warnings`, `/dimensions`, `/graph` and the
 `/{provider}/{register}/variants` register sub-resource), the `?period` query on
 the catch-all (the `{states: [...]}` resolve_at shape), the read-only
-`?value_set_version` browse-narrowing label filter, and a per-DB-backed-route
-ThreadPoolExecutor concurrency smoke (the A5.1b-ii P1 cross-thread guard). (The
-`@version` FQID pin is retired — a bare leaf is the only form.) The security
-gate
-(malformed period/variant/traversal → 422 + zero SQL; see DESIGN.md → FQID path
-guard (catalog_fqid.py)) lives in ``test_fqid_validation.py``.
+`?value_set_version` browse-narrowing label filter, and a ThreadPoolExecutor
+concurrency smoke (the A5.1b-ii P1 cross-thread guard). `/states`,
+`/successors`, the variable and group graphs and the suffix redirects are pinned
+by ``conformance/cases/http_catalog``. The security gate (malformed
+period/variant/traversal/`@` pin → 422 + zero SQL; see DESIGN.md → FQID path
+guard (catalog_fqid.py)) lives in ``test_fqid_validation.py``; the ETag and
+Cache-Control tiers in ``test_etag_middleware.py``.
 
 The ``catalog_db`` fixture seeds ``scb/lisa/kon`` with a same_as edge, a
 succession edge (kon→rams/syss), a lineage edge (kon's state consumes syss's),
@@ -21,9 +22,6 @@ from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor
 
 import pytest
-from fastapi.testclient import TestClient
-from reg_webapp.app import create_app
-from reg_webapp.etag import CACHE_CONTROL_REVALIDATE, CACHE_CONTROL_SHORT
 
 _KON = "scb/lisa/kon"
 _SYSS = "scb/rams/syss"
@@ -33,41 +31,7 @@ _SYSS = "scb/rams/syss"
 _INKJAN = "scb/rams/inkjan"
 
 
-@pytest.fixture
-def client(catalog_db):
-    with TestClient(create_app()) as c:
-        yield c
-
-
 # ── The 6 binding-suffix sub-endpoints ──────────────────────────────────────
-
-
-def test_states_endpoint(client):
-    resp = client.get(f"/api/catalog/{_KON}/states")
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["binding"] == _KON
-    assert len(body["states"]) == 1
-    state = body["states"][0]
-    assert state["variant"] == "individer-15plus"
-    # Uniform with the leaf-embed + the ?period response: value_set hydrated.
-    assert state["value_set"] == [
-        {"code": "1", "label": "Man"},
-        {"code": "2", "label": "Kvinna"},
-    ]
-
-
-def test_successors_endpoint(client):
-    resp = client.get(f"/api/catalog/{_KON}/successors")
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["binding"] == _KON
-    assert any(r["fqid"] == _SYSS for r in body["successors"])
-    # #142 succession fields ride through; `register` is the wire alias.
-    ref = next(r for r in body["successors"] if r["fqid"] == _SYSS)
-    assert ref["register"] == "rams"
-    assert ref["effective_year"] == 2019
-    assert ref["reason"] == "kon→syss"
 
 
 def test_predecessors_endpoint(client):
@@ -139,16 +103,6 @@ def test_dimensions_endpoint_resolves_through_same_as(client):
     assert _INKJAN in member_fqids  # the resolved target's group, not lisa's
 
 
-def test_dimensions_endpoint_dead_binding_301s_to_successor(client):
-    # A dead/renamed binding 301s to /dimensions on its terminal successor (#411),
-    # uniform with the other sub-endpoints. `renamed-head` → … → scb/rams/syss.
-    resp = client.get(
-        "/api/catalog/scb/lisa/renamed-head/dimensions", follow_redirects=False
-    )
-    assert resp.status_code == 301
-    assert resp.headers["location"] == f"/api/catalog/{_SYSS}/dimensions"
-
-
 def test_clean_binding_has_empty_lineage_and_warnings(client):
     # syss has no consumer lineage / warnings — empty lists, 200 (not 404).
     assert client.get(f"/api/catalog/{_SYSS}/lineage").json()["lineage_edges"] == []
@@ -161,20 +115,6 @@ def test_clean_binding_has_empty_lineage_and_warnings(client):
 # ── The relationship-graph sub-resource (#761) ───────────────────────────────
 
 
-def test_graph_endpoint_variable(client):
-    # kon has a succession edge to rams/syss → a non-empty graph with both nodes
-    # present and `focus_id` = the queried node. The graph is succession-only.
-    resp = client.get(f"/api/catalog/{_KON}/graph")
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["focus_id"] == _KON
-    node_ids = {n["id"] for n in body["nodes"]}
-    assert _KON in node_ids
-    assert _SYSS in node_ids  # the succession successor
-    kinds = {e["kind"] for e in body["edges"]}
-    assert kinds == {"succession"}, body
-
-
 def test_graph_endpoint_variable_carries_same_as(client):
     # The fixture seeds a curated same_as edge kon→syss; the kon graph node must
     # carry the syss alias in its `same_as[]` (node metadata, not an edge — #761).
@@ -184,15 +124,6 @@ def test_graph_endpoint_variable_carries_same_as(client):
     kon_node = next(n for n in body["nodes"] if n["id"] == _KON)
     alias_fqids = {ref["fqid"] for ref in kon_node["same_as"]}
     assert _SYSS in alias_fqids
-
-
-def test_graph_endpoint_dead_binding_301s_to_successor(client):
-    # A dead/renamed binding 301s to /graph on its terminal successor (#411).
-    resp = client.get(
-        "/api/catalog/scb/lisa/renamed-head/graph", follow_redirects=False
-    )
-    assert resp.status_code == 301
-    assert resp.headers["location"] == f"/api/catalog/{_SYSS}/graph"
 
 
 def test_graph_endpoint_on_register_fqid_is_422(client):
@@ -227,17 +158,6 @@ def test_graph_endpoint_unknown_classification_404(client):
     # An unknown classification leaf 404s (parity with a not-found binding), not 500.
     resp = client.get("/api/catalog/class/nope/graph")
     assert resp.status_code == 404
-
-
-def test_concept_group_graph_endpoint(client):
-    # The `ink` token group on scb/rams → a group-addressed graph (focus_id None)
-    # unioning its member variables.
-    resp = client.get("/api/catalog/group/scb/rams/ink/graph")
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["focus_id"] is None
-    node_ids = {n["id"] for n in body["nodes"]}
-    assert {_INKJAN, "scb/rams/inkfeb"} <= node_ids
 
 
 def test_concept_group_graph_unknown_key_404(client):
@@ -279,15 +199,6 @@ def test_classification_group_graph_unknown_key_404(client):
 
 
 # ── The variant browser (register sub-resource) ─────────────────────────────
-
-
-def test_variants_endpoint(client):
-    resp = client.get("/api/catalog/scb/lisa/variants")
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["register"] == "scb/lisa"  # wire alias
-    slugs = {v["slug"] for v in body["variants"]}
-    assert "individer-15plus" in slugs
 
 
 def test_variants_endpoint_serializes_panel_fields(client):
@@ -367,17 +278,9 @@ def test_variants_reserved_segment_422_not_500(client, path: str):
 # ── Sub-endpoints are binding-only: non-binding FQID → 422; absent → 404 ─────
 
 
-@pytest.mark.parametrize(
-    "suffix",
-    [
-        "states",
-        "predecessors",
-        "successors",
-        "lineage",
-        "lineage_warnings",
-        "dimensions",
-    ],
-)
+# One error mapper serves every suffix; `states`, `successors` and `dimensions`
+# are each the surviving HTTP proof for a deleted reg_meta library refusal.
+@pytest.mark.parametrize("suffix", ["states", "successors", "dimensions"])
 def test_subendpoint_on_register_fqid_is_422(client, suffix: str):
     # A 2-seg (register) FQID is not a binding — reg_meta raises
     # `not_a_binding_fqid` (EXIT_USAGE), mapped to 422 (a usage error, not 500).
@@ -402,25 +305,6 @@ def test_subendpoint_on_register_fqid_is_422(client, suffix: str):
 def test_subendpoint_on_absent_binding_is_404(client, suffix: str):
     resp = client.get(f"/api/catalog/scb/lisa/doesnotexist/{suffix}")
     assert resp.status_code == 404
-
-
-@pytest.mark.parametrize(
-    "suffix",
-    [
-        "states",
-        "predecessors",
-        "successors",
-        "lineage",
-        "lineage_warnings",
-        "dimensions",
-    ],
-)
-def test_subendpoint_rejects_at_version_pin(client, suffix: str):
-    # The `@version` pin is retired — a binding leaf is a bare slug, so the `@` is a
-    # non-slug character the path gate rejects (422) before the suffixed handler
-    # runs, on every sub-resource route.
-    resp = client.get(f"/api/catalog/{_KON}@v1/{suffix}")
-    assert resp.status_code == 422, f"{suffix} → {resp.status_code}"
 
 
 # ── The ?period query on the catch-all (the {states:[...]} shape) ────────────
@@ -554,14 +438,6 @@ def test_no_period_query_returns_full_leaf(client):
 # ── ?value_set_version read-only browse-narrowing label filter ───────────────
 
 
-def test_value_set_version_query_alone_is_accepted(client):
-    # No state carries a value_set_version_label, so narrowing yields empty — but
-    # the request is well-formed (200), proving the query is wired.
-    resp = client.get(f"/api/catalog/{_KON}?period=2020&value_set_version=v1")
-    assert resp.status_code == 200
-    assert resp.json()["states"] == []
-
-
 def test_value_set_version_query_accepts_a_free_text_label(client):
     # [A5.3b] ?value_set_version is matched against the FREE-TEXT
     # value_set_version_label (a Python filter, not SQL), so a real label with
@@ -576,15 +452,6 @@ def test_value_set_version_query_accepts_a_free_text_label(client):
     )
     assert resp.status_code == 200, resp.json()
     assert resp.json()["states"] == []  # no fixture state carries that label
-
-
-def test_value_set_version_query_rejects_control_chars(client):
-    # The sanity gate still 422s a NUL/control char (smuggling vector).
-    resp = client.get(
-        f"/api/catalog/{_KON}",
-        params={"period": "2020", "value_set_version": "bad\x00label"},
-    )
-    assert resp.status_code == 422
 
 
 def test_value_set_version_none_sentinel_selects_the_empty_label(client):
@@ -625,63 +492,6 @@ def test_inverted_period_range_is_422_not_500(client):
     assert resp.status_code == 422, f"inverted range → {resp.status_code}"
 
 
-# ── ETag / Cache-Control + 304 on every read endpoint ────────────────────────
-
-_READ_PATHS = [
-    "/api/context",
-    "/api/catalog",
-    f"/api/catalog/{_KON}",
-    f"/api/catalog/{_KON}?period=2020",
-    f"/api/catalog/{_KON}/states",
-    f"/api/catalog/{_KON}/predecessors",
-    f"/api/catalog/{_KON}/successors",
-    f"/api/catalog/{_KON}/lineage",
-    f"/api/catalog/{_KON}/lineage_warnings",
-    f"/api/catalog/{_INKJAN}/dimensions",
-    "/api/catalog/scb/lisa/variants",
-]
-
-
-@pytest.mark.parametrize("path", _READ_PATHS)
-def test_read_endpoint_sets_etag_and_cache_control(client, path: str):
-    resp = client.get(path)
-    assert resp.status_code == 200
-    etag = resp.headers.get("etag")
-    assert etag and etag.startswith('"') and etag.endswith('"')
-    # /api/context (the vintage-footer source, #447) revalidates always; every
-    # other path here is a /api/catalog/* read, which gets the short 60s window
-    # (#499) so curated concept-group folds surface promptly for returning users.
-    expected_cc = (
-        CACHE_CONTROL_REVALIDATE if path == "/api/context" else CACHE_CONTROL_SHORT
-    )
-    assert resp.headers.get("cache-control") == expected_cc
-
-
-@pytest.mark.parametrize("path", _READ_PATHS)
-def test_if_none_match_returns_304(client, path: str):
-    etag = client.get(path).headers["etag"]
-    resp = client.get(path, headers={"If-None-Match": etag})
-    assert resp.status_code == 304
-    assert resp.content == b""
-    # The validating headers survive on the 304.
-    assert resp.headers["etag"] == etag
-    # /api/context (the vintage-footer source, #447) revalidates always; every
-    # other path here is a /api/catalog/* read, which gets the short 60s window
-    # (#499) so curated concept-group folds surface promptly for returning users.
-    expected_cc = (
-        CACHE_CONTROL_REVALIDATE if path == "/api/context" else CACHE_CONTROL_SHORT
-    )
-    assert resp.headers.get("cache-control") == expected_cc
-
-
-def test_period_in_etag_cache_key(client):
-    # The ?period query is part of the URL → part of the cache key: different
-    # periods are different ETags. (Different bodies here: 1 state vs 0.)
-    a = client.get(f"/api/catalog/{_KON}?period=2020").headers["etag"]
-    b = client.get(f"/api/catalog/{_KON}?period=1900").headers["etag"]
-    assert a != b
-
-
 # ── Concurrency: the A5.1b-ii P1 cross-thread guard, per DB-backed route ─────
 # Each new DB-backed route opens its sqlite connection INSIDE the sync handler
 # body (one thread). The TestClient's sequential default masks the bug, so we hit
@@ -689,23 +499,14 @@ def test_period_in_etag_cache_key(client):
 # opened connection used cross-thread would raise sqlite3.ProgrammingError →
 # non-200 (reproduced 72/80 on #168 before the fix).
 
+# One route per connection-open pattern: a binding suffix, a `?period` resolve,
+# the full binding leaf and a listing. They share `_catalog_conn`, so a future
+# Depends-opened conn on any route would regress the cross-thread guard.
 _CONCURRENT_DB_ROUTES = [
     f"/api/catalog/{_KON}/states",
-    f"/api/catalog/{_KON}/predecessors",
-    f"/api/catalog/{_SYSS}/predecessors",
-    f"/api/catalog/{_KON}/successors",
-    f"/api/catalog/{_KON}/lineage",
-    f"/api/catalog/{_KON}/lineage_warnings",
-    f"/api/catalog/{_INKJAN}/dimensions",
-    "/api/catalog/scb/lisa/variants",
     f"/api/catalog/{_KON}?period=2020",
-    f"/api/catalog/{_KON}?period=2018..2020&variant=individer-15plus",
-    # The other in-handler-open paths (root, no-period binding leaf, class root) —
-    # same `_catalog_conn` pattern, so a future Depends-opened conn on any of them
-    # would regress the cross-thread guard.
-    "/api/catalog",
     f"/api/catalog/{_KON}",
-    "/api/catalog/class",
+    "/api/catalog",
 ]
 
 

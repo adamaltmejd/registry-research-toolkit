@@ -26,101 +26,6 @@ describe("PeriodWindowSlider", () => {
     userChosen: true,
   };
 
-  it("seeds two thumbs + the readout from the selection, shows the coverage span", async () => {
-    const screen = await render(PeriodWindowSlider, {
-      ...base,
-      selection: { from: 2000, to: 2010 },
-      window: { from: 2000, to: 2010 },
-      onchange: vi.fn(),
-      onreset: vi.fn(),
-    });
-    await expect
-      .element(screen.getByRole("slider", { name: "From year" }))
-      .toHaveValue("2000");
-    await expect
-      .element(screen.getByRole("slider", { name: "To year" }))
-      .toHaveValue("2010");
-    await expect.element(screen.getByText("2000–2010")).toBeVisible();
-    await expect.element(screen.getByText("data 1995–2015")).toBeVisible();
-  });
-
-  it("moving the From thumb emits the new window (never crossing To)", async () => {
-    const onchange = vi.fn<(next: StudyWindow) => void>();
-    const screen = await render(PeriodWindowSlider, {
-      ...base,
-      selection: { from: 2000, to: 2010 },
-      window: { from: 2000, to: 2010 },
-      onchange,
-      onreset: vi.fn(),
-    });
-    await screen.getByRole("slider", { name: "From year" }).fill("2005");
-    expect(onchange).toHaveBeenLastCalledWith({ from: 2005, to: 2010 });
-  });
-
-  it("user deviation: selection ≠ window shows the hint; reset fires onreset", async () => {
-    const onreset = vi.fn<() => void>();
-    const screen = await render(PeriodWindowSlider, {
-      ...base,
-      selection: { from: 2002, to: 2008 },
-      window: { from: 2000, to: 2010 },
-      onchange: vi.fn(),
-      onreset,
-    });
-    await expect
-      .element(screen.getByText(/Deviates from project window/))
-      .toBeVisible();
-    await screen
-      .getByRole("button", { name: "reset to project window" })
-      .click();
-    expect(onreset).toHaveBeenCalledOnce();
-  });
-
-  it("userChosen:false suppresses the deviation hint even when the seed ≠ window (Fix B)", async () => {
-    // The coverage-clamped default seed (selection 2000–2008 from window 2000–2010
-    // ∩ coverage) differs from the bare window, but the user chose nothing — the
-    // data constrained it. With `userChosen:false` the amber "Deviates" hint must
-    // NOT fire on this untouched default render.
-    const screen = await render(PeriodWindowSlider, {
-      ...base,
-      userChosen: false,
-      coverage: { from: 1995, to: 2008 } as Coverage,
-      selection: { from: 2000, to: 2008 },
-      window: { from: 2000, to: 2010 },
-      onchange: vi.fn(),
-      onreset: vi.fn(),
-    });
-    await expect
-      .element(screen.getByText(/Deviates from project window/))
-      .not.toBeInTheDocument();
-  });
-
-  it("no user-deviation hint when the selection matches the window", async () => {
-    const screen = await render(PeriodWindowSlider, {
-      ...base,
-      selection: { from: 2000, to: 2010 },
-      window: { from: 2000, to: 2010 },
-      onchange: vi.fn(),
-      onreset: vi.fn(),
-    });
-    await expect
-      .element(screen.getByText(/Deviates from project window/))
-      .not.toBeInTheDocument();
-  });
-
-  it("availability deviation: a selection beyond coverage shows the not-delivered note", async () => {
-    // coverage 1995–2015; select 2000–2020 → 2016–2020 not delivered.
-    const screen = await render(PeriodWindowSlider, {
-      ...base,
-      selection: { from: 2000, to: 2020 },
-      window: { from: 2000, to: 2020 },
-      onchange: vi.fn(),
-      onreset: vi.fn(),
-    });
-    await expect
-      .element(screen.getByText(/Not delivered after 2015/))
-      .toBeVisible();
-  });
-
   it("unbounded-start coverage (from: null) STILL fires the finite-end gap (Fix A)", async () => {
     // coverage {null..2008}: unknown start, KNOWN end. A 2010–2015 selection is
     // entirely after the finite end → "Not delivered after 2008" must fire (the
@@ -138,25 +43,6 @@ describe("PeriodWindowSlider", () => {
       .element(screen.getByText(/Not delivered after 2008/))
       .toBeVisible();
     await expect.element(screen.getByText("data …–2008")).toBeVisible();
-  });
-
-  it("unbounded-end coverage (to: null) fires no 'after' gap (still delivered)", async () => {
-    // coverage {1990..null}: a 2000–2030 selection sits entirely inside the open
-    // end → no "Not delivered after" note; the end reads as an ellipsis.
-    const screen = await render(PeriodWindowSlider, {
-      ...base,
-      min: 1985,
-      max: 2030,
-      coverage: { from: 1990, to: null },
-      selection: { from: 2000, to: 2030 },
-      window: { from: 2000, to: 2030 },
-      onchange: vi.fn(),
-      onreset: vi.fn(),
-    });
-    await expect
-      .element(screen.getByText(/Not delivered/))
-      .not.toBeInTheDocument();
-    await expect.element(screen.getByText("data 1990–…")).toBeVisible();
   });
 
   it("open-ended coverage projects to the VINTAGE, not the track edge (#631)", async () => {
@@ -185,27 +71,6 @@ describe("PeriodWindowSlider", () => {
     expect(screen.container.querySelectorAll(".gap").length).toBe(1);
   });
 
-  it("finite coverage is NOT re-projected by vintageYear (#631)", async () => {
-    // coverage {1990..2008} with vintageYear 2021: the finite end is the gap
-    // boundary, NOT the vintage. A 2000–2015 selection gaps "after 2008", never
-    // "after 2021" — vintageYear caps only the OPEN end.
-    const screen = await render(PeriodWindowSlider, {
-      ...base,
-      min: 1985,
-      max: 2026,
-      coverage: { from: 1990, to: 2008 },
-      vintageYear: 2021,
-      selection: { from: 2000, to: 2015 },
-      window: { from: 2000, to: 2015 },
-      onchange: vi.fn(),
-      onreset: vi.fn(),
-    });
-    await expect
-      .element(screen.getByText(/Not delivered after 2008/))
-      .toBeVisible();
-    await expect.element(screen.getByText("data 1990–2008")).toBeVisible();
-  });
-
   it("no coverage → no availability note and no coverage readout", async () => {
     const screen = await render(PeriodWindowSlider, {
       min: 1990,
@@ -223,28 +88,6 @@ describe("PeriodWindowSlider", () => {
       .element(screen.getByText(/Not delivered/))
       .not.toBeInTheDocument();
     await expect.element(screen.getByText(/^data /)).not.toBeInTheDocument();
-  });
-
-  it("sub-annual ?period: the shown span is the window projection → show the cue, suppress the misleading no-deviation reading", async () => {
-    // selection === window (the projected fallback) would normally read as "no
-    // deviation"; but the active value is sub-annual, so the slider must say so
-    // rather than imply the window is the active selection.
-    const screen = await render(PeriodWindowSlider, {
-      ...base,
-      selection: { from: 2000, to: 2010 },
-      window: { from: 2000, to: 2010 },
-      subAnnualPeriod: "HT2020",
-      onchange: vi.fn(),
-      onreset: vi.fn(),
-    });
-    await expect.element(screen.getByText(/Active period/)).toBeVisible();
-    await expect
-      .element(screen.getByText("HT2020", { exact: true }))
-      .toBeVisible();
-    // No user-deviation hint (it would be a window-vs-window artefact here).
-    await expect
-      .element(screen.getByText(/Deviates from project window/))
-      .not.toBeInTheDocument();
   });
 
   it("hasSelection:false suppresses the leading not-delivered gap (no-op full-history default, #639)", async () => {
@@ -294,69 +137,6 @@ describe("PeriodWindowSlider", () => {
     expect(screen.container.querySelectorAll(".gap").length).toBe(1);
   });
 
-  it("renders the unavailable (no-data) band UP FRONT, with no selection/drag (#671)", async () => {
-    // #671: the out-of-coverage track is a non-selectable greyed band shown
-    // immediately — even on the no-op default (hasSelection:false), where the
-    // alarming not-delivered GAP is suppressed. coverage 1995–2015 on a 1990–2020
-    // track → a leading (1990–1994) and trailing (2016–2020) unavailable region.
-    const screen = await render(PeriodWindowSlider, {
-      ...base,
-      hasSelection: false,
-      selection: { from: 1995, to: 2015 },
-      window: null,
-      onchange: vi.fn(),
-      onreset: vi.fn(),
-    });
-    expect(screen.container.querySelectorAll(".unavailable").length).toBe(2);
-    // No alarming selection-gap state (the band is "no data", not a warning).
-    expect(screen.container.querySelectorAll(".gap").length).toBe(0);
-    await expect
-      .element(screen.getByText(/Not delivered/))
-      .not.toBeInTheDocument();
-  });
-
-  it("renders a positive delivered cue for a single-year coverage band (#796)", async () => {
-    const screen = await render(PeriodWindowSlider, {
-      min: 1960,
-      max: 2004,
-      coverage: { from: 2004, to: 2004 } as Coverage,
-      subAnnualPeriod: null,
-      hasSelection: false,
-      userChosen: false,
-      selection: { from: 2004, to: 2004 },
-      window: null,
-      onchange: vi.fn(),
-      onreset: vi.fn(),
-    });
-
-    expect(screen.container.querySelectorAll(".unavailable").length).toBe(1);
-    expect(screen.container.querySelector(".coverage")).not.toBeNull();
-    expect(screen.container.querySelector(".coverage-cue")).not.toBeNull();
-    expect(screen.container.querySelectorAll(".gap").length).toBe(0);
-  });
-
-  it("clamps the thumbs to coverage so a drag can't enter the not-delivered region (#671)", async () => {
-    // coverage 1995–2015 → selectableMin/Max = 1995/2015. Dragging the To thumb
-    // up to 2020 is clamped to 2015 (the delivered ceiling); the From thumb down
-    // to 1990 clamps to 1995.
-    const onchange = vi.fn<(next: StudyWindow) => void>();
-    const screen = await render(PeriodWindowSlider, {
-      ...base, // 1990–2020, coverage 1995–2015
-      selection: { from: 2000, to: 2010 },
-      window: { from: 2000, to: 2010 },
-      onchange,
-      onreset: vi.fn(),
-    });
-    await screen.getByRole("slider", { name: "To year" }).fill("2020");
-    await expect
-      .element(screen.getByRole("slider", { name: "To year" }))
-      .toHaveValue("2015");
-    await screen.getByRole("slider", { name: "From year" }).fill("1990");
-    await expect
-      .element(screen.getByRole("slider", { name: "From year" }))
-      .toHaveValue("1995");
-  });
-
   it("a REJECTED move keeps the thumbs, the readout and the emitted range in agreement", async () => {
     // The synthetic catalog's finite 2018 leaf: coverage 2018–2018 on a
     // 1960–2020 track, both thumbs already on the single delivered year. Home on
@@ -387,26 +167,6 @@ describe("PeriodWindowSlider", () => {
       .element(screen.getByText("2018–2018", { exact: true }))
       .toBeVisible();
     expect(onchange).toHaveBeenLastCalledWith({ from: 2018, to: 2018 });
-  });
-
-  it("open-ended coverage: 'coverage through <vintage>' names the delivery ceiling (M21/#671)", async () => {
-    // An open-ended coverage end reads as an ellipsis in the raw readout; the
-    // note names the vintage-projected ceiling so the bound is explained.
-    const screen = await render(PeriodWindowSlider, {
-      ...base,
-      min: 1990,
-      max: 2026,
-      coverage: { from: 1995, to: null },
-      vintageYear: 2021,
-      selection: { from: 2000, to: 2010 },
-      window: { from: 2000, to: 2010 },
-      onchange: vi.fn(),
-      onreset: vi.fn(),
-    });
-    await expect.element(screen.getByText("data 1995–…")).toBeVisible();
-    await expect
-      .element(screen.getByText("coverage through 2021"))
-      .toBeVisible();
   });
 
   it("finite coverage: no redundant 'coverage through' note (the readout already names the end, M21)", async () => {

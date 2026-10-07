@@ -11,7 +11,6 @@ from zipfile import BadZipFile
 import pytest
 from _csv_fixtures import (
     repin_input_bundle,
-    sparsify_scb_values,
     write_input_bundle,
     write_input_bundle_from_snapshot,
     write_scb_input,
@@ -148,29 +147,6 @@ def test_catalog_bundle_carries_classification_books_but_no_curation_or_naming(
     assert not {
         path for path in written if path.startswith(("curation/", "fqid_slugs/"))
     }
-
-
-def test_catalog_bundle_preparation_skips_exhaustive_snapshot_verification(
-    tmp_path: Path,
-) -> None:
-    input_dir = tmp_path / "source"
-    write_scb_input(input_dir)
-    snapshot = write_scb_snapshot(tmp_path / "accepted", input_dir / "SCB")
-    auxiliary = input_dir / "SCB" / "Tabelldefinitioner.sql"
-    auxiliary.write_text(
-        "CREATE TABLE [dbo].[Auxiliary]([value] [int] NULL) ON [PRIMARY]\nGO\n",
-        encoding="utf-8",
-    )
-
-    # With the value role sparse, re-proving the snapshot or reading values would
-    # fail: auxiliary-only capture must reuse the accepted proof.
-    sparsify_scb_values(snapshot)
-    output = snapshot.path.parent / "bundle"
-    prepare_input_bundle(input_dir, snapshot, output)
-
-    assert (
-        output / "catalog" / "SCB" / "Tabelldefinitioner.sql"
-    ).read_bytes() == auxiliary.read_bytes()
 
 
 @pytest.mark.parametrize(

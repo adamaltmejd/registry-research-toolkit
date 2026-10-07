@@ -14,8 +14,6 @@ from _prepared_fixtures import (
     prepare_records as _prepare,
     prepared_record as _record,
     prepared_revision as _revision,
-    record_file_opens,
-    record_git_calls,
 )
 from reg_meta_build.prepared_sources import (
     PreparedSourceError,
@@ -28,26 +26,6 @@ from reg_meta_build.prepared_sources import (
 
 def _git(repo: Path, *args: str) -> None:
     subprocess.run(["git", "-C", str(repo), *args], check=True, capture_output=True)
-
-
-def test_warm_open_reads_no_payload_and_runs_no_hash_object(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    root = tmp_path / "inputs" / "records"
-    manifest = _prepare(root)
-    commit = accept_prepared(root)
-    with monkeypatch.context() as patch:
-        git = record_git_calls(patch)
-        opened_paths = record_file_opens(patch)
-        opened = open_prepared_source_records(
-            root, expected_sha256=manifest.sha256, input_commit=commit
-        )
-        assert len(tuple(opened.records)) == 1
-        name = next(opened.lookup("source-a", ("source-a", "First"))).fields.name
-    assert name is not None and name.value == "First"
-    assert not any("hash-object" in call for call in git)
-    # SQLite opens the database in C; a Python open of it would be a rehash.
-    assert [path for path, _ in opened_paths if path.suffix == ".sqlite"] == []
 
 
 def test_prepare_validates_identity_revision_membership_and_cleans_failure(

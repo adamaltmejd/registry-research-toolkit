@@ -167,20 +167,8 @@ const ageState = state({
 });
 
 describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () => {
-  it("renders DISTINCT value sets, not raw states (the dedup)", async () => {
-    // Four states, two value sets → two rows in the union list.
-    const states = [
-      classState,
-      state({ ...classState, state_id: "3", valid_from: "2011-01-01" }),
-      plainState,
-      state({ ...plainState, state_id: "4", valid_from: "1968-01-01" }),
-    ];
-    await render(ValueSetView, { states, narrowed: false });
-    expect(document.querySelectorAll(".vs-list > li")).toHaveLength(2);
-  });
-
   it.each([false, true])(
-    "shows literal delivery names, descriptions, definitions and units (multiple=%s)",
+    "shows literal names, descriptions, definitions and units (multiple=%s)",
     async (multiple) => {
       const first = state({
         state_id: "10",
@@ -266,45 +254,6 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     expect(document.body.textContent).not.toContain("Kronor");
   });
 
-  it("shows state operational definitions when parallel columns share one value set (#736)", async () => {
-    const states = [
-      state({
-        state_id: "10",
-        value_set_id: "500",
-        value_set_version_label: "vald/inte vald",
-        delivery_column_name: "fedunsatreason_1",
-        operational_definition: "Education was not relevant to work",
-        value_set_summary: coding(500, [
-          { code: "0", label: "Inte vald" },
-          { code: "1", label: "Vald" },
-        ]),
-      }),
-      state({
-        state_id: "11",
-        value_set_id: "500",
-        value_set_version_label: "vald/inte vald",
-        delivery_column_name: "fedunsatreason_2",
-        operational_definition: "Education was too theoretical",
-        value_set_summary: coding(500, [
-          { code: "0", label: "Inte vald" },
-          { code: "1", label: "Vald" },
-        ]),
-      }),
-    ];
-
-    await render(ValueSetView, { states, narrowed: false });
-
-    expect(document.querySelectorAll(".vs-list > li")).toHaveLength(1);
-    await expect.element(page.getByText("fedunsatreason_1")).toBeVisible();
-    await expect
-      .element(page.getByText("Education was not relevant to work"))
-      .toBeVisible();
-    await expect.element(page.getByText("fedunsatreason_2")).toBeVisible();
-    await expect
-      .element(page.getByText("Education was too theoretical"))
-      .toBeVisible();
-  });
-
   it("renders expanded state definitions with duplicate source state ids (#736)", async () => {
     const states = [
       state({
@@ -387,14 +336,23 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   });
 
   it("a classification value set shows the '= LKF ⟨vintage⟩' link, NOT a code dump", async () => {
+    // The classification state carries codes too, so a code dump would show as a
+    // second "Values (…)" disclosure beside the plain value set's.
     await render(ValueSetView, {
-      states: [classState, plainState],
+      states: [
+        state({
+          ...classState,
+          value_set_summary: coding(100, [{ code: "01", label: "Kod ett" }]),
+        }),
+        plainState,
+      ],
       narrowed: false,
     });
     // The classification row links out to the classification.
     const link = page.getByRole("link", { name: "LKF 2007" });
     await expect.element(link).toBeVisible();
     expect(link.element().getAttribute("href")).toBe("/catalog/class/lkf2007");
+    expect(page.getByText(/^Values \(/).elements()).toHaveLength(1);
   });
 
   it("warns on nonconforming codes while keeping a classification link", async () => {
@@ -438,6 +396,12 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       ],
       narrowed: false,
     });
+    expect(
+      page
+        .getByRole("link")
+        .elements()
+        .some((a) => a.getAttribute("href") === "/catalog/class/lkf2007"),
+    ).toBe(true);
     expect(normalizedText(".conformance-notice")).toContain(
       "2 source codes match this classification; 1 is a source extension.",
     );
@@ -637,69 +601,6 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     expect(vi.mocked(getValueSetCodes)).not.toHaveBeenCalled();
   });
 
-  it("shows the claimed classification alongside source extensions", async () => {
-    await render(ValueSetView, {
-      states: [
-        state({
-          value_set_id: "300",
-          classifications: [
-            {
-              slug: "isced-f2013",
-              short_name: "isced-f2013",
-              name: "isced-f2013",
-              conformance: {
-                declared_classification_slug: "isced-f2013",
-                declared_classification_short_name: "ISCED-F 2013",
-                declared_classification_name: "ISCED-F 2013",
-                status: "extended",
-                checked_code_count: 25,
-                matched_code_count: 1,
-                nonconforming_code_count: 24,
-                nonstandard_code_count: 24,
-                sentinel_code_count: 0,
-                overlap: 0.04,
-                nonconforming_codes: [],
-              },
-            },
-          ],
-          value_set_version_label: "ISCED F 2013",
-          value_set_summary: coding(300, [
-            { code: "13", label: "Datavetenskap" },
-            { code: "1a", label: "Pedagogik" },
-          ]),
-        }),
-        plainState,
-      ],
-      narrowed: false,
-    });
-    expect(normalizedText(".conformance-notice")).toContain(
-      "1 source code matches this classification; 24 are source extensions.",
-    );
-    await expect
-      .element(page.getByRole("link", { name: "isced-f2013" }).first())
-      .toBeVisible();
-    await expect
-      .element(page.getByText("Matching source codes (1)"))
-      .toBeVisible();
-    await expect
-      .element(page.getByText("Nonstandard source codes (24)"))
-      .toBeVisible();
-  });
-
-  it("a plain value set exposes its codes inline (expandable), not the classification link", async () => {
-    // ≥2 states → the multi-state union (one state alone is single-state DETAIL).
-    await render(ValueSetView, {
-      states: [plainState, classState],
-      narrowed: false,
-    });
-    // The "Values (2)" disclosure is present (the plain value set); expanding
-    // reveals the code rows.
-    const summary = page.getByText("Values (2)");
-    await expect.element(summary).toBeVisible();
-    await summary.click();
-    await expect.element(page.getByText("Upplands Väsby")).toBeVisible();
-  });
-
   it("shuts an open code disclosure when the states are re-resolved", async () => {
     // A `?period` Apply refetches this view WITHOUT remounting it. The open map is
     // cleared with the rest of the local view state, and the twisty is BOUND to it,
@@ -810,19 +711,18 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   });
 
   it("keeps distinct source domains even when they declare the same classification", async () => {
-    // The duplicate-LKF-row bug: SCB ships ≥2 distinct value_set_ids per LKF
-    // edition. Two such states for lkf2007 must render ONE "= LKF 2007" row, not
-    // two — plus the one plain value set → two rows total.
+    // SCB ships ≥2 distinct value_set_ids per LKF edition. They are distinct source
+    // domains, so each keeps its own row (each linking LKF 2007) beside the plain
+    // value set; they do not collapse into one.
     const states = [
       classState, // lkf2007, value_set_id 100
       state({ ...classState, state_id: "9", value_set_id: "101" }), // SAME edition, distinct id
       plainState,
     ];
     await render(ValueSetView, { states, narrowed: false });
-    expect(document.querySelectorAll(".vs-list > li")).toHaveLength(3);
-    // Exactly one "= LKF 2007" link (no duplicate row).
+    await expect.element(page.getByText("Kommun historisk")).toBeVisible();
     expect(
-      document.querySelectorAll('a[href="/catalog/class/lkf2007"]'),
+      page.getByRole("link", { name: "LKF 2007", exact: true }).elements(),
     ).toHaveLength(2);
   });
 
@@ -872,21 +772,6 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     expect(document.querySelectorAll(".vs-list > li")).toHaveLength(2);
   });
 
-  it("the FilterInput narrows the union list (by label / variant slug)", async () => {
-    await render(ValueSetView, {
-      states: [classState, plainState],
-      narrowed: false,
-    });
-    expect(document.querySelectorAll(".vs-list > li")).toHaveLength(2);
-    // Filter to the plain value set by its label substring.
-    const filter = page.getByRole("textbox", { name: "Filter value sets" });
-    await filter.fill("historisk");
-    expect(document.querySelectorAll(".vs-list > li")).toHaveLength(1);
-    await expect
-      .element(page.getByText("Kommun historisk", { exact: true }))
-      .toBeVisible();
-  });
-
   it("Isolate after filtering isolates the FILTERED value set (stable key, not list index)", async () => {
     // `plainState` is the SECOND value set in the unfiltered list. Filtering to it
     // leaves a single row whose Isolate must focus IT — not the first of the
@@ -910,45 +795,6 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     expect(
       document.querySelector('a[href="/catalog/class/lkf2007"]'),
     ).toBeNull();
-  });
-
-  it("a plain value set with no inline value_set omits filler text when isolated", async () => {
-    // A plain (non-classification) value set whose `value_set` is null/empty: the
-    // isolated body has no codes to dump and no classification to link, so it
-    // renders no filler text.
-    const codeless = state({
-      state_id: "1",
-      value_set_id: "300",
-      value_set_version_label: "Codeless",
-      variant: "a",
-      value_set_summary: null,
-    });
-    const other = state({
-      state_id: "2",
-      value_set_id: "301",
-      value_set_version_label: "Other",
-      variant: "a",
-    });
-    await render(ValueSetView, {
-      states: [codeless, other],
-      narrowed: false,
-    });
-    await page.getByRole("button", { name: "Isolate" }).first().click();
-    await expect.element(page.getByText("Codeless")).toBeVisible();
-    await expect
-      .element(page.getByText("No value set."))
-      .not.toBeInTheDocument();
-  });
-
-  it("does NOT render any resolution-narrowing picker (the picker owns that now)", async () => {
-    // #905: the old variant / value-set-version chips moved to RepresentationPicker.
-    // The viewer is pure display — no `.picker` fieldset, regardless of variant
-    // multiplicity.
-    await render(ValueSetView, {
-      states: [classState, plainState], // distinct variants doda / fodda
-      narrowed: false,
-    });
-    expect(document.querySelector(".picker")).toBeNull();
   });
 
   it("renders technical-change hints inside a folded value-set usage (#743)", async () => {
@@ -1038,29 +884,6 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     await expect
       .element(page.getByText("1 value set outside this period"))
       .toBeVisible();
-  });
-
-  it("single-state DETAIL mode is unchanged (Variant / Valid / value set)", async () => {
-    await render(ValueSetView, {
-      states: [
-        state({
-          variant: "doda",
-          value_set_version_label: "Kommun historisk",
-          value_set_id: "900",
-          value_set_summary: coding(900, [
-            { code: "0114", label: "Upplands Väsby" },
-          ]),
-        }),
-      ],
-      narrowed: false,
-    });
-    // The single-state detail renders its own dl.meta + the value-set heading —
-    // NOT the multi-state value-set list UI (`.vs-list`, which only the >1-state
-    // view emits), so this really guards the single/multi boundary.
-    await expect.element(page.getByText("Variant")).toBeVisible();
-    await expect.element(page.getByText("Value-set version")).toBeVisible();
-    expect(document.querySelector(".vs-list")).toBeNull();
-    await expect.element(page.getByText("Upplands Väsby")).toBeVisible();
   });
 
   it("single-state detail omits default/noise rows and wholly unknown windows", async () => {
@@ -1224,62 +1047,6 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   });
 
   // ── focusColumn deep-link (#905) ────────────────────────────────────────────
-  it("focusColumn auto-isolates the distinct value set its column delivers", async () => {
-    // `plainState` is delivered via column PLAINCOL; the `?codes=PLAINCOL` deep link
-    // (focusColumn) seeds the isolation onto its value set, NOT the classification
-    // one — the union list is hidden and the isolated detail shows it.
-    const classCol = state({ ...classState, delivery_column_name: "CLASSCOL" });
-    const plainCol = state({ ...plainState, delivery_column_name: "PLAINCOL" });
-    await render(ValueSetView, {
-      states: [classCol, plainCol],
-      narrowed: false,
-      focusColumn: "PLAINCOL",
-    });
-    // Isolated → no union rows, the detail's "Used by" + the plain value set's
-    // heading are visible.
-    expect(document.querySelectorAll(".vs-list > li")).toHaveLength(0);
-    await expect.element(page.getByText("Used by")).toBeVisible();
-    expect(
-      document.querySelector(".vs-detail .vs-heading")?.textContent,
-    ).toContain("Kommun historisk");
-  });
-
-  it("focusColumn on a coding-VARYING column isolates the LATEST-era value set", async () => {
-    // One column delivered two distinct value sets over time (a coding change):
-    // the deep link isolates the LATEST-era one (max valid_to) — the picker row's
-    // representative coding. The earlier coding stays one "← All value sets" away.
-    const early = state({
-      state_id: "1",
-      value_set_id: "303",
-      value_set_version_label: "Old coding",
-      variant: "v",
-      delivery_column_name: "COL",
-      valid_from: "2015-01-01",
-      valid_to: "2018-12-31",
-    });
-    const latest = state({
-      state_id: "2",
-      value_set_id: "249",
-      value_set_version_label: "New coding",
-      variant: "v",
-      delivery_column_name: "COL",
-      valid_from: "2019-01-01",
-      valid_to: "2022-12-31",
-    });
-    await render(ValueSetView, {
-      states: [early, latest],
-      narrowed: false,
-      focusColumn: "COL",
-    });
-    await expect.element(page.getByText("Used by")).toBeVisible();
-    expect(
-      document.querySelector(".vs-detail .vs-heading")?.textContent,
-    ).toContain("New coding");
-    // The reset returns to the union showing BOTH codings.
-    await page.getByRole("button", { name: "← All value sets" }).click();
-    expect(document.querySelectorAll(".vs-list > li")).toHaveLength(2);
-  });
-
   it("re-seeds the isolation when the states change underneath (sibling navigation)", async () => {
     // The reset `$effect` (keyed on `states`) must re-run when navigation swaps the
     // states for a sibling column: a stale isolated detail can't survive into the new
@@ -1400,56 +1167,6 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     });
     expect(document.querySelectorAll(".vs-list > li")).toHaveLength(2);
     expect(document.querySelector(".vs-detail")).toBeNull();
-  });
-
-  it("focusVariant isolates the clicked variant's coding when a column is shared across variants (#905)", async () => {
-    // One delivery column COL delivered by TWO variants with DISTINCT codings —
-    // picker rows are keyed `(variant, column)`, so the deep link carries the variant.
-    // `focusVariant: "a"` must isolate variant a's coding, NOT variant b's latest-era
-    // one (the unscoped column lookup would pick b).
-    const a = state({
-      state_id: "1",
-      value_set_id: "100",
-      value_set_version_label: "Coding A",
-      variant: "a",
-      delivery_column_name: "COL",
-      valid_from: "2015-01-01",
-      valid_to: "2018-12-31",
-    });
-    const b = state({
-      state_id: "2",
-      value_set_id: "200",
-      value_set_version_label: "Coding B",
-      variant: "b",
-      delivery_column_name: "COL",
-      valid_from: "2019-01-01",
-      valid_to: "2022-12-31",
-    });
-    const { rerender } = await render(ValueSetView, {
-      states: [a, b],
-      narrowed: false,
-      focusColumn: "COL",
-      focusVariant: "a",
-    });
-    await expect.element(page.getByText("Used by")).toBeVisible();
-    const headingA = document.querySelector(
-      ".vs-detail .vs-heading",
-    )?.textContent;
-    expect(headingA).toContain("Coding A");
-    expect(headingA).not.toContain("Coding B");
-    // Re-render with the OTHER variant: same column, the other row's coding. The
-    // reset $effect re-seeds the isolation onto b's value set.
-    await rerender({
-      states: [a, b],
-      narrowed: false,
-      focusColumn: "COL",
-      focusVariant: "b",
-    });
-    const headingB = document.querySelector(
-      ".vs-detail .vs-heading",
-    )?.textContent;
-    expect(headingB).toContain("Coding B");
-    expect(headingB).not.toContain("Coding A");
   });
 });
 

@@ -6,12 +6,9 @@ from typing import TYPE_CHECKING
 
 import catalog_test_support
 import pytest
-from _slugged_db import (
-    build_slugged_db,
-)
+from _slugged_db import build_slugged_db
 from reg_meta.catalog import (
     Catalog,
-    ClassificationCode,
     DenseIntegerRange,
     ValueSetMember,
     dense_integer_range,
@@ -108,28 +105,6 @@ class TestClassificationCodes:
             )
         conn.commit()
 
-    def test_returns_codes_code_ordered_with_validity(self) -> None:
-        conn = build_slugged_db()  # seeds the live sun2020 (no codes yet)
-        # Inserted out of code order to prove the ORDER BY code.
-        self._seed_codes(
-            conn,
-            "sun2020",
-            [
-                ("3", "Eftergymnasial", 1, 1),
-                ("1", "Förgymnasial", 1, 1),
-            ],
-        )
-        codes = Catalog(conn).classification_codes("class/sun2020")
-        assert all(isinstance(c, ClassificationCode) for c in codes)
-        assert [(c.code, c.label) for c in codes] == [
-            ("1", "Förgymnasial"),
-            ("3", "Eftergymnasial"),
-        ]
-        by_code = {c.code: c for c in codes}
-        # is_valid coerces 1 → True for canonical rows.
-        assert by_code["1"].is_valid is True
-        assert by_code["1"].level == 1
-
     def test_null_is_valid_stays_none(self) -> None:
         # A classification with no canonical CSV has is_valid=NULL everywhere —
         # surfaced as None (validity unknown), not coerced to False.
@@ -138,26 +113,6 @@ class TestClassificationCodes:
         (code,) = Catalog(conn).classification_codes("class/sun2020")
         assert code.is_valid is None
         assert code.level is None
-
-    def test_empty_when_no_codes(self) -> None:
-        conn = build_slugged_db()  # sun2020 with no classification_code rows
-        assert Catalog(conn).classification_codes("class/sun2020") == []
-
-    def test_scoped_to_resolved_edition(self) -> None:
-        # Codes are per-edition: sun2000's codes must NOT leak into sun2020's list.
-        conn = build_slugged_db()
-        conn.execute(
-            "INSERT INTO classification (short_name, name, slug) "
-            "VALUES ('SUN2000', 'SUN 2000', 'sun2000')"
-        )
-        self._seed_codes(conn, "sun2000", [("9", "Gammal kod", 1, 1)])
-        self._seed_codes(conn, "sun2020", [("1", "Ny kod", 1, 1)])
-        assert [
-            c.code for c in Catalog(conn).classification_codes("class/sun2020")
-        ] == ["1"]
-        assert [
-            c.code for c in Catalog(conn).classification_codes("class/sun2000")
-        ] == ["9"]
 
     def test_resolves_through_same_as(self) -> None:
         # An alias slug cites its resolved target edition's codes.

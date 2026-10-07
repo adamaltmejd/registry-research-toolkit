@@ -260,8 +260,7 @@ export type ConceptGroup = Schemas["ConceptGroupSummary"];
 export type ConceptGroupMember = Schemas["ConceptGroupMember"];
 /** One facet assignment on a group member (`axis`/`value`/`label`) — shared by
  * the browse `ConceptGroupMember` and the subject-page `ConceptGroupNodeMember`,
- * so the facet-grid helpers (`axisValues`/`memberAt`) can be generic over the
- * member type. */
+ * so facet helpers can read either member type. */
 export type GroupFacetModel = Schemas["GroupFacet"];
 /** One declared facet axis of a concept group (#819): the stable `name` (the
  * MATCH key — equal to a member's `GroupFacet.axis`) and its curator-authored
@@ -702,7 +701,7 @@ export type SearchType =
  * appended (server default otherwise), an explicit non-`all` `type` appended
  * (#393 item 1 — `all` is the server default, so it's OMITTED to keep the URL +
  * ETag stable), an optional `register` filter appended (the for-variable hook
- * scopes by register; `search`/`docSearch` pass none), and the request aborts on
+ * scopes by register; `search` passes none), and the request aborts on
  * EITHER the caller's `signal` (a supersede/unmount teardown, which stays silent)
  * OR a ~12s timeout (surfaced as a `TimeoutError`) — `AbortSignal.any` fires on
  * whichever wins. */
@@ -778,23 +777,11 @@ export function search(
 // `{value}`) — never `{@html}` (they may carry FTS highlight markers; the full
 // converted FTS document lives at the SCB source, not here).
 
-export type DocSearchResponse = Schemas["DocSearchResponse"];
 export type DocResult = Schemas["DocResult"];
 export type DocDetail = Schemas["DocDetail"];
 export type DocVariableMentions = Schemas["DocVariableMentions"];
 export type RelatedDocument = Schemas["RelatedDocument"];
 export type RelatedDocumentsResponse = Schemas["RelatedDocumentsResponse"];
-
-/** Search documentation. Shares `search`'s query + abort/timeout plumbing (a ~12s
- * client `TimeoutError` layered with the caller's teardown `signal`); `limit` is
- * the per-request result cap (server default otherwise). An absent docs index
- * returns `ingested:false`, not an error. */
-export function docSearch(
-  q: string,
-  options?: { signal?: AbortSignal; limit?: number },
-): Promise<DocSearchResponse> {
-  return searchGet<DocSearchResponse>("/docs/search", q, options);
-}
 
 /** Resolve one doc by its `identifier` (a filename — a single path segment, so
  * `encodeURIComponent` the whole thing). 404 when the index is absent OR the doc

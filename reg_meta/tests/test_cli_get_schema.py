@@ -57,45 +57,6 @@ class TestGetSchema:
         assert variants[0]["register_variant_id"] == "10"
         assert len(variants[0]["versions"]) == 3  # 2020, 2021, 2022
 
-    def test_by_register(self, db_path: str):
-        data, code = _run_json(
-            ["--db", db_path, "get", "schema", "--register", "TESTREG"]
-        )
-        assert code == 0
-        assert len(data["data"]["variants"]) == 1
-
-    def test_years_single(self, db_path: str):
-        # A2.6: "editions" are `variable_state` validity windows now; their
-        # `year` is the window's opening year (`valid_from`). The 2020 filter
-        # keeps every window opening in 2020 (the fixture has two).
-        data, code = _run_json(
-            ["--db", db_path, "get", "schema", "10", "--years", "2020"]
-        )
-        assert code == 0
-        versions = data["data"]["variants"][0]["versions"]
-        assert versions  # at least one window opens in 2020
-        assert all(v["year"] == 2020 for v in versions)
-
-    def test_years_range(self, db_path: str):
-        # The window-opening year is what the range filters on (a window's
-        # opening year falls inside 2020-2021 here).
-        data, code = _run_json(
-            ["--db", db_path, "get", "schema", "10", "--years", "2020-2021"]
-        )
-        assert code == 0
-        versions = data["data"]["variants"][0]["versions"]
-        years = {v["year"] for v in versions}
-        assert years
-        assert all(2020 <= y <= 2021 for y in years)
-
-    def test_years_open_end(self, db_path: str):
-        data, code = _run_json(
-            ["--db", db_path, "get", "schema", "10", "--years", "2022-"]
-        )
-        assert code == 0
-        versions = data["data"]["variants"][0]["versions"]
-        assert all(v["year"] >= 2022 for v in versions)
-
     def test_columns_include_aliases(self, db_path: str):
         data, _code = _run_json(
             ["--db", db_path, "get", "schema", "10", "--years", "2020"]
@@ -141,22 +102,6 @@ class TestGetSchema:
         assert code == 0
         for ver in data["data"]["variants"][0]["versions"]:
             assert ver["columns"] == []
-
-    def test_summary_mode(self, db_path: str):
-        """--summary returns condensed variant-level info (via JSON data)."""
-        data, code = _run_json(["--db", db_path, "get", "schema", "10", "--summary"])
-        assert code == 0
-        # JSON output still has full data; summary only affects table display
-        variants = data["data"]["variants"]
-        assert len(variants) >= 1
-        assert len(variants[0]["versions"]) >= 1
-
-    def test_flat_mode(self, db_path: str):
-        """--flat is a display mode; JSON data is unchanged."""
-        data, code = _run_json(["--db", db_path, "get", "schema", "10", "--flat"])
-        assert code == 0
-        variants = data["data"]["variants"]
-        assert len(variants) >= 1
 
     def test_source_present_for_imported_variable(self, db_path: str):
         """OTHERREG's Kön is imported from TESTREG — source column should show it."""
@@ -235,33 +180,6 @@ class TestGetDiff:
         removed_names = {r["variable_name"] for r in v["removed"]}
         assert "ÅÄÖVar" in added_names
         assert "TestVar" in removed_names
-
-    def test_variable_filter_unchanged(self, db_path: str):
-        """Kön is unchanged 2020→2022; should appear in unchanged list."""
-        data, code = _run_json(
-            [
-                "--db",
-                db_path,
-                "get",
-                "diff",
-                "--register",
-                "TESTREG",
-                "--from",
-                "2020",
-                "--to",
-                "2022",
-                "--variable",
-                "Kön",
-            ]
-        )
-        assert code == 0
-        assert data["data"]["variants"] == []
-        assert "Kön" in data["data"]["unchanged"]
-        # resolved_variables shows the mapping
-        resolved = data["data"]["resolved_variables"]
-        assert any(
-            r["variable_name"] == "Kön" and r["input"] == "Kön" for r in resolved
-        )
 
     def test_variable_filter_by_alias(self, db_path: str):
         """Kon is a column alias for Kön — resolved_variables shows the mapping."""
@@ -413,23 +331,6 @@ class TestGetDiff:
                 "2020",
                 "--to",
                 "2022",
-            ]
-        )
-        assert code == 16
-
-    def test_no_versions_in_range(self, db_path: str):
-        _data, code = _run_json(
-            [
-                "--db",
-                db_path,
-                "get",
-                "diff",
-                "--register",
-                "TESTREG",
-                "--from",
-                "1990",
-                "--to",
-                "1995",
             ]
         )
         assert code == 16

@@ -291,7 +291,6 @@ import type { ConceptGroup } from "./api";
 import {
   foldGroupedRows,
   groupFilterKeys,
-  membersHaveUniqueCoords,
   narrowGroupsToMembers,
 } from "./catalog";
 
@@ -449,32 +448,6 @@ describe("groupFilterKeys", () => {
       r.group ? groupFilterKeys(r.group, noColumns) : [`zzz-inkjan-zzz`];
     const ranked = rankFilter(rows, "inkjan", keysOf);
     expect(ranked[0].id).toBe("ink-group");
-  });
-});
-
-describe("membersHaveUniqueCoords (#819 FIX C)", () => {
-  it("does not alias distinct vectors by concatenation (separator safety)", () => {
-    // ["ab",""] vs ["a","b"] both concatenate to "ab" without a separator — must
-    // stay distinct so a real collision isn't masked / a non-collision isn't faked.
-    const g = group({
-      axes: ax("x", "y"),
-      members: [
-        {
-          fqid: "scb/a/1",
-          name: null,
-          facets: [{ axis: "x", value: "ab", label: "ab" }],
-        },
-        {
-          fqid: "scb/a/2",
-          name: null,
-          facets: [
-            { axis: "x", value: "a", label: "a" },
-            { axis: "y", value: "b", label: "b" },
-          ],
-        },
-      ],
-    } as unknown as Partial<ConceptGroup>);
-    expect(membersHaveUniqueCoords(g, ax("x", "y"))).toBe(true);
   });
 });
 

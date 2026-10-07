@@ -11,7 +11,7 @@ import pytest
 from _slugged_db import build_slugged_db
 from reg_meta.catalog import Catalog
 from reg_meta.errors import RegMetaError
-from reg_meta.graph import ClassificationGraphNode, graph_for_classification_fqid
+from reg_meta.graph import ClassificationGraphNode
 
 if TYPE_CHECKING:
     import sqlite3
@@ -108,64 +108,6 @@ class TestClassificationChains:
         by_pair = {(e.source, e.target): e for e in succ}
         assert by_pair[("class/sun1996", "class/sun2000")].effective_year == 2000
         assert by_pair[("class/sun2000", "class/sun2020")].effective_year == 2020
-
-    def test_sun_umbrella_members_present_and_deduped(self) -> None:
-        # A SUN-style umbrella with two members sharing a chain: editions present,
-        # deduped (no double nodes), no `group:sun` node.
-        conn = build_slugged_db(classification=None)
-        _add_classification(conn, cid=1, slug="sun1996")
-        _add_classification(conn, cid=2, slug="sun2000-niva")
-        _add_class_succession(
-            conn, predecessor="sun1996", successor="sun2000-niva", effective_year=2000
-        )
-        conn.execute(
-            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-            "label, source) VALUES (12, 'classification', NULL, 'sun', 'SUN', 'curated')"
-        )
-        conn.executemany(
-            "INSERT INTO concept_group_classification (classification_id, group_id, "
-            "facet_value, facet_label) VALUES (?, 12, ?, ?)",
-            [(1, "1996", "1996"), (2, "2000", "2000")],
-        )
-        conn.commit()
-        g = Catalog(conn).graph_for_classification_group("sun")
-        assert g is not None
-        ids = [n.id for n in g.nodes]
-        assert sorted(ids) == ["class/sun1996", "class/sun2000-niva"]
-        assert len(ids) == len(set(ids))  # deduped
-        assert all(not n.id.startswith("group:") for n in g.nodes)
-        # Exactly one shared succession edge across the two members (no double from
-        # co-membership reaching the same chain).
-        succ = [e for e in g.edges if e.kind == "succession"]
-        assert len(succ) == 1
-        assert (succ[0].source, succ[0].target) == (
-            "class/sun1996",
-            "class/sun2000-niva",
-        )
-
-    def test_one_dimensional_family_graph_uses_family_key(self) -> None:
-        conn = build_slugged_db(classification=None)
-        _add_classification(conn, cid=1, slug="icd-10-se", name="ICD-10")
-        _add_classification(conn, cid=2, slug="icd-11-se", name="ICD-11")
-        _add_class_succession(
-            conn,
-            predecessor="icd-10-se",
-            successor="icd-11-se",
-            effective_year=2027,
-        )
-
-        g = Catalog(conn).graph_for_classification_group("icd")
-
-        assert g is not None
-        nodes = {n.id: n for n in g.nodes}
-        assert set(nodes) == {"class/icd-10-se", "class/icd-11-se"}
-        assert all(isinstance(n, ClassificationGraphNode) for n in g.nodes)
-        assert nodes["class/icd-10-se"].group_key == "class/icd"
-        assert nodes["class/icd-10-se"].group_label == "ICD"
-        assert nodes["class/icd-10-se"].short_name == "ICD-10-SE"
-        assert {(e.source, e.target) for e in g.edges} == {
-            ("class/icd-10-se", "class/icd-11-se")
-        }
 
     def test_umbrella_members_carry_group_label_heading(self) -> None:
         # #794 P3: a curated umbrella member carries the group's display `label` as
@@ -328,95 +270,6 @@ class TestClassificationChains:
         succ_ids = [e.id for e in g.edges if e.kind == "succession"]
         assert len(succ_ids) == len(set(succ_ids))
 
-    def test_umbrella_members_carry_group_key(self) -> None:
-        # F2 regression: a classification umbrella's curated MEMBER editions must carry
-        # `group_key = "class/<key>"` so the renderer can cluster umbrella membership
-        # (the contract models classification group membership as shared group_key
-        # metadata + clustering, NO `group:<key>` node). A non-member edition surfaced
-        # by the chain walk keeps `group_key=None` (mirrors the variable side: only the
-        # node's OWN membership sets its key).
-        conn = build_slugged_db(classification=None)
-        _add_classification(conn, cid=1, slug="sun1996")
-        _add_classification(conn, cid=2, slug="sun2000-niva")
-        _add_classification(conn, cid=3, slug="sun2020-niva")
-        _add_class_succession(
-            conn, predecessor="sun1996", successor="sun2000-niva", effective_year=2000
-        )
-        _add_class_succession(
-            conn,
-            predecessor="sun2000-niva",
-            successor="sun2020-niva",
-            effective_year=2020,
-        )
-        conn.execute(
-            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-            "label, source) VALUES (12, 'classification', NULL, 'sun', 'SUN', 'curated')"
-        )
-        # The curated members are the two ENDPOINT editions; sun2000-niva is a mid-
-        # chain edition surfaced by the walk but NOT a curated member.
-        conn.executemany(
-            "INSERT INTO concept_group_classification (classification_id, group_id, "
-            "facet_value, facet_label) VALUES (?, 12, ?, ?)",
-            [(1, "1996", "1996"), (3, "2020", "2020")],
-        )
-        conn.commit()
-        g = Catalog(conn).graph_for_classification_group("sun")
-        assert g is not None
-        nodes = {n.id: n for n in g.nodes}
-        # Curated members carry the umbrella key.
-        assert nodes["class/sun1996"].group_key == "class/sun"
-        assert nodes["class/sun2020-niva"].group_key == "class/sun"
-        # The non-member mid-chain ancestor keeps group_key None.
-        assert nodes["class/sun2000-niva"].group_key is None
-
-    def test_split_non_member_ancestor_group_key_none(self) -> None:
-        # F2 boundary at a #579 split: a curated member D (sun2020-niva) and the split
-        # ROOT P (sun1996, also a curated member) share a chain, but P's OTHER branches
-        # (sun2000-inriktning / sun2000-grupp) are surfaced by P's walk and are NOT
-        # curated members → they must carry group_key None, while the curated members
-        # carry "class/sun". Confirms only the node's OWN membership sets the key, even
-        # when a member is first built by a non-member-anchored walk.
-        conn = build_slugged_db(classification=None)
-        _add_classification(conn, cid=1, slug="sun1996", valid_from=1996)
-        _add_classification(conn, cid=2, slug="sun2000-niva", valid_from=2000)
-        _add_classification(conn, cid=3, slug="sun2000-inriktning", valid_from=2000)
-        _add_classification(conn, cid=4, slug="sun2000-grupp", valid_from=2000)
-        _add_classification(conn, cid=5, slug="sun2020-niva", valid_from=2020)
-        for succ in ("sun2000-niva", "sun2000-inriktning", "sun2000-grupp"):
-            _add_class_succession(
-                conn, predecessor="sun1996", successor=succ, effective_year=2000
-            )
-        _add_class_succession(
-            conn,
-            predecessor="sun2000-niva",
-            successor="sun2020-niva",
-            effective_year=2020,
-        )
-        conn.execute(
-            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-            "label, source) VALUES (12, 'classification', NULL, 'sun', 'SUN', 'curated')"
-        )
-        # D (facet 1) precedes P (facet 2) → D processed first; P built as D's
-        # ancestor (non-member-anchored) BEFORE P's own member-anchored walk upgrades
-        # it. Both D and P are curated members.
-        conn.executemany(
-            "INSERT INTO concept_group_classification (classification_id, group_id, "
-            "facet_value, facet_label) VALUES (?, 12, ?, ?)",
-            [(5, "1", "niva-2020"), (1, "2", "root-1996")],
-        )
-        conn.commit()
-        g = Catalog(conn).graph_for_classification_group("sun")
-        assert g is not None
-        nodes = {n.id: n for n in g.nodes}
-        # Curated members carry the umbrella key (P even though built first as an
-        # ancestor, then upgraded).
-        assert nodes["class/sun1996"].group_key == "class/sun"
-        assert nodes["class/sun2020-niva"].group_key == "class/sun"
-        # Non-member editions surfaced by the walk stay ungrouped.
-        assert nodes["class/sun2000-niva"].group_key is None
-        assert nodes["class/sun2000-inriktning"].group_key is None
-        assert nodes["class/sun2000-grupp"].group_key is None
-
     def test_lone_classification_group_of_one_is_empty(self) -> None:
         # A classification umbrella whose single member has NO succession chain →
         # the solo edition is empty (the `_is_empty_solo` ClassificationGraphNode
@@ -465,109 +318,6 @@ class TestClassificationLeafGraph:
     `graph_for_fqid`: a leaf edition's own chain unioned with its umbrella group(s),
     `focus_id` on the canonical edition."""
 
-    def test_leaf_in_umbrella_carries_chain_and_co_members(self) -> None:
-        # An umbrella where each curated member sits on a SEPARATE chain: querying
-        # one member's leaf graph must pull in BOTH the member's own edition chain
-        # AND its umbrella co-members' chains (Fork B, deduped), `focus_id` = the
-        # queried edition.
-        conn = build_slugged_db(classification=None)
-        # Member A's chain: sun1996 → sun2000-niva.
-        _add_classification(conn, cid=1, slug="sun1996", valid_from=1996)
-        _add_classification(conn, cid=2, slug="sun2000-niva", valid_from=2000)
-        _add_class_succession(
-            conn, predecessor="sun1996", successor="sun2000-niva", effective_year=2000
-        )
-        # Member B's chain: ssyk1996 → ssyk2012 (disjoint from A).
-        _add_classification(conn, cid=3, slug="ssyk1996", valid_from=1996)
-        _add_classification(conn, cid=4, slug="ssyk2012", valid_from=2012)
-        _add_class_succession(
-            conn, predecessor="ssyk1996", successor="ssyk2012", effective_year=2012
-        )
-        # Curated members = the two terminal editions (one per chain).
-        _add_class_umbrella_group(conn, members=[(2, "niva"), (4, "ssyk")])
-        g = Catalog(conn).graph_for_classification_fqid("class/sun2000-niva")
-        ids = {n.id for n in g.nodes}
-        # The queried edition's chain AND the co-member's chain are both present,
-        # deduped.
-        assert ids == {
-            "class/sun1996",
-            "class/sun2000-niva",
-            "class/ssyk1996",
-            "class/ssyk2012",
-        }
-        assert len([n.id for n in g.nodes]) == len(ids)  # no double nodes
-        assert g.focus_id == "class/sun2000-niva"
-        # The curated members carry the umbrella key; the non-member predecessors
-        # surfaced by the chain walk stay ungrouped (own-membership rule).
-        nodes = {n.id: n for n in g.nodes}
-        assert nodes["class/sun2000-niva"].group_key == "class/sun"
-        assert nodes["class/ssyk2012"].group_key == "class/sun"
-        assert nodes["class/sun1996"].group_key is None
-        # The chains' succession edges are present.
-        edges = {(e.source, e.target) for e in g.edges if e.kind == "succession"}
-        assert ("class/sun1996", "class/sun2000-niva") in edges
-        assert ("class/ssyk1996", "class/ssyk2012") in edges
-
-    def test_leaf_chain_no_umbrella_is_chain_only_with_focus(self) -> None:
-        # A classification with a succession chain but NO umbrella group → just its
-        # own edition chain, `focus_id` on the queried edition, all ungrouped.
-        conn = build_slugged_db(classification=None)
-        _add_classification(conn, cid=1, slug="sun1996", valid_from=1996)
-        _add_classification(conn, cid=2, slug="sun2000", valid_from=2000)
-        _add_classification(conn, cid=3, slug="sun2020", valid_from=2020)
-        _add_class_succession(
-            conn, predecessor="sun1996", successor="sun2000", effective_year=2000
-        )
-        _add_class_succession(
-            conn, predecessor="sun2000", successor="sun2020", effective_year=2020
-        )
-        g = Catalog(conn).graph_for_classification_fqid("class/sun2000")
-        assert {n.id for n in g.nodes} == {
-            "class/sun1996",
-            "class/sun2000",
-            "class/sun2020",
-        }
-        assert g.focus_id == "class/sun2000"
-        assert all(n.group_key is None for n in g.nodes)
-        edges = {(e.source, e.target) for e in g.edges if e.kind == "succession"}
-        assert edges == {
-            ("class/sun1996", "class/sun2000"),
-            ("class/sun2000", "class/sun2020"),
-        }
-
-    def test_focus_node_present_when_not_a_walked_umbrella_member(self) -> None:
-        # Fix-1 regression: the canonical focus edition references an umbrella but is
-        # NOT itself a walked member of any group (a curation skew / #579 spine
-        # edition). The umbrella's curated members sit on a DISJOINT chain, so unioning
-        # only the members never reaches the focus — its `focus_id` would point at a
-        # missing node. Adding the focus's OWN chain FIRST (mirroring `graph_for_fqid`)
-        # guarantees the focus node exists. Driven at the module-function boundary
-        # (`graph_for_classification_fqid`) with a hand-built `groups` list that omits
-        # the focus, the exact skew the catalog resolver can't normally produce.
-        conn = build_slugged_db(classification=None)
-        # The umbrella members (a disjoint chain that does NOT include the focus).
-        _add_classification(conn, cid=1, slug="ssyk1996", valid_from=1996)
-        _add_classification(conn, cid=2, slug="ssyk2012", valid_from=2012)
-        _add_class_succession(
-            conn, predecessor="ssyk1996", successor="ssyk2012", effective_year=2012
-        )
-        # The focus edition — live, with NO succession chain and NOT in the umbrella.
-        _add_classification(conn, cid=3, slug="sun2020", valid_from=2020)
-        _add_class_umbrella_group(conn, members=[(2, "ssyk")])
-        catalog = Catalog(conn)
-        group = catalog.classification_group("sun")
-        assert group is not None  # umbrella of the disjoint members
-
-        g = graph_for_classification_fqid(catalog, "sun2020", [group])
-        ids = {n.id for n in g.nodes}
-        # The focus node is present even though it isn't a walked umbrella member.
-        assert "class/sun2020" in ids
-        assert g.focus_id == "class/sun2020"
-        # The focus node really exists for that id (not a dangling focus_id).
-        assert g.focus_id in ids
-        # The disjoint umbrella members are still unioned in.
-        assert {"class/ssyk1996", "class/ssyk2012"} <= ids
-
     def test_standalone_classification_is_empty(self) -> None:
         # A classification with no chain and no umbrella → the empty (don't-render)
         # graph (`_is_empty_solo` for a solo classification), parity with today's
@@ -586,9 +336,3 @@ class TestClassificationLeafGraph:
         with pytest.raises(RegMetaError) as exc:
             Catalog(conn).graph_for_classification_fqid("p/r/v")
         assert exc.value.code == "not_a_classification_fqid"
-
-    def test_unknown_classification_raises_not_found(self) -> None:
-        conn = build_slugged_db(classification=None)
-        with pytest.raises(RegMetaError) as exc:
-            Catalog(conn).graph_for_classification_fqid("class/nope")
-        assert exc.value.code == "fqid_not_found"

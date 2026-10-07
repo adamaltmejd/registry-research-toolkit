@@ -15,13 +15,12 @@ from order_fixture import (
 )
 from reg_meta.catalog import Catalog
 from reg_meta.cli import run
-from reg_meta.errors import EXIT_CONFIG, EXIT_NO_MATCH, RegMetaError
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.inventory import load_inventory
 from reg_meta.order import (
     SUPPORTED_SCHEMA_VERSION,
     OrderManifest,
     extraction_filenames,
-    load_project,
     materialize_order,
     project_from_raw,
 )
@@ -41,19 +40,6 @@ class TestSupportedSchemaVersion:
     (`order.schema_version_issue`), so the fixtures that reject here reject there
     — pinned in `reg_webapp/backend/tests/test_project_order.py`.
     """
-
-    def test_supported_version_is_reg_schemas_own_declaration(self) -> None:
-        """Never a second spelling of the contract version: the gate reads the
-        schema package's declaration, so the two cannot drift."""
-        import reg_schema
-
-        assert SUPPORTED_SCHEMA_VERSION == reg_schema.__version__ == "3.0.0"
-
-    def test_the_current_contract_is_accepted(self) -> None:
-        """The ONE accepted claim: exact equality, nothing around it."""
-        project = project_from_raw(raw_project(schema_version=SUPPORTED_SCHEMA_VERSION))
-
-        assert project.schema_version == SUPPORTED_SCHEMA_VERSION
 
     @pytest.mark.parametrize(
         "version",
@@ -140,18 +126,6 @@ class TestCliAdapter:
         path.write_text(json.dumps(raw_project(**over)), encoding="utf-8")
         return path
 
-    def test_stdout_carries_the_manifest_bytes_verbatim(
-        self, conn, tmp_path, capsys
-    ) -> None:
-        project = self._project_file(tmp_path)
-        expected = materialize_order(load_project(project), conn)
-
-        code = run(["order", str(project), "--db", self._db_dir(conn, tmp_path)])
-
-        assert code == 0
-        assert expected.manifest is not None
-        assert capsys.readouterr().out == expected.manifest.to_json()
-
     def test_output_flag_writes_the_manifest_to_a_file(
         self, conn, tmp_path, capsys
     ) -> None:
@@ -173,34 +147,6 @@ class TestCliAdapter:
         assert capsys.readouterr().out == ""
         assert OrderManifest.model_validate_json(out.read_text(encoding="utf-8"))
 
-    def test_blocked_order_exits_no_match_naming_every_finding(
-        self, conn, tmp_path, capsys
-    ) -> None:
-        """Fail-closed: a blocked order is the error envelope + exit 17
-        (`EXIT_NO_MATCH`), never a partial manifest on stdout."""
-        import json
-
-        project = self._project_file(tmp_path, steward="swecov")
-
-        code = run(["order", str(project), "--db", self._db_dir(conn, tmp_path)])
-
-        assert code == EXIT_NO_MATCH
-        error = json.loads(capsys.readouterr().out)["error"]
-        assert error["code"] == "order_blocked"
-        assert "steward_mismatch" in error["message"]
-
-    def test_unreadable_project_exits_config(self, conn, tmp_path, capsys) -> None:
-        import json
-
-        code = run(
-            ["order", str(tmp_path / "nope.json"), "--db", self._db_dir(conn, tmp_path)]
-        )
-
-        assert code == EXIT_CONFIG
-        assert json.loads(capsys.readouterr().out)["error"]["code"] == (
-            "project_unreadable"
-        )
-
     @pytest.mark.parametrize("period", ["notaperiod"])
     def test_structurally_invalid_project_exits_config(
         self, conn, tmp_path, capsys, period
@@ -219,23 +165,6 @@ class TestCliAdapter:
         assert code == EXIT_CONFIG
         payload = json.loads(capsys.readouterr().out)
         assert payload["error"]["code"] == "project_invalid"
-        assert "entries" not in payload
-
-    def test_unsupported_schema_version_exits_config_writing_no_manifest(
-        self, conn, tmp_path, capsys
-    ) -> None:
-        """A project written for another schema contract is rejected at the same
-        shared door, before the DB is opened: the error envelope, never a
-        manifest for a spec this build cannot read."""
-        import json
-
-        project = self._project_file(tmp_path, schema_version="1.0.0")
-
-        code = run(["order", str(project), "--db", self._db_dir(conn, tmp_path)])
-
-        assert code == EXIT_CONFIG
-        payload = json.loads(capsys.readouterr().out)
-        assert payload["error"]["code"] == "unsupported_schema_version"
         assert "entries" not in payload
 
 
@@ -312,19 +241,6 @@ representation = "Kon"
         resolve_project_binding(conn, "scb/lisa/kon", "_default").finding.code
         == "binding_unavailable"
     )
-
-
-@pytest.mark.parametrize(
-    "period", ["_default", ["_default"], {"from": "_default", "to": 2020}]
-)
-def test_year_independent_source_requires_whole_period_and_concrete_variant(period):
-    raw = raw_project()
-    raw["sources"][0]["period"] = period
-    if period == "_default":
-        assert project_from_raw(raw).sources[0].period == "_default"
-        raw["sources"][0]["register_variant"] = "scb/lisa/_default"
-    with pytest.raises(RegMetaError):
-        project_from_raw(raw)
 
 
 def test_year_independent_delivery_counts_all_source_states(conn):

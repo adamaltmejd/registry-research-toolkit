@@ -70,7 +70,8 @@ def test_scoped_cli_json(case: Path, tmp_path: Path, capsys) -> None:
                         for state in output["instances"]
                         for column in state["aliases"]
                     }
-                )
+                ),
+                "years": sorted({state["year"] for state in output["instances"]}),
             }
         elif observe == "logical-values":
             actual = {
@@ -80,7 +81,8 @@ def test_scoped_cli_json(case: Path, tmp_path: Path, capsys) -> None:
                         for state in output["instances"]
                         for code in state["values"]
                     }
-                )
+                ),
+                "years": sorted({state["year"] for state in output["instances"]}),
             }
         elif observe == "logical-datacolumns":
             actual = {
@@ -97,7 +99,11 @@ def test_scoped_cli_json(case: Path, tmp_path: Path, capsys) -> None:
                 )
             }
         elif observe == "logical-coded-variables":
-            actual = {"names": sorted(row["variable_name"] for row in output)}
+            rows = sorted(output, key=lambda row: row["variable_name"])
+            actual = {
+                "names": [row["variable_name"] for row in rows],
+                "code_counts": [row["n_distinct_codes"] for row in rows],
+            }
         elif observe == "logical-resolve":
             actual = {"statuses": [row["status"] for row in output["columns"]]}
         elif observe == "search-page":

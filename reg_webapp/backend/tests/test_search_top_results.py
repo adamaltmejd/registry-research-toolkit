@@ -1,7 +1,8 @@
 """`GET /api/search` top-results group against ``catalog_db`` and ``topical_catalog_db``.
 
-Covers when the top-results group appears and its ranking of registers,
-variables and codes for topical queries (Y-18).
+Covers a single-candidate search omitting the top-results group and its ranking
+of registers, variables and codes for topical queries (Y-18). Group order, typed
+scopes and cursor continuation are pinned by ``conformance/cases/http_search``.
 """
 
 from __future__ import annotations
@@ -14,22 +15,9 @@ from reg_webapp.app import create_app
 # ── top-results / best-bets (#393 items 6/7) ────────────────────────────────
 
 
-def test_top_results_group_precedes_typed_groups(client):
-    body = client.get("/api/search", params={"q": "C12"}).json()
-    assert [g["group"] for g in body["groups"]][:2] == ["top_results", "registers"]
-    top = _group(body, "top_results")
-    assert not top["has_more"]
-    assert top["results"]
-
-
 def test_single_candidate_search_omits_top_results(client):
     body = client.get("/api/search", params={"q": "lisa"}).json()
     assert "top_results" not in [g["group"] for g in body["groups"]]
-
-
-def test_scoped_search_omits_top_results(client):
-    body = client.get("/api/search", params={"q": "lisa", "type": "register"}).json()
-    assert [g["group"] for g in body["groups"]] == ["registers"]
 
 
 # ── topical ranking vs incidental code labels (Y-18) ─────────────────────────
@@ -94,26 +82,6 @@ def test_topical_top_results_lead_with_register_and_variable(
     assert _row_ids(body, "top_results") == expected_top
 
 
-def test_topical_query_keeps_bounded_continuation(topical_client):
-    first = topical_client.get(
-        "/api/search", params={"q": "covid test", "limit": 1}
-    ).json()
-    codes = _group(first, "classification_codes")
-    assert _row_ids(first, "classification_codes") == ["code:C900"]
-    assert codes["has_more"] and codes["next_cursor"]
-
-    second = topical_client.get(
-        "/api/search",
-        params={
-            "q": "covid test",
-            "limit": 1,
-            "type": "classification_code",
-            "cursor": codes["next_cursor"],
-        },
-    ).json()
-    assert _row_ids(second, "classification_codes") == ["code:C901"]
-
-
 @pytest.mark.parametrize(
     ("query", "expected_first"),
     # The exact code IDENTIFIER and the exact whole LABEL both keep their lead
@@ -134,20 +102,3 @@ def test_exact_variable_identifier_still_resolves_its_variable(topical_client):
     assert _row_ids(body, "variables") == [_TOPICAL_VARIABLE]
     assert _row_ids(body, "classification_codes") == []
     assert _row_ids(body, "register_value_sets") == []
-
-
-@pytest.mark.parametrize("client_fixture", ["client", "topical_client"])
-def test_unaffected_query_matches_the_unseeded_catalog(request, client_fixture):
-    # The control the topical rows must not disturb: same wire order either way.
-    body = (
-        request.getfixturevalue(client_fixture)
-        .get("/api/search", params={"q": "Kön"})
-        .json()
-    )
-    assert {g["group"]: _row_ids(body, g["group"]) for g in body["groups"]} == {
-        "registers": [],
-        "variables": ["variable:scb/lisa/kon"],
-        "classifications": [],
-        "classification_codes": [],
-        "register_value_sets": [],
-    }

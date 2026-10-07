@@ -64,8 +64,8 @@ tree carries roles beyond it (the label roles `--micro-label-size` and
 finding; a literal or a ramp stop is:
 
 - Surfaces and ink — `--bg`, `--surface`, `--surface-raised`, `--surface-sunken`,
-  `--surface-hover`, `--surface-selected`, `--text`, `--text-muted`, `--text-faint`,
-  `--border`, `--border-strong`, `--scrim`, `--elevation-raised`, `--focus-ring`.
+  `--surface-hover`, `--text`, `--text-muted`, `--text-faint`, `--border`,
+  `--border-strong`, `--scrim`, `--elevation-raised`, `--focus-ring`.
 - Chrome — `--accent`, `--accent-fg`, `--accent-bg`, `--accent-ink`.
 - Status — `--err`, `--warn`, `--info`, `--ok` and their `-bg` fill tints.
 - Categorical node type — `--cat-reg|var|code|class|group` and their `-ink` label stops.

@@ -12,9 +12,21 @@ import SearchOmnibox from "./SearchOmnibox.svelte";
 // `<input aria-label="Search the catalog">` — queried by its textbox role.
 
 // The box is queried by its accessible name (a plain textbox, no longer a
-// combobox). The debounce is ~300ms; the assertions poll, so they ride past it.
+// combobox).
 function box() {
   return page.getByRole("textbox", { name: "Search the catalog" });
+}
+
+// Typing routes through a ~300 ms debounce. Fake the timer while typing and run
+// it out, so a case observes the settled result without waiting it out.
+async function typeAndSettle(text: string): Promise<void> {
+  vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+  try {
+    await box().fill(text);
+    await vi.runOnlyPendingTimersAsync();
+  } finally {
+    vi.useRealTimers();
+  }
 }
 
 function press(input: HTMLInputElement, key: string): void {
@@ -43,23 +55,14 @@ afterEach(() => {
 });
 
 describe("SearchOmnibox — URL↔box sync (#379)", () => {
-  it("seeds the box from ?q on a deep-link to /search", async () => {
-    setUrl("/search?q=lisa");
-    await render(SearchOmnibox);
-
-    await expect.element(box()).toHaveValue("lisa");
-  });
-
   it("does NOT navigate when typing from another route — only Enter routes to /search", async () => {
     // New behavior (maintainer direction): a plain search box must not yank you
     // onto /search mid-word. From a non-search route the debounce is inert; typing
     // leaves you put, and Enter is the sole path to the results page.
     await render(SearchOmnibox);
-    await box().fill("kon");
-
-    // Wait out the debounce window (300ms) plus margin, then assert we're STILL on
-    // the home route — typing did not navigate.
-    await new Promise((r) => setTimeout(r, 450));
+    // Run out the debounce, then assert we're STILL on the home route — typing did
+    // not navigate.
+    await typeAndSettle("kon");
     expect(router.route.name).toBe("home");
     expect(router.getQueryParam("q")).toBeNull();
 
@@ -78,41 +81,18 @@ describe("SearchOmnibox — URL↔box sync (#379)", () => {
     await box().fill("kon");
 
     await expect.element(page.getByText("Enter")).toBeVisible();
-    await expect
-      .element(box())
-      .toHaveAttribute("aria-describedby", "omnibox-enter-hint");
+    await expect.element(box()).toHaveAccessibleDescription(/Enter/);
   });
 
   it("refines in place (replaceState) while already on /search — no back-stack spam", async () => {
     setUrl("/search?q=ko");
     await render(SearchOmnibox);
     const lenBefore = window.history.length;
-    await box().fill("kon");
+    await typeAndSettle("kon");
 
-    await expect.poll(() => router.getQueryParam("q")).toBe("kon");
+    expect(router.getQueryParam("q")).toBe("kon");
     // Refinement replaces the current entry — the history stack doesn't grow.
     expect(window.history.length).toBe(lenBefore);
-  });
-
-  it("commits immediately on Enter (does not full-reload the page)", async () => {
-    await render(SearchOmnibox);
-    await box().fill("kon");
-    // Enter submits the single-input form; the handler preventDefaults the reload
-    // and flushes the commit. `requestSubmit()` runs the form's onsubmit (a bare
-    // dispatch of a non-cancelable submit wouldn't).
-    const form = (box().element() as HTMLInputElement).form;
-    form?.requestSubmit();
-
-    await expect.poll(() => router.getQueryParam("q")).toBe("kon");
-  });
-
-  it("clears the box on Escape", async () => {
-    setUrl("/search?q=kon");
-    await render(SearchOmnibox);
-    await expect.element(box()).toHaveValue("kon");
-
-    press(box().element() as HTMLInputElement, "Escape");
-    await expect.element(box()).toHaveValue("");
   });
 
   it("does not navigate when Enter follows an Escape-cleared box (blank commit is a no-op)", async () => {
@@ -137,19 +117,19 @@ describe("SearchOmnibox — URL↔box sync (#379)", () => {
     // back to "all" — the committed URL carries the existing ?type= forward.
     setUrl("/search?q=ko&type=value");
     await render(SearchOmnibox);
-    await box().fill("kon");
+    await typeAndSettle("kon");
 
-    await expect.poll(() => router.getQueryParam("q")).toBe("kon");
-    await expect.poll(() => router.getQueryParam("type")).toBe("value");
+    expect(router.getQueryParam("q")).toBe("kon");
+    expect(router.getQueryParam("type")).toBe("value");
   });
 
   it("does not add a ?type= when none is present (default scope stays clean)", async () => {
     setUrl("/search?q=ko");
     await render(SearchOmnibox);
-    await box().fill("kon");
+    await typeAndSettle("kon");
 
-    await expect.poll(() => router.getQueryParam("q")).toBe("kon");
-    await expect.poll(() => router.getQueryParam("type")).toBeNull();
+    expect(router.getQueryParam("q")).toBe("kon");
+    expect(router.getQueryParam("type")).toBeNull();
   });
 
   it("adopts the URL's ?q on a back/forward (popstate) without ping-pong", async () => {

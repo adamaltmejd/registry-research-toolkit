@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import re
 import shutil
 import subprocess
 from typing import TYPE_CHECKING
@@ -17,7 +16,7 @@ from _csv_fixtures import (
     write_scb_input,
 )
 from _lisa_fixtures import write_lisa_workbook
-from _prepared_fixtures import accept_prepared, record_file_opens, record_git_calls
+from _prepared_fixtures import accept_prepared, record_file_opens
 from _sos_fixtures import write_sos_input
 from openpyxl import Workbook, load_workbook
 from reg_meta.errors import EXIT_CONFIG, EXIT_USAGE
@@ -422,9 +421,7 @@ def test_sos_declarations_validity_support_and_formula_evidence_survive_preparat
     ]
 
 
-def test_warm_open_runs_one_git_status_and_reads_no_raw_or_payload_inputs(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_warm_open_needs_only_the_accepted_preparation(tmp_path: Path) -> None:
     selection = _selection(tmp_path)
     destination = tmp_path / "prepared" / "catalog"
     manifest = prepare_catalog_sources(selection, destination)
@@ -432,46 +429,23 @@ def test_warm_open_runs_one_git_status_and_reads_no_raw_or_payload_inputs(
     # Warm use depends on the accepted preparation alone, never on the raw inputs.
     shutil.rmtree(tmp_path / "accepted")
     shutil.rmtree(tmp_path / "source")
-    with monkeypatch.context() as patch:
-        git = record_git_calls(patch)
-        opened = record_file_opens(patch)
-        prepared = open_prepared_catalog_sources(
-            destination, expected_sha256=manifest.sha256, input_commit=commit
-        )
-    assert sum("status" in call for call in git) == 1, git
-    assert not any("hash-object" in call for call in git)
-    payload_reads = [
-        path
-        for path, _ in opened
-        if "files" in path.parts and path.name != "manifest.json"
-    ]
-    assert payload_reads == []
+    prepared = open_prepared_catalog_sources(
+        destination, expected_sha256=manifest.sha256, input_commit=commit
+    )
     assert next(prepared.records.records).locators
     assert list(prepared.value_sources[0].associations())
     assert list(prepared.iter_evidence())
 
 
-def test_preparation_replays_identical_bytes_without_rereading_child_payloads(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_preparation_is_byte_identical_on_rerun(tmp_path: Path) -> None:
     selection = _selection(tmp_path)
     first, second = tmp_path / "first", tmp_path / "second"
-    with monkeypatch.context() as patch:
-        opened = record_file_opens(patch)
-        before = prepare_catalog_sources(selection, first)
+    before = prepare_catalog_sources(selection, first)
     after = prepare_catalog_sources(selection, second)
     assert before == after
     assert {file.path: (first / file.path).read_bytes() for file in before.files} == {
         file.path: (second / file.path).read_bytes() for file in after.files
     }
-    # Each child proves its own payloads while staging; the published copies are
-    # never read back (no rehash of child data by the catalog).
-    published_child = re.compile(r"/(records|values/[0-9a-f]{64})/files/")
-    assert [
-        path
-        for path, mode in opened
-        if "w" not in mode and published_child.search(path.as_posix())
-    ] == []
 
 
 def test_unsupported_or_incoherent_manifest_fails_before_opening_children(

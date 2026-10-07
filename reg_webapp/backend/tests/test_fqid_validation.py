@@ -3,8 +3,8 @@
 See DESIGN.md → FQID path guard (catalog_fqid.py). Two layers:
 
 1. Unit tests on ``validate_fqid_path`` directly (the chokepoint module): every
-   traversal / malformed payload raises ``FqidPathError`` and every legal FQID
-   passes. A binding leaf is a bare slug — the ``@version`` pin is retired, so any
+   traversal / malformed payload raises ``FqidPathError`` (legal FQIDs pass on
+   every 200 catalog GET). A binding leaf is a bare slug — the ``@version`` pin is retired, so any
    ``@`` is a non-slug character that is rejected here. The unit layer is where raw
    ``..`` payloads belong — an HTTP client normalizes ``scb/../etc`` to ``etc``
    before it reaches the server, so the raw-dotdot case can only be exercised
@@ -66,26 +66,11 @@ _REJECT_PATHS = [
 # slug); `reg_meta.fqid.parse` rejects the arity downstream (→ 422 at the app
 # layer, covered by test_too_many_segments_returns_422).
 
-# Legal FQIDs that must PASS the chokepoint (bare FQIDs — no @version pin).
-_ACCEPT_PATHS = [
-    ("scb", "scb"),
-    ("scb/lisa", "scb/lisa"),
-    ("scb/lisa/kon", "scb/lisa/kon"),
-    ("class", "class"),
-    ("class/sun2020", "class/sun2020"),
-]
-
 
 @pytest.mark.parametrize("raw", _REJECT_PATHS)
 def test_validate_fqid_path_rejects(raw: str):
     with pytest.raises(FqidPathError):
         validate_fqid_path(raw)
-
-
-@pytest.mark.parametrize(("raw", "expect_fqid"), _ACCEPT_PATHS)
-def test_validate_fqid_path_accepts(raw: str, expect_fqid: str):
-    result = validate_fqid_path(raw)
-    assert result.fqid == expect_fqid
 
 
 # ── SECURITY GATE: 422 + zero SQL through the live app ──────────────────────
@@ -158,26 +143,6 @@ def test_path_traversal_returns_422_with_zero_sql(catalog_db, probe: str):
     )
 
 
-@pytest.mark.parametrize(
-    "probe",
-    [
-        "scb/lisa/naringsgren@sni2007",  # the retired canonical pin form
-        "scb/lisa/naringsgren@bad/slug",
-        "scb/lisa/kon@@x",
-    ],
-)
-def test_at_version_rejected_by_gate(catalog_db, probe: str):
-    """The `@version` pin is retired — a binding leaf is a bare slug, so any `@`
-    (including the once-canonical `scb/lisa/naringsgren@sni2007`) fails the gate
-    with 422 and ZERO SQL (the value set is resolved from the variant/period, never
-    pinned on the FQID)."""
-    with _StatementCounter() as counter, TestClient(create_app()) as client:
-        counter.reset()
-        resp = client.get(f"/api/catalog/{probe}?period=2020")
-    assert resp.status_code == 422
-    assert counter.count == 0
-
-
 @pytest.mark.parametrize("path", ["_default", "scb/lisa/_default", "class/_default"])
 def test_default_variant_literal_rejected_by_guard(catalog_db, path: str):
     """`_default` (the variant coordinate) is NOT a catalog path segment, so the
@@ -210,24 +175,23 @@ def test_class_literal_in_illegal_slot_guard_rejects(catalog_db, path: str):
 # segment guard) is a sub-dependency that runs before the per-request open.
 
 _KON = "scb/lisa/kon"
-# The binding-suffix routes (FQID before the literal suffix) + the variants
-# sub-resource (FQID is the 2-seg register prefix before the literal `variants`).
-_SUFFIXED_ROUTE_TEMPLATES = [
-    "/api/catalog/{fqid}/states",
-    "/api/catalog/{fqid}/predecessors",
-    "/api/catalog/{fqid}/successors",
-    "/api/catalog/{fqid}/graph",
-    "/api/catalog/{fqid}/lineage",
-    "/api/catalog/{fqid}/lineage_warnings",
+# Every binding-suffix route (FQID before the literal suffix), each with one
+# probe: the guard is one shared dependency, so one rejected probe per route
+# proves the route carries it; the probe kinds rotate so each still reaches a
+# suffixed route. The retired `@version` pin rides on several suffixes.
+_SUFFIXED_ROUTE_PROBES = [
+    "/api/catalog/scb/lisa/%2e%2e/states",
+    "/api/catalog/scb%2f..%2fetc/predecessors",
+    "/api/catalog/scb/lisa/kon%00/successors",
+    f"/api/catalog/{_KON}@v1/graph",
+    f"/api/catalog/{_KON}@v1/lineage",
+    "/api/catalog/scb/lisa/%2e%2e/lineage_warnings",
+    f"/api/catalog/{_KON}@v1/dimensions",
 ]
 
 
-@pytest.mark.parametrize("template", _SUFFIXED_ROUTE_TEMPLATES)
-@pytest.mark.parametrize(
-    "probe", ["scb/lisa/%2e%2e", "scb%2f..%2fetc", "scb/lisa/kon%00"]
-)
-def test_suffixed_route_traversal_422_zero_sql(catalog_db, template: str, probe: str):
-    url = template.format(fqid=probe)
+@pytest.mark.parametrize("url", _SUFFIXED_ROUTE_PROBES)
+def test_suffixed_route_traversal_422_zero_sql(catalog_db, url: str):
     with _StatementCounter() as counter, TestClient(create_app()) as client:
         counter.reset()
         resp = client.get(url)
@@ -273,13 +237,15 @@ _BAD_PERIODS = [
     "HT2020\n",
     "2020-Q3\n",
 ]
-_BAD_VARIANTS = ["Std", "../etc", "x%00", "x'; DROP--", "in valid"]
+# `class` is the reserved classification prefix, never a variant slug.
+_BAD_VARIANTS = ["Std", "../etc", "x%00", "x'; DROP--", "in valid", "class"]
 # [A5.3b] ?value_set_version is a FREE-TEXT label (matched by a Python `==` in
 # resolve_at, NOT SQL), so the gate rejects only control chars / over-length —
 # NOT slug-shape (real labels carry spaces/commas/case). A non-matching value like
 # "../etc" or "Sni2007" is now ACCEPTED (it simply narrows to no state); the bad
 # set is control/NUL chars + an over-cap string.
-_BAD_VSV = ["x\x00", "a\tb", "a\nb", "x" * 201]
+# Whitespace-only is not a label; DEL and C1 are control chars too.
+_BAD_VSV = ["x\x00", "a\tb", "a\nb", "x" * 201, "   ", "a\x7fb", "a\x85b"]
 
 
 @pytest.mark.parametrize("period", _BAD_PERIODS)

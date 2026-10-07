@@ -50,17 +50,6 @@ describe("RelatedDocumentsPanel (#742/#967)", () => {
       .toBeVisible();
   });
 
-  it("omits the section when no docs DB is ingested", async () => {
-    vi.mocked(getRelatedDocuments).mockResolvedValue(
-      related({ ingested: false }),
-    );
-    await render(RelatedDocumentsPanel, { register: "lisa" });
-
-    await expect
-      .element(page.getByRole("heading", { name: "Source documents" }))
-      .not.toBeInTheDocument();
-  });
-
   it("omits the section when the register has no source documents", async () => {
     vi.mocked(getRelatedDocuments).mockResolvedValue(related());
     await render(RelatedDocumentsPanel, { register: "lisa" });

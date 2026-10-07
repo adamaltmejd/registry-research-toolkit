@@ -8,15 +8,26 @@
 seed = 0
 
 # Named semantic exceptions: accepted differences between the baseline and the reader
-# under test. None yet. An entry covers a difference only when stdout alone differs and
-# every differing JSON pointer lies under `path` (all of stdout when omitted):
+# under test. An entry covers a difference only when stdout alone differs and every
+# differing JSON pointer lies under one of `paths` (all of stdout when omitted):
 #
 #   [[exception]]
 #   name = "search-rank-ties"        # reported per difference
 #   reason = "why the new behavior is correct"
 #   case = "*/search/*"              # fnmatch glob over `<catalog>/<scope>/<command>/<key>`
-#   path = "/results"                # JSON pointer prefix
-exception = []
+#   paths = ["/results"]             # JSON pointer prefixes
+
+[[exception]]
+name = "derived-generation-cursor"
+reason = "The checkout arm reads derived copies, which have their own generation (section 4); a search cursor binds the generation, so none outlives it. `has_more` still compares, and page 2 of `search-limit-5` exercises the shared cursor encoder."
+case = "*/*/search*"
+paths = ["/next_cursor"]
+
+[[exception]]
+name = "derived-generation-order"
+reason = "An order manifest records the catalog's schema version and generation, which a derived copy changes by design (section 4)."
+case = "*/*/order/*"
+paths = ["/provenance/catalog_generation_id", "/provenance/catalog_schema_version"]
 
 # The baseline reader: `reg_meta` (with `reg_schema`) at this commit, installed from
 # `git archive` into its own virtualenv with the commit's locked dependencies.

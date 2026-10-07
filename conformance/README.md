@@ -102,7 +102,7 @@ under `cases/fixtures` unless they name a reader source. The shared builder rema
 dev script retains its path and consumes these same sources.
 
 Two inherited standalone oracles retain their consumers:
-`selection/update-expected.json` compares named/path/environment update trials;
+`selection/update-expected.json` compares path/environment update trials;
 `selection/doc-cursor-expected.json` is consumed by the existing package document CLI
 case. Its request builds selection/docs, runs docs search for Example with limit 1,
 follows the returned cursor, reads the named catalog document, and lists local docs. The
@@ -135,13 +135,15 @@ both are slice 3a runner extensions.
 
 ## Artifact checks
 
-SQLite integrity and FKs, reader admission, existing manifest table/column scope
-accounting, deterministic search/order, sampled browse/search/validate agreement,
-CLI/HTTP/materializer order bytes, CLI/HTTP validation bytes, and located
-unheld/unresolved refusal run on both synthetic kinds by default. A real run uses one
-admitted schema-9 artifact. Real identifiers stay in memory and temporary test request
-files; failure messages omit them. Catalog artifacts support global-fallback orders;
-steward artifacts only order compiled holdings regardless of reference browsing.
+SQLite integrity, reader admission, deterministic search/order, sampled
+browse/search/validate agreement, CLI/HTTP/materializer order bytes, CLI/HTTP validation
+bytes, and located unheld/unresolved refusal run on both synthetic kinds by default. A
+real run uses one admitted schema-9 artifact and also runs `validate_built_db`, the
+build's structural authority (foreign keys, manifest identity, holdings table/column
+accounting); synthetic artifacts already pass it when they are built. Real identifiers
+stay in memory and temporary test request files; failure messages omit them. Catalog
+artifacts support global-fallback orders; steward artifacts only order compiled holdings
+regardless of reference browsing.
 
 Complete HTTP register-child membership is compared with an independently derived
 whole-variable admission set. CLI browse, search and order agreement uses a generation-

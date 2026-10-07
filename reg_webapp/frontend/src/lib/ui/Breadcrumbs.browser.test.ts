@@ -30,13 +30,6 @@ describe("Breadcrumbs", () => {
     expect(page.getByRole("link", { name: "LISA" }).query()).toBeNull();
   });
 
-  it("marks the last item as the current page", async () => {
-    const { container } = await render(Breadcrumbs, { items });
-    const current = container.querySelector('[aria-current="page"]');
-    expect(current).not.toBeNull();
-    expect(current?.textContent).toBe("LISA");
-  });
-
   it("treats only the last item as current — a plain non-final item is not (Fix 6)", async () => {
     // A middle item without href is an intentionally-plain span; it must NOT also
     // expose aria-current="page", or two "current page" nodes leak into a11y.

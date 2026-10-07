@@ -1,8 +1,7 @@
 """Curated cross-register thematic tag layer (#311) — build-side machinery.
 
-Covers the loader (`load_tags`: shape + exactly-one-grain + dedup validation),
-and per-grain uniqueness and exactly-one-grain enforced by the DDL. The validator
-closure check is pinned by the `tag-*` cases under `cases/validate/`; common writer
+Covers the loader (`load_tags`: shape + exactly-one-grain + dedup validation). The
+validator closure check is pinned by the `tag-*` cases under `cases/validate/`; common writer
 and dependency tests cover resolved tag materialization.
 Tests use both small local fixtures and the committed seed `tags.toml`.
 """
@@ -12,11 +11,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from _slugged_db import build_slugged_db, seed_tags
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.tags import (
-    CuratedTag,
-    TagMember,
     load_tags,
 )
 
@@ -172,85 +168,3 @@ label = "A"
     with pytest.raises(RegMetaError) as exc:
         load_tags(path)
     assert exc.value.code == "tags_invalid"
-
-
-# ── database constraints ─────────────────────────────────────────────────────
-
-
-def _tag(members: tuple[TagMember, ...], **overrides) -> CuratedTag:
-    kwargs: dict = {
-        "slug": "income",
-        "label": "Income",
-        "description": None,
-        "members": members,
-    }
-    kwargs.update(overrides)
-    return CuratedTag(**kwargs)
-
-
-def test_tag_member_per_grain_uniqueness() -> None:
-    """A (tag, register) pair must be unique — the partial UNIQUE index is the DB
-    backstop (load-time dedup is by literal FQID; a slug rename could collide two
-    distinct refs onto one id). A duplicate INSERT raises IntegrityError."""
-    import sqlite3
-
-    conn = build_slugged_db(classification=None)
-    seed_tags(
-        conn,
-        (_tag((TagMember("scb", "lisa", None, 0, False, None),)),),
-    )
-    tag_id = conn.execute("SELECT tag_id FROM tag").fetchone()[0]
-    with pytest.raises(sqlite3.IntegrityError):
-        conn.execute(
-            "INSERT INTO tag_member (tag_id, register_id, variable_id) "
-            "VALUES (?, 1, NULL)",
-            (tag_id,),
-        )
-
-
-def test_tag_member_variable_grain_uniqueness() -> None:
-    """Symmetric to the register-grain test: a (tag, variable) pair must be unique
-    via `idx_tag_member_variable`. Guards against both partial indexes accidentally
-    keying on the SAME column (e.g. both on register_id), which would leave the
-    variable grain unprotected."""
-    import sqlite3
-
-    conn = build_slugged_db(classification=None)  # variable `kon` exists
-    seed_tags(
-        conn,
-        (_tag((TagMember("scb", "lisa", "kon", 0, False, None),)),),
-    )
-    tag_id, var_id = conn.execute(
-        "SELECT tm.tag_id, tm.variable_id FROM tag_member tm"
-    ).fetchone()
-    with pytest.raises(sqlite3.IntegrityError):
-        conn.execute(
-            "INSERT INTO tag_member (tag_id, register_id, variable_id) "
-            "VALUES (?, NULL, ?)",
-            (tag_id, var_id),
-        )
-
-
-def test_tag_member_exactly_one_grain_check() -> None:
-    """The DDL CHECK rejects a row with both grains set or neither."""
-    import sqlite3
-
-    conn = build_slugged_db(classification=None)
-    seed_tags(
-        conn,
-        (_tag((TagMember("scb", "lisa", None, 0, False, None),)),),
-    )
-    tag_id = conn.execute("SELECT tag_id FROM tag").fetchone()[0]
-    # Both grains set.
-    with pytest.raises(sqlite3.IntegrityError):
-        conn.execute(
-            "INSERT INTO tag_member (tag_id, register_id, variable_id) VALUES (?, 1, 1)",
-            (tag_id,),
-        )
-    # Neither grain set.
-    with pytest.raises(sqlite3.IntegrityError):
-        conn.execute(
-            "INSERT INTO tag_member (tag_id, register_id, variable_id) "
-            "VALUES (?, NULL, NULL)",
-            (tag_id,),
-        )

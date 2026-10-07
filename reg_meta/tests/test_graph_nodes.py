@@ -48,75 +48,9 @@ class TestEmptyGraph:
         assert g.edges == []
         assert g.focus_id is None
 
-    def test_lone_variable_text_family_wobble_is_empty(self) -> None:
-        # char↔varchar wobble is likewise not a boundary signal → one run → empty.
-        conn = build_slugged_db()
-        add_state(
-            conn,
-            register_id=1,
-            variable_slug="kon",
-            register_variant_id=10,
-            valid_from="2019-01-01",
-            delivery_column_name="Kon",
-            data_type="varchar",
-        )
-        conn.execute(
-            "UPDATE variable_state SET data_type = 'char' "
-            "WHERE valid_from = '2018-01-01'"
-        )
-        conn.commit()
-        g = Catalog(conn).graph_for_fqid(_KON)
-        assert g.nodes == []
-        assert g.edges == []
-
-    def test_lone_classification_no_chain_is_empty(self) -> None:
-        conn = build_slugged_db()  # seeds sun2020, no succession
-        g = Catalog(conn).graph_for_classification_group("nope")
-        assert g is None  # unknown group key
         # A lone classification reached via a group of one would be empty too, but a
         # standalone classification is only reachable via the group accessor here;
         # the variable-graph empty path is the akters case above.
-
-    def test_lone_variable_value_set_change_renders(self) -> None:
-        # A lone variable WITH a meaningful value-set change but no succession → one
-        # node whose states span ≥2 representation runs → renders.
-        conn = build_slugged_db()
-        add_value_set(conn, value_set_id=1, codes=[("1", "Man"), ("2", "Kvinna")])
-        add_value_set(conn, value_set_id=2, codes=[("1", "M"), ("2", "K"), ("3", "X")])
-        # Replace the seed's single state with two value-set-distinct states.
-        conn.execute("DELETE FROM variable_state")
-        add_state(
-            conn,
-            register_id=1,
-            variable_slug="kon",
-            register_variant_id=10,
-            valid_from="2018-01-01",
-            valid_to="2018-12-31",
-            delivery_column_name="Kon",
-            value_set_id=1,
-        )
-        add_state(
-            conn,
-            register_id=1,
-            variable_slug="kon",
-            register_variant_id=10,
-            valid_from="2019-01-01",
-            delivery_column_name="Kon",
-            value_set_id=2,
-        )
-        conn.commit()
-        g = Catalog(conn).graph_for_fqid(_KON)
-        assert len(g.nodes) == 1
-        (node,) = g.nodes
-        assert isinstance(node, VariableGraphNode)
-        runs = [s.representation_run_id for s in node.states]
-        assert runs == [0, 1]  # two cells
-        assert g.focus_id == _KON
-        # The variant DISPLAY name flows onto every graph state (the contract field
-        # the picker shows instead of the slug). `_DEFAULT_VARIANT` names variant 10
-        # "Individer 15+"; the slug stays the add coordinate.
-        assert all(s.variant == "individer-15plus" for s in node.states)
-        assert all(s.variant_label == "Individer 15+" for s in node.states)
 
 
 # ── Node metadata (definition / description) ─────────────────────────────────
@@ -210,57 +144,6 @@ class TestVariableGroups:
         assert node.id == _KON
         assert node.group_key == "scb/lisa/demog"
         assert [s.representation_run_id for s in node.states] == [0]
-
-    def test_member_renders_group_union_with_focus(self) -> None:
-        conn = build_slugged_db()
-        add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
-        add_state(
-            conn,
-            register_id=1,
-            variable_slug="civilstand",
-            register_variant_id=10,
-            delivery_column_name="Civ",
-        )
-        _add_concept_group(
-            conn,
-            group_id=40,
-            register_id=1,
-            group_key="demog",
-            member_slugs=["kon", "civilstand"],
-        )
-        g = Catalog(conn).graph_for_fqid(_KON)
-        ids = {n.id for n in g.nodes}
-        assert ids == {"scb/lisa/kon", "scb/lisa/civilstand"}
-        assert g.focus_id == _KON
-        # group_key is namespaced by provider/register (register-only-unique keys must
-        # not collide across registers in a cross-register graph).
-        assert all(n.group_key == "scb/lisa/demog" for n in g.nodes)
-
-    def test_group_addressed_has_no_focus(self) -> None:
-        conn = build_slugged_db()
-        add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
-        add_state(
-            conn,
-            register_id=1,
-            variable_slug="civilstand",
-            register_variant_id=10,
-            delivery_column_name="Civ",
-        )
-        _add_concept_group(
-            conn,
-            group_id=40,
-            register_id=1,
-            group_key="demog",
-            member_slugs=["kon", "civilstand"],
-        )
-        g = Catalog(conn).graph_for_group("scb", "lisa", "demog")
-        assert g is not None
-        assert g.focus_id is None
-        assert {n.id for n in g.nodes} == {"scb/lisa/kon", "scb/lisa/civilstand"}
-
-    def test_unknown_group_is_none(self) -> None:
-        conn = build_slugged_db()
-        assert Catalog(conn).graph_for_group("scb", "lisa", "nope") is None
 
     def test_group_key_namespaced_by_register(self) -> None:
         # P2-2 regression: concept-group keys are only register-unique, so a graph

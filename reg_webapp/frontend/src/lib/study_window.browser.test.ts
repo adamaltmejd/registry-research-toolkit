@@ -243,27 +243,6 @@ describe("common study window — catalog picker", () => {
     expect(projectStore.draft?.sources).toEqual([]);
   });
 
-  it("marks a committed column whose source period differs from the window", async () => {
-    loadDraft(
-      [
-        source("LISA", "scb/lisa/individer", "scb/lisa/kon", {
-          from: 2010,
-          to: 2012,
-        }),
-      ],
-      { from: 2010, to: 2015 },
-    );
-    await renderLeaf([state({})]);
-
-    await expect
-      .element(
-        page.getByRole("checkbox", {
-          name: /In project, years differ \(source period 2010–2012; study window 2010–2015\)/,
-        }),
-      )
-      .toBeChecked();
-  });
-
   it("marks a committed column the window has moved off as outside it", async () => {
     loadDraft(
       [

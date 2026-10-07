@@ -11,18 +11,11 @@ import type { Column } from "./types";
 // `cell` snippet is the escape hatch for custom cell content — default renders
 // `row[column.key]`.
 //
-// OPTIONAL variants are deliberately distinct:
-// - Selection: pass `getRowId` + `selectedId` (+ `onselect`) and the table adopts
-//   ARIA grid semantics (role=grid) with keyboard-focusable selectable rows
-//   (tabindex, Enter/Space activate), carrying `aria-selected` + the selected
-//   style + the focus ring.
-// - Row navigation: pass `rowNavigation` for link-list tables whose row/card
-//   surface should delegate a plain click to the row's primary `a[href]`. The
-//   anchor remains the only tab stop and accessible link; rows stay role=table
-//   rows with no tabindex.
-// Omit both and it's a plain static table (role=table, no row tabindex). List
-// keyboard NAV is owned by Bits UI `Command` elsewhere — this is selectable rows
-// + visual states only, NOT a roving-tabindex grid.
+// Row navigation (optional): pass `rowNavigation` for link-list tables whose
+// row/card surface should delegate a plain click to the row's primary `a[href]`.
+// The anchor remains the only tab stop and accessible link; rows stay role=table
+// rows with no tabindex. Omit it and it's a plain static table. `getRowId` keys
+// the rows (stable identity across re-renders).
 //
 // RESPONSIVE: at <=48rem the default table stacks (each <tr> becomes a card,
 // cells stack with their column micro-label as a `::before` prefix). The framed
@@ -31,7 +24,7 @@ import type { Column } from "./types";
 // one visual column: the first column is the primary heading and the second cell
 // reads as secondary text underneath. Because CSS `display` changes strip native
 // table roles in Firefox/Safari, the ARIA roles are set EXPLICITLY and
-// unconditionally (table/grid, rowgroup, row, columnheader/cell/gridcell) so the
+// unconditionally (table, rowgroup, row, columnheader/cell) so the
 // narrow forms keep valid table semantics. The first column is the primary title
 // (no micro-label prefix); the `data-label` on each <td> feeds the decorative
 // prefix for the rest.
@@ -41,10 +34,8 @@ interface Props {
   rows: Row[];
   /** Custom cell renderer; default renders `row[column.key]`. */
   cell?: Snippet<[Row, Column<Row>]>;
-  /** Stable row id — enables selection when paired with `selectedId`. */
+  /** Stable row id, used as the row key. */
   getRowId?: (row: Row) => string;
-  selectedId?: string;
-  onselect?: (row: Row) => void;
   /** Link-list variant: plain row/card clicks delegate to the row's primary anchor. */
   rowNavigation?: boolean;
   /** Give the table the raised panel surface; the column headers become the title row. */
@@ -56,14 +47,10 @@ let {
   rows,
   cell,
   getRowId,
-  selectedId,
-  onselect,
   rowNavigation = false,
   framed = false,
 }: Props = $props();
 
-const selectable = $derived(getRowId !== undefined && onselect !== undefined);
-const navigable = $derived(rowNavigation && !selectable);
 type MouseStart = { row: EventTarget | null; x: number; y: number };
 let mouseStart: MouseStart | null = null;
 
@@ -71,10 +58,10 @@ function alignOf(col: Column<Row>): "start" | "end" {
   return col.align ?? (col.numeric ? "end" : "start");
 }
 
-// A `cell` snippet can render its own link/button. A click (or Enter/Space) on
-// that nested control bubbles to the row, so bail when the event originated from
-// an interactive descendant rather than the row itself — otherwise selecting the
-// row would hijack the control's own activation.
+// A `cell` snippet can render its own link/button. A click on that nested
+// control bubbles to the row, so bail when the event originated from an
+// interactive descendant rather than the row itself — otherwise the row would
+// hijack the control's own activation.
 const INTERACTIVE =
   'a[href], button, input, select, textarea, label, [role="button"], [tabindex]';
 
@@ -85,7 +72,7 @@ function fromInteractiveChild(
   const target = event.target;
   if (!(target instanceof Element)) return false;
   const hit = target.closest(INTERACTIVE);
-  // The row itself is a tabindex element; only a DESCENDANT control should bail.
+  // Only a DESCENDANT control should bail, never the row itself.
   return hit !== null && hit !== rowEl;
 }
 
@@ -117,11 +104,6 @@ function primaryRowLink(rowEl: HTMLElement): HTMLAnchorElement | null {
   return link instanceof HTMLAnchorElement ? link : null;
 }
 
-function onrowclick(event: MouseEvent, row: Row): void {
-  if (fromInteractiveChild(event, event.currentTarget)) return;
-  onselect?.(row);
-}
-
 function onrowmousedown(event: MouseEvent): void {
   mouseStart =
     event.button === 0
@@ -151,34 +133,20 @@ function onrownavigationclick(event: MouseEvent): void {
   if (rowSelectionText(rowEl) || dragged) return;
   primaryRowLink(rowEl)?.click();
 }
-
-function onkeydown(event: KeyboardEvent, row: Row): void {
-  // Enter / Space activate the selected-row; other keys fall through (no roving
-  // tabindex — see the component note).
-  if (event.key !== "Enter" && event.key !== " ") return;
-  // Don't hijack a nested control's own keyboard activation (e.g. focus on a cell
-  // <button>); only activate when the row element itself is the event source.
-  if (fromInteractiveChild(event, event.currentTarget)) return;
-  event.preventDefault();
-  onselect?.(row);
-}
 </script>
 
-<!-- Selection uses ARIA grid semantics (role=grid on the table) so each row is a
-     valid selectable `aria-selected` row. Roles are set EXPLICITLY on every
-     element (not left to native HTML-AAM remapping) because the responsive stacked
-     form changes `display` to block, which strips native table roles in Firefox/
-     Safari — explicit roles keep the table/grid semantics across that change.
-     Every selectable row is its OWN tab stop (tabindex=0), NOT a single-tab-stop
-     roving-tabindex grid: list keyboard NAV is owned by Bits UI `Command`
-     elsewhere — this primitive provides selectable rows + visual states only. -->
+<!-- Roles are set EXPLICITLY on every element (not left to native HTML-AAM
+     remapping) because the responsive stacked form changes `display` to block,
+     which strips native table roles in Firefox/Safari — explicit roles keep the
+     table semantics across that change. -->
 <!-- Y-97: `.table-scroll`'s horizontal-overflow rationale is in its own CSS rule below. -->
 <div class="table-scroll">
+  <!-- svelte-ignore a11y_no_redundant_roles -->
   <table
     class="data-table"
     class:framed
     class:narrow-stack={framed && columns.length === 2}
-    role={selectable ? "grid" : "table"}
+    role="table"
     style={`--data-table-columns: ${columns.length}`}
   >
     <!-- svelte-ignore a11y_no_redundant_roles -->
@@ -205,23 +173,12 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
     <!-- svelte-ignore a11y_no_redundant_roles -->
     <tbody role="rowgroup">
       {#each rows as row, i (getRowId ? getRowId(row) : i)}
-        {@const id = getRowId?.(row)}
-        {@const isSelected = selectable && id === selectedId}
         <!-- svelte-ignore a11y_no_redundant_roles -->
         <tr
           role="row"
-          class:selectable
-          class:navigable
-          class:selected={isSelected}
-          tabindex={selectable ? 0 : undefined}
-          aria-selected={selectable ? isSelected : undefined}
-          onmousedown={navigable ? onrowmousedown : undefined}
-          onclick={selectable
-            ? (e) => onrowclick(e, row)
-            : navigable
-              ? onrownavigationclick
-              : undefined}
-          onkeydown={selectable ? (e) => onkeydown(e, row) : undefined}
+          class:navigable={rowNavigation}
+          onmousedown={rowNavigation ? onrowmousedown : undefined}
+          onclick={rowNavigation ? onrownavigationclick : undefined}
         >
           {#each columns as col, colIndex (col.key)}
             <!-- `data-label` feeds the stacked-card micro-label prefix (<=48rem);
@@ -229,7 +186,7 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
                  decorative — screen readers still get the column name from the
                  (visually-hidden but a11y-tree-present) <th role="columnheader">. -->
             <td
-              role={selectable ? "gridcell" : "cell"}
+              role="cell"
               class="align-{alignOf(col)}"
               class:first={colIndex === 0}
               class:mono={col.mono || col.numeric}
@@ -315,24 +272,14 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
     overflow-wrap: normal;
     hyphens: none;
   }
-  tbody tr.selectable {
-    cursor: pointer;
-  }
   tbody tr.navigable {
     cursor: pointer;
   }
   tbody tr:hover {
     background: var(--surface-hover);
   }
-  tbody tr.selected {
-    background: var(--surface-selected);
-  }
   .framed tbody tr:last-child td {
     border-bottom: none;
-  }
-  tbody tr.selectable:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
   }
   tbody tr.navigable :global(a[href]:hover) {
     text-decoration: none;
@@ -420,11 +367,6 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
        otherwise-empty <td> don't defeat the match. */
     td:empty::before {
       content: none;
-    }
-    /* The card keeps ONE focus/hover/selected target (the selectable <tr>). */
-    tbody tr.selectable:focus-visible {
-      outline: none;
-      box-shadow: var(--focus-ring);
     }
     .framed thead {
       position: static;

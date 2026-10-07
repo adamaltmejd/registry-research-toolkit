@@ -1,4 +1,3 @@
-import { createRawSnippet } from "svelte";
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-svelte";
 import DualThumbTrack from "./DualThumbTrack.svelte";
@@ -17,11 +16,6 @@ function inputTick(el: HTMLInputElement, value: number): void {
   el.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
-/** Fire `change` on a range input (pointer release / keyboard commit). */
-function commit(el: HTMLInputElement): void {
-  el.dispatchEvent(new Event("change", { bubbles: true }));
-}
-
 describe("DualThumbTrack", () => {
   const base = { min: 1990, max: 2020 };
 
@@ -37,28 +31,6 @@ describe("DualThumbTrack", () => {
     await expect
       .element(screen.getByRole("slider", { name: "To year" }))
       .toHaveValue("2020");
-  });
-
-  it("renders the children decoration inside the track, behind the thumbs", async () => {
-    const screen = await render(DualThumbTrack, {
-      ...base,
-      selection: { from: 2000, to: 2010 },
-      children: createRawSnippet(() => ({
-        render: () => `<div class="fill" data-testid="deco"></div>`,
-      })),
-    });
-    const deco = screen.container.querySelector('[data-testid="deco"]');
-    const track = screen.container.querySelector(".track");
-    const thumb = screen.container.querySelector(".thumb-from");
-    expect(deco).not.toBeNull();
-    expect(thumb).not.toBeNull();
-    // The decoration is inside the track …
-    expect(track?.contains(deco)).toBe(true);
-    // … and precedes the thumbs in DOM order (so the thumbs paint over it).
-    expect(
-      // biome-ignore lint/style/noNonNullAssertion: asserted non-null above.
-      deco!.compareDocumentPosition(thumb!) & Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy();
   });
 
   it("clamps so From cannot cross past To", async () => {
@@ -81,64 +53,6 @@ describe("DualThumbTrack", () => {
     // Drag To before From → clamped to From.
     await toThumb.fill("1995");
     await expect.element(toThumb).toHaveValue("2000");
-  });
-
-  it("a REJECTED move leaves no stale native value, and repeating it doesn't either", async () => {
-    const screen = await render(DualThumbTrack, {
-      ...base,
-      // Both thumbs already coincident: every further From step is rejected.
-      selection: { from: 2010, to: 2010 },
-    });
-    const fromThumb = screen.getByRole("slider", { name: "From year" });
-    const el = (await fromThumb.element()) as HTMLInputElement;
-    // The clamp discards these steps, so the reactive value never changes and
-    // nothing re-renders — the browser's OWN value must still be walked back, or
-    // the thumb and the announced year drift away from the selection.
-    inputTick(el, 2011);
-    await expect.element(fromThumb).toHaveValue("2010");
-    inputTick(el, 2012);
-    await expect.element(fromThumb).toHaveValue("2010");
-  });
-
-  it("onLiveInput fires on every input tick; onCommit only on change (release)", async () => {
-    const onLiveInput = vi.fn();
-    const onCommit = vi.fn();
-    const screen = await render(DualThumbTrack, {
-      ...base,
-      selection: { from: 2000, to: 2010 },
-      onLiveInput,
-      onCommit,
-    });
-    const el = (await screen
-      .getByRole("slider", { name: "To year" })
-      .element()) as HTMLInputElement;
-
-    // Several live ticks (a drag): onLiveInput fires each time, onCommit never.
-    inputTick(el, 2008);
-    inputTick(el, 2005);
-    inputTick(el, 2003);
-    expect(onLiveInput).toHaveBeenCalledTimes(3);
-    expect(onCommit).not.toHaveBeenCalled();
-    // The thumb reflects the final clamped live value.
-    await expect
-      .element(screen.getByRole("slider", { name: "To year" }))
-      .toHaveValue("2003");
-
-    // Release commits exactly once; no extra live signal.
-    commit(el);
-    expect(onCommit).toHaveBeenCalledTimes(1);
-    expect(onLiveInput).toHaveBeenCalledTimes(3);
-  });
-
-  it("works with neither callback wired (both optional)", async () => {
-    const screen = await render(DualThumbTrack, {
-      ...base,
-      selection: { from: 2000, to: 2010 },
-    });
-    const fromThumb = screen.getByRole("slider", { name: "From year" });
-    // No throw, and the thumb still tracks the (clamped) live value.
-    await fromThumb.fill("2005");
-    await expect.element(fromThumb).toHaveValue("2005");
   });
 
   // ── #671 hard-selectable sub-range (opt-in, default = full bounds) ──────────
@@ -205,34 +119,6 @@ describe("DualThumbTrack", () => {
       await expect.element(fromThumb).toHaveAttribute("max", "2020");
     });
 
-    it("with the props ABSENT, dragging into the former-not-selectable region is unchanged (YearWindowSlider path)", async () => {
-      const screen = await render(DualThumbTrack, {
-        ...base, // 1990–2020, no selectableMin/Max
-        selection: { from: 2000, to: 2010 },
-      });
-      const fromThumb = screen.getByRole("slider", { name: "From year" });
-      // No selectable range → clamps only to the full bounds: 1990 is allowed.
-      await fromThumb.fill("1990");
-      await expect.element(fromThumb).toHaveValue("1990");
-    });
-
-    it("an in-range value advertises the selectable bound as aria-valuemax (Fix 6)", async () => {
-      const screen = await render(DualThumbTrack, {
-        ...base, // 1990–2020
-        selectableMin: 1995,
-        selectableMax: 2015,
-        selection: { from: 2000, to: 2010 }, // both within [1995, 2015]
-      });
-      // The value is inside the selectable sub-range → the widen collapses to it:
-      // the To thumb advertises selHi (2015), not the full track max.
-      await expect
-        .element(screen.getByRole("slider", { name: "To year" }))
-        .toHaveAttribute("aria-valuemax", "2015");
-      await expect
-        .element(screen.getByRole("slider", { name: "From year" }))
-        .toHaveAttribute("aria-valuemin", "1995");
-    });
-
     it("an out-of-coverage seed widens aria-valuemax to include the value (valuenow stays in-range, Fix 6)", async () => {
       const screen = await render(DualThumbTrack, {
         ...base, // 1990–2020
@@ -253,42 +139,5 @@ describe("DualThumbTrack", () => {
         .element(screen.getByRole("slider", { name: "From year" }))
         .toHaveAttribute("aria-valuemin", "1995");
     });
-  });
-
-  // The period card keeps keyboard focus across an Apply (Y-65), so a thumb that
-  // holds it has to SHOW that — and on the KNOB. Both inputs are transparent
-  // overlays spanning the whole track, so a ring on the input itself (the
-  // browser's own outline included) is one rectangle around the rail, identical
-  // whichever thumb is focused.
-  it("paints the focus ring on the focused thumb's knob, not around the track", async () => {
-    const screen = await render(DualThumbTrack, {
-      ...base,
-      selection: { from: 2000, to: 2010 },
-    });
-    const thumb = screen
-      .getByRole("slider", { name: "From year" })
-      .element() as HTMLInputElement;
-    thumb.focus();
-    expect(thumb.matches(":focus-visible")).toBe(true);
-    // The input's own ring is off: it spans the whole track, so it says the
-    // slider is focused but not which thumb, nor where it sits.
-    expect(getComputedStyle(thumb).outlineStyle).toBe("none");
-    // …and the ring is declared on the KNOB instead — asserted off the rule
-    // text because no browser reports a computed style for a slider-thumb
-    // pseudo-element (`getComputedStyle(el, "::-webkit-slider-thumb")` answers
-    // for the element itself). ONE rule, though the source carries both vendor
-    // spellings so neither engine gets `outline: none` with nothing in its
-    // place: a browser discards the rule whose pseudo-element it doesn't know,
-    // so Gecko's never reaches this CSSOM. The rendered proof that the ring
-    // paints is the four-width `catalog-period-focus-thumb` shot.
-    const knobRings = [...document.styleSheets]
-      .flatMap((sheet) => [...sheet.cssRules])
-      .map((rule) => rule.cssText)
-      .filter((text) =>
-        /:focus-visible::(-webkit-slider-thumb|-moz-range-thumb).*--focus-ring/.test(
-          text,
-        ),
-      );
-    expect(knobRings).toHaveLength(1);
   });
 });

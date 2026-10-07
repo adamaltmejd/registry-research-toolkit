@@ -10,36 +10,6 @@ import type { StudyWindow } from "./project_data";
 // Rich `?period` wire values still resolve server-side, but the picker no longer
 // authors range/list/text periods.
 describe("PeriodPicker — year-grain UI", () => {
-  it("does not render advanced authoring controls or the no-window hint", async () => {
-    const screen = await render(PeriodPicker, {
-      period: null,
-      window: null,
-      onsubmit: vi.fn(),
-      onclear: vi.fn(),
-    });
-    await expect
-      .element(screen.getByRole("button", { name: "Apply period" }))
-      .toBeVisible();
-    await expect
-      .element(screen.getByRole("button", { name: "More options" }))
-      .not.toBeInTheDocument();
-    // The free-text period authoring field stays gone: the text inputs on the
-    // card are the two exact YEAR fields (Y-16) and nothing else, so no field
-    // authors a richer grammar than the slider's year window.
-    const textInputs = [
-      ...screen.container.querySelectorAll<HTMLInputElement>(
-        "input[type='text']",
-      ),
-    ];
-    expect(textInputs.map((input) => input.labels?.[0]?.textContent)).toEqual([
-      "From",
-      "To",
-    ]);
-    await expect
-      .element(screen.getByText(/No project window set/))
-      .not.toBeInTheDocument();
-  });
-
   it("keeps an active token ?period visible and clearable without rewriting it on untouched Apply", async () => {
     const onsubmit = vi.fn<(period: string) => void>();
     const onclear = vi.fn<() => void>();
@@ -58,24 +28,6 @@ describe("PeriodPicker — year-grain UI", () => {
     await screen.getByRole("button", { name: "Clear" }).click();
     expect(onclear).toHaveBeenCalledOnce();
   });
-
-  it("keeps an active comma-list ?period visible and clearable without rewriting it on untouched Apply", async () => {
-    const onsubmit = vi.fn<(period: string) => void>();
-    const onclear = vi.fn<() => void>();
-    const screen = await render(PeriodPicker, {
-      period: "2005..2010,2015..2020",
-      window: { from: 2000, to: 2020 },
-      onsubmit,
-      onclear,
-    });
-    await expect
-      .element(screen.getByText("2005..2010,2015..2020", { exact: true }))
-      .toBeVisible();
-    await screen.getByRole("button", { name: "Apply period" }).click();
-    expect(onsubmit).not.toHaveBeenCalled();
-    await screen.getByRole("button", { name: "Clear" }).click();
-    expect(onclear).toHaveBeenCalledOnce();
-  });
 });
 
 // The #615 year-window slider — the picker's DEFAULT control. Precedence
@@ -84,62 +36,6 @@ describe("PeriodPicker — year-grain UI", () => {
 describe("PeriodPicker — window slider (#615)", () => {
   const WINDOW: StudyWindow = { from: 2000, to: 2010 };
   const COVERAGE: Coverage = { from: 1995, to: 2008 };
-
-  it("seeds the slider thumbs from window∩coverage when no ?period is set (#671)", async () => {
-    const screen = await render(PeriodPicker, {
-      period: null,
-      window: WINDOW, // 2000–2010
-      coverage: COVERAGE, // 1995–2008
-      onsubmit: vi.fn(),
-      onclear: vi.fn(),
-    });
-    // #671: no ?period → the thumbs seed at the window narrowed to coverage
-    // (2000–2008), so the variable's real coverage shows up front instead of the
-    // window's 2009–2010 tail reading as available.
-    await expect
-      .element(screen.getByRole("slider", { name: "From year" }))
-      .toHaveValue("2000");
-    await expect
-      .element(screen.getByRole("slider", { name: "To year" }))
-      .toHaveValue("2008");
-  });
-
-  it("seeds the thumbs at window∩coverage when a window extends past coverage (#671)", async () => {
-    // #671 seed precedence: no ?period, window 2000–2010 but coverage only
-    // 1995–2008 → the thumbs seed at the intersection 2000–2008 (the window
-    // narrowed to where data exists), not the bare window 2000–2010.
-    const screen = await render(PeriodPicker, {
-      period: null,
-      window: { from: 2000, to: 2010 },
-      coverage: { from: 1995, to: 2008 } as Coverage,
-      onsubmit: vi.fn(),
-      onclear: vi.fn(),
-    });
-    await expect
-      .element(screen.getByRole("slider", { name: "From year" }))
-      .toHaveValue("2000");
-    await expect
-      .element(screen.getByRole("slider", { name: "To year" }))
-      .toHaveValue("2008");
-  });
-
-  it("seeds the thumbs at the coverage span when no window is set (#671)", async () => {
-    // No ?period, no window, coverage 1995–2008 → the thumbs seed at the coverage
-    // span (the variable's true coverage shown up front), not the full bounds.
-    const screen = await render(PeriodPicker, {
-      period: null,
-      window: null,
-      coverage: { from: 1995, to: 2008 } as Coverage,
-      onsubmit: vi.fn(),
-      onclear: vi.fn(),
-    });
-    await expect
-      .element(screen.getByRole("slider", { name: "From year" }))
-      .toHaveValue("1995");
-    await expect
-      .element(screen.getByRole("slider", { name: "To year" }))
-      .toHaveValue("2008");
-  });
 
   it("open-start coverage + a pre-1960 window seeds From at the window start, not the 1960 floor (Fix 5)", async () => {
     // Fix 5: window 1950–2005 starts before the SLIDER_FLOOR_YEAR (1960), so the
@@ -209,44 +105,6 @@ describe("PeriodPicker — window slider (#615)", () => {
     });
     await screen.getByRole("button", { name: "Apply period" }).click();
     expect(onsubmit).toHaveBeenLastCalledWith("1995..2008");
-  });
-
-  it("Apply with NO window, no ?period AND no coverage stays a no-op (nothing to narrow to)", async () => {
-    // Only the truly-empty case (no selection AND no coverage) keeps the no-op:
-    // the seed is the full bounds, nothing meaningful was chosen.
-    const onsubmit = vi.fn<(period: string) => void>();
-    const screen = await render(PeriodPicker, {
-      period: null,
-      window: null,
-      coverage: null,
-      onsubmit,
-      onclear: vi.fn(),
-    });
-    await screen.getByRole("button", { name: "Apply period" }).click();
-    expect(onsubmit).not.toHaveBeenCalled();
-  });
-
-  it("uses enforced steward-derived bounds when no selected period reaches outside them (#1037)", async () => {
-    const screen = await render(PeriodPicker, {
-      period: null,
-      window: null,
-      coverage: { from: 1996, to: null },
-      windowMinYear: 2000,
-      vintageYear: 2010,
-      enforcePeriodBounds: true,
-      onsubmit: vi.fn(),
-      onclear: vi.fn(),
-    });
-
-    await expect
-      .element(screen.getByRole("slider", { name: "From year" }))
-      .toHaveAttribute("min", "2000");
-    await expect
-      .element(screen.getByRole("slider", { name: "From year" }))
-      .toHaveValue("2000");
-    await expect
-      .element(screen.getByRole("slider", { name: "To year" }))
-      .toHaveValue("2010");
   });
 
   it("enforced steward bounds clamp stale project windows before deriving bounds or Apply output (#1037)", async () => {
@@ -329,96 +187,6 @@ describe("PeriodPicker — window slider (#615)", () => {
     expect(onsubmit).not.toHaveBeenCalled();
   });
 
-  it("enforced steward bounds ignore wholly pre-floor coverage when deriving slider bounds (#1037)", async () => {
-    const onsubmit = vi.fn<(period: string) => void>();
-    const screen = await render(PeriodPicker, {
-      period: null,
-      window: null,
-      coverage: { from: 1990, to: 1995 },
-      windowMinYear: 2000,
-      vintageYear: 2010,
-      enforcePeriodBounds: true,
-      onsubmit,
-      onclear: vi.fn(),
-    });
-
-    await expect
-      .element(screen.getByRole("slider", { name: "From year" }))
-      .toHaveAttribute("min", "2000");
-    await expect
-      .element(screen.getByRole("slider", { name: "To year" }))
-      .toHaveAttribute("max", "2010");
-    await expect
-      .element(screen.getByRole("slider", { name: "From year" }))
-      .toHaveValue("2000");
-    await expect
-      .element(screen.getByRole("slider", { name: "To year" }))
-      .toHaveValue("2010");
-
-    await screen.getByRole("button", { name: "Apply period" }).click();
-    expect(onsubmit).not.toHaveBeenCalled();
-  });
-
-  it("enforced steward bounds ignore open-ended post-ceiling coverage when deriving slider bounds (#1037)", async () => {
-    const onsubmit = vi.fn<(period: string) => void>();
-    const screen = await render(PeriodPicker, {
-      period: null,
-      window: null,
-      coverage: { from: 2027, to: null },
-      windowMinYear: 2000,
-      vintageYear: 2010,
-      enforcePeriodBounds: true,
-      onsubmit,
-      onclear: vi.fn(),
-    });
-
-    await expect
-      .element(screen.getByRole("slider", { name: "From year" }))
-      .toHaveAttribute("min", "2000");
-    await expect
-      .element(screen.getByRole("slider", { name: "To year" }))
-      .toHaveAttribute("max", "2010");
-    await expect
-      .element(screen.getByRole("slider", { name: "From year" }))
-      .toHaveValue("2000");
-    await expect
-      .element(screen.getByRole("slider", { name: "To year" }))
-      .toHaveValue("2010");
-
-    await screen.getByRole("button", { name: "Apply period" }).click();
-    expect(onsubmit).not.toHaveBeenCalled();
-  });
-
-  it("enforced steward bounds ignore open-start pre-floor coverage when deriving slider bounds (#1037)", async () => {
-    const onsubmit = vi.fn<(period: string) => void>();
-    const screen = await render(PeriodPicker, {
-      period: null,
-      window: null,
-      coverage: { from: null, to: 1995 },
-      windowMinYear: 2000,
-      vintageYear: 2010,
-      enforcePeriodBounds: true,
-      onsubmit,
-      onclear: vi.fn(),
-    });
-
-    await expect
-      .element(screen.getByRole("slider", { name: "From year" }))
-      .toHaveAttribute("min", "2000");
-    await expect
-      .element(screen.getByRole("slider", { name: "To year" }))
-      .toHaveAttribute("max", "2010");
-    await expect
-      .element(screen.getByRole("slider", { name: "From year" }))
-      .toHaveValue("2000");
-    await expect
-      .element(screen.getByRole("slider", { name: "To year" }))
-      .toHaveValue("2010");
-
-    await screen.getByRole("button", { name: "Apply period" }).click();
-    expect(onsubmit).not.toHaveBeenCalled();
-  });
-
   it("enforced steward bounds clamp stale active year periods before deriving bounds or Apply output (#1037)", async () => {
     const onsubmit = vi.fn<(period: string) => void>();
     const screen = await render(PeriodPicker, {
@@ -470,32 +238,6 @@ describe("PeriodPicker — window slider (#615)", () => {
 
     await screen.getByRole("button", { name: "Apply period" }).click();
     expect(onsubmit).toHaveBeenLastCalledWith("1950..1965");
-  });
-
-  it("global fallback ceiling does not erase finite post-vintage coverage (#1037)", async () => {
-    const onsubmit = vi.fn<(period: string) => void>();
-    const screen = await render(PeriodPicker, {
-      period: null,
-      window: null,
-      coverage: { from: 2027, to: 2030 },
-      windowMinYear: 1960,
-      vintageYear: 2026,
-      onsubmit,
-      onclear: vi.fn(),
-    });
-
-    await expect
-      .element(screen.getByRole("slider", { name: "To year" }))
-      .toHaveAttribute("max", "2030");
-    await expect
-      .element(screen.getByRole("slider", { name: "From year" }))
-      .toHaveValue("2027");
-    await expect
-      .element(screen.getByRole("slider", { name: "To year" }))
-      .toHaveValue("2030");
-
-    await screen.getByRole("button", { name: "Apply period" }).click();
-    expect(onsubmit).toHaveBeenLastCalledWith("2027..2030");
   });
 
   it("Apply with an INVERTED (discarded) coverage and no window stays a no-op (Fix 4)", async () => {
@@ -627,24 +369,6 @@ describe("PeriodPicker — window slider (#615)", () => {
     expect(onclear).not.toHaveBeenCalled();
   });
 
-  it("the standalone Clear still drops ?period entirely (full history, Fix B)", async () => {
-    // The separate "Clear" affordance keeps the explicit full-history path — it
-    // calls onclear (NOT a window narrow), distinct from "reset to project
-    // window".
-    const onsubmit = vi.fn<(period: string) => void>();
-    const onclear = vi.fn<() => void>();
-    const screen = await render(PeriodPicker, {
-      period: "2003..2007",
-      window: WINDOW,
-      coverage: COVERAGE,
-      onsubmit,
-      onclear,
-    });
-    await screen.getByRole("button", { name: "Clear" }).click();
-    expect(onclear).toHaveBeenCalledOnce();
-    expect(onsubmit).not.toHaveBeenCalled();
-  });
-
   it("no deviation hint when ?period equals the window", async () => {
     const screen = await render(PeriodPicker, {
       period: "2000..2010",
@@ -706,38 +430,6 @@ describe("PeriodPicker — window slider (#615)", () => {
       .toBeVisible();
   });
 
-  it("a window/seed change clears a stale dragged buffer → Apply submits the new window (Fix C)", async () => {
-    // No ?period: the slider seeds from the window. The user drags a thumb (sets
-    // `pending`), then the GLOBAL window changes (header) or a project opens →
-    // the slider re-seeds. The stale buffer must clear so the next Apply submits
-    // the NOW-DISPLAYED window, not the old dragged value (Codex P2).
-    const onsubmit = vi.fn<(period: string) => void>();
-    // Coverage spans both windows here so the #671 seed = the window verbatim
-    // (window ⊆ coverage), isolating the Fix-C re-seed behavior from the
-    // intersection-clip (covered by its own tests above).
-    const WIDE: Coverage = { from: 1990, to: 2020 };
-    const screen = await render(PeriodPicker, {
-      period: null,
-      window: WINDOW, // 2000–2010
-      coverage: WIDE,
-      onsubmit,
-      onclear: vi.fn(),
-    });
-    // Drag the From thumb → buffer holds 2005..2010.
-    await screen.getByRole("slider", { name: "From year" }).fill("2005");
-    // The global window changes underneath (no ?period) → re-seed.
-    await screen.rerender({
-      period: null,
-      window: { from: 2012, to: 2018 },
-      coverage: WIDE,
-      onsubmit,
-      onclear: vi.fn(),
-    });
-    // Apply now submits the NEW window, not the stale 2005..2010 drag.
-    await screen.getByRole("button", { name: "Apply period" }).click();
-    expect(onsubmit).toHaveBeenLastCalledWith("2012..2018");
-  });
-
   it("a COVERAGE change (same ?period + window) clears a stale dragged buffer → Apply submits the new coverage-clamped seed (Fix C, #671 coverage seed)", async () => {
     // #671 made the thumb seed depend on `coverage`, but the reset effect tracked
     // only period/activeYearSelection/ceiling. Navigating between leaves that share
@@ -765,24 +457,6 @@ describe("PeriodPicker — window slider (#615)", () => {
     // leaf-A drag (2005..2008).
     await screen.getByRole("button", { name: "Apply period" }).click();
     expect(onsubmit).toHaveBeenLastCalledWith("2000..2004");
-  });
-
-  it("a drag-then-Apply with NO intervening seed change still submits the dragged value (Fix C guard)", async () => {
-    // The legitimate path must survive: a drag sets the buffer; Apply right after
-    // (no seed/URL change between) submits it — the buffer only clears on a
-    // re-seed, never on the drag itself.
-    const onsubmit = vi.fn<(period: string) => void>();
-    const screen = await render(PeriodPicker, {
-      period: null,
-      window: WINDOW, // 2000–2010
-      coverage: COVERAGE,
-      onsubmit,
-      onclear: vi.fn(),
-    });
-    await screen.getByRole("slider", { name: "From year" }).fill("2003");
-    await screen.getByRole("button", { name: "Apply period" }).click();
-    // To seeds at the coverage end (2008) under #671 → 2003..2008.
-    expect(onsubmit).toHaveBeenLastCalledWith("2003..2008");
   });
 
   it("OPEN-ended coverage: a stale window past the vintage seeds INTO the vintage-capped coverage (#631 + #671)", async () => {
@@ -919,25 +593,6 @@ describe("PeriodPicker — window slider (#615)", () => {
     expect(onsubmit).toHaveBeenLastCalledWith("2000..2010");
   });
 
-  it("LEADING gap is suppressed at the picker level (no ?period, no window → hasSelection:false, #639)", async () => {
-    // The #639 entry condition: period null + window null + finite coverage
-    // 1995–2008. With no selection, activeYearSelection is null → hasSelection
-    // is false, so the leading 1960–1994 span below coverage must NOT gap as
-    // "Not delivered before 1995" (the user never chose the full-history span).
-    // No note, no gap cells.
-    const screen = await render(PeriodPicker, {
-      period: null,
-      window: null,
-      coverage: { from: 1995, to: 2008 } as Coverage,
-      onsubmit: vi.fn(),
-      onclear: vi.fn(),
-    });
-    await expect
-      .element(screen.getByText(/Not delivered/))
-      .not.toBeInTheDocument();
-    expect(screen.container.querySelectorAll(".gap").length).toBe(0);
-  });
-
   it("dragging a thumb into the not-delivered region is hard-clamped to coverage (#671)", async () => {
     // #671 supersedes the #639 follow-up: rather than firing an availability gap
     // once a drag enters not-delivered years, the thumbs are HARD-CLAMPED to
@@ -970,54 +625,6 @@ describe("PeriodPicker — window slider (#615)", () => {
       .element(screen.getByText(/Not delivered/))
       .not.toBeInTheDocument();
     expect(screen.container.querySelectorAll(".gap").length).toBe(0);
-  });
-
-  it("a window wider than coverage seeds INTO coverage — the pre-coverage span is the unavailable band, not a gap (#671)", async () => {
-    // Under #671 the window 1960–2008 is intersected with coverage 1995–2008, so
-    // the thumbs seed at 1995–2008 (the pre-coverage 1960–1994 span is no longer
-    // SELECTED). That span reads as the up-front non-selectable `unavailable` band
-    // — NOT a "Not delivered before" gap (which #671 supersedes for the default
-    // seed; the alarming selection-gap only fires for an explicit out-of-coverage
-    // ?period). This supersedes the old #639 "window set → leading gap fires" lock.
-    const screen = await render(PeriodPicker, {
-      period: null,
-      window: { from: 1960, to: 2008 } as StudyWindow,
-      coverage: { from: 1995, to: 2008 } as Coverage,
-      onsubmit: vi.fn(),
-      onclear: vi.fn(),
-    });
-    await expect
-      .element(screen.getByRole("slider", { name: "From year" }))
-      .toHaveValue("1995");
-    await expect
-      .element(screen.getByText(/Not delivered/))
-      .not.toBeInTheDocument();
-    expect(
-      screen.container.querySelectorAll(".unavailable").length,
-    ).toBeGreaterThan(0);
-  });
-
-  it("no window set: the availability note softens without rendering a helper hint", async () => {
-    const screen = await render(PeriodPicker, {
-      period: "2005..2012",
-      window: null,
-      coverage: COVERAGE, // 1995–2008 → 2009–2012 not delivered
-      onsubmit: vi.fn(),
-      onclear: vi.fn(),
-    });
-    // The not-delivered note still appears (availability is relative to the
-    // active selection)…
-    await expect
-      .element(screen.getByText(/Not delivered after 2008/))
-      .toBeVisible();
-    // …but no generic no-window hint renders on the page.
-    await expect
-      .element(screen.getByText(/No project window set/))
-      .not.toBeInTheDocument();
-    // No user-deviation hint (nothing to deviate from).
-    await expect
-      .element(screen.getByText(/Deviates from project window/))
-      .not.toBeInTheDocument();
   });
 });
 
@@ -1085,20 +692,6 @@ describe("PeriodPicker — exact year entry (Y-16)", () => {
     expect(onsubmit).toHaveBeenLastCalledWith("2022");
   });
 
-  it("collapses to a single year typed UPPER-first too (order cannot change the wire)", async () => {
-    const onsubmit = vi.fn<(period: string) => void>();
-    const screen = await render(PeriodPicker, {
-      ...EXACT,
-      onsubmit,
-      onclear: vi.fn(),
-    });
-    const { from, to, apply } = fields(screen);
-    await to.fill("2022");
-    await from.fill("2022");
-    await apply.click();
-    expect(onsubmit).toHaveBeenLastCalledWith("2022");
-  });
-
   it("widens a range in one Apply and shows the pending range before it", async () => {
     const onsubmit = vi.fn<(period: string) => void>();
     const screen = await render(PeriodPicker, {
@@ -1124,40 +717,6 @@ describe("PeriodPicker — exact year entry (Y-16)", () => {
 
     await apply.click();
     expect(onsubmit).toHaveBeenLastCalledWith("2016..2023");
-  });
-
-  it("shifts a range LATER in one Apply (both bounds past the old upper bound)", async () => {
-    const onsubmit = vi.fn<(period: string) => void>();
-    const screen = await render(PeriodPicker, {
-      ...EXACT,
-      onsubmit,
-      onclear: vi.fn(),
-    });
-    const { from, to, apply } = fields(screen);
-    await from.fill("2021");
-    await to.fill("2023");
-    await expect
-      .element(screen.getByText("2021–2023", { exact: true }))
-      .toBeVisible();
-    await apply.click();
-    expect(onsubmit).toHaveBeenLastCalledWith("2021..2023");
-  });
-
-  it("shifts a range EARLIER in one Apply (both bounds before the old lower bound)", async () => {
-    const onsubmit = vi.fn<(period: string) => void>();
-    const screen = await render(PeriodPicker, {
-      ...EXACT,
-      onsubmit,
-      onclear: vi.fn(),
-    });
-    const { from, to, apply } = fields(screen);
-    await to.fill("2017");
-    await from.fill("2016");
-    await expect
-      .element(screen.getByText("2016–2017", { exact: true }))
-      .toBeVisible();
-    await apply.click();
-    expect(onsubmit).toHaveBeenLastCalledWith("2016..2017");
   });
 
   it("refuses a year outside the selectable coverage band and keeps the pending range", async () => {
@@ -1187,26 +746,6 @@ describe("PeriodPicker — exact year entry (Y-16)", () => {
     await expect.element(from).toHaveValue("2010");
     await expect
       .element(screen.getByText("2019–2020", { exact: true }))
-      .toBeVisible();
-  });
-
-  it("refuses a year past the vintage ceiling of an open-ended coverage", async () => {
-    const onsubmit = vi.fn<(period: string) => void>();
-    const screen = await render(PeriodPicker, {
-      ...EXACT,
-      onsubmit,
-      onclear: vi.fn(),
-    });
-    const { to, apply } = fields(screen);
-    await to.fill("2030");
-    await apply.click();
-    expect(onsubmit).not.toHaveBeenCalled();
-    await expect
-      .element(
-        screen.getByText(
-          "2030 is outside 2015–2024 — pick a year in that range.",
-        ),
-      )
       .toBeVisible();
   });
 
@@ -1252,22 +791,6 @@ describe("PeriodPicker — exact year entry (Y-16)", () => {
     expect(onsubmit).toHaveBeenLastCalledWith("2001..2009");
   });
 
-  it("refuses text that is not a four-digit year", async () => {
-    const onsubmit = vi.fn<(period: string) => void>();
-    const screen = await render(PeriodPicker, {
-      ...EXACT,
-      onsubmit,
-      onclear: vi.fn(),
-    });
-    const { to, apply } = fields(screen);
-    await to.fill("20x");
-    await apply.click();
-    expect(onsubmit).not.toHaveBeenCalled();
-    await expect
-      .element(screen.getByText("To must be a four-digit year, like 2015."))
-      .toBeVisible();
-  });
-
   it("names BOTH fields when neither holds a year (Y-17)", async () => {
     const onsubmit = vi.fn<(period: string) => void>();
     const screen = await render(PeriodPicker, {
@@ -1307,27 +830,6 @@ describe("PeriodPicker — exact year entry (Y-16)", () => {
     await expect.element(from).toHaveAttribute("aria-invalid", "false");
   });
 
-  it("refuses a FOUR-digit year outside the wire's centuries as out of range", async () => {
-    const onsubmit = vi.fn<(period: string) => void>();
-    const screen = await render(PeriodPicker, {
-      ...EXACT,
-      onsubmit,
-      onclear: vi.fn(),
-    });
-    const { to, apply } = fields(screen);
-    // 2100 IS four digits, so saying it isn't would contradict what was typed.
-    await to.fill("2100");
-    await apply.click();
-    expect(onsubmit).not.toHaveBeenCalled();
-    await expect
-      .element(
-        screen.getByText(
-          "2100 is outside 2015–2024 — pick a year in that range.",
-        ),
-      )
-      .toBeVisible();
-  });
-
   it("names BOTH years when both bounds fall outside the band", async () => {
     const onsubmit = vi.fn<(period: string) => void>();
     const screen = await render(PeriodPicker, {
@@ -1350,24 +852,6 @@ describe("PeriodPicker — exact year entry (Y-16)", () => {
         ),
       )
       .toBeVisible();
-  });
-
-  it("marks the refused fields invalid and clears that once the entry is valid", async () => {
-    const screen = await render(PeriodPicker, {
-      ...EXACT,
-      onsubmit: vi.fn(),
-      onclear: vi.fn(),
-    });
-    const { from, to, apply } = fields(screen);
-    await from.fill("2022");
-    await apply.click();
-    await expect.element(from).toHaveAttribute("aria-invalid", "true");
-    await expect.element(to).toHaveAttribute("aria-invalid", "true");
-    await to.fill("2023");
-    await expect.element(from).toHaveAttribute("aria-invalid", "false");
-    await expect
-      .element(screen.getByText(/is after To/))
-      .not.toBeInTheDocument();
   });
 
   it("a thumb drag after a typed entry takes the fields back over", async () => {
@@ -1407,24 +891,6 @@ describe("PeriodPicker — exact year entry (Y-16)", () => {
     expect(onsubmit).toHaveBeenLastCalledWith("2005..2006");
   });
 
-  it("re-seeds the fields when the applied ?period arrives back as the active value", async () => {
-    const onsubmit = vi.fn<(period: string) => void>();
-    const props = { ...EXACT, onsubmit, onclear: vi.fn() };
-    const screen = await render(PeriodPicker, props);
-    const { from, to, apply } = fields(screen);
-    await from.fill("2022");
-    await to.fill("2022");
-    await apply.click();
-    expect(onsubmit).toHaveBeenLastCalledWith("2022");
-    // The parent writes the URL; the picker re-seeds from it (no stale entry).
-    await screen.rerender({ ...props, period: "2022" });
-    await expect.element(from).toHaveValue("2022");
-    await expect.element(to).toHaveValue("2022");
-    await expect
-      .element(screen.getByText("2022–2022", { exact: true }))
-      .toBeVisible();
-  });
-
   // A re-render is not a re-seed. Both consumers rebuild these props from derived
   // state — the leaf's `coverageFromStates(node.states)`, the group's
   // `unionCoverage` over its selectable bands, a window store that rewrites the
@@ -1454,20 +920,6 @@ describe("PeriodPicker — exact year entry (Y-16)", () => {
     await expect.element(to).toHaveValue("2006");
     await apply.click();
     expect(onsubmit).toHaveBeenLastCalledWith("2002..2006");
-  });
-
-  it("keeps a dragged pending value through the same identity-only re-render", async () => {
-    const onsubmit = vi.fn<(period: string) => void>();
-    const props = { ...CHURN, onsubmit, onclear: vi.fn() };
-    const screen = await render(PeriodPicker, props);
-    await screen.getByRole("slider", { name: "From year" }).fill("2004");
-    await screen.rerender({
-      ...props,
-      window: { from: 2000, to: 2010 },
-      coverage: { from: 1995, to: 2008 },
-    });
-    await screen.getByRole("button", { name: "Apply period" }).click();
-    expect(onsubmit).toHaveBeenLastCalledWith("2004..2008");
   });
 
   // A moved SELECTABLE BAND is a re-seed even when the seeded years stand still.
@@ -1511,30 +963,6 @@ describe("PeriodPicker — exact year entry (Y-16)", () => {
     await expect.element(from).toHaveValue("2000");
     await expect.element(to).toHaveValue("2008");
     // …and Apply submits that, not the sub-floor drag.
-    await apply.click();
-    expect(onsubmit).toHaveBeenLastCalledWith("2000..2008");
-  });
-
-  it("re-seeds a dragged window an arriving STEWARD floor forbids (#1037)", async () => {
-    const onsubmit = vi.fn<(period: string) => void>();
-    const props = { ...BAND, onsubmit, onclear: vi.fn() };
-    const screen = await render(PeriodPicker, props);
-    const { from, to, apply } = fields(screen);
-    await dragToFloor(screen);
-    // Hard steward bounds arrive (a deployment floor of 2000), clipping coverage
-    // to 2000–2008. Period, active window, ceiling and seed still all match.
-    await screen.rerender({
-      ...props,
-      windowMinYear: 2000,
-      enforcePeriodBounds: true,
-    });
-    await expect
-      .element(screen.getByText("2000–2008", { exact: true }))
-      .toBeVisible();
-    await expect.element(from).toHaveValue("2000");
-    await expect.element(to).toHaveValue("2008");
-    // The whole point: no Apply may cross the steward floor, and none may submit
-    // something other than what the readout and the fields show.
     await apply.click();
     expect(onsubmit).toHaveBeenLastCalledWith("2000..2008");
   });

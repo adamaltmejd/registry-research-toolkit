@@ -1,0 +1,5 @@
+{
+  "fixture": "reader",
+  "kind": "catalog",
+  "requests": [{"path": "/api/context"}]
+}

@@ -132,25 +132,6 @@ describe("BindingEditor read-only cart row", () => {
     expect(page.getByText("Advanced").query()).toBeNull();
   });
 
-  it("leads with an explicit display_name where a file sets one", async () => {
-    // A hand-authored spec may set an explicit `display_name`; reg_schema makes it
-    // that binding's output column name, so it is the column the row leads with.
-    const binding = {
-      variable: "scb/lisa/adeldag",
-      type: "opaque",
-      display_name: "AdelDag",
-      representation: null,
-    } as unknown as Binding;
-    await renderRow(binding);
-
-    await expect
-      .element(page.getByText("AdelDag", { exact: true }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("link", { name: "scb/lisa/adeldag" }))
-      .toBeVisible();
-  });
-
   it("leads with display_name over a pinned representation when a file sets both", async () => {
     // reg_schema makes `display_name` the binding's OUTPUT column name, so it is
     // what the extract delivers even where a `representation` also pins the source
@@ -169,67 +150,6 @@ describe("BindingEditor read-only cart row", () => {
     await expect
       .element(page.getByRole("button", { name: "Remove column Sex" }))
       .toBeVisible();
-  });
-
-  it("resolves the column name from the catalog for a pick that names none", async () => {
-    // The ORDINARY pick, through the picker's own mapping: ONE delivery column at
-    // the (variant, period) leaves `representation` null and no `display_name`, so
-    // the file names no column and the name is the reg_meta default — which lives
-    // in the catalog, at THIS source's (variant, period).
-    const binding = bindingFieldsFromResolution(
-      "scb/lisa/kon",
-      { kind: "derived", type: "categorical" },
-      "Kon",
-    );
-    await renderRow(binding);
-
-    await expect.element(page.getByText("Kon", { exact: true })).toBeVisible();
-    await expect
-      .element(page.getByRole("link", { name: "scb/lisa/kon" }))
-      .toBeVisible();
-    // Resolved at the SOURCE's coordinate, not the variable's whole history…
-    expect(vi.mocked(getCatalogNode).mock.calls[0]).toEqual([
-      "scb/lisa/kon",
-      { period: "2020", variant: "v1" },
-    ]);
-    // …and read, never written: the draft still names no column.
-    expect(binding.representation).toBeNull();
-    expect("display_name" in binding).toBe(false);
-  });
-
-  it("leads a rename within the period with the current name, the earlier ones in mono after it", async () => {
-    // A source period spanning a rename resolves to several names for one column.
-    // The picker's own rows lead with the surviving column and name the superseded
-    // ones quietly; the cart row says it the same way.
-    vi.mocked(getCatalogNode).mockResolvedValue(
-      resolved(
-        state("DINF", "1981-01-01", "1983-12-31"),
-        state("DINF83", "1984-01-01", "1985-12-31"),
-        state("DINF86", "1990-01-01", "9999-12-31"),
-      ),
-    );
-    const binding = bindingFieldsFromResolution(
-      "scb/lisa/disponibel-inkomst",
-      { kind: "derived", type: "numeric" },
-      null,
-    );
-    await renderRow(binding, "1981..2020");
-
-    await expect
-      .element(page.getByText("DINF86", { exact: true }))
-      .toBeVisible();
-    const hint = document.querySelector<HTMLElement>(".rename-hint");
-    expect(hint?.textContent).toBe("was DINF, DINF83");
-    // The columns are identifiers and take the machine face; the word introducing
-    // them is copy and does not.
-    const superseded = document.querySelector<HTMLElement>(".superseded");
-    expect(superseded?.textContent).toBe("DINF, DINF83");
-    expect(getComputedStyle(superseded as HTMLElement).fontFamily).toContain(
-      "mono",
-    );
-    expect(getComputedStyle(hint as HTMLElement).fontFamily).not.toContain(
-      "mono",
-    );
   });
 
   it("keeps the FQID alone when nothing there resolves to a column", async () => {

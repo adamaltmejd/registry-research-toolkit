@@ -33,11 +33,11 @@ jobs:
         with:
           version: "0.12.11"
       - run: uv sync --frozen
-      - name: Prepare rootless Podman
-        run: |
-          sudo apt-get update
-          sudo apt-get install --yes podman
-          podman info
+      # Podman ships with the runner image; no apt step (see ci.yml's
+      # `package-integration` for why).
+      - name: Check rootless Podman
+        timeout-minutes: 2
+        run: podman info
       # Both opt-in flags: --run-integration (all container tests) and --run-release
       # (the subset that needs a published release asset). Serial, NOT `-n auto`:
       # the module-scoped image fixture builds the container once; xdist would

@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 # is shared by the build-db test modules.
 from _pipeline_catalog_support import catalog  # noqa: F401
 
-# The committed curation tree, loaded once per module by the repo-curation TOML tests.
+# The committed curation tree, loaded once per session (test_committed_curation).
 from _repo_curation_support import repo_tree  # noqa: F401
 from _shared_fixtures import (  # noqa: F401
     db_conn,

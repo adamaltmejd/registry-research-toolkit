@@ -329,9 +329,6 @@
      ink-filled control too. */
   --focus-ring: 0 0 0 2px var(--accent-bg), 0 0 0 3px var(--accent);
   --surface-hover: var(--gray-11);
-  /* Selection is one ramp stop darker than hover, and always pairs with the
-     3px ink bar on the leading edge — never tint alone. */
-  --surface-selected: var(--gray-10);
 
   /* ── Motion ──────────────────────────────────────────────────────────── */
   /* Small + functional (popover/disclosure transitions), not decorative. */

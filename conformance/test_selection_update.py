@@ -145,24 +145,15 @@ def network_fixture(
     return source_db, urls
 
 
-@pytest.mark.parametrize("selection", ["named", "path", "env"])
+@pytest.mark.parametrize("selection", ["path", "env"])
 def test_update_preserves_selected_identity(selection, tmp_path: Path, monkeypatch):
     source, urls = network_fixture(tmp_path, monkeypatch)
-    target = (
-        tmp_path / "data/reg_meta/swecov"
-        if selection == "named"
-        else tmp_path / "explicit"
-    )
-    if selection != "named":
-        target.mkdir()
-        (target / "reg_meta.db").write_bytes(source.read_bytes())
+    target = tmp_path / "explicit"
+    target.mkdir()
+    (target / "reg_meta.db").write_bytes(source.read_bytes())
     if selection == "env":
         monkeypatch.setenv("REG_META_DB", str(target))
-    result = run_update(
-        catalog="swecov" if selection == "named" else None,
-        db_dir=target if selection == "path" else None,
-        yes=True,
-    )
+    result = run_update(db_dir=target if selection == "path" else None, yes=True)
     expected = json.loads((SELECTION / "update-expected.json").read_text())
     actual = {
         "package": result["package"],
@@ -177,8 +168,6 @@ def test_update_preserves_selected_identity(selection, tmp_path: Path, monkeypat
     finally:
         conn.close()
     assert (target / "reg_meta_docs.db").exists()
-    if selection == "named":
-        assert not (target.parent / "reg_meta.db").exists()
 
 
 @pytest.mark.parametrize(

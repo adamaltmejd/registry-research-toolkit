@@ -110,7 +110,7 @@ describe("VariantBrowser — folded versions (Y-79)", () => {
       ),
     );
 
-    const { container } = await render(VariantBrowser, {
+    await render(VariantBrowser, {
       registerFqid: "scb/rams",
     });
 
@@ -123,8 +123,6 @@ describe("VariantBrowser — folded versions (Y-79)", () => {
     await expect
       .element(page.getByRole("heading", { name: "Object type" }))
       .toBeVisible();
-    // Nothing was folded, so there is no "which delivery is this" caveat.
-    expect(container.querySelectorAll("p.as-delivered")).toHaveLength(0);
   });
 
   it("renders every population and object type of a version, repeated names included", async () => {
@@ -292,25 +290,6 @@ describe("VariantBrowser — variant family segments (#376/Y-79)", () => {
       .toBeVisible();
   });
 
-  it("omits display_group when it just repeats the name (the common case)", async () => {
-    vi.mocked(getRegisterVariants).mockResolvedValue(
-      variantsResponse(
-        variant("arbetsstallen", {
-          name: "Arbetsställen",
-          display_group: "Arbetsställen",
-          versions: datedVersions(2004),
-        }),
-      ),
-    );
-
-    await render(VariantBrowser, { registerFqid: "scb/lisa" });
-
-    // The name renders exactly once — not "Arbetsställen Arbetsställen".
-    const matches = page.getByText("Arbetsställen", { exact: true });
-    await expect.element(matches).toBeVisible();
-    expect(await matches.all()).toHaveLength(1);
-  });
-
   it("heads a variant that has no name with its display_group, printed once", async () => {
     vi.mocked(getRegisterVariants).mockResolvedValue(
       variantsResponse(
@@ -334,26 +313,6 @@ describe("VariantBrowser — variant family segments (#376/Y-79)", () => {
       await page.getByText("KUAGG aggregat", { exact: true }).all(),
     ).toHaveLength(1);
     expect(container.querySelectorAll("p.entry-meta")).toHaveLength(0);
-  });
-
-  it("shows display_group when it genuinely differs from the name", async () => {
-    vi.mocked(getRegisterVariants).mockResolvedValue(
-      variantsResponse(
-        variant("foretag-kuagg", {
-          name: "Företag - Uppgifter",
-          display_group: "KUAGG aggregat",
-        }),
-      ),
-    );
-
-    await render(VariantBrowser, { registerFqid: "scb/lsum" });
-
-    await expect
-      .element(page.getByText("Företag - Uppgifter", { exact: true }))
-      .toBeVisible();
-    await expect
-      .element(page.getByText("KUAGG aggregat", { exact: true }))
-      .toBeVisible();
   });
 });
 

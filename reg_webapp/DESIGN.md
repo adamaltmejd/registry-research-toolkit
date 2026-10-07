@@ -54,12 +54,13 @@ conn = reg_meta.db.open_db(db_path)  # mode=ro + _check_schema_compat
 
 `open_db` already opens `mode=ro` and runs `_check_schema_compat` — a real
 `SCHEMA_VERSION` assert vs the DB manifest. That is the **load-bearing** schema gate (a
-wrong major / too-old minor raises at startup; `test_boot.py` covers it). The boot
-connection is closed once the manifest is read; the parsed manifest AND the resolved
-`db_path` are stashed on `app.state` (the keys `/api/context` surfaces are validated at
-boot so a malformed DB fails fast). The lifespan holds **no** long-lived query
-connection — see the connection model below. The boot also loads the steward and builds
-its in-memory catalog index (below), stashing both on `app.state`.
+wrong major / too-old minor raises at startup;
+`conformance/cases/boot/schema-major-mismatch` covers it). The boot connection is closed
+once the manifest is read; the parsed manifest AND the resolved `db_path` are stashed on
+`app.state` (the keys `/api/context` surfaces are validated at boot so a malformed DB
+fails fast). The lifespan holds **no** long-lived query connection — see the connection
+model below. The boot also loads the steward and builds its in-memory catalog index
+(below), stashing both on `app.state`.
 
 The webapp reads reg_meta read-only and ships no DDL, so it owns no `SCHEMA_VERSION` —
 the only schema gate is `open_db`'s boot compat check against reg_meta's manifest.
@@ -134,12 +135,12 @@ Catalog routes live in one `routes/catalog.py` APIRouter, declaring `/catalog`, 
 suffixed routes, then `/catalog/{fqid:path}` (the catch-all **last**). Starlette matches
 in **declaration order** and the `{fqid:path}` converter greedy-consumes any suffix, so
 the suffixed routes must declare ABOVE the catch-all or the catch-all swallows the
-suffix into `fqid` and the suffix handler never fires. A CI router-introspection test
-(`test_boot.py::test_suffixed_routes_declared_before_catch_all`) pins the order. The
-suffix tokens (and `variants`) are also **reserved in the variable slot** of the slug
-grammar (see reg_meta/DESIGN.md → FQID grammar) at build time, so a variable slugged
-`states` can't shadow a sub-endpoint. The validate→parse→Catalog-dispatch→Pydantic-map
-flow is factored into reusable helpers.
+suffix into `fqid` and the suffix handler never fires. Each suffixed route answering
+with its own shape over HTTP (`conformance/cases/http_catalog`,
+`test_catalog_subendpoints.py`) pins the order. The suffix tokens (and `variants`) are
+also **reserved in the variable slot** of the slug grammar (see reg_meta/DESIGN.md →
+FQID grammar) at build time, so a variable slugged `states` can't shadow a sub-endpoint.
+The validate→parse→Catalog-dispatch→Pydantic-map flow is factored into reusable helpers.
 
 The suffixed surface has one family declared above the catch-all: seven **binding-suffix
 routes** (`/states`, `/predecessors`, `/successors`, `/lineage`, `/lineage_warnings`,
@@ -215,8 +216,8 @@ fails on any `classification_replaced_by` edge whose endpoint has no live row), 
 `fqid` is None only on a malformed/unresolvable slug (rendered as plain text, not a
 link). The earlier immediate-neighbor routes (`/classification_predecessors`,
 `/classification_successors`) were retired — the embedded full chain subsumes them.
-(reg_meta's `Catalog.classification_successors`/`classification_predecessors` accessors
-remain as public API and back the chain walk.)
+(reg_meta's `Catalog.classification_predecessors` accessor remains public API; the chain
+walk reads the same edges.)
 
 At the current head, the classification leaf also embeds further payloads inline for
 synchronous SPA render: `codes` (reg_meta's `ClassificationCode`, embedded directly from
@@ -390,18 +391,13 @@ citation of a slug with no live row AND no successor edge still 404s.)
 reg_meta/DESIGN.md → Concept groups) ALONGSIDE the complete flat `children` list:
 grouped members appear in both, so the contract stays additive and group-unaware
 consumers keep working. The SPA folds client-side (`catalog.ts::foldGroupedRows`):
-grouped leaves hide under one expandable `ConceptGroupRow` (a month×rank value matrix
-for two facet axes, chips for faceted members — months/vintages in single-axis variable
-groups, curated labels in axis-less classification umbrellas — and a plain member list
-for edge groups), ungrouped leaves render as before, and the type-to-filter matches a
-group on its label/key OR any member's name/FQID (`groupMatchesFilter`) so member
-searches still surface the folded group. `ConceptGroupRow` takes an optional `onpick`
-that renders members as pick buttons instead of catalogHref links (#322) — a browse/pick
-mode switch, currently dormant since the #991 cart model retired the only `onpick`
-consumer (`CatalogPicker.svelte`; picking now happens from the catalog subject page's
-own picker, see § The picker — slice axis × time axis, which does not use
-`ConceptGroupRow`'s pick mode). `foldGroupedRows` tolerates a stale pre-`groups`
-edge-cached payload (#317) by degrading to the flat list.
+grouped leaves hide under one `ConceptGroupRow`, a link to the group's subject page
+(#673 for register groups, #756 for classification umbrellas) carrying the label and the
+distinct-member count; the members, their facets and picking live on that page.
+Ungrouped leaves render as before, and the type-to-filter matches a group on its
+label/key OR any member's name/FQID (`groupMatchesFilter`) so member searches still
+surface the folded group. `foldGroupedRows` tolerates a stale pre-`groups` edge-cached
+payload (#317) by degrading to the flat list.
 
 **`/lineage` shape.** Maps what reg_meta's `LineageEdge` carries (`consumer_state_id`,
 `source_state_id`, the validity intersection, `source_fqid`). A richer per-source-state
@@ -1302,16 +1298,10 @@ friction) still stands wherever a future `Command`-hosted list meets grouped row
 Load-bearing decisions downstream children (#806–#809) must not re-litigate:
 
 - **`DataTable` ARIA roles — explicit and unconditional.** Every table element carries
-  its ARIA role explicitly (`table`/`grid`, `rowgroup`, `row`, `columnheader`,
-  `cell`/`gridcell`) regardless of the selectable variant. This is required because the
-  responsive stacked form switches `display` to `block`, which strips native table roles
-  in Firefox/Safari — explicit roles keep the semantics intact across that change.
-- **`DataTable` selection — ARIA grid, not roving tabindex.** The selectable variant
-  sets `role="grid"` on the table; each selectable row carries `aria-selected` and
-  `tabindex=0` (its own tab stop). This is deliberately **not** a single-tab-stop
-  roving-tabindex grid — list keyboard navigation belongs to Bits UI `Command`
-  elsewhere. API: `getRowId` + `selectedId` + `onselect`; omit them for a plain static
-  table (`role="table"`).
+  its ARIA role explicitly (`table`, `rowgroup`, `row`, `columnheader`, `cell`). This is
+  required because the responsive stacked form switches `display` to `block`, which
+  strips native table roles in Firefox/Safari — explicit roles keep the semantics intact
+  across that change. `getRowId` only keys the rows; there is no selectable variant.
 - **`DataTable` row navigation — link delegation, not selection.** Browse tables whose
   primary cell is a link opt into `rowNavigation`; rows stay in plain `role="table"`
   semantics with no row `tabindex` or `aria-selected`, and the anchor remains the only
@@ -1369,10 +1359,10 @@ Load-bearing decisions downstream children (#806–#809) must not re-litigate:
   `clip-path: inset(50%)`, not the legacy `clip` property) is the second cross-component
   utility in `lib/ui/utilities.css`. It removes content from the visual layout while
   keeping it in the accessibility tree — unlike `display:none`, which severs both. Used
-  by `ConceptGroupNavigator`'s filter-pill checkboxes. `DataTable`'s stacked `<thead>`
-  is sr-only only under `@media (max-width: 48rem)`, so it cannot apply the
-  (unconditional) class and keeps a media-scoped inline copy held identical to the
-  utility — the sr-only analog of the `td::before` micro-label exception.
+  by `FilterChip`'s checkbox. `DataTable`'s stacked `<thead>` is sr-only only under
+  `@media (max-width: 48rem)`, so it cannot apply the (unconditional) class and keeps a
+  media-scoped inline copy held identical to the utility — the sr-only analog of the
+  `td::before` micro-label exception.
 - **`.cbox` global utility.** The app's checkbox face, in `lib/ui/utilities.css`. Every
   tick in the app is a real native `<input type="checkbox">` — the role, the keyboard
   control and the `:checked`/`:indeterminate` states are the platform's — and this class
@@ -1550,14 +1540,13 @@ kind:
   filter only when it discriminates (≥2 distinct values across all visible rows);
   single-value dimensions are invisible. Filtering is a client-side presentation lens: a
   hidden-but-selected row still commits, and the footer signals this. The filter logic
-  mirrors the #819 `ConceptGroupNavigator`: OR within a dimension, AND across. When the
-  group's graph is edge-bearing, small enough to draw cleanly, and maps every selectable
-  graph cell one-to-one to the visible picker rows, the same picker may switch to graph
-  / time-band mode instead of the list. The #908 dimension filter strip stays above
-  either render mode; active filters narrow graph cells through the same filtered row
-  model as the compact list. Leaf graph context with no selectable delivery-column row
-  still renders in graph mode as unavailable context cells, so no-column bindings keep
-  their succession/group context.
+  is OR within a dimension, AND across. When the group's graph is edge-bearing, small
+  enough to draw cleanly, and maps every selectable graph cell one-to-one to the visible
+  picker rows, the same picker may switch to graph / time-band mode instead of the list.
+  The #908 dimension filter strip stays above either render mode; active filters narrow
+  graph cells through the same filtered row model as the compact list. Leaf graph
+  context with no selectable delivery-column row still renders in graph mode as
+  unavailable context cells, so no-column bindings keep their succession/group context.
 
   Two **succession-collapse** folds ship in #902, both client-side and purely
   presentational:
@@ -2417,13 +2406,6 @@ statements == 0):
   per-segment check. **`@version` is a 422, not a pin:** `scb/lisa/naringsgren@sni2007`
   is now an explicit *negative* case (the pin is retired), alongside
   `scb/lisa/naringsgren@bad/slug` and `…@@x`.
-
-**Provenance confinement (route introspection).** No handler references the
-maintainer-only sibling provenance DB path, so there is no path-confinement to enforce
-at the handler level. The published catalog's separate `variable_state.provenance` field
-is safe row metadata (provider export versus curated delivery correction) and travels
-with states; it does not expose or query the sibling DB. This separation is a property
-of the endpoint set, re-checked when routes are added.
 
 ## Forward-looking open UX notes
 

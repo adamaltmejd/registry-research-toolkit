@@ -4,7 +4,7 @@
 `catalog_db` alone = no docs index (the degradation case). Covers search +
 register scope, doc get (excerpt, never full body), the "mentioned in docs"
 variable hook (fuzzy + coverage distinction), input gates, the docs-absent
-degradation, and the ETag round-trip.
+degradation and the excerpt rules.
 """
 
 from __future__ import annotations
@@ -251,17 +251,7 @@ def test_related_document_register_slug_gate(client):
     assert client.get("/api/docs/related/not-a-register!").status_code == 422
 
 
-# ── ETag + excerpt unit ──────────────────────────────────────────────────────
-
-
-def test_docs_search_etag_roundtrip(client):
-    first = client.get("/api/docs/search", params={"q": "kon"})
-    assert first.status_code == 200
-    etag = first.headers["etag"]
-    second = client.get(
-        "/api/docs/search", params={"q": "kon"}, headers={"If-None-Match": etag}
-    )
-    assert second.status_code == 304
+# ── excerpt unit ────────────────────────────────────────────────────────────
 
 
 def _source_prose(name: str) -> str:

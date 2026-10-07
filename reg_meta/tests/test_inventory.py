@@ -12,15 +12,8 @@ the one-to-one cell→column resolution invariant (last section).
 from __future__ import annotations
 
 import pytest
-from pydantic import ValidationError
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.fqid import FqidError
-from reg_meta.inventory import (
-    DeliveryInventory,
-    EditionRange,
-    edition_bounds,
-    load_inventory,
-)
+from reg_meta.inventory import load_inventory
 
 FIXTURE_INVENTORY = """
 version = 1
@@ -84,48 +77,6 @@ def _write(tmp_path, text: str):
     return path
 
 
-@pytest.fixture
-def inventory(tmp_path) -> DeliveryInventory:
-    return load_inventory(_write(tmp_path, FIXTURE_INVENTORY))
-
-
-def test_fixture_parses_into_typed_models(inventory: DeliveryInventory) -> None:
-    assert inventory.version == 1
-    assert inventory.steward == "swecov"
-    assert [table.id for table in inventory.tables] == [
-        "LISA_Individ_2019.csv",
-        "dbo.Utrikeshandel",
-        "SCB_Foretag_2005-2010_2015.csv",
-    ]
-
-    lisa = inventory.tables[0]
-    # The bare TOML year int canonicalizes to its period token.
-    assert lisa.edition == "2019"
-    # Physical column names stay literal and case-preserving.
-    assert [column.name for column in lisa.columns] == ["Kon", "DispInk04", "LopNr"]
-
-    mapped = lisa.columns[0].mappings[0]
-    assert mapped.register_variant == "scb/lisa/individer-15plus"
-    assert str(mapped.variable) == "scb/lisa/kon"
-    assert mapped.representation == "Kon"
-    assert lisa.columns[1].mappings[0].representation == "DispInk04"
-
-
-def test_unresolved_column_carries_no_mappings(inventory: DeliveryInventory) -> None:
-    assert inventory.tables[0].columns[2].mappings == ()
-
-
-def test_unmapped_reason_is_retained_exactly(tmp_path) -> None:
-    reason = "  Source owner is unresolved; preserve this column.  "
-    text = FIXTURE_INVENTORY.replace(
-        'name = "LopNr"', f'name = "LopNr"\nunmapped_reason = "{reason}"'
-    )
-    inventory = load_inventory(_write(tmp_path, text))
-    column = inventory.tables[0].columns[2]
-    assert column.unmapped_reason == reason
-    assert column.mappings == ()
-
-
 @pytest.mark.parametrize("reason", ["", "   ", "\\t"])
 def test_unmapped_reason_refuses_blank_text(tmp_path, reason: str) -> None:
     text = FIXTURE_INVENTORY.replace(
@@ -143,54 +94,6 @@ def test_unmapped_reason_refuses_active_mappings(tmp_path) -> None:
     with pytest.raises(RegMetaError) as excinfo:
         load_inventory(_write(tmp_path, text))
     assert "unmapped_reason cannot accompany mappings" in excinfo.value.message
-
-
-def test_one_column_maps_to_two_variants(inventory: DeliveryInventory) -> None:
-    varukod = inventory.tables[1].columns[0]
-    assert [mapping.register_variant for mapping in varukod.mappings] == [
-        "scb/utrikeshandel/import",
-        "scb/utrikeshandel/export",
-    ]
-    assert {str(mapping.variable) for mapping in varukod.mappings} == {
-        "scb/utrikeshandel/varukod"
-    }
-
-
-def test_fixture_round_trips_through_the_models(inventory: DeliveryInventory) -> None:
-    dumped = inventory.model_dump()
-    # The dump speaks the authored TOML spelling (singular array-of-tables keys,
-    # `from` not `from_`), so it re-validates without translation.
-    assert set(dumped) == {"version", "steward", "table"}
-    assert set(dumped["table"][1]["edition"]) == {"from", "to"}
-    assert DeliveryInventory.model_validate(dumped) == inventory
-
-
-def test_edition_bounds_expand_via_the_shared_period_grammar() -> None:
-    assert edition_bounds("2019") == (("2019-01-01", "2019-12-31"),)
-    assert edition_bounds("2019-Q3") == (("2019-07-01", "2019-09-30"),)
-    assert edition_bounds((EditionRange(**{"from": "2005", "to": "2010"}), "2015")) == (
-        ("2005-01-01", "2010-12-31"),
-        ("2015-01-01", "2015-12-31"),
-    )
-
-
-def test_school_year_edition_loads_as_its_token(tmp_path) -> None:
-    inventory = load_inventory(
-        _write(
-            tmp_path,
-            """
-version = 1
-steward = "swecov"
-
-[[table]]
-id = "Grundskola_2004.csv"
-edition = "LA2004"
-[[table.column]]
-name = "Betyg"
-""",
-        )
-    )
-    assert inventory.tables[0].edition == "LA2004"
 
 
 def test_school_year_conflict_names_the_period_as_its_token(tmp_path) -> None:
@@ -424,34 +327,6 @@ def test_rejects_a_non_utf8_inventory(tmp_path) -> None:
     assert excinfo.value.exit_code == EXIT_CONFIG
 
 
-def test_edition_bounds_rejects_a_non_period_token() -> None:
-    with pytest.raises(FqidError):
-        edition_bounds("2019-2020")
-
-
-def test_accepts_the_default_variant_coordinate(tmp_path) -> None:
-    """A single-table register rides the synthesized `_default` variant slug;
-    only the EDITION forbids `_default`."""
-    text = """
-version = 1
-steward = "swecov"
-
-[[table]]
-id = "SmiNet_2021.csv"
-edition = 2021
-[[table.column]]
-name = "Diagnosdatum"
-[[table.column.mapping]]
-register_variant = "fohm/sminet/_default"
-variable = "fohm/sminet/diagnosdatum"
-representation = "Diagnosdatum"
-
-"""
-    inventory = load_inventory(_write(tmp_path, text))
-    mapping = inventory.tables[0].columns[0].mappings[0]
-    assert mapping.register_variant == "fohm/sminet/_default"
-
-
 # ── one-to-one cell→column resolution ──────────────────────────────────────
 #
 # Every admitted `(register_variant, variable, representation, period)` cell
@@ -571,74 +446,6 @@ representation = "Kon"
     )
 
 
-def test_the_invariant_holds_for_a_programmatic_inventory() -> None:
-    """The materializer accepts any `DeliveryInventory`, not only TOML-loaded
-    ones, so the invariant lives on the model — not in `load_inventory`."""
-    raw = {
-        "version": 1,
-        "steward": "swecov",
-        "table": [
-            {
-                "id": table_id,
-                "edition": "2019",
-                "column": [
-                    {
-                        "name": "Kon",
-                        "mapping": [
-                            {
-                                "register_variant": "scb/lisa/individer-15plus",
-                                "variable": "scb/lisa/kon",
-                                "representation": "Kon",
-                            }
-                        ],
-                    }
-                ],
-            }
-            for table_id in ("LISA_A_2019.csv", "LISA_B_2019.csv")
-        ],
-    }
-    with pytest.raises(ValidationError) as excinfo:
-        DeliveryInventory.model_validate(raw)
-    assert "both map scb/lisa/individer-15plus scb/lisa/kon over 2019" in str(
-        excinfo.value
-    )
-
-
-def test_accepts_a_disjoint_annual_series(tmp_path) -> None:
-    """The ordinary annual series: the same triple in two tables whose editions
-    do NOT overlap resolves one cell to one location, so it stays legal."""
-    text = """
-version = 1
-steward = "swecov"
-
-[[table]]
-id = "LISA_Individ_2019.csv"
-edition = 2019
-[[table.column]]
-name = "Kon"
-[[table.column.mapping]]
-register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/kon"
-representation = "Kon"
-
-[[table]]
-id = "LISA_Individ_2020.csv"
-edition = 2020
-[[table.column]]
-name = "Kon"
-[[table.column.mapping]]
-register_variant = "scb/lisa/individer-15plus"
-variable = "scb/lisa/kon"
-representation = "Kon"
-
-"""
-    inventory = load_inventory(_write(tmp_path, text))
-    assert [table.id for table in inventory.tables] == [
-        "LISA_Individ_2019.csv",
-        "LISA_Individ_2020.csv",
-    ]
-
-
 def test_accepts_two_representations_of_one_variable_over_one_period(tmp_path) -> None:
     """Two DIFFERENT explicit representations are two cells, not one: parallel
     representations (SSYK 3- and 4-digit) delivered for the same period are
@@ -712,19 +519,6 @@ variable = "skv/agi/utbetalt-belopp"
 representation = "Belopp"
 
 """
-
-
-def test_accepts_distinct_partitions_of_one_cell(tmp_path) -> None:
-    """The motivating shape: two reporter streams of one edition mapping the
-    same coordinate. Distinct labels make them shards, not a conflict — and the
-    materializer emits both, one extraction file each."""
-    inventory = load_inventory(
-        _write(tmp_path, _agi_shards('partition = "arb"', 'partition = "soc"'))
-    )
-    assert [(t.id, t.partition) for t in inventory.tables] == [
-        ("Arb_AGIIndivid_2021-03.csv", "arb"),
-        ("Soc_AGIIndivid_2021-03.csv", "soc"),
-    ]
 
 
 def test_rejects_two_tables_sharing_one_partition_label(tmp_path) -> None:

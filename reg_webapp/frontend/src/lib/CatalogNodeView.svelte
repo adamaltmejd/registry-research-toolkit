@@ -1274,13 +1274,11 @@ async function addSelected(): Promise<void> {
                   {/each}
                 {/if}
               {:else if row.kind === "group"}
-                <!-- #673 (M6): register-arm group rows link to their subject page.
-                     Browse-link rows omit the slug pill; picker disclosure rows keep it. -->
+                <!-- #673 (M6): register-arm group rows link to their subject page. -->
                 <ConceptGroupRow
                   group={row.group}
                   noun="variables"
                   href={row.href}
-                  showGroupKey={false}
                 />
               {:else}
                 <a class="row-link" href={catalogHref(row.fqid)} title={row.fqid}>
@@ -1386,13 +1384,11 @@ async function addSelected(): Promise<void> {
                       {row.label}
                     </a>
                   {:else if row.kind === "group"}
-                    <!-- #756: classification-umbrella groups link to their subject page.
-                         Browse-link rows omit the slug pill; picker disclosure rows keep it. -->
+                    <!-- #756: classification-umbrella groups link to their subject page. -->
                     <ConceptGroupRow
                       group={row.group}
                       noun={row.noun}
                       href={row.href}
-                      showGroupKey={false}
                     />
                   {:else}
                     <a class="row-link" href={catalogHref(row.fqid)} title={row.shortName}>

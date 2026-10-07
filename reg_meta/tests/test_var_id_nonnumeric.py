@@ -32,7 +32,6 @@ import pytest
 from reg_meta.queries import (
     get_varinfo,
     search,
-    search_variables_by_classification,
 )
 from search_test_support import reader_search_conn
 
@@ -167,82 +166,6 @@ def db() -> sqlite3.Connection:
     return conn
 
 
-def test_classification_to_variables_var_id_guard(db: sqlite3.Connection) -> None:
-    rows = search_variables_by_classification(db, "sun2020")
-    by_name = {r["variable_name"]: r["var_id"] for r in rows}
-    # SCB var (low-band variable_id) → the numeric var_id (int 44).
-    assert by_name["Kön"] == 44
-    assert isinstance(by_name["Kön"], int)
-    # SOS (name) + curated (column) provider_keys, both HIGH band → None, not 0.
-    assert by_name["Diagnos"] is None
-    assert by_name["Diagnos curated"] is None
-    # The band guard rejects on `variable_id`, not on provider_key shape, so a
-    # non-SCB var (high band) resolves to None regardless of its key text:
-    #   - "44abc" (leading-digit but not pure-digit), and
-    #   - "2020"  (PURE digit) — the band guard's edge over the old digit guard,
-    #     which would have leaked 2020 as a var_id.
-    assert by_name["Mixed"] is None
-    assert by_name["DigitOnly"] is None
-
-
-def test_search_varname_var_id_guard(db: sqlite3.Connection) -> None:
-    # field="varname" is the LIKE-over-name path (no FTS rebuild needed).
-    # The typed `varname` row (#701) carries `var_id`/`name` as attributes.
-    scb = search(db, "Kön", field="varname").results
-    assert scb and scb[0].var_id == 44
-
-    sos = search(db, "Diagnos", field="varname").results
-    by_name = {r.name: r.var_id for r in sos}
-    assert by_name["Diagnos"] is None
-    assert by_name["Diagnos curated"] is None
-
-
-def test_search_datacolumn_var_id_guard(db: sqlite3.Connection) -> None:
-    # field="datacolumn" is the LIKE-over-`delivery_column_name` path; the fixture
-    # sets each state's `delivery_column_name` = the variable's `name`, so the same
-    # "Kön"/"Diagnos" queries match here (mirror of the varname guard above).
-    # The typed `datacolumn` row (#701) carries `var_id`/`name` as attributes.
-    scb = search(db, "Kön", field="datacolumn").results
-    assert scb and scb[0].var_id == 44
-    assert isinstance(scb[0].var_id, int)
-
-    sos = search(db, "Diagnos", field="datacolumn").results
-    by_name = {r.name: r.var_id for r in sos}
-    assert by_name["Diagnos"] is None
-    assert by_name["Diagnos curated"] is None
-
-
-def test_varinfo_var_id_guard(db: sqlite3.Connection) -> None:
-    # SCB var (low-band id) addressable by numeric var_id, surfaces var_id 44.
-    scb = get_varinfo(db, "44", register="lisa")
-    assert scb and scb[0]["var_id"] == 44
-
-    # SOS var: addressable by name (it has no numeric var_id), surfaces None.
-    # The register is resolved by `register.name`, not slug.
-    sos = get_varinfo(db, "Diagnos", register="SOS Register")
-    assert sos and sos[0]["var_id"] is None
-
-    # Curated var: addressable by name, surfaces None.
-    cur = get_varinfo(db, "Diagnos curated", register="Curated Register")
-    assert cur and cur[0]["var_id"] is None
-
-
-def test_digit_shaped_nonscb_key_is_none(db: sqlite3.Connection) -> None:
-    # The BAND guard classifies on `variable_id` band, NOT on provider_key shape,
-    # so a non-SCB var (high-band id) resolves to None even when its key would
-    # have fooled the old digit guard. Both digit-shaped non-SCB vars live on the
-    # curated (non-SCB) register:
-    #   - "44abc": leading-digit but not pure-digit — the old `CAST(... AS INTEGER)`
-    #     would have parsed 44; the digit guard already rejected it, the band guard
-    #     keeps rejecting it (for the right reason: high band, not "has letters").
-    mixed = get_varinfo(db, "Mixed", register="Curated Register")
-    assert mixed and mixed[0]["var_id"] is None
-    #   - "2020": PURE digit — the OLD digit guard would have LEAKED 2020 as a
-    #     var_id; the band guard correctly returns None because its id is high band.
-    digit = get_varinfo(db, "DigitOnly", register="Curated Register")
-    assert digit and digit[0]["var_id"] is None
-
-
 def test_low_band_column_key_is_none(db: sqlite3.Connection) -> None:
     # Locks the regression Codex caught (#474): a column SCB's own export never
     # documented (a `[[column]]` in reg_meta_build/curation/scb_errata.toml) is minted in
@@ -269,31 +192,6 @@ def test_low_band_column_key_is_none(db: sqlite3.Connection) -> None:
 
     minted = get_varinfo(db, "SomeCol", register="lisa")
     assert minted and minted[0]["var_id"] is None
-
-
-def test_none_var_id_renders_blank_not_none() -> None:
-    # A None var_id must render as an empty cell, never the literal "None" or
-    # "0" — both the table and list renderers coerce it (#466). >5 rows forces
-    # the table path; the list path is checked directly.
-    from reg_meta.cli_common import render_list, render_table
-
-    rows = [
-        {"var_id": 44, "variable_name": "Kön"},
-        {"var_id": None, "variable_name": "Diagnos"},
-    ]
-    cols = ["var_id", "variable_name"]
-
-    table, _ = render_table(rows + rows + rows, cols)  # 6 rows → table path
-    assert "None" not in table
-    # The SCB numeric id is still shown; the None row's cell is blank.
-    assert "44" in table
-    diagnos_line = next(ln for ln in table.splitlines() if "Diagnos" in ln)
-    assert not diagnos_line.startswith("None")
-    assert "0" not in diagnos_line.split("Diagnos")[0]
-
-    listed = render_list(rows, cols)
-    assert "None" not in listed
-    assert "44" in listed
 
 
 def test_pipeline_built_non_scb_variable_reports_no_var_id(

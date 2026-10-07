@@ -1,0 +1,17 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/ok": false,
+      "/issues": [
+        {
+          "code": "binding_representation_unknown",
+          "level": "error",
+          "message": "column 'scb/example/lonfink' pins representation 'LonFinkFeb', which is not a delivery column at scb/example/annual in 2018-01,2018-03 (available: ['LonFinkJan', 'LonFinkMars'])",
+          "path": "/sources/0/bindings/0/variable",
+          "successor_fqid": null
+        }
+      ]
+    }
+  }
+]

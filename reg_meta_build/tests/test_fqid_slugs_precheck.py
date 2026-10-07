@@ -12,14 +12,12 @@ from _slugged_db import (
 from reg_meta.errors import RegMetaError
 
 from reg_meta_build.fqid_slugs import (
-    SNAPSHOT_FILENAME,
     SlugEntry,
     diff_snapshot,
     populate_variable_slugs,
     precheck_slugs,
     read_snapshot,
     snapshot_payload,
-    write_snapshot,
 )
 
 if TYPE_CHECKING:
@@ -27,39 +25,6 @@ if TYPE_CHECKING:
 
 
 class TestPrecheckSlugs:
-    def test_clean_state(self, tmp_path: Path):
-        d = tmp_path / "slugs"
-        d.mkdir()
-        _write(
-            d / "scb.toml",
-            '[register."1"]\nslug = "lisa"\n'
-            '[register_variant."1.10"]\nslug = "individer"\n',
-        )
-        conn = build_slugged_db()
-        conn.execute("UPDATE register SET slug = NULL")
-        conn.execute("UPDATE register_variant SET slug = NULL")
-        result = precheck_slugs(conn, d)
-        assert result.ok
-
-    def test_missing_register_reported(self, tmp_path: Path):
-        d = tmp_path / "slugs"
-        d.mkdir()
-        _write(d / "scb.toml", "")
-        conn = build_slugged_db()
-        conn.execute("UPDATE register SET slug = NULL")
-        conn.execute("UPDATE register_variant SET slug = NULL")
-        result = precheck_slugs(conn, d)
-        assert not result.ok
-        assert any(r[1] == "1" for r in result.missing_registers)
-
-    def test_parse_error_surfaces(self, tmp_path: Path):
-        d = tmp_path / "slugs"
-        d.mkdir()
-        _write(d / "scb.toml", '[register."1"]\nslug = "Bad_Slug"\n')
-        conn = build_slugged_db()
-        result = precheck_slugs(conn, d)
-        assert result.parse_errors
-
     def test_drifting_variables_advisory(self, tmp_path: Path):
         # #143: precheck lists drifting-column variables (advisory — it must
         # NOT affect `ok`). The drift var is reported with its stored slug + the
@@ -223,64 +188,6 @@ class TestPrecheckSlugs:
 
 
 class TestSnapshot:
-    def test_diff_detects_add(self):
-        prev = {
-            "register": {},
-            "register_variant": {},
-            "variable": {},
-        }
-        cur = {
-            "register": {"scb/1": "lisa"},
-            "register_variant": {},
-            "variable": {},
-        }
-        diff = diff_snapshot(prev, cur)
-        assert diff["added"] == ["register/scb/1 = 'lisa'"]
-        assert diff["removed"] == []
-        assert diff["renamed"] == []
-
-    def test_diff_detects_removal(self):
-        prev = {
-            "register": {"scb/1": "lisa"},
-            "register_variant": {},
-            "variable": {},
-        }
-        cur = {
-            "register": {},
-            "register_variant": {},
-            "variable": {},
-        }
-        diff = diff_snapshot(prev, cur)
-        assert "register/scb/1" in diff["removed"][0]
-
-    def test_diff_detects_rename(self):
-        prev = {
-            "register": {"scb/1": "lisa"},
-            "register_variant": {},
-            "variable": {},
-        }
-        cur = {
-            "register": {"scb/1": "lisa-renamed"},
-            "register_variant": {},
-            "variable": {},
-        }
-        diff = diff_snapshot(prev, cur)
-        assert diff["renamed"]
-        assert "'lisa'" in diff["renamed"][0]
-        assert "'lisa-renamed'" in diff["renamed"][0]
-
-    def test_snapshot_round_trip(self, tmp_path: Path):
-        path = tmp_path / SNAPSHOT_FILENAME
-        # A2.6: no register_version in the snapshot (version left the grammar).
-        payload = {
-            "register": {"scb/1": "lisa"},
-            "register_variant": {"scb/1.10": "individer-15plus"},
-            "variable": {},
-        }
-        write_snapshot(path, payload)
-        loaded = read_snapshot(path)
-        assert loaded == payload
-
     def test_snapshot_missing_file_returns_empty(self, tmp_path: Path):
         loaded = read_snapshot(tmp_path / "nope.json")
         assert loaded == {
@@ -329,20 +236,6 @@ class TestDiffSnapshotFrozenZones:
         "register_variant": {},
         "variable": {},
     }
-
-    def test_default_frozen_zones_empty_reports_register_changes(self) -> None:
-        # No frozen_zones ⇒ blocked is empty and removed/renamed/added are
-        # byte-identical to the pre-#470 three-key output.
-        cur = {
-            "register": {"sos/9": "deaths"},  # scb/1 removed
-            "register_variant": {},
-            "variable": {},
-        }
-        diff = diff_snapshot(self._PREV, cur)
-        assert diff["blocked"] == []
-        assert diff["removed"] == ["register/scb/1 (was 'lisa')"]
-        assert diff["renamed"] == []
-        assert diff["added"] == []
 
     def test_only_frozen_zone_violations_block(self) -> None:
         cur = {

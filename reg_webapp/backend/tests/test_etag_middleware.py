@@ -1,25 +1,21 @@
-"""ETag middleware wiring, end-to-end through the app.
+"""ETag / Cache-Control, end-to-end through the app.
 
-See DESIGN.md → ETag / Cache-Control (etag.py + middleware.py). The pure logic is
-unit-tested in ``test_etag.py``; here we pin the middleware
-behavior: GET reads get ETag + Cache-Control, error responses do NOT (an error
-body is not a cacheable representation), a matching If-None-Match yields a 304
-with no body, and the ETag prefix is the INSTALLED reg_meta version (NOT the DB
-schema_version manifest). The per-endpoint ETag/304 parametrization lives in
-``test_catalog_subendpoints.py``.
-
-A non-GET (write) endpoint would be SKIPPED by the method gate — A5.2b adds the
-first write endpoint, so the skip is asserted here against a synthetic route to
-pin the contract before then.
+See DESIGN.md → ETag / Cache-Control (etag.py + middleware.py). GET reads get ETag + the per-route Cache-Control tier, error
+responses and writes do NOT (an error body is not a cacheable representation), a
+matching If-None-Match (weak, list or wildcard form) yields a 304 with no body,
+and the ETag prefix is the INSTALLED reg_meta version (NOT the DB
+schema_version manifest).
 """
 
 from __future__ import annotations
 
+import pytest
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
-from reg_webapp.middleware import ETagMiddleware
 
 import reg_meta
+
+_SHORT = "public, max-age=60, must-revalidate"
 
 
 def test_etag_prefix_is_installed_reg_meta_version_not_manifest(catalog_db):
@@ -59,21 +55,53 @@ def test_304_drops_content_type_and_length(catalog_db):
     assert resp.headers["etag"] == etag
 
 
-def test_non_get_method_is_skipped(catalog_db):
-    # The method gate skips writes (A5.2b). Pin it now with a synthetic POST route
-    # mounted alongside the real middleware: the POST response must carry NO ETag.
-    app = create_app()
+@pytest.mark.parametrize(
+    ("path", "cache_control"),
+    [
+        # The vintage footer asserts a deploy version/date: always revalidate.
+        ("/api/context", "no-cache"),
+        # Fold- or steward-dependent reads get the short window (#499, #506, #726).
+        ("/api/catalog/scb/lisa/kon/states", _SHORT),
+        ("/api/search?q=lisa", _SHORT),
+        ("/api/stats", _SHORT),
+        # Rebuild-stable doc reads keep 24h; `/api/docs/search` must not collide
+        # with the `/api/search` prefix.
+        ("/api/docs/search?q=kon", "public, max-age=86400, must-revalidate"),
+    ],
+)
+def test_read_cache_control_tier(docs_db, path, cache_control):
+    with TestClient(create_app()) as client:
+        resp = client.get(path)
+    assert resp.status_code == 200
+    assert resp.headers["cache-control"] == cache_control
 
-    @app.post("/api/_probe_write")
-    def _probe_write() -> dict[str, bool]:  # pragma: no cover - wiring probe
-        return {"ok": True}
 
-    # The middleware is added in create_app; assert it's actually mounted so this
-    # test fails loudly if the wiring is dropped.
-    assert any(m.cls is ETagMiddleware for m in app.user_middleware)
+@pytest.mark.parametrize(
+    ("if_none_match", "status"),
+    [
+        # RFC 7232 §3.2: If-None-Match is a WEAK comparison, so an edge that
+        # weakened the validator (Cloudflare) still gets a 304.
+        ("W/{etag}", 304),
+        ('"other", {etag}', 304),
+        ("*", 304),
+        ('"other"', 200),
+        ('W/"other"', 200),
+    ],
+)
+def test_if_none_match_forms(catalog_db, if_none_match, status):
+    with TestClient(create_app()) as client:
+        etag = client.get("/api/context").headers["etag"]
+        resp = client.get(
+            "/api/context",
+            headers={"If-None-Match": if_none_match.format(etag=etag)},
+        )
+    assert resp.status_code == status
 
-    with TestClient(app) as client:
-        resp = client.post("/api/_probe_write")
+
+def test_write_response_has_no_etag(catalog_db):
+    # The method gate skips writes: a validation answer is never cached.
+    with TestClient(create_app()) as client:
+        resp = client.post("/api/project/validate", json={})
     assert resp.status_code == 200
     assert "etag" not in resp.headers
     assert "cache-control" not in resp.headers
@@ -119,3 +147,21 @@ def test_generation_invalidates_an_identical_body(tmp_path, monkeypatch):
     assert responses[0].status_code == responses[1].status_code == 200
     assert responses[0].content == responses[1].content
     assert responses[0].headers["etag"] != responses[1].headers["etag"]
+
+
+def test_different_bodies_under_identical_metadata_do_not_share_a_validator(
+    catalog_db,
+):
+    # Fails if compute_etag drops the body digest: version, steward, generation
+    # and scope are identical here, so only the body can tell the two apart, and
+    # an ETag cached for `?q=lisa` would otherwise turn `?q=rams` into a stale 304.
+    with TestClient(create_app()) as client:
+        lisa = client.get("/api/search", params={"q": "lisa"})
+        rams = client.get(
+            "/api/search",
+            params={"q": "rams"},
+            headers={"If-None-Match": lisa.headers["etag"]},
+        )
+    assert lisa.status_code == rams.status_code == 200
+    assert lisa.content != rams.content
+    assert lisa.headers["etag"] != rams.headers["etag"]

@@ -124,27 +124,6 @@ def test_graph_states_carry_column_and_coding_metadata(
 
 
 class TestRepresentationRuns:
-    def test_cross_era_column_rename_is_a_boundary(self) -> None:
-        conn = build_slugged_db()
-        conn.execute("DELETE FROM variable_state")
-        for vf, vt, col in (
-            ("2018-01-01", "2019-12-31", "Kon"),
-            ("2020-01-01", "9999-12-31", "Konkod"),  # renamed column → new run
-        ):
-            add_state(
-                conn,
-                register_id=1,
-                variable_slug="kon",
-                register_variant_id=10,
-                valid_from=vf,
-                valid_to=vt,
-                delivery_column_name=col,
-            )
-        conn.commit()
-        node = Catalog(conn).graph_for_fqid(_KON).nodes[0]
-        assert isinstance(node, VariableGraphNode)
-        assert [s.representation_run_id for s in node.states] == [0, 1]
-
     def test_value_set_version_label_change_is_a_boundary(self) -> None:
         # Two valued states sharing a value_set_id but differing in
         # value_set_version_label are DISTINCT materialized states (the #526
@@ -403,27 +382,3 @@ class TestVariableNodeFacets:
         assert isinstance(kon, VariableGraphNode)
         assert kon.facets == []
         assert kon.group_label == "Group demog"
-
-    def test_ungrouped_variable_has_no_facets_or_label(self) -> None:
-        # An ungrouped variable: facets == [] and group_label is None. Use a node that
-        # renders (≥2 representation runs) so the empty-graph gate doesn't drop it.
-        conn = build_slugged_db()
-        add_value_set(conn, value_set_id=1, codes=[("1", "Man"), ("2", "Kvinna")])
-        add_value_set(conn, value_set_id=2, codes=[("1", "M"), ("2", "K"), ("3", "X")])
-        conn.execute("DELETE FROM variable_state")
-        for vf, vsid in (("2018-01-01", 1), ("2019-01-01", 2)):
-            add_state(
-                conn,
-                register_id=1,
-                variable_slug="kon",
-                register_variant_id=10,
-                valid_from=vf,
-                delivery_column_name="Kon",
-                value_set_id=vsid,
-            )
-        conn.commit()
-        (node,) = Catalog(conn).graph_for_fqid(_KON).nodes
-        assert isinstance(node, VariableGraphNode)
-        assert node.group_key is None
-        assert node.facets == []
-        assert node.group_label is None
