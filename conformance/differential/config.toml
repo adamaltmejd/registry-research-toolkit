@@ -32,6 +32,12 @@ reason = "An order manifest records the catalog's schema version and generation,
 case = "*/*/order/*"
 paths = ["/provenance/catalog_generation_id", "/provenance/catalog_schema_version"]
 
+[[exception]]
+name = "derived-schema-version"
+reason = "`context` reports the served artifact's schema version: the derived copy's minor (9.1, section 4) against the original base's."
+case = "*/*/context"
+paths = ["/data/schema_version"]
+
 # The baseline reader: `reg_meta` (with `reg_schema`) at this commit, installed from
 # `git archive` into its own virtualenv with the commit's locked dependencies.
 [baseline]
