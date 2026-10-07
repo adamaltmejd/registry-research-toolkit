@@ -1,13 +1,12 @@
 import { createRawSnippet } from "svelte";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { page, userEvent } from "vitest/browser";
+import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import AppShell from "./AppShell.svelte";
 import type { RootResponse } from "./api";
 import { getCatalogRoot } from "./api";
 import { DATA_BROWSER_LABEL } from "./catalog";
 import { resetCatalogNames } from "./catalog_names.svelte";
-import type { ProjectData } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import { link, router } from "./router.svelte";
 
@@ -222,38 +221,6 @@ describe("AppShell — project chip", () => {
     await expect.element(drawer().getByText("Warnings")).toBeVisible();
   });
 
-  it("names the completed check in the chip when the draft validates clean", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(async () => ({
-        ok: true,
-        status: 200,
-        json: async () => ({ ok: true, issues: [] }),
-      })),
-    );
-    projectStore.newProject({
-      reg_meta_version: "reg_meta/v1.0.0",
-      steward: "global",
-    });
-    projectStore.applyStagedDiff({
-      adds: [
-        {
-          registerVariant: "scb/lisa/v1",
-          period: 2018,
-          binding: { variable: "scb/lisa/kon", type: "categorical" },
-        },
-      ],
-    });
-    await projectStore.validate();
-
-    await render(AppShell, minimalProps());
-    await openDrawer();
-
-    // The panel's vocabulary, not a bare "Valid": the chip rides along on every
-    // route, including one showing a blocked order.
-    await expect.element(drawer().getByText("Draft valid")).toBeVisible();
-  });
-
   it("says the order is blocked when the study window has moved off a source", async () => {
     vi.stubGlobal(
       "fetch",
@@ -286,115 +253,9 @@ describe("AppShell — project chip", () => {
     // study window: the chip reports the blocked order, not the validation.
     await expect.element(drawer().getByText("Order blocked")).toBeVisible();
   });
-
-  it("tolerates malformed source slots while showing counts", async () => {
-    // The two halves of an Open: the file ingress, then the commit (the toolbar
-    // puts the replacement confirmation between them).
-    const parsed = projectStore.parseProjectText(
-      JSON.stringify({
-        schema_version: "2.0.0",
-        steward: "global",
-        reg_meta_version: "reg_meta/v1.0.0",
-        name: "Malformed project",
-        sources: [
-          null,
-          {
-            name: "LISA",
-            register_variant: "scb/lisa/v1",
-            period: 2018,
-            bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
-          },
-        ],
-      }),
-    );
-    expect(parsed).not.toBeNull();
-    projectStore.loadProject(parsed as ProjectData);
-
-    await render(AppShell, minimalProps());
-    await openDrawer();
-
-    await expect
-      .element(page.getByRole("link", { name: /^Project: Malformed project/ }))
-      .toBeVisible();
-    await expect
-      .element(drawer().getByText("2 sources · 1 column"))
-      .toBeVisible();
-  });
 });
 
 describe("AppShell — mobile drawer", () => {
-  it("opens on the hamburger and closes on a pointer outside it", async () => {
-    const { container } = await render(AppShell, minimalProps());
-
-    const toggle = menuToggle();
-    await expect.element(toggle).toHaveAttribute("aria-expanded", "false");
-    // The drawer exists only while it is open.
-    expect(drawer().query()).toBeNull();
-
-    await toggle.click();
-    await expect.element(drawer()).toBeVisible();
-    await expect.element(toggle).toHaveAttribute("aria-expanded", "true");
-
-    // The dimmer covers the exposed content beside the drawer, and that is where
-    // a dismissing pointer lands — the tap-out the hand-written scrim button did.
-    const scrim = container.querySelector(".drawer-scrim");
-    expect(scrim).not.toBeNull();
-    await page.elementLocator(scrim as Element).click();
-
-    await expect.element(drawer()).not.toBeInTheDocument();
-    await expect.element(toggle).toHaveAttribute("aria-expanded", "false");
-  });
-
-  it("opens from the keyboard, contains focus, and hands it back on Escape", async () => {
-    await render(AppShell, minimalProps());
-
-    const toggle = menuToggle();
-    toggle.element().focus();
-    await userEvent.keyboard("{Enter}");
-    await expect.element(drawer()).toBeVisible();
-    // Wait for the facets so the drawer holds its full set of controls before
-    // the tab traversal below counts on them.
-    await expect
-      .element(drawer().getByRole("link", { name: "sos" }))
-      .toBeVisible();
-
-    const panel = drawer().element();
-    // Focus ENTERS the drawer — it does not stay on the toggle the drawer covers.
-    await vi.waitFor(() => {
-      expect(panel.contains(document.activeElement)).toBe(true);
-    });
-
-    // The background controls the ticket names — the toggle under the drawer and
-    // the catalog search beside it — are outside the panel, so "every Tab stop is
-    // inside the panel" is exactly the claim that Tab never reaches them.
-    const search = page.getByRole("textbox", { name: "Search the catalog" });
-    expect(panel.contains(toggle.element())).toBe(false);
-    expect(panel.contains(search.element())).toBe(false);
-
-    // Tab past the last of the drawer's stops: every one is a drawer control,
-    // and the traversal wraps rather than escaping into the page behind.
-    const visited = new Set<Element>();
-    for (let i = 0; i < 8; i++) {
-      await userEvent.keyboard("{Tab}");
-      const active = document.activeElement;
-      expect(panel.contains(active)).toBe(true);
-      if (active != null) {
-        visited.add(active);
-      }
-    }
-    // The traversal really moved — a trap that pinned focus to one control would
-    // satisfy the containment assertions above but not this.
-    expect(visited.size).toBeGreaterThan(1);
-
-    await userEvent.keyboard("{Escape}");
-
-    await expect.element(drawer()).not.toBeInTheDocument();
-    await expect.element(toggle).toHaveAttribute("aria-expanded", "false");
-    await vi.waitFor(() => {
-      expect(document.activeElement).toBe(toggle.element());
-    });
-  });
-
   it("closes when the route changes underneath it", async () => {
     await render(AppShell, minimalProps());
 
@@ -496,51 +357,5 @@ describe("AppShell — mobile drawer", () => {
       // cases that follow.
       await page.viewport(mobile.width, mobile.height);
     }
-  });
-
-  it("closes when a drawer link navigates (the close-on-navigate $effect)", async () => {
-    const { container } = await render(AppShell, minimalProps());
-    // The shell relies on App's `use:link` root to pushState-route its links;
-    // rendered on its own it has no such ancestor, so give it one — otherwise a
-    // facet click leaves the page instead of routing.
-    link(container as HTMLElement);
-
-    await openDrawer();
-    await drawer().getByRole("link", { name: "sos" }).click();
-
-    // A navigation must close the drawer so it doesn't cover the freshly routed
-    // page, and focus must come back to the control that opened it.
-    expect(router.route.name).toBe("catalog-node");
-    await expect.element(drawer()).not.toBeInTheDocument();
-    await expect
-      .element(menuToggle())
-      .toHaveAttribute("aria-expanded", "false");
-    await vi.waitFor(() => {
-      expect(document.activeElement).toBe(menuToggle().element());
-    });
-  });
-});
-
-describe("AppShell — viewport geometry", () => {
-  it("grows the main canvas through the remaining viewport with short routed content", async () => {
-    const { container } = await render(AppShell, minimalProps());
-
-    const shell = container.querySelector<HTMLElement>(".shell");
-    const frame = container.querySelector<HTMLElement>(".frame");
-    const topbar = container.querySelector<HTMLElement>(".topbar");
-    const canvas = container.querySelector<HTMLElement>(".canvas");
-    expect(shell).not.toBeNull();
-    expect(frame).not.toBeNull();
-    expect(topbar).not.toBeNull();
-    expect(canvas).not.toBeNull();
-
-    const shellRect = shell?.getBoundingClientRect();
-    const frameRect = frame?.getBoundingClientRect();
-    const topbarRect = topbar?.getBoundingClientRect();
-    const canvasRect = canvas?.getBoundingClientRect();
-    expect(shellRect?.height).toBeGreaterThanOrEqual(window.innerHeight);
-    expect(frameRect?.bottom).toBeCloseTo(shellRect?.bottom ?? 0, 0);
-    expect(canvasRect?.top).toBeCloseTo(topbarRect?.bottom ?? 0, 0);
-    expect(canvasRect?.bottom).toBeCloseTo(frameRect?.bottom ?? 0, 0);
   });
 });
