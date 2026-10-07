@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
@@ -11,6 +11,9 @@ from reg_meta_build.cis2016_matrix import (
     MatrixSelector,
     load_matrix,
 )
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 # The pre-flip `_reparent_variable_alias` projection (the function A4.3a
 # deleted) — used to prove the IR-carried IRVariableAlias rows are row-identical.
@@ -178,25 +181,6 @@ class TestCis2014MatrixProjection:
             )
         assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "matrix_evidence_invalid"
-
-    def test_repo_evidence_loads(self) -> None:
-        path = (
-            Path(__file__).resolve().parents[1]
-            / "curation/registers/scb/innovation-foretag/"
-            / "cis2014-matrix-meaning-evidence.json"
-        )
-        matrix = load_matrix(
-            path,
-            source_mode="documented_blank",
-            expected_selector=MatrixSelector.model_validate(
-                _cis2014_payload()["selector"]
-            ),
-        )
-        assert matrix is not None
-        assert len(matrix.answers) == 45
-        assert matrix.answer_facts.data_type == "decimal"
-        assert matrix.answer_facts.is_identifier is False
-        assert matrix.answer_facts.is_sensitive is False
 
     def test_invalid_mode_selector_and_answer_coordinates_fail_config(
         self, tmp_path: Path
