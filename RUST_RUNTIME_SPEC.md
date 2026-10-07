@@ -4,7 +4,7 @@
 decisions in section 13 on 2026-10-07. This file is a scoped, self-deleting tracker
 under the governance exception in `CLAUDE.md`/`AGENTS.md`, alongside `REFACTOR_SPEC.md`.
 As each stage ships, its design rationale moves into `ARCHITECTURE.md` and the package
-`DESIGN.md` files and its section here shrinks. **Completion gate: deleted when stage 6
+`DESIGN.md` files and its section here shrinks. **Completion gate: deleted when stage 5
 (SPA on WASM) ships.**
 
 The question asked: should `reg_meta` be ported to Rust, both for speed and to rebuild
@@ -27,8 +27,10 @@ cache, Apple Silicon, median of three runs of the installed `reg-meta` CLI.
 
 What this says:
 
-- **Start-up is the only cost that Rust removes by itself.** A native binary starts in a
-  few milliseconds. Agents call the CLI in loops, so 250 ms per call adds up.
+- **Start-up stops mattering.** Python start-up costs ~250 ms per CLI call, but the
+  runtime now runs as long-lived processes (`serve`, `mcp`), so start-up is paid once.
+  The case for Rust rests on one implementation across build, server and browser
+  (sections 5 and 6), memory use and typed contracts, not on start-up.
 - **Search and the slow commands are query-design problems.** A Rust reader runs the
   same SQLite engine. Ported line by line, it would still issue 1,600 queries per search
   and still scan 140k rows through a folding function.
@@ -200,8 +202,8 @@ implementation:
   | FQID and period grammar               | Rust core crate                       | Build via Python bindings; SPA via WASM              |
   | Text folds                            | Rust core crate                       | Build via Python bindings (fills `*_folded` columns) |
   | Canonical JSON + SHA-256              | Rust core crate                       | Build via Python bindings                            |
-  | Project schema + structural validator | Rust core crate (replaces reg_schema) | Server, CLI; SPA via WASM; JSON Schema export        |
-  | Result types                          | Rust structs (serde + schemars)       | CLI JSON, HTTP OpenAPI, frontend TS types            |
+  | Project schema + structural validator | Rust core crate (replaces reg_schema) | Server, MCP; SPA via WASM; JSON Schema export        |
+  | Result types                          | Rust structs (serde + schemars)       | HTTP OpenAPI, MCP tool schemas, frontend TS types    |
 
 Notes:
 
@@ -235,15 +237,21 @@ Notes:
                                    ▼
                     reg_meta.db (+ docs DB), immutable
                                    │
-            ┌──────────────────────┼───────────────────────┐
-            ▼                      ▼                       ▼
-     reg-meta CLI           reg-meta serve            reg-meta mcp
-     (agents)               (HTTP API for the SPA)    (agent tools over stdio)
-            └──────────── one Rust binary, one query library ───┘
+                      reg-catalog: one operation set
                                    │
-                         SPA (Svelte) + reg_core WASM
-                         for period grammar and project validation
+                    ┌──────────────┴──────────────┐
+                    ▼                             ▼
+             reg-meta serve                 reg-meta mcp
+             HTTP API (SPA)                 MCP over stdio
+             + remote MCP endpoint          (local catalog)
+             (hosted agents)
+                    │
+          SPA (Svelte) + reg_core WASM
+          for period grammar and project validation
 ```
+
+There is no query CLI (decision 11). Every operation is defined once in `reg-catalog`
+and exposed over HTTP and MCP.
 
 Rust workspace (`crates/`):
 
@@ -251,188 +259,174 @@ Rust workspace (`crates/`):
   JSON/hash, project-data types and structural validator, error codes. Compiles to
   native, Python extension (PyO3, via maturin) and WASM.
 - `reg-catalog` — the reader. Opens and admits an artifact (read-only, `immutable=1`,
-  schema gate, identity checks), owns scope as reader state, and exposes one function
-  per query returning typed results. Includes search (one ranking, including the
-  webapp's best-bets and golden pins, which become curated build input), order
-  materialization and project semantic validation.
-- `reg-meta` — the binary. Subcommands for the CLI, `serve` (axum + utoipa; ETag,
-  body-size limit and rate limit as tower layers) and `mcp`. `update` downloads,
-  verifies the SHA-256 and atomically activates an artifact.
+  schema gate, identity checks), owns scope as reader state, and defines the operation
+  set: one function per operation, typed parameters and results with JSON Schemas.
+  Includes search (one ranking, including the webapp's best-bets and golden pins, which
+  become curated build input), order materialization and project semantic validation.
+- `reg-meta` — the binary, with run modes only:
+  - `serve` — the HTTP API for the SPA (axum + utoipa; ETag, body-size limit and rate
+    limit as tower layers) and a remote MCP endpoint over streamable HTTP for hosted
+    agents.
+  - `mcp` — MCP over stdio against a local catalog, for offline use and private steward
+    catalogs.
+  - `fetch` — downloads a catalog release, verifies its SHA-256 and atomically activates
+    it, for local `mcp` installs.
 - `reg-core-py` — the PyO3 module the build imports.
 
-What is deleted: the Python `reg_meta` package, `reg_schema`, the FastAPI backend, and
-the frontend's hand-written grammar and validation mirrors. Modules that only the build
-uses (`source_evidence`, `documentary`, `cli_common`, inventory TOML loading) move into
-`reg_meta_build` first.
+What is deleted: the Python `reg_meta` package including its CLI, `reg_schema`, the
+FastAPI backend, and the frontend's hand-written grammar and validation mirrors. Modules
+that only the build uses (`source_evidence`, `documentary`, `cli_common`, inventory TOML
+loading) move into `reg_meta_build` first.
 
 Why the HTTP server moves to Rust rather than FastAPI calling Rust through bindings:
 
 - With bindings, every result type exists twice: as a Rust struct and as a Pydantic
   model for OpenAPI. That is the drift this design removes.
 - The backend is ~6k lines. About 3k of them are catalog logic (node assembly, search
-  ranking, semantic validation) that belongs in the reader anyway, so the CLI gets it
-  too. The rest is HTTP glue that axum and tower handle directly.
-- The frontend depends on FastAPI only lightly: it reads `detail` as a string and
-  `detail[0].msg`. The server can emit that shape.
+  ranking, semantic validation) that belongs in the operation set anyway, so agents get
+  it too. The rest is HTTP glue that axum and tower handle directly.
 - The deploy image becomes one static binary plus the baked DBs. Keep the 1 GB Fly VM
   for the page cache.
 
-## 7. CLI v4
+## 7. Agent and web interface
 
-**Under iteration (decision 4).** Rules marked *settled* were agreed with the maintainer
-on 2026-10-07; the rest is draft until signed off. Still open for the stage-1 spec: the
-exact command names in the sketch below, and each command's argument and output schema.
+**Users are agents and the webapp only** *(settled, decision 10)*. Agents use MCP; the
+SPA uses HTTP. Interactive human use is out of scope while building: no feature, flag or
+output exists for it. It is re-evaluated after stage 5.
 
-**Users are agents and the webapp only** *(settled, decision 10)*. The CLI is designed
-for agents; the HTTP API for the SPA. Interactive human use of the CLI is out of scope
-while building: no feature, flag or output exists for it. It is re-evaluated after stage 6.
+**No query CLI** *(settled, decision 11)*. Every former CLI user moves:
 
-Design rules:
+  | Former CLI user                          | Replacement                                                               |
+  | ---------------------------------------- | ------------------------------------------------------------------------- |
+  | Agent skill (`register-metadata-search`) | MCP tools: the hosted endpoint by default, `reg-meta mcp` locally         |
+  | Docker bake (`reg-meta update`)          | `curl` the release asset, verify its SHA-256, decompress with `zstd`      |
+  | Publish workflow smoke test              | Start `serve` in CI and probe endpoints; conformance against the artifact |
+  | Conformance CLI cases                    | HTTP request cases                                                        |
+  | `reg-meta order project.json`            | `POST /api/project/order` and an MCP tool                                 |
 
-- **JSON only** *(settled)*. Every command writes JSON to stdout. There is no other
-  output format and no `--format` flag.
-- **No prompts, no progress output** *(settled)*. Commands never ask for confirmation
-  and never print progress. stderr carries only the JSON error document.
-- **`{data, meta}` on every document** *(settled)*. `data` is the result; `meta` is a
-  small object with the contract version, catalog generation and scope. Agents always
-  know which catalog answered.
-- **Deterministic output** *(settled)*. `meta` carries no timing, so the same command on
-  the same catalog prints the same bytes and goldens can compare raw output. Performance
-  is measured by the tier-1 harness, not reported by the binary.
-- **A ref is an FQID or a bare name** *(settled)*. Any entity is a ref: `provider`,
+**One operation set, two transports.** Each operation in `reg-catalog` has a name, a
+typed parameter object and a typed result, all with JSON Schemas. The HTTP routes and
+the MCP tools are generated from those definitions, so the two transports cannot drift.
+OpenAPI and MCP `tools/list` are the self-description; there is no separate `describe`.
+
+Rules (settled 2026-10-07; first agreed for the CLI, carried over to the API):
+
+- **JSON only, `{data, meta}` on every response.** `data` is the result; `meta` holds
+  the contract version, catalog generation and scope. Agents always know which catalog
+  answered.
+- **Deterministic responses.** `meta` carries no timing, so the same request on the same
+  catalog returns the same bytes and goldens compare raw output. Performance is measured
+  by the tier-1 harness.
+- **A ref is an FQID or a bare name.** Any entity is a ref: `provider`,
   `provider/register`, `provider/register/slug`, `class/slug`, group keys, or a bare
   name. A unique name resolves; an ambiguous one returns the candidates with their FQIDs
-  and exit 17, so the next call can be exact.
-- **`show` plus facet commands** *(settled)*. `show <ref>` returns a summary for any
-  kind (register, variable, classification, group). Separate verbs fetch the heavy
+  and an `ambiguous_ref` error, so the next call can be exact.
+- **`show` plus facet operations.** `show(ref)` returns a summary for any kind
+  (register, variable, classification, group). Separate operations fetch the heavy
   parts: states, values, lineage, graph, coverage.
-- **One time filter: `--period`** *(settled)*. Every command that filters by time takes
-  `--period`, parsed by the FQID/project period grammar in `reg-core` (`2019`,
-  `2015..2019`, `LA2019`, `2019-03`, `2019-01-01..2019-06-30`). `diff` takes two periods
-  as `--from`/`--to` in the same grammar. Replaces `--years`, `--year` and the integer
-  `--from`/`--to`.
-- **Cursor paging everywhere** *(settled)*. Every list takes `--limit` (one default,
-  50) and `--cursor`, and returns `next_cursor`. Cursors are bound to the catalog
-      generation, so a stale cursor fails loudly instead of skipping rows. No
-      `--offset`.
-- **One flag per concept, the same everywhere.** `--register` and `--scope` mean the
-  same on every command; `--scope` is valid on every read command because scope is
-  reader state.
-- **One output shape per command.** The shape does not depend on result count. Every
+- **One time filter: `period`.** Every operation that filters by time takes `period`,
+  parsed by the FQID/project period grammar in `reg-core` (`2019`, `2015..2019`,
+  `LA2019`, `2019-03`, `2019-01-01..2019-06-30`). `diff` takes two periods, `from` and
+  `to`, in the same grammar.
+- **Cursor paging everywhere.** Every list takes `limit` (one default, 50) and `cursor`,
+  and returns `next_cursor`. Cursors are bound to the catalog generation, so a stale
+  cursor fails loudly instead of skipping rows. No offsets.
+- **One parameter per concept, the same everywhere.** `register` and `scope` mean the
+  same on every operation; `scope` is valid on every read because scope is reader state.
+- **One result shape per operation.** The shape does not depend on result count. Every
   list is `{"items": [...], "next_cursor": ...}` inside `data`.
-- **Errors** are always JSON on stderr: `{code, class, message, remediation, fields}`.
-- **Exit codes** *(settled)*. Keep 0 ok, 2 usage, 10 catalog missing or incompatible, 16
-  not found, 25 network, 30 internal. 17 means no match or ambiguous ref only; new 18
-  means order blocked; unused 20 is dropped. `describe` lists every code.
-- **Generated help and `describe`** *(settled)*. Help text and examples, written for
-  agents, live next to each command's definition (one source); `--help` renders them and
-  `--examples` folds into it. `reg-meta describe` emits the command tree with argument
-  and output JSON Schemas. This replaces ~580 lines of hand-written help and examples,
-  and the ~840 lines of text renderers are deleted outright.
-- **`order` follows the envelope** *(settled)*. stdout carries `{data: manifest, meta}`
-  like every command. `-o FILE` writes the exact manifest bytes, which is what the
-  byte-identity contract and the webapp download use.
-- **Catalog management stays small** *(settled)*. Users normally pick one catalog and
-  keep it. Top-level `update` downloads or refreshes the selected catalog; `info`
-  reports the version, the selected catalog's identity and any other installed catalogs.
-  Selection stays on the global `--catalog NAME` (and `--db DIR`). No `catalog` command
-  group.
+- **Errors** are `{code, class, message, remediation, fields}`, with a stable `code`
+  catalog. HTTP maps each class to a status (usage 400/422, not found 404, ambiguous ref
+  or no match 409, order blocked 422, catalog unavailable 503, internal 500); MCP
+  returns the same document as a tool error.
+- **Order manifests keep their bytes.** The order operation returns
+  `{data: manifest, meta}`; the HTTP download route serves the exact manifest bytes,
+  which is what the byte-identity contract and the SPA download use.
+- **Few, coarse MCP tools.** Every tool's schema occupies agent context, so the tool set
+  stays around ten: roughly search, show, states, values, lineage/graph, coverage,
+  schema/diff, resolve, order and docs. Fine-grained HTTP routes for the SPA can map
+  onto the same operations.
+- **Catalog selection is configuration.** A server or MCP process serves one catalog,
+  chosen at start (`--catalog NAME` or `--db DIR`). Users normally pick one catalog and
+  keep it.
 
-Command sketch:
+**Hosted MCP** *(settled, decision 12)*. `serve` exposes the remote MCP endpoint at
+catalog.swecov.se, so agents need no install and no 1.2 GB download. Its rate limits are
+sized for tool calls, separately from the SPA's. Private steward catalogs are never
+served there; they stay on local `reg-meta mcp`.
 
-```
-reg-meta search <query> [--type T]... [--register R] [--period P]
-reg-meta show <ref>                 # register, variable, classification, group
-reg-meta states <ref> [--period P]
-reg-meta values <ref> [--period P]
-reg-meta lineage <ref>
-reg-meta graph <ref>
-reg-meta coverage <ref>             # was: get availability
-reg-meta schema <register> [--variant V] [--period P]
-reg-meta diff <register> --from P --to P [--variant V]
-reg-meta resolve <column>... | -
-reg-meta coded [--min-codes N] [--min-registers N]
-reg-meta order <project.json> [-o FILE]
-reg-meta docs search <query> | docs show <id> | docs list
-reg-meta info
-reg-meta update [--tag T]
-reg-meta serve [--port N]
-reg-meta mcp
-reg-meta describe
-```
-
-`get datacolumns`, `get varinfo` and `get lineage` collapse into `show`, `states` and
-`lineage`. `get groups --classifications` collapses into `show class/...`.
-
-`mcp` exposes the same query functions as MCP tools with the same JSON Schemas. Agents
-then call typed tools instead of parsing shell output. The skill keeps the CLI as a
-fallback.
+Still open for the stage-1 API spec: the exact operation and tool names, and each
+operation's parameter and result schemas.
 
 ## 8. Distribution
 
-- **Binaries** for macOS, Linux and Windows on each `reg_meta/v*` release, built with
-  cargo-dist or a plain matrix workflow, with SHA-256 checksums.
-- **PyPI** keeps `uv tool install reg-meta` working: maturin with `bindings = "bin"`
-  publishes the binary as a wheel. The skill's install instructions stay the same.
-- **Self-upgrade** defers to the installer (`uv tool upgrade`, or the release binary).
-  `update` manages catalog artifacts only.
-- **Release DB assets** gain a checksum file. `update` verifies before activation.
+- **Server image:** one static binary plus the baked DBs, fetched in the Dockerfile with
+  `curl`, SHA-256 verification and `zstd`.
+- **Local binary** for macOS, Linux and Windows on each `reg_meta/v*` release, built
+  with cargo-dist or a plain matrix workflow, with SHA-256 checksums. PyPI keeps
+  `uv tool install reg-meta` working through maturin with `bindings = "bin"`. It is used
+  only for `reg-meta mcp` and `reg-meta fetch`.
+- **Agent plugin:** the `microdata-tools-se` plugin declares the MCP server: the hosted
+  endpoint by default, the local binary as an alternative. The skill text documents the
+  tools, not shell commands.
+- **Release DB assets** gain a checksum file. `fetch` verifies before activation.
 - **reg_meta_build** depends on `reg-core-py` as a workspace member built by maturin.
   `uv sync` builds it, which needs a Rust toolchain on the maintainer machine and in CI.
 
 ## 9. Verification
 
-The conformance corpus is the acceptance gate. Today every runner calls Python
-in-process, so it must become implementation-neutral first:
+The conformance corpus is the acceptance gate, and HTTP is its single transport. Today
+every runner calls Python in-process, so it must become implementation-neutral first:
 
-- Add a runner seam: one `run_cli(argv)` helper that runs `$REG_META_BIN` as a
-  subprocess (~30 lines plus ~10 call sites). HTTP cases take a base URL instead of a
-  `TestClient`.
-- Rewrite the 42 `logical` cases and the 5 `coverage` cases, which name Python
-  functions, as CLI v4 argv cases. Write them against v4 directly, not against today's
-  surface.
+- Add a runner seam: HTTP cases take a base URL instead of a `TestClient`, so the same
+  corpus runs against FastAPI today and `reg-meta serve` later.
+- Rewrite the CLI argv cases (`cli_scope`, `selection`), the 42 `logical` cases and the
+  5 `coverage` cases as HTTP request cases against the new API. Write them against the
+  new API directly, not against today's surface.
+- MCP is checked by an equivalence suite: for a sample of operations, the MCP tool call
+  and the HTTP request return the same `data`. The generated wiring makes this a thin
+  check, not a second corpus.
 - Order cases compare against committed `order.json` bytes, not against Python's own
   output.
-- `update` and selection cases need a URL override (`REG_META_RELEASES_URL`) and a local
-  HTTP fixture server instead of patching `urlopen`.
+- `fetch` cases use a local HTTP fixture server and a URL override
+  (`REG_META_RELEASES_URL`) instead of patching `urlopen`.
 - Fixtures: a script builds each synthetic (fixture, kind) artifact once through the
   real Python pipeline, cached by a hash of the fixture sources and build code. Rust
   tests and conformance read the same built files. Determinism makes caching safe.
-- The tier-1 differential harness (section 4) maps v4 output back to the current
+- The tier-1 differential harness (section 4) maps new API results back to the current
   reader's results where the shapes differ; the mapping is part of the harness, not the
   product.
-- Expected outputs change where v4 changes the surface. Those diffs are reviewed as
-  content decisions, per the testing policy.
+- Expected outputs change where the new API changes the surface. Those diffs are
+  reviewed as content decisions, per the testing policy.
 
 ## 10. Staging
 
 There are no users, so each surface switches over in one step, with no compatibility
 layers. The derived tables ship additively (section 4), so the deployed webapp keeps
-running on every intermediate release until stage 5 replaces it.
+running on every intermediate release until stage 4 replaces it.
 
-0. **Decide and prove (days).** Iterate the CLI v4 surface with the maintainer (decision
-   4). In parallel, a throwaway Rust spike: open with schema gate plus `search` against
-   the pinned base. Measure start-up and search latency, check fold parity with a
-   property corpus, and confirm maturin + PyO3 + uv workspace ergonomics. Adjust the
-   plan if anything is worse than expected.
-1. **Groundwork.** Write the CLI v4 spec, the fold spec and the error code catalog. Move
-   build-only modules into `reg_meta_build`. Add the conformance runner seam, the cached
-   fixture builder and the tier-1 differential harness.
+0. **Prove (days).** A throwaway Rust spike: open with schema gate plus `search` against
+   the pinned base, served over HTTP and MCP. Measure search latency, check fold parity
+   with a property corpus, and confirm maturin + PyO3 + uv workspace ergonomics. Adjust
+   the plan if anything is worse than expected.
+1. **Groundwork.** Write the API spec (operations, tools, schemas, error codes) and the
+   fold spec. Move build-only modules into `reg_meta_build`. Add the conformance
+   base-URL seam, the cached fixture builder and the tier-1 differential harness.
 2. **Derive step.** `reg-meta-build derive` with its validator, bootstrapped from moved
    reader functions, shipped as schema 9.x. `holdings_compile` stops importing
    `Catalog`.
-3. **Rust reader slices.** `reg-core`, `reg-catalog` and the `reg-meta` binary, one
+3. **Rust operation slices.** `reg-core`, `reg-catalog` and `reg-meta serve`/`mcp`, one
    vertical slice at a time, each paired with its derived tables: (a) admission +
    search, (b) show / states / values, (c) schema / diff / coverage / coded, (d) chains
-   and graph, (e) order and project validation. The build switches to `reg-core-py` for
-   FQID, folds and hashing. Gated by tiers 0 and 1.
-4. **Cutover.** When all slices pass, the Rust binary becomes `reg-meta`; delete the
-   Python `reg_meta` CLI and reader; bump the schema major. Then add `reg-meta mcp` over
-   the same query functions.
-5. **Rust server.** `reg-meta serve` replaces FastAPI. Regenerate `openapi.json` and
-   frontend types. Move `reg_schema` into `reg-core`. Delete the Python backend and
-   `reg_schema`.
-6. **SPA on WASM.** Replace `period.ts`, `validation.ts` and the hand-written
+   and graph, (e) order and project validation. The new API runs beside FastAPI and is
+   not yet used by the SPA. The build switches to `reg-core-py` for FQID, folds and
+   hashing. Gated by tiers 0 and 1. The hosted MCP endpoint can go live as soon as slice (a)
+   passes.
+4. **Cutover.** The SPA moves to the Rust server's API (regenerate types, adapt calls);
+   the agent plugin moves to MCP; the Dockerfile and publish workflow drop the CLI. Move
+   `reg_schema` into `reg-core`. Delete the FastAPI backend, the Python `reg_meta`
+   package with its CLI, and `reg_schema`. Bump the schema major.
+5. **SPA on WASM.** Replace `period.ts`, `validation.ts` and the hand-written
    `project_data.ts` with `reg-core` compiled to WASM plus generated types.
 
 Stage 2 can be done without Rust and pays for itself. If the spike fails, stop after
@@ -521,15 +515,17 @@ moving. The first layer is cheap to fix in Python.
 
 ## 13. Decisions (2026-10-07)
 
-  | #   | Question                               | Decision                                                                                                                                                          |
-  | --- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | 1   | Where are catalog facts resolved? (§3) | **Compiled in the build**, in the derive step (§4). Reverses "No state/window resolution is compiled" in `reg_meta/DESIGN.md`.                                    |
-  | 2   | What serves the webapp API? (§6)       | **Rust server** (`reg-meta serve`). The FastAPI backend is deleted in stage 5.                                                                                    |
-  | 3   | `reg_schema`? (§5)                     | **Merged into `reg-core`.** The Python package is deleted in stage 5.                                                                                             |
-  | 4   | CLI v4 surface (§7)                    | **Iterate first.** §7 is a draft; the surface is settled with the maintainer in stage 0.                                                                          |
-  | 5   | MCP server mode                        | **Yes, after CLI parity** (stage 4).                                                                                                                              |
-  | 6   | WASM in the SPA                        | **Yes, as the last stage** (stage 6).                                                                                                                             |
-  | 7   | Parallel per-register resolve (§11)    | **Yes**, after the family-scan fix lands.                                                                                                                         |
-  | 8   | Where this plan lives                  | **Its own root tracker**, with the governance rule amended to allow one tracker per concurrent refactor.                                                          |
-  | 9   | How to avoid full rebuilds per step    | **Base/derive split, pinned artifacts, three tiers with budgets, incremental base build** (§4, §11).                                                              |
-  | 10  | Who the runtime is designed for        | **Agents and the webapp only.** No human-oriented CLI features (text output, prompts, progress, notebook import) while building; re-evaluated after stage 6 (§7). |
+  | #   | Question                               | Decision                                                                                                                                                      |
+  | --- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | 1   | Where are catalog facts resolved? (§3) | **Compiled in the build**, in the derive step (§4). Reverses "No state/window resolution is compiled" in `reg_meta/DESIGN.md`.                                |
+  | 2   | What serves the webapp API? (§6)       | **Rust server** (`reg-meta serve`). The FastAPI backend is deleted in stage 4.                                                                                |
+  | 3   | `reg_schema`? (§5)                     | **Merged into `reg-core`.** The Python package is deleted in stage 4.                                                                                         |
+  | 4   | CLI v4 surface                         | **Superseded by decision 11.** Its settled rules carry over to the API (§7).                                                                                  |
+  | 5   | MCP server mode                        | **Yes. Now the primary agent interface** (decision 11), built with each operation slice in stage 3.                                                           |
+  | 6   | WASM in the SPA                        | **Yes, as the last stage** (stage 5).                                                                                                                         |
+  | 7   | Parallel per-register resolve (§11)    | **Yes**, after the family-scan fix lands.                                                                                                                     |
+  | 8   | Where this plan lives                  | **Its own root tracker**, with the governance rule amended to allow one tracker per concurrent refactor.                                                      |
+  | 9   | How to avoid full rebuilds per step    | **Base/derive split, pinned artifacts, three tiers with budgets, incremental base build** (§4, §11).                                                          |
+  | 10  | Who the runtime is designed for        | **Agents and the webapp only.** No human-oriented features (text output, prompts, progress, notebook import) while building; re-evaluated after stage 5 (§7). |
+  | 11  | Query CLI?                             | **None.** One operation set exposed over HTTP and MCP; the binary has run modes only (`serve`, `mcp`, `fetch`) (§6, §7).                                      |
+  | 12  | Where agents reach MCP                 | **Hosted and local.** Remote MCP endpoint on `serve` at catalog.swecov.se; `reg-meta mcp` over stdio for offline use and private steward catalogs (§7).       |
