@@ -14,7 +14,7 @@ import tomllib
 from typing import TYPE_CHECKING
 
 import pytest
-from _curation_fixtures import write_lisa_errata
+from _curation_fixtures import write_lisa_errata, write_lisa_slug_dir
 from _swecov_fixtures import (
     build_catalog,
     flavored_db_fixture,  # noqa: F401
@@ -189,18 +189,19 @@ def test_the_emitted_candidates_load_as_scb_errata(
     tmp_path: Path, flavored_db: Path
 ) -> None:
     """The output IS the repair candidate, so its `[[errata.column]]` table parses,
-    and `load_scb_errata` accepts its shape against the repo's curated SCB slugs.
+    and `load_scb_errata` accepts its shape against curated SCB slugs.
 
     `noted` is the one field a placeholder cannot satisfy — the loader demands a
     canonical `YYYY-MM-DD`, which is exactly what stops an uncurated paste from
     reaching a build — so the proof is the same one `inventory_coverage`'s worklist
     carries: refused while undated, loads once dated, every other key already what
-    the loader wants. Real repo slugs, because that is what the stanzas name.
+    the loader wants. The slug dir curates the LISA variant the stanzas name;
+    whether the repo's own `scb.toml` still does is committed content, which the
+    maintainer's real-seed build checks.
     """
     from reg_meta_build.scb_errata import load_scb_errata
 
-    from reg_meta_build.fqid_slugs import repo_slug_dir
-
+    slug_dir = write_lisa_slug_dir(tmp_path / "fqid_slugs")
     text = _grafts_text(
         tmp_path,
         flavored_db,
@@ -211,14 +212,14 @@ def test_the_emitted_candidates_load_as_scb_errata(
     root = write_lisa_errata(tmp_path / "curation", text)
 
     with pytest.raises(RegMetaError) as exc:
-        load_scb_errata(root, repo_slug_dir())
+        load_scb_errata(root, slug_dir)
     assert "`noted`" in exc.value.message
 
     root = write_lisa_errata(
         root,
         text.replace('noted = "TODO: YYYY-MM-DD"', 'noted = "2026-09-12"'),
     )
-    errata = load_scb_errata(root, repo_slug_dir())
+    errata = load_scb_errata(root, slug_dir)
     assert {(column.column, column.source) for column in errata.columns} == {
         ("Ssyk4_J16", "scb-docs"),
         ("FastBet", "steward-holdings"),

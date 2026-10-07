@@ -9,7 +9,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from _curation_fixtures import write_lisa_errata
+from _curation_fixtures import write_lisa_errata, write_lisa_slug_dir
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.scb_errata import (
     load_scb_errata,
@@ -53,17 +53,7 @@ def _version(name: str) -> str:
 
 @pytest.fixture
 def slug_dir(tmp_path: Path) -> Path:
-    """A curated `scb.toml` carrying the two LISA individual-frame variants the
-    entries resolve against (`register` 34, variants 153 / 1335)."""
-    d = tmp_path / "fqid_slugs"
-    d.mkdir()
-    (d / "scb.toml").write_text(
-        '[register."34"]\nslug = "lisa"\n'
-        '[register_variant."34.153"]\nslug = "individer-15plus"\n'
-        '[register_variant."34.1335"]\nslug = "individer-16plus"\n',
-        encoding="utf-8",
-    )
-    return d
+    return write_lisa_slug_dir(tmp_path / "fqid_slugs")
 
 
 def _load(tmp_path: Path, slug_dir: Path, body: str):

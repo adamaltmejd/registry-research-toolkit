@@ -19,6 +19,19 @@ def write_lisa_errata(root: Path, body: str) -> Path:
     return root
 
 
+def write_lisa_slug_dir(root: Path) -> Path:
+    """Write a curated `scb.toml` carrying the two LISA individual-frame variants
+    errata entries resolve against (`register` 34, variants 153 / 1335)."""
+    root.mkdir(parents=True)
+    (root / "scb.toml").write_text(
+        '[register."34"]\nslug = "lisa"\n'
+        '[register_variant."34.153"]\nslug = "individer-15plus"\n'
+        '[register_variant."34.1335"]\nslug = "individer-16plus"\n',
+        encoding="utf-8",
+    )
+    return root
+
+
 def write_fdb_partition_curation(root: Path) -> Path:
     """Write Y-167's two-split ownership in the register-scoped format."""
     path = root / "registers" / "scb" / "fdb.toml"
