@@ -1,0 +1,45 @@
+# G1 differential harness (RUST_RUNTIME_SPEC.md section 4, "G1"): the seed, the pins and
+# the named semantic exceptions. The cache root is the only other setting
+# (`$REG_META_G1_CACHE`). A re-pin package edits this file and section 4 together: it
+# runs G1 on the old and new pin and records any difference. Each run deletes every
+# cached artifact or baseline environment that is not pinned here.
+
+# Seeds every query sample (`cases.py`).
+seed = 0
+
+# Named semantic exceptions: accepted differences between the baseline and the reader
+# under test. None yet. An entry covers a difference only when stdout alone differs and
+# every differing JSON pointer lies under `path` (all of stdout when omitted):
+#
+#   [[exception]]
+#   name = "search-rank-ties"        # reported per difference
+#   reason = "why the new behavior is correct"
+#   case = "*/search/*"              # fnmatch glob over `<catalog>/<scope>/<command>/<key>`
+#   path = "/results"                # JSON pointer prefix
+exception = []
+
+# The baseline reader: `reg_meta` (with `reg_schema`) at this commit, installed from
+# `git archive` into its own virtualenv with the commit's locked dependencies.
+[baseline]
+commit = "760d70fa5fcd65ab18c442a0f3775e0a0b86c7a4"
+
+# The pinned release artifacts. `sha256` is the GitHub release asset digest (of the
+# `.zst`), checked while the asset streams into the cache.
+[release]
+tag = "reg_meta/v0.42.0"
+
+[[release.asset]]
+catalog = "global"
+name = "reg_meta.db.zst"
+sha256 = "39c68222545b61cb690b7861f20deb8196c8035f7b0ed932fc5847e8c68d07a3"
+
+[[release.asset]]
+catalog = "swecov"
+name = "reg_meta_swecov.db.zst"
+sha256 = "32e8d425a2ba5b039d4fa60c494762d9970515ee994871660097fe3d49711c68"
+
+# The docs database is optional enrichment for `search` and required by `docs`; it is
+# placed beside both catalogs so the two read the same documentation.
+[release.docs]
+name = "reg_meta_docs.db.zst"
+sha256 = "b110210901daa4e2a13e33a8574a6e2b52b43258f05bbbc6378255ddf7e75afe"

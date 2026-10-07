@@ -1,0 +1,57 @@
+{
+  "kind": "catalog",
+  "fixture": "semantic",
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Synthetic semantic",
+        "window": {
+          "from": 2018,
+          "to": 2019
+        },
+        "sources": [
+          {
+            "name": "y2018",
+            "register_variant": "scb/example/annual",
+            "period": 2018,
+            "bindings": [
+              {
+                "variable": "scb/example/kon",
+                "type": "categorical",
+                "value_set": "class/kon"
+              }
+            ]
+          },
+          {
+            "name": "y2019",
+            "register_variant": "scb/example/annual",
+            "period": 2019,
+            "bindings": [
+              {
+                "variable": "scb/example/kon",
+                "type": "categorical",
+                "value_set": "class/kon"
+              }
+            ]
+          }
+        ],
+        "panels": [
+          {
+            "panel_id": "example",
+            "members": [
+              "y2018",
+              {
+                "source": "y2019"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

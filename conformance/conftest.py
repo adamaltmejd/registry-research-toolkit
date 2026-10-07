@@ -5,9 +5,19 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
+from http_cases import ServerPool
+from reader_artifacts import FIXTURE_IMPORT_DATE, cached_reader_artifact
 from reg_meta.db import open_db
 from reg_meta.errors import RegMetaError
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--server-cmd",
+        default=None,
+        help="run conformance HTTP cases against a server started from this "
+        "command template ({db}, {port}); see conformance/README.md",
+    )
 
 
 def pytest_configure(config):
@@ -64,17 +74,32 @@ def pytest_collection_modifyitems(config, items):
 
 
 @pytest.fixture(scope="session")
-def artifact_dir(request, tmp_path_factory):
+def artifact_dir(request):
     if request.config.getoption("--artifact-dir") is not None:
         return Path(request.param).expanduser().resolve()
     if request.config.getoption("--run-release"):
         raise pytest.UsageError("conformance tier 3 requires --artifact-dir")
-    return build_reader_artifact(
-        tmp_path_factory.mktemp(f"conformance-{request.param}"),
+    return cached_reader_artifact(
         "reader",
         request.param,
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     ).parent
+
+
+@pytest.fixture(scope="session")
+def http_servers(request, tmp_path_factory):
+    """Server processes for `--server-cmd`, one per artifact; None runs in-process.
+
+    Every server is stopped at session end, whether or not the cases passed."""
+    template = request.config.getoption("--server-cmd")
+    if template is None:
+        yield None
+        return
+    pool = ServerPool(template, tmp_path_factory.mktemp("servers"))
+    try:
+        yield pool
+    finally:
+        pool.close()
 
 
 @pytest.fixture

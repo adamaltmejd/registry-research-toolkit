@@ -53,7 +53,7 @@ held to it.
 Components consume **semantic roles only** — never primitive ramp stops (`--gray-*`, a
 raw status or categorical hue) and never a literal, which can render identically today
 and still break the role contract that makes a dark or per-provider theme a pure remap.
-The `style_tokens` test already fails a candidate on raw color literals and font stacks
+The `lint:tokens` script already fails a candidate on raw color literals and font stacks
 inside a `<style>` block, so the yield here is what it cannot see: a ramp stop read
 through `var()`, a one-off px spacing/radius/shadow value, and the wrong role chosen for
 the job.

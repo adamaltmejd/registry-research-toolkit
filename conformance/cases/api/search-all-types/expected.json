@@ -1,0 +1,16 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/type": [
+        "variable",
+        "group",
+        "register"
+      ],
+      "/data/items/0/fqid": "scb/lisa/gender",
+      "/data/items/1/key": "kontroll",
+      "/data/items/2/fqid": "scb/konj",
+      "/data/next_cursor": null
+    }
+  }
+]

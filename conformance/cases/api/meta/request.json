@@ -1,0 +1,24 @@
+{
+  "fixture": "reader",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Value",
+        "type": "variable",
+        "limit": 1
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Value",
+        "type": "variable",
+        "limit": 1,
+        "scope": "reference"
+      }
+    }
+  ]
+}

@@ -91,20 +91,6 @@ export interface ProjectData {
 /** The Model A `schema_version` a NEW draft is seeded with (reg_schema 3.0.0). */
 export const MODEL_A_SCHEMA_VERSION = "3.0.0";
 
-/** The 6 ColumnType values (reg_schema `ColumnType` `Literal`). The
- * BindingEditor's type `<select>` + the type-conditional advanced-field gating key
- * off this. Hand-maintained — `ColumnType` isn't on the OpenAPI surface
- * (project_data isn't a response model), so codegen can't supply it; co-located
- * with the `Binding` type it enumerates. */
-export const COLUMN_TYPES = [
-  "id",
-  "categorical",
-  "numeric",
-  "date",
-  "datetime",
-  "opaque",
-] as const;
-
 /** Seed for a new project (from `/api/context`): the canonical reg_meta release
  * tag (derive it from the deployment's bare package version with
  * `regMetaReleaseTag`) + the deployment's steward id. `name` and `sources`
@@ -288,24 +274,6 @@ export function removeSource(draft: ProjectData, index: number): ProjectData {
   return {
     ...draft,
     sources: sourcesArray(draft).filter((_, i) => i !== index),
-  };
-}
-
-/** Patch the source at `index` with `patch` (shallow merge — preserves the
- * source's unmapped keys + its `bindings`). */
-export function updateSource(
-  draft: ProjectData,
-  index: number,
-  patch: Partial<Source>,
-): ProjectData {
-  return {
-    ...draft,
-    sources: sourcesArray(draft).map((s, i) => {
-      if (i !== index || asSafeSource(s) == null) {
-        return s;
-      }
-      return { ...s, ...patch };
-    }),
   };
 }
 

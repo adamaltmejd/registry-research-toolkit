@@ -1,0 +1,13 @@
+{
+  "fixture": "reader",
+  "kind": "steward",
+  "serve": {
+    "catalog": "global"
+  },
+  "requests": [
+    {
+      "operation": "context",
+      "path": "/api/context"
+    }
+  ]
+}

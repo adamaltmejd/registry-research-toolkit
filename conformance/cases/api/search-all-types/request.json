@@ -1,0 +1,14 @@
+{
+  "kind": "catalog",
+  "fixture": "search-ranking",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "kon",
+        "limit": 5
+      }
+    }
+  ]
+}

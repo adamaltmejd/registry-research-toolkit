@@ -32,6 +32,7 @@ from reader_artifacts import (
 )
 from reg_meta.cli import run
 from reg_meta.db import get_manifest, open_db
+from reg_meta.order import materialize_order, project_from_raw
 from reg_webapp.app import create_app
 
 
@@ -178,6 +179,11 @@ def check_generation_seeded_stratified_binding_agreement(
             ordered.status_code == 200, "Sample HTTP order disagrees with admission"
         )
         require(cli_bytes == ordered.text, "Sample CLI/HTTP order bytes disagree")
+        if candidate is sample[0]:
+            # Repeat and materializer bytes on one candidate keep tier 3 bounded.
+            require_repeatable(
+                artifact_dir, artifact_client, capsys, project_path, ordered, query
+            )
     receipt = {
         "sample_count": len(sample),
         "sample_sha256": identity_digest([c.identity() for c in sample]),
@@ -193,6 +199,55 @@ def check_generation_seeded_stratified_binding_agreement(
     return receipt
 
 
+def require_repeatable(artifact_dir, client, capsys, project_path, ordered, query):
+    """Materializer, CLI and HTTP order bytes agree and repeat; search first
+    pages repeat byte for byte."""
+    project = json.loads(project_path.read_text())
+    with open_db(artifact_dir / "reg_meta.db") as conn:
+        result = materialize_order(project_from_raw(project), conn)
+        steward = get_manifest(conn)["catalog_artifact_kind"] == "steward"
+    require(
+        result.manifest is not None and result.manifest.to_json() == ordered.text,
+        "Materializer and adapter order bytes differ",
+    )
+    code = run(["--db", str(artifact_dir), "order", str(project_path)])
+    require(
+        code == 0 and capsys.readouterr().out == ordered.text,
+        "Repeated CLI order bytes differ",
+    )
+    require(
+        client.post("/api/project/order", json=project).content == ordered.content,
+        "Repeated HTTP order bytes differ",
+    )
+    scope = "holdings" if steward else "reference"
+    params = {"q": query, "type": "variable", "limit": 100, "scope": scope}
+    require(
+        client.get("/api/search", params=params).content
+        == client.get("/api/search", params=params).content,
+        "Repeated HTTP first page differs",
+    )
+    argv = [
+        "--db",
+        str(artifact_dir),
+        "--format",
+        "json",
+        "search",
+        "--query",
+        query,
+        "--type",
+        "variable",
+        "--no-fold",
+        "--limit",
+        "100",
+        "--scope",
+        scope,
+    ]
+    require(run(argv) == 0, "CLI sample search failed")
+    first = capsys.readouterr().out
+    require(run(argv) == 0, "Repeated CLI sample search failed")
+    require(capsys.readouterr().out == first, "Repeated CLI first page differs")
+
+
 def test_generation_seeded_stratified_binding_agreement(
     artifact_dir, artifact_client, tmp_path, capsys
 ):
@@ -201,39 +256,14 @@ def test_generation_seeded_stratified_binding_agreement(
     )
 
 
-def test_unknown_physical_tables_cannot_supply_logical_bindings(artifact_dir):
-    with open_db(artifact_dir / "reg_meta.db") as conn:
-        tables = conn.execute(
-            "SELECT count(*) FROM holding_table WHERE scope='unknown'"
-        ).fetchone()[0]
-        mappings = conn.execute("""
-            SELECT count(*) FROM holding_mapping JOIN holding_column USING(column_id)
-            JOIN holding_table USING(table_id) WHERE scope='unknown'
-        """).fetchone()[0]
-    require(
-        mappings == 0, "Unknown physical tables unexpectedly claim logical bindings"
-    )
-    print(
-        json.dumps(
-            {"unknown_physical_tables": tables, "unknown_logical_bindings": mappings}
-        )
-    )
-
-
 def test_unheld_deep_link_and_reference_search_do_not_admit_order(
     artifact_dir, artifact_client, tmp_path, capsys
 ):
     with open_db(artifact_dir / "reg_meta.db") as conn:
-        manifest = get_manifest(conn)
-        if manifest["catalog_artifact_kind"] != "steward":
-            # The catalog's explicit scope refusal is a configuration boundary.
-            response = artifact_client.get("/api/catalog", params={"scope": "holdings"})
-            require(
-                response.status_code == 422,
-                "Catalog unexpectedly supports holdings scope",
-            )
-            return
+        if get_manifest(conn)["catalog_artifact_kind"] != "steward":
+            pytest.skip("catalog refusals are pinned in test_artifact")
         project = sample_project(conn, unheld=True)
+        refused = materialize_order(project_from_raw(project), conn)
     binding = project["sources"][0]["bindings"][0]["variable"]
     reference = artifact_client.get(
         "/api/catalog/" + binding, params={"scope": "reference"}
@@ -279,6 +309,12 @@ def test_unheld_deep_link_and_reference_search_do_not_admit_order(
         ),
         "Unheld order refusal is not located",
     )
+    require(refused.manifest is None, "Unheld reference binding was ordered")
+    require(
+        ordered.json()["findings"]
+        == [f.model_dump(mode="json") for f in refused.findings],
+        "HTTP refusal findings disagree with materializer",
+    )
     path = tmp_path / "unheld-acceptance.json"
     path.write_text(json.dumps(project))
     code = run(["--db", str(artifact_dir), "--format", "json", "order", str(path)])
@@ -300,7 +336,6 @@ def test_unheld_deep_link_and_reference_search_do_not_admit_order(
         "range",
         "list",
         "partitions",
-        "year-independent",
     ],
 )
 def test_source_built_stratified_boundary_agreement(

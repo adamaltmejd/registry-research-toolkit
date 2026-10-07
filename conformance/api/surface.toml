@@ -11,8 +11,7 @@
 #                     (plugins/microdata-tools-se/skills/register-metadata-search/SKILL.md),
 #                     id = its text as written there.
 #              import: a `reg_meta` name imported by any git-visible .py file outside
-#                     reg_meta/ (tests, scripts and tools included; the throwaway stage-0
-#                     spike, which package 1.5 deletes, is skipped).
+#                     reg_meta/ (tests, scripts and tools included).
 #                     `from M import N` is "M.N"; `import M` is "M".
 # disposition  route, command, skill:
 #                retained  the same surface stays.
@@ -43,6 +42,7 @@
 kind = "route"
 id = "GET /api/catalog"
 disposition = "replaced"
+operation = "show"
 owner = "3b"
 covered_by = ["conformance/cases/http_catalog/admission", "reg_webapp/backend/tests/test_catalog_tree.py"]
 note = "Scoped provider list plus the classification root: show on the catalog root."
@@ -51,6 +51,7 @@ note = "Scoped provider list plus the classification root: show on the catalog r
 kind = "route"
 id = "GET /api/catalog/group/class/{key}"
 disposition = "replaced"
+operation = "show"
 owner = "3b"
 covered_by = ["reg_webapp/backend/tests/test_catalog_classifications.py", "reg_webapp/backend/tests/test_catalog_groups.py"]
 note = "Show on a classification umbrella group or succession family. Judgment: the family's chain itself is graph data (3d)."
@@ -59,6 +60,7 @@ note = "Show on a classification umbrella group or succession family. Judgment: 
 kind = "route"
 id = "GET /api/catalog/group/class/{key}/graph"
 disposition = "replaced"
+operation = "graph"
 owner = "3d"
 covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
 
@@ -66,6 +68,7 @@ covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
 kind = "route"
 id = "GET /api/catalog/group/{provider}/{register}/{key}"
 disposition = "replaced"
+operation = "show"
 owner = "3b"
 covered_by = ["conformance/cases/http_catalog/group-coverage", "conformance/cases/http_catalog/unheld-group", "reg_webapp/backend/tests/test_catalog_groups.py"]
 note = "Show on a register concept group."
@@ -74,6 +77,7 @@ note = "Show on a register concept group."
 kind = "route"
 id = "GET /api/catalog/group/{provider}/{register}/{key}/graph"
 disposition = "replaced"
+operation = "graph"
 owner = "3d"
 covered_by = ["conformance/cases/http_catalog/whole-variable-group-graph", "conformance/cases/http_catalog/unheld-group"]
 
@@ -81,6 +85,7 @@ covered_by = ["conformance/cases/http_catalog/whole-variable-group-graph", "conf
 kind = "route"
 id = "GET /api/catalog/{fqid}"
 disposition = "replaced"
+operation = "show"
 owner = "3b"
 covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "conformance/cases/http_catalog/redirects", "reg_webapp/backend/tests/test_catalog_tree.py"]
 note = "Show for every ref kind. The `?period` states subset becomes the states operation's `period` filter."
@@ -89,9 +94,10 @@ note = "Show for every ref kind. The `?period` states subset becomes the states 
 kind = "route"
 id = "GET /api/catalog/{fqid}/data_warnings"
 disposition = "replaced"
+operation = "warnings"
 owner = "3b"
 covered_by = ["conformance/cases/http_catalog/warnings", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
-note = "Judgment: warnings render on the register and binding pages, so they ship with show."
+note = "Judgment: warnings render on the register and binding pages, so they ship with show in 3b, as the filtered warnings operation."
 
 [[row]]
 kind = "route"
@@ -105,6 +111,7 @@ note = "The SPA stopped fetching it (#678); the graph carries group membership. 
 kind = "route"
 id = "GET /api/catalog/{fqid}/graph"
 disposition = "replaced"
+operation = "graph"
 owner = "3d"
 covered_by = ["conformance/cases/http_catalog/reference-edges", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
 
@@ -120,6 +127,7 @@ note = "The SPA does not call it (the graph replaced the lineage panel). Agents 
 kind = "route"
 id = "GET /api/catalog/{fqid}/lineage_warnings"
 disposition = "replaced"
+operation = "lineage"
 owner = "3d"
 covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
 note = "The SPA's lineage details fetch it."
@@ -136,6 +144,7 @@ note = "The SPA stopped fetching it: the node's embedded succession chain and th
 kind = "route"
 id = "GET /api/catalog/{fqid}/states"
 disposition = "replaced"
+operation = "states"
 owner = "3b"
 covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "conformance/cases/http_catalog/redirects", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
 
@@ -151,6 +160,7 @@ note = "The SPA does not fetch it: the node's embedded succession chain and the 
 kind = "route"
 id = "GET /api/catalog/{provider}/{register}/variants"
 disposition = "replaced"
+operation = "show"
 owner = "3b"
 covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "conformance/cases/http_catalog/redirects", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
 note = "A register's variant list for the variant browser, a show facet."
@@ -159,6 +169,7 @@ note = "A register's variant list for the variant browser, a show facet."
 kind = "route"
 id = "GET /api/context"
 disposition = "replaced"
+operation = "context"
 owner = "3a"
 covered_by = ["conformance/cases/http_context", "reg_webapp/backend/tests/test_context.py"]
 note = "Judgment: catalog identity (schema, generation, artifact kind, default scope) is admission state, and 3a builds admission and the `meta` block. Steward branding and the period span ride along."
@@ -167,6 +178,7 @@ note = "Judgment: catalog identity (schema, generation, artifact kind, default s
 kind = "route"
 id = "GET /api/docs/doc/{identifier}"
 disposition = "replaced"
+operation = "docs_get"
 owner = "3b"
 covered_by = ["reg_webapp/backend/tests/test_docs.py", "reg_meta/tests/test_doc_queries.py"]
 note = "Docs judgment, all five docs routes: they read their own DB but render on register and variable pages, and docs search reuses the 3a FTS builder, so they land with show after 3a."
@@ -175,6 +187,7 @@ note = "Docs judgment, all five docs routes: they read their own DB but render o
 kind = "route"
 id = "GET /api/docs/file/{register}/{filename}"
 disposition = "replaced"
+operation = "docs_related"
 owner = "3b"
 covered_by = ["reg_webapp/backend/tests/test_docs.py"]
 note = "Raw-bytes download (section 7): media type and bytes kept; its metadata comes from the related-documents operation."
@@ -183,6 +196,7 @@ note = "Raw-bytes download (section 7): media type and bytes kept; its metadata 
 kind = "route"
 id = "GET /api/docs/for-variable"
 disposition = "replaced"
+operation = "docs_search"
 owner = "3b"
 covered_by = ["reg_webapp/backend/tests/test_docs.py"]
 
@@ -190,6 +204,7 @@ covered_by = ["reg_webapp/backend/tests/test_docs.py"]
 kind = "route"
 id = "GET /api/docs/related/{register}"
 disposition = "replaced"
+operation = "docs_related"
 owner = "3b"
 covered_by = ["reg_webapp/backend/tests/test_docs.py"]
 
@@ -197,6 +212,7 @@ covered_by = ["reg_webapp/backend/tests/test_docs.py"]
 kind = "route"
 id = "GET /api/docs/search"
 disposition = "replaced"
+operation = "docs_search"
 owner = "3b"
 covered_by = ["reg_webapp/backend/tests/test_docs.py", "reg_meta/tests/test_doc_queries.py"]
 
@@ -204,6 +220,7 @@ covered_by = ["reg_webapp/backend/tests/test_docs.py", "reg_meta/tests/test_doc_
 kind = "route"
 id = "POST /api/project/order"
 disposition = "replaced"
+operation = "order"
 owner = "3e"
 covered_by = ["conformance/cases/validate", "reg_webapp/backend/tests/test_project_order.py"]
 note = "The download keeps the exact manifest bytes (section 7)."
@@ -212,6 +229,7 @@ note = "The download keeps the exact manifest bytes (section 7)."
 kind = "route"
 id = "POST /api/project/validate"
 disposition = "replaced"
+operation = "validate"
 owner = "3e"
 covered_by = ["conformance/cases/validate", "reg_webapp/backend/tests/test_project_validate.py"]
 
@@ -219,6 +237,7 @@ covered_by = ["conformance/cases/validate", "reg_webapp/backend/tests/test_proje
 kind = "route"
 id = "GET /api/search"
 disposition = "replaced"
+operation = "search"
 owner = "3a"
 covered_by = ["conformance/cases/http_search", "reg_webapp/backend/tests/test_search_results.py", "reg_webapp/backend/tests/test_search_golden_config.py"]
 
@@ -226,6 +245,7 @@ covered_by = ["conformance/cases/http_search", "reg_webapp/backend/tests/test_se
 kind = "route"
 id = "GET /api/stats"
 disposition = "replaced"
+operation = "context"
 owner = "3a"
 covered_by = ["conformance/cases/http_scope/stats", "reg_webapp/backend/tests/test_stats.py"]
 note = "Judgment: scoped headline counts for the landing page that hosts search; they need only admission and the scope predicate, both 3a."
@@ -234,6 +254,7 @@ note = "Judgment: scoped headline counts for the landing page that hosts search;
 kind = "route"
 id = "GET /api/value-sets/{value_set_id}/codes"
 disposition = "replaced"
+operation = "values"
 owner = "3b"
 covered_by = ["reg_webapp/backend/tests/test_value_set_codes.py"]
 note = "The values operation; offset paging becomes cursor paging (section 7)."
@@ -252,6 +273,7 @@ note = "Command group only; its subcommands carry the dispositions. The CLI is d
 kind = "command"
 id = "docs get"
 disposition = "replaced"
+operation = "docs_get"
 owner = "3b"
 covered_by = ["reg_meta/tests/test_doc_commands.py"]
 
@@ -259,6 +281,7 @@ covered_by = ["reg_meta/tests/test_doc_commands.py"]
 kind = "command"
 id = "docs list"
 disposition = "replaced"
+operation = "docs_search"
 owner = "3b"
 covered_by = ["reg_meta/tests/test_doc_commands.py", "conformance/cases/selection/docs-default-mismatch"]
 note = "The SPA has no docs listing route; the docs operations need one for agents."
@@ -267,6 +290,7 @@ note = "The SPA has no docs listing route; the docs operations need one for agen
 kind = "command"
 id = "docs search"
 disposition = "replaced"
+operation = "docs_search"
 owner = "3b"
 covered_by = ["reg_meta/tests/test_doc_commands.py"]
 note = "Docs go with show; see the docs route rows."
@@ -283,6 +307,7 @@ note = "Command group only; its subcommands carry the dispositions. The CLI is d
 kind = "command"
 id = "get availability"
 disposition = "replaced"
+operation = "coverage"
 owner = "3c"
 covered_by = ["conformance/cases/cli_scope/availability-reference", "conformance/cases/cli_scope/availability-holdings"]
 note = "The coverage operation."
@@ -291,14 +316,16 @@ note = "The coverage operation."
 kind = "command"
 id = "get classification"
 disposition = "replaced"
+operation = "show"
 owner = "3b"
 covered_by = ["conformance/cases/cli_scope/classification-variables-reference", "conformance/cases/cli_scope/classification-variables-holdings"]
-note = "Judgment: show on a classification (codes, owning variables); its edition succession chain is 3d."
+note = "Judgment: show on a classification (summary, owning variables); its codes (`--codes`) are the values operation on the classification ref, and its edition succession chain is 3d."
 
 [[row]]
 kind = "command"
 id = "get coded-variables"
 disposition = "replaced"
+operation = "coded_variables"
 owner = "3c"
 covered_by = ["conformance/cases/cli_scope/coded-variables-explicit-reference"]
 
@@ -306,6 +333,7 @@ covered_by = ["conformance/cases/cli_scope/coded-variables-explicit-reference"]
 kind = "command"
 id = "get datacolumns"
 disposition = "replaced"
+operation = "schema"
 owner = "3c"
 covered_by = ["conformance/cases/cli_scope/datacolumns-explicit-reference", "conformance/cases/cli_scope/datacolumns-unheld-explicit-reference"]
 note = "Judgment: column aliases are delivered-schema facts, so they go with schema; a show facet in 3b would also fit."
@@ -314,6 +342,7 @@ note = "Judgment: column aliases are delivered-schema facts, so they go with sch
 kind = "command"
 id = "get diff"
 disposition = "replaced"
+operation = "diff"
 owner = "3c"
 covered_by = ["conformance/cases/cli_scope/diff-explicit-reference"]
 
@@ -321,6 +350,7 @@ covered_by = ["conformance/cases/cli_scope/diff-explicit-reference"]
 kind = "command"
 id = "get groups"
 disposition = "replaced"
+operation = "show"
 owner = "3b"
 covered_by = ["conformance/cases/cli_scope/groups-reference", "conformance/cases/cli_scope/groups-holdings"]
 note = "Show on a concept group (members and facets)."
@@ -329,6 +359,7 @@ note = "Show on a concept group (members and facets)."
 kind = "command"
 id = "get lineage"
 disposition = "replaced"
+operation = "lineage"
 owner = "3d"
 covered_by = ["conformance/cases/cli_scope/lineage-unheld-reference"]
 
@@ -336,6 +367,7 @@ covered_by = ["conformance/cases/cli_scope/lineage-unheld-reference"]
 kind = "command"
 id = "get register"
 disposition = "replaced"
+operation = "show"
 owner = "3b"
 covered_by = ["conformance/cases/cli_scope/register-reference", "conformance/cases/cli_scope/register-holdings", "reg_meta/tests/test_cli_get.py"]
 
@@ -343,6 +375,7 @@ covered_by = ["conformance/cases/cli_scope/register-reference", "conformance/cas
 kind = "command"
 id = "get schema"
 disposition = "replaced"
+operation = "schema"
 owner = "3c"
 covered_by = ["conformance/cases/cli_scope/schema-reference", "conformance/cases/cli_scope/schema-holdings", "reg_meta/tests/test_cli_get_schema.py"]
 
@@ -350,6 +383,7 @@ covered_by = ["conformance/cases/cli_scope/schema-reference", "conformance/cases
 kind = "command"
 id = "get values"
 disposition = "replaced"
+operation = "values"
 owner = "3b"
 covered_by = ["conformance/cases/cli_scope/values-explicit-reference", "reg_meta/tests/test_cli_get_values.py"]
 
@@ -357,6 +391,7 @@ covered_by = ["conformance/cases/cli_scope/values-explicit-reference", "reg_meta
 kind = "command"
 id = "get varinfo"
 disposition = "replaced"
+operation = "show"
 owner = "3b"
 covered_by = ["conformance/cases/cli_scope/varinfo-explicit-reference", "conformance/cases/cli_scope/varinfo-unheld-holdings", "reg_meta/tests/test_cli_get.py"]
 
@@ -372,6 +407,7 @@ note = "No test covers it. Every response's `meta` carries contract version, gen
 kind = "command"
 id = "order"
 disposition = "replaced"
+operation = "order"
 owner = "3e"
 covered_by = ["conformance/cases/order", "conformance/test_order.py", "conformance/cases/validate"]
 note = "`POST /api/project/order` and an MCP tool (section 7)."
@@ -380,6 +416,7 @@ note = "`POST /api/project/order` and an MCP tool (section 7)."
 kind = "command"
 id = "resolve"
 disposition = "replaced"
+operation = "resolve"
 owner = "3c"
 covered_by = ["conformance/cases/cli_scope/resolve-explicit-reference", "reg_meta/tests/test_cli_resolve.py"]
 note = "Judgment: exact column-name to variable lookup over delivered aliases, beside datacolumns and schema. Not ref resolution, which is 3a's `ambiguous_ref`."
@@ -388,21 +425,23 @@ note = "Judgment: exact column-name to variable lookup over delivered aliases, b
 kind = "command"
 id = "search"
 disposition = "replaced"
+operation = "search"
 owner = "3a"
-covered_by = ["conformance/cases/cli_scope/search-reference-1", "conformance/cases/cli_scope/search-holdings-1", "reg_meta/tests/test_cli_search.py"]
+covered_by = ["conformance/cases/cli_scope/search-holdings-1", "conformance/cases/cli_scope/search-reference-2", "reg_meta/tests/test_cli_search.py"]
 
 [[row]]
 kind = "command"
 id = "update"
-disposition = "replaced"
+disposition = "removed"
 owner = "3a"
 covered_by = ["conformance/cases/selection/empty-explicit-update", "conformance/cases/update", "reg_meta/tests/test_update.py"]
-note = "Replaced by the `reg-meta fetch` run mode (section 6), owned by 3a because local `reg-meta mcp` needs a catalog from 3a on; the Docker bake moves to curl, SHA-256 and zstd (section 7). The Dockerfile, publish workflow and agent plugin keep using `update` until stage 4 drops the CLI."
+note = "No operation: replaced by the `reg-meta fetch` run mode (section 6), owned by 3a because local `reg-meta mcp` needs a catalog from 3a on; the Docker bake moves to curl, SHA-256 and zstd (section 7). The Dockerfile, publish workflow and agent plugin keep using `update` until stage 4 drops the CLI."
 
 [[row]]
 kind = "command"
 id = "validate"
 disposition = "replaced"
+operation = "validate"
 owner = "3e"
 covered_by = ["conformance/cases/validate", "conformance/test_validate.py"]
 
@@ -497,7 +536,7 @@ id = "reg_meta.catalog.BindingGroupRef"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/test_concept_groups.py"]
+covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/cases/http_catalog/concept-group-admission"]
 
 [[row]]
 kind = "import"
@@ -554,7 +593,7 @@ id = "reg_meta.catalog.ConceptGroupMember"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/test_concept_groups.py"]
+covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/cases/http_catalog/concept-group-admission"]
 
 [[row]]
 kind = "import"
@@ -562,7 +601,7 @@ id = "reg_meta.catalog.ConceptGroupSummary"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/test_concept_groups.py"]
+covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/cases/http_catalog/concept-group-admission"]
 
 [[row]]
 kind = "import"
@@ -579,7 +618,7 @@ id = "reg_meta.catalog.GroupAxis"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/test_concept_groups.py"]
+covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/cases/http_catalog/concept-group-admission"]
 
 [[row]]
 kind = "import"
@@ -1531,7 +1570,7 @@ covered_by = ["reg_meta/tests/test_search_ranking.py", "conformance/cases/http_s
 [[row]]
 kind = "import"
 id = "reg_meta.semantic.validate_project"
-used_by = ["conformance", "reg_webapp"]
+used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "3e"
 covered_by = ["conformance/test_validate.py", "conformance/cases/validate"]

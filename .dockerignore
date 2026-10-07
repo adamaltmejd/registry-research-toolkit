@@ -43,6 +43,5 @@ reg_webapp/frontend/dist/
 archive/
 REFACTOR_SPEC.md
 RUST_RUNTIME_SPEC.md
-spike/
 ARCHITECTURE.md
 AGENTS.md

@@ -1,0 +1,237 @@
+# Error catalog (RUST_RUNTIME_SPEC.md package 1.1). An error is the document
+# {code, class, message, remediation, fields} (operations.toml, shape.Error). HTTP sends
+# it as `{"error": ..., "meta": ...}` with the code's status; MCP returns the same
+# document as a tool error; a process (startup, `fetch`) prints it on stderr and exits
+# with the code's `exit`. Approved at checkpoint 1.
+#
+# code       stable; `fields` lists the keys of its `fields` object.
+# class      usage 400/422, not_found 404, conflict 409, order_blocked 422,
+#            unavailable 503, internal 500 (section 7); limit 413/429 (HTTP only);
+#            network (fetch only).
+# surface    operation: any operation, either transport. http: the HTTP transport only.
+#            startup: `serve` or `mcp` refuses to start (never listens). fetch: the
+#            `fetch` run mode.
+# status     the HTTP status (operation and http codes).
+# exit       the process exit status (startup and fetch codes): 2 usage, 10
+#            configuration, 25 network, as today's EXIT_* constants. A process run
+#            with a bad argument prints invalid_parameter and exits 2.
+# replaces   today's reg_meta codes and webapp HTTP errors it takes over.
+#
+# Not carried over: uv_not_found, upgrade_failed, pypi_lookup_failed (the binary does
+# not upgrade itself); db_exists, doc_db_exists, catalog_bootstrap_required (`fetch`
+# activates atomically and bootstraps); no_match (`resolve` reports a status per
+# column); unknown_search_row_type, state_variant_unresolved,
+# corrupt_concept_group_source (artifact invariants, so internal_error);
+# inventory_toml_unreadable, inventory_invalid (build-side, stay in reg_meta_build).
+# Order finding codes and project issue codes are data inside `order_blocked` and
+# `validate` results, owned by the project validator (slice 3e), not error codes.
+
+[[code]]
+code = "invalid_parameter"
+class = "usage"
+surface = "operation"
+status = 422
+fields = ["parameter"]
+replaces = ["usage_error", "FastAPI 422 literal/type errors", "scope_forbidden", "invalid search type", "query NUL or over 200 characters", "required-together parameter errors"]
+note = """An unknown, missing, mistyped or out-of-range parameter. Out-of-range `limit` \
+is an error, not today's silent clamp; unknown parameters are errors, not ignored."""
+
+[[code]]
+code = "invalid_ref"
+class = "usage"
+surface = "operation"
+status = 422
+fields = ["ref"]
+replaces = ["FqidError (webapp 422)", "not_a_binding_fqid", "not_a_classification_fqid", "warnings on a non-register, non-binding ref"]
+note = "A malformed FQID, or one of a kind the operation does not take."
+
+[[code]]
+code = "invalid_period"
+class = "usage"
+surface = "operation"
+status = 422
+fields = ["parameter"]
+replaces = ["invalid_period", "period_param.py 422s", "--years ValueError (internal_error today)"]
+
+[[code]]
+code = "invalid_cursor"
+class = "usage"
+surface = "operation"
+status = 422
+replaces = ["invalid_search_cursor (malformed, or issued for other parameters or scope)", "golden cursor errors", "empty cursor"]
+
+[[code]]
+code = "scope_unavailable"
+class = "usage"
+surface = "operation"
+status = 422
+fields = ["scope"]
+replaces = ["scope_unavailable"]
+note = "`holdings` on a catalog (non-steward) artifact."
+
+[[code]]
+code = "project_invalid"
+class = "usage"
+surface = "operation"
+status = 422
+fields = ["issues"]
+replaces = ["project_invalid", "unsupported_schema_version (order)"]
+note = "`order` on a project the structural validator rejects; `issues` are validate's."
+
+[[code]]
+code = "not_found"
+class = "not_found"
+surface = "operation"
+status = 404
+fields = ["ref"]
+replaces = ["not_found", "fqid_not_found", "doc_not_found", "value-set and group 404s", "not in this steward's catalog"]
+note = "`ref` is the requested ref or identifier. Absent from holdings but present in reference is not_found under scope=holdings."
+
+[[code]]
+code = "docs_unavailable"
+class = "not_found"
+surface = "operation"
+status = 404
+replaces = ["documentation index not ingested", "ingested: false", "doc_db_not_found"]
+
+[[code]]
+code = "ambiguous_ref"
+class = "conflict"
+surface = "operation"
+status = 409
+fields = ["ref", "candidates"]
+replaces = ["ambiguous", "ambiguous_alias", "multi-match lists of get register/varinfo", "first-match picks in availability and diff"]
+note = "`candidates` is [{fqid, kind, name}], so the next call can be exact."
+
+[[code]]
+code = "stale_cursor"
+class = "conflict"
+surface = "operation"
+status = 409
+fields = ["generation"]
+replaces = ["invalid_search_cursor (generation mismatch)"]
+note = "The cursor was issued by another catalog generation; `generation` is the current one. Restart without `cursor`."
+
+[[code]]
+code = "order_blocked"
+class = "order_blocked"
+surface = "operation"
+status = 422
+fields = ["findings"]
+replaces = ["order_blocked", "OrderBlockedModel"]
+note = "`findings` is today's [{code, message, source, variable, period}], with message rendered from fields (section 5)."
+
+[[code]]
+code = "catalog_unavailable"
+class = "unavailable"
+surface = "operation"
+status = 503
+note = "The admitted catalog cannot be read (file gone, I/O error)."
+
+[[code]]
+code = "internal_error"
+class = "internal"
+surface = "operation"
+status = 500
+replaces = ["internal_error", "unknown catalog entity"]
+
+[[code]]
+code = "malformed_request"
+class = "usage"
+surface = "http"
+status = 400
+replaces = ["project_unreadable", "request_body.py 400"]
+note = "A POST body that is not one UTF-8 JSON object (BOM, duplicate key, too deep)."
+
+[[code]]
+code = "payload_too_large"
+class = "limit"
+surface = "http"
+status = 413
+fields = ["limit_bytes"]
+replaces = ["limits.py 413"]
+
+[[code]]
+code = "rate_limited"
+class = "limit"
+surface = "http"
+status = 429
+fields = ["retry_after_seconds"]
+replaces = ["limits.py 429"]
+
+[[code]]
+code = "db_not_found"
+class = "unavailable"
+surface = "startup"
+exit = 10
+replaces = ["db_not_found"]
+
+[[code]]
+code = "schema_incompatible"
+class = "unavailable"
+surface = "startup"
+exit = 10
+fields = ["schema_version", "supported"]
+replaces = ["schema_incompatible"]
+
+[[code]]
+code = "catalog_unpublishable"
+class = "unavailable"
+surface = "startup"
+exit = 10
+replaces = ["catalog_unpublishable"]
+
+[[code]]
+code = "catalog_mismatch"
+class = "unavailable"
+surface = "startup"
+exit = 10
+fields = ["configured", "artifact"]
+replaces = ["catalog_mismatch", "REG_WEBAPP_STEWARD RuntimeError"]
+note = "The configured catalog (`--catalog NAME`) names another artifact kind or steward."
+
+[[code]]
+code = "doc_schema_incompatible"
+class = "unavailable"
+surface = "startup"
+exit = 10
+replaces = ["doc_schema_incompatible"]
+note = "A docs database is present but incompatible; an absent one is docs_unavailable per request."
+
+[[code]]
+code = "release_not_found"
+class = "unavailable"
+surface = "fetch"
+exit = 10
+replaces = ["release_not_found"]
+
+[[code]]
+code = "download_failed"
+class = "network"
+surface = "fetch"
+exit = 25
+replaces = ["download_failed", "no_releases", "release_lookup_failed"]
+
+[[code]]
+code = "no_db_in_release"
+class = "unavailable"
+surface = "fetch"
+exit = 10
+fields = ["asset"]
+replaces = ["no_db_in_release", "no_docs_in_release"]
+
+[[code]]
+code = "incompatible_db_asset"
+class = "unavailable"
+surface = "fetch"
+exit = 10
+fields = ["asset"]
+replaces = ["incompatible_db_asset", "incompatible_docs_asset"]
+
+[[code]]
+code = "checksum_mismatch"
+class = "network"
+surface = "fetch"
+exit = 25
+fields = ["asset"]
+note = "New: section 8's SHA-256 verification before activation."

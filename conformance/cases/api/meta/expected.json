@@ -1,0 +1,18 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/meta": {
+        "contract_version": "4.0.0",
+        "generation": "6e1c9d58eb992aa0eeffcaa8d1220eefec0c6eec645f6670ef13d8f638690ddf",
+        "scope": "holdings"
+      }
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/meta/scope": "reference"
+    }
+  }
+]
