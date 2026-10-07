@@ -5,6 +5,8 @@
   ``curation/relations.toml`` meets it at the real-seed build).
 - The build refuses a curated same_as component above that cap (synthetic SCB
   register whose curated relations chain N variables).
+- The build refuses a duplicated, non-variable or self-referencing curated
+  code<->label pair with an error naming its register file.
 - A malformed ``doc_sources.toml`` entry fails ``reg-meta-build build-docs`` with a
   located ``doc_sources_invalid`` configuration error (synthetic TOML written into
   a copied builder package, since the map resolves relative to the package file).
@@ -78,6 +80,42 @@ def test_same_as_component_above_the_cap_fails_the_build(tmp_path: Path) -> None
     assert exc_info.value.code == "relations_same_as_component_too_large"
     assert exc_info.value.exit_code == EXIT_CONFIG
     assert "component of 33 FQIDs (cap 32)" in exc_info.value.message
+
+
+_PAIR = '[[code_label_pair]]\ncode = "scb/sample/{}"\nlabel = "scb/sample/{}"\n'
+
+
+@pytest.mark.parametrize(
+    ("pairs", "located"),
+    [
+        (_PAIR.format("kod", "namn") * 2, "[[code_label_pair]] entry 2: duplicate"),
+        (_PAIR.format("kod", "people/namn"), "provider/register coordinate"),
+        (_PAIR.format("kod", "kod"), "code_label_pair/1: identical endpoints"),
+    ],
+    ids=["duplicate", "wrong-grain", "self-pair"],
+)
+def test_malformed_code_label_pair_fails_the_build_located(
+    tmp_path: Path, pairs: str, located: str
+) -> None:
+    """A duplicated, non-variable or self-referencing code<->label pair stops the
+    build before resolution, naming the register file and the pair. The first two
+    fail the register-file load (EXIT_CONFIG); a self-pair loads and fails the
+    curation compile, which the CLI reports as EXIT_CONFIG."""
+    with pytest.raises((RegMetaError, ValueError)) as exc_info:
+        build_scb_catalog(
+            tmp_path,
+            curation={"registers/scb/sample.toml": SCB_SAMPLE_REGISTER + pairs},
+            registerinformation_rows=[
+                var_row(cvid=1000, var_id=100, colname="Kod", varname="Kod"),
+                var_row(cvid=1001, var_id=101, colname="Namn", varname="Namn"),
+            ],
+        )
+    error = exc_info.value
+    message = error.message if isinstance(error, RegMetaError) else str(error)
+    if isinstance(error, RegMetaError):
+        assert error.exit_code == EXIT_CONFIG
+    assert "registers/scb/sample.toml" in message
+    assert located in message
 
 
 @pytest.fixture(scope="module")
