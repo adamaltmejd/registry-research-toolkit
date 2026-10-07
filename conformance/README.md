@@ -66,7 +66,7 @@ answering is retried on a fresh port. Its output goes to `servers*/server-N.log`
 the pytest base temp. The FastAPI app under uvicorn:
 
 ```sh
-uv run python -m pytest conformance -q --server-cmd='uv run python -c "import sys, uvicorn; from reg_webapp.app import create_app; uvicorn.run(create_app(rate_limit_per_minute=100_000), port=int(sys.argv[1]))" {port}'
+uv run python -m pytest conformance -q --server-cmd='uv run python -c "import sys, uvicorn; from reg_webapp.app import create_app; uvicorn.run(create_app(rate_limit_per_minute=1000), port=int(sys.argv[1]))" {port}'
 ```
 
 The app reads its artifact from the environment, so this template needs no `{db}`. It is

@@ -715,7 +715,7 @@ is deleted".
   headers. The `api` corpus is collected only with this option. Startup-failure and
   `golden_config` cases stay in-process.
 - Paths: `conformance/conftest.py`, `conformance/http_cases.py`,
-  `conformance/README.md`.
+  `conformance/test_http.py` (which collects the HTTP cases), `conformance/README.md`.
 - Out of scope: rewriting existing cases.
 - Acceptance: `uv run python -m pytest conformance -q --server-cmd='uv run uvicorn …'`
   (the exact command recorded in `conformance/README.md`) passes the existing HTTP and

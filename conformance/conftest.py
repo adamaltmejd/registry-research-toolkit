@@ -11,6 +11,15 @@ from reg_meta.db import open_db
 from reg_meta.errors import RegMetaError
 
 
+def pytest_addoption(parser):
+    parser.addoption(
+        "--server-cmd",
+        default=None,
+        help="run conformance HTTP cases against a server started from this "
+        "command template ({db}, {port}); see conformance/README.md",
+    )
+
+
 def pytest_configure(config):
     directory = config.getoption("--artifact-dir")
     holdings_input = config.getoption("--holdings-input")

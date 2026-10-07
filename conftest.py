@@ -56,13 +56,6 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         help="accepted holdings input directory (requires --run-release and --artifact-dir)",
     )
     parser.addoption(
-        "--server-cmd",
-        type=str,
-        default=None,
-        help="run conformance HTTP cases against a server started from this "
-        "command template ({db}, {port}); see conformance/README.md",
-    )
-    parser.addoption(
         "--install-mode",
         choices=INSTALL_MODES,
         default="registry",
