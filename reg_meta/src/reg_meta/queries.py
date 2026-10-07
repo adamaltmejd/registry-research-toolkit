@@ -4477,7 +4477,9 @@ def get_coded_variables(
     """Find variables that have value sets, ranked by usage.
 
     Returns a list of dicts with "variable_name", "n_distinct_codes",
-    "n_registers", "n_instances".
+    "n_registers", "n_instances". Rows are keyed by the variable's common name;
+    variables without a common name are not ranked (search finds them by their
+    delivery names).
 
     A2.7: sourced from `variable_state` (was per-cvid `variable_instance`).
     `n_instances` counts distinct states now — the per-era shape is the unit the
@@ -4504,7 +4506,10 @@ def get_coded_variables(
         "AND w.register_variant_id = vs.register_variant_id "
         "AND w.valid_from <= vs.valid_to AND w.valid_to >= vs.valid_from "
         "WHERE w.coding_metadata = 'per_column') coding ON coding.state_id = vs.state_id "
-        "WHERE "
+        # The ranking key is the common name. A variable without one (its
+        # deliveries name it differently) has no key to rank under; grouping its
+        # NULL would merge unrelated variables into one nameless row (#1177).
+        "WHERE v.name IS NOT NULL AND "
         + scope_predicate(
             scope,
             "variable",
