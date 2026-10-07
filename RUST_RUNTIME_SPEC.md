@@ -238,7 +238,7 @@ Notes:
             ┌──────────────────────┼───────────────────────┐
             ▼                      ▼                       ▼
      reg-meta CLI           reg-meta serve            reg-meta mcp
-     (agents, humans)       (HTTP API for the SPA)    (agent tools over stdio)
+     (agents)               (HTTP API for the SPA)    (agent tools over stdio)
             └──────────── one Rust binary, one query library ───┘
                                    │
                          SPA (Svelte) + reg_core WASM
@@ -258,8 +258,7 @@ Rust workspace (`crates/`):
 - `reg-meta` — the binary. Subcommands for the CLI, `serve` (axum + utoipa; ETag,
   body-size limit and rate limit as tower layers) and `mcp`. `update` downloads,
   verifies the SHA-256 and atomically activates an artifact.
-- `reg-core-py` — the PyO3 module the build imports. Optionally later, a read API for
-  notebooks.
+- `reg-core-py` — the PyO3 module the build imports.
 
 What is deleted: the Python `reg_meta` package, `reg_schema`, the FastAPI backend, and
 the frontend's hand-written grammar and validation mirrors. Modules that only the build
@@ -284,16 +283,22 @@ Why the HTTP server moves to Rust rather than FastAPI calling Rust through bindi
 on 2026-10-07; the rest is draft until signed off. Still open for the stage-1 spec: the
 exact command names in the sketch below, and each command's argument and output schema.
 
+**Users are agents and the webapp only** *(settled, decision 10)*. The CLI is designed
+for agents; the HTTP API for the SPA. Interactive human use of the CLI is out of scope
+while building: no feature, flag or output exists for it. It is re-evaluated after stage 6.
+
 Design rules:
 
-- **Always JSON** *(settled)*. Every command writes JSON to stdout by default;
-  `--format text` renders a table for humans, `--format ndjson` streams list items.
+- **JSON only** *(settled)*. Every command writes JSON to stdout. There is no other
+  output format and no `--format` flag.
+- **No prompts, no progress output** *(settled)*. Commands never ask for confirmation
+  and never print progress. stderr carries only the JSON error document.
 - **`{data, meta}` on every document** *(settled)*. `data` is the result; `meta` is a
   small object with the contract version, catalog generation and scope. Agents always
   know which catalog answered.
 - **Deterministic output** *(settled)*. `meta` carries no timing, so the same command on
-  the same catalog prints the same bytes and goldens can compare raw output. Timing goes
-  to stderr with `--verbose`.
+  the same catalog prints the same bytes and goldens can compare raw output. Performance
+  is measured by the tier-1 harness, not reported by the binary.
 - **A ref is an FQID or a bare name** *(settled)*. Any entity is a ref: `provider`,
   `provider/register`, `provider/register/slug`, `class/slug`, group keys, or a bare
   name. A unique name resolves; an ambiguous one returns the candidates with their FQIDs
@@ -319,14 +324,11 @@ Design rules:
 - **Exit codes** *(settled)*. Keep 0 ok, 2 usage, 10 catalog missing or incompatible, 16
   not found, 25 network, 30 internal. 17 means no match or ambiguous ref only; new 18
   means order blocked; unused 20 is dropped. `describe` lists every code.
-- **Generated help and `describe`** *(settled)*. Help text and examples live next to
-  each command's definition (one source); `--help` renders them and `--examples` folds
-  into it. `reg-meta describe` emits the command tree with argument and output JSON
-  Schemas for agents. This replaces ~580 lines of hand-written help and examples.
-- **Text view: generic plus a few custom** *(settled)*. `--format text` uses a generic
-  renderer that turns any output into tables from its schema. Hand-tuned views exist
-  only for the commands humans use most (search, show, schema). New commands get text
-  output without new rendering code. Replaces ~840 lines of per-payload renderers.
+- **Generated help and `describe`** *(settled)*. Help text and examples, written for
+  agents, live next to each command's definition (one source); `--help` renders them and
+  `--examples` folds into it. `reg-meta describe` emits the command tree with argument
+  and output JSON Schemas. This replaces ~580 lines of hand-written help and examples,
+  and the ~840 lines of text renderers are deleted outright.
 - **`order` follows the envelope** *(settled)*. stdout carries `{data: manifest, meta}`
   like every command. `-o FILE` writes the exact manifest bytes, which is what the
   byte-identity contract and the webapp download use.
@@ -353,7 +355,7 @@ reg-meta coded [--min-codes N] [--min-registers N]
 reg-meta order <project.json> [-o FILE]
 reg-meta docs search <query> | docs show <id> | docs list
 reg-meta info
-reg-meta update [--tag T] [--yes]
+reg-meta update [--tag T]
 reg-meta serve [--port N]
 reg-meta mcp
 reg-meta describe
@@ -516,19 +518,18 @@ moving. The first layer is cheap to fix in Python.
 - **Cache keys in the incremental build.** A key that misses an input yields a stale,
   wrong artifact. Mitigated by the periodic uncached byte-compare.
 - **Frontend churn in stages 5–6.** Type regeneration will move many generated names.
-- **Lost notebook import.** `import reg_meta` goes away unless the optional read
-  bindings are built. Nothing in the repo depends on it today.
 
 ## 13. Decisions (2026-10-07)
 
-  | #   | Question                               | Decision                                                                                                                       |
-  | --- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-  | 1   | Where are catalog facts resolved? (§3) | **Compiled in the build**, in the derive step (§4). Reverses "No state/window resolution is compiled" in `reg_meta/DESIGN.md`. |
-  | 2   | What serves the webapp API? (§6)       | **Rust server** (`reg-meta serve`). The FastAPI backend is deleted in stage 5.                                                 |
-  | 3   | `reg_schema`? (§5)                     | **Merged into `reg-core`.** The Python package is deleted in stage 5.                                                          |
-  | 4   | CLI v4 surface (§7)                    | **Iterate first.** §7 is a draft; the surface is settled with the maintainer in stage 0.                                       |
-  | 5   | MCP server mode                        | **Yes, after CLI parity** (stage 4).                                                                                           |
-  | 6   | WASM in the SPA                        | **Yes, as the last stage** (stage 6).                                                                                          |
-  | 7   | Parallel per-register resolve (§11)    | **Yes**, after the family-scan fix lands.                                                                                      |
-  | 8   | Where this plan lives                  | **Its own root tracker**, with the governance rule amended to allow one tracker per concurrent refactor.                       |
-  | 9   | How to avoid full rebuilds per step    | **Base/derive split, pinned artifacts, three tiers with budgets, incremental base build** (§4, §11).                           |
+  | #   | Question                               | Decision                                                                                                                                                          |
+  | --- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | 1   | Where are catalog facts resolved? (§3) | **Compiled in the build**, in the derive step (§4). Reverses "No state/window resolution is compiled" in `reg_meta/DESIGN.md`.                                    |
+  | 2   | What serves the webapp API? (§6)       | **Rust server** (`reg-meta serve`). The FastAPI backend is deleted in stage 5.                                                                                    |
+  | 3   | `reg_schema`? (§5)                     | **Merged into `reg-core`.** The Python package is deleted in stage 5.                                                                                             |
+  | 4   | CLI v4 surface (§7)                    | **Iterate first.** §7 is a draft; the surface is settled with the maintainer in stage 0.                                                                          |
+  | 5   | MCP server mode                        | **Yes, after CLI parity** (stage 4).                                                                                                                              |
+  | 6   | WASM in the SPA                        | **Yes, as the last stage** (stage 6).                                                                                                                             |
+  | 7   | Parallel per-register resolve (§11)    | **Yes**, after the family-scan fix lands.                                                                                                                         |
+  | 8   | Where this plan lives                  | **Its own root tracker**, with the governance rule amended to allow one tracker per concurrent refactor.                                                          |
+  | 9   | How to avoid full rebuilds per step    | **Base/derive split, pinned artifacts, three tiers with budgets, incremental base build** (§4, §11).                                                              |
+  | 10  | Who the runtime is designed for        | **Agents and the webapp only.** No human-oriented CLI features (text output, prompts, progress, notebook import) while building; re-evaluated after stage 6 (§7). |
