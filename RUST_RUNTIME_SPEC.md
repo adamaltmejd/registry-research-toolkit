@@ -281,15 +281,19 @@ Why the HTTP server moves to Rust rather than FastAPI calling Rust through bindi
 ## 7. CLI v4
 
 **Under iteration (decision 4).** Rules marked *settled* were agreed with the maintainer
-on 2026-10-07; the rest is draft until signed off.
+on 2026-10-07; the rest is draft until signed off. Still open for the stage-1 spec: the
+exact command names in the sketch below, and each command's argument and output schema.
 
 Design rules:
 
 - **Always JSON** *(settled)*. Every command writes JSON to stdout by default;
   `--format text` renders a table for humans, `--format ndjson` streams list items.
 - **`{data, meta}` on every document** *(settled)*. `data` is the result; `meta` is a
-  small object with the contract version, catalog generation and scope (draft: timing).
-  Agents always know which catalog answered.
+  small object with the contract version, catalog generation and scope. Agents always
+  know which catalog answered.
+- **Deterministic output** *(settled)*. `meta` carries no timing, so the same command on
+  the same catalog prints the same bytes and goldens can compare raw output. Timing goes
+  to stderr with `--verbose`.
 - **A ref is an FQID or a bare name** *(settled)*. Any entity is a ref: `provider`,
   `provider/register`, `provider/register/slug`, `class/slug`, group keys, or a bare
   name. A unique name resolves; an ambiguous one returns the candidates with their FQIDs
@@ -319,6 +323,18 @@ Design rules:
   each command's definition (one source); `--help` renders them and `--examples` folds
   into it. `reg-meta describe` emits the command tree with argument and output JSON
   Schemas for agents. This replaces ~580 lines of hand-written help and examples.
+- **Text view: generic plus a few custom** *(settled)*. `--format text` uses a generic
+  renderer that turns any output into tables from its schema. Hand-tuned views exist
+  only for the commands humans use most (search, show, schema). New commands get text
+  output without new rendering code. Replaces ~840 lines of per-payload renderers.
+- **`order` follows the envelope** *(settled)*. stdout carries `{data: manifest, meta}`
+  like every command. `-o FILE` writes the exact manifest bytes, which is what the
+  byte-identity contract and the webapp download use.
+- **Catalog management stays small** *(settled)*. Users normally pick one catalog and
+  keep it. Top-level `update` downloads or refreshes the selected catalog; `info`
+  reports the version, the selected catalog's identity and any other installed catalogs.
+  Selection stays on the global `--catalog NAME` (and `--db DIR`). No `catalog` command
+  group.
 
 Command sketch:
 
@@ -336,7 +352,8 @@ reg-meta resolve <column>... | -
 reg-meta coded [--min-codes N] [--min-registers N]
 reg-meta order <project.json> [-o FILE]
 reg-meta docs search <query> | docs show <id> | docs list
-reg-meta catalog info | catalog update [--catalog NAME] [--tag T] [--yes]
+reg-meta info
+reg-meta update [--tag T] [--yes]
 reg-meta serve [--port N]
 reg-meta mcp
 reg-meta describe
@@ -356,7 +373,7 @@ fallback.
 - **PyPI** keeps `uv tool install reg-meta` working: maturin with `bindings = "bin"`
   publishes the binary as a wheel. The skill's install instructions stay the same.
 - **Self-upgrade** defers to the installer (`uv tool upgrade`, or the release binary).
-  `catalog update` manages artifacts only.
+  `update` manages catalog artifacts only.
 - **Release DB assets** gain a checksum file. `update` verifies before activation.
 - **reg_meta_build** depends on `reg-core-py` as a workspace member built by maturin.
   `uv sync` builds it, which needs a Rust toolchain on the maintainer machine and in CI.
