@@ -257,6 +257,9 @@ def ensure_derived(pins: Pins, dirs: dict[str, Path]) -> dict[str, Path]:
                 stdout=subprocess.PIPE,
                 text=True,
                 check=False,
+                # A perturbation run's PYTHONPATH would derive from the perturbed
+                # tree and cache it under the committed tree's key.
+                env={k: v for k, v in os.environ.items() if k != "PYTHONPATH"},
             )
             if result.returncode:
                 raise RuntimeError(f"derive {catalog} failed: {result.stdout}")

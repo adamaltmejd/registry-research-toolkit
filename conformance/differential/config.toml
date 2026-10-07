@@ -19,7 +19,7 @@ seed = 0
 
 [[exception]]
 name = "derived-generation-cursor"
-reason = "The checkout arm reads derived copies, which have their own generation (section 4); a search cursor binds the generation, so none outlives it. Each arm follows its own cursor, so page 2 still compares."
+reason = "The checkout arm reads derived copies, which have their own generation (section 4); a search cursor binds the generation, so none outlives it. `has_more` still compares, and page 2 of `search-limit-5` exercises the shared cursor encoder."
 case = "*/*/search*"
 paths = ["/next_cursor"]
 

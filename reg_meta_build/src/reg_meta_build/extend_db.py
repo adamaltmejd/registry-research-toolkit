@@ -455,6 +455,12 @@ def extend_db(
                 conn.commit()
                 derive(conn)
             manifest = get_manifest(conn)
+            # Derivation provenance belongs to the base; base_generation_id
+            # already covers it, so an extension does not inherit the key.
+            if manifest.pop("derived_from_generation_id", None):
+                conn.execute(
+                    "DELETE FROM import_manifest WHERE key = 'derived_from_generation_id'"
+                )
             if diagnostic:
                 if base_generation := manifest.pop("generation_id", None):
                     manifest["base_generation_id"] = base_generation

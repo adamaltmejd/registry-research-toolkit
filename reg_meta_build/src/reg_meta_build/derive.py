@@ -12,12 +12,14 @@ import shutil
 import sqlite3
 from concurrent.futures import ProcessPoolExecutor
 from contextlib import closing
+from dataclasses import replace
 from typing import TYPE_CHECKING
 
 # Bootstrap by moving (RUST_RUNTIME_SPEC.md section 4): the resolver rules are read
 # from the reader, so the derived rows equal what it returns by construction.
 from reg_meta.catalog import Catalog
 from reg_meta.db import get_manifest, register_py_lower
+from reg_meta.errors import RegMetaError
 
 from .artifact_identity import builder_commit, generation_id
 from .db import (
@@ -134,8 +136,17 @@ def derive_artifact(base: Path, out: Path) -> None:
     shutil.copyfile(base, tmp)
     try:
         # Every read comes from the copy, so the gate sees the bytes it derives.
-        with closing(open_built_db(tmp, older_minor=True)) as conn:
-            manifest = get_manifest(conn)
+        try:
+            with closing(open_built_db(tmp, older_minor=True)) as conn:
+                manifest = get_manifest(conn)
+        except RegMetaError as exc:
+            # The gate reads the copy; name the file the user passed.
+            raise replace(
+                exc,
+                message=exc.message.replace(str(tmp), str(base)),
+                remediation="Derive admits this builder's schema major with an "
+                "equal or older minor; rebuild the base otherwise.",
+            ) from None
         kind = manifest.get("catalog_artifact_kind")
         if kind not in {"catalog", "steward"} or "generation_id" not in manifest:
             raise ValueError(
