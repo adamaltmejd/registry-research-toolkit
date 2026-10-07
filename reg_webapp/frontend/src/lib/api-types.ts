@@ -537,10 +537,10 @@ export interface paths {
          * Order Project
          * @description Materialize a ``project_data.json`` into the JSON order manifest.
          *
-         *     A THIN adapter over ``reg_meta.order.materialize_order`` (reg_meta/DESIGN.md
-         *     → Order materializer and manifest): no gate, no fallback and no rendering lives here, so this endpoint and
-         *     the ``reg-meta order`` CLI emit byte-identical manifests. The selected
-         *     artifact determines orderability: catalog artifacts use global fallback;
+         *     A THIN adapter over ``reg_meta.order.materialize_order`` (reg_meta/DESIGN.md → Order
+         *     materializer and manifest): no gate, no fallback and no rendering lives here, so
+         *     this endpoint and the ``reg-meta order`` CLI emit byte-identical manifests. The
+         *     selected artifact determines orderability: catalog artifacts use global fallback;
          *     steward artifacts use their compiled holdings and steward identity.
          *
          *     200 is the manifest — ``application/json``, downloaded as ``order.json``.
@@ -575,14 +575,13 @@ export interface paths {
          *     structural ⧺ semantic issue list + the derived ``ok`` flag; a 4xx is
          *     reserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).
          *
-         *     A THIN adapter over reg_meta's ``semantic.validate_project``
-         *     (reg_meta/DESIGN.md → Project semantic validation): the composition, every issue and the serialization
-         *     live there, so this endpoint and ``reg-meta validate`` emit byte-identical
-         *     findings. The 200 body is ``semantic.validation_json`` VERBATIM, returned
-         *     as a raw ``Response`` (FastAPI passes it through without re-serializing)
-         *     while ``response_model=`` still publishes ``ValidationResultModel`` as the
-         *     typed contract for the OpenAPI snapshot + the SPA codegen — the ``/order``
-         *     pattern.
+         *     A THIN adapter over reg_meta's ``semantic.validate_project`` (reg_meta/DESIGN.md →
+         *     Project semantic validation): the composition, every issue and the serialization
+         *     live there, so this endpoint and ``reg-meta validate`` emit byte-identical findings.
+         *     The 200 body is ``semantic.validation_json`` VERBATIM, returned as a raw
+         *     ``Response`` (FastAPI passes it through without re-serializing) while
+         *     ``response_model=`` still publishes ``ValidationResultModel`` as the typed contract
+         *     for the OpenAPI snapshot + the SPA codegen — the ``/order`` pattern.
          *
          *     ``async`` only to read the body off the wire; the BLOCKING work (the structural
          *     parse + the semantic layer's per-binding sqlite resolution) is offloaded to the
@@ -2048,8 +2047,8 @@ export interface components {
          *     `PhysicalCoordinate.column`).
          *
          *     `register` is a `BaseModel` method, so the Python attr is `register_name`
-         *     with a `"register"` alias — the wire key stays the order-contract coordinate spelling
-         *     (same pattern as `catalog.BindingGroupRef`).
+         *     with a `"register"` alias — the wire key stays the order-contract coordinate
+         *     spelling (same pattern as `catalog.BindingGroupRef`).
          */
         LogicalCoordinate: {
             /** Provider */

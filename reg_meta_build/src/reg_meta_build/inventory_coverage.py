@@ -129,17 +129,16 @@ class CoverageMiss:
     """One `(register, variant, column)` the steward holds in editions the
     catalog has no window for, grouped as one curation decision.
 
-    `register` is the 2-segment `provider/register` FQID and `variant` the variant
-    slug, the pair `[[errata.delivered]]` is keyed on. `column` is the CANONICAL delivery
-    column (the mapping's `representation`, SCB's own spelling), falling back to
-    the held spelling for a mapping that pins none. `versions` are the
-    `Registerversionnamn` the omitted rows must name, and `mint` the subset of
-    those the catalog does not know at all (each needs its own `[[errata.version]]`).
-    `editions` are the uncovered edition intervals and `windows` what the catalog
-    does carry for the column here. `errata_column` records that at least one
-    grouped mapping resolves to a variable minted by a `[[errata.column]]` entry; such a
-    group must never become a `[[errata.delivered]]` candidate because no source row
-    exists to clone.
+    `register` is the 2-segment `provider/register` FQID and `variant` the variant slug,
+    the pair `[[errata.delivered]]` is keyed on. `column` is the CANONICAL delivery
+    column (the mapping's required `representation`, SCB's own spelling). `versions` are
+    the `Registerversionnamn` the omitted rows must name, and `mint` the subset of those
+    the catalog does not know at all (each needs its own `[[errata.version]]`).
+    `editions` are the uncovered edition intervals and `windows` what the catalog does
+    carry for the column here. `errata_column` records that at least one grouped mapping
+    resolves to a variable minted by a `[[errata.column]]` entry; such a group must
+    never become a `[[errata.delivered]]` candidate because no source row exists to
+    clone.
     """
 
     register: str

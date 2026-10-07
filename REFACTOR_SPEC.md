@@ -35,8 +35,8 @@ shipped as compiled holdings (schema 9, released as `reg_meta/v0.41.0` and deplo
 2026-10-06), and its open items followed: the reader defects (#1166), the per-package
 test sweep (#1169), the shared semantic pass in `reg_meta` (#1167) and the SPA common
 study window (#1168). Its decisions live in `reg_meta/DESIGN.md` → "Holdings resolution
-invariants" and "Order materializer and manifest", `reg_meta_build/DESIGN.md` → "Steward
-extension" and `reg_webapp/DESIGN.md` → "Common study window".
+invariants" and "Order materializer and manifest", `reg_meta_build/DESIGN.md` →
+"Holdings curation rules" and `reg_webapp/DESIGN.md` → "Common study window".
 
 ## Sequence
 

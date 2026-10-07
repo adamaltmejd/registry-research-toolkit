@@ -1029,12 +1029,13 @@ physical `(table, column)`: the extraction tool never chooses between sources. I
 validation, and therefore the compiled steward artifact's build, **errors** whenever two
 mappings could serve the same cell: same variant + variable, same canonical
 representation and overlapping editions, whether across tables or across columns of one
-table. The inventory describes **current holdings only**, so this error doubles as the
-supersession worklist; the curation rules that resolve it live in
-`reg_meta_build/DESIGN.md` → "Steward extension". Zero-column cells are not errors; they
-are simply not admitted. Several mappings may still let one physical table/column serve
-several register variants (the combined Utrikeshandel table), and several tables may map
-the same logical coordinate over **disjoint** editions (the ordinary annual series).
+table. This error is also the supersession worklist; the curation rules that resolve it
+(current holdings only, supersession, sub-extract exclusions) are
+`reg_meta_build/DESIGN.md` → "Holdings curation rules". Zero-column cells are not
+errors; they are simply not admitted. Several mappings may still let one physical
+table/column serve several register variants (the combined Utrikeshandel table), and
+several tables may map the same logical coordinate over **disjoint** editions (the
+ordinary annual series).
 
 **Disjoint-partition arm.** Some registers arrive as several tables partitioned by
 sub-population **within one edition**: survey strata (`ITftg_Mikro`/`ITftg_Stora`),
@@ -1044,14 +1045,13 @@ user-facing variant: nothing semantic differs across the shards, and no research
 should have to know delivery trivia to get the whole register. Partitions are therefore
 an inventory/order-layer concept, never a catalog concept. The one-to-one invariant
 holds per `(cell × partition)`: two tables mapping the same cell over overlapping
-editions conflict **unless** they carry distinct partition labels. Labels are explicit
-curated facts, never inferred, so a true redelivery cannot hide behind partitions
-without a reviewable curation line saying so. The materializer matches every partition
-of a cell, and **extraction preserves delivery topology: what goes in as two tables
-comes out as two files**, never a union (see "Order materializer and manifest" below).
-Under the invariant, "one file per (ordered variant, edition segment, partition)" and
-"one file per table" coincide; a combined table backing several ordered variants still
-emits per ordered variant.
+editions conflict **unless** they carry distinct partition labels (curated, never
+inferred: `reg_meta_build/DESIGN.md` → "Holdings curation rules"). The materializer
+matches every partition of a cell, and **extraction preserves delivery topology: what
+goes in as two tables comes out as two files**, never a union (see "Order materializer
+and manifest" below). Under the invariant, "one file per (ordered variant, edition
+segment, partition)" and "one file per table" coincide; a combined table backing several
+ordered variants still emits per ordered variant.
 
 ### Build-time consistency gate
 
@@ -1081,10 +1081,8 @@ selection meets a steward's physical delivery topology. It returns either a comp
 compiled contract above owns the facts. The FastAPI endpoint and the CLI/plugin are thin
 adapters over this one function, which is what makes their results byte-identical; all
 logic (and all fail-closing) lives here. There is one common manifest and no per-steward
-export template (ratified 2026-08-31). Placing the materializer and semantic resolution
-in shared `reg_meta` domain code deliberately adds the `reg_meta → reg_schema`
-dependency rather than creating another package (see `ARCHITECTURE.md` → "Why this
-split").
+export template (2026-07-14, #1137). Why this domain code lives in `reg_meta` rather
+than a new package is `ARCHITECTURE.md` → "Why this split".
 
 **Artifact-driven materialization.** `import_manifest.catalog_artifact_kind = "catalog"`
 selects the **global-deployment fallback**: it has no physical delivery topology, so

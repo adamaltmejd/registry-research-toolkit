@@ -1,5 +1,5 @@
 # SWECOV delivery-inventory curation overlay. Curation rules: reg_meta_build/DESIGN.md
-# → Steward extension. Invariants: reg_meta/DESIGN.md → Holdings resolution
+# → Holdings curation rules. Invariants: reg_meta/DESIGN.md → Holdings resolution
 # invariants.
 #
 # POLICY side of the inventory build: the holdings CSV
@@ -58,7 +58,8 @@ reason = "cumulative NVR covid re-delivery; superseded by FHM_NVR_Covid_20240422
 # ── DECIDED (maintainer-approved 2026-09-01): mechanical translation of the drop rules in the
 # maintainer's MONA-side get_all_variables.R (the full→curated CSV filter,
 # lines 182-205) — the pre-existing supersession policy, moved into the
-# committed overlay so the holdings curation rules own it. APPROVED by maintainer 2026-09-01.
+# committed overlay so the holdings curation rules own it. APPROVED by
+# maintainer 2026-09-01.
 
 [[exclude]]
 table = "AGIHuvud202101_Prel"
@@ -1928,7 +1929,7 @@ edition = 2020
 # ── DECIDED (maintainer, 2026-09-01): special-purpose sub-extracts — data
 # already held, re-delivered at another level of detail for a narrow purpose.
 # Excluded from the order surface; NOT supersessions (reg_meta_build/DESIGN.md →
-# Steward extension, holdings curation rules).
+# Holdings curation rules).
 
 [[exclude]]
 table = "RTB_SaBo_InrFlyttFlode2015"

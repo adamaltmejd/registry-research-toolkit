@@ -117,7 +117,7 @@ def _segment_bounds(segment: EditionSegment) -> tuple[str, str]:
         raise ValueError(
             f"edition must be one explicit finite period, never {segment!r} "
             "(a table with no edition encoded in its name still needs a curated "
-            "edition — see reg_meta_build/DESIGN.md → Steward extension)"
+            "edition — see reg_meta_build/DESIGN.md → Holdings curation rules)"
         )
     return period_token_to_bounds(segment)
 
@@ -536,8 +536,8 @@ class DeliveryInventory(_InventoryModel):
 
 
 def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
-    """Enforce the one-to-one resolution invariant (ratified 2026-09-01; reg_meta/DESIGN.md
-    → "Holdings resolution invariants").
+    """Enforce the one-to-one resolution invariant (ratified 2026-09-01;
+    reg_meta/DESIGN.md → "Holdings resolution invariants").
 
     Every admitted `(register_variant, variable, representation, period)` cell
     resolves to exactly one physical `(table, column)`. Two mappings that could
@@ -627,7 +627,7 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
             + "\n  An inventory states CURRENT holdings only: discard the "
             "superseded delivery at curation instead of choosing here (a "
             "filename date is not proof of supersession) — reg_meta_build/"
-            "DESIGN.md → Steward extension."
+            "DESIGN.md → Holdings curation rules."
         )
 
 
@@ -696,8 +696,8 @@ def load_inventory(path: Path) -> DeliveryInventory:
         raise _inventory_error(
             "inventory_toml_unreadable",
             f"Could not read delivery inventory {path}: {exc}",
-            "The inventory must be UTF-8 TOML (see reg_meta/DESIGN.md → Steward "
-            "delivery inventory for the format).",
+            "The inventory must be UTF-8 TOML (see reg_meta/DESIGN.md → Inventory "
+            "TOML authoring contract for the format).",
         ) from exc
     try:
         return DeliveryInventory.model_validate(raw)
@@ -712,5 +712,5 @@ def load_inventory(path: Path) -> DeliveryInventory:
             f"Invalid delivery inventory {path}:\n{details}",
             "Each `[[table]]` needs an exact `id`, one explicit finite "
             "`edition`, and its literal `[[table.column]]` entries; see "
-            "reg_meta/DESIGN.md → Steward delivery inventory.",
+            "reg_meta/DESIGN.md → Inventory TOML authoring contract.",
         ) from exc

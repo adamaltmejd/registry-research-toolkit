@@ -121,8 +121,8 @@ class LogicalCoordinate(_OrderModel):
     `PhysicalCoordinate.column`).
 
     `register` is a `BaseModel` method, so the Python attr is `register_name`
-    with a `"register"` alias — the wire key stays the order-contract coordinate spelling
-    (same pattern as `catalog.BindingGroupRef`)."""
+    with a `"register"` alias — the wire key stays the order-contract coordinate
+    spelling (same pattern as `catalog.BindingGroupRef`)."""
 
     provider: str
     register_name: str = Field(alias="register")

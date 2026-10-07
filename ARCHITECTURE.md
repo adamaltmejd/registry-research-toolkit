@@ -138,10 +138,10 @@ Each Python package releases to PyPI on its own tag (`reg_meta/v*`, `reg_meta_bu
   Tiny, focused, no `reg_meta` dep: the schema uses string IDs and leaves resolution to
   the consumer.
 - **`reg_meta → reg_schema`** — the order materializer and project semantic resolution
-  are shared `reg_meta` domain code with thin FastAPI and CLI/plugin adapters that emit
-  byte-identical results. That placement deliberately adds this edge rather than
-  creating another package (decided 2026-08-31 with the order manifest; see
-  `reg_meta/DESIGN.md` → "Order materializer and manifest").
+  consume `ProjectData`, so they live in `reg_meta` as shared domain code. Taking this
+  edge was deliberate, rather than creating another package for them (2026-07-14,
+  #1137). Their thin-adapter contract is `reg_meta/DESIGN.md` → "Order materializer and
+  manifest".
 
 ### Accepted source revisions and catalog generations
 

@@ -239,10 +239,10 @@ describe("ValidationPanel — researcher-language findings", () => {
   });
 
   // The WARNING label, on the partial-availability clip that now reads as one (Y-45
-  // widened the same code to disjoint requested periods): the order includes the
-  // part that IS available, so the label reports availability rather than a fault, and says
-  // nothing about continuous ranges. The code, the info level, the diagnostic path
-  // and the requested/ordered message are the stable part — only the label moved.
+  // widened the same code to disjoint requested periods): the order includes the part
+  // that IS available, so the label reports availability rather than a fault, and says
+  // nothing about continuous ranges. The code, the info level, the diagnostic path and
+  // the requested/ordered message are the stable part — only the label moved.
   it("labels a clean result with notes, reading its partial-availability clip as information", async () => {
     await render(ValidationPanel, {
       result: {

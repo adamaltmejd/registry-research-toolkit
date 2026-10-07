@@ -1,12 +1,12 @@
 """`POST /api/project/order` — the FastAPI adapter over reg_meta's shared order
 materializer, against the slugged ``catalog_db`` fixture.
 
-See DESIGN.md → Project-write surface (routes/project.py) and reg_meta/DESIGN.md
-→ Order materializer and manifest. The endpoint is a THIN adapter, so the materializer's own rules are pinned by
-``reg_meta/tests/test_order.py``; what belongs HERE is the adapter contract: the
-``order.json`` download shape, the "not an order" 422s (an invalid spec and a
-fail-closed blocked order alike — never a partial 200), and the byte-identity
-with the ``reg-meta order`` CLI that is the adapter contract's whole point.
+See DESIGN.md → Project-write surface (routes/project.py) and reg_meta/DESIGN.md → Order
+materializer and manifest. The endpoint is a THIN adapter, so the materializer's own
+rules are pinned by ``reg_meta/tests/test_order.py``; what belongs HERE is the adapter
+contract: the ``order.json`` download shape, the "not an order" 422s (an invalid spec
+and a fail-closed blocked order alike — never a partial 200), and the byte-identity with
+the ``reg-meta order`` CLI that is the adapter contract's whole point.
 
 The fixture is a catalog artifact, so the materializer uses global fallback
 and requires ``steward: "global"`` in the spec below. Steward orderability

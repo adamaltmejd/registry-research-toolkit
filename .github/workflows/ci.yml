@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
+    branches: [main, claude/refactor-12-tail]
   workflow_call:
   # Manual re-fire (#326): GitHub occasionally drops a push event (hit on the
   # #317 rollout — container-build.yml got the event, ci.yml didn't), and the

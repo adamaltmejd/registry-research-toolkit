@@ -7,9 +7,10 @@ layer run first; this one resolves every FQID in a *structurally valid*
 NOT ``reg_schema`` — because ``reg_schema`` is reg_meta-free by design (the
 shared validation surface stays importable without pulling reg_meta); semantic
 rules need the DB. It is shared domain code beside the order materializer
-(reg_meta/DESIGN.md → "Project semantic validation"): the FastAPI ``POST /api/project/validate`` and the
-``reg-meta validate`` CLI are thin adapters over ``validate_project`` and emit
-its canonical bytes (``validation_json``).
+(reg_meta/DESIGN.md → "Project semantic validation"): the FastAPI
+``POST /api/project/validate`` and the ``reg-meta validate`` CLI are thin
+adapters over ``validate_project`` and emit its canonical bytes
+(``validation_json``).
 
 It emits the same frozen ``reg_schema.ValidationIssue`` shape the other layers
 do — composition is tuple concatenation, no merge semantics.
