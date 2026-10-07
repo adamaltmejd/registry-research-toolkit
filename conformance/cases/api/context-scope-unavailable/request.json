@@ -1,0 +1,7 @@
+{
+  "fixture": "reader",
+  "kind": "catalog",
+  "requests": [
+    {"operation": "context", "path": "/api/context", "query": {"scope": "holdings"}}
+  ]
+}

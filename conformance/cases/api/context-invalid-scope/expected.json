@@ -1,0 +1,17 @@
+[
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "scope",
+      "/meta/scope": "holdings"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "years"
+    }
+  }
+]
