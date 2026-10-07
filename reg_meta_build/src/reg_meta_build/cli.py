@@ -1497,9 +1497,8 @@ def _cmd_precheck_slugs(
         # The read-only branch is a snapshot-FRESHNESS check, freeze-agnostic:
         # ANY added/removed/renamed fails CI so a maintainer can't merge slug
         # drift without round-tripping through `--update-snapshot` to commit a
-        # refreshed .snapshot.json (mirrors
-        # test_slug_snapshot.test_snapshot_covers_committed_additions). Zone
-        # freeze state doesn't relax this — it only gates the write side above.
+        # refreshed .snapshot.json. Zone freeze state doesn't relax this — it
+        # only gates the write side above.
         if diff["removed"] or diff["renamed"] or diff["added"]:
             exit_code = EXIT_CONFIG
 
