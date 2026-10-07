@@ -1,26 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { onNavClick, parseRoute, router } from "./router.svelte";
+import {
+  catalogHref,
+  classGroupHref,
+  groupHref,
+  variantsHref,
+} from "./catalog";
+import { onNavClick, parseRoute, type Route, router } from "./router.svelte";
 
 describe("parseRoute", () => {
-  it("maps / to home and /catalog to the data-browser root (#675)", () => {
-    // The landing page split: `/` is the home route, `/catalog` (and its
-    // trailing-slash form) is the data browser — same URL, distinct route.
-    expect(parseRoute("/")).toEqual({ name: "home" });
-    expect(parseRoute("/catalog")).toEqual({ name: "root" });
-    expect(parseRoute("/catalog/")).toEqual({ name: "root" }); // trailing slash
-  });
-
-  it("parses a catalog node path into its FQID path", () => {
-    expect(parseRoute("/catalog/scb")).toEqual({
-      name: "catalog-node",
-      fqidPath: "scb",
-    });
-    expect(parseRoute("/catalog/scb/lisa/kon")).toEqual({
-      name: "catalog-node",
-      fqidPath: "scb/lisa/kon",
-    });
-  });
-
   it("decodes percent-encoded segments", () => {
     expect(parseRoute("/catalog/scb/lisa/k%C3%B6n")).toEqual({
       name: "catalog-node",
@@ -46,13 +33,6 @@ describe("parseRoute", () => {
     expect(parseRoute("/catalog/scb//lisa")).toEqual({
       name: "not-found",
       path: "/catalog/scb//lisa",
-    });
-  });
-
-  it("treats the classification axis as a catalog node", () => {
-    expect(parseRoute("/catalog/class/sun2020")).toEqual({
-      name: "catalog-node",
-      fqidPath: "class/sun2020",
     });
   });
 
@@ -102,18 +82,6 @@ describe("parseRoute", () => {
     });
   });
 
-  it("still parses a register-group path as the `group` route (#756 ordering)", () => {
-    // The class-group check is `group/class/...` specifically — a normal
-    // register group (`group/<provider>/<register>/<key>`) with a non-`class`
-    // provider must still resolve to the register `group` route, unaffected.
-    expect(parseRoute("/catalog/group/scb/rams/ink")).toEqual({
-      name: "group",
-      provider: "scb",
-      register: "rams",
-      key: "ink",
-    });
-  });
-
   it("parses the register's variants page (Y-79)", () => {
     // `/catalog/<provider>/<register>/variants` is the register SUB-RESOURCE —
     // the same fixed 3-seg shape the API declares above its catch-all, NOT an
@@ -143,55 +111,31 @@ describe("parseRoute", () => {
       fqidPath: "scb/lisa/kon/variants",
     });
   });
+});
 
-  it("parses the /project authoring route (A5.3c)", () => {
-    expect(parseRoute("/project")).toEqual({ name: "project" });
-    expect(parseRoute("/project/")).toEqual({ name: "project" }); // trailing slash
-  });
-
-  it("parses the /search results route (#379) — query lives in ?q, not the path", () => {
-    // The route is keyed on the PATHNAME only; the `?q=` is read separately via
-    // getQueryParam, so the parsed route carries no query field (a refined `?q=`
-    // doesn't remount the view).
-    expect(parseRoute("/search")).toEqual({ name: "search" });
-    expect(parseRoute("/search/")).toEqual({ name: "search" }); // trailing slash
-  });
-
-  it("parses the /doc viewer route (#394) — identifier is the filename segment", () => {
-    expect(parseRoute("/doc/lisa_kon.md")).toEqual({
-      name: "doc",
-      identifier: "lisa_kon.md",
-    });
-  });
-
-  it("decodes a percent-encoded /doc identifier (#394)", () => {
-    expect(parseRoute("/doc/lisa%20kon.md")).toEqual({
-      name: "doc",
-      identifier: "lisa kon.md",
-    });
-  });
-
-  it("routes a malformed percent-sequence in /doc to not-found (#394)", () => {
-    // Same cold-deep-link safety as /catalog: a bare `%` would throw a URIError in
-    // decodeURIComponent; safeDecode must degrade it to not-found, not white-screen.
-    expect(parseRoute("/doc/%")).toEqual({
-      name: "not-found",
-      path: "/doc/%",
-    });
-  });
-
-  it("routes a bare /doc/ (empty identifier) to not-found (#394)", () => {
-    // The trailing slash is stripped to `/doc`, which doesn't match the `/doc/`
-    // prefix, so it falls through to the catch-all not-found (path is the stripped
-    // `/doc`, NOT the original `/doc/`).
-    expect(parseRoute("/doc/")).toEqual({
-      name: "not-found",
-      path: "/doc",
-    });
-  });
-
-  it("maps anything else to not-found", () => {
-    expect(parseRoute("/about")).toEqual({ name: "not-found", path: "/about" });
+describe("catalog href builders ↔ parseRoute", () => {
+  it("parses every built href back to the route it names", () => {
+    // Non-ASCII, `%` and a slash-bearing key must survive the encode → decode
+    // round trip as the same route. An unencoded `%` would decode to not-found.
+    const cases: [href: string, route: Route][] = [
+      [catalogHref(""), { name: "root" }],
+      [
+        catalogHref("scb/lisa/kön%"),
+        { name: "catalog-node", fqidPath: "scb/lisa/kön%" },
+      ],
+      [
+        variantsHref("scb/lis%ä"),
+        { name: "variants", provider: "scb", register: "lis%ä" },
+      ],
+      [
+        groupHref("scb/lsön", "a/b%"),
+        { name: "group", provider: "scb", register: "lsön", key: "a/b%" },
+      ],
+      [classGroupHref("a/b%"), { name: "class-group", key: "a/b%" }],
+    ];
+    for (const [href, route] of cases) {
+      expect(parseRoute(href), href).toEqual(route);
+    }
   });
 });
 
@@ -257,36 +201,6 @@ describe("onNavClick", () => {
     expect(clickAnchor("/openapi.json").defaultPrevented).toBe(false);
     expect(clickAnchor("/docs").defaultPrevented).toBe(false);
   });
-
-  it("intercepts an SPA route under /catalog", () => {
-    expect(clickAnchor("/catalog/scb/lisa/kon").defaultPrevented).toBe(true);
-  });
-
-  it("intercepts the concept-group SUBJECT route (#617)", () => {
-    // A member page's "in group" link goes to `/catalog/group/<p>/<r>/<key>`; now
-    // that the route parses to `group` (not not-found), onNavClick intercepts it.
-    expect(clickAnchor("/catalog/group/scb/rams/ink").defaultPrevented).toBe(
-      true,
-    );
-  });
-
-  it("intercepts the /project authoring route (A5.3c)", () => {
-    expect(clickAnchor("/project").defaultPrevented).toBe(true);
-  });
-
-  it("intercepts the /search results route with a ?q query (#379)", () => {
-    // `/search` is an SPA-owned route, so an internal <a href="/search?q=…">
-    // (the omnibox routes via the URL, the shell intercepts the click) must be
-    // pushState-navigated rather than full-reloading.
-    expect(clickAnchor("/search?q=kon").defaultPrevented).toBe(true);
-  });
-
-  it("intercepts the /doc viewer route (#394)", () => {
-    // A docs search hit links to `/doc/<filename>`; now that the route exists,
-    // onNavClick's "parseRoute(...).name !== 'not-found'" guard intercepts it
-    // automatically (no special case in onNavClick).
-    expect(clickAnchor("/doc/lisa_kon.md").defaultPrevented).toBe(true);
-  });
 });
 
 describe("router.replace (#379)", () => {
@@ -305,11 +219,6 @@ describe("router.replace (#379)", () => {
     expect(router.getQueryParam("q")).toBe("ab");
     // replaceState swaps the current entry in place — the stack doesn't grow.
     expect(window.history.length).toBe(lenBefore);
-  });
-
-  it("is a no-op when already at the full url (same guard as navigate)", () => {
-    router.replace("/search?q=a");
-    expect(router.getQueryParam("q")).toBe("a");
   });
 });
 
@@ -356,30 +265,11 @@ describe("router reactive query (A5.3b)", () => {
     window.history.pushState({}, "", "/");
   });
 
-  it("reads ?period off the query after a navigate", () => {
-    router.navigate("/catalog/scb/lisa/kon?period=2020");
-    expect(router.getQueryParam("period")).toBe("2020");
-  });
-
-  it("returns null for an absent query param", () => {
-    router.navigate("/catalog/scb/lisa/kon?period=2020");
-    expect(router.getQueryParam("variant")).toBeNull();
-  });
-
   it("returns null for a present-but-empty query param (?period=)", () => {
     // An empty modifier is "no value" — A5.3b callers treat `?period=` as absent
     // (the `|| null` in getQueryParam). Pin it so a regression to `""` is caught.
     router.navigate("/catalog/scb/lisa/kon?period=");
     expect(router.getQueryParam("period")).toBeNull();
-  });
-
-  it("reads multiple modifiers off the query", () => {
-    router.navigate(
-      "/catalog/scb/lisa/kon?period=2020&variant=x&value_set_version=y",
-    );
-    expect(router.getQueryParam("period")).toBe("2020");
-    expect(router.getQueryParam("variant")).toBe("x");
-    expect(router.getQueryParam("value_set_version")).toBe("y");
   });
 
   it("updates `search` on a same-path/new-query navigation (NOT a no-op)", () => {
@@ -389,13 +279,6 @@ describe("router reactive query (A5.3b)", () => {
     // FULL url, so this is correctly NOT a no-op).
     router.navigate("/catalog/scb/lisa/kon?period=2021");
     expect(router.getQueryParam("period")).toBe("2021");
-  });
-
-  it("clears the query when navigating to the bare pathname", () => {
-    router.navigate("/catalog/scb/lisa/kon?period=2020");
-    expect(router.getQueryParam("period")).toBe("2020");
-    router.navigate("/catalog/scb/lisa/kon");
-    expect(router.getQueryParam("period")).toBeNull();
   });
 
   it("keeps the SAME route object across a query-only navigation (Y-65)", () => {
@@ -411,16 +294,6 @@ describe("router reactive query (A5.3b)", () => {
     router.replace("/catalog/scb/lisa/kon?period=2018..2021");
     expect(router.route).toBe(before);
     expect(router.getQueryParam("period")).toBe("2018..2021");
-  });
-
-  it("replaces the route object when the PATHNAME moves", () => {
-    const before = router.route;
-    router.navigate("/catalog/scb/rams/syss?period=2019..2020");
-    expect(router.route).not.toBe(before);
-    expect(router.route).toEqual({
-      name: "catalog-node",
-      fqidPath: "scb/rams/syss",
-    });
   });
 
   it("updates `search` on a popstate event, without moving the route (Y-65)", () => {

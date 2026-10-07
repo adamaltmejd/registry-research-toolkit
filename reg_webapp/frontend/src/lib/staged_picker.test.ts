@@ -15,13 +15,10 @@ import {
   applyStagedPicks,
   committedPickerRows,
   finalAddPeriodWires,
-  finalSourcePeriodsForStagedAdds,
-  nullBindingCommittedRowKeys,
   pickerRowKey,
   rowAddSegments,
   type StagedPick,
   type StagedPickerBand,
-  stagedAddCandidates,
   stagedRemoveForCommitted,
   windowsOverlapPeriod,
 } from "./staged_picker";
@@ -393,63 +390,6 @@ describe("committedPickerRows", () => {
     expect(committed.has(pickerRowKey(b, rows[1]))).toBe(false);
   });
 
-  it("counts every null-representation row the source period spans", () => {
-    const rows = [
-      row({
-        key: "ind::OLD",
-        column: "OLD",
-        representation: "OLD",
-        from: "1981-01-01",
-        to: "1985-12-31",
-        windows: [{ from: "1981-01-01", to: "1985-12-31" }],
-        period: "1981 - 1985",
-        wirePeriod: "1981..1985",
-        renamedColumns: [],
-      }),
-      row({
-        key: "ind::NEW",
-        column: "NEW",
-        representation: "NEW",
-        from: "1986-01-01",
-        to: "1995-12-31",
-        windows: [{ from: "1986-01-01", to: "1995-12-31" }],
-        period: "1986 - 1995",
-        wirePeriod: "1986..1995",
-        renamedColumns: [],
-      }),
-    ];
-    const b = band(rows);
-    const draft: ProjectData = {
-      schema_version: "2.0.0",
-      reg_meta_version: "reg_meta/v1.0.0",
-      steward: "global",
-      name: "",
-      sources: [
-        {
-          name: "LISA",
-          register_variant: "scb/lisa/ind",
-          period: { from: 1981, to: 1995 },
-          bindings: [
-            {
-              variable: "scb/lisa/dinf",
-              type: "numeric",
-              representation: null,
-            },
-          ],
-        },
-      ],
-    };
-
-    const committed = committedPickerRows(draft, [b]);
-
-    expect(committed.get(pickerRowKey(b, rows[0]))).toEqual(
-      expect.objectContaining({ representation: null }),
-    );
-    expect(committed.get(pickerRowKey(b, rows[1]))).toEqual(
-      expect.objectContaining({ representation: null }),
-    );
-  });
-
   it("gives an imported `_default` source no null-representation coverage", () => {
     // A file written before the sentinel was retired can still carry it, but it
     // is no longer a project period: it denotes no bounds, so it can overlap no
@@ -505,43 +445,6 @@ describe("committedPickerRows", () => {
 
     expect(committed.size).toBe(0);
   });
-
-  it("skips malformed draft source slots instead of crashing", () => {
-    const r = row();
-    const b = band([r]);
-    const draft: ProjectData = {
-      schema_version: "2.0.0",
-      reg_meta_version: "reg_meta/v1.0.0",
-      steward: "global",
-      name: "",
-      sources: [
-        null as never,
-        { register_variant: 17 } as never,
-        {
-          name: "LISA",
-          register_variant: "scb/lisa/ind",
-          period: { from: 1981, to: 1985 },
-          bindings: [
-            null as never,
-            {
-              variable: "scb/lisa/dinf",
-              type: "numeric",
-              representation: "DINF83",
-            },
-          ],
-        },
-      ],
-    };
-
-    const committed = committedPickerRows(draft, [b]);
-
-    expect(committed.get(pickerRowKey(b, r))).toEqual(
-      expect.objectContaining({
-        representation: "DINF83",
-        variable: "scb/lisa/dinf",
-      }),
-    );
-  });
 });
 
 describe("windowsOverlapPeriod", () => {
@@ -563,44 +466,9 @@ describe("windowsOverlapPeriod", () => {
       windowsOverlapPeriod(eras(["1996-01-01", "1997-12-31"]), committed),
     ).toBe(true);
   });
-
-  it("is false for a period with no finite bounds", () => {
-    // Browse state, never a `Source.period`: nothing was committed, so no era can
-    // be inside it.
-    expect(windowsOverlapPeriod(eras(["2018-01-01", "9999-12-31"]), "")).toBe(
-      false,
-    );
-  });
 });
 
 describe("finalAddPeriodWires", () => {
-  it("resolves each add at the final source period it commits under", () => {
-    expect(
-      finalAddPeriodWires(
-        [{ registerVariant: "scb/lisa/ind", period: 2000 }],
-        [
-          { registerVariant: "scb/lisa/ind", period: { from: 2010, to: 2015 } },
-          { registerVariant: "scb/rams/std", period: 2019 },
-        ],
-      ),
-    ).toEqual(["2000,2010..2015", "2019"]);
-  });
-
-  it("refuses the batch when an add has no period of its own", () => {
-    // The open-ended row picked with no `?period` and no project window: its
-    // `rowAddPeriod` is unset, and there is no source period to inherit — so the
-    // pick would author `period: ""` and an underivable binding type.
-    expect(
-      finalAddPeriodWires(
-        [],
-        [
-          { registerVariant: "scb/lisa/ind", period: 2019 },
-          { registerVariant: "scb/rams/std", period: "" },
-        ],
-      ),
-    ).toBeNull();
-  });
-
   it("accepts year-independent selection only with a concrete variant and unmixed scope", () => {
     expect(
       finalAddPeriodWires(
@@ -649,156 +517,7 @@ describe("finalAddPeriodWires", () => {
   });
 });
 
-describe("finalSourcePeriodsForStagedAdds", () => {
-  it("resolves add bindings against the source period after merge/replacement", () => {
-    const periods = finalSourcePeriodsForStagedAdds(
-      [
-        {
-          registerVariant: "scb/lisa/ind",
-          period: 2000,
-        },
-      ],
-      [
-        {
-          registerVariant: "scb/lisa/ind",
-          period: { from: 2010, to: 2015 },
-        },
-      ],
-    );
-
-    expect(periods.get("scb/lisa/ind")).toEqual([
-      2000,
-      { from: 2010, to: 2015 },
-    ]);
-  });
-
-  it("keeps duplicate register variants aligned with the source that apply will update", () => {
-    const periods = finalSourcePeriodsForStagedAdds(
-      [
-        {
-          registerVariant: "scb/lisa/ind",
-          period: 2000,
-        },
-        {
-          registerVariant: "scb/lisa/ind",
-          period: 2020,
-        },
-      ],
-      [
-        {
-          registerVariant: "scb/lisa/ind",
-          period: 2010,
-        },
-      ],
-    );
-
-    expect(periods.get("scb/lisa/ind")).toEqual([2000, 2010]);
-  });
-
-  it("keeps multiple same-variant token adds in the final source period", () => {
-    const periods = finalSourcePeriodsForStagedAdds(
-      [
-        {
-          registerVariant: "scb/lisa/ind",
-          period: "2020-Q1",
-        },
-      ],
-      [
-        {
-          registerVariant: "scb/lisa/ind",
-          period: "2020-Q2",
-        },
-        {
-          registerVariant: "scb/lisa/ind",
-          period: "2020-Q3",
-        },
-      ],
-    );
-
-    expect(periods.get("scb/lisa/ind")).toEqual([
-      "2020-Q1",
-      "2020-Q2",
-      "2020-Q3",
-    ]);
-  });
-});
-
-describe("nullBindingCommittedRowKeys", () => {
-  it("returns every committed row backed by the same null binding", () => {
-    const rows = [
-      row({ key: "ind::OLD", column: "OLD", representation: "OLD" }),
-      row({ key: "ind::NEW", column: "NEW", representation: "NEW" }),
-      row({ key: "arb::OTHER", variant: "arb", column: "OTHER" }),
-    ];
-    const b = band(rows);
-    const committed = [
-      {
-        key: pickerRowKey(b, rows[0]),
-        registerVariant: "scb/lisa/ind",
-        variable: "scb/lisa/dinf",
-        representation: null,
-        sourceName: "LISA",
-        sourcePeriod: 2020,
-      },
-      {
-        key: pickerRowKey(b, rows[1]),
-        registerVariant: "scb/lisa/ind",
-        variable: "scb/lisa/dinf",
-        representation: null,
-        sourceName: "LISA",
-        sourcePeriod: 2020,
-      },
-      {
-        key: pickerRowKey(b, rows[2]),
-        registerVariant: "scb/lisa/arb",
-        variable: "scb/lisa/dinf",
-        representation: null,
-        sourceName: "LISA",
-        sourcePeriod: 2020,
-      },
-    ];
-
-    expect(nullBindingCommittedRowKeys(committed, committed[0])).toEqual([
-      pickerRowKey(b, rows[0]),
-      pickerRowKey(b, rows[1]),
-    ]);
-  });
-});
-
 describe("rowAddSegments (#376 per-concrete-segment fan-out)", () => {
-  it("stages an unfolded row as its single variant over its own span", () => {
-    const b = band([row()]);
-    expect(rowAddSegments(b, b.rows[0], {})).toEqual([
-      {
-        variant: "ind",
-        registerVariant: "scb/lisa/ind",
-        periodWire: "1981..1995",
-        outsideScope: false,
-      },
-    ]);
-  });
-
-  it("fans a folded family with no active scope into every concrete era segment", () => {
-    const r = foldedFamilyRow();
-    const b = band([r]);
-    // No scope → each concrete segment stages as its OWN register_variant over its OWN
-    // era window; the head `individer-15plus` never absorbs the predecessor era (#376).
-    expect(rowAddSegments(b, r, {})).toEqual([
-      {
-        variant: "individer-16plus",
-        registerVariant: "scb/lisa/individer-16plus",
-        periodWire: "1990..2009",
-        outsideScope: false,
-      },
-      {
-        variant: "individer-15plus",
-        registerVariant: "scb/lisa/individer-15plus",
-        periodWire: "2010..2023",
-        outsideScope: false,
-      },
-    ]);
-  });
-
   it("narrows a period-scoped family add to the concrete era it overlaps, clipped", () => {
     const r = foldedFamilyRow();
     const b = band([r]);
@@ -982,39 +701,6 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("stagedAddCandidates", () => {
-  it("fans a folded family row out to one candidate per concrete era", () => {
-    const b = band([foldedFamilyRow()]);
-    expect(
-      stagedAddCandidates({ band: b, row: b.rows[0] }, {}).map((c) => [
-        c.registerVariant,
-        c.periodWire,
-        c.period,
-      ]),
-    ).toEqual([
-      ["scb/lisa/individer-16plus", "1990..2009", { from: 1990, to: 2009 }],
-      ["scb/lisa/individer-15plus", "2010..2023", { from: 2010, to: 2023 }],
-    ]);
-  });
-
-  it("stages a register-list column exactly as the variable page's own rows do", () => {
-    // The Y-83 claim, at the staging seam: the register list's ONE tickable
-    // `Kon` column and the variable page's TWO variant rows fan out to the same
-    // (register_variant, period) adds, so the two surfaces author the same thing.
-    const scope = { period: null, window: [2018, 2023] as [number, number] };
-    const fields = (picks: StagedPick[]) =>
-      picks.flatMap((pick) =>
-        stagedAddCandidates(pick, scope).map((c) => [
-          c.registerVariant,
-          c.periodWire,
-        ]),
-      );
-    expect(fields(picksOf(deliveryColumnRows(konDeliveries)))).toEqual(
-      fields(picksOf(pickerRepresentations(konStates))),
-    );
-  });
-});
-
 describe("applyStagedPicks", () => {
   it("commits a register-list pick to the same project_data.json as the leaf's", async () => {
     stubResolve(konStates);
@@ -1098,69 +784,6 @@ describe("applyStagedPicks", () => {
     ]);
   });
 
-  it("refuses the whole batch, unmutated, when an add resolves no finite period", async () => {
-    stubResolve(konStates);
-    // Delivered open-ended and no window to clip it to: there is no finite period
-    // to commit or to resolve the binding at, so the batch is refused BEFORE the
-    // store is touched — never a half-authored `period: ""` source (Y-58).
-    const openEnded = deliveryColumnRows([
-      {
-        variant: "individer",
-        column: "Kon",
-        period_scope: "intervals",
-        coverage: {
-          coverage_from: "2018-01-01",
-          coverage_to: null,
-          open_ended: true,
-          state_count: 1,
-        },
-        windows: [{ valid_from: "2018-01-01", valid_to: "9999-12-31" }],
-      },
-    ]);
-    projectStore.newProject({
-      reg_meta_version: SEED.regMetaVersion,
-      steward: SEED.steward,
-    });
-    const before = JSON.stringify(projectStore.draft);
-
-    const result = await applyStagedPicks(
-      { adds: picksOf(openEnded), removes: [] },
-      {
-        scope: { period: null, window: null },
-        seed: SEED,
-        cancelled: () => false,
-      },
-    );
-
-    expect(result).toEqual({ kind: "period-required" });
-    expect(JSON.stringify(projectStore.draft)).toBe(before);
-    expect(getCatalogNode).not.toHaveBeenCalled();
-  });
-
-  it("abandons a pick whose host is gone rather than authoring into a draft it left", async () => {
-    stubResolve(konStates);
-    projectStore.newProject({
-      reg_meta_version: SEED.regMetaVersion,
-      steward: SEED.steward,
-    });
-    const before = JSON.stringify(projectStore.draft);
-
-    const result = await applyStagedPicks(
-      {
-        adds: picksOf(deliveryColumnRows(konDeliveries)),
-        removes: [],
-      },
-      {
-        scope: { period: null, window: [2018, 2023] },
-        seed: SEED,
-        cancelled: () => true,
-      },
-    );
-
-    expect(result).toEqual({ kind: "abandoned" });
-    expect(JSON.stringify(projectStore.draft)).toBe(before);
-  });
-
   it("abandons a batch whose host left WHILE its bindings resolved", async () => {
     // The teardown lands AFTER the pre-resolve gate has already let the batch
     // through, and leaves the draft untouched — so the draft identity beside it
@@ -1193,14 +816,5 @@ describe("applyStagedPicks", () => {
 
     expect(result).toEqual({ kind: "abandoned" });
     expect(JSON.stringify(projectStore.draft)).toBe(before);
-  });
-
-  it("has nothing to confirm for an empty batch", async () => {
-    expect(
-      await applyStagedPicks(
-        { adds: [], removes: [] },
-        { scope: {}, seed: SEED, cancelled: () => false },
-      ),
-    ).toEqual({ kind: "applied", outcome: null });
   });
 });

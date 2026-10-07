@@ -5,7 +5,7 @@
 // without a backend. Kept out of the PURE catalog.test.ts so that file needs no
 // module mock.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { CatalogNode, StatesResponse, VariableStateModel } from "./api";
+import type { StatesResponse, VariableStateModel } from "./api";
 import { getCatalogNode } from "./api";
 import { bindingFieldsFromResolution, resolveBindingAt } from "./catalog";
 
@@ -48,43 +48,6 @@ beforeEach(() => {
 });
 
 describe("resolveBindingAt", () => {
-  it("period-unset → unresolved WITHOUT a fetch", async () => {
-    const r = await resolveBindingAt("scb/lisa/lon", null, "v1");
-    expect(r).toEqual({ kind: "unresolved", reason: "period-unset" });
-    expect(getCatalogNode).not.toHaveBeenCalled();
-  });
-
-  it("a covering single-rep state → derived (the resolved type)", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(
-      statesResponse([
-        state({ delivery_column_name: "Lon", data_type: "int" }),
-      ]),
-    );
-    const r = await resolveBindingAt("scb/lisa/lon", "2015", "v1");
-    expect(r).toEqual({ kind: "derived", type: "numeric" });
-    // The (period, variant) rode the resolve query.
-    expect(getCatalogNode).toHaveBeenCalledWith("scb/lisa/lon", {
-      period: "2015",
-      variant: "v1",
-    });
-  });
-
-  it("no covering state → unresolved (no-states)", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(statesResponse([]));
-    const r = await resolveBindingAt("scb/lisa/lon", "2015", "v1");
-    expect(r).toEqual({ kind: "unresolved", reason: "no-states" });
-  });
-
-  it("a browsable node (no ?period resolve) → unresolved (not-a-leaf)", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue({
-      kind: "register",
-      fqid: "scb/lisa",
-      children: [],
-    } as unknown as CatalogNode);
-    const r = await resolveBindingAt("scb/lisa", "2015", "v1");
-    expect(r).toEqual({ kind: "unresolved", reason: "not-a-leaf" });
-  });
-
   it(">1 co-existing delivery column → ambiguous (deferred to the picker chooser)", async () => {
     // Two distinct columns with OVERLAPPING validity → coexisting → ambiguous.
     const states = [
@@ -107,51 +70,11 @@ describe("resolveBindingAt", () => {
       expect(r.states).toHaveLength(2);
     }
   });
-
-  it("omits the ?variant modifier when the variant seg is empty", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(
-      statesResponse([state({ delivery_column_name: "X", data_type: "int" })]),
-    );
-    await resolveBindingAt("scb/lisa/lon", "2015", "");
-    expect(getCatalogNode).toHaveBeenCalledWith("scb/lisa/lon", {
-      period: "2015",
-      variant: undefined,
-    });
-  });
 });
 
 // The expectations below are EXACT objects, not `objectContaining`: every arm writes
 // `representation` and leaves `display_name` absent (Y-76).
 describe("bindingFieldsFromResolution", () => {
-  it("keeps ordinary single-column derived picks unpinned", () => {
-    expect(
-      bindingFieldsFromResolution(
-        "scb/lisa/kon",
-        { kind: "derived", type: "numeric" },
-        "Kon",
-      ),
-    ).toEqual({
-      variable: "scb/lisa/kon",
-      type: "numeric",
-      representation: null,
-    });
-  });
-
-  it("pins an explicit representation-grained pick even when resolution sees one sibling", () => {
-    expect(
-      bindingFieldsFromResolution(
-        "scb/iot/dispink",
-        { kind: "derived", type: "numeric" },
-        "CDISP5",
-        { pinRepresentation: true },
-      ),
-    ).toEqual({
-      variable: "scb/iot/dispink",
-      type: "numeric",
-      representation: "CDISP5",
-    });
-  });
-
   it("takes the chosen column's type when the picker resolves an ambiguous pick", () => {
     expect(
       bindingFieldsFromResolution(

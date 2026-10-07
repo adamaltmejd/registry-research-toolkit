@@ -64,7 +64,7 @@ replaced.
    rationale, "Frontend toolchain" for the lint/check/codegen setup, and "SPA routing +
    production fallback" if the change touches routing.
 3. `reg_webapp/frontend/src/tokens.css` — the roles as implemented, which
-   `src/design_md.test.ts` holds to the DESIGN.md front matter.
+   `bun run lint:tokens` holds to the DESIGN.md front matter.
 4. `reg_webapp/frontend/src/lib/ui/` — the primitive barrel (`index.ts`, `types.ts`)
    plus the one or two primitives closest to what you are building.
 5. The closest existing view under `frontend/src/lib/` and its `*.browser.test.ts` —
