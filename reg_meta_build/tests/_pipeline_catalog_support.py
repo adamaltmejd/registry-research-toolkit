@@ -61,7 +61,10 @@ class CatalogFixture:
 @pytest.fixture
 def catalog(tmp_path: Path, request) -> CatalogFixture:
     mode = getattr(request, "param", False)
-    second = mode is True or mode == "unknown_support"
+    second = mode in {True, "unknown_support", "shared_var"}
+    # "shared_var": the second register's variable reuses the first's native
+    # variable id, so the two differ only by their register's native id.
+    other_var = 101 if mode == "shared_var" else 201
     thin = mode in {"thin", "thin_two"}
     source = tmp_path / "source"
     records = [var_row(cvid=1001, var_id=101, colname="VALUE", data_type="int")]
@@ -72,7 +75,7 @@ def catalog(tmp_path: Path, request) -> CatalogFixture:
         records.append(
             var_row(
                 cvid=2001,
-                var_id=201,
+                var_id=other_var,
                 colname="OTHER",
                 varname="OtherVar",
                 data_type="int",
@@ -138,7 +141,7 @@ def catalog(tmp_path: Path, request) -> CatalogFixture:
         (registers / "other.toml").write_text(
             '[register]\nprovider = "scb"\nslug = "other"\nnative_id = "2"\n'
             '[[variant]]\nnative_id = "2.20"\nslug = "people"\n'
-            '[[variable]]\nnative_id = "2.201"\nslug = "value"\n',
+            f'[[variable]]\nnative_id = "2.{other_var}"\nslug = "value"\n',
             encoding="utf-8",
         )
     if thin:

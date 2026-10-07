@@ -1678,31 +1678,28 @@ def declared_column_ownership(
 
 
 def _entity_key_curation_basis(
-    slug_dir: Path, *, flavored: bool
-) -> tuple[dict[tuple[str, str], str], set[int] | None]:
-    """The (curated `[variable]` slug map, flavored steward-register scope) the
-    entity-key gate and generator BOTH read, from a single glob of ``slug_dir``.
+    slug_dir: Path,
+) -> tuple[dict[tuple[str, str], str], dict[tuple[str, str], str]]:
+    """The (curated `[variable]` slug map, register native-id map) the entity-key
+    gate and generator BOTH read, from a single glob of ``slug_dir``.
 
-    Returns ``(curated, scope)`` where ``curated`` is the
-    ``{(provider, source_id): slug}`` map and ``scope`` is the register-id filter
-    handed to `iter_entity_key_variables`. ``scope`` is None unless ``flavored``
-    (global build = all providers under mandatory curation); when flavored it is
-    the set of STEWARD register ids the ``slug_dir`` curates — its ``[register]``
-    entries' source ids (#559) — NOT a provider-slug set. Register-scoping is
-    deliberate: a steward overlay may reuse a provider slug that also has global
-    base registers, so a provider-slug scope would re-pull those global registers;
-    scoping by the curated register ids includes only steward-overlay registers.
-    Shared so the gate (`validate._check_entity_key_vars_curated`) and generator
-    (`infer_entity_key_pins`) enumerate the identical basis — the same
-    can't-disagree contract `iter_entity_key_variables` already enforces."""
+    Returns ``(curated, native_ids)``: ``curated`` is the
+    ``{(provider, source_id): slug}`` map and ``native_ids`` is
+    ``{(provider, register slug): register native id}``, from the dir's register
+    entries, handed to `iter_entity_key_variables`. A built catalog keys registers
+    by a surrogate minted from the slug path and keeps no native id (#1215), so a
+    catalog register finds the native id its variable pins are keyed on through its
+    slug path. On the flavored path (#559) the same map is the steward scope: the
+    registers the steward ``slug_dir`` names. Shared so the gate
+    (`validate._check_entity_key_vars_curated`) and generator
+    (`infer_entity_key_pins`) enumerate the identical basis."""
     entries = iter_curated_provider_entries(slug_dir)
-    curated = _curated_variable_slugs(entries)
-    register_ids = (
-        {_parse_register_id(e.source_id) for e in entries if e.kind == "register"}
-        if flavored
-        else None
-    )
-    return curated, register_ids
+    native_ids = {
+        (e.provider, e.slug): e.source_id
+        for e in entries
+        if e.kind == "register" and e.provider is not None and e.slug is not None
+    }
+    return _curated_variable_slugs(entries), native_ids
 
 
 def _auto_variable_slugs(auto_entries: list[SlugEntry]) -> dict[str, str]:
@@ -1816,13 +1813,18 @@ def write_auto_toml(
 # steward dir. Scoping by REGISTER (not provider): `extend_db` lets a steward
 # overlay reuse an existing provider slug that ALSO has global base registers, so
 # a provider-slug filter would re-pull that provider's global registers too. The
-# flavored caller passes `register_ids={the [register] entries in the steward
-# slug_dir}` so the gate/generator enforce/emit ONLY the steward-overlay
+# flavored caller scopes to the registers its steward slug_dir names (`[register]`
+# entries) so the gate/generator enforce/emit ONLY the steward-overlay
 # registers. Register-scoping is REQUIRED for correctness, not just to dodge
 # false failures: `_variable_source_ids` is unsafe on a flavored DB for GLOBAL
 # registers (split-sibling discriminators can diverge from the incremental slug
 # path), so the filter must skip a non-steward register's row BEFORE that helper
 # runs.
+#
+# Both scopes key a variable's source_id on its register's NATIVE id, the key its
+# curated pin carries. A built catalog's `register_id` is a surrogate minted from
+# the slug path (#1215), so the native id comes from the slug dir's register entry
+# for the catalog row's (provider, register slug), as `seed_all` does.
 
 
 def _decode_panel_entity_key_refs(raw: str | None) -> tuple[str, ...]:
@@ -1909,8 +1911,9 @@ def _variable_source_ids(
 
 def iter_entity_key_variables(
     conn: sqlite3.Connection,
+    register_native_ids: Mapping[tuple[str, str], str],
     *,
-    register_ids: set[int] | None = None,
+    scoped: bool = False,
 ) -> Iterator[EntityKeyVariable]:
     """Yield every panel entity-key variable on a built DB.
 
@@ -1925,23 +1928,27 @@ def iter_entity_key_variables(
 
     Shared by the pin generator (`infer_entity_key_pins`) and the curation gate
     (`validate._check_entity_key_vars_curated`) so the two can't disagree on
-    which variables need a pin. Default (``register_ids=None``) is GENERAL: it
-    yields every register's entity-key vars, the unscoped behavior the GLOBAL
-    build/generator + gate use (#554, all global providers under mandatory
-    curation).
+    which variables need a pin.
 
-    ``register_ids`` (a set of register ids) feeds the FLAVORED (steward-scoped)
-    gate/generator (#559): a flavored DB carries the global base PLUS a steward
-    overlay, but only the STEWARD-OVERLAY registers belong to the steward slug
-    dir, so the flavored caller passes the steward register ids (the `[register]`
-    entries in the steward slug dir) to enforce/emit ONLY those — leaving the
-    global base's registers out even when a steward register reuses their
-    provider (`extend_db` allows that overlap). The filter is applied at the TOP
-    of the row loop — a non-matching register's row is skipped BEFORE
-    `_variable_source_ids` runs for it, which MATTERS for correctness:
-    `_variable_source_ids` is documented unsafe on a flavored DB for GLOBAL
-    registers (split-sibling discriminators can diverge from the incremental slug
-    path), so a global register's row must never reach it. Steward-overlay
+    ``register_native_ids`` maps ``(provider, register slug)`` to the register's
+    native id, the prefix of its variables' source ids (the key a curated pin
+    carries). A built catalog's ``register_id`` is a surrogate minted from the slug
+    path (#1215), so it is never the prefix. Default (``scoped=False``) is GENERAL:
+    it yields every register's entity-key vars, the unscoped behavior the GLOBAL
+    build/generator + gate use (#554, all global providers under mandatory
+    curation), and refuses a register with no native id
+    (``entity_key_register_unknown``) rather than skip its variables.
+
+    ``scoped=True`` feeds the FLAVORED (steward-scoped) gate/generator (#559): a
+    flavored DB carries the global base PLUS a steward overlay, but only the
+    STEWARD-OVERLAY registers belong to the steward slug dir, so a register the map
+    does not name is skipped — leaving the global base's registers out even when a
+    steward register reuses their provider (`extend_db` allows that overlap). The
+    filter is applied at the TOP of the row loop — a non-matching register's row is
+    skipped BEFORE `_variable_source_ids` runs for it, which MATTERS for
+    correctness: `_variable_source_ids` is documented unsafe on a flavored DB for
+    GLOBAL registers (split-sibling discriminators can diverge from the incremental
+    slug path), so a global register's row must never reach it. Steward-overlay
     registers are all-new variables, so `_variable_source_ids` is safe on them."""
     rows = conn.execute(
         "SELECT rv.register_id, rv.panel_entity_key, "
@@ -1955,8 +1962,19 @@ def iter_entity_key_variables(
     source_ids_by_register: dict[int, dict[int, str]] = {}
     seen: set[int] = set()
     for row in rows:
-        if register_ids is not None and row["register_id"] not in register_ids:
-            continue  # flavored scope: skip non-steward registers before _variable_source_ids
+        native_id = register_native_ids.get(
+            (row["provider_slug"], row["register_slug"])
+        )
+        if native_id is None:
+            if scoped:
+                continue  # flavored scope: skip non-steward registers before _variable_source_ids
+            raise _err(
+                "entity_key_register_unknown",
+                f"{row['provider_slug']}/{row['register_slug']}: no register entry "
+                "in the slug dir names its native id, so its entity-key variables "
+                "have no pin key.",
+                "Pass the curation tree that built the catalog (`--slug-dir`).",
+            )
         register_id = row["register_id"]
         for slug in _decode_panel_entity_key_refs(row["panel_entity_key"]):
             hit = conn.execute(
@@ -1972,7 +1990,7 @@ def iter_entity_key_variables(
             seen.add(variable_id)
             if register_id not in source_ids_by_register:
                 source_ids_by_register[register_id] = _variable_source_ids(
-                    conn, register_id, register_native_id=str(register_id)
+                    conn, register_id, register_native_id=native_id
                 )
             yield EntityKeyVariable(
                 provider_slug=row["provider_slug"],
@@ -2027,11 +2045,11 @@ def infer_entity_key_pins(
 
     ``flavored=True`` (#559) reads the STEWARD ``slug_dir`` and scopes to the
     steward registers that dir curates — emitting steward pins only. The steward
-    scope is the set of register ids the ``[register]`` entries name, so the
+    scope is the set of registers the ``[register]`` entries name, so the
     global base's registers are excluded even when a steward register reuses their
     provider (and `iter_entity_key_variables`'s flavored-unsafe
     `_variable_source_ids` never runs on a global register)."""
-    curated, scope = _entity_key_curation_basis(slug_dir, flavored=flavored)
+    curated, native_ids = _entity_key_curation_basis(slug_dir)
     pins = [
         EntityKeyPin(
             provider_slug=ek.provider_slug,
@@ -2040,7 +2058,7 @@ def infer_entity_key_pins(
             register_slug=ek.register_slug,
             variable_slug=ek.variable_slug,
         )
-        for ek in iter_entity_key_variables(conn, register_ids=scope)
+        for ek in iter_entity_key_variables(conn, native_ids, scoped=flavored)
         if (ek.provider_slug, ek.source_id) not in curated
     ]
     pins.sort(key=lambda p: (p.provider_slug, _source_id_sort_key(p.source_id)))

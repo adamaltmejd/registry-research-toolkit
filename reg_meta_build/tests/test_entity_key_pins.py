@@ -100,10 +100,19 @@ def _add_sos_entity_key(conn: sqlite3.Connection) -> None:
     conn.commit()
 
 
+# The fixture registers' native ids by (provider, register slug), as a slug dir's
+# register entries name them; pins key on these, never on the catalog's id.
+_NATIVE_IDS = {("scb", "lisa"): "1", ("sos", "dors"): "500"}
+
+
 def _slug_dir(tmp_path: Path, scb_body: str = "") -> Path:
+    """A global slug dir naming both fixture registers; ``scb_body`` adds pins."""
     d = tmp_path / "slugs"
     d.mkdir()
-    (d / "scb.toml").write_text(scb_body, encoding="utf-8")
+    (d / "scb.toml").write_text(
+        '[register."1"]\nslug = "lisa"\n' + scb_body, encoding="utf-8"
+    )
+    (d / "sos.toml").write_text('[register."500"]\nslug = "dors"\n', encoding="utf-8")
     return d
 
 
@@ -171,7 +180,7 @@ class TestEnumerate:
         """A bare `panel_entity_key` slug resolves to its variable in the
         variant's register, carrying the build source_id (`<reg>.<provider_key>`)."""
         conn = _db_with_entity_key("kon")
-        eks = list(iter_entity_key_variables(conn))
+        eks = list(iter_entity_key_variables(conn, _NATIVE_IDS))
         assert len(eks) == 1
         (ek,) = eks
         assert (ek.provider_slug, ek.source_id, ek.variable_slug) == (
@@ -186,7 +195,8 @@ class TestEnumerate:
         names a real variable is enumerated once."""
         conn = _db_with_entity_key(["kon", "ar"])
         keyed = {
-            (ek.source_id, ek.variable_slug) for ek in iter_entity_key_variables(conn)
+            (ek.source_id, ek.variable_slug)
+            for ek in iter_entity_key_variables(conn, _NATIVE_IDS)
         }
         assert keyed == {("1.44", "kon"), ("1.99", "ar")}
 
@@ -195,7 +205,9 @@ class TestEnumerate:
         resolution gate (`_check_panel_refs_resolve`) owns the dangle finding, so
         the generator must not emit a pin for a slug that binds nothing."""
         conn = _db_with_entity_key(["kon", "ghost"])
-        keyed = {ek.variable_slug for ek in iter_entity_key_variables(conn)}
+        keyed = {
+            ek.variable_slug for ek in iter_entity_key_variables(conn, _NATIVE_IDS)
+        }
         assert keyed == {"kon"}
 
     def test_enumerates_all_providers_unscoped(self):
@@ -205,29 +217,38 @@ class TestEnumerate:
         re-narrowing `iter_entity_key_variables` itself."""
         conn = _db_with_entity_key("kon")
         _add_sos_entity_key(conn)
-        providers = {ek.provider_slug for ek in iter_entity_key_variables(conn)}
+        providers = {
+            ek.provider_slug for ek in iter_entity_key_variables(conn, _NATIVE_IDS)
+        }
         assert providers == {"scb", "sos"}
 
-    def test_register_ids_scope_yields_only_named(self):
-        """#559: passing `register_ids={...}` filters to those register ids only —
+    def test_scoped_skips_unnamed_register_unscoped_refuses_it(self):
+        """#559: `scoped=True` yields only the registers the native-id map names —
         a flavored caller scopes to its steward registers so the global base's
         entity-key vars (whose `_variable_source_ids` is flavored-unsafe, and which
         may share a provider slug with a steward overlay) are skipped before that
-        helper runs."""
+        helper runs. Unscoped, the same unnamed register has no pin key, so the
+        enumeration refuses it rather than skip it (#1215: falling back to the
+        catalog's surrogate id would key pins nothing can apply)."""
         conn = _db_with_entity_key("kon")
         _add_sos_entity_key(conn)  # sos register 500
-        scoped = list(iter_entity_key_variables(conn, register_ids={500}))
-        assert {ek.provider_slug for ek in scoped} == {"sos"}
-        assert {ek.source_id for ek in scoped} == {"500.LOPNR"}
-        # The empty scope yields nothing (no register matches).
-        assert list(iter_entity_key_variables(conn, register_ids=set())) == []
+        steward = {("sos", "dors"): "500"}
+        scoped = list(iter_entity_key_variables(conn, steward, scoped=True))
+        assert {(ek.provider_slug, ek.source_id) for ek in scoped} == {
+            ("sos", "500.LOPNR")
+        }
+        assert list(iter_entity_key_variables(conn, {}, scoped=True)) == []
+        with pytest.raises(RegMetaError) as exc:
+            list(iter_entity_key_variables(conn, steward))
+        assert exc.value.code == "entity_key_register_unknown"
+        assert "scb/lisa" in exc.value.message
 
     def test_yields_three_part_source_id_for_split_sibling(self):
         """A split-sibling entity-key var carries a 3-part `<reg>.<pk>.<disc>`
         source_id (the disc is its own column slug, NOT the panel-ref slug), so a
         pin keys the right sibling — the #539 regression class."""
         conn = _db_with_split_sibling_entity_key(entity_key_slug="lopnr")
-        eks = list(iter_entity_key_variables(conn))
+        eks = list(iter_entity_key_variables(conn, _NATIVE_IDS))
         assert len(eks) == 1
         (ek,) = eks
         # 3-part key: register.provider_key.discriminator (the column slug).
@@ -247,7 +268,7 @@ class TestEnumerate:
         )
         conn.commit()
         with pytest.raises(RegMetaError) as exc:
-            list(iter_entity_key_variables(conn))
+            list(iter_entity_key_variables(conn, _NATIVE_IDS))
         assert exc.value.code == "slug_toml_invalid"
         assert "contains '.'" in exc.value.message
 
@@ -431,11 +452,12 @@ class TestGenerator:
         pins = infer_entity_key_pins(conn, steward_dir, flavored=True)
         assert [(p.provider_slug, p.source_id) for p in pins] == [("sos", "500.LOPNR")]
 
-        # Default (flavored=False) over the same dir is unscoped — it would try to
-        # pin the scb var too (no sos curation present), proving the scope is what
-        # excludes scb, not the curated-skip.
-        unscoped = infer_entity_key_pins(conn, steward_dir, flavored=False)
-        assert {p.provider_slug for p in unscoped} == {"scb", "sos"}
+        # Default (flavored=False) over the same dir is unscoped — it reaches the
+        # scb register too and refuses it (no entry names its native id), proving
+        # the scope is what excludes scb, not the curated-skip.
+        with pytest.raises(RegMetaError) as exc:
+            infer_entity_key_pins(conn, steward_dir, flavored=False)
+        assert exc.value.code == "entity_key_register_unknown"
 
     def test_non_scb_entity_key_emitted(self, tmp_path: Path):
         """#554: ALL global providers are under mandatory curation, so a non-SCB
@@ -643,7 +665,6 @@ class TestCli:
         _add_sos_entity_key(conn)
         db = _file_db(conn, tmp_path)
         slug_dir = _slug_dir(tmp_path)
-        (slug_dir / "sos.toml").write_text("", encoding="utf-8")
         out_dir = tmp_path / "pins"
         code, data = _cli(capsys, db, "--slug-dir", slug_dir, "--out-dir", out_dir)
         assert code == 0
@@ -663,7 +684,6 @@ class TestCli:
         _add_sos_entity_key(conn)
         db = _file_db(conn, tmp_path)
         slug_dir = _slug_dir(tmp_path)
-        (slug_dir / "sos.toml").write_text("", encoding="utf-8")
 
         code, data = _cli(capsys, db, "--slug-dir", slug_dir)
         assert code == 0

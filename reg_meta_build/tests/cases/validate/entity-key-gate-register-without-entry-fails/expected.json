@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "entity_key_register_unknown: scb/testreg: no register entry in the slug dir names its native id"
+  ]
+}
