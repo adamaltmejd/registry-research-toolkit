@@ -127,11 +127,11 @@ Consequences:
   representation metadata, are artifact facts. Whether a window *replaces* its base
   state depends on the requested period (`_applicable_alias_windows` in `catalog.py`;
   pinned by `test_gap_year_month_falls_back_to_annual_state`). The rule: windows replace
-  the base state only when a source (non-curated) window whose spelling matches the base
-  column overlaps the request; curated windows are always additive; a period no source
-  window overlaps falls back to the base state. That rule stays in the reader (class C).
-  Gap, partial-overlap and spanning cases are pinned as `api` cases before the moved
-  code is reduced.
+  the base state only when some source (non-curated) window is spelled like the base
+  column and some source window overlaps the request (two separate tests in the code);
+  curated windows are always additive; a period no source window overlaps falls back to
+  the base state. That rule stays in the reader (class C). Gap, partial-overlap and
+  spanning cases are pinned as `api` cases before the moved code is reduced.
 - **Projected states are their own relation.** `variable_state.state_id` is a primary
   key, and a year's month windows share their annual state's `state_id`, so projected
   states cannot be rows of `variable_state` without changing its grain under the Python
@@ -382,10 +382,10 @@ Rust workspace (`crates/`):
 
 What is deleted: the Python `reg_meta` package including its CLI, `reg_schema`, the
 FastAPI backend, and the frontend's hand-written grammar and validation mirrors. The
-build imports twelve `reg_meta` modules today (`source_evidence`, `fqid`, `errors`,
-`inventory`, `db`, `catalog`, `documentary`, `doc_db`, `queries`, `cli_common` and
-others); the surface inventory (package 1.1a) gives each a disposition: into
-`reg_meta_build`, or replaced by `reg-core-py`. The moves happen in stage 4.
+build imports ten `reg_meta` modules today (`source_evidence`, `fqid`, `errors`,
+`inventory`, `db`, `catalog`, `documentary`, `doc_db`, `queries`, `cli_common`); the
+surface inventory (package 1.1a) gives each a disposition: into `reg_meta_build`, or
+replaced by `reg-core-py`. The moves happen in stage 4.
 
 Why the HTTP server moves to Rust rather than FastAPI calling Rust through bindings:
 
@@ -555,13 +555,14 @@ both servers, and the edge sends each ported path to the Rust server *(decision 
    for its routes, route those paths at the edge to the Rust server, and delete the
    replaced FastAPI routes. One to four PRs per slice.
    - **(a) admission + search** runs alone. It creates `reg-catalog`, the `reg-meta`
-     binary, the envelope, error, paging and MCP wiring, and `reg-core-py`; turns the
-     webapp's search pins and best-bets into curated build input (re-fixturing the eight
-     `golden_config` cases); applies the checkpoint-1 indexing decision; and has a
-     deployment package (both servers in one image, edge routing for `/mcp` and the
-     ported paths, separate MCP rate limits, a public-host MCP smoke test). The
-     exhaustive Python-against-Rust fold sweep joins G1 here. Hosted MCP goes live when (a)
-     passes. Ends at checkpoint 2.
+     binary, the envelope, error, paging and MCP wiring, and `reg-core-py`, with a G0
+     test that the generated OpenAPI and MCP `tools/list` match
+     `conformance/api/operations.toml`; turns the webapp's search pins and best-bets
+     into curated build input (re-fixturing the eight `golden_config` cases); applies
+     the checkpoint-1 indexing decision; and has a deployment package (both servers in
+     one image, edge routing for `/mcp` and the ported paths, separate MCP rate limits,
+     a public-host MCP smoke test). The exhaustive Python-against-Rust fold sweep joins
+     G1 here. Hosted MCP goes live when (a) passes. Ends at checkpoint 2.
    - **(b) show / states / values** starts with one PR for the `expanded_state`,
      `browse_delivery` and `resolver_column` schema, derivation and validator checks,
      and switches `holdings_compile` to `resolver_column`. That PR merges before
