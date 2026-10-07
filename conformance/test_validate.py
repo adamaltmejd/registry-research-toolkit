@@ -45,7 +45,7 @@ def test_cli_and_http_project_adapters_agree(
     case: Path, tmp_path: Path, monkeypatch, capsys
 ) -> None:
     request = json.loads((case / "request.json").read_text())
-    path = case_artifact(request, tmp_path, monkeypatch)
+    path = case_artifact(request, monkeypatch)
     steps = [s for s in request["requests"] if s["path"] in _COMMANDS]
     assert steps
     project = tmp_path / "project.json"
@@ -82,7 +82,7 @@ _CODE_LIST_TABLES = frozenset(
 )
 
 
-def test_validation_reads_state_metadata_never_code_lists(tmp_path, monkeypatch):
+def test_validation_reads_state_metadata_never_code_lists(monkeypatch):
     """Project validation answers identity and state-window questions, so it
     never reads code membership (reg_meta/DESIGN.md → Project semantic
     validation): a geography variable's shared code list would otherwise be
@@ -95,7 +95,7 @@ def test_validation_reads_state_metadata_never_code_lists(tmp_path, monkeypatch)
         for p in sorted((CASES / "validate").glob("*/request.json"))
     ]
     cases = [c for c in cases if c.get("fixture") == "semantic"]
-    path = case_artifact(cases[0], tmp_path, monkeypatch)
+    path = case_artifact(cases[0], monkeypatch)
     statements: list[str] = []
 
     @contextmanager

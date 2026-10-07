@@ -1,0 +1,146 @@
+"""The synthetic-artifact cache: built once, immutable, keyed by every input."""
+
+from __future__ import annotations
+
+import hashlib
+import shutil
+import sqlite3
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
+from reader_artifacts import (
+    BUILD_PACKAGES,
+    CASES,
+    FIXTURE_CACHE_ENV,
+    LOCKFILE,
+    artifact_key,
+    build_inputs_digest,
+    build_reader_artifact,
+    cached_reader_artifact,
+    runtime_versions,
+)
+
+SCRIPT = Path(__file__).with_name("fixture_cache.py")
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def test_a_cached_artifact_is_never_rebuilt(tmp_path, monkeypatch):
+    cache = tmp_path / "cache"
+    monkeypatch.setenv(FIXTURE_CACHE_ENV, str(cache))
+    first = cached_reader_artifact("reader", "catalog")
+    directories = [cache, *(path for path in cache.rglob("*") if path.is_dir())]
+    # A rebuild must stage a new entry, which a read-only cache refuses.
+    for directory in directories:
+        directory.chmod(0o555)
+    try:
+        assert cached_reader_artifact("reader", "catalog") == first
+    finally:
+        for directory in directories:
+            directory.chmod(0o755)
+
+
+def test_a_cached_artifact_is_read_only(tmp_path, monkeypatch):
+    monkeypatch.setenv(FIXTURE_CACHE_ENV, str(tmp_path / "cache"))
+    path = cached_reader_artifact("reader", "catalog")
+    with (
+        sqlite3.connect(path) as conn,
+        pytest.raises(sqlite3.OperationalError, match="readonly"),
+    ):
+        conn.execute("CREATE TABLE mutation (value)")
+    # Mutating callers get a private copy; the entry keeps its bytes.
+    entry = _sha256(path)
+    copy = build_reader_artifact(tmp_path / "copy", "reader", "catalog")
+    with sqlite3.connect(copy) as conn:
+        conn.execute("CREATE TABLE mutation (value)")
+    conn.close()
+    assert _sha256(copy) != entry
+    assert _sha256(path) == entry
+
+
+@pytest.mark.parametrize("kind", ["catalog", "steward"])
+def test_a_cache_hit_is_byte_identical_to_a_fresh_build(kind, tmp_path, monkeypatch):
+    monkeypatch.setenv(FIXTURE_CACHE_ENV, str(tmp_path / "warm"))
+    cached_reader_artifact("reader", kind)
+    hit = cached_reader_artifact("reader", kind)
+    monkeypatch.setenv(FIXTURE_CACHE_ENV, str(tmp_path / "fresh"))
+    fresh = cached_reader_artifact("reader", kind)
+    assert hit != fresh
+    assert _sha256(hit) == _sha256(fresh)
+
+
+def test_the_script_prints_the_cached_artifact(tmp_path, monkeypatch):
+    monkeypatch.setenv(FIXTURE_CACHE_ENV, str(tmp_path / "cache"))
+    completed = subprocess.run(
+        [sys.executable, str(SCRIPT), "--fixture", "reader", "steward"],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    assert Path(completed.stdout.strip()) == cached_reader_artifact("reader", "steward")
+
+
+def _perturb(path: Path) -> None:
+    with path.open("ab") as handle:
+        handle.write(b"\n")
+
+
+def test_every_build_input_class_changes_the_key(tmp_path):
+    packages = [tmp_path / package.name for package in BUILD_PACKAGES]
+    for source, copy in zip(BUILD_PACKAGES, packages, strict=True):
+        shutil.copytree(source, copy, ignore=shutil.ignore_patterns("__pycache__"))
+    builder = tmp_path / "reader_artifacts.py"
+    shutil.copyfile(
+        Path(__file__).parents[1] / "reg_meta/tests/reader_artifacts.py", builder
+    )
+    lockfile = tmp_path / "uv.lock"
+    shutil.copyfile(LOCKFILE, lockfile)
+    fixture = tmp_path / "fixture"
+    shutil.copytree(CASES / "reader/fixture", fixture)
+    runtime = runtime_versions()
+
+    def inputs(**changed):
+        return build_inputs_digest(
+            **{
+                "packages": packages,
+                "builder": builder,
+                "lockfile": lockfile,
+                "runtime": runtime,
+                **changed,
+            }
+        )
+
+    def key(**changed):
+        options = {
+            "kind": "steward",
+            "identity_overrides": {"import_date": "2024-01-01"},
+            "build_inputs": inputs(),
+            **changed,
+        }
+        return artifact_key(fixture, options.pop("kind"), **options)
+
+    # Content-addressed: a copy elsewhere keys the same as the live checkout.
+    assert inputs() == build_inputs_digest()
+    baseline = key()
+    changed = {
+        "kind": key(kind="catalog"),
+        "identity_overrides": key(identity_overrides={"import_date": "2024-01-02"}),
+        "python": key(build_inputs=inputs(runtime={**runtime, "python": "3.99"})),
+        "sqlite": key(build_inputs=inputs(runtime={**runtime, "sqlite": "9.0.0"})),
+    }
+    for label, path in [
+        ("fixture", fixture / "catalog.json"),
+        ("builder", builder),
+        ("lockfile", lockfile),
+        *((package.name, min(package.rglob("*.py"))) for package in packages),
+    ]:
+        # Cumulative edits: each must move the key off every earlier one.
+        _perturb(path)
+        changed[label] = key(build_inputs=inputs())
+    assert len(changed) == 10
+    assert baseline not in changed.values()
+    assert len(set(changed.values())) == len(changed)

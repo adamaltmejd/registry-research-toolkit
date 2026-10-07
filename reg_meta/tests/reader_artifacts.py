@@ -2,15 +2,23 @@
 
 from __future__ import annotations
 
+import functools
 import hashlib
 import json
+import os
+import platform
+import re
 import shutil
 import sqlite3
+import sys
+import tempfile
+import time
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from reg_meta.catalog import DataWarning
 from reg_meta.db import SCHEMA_VERSION, open_db
-from reg_meta.source_evidence import canonical_json
+from reg_meta.source_evidence import canonical_json, canonical_sha256
 from reg_meta_build.artifact_identity import generation_id
 from reg_meta_build.holdings_compile import compile_holdings
 from reg_meta_build.resolved_catalog import (
@@ -22,11 +30,29 @@ from reg_meta_build.resolved_catalog import (
 from reg_meta_build.resolved_metadata import ResolvedMetadata
 from reg_meta_build.validate import validate_built_db
 
+import reg_meta
+import reg_meta_build
+import reg_schema
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping, Sequence
+
 CASES = Path(__file__).resolve().parents[2] / "conformance/cases"
 BUILDER_CASES = CASES.parents[1] / "reg_meta_build/tests/cases/holdings"
 FIXTURE_IMPORT_DATE = json.loads(
     (CASES / "reader/fixture/import_metadata.json").read_text()
 )["import_date"]
+
+FIXTURE_CACHE_ENV = "REG_FIXTURE_CACHE"
+# Bump when the cache layout or key composition changes.
+FIXTURE_CACHE_LAYOUT = 1
+# A generation unused this long is pruned when a new one is created. Every
+# lookup marks its generation as used, so only idle generations go.
+FIXTURE_CACHE_RETENTION_SECONDS = 3600
+BUILD_PACKAGES = tuple(
+    Path(package.__file__).parent for package in (reg_meta_build, reg_meta, reg_schema)
+)
+LOCKFILE = CASES.parents[1] / "uv.lock"
 
 
 def replicate_filler(case: Path, destination: Path) -> Path:
@@ -93,14 +119,9 @@ def replicate_filler(case: Path, destination: Path) -> Path:
     return destination
 
 
-def build_reader_artifact(
-    directory: Path,
-    fixture: str | Path,
-    kind: str,
-    *,
-    identity_overrides: dict[str, str] | None = None,
-) -> Path:
-    source = (
+def fixture_source(fixture: str | Path) -> Path:
+    """The readable source directory a fixture name (or path) builds from."""
+    return (
         fixture
         if isinstance(fixture, Path)
         else CASES / "reader/fixture"
@@ -109,6 +130,176 @@ def build_reader_artifact(
         if fixture.startswith("reader/")
         else BUILDER_CASES / fixture
     )
+
+
+def fixture_cache_dir() -> Path:
+    """Per-user artifact cache, shared by worktrees and pytest-xdist workers."""
+    configured = os.environ.get(FIXTURE_CACHE_ENV)
+    if configured:
+        return Path(configured).expanduser()
+    base = os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache"
+    return Path(base) / "registry-research-toolkit/fixture-artifacts"
+
+
+def _tree_digest(root: Path) -> str:
+    """Content digest of a file or directory, independent of where it lives."""
+    files = (
+        [root]
+        if root.is_file()
+        else sorted(
+            path
+            for path in root.rglob("*")
+            if path.is_file()
+            and "__pycache__" not in path.parts
+            and path.suffix != ".pyc"
+        )
+    )
+    digest = hashlib.sha256()
+    for path in files:
+        digest.update(path.relative_to(root).as_posix().encode() + b"\0")
+        with path.open("rb") as handle:
+            digest.update(hashlib.file_digest(handle, "sha256").digest())
+    return digest.hexdigest()
+
+
+def runtime_versions() -> dict[str, str]:
+    """Interpreter and SQLite library versions the pipeline runs on."""
+    return {
+        "python": sys.version,
+        "sqlite": sqlite3.sqlite_version,
+        "platform": f"{sys.platform}-{platform.machine()}",
+    }
+
+
+def build_inputs_digest(
+    *,
+    packages: Sequence[Path] = BUILD_PACKAGES,
+    builder: Path = Path(__file__),
+    lockfile: Path = LOCKFILE,
+    runtime: Mapping[str, str] | None = None,
+) -> str:
+    """Digest of every fixture-independent build input.
+
+    The defaults are the imported `reg_meta_build`, `reg_meta` and `reg_schema`
+    sources (file contents, so uncommitted edits count), this builder, `uv.lock`
+    and `runtime_versions()`; the arguments let a caller digest other copies.
+    """
+    return canonical_sha256(
+        {
+            "layout": FIXTURE_CACHE_LAYOUT,
+            "packages": [_tree_digest(package) for package in packages],
+            "builder": _tree_digest(builder),
+            "lockfile": _tree_digest(lockfile),
+            "runtime": dict(runtime if runtime is not None else runtime_versions()),
+        }
+    )
+
+
+@functools.cache
+def _live_build_inputs() -> str:
+    return build_inputs_digest()
+
+
+def artifact_key(
+    fixture: str | Path,
+    kind: str,
+    *,
+    identity_overrides: Mapping[str, str] | None = None,
+    build_inputs: str | None = None,
+) -> str:
+    """Cache key of one synthetic artifact: its sources, options and build inputs.
+
+    Every build also reads the shared `reader/fixture` identity and steward policy
+    fallbacks, so that directory is keyed alongside the named source.
+    """
+    return canonical_sha256(
+        {
+            "build_inputs": build_inputs or _live_build_inputs(),
+            "source": _tree_digest(fixture_source(fixture)),
+            "defaults": _tree_digest(CASES / "reader/fixture"),
+            "kind": kind,
+            "identity_overrides": dict(identity_overrides or {}),
+        }
+    )
+
+
+def _generation_dir() -> Path:
+    """This build-input generation's cache directory, marked as in use."""
+    root = fixture_cache_dir()
+    generation = root / _live_build_inputs()
+    if not generation.is_dir():
+        generation.mkdir(parents=True, exist_ok=True)
+        # simplify: every source edit starts a generation (~35 MB), so idle ones
+        # are pruned by age; switch to size-based eviction if that still grows.
+        cutoff = time.time() - FIXTURE_CACHE_RETENTION_SECONDS
+        for stale in root.iterdir():
+            # Only generation directories: the override may name a shared parent.
+            if (
+                re.fullmatch("[0-9a-f]{64}", stale.name)
+                and stale.is_dir()
+                and stale.stat().st_mtime < cutoff
+            ):
+                shutil.rmtree(stale, ignore_errors=True)
+    os.utime(generation)
+    return generation
+
+
+def cached_reader_artifact(
+    fixture: str | Path,
+    kind: str,
+    *,
+    identity_overrides: Mapping[str, str] | None = None,
+) -> Path:
+    """Return the cached, read-only `reg_meta.db`, building it on first use.
+
+    Entries are immutable: callers that mutate an artifact use
+    `build_reader_artifact`, which copies one. A miss builds into a private
+    staging directory and renames it into place, so concurrent builders of the
+    same key never expose a partial entry; the loser discards its copy.
+    """
+    entry = _generation_dir() / artifact_key(
+        fixture, kind, identity_overrides=identity_overrides
+    )
+    path = entry / "reg_meta.db"
+    if path.exists():
+        return path
+    staging = Path(tempfile.mkdtemp(prefix=".staging-", dir=entry.parent))
+    try:
+        _build_artifact(staging, fixture_source(fixture), kind, identity_overrides)
+        (staging / "reg_meta.db").chmod(0o444)
+        try:
+            staging.rename(entry)
+        except OSError:
+            if not path.exists():
+                raise
+    finally:
+        shutil.rmtree(staging, ignore_errors=True)
+    return path
+
+
+def build_reader_artifact(
+    directory: Path,
+    fixture: str | Path,
+    kind: str,
+    *,
+    identity_overrides: Mapping[str, str] | None = None,
+) -> Path:
+    """Copy the cached artifact into `directory` as a private, writable file."""
+    cached = cached_reader_artifact(
+        fixture, kind, identity_overrides=identity_overrides
+    )
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / "reg_meta.db"
+    shutil.copyfile(cached, path)
+    return path
+
+
+def _build_artifact(
+    directory: Path,
+    source: Path,
+    kind: str,
+    identity_overrides: Mapping[str, str] | None,
+) -> Path:
     identity = json.loads((CASES / "reader/fixture/identity.json").read_text())
     identity.update(identity_overrides or {})
     variables = tuple(

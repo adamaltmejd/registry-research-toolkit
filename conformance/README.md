@@ -12,9 +12,9 @@ uv run python -m pytest conformance -q
 uv run python -m pytest conformance --run-release --artifact-dir=/path/to/catalog -q
 ```
 
-The first invocation builds catalog and steward artifacts once per session for the
-artifact checks. Fixture-bound cases always build their own named readable source; they
-never substitute the selected real artifact into synthetic value goldens. The second
+The first invocation runs the artifact checks on the synthetic catalog and steward
+artifacts. Fixture-bound cases always build their own named readable source; they never
+substitute the selected real artifact into synthetic value goldens. The second
 invocation adds checks on exactly the selected artifact. Both flags are required for
 tier 3; the reader rejects missing, schema-incompatible and non-publishable artifacts
 before execution. Existing package `release` consumers keep their marker contract.
@@ -50,6 +50,20 @@ oracle expand to the test filesystem before comparison.
   | http_catalog, http_context, http_scope, http_search, validate | HTTP request sequence and status/pointer oracle; implicit compiled source          |
   | validate (also)                                               | CLI validate/order bytes or refusal against each HTTP project response             |
   | fixtures                                                      | HTTP readable sources, not independently executed cases                            |
+
+## Fixture cache
+
+Every synthetic artifact is built once through the real pipeline into a per-user cache:
+`$REG_FIXTURE_CACHE`, else `$XDG_CACHE_HOME` (or `~/.cache`) under
+`registry-research-toolkit/fixture-artifacts`. Worktrees and pytest-xdist workers share
+it. The key hashes the fixture source, the shared `cases/reader/fixture` defaults, the
+kind, identity overrides, the `reg_meta_build`, `reg_meta` and `reg_schema` sources, the
+builder, `uv.lock` and the Python and SQLite versions, so any edit is a new entry.
+Entries are read-only; `build_reader_artifact` hands a mutating case its own copy. A
+miss builds into a staging directory and renames it into place. Generations idle for an
+hour are pruned when a new one starts; deleting the directory between runs is safe.
+`uv run python conformance/fixture_cache.py --fixture reader catalog` builds one entry
+and prints its path for consumers outside pytest.
 
 Reader fixtures named `reader` or `reader/<name>` live under `cases/reader`; other named
 sources live under `reg_meta_build/tests/cases/holdings`. HTTP fixture names resolve
