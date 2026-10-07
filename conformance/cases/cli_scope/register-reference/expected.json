@@ -1,6 +1,7 @@
 {
   "fqid": "scb/example",
   "variants": [
-    "annual"
+    "annual",
+    "archive"
   ]
 }
