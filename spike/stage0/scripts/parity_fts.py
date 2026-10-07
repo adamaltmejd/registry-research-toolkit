@@ -101,6 +101,8 @@ def main() -> None:
     print(f"queries {len(qs)}, empty results {empty}")
     print(f"order/identity mismatches {len(order_mismatch)}: {order_mismatch[:10]}")
     print(f"same order but bm25 drift > 1e-9: {rank_drift}")
+    if order_mismatch or rank_drift:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
