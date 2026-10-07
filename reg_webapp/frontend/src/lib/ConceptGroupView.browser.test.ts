@@ -1510,7 +1510,33 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   });
 
   // ── #678 finding 6: chip nav goes through the SPA router (no full reload) ─────
-  it("a plain chip click routes in-app without toggling; a modifier click is left to the browser", async () => {
+  it("a plain chip click routes in-app without toggling the row", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+
+    await renderGroup();
+
+    const janLink = page.getByRole("link", { name: /^Inkjan/ });
+    await expect
+      .element(janLink)
+      .toHaveAttribute("href", "/catalog/scb/rams/inkjan");
+
+    // A plain left click is prevented (no full reload) and routed in-app, and it does
+    // not toggle the row's selection.
+    const plain = new MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      button: 0,
+    });
+    janLink.element().dispatchEvent(plain);
+    expect(plain.defaultPrevented).toBe(true);
+    expect(location.pathname).toBe("/catalog/scb/rams/inkjan");
+    await expect
+      .element(page.getByRole("checkbox", { name: /Inkjan/ }))
+      .not.toBeChecked();
+  });
+
+  it("a modifier chip click is left to the browser", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
 
@@ -1546,20 +1572,6 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     }
     expect(componentPrevented).toBe(false);
     expect(location.pathname).toBe(groupPath);
-
-    // A plain left click is prevented (no full reload) and routed in-app, and it does
-    // not toggle the row's selection.
-    const plain = new MouseEvent("click", {
-      bubbles: true,
-      cancelable: true,
-      button: 0,
-    });
-    janLink.element().dispatchEvent(plain);
-    expect(plain.defaultPrevented).toBe(true);
-    expect(location.pathname).toBe("/catalog/scb/rams/inkjan");
-    await expect
-      .element(page.getByRole("checkbox", { name: /Inkjan/ }))
-      .not.toBeChecked();
   });
 });
 
