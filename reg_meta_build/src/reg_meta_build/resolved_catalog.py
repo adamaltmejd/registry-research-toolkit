@@ -52,6 +52,7 @@ from reg_meta_build.db import (
     publish_db,
     seed_providers,
 )
+from reg_meta_build.derive import derive
 from reg_meta_build.id import mint
 from reg_meta_build.resolved_metadata import (
     ResolvedMetadata,
@@ -1413,6 +1414,8 @@ def write_resolved_catalog(
                 "unika_summary",
             ):
                 conn.execute(f"DROP TABLE {table}")
+            conn.commit()
+            derive(conn)
             _populate_fts(conn)
             # Last write: readers plan with these statistics. ANALYZE is a pure
             # function of the table contents, so rebuilds stay byte-identical.

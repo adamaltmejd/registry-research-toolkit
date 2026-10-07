@@ -276,6 +276,7 @@ def extend_db(
         _unlink_wal_sidecars,
         publish_db,
     )
+    from .derive import derive
     from .fqid_slugs import populate_slugs, populate_variable_slugs
 
     data_warnings = TypeAdapter(tuple[DataWarning, ...]).validate_python(
@@ -445,6 +446,14 @@ def extend_db(
                 _assert_steward_rows_slugged(conn)
 
             write_data_warnings(conn, data_warnings)
+            # Holdings must see the steward's own metadata, so derive runs over
+            # base plus overlay. An unslugged diagnostic never compiles holdings;
+            # it clears the inherited universe instead of deriving a stale one.
+            if skip_slugs:
+                conn.execute("DELETE FROM resolver_column")
+            else:
+                conn.commit()
+                derive(conn)
             manifest = get_manifest(conn)
             if diagnostic:
                 if base_generation := manifest.pop("generation_id", None):

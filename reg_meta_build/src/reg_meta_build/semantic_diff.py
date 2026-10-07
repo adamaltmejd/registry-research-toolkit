@@ -99,6 +99,7 @@ _PLAIN_TABLES = frozenset(
         "timeseries_event",
         "source_relationship_variable",
         "data_warning",
+        "resolver_column",  # Derived, but compared: it authorizes holdings.
     }
 )
 

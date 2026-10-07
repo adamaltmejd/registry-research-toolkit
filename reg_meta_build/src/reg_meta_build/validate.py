@@ -63,6 +63,7 @@ from reg_meta_build.db import (
     PROVIDER_ID_SCB,
     PROVIDER_ID_SOS,
 )
+from reg_meta_build.derive import resolver_columns
 from reg_meta_build.id import _MINT_BIT, is_canonical_scb
 from reg_meta_build.relations import (
     _REPLACED_BY_NOTE_VINTAGE_LIFT,
@@ -249,6 +250,7 @@ def validate_built_db(
         _check_classification_derived_from(conn, result, tables, corpus=corpus)
         _check_variable_replaced_by_vintage_lift(conn, result, tables, corpus=corpus)
         _check_representation_replaced_by(conn, result, tables, corpus=corpus)
+        _check_resolver_column(conn, result, tables)
         result.section("[compiled holdings]")
         from .holdings_validation import validate_compiled_holdings
 
@@ -299,6 +301,7 @@ def _check_schema_shape(
         "holding_period",
         "holding_column",
         "holding_mapping",
+        "resolver_column",
     ):
         if required in tables:
             result.ok(f"{required} present")
@@ -1628,6 +1631,51 @@ def _check_planner_statistics(
         result.ok(f"sqlite_stat1 present ({n_rows:,} rows)")
     else:
         result.fail("sqlite_stat1 is empty — the build must end with ANALYZE")
+
+
+def _check_resolver_column(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """``resolver_column`` equals a recomputation, set and spelling.
+
+    Holdings canonicalize against it, so this check also guards their mappings.
+    Only an incomplete artifact may leave it empty (an unslugged extend-db)."""
+    result.section("[resolver_column]")
+    if "resolver_column" not in tables:
+        return  # _check_schema_shape already failed.
+    stored = set(
+        map(
+            tuple,
+            conn.execute(
+                "SELECT variable_id, register_variant_id, delivery_column_lower, "
+                "delivery_column_name FROM resolver_column"
+            ),
+        )
+    )
+    manifest = dict(conn.execute("SELECT key, value FROM import_manifest"))
+    incomplete = (
+        manifest.get("catalog_artifact_kind") == "diagnostic"
+        or manifest.get("catalog_completeness") == "incomplete"
+    )
+    if not stored and incomplete:
+        result.ok("resolver_column empty on an incomplete artifact")
+        return
+    try:
+        expected = set(resolver_columns(conn))
+    except (ValueError, TypeError) as exc:
+        result.fail(f"resolver_column cannot be recomputed: {exc}")
+        return
+    missing, surplus = len(expected - stored), len(stored - expected)
+    if missing or surplus:
+        result.fail(
+            f"resolver_column disagrees with the resolver: {missing:,} missing, "
+            f"{surplus:,} surplus row(s)"
+        )
+    else:
+        result.ok(f"resolver_column equals the resolver ({len(stored):,} rows)")
+    orphans = conn.execute("PRAGMA foreign_key_check(resolver_column)").fetchall()
+    if orphans:
+        result.fail(f"{len(orphans):,} resolver_column row(s) with dangling keys")
 
 
 def _check_tags(

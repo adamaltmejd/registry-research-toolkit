@@ -298,6 +298,7 @@ def install_test_holdings(conn, inventory):
     import tomlkit
     from reader_artifacts import CASES
     from reg_meta_build.artifact_identity import generation_id
+    from reg_meta_build.derive import derive
     from reg_meta_build.holdings_compile import compile_holdings
 
     stamp_test_catalog(conn)
@@ -340,6 +341,8 @@ def install_test_holdings(conn, inventory):
         (candidate / "policy/holdings_policy.toml").write_text(
             f'source_sha256 = "{hashlib.sha256(census.read_bytes()).hexdigest()}"\n'
         )
+        # As extend-db does: derive over the edited graph, then compile holdings.
+        derive(conn)
         compiled = compile_holdings(conn, candidate, steward=inventory.steward)
     manifest = dict(conn.execute("SELECT key, value FROM import_manifest"))
     manifest.update(

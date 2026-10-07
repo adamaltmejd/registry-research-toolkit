@@ -22,7 +22,7 @@ from reg_meta.db import (
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
 # Produced catalog schema; readers gate their independently supported version.
-SCHEMA_VERSION = "9.0.0"
+SCHEMA_VERSION = "9.1.0"
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
@@ -1566,6 +1566,21 @@ CREATE TABLE holding_mapping (
 -- Candidate logical-to-physical index; verify order with plan 02 EXPLAIN QUERY PLAN.
 CREATE INDEX idx_holding_mapping_variable_variant
     ON holding_mapping(variable_id, variant_id);
+
+-- Derived (derive.py): the whole-history universe of resolver-emitted delivery
+-- columns, the only relation that authorizes a holdings mapping. Browse eligibility
+-- is a different contract and never reads it.
+CREATE TABLE resolver_column (
+    -- Owning variable; never a same_as donor.
+    variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
+    -- Variant the resolver emits the column at; never a selected state or window ID.
+    register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
+    -- Python str.lower() of the name; the lookup key, never displayed.
+    delivery_column_lower TEXT NOT NULL,
+    -- Representative spelling; never applicability to one holding edition.
+    delivery_column_name TEXT NOT NULL CHECK (length(delivery_column_name) > 0),
+    PRIMARY KEY (variable_id, register_variant_id, delivery_column_lower)
+) WITHOUT ROWID;
 
 CREATE TABLE import_manifest (
     key TEXT PRIMARY KEY,
