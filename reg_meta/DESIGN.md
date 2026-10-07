@@ -891,9 +891,12 @@ Year-independent states remain year-independent. A join on canonical
 aliases use the existing resolver. The inventory consistency gate uses the same public
 delivery universe. The builder's inventory coverage flat union answers a different
 accounting question. None of the three rules is copied into DDL. Range/list physical
-periods survive; the build coverage assessment retains its existing "temporally
-unassessed" disposition through `data_warning`, without partial-resolution rows or a
-findings relation. Unknown tables retain census columns but no logical mappings.
+periods survive. That the build coverage assessment leaves range/list editions
+"temporally unassessed" is builder accounting only: it is derivable from
+`holding_table.edition_json` and reaches curators as the coverage report's
+skipped-tables line. It is not a `data_warning`, which carries source limitations and
+interpretation assumptions only (see "Data warnings"), and it has no partial-resolution
+rows or findings relation. Unknown tables retain census columns but no logical mappings.
 
 Candidate indexes are `holding_mapping(variable_id, variant_id)`,
 `holding_mapping(column_id)`, `holding_column(table_id)` and
@@ -947,7 +950,10 @@ same_as reference edge never grants possession of a different binding.
 
 An interval holding contributes only the intersection of its exact periods with the
 request and resolved applicability; year-independent holdings require compatible
-year-independent resolver output, never artificial dates. Unknown never contributes.
+year-independent resolver output, never artificial dates. A state narrowed to its held
+window re-derives every window-derived field from that window (`period_token`,
+`warning_ids`), so a narrowed state never reports its semantic window's token or
+out-of-window warnings. `pooled` stays the source fact. Unknown never contributes.
 Without a period filter, membership uses any applicable interval or year-independent
 mapping; with one, it requires an overlap in that scope. Discovery may union admitted
 variants for a binding, but variant-specific leaves, validation and order never do.

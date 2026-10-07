@@ -1,0 +1,14 @@
+{
+  "fixture": "reader/narrowed-pooled",
+  "artifact": "steward",
+  "operation": "catalog_states",
+  "args": [
+    "scb/example/value"
+  ],
+  "kwargs": {},
+  "observe": "state-warnings",
+  "warning_codes": {
+    "29a27d8a077bd3df6b9c3ee7da403ce67e63a8b2a945d64d0947d0423816fbd7": "early-limit",
+    "d0aa2c5bd16e0a4160c2b25b196da3d851b77efc8d8cb833dc16b4ea2f6ca4f6": "held-year-limit"
+  }
+}

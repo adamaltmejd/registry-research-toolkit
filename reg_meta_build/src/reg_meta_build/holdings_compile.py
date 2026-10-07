@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import sqlite3
 import tomllib
 from dataclasses import dataclass
@@ -197,47 +196,3 @@ def compile_holdings(
     return CompiledHoldings(
         len(logical) + len(unknown), column_id, mappings_count, accounting
     )
-
-
-def write_holdings_assessment_warnings(conn: sqlite3.Connection) -> int:
-    """Keep the range/list build-assessment disposition without inventory witnesses."""
-    from reg_meta.catalog import DataWarning
-    from reg_meta.source_evidence import canonical_sha256
-
-    from .data_warnings import write_data_warnings
-
-    warnings = []
-    for provider, register, count in conn.execute(
-        "SELECT p.slug, r.slug, COUNT(DISTINCT ht.table_id) "
-        "FROM holding_table ht JOIN holding_column hc USING(table_id) "
-        "JOIN holding_mapping hm USING(column_id) JOIN variable v USING(variable_id) "
-        "JOIN register r USING(register_id) JOIN provider p USING(provider_id) "
-        "WHERE ht.scope='intervals' AND json_type(ht.edition_json) IN ('array', 'object') "
-        "GROUP BY p.slug, r.slug ORDER BY p.slug, r.slug"
-    ):
-        payload = {
-            "register_fqid": f"{provider}/{register}",
-            "variable_fqid": None,
-            "variant": None,
-            "delivery_column_name": None,
-            "valid_from": None,
-            "valid_to": None,
-            "code": "holding_temporally_unassessed",
-            "severity": "warning",
-            "summary": "Range/list holdings are not column-availability evidence",
-            "detail": f"{count} range/list table(s) retain their physical periods. Semantic applicability is assessed by the resolver at query time.",
-            "source_subject": f"{provider}/{register}",
-            "fields": ["inventory.edition"],
-            "refs": [],
-            "withheld_output": ["build_column_window_coverage"],
-            "acknowledged_by": "source_policy",
-            "case_id": "holding_temporally_unassessed",
-        }
-        payload["diagnostic_detail_sha256"] = canonical_sha256(payload["detail"])
-        warnings.append(
-            DataWarning.model_validate_json(
-                json.dumps({"warning_id": canonical_sha256(payload), **payload})
-            )
-        )
-    write_data_warnings(conn, tuple(warnings))
-    return len(warnings)
