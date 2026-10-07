@@ -158,7 +158,6 @@ def run(config: dict) -> int:
     report_dir = cache.cache_root() / "report"
     shutil.rmtree(report_dir, ignore_errors=True)
     all_cases = cases.generate(dirs, config, report_dir / "projects")
-    prepared = time.monotonic()
 
     # Half the cores per arm; both arms run at once.
     workers = max(1, (os.cpu_count() or 2) // 2)
@@ -225,7 +224,6 @@ def run(config: dict) -> int:
         "differences": len(unexcepted),
         "excepted": len(differences) - len(unexcepted),
         "wall_seconds": round(wall, 1),
-        "prepare_seconds": round(prepared - started, 1),
         "workers_per_arm": workers,
         "baseline_seconds_by_command": {
             k: round(v, 1) for k, v in seconds.most_common()

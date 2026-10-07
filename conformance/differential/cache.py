@@ -53,10 +53,6 @@ BASELINE_PATHS = (
 CHUNK = 1 << 20
 
 
-class CacheError(RuntimeError):
-    """A pinned input could not be fetched, verified or installed."""
-
-
 @dataclass(frozen=True)
 class Asset:
     name: str
@@ -142,7 +138,7 @@ def _download(tag: str, asset: Asset, dest: Path) -> None:
                 data = decompressor.decompress(chunk)
                 out.write(data)
         if asset_digest.hexdigest() != asset.sha256:
-            raise CacheError(
+            raise RuntimeError(
                 f"{asset.name} from {tag} has SHA-256 {asset_digest.hexdigest()}, "
                 f"pinned {asset.sha256}"
             )
