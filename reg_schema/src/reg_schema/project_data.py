@@ -33,11 +33,10 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 # Top-level enums (see DESIGN.md → Two layers: models vs. validator). Mirrored at runtime by the structural
-# validator using ``get_args`` — same drift-protection pattern as
-# ``IssueLevel`` in ``validation.py``.
+# validator using ``get_args``, so the two cannot drift.
 Steward = Literal["global", "ifau", "swecov"]
 ColumnType = Literal["id", "categorical", "numeric", "date", "datetime", "opaque"]
 IdSubtype = Literal["integer", "string"]
@@ -273,6 +272,10 @@ class StudyWindow(_Model):
     is valid; a window can't end before it starts.
     """
 
+    # The `to >= from` rule is the structural validator's `invalid_window`, not
+    # re-encoded here. (A comment, not docstring text: openapi.json publishes the
+    # docstring.)
+
     model_config = ConfigDict(
         frozen=True,
         extra="forbid",
@@ -282,14 +285,6 @@ class StudyWindow(_Model):
 
     from_: int = Field(alias="from")
     to: int
-
-    @model_validator(mode="after")
-    def _check_order(self) -> StudyWindow:
-        if self.to < self.from_:
-            raise ValueError(
-                f"study window 'to' ({self.to}) must be >= 'from' ({self.from_})"
-            )
-        return self
 
 
 # Top-level shape -----------------------------------------------------
