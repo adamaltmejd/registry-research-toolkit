@@ -247,7 +247,7 @@ id = "GET /api/stats"
 disposition = "replaced"
 operation = "context"
 owner = "3a"
-covered_by = ["conformance/cases/http_scope/stats", "reg_webapp/backend/tests/test_stats.py"]
+covered_by = ["conformance/cases/http_scope/stats", "conformance/cases/http_scope/stats-catalog"]
 note = "Judgment: scoped headline counts for the landing page that hosts search; they need only admission and the scope predicate, both 3a."
 
 [[row]]
@@ -553,7 +553,7 @@ id = "reg_meta.catalog.CatalogSizes"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "3a"
-covered_by = ["conformance/cases/http_scope/stats", "reg_webapp/backend/tests/test_stats.py"]
+covered_by = ["conformance/cases/http_scope/stats", "conformance/cases/http_scope/stats-catalog"]
 
 [[row]]
 kind = "import"
@@ -642,7 +642,7 @@ id = "reg_meta.catalog.Period"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_period_param.py"]
+covered_by = ["reg_webapp/backend/tests/test_fqid_validation.py", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
 
 [[row]]
 kind = "import"
@@ -1199,7 +1199,7 @@ id = "reg_meta.fqid.RESERVED_GROUP_SLUG"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_boot.py"]
+covered_by = ["reg_webapp/backend/tests/test_reserved_slugs.py"]
 
 [[row]]
 kind = "import"
@@ -1207,7 +1207,7 @@ id = "reg_meta.fqid.RESERVED_HTTP_SUFFIX_SLUGS"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_boot.py"]
+covered_by = ["reg_webapp/backend/tests/test_reserved_slugs.py"]
 
 [[row]]
 kind = "import"
@@ -1215,7 +1215,7 @@ id = "reg_meta.fqid.RESERVED_VARIANTS_SLUG"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_boot.py"]
+covered_by = ["reg_webapp/backend/tests/test_reserved_slugs.py"]
 
 [[row]]
 kind = "import"
