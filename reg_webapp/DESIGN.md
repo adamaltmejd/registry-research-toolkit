@@ -1269,8 +1269,8 @@ geometry, elevation, focus and motion). Dark mode and the planned per-provider t
 are role remaps under `[data-theme]` / `[data-provider]` — no component CSS changes. The
 tokens live in `frontend/src/tokens.css`, imported once in `main.ts`.
 
-**Enforced deterministically** by `frontend/src/style_tokens.test.ts` (part of
-`bun run test`, so it runs in the `reg-webapp-frontend` CI job with no extra wiring):
+**Enforced deterministically** by `frontend/scripts/lint_tokens.ts` (`lint:tokens`, part
+of `bun run lint`, so it runs in the `reg-webapp-frontend` CI job with no extra wiring):
 every `<style>` block in every `.svelte` under `src/` must be free of raw color literals
 (hex, `rgb()`, `hsl()`, `oklch()`, …) and raw `font-family` stacks — a literal that
 renders identically today still escapes the `[data-theme="dark"]` remap. `mask-image`
