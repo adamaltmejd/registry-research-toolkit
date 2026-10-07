@@ -42,6 +42,22 @@ def test_a_cached_artifact_is_never_rebuilt(tmp_path, monkeypatch):
     assert (after.st_ino, after.st_mtime_ns) == (before.st_ino, before.st_mtime_ns)
 
 
+@pytest.mark.skipif(os.geteuid() == 0, reason="root writes through read-only mode bits")
+def test_a_hit_needs_no_write_access(tmp_path, monkeypatch):
+    cache = tmp_path / "cache"
+    monkeypatch.setenv(FIXTURE_CACHE_ENV, str(cache))
+    first = cached_reader_artifact("reader", "catalog")
+    directories = [cache, *(path for path in cache.rglob("*") if path.is_dir())]
+    # A rebuild must stage a new entry, which a read-only cache refuses.
+    for directory in directories:
+        directory.chmod(0o555)
+    try:
+        assert cached_reader_artifact("reader", "catalog") == first
+    finally:
+        for directory in directories:
+            directory.chmod(0o755)
+
+
 def test_only_idle_generations_are_pruned(tmp_path, monkeypatch):
     cache = tmp_path / "cache"
     monkeypatch.setenv(FIXTURE_CACHE_ENV, str(cache))
@@ -59,7 +75,7 @@ def test_only_idle_generations_are_pruned(tmp_path, monkeypatch):
     assert (stale.exists(), active.exists(), neighbour.exists()) == (False, True, True)
 
 
-def test_a_lookup_rebuilds_a_removed_generation(tmp_path, monkeypatch):
+def test_a_removed_generation_is_rebuilt_on_the_next_lookup(tmp_path, monkeypatch):
     monkeypatch.setenv(FIXTURE_CACHE_ENV, str(tmp_path / "cache"))
     path = cached_reader_artifact("reader", "catalog")
     shutil.rmtree(path.parents[1])

@@ -240,10 +240,14 @@ def artifact_key(
     )
 
 
+def _generation_path() -> Path:
+    return fixture_cache_dir() / "generations" / _live_build_inputs()
+
+
 def _generation_dir() -> Path:
     """This build-input generation's cache directory, marked as in use."""
-    generations = fixture_cache_dir() / "generations"
-    generation = generations / _live_build_inputs()
+    generation = _generation_path()
+    generations = generation.parent
     if not generation.is_dir():
         generation.mkdir(parents=True, exist_ok=True)
         # simplify: every source edit starts a generation (~35 MB), so ones idle
@@ -261,12 +265,15 @@ def _retry_if_pruned[T](lookup: Callable[[], T]) -> T:
     """Run a cache lookup, once more if a concurrent prune removed its generation.
 
     A prune can read a generation's old mtime just before a lookup touches it;
-    the retry recreates the generation and rebuilds the entry.
+    the retry recreates the generation and rebuilds the entry. Any other missing
+    file (a fixture without `catalog.json`, say) is a real error and raises.
     """
     try:
         return lookup()
     except FileNotFoundError:
-        return lookup()
+        if _generation_path().is_dir():
+            raise
+    return lookup()
 
 
 def cached_reader_artifact(
