@@ -306,10 +306,11 @@ return-model cases retain contracts that have no equivalent CLI or HTTP projecti
    built from readable source, property tests, golden corpora: the default
    `pytest -m "not integration"` and `bun run test`. Run narrowed by package while
    iterating. Each package stays inside its budget below.
-2. **Push / CI.** The package suites as separate jobs, the OpenAPI snapshot and codegen
-   drift checks, and the Playwright smoke driver against the fixture DB.
-   `@pytest.mark.integration` adds the container-backed tests, which are not budgeted
-   here.
+2. **Push / CI.** The package suites (one `test` job today; one job per suite with
+   `timeout-minutes` at its budget once the suites are within budget), the OpenAPI
+   snapshot and codegen drift checks, and the Playwright smoke driver against the
+   fixture DB. `@pytest.mark.integration` adds the container-backed tests, which are not
+   budgeted here.
 3. **Artifact (maintainer or release gate).** Run
    `pytest conformance --run-release --artifact-dir=/path/to/catalog`. The reader admits
    the selected artifact before execution; incompatible or non-publishable artifacts
@@ -328,9 +329,9 @@ return-model cases retain contracts that have no equivalent CLI or HTTP projecti
 
 Budgets are what a lean suite for the package needs, derived from its boundaries, not
 from the suite's current size. Local is wall time with `pytest <tree> -n auto -q` (or
-`bun run test`) on a 10-core developer Mac; CI is the job's `timeout-minutes` on
-`ubuntu-latest`, including setup. A suite over budget is a finding for the `test-audit`
-skill, not a reason to raise the number.
+`bun run test`) on a 10-core developer Mac; CI is the job budget proposed for
+`timeout-minutes` on `ubuntu-latest`, including setup. A suite over budget is a finding
+for the `test-audit` skill, not a reason to raise the number.
 
   | Suite                      | Local | CI job | Rationale                                                                                                                            |
   | -------------------------- | ----- | ------ | ------------------------------------------------------------------------------------------------------------------------------------ |
@@ -348,7 +349,7 @@ outside G0.
 
 ### Conformance suite
 
-Tiers 2 and 3 share `conformance/` at the repository root. Its readable case data moved
+Every tier runs `conformance/` at the repository root. Its readable case data moved
 byte-identically from the reader and backend suites; thin loaders execute CLI JSON,
 documented public library return models, order manifests and HTTP/boot/validation
 boundaries. Public naming alone is insufficient: cases assert domain outputs or located
