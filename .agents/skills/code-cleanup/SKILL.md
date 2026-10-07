@@ -68,14 +68,16 @@ subagent tool (in Claude Code, the Agent tool with the `general-purpose` type; E
 locates code and does not audit it), told to edit nothing. Launch as many at once as the
 harness allows (Codex runs three children at a time) and the rest in waves. Where the
 harness lets a call choose its model, set it on every call: the family's mid tier (in
-Claude, Opus) for code, the tier below for docs. Modules are every tracked non-test
-production tree (check with `git ls-files`); today: `reg_meta/src`, `reg_meta_build/src`
-split as `sources/`, `ir/` and the top-level modules by size, `reg_schema/src`,
-`reg_webapp/backend/src` with `reg_webapp/backend/scripts`, `reg_webapp/frontend/src`
-(the app root and `lib/`), `reg_webapp/edge`, `scripts/`, and `crates/` (Rust; while
-`RUST_RUNTIME_SPEC.md` is open, its findings go to that refactor's owner, not to land
-here). The test trees are the `test-audit` skill's: run its sweep in the same waves and
-merge its list into step 3.
+Claude, Opus) for code, the tier below for docs. Every tracked non-test source file
+(`git ls-files`, minus tests and committed data) belongs to exactly one module; a file
+the split below misses joins its nearest module. Today's split: `reg_meta/src`;
+`reg_meta_build/src` as `sources/`, `ir/` and the top-level modules by size, with
+`input_data/swecov/build_catalog.py`; `reg_schema/src`; `reg_webapp/backend/src` with
+`backend/scripts`; `reg_webapp/frontend` (the app root, `lib/`, config and `scripts/`);
+`reg_webapp/edge` with the Dockerfile and deploy scripts; the repo-local skills' helper
+scripts; `scripts/`; and `crates/` (Rust; while `RUST_RUNTIME_SPEC.md` is open, its
+findings go to that refactor's owner, not to land here). The test trees are the
+`test-audit` skill's: run its sweep in the same waves and merge its list into step 3.
 
 Each prompt carries the module's paths, an instruction to read CLAUDE.md,
 ARCHITECTURE.md and the package's DESIGN.md first and the module's files whole, the step
@@ -137,9 +139,11 @@ was removed. Before each push: `uv run ruff check`, `uv run ruff format --check`
 `cargo clippy --workspace --all-targets --locked -- -D warnings` and
 `cargo test --workspace --locked`, as CI runs them; for the frontend,
 `bun run check && bun run lint && bun run test && bun run build` in
-`reg_webapp/frontend`, as CI runs them. A change that redesigns a module rather than
-deleting from it, or needs more than one sitting, becomes a GitHub issue instead (search
-open and closed first).
+`reg_webapp/frontend`, as CI runs them; for the edge worker,
+`bunx wrangler@4.130.0 deploy --dry-run --config reg_webapp/edge/wrangler.jsonc` (the
+pin CI deploys with). A change that redesigns a module rather than deleting from it, or
+needs more than one sitting, becomes a GitHub issue instead (search open and closed
+first).
 
 ## 5. Report
 

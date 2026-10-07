@@ -70,8 +70,9 @@ One line per block that fails the bar, no hedging:
 - `promise:` the name or docstring claims more than the scenario exercises.
 - `seam:` asserts the implementation's shape instead of a boundary's output: a private
   function, an object's internals, a call, a SQL string, a mock of an internal module, a
-  component's props or state. Also a helper, fixture or product hook that only this
-  block needs.
+  component's props or state. Also a helper or product hook that only this block needs
+  and that exposes internals; a readable fixture dedicated to one boundary case is not a
+  seam.
 
 Disposition is `delete`, or `rewrite` (name the corpus) when the block is the only proof
 of a stated behavior. Never `delete` the only proof of a load-bearing guard (CLAUDE.md →
