@@ -10,7 +10,9 @@ import hashlib
 import json
 import subprocess
 from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
+from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.input_snapshot import (
     SCB_CSV_FILES,
     CatalogBundleSelection,
@@ -19,6 +21,10 @@ from reg_meta_build.input_snapshot import (
     prepare_input_bundle,
     prepare_snapshot,
 )
+from reg_meta_build.sources.scb_records import clean_scb_row
+
+if TYPE_CHECKING:
+    from reg_meta_build.source_records import SourceRecord
 
 PIPE = "|"
 
@@ -227,6 +233,30 @@ def var_row(
         str(regver_id),
         str(var_id),
     )
+
+
+SCB_REVISION = SourceRevision.create(
+    dataset="scb-fixture",
+    publisher="SCB",
+    purpose="synthetic SCB source-record fixture",
+    upstream_revision="1",
+    artifact_path="records.csv",
+    artifact_size=1,
+    artifact_sha256="a" * 64,
+)
+
+
+def scb_record(
+    row: int = 1, *, revision: SourceRevision = SCB_REVISION, **var_row_kwargs: Any
+) -> SourceRecord:
+    """The cleaned source record of one synthetic `var_row(**var_row_kwargs)`, every
+    cell delivered verbatim, at physical row `row` of `revision`."""
+    header = REGISTERINFORMATION_HEADER.split(PIPE)
+    values = var_row(**var_row_kwargs).split(PIPE)
+    cells: dict[str, tuple[bool, str | None, str]] = {
+        name: (True, value, value) for name, value in zip(header, values, strict=True)
+    }
+    return clean_scb_row(header, row, cells, revision).record
 
 
 HAMN_SIGNAL_TARGETS = (

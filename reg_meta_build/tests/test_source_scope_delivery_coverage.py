@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import pytest
-from _source_scope_support import REVISION, guard, record, resolve
+from _csv_fixtures import SCB_REVISION
+from _source_scope_support import guard, record, resolve
 from reg_meta.source_evidence import SourceField
 from reg_meta_build.catalog_dependencies import (
     check_delivery_coverage,
@@ -93,7 +94,7 @@ def test_lost_delivery_coverage_is_refused_with_its_exact_window(shape, missing)
         )
     assert missing in str(failure.value)
     assert "scb/example/value-5 people-2/VALUE" in str(failure.value)
-    assert f"claimed by {REVISION.dataset}/" in str(failure.value)
+    assert f"claimed by {SCB_REVISION.dataset}/" in str(failure.value)
 
 
 @pytest.mark.parametrize("shape", ["gap", "negative", "unknown", "pooled"])

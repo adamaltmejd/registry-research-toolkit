@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import replace
 
 import pytest
+from _csv_fixtures import SCB_REVISION
 from _source_scope_support import record, resolve
 from catalog_manifest import synthetic_manifest
 from reg_meta.errors import RegMetaError
@@ -147,7 +148,7 @@ def test_unresolved_or_split_native_identity_withholds_only_its_event(targets):
 
 
 def test_event_binding_never_matches_another_source_or_coerces_native_ids():
-    for target in ("unrelated-source", "scope-fixture"):
+    for target in ("unrelated-source", SCB_REVISION.dataset):
         bindings, originals, scope, uses = _observe((_event(first="01"),))
         bindings = SourceEventBindings(bindings.events, {REVISION.dataset: target})
         bindings.observe_scope(originals, scope, uses)

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
-from reg_meta.source_evidence import RecordLocator, SourceField, SourceRevision
+from _csv_fixtures import SCB_REVISION, scb_record
+from reg_meta.source_evidence import RecordLocator, SourceField
 from reg_meta_build.source_curation import (
     CheckedFieldChange,
     CurationCase,
@@ -28,22 +28,10 @@ from reg_meta_build.source_records import (
     value_field,
 )
 from reg_meta_build.source_reference_records import SourceColumnTypeDeclaration
-from reg_meta_build.sources.scb_records import clean_scb_row
 from reg_meta_build.sources.swecov_column_types import index_swecov_column_types
 
 if TYPE_CHECKING:
     from reg_meta_build.source_curation import OccurrenceEffect
-
-
-REVISION = SourceRevision.create(
-    dataset="scb-fixture",
-    publisher="SCB",
-    purpose="checked occurrence fixture",
-    upstream_revision="1",
-    artifact_path="Registerinformation.csv",
-    artifact_size=1,
-    artifact_sha256="b" * 64,
-)
 
 
 def effect_scope(year: str) -> TemporalScope:
@@ -61,7 +49,8 @@ def effect_record(
     variable: int = 5,
     data_type: str = "int",
 ) -> SourceRecord:
-    values = var_row(
+    return scb_record(
+        row,
         cvid=cvid,
         var_id=variable,
         colname=column,
@@ -69,12 +58,7 @@ def effect_record(
         regver_id=int(year),
         year=year,
         data_type=data_type,
-    ).split("|")
-    header = REGISTERINFORMATION_HEADER.split("|")
-    cells: dict[str, tuple[bool, str | None, str]] = {
-        name: (True, value, value) for name, value in zip(header, values, strict=True)
-    }
-    return clean_scb_row(header, row, cells, REVISION).record
+    )
 
 
 def effect_expectation(record: SourceRecord) -> RecordExpectation:
@@ -139,7 +123,7 @@ def storage_columns(
 ) -> dict[tuple[str, str], SourceColumnTypeDeclaration]:
     return index_swecov_column_types(
         SourceColumnTypeDeclaration(
-            revision=REVISION,
+            revision=SCB_REVISION,
             locator=RecordLocator(
                 semantic_record_key=("storage", table, column),
                 physical_file="fixture.csv",

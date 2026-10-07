@@ -5,14 +5,13 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
+from _csv_fixtures import scb_record
 from reg_meta_build.curation_compile import convert_column_partitions
 from reg_meta_build.source_effects import (
     apply_occurrence_cases,
     record_ref,
 )
 from reg_meta_build.source_occurrences import source_occurrence
-from reg_meta_build.sources.scb_records import clean_scb_row
 
 from reg_meta_build.fqid_slugs import (
     declared_column_ownership,
@@ -28,8 +27,6 @@ if TYPE_CHECKING:
         SourceRecord,
     )
 
-from _source_effects_support import REVISION as _REVISION
-
 # Y-167: FDB VarId 830 literal column ownership. GatuRest/Gaturest share one
 # identity, PGaturest keeps its own, on both FDB variants (424/427). The
 # tracked declaration feeds the converter; nothing is folded or inferred.
@@ -44,19 +41,15 @@ _FDB_DECLARATION = (
 def _fdb_record(
     column: str, *, row: int = 1, cvid: int = 20, year: str = "2020", variant: int = 424
 ) -> SourceRecord:
-    values = var_row(
+    return scb_record(
+        row,
         cvid=cvid,
         var_id=830,
         colname=column,
         register=("FDB", 1, variant),
         regver_id=int(year),
         year=year,
-    ).split("|")
-    header = REGISTERINFORMATION_HEADER.split("|")
-    cells: dict[str, tuple[bool, str | None, str]] = {
-        name: (True, value, value) for name, value in zip(header, values, strict=True)
-    }
-    return clean_scb_row(header, row, cells, _REVISION).record
+    )
 
 
 def _fdb_family() -> tuple[SourceRecord, ...]:

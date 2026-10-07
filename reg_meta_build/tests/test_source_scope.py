@@ -6,8 +6,9 @@ from types import SimpleNamespace
 from typing import Any, cast
 
 import pytest
+from _csv_fixtures import SCB_REVISION
 from _prepared_fixtures import accept_prepared
-from _source_scope_support import REVISION, acknowledge, guard, names, record, resolve
+from _source_scope_support import acknowledge, guard, names, record, resolve
 from reg_meta_build.curation_compile import (
     compile_scb_preliminary,
     convert_column_partitions,
@@ -257,8 +258,8 @@ def test_whole_list_item_validity_override_emits_one_warning(tmp_path):
     )
     manifest = prepare_source_values(
         root,
-        revision=REVISION,
-        validity_revision=REVISION,
+        revision=SCB_REVISION,
+        validity_revision=SCB_REVISION,
         descriptors=(SourceValueDescriptor("list"),),
         values=(SourceValue("no", "0", "No"), SourceValue("yes", "1", "Yes")),
         associations=rows,
@@ -274,7 +275,7 @@ def test_whole_list_item_validity_override_emits_one_warning(tmp_path):
             for index in range(2)
         ),
         join=SourceValueJoin(
-            record_sources=(REVISION.dataset,),
+            record_sources=(SCB_REVISION.dataset,),
             member_target="native_member",
             member_format="integer",
             validity_target="item",
@@ -308,8 +309,8 @@ def test_scope_forwards_label_rule_and_fqid_override(tmp_path):
     root = tmp_path / "values"
     manifest = prepare_source_values(
         root,
-        revision=REVISION,
-        validity_revision=REVISION,
+        revision=SCB_REVISION,
+        validity_revision=SCB_REVISION,
         descriptors=(SourceValueDescriptor("list", version=" Listed "),),
         values=(SourceValue("value", "01", "One"),),
         associations=(
@@ -318,7 +319,7 @@ def test_scope_forwards_label_rule_and_fqid_override(tmp_path):
             ),
         ),
         join=SourceValueJoin(
-            record_sources=(REVISION.dataset,),
+            record_sources=(SCB_REVISION.dataset,),
             member_target="native_member",
             member_format="integer",
             validity_target="item",
@@ -414,7 +415,7 @@ def test_checked_list_declaration_controls_binding_without_replacing_evidence(
     root = tmp_path / "values"
     manifest = prepare_source_values(
         root,
-        revision=REVISION,
+        revision=SCB_REVISION,
         descriptors=(
             SourceValueDescriptor("old", name="Old"),
             SourceValueDescriptor("new", name="New"),
@@ -428,7 +429,7 @@ def test_checked_list_declaration_controls_binding_without_replacing_evidence(
             SourceValueAssociation(2, "new", "new", "values"),
         ),
         join=SourceValueJoin(
-            record_sources=(REVISION.dataset,),
+            record_sources=(SCB_REVISION.dataset,),
             member_target="declared_list",
             member_format="none",
             validity_target="row",
@@ -519,8 +520,8 @@ def test_copied_coding_checks_original_external_evidence_before_any_effects(
             )
         manifest = prepare_source_values(
             root,
-            revision=REVISION,
-            validity_revision=REVISION,
+            revision=SCB_REVISION,
+            validity_revision=SCB_REVISION,
             descriptors=(SourceValueDescriptor("list"),),
             values=(
                 SourceValue("code", code, "Original label"),
@@ -528,7 +529,7 @@ def test_copied_coding_checks_original_external_evidence_before_any_effects(
             ),
             associations=rows,
             join=SourceValueJoin(
-                record_sources=(REVISION.dataset,),
+                record_sources=(SCB_REVISION.dataset,),
                 member_target="native_member",
                 member_format="integer",
                 validity_target="item",

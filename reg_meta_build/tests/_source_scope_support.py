@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
-from reg_meta.source_evidence import SourceRevision
+from _csv_fixtures import scb_record
 from reg_meta_build.source_coordinates import (
     native_parent_key,
     native_variable_key,
@@ -29,19 +28,8 @@ from reg_meta_build.source_records import (
 )
 from reg_meta_build.source_scope import resolve_source_scope
 from reg_meta_build.source_support import SourceSupportBindings
-from reg_meta_build.sources.scb_records import clean_scb_row
 
 from reg_meta_build.fqid_slugs import SlugEntry
-
-REVISION = SourceRevision.create(
-    dataset="scope-fixture",
-    publisher="SCB",
-    purpose="Scope composition",
-    upstream_revision="1",
-    artifact_path="records.csv",
-    artifact_size=1,
-    artifact_sha256="a" * 64,
-)
 
 
 def record(
@@ -55,8 +43,8 @@ def record(
     edition_id=None,
     data_length="1",
 ):
-    header = REGISTERINFORMATION_HEADER.split("|")
-    values = var_row(
+    result = scb_record(
+        member,
         cvid=member,
         var_id=variable,
         colname=column,
@@ -65,16 +53,7 @@ def record(
         regver_id=int(year) if edition_id is None else edition_id,
         data_length=data_length,
         year=year,
-    ).split("|")
-    result = clean_scb_row(
-        header,
-        member,
-        {
-            name: (True, value, value)
-            for name, value in zip(header, values, strict=True)
-        },
-        REVISION,
-    ).record
+    )
     return result.model_copy(
         update={
             "fields": result.fields.model_copy(
