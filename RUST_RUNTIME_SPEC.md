@@ -503,10 +503,10 @@ running on every intermediate release until stage 4 replaces it.
    harness is one of its deliverables. Ends at checkpoint 1.
 2. **Derive framework.** `reg-meta-build derive` with its validator, the pattern for
    registering a derived table, the derived-artifact identity contract and the steward
-   ordering (section 4), shipped as a schema 9.x minor. Tier 1 compares the baseline
-   reader against derived tables from here on. The derived tables themselves are built
-   in the stage-3 slice that reads them, so no table shape is designed before something
-   consumes it.
+   ordering (section 4), shipped as a schema 9.x minor. Its acceptance proves the tier-1
+   harness on a trivial derived table; real tables arrive with the slices. The derived
+   tables themselves are built in the stage-3 slice that reads them, so no table shape
+   is designed before something consumes it.
 3. **Rust operation slices.** Each slice is its `api` cases (written red from the
    approved operation table), its derived tables (a schema 9.x minor), then its Rust
    operations over HTTP and MCP, in one to three PRs: (a) admission + search, (b) show /
@@ -539,7 +539,7 @@ The build track (section 11) runs alongside, independent of these stages.
 ### Stage 1 packages
 
 Each package follows the execution protocol (section 4). Order: 1.0 first; then 1.1, 1.2
-and 1.3 in parallel; then 1.4 (after 1.1 and 1.3) and 1.5 (after 1.2).
+and 1.3 in parallel; then 1.1b, 1.4 (after 1.1 and 1.3) and 1.5 (after 1.2).
 
 **1.0 Land this tracker.** PR for `claude/reg-meta-rust-port-d3d5bc` (this file, the
 governance exception, `spike/stage0/`), reviewed and merged. Every later package
@@ -551,15 +551,25 @@ branches from main.
   tool, parameters, result shape, error codes) and the error catalog (code, class, HTTP
   status). The `api` case format is documented in `conformance/README.md`; cases for
   slice (a) (admission errors, search) go under `conformance/cases/api/`.
-- A surface inventory in section 7: every current HTTP route, CLI command and public
-  library entry point, marked retained, replaced or removed, with its owning slice and
-  acceptance case. Nothing the cutover needs may be unowned.
 - Expected values may start from the current Python reader's output mapped to the new
   shape; each is reviewed as content.
+- Paths: this file, `conformance/README.md`, `conformance/cases/api/`, one test module
+  under `conformance/`.
 - Out of scope: any runner or implementation.
 - Acceptance: a tier-0 test checks that every `api` case parses, names an operation in
   the table and references an existing fixture.
 - Ends at checkpoint 1, together with 1.2.
+
+**1.1b Surface inventory.** Implements section 7, "No query CLI".
+
+- Changes: a table in section 7 of every current HTTP route, CLI command and public
+  library entry point, marked retained, replaced or removed, with its owning slice and
+  acceptance case. Nothing the cutover needs may be unowned (docs, context, stats and
+  `fetch` included).
+- Paths: this file only.
+- Acceptance: every route in `reg_webapp/backend/src/reg_webapp/routes/` and every
+  `reg-meta` subcommand appears in the table.
+- Ends at checkpoint 1.
 
 **1.2 `reg-core` with the folds.** Implements the fold spec (section 5).
 
@@ -573,6 +583,8 @@ branches from main.
   Python.
 - Adds a CI job (`cargo fmt --check`, `cargo clippy -D warnings`, `cargo test`) and a
   pre-commit `cargo fmt` hook.
+- Paths: `crates/`, root `Cargo.toml` and `Cargo.lock`, `conformance/cases/folds/`,
+  `.github/workflows/`, `.pre-commit-config.yaml`.
 - Out of scope: Python bindings (slice 3a), the FQID and period grammars.
 - Acceptance: `cargo test` passes the corpus and a sweep over every scalar value; CI is
   green.
@@ -582,9 +594,11 @@ branches from main.
 - Changes: a builder that makes each synthetic (fixture, kind) artifact once through the
   real pipeline into a cache directory. The key hashes every transitive build input:
   fixture sources, the `reg_meta_build`, `reg_meta` and `reg_schema` sources (the
-  fixture builder imports identity and fallback policy from `reg_meta`), builder options
-  and `uv.lock`. Entries are immutable; cases that mutate an artifact copy it.
-  Conformance session fixtures read from the cache.
+  fixture builder in `reg_meta/tests/reader_artifacts.py` imports from `reg_meta`),
+  builder options and `uv.lock`. Entries are immutable; cases that mutate an artifact
+  copy it. Conformance session fixtures read from the cache.
+- Paths: `conformance/conftest.py`, `conformance/` helpers,
+  `reg_meta/tests/reader_artifacts.py`, a cache builder script.
 - Out of scope: changing any fixture or golden.
 - Acceptance: `uv run python -m pytest conformance -q` twice, and the second run builds
   nothing; a cache hit is byte-identical to a fresh build; touching each input class
@@ -596,6 +610,8 @@ branches from main.
   starts one server per cached fixture artifact and server configuration, and runs HTTP
   cases over a real socket. The `api` corpus is collected only with this option.
   Startup-failure cases stay process-level.
+- Paths: `conformance/conftest.py`, `conformance/http_cases.py`,
+  `conformance/README.md`.
 - Out of scope: rewriting existing cases.
 - Acceptance: the existing HTTP and validate cases pass with `--server-cmd` starting the
   FastAPI app under uvicorn; the default in-process run is unchanged.
@@ -609,6 +625,7 @@ branches from main.
   the search-eval corpus terms, in both scopes. It is seeded from
   `spike/stage0/scripts/parity_fts.py`.
 - Deletes `spike/stage0/`; the fold parity sweep lives on in 1.2.
+- Paths: `conformance/differential/`, section 4 of this file, `spike/stage0/` (deleted).
 - Out of scope: mappings for the new API's shapes, which each slice adds.
 - Acceptance: a baseline-against-checkout run on unchanged main reports zero differences
   in under 5 minutes, and a deliberately perturbed checkout reader is reported.
