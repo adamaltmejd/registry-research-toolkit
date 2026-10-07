@@ -17,20 +17,12 @@ codings ONE classification era spans.
 from __future__ import annotations
 
 import pytest
-from fastapi.testclient import TestClient
-from reg_webapp.app import create_app
 
 # The seeded parish codings (see `scripts/fixture_db.py`): id → (count, prefix).
 _HISTORIC = 900
 _DISTRICT = 902
 _EMPTY = 903
 _AGES = 904
-
-
-@pytest.fixture
-def client(catalog_db):
-    with TestClient(create_app()) as c:
-        yield c
 
 
 def _codes(client, value_set_id, **params):
