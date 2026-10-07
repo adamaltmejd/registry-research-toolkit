@@ -1,0 +1,22 @@
+[build-system]
+requires = ["maturin>=1.9,<2"]
+build-backend = "maturin"
+
+[project]
+name = "reg-core-spike"
+version = "0.0.0"
+requires-python = ">=3.14"
+
+[tool.maturin]
+features = ["python"]
+module-name = "reg_core_spike"
+
+[tool.uv]
+# uv caches path-dependency builds keyed on pyproject.toml only; without these keys a
+# Rust edit is silently ignored by `uv run --with` / `uv sync`.
+cache-keys = [
+  { file = "pyproject.toml" },
+  { file = "Cargo.toml" },
+  { file = "src/**/*.rs" },
+  { file = "../Cargo.lock" },
+]

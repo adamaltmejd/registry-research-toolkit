@@ -208,16 +208,20 @@ implementation:
 Notes:
 
 - **Text folds get a written spec.** Two named folds:
-  - `fold_identity` — per-character Unicode lowercase, no context rules (no final
-    sigma), no normalization. This is today's `py_lower` and column identity rule. In
-    Rust this is `char::to_lowercase` applied per character, not `str::to_lowercase`,
-    which applies final sigma.
-  - `fold_search` — NFKD, drop combining marks, full case folding, collapse whitespace.
-    This is today's search-text fold and is aligned with FTS5 `unicode61`.
+  - `fold_identity` — Unicode lowercase with the Final_Sigma context rule, no
+    normalization. This is today's `py_lower` (Python `str.lower()`, which does apply
+    Final_Sigma) and the column identity rule. In Rust it is `str::to_lowercase`.
+  - `fold_search` — strip, full case folding, NFKD, drop characters with a nonzero
+    canonical combining class, collapse whitespace. This is today's search-text fold and
+    is aligned with FTS5 `unicode61`.
+  - Helper classes follow Python, not Rust's std: whitespace is `White_Space` plus
+    U+001C..U+001F; "alphanumeric" (`[^\W_]`) is general category L\* or N\*, not Rust's
+    `Alphabetic` property.
 
   The build computes folded columns with the same code the reader uses for the query
-  string, through the bindings. Pin the Unicode version. Keep a property-test corpus of
-  Swedish and SCB strings.
+  string, through the bindings. Pin one Unicode version for all of `reg-core` (stage 0
+  found Rust std and `unicode-normalization` on 17.0, `caseless` on 16.0, Python on
+  16.0). Keep the stage-0 parity sweep as a property test.
 
 - **Canonical JSON** has no floats today. Keep it that way. A float in a hashed payload
   is a build error.
@@ -433,6 +437,73 @@ Stage 2 can be done without Rust and pays for itself. If the spike fails, stop a
 stage 2 and keep the Python reader, now much thinner.
 
 The build track (section 11) runs alongside, independent of these stages.
+
+### Stage 0 results (2026-10-07)
+
+The spike lives in `spike/stage0/` (deleted when stage 1 starts): a `core` crate with
+the folds and the FTS query builder plus PyO3 bindings, and a `server` binary with run
+modes `serve` (HTTP `/api/search` and MCP at `/mcp`) and `mcp` (stdio). Its one
+operation is the variable full-text arm of today's search, in reference scope, with
+today's SQL. All measurements are on the pinned 0.41.0 catalog, warm.
+
+**Verdict: proceed.** Nothing was worse than expected; two findings change stage 1.
+
+Correctness:
+
+- **Search parity.** 338 queries (the search-eval corpus, 300 sampled variable-name
+  words, edge cases): identical result order and FQIDs, and identical bm25 scores to
+  1e-9, between Rust and Python running the same arm. The bundled SQLite (3.53.2) and
+  Python's (3.53.4) agree.
+- **Fold parity.** Every Unicode scalar value (1,112,064, bare and in four contexts) and
+  1.09M distinct catalog strings, for `fold_identity`, `fold_search`, the query
+  normalizer, the FTS query builder and the two character classes. Zero mismatches on
+  the corpus. The sweep's residual mismatches are all characters that differ between
+  Unicode 16 (Python) and 17 (Rust); none occur in the catalog.
+- **Found and fixed:** Rust's `char::is_alphanumeric` admits `Other_Alphabetic` marks
+  and symbols that Python's `[^\W_]` rejects, so the FTS query builder emitted terms
+  Python drops. The fix is a general-category rule (§5).
+- **Corrected assumption:** Python's `str.lower()` applies Final_Sigma, so
+  `fold_identity` is plain `str::to_lowercase` (§5).
+
+Performance (warm, in-process for Python):
+
+  | Measurement                                           | Median | p95      |
+  | ----------------------------------------------------- | ------ | -------- |
+  | Rust HTTP `GET /api/search`                           | 2.0 ms | 39 ms    |
+  | Rust MCP over HTTP, `tools/call search`               | 8.4 ms | 38 ms    |
+  | Rust MCP over stdio, `tools/call search`              | 6.1 ms | 40 ms    |
+  | Python, the same arm's SQL only                       | 0.4 ms | 19 ms    |
+  | Python `search(field="description", type="variable")` | 17 ms  | 179 ms   |
+  | Python `search()` default (all arms)                  | 485 ms | 1,408 ms |
+
+- The arm's SQL costs the same in both languages. The gap to Python's `search()` is its
+  Python post-processing and query count, which section 3 removes; Rust adds speed on
+  top of that only by dropping per-row Python work.
+- `reg-meta mcp` spawns and completes MCP initialize in 12 ms. `serve` used 57 MB RSS
+  after the load test; the release binary is 6.8 MB.
+
+Toolchain:
+
+- Builds: cold release 51 s; incremental debug ~1 s; incremental release ~35 s (thin
+  LTO, benchmarks only). Clippy and rustfmt clean. rusqlite (bundled, FTS5), axum and
+  rmcp 3.5 worked without workarounds.
+- PyO3 via maturin: `uv run --with ./spike/stage0/core` builds the extension with no
+  manual maturin install (needs cargo on PATH). First build 12.5 s, rebuild after a Rust
+  edit 4.6 s, 670 KB extension.
+- **uv does not see Rust edits by default.** It caches path builds on `pyproject.toml`
+  only; the package needs `[tool.uv] cache-keys` covering `Cargo.toml`, `src/**/*.rs`
+  and `Cargo.lock`. "Editable" installs are full rebuilds for a Rust extension.
+- Plain `cargo build --features python` does not link on macOS; build the extension
+  through maturin and use cargo for check, clippy and tests.
+- MCP interop papercut: the Python MCP SDK 2.3 logs "Session termination failed: 202"
+  when rmcp answers the session DELETE with 202. Harmless; recheck at stage 3.
+
+Stage-1 consequences:
+
+1. Pin one Unicode version across `reg-core`: Rust std (17.0) sets it; replace or
+   regenerate the case-folding table that `caseless` pins at 16.0.
+2. Give `reg-core-py` `cache-keys` from the start, and keep the parity sweep and the
+   search-parity harness as the seed of the tier-1 harness.
 
 ## 11. The build: faster, incremental, still Python
 
