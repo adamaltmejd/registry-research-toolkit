@@ -32,18 +32,48 @@ STALE_REF = "classifications/A.toml#/binding/value_set_labels/1"
 
 
 def write_catalog(
-    tmp_path: Path, books: Books, declared: str | None = None
+    tmp_path: Path,
+    books: Books,
+    declared: str | None = None,
+    value_sets: dict[str, str] | None = None,
 ) -> tuple[Path, str, str, Path]:
+    """`value_sets` adds one SCB column per entry (variable 1.102, 1.103, ...)
+    whose 2020 value set, codes `1`/`2`, carries the given Värdemängdsversion."""
+    value_sets = value_sets or {}
+    coded = [
+        (column, label, 1002 + index, 102 + index)
+        for index, (column, label) in enumerate(value_sets.items())
+    ]
     source = tmp_path / "source"
     write_scb_input(
         source,
         registerinformation_rows=[
-            var_row(cvid=1001, var_id=101, colname="VALUE", data_type="int")
+            var_row(cvid=1001, var_id=101, colname="VALUE", data_type="int"),
+            *(
+                var_row(cvid=cvid, var_id=var_id, colname=column, varname=column)
+                for column, _, cvid, var_id in coded
+            ),
         ],
         unika_rows=[
-            "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0"
+            "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0",
+            *(
+                f"TESTREG|Testregistret|Individer|Individer|{column}|{column}"
+                "|2020|2020|0|0|0"
+                for column, *_ in coded
+            ),
         ],
-        include=("registerinformation", "unika"),
+        vardemangder_rows=[
+            f"{label}|1|{code}|{name}|{cvid}|{cvid}{code}"
+            for _, label, cvid, _ in coded
+            for code, name in (("1", "One"), ("2", "Two"))
+        ],
+        valid_dates_rows=[
+            f"{cvid}{code}|2000-01-01|2030-12-31"
+            for _, _, cvid, _ in coded
+            for code in ("1", "2")
+        ],
+        include=("registerinformation", "unika")
+        + (("vardemangder", "valid_dates") if coded else ()),
     )
     fk = source / "Forsakringskassan"
     fk.mkdir()
@@ -77,7 +107,11 @@ def write_catalog(
     (scb / "sample.toml").write_text(
         '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
         '[[variant]]\nnative_id = "1.10"\nslug = "people"\n'
-        '[[variable]]\nnative_id = "1.101"\nslug = "value"\n',
+        '[[variable]]\nnative_id = "1.101"\nslug = "value"\n'
+        + "".join(
+            f'[[variable]]\nnative_id = "1.{var_id}"\nslug = "{column.lower()}"\n'
+            for column, _, _, var_id in coded
+        ),
         encoding="utf-8",
     )
     thin = curation / "registers" / "fk"
@@ -99,8 +133,15 @@ def write_catalog(
     return prepared, commit, manifest.sha256, curation
 
 
-def diagnostic_build(tmp_path: Path, books: Books, declared: str | None = None):
-    prepared, commit, digest, curation = write_catalog(tmp_path, books, declared)
+def diagnostic_build(
+    tmp_path: Path,
+    books: Books,
+    declared: str | None = None,
+    value_sets: dict[str, str] | None = None,
+):
+    prepared, commit, digest, curation = write_catalog(
+        tmp_path, books, declared, value_sets
+    )
     return build_catalog(
         prepared,
         commit,
@@ -112,7 +153,7 @@ def diagnostic_build(tmp_path: Path, books: Books, declared: str | None = None):
     )
 
 
-def amount_classifications(db: Path) -> list[str]:
+def column_classifications(db: Path, column: str = "AMOUNT") -> list[str]:
     with sqlite3.connect(db) as conn:
         return [
             slug
@@ -120,7 +161,8 @@ def amount_classifications(db: Path) -> list[str]:
                 "SELECT c.slug FROM state_classification sc "
                 "JOIN classification c ON c.id = sc.classification_id "
                 "JOIN variable_state s ON s.state_id = sc.state_id "
-                "WHERE s.delivery_column_name = 'AMOUNT' ORDER BY c.slug"
+                "WHERE s.delivery_column_name = ? ORDER BY c.slug",
+                (column,),
             )
         ]
 
@@ -136,7 +178,7 @@ def test_declared_short_name_or_alias_binds_state_to_its_classification(
     books = {"A": ("a", 'aliases = ["Source A"]\n'), "B": ("b", "")}
     result = diagnostic_build(tmp_path, books, declared)
     assert result["status"] == "diagnostic_complete"
-    assert amount_classifications(tmp_path / "out.db") == ["a"]
+    assert column_classifications(tmp_path / "out.db") == ["a"]
     assert issue_codes(tmp_path / "report") == []
 
 
@@ -151,7 +193,25 @@ def test_declared_family_alias_binds_state_to_the_covering_edition(
         "NEW": ("new", 'family = "pair"\nvalid_from = 2020\n'),
     }
     diagnostic_build(tmp_path, books, "Source pair")
-    assert amount_classifications(tmp_path / "out.db") == ["new"]
+    assert column_classifications(tmp_path / "out.db") == ["new"]
+    assert issue_codes(tmp_path / "report") == []
+
+
+def test_value_set_label_binds_only_the_versions_its_book_lists(
+    tmp_path: Path,
+) -> None:
+    """A label rule binds by the source's value-set version label, never by code
+    coincidence: a grouped reporting version (SCB's "SNI 2002, begränsad nivå")
+    whose codes all sit in the detailed book stays unbound, without an issue.
+    Fails if a label rule matched on code containment or on an unlisted label."""
+    books = {"A": ("a", '[binding]\nvalue_set_labels = ["Detailed book"]\n')}
+    diagnostic_build(
+        tmp_path,
+        books,
+        value_sets={"DETAILED": "Detailed book", "GROUPED": "Grouped report"},
+    )
+    assert column_classifications(tmp_path / "out.db", "DETAILED") == ["a"]
+    assert column_classifications(tmp_path / "out.db", "GROUPED") == []
     assert issue_codes(tmp_path / "report") == []
 
 

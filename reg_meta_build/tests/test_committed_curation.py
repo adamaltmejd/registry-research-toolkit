@@ -3,7 +3,9 @@
 Load-time validation only: TOML shape, strict models, cross-file references the
 loaders resolve, classification code CSVs and reviewed matrix evidence. Whether the
 committed content is *right* (named owners, counts, endpoints that resolve against
-real exports) is checked by the maintainer's real-seed strict build, not here.
+real exports) is checked by the maintainer's real-seed strict build, not here. The
+one content exception is the grouped-SNI label pin below, a mistake the real-seed
+build accepts.
 """
 
 from __future__ import annotations
@@ -39,6 +41,19 @@ if TYPE_CHECKING:
 # Overlay families the model accepts but no committed register declares yet. Remove
 # an entry when its first declaration lands.
 _NOT_YET_DECLARED = {"errata.edition_period"}
+
+# SCB's grouped SNI reporting labels, unbound in eda7462a. Some grouped codes are also
+# valid codes in the detailed books (`01` in SNI2002), so a label rule naming one can
+# bind a grouped value set to a detailed book without a stale or nonconforming
+# diagnostic, and the real-seed build does not catch it.
+_GROUPED_SNI_LABELS = {
+    "SNI 92, begränsad nivå",
+    "SNI 92, grov nivå",
+    "SNI 2002, begränsad nivå",
+    "SNI 2002, grov nivå",
+    'SNI 2007, grov nivå - "populärversion"',
+    'SNI 2007, utökad nivå - "populärversion"',
+}
 
 
 def _overlay_families(
@@ -128,6 +143,14 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
         assert load_valid_codes(books / entry.classification.codes_file), (
             entry.classification.short_name
         )
+    label_rules = {
+        label: entry.classification.short_name
+        for entry in tree.classifications
+        for label in entry.binding.value_set_labels
+    }
+    assert not label_rules.keys() & _GROUPED_SNI_LABELS, {
+        label: label_rules[label] for label in label_rules.keys() & _GROUPED_SNI_LABELS
+    }
 
     matrices = [
         (register, declaration)
