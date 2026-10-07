@@ -1666,6 +1666,23 @@ dates. Source-backed stock-file overrides may name an exact snapshot date, inclu
 October school censuses, while retaining the original catalog state windows. A source
 snapshot date alone does not establish the delivery date of a derived geocoded extract.
 
+**Holdings curation rules (ratified 2026-09-01).** Each inventory table carries one
+explicit physical edition in the shared finite period grammar. A table without an
+edition encoded in its name still requires an explicit curated edition; filename
+inference fails for review on zero or ambiguous period tokens rather than guessing.
+Neither explicit year-independent scope nor retained unknown scope is inferred as an
+unbounded "all periods" sentinel. The inventory describes **current holdings only**: a
+superseded delivery (a cumulative re-delivery replacing an earlier snapshot, e.g. the
+dated `FHM_NVR_Covid*` series) is discarded at curation. The one-to-one validation error
+(`reg_meta/DESIGN.md` → "Holdings resolution invariants") is the supersession worklist.
+The generator fails for review on each conflict rather than auto-picking a survivor; a
+filename date is not proof of supersession. A **special-purpose sub-extract** (data
+already held, re-delivered at another level of detail for a narrow purpose: the
+`RTB_SaBo_*` extracts, the `SWECOV_SOS_*_comorb` comorbidity tables) is likewise
+excluded from the order surface at curation, under its own exclusion reason class
+distinct from supersession. Disjoint-partition labels are explicit curated facts, never
+inferred.
+
 Unsupported physical fields remain in the inventory with unavailable mappings and
 explicit reasons. Exact auxiliary fields can also retain a known owner and meaning in
 their evidence while the maintained primary holding supplies the ordering coordinate.

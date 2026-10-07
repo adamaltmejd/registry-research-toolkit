@@ -1238,7 +1238,7 @@ describe("stable client-side ids (issue #200)", () => {
   });
 });
 
-describe("a blocked order (§12)", () => {
+describe("a blocked order", () => {
   it("closes the download gate on the 422 so the CTA can't repeat a request that cannot succeed", async () => {
     // The materializer fail-closes projects that VALIDATE clean (a steward-
     // provenance mismatch, an uncovered period), so a green validation is not

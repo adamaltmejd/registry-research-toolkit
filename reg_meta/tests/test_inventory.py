@@ -1,11 +1,12 @@
-"""Steward delivery-inventory contract (REFACTOR_SPEC.md §12 lane 1).
+"""Steward delivery-inventory contract (reg_meta/DESIGN.md → Inventory TOML
+authoring contract, Holdings resolution invariants).
 
 The fixture below is a synthetic inventory — no real steward holdings are
-committed here — covering the four shapes §12 calls out: a mapped column, an
+committed here — covering the four shapes the contract calls out: a mapped column, an
 unresolved (zero-mapping) column, one column mapped to two register variants
 (the combined Utrikeshandel shape), and a table whose edition is a finite
 multi-period list. The rejection cases pin the fail-fast guards, including
-§12's one-to-one cell→column resolution invariant (last section).
+the one-to-one cell→column resolution invariant (last section).
 """
 
 from __future__ import annotations
@@ -430,7 +431,7 @@ def test_edition_bounds_rejects_a_non_period_token() -> None:
 
 def test_accepts_the_default_variant_coordinate(tmp_path) -> None:
     """A single-table register rides the synthesized `_default` variant slug;
-    only the EDITION forbids `_default` (§12)."""
+    only the EDITION forbids `_default`."""
     text = """
 version = 1
 steward = "swecov"
@@ -451,7 +452,7 @@ representation = "Diagnosdatum"
     assert mapping.register_variant == "fohm/sminet/_default"
 
 
-# ── §12 one-to-one cell→column resolution ──────────────────────────────────
+# ── one-to-one cell→column resolution ──────────────────────────────────────
 #
 # Every admitted `(register_variant, variable, representation, period)` cell
 # must resolve to exactly ONE physical `(table, column)`: the extraction tool
@@ -503,13 +504,13 @@ def test_rejects_two_tables_serving_one_cell(tmp_path) -> None:
         "(representation 'Vaccinationsdatum') both map fohm/nvr/_default "
         "fohm/nvr/vaccinationsdatum over 2021" in message
     )
-    # §12 forbids an auto-picked survivor: the maintainer curates.
+    # The curation rules forbid an auto-picked survivor: the maintainer curates.
     assert "filename date is not proof of supersession" in message
 
 
 def test_rejects_two_columns_of_one_table_serving_one_cell(tmp_path) -> None:
     """A table's single edition always overlaps itself, so the same triple in
-    two of its columns is the same conflict — §12's across-columns arm."""
+    two of its columns is the same conflict — the invariant's across-columns arm."""
     text = """
 version = 1
 steward = "swecov"
@@ -605,7 +606,7 @@ def test_the_invariant_holds_for_a_programmatic_inventory() -> None:
 
 def test_accepts_a_disjoint_annual_series(tmp_path) -> None:
     """The ordinary annual series: the same triple in two tables whose editions
-    do NOT overlap resolves one cell to one location, so it stays legal (§12)."""
+    do NOT overlap resolves one cell to one location, so it stays legal."""
     text = """
 version = 1
 steward = "swecov"
@@ -671,7 +672,7 @@ representation = "Ssyk4"
     assert len(inventory.tables) == 2
 
 
-# ── §12 disjoint-partition arm ─────────────────────────────────────────────
+# ── disjoint-partition arm ─────────────────────────────────────────────────
 #
 # Some registers arrive as several tables partitioned by SUB-POPULATION within
 # one edition (the `Arb_`/`Soc_AGIIndivid` reporter streams below), deliberately
@@ -748,7 +749,7 @@ def test_rejects_two_tables_sharing_one_partition_label(tmp_path) -> None:
 
 def test_rejects_a_partition_label_opposite_an_unlabelled_table(tmp_path) -> None:
     """An unlabelled table claims the WHOLE population of its edition, so it
-    necessarily overlaps a shard of it. §12 requires the label on both sides,
+    necessarily overlaps a shard of it. The invariant requires the label on both sides,
     and the conflict line says so — one side labelled is the diagnostic case
     where a curated split was left half-stated."""
     with pytest.raises(RegMetaError) as excinfo:

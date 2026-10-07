@@ -112,7 +112,7 @@ async def validate_project(request: Request) -> Response:
     reserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).
 
     A THIN adapter over reg_meta's ``semantic.validate_project``
-    (REFACTOR_SPEC.md §12): the composition, every issue and the serialization
+    (reg_meta/DESIGN.md → Project semantic validation): the composition, every issue and the serialization
     live there, so this endpoint and ``reg-meta validate`` emit byte-identical
     findings. The 200 body is ``semantic.validation_json`` VERBATIM, returned
     as a raw ``Response`` (FastAPI passes it through without re-serializing)
@@ -146,7 +146,7 @@ def _validate_blocking(db_path: Path, raw: dict[str, Any]) -> Response:
 
 # The 200 body IS `OrderManifest.to_json()` VERBATIM — the manifest's own
 # canonical serialization (sorted keys, stable entry order, trailing newline),
-# which is what makes this adapter and `reg-meta order` byte-identical (§12).
+# which is what makes this adapter and `reg-meta order` byte-identical.
 # So the handler returns a raw `Response` (FastAPI passes a `Response` through
 # without re-serializing) while `response_model=` still publishes the reg_meta
 # model as the typed contract for the OpenAPI snapshot + the SPA codegen. It is
@@ -173,8 +173,8 @@ def _validate_blocking(db_path: Path, raw: dict[str, Any]) -> Response:
 async def order_project(request: Request) -> Response:
     """Materialize a ``project_data.json`` into the JSON order manifest.
 
-    A THIN adapter over ``reg_meta.order.materialize_order`` (REFACTOR_SPEC.md
-    §12): no gate, no fallback and no rendering lives here, so this endpoint and
+    A THIN adapter over ``reg_meta.order.materialize_order`` (reg_meta/DESIGN.md
+    → Order materializer and manifest): no gate, no fallback and no rendering lives here, so this endpoint and
     the ``reg-meta order`` CLI emit byte-identical manifests. The selected
     artifact determines orderability: catalog artifacts use global fallback;
     steward artifacts use their compiled holdings and steward identity.

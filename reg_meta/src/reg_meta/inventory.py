@@ -5,16 +5,17 @@ period). What a steward actually delivers is separate data: exact tables, one
 explicit physical edition per table, and literal physical column names. This
 module is that contract — the typed models plus `load_inventory`, the structural
 validator maintainers (and, later, the inventory generator) run before an
-inventory is committed. Its load-bearing rule is §12's one-to-one resolution
+inventory is committed. Its load-bearing rule is the one-to-one resolution
 invariant: every admitted `(register_variant, variable, representation, period)`
-cell resolves to exactly one physical `(table, column)` — per §12's
+cell resolves to exactly one physical `(table, column)` — per the
 disjoint-partition arm, per `(cell × partition)` — so the extraction tool never
-chooses between sources. REFACTOR_SPEC.md §12 is the decision text; the format
-is documented in DESIGN.md → Steward delivery inventory.
+chooses between sources. reg_meta/DESIGN.md → "Holdings resolution invariants"
+is the decision text; the format is documented in reg_meta/DESIGN.md →
+"Inventory TOML authoring contract".
 
 Deliberately reg_schema-free: the contract needs only reg_meta's own period
 grammar (`fqid.period_token_to_bounds`) and FQID parser, so the `reg_meta →
-reg_schema` dependency §12 sanctions for the materializer is not taken here.
+reg_schema` dependency the materializer takes is not taken here.
 This module holds no DB access — it is pure domain code over an authored file.
 """
 
@@ -88,7 +89,7 @@ class EditionRange(_InventoryModel):
 EditionSegment = str | EditionRange
 # A table's edition: one segment, or a finite list for a multi-period file that
 # carries an interrupted series. NEVER `"_default"` and never an unbounded "all
-# periods" sentinel (§12) — an edition is always finite and explicit.
+# periods" sentinel — an edition is always finite and explicit.
 Edition = EditionSegment | tuple[EditionSegment, ...]
 
 
@@ -116,7 +117,7 @@ def _segment_bounds(segment: EditionSegment) -> tuple[str, str]:
         raise ValueError(
             f"edition must be one explicit finite period, never {segment!r} "
             "(a table with no edition encoded in its name still needs a curated "
-            "edition — see REFACTOR_SPEC.md §12)"
+            "edition — see reg_meta_build/DESIGN.md → Steward extension)"
         )
     return period_token_to_bounds(segment)
 
@@ -149,7 +150,7 @@ def edition_bounds(edition: Edition) -> tuple[tuple[str, str], ...]:
 # ── interval algebra and period rendering over inclusive ISO dates ──────────
 #
 # Shared with `order.py` and `catalog.py`, which import these: an inventory
-# edition, a project period, an availability window, a §12 resolution conflict
+# edition, a project period, an availability window, a resolution conflict
 # and a delivery's windows must all expand and render through ONE grammar, so a
 # clip, an overlap, an edition and a browse row can never disagree about bounds
 # or spelling.
@@ -232,7 +233,7 @@ def _representations_conflate(left: str, right: str) -> bool:
 
 
 def _partitions_separate(left: str | None, right: str | None) -> bool:
-    """Do two tables carry DISTINCT §12 partition labels — i.e. are they shards
+    """Do two tables carry DISTINCT partition labels — i.e. are they shards
     of one sub-population split rather than two claims on one cell?
 
     Only two explicit, different labels separate. `None` on either side does
@@ -245,7 +246,7 @@ def _partitions_separate(left: str | None, right: str | None) -> bool:
 def _partition_hint(left: str | None, right: str | None) -> str:
     """The remediation suffix for a conflict where exactly ONE side is labelled.
 
-    That mix is the diagnostic case: the curator already recognized a §12
+    That mix is the diagnostic case: the curator already recognized a
     partition split on one table and left the other unlabelled, so the fix is a
     label rather than a supersession discard. Two unlabelled tables are
     indistinguishable from an uncurated re-delivery, so they get the error's
@@ -277,7 +278,7 @@ class ColumnMapping(_InventoryModel):
     register), `variable` the 3-segment binding FQID, and `representation` the
     canonical reg_meta `variable_alias.delivery_column_name` this column
     corresponds to. The
-    representation is a required join discriminator, not an output substitute (§12)."""
+    representation is a required join discriminator, not an output substitute."""
 
     register_variant: str
     variable: Fqid
@@ -328,7 +329,7 @@ class InventoryColumn(_InventoryModel):
     """One literal, case-preserving physical column of a delivered table.
 
     `mappings` may be empty: an unresolved column is still inventoried, so it
-    stays in the coverage denominator without being admitted or orderable (§12).
+    stays in the coverage denominator without being admitted or orderable.
     Several mappings let one physical column serve several register variants
     (the combined Utrikeshandel table)."""
 
@@ -347,7 +348,7 @@ class InventoryColumn(_InventoryModel):
     def _check_unique_mappings(self) -> InventoryColumn:
         """The same `(register_variant, variable, representation)` triple twice
         under one column states one cell twice — a generator or merge slip, not
-        a second holding, and the degenerate case of §12's one-to-one
+        a second holding, and the degenerate case of the one-to-one
         resolution invariant (the cross-location arm is
         `DeliveryInventory._check_one_to_one_resolution`)."""
         seen: set[ColumnMapping] = set()
@@ -377,7 +378,7 @@ class InventoryTable(_InventoryModel):
     (`dbo.SoS_Patientregister`). It is never parsed for meaning here; a table
     whose name carries no period still requires an explicit curated `edition`.
 
-    `partition` is §12's optional disjoint-partition label: a short slug naming
+    `partition` is the optional disjoint-partition label: a short slug naming
     which sub-population shard of one edition this table carries (a survey
     stratum, a reporter stream, a municipality). It is an explicit curated fact,
     never inferred — so a true re-delivery cannot hide behind a partition
@@ -535,7 +536,8 @@ class DeliveryInventory(_InventoryModel):
 
 
 def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
-    """Enforce §12's one-to-one resolution invariant (ratified 2026-09-01).
+    """Enforce the one-to-one resolution invariant (ratified 2026-09-01; reg_meta/DESIGN.md
+    → "Holdings resolution invariants").
 
     Every admitted `(register_variant, variable, representation, period)` cell
     resolves to exactly one physical `(table, column)`. Two mappings that could
@@ -548,7 +550,7 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
     resolver's canonical spellings, catching additional case-only conflicts.
     Grouping preserves variant and period scope.
 
-    Disjoint-partition arm (§12): the invariant holds per `(cell × partition)`.
+    Disjoint-partition arm: the invariant holds per `(cell × partition)`.
     Distinct explicit partition labels denote separate population shards and
     never conflict. Equal labels still conflict. An unlabelled location claims
     the whole population and overlaps every shard. Columns of one table share
@@ -624,8 +626,8 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
             + "\n".join(f"    {line}" for line in conflicts)
             + "\n  An inventory states CURRENT holdings only: discard the "
             "superseded delivery at curation instead of choosing here (a "
-            "filename date is not proof of supersession) — REFACTOR_SPEC.md "
-            "§12."
+            "filename date is not proof of supersession) — reg_meta_build/"
+            "DESIGN.md → Steward extension."
         )
 
 

@@ -2,12 +2,11 @@
 materializer, against the slugged ``catalog_db`` fixture.
 
 See DESIGN.md → Project-write surface (routes/project.py) and reg_meta/DESIGN.md
-→ Order materializer and manifest. The endpoint is a THIN adapter
-(REFACTOR_SPEC.md §12), so the materializer's own rules are pinned by
+→ Order materializer and manifest. The endpoint is a THIN adapter, so the materializer's own rules are pinned by
 ``reg_meta/tests/test_order.py``; what belongs HERE is the adapter contract: the
 ``order.json`` download shape, the "not an order" 422s (an invalid spec and a
 fail-closed blocked order alike — never a partial 200), and the byte-identity
-with the ``reg-meta order`` CLI that is §12's whole point.
+with the ``reg-meta order`` CLI that is the adapter contract's whole point.
 
 The fixture is a catalog artifact, so the materializer uses global fallback
 and requires ``steward: "global"`` in the spec below. Steward orderability
@@ -132,7 +131,7 @@ def test_deterministic(client):
 
 
 def test_byte_identical_to_the_cli_adapter(client, catalog_db, tmp_path, capsys):
-    """§12's contract: the FastAPI adapter and ``reg-meta order`` are thin
+    """The adapter contract: the FastAPI adapter and ``reg-meta order`` are thin
     adapters over ONE materializer, so the same (project, DB) inputs
     produce byte-identical ``order.json`` on both surfaces."""
     from reg_meta.cli import run
@@ -153,9 +152,9 @@ def test_blocked_order_is_422_not_a_200_manifest_and_reads_the_same_on_the_cli(
 ):
     """A fail-closed blocked order is NOT an order: a 422 naming every finding,
     never a 200 with a partial manifest. Here the project's steward provenance
-    does not match the deployment's (§12 blocks retargeting).
+    does not match the deployment's (retargeting is blocked).
 
-    §12's byte-identical-adapters rule covers this path too, so ``reg-meta
+    The byte-identical-adapters rule covers this path too, so ``reg-meta
     order``'s error envelope carries the SAME single line — both render
     ``order.blocked_message``. The WORDING is the materializer's, pinned once in
     ``reg_meta/tests/test_order.py``; what belongs here is the flattening rule
@@ -245,7 +244,7 @@ def test_invalid_spec_422_carries_no_findings(client):
 def test_unsupported_version_is_rejected_by_every_consumer(
     client, catalog_db, tmp_path, capsys, version
 ):
-    """§12's equal-surfaces rule, applied to the supported-version decision: ONE
+    """The equal-surfaces rule, applied to the supported-version decision: ONE
     project written for another schema contract, every consumer that reads a raw
     project, one answer — and no manifest anywhere. The CLI's error message and
     the adapter's 422 detail are the same words because both render reg_meta's

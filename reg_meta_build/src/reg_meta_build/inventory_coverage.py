@@ -309,7 +309,7 @@ def coverage_misses(
         for column in table.columns:
             placed = _placements(column, pair_ids, windows)
             unresolved += len(column.mappings) - len(placed)
-            # An unmapped column admits nothing (§12): it stays out of the
+            # An unmapped column admits nothing: it stays out of the
             # denominator because it is never ordered, so it cannot contradict the
             # catalog.
             if not placed:
@@ -557,7 +557,7 @@ class _Windows:
     ) -> tuple[_Interval, ...]:
         """The windows a mapping's coverage is judged against. An explicit
         `representation` names ONE canonical column; `None` means "the concept's
-        single representation" (§12), which any of the binding's columns can
+        single representation", which any of the binding's columns can
         answer, so it is judged against the binding as a whole."""
         if representation is None:
             return self.by_pair.get(pair, ())

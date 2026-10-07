@@ -79,8 +79,9 @@ Its schema and structural validator are `reg_schema`
 physical filenames or SQL tables. Compiled physical holdings
 (`table + edition → literal columns → zero-or-more explicit logical mappings`) join a
 project and query-time reg_meta resolution to produce one normalized, versioned JSON
-order manifest for web and CLI. The materializer reads the selected compiled artifact
-for `global`/`swecov`; inventory remains a builder input.
+order manifest for web and CLI, with no per-steward export template. The materializer
+reads the selected compiled artifact for `global`/`swecov`; inventory remains a builder
+input.
 
 Current shipped coverage is browse/search the catalog → choose variables and periods →
 automatic validation → the versioned JSON order manifest. The former mock-data bootstrap
@@ -136,6 +137,11 @@ Each Python package releases to PyPI on its own tag (`reg_meta/v*`, `reg_meta_bu
   (webapp authors it, future exporters and the planned MONA runner rebuild read it).
   Tiny, focused, no `reg_meta` dep: the schema uses string IDs and leaves resolution to
   the consumer.
+- **`reg_meta → reg_schema`** — the order materializer and project semantic resolution
+  are shared `reg_meta` domain code with thin FastAPI and CLI/plugin adapters that emit
+  byte-identical results. That placement deliberately adds this edge rather than
+  creating another package (decided 2026-08-31 with the order manifest; see
+  `reg_meta/DESIGN.md` → "Order materializer and manifest").
 
 ### Accepted source revisions and catalog generations
 
@@ -338,9 +344,9 @@ steward reference visibility does not grant orderability. The existing
 `reg_schema/test_corpus/` stays in place for its Python and TS consumers.
 
 The corpus depends on public contracts rather than private Python internals. Private
-imports/internal patches and oversized test modules are gated by repo lints: zero
-conformance exemptions, frozen package file allowlists that only shrink as the package
-test sweep proceeds. A future language-independent reader port reuses these oracles.
+imports/internal patches and oversized test modules are gated by repo lints with no
+exemptions or file allowlists; the per-package test sweep (plans 06a–06c, #1169) emptied
+the last ones. A future language-independent reader port reuses these oracles.
 
 ### Discipline against ballooning
 
@@ -370,12 +376,12 @@ git (the `MIGRATION_PLAN.md` tracker was retired once A5 shipped).
   | Old spec section                                                                                                    | New home                            |
   | ------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
   | §1 background, §2/§3 product, §4 layout/deps, §9.3 REST, §11 changes, §12 invariants, §13 policy, §16 overview      | this file                           |
-  | §5 object model, FQID grammar, edge semantics, library API, glossary                                                | `reg_meta/DESIGN.md`                |
+  | §5 object model, FQID grammar, edge semantics, library API, glossary; §15 step 12 order manifest                    | `reg_meta/DESIGN.md`                |
   | §4.4 IR/adapter, §5.3 slug curation, §5.4 immutability, §5.6 lineage, §5.7 triage, ID minting                       | `reg_meta_build/DESIGN.md`          |
   | §5.9, §6 `project_data.json` schema + structural/return-shape rules                                                 | `reg_schema/DESIGN.md`              |
   | §6.8.3 semantic rules, §9 webapp                                                                                    | `reg_webapp/DESIGN.md`              |
   | §7 (bundle), §10-bundle, §16 PII/determinism (archived)                                                             | `archive/mona-subsystem`            |
-  | §6.6 codes, §8 stats+kit, §9 deployment/stewards, §10 mockdata, §14 open decisions, §15 steps 6.5–12, remaining §16 | `REFACTOR_SPEC.md` (remaining work) |
+  | §6.6 codes, §8 stats+kit, §9 deployment/stewards, §10 mockdata, §14 open decisions, §15 steps 6.5–11, remaining §16 | `REFACTOR_SPEC.md` (remaining work) |
 
 Shared literal source evidence types belong to `reg_meta`: the consumer must be able to
 validate documentary catalog relationships without importing the builder.

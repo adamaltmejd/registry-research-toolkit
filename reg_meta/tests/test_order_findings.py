@@ -203,7 +203,7 @@ class TestBlockingFindings:
 
 
 class TestGlobalFallback:
-    """§12's global-deployment fallback: no inventory, so canonical resolution
+    """The global-deployment fallback: no inventory, so canonical resolution
     alone grounds the order — same entry shape, blank `table`, the resolved
     canonical column in `column`, `edition` = that slice's requested period."""
 
@@ -326,7 +326,7 @@ class TestGlobalFallback:
         assert finding_codes(result) == ["steward_mismatch"]
 
     def test_extraction_filename_is_one_file_per_period_segment(self, conn) -> None:
-        # `edition = requested_period`, so §12's naming rule gives an
+        # `edition = requested_period`, so the naming rule gives an
         # interrupted request one file per segment without a special case.
         result = materialize_order(
             order_project("scb/lisa/kon", steward="global", period=(2018, 2020)), conn

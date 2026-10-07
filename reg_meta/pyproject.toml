@@ -17,9 +17,9 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Topic :: Scientific/Engineering",
 ]
-# `reg-schema` is the dependency REFACTOR_SPEC.md §12 sanctions: the shared order
-# materializer (`order.py`) consumes `ProjectData`, and the decision was to take
-# this edge rather than create a third package for one function. In the published
+# `reg-schema` is the dependency ARCHITECTURE.md → "Why this split" sanctions: the
+# shared order materializer (`order.py`) consumes `ProjectData`, and the decision
+# was to take this edge rather than create a third package for one function. In the published
 # wheel this floor is a real PyPI resolution — `uv tool install reg-meta` fetches
 # `reg-schema` from the index (published by publish_reg_schema.yml), so a release
 # that raises the floor must publish reg_schema first. [tool.uv.sources] in the

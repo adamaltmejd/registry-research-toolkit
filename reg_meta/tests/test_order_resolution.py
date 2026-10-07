@@ -12,10 +12,10 @@ from reg_schema.project_data import PeriodRange
 
 
 class TestSharedResolution:
-    """`resolve_binding` — §12 steps 1+2, the ONE availability/slicing answer
+    """`resolve_binding` — materializer steps 1+2, the ONE availability/slicing answer
     the materializer and the webapp's `/api/project/validate` both read.
 
-    §12 is intersection semantics: a binding is requested wherever it IS
+    The order contract is intersection semantics: a binding is requested wherever it IS
     available inside the source window, so narrower availability clips (and is
     reported) rather than blocking.
     """

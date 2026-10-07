@@ -537,8 +537,8 @@ export interface paths {
          * Order Project
          * @description Materialize a ``project_data.json`` into the JSON order manifest.
          *
-         *     A THIN adapter over ``reg_meta.order.materialize_order`` (REFACTOR_SPEC.md
-         *     §12): no gate, no fallback and no rendering lives here, so this endpoint and
+         *     A THIN adapter over ``reg_meta.order.materialize_order`` (reg_meta/DESIGN.md
+         *     → Order materializer and manifest): no gate, no fallback and no rendering lives here, so this endpoint and
          *     the ``reg-meta order`` CLI emit byte-identical manifests. The selected
          *     artifact determines orderability: catalog artifacts use global fallback;
          *     steward artifacts use their compiled holdings and steward identity.
@@ -576,7 +576,7 @@ export interface paths {
          *     reserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).
          *
          *     A THIN adapter over reg_meta's ``semantic.validate_project``
-         *     (REFACTOR_SPEC.md §12): the composition, every issue and the serialization
+         *     (reg_meta/DESIGN.md → Project semantic validation): the composition, every issue and the serialization
          *     live there, so this endpoint and ``reg-meta validate`` emit byte-identical
          *     findings. The 200 body is ``semantic.validation_json`` VERBATIM, returned
          *     as a raw ``Response`` (FastAPI passes it through without re-serializing)
@@ -1374,7 +1374,7 @@ export interface components {
         };
         /**
          * ClipReport
-         * @description One informational availability clip (§12: reported, never silent, never
+         * @description One informational availability clip (reported, never silent, never
          *     an error): the binding asked for `requested_period` and is ordered for
          *     `ordered_period`, because that is where the column is documented as
          *     available. Emitted only when the clip actually narrows the request.
@@ -2048,7 +2048,7 @@ export interface components {
          *     `PhysicalCoordinate.column`).
          *
          *     `register` is a `BaseModel` method, so the Python attr is `register_name`
-         *     with a `"register"` alias — the wire key stays the §12 coordinate spelling
+         *     with a `"register"` alias — the wire key stays the order-contract coordinate spelling
          *     (same pattern as `catalog.BindingGroupRef`).
          */
         LogicalCoordinate: {
@@ -2104,7 +2104,7 @@ export interface components {
          *     `source` is the project source name, so an entry stays traceable to the
          *     binding that produced it. `requested_period` is the AVAILABILITY-CLIPPED
          *     period this table serves (canonically rendered), not the source's raw
-         *     declared period — the table itself is ordered whole regardless (§12).
+         *     declared period — the table itself is ordered whole regardless.
          */
         OrderEntry: {
             logical: components["schemas"]["LogicalCoordinate"];
@@ -2158,13 +2158,13 @@ export interface components {
          * OrderProvenance
          * @description Everything the steward-side extract system needs to know WHICH project,
          *     against WHICH catalog, for WHICH deployment — so the manifest is
-         *     self-contained offline (§12: no network, no catalog lookup at extract time).
+         *     self-contained offline (no network, no catalog lookup at extract time).
          *
          *     `project_hash` is the SHA-256 of the project's canonical JSON, so a manifest
          *     can be tied back to the exact uploaded project bytes.
          *
          *     `mode` names what GROUNDED the entries — a steward's compiled holdings or
-         *     §12's global fallback (canonical resolution alone, blank `table`) — so a
+         *     the global fallback (canonical resolution alone, blank `table`) — so a
          *     reader never has to infer it from the entry shape.
          */
         OrderProvenance: {
@@ -2283,13 +2283,13 @@ export interface components {
          *     period token, an explicit `lo..hi` range, or a comma-joined list for an
          *     interrupted series).
          *
-         *     `partition` is the table's §12 disjoint-partition label when it carries one
+         *     `partition` is the table's disjoint-partition label when it carries one
          *     — the shard of the edition's population this table delivers — so the
          *     extractor can see it; it is absent from the JSON otherwise. Extraction
          *     preserves delivery topology: what goes in as two partitions comes out as two
          *     files, distinguished by the partition token `extraction_filenames` adds.
          *
-         *     In §12's global-deployment fallback there is no physical topology: `table`
+         *     In the global-deployment fallback there is no physical topology: `table`
          *     is blank, `column` carries the resolved canonical column, `edition` equals
          *     the entry's requested period, and there is no partition.
          */
