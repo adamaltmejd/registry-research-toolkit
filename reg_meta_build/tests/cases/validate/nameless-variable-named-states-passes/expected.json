@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "report_contains": [
+    "all 1 name-less variable(s) carry a positive name on every state"
+  ],
+  "failures_absent": [
+    "name-less variable(s) have a state without a positive delivery name"
+  ]
+}

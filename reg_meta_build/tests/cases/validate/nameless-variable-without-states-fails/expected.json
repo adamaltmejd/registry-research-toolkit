@@ -1,0 +1,7 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "1 name-less variable(s) lack a positive delivery name on every state",
+    "scb/testreg/aaocol (no states)"
+  ]
+}
