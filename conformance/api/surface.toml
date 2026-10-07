@@ -180,7 +180,7 @@ id = "GET /api/docs/doc/{identifier}"
 disposition = "replaced"
 operation = "docs_get"
 owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py", "reg_meta/tests/test_doc_queries.py"]
+covered_by = ["reg_webapp/backend/tests/test_docs.py"]
 note = "Docs judgment, all five docs routes: they read their own DB but render on register and variable pages, and docs search reuses the 3a FTS builder, so they land with show after 3a."
 
 [[row]]
@@ -214,7 +214,7 @@ id = "GET /api/docs/search"
 disposition = "replaced"
 operation = "docs_search"
 owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py", "reg_meta/tests/test_doc_queries.py"]
+covered_by = ["reg_webapp/backend/tests/test_docs.py"]
 
 [[row]]
 kind = "route"
@@ -923,7 +923,7 @@ id = "reg_meta.doc_db.DOC_DB_FILENAME"
 used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
-covered_by = ["reg_meta/tests/test_doc_queries.py", "reg_meta_build/tests/test_doc_coverage.py"]
+covered_by = ["reg_meta_build/tests/test_doc_coverage.py"]
 note = "The docs DB schema has one home, reg_meta_build."
 
 [[row]]
@@ -932,7 +932,7 @@ id = "reg_meta.doc_db.DOC_SCHEMA_VERSION"
 used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
-covered_by = ["reg_meta/tests/test_doc_queries.py", "reg_meta_build/tests/test_doc_coverage.py"]
+covered_by = ["reg_meta_build/tests/test_doc_coverage.py"]
 note = "The docs DB schema has one home, reg_meta_build."
 
 [[row]]
@@ -949,7 +949,7 @@ id = "reg_meta.doc_db.doc_db_path"
 used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
-covered_by = ["reg_meta/tests/test_doc_queries.py", "reg_meta_build/tests/test_doc_coverage.py"]
+covered_by = ["reg_meta_build/tests/test_doc_coverage.py"]
 
 [[row]]
 kind = "import"
@@ -957,7 +957,7 @@ id = "reg_meta.doc_db.open_doc_db"
 used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
-covered_by = ["reg_meta/tests/test_doc_queries.py", "reg_meta_build/tests/test_doc_coverage.py"]
+covered_by = ["reg_meta_build/tests/test_doc_coverage.py"]
 
 [[row]]
 kind = "import"
@@ -965,7 +965,7 @@ id = "reg_meta.doc_queries.doc_get"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "3b"
-covered_by = ["reg_meta/tests/test_doc_queries.py", "reg_webapp/backend/tests/test_docs.py"]
+covered_by = ["reg_webapp/backend/tests/test_docs.py"]
 
 [[row]]
 kind = "import"
@@ -973,7 +973,7 @@ id = "reg_meta.doc_queries.doc_registers"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "3b"
-covered_by = ["reg_meta/tests/test_doc_queries.py", "reg_webapp/backend/tests/test_docs.py"]
+covered_by = ["reg_webapp/backend/tests/test_docs.py"]
 
 [[row]]
 kind = "import"
@@ -981,7 +981,7 @@ id = "reg_meta.doc_queries.doc_search"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "3b"
-covered_by = ["reg_meta/tests/test_doc_queries.py", "reg_webapp/backend/tests/test_docs.py"]
+covered_by = ["reg_webapp/backend/tests/test_docs.py"]
 
 [[row]]
 kind = "import"
@@ -989,7 +989,7 @@ id = "reg_meta.doc_queries.related_document_content"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "3b"
-covered_by = ["reg_meta/tests/test_doc_queries.py", "reg_webapp/backend/tests/test_docs.py"]
+covered_by = ["reg_webapp/backend/tests/test_docs.py"]
 
 [[row]]
 kind = "import"
@@ -997,7 +997,7 @@ id = "reg_meta.doc_queries.related_documents_for_register"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "3b"
-covered_by = ["reg_meta/tests/test_doc_queries.py", "reg_webapp/backend/tests/test_docs.py"]
+covered_by = ["reg_webapp/backend/tests/test_docs.py"]
 
 [[row]]
 kind = "import"
