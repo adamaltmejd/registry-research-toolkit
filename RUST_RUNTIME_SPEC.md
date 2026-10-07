@@ -220,6 +220,18 @@ base; the refactor changes derive and the reader. Neither waits for the other. A
 **re-pin package** moves the pin to a newer release: it runs G1 on the old and new pin
 and records any difference. Re-pin at least at every maintainer checkpoint.
 
+**Current pin** (package 1.5; the data lives in `conformance/differential/config.toml`):
+
+- Release `reg_meta/v0.42.0`. Asset SHA-256s: global `reg_meta.db.zst`
+  `39c68222545b61cb690b7861f20deb8196c8035f7b0ed932fc5847e8c68d07a3`; SWECOV
+  `reg_meta_swecov.db.zst`
+  `32e8d425a2ba5b039d4fa60c494762d9970515ee994871660097fe3d49711c68`; docs
+  `reg_meta_docs.db.zst`
+  `b110210901daa4e2a13e33a8574a6e2b52b43258f05bbbc6378255ddf7e75afe` (read by `search`
+  and `docs`).
+- Baseline reader: `reg_meta` at `760d70fa5fcd65ab18c442a0f3775e0a0b86c7a4` (main after
+  #1189).
+
 **Three verification gates, with budgets.** They are named G0–G2 so they are not
 confused with the test tiers 1–3 in `ARCHITECTURE.md`.
 
@@ -728,7 +740,7 @@ is deleted".
   SWECOV artifacts (tag and SHA-256, recorded in section 4) in a shared cache directory,
   and the baseline reader commit, installed in its own environment and driven through
   its CLI JSON. The compared operations are every `reg-meta` read command: `search`, the
-  `get` subcommands, `resolve`, `validate`, `order` and `doc`. Queries cover every
+  `get` subcommands, `resolve`, `validate`, `order` and `docs`. Queries cover every
   register, seeded variable samples, holdings strata and the search-eval corpus terms,
   in both scopes, run by parallel workers. Seeded from `parity_fts.py`, which compares
   only one FTS arm's SQL; G1 compares the public `search` command, exact-name promotion
