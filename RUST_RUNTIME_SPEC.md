@@ -260,6 +260,13 @@ the loop:
   reviewed it. The review is a PR review that lists each acceptance command it reran
   with its result, and checks the diff against the package's paths and out-of-scope
   list. The implementing agent never declares its own work done.
+- **Build only what is needed.** A package builds what its stated behavior requires and
+  nothing more: no speculative options, retries for unlikely races, extra layers, or
+  tests beyond about one per stated behavior. Every PR ends with a simplification pass
+  over its own diff, listed in a "Simplification" section of the PR body. Reviewers
+  report defects in the stated behavior, rule violations and simplifications; an idea
+  that adds scope goes in one line under "Not requested", and the orchestrating session
+  declines it unless it fixes a defect.
 - **Escalate, don't decide.** An agent stops instead of changing any of: the operation
   table or error catalog (`conformance/api/`), a decision in section 13, the meaning of
   an existing golden expected file, the schema major version, a gate budget, or a new
