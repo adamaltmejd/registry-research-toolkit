@@ -22,10 +22,14 @@ from reg_meta_build.doc_db import load_doc_sources, load_related_documents
 from reg_meta_build.scb_errata import resolve_scb_errata
 
 from reg_meta_build.fqid_slugs import (
+    diff_snapshot,
     load_freeze_states,
     load_slug_dir,
     pinned_zones,
+    read_snapshot,
     repo_slug_dir,
+    snapshot_path,
+    snapshot_payload,
 )
 
 if TYPE_CHECKING:
@@ -102,7 +106,28 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
     # skips the committed auto pins and leaves the snapshot guards nothing to guard.
     # The committed file advances the global providers to curating (#759).
     assert pinned_zones(load_freeze_states(slug_dir))
-    assert load_slug_dir(slug_dir)
+    # Snapshot freshness: the DB-free half of `precheck-slugs`, which CI never runs.
+    # Any added, removed or renamed slug against the committed snapshot fails, as in
+    # the CLI's read-only branch; a frozen zone's grow-only refusal is a subset.
+    # Steward dirs (fqid_slugs/<steward>/) keep their own snapshot.
+    steward_dirs = sorted(
+        d for d in (REPO_ROOT / "fqid_slugs").iterdir() if snapshot_path(d).is_file()
+    )
+    assert steward_dirs
+    for directory, registers in [
+        (slug_dir, tree.registers),
+        *((d, None) for d in steward_dirs),
+    ]:
+        entries = load_slug_dir(directory, registers=registers)
+        assert entries, directory
+        diff = diff_snapshot(
+            read_snapshot(snapshot_path(directory)), snapshot_payload(entries)
+        )
+        stale = {k: v for k in ("added", "removed", "renamed") if (v := diff[k])}
+        assert not stale, (
+            f"{snapshot_path(directory)} is stale; run "
+            f"`reg-meta-build precheck-slugs --update-snapshot`: {stale}"
+        )
 
     # The build's own call: errata resolve against the already-loaded registers.
     errata = resolve_scb_errata(

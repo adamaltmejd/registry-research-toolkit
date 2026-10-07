@@ -18,7 +18,9 @@ WITHIN-FILE slug-typo rename pointer, a different relation from succession.
 from __future__ import annotations
 
 import json
+import os
 import re
+import subprocess
 import tomllib
 import unicodedata
 from collections import Counter, defaultdict
@@ -816,6 +818,158 @@ def pinned_zones(states: Mapping[str, SlugFreezeState]) -> frozenset[str]:
     return frozenset(z for z, s in states.items() if s != "churning")
 
 
+_GIT_TRUST_KEY = "safe.directory"
+
+
+def _git_env() -> dict[str, str]:
+    """The environment with every ``GIT_*`` variable stripped, so git discovers the
+    repo from ``cwd`` alone. Git hooks export GIT_DIR / GIT_INDEX_FILE into the hook
+    process; inheriting them would point these calls at the hook's repo.
+
+    The one exception is an inherited ``safe.directory`` entry in the
+    GIT_CONFIG_COUNT/KEY_n/VALUE_n block, re-emitted densely: a container that
+    mounts the checkout under another uid grants ownership trust only that way, and
+    without it every call exits 128 "dubious ownership" and the check fails closed
+    on a checkout it could have read. Every other inherited config entry is
+    dropped with the routing variables."""
+    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    count = os.environ.get("GIT_CONFIG_COUNT", "")
+    trusted = [
+        os.environ[f"GIT_CONFIG_VALUE_{i}"]
+        for i in range(int(count) if count.isdigit() else 0)
+        if os.environ.get(f"GIT_CONFIG_KEY_{i}", "").casefold() == _GIT_TRUST_KEY
+        and f"GIT_CONFIG_VALUE_{i}" in os.environ
+    ]
+    if trusted:
+        env["GIT_CONFIG_COUNT"] = str(len(trusted))
+        for n, value in enumerate(trusted):
+            env[f"GIT_CONFIG_KEY_{n}"] = _GIT_TRUST_KEY
+            env[f"GIT_CONFIG_VALUE_{n}"] = value
+    return env
+
+
+def _git_unreadable(directory: Path, detail: str) -> RegMetaError:
+    return _err(
+        "slug_dir_git_unreadable",
+        f"{directory}: a .git is present but git cannot read the committed HEAD "
+        f"tree, so uncommitted slug pins cannot be checked: {detail.strip()}",
+        f"Make `git -C {directory} ls-tree HEAD` succeed, then rerun. For "
+        "'dubious ownership', trust the checkout with "
+        "`git config --global --add safe.directory <repo>`; for a broken .git "
+        "link, repair or remove it.",
+    )
+
+
+def _git_committed_paths(directory: Path) -> set[str] | None:
+    """Paths under ``directory`` (relative to it) in the committed HEAD tree, or
+    ``None`` when no ``.git`` sits at or above ``directory`` (a wheel install) or
+    HEAD is unborn.
+
+    Reads HEAD, not the index: a staged-but-uncommitted file would not survive a
+    clean checkout either, and the index would report it as fine.
+
+    Fails closed: a ``.git`` that git cannot read (a broken worktree link,
+    "dubious ownership", git missing from PATH) raises a configuration error.
+    Returning ``None`` there would report no uncommitted pins and let
+    ``--update-snapshot`` bake in the pin this check exists to refuse. The
+    presence of ``.git`` is the discriminator because git exits 128 both outside
+    a repo and when it refuses one."""
+    resolved = directory.resolve()
+    if not any(
+        (d / ".git").exists(follow_symlinks=False)
+        for d in (resolved, *resolved.parents)
+    ):
+        return None
+
+    def git(*args: str) -> subprocess.CompletedProcess[str]:
+        try:
+            return subprocess.run(
+                ["git", *args],
+                cwd=directory,
+                capture_output=True,
+                text=True,
+                env=_git_env(),
+                check=False,  # the return code is classified below
+            )
+        except OSError as exc:
+            raise _git_unreadable(directory, str(exc)) from exc
+
+    head = git("rev-parse", "--verify", "--quiet", "HEAD^{commit}")
+    if head.returncode == 1 and not head.stderr.strip():
+        return None  # unborn HEAD: nothing committed yet
+    if head.returncode != 0:
+        raise _git_unreadable(directory, head.stderr)
+    listed = git("ls-tree", "-z", "-r", "--name-only", "HEAD", "--", ".")
+    if listed.returncode != 0:
+        raise _git_unreadable(directory, listed.stderr)
+    return {name for name in listed.stdout.split("\0") if name}
+
+
+def _register_auto_path(root: Path, provider: str, register_slug: str) -> Path:
+    """The generated pin file for one register in the register-owned layout.
+
+    It sits at the provider root, keyed by register slug, even when the register's
+    own TOML is nested in a family folder. The loader, the writer and the
+    untracked-pin guard all resolve it here."""
+    return root / "registers" / provider / f"{register_slug}{AUTO_FILE_SUFFIX}"
+
+
+def _untracked_pinned_autos(
+    slug_dir: Path, *, registers: Sequence[RegisterCuration] | None = None
+) -> list[Path]:
+    """Pinned (curating/frozen) auto files present on disk but absent from the
+    committed HEAD tree, sorted.
+
+    A pinned zone reads its slugs back from its ``*.auto.toml``. The file is
+    gitignored, so a leftover from a churning build, or one that was ``git add -f``'d
+    but never committed, passes every on-disk check and then vanishes on a clean
+    checkout, taking the pin with it. The build is git-agnostic, so ``precheck-slugs``
+    reports this. A pinned zone with no auto file on disk is not reported: the build's
+    ``slug_freeze_auto_missing`` guard owns that case and exempts a provider without
+    variables. Outside a git work tree (a wheel install) nothing is reported; a
+    ``.git`` that git cannot read raises a configuration error.
+
+    Only the paths the loader reads are candidates; an auto file anywhere else
+    pins nothing. ``registers`` is ``load_register_files(slug_dir)`` when the caller
+    already has it; ``None`` parses it here."""
+    pinned = pinned_zones(load_freeze_states(slug_dir))
+    if not pinned:
+        return []
+    if (slug_dir / "registers").is_dir():
+        from .curation_tree import load_register_files
+
+        if registers is None:
+            registers = load_register_files(slug_dir)
+        candidates = [
+            path
+            for register in registers
+            if register.register_info.provider in pinned
+            and (
+                path := _register_auto_path(
+                    slug_dir,
+                    register.register_info.provider,
+                    register.register_info.slug,
+                )
+            ).is_file()
+        ]
+    else:
+        candidates = [
+            path
+            for zone in pinned
+            if (path := slug_dir / f"{zone}{AUTO_FILE_SUFFIX}").is_file()
+        ]
+    if not candidates:
+        return []
+    committed = _git_committed_paths(slug_dir)
+    if committed is None:
+        return []
+    return sorted(
+        path
+        for path in candidates
+        if path.relative_to(slug_dir).as_posix() not in committed
+    )
+
+
 def load_slug_dir(
     slug_dir: Path, *, registers: Sequence[RegisterCuration] | None = None
 ) -> list[SlugEntry]:
@@ -829,9 +983,8 @@ def load_slug_dir(
     auto file is gitignored/ephemeral (rewritten every build, not committed — see
     DESIGN.md § "Slug immutability"), so a leftover untracked file from a prior
     build is not part of the in-memory baseline. Loading it would inflate
-    ``snapshot_payload`` with phantom variable slugs and false-fail
-    ``test_snapshot_covers_committed_additions`` (the recurring ``git clean -fdX``
-    footgun). A pinned (curating/frozen) zone's committed ``<provider>.auto.toml``
+    ``snapshot_payload`` with phantom variable slugs and false-fail the
+    ``precheck-slugs`` snapshot diff (the recurring ``git clean -fdX`` footgun). A pinned (curating/frozen) zone's committed ``<provider>.auto.toml``
     IS the baseline and still loads. Mirrors the freeze gate in
     ``populate_variable_slugs``. Non-auto provider TOMLs are state-independent and
     always load.
@@ -864,7 +1017,8 @@ def _load_register_slug_tree(
     authored_only: bool = False,
     registers: Sequence[RegisterCuration] | None = None,
 ) -> list[SlugEntry]:
-    """Read register-owned slugs, with generated pins beside each register."""
+    """Read register-owned slugs, with each register's generated pin from the
+    provider root (``_register_auto_path``)."""
     from .curation_tree import load_register_files
 
     states = states if states is not None else load_freeze_states(root)
@@ -949,7 +1103,7 @@ def _load_register_slug_tree(
         if authored_only or freeze_state(states, provider) == "churning":
             entries.extend(local)
             continue
-        auto_path = root / "registers" / provider / f"{identity.slug}{AUTO_FILE_SUFFIX}"
+        auto_path = _register_auto_path(root, provider, identity.slug)
         if not auto_path.is_file():
             entries.extend(local)
             continue
@@ -2459,10 +2613,7 @@ def populate_variable_slugs(
                 and entry.slug is not None
             ):
                 global_auto_paths[entry.provider][entry.source_id] = (
-                    slug_dir
-                    / "registers"
-                    / entry.provider
-                    / f"{entry.slug}{AUTO_FILE_SUFFIX}"
+                    _register_auto_path(slug_dir, entry.provider, entry.slug)
                 )
 
     # #786 frozen-fallback gate: a `frozen` provider's auto slugs are immutable,
@@ -3462,7 +3613,7 @@ def seed_all(conn: sqlite3.Connection, out_dir: Path) -> dict[str, Path]:
                 (register_id,),
             )
         }
-        path = out_dir / "registers" / provider / f"{register_slug}{AUTO_FILE_SUFFIX}"
+        path = _register_auto_path(out_dir, provider, register_slug)
         path.parent.mkdir(parents=True, exist_ok=True)
         derivation = read_auto_derivations(path)
         if path.is_file():
@@ -3547,6 +3698,16 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
         entries = load_slug_dir(slug_dir, registers=registers)
     except RegMetaError as exc:
         parse_errors.append(exc.message)
+    else:
+        # Reported as parse errors: the slugs just loaded include a pin a clean
+        # checkout would not have, so `ok` must fail and `--update-snapshot` must
+        # not bake them into the baseline (it refuses on any parse error).
+        parse_errors.extend(
+            f"{path}: pinned auto file is not in the committed HEAD tree, so a "
+            "clean checkout would lose its slugs. Commit it: "
+            f"`git add -f {path} && git commit`."
+            for path in _untracked_pinned_autos(slug_dir, registers=registers)
+        )
 
     by_provider_kind: dict[tuple[str, str], set[str]] = {}
     for entry in entries:
