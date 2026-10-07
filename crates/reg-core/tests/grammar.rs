@@ -161,7 +161,8 @@ impl Rng {
                 }
                 s.push(char::from(*self.pick(ALNUM)));
             }
-            if s != "class" {
+            // Reserved: `class` everywhere, `group` as a first segment.
+            if s != "class" && s != "group" {
                 return s;
             }
         }

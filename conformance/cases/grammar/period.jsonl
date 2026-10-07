@@ -4,6 +4,7 @@
 {"in": "2019-03", "out": {"kind": "month", "year": 2019, "month": 3}, "years": [2019, 2019]}
 {"in": "2019-01-01", "out": {"kind": "day", "year": 2019, "month": 1, "day": 1}, "years": [2019, 2019]}
 {"in": "2000-02-29", "out": {"kind": "day", "year": 2000, "month": 2, "day": 29}, "years": [2000, 2000], "note": "2000 is a leap year."}
+{"in": "2024-02-29", "out": {"kind": "day", "year": 2024, "month": 2, "day": 29}, "years": [2024, 2024], "note": "Every fourth year is a leap year."}
 {"in": "2019-04-30", "out": {"kind": "day", "year": 2019, "month": 4, "day": 30}, "years": [2019, 2019]}
 {"in": "HT2020", "out": {"kind": "term", "term": "HT", "year": 2020}, "years": [2020, 2020]}
 {"in": "VT2020", "out": {"kind": "term", "term": "VT", "year": 2020}, "years": [2020, 2020]}

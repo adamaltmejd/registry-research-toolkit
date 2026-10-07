@@ -23,7 +23,8 @@ Refusals are `invalid_ref`. `out` is one of:
 - `{"kind": "classification", "classification"}` — `class/sun2020`
 
 Every slug matches `^[a-z](?:-?[a-z0-9])*$` and is not `class`, which is reserved in
-every slot.
+every slot. `group` is reserved as the first segment, for group refs
+(`conformance/api/operations.toml`, `show`).
 
 ### `period.jsonl`
 

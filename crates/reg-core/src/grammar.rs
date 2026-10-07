@@ -47,9 +47,13 @@ impl std::error::Error for GrammarError {}
 /// The discriminator of classification FQIDs, reserved as a slug everywhere.
 const CLASSIFICATION_PREFIX: &str = "class";
 
+/// The first segment of group refs (`conformance/api/operations.toml`, `show`), so no
+/// provider may take it.
+const GROUP_PREFIX: &str = "group";
+
 /// A fully qualified identifier. The kind follows from the segment count and the
 /// leading `class/`.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Fqid {
     Provider {
         provider: String,
@@ -92,7 +96,7 @@ impl FromStr for Fqid {
                 _ => Err(GrammarError::InvalidRef),
             };
         }
-        if !segs.iter().all(|seg| is_slug(seg)) {
+        if segs[0] == GROUP_PREFIX || !segs.iter().all(|seg| is_slug(seg)) {
             return Err(GrammarError::InvalidRef);
         }
         match segs[..] {
@@ -132,7 +136,7 @@ impl fmt::Display for Fqid {
 
 /// A Swedish school term: `HT` (autumn, July to December) or `VT` (spring, January to
 /// June).
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Term {
     Ht,
     Vt,
@@ -140,7 +144,7 @@ pub enum Term {
 
 /// One period token. Years are 1900..=2099; months, quarters, halves and days are
 /// calendar-valid.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PeriodToken {
     /// `YYYY`
     Year(u16),
@@ -160,7 +164,7 @@ pub enum PeriodToken {
 
 /// A `period` parameter: one token, or an inclusive `from..to` range whose start is
 /// not after its end.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Period {
     Token(PeriodToken),
     Range { from: PeriodToken, to: PeriodToken },
