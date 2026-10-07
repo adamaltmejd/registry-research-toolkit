@@ -280,23 +280,29 @@ Why the HTTP server moves to Rust rather than FastAPI calling Rust through bindi
 
 ## 7. CLI v4
 
-**Draft, under iteration (decision 4).** Nothing below is settled until the maintainer
-signs off on the surface.
+**Under iteration (decision 4).** Rules marked *settled* were agreed with the maintainer
+on 2026-10-07; the rest is draft until signed off.
 
 Design rules:
 
-- **Address by FQID first.** Any entity is a ref: `provider`, `provider/register`,
-  `provider/register/slug`, `class/slug`, group keys, or a bare name. An ambiguous bare
-  name returns the candidates and exit 17.
+- **Always JSON** *(settled)*. Every command writes JSON to stdout by default;
+  `--format text` renders a table for humans, `--format ndjson` streams list items.
+- **`{data, meta}` on every document** *(settled)*. `data` is the result; `meta` is a
+  small object with the contract version, catalog generation and scope (draft: timing).
+  Agents always know which catalog answered.
+- **A ref is an FQID or a bare name** *(settled)*. Any entity is a ref: `provider`,
+  `provider/register`, `provider/register/slug`, `class/slug`, group keys, or a bare
+  name. A unique name resolves; an ambiguous one returns the candidates with their FQIDs
+  and exit 17, so the next call can be exact.
+- **`show` plus facet commands** *(settled)*. `show <ref>` returns a summary for any
+  kind (register, variable, classification, group). Separate verbs fetch the heavy
+  parts: states, values, lineage, graph, coverage.
 - **One flag per concept, the same everywhere.** `--register`, `--period` (the FQID
   period grammar, replacing `--years`/`--year`/`--from`/`--to`), `--limit` and
   `--cursor` on every list. `--scope` is valid on every read command because scope is
   reader state.
-- **Output follows the destination.** JSON when stdout is not a terminal, text when it
-  is. `--format json|text|ndjson` overrides.
 - **One output shape per command.** The shape does not depend on result count. Every
-  list is `{"items": [...], "next_cursor": ...}`. Every JSON document carries a small
-  `meta` object (contract version, artifact identity, scope, timing).
+  list is `{"items": [...], "next_cursor": ...}` inside `data`.
 - **Errors** are always JSON on stderr: `{code, class, message, remediation, fields}`.
 - **Exit codes:** keep 0/2/10/16/25/30, split 17 into 17 (no match / ambiguous) and 18
   (order blocked), and drop 20.
