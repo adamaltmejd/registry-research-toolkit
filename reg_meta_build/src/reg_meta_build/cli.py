@@ -57,6 +57,7 @@ from .db import (
     _scb_snapshot_error,
     open_built_db,
 )
+from .derive import derive_artifact
 from .doc_coverage import compute_doc_coverage, render_doc_coverage_toml
 from .doc_db import (
     build_doc_db,
@@ -367,6 +368,19 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     extend_db_p.add_argument("--input-commit", default=None)
     extend_db_p.add_argument("--input-manifest-sha256", default=None)
+
+    derive_p = sub.add_parser(
+        "derive",
+        help="Publish a derived copy of a published artifact (maintainer-only).",
+    )
+    derive_p.add_argument(
+        "--base",
+        required=True,
+        help="Published reg_meta.db to derive from (read-only; same schema major, minor up to the builder's).",
+    )
+    derive_p.add_argument(
+        "--out", required=True, help="Path the derived reg_meta.db is published at."
+    )
 
     build_docs_p = sub.add_parser(
         "build-docs",
@@ -1313,6 +1327,27 @@ def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     ), 0
 
 
+def _cmd_derive(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    start = time.perf_counter()
+    try:
+        derive_artifact(Path(args.base), Path(args.out))
+    except ValueError as exc:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="derive_failed",
+            error_class="configuration",
+            message=str(exc),
+            remediation="Derive from a complete published artifact with committed builder sources.",
+        ) from exc
+    return success_envelope(
+        command="derive",
+        args_payload={"base": args.base, "out": args.out},
+        db_info={"schema_version": SCHEMA_VERSION},
+        data={"db_path": args.out},
+        duration_ms=int((time.perf_counter() - start) * 1000),
+    ), 0
+
+
 def _cmd_build_docs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     if args.docs_dir:
@@ -2097,6 +2132,7 @@ COMMAND_DISPATCH: dict[
     "verify-input-bundle": _cmd_verify_input_bundle,
     "inspect-source-records": _cmd_inspect_source_records,
     "extend-db": _cmd_extend_db,
+    "derive": _cmd_derive,
     "build-docs": _cmd_build_docs,
     "seed-slugs": _cmd_seed_slugs,
     "precheck-slugs": _cmd_precheck_slugs,
@@ -2145,6 +2181,10 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
     (
         "extend-db --base-db DB --holdings-input DIR --input-commit SHA --input-manifest-sha256 SHA256 [--steward S]",
         "Compile accepted steward holdings onto a strict schema-9 catalog.",
+    ),
+    (
+        "derive --base DB --out DB",
+        "Publish a derived copy of a published artifact with its own identity.",
     ),
     (
         "build-docs [--docs-dir DIR]",
