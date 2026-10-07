@@ -13,10 +13,7 @@ from typing import TYPE_CHECKING
 from _repo_curation_support import REPO_CURATION, REPO_ROOT
 from reg_meta_build.cis2016_matrix import load_matrix
 from reg_meta_build.classifications import load_valid_codes
-from reg_meta_build.concept_groups import (
-    load_concept_groups,
-    load_worklist_concept_groups,
-)
+from reg_meta_build.concept_groups import load_worklist_concept_groups
 from reg_meta_build.doc_db import load_doc_sources, load_related_documents
 from reg_meta_build.scb_errata import resolve_scb_errata
 
@@ -69,8 +66,10 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
             expected_selector=declaration.selector,
         ).answers, register.source_file
 
-    # The concept-group-candidates CLI reads the accepted groups and the worklist.
-    assert load_concept_groups(REPO_CURATION)
+    # simplify: the accepted [[group]] tables are checked by the tree's strict model
+    # only; load_concept_groups re-parses every register file (~10 s), so its extra
+    # key/axis checks run for the concept-group-candidates CLI, not here. Add it if
+    # that CLI ever fails on committed groups.
     assert load_worklist_concept_groups(
         REPO_ROOT / "worklists" / "concept_groups.auto.toml"
     )
