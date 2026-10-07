@@ -103,12 +103,15 @@ dev script retains its path and consumes these same sources.
 
 Two inherited standalone oracles retain their consumers:
 `selection/update-expected.json` compares path/environment update trials;
-`selection/doc-cursor-expected.json` is consumed by the existing package document CLI
-case. Its request builds selection/docs, runs docs search for Example with limit 1,
-follows the returned cursor, reads the named catalog document, and lists local docs. The
-source-backed document case stays in its package; its fixture and oracle have one home
-here. Requests without explicit fixture keys retain the defaults above so all relocated
-bytes remain unchanged.
+`selection/doc-cursor-expected.json` is consumed by the package search CLI case in
+`reg_meta/tests/test_doc_commands.py`. That case has no request file: it builds the
+`reader` catalog artifact and a document database from `selection/docs`, then runs
+`reg-meta search` for "Value" over variable descriptions, unfolded, with limit 2, and
+follows `next_cursor` until `has_more` is false. The oracle pins the first page's result
+types (the document hit ahead of the variable), the catalog FQIDs across all pages in
+order with document rows excluded, and the last page's `has_more`. The source-backed
+case stays in its package; its fixture and oracle have one home here. Requests without
+explicit fixture keys retain the defaults above so all relocated bytes remain unchanged.
 
 ## API cases
 

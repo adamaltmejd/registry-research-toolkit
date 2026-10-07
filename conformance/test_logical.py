@@ -100,8 +100,6 @@ def test_logical_export_scope(case: Path, tmp_path: Path) -> None:
                 }
             elif observe == "warnings":
                 actual = {"codes": sorted(w.code for w in result)}
-            elif observe == "coverage":
-                actual = {"registers": sorted(result)}
             elif observe == "terminal":
                 actual = {"target": str(result) if result is not None else None}
             elif observe == "varinfo":
