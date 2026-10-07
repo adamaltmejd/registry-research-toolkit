@@ -67,11 +67,11 @@ jobs:
       # both exist. `-m "not release"` deselects test_update_and_query: the
       # release's own assets are smoke-tested above, and the clean-container
       # download runs post-publish (the `integration` job below).
-      - name: Prepare rootless Podman
-        run: |
-          sudo apt-get update
-          sudo apt-get install --yes podman
-          podman info
+      # Podman ships with the runner image; no apt step (see ci.yml's
+      # `package-integration` for why).
+      - name: Check rootless Podman
+        timeout-minutes: 2
+        run: podman info
       - name: Verify reg_meta installs from the registry in a clean container
         run: |
           uv run python -m pytest reg_meta/tests/test_integration.py \
