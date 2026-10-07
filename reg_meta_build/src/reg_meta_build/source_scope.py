@@ -477,12 +477,17 @@ def resolve_source_scope(
                 occurrence, value_sessions, support=support
             )
             claims[column].extend(bound.claims)
-            if guarded_refs:
+            if guarded_refs and (
+                guarded := [
+                    ref
+                    for original in occurrence.source_records
+                    if (ref := record_ref(original)) in guarded_refs
+                ]
+            ):
+                # Hash only claims a guard reads; whole-claim digests are costly.
                 tokens = tuple(coding_source_sha256(claim) for claim in bound.claims)
-                for original in occurrence.source_records:
-                    ref = record_ref(original)
-                    if ref in guarded_refs:
-                        guarded_coding[ref].extend(tokens)
+                for ref in guarded:
+                    guarded_coding[ref].extend(tokens)
             if (
                 enumerated_bindings is not None
                 and occurrence.fields.column_name is not None

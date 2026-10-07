@@ -1442,6 +1442,16 @@ def compile_parallel_representations(
                 "checked effective representation ownership is stale",
             ),
         )
+    # Every entry filters the complete register; derive per-record keys once.
+    keyed = tuple(
+        (
+            record,
+            record_ref(record),
+            native_variable_key(record),
+            native_variant_key(record),
+        )
+        for record in records
+    )
     for index, entry in enumerate(register.representation.parallel, 1):
         ref = f"{register.source_file}#/representation.parallel/{index}"
         variable_names = tuple(
@@ -1471,12 +1481,12 @@ def compile_parallel_representations(
         }
         owned = tuple(
             record
-            for record in records
-            if native_variant_key(record) == variant_key
+            for record, record_key, record_variable, record_variant in keyed
+            if record_variant == variant_key
             and (
-                record_ref(record) in expected_refs
+                record_key in expected_refs
                 if expected_refs
-                else native_variable_key(record) == variable_key
+                else record_variable == variable_key
             )
         )
         # Keep the uncorrected path byte-identical. A checked field/identity
@@ -1690,16 +1700,17 @@ def compile_parallel_representations(
             )
             continue
         first = selected[0]
+        first_variable = native_variable_key(first)
         peers = tuple(
             record
-            for record in records
+            for record, _, record_variable, record_variant in keyed
             if record.source == first.source
-            and native_variable_key(record) == native_variable_key(first)
-            and native_variant_key(record) == variant_key
+            and record_variable == first_variable
+            and record_variant == variant_key
         )
         selected_refs = {record_ref(record) for record in selected}
         targets = capture_expectations(
-            tuple(record for record in records if record_ref(record) in selected_refs),
+            tuple(record for record, key, _, _ in keyed if key in selected_refs),
             fields=tuple(SourceFields.model_fields),
             coding=True,
             parents=use_effective,
@@ -1730,7 +1741,7 @@ def compile_parallel_representations(
             for expectation in (*case.targets, *case.support)
         }
         correction_support = tuple(
-            record for record in records if record_ref(record) in support_refs
+            record for record, key, _, _ in keyed if key in support_refs
         )
         cases.append(
             CurationCase(
