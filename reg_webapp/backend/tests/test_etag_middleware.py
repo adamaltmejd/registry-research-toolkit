@@ -147,3 +147,21 @@ def test_generation_invalidates_an_identical_body(tmp_path, monkeypatch):
     assert responses[0].status_code == responses[1].status_code == 200
     assert responses[0].content == responses[1].content
     assert responses[0].headers["etag"] != responses[1].headers["etag"]
+
+
+def test_different_bodies_under_identical_metadata_do_not_share_a_validator(
+    catalog_db,
+):
+    # Fails if compute_etag drops the body digest: version, steward, generation
+    # and scope are identical here, so only the body can tell the two apart, and
+    # an ETag cached for `?q=lisa` would otherwise turn `?q=rams` into a stale 304.
+    with TestClient(create_app()) as client:
+        lisa = client.get("/api/search", params={"q": "lisa"})
+        rams = client.get(
+            "/api/search",
+            params={"q": "rams"},
+            headers={"If-None-Match": lisa.headers["etag"]},
+        )
+    assert lisa.status_code == rams.status_code == 200
+    assert lisa.content != rams.content
+    assert lisa.headers["etag"] != rams.headers["etag"]
