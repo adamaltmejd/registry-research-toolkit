@@ -1,0 +1,20 @@
+# Rust runtime workspace (RUST_RUNTIME_SPEC.md). `spike/` is the stage-0 throwaway with
+# its own workspace; package 1.5 deletes it and this exclude.
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+exclude = ["spike"]
+
+[workspace.package]
+edition = "2024"
+publish = false
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+
+# The every-scalar sweeps take ~11 s unoptimized; opt-level 1 keeps G0 fast.
+[profile.test]
+opt-level = 1

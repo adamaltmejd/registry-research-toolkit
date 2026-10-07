@@ -19,6 +19,8 @@ dist/
 .mypy_cache/
 .hypothesis/
 node_modules/
+# Cargo workspace build output (root Cargo.toml)
+/target/
 
 # IDE
 .idea/

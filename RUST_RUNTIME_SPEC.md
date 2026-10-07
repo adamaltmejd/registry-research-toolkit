@@ -309,10 +309,17 @@ Notes:
   - `fold_identity` — Unicode lowercase with the Final_Sigma context rule, no
     normalization. This is today's `py_lower` (Python `str.lower()`, which does apply
     Final_Sigma) and the column identity rule. In Rust it is `str::to_lowercase`.
-  - `fold_search` — strip, full case folding, NFKD, drop characters with a nonzero
-    canonical combining class, collapse whitespace. This is today's search-text fold and
-    is *not* what FTS5 `unicode61` does to indexed text: `unicode61` folds neither ß nor
-    ligatures nor full-width forms (`straße`/`strasse`, `ﬁlm`/`film`, `ＡＢＣ`/`abc`
+  - `fold_search` — full case folding, NFKD, drop characters with a nonzero canonical
+    combining class, repeated until the text stops changing; then split on whitespace
+    and join with single spaces. It is idempotent. Each pass maps characters
+    independently, so a pass bound that holds for every scalar holds for every string:
+    two passes change any text at most and the third confirms; reaching the cap is a
+    bug. The fold before package 1.2 (one pass, strip first) was not idempotent on 712
+    scalars: NFKD re-introduced capitals after the case fold (U+1D2C MODIFIER LETTER
+    CAPITAL A → `A`), and a spacing mark decomposed to a space after the strip (U+00A8
+    `¨` → ` `). This is `reg_meta.queries.fold_search`, the reader's search-text fold,
+    and is *not* what FTS5 `unicode61` does to indexed text: `unicode61` folds neither ß
+    nor ligatures nor full-width forms (`straße`/`strasse`, `ﬁlm`/`film`, `ＡＢＣ`/`abc`
     match under `fold_search` but not under `unicode61`). Whether indexed text is
     pre-folded with `fold_search` or stays raw is decided at checkpoint 1, with the
     distinguishing cases in the fold corpus.
@@ -641,16 +648,21 @@ is deleted".
   functions.
 - Fold corpus: a generator script (adapted from `spike/stage0/scripts/parity_folds.py`;
   a tool, not a test, so it may call Python's folds) writes a sampled corpus to
-  `conformance/cases/folds/`: every scalar whose fold is not the identity, seeded
-  samples, and hand-verified Unicode 17 cases, under about 1 MB. It excludes scalars
-  that Python's UCD (16.0) leaves unassigned or folds differently from 17.0, as
+  `conformance/cases/folds/`: every scalar whose fold is not the identity (Hangul
+  syllables with a final consonant sampled, their decomposition being algorithmic),
+  seeded samples, and hand-verified Unicode 17 cases, under about 1 MB. It excludes
+  scalars that Python's UCD (16.0) leaves unassigned or folds differently from 17.0, as
   `parity_folds.py` already classifies them; the hand-verified cases cover those.
 - CI: a Rust job (`cargo fmt --check`, `cargo clippy --workspace -- -D warnings`,
   `cargo test --workspace`); the lint job installs the Rust toolchain because pre-commit
   gains a `cargo fmt` hook.
 - Paths: `crates/` (the corpus generator lives at `crates/reg-core/tools/`), root
   `Cargo.toml` and `Cargo.lock`, `conformance/cases/folds/`, `.github/workflows/`,
-  `.pre-commit-config.yaml`.
+  `.pre-commit-config.yaml`, `.gitignore`. For the idempotent `fold_search` (section 5):
+  `reg_meta/src/reg_meta/queries.py` (the reader's fold, made public),
+  `reg_webapp/backend/src/reg_webapp/routes/search.py` (imports it instead of a copy),
+  `conformance/artifact_requests.py` (the oracle's independent restatement) and a
+  regression case under `conformance/cases/http_search/`.
 - Out of scope: Python bindings (slice 3a), the FQID and period grammars.
 - Acceptance: `cargo test --workspace` passes the corpus and a property sweep over every
   scalar value (total, no panic, `fold_search` idempotent); CI is green.
