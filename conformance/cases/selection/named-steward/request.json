@@ -1,8 +1,0 @@
-{
-  "kind": "steward",
-  "install": "swecov",
-  "argv": [
-    "--catalog",
-    "swecov"
-  ]
-}

@@ -1,0 +1,17 @@
+{
+  "fixture": "reader",
+  "requests": [
+    {
+      "path": "/api/catalog/scb"
+    },
+    {
+      "path": "/api/catalog/scb",
+      "query": {
+        "scope": "reference"
+      }
+    },
+    {
+      "path": "/api/catalog/scb"
+    }
+  ]
+}
