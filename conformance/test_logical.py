@@ -157,13 +157,6 @@ def test_logical_export_scope(case: Path, tmp_path: Path) -> None:
                         for r in result
                     ]
                 }
-            elif observe == "classified":
-                actual = {"names": [r["variable_name"] for r in result]}
-            elif observe == "states":
-                actual = {
-                    "columns": [s.delivery_column_name for s in result],
-                    "windows": [[s.valid_from, s.valid_to] for s in result],
-                }
             elif observe == "state-tokens":
                 actual = {
                     "windows": [
@@ -171,5 +164,5 @@ def test_logical_export_scope(case: Path, tmp_path: Path) -> None:
                     ]
                 }
             else:
-                actual = {"present": bool(result)}
+                pytest.fail(f"{observe!r} is not an observe, and no error was raised")
     assert actual == expected
