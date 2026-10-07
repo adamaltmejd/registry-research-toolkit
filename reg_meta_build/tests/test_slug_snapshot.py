@@ -3,7 +3,8 @@
 A curating/frozen zone reads its variable slugs back from its gitignored
 ``*.auto.toml``. A copy that is on disk but not in the committed HEAD tree passes
 every on-disk check and then vanishes on a clean checkout, so ``precheck-slugs``
-reports it and refuses ``--update-snapshot``. The grow-only refusal for frozen zones
+reports it and refuses ``--update-snapshot``. A ``.git`` that git cannot read fails
+the command rather than reporting nothing. The grow-only refusal for frozen zones
 is proven in ``test_fqid_slugs_precheck_cli.py``.
 """
 
@@ -11,6 +12,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 from typing import TYPE_CHECKING
 
@@ -177,6 +179,28 @@ def test_inherited_git_routing_ignored(catalog, tmp_path, capsys, monkeypatch):
     code, data = _precheck(db_dir, slug_dir, capsys)
 
     _assert_refused(code, data, slug_dir, slug_dir / _AUTO)
+
+
+def test_unreadable_git_fails_closed(catalog, tmp_path, capsys):
+    """A ``.git`` that git cannot read (here a worktree link to a missing gitdir;
+    in a container, "dubious ownership") is a configuration error, not "no
+    uncommitted pins": reporting nothing would let ``--update-snapshot`` bake in
+    the pin this check refuses."""
+    db_dir, slug_dir = _layout(catalog, tmp_path, freeze="curating", auto=True)
+    shutil.rmtree(slug_dir / ".git")
+    (slug_dir / ".git").write_text(
+        f"gitdir: {tmp_path / 'missing'}\n", encoding="utf-8"
+    )
+
+    code, data = _precheck(db_dir, slug_dir, capsys)
+
+    assert code == 10
+    error = data["error"]
+    assert error["code"] == "slug_dir_git_unreadable"
+    assert error["class"] == "configuration"
+    assert str(slug_dir) in error["message"]
+    assert "safe.directory" in error["remediation"]
+    assert not snapshot_path(slug_dir).exists()
 
 
 def test_register_tree_guard_reads_the_loaders_pin_path(catalog, tmp_path, capsys):

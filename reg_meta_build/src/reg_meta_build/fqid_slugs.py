@@ -829,8 +829,8 @@ def _git_env() -> dict[str, str]:
     The one exception is an inherited ``safe.directory`` entry in the
     GIT_CONFIG_COUNT/KEY_n/VALUE_n block, re-emitted densely: a container that
     mounts the checkout under another uid grants ownership trust only that way, and
-    without it every call exits 128 "dubious ownership", which reads as "not a work
-    tree" and silently skips the check. Every other inherited config entry is
+    without it every call exits 128 "dubious ownership" and the check fails closed
+    on a checkout it could have read. Every other inherited config entry is
     dropped with the routing variables."""
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     count = os.environ.get("GIT_CONFIG_COUNT", "")
@@ -848,29 +848,60 @@ def _git_env() -> dict[str, str]:
     return env
 
 
+def _git_unreadable(directory: Path, detail: str) -> RegMetaError:
+    return _err(
+        "slug_dir_git_unreadable",
+        f"{directory}: a .git is present but git cannot read the committed HEAD "
+        f"tree, so uncommitted slug pins cannot be checked: {detail.strip()}",
+        f"Make `git -C {directory} ls-tree HEAD` succeed, then rerun. For "
+        "'dubious ownership', trust the checkout with "
+        "`git config --global --add safe.directory <repo>`; for a broken .git "
+        "link, repair or remove it.",
+    )
+
+
 def _git_committed_paths(directory: Path) -> set[str] | None:
     """Paths under ``directory`` (relative to it) in the committed HEAD tree, or
-    ``None`` when ``directory`` is not in a git work tree or HEAD is unborn.
+    ``None`` when no ``.git`` sits at or above ``directory`` (a wheel install) or
+    HEAD is unborn.
 
     Reads HEAD, not the index: a staged-but-uncommitted file would not survive a
-    clean checkout either, and the index would report it as fine."""
+    clean checkout either, and the index would report it as fine.
+
+    Fails closed: a ``.git`` that git cannot read (a broken worktree link,
+    "dubious ownership", git missing from PATH) raises a configuration error.
+    Returning ``None`` there would report no uncommitted pins and let
+    ``--update-snapshot`` bake in the pin this check exists to refuse. The
+    presence of ``.git`` is the discriminator because git exits 128 both outside
+    a repo and when it refuses one."""
+    resolved = directory.resolve()
+    if not any(
+        (d / ".git").exists(follow_symlinks=False)
+        for d in (resolved, *resolved.parents)
+    ):
+        return None
 
     def git(*args: str) -> subprocess.CompletedProcess[str]:
-        return subprocess.run(
-            ["git", *args],
-            cwd=directory,
-            capture_output=True,
-            text=True,
-            env=_git_env(),
-            check=False,  # nonzero = no work tree / unborn HEAD, read below
-        )
+        try:
+            return subprocess.run(
+                ["git", *args],
+                cwd=directory,
+                capture_output=True,
+                text=True,
+                env=_git_env(),
+                check=False,  # the return code is classified below
+            )
+        except OSError as exc:
+            raise _git_unreadable(directory, str(exc)) from exc
 
-    inside = git("rev-parse", "--is-inside-work-tree")
-    if inside.returncode != 0 or inside.stdout.strip() != "true":
-        return None
+    head = git("rev-parse", "--verify", "--quiet", "HEAD^{commit}")
+    if head.returncode == 1 and not head.stderr.strip():
+        return None  # unborn HEAD: nothing committed yet
+    if head.returncode != 0:
+        raise _git_unreadable(directory, head.stderr)
     listed = git("ls-tree", "-z", "-r", "--name-only", "HEAD", "--", ".")
     if listed.returncode != 0:
-        return None
+        raise _git_unreadable(directory, listed.stderr)
     return {name for name in listed.stdout.split("\0") if name}
 
 
@@ -895,7 +926,8 @@ def _untracked_pinned_autos(
     checkout, taking the pin with it. The build is git-agnostic, so ``precheck-slugs``
     reports this. A pinned zone with no auto file on disk is not reported: the build's
     ``slug_freeze_auto_missing`` guard owns that case and exempts a provider without
-    variables. Outside a git work tree (a wheel install) nothing is reported.
+    variables. Outside a git work tree (a wheel install) nothing is reported; a
+    ``.git`` that git cannot read raises a configuration error.
 
     Only the paths the loader reads are candidates; an auto file anywhere else
     pins nothing. ``registers`` is ``load_register_files(slug_dir)`` when the caller
