@@ -34,7 +34,6 @@ colors:
   surface-raised: "{colors.white}"
   surface-sunken: "{colors.gray-11}"
   surface-hover: "{colors.gray-11}"
-  surface-selected: "{colors.gray-10}"
   text: "{colors.gray-1}"
   text-muted: "{colors.gray-5}"
   text-faint: "{colors.gray-6}"
@@ -158,9 +157,6 @@ components:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.text-muted}"
     typography: "{typography.label}"
-  row-selected:
-    backgroundColor: "{colors.surface-selected}"
-    textColor: "{colors.text}"
   tag:
     rounded: "{rounded.sm}"
     typography: "{typography.body-sm}"
@@ -216,9 +212,7 @@ provider themes pure role remaps.
 
 - **Paper (`bg` #f7f7f6) and surfaces (`surface` #ffffff, `surface-sunken` #efefee):**
   the canvas is a hair off white so white panels and tables read as the working surface.
-  Sunken is the rail, hover rows, and inset wells. Selection is one ramp stop darker
-  (`surface-selected` #e6e6e5) plus a 3 px ink bar on the leading edge, so a selected
-  row never depends on tint alone.
+  Sunken is the rail, hover rows, and inset wells.
 - **Ink (`text` #151618, `text-muted` #5f6368, `text-faint` #6b6f74):** three text
   strengths, all AA on paper and on surfaces (16.9:1, 5.6:1, 4.7:1). Faint is for
   metadata that must stay legible, not for hiding things.
@@ -287,8 +281,8 @@ page body never scrolls horizontally.
 
 Panels are the unit of grouping: a header (label-level title, optional meta) over a
 body. Tables are the workhorse: label-level headers, right-aligned mono numerics,
-hairline rows, no zebra, hover and keyboard-selected states. The first column is the
-title column by position and becomes the card title when the table stacks.
+hairline rows, no zebra, a hover state. The first column is the title column by position
+and becomes the card title when the table stacks.
 
 ## Elevation & Depth
 
