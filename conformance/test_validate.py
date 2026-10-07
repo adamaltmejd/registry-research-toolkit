@@ -87,9 +87,9 @@ def test_validation_reads_state_metadata_never_code_lists(monkeypatch):
     never reads code membership (reg_meta/DESIGN.md → Project semantic
     validation): a geography variable's shared code list would otherwise be
     loaded per state to answer a question about one period. The statements are
-    captured from the public door on the test's own connection, the
-    `test_artifact_read_paths.py` precedent, over every case of the readable
-    semantic fixture (which carries value sets and a classification)."""
+    captured from the public door on the test's own connection, over every
+    case of the readable semantic fixture (which carries value sets and a
+    classification)."""
     cases = [
         json.loads(p.read_text())
         for p in sorted((CASES / "validate").glob("*/request.json"))
