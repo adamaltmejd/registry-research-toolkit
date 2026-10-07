@@ -35,7 +35,10 @@ from a step's `content` string, encoded with its optional `encoding`, or built b
 `nested_arrays: N` as an object nesting N arrays deep) compares the CLI's exit 10
 envelope message with the HTTP `detail`. No volatile fields are removed from those
 comparisons. Keys and lists retain their order. Path placeholders in the selection
-oracle expand to the test filesystem before comparison.
+oracle expand to the test filesystem before comparison. An HTTP response oracle may also
+pin raw bytes: `media_type` (the content type without parameters), `headers` (exact
+values by lower-case name) and `bytes` (a file in the case directory compared byte for
+byte), as `validate/gap-clipped` does for its order download.
 
   | Surface directory                                             | Boundary and request interpretation                                                |
   | ------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
@@ -50,6 +53,29 @@ oracle expand to the test filesystem before comparison.
   | http_catalog, http_context, http_scope, http_search, validate | HTTP request sequence and status/pointer oracle; implicit compiled source          |
   | validate (also)                                               | CLI validate/order bytes or refusal against each HTTP project response             |
   | fixtures                                                      | HTTP readable sources, not independently executed cases                            |
+
+## Out-of-process runner
+
+`--server-cmd` runs the HTTP surfaces above over a real socket instead of in-process. It
+is a command template: `{db}` (the artifact directory) and `{port}` are substituted in
+each word. The runner starts one server per cached artifact from the repository root,
+with `REG_META_DB`, `REG_WEBAPP_STEWARD` and `REG_WEBAPP_STEWARDS_DIR` in its
+environment, waits until `GET /openapi.json` answers (120 s at most), reuses it for
+every case on that artifact and stops it at session end. A server that exits before
+answering is retried on a fresh port. Its output goes to `servers*/server-N.log` under
+the pytest base temp. The FastAPI app under uvicorn:
+
+```sh
+uv run python -m pytest conformance -q --server-cmd='uv run python -c "import sys, uvicorn; from reg_webapp.app import create_app; uvicorn.run(create_app(rate_limit_per_minute=100_000), port=int(sys.argv[1]))" {port}'
+```
+
+The app reads its artifact from the environment, so this template needs no `{db}`. It is
+not `uvicorn reg_webapp.app:create_app --factory` because the production write limit (30
+per minute per IP) would refuse the validate cases, all sent from loopback; the
+in-process runner raises the limit the same way. The `api` corpus (`cases/api/`) is
+collected only with `--server-cmd`, except its `startup_error` cases, which are
+process-level. Cases with `golden_config` swap a pins file the app reads at import, and
+stay in-process. Every other suite, boot and startup cases included, is unchanged.
 
 ## Fixture cache
 

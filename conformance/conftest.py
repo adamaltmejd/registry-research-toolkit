@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from http_cases import ServerPool
 from reader_artifacts import FIXTURE_IMPORT_DATE, cached_reader_artifact
 from reg_meta.db import open_db
 from reg_meta.errors import RegMetaError
@@ -74,6 +75,22 @@ def artifact_dir(request):
         request.param,
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     ).parent
+
+
+@pytest.fixture(scope="session")
+def http_servers(request, tmp_path_factory):
+    """Server processes for `--server-cmd`, one per artifact; None runs in-process.
+
+    Every server is stopped at session end, whether or not the cases passed."""
+    template = request.config.getoption("--server-cmd")
+    if template is None:
+        yield None
+        return
+    pool = ServerPool(template, tmp_path_factory.mktemp("servers"))
+    try:
+        yield pool
+    finally:
+        pool.close()
 
 
 @pytest.fixture
