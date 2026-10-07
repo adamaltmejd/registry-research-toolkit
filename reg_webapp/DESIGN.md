@@ -2416,13 +2416,6 @@ statements == 0):
   is now an explicit *negative* case (the pin is retired), alongside
   `scb/lisa/naringsgren@bad/slug` and `…@@x`.
 
-**Provenance confinement (route introspection).** No handler references the
-maintainer-only sibling provenance DB path, so there is no path-confinement to enforce
-at the handler level. The published catalog's separate `variable_state.provenance` field
-is safe row metadata (provider export versus curated delivery correction) and travels
-with states; it does not expose or query the sibling DB. This separation is a property
-of the endpoint set, re-checked when routes are added.
-
 ## Forward-looking open UX notes
 
 These are unresolved UX questions, not built behavior — recorded so they aren't

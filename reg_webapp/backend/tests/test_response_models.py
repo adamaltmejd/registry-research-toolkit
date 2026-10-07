@@ -1,67 +1,37 @@
-"""Every ``/api`` route declares a typed response contract.
+"""Every ``/api`` route declares a typed response contract in ``openapi.json``.
 
-See DESIGN.md → OpenAPI snapshot + TS codegen (the drift gate). Lint-enforced
-invariant: the SPA codegens TS types from the OpenAPI schema, so an
-endpoint without a typed contract is a hole.
+See DESIGN.md → OpenAPI snapshot + TS codegen (the drift gate). The SPA codegens
+TS types from the OpenAPI schema, so an endpoint without a typed contract is a
+hole. The committed snapshot is pinned to the live app by
+``test_openapi_snapshot.py``, so it is the contract read here.
 
 Two contract shapes are allowed:
 
-- a Pydantic ``response_model`` (the JSON endpoints, including
-  ``/api/project/order`` — it returns the manifest's own canonical bytes but
-  still declares the reg_meta ``OrderManifest`` as its contract), OR
-- a documented BINARY/DOWNLOAD media type (the PDF file route). These cannot
-  declare a Pydantic ``response_model`` (they return opaque bytes), but they DO
-  declare their media type in the route's ``responses=`` so the OpenAPI contract
-  (and the SPA codegen) sees a download, not an untyped JSON body. This is the
-  sanctioned carve-out.
+- a JSON body with a schema (a Pydantic ``response_model``; a route without
+  one renders as an empty ``{}`` schema), OR
+- a documented BINARY/DOWNLOAD media type (the PDF file route), declared in the
+  route's ``responses=`` so the SPA codegen sees a download, not an untyped JSON
+  body — and then ONLY that media type.
 """
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+import json
+from pathlib import Path
 
-from _route_helpers import flat_api_routes
-from reg_webapp.app import create_app
-
-if TYPE_CHECKING:
-    from fastapi.routing import APIRoute
-
-# The binary/download endpoints: no Pydantic response_model (raw bytes), but
-# each MUST declare its download media type in OpenAPI instead. Pinned by path,
-# method, and expected media type so a new download endpoint is a deliberate
-# addition here.
-_DOWNLOAD_ENDPOINTS: dict[str, tuple[str, str]] = {
-    "/api/docs/file/{register}/{filename}": ("get", "application/pdf"),
-}
+_OPENAPI = Path(__file__).resolve().parents[1] / "openapi.json"
 
 
-def _api_routes() -> list[APIRoute]:
-    routes = [r for r in flat_api_routes(create_app()) if r.path.startswith("/api")]
-    assert routes, "expected at least one /api route"
-    return routes
-
-
-def test_every_json_api_route_has_response_model():
-    """Every JSON ``/api`` route (i.e. not a documented download) declares a
-    Pydantic ``response_model``."""
-    missing = [
-        r.path
-        for r in _api_routes()
-        if r.path not in _DOWNLOAD_ENDPOINTS and r.response_model is None
+def test_every_api_route_declares_a_typed_200_body():
+    paths = json.loads(_OPENAPI.read_text(encoding="utf-8"))["paths"]
+    untyped = [
+        f"{method.upper()} {path}"
+        for path, operations in paths.items()
+        if path.startswith("/api")
+        for method, operation in operations.items()
+        for content in [operation["responses"]["200"].get("content", {})]
+        if not content
+        or ("application/json" in content and not content["application/json"]["schema"])
+        or ("application/json" in content and len(content) > 1)
     ]
-    assert not missing, f"JSON routes missing response_model: {missing}"
-
-
-def test_download_endpoints_declare_their_media_type():
-    """The download carve-outs declare their media type in OpenAPI (a typed
-    contract for the SPA) — they don't silently fall back to ``application/json``."""
-    schema = create_app().openapi()
-    for path, (method, media_type) in _DOWNLOAD_ENDPOINTS.items():
-        content = schema["paths"][path][method]["responses"]["200"]["content"]
-        assert media_type in content, (
-            f"{path} should declare 200 content-type {media_type!r}, got "
-            f"{list(content)}"
-        )
-        assert "application/json" not in content, (
-            f"{path} is a download — it must not also advertise application/json"
-        )
+    assert not untyped, f"routes without a typed 200 contract: {untyped}"
