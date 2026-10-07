@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import unicodedata
 
 from acceptance_requests import response_fqids
 from reg_meta.cli import run
@@ -111,36 +112,46 @@ def cli_json(directory, capsys, arguments):
 
 
 # reg_meta/DESIGN.md: search continuation has a hard 1,000-result depth ceiling and a
-# researcher who reaches it must refine the query. Exact/prefix promotion switches off
-# when more than 50 rows match the query by identity, so a binding whose generic name
-# (the real catalogs share "År" across dozens of registers) ranks it past that depth
-# is, by contract, unreachable through that name alone.
+# researcher who reaches it must refine the query. Exact identity matches always
+# lead the order (#1180), so a binding searched by its own name ranks past that
+# depth only when more exact matches than the ceiling share the name; it is then,
+# by contract, unreachable through that name alone.
 SEARCH_DEPTH_CEILING = 1_000
-IDENTITY_PROMOTION_LIMIT = 50
 
 
-def identity_match_floor(query, rows):
-    """Lower bound on the reader's identity-match count over consumed rows.
-
-    Casefold-only equality/prefix on the published identity texts; the reader also
-    folds diacritics, so it counts at least these.
-    """
-    folded = " ".join(query.split()).casefold()
-    return sum(
-        any(
-            isinstance(text, str)
-            and " ".join(text.split()).casefold().startswith(folded)
-            for text in (row.get("name"), row.get("group_label"), row.get("datacolumn"))
-        )
-        for row in rows
+def _fold(text):
+    """The reader's documented identity fold: casefold, no diacritics, one space."""
+    decomposed = unicodedata.normalize("NFKD", text.strip().casefold())
+    return " ".join(
+        "".join(ch for ch in decomposed if not unicodedata.combining(ch)).split()
     )
 
 
+def _identity_texts(row):
+    texts = [
+        row.get("name"),
+        row.get("datacolumn"),
+        row.get("group_key"),
+        row.get("group_label"),
+        *(row.get("delivery_column_names") or ()),
+    ]
+    for item in (row, *(row.get("members") or ())):
+        fqid = item.get("fqid")
+        texts.extend((fqid, fqid.rsplit("/", 1)[-1]) if fqid else ())
+        texts.extend((item.get("name"), item.get("delivery_column")))
+    return [text for text in texts if isinstance(text, str)]
+
+
+def exact_identity_match(query, row):
+    """Whether a consumed row matches the query exactly by a published identity."""
+    folded = _fold(query)
+    return any(_fold(text) == folded for text in _identity_texts(row))
+
+
 def ceiling_exhausted(query, rows):
-    """A miss is contractual only past the depth ceiling with promotion gated off."""
-    return (
-        len(rows) >= SEARCH_DEPTH_CEILING
-        and identity_match_floor(query, rows) > IDENTITY_PROMOTION_LIMIT
+    """A miss is contractual only when exact matches alone fill the depth ceiling."""
+    return len(rows) >= SEARCH_DEPTH_CEILING and all(
+        exact_identity_match(query, row) for row in rows
     )
 
 
@@ -191,12 +202,12 @@ def require_search_reaches(directory, client, capsys, query, scope, binding):
     """Require CLI and HTTP name search to reach an admitted binding.
 
     A traversal may miss it only when the miss is contractual: the traversal
-    consumed the whole depth ceiling and more than the promotion limit of its rows
-    match the query by identity, so the promotion gate is provably off. The
-    researcher's documented refinement, the reader's register-scoped search, must
-    then find the binding. That proves READER reachability, not HTTP search
-    reachability: HTTP search has no register refinement, and the binding's HTTP
-    reachability is proven by the caller's `/api/catalog/<fqid>` browse checks.
+    consumed the whole depth ceiling and every consumed row matches the query
+    exactly, so exact matches alone outnumber the ceiling. The researcher's
+    documented refinement, the reader's register-scoped search, must then find the
+    binding. That proves READER reachability, not HTTP search reachability: HTTP
+    search has no register refinement, and the binding's HTTP reachability is
+    proven by the caller's `/api/catalog/<fqid>` browse checks.
 
     Edge cases: a query with exactly 1,000 results looks like a truncated one, and
     HTTP rows include net-new golden pins (latent: no variable pins exist today).

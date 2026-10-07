@@ -121,29 +121,56 @@ def test_excluded_identity_is_removed_before_limit_and_binds_the_cursor(
     assert exc.value.code == "invalid_search_cursor"
 
 
-def test_generic_identity_matches_do_not_swamp_the_ranked_order(
+def test_exact_identity_matches_lead_however_many_share_the_name(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:
     """51 classifications named exactly `C12` (owning only `C120`) and one
     `zz-discriminative` whose description repeats `C12`, which makes it the
     best-ranked name hit without an identity match. More than 50 identity matches
-    switch identity promotion off, so the ranked order stands."""
+    switch prefix promotion off, but every exact match still leads (#1180)."""
     conn = reader_search_conn(tmp_path_factory, "search-identity-swamp")
     first = search(conn, "C12", field="description", type="classification", limit=25)
-    assert str(first.results[0].fqid) == "class/zz-discriminative"
     assert first.next_cursor is not None
     second = search(
         conn,
         "C12",
         field="description",
         type="classification",
-        limit=25,
+        limit=50,
         cursor=first.next_cursor,
     )
 
     combined = _fqids(first, second)
     assert len(combined) == len(set(combined))
-    assert combined[0] == "class/zz-discriminative"
+    assert set(combined[:51]) == {f"class/generic-{index:02d}" for index in range(51)}
+    assert combined[51] == "class/zz-discriminative"
+
+
+@pytest.mark.parametrize(
+    ("field", "fold_groups"), [("description", True), ("all", False)]
+)
+def test_exact_name_is_admitted_and_leads_past_a_prefix_swamp(
+    tmp_path_factory: pytest.TempPathFactory, field: str, fold_groups: bool
+) -> None:
+    """`scb/example/value` is named exactly `Year`; 1,001 `Year year` fillers
+    whose definition repeats the term outrank it by bm25 and fill every bounded
+    candidate prefix. The exact name is admitted before each bound and leads the
+    order however many prefix matches gate promotion off (#1180)."""
+    conn = reader_search_conn(tmp_path_factory, "search-exact-admission")
+
+    page = search(
+        conn,
+        "year",
+        field=field,
+        type="variable",
+        limit=5,
+        fold_groups=fold_groups,
+    )
+
+    names = [result.name for result in page.results]
+    assert str(page.results[0].fqid) == "scb/example/value"
+    # Unfolded, the `varname` arm adds the same variable's exact name row.
+    assert "Year" not in names[names.index("Year year") :]
 
 
 def test_unfolded_identity_swamp_gate_does_not_depend_on_page_size(

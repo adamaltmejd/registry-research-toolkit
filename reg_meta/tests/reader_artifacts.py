@@ -29,6 +29,41 @@ FIXTURE_IMPORT_DATE = json.loads(
 )["import_date"]
 
 
+def replicate_filler(case: Path, destination: Path) -> Path:
+    """Copy a reader case, expanding its `request.json` filler into copies.
+
+    `request.json` names one `filler` binding of the case's `catalog.json` and a
+    `copies` count; the filler is replaced by that many copies whose slug and
+    provider key carry a `-N` suffix. Returns the expanded source directory.
+    """
+    request = json.loads((case / "request.json").read_text())
+    shutil.copytree(case, destination)
+    catalog = json.loads((case / "catalog.json").read_text())
+    filler = next(
+        variable
+        for variable in catalog
+        if "/".join(
+            (
+                variable["register"]["provider"],
+                variable["register"]["slug"],
+                variable["slug"],
+            )
+        )
+        == request["filler"]
+    )
+    catalog.remove(filler)
+    catalog.extend(
+        {
+            **filler,
+            "slug": f"{filler['slug']}-{index}",
+            "provider_key": f"{filler['provider_key']}-{index}",
+        }
+        for index in range(request["copies"])
+    )
+    (destination / "catalog.json").write_text(json.dumps(catalog))
+    return destination
+
+
 def build_reader_artifact(
     directory: Path,
     fixture: str | Path,
