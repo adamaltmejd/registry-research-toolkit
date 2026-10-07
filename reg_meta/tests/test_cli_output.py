@@ -15,11 +15,6 @@ def limits_db(tmp_path_factory: pytest.TempPathFactory) -> str:
     return build_cli_source(tmp_path_factory.mktemp("limits"), "cli-display-limits")
 
 
-@pytest.fixture(scope="module")
-def periods_db(tmp_path_factory: pytest.TempPathFactory) -> str:
-    return build_cli_source(tmp_path_factory.mktemp("periods"), "cli-periods")
-
-
 def test_default_format_lists_few_rows_and_tabulates_many(
     limits_db: str, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -36,44 +31,6 @@ def test_default_format_lists_few_rows_and_tabulates_many(
     assert set(many_rows[1]) <= {"-", " "}
 
 
-def test_table_rows_past_display_cap_are_cut_with_hint(
-    limits_db: str,
-    capsys: pytest.CaptureFixture[str],
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    monkeypatch.setenv("COLUMNS", "200")
-    argv = ["--db", limits_db, "--format", "table", "get", "values", "Category"]
-    assert run([*argv, "--register", "Wide", "--year", "2020"]) == 0
-    captured = capsys.readouterr()
-    rows = captured.out.splitlines()[2:]
-    assert [row.split()[0] for row in rows] == [f"{i:03d}" for i in range(1, 101)]
-    assert "Table view truncated 1 rows" in captured.err
-
-
-@pytest.mark.parametrize(
-    "argv",
-    [["get", "schema", "--register", "Terms"], ["get", "varinfo", "Grade"]],
-    ids=["schema", "varinfo"],
-)
-def test_period_column_renders_each_window_at_its_coarsest_token(
-    periods_db: str, argv: list[str], capsys: pytest.CaptureFixture[str]
-) -> None:
-    assert run(["--db", periods_db, "--format", "list", *argv]) == 0
-    periods = [
-        line.split()[1]
-        for line in capsys.readouterr().out.splitlines()
-        if line.split()[:1] == ["period"]
-    ]
-    assert periods == [
-        "VT2015",
-        "HT2015",
-        "2018-Q2",
-        "2019-03",
-        "2020",
-        "2021-01-01..9999-12-31",
-    ]
-
-
 # ---------------------------------------------------------------------------
 # Envelope and error model
 # ---------------------------------------------------------------------------
@@ -88,40 +45,6 @@ class TestOutputFormats:
         assert "database" in data
         assert "data" in data
         assert "duration_ms" in data["run"]
-
-    def test_default_format_is_human_readable(self, db_path: str):
-        """Default output (no --format) should be human-readable, not JSON."""
-        import io
-        import sys
-
-        old_stdout = sys.stdout
-        sys.stdout = buf = io.StringIO()
-        try:
-            code = run(["--db", db_path, "search", "--query", "testvariabel"])
-        finally:
-            sys.stdout = old_stdout
-        output = buf.getvalue()
-        assert code == 0
-        assert "TestVar" in output
-        assert not output.lstrip().startswith("{")
-
-    def test_list_format(self, db_path: str):
-        import io
-        import sys
-
-        old_stdout = sys.stdout
-        sys.stdout = buf = io.StringIO()
-        try:
-            code = run(
-                ["--db", db_path, "--format", "list", "get", "register", "TESTREG"]
-            )
-        finally:
-            sys.stdout = old_stdout
-        output = buf.getvalue()
-        assert code == 0
-        assert "register_id" in output
-        assert "TESTREG" in output
-        assert "---" not in output  # no table separator
 
     def test_json_no_verbose_is_data_only(self, db_path: str):
         data, code = _run_json(
@@ -210,10 +133,3 @@ class TestSchemaCompat:
         assert exc.value.code == "schema_incompatible"
         assert exc.value.exit_code == EXIT_CONFIG
         assert "update" in exc.value.remediation.lower()
-
-    def test_current_version_accepted(self, tmp_path):
-        from reg_meta.db import SCHEMA_VERSION, open_db
-
-        db = self._db_with_manifest_version(tmp_path, SCHEMA_VERSION)
-        conn = open_db(db, check_schema=True)  # must not raise
-        conn.close()

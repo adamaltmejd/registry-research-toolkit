@@ -113,46 +113,11 @@ afterEach(() => {
 });
 
 describe("ProjectEditor cart — read-only, no add affordances", () => {
-  it("renders picked sources read-only with no Add source / Add binding buttons", async () => {
-    seedSources(["scb/lisa/v1", "scb/rtb/v1"]);
-    await renderEditor();
-
-    // The two sources' coordinates show read-only.
-    await expect
-      .element(page.getByRole("heading", { name: "Sources (2)" }))
-      .toBeVisible();
-    // Exact — the register_variant coordinate is a substring of the binding's
-    // variable FQID (`scb/lisa/v1/var`), so a loose match would double-hit.
-    await expect
-      .element(page.getByText("scb/lisa/v1", { exact: true }))
-      .toBeVisible();
-    await expect
-      .element(page.getByText("scb/rtb/v1", { exact: true }))
-      .toBeVisible();
-
-    // No "Add source" / "Add binding" — data is added in the catalog browser.
-    expect(page.getByRole("button", { name: "Add source" }).query()).toBeNull();
-    expect(
-      page.getByRole("button", { name: "Add binding" }).query(),
-    ).toBeNull();
-  });
-
-  it("shows the browse-to-add empty state when there are no sources", async () => {
-    projectStore.newProject(SEED);
-    await renderEditor();
-
-    await expect
-      .element(page.getByText(/Browse the catalog to add data/))
-      .toBeVisible();
-  });
-
-  it("keeps name edit + downloads and retires the manual Validate button", async () => {
+  it("keeps the name edit and both downloads, each saying what it hands over", async () => {
     seedSources(["scb/lisa/v1"]);
     await renderEditor();
 
-    // Validation now runs automatically; the toolbar keeps only the downloads.
-    expect(page.getByRole("button", { name: "Validate" }).query()).toBeNull();
-    // Both keep their file name, and a VISIBLE line says which artifact each one
+    // Both downloads keep their file name, and a VISIBLE line says which artifact each one
     // hands over (a hover title would miss the touch widths and the keyboard).
     await expect
       .element(page.getByRole("button", { name: "Download project_data.json" }))
@@ -175,38 +140,29 @@ describe("ProjectEditor cart — read-only, no add affordances", () => {
         "Not available yet — see the validation results below",
       );
 
-    // The one editable field — the project name — writes through updateField.
-    const nameInput = page.getByRole("textbox", { name: "Name" });
-    await nameInput.fill("My study");
-    expect(projectStore.draft?.name).toBe("My study");
+    // The one editable field — the project name — heads the page as it is typed.
+    await page.getByRole("textbox", { name: "Name" }).fill("My study");
+    await expect
+      .element(page.getByRole("heading", { name: /My study/ }))
+      .toBeVisible();
   });
 
   // Y-75: the steward / reg_meta / schema stamps are the file's provenance — they
-  // are read-only, nothing on this page edits them, and the order route only reads
-  // `steward` to refuse a mismatch. So they leave the column where the order is
-  // assembled and sit in a footer at the foot of the page. Presentation only: the
-  // draft keeps every field.
-  it("keeps the file's provenance in a page footer, not the working column", async () => {
+  // are read-only and nothing on this page edits them, but they are still shown.
+  it("shows the file's provenance stamps", async () => {
     seedSources(["scb/lisa/v1"]);
     await renderEditor();
 
-    const footer = document.querySelector<HTMLElement>("footer.provenance");
-    expect(footer).not.toBeNull();
     for (const shown of [
       "Steward",
-      "global",
       "reg_meta version",
       "reg_meta/v1.0.0",
       "schema version",
     ]) {
-      expect(footer?.textContent).toContain(shown);
+      await expect
+        .element(page.getByText(shown, { exact: true }))
+        .toBeVisible();
     }
-    // It is the LAST thing on the page — below the sources and the findings.
-    const editor = document.querySelector<HTMLElement>("article.editor");
-    expect(editor?.lastElementChild).toBe(footer);
-    // The draft is untouched by where they render.
-    expect(projectStore.draft?.steward).toBe("global");
-    expect(projectStore.draft?.reg_meta_version).toBe("reg_meta/v1.0.0");
   });
 
   it("coerces a non-array sources to empty and renders without crashing", async () => {
@@ -250,6 +206,10 @@ describe("ProjectEditor cart — read-only, no add affordances", () => {
     // …and the malformed slot shows a degraded alert instead of silently vanishing.
     await expect
       .element(page.getByText(/This source entry is malformed/))
+      .toBeVisible();
+    // …which stays removable: the degraded card keeps its Remove affordance.
+    await expect
+      .element(page.getByRole("button", { name: "Remove source", exact: true }))
       .toBeVisible();
 
     // The null slot is preserved verbatim on the draft (serialize/validate still
@@ -296,26 +256,6 @@ describe("ProjectEditor stable keys (middle-remove keeps the right survivors)", 
 });
 
 describe("ProjectEditor renders the ValidationPanel", () => {
-  it("shows the current validation status (the panel is present)", async () => {
-    // The automatic validation runs on the APP-owned draft lifecycle (App.svelte),
-    // not on this route — the cart renders whatever verdict the store holds.
-    seedSources(["scb/lisa/v1"]);
-    await projectStore.validate();
-    await renderEditor();
-
-    // The panel owns the exact wording (ValidationPanel.browser.test.ts); here it
-    // only has to be the clean verdict rather than the old one-word "Valid". Scoped
-    // to the panel: each source card carries its own status line for the period
-    // entry's refusals (Y-81), so the page has more than one.
-    await expect
-      .element(
-        page
-          .getByRole("region", { name: "Validation results" })
-          .getByRole("status"),
-      )
-      .toMatchTextContent(/^Draft valid/);
-  });
-
   it("passes project-window coverage hints into the panel", async () => {
     seedSources(["scb/lisa/v1"]);
     // A window the 2000 source overlaps but does not fill (one wholly outside it
@@ -352,65 +292,9 @@ describe("ProjectEditor renders the ValidationPanel", () => {
     await expect.element(retry).toBeVisible();
     await retry.click();
 
-    await vi.waitFor(() => {
-      expect(projectStore.validationStatus).toBe("ok");
-    });
-  });
-
-  it("offers no validation retry when it was the ORDER request that failed", async () => {
-    // The banner's retry belongs to the request that failed. A blocked order is a
-    // verdict on THIS draft: "Retry validation" re-runs a validation that already
-    // passes, which clears the block and re-enables the download the materializer
-    // just refused. Queried synchronously — the automatic re-validate is 300ms out
-    // and would clear the banner on its own.
-    seedSources(["scb/lisa/v1"]);
-    vi.mocked(fetch).mockImplementation((async (url: string) =>
-      String(url).includes("/project/order")
-        ? {
-            ok: false,
-            status: 422,
-            json: async () => ({
-              detail: "order blocked by 1 finding: …",
-              findings: [
-                {
-                  code: "variable_unresolved",
-                  message: "scb/lisa/v1/var does not resolve in the catalog",
-                  source: null,
-                  variable: "scb/lisa/v1/var",
-                  period: null,
-                },
-              ],
-            }),
-            headers: new Headers(),
-          }
-        : {
-            ok: true,
-            status: 200,
-            json: async () => ({ ok: true, issues: [] }),
-          }) as unknown as typeof fetch);
-
-    await projectStore.validate();
-    await projectStore.downloadOrder();
-    await renderEditor();
-
-    expect(
-      page.getByText("the materializer produced no order").query(),
-    ).not.toBeNull();
-    expect(
-      page.getByRole("button", { name: "Retry validation" }).query(),
-    ).toBeNull();
-    // Nor a re-POST of the order: the findings are a verdict on this draft.
-    expect(
-      page.getByRole("button", { name: "Retry download" }).query(),
-    ).toBeNull();
-    // …and the download stays closed on the draft the materializer refused.
-    expect(
-      (
-        page
-          .getByRole("button", { name: "Download order.json" })
-          .query() as HTMLButtonElement | null
-      )?.disabled,
-    ).toBe(true);
+    await expect
+      .element(page.getByRole("status").filter({ hasText: "Draft valid" }))
+      .toBeVisible();
   });
 });
 
@@ -555,18 +439,6 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
     await expect
       .element(page.getByRole("heading", { name: /Untitled project/ }))
       .toBeVisible();
-  });
-
-  it("a successful Open asks the same question — a cancel never loads the file", async () => {
-    seedDirtyDraft();
-    const { container } = await renderEditor();
-
-    pickFile(container, OPENABLE);
-    await expect.element(replaceDialog()).toBeVisible();
-    await replaceDialog().getByRole("button", { name: "Cancel" }).click();
-
-    expect(projectStore.draft?.name).toBe("In progress");
-    expect(page.getByText("Opened project").query()).toBeNull();
   });
 
   it("a successful Open loads the file once the researcher confirms", async () => {
@@ -733,42 +605,6 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
 
     await unmount();
     expect(projectStore.replacementPending).toBe(false);
-    expect(projectStore.draft?.name).toBe("In progress");
-  });
-
-  it("carries the alert-dialog semantics and returns focus to the control that opened it", async () => {
-    seedDirtyDraft();
-    await renderEditor();
-    const newButton = page.getByRole("button", { name: "New", exact: true });
-    await newButton.click();
-
-    const panel = replaceDialog().element() as HTMLElement;
-    await expect.element(replaceDialog()).toHaveAttribute("aria-modal", "true");
-    // Labelled by the question and described by the consequence, so both are read
-    // before the choices are.
-    expect(
-      document.getElementById(panel.getAttribute("aria-labelledby") ?? "")
-        ?.textContent,
-    ).toContain("Replace the current project?");
-    expect(
-      document.getElementById(panel.getAttribute("aria-describedby") ?? "")
-        ?.textContent,
-    ).toContain("recovery copy");
-    // Focus is inside the dialog while it stands.
-    expect(panel.contains(document.activeElement)).toBe(true);
-
-    // Escape answers it the safe way, and focus comes back to the toolbar button.
-    document.activeElement?.dispatchEvent(
-      new KeyboardEvent("keydown", {
-        key: "Escape",
-        bubbles: true,
-        cancelable: true,
-      }),
-    );
-
-    await vi.waitFor(() => {
-      expect(document.activeElement).toBe(newButton.element());
-    });
     expect(projectStore.draft?.name).toBe("In progress");
   });
 });

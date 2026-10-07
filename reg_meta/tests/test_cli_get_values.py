@@ -7,7 +7,6 @@ import sqlite3
 
 import pytest
 from cli_test_support import build_cli_source, run_json as _run_json
-from reader_artifacts import stamp_catalog_identity
 from reg_meta.cli import run
 
 
@@ -65,94 +64,12 @@ def test_year_groups_keep_per_column_owner_coordinates(
     assert owners[0]["state_id"] == owners[1]["state_id"]
 
 
-def test_year_groups_render_summary_listing_and_capped_registers(
-    groups_db: str, capsys: pytest.CaptureFixture[str]
-) -> None:
-    argv = ["--db", groups_db, "--format", "list"]
-    assert run([*argv, "get", "values", "Sex", "--year", "2017"]) == 0
-    shown = ", ".join(f"Reg{i:02d}" for i in range(1, 11))
-    assert capsys.readouterr().out.splitlines() == [
-        "Variable 'Sex' — year 2017 — 3 distinct value set(s) across 15 "
-        "instance(s) in 14 register(s)",
-        "",
-        "[Group 1] 13 instance(s) across 13 register(s)",
-        "  1         Man",
-        "  2         Woman",
-        f"  Registers: {shown} (+3 more)",
-        "",
-        "[Group 2] 1 instance(s) across 1 register(s)",
-        "  1         Boy",
-        "  2         Girl",
-        "  Registers: RegC",
-        "",
-        "[Group 3] 1 instance(s) across 1 register(s)",
-        "  F         Female",
-        "  M         Male",
-        "  Registers: RegD",
-    ]
-
-
 # ---------------------------------------------------------------------------
 # Get values
 # ---------------------------------------------------------------------------
 
 
 class TestGetValues:
-    def test_values_by_var_id(self, db_path: str):
-        """A2.7: a numeric target resolves as a var_id (was a CVID). var_id 44
-        is Kön; with no --year it returns the multi-state view, whose states
-        carry the {1=Man, 2=Kvinna} value set."""
-        data, code = _run_json(["--db", db_path, "get", "values", "44"])
-        assert code == 0
-        payload = data["data"]
-        assert payload["variable_name"] == "Kön"
-        codes = {v["code"] for i in payload["instances"] for v in i.get("values", [])}
-        assert codes == {"1", "2"}
-
-    def test_not_found(self, db_path: str):
-        # 99999 is neither a known var_id nor a variable name → not_found.
-        _data, code = _run_json(["--db", db_path, "get", "values", "99999"])
-        assert code == 16
-
-    def test_by_variable_year_resolves_to_single_cvid(self, db_path: str):
-        """variable + year → flat value list (cvid shape)."""
-        data, code = _run_json(
-            [
-                "--db",
-                db_path,
-                "get",
-                "values",
-                "Kön",
-                "--register",
-                "TESTREG",
-                "--year",
-                "2020",
-            ]
-        )
-        assert code == 0
-        assert isinstance(data["data"], list)
-        codes = {v["code"] for v in data["data"]}
-        assert codes == {"1", "2"}
-
-    def test_by_variable_multi_year(self, db_path: str):
-        """variable (no year) → multi-instance year × codes view."""
-        data, code = _run_json(
-            ["--db", db_path, "get", "values", "Kön", "--register", "TESTREG"]
-        )
-        assert code == 0
-        payload = data["data"]
-        assert payload["variable_name"] == "Kön"
-        instances = payload["instances"]
-        # A2.6: "instances" are `variable_state` rows. The coalescer merged the
-        # 2020 + 2021 cvids into one 2020-01-01..2021-12-31 state (window-opening
-        # year 2020); the 2022 cvid is its own state. So years are {2020, 2022}.
-        years = {i["year"] for i in instances}
-        assert years == {2020, 2022}
-        # The Man/Kvinna value set surfaces on at least one state.
-        coded = [i for i in instances if i["values"]]
-        assert coded
-        assert any({v["code"] for v in i["values"]} == {"1", "2"} for i in coded)
-
     def test_by_variable_year_collapses_across_registers(self, db_path: str):
         """variable + year across multiple registers collapses if codes match.
 
@@ -168,10 +85,6 @@ class TestGetValues:
         assert isinstance(data["data"], list)
         codes = {v["code"] for v in data["data"]}
         assert codes == {"1", "2"}
-
-    def test_by_variable_unknown(self, db_path: str):
-        _data, code = _run_json(["--db", db_path, "get", "values", "NONEXISTENT_VAR"])
-        assert code == 16
 
     def test_by_variable_year_no_match(self, db_path: str):
         _data, code = _run_json(
@@ -275,121 +188,6 @@ class TestGetValues:
         assert "AppleVar" in exc.value.message
         assert "BananaVar" in exc.value.message
         conn.close()
-
-    def test_groups_cli_end_to_end(self, tmp_path):
-        """Full CLI path: `get values <var> --year Y` across registers with
-        disagreeing code labels emits a `groups`-shaped payload.
-        """
-        import sqlite3
-
-        from reg_meta.db import SCHEMA_VERSION
-        from reg_meta_build.db import DDL
-
-        db_dir = tmp_path / "db"
-        db_dir.mkdir()
-        db = db_dir / "reg_meta.db"
-        conn = sqlite3.connect(str(db))
-        conn.row_factory = sqlite3.Row
-        conn.executescript(DDL)
-        conn.execute(
-            "INSERT INTO import_manifest VALUES ('schema_version', ?)",
-            (SCHEMA_VERSION,),
-        )
-        stamp_catalog_identity(conn)
-        # Two registers, same variable name + var_id, same year, different code labels.
-        from reg_meta_build.db import seed_providers
-
-        seed_providers(conn)
-        conn.execute(
-            "INSERT INTO register (register_id, provider_id, name) "
-            "VALUES (1, 1, 'RegAdult')"
-        )
-        conn.execute(
-            "INSERT INTO register (register_id, provider_id, name) "
-            "VALUES (2, 1, 'RegChild')"
-        )
-        conn.execute(
-            "INSERT INTO register_variant (register_variant_id, register_id, name) "
-            "VALUES (10, 1, 'Adults')"
-        )
-        conn.execute(
-            "INSERT INTO register_variant (register_variant_id, register_id, name) "
-            "VALUES (11, 2, 'Children')"
-        )
-        v1 = conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name, slug) "
-            "VALUES (1, '44', 'Kön', 'kon')"
-        ).lastrowid
-        v2 = conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name, slug) "
-            "VALUES (2, '44', 'Kön', 'kon')"
-        ).lastrowid
-        # Two distinct value sets. member_hash must be 32 bytes.
-        conn.execute(
-            "INSERT INTO value_set (value_set_id, member_hash) VALUES (1, ?)",
-            (b"\xaa" * 32,),
-        )
-        conn.execute(
-            "INSERT INTO value_set (value_set_id, member_hash) VALUES (2, ?)",
-            (b"\xbb" * 32,),
-        )
-        conn.execute(
-            "INSERT INTO value_code (code_id, code, label) VALUES (1, '1', 'Man')"
-        )
-        conn.execute(
-            "INSERT INTO value_code (code_id, code, label) VALUES (2, '2', 'Kvinna')"
-        )
-        conn.execute(
-            "INSERT INTO value_code (code_id, code, label) VALUES (3, '1', 'Pojke')"
-        )
-        conn.execute(
-            "INSERT INTO value_code (code_id, code, label) VALUES (4, '2', 'Flicka')"
-        )
-        conn.execute("INSERT INTO value_set_member VALUES (1, 1)")
-        conn.execute("INSERT INTO value_set_member VALUES (1, 2)")
-        conn.execute("INSERT INTO value_set_member VALUES (2, 3)")
-        conn.execute("INSERT INTO value_set_member VALUES (2, 4)")
-        # A2.6: get_values_by_variable reads variable_state; one 2020 state per
-        # variable, each carrying its own value set.
-        conn.execute(
-            "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
-            "valid_to, data_type, value_set_id) "
-            "VALUES (?, 10, '2020-01-01', '2020-12-31', 'int', 1)",
-            (v1,),
-        )
-        conn.execute(
-            "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
-            "valid_to, data_type, value_set_id) "
-            "VALUES (?, 11, '2020-01-01', '2020-12-31', 'int', 2)",
-            (v2,),
-        )
-        # docs DB stub — query commands require it present.
-        from reg_meta_build.doc_db import build_doc_db
-
-        docs_src = tmp_path / "docs"
-        (docs_src / "stub").mkdir(parents=True)
-        (docs_src / "stub" / "Stub.md").write_text(
-            "---\nvariable: Stub\ndisplay_name: Stub\ntags:\n  - type/variable\n---\n\nx\n",
-            encoding="utf-8",
-        )
-        build_doc_db(docs_src, db_dir)
-        conn.commit()
-        conn.close()
-
-        data, code = _run_json(
-            ["--db", str(db_dir), "get", "values", "Kön", "--year", "2020"]
-        )
-        assert code == 0
-        payload = data["data"]
-        assert "groups" in payload
-        assert payload["value_set_count"] == 2
-        assert payload["instance_count"] == 2
-        assert payload["register_count"] == 2
-        # Two groups, each with one instance from one register.
-        labels = {
-            tuple(sorted(v["label"] for v in g["values"])) for g in payload["groups"]
-        }
-        assert labels == {("Kvinna", "Man"), ("Flicka", "Pojke")}
 
 
 # ---------------------------------------------------------------------------

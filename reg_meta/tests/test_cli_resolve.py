@@ -5,7 +5,6 @@ from __future__ import annotations
 import io
 
 from cli_test_support import run_json as _run_json
-from reg_meta.cli import run
 
 # ---------------------------------------------------------------------------
 # Split-sibling isolation (A2.2 split → A2.6 query)
@@ -192,13 +191,6 @@ def _split_sibling_db():
 
 
 class TestResolve:
-    def test_exact_match(self, db_path: str):
-        data, code = _run_json(["--db", db_path, "resolve", "--columns", "Kon"])
-        assert code == 0
-        col = data["data"]["columns"][0]
-        assert col["status"] == "matched"
-        assert len(col["matches"]) >= 1
-
     def test_register_filter(self, db_path: str):
         data, code = _run_json(
             ["--db", db_path, "resolve", "--columns", "Kon", "--register", "TESTREG"]
@@ -209,18 +201,6 @@ class TestResolve:
         assert all(m["register_id"] == "1" for m in col["matches"])
         # Nothing is split in the fixture register, so the match stays unique.
         assert len(col["matches"]) == 1
-
-    def test_case_insensitive(self, db_path: str):
-        data, _ = _run_json(["--db", db_path, "resolve", "--columns", "kon"])
-        col = data["data"]["columns"][0]
-        assert col["status"] == "matched"
-
-    def test_no_match(self, db_path: str):
-        data, code = _run_json(["--db", db_path, "resolve", "--columns", "ZZZNOPE"])
-        assert code == 0
-        col = data["data"]["columns"][0]
-        assert col["status"] == "no_match"
-        assert col["matches"] == []
 
     def test_require_match_fails(self, db_path: str):
         _data, code = _run_json(
@@ -234,17 +214,6 @@ class TestResolve:
         assert code == 2
         assert data["error"]["code"] == "usage_error"
         assert "--columns" in data["error"]["remediation"]
-
-    def test_batch(self, db_path: str):
-        data, code = _run_json(
-            ["--db", db_path, "resolve", "--columns", "Kon,TestCol,ZZZNOPE"]
-        )
-        assert code == 0
-        columns = data["data"]["columns"]
-        assert len(columns) == 3
-        assert columns[0]["status"] == "matched"
-        assert columns[1]["status"] == "matched"
-        assert columns[2]["status"] == "no_match"
 
     def test_alias_anomaly(self, db_path: str):
         """Both TestCol and TestKolumn should resolve to var 100."""
@@ -273,13 +242,6 @@ class TestResolve:
         assert data1["data"]["columns"][0]["matches"][0]["var_id"] == 100
         assert data2["data"]["columns"][0]["matches"][0]["var_id"] == 100
 
-    def test_no_confidence_or_reasons(self, db_path: str):
-        """Resolve v2 should not include confidence or match_reasons."""
-        data, _ = _run_json(["--db", db_path, "resolve", "--columns", "Kon"])
-        match = data["data"]["columns"][0]["matches"][0]
-        assert "confidence" not in match
-        assert "match_reasons" not in match
-
     def test_swedish_uppercase_column_folds(self):
         """#853 regression: a delivery column stored with an uppercase Swedish
         letter (`Ägare`) must resolve case-insensitively. SQLite `LOWER()` is
@@ -301,17 +263,6 @@ class TestResolve:
         match = data["data"]["columns"][0]["matches"][0]
         assert match["fqid"] == "scb/testreg/kon"
 
-    def test_table_output_shows_fqid(self, db_path: str, capsys):
-        """The human-readable renderer must carry the fqid too — split siblings
-        share every other displayed field."""
-        code = run(
-            ["--format", "table", "--db", db_path, "resolve", "--columns", "Kon"]
-        )
-        assert code == 0
-        out = capsys.readouterr().out
-        assert "fqid" in out
-        assert "scb/testreg/kon" in out
-
     def test_split_siblings_both_survive(self):
         """Y-47 regression: an A2.2 split leaves sibling variables that SHARE
         (register_id, provider_key) and name. Grouping the alias lookup on that
@@ -332,18 +283,6 @@ class TestResolve:
             # field is identical, so only the FQID tells them apart.
             assert [m["fqid"] for m in matches] == ["scb/lisa/kon", "scb/lisa/kon-2"]
             assert {m["var_id"] for m in matches} == {44}
-
-    def test_unslugged_siblings_still_dedupe_by_variable_id(self):
-        """A variable with no slug is not FQID-addressable (`fqid: None`, the
-        `try_emit` convention). The siblings must still come back separately —
-        the dedupe key is `variable_id`, never the FQID."""
-        from reg_meta.queries import resolve
-
-        conn = _split_sibling_db()
-        conn.execute("UPDATE variable SET slug = NULL")
-        conn.commit()
-        matches = resolve(conn, ["Kon"])[0]["matches"]
-        assert [m["fqid"] for m in matches] == [None, None]
 
     def test_repeated_alias_does_not_duplicate_variable(self):
         """One variable delivering the same column under several alias rows

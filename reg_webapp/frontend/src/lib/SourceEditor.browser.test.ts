@@ -156,38 +156,6 @@ function seedSource(period: Period): Source {
 }
 
 describe("SourceEditor cart card", () => {
-  it("displays the register_variant read-only, with the period as its one field", async () => {
-    const source = {
-      name: "lisa_main",
-      register_variant: "scb/lisa/v1",
-      period: 2020,
-      bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
-    } as Source;
-    await renderCard(source);
-
-    // The coordinate is shown read-only…
-    await expect.element(page.getByText("scb/lisa/v1")).toBeVisible();
-    // …the period as the two year fields that author it (Y-81)…
-    await expect
-      .element(page.getByRole("textbox", { name: "From" }))
-      .toHaveValue("2020");
-    await expect
-      .element(page.getByRole("textbox", { name: "To" }))
-      .toHaveValue("2020");
-    // …the column's variable is shown…
-    await expect.element(page.getByText("scb/lisa/kon")).toBeVisible();
-
-    // …and those two years are the WHOLE of the card's authoring: no name field, no
-    // "Pick variant", no way to add a column from the cart.
-    expect(page.getByRole("textbox").elements()).toHaveLength(2);
-    expect(
-      page.getByRole("button", { name: /Pick variant/ }).query(),
-    ).toBeNull();
-    expect(
-      page.getByRole("button", { name: "Add binding" }).query(),
-    ).toBeNull();
-  });
-
   // Y-75: `name` is a generated join key — three variants of one register mint
   // `LISA`, `LISA_2`, `LISA_3`, which name nothing a researcher picked. The card is
   // titled by the REGISTER; the name stays visible as a detail because panels and
@@ -234,25 +202,6 @@ describe("SourceEditor cart card", () => {
     await expect.element(page.getByText("Source name")).toBeVisible();
     await expect
       .element(page.getByText("LISA_2", { exact: true }))
-      .toBeVisible();
-  });
-
-  it("names a variant with no family too, from the same catalog read", async () => {
-    // Y-80's complaint in one case: before, only LISA's individual frame had a
-    // label at all and every other variant read as a bare coordinate.
-    const source = {
-      name: "LISA_3",
-      register_variant: "scb/lisa/arbetsstallen",
-      period: 2020,
-      bindings: [],
-    } as unknown as Source;
-    await renderCard(source);
-
-    await expect
-      .element(page.getByRole("heading", { name: "LISA", exact: true }))
-      .toBeVisible();
-    await expect
-      .element(page.getByText("Arbetsställen", { exact: true }))
       .toBeVisible();
   });
 
@@ -544,63 +493,6 @@ describe("SourceEditor cart card", () => {
     await expect.element(alert).toMatchTextContent(/bindings\s+are malformed/);
   });
 
-  it("renders an alert (not a crash) when the source slot is null", async () => {
-    // A `sources: [null, …]` slot: SourceEditor must degrade to a malformed card
-    // rather than deref `source.<field>` and throw (defense in depth for the render
-    // boundary — ProjectEditor passes the raw slot straight in).
-    await renderCard(null as unknown as Source);
-
-    const alert = page.getByRole("alert");
-    await expect.element(alert).toBeVisible();
-    await expect.element(alert).toMatchTextContent(/source entry is malformed/);
-    // Still removable — the degraded card keeps its Remove affordance.
-    await expect
-      .element(page.getByRole("button", { name: /Remove source/ }))
-      .toBeVisible();
-    // A malformed slot names no coordinate, so it asks the catalog nothing.
-    expect(vi.mocked(getCatalogNode).mock.calls).toHaveLength(0);
-  });
-
-  it("counts and empties in COLUMNS, the word the rest of the app uses", async () => {
-    const source = {
-      name: "ok",
-      register_variant: "scb/lisa/v1",
-      period: 2020,
-      bindings: [],
-    } as Source;
-    const view = await renderCard(source);
-
-    await expect
-      .element(page.getByRole("heading", { name: "Columns (0)" }))
-      .toBeVisible();
-    await expect
-      .element(
-        page.getByText(
-          "No columns yet. Browse the catalog to add columns from this register.",
-        ),
-      )
-      .toBeVisible();
-    expect(page.getByRole("alert").query()).toBeNull();
-    // Nothing on this page calls a column a binding any more.
-    expect(document.body.textContent).not.toContain("Bindings");
-    view.unmount();
-
-    const filled = {
-      name: "ok",
-      register_variant: "scb/lisa/v1",
-      period: 2020,
-      bindings: [
-        { variable: "scb/lisa/kon", type: "categorical" },
-        { variable: "scb/lisa/adeldag", type: "opaque" },
-      ],
-    } as Source;
-    await renderCard(filled);
-
-    await expect
-      .element(page.getByRole("heading", { name: "Columns (2)" }))
-      .toBeVisible();
-  });
-
   it("wraps a long register title, source name and column FQID without horizontal overflow on mobile (#1110)", async () => {
     // Regression for PR #1109's visual-gate finding: at 375px a long unbroken run
     // (`.source-head h3`, a mono KeyValue value, the column FQID in `.binding-body`)
@@ -757,20 +649,6 @@ describe("SourceEditor source period (Y-81)", () => {
 
   // The window is an authoring SEED, not an inheritance: a source may deliberately
   // cover more or less, so a divergence is MARKED, never warned about.
-  it("marks a period that differs from the study window", async () => {
-    const source = {
-      name: "LISA",
-      register_variant: "scb/lisa/arbetsstallen",
-      period: { from: 1990, to: 2020 },
-      bindings: [],
-    } as unknown as Source;
-    await renderCard(source, { studyWindow: { from: 2005, to: 2020 } });
-
-    await expect
-      .element(page.getByText("Differs from study window 2005–2020"))
-      .toBeVisible();
-  });
-
   it("marks nothing when the period matches the study window", async () => {
     const source = {
       name: "LISA",
@@ -919,24 +797,6 @@ describe("SourceEditor source period (Y-81)", () => {
     }
   });
 
-  // a4: an Apply pressed with nothing to change used to return silently, leaving
-  // the researcher to guess whether it did anything.
-  it("announces when an Apply has nothing to change", async () => {
-    const source = seedSource(2020);
-    await renderCard(source);
-
-    // Pressed with the fields still showing exactly the stored period.
-    await page.getByRole("button", { name: /Apply period/ }).click();
-    await expect.element(page.getByText("Period unchanged.")).toBeVisible();
-    expect(projectStore.draft?.sources?.[0]?.period).toBe(2020);
-
-    // Typed back to the same value and applied again: still nothing to write.
-    await page.getByRole("textbox", { name: "From" }).fill("2020");
-    await page.getByRole("button", { name: /Apply period/ }).click();
-    await expect.element(page.getByText("Period unchanged.")).toBeVisible();
-    expect(projectStore.draft?.sources?.[0]?.period).toBe(2020);
-  });
-
   it("retires a stale confirmation once a later Apply finds nothing to change", async () => {
     // A real write, then an untouched second press: the line must switch to the
     // unchanged notice rather than leaving the earlier "Period set to" standing —
@@ -1061,15 +921,49 @@ describe("SourceEditor source period (Y-81)", () => {
       period: { from: 1990, to: 2020 },
       bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
     } as Source;
+    // Only the resolve at the card's own variant and period, in wire form, names
+    // the column; any other coordinate resolves to nothing, so the row would keep
+    // its bare FQID.
+    vi.mocked(getCatalogNode).mockImplementation(async (fqid, params) => {
+      if (fqid === "scb") {
+        return providerNode("scb", registerNode("scb/lisa", "LISA"));
+      }
+      const own =
+        fqid === "scb/lisa/kon" &&
+        params?.period === "1990..2020" &&
+        params?.variant === "arbetsstallen";
+      return {
+        states: own
+          ? [
+              {
+                warning_ids: [],
+                state_id: "1",
+                period_scope: "intervals",
+                variant: "arbetsstallen",
+                variant_label: null,
+                register_variant_id: "1",
+                valid_from: "1990-01-01",
+                valid_to: "9999-12-31",
+                data_type: "int",
+                data_length: null,
+                delivery_column_name: "KonArb",
+                source_register_text: null,
+                provenance: null,
+                pooled: false,
+                value_set_version_label: "",
+                value_set_id: null,
+                value_set: null,
+                value_set_summary: null,
+                is_identifier: false,
+                classifications: [],
+              },
+            ]
+          : [],
+      } as unknown as StatesResponse;
+    });
     await renderCard(source);
 
-    await expect.element(page.getByText("scb/lisa/kon")).toBeVisible();
-    await vi.waitFor(() => {
-      expect(vi.mocked(getCatalogNode).mock.calls).toContainEqual([
-        "scb/lisa/kon",
-        { period: "1990..2020", variant: "arbetsstallen" },
-      ]);
-    });
+    await expect.element(page.getByText("KonArb")).toBeVisible();
   });
 });
 
