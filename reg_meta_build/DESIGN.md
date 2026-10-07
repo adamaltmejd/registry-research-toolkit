@@ -1703,10 +1703,12 @@ year stands (fail-closed: it understates holdings and blocks orders rather than
 over-admitting) until a maintainer-run, aggregate-only date-span check on MONA
 establishes the span (#1170 tracks the open cases).
 
-Admitted literals of one owner that differ only in case fold to one compiled triple, so
-the generator emits one mapping for them: the literal equal to the physical field, else
-the compiler's representative spelling, else a worklist entry. The compiler's
-duplicate-triple guard is unchanged (#1170).
+Admitted literals of one owner and variant that differ only in case fold to one compiled
+triple, so the generator emits one mapping for them. Precedence: the curated
+`[[mapping]]` spelling, then the literal equal to the physical field, then the spelling
+the compiler stores for that delivery column; with none of these among the twins, or two
+curated twins, the column goes to the worklist. Spellings under different variants or
+owners never fold.
 
 Unsupported physical fields remain in the inventory with unavailable mappings and
 explicit reasons. Exact auxiliary fields can also retain a known owner and meaning in

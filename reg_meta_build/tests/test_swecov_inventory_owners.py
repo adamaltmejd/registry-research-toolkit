@@ -446,6 +446,87 @@ def test_inventory_emits_one_mapping_for_case_only_twin_spellings(
     ]
 
 
+def test_inventory_curated_mapping_wins_among_case_only_twins(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """A reviewed `[[mapping]]` spelling outranks the physical literal: the fold
+    never silently replaces a curated representation."""
+    db = _case_twin_db(tmp_path, flavored_db, ("T_kolumn", "T_KOLUMN"))
+    overlay = (
+        '[[mapping]]\ntable = "T2019"\ncolumn = "T_KOLUMN"\nedition = 2019\n'
+        'register_variant = "inera/bestallda-prover/_default"\n'
+        'variable = "inera/bestallda-prover/t-kolumn"\n'
+        'representation = "T_kolumn"\nreason = "reviewed spelling"\n'
+    )
+
+    steward = _run_inventory(tmp_path, db, overlay, "T2019", ["T_KOLUMN"])
+
+    (column,) = load_delivery_inventory(steward / "inventory.toml").tables[0].columns
+    assert [(str(m.variable), m.representation) for m in column.mappings] == [
+        ("inera/bestallda-prover/t-kolumn", "T_kolumn")
+    ]
+
+
+@pytest.mark.parametrize("scope", ["variant", "owner"])
+def test_inventory_does_not_fold_case_spellings_across_variants_or_owners(
+    tmp_path: Path, flavored_db: Path, scope: str
+) -> None:
+    """Spellings that differ only in case under different variants, or under
+    different owners, are separate coordinates and each keep their mapping."""
+    db = tmp_path / "case-scopes.db"
+    shutil.copyfile(flavored_db, db)
+    with sqlite3.connect(db) as conn:
+        if scope == "variant":
+            conn.execute(
+                "INSERT INTO register_variant (register_variant_id, register_id, "
+                "name, slug) VALUES (905, 901, 'Andra', 'andra')"
+            )
+            conn.execute(
+                "INSERT INTO variable_state (variable_id, register_variant_id, "
+                "valid_from, valid_to, data_type, delivery_column_name) "
+                "VALUES (904, 905, '0001-01-01', '9999-12-31', 'varchar', 'T_KOLUMN')"
+            )
+            table = "T2019"
+            overlay = (
+                '[[assign]]\ntable = "T2019"\nregister_variant = '
+                '["inera/bestallda-prover/_default", "inera/bestallda-prover/andra"]\n'
+            )
+            expected = [
+                ("inera/bestallda-prover/_default", "t-kolumn", "T_kolumn"),
+                ("inera/bestallda-prover/andra", "t-kolumn", "T_KOLUMN"),
+            ]
+        else:
+            conn.execute(
+                "INSERT INTO variable (variable_id, register_id, provider_key, slug, "
+                "name) VALUES (910, 901, 'annan', 'annan', 'Annan')"
+            )
+            conn.execute(
+                "INSERT INTO variable_state (variable_id, register_variant_id, "
+                "valid_from, valid_to, data_type, delivery_column_name) "
+                "VALUES (910, 902, '2020-01-01', '2020-12-31', 'varchar', 'T_KOLUMN')"
+            )
+            table = "T_pooled"
+            overlay = (
+                '[[edition]]\ntable = "T_pooled"\n'
+                "edition = { from = 2019, to = 2020 }\n"
+            )
+            expected = [
+                ("inera/bestallda-prover/_default", "annan", "T_KOLUMN"),
+                ("inera/bestallda-prover/_default", "t-kolumn", "T_kolumn"),
+            ]
+
+    steward = _run_inventory(tmp_path, db, overlay, table, ["T_KOLUMN"])
+
+    (column,) = load_delivery_inventory(steward / "inventory.toml").tables[0].columns
+    assert (
+        sorted(
+            (m.register_variant, m.variable.variable, m.representation)
+            for m in column.mappings
+        )
+        == expected
+    )
+
+
 def test_inventory_refuses_case_only_twins_without_physical_or_representative(
     tmp_path: Path, flavored_db: Path
 ) -> None:
