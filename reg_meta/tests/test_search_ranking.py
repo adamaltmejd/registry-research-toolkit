@@ -146,31 +146,82 @@ def test_exact_identity_matches_lead_however_many_share_the_name(
     assert combined[51] == "class/zz-discriminative"
 
 
-@pytest.mark.parametrize(
-    ("field", "fold_groups"), [("description", True), ("all", False)]
-)
-def test_exact_name_is_admitted_and_leads_past_a_prefix_swamp(
-    tmp_path_factory: pytest.TempPathFactory, field: str, fold_groups: bool
-) -> None:
-    """`scb/example/value` is named exactly `Year`; 1,001 `Year year` fillers
-    whose definition repeats the term outrank it by bm25 and fill every bounded
-    candidate prefix. The exact name is admitted before each bound and leads the
-    order however many prefix matches gate promotion off (#1180)."""
-    conn = reader_search_conn(tmp_path_factory, "search-exact-admission")
+@pytest.fixture(scope="module")
+def admission_conn(tmp_path_factory: pytest.TempPathFactory) -> sqlite3.Connection:
+    """1,001 `Annual year` fillers (delivery column `Annual year`, definition
+    repeating `year` and `bø`) fill every bounded variable prefix ahead of
+    `Year` (exact name) and of `Target` and `Place`, exact only through their
+    delivery columns `Year` and `Bø`: they outrank them by bm25 and sort before
+    them by name and by delivery column."""
+    return reader_search_conn(tmp_path_factory, "search-exact-admission")
 
+
+@pytest.mark.parametrize(
+    ("field", "fold_groups", "exact"),
+    [
+        ("description", True, ["Target", "Year"]),
+        ("all", False, ["Target", "Target", "Year", "Year"]),
+        ("varname", False, ["Year"]),
+        ("datacolumn", False, ["Target"]),
+    ],
+)
+def test_exact_name_is_admitted_and_leads_past_full_candidate_prefixes(
+    admission_conn: sqlite3.Connection,
+    field: str,
+    fold_groups: bool,
+    exact: list[str],
+) -> None:
+    """Every bounded variable arm admits exact name and delivery-column matches
+    before its LIMIT, and they lead the order (#1180). Unfolded, one variable
+    can lead through several arms."""
     page = search(
-        conn,
+        admission_conn,
         "year",
         field=field,
         type="variable",
-        limit=5,
+        limit=len(exact) + 1,
         fold_groups=fold_groups,
     )
 
     names = [result.name for result in page.results]
-    assert str(page.results[0].fqid) == "scb/example/value"
-    # Unfolded, the `varname` arm adds the same variable's exact name row.
-    assert "Year" not in names[names.index("Year year") :]
+    assert sorted(names[:-1]) == exact
+    assert names[-1] == "Annual year"
+
+
+def test_exact_name_without_an_ascii_fold_is_admitted(
+    admission_conn: sqlite3.Connection,
+) -> None:
+    """`ø` has no decomposition, so an ASCII fold of the query deletes it: the
+    exact delivery column `Bø` must still admit `Place` past the fillers whose
+    definition repeats `bø`."""
+    page = search(admission_conn, "Bø", field="description", type="variable", limit=2)
+
+    assert [result.name for result in page.results] == ["Place", "Annual year"]
+
+
+def test_unheld_exact_alias_does_not_win_admission(
+    tmp_path_factory: pytest.TempPathFactory,
+) -> None:
+    """In holdings scope 1,001 held `Annual year` columns fill the
+    delivery-column prefix. `Target` holds the exact column `Year`; `Unheld`
+    holds only `Year count` and has an unheld `Year` alias, which must not admit
+    it ahead of the fillers."""
+    conn = reader_search_conn(tmp_path_factory, "search-exact-holdings", kind="steward")
+
+    page = search(
+        conn,
+        "year",
+        scope="holdings",
+        field="datacolumn",
+        type="variable",
+        limit=3,
+    )
+
+    assert [(result.datacolumn, result.name) for result in page.results] == [
+        ("Year", "Target"),
+        ("Annual year", "Filler"),
+        ("Annual year", "Filler"),
+    ]
 
 
 def test_unfolded_identity_swamp_gate_does_not_depend_on_page_size(

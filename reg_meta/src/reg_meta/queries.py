@@ -466,12 +466,21 @@ def _fts_match_query(raw: str) -> str | None:
     folds both the index AND query side (å→a), so a Python fold would be
     redundant (and would double-fold). Returns None when no token carries an
     alphanumeric char (empty / whitespace / punctuation-only)."""
-    terms = [
-        f'"{tok.replace(chr(34), chr(34) * 2)}"*'
+    terms = [f"{phrase}*" for phrase in _fts_quoted_tokens(raw)]
+    return " ".join(terms) if terms else None
+
+
+def _fts_quoted_tokens(raw: str) -> list[str]:
+    """Each whitespace token with a word char as a quoted FTS5 phrase, raw.
+
+    The raw token reaches unicode61, which tokenizes and folds it exactly as the
+    index; a Python ASCII fold would delete letters with no decomposition (ø, æ,
+    ß, ł) instead of matching them."""
+    return [
+        f'"{tok.replace(chr(34), chr(34) * 2)}"'
         for tok in raw.split()
         if _FTS_WORD_CHAR.search(tok)
     ]
-    return " ".join(terms) if terms else None
 
 
 def _fold_fts_text(text: str) -> str:
@@ -1101,23 +1110,26 @@ def _fill_exact_variables(
 ) -> None:
     """Fill `_search_exact_variables`, which every bounded variable arm orders first.
 
-    It holds the variables named exactly as the query, by the test
-    `_search_identity_score` applies to a variable row: the folded name or an
-    in-scope delivery column (the ranking aliases, so an unheld alias cannot win
-    admission) equals the folded query. FTS token matches on those two columns
-    narrow the candidates; unicode61 folds diacritics as `_fold_search_text` does.
+    It holds the variables whose `variable.name` or in-scope delivery column (the
+    ranking aliases, so an unheld alias cannot win admission) folds, as
+    `_search_identity_score` folds, to the query. FTS phrase matches of the raw
+    query tokens on those two columns narrow the candidates.
+
+    Admission is narrower than the scorer, which also treats an FQID or slug leaf
+    as exact and, for a variable with no `variable.name`, reads the state and
+    alias-window names `variable_fts.name` falls back to. Rows exact only by those
+    texts are promoted when the bound already holds them, not admitted.
     """
     conn.execute("DROP TABLE IF EXISTS _search_exact_variables")
     conn.execute(
         "CREATE TEMP TABLE _search_exact_variables (variable_id INTEGER PRIMARY KEY)"
     )
     folded_query = _fold_search_text(query)
-    terms = _fts_terms(query)
-    if not folded_query or not terms:
+    phrases = _fts_quoted_tokens(query)
+    if not folded_query or not phrases:
         return
     # `variable.name`, not `variable_fts.name`: reading an external-content column
-    # evaluates the whole content view per row, ~25x slower. They differ only for
-    # an unnamed variable, which has no name to match exactly.
+    # evaluates the whole content view per row, ~25x slower.
     # simplify: past `limit` exact matches the admitted subset is by id, not by
     # rank; rank them in SQL if a real name is ever shared by ~1,000 variables.
     conn.execute(
@@ -1137,9 +1149,7 @@ def _fill_exact_variables(
         )
         + ")) ORDER BY v.variable_id LIMIT ?",
         (
-            "{name delivery_column_names} : ("
-            + " ".join(f'"{term}"' for term in terms)
-            + ")",
+            "{name delivery_column_names} : (" + " ".join(phrases) + ")",
             folded_query,
             folded_query,
             limit,

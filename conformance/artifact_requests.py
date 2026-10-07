@@ -128,17 +128,27 @@ def _fold(text):
 
 
 def _identity_texts(row):
+    """The published identity texts the reader scores for a variable-search row.
+
+    A leaf row offers its FQID and slug leaf, names and delivery columns; a group
+    row offers its key and label and each member's FQID, name, delivery column
+    and facets (member slug leaves are not identity texts).
+    """
+    fqid = row.get("fqid")
     texts = [
+        fqid,
+        fqid.rsplit("/", 1)[-1] if fqid else None,
         row.get("name"),
         row.get("datacolumn"),
+        *(row.get("delivery_column_names") or ()),
         row.get("group_key"),
         row.get("group_label"),
-        *(row.get("delivery_column_names") or ()),
     ]
-    for item in (row, *(row.get("members") or ())):
-        fqid = item.get("fqid")
-        texts.extend((fqid, fqid.rsplit("/", 1)[-1]) if fqid else ())
-        texts.extend((item.get("name"), item.get("delivery_column")))
+    for member in row.get("members") or ():
+        texts.extend((member.get("fqid"), member.get("name")))
+        texts.append(member.get("delivery_column"))
+        for facet in member.get("facets") or ():
+            texts.extend((facet.get("value"), facet.get("label")))
     return [text for text in texts if isinstance(text, str)]
 
 

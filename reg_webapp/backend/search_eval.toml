@@ -110,10 +110,10 @@ note = "Full register name -> register."
 [[case]]
 query = "civilstånd"
 group = "variable"
-intended = "scb/rtb/civilgrel"
+intended = "scb/lisa/civilstand"
 expect = "hit"
 confirmed = true
-note = "Marital status; base-population register variable. Steward may prefer a different canonical civilstånd variable."
+note = "Marital status. Exact names lead (#1180, maintainer-accepted): ~60 variables named exactly Civilstånd fill the page, so the guard is LISA's plain Civilstånd, not RTB's civilgrel (Civilstånd tidigare relationsperson)."
 
 [[case]]
 query = "medborgarskap"

@@ -5,37 +5,6 @@
       "slug": "example",
       "name": "Example"
     },
-    "slug": "value",
-    "provider_key": "44",
-    "name": "Year",
-    "definition": null,
-    "description": null,
-    "operational_definition": null,
-    "measurement_unit": null,
-    "is_sensitive": false,
-    "is_identifier": false,
-    "states": [
-      {
-        "variant": {
-          "slug": "annual",
-          "name": "Annual"
-        },
-        "valid_from": "2018-01-01",
-        "valid_to": "2019-12-31",
-        "delivery_column_name": "Value",
-        "data_type": "integer",
-        "data_length": "8",
-        "operational_definition": null,
-        "provenance": null
-      }
-    ]
-  },
-  {
-    "register": {
-      "provider": "scb",
-      "slug": "example",
-      "name": "Example"
-    },
     "slug": "target",
     "provider_key": "46",
     "name": "Target",
@@ -67,9 +36,9 @@
       "slug": "example",
       "name": "Example"
     },
-    "slug": "place",
-    "provider_key": "47",
-    "name": "Place",
+    "slug": "unheld",
+    "provider_key": "48",
+    "name": "Unheld",
     "definition": null,
     "description": null,
     "operational_definition": null,
@@ -83,8 +52,21 @@
           "name": "Annual"
         },
         "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Year count",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      },
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2019-01-01",
         "valid_to": "2019-12-31",
-        "delivery_column_name": "Bø",
+        "delivery_column_name": "Year",
         "data_type": "integer",
         "data_length": "8",
         "operational_definition": null,
@@ -100,8 +82,8 @@
     },
     "slug": "filler",
     "provider_key": "45",
-    "name": "Annual year",
-    "definition": "Year year year. Bø bø bø.",
+    "name": "Filler",
+    "definition": null,
     "description": null,
     "operational_definition": null,
     "measurement_unit": null,
