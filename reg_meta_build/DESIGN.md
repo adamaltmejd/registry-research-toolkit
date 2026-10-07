@@ -1669,7 +1669,9 @@ A cumulative register's stock file is not a one-year edition: when the source do
 one cumulative register version, the override spans that version's start through the
 stock date (Flergenerationsregistret: 1961 through the snapshot year). Older cumulative
 snapshots are then excluded as superseded. Without that documentation the name-derived
-year stands until a holdings probe establishes the span.
+year stands (fail-closed: it understates holdings and blocks orders rather than
+over-admitting) until a maintainer-run, aggregate-only date-span check on MONA
+establishes the span (#1170 tracks the open cases).
 
 Unsupported physical fields remain in the inventory with unavailable mappings and
 explicit reasons. Exact auxiliary fields can also retain a known owner and meaning in
