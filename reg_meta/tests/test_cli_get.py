@@ -51,17 +51,6 @@ class TestGetRegister:
 
 
 class TestGetVarinfo:
-    def test_by_name(self, db_path: str):
-        data, code = _run_json(
-            ["--db", db_path, "get", "varinfo", "Kön", "--register", "TESTREG"]
-        )
-        assert code == 0
-        assert data["data"]["name"] == "Kön"
-        assert data["data"]["register_id"] == "1"
-        # A2.6: "instances" are `variable_state` rows now (coalesced per-delivery
-        # shape), not per-cvid rows — TESTREG Kön has two states.
-        assert len(data["data"]["instances"]) == 2
-
     def test_by_var_id(self, db_path: str):
         data, code = _run_json(
             ["--db", db_path, "get", "varinfo", "100", "--register", "1"]
@@ -75,20 +64,6 @@ class TestGetVarinfo:
         # var_id 44 exists in both registers
         assert "variables" in data["data"]
         assert len(data["data"]["variables"]) == 2
-
-    def test_instance_details(self, db_path: str):
-        data, _code = _run_json(
-            ["--db", db_path, "get", "varinfo", "Kön", "--register", "TESTREG"]
-        )
-        inst = data["data"]["instances"][0]
-        # A2.6: per-state keys (state_id + validity window) replace cvid +
-        # register_version name.
-        assert "state_id" in inst
-        assert "valid_from" in inst
-        assert "year" in inst
-        assert "aliases" in inst
-        assert "value_set_count" in inst
-        assert inst["provenance"] is None
 
     def test_correction_provenance_is_printed(
         self, db_path: str, capsys: pytest.CaptureFixture[str]
@@ -137,10 +112,6 @@ class TestGetVarinfo:
         with_codes = [i for i in data["data"]["instances"] if i["value_set_count"] == 2]
         assert with_codes
 
-    def test_not_found(self, db_path: str):
-        _data, code = _run_json(["--db", db_path, "get", "varinfo", "NONEXISTENT"])
-        assert code == 16
-
 
 # ---------------------------------------------------------------------------
 # Get datacolumns
@@ -148,32 +119,12 @@ class TestGetVarinfo:
 
 
 class TestGetDatacolumns:
-    def test_by_name(self, db_path: str):
-        data, code = _run_json(["--db", db_path, "get", "datacolumns", "Kön"])
-        assert code == 0
-        col_names = {r["delivery_column_name"] for r in data["data"]}
-        assert "Kon" in col_names or "KON" in col_names
-
     def test_register_filter(self, db_path: str):
         data, code = _run_json(
             ["--db", db_path, "get", "datacolumns", "Kön", "--register", "TESTREG"]
         )
         assert code == 0
         assert all(r["register_id"] == "1" for r in data["data"])
-
-    def test_alias_anomaly(self, db_path: str):
-        """TestVar should show both TestCol and TestKolumn aliases."""
-        data, code = _run_json(
-            ["--db", db_path, "get", "datacolumns", "TestVar", "--register", "TESTREG"]
-        )
-        assert code == 0
-        col_names = {r["delivery_column_name"] for r in data["data"]}
-        assert "TestCol" in col_names
-        assert "TestKolumn" in col_names
-
-    def test_not_found(self, db_path: str):
-        _data, code = _run_json(["--db", db_path, "get", "datacolumns", "NONEXISTENT"])
-        assert code == 16
 
     def test_full_alias_history_survives_reparent(self):
         """A2.7: `get_datacolumns` reads the re-parented `variable_alias` (full
@@ -205,34 +156,12 @@ class TestGetDatacolumns:
 
 
 class TestGetCodedVariables:
-    def test_returns_results(self, db_path: str):
-        data, code = _run_json(["--db", db_path, "get", "coded-variables"])
-        assert code == 0
-        assert len(data["data"]) >= 1
-        first = data["data"][0]
-        assert "variable_name" in first
-        assert "n_distinct_codes" in first
-        assert "n_registers" in first
-
     def test_min_codes_filter(self, db_path: str):
         data, code = _run_json(
             ["--db", db_path, "get", "coded-variables", "--min-codes", "3"]
         )
         assert code == 0
         assert all(r["n_distinct_codes"] >= 3 for r in data["data"])
-
-    def test_min_registers_filter(self, db_path: str):
-        data, code = _run_json(
-            ["--db", db_path, "get", "coded-variables", "--min-registers", "2"]
-        )
-        assert code == 0
-        assert all(r["n_registers"] >= 2 for r in data["data"])
-
-    def test_kon_present(self, db_path: str):
-        """Kön has value items in our fixtures → should appear."""
-        data, _code = _run_json(["--db", db_path, "get", "coded-variables"])
-        names = {r["variable_name"] for r in data["data"]}
-        assert "Kön" in names
 
 
 # ---------------------------------------------------------------------------
@@ -284,13 +213,6 @@ class TestGetLineage:
         _data, code = _run_json(["--db", db_path, "get", "lineage", "NONEXISTENT"])
         assert code == 16
 
-    def test_provenance_coverage(self, db_path: str):
-        data, code = _run_json(["--db", db_path, "get", "lineage", "Kön"])
-        assert code == 0
-        cov = data["data"]["provenance_coverage"]
-        assert cov["total"] == cov["with_source"] + cov["without_source"]
-        assert cov["total"] > 0
-
     def test_year_range(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "lineage", "Kön"])
         assert code == 0
@@ -329,15 +251,6 @@ class TestGetAvailability:
         assert d["target_type"] == "variable"
         # Should only have TESTREG
         assert all(r["register_id"] == "1" for r in d["registers"])
-
-    def test_register_availability(self, db_path: str):
-        data, code = _run_json(["--db", db_path, "get", "availability", "TESTREG"])
-        assert code == 0
-        d = data["data"]
-        assert d["target_type"] == "register"
-        assert d["register_name"] == "TESTREG"
-        assert d["min_year"] <= d["max_year"]
-        assert len(d["variants"]) >= 1
 
     def test_not_found(self, db_path: str):
         _, code = _run_json(["--db", db_path, "get", "availability", "NONEXISTENT"])

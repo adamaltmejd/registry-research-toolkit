@@ -29,9 +29,6 @@ from .db import (
     db_path_from_args,
     open_db,
 )
-from .doc_db import (
-    RelatedDocument,  # noqa: TC001 - Pydantic resolves model fields at runtime.
-)
 from .documentary import DocumentaryRelationship
 from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
 from .fqid import (
@@ -207,7 +204,6 @@ class ResolvedRegister(_CatalogModel):
     # `registerrubrik` is dropped (redundant with name).
     name: str
     purpose: str | None
-    related_documents: tuple[RelatedDocument, ...] = ()
     tags: tuple[TagMembership, ...] = ()
     warnings: tuple[DataWarning, ...] = ()
 
@@ -589,18 +585,6 @@ class BindingGroupRef(_CatalogModel):
     provider: str
     register_name: str = Field(alias="register")
     key: str
-
-
-class TagSummary(_CatalogModel):
-    """One curated thematic tag (#311) in the global vocabulary. `slug` is the
-    globally-unique tag id; `member_count` / `starred_count` are this tag's total
-    members and the subset flagged golden/recommended (across both grains)."""
-
-    slug: str
-    label: str
-    description: str | None
-    member_count: int
-    starred_count: int
 
 
 class TagMembership(_CatalogModel):
@@ -1076,8 +1060,7 @@ class RepresentationSuccessionRef(_CatalogModel):
 class ClassificationRef(_CatalogModel):
     """A classification-grain succession edge endpoint (#571): one
     `classification_replaced_by` neighbor of a classification edition. Carried by
-    `classification_predecessors`/`classification_successors` and
-    `ResolvedClassification.replaced_by`.
+    `classification_predecessors` and `ResolvedClassification.replaced_by`.
 
     The classification FQID is 2-segment (`class/<slug>`), so the edge endpoint is
     a single slug — no provider/register triple (unlike `VariableRef`). There is
@@ -1325,7 +1308,6 @@ class ResolvedVariable(_CatalogModel):
     deprecated: bool = False
     source_register_id: CatalogStorageId | None
     source_register_text: str | None
-    related_documents: tuple[RelatedDocument, ...] = ()
     # Full state history, chronological ascending (oldest first). Each state
     # carries its variant coordinate + period range.
     states: tuple[VariableState, ...]
@@ -1518,7 +1500,6 @@ class Catalog:
     def __init__(
         self,
         conn: sqlite3.Connection,
-        doc_conn: sqlite3.Connection | None = None,
         *,
         classification_as_of_year: int | None = None,
         scope: ReadScope | None = None,
@@ -1526,7 +1507,6 @@ class Catalog:
         self._conn = conn
         self.scope = resolve_scope(conn, scope)
         self.holdings = Holdings(conn)
-        self._doc_conn = doc_conn
         self._classification_as_of_year = (
             classification_as_of_year
             if classification_as_of_year is not None
@@ -1678,7 +1658,6 @@ class Catalog:
         cls,
         db_arg: str | Path | None = None,
         *,
-        with_docs: bool = False,
         classification_as_of_year: int | None = None,
         scope: ReadScope | None = None,
         catalog: str | None = None,
@@ -1690,28 +1669,18 @@ class Catalog:
         if selected is None and db_arg is None and not os.environ.get("REG_META_DB"):
             selected = "global"
         conn = open_db(path, catalog=selected)
-        doc_conn = None
         try:
-            if with_docs:
-                from .doc_db import ensure_doc_db
-
-                doc_conn = ensure_doc_db(str(path.parent))
             return cls(
                 conn,
-                doc_conn=doc_conn,
                 classification_as_of_year=classification_as_of_year,
                 scope=scope,
             )
         except Exception:
             conn.close()
-            if doc_conn is not None:
-                doc_conn.close()
             raise
 
     def close(self) -> None:
         self._conn.close()
-        if self._doc_conn is not None:
-            self._doc_conn.close()
 
     def resolve(self, fqid: str | Fqid) -> ResolvedEntity:
         if isinstance(fqid, str):
@@ -2223,23 +2192,20 @@ class Catalog:
         return out
 
     def provider_column_coverage(
-        self, provider_slug: str, register_slugs: Iterable[str] | None = None
+        self, provider_slug: str
     ) -> dict[str, dict[tuple[str, str | None], VariableCoverage]]:
-        """Column coverage for a provider, optionally restricted to register slugs.
+        """Column coverage for every register of a provider.
 
         Named keys match `register_column_coverage`; `(variable, None)` keys match
         `register_unnamed_column_coverage`. Registers without slugged state-bearing
         variables are absent. The artifact's read scope applies before coverage.
         """
         if self.scope == "holdings":
-            selected = frozenset(register_slugs) if register_slugs is not None else None
-            deliveries = self._provider_held_deliveries(provider_slug, selected)
+            deliveries = self._provider_held_deliveries(provider_slug)
             out = {}
             for register in self.list_registers(provider_slug):
                 slug = register.fqid.register
                 assert slug is not None
-                if selected is not None and slug not in selected:
-                    continue
                 columns: dict[tuple[str, str | None], VariableCoverage] = {}
                 for variable, offered in deliveries.get(slug, {}).items():
                     for column in sorted(
@@ -2251,14 +2217,6 @@ class Catalog:
                 out[slug] = columns
             return out
 
-        params = [provider_slug]
-        register_filter = ""
-        if register_slugs is not None:
-            slugs = sorted(set(register_slugs))
-            if not slugs:
-                return {}
-            register_filter = f" AND r.slug IN ({','.join('?' for _ in slugs)})"
-            params.extend(slugs)
         # LEFT joins keep register selection ahead of indexed variable/state
         # lookups; the live per-register inner-join queries can scan catalog-wide
         # tables. HAVING drops the stateless rows those joins retain.
@@ -2271,10 +2229,9 @@ class Catalog:
             "ON v.register_id = r.register_id AND v.slug IS NOT NULL "
             "LEFT JOIN variable_state vs ON vs.variable_id = v.variable_id "
             "WHERE p.slug = ? AND r.slug IS NOT NULL "
-            + register_filter
-            + " GROUP BY r.register_id, v.variable_id, vs.delivery_column_name "
+            "GROUP BY r.register_id, v.variable_id, vs.delivery_column_name "
             "HAVING COUNT(vs.state_id) > 0",
-            params,
+            (provider_slug,),
         ).fetchall()
         by_register: dict[str, list[sqlite3.Row]] = {}
         for row in rows:
@@ -3009,37 +2966,6 @@ class Catalog:
             family if any(edition.slug == slug for edition in family.editions) else None
         )
 
-    def list_tags(self) -> list[TagSummary]:
-        """The curated thematic tag vocabulary (#311) with per-tag member counts,
-        ordered by slug. `member_count` spans both grains; `starred_count` is the
-        golden/recommended subset. Empty when no tags are curated (the machinery-
-        only ship state)."""
-        rows = self._conn.execute(
-            "SELECT t.slug, t.label, t.description, "
-            "COUNT(tm.tag_id) AS member_count, "
-            "COALESCE(SUM(tm.starred), 0) AS starred_count "
-            "FROM tag t "
-            "LEFT JOIN tag_member tm ON tm.tag_id = t.tag_id AND "
-            "(tm.variable_id IS NULL OR "
-            + scope_predicate(self.scope, "variable", "tm")
-            + ") AND "
-            "(tm.register_id IS NULL OR "
-            + scope_predicate(self.scope, "register", "tm")
-            + ") "
-            "GROUP BY t.tag_id "
-            "ORDER BY t.slug"
-        ).fetchall()
-        return [
-            TagSummary(
-                slug=r["slug"],
-                label=r["label"],
-                description=r["description"],
-                member_count=r["member_count"],
-                starred_count=r["starred_count"],
-            )
-            for r in rows
-        ]
-
     def _direct_tags_for_variable(self, fqid: Fqid) -> list[TagMembership]:
         rows = self._conn.execute(
             "SELECT t.slug, t.label, tm.rank, tm.starred, tm.note "
@@ -3054,25 +2980,7 @@ class Catalog:
         ).fetchall()
         return [_tag_membership(r) for r in rows]
 
-    def _group_tags_for_variable(
-        self,
-        fqid: Fqid,
-        *,
-        group_member_fqids: Iterable[Fqid] | None = None,
-    ) -> tuple[TagMembership, ...]:
-        scope_ids = (
-            self._variable_ids_for_binding_fqids(group_member_fqids)
-            if group_member_fqids is not None
-            else None
-        )
-        if scope_ids is not None and not scope_ids:
-            return ()
-        scope_clause = ""
-        scope_params: tuple[int, ...] = ()
-        if scope_ids is not None:
-            placeholders = ",".join("?" for _ in scope_ids)
-            scope_clause = f"AND group_member.variable_id IN ({placeholders}) "
-            scope_params = scope_ids
+    def _group_tags_for_variable(self, fqid: Fqid) -> tuple[TagMembership, ...]:
         rows = self._conn.execute(
             "SELECT DISTINCT t.slug, t.label, tm.rank, tm.starred, tm.note, "
             "tm.variable_id AS member_variable_id "
@@ -3085,23 +2993,17 @@ class Catalog:
             "  ON group_member.group_id = target_member.group_id "
             "JOIN tag_member tm ON tm.variable_id = group_member.variable_id "
             "JOIN tag t ON t.tag_id = tm.tag_id "
-            "WHERE target_p.slug = ? AND target_r.slug = ? AND target.slug = ? "
-            f"{scope_clause} AND "
+            "WHERE target_p.slug = ? AND target_r.slug = ? AND target.slug = ? AND "
             + self._group_member_predicate("group_member")
             + " AND "
             + self._group_member_predicate("target_member")
             + " "
             "ORDER BY tm.rank, t.slug, tm.variable_id",
-            (fqid.provider, fqid.register, fqid.variable, *scope_params),
+            (fqid.provider, fqid.register, fqid.variable),
         ).fetchall()
         return _aggregate_tag_memberships(rows)
 
-    def tags_for_variable(
-        self,
-        fqid: Fqid,
-        *,
-        group_member_fqids: Iterable[Fqid] | None = None,
-    ) -> list[TagMembership]:
+    def tags_for_variable(self, fqid: Fqid) -> list[TagMembership]:
         """Tags the variable at `fqid` (a 3-seg binding FQID) belongs to (#311),
         ordered by tag rank then slug.
 
@@ -3109,8 +3011,6 @@ class Catalog:
         If the variable is in a concept group, thematic tags curated on any sibling
         member are inherited as neutral memberships so every member shares the
         group-level theme without copying a representative member's note/star.
-        `group_member_fqids` scopes that inheritance to a caller-narrowed member
-        set while preserving the variable's own direct tags.
         """
         self._require_binding(fqid)
         direct = self._direct_tags_for_variable(fqid)
@@ -3123,9 +3023,7 @@ class Catalog:
                 starred=False,
                 note=None,
             )
-            for tag in self._group_tags_for_variable(
-                fqid, group_member_fqids=group_member_fqids
-            )
+            for tag in self._group_tags_for_variable(fqid)
             if tag.slug not in direct_slugs
         ]
         return sorted([*direct, *inherited], key=lambda tag: (tag.rank, tag.slug))
@@ -3178,7 +3076,6 @@ class Catalog:
             provider_id=row["provider_id"],
             name=row["name"],
             purpose=row["purpose"],
-            related_documents=self._related_documents_for_register(fqid.register),
             tags=tuple(self.tags_for_register(fqid)),
             warnings=tuple(
                 w for w in self.data_warnings(fqid) if w.variable_fqid is None
@@ -3331,9 +3228,6 @@ class Catalog:
             deprecated=bool(meta["deprecated"]),
             source_register_id=meta["source_register_id"],
             source_register_text=meta["source_register_text"],
-            related_documents=self._related_documents_for_register(
-                meta["register_slug"]
-            ),
             states=self._states_for_variable(
                 var["variable_id"],
                 with_codes=with_codes,
@@ -3351,15 +3245,6 @@ class Catalog:
                 if w.variable_fqid == canonical_fqid
             ),
         )
-
-    def _related_documents_for_register(
-        self, register_slug: str | None
-    ) -> tuple[RelatedDocument, ...]:
-        if self._doc_conn is None or register_slug is None:
-            return ()
-        from .doc_queries import related_documents_for_register
-
-        return related_documents_for_register(self._doc_conn, register_slug)
 
     def _group_ref_for_variable(
         self, variable_id: int, provider_slug: str, register_slug: str
@@ -5135,19 +5020,10 @@ class Catalog:
             ).fetchall()
         }
 
-    def classification_successors(self, fqid: str | Fqid) -> list[ClassificationRef]:
-        """The editions that replaced this classification edition (outbound
-        succession, #571). Keyed on the literal slug — succession tolerates a DEAD
-        predecessor edition (a renamed/retired slug still carries edges), so unlike
-        `successors` this does NOT require the slug to resolve to a live row."""
-        return list(
-            self._classification_successor_edges(self._parse_classification(fqid))
-        )
-
     def classification_predecessors(self, fqid: str | Fqid) -> list[ClassificationRef]:
         """The editions this classification edition replaced (inbound succession,
-        #571). Keyed on the literal slug; tolerates a dead edition like
-        `classification_successors`."""
+        #571). Keyed on the literal slug, so a dead edition still reports its
+        edges."""
         return list(
             self._classification_predecessor_edges(self._parse_classification(fqid))
         )
@@ -5160,16 +5036,6 @@ class Catalog:
         classification succession."""
         return list(
             self._classification_derived_from_edges(self._parse_classification(fqid))
-        )
-
-    def classification_derivatives(
-        self, fqid: str | Fqid
-    ) -> list[ClassificationDerivedFromRef]:
-        """The non-temporal specialized classifications derived from this
-        classification (#779). Keyed on the literal slug and intentionally
-        independent of classification succession."""
-        return list(
-            self._classification_derivative_edges(self._parse_classification(fqid))
         )
 
     def classification_chain(self, fqid: str | Fqid) -> list[ClassificationEdition]:

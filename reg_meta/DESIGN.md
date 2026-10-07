@@ -578,11 +578,11 @@ Pydantic so FastAPI can consume its catalog models directly. The hard no-Pydanti
 applied only to `reg_monabundle`'s amalgamated bundle (now archived); reg_meta was never
 subject to it. See root CLAUDE.md "Stack" and ARCHITECTURE.md.
 
-When a caller constructs `Catalog` with a docs-DB connection, `ResolvedRegister` and
-`ResolvedVariable` also carry `related_documents`: register-version PDF metadata
-(`title`, `filename`, `source_url`, `license`, `fetched`, `sha256`, `byte_size`) read
-from `reg_meta_docs.db`. The list is metadata only; binary content is fetched by exact
-`(register, filename)` through `doc_queries.related_document_content`.
+Register-version PDF metadata (`title`, `filename`, `source_url`, `license`, `fetched`,
+`sha256`, `byte_size`) is read from `reg_meta_docs.db` by
+`doc_queries.related_documents_for_register`, not embedded on resolved models. The list
+is metadata only; binary content is fetched by exact `(register, filename)` through
+`doc_queries.related_document_content`.
 
 **`search.py` — the typed search surface (#701).** `queries.search` builds its result
 rows as plain dicts through the internal pipeline and converts ONCE at the end into the
@@ -635,7 +635,7 @@ cannot emit the injected identity again at its natural FTS position.
 uniformly. The longitudinal `resolve(fqid).replaced_by` attribute carries the
 **outbound** edges (successors) — "X was replaced by Y" is the natural directional read;
 inbound traversal is the explicit `predecessors(fqid)` call. The classification-grain
-duals `classification_successors(fqid)` / `classification_predecessors(fqid)` (#571)
+duals (`ResolvedClassification.replaced_by` / `classification_predecessors(fqid)`, #571)
 follow the same split, but key on the **literal edition slug** (not
 `_resolve_edge_triple` live-row resolution) — tolerating dead predecessor editions is
 the whole point of succession, since a renamed/retired slug no longer has a
@@ -801,17 +801,17 @@ succession with no edition). Note: `RelatedRef` (the former `variable_related_to
 see-also endpoint) was retired in #800 alongside the `related` edge kind.
 
 **`ClassificationRef`** — a classification-grain succession edge endpoint (#571),
-carried by `classification_successors` / `classification_predecessors` /
-`ResolvedClassification.replaced_by`. The classification FQID is 2-segment
-(`class/<slug>`), so the edge endpoint is a single slug — no provider/register triple.
-Fields: `fqid` (best-effort `class/<slug>`, built via `_class_ref_fqid`; None only on a
-malformed slug), the load-bearing `slug`, `effective_year` (the succession year, or
-None), and `note` (build provenance — `derived:vintage_chain` for the auto edges,
-`curated:slug_toml` for the curated #579 edges). There is no `reason`/`beskrivning`
-column on `classification_replaced_by` (that column exists only on the variable-grain
-`timeseries_event`), so `ClassificationRef` carries `note` where `VariableRef` carries
-`reason`. Succession references the **exact edition slug** as identity; `fqid` is
-best-effort to surface malformed slugs gracefully rather than raising.
+carried by `classification_predecessors` / `ResolvedClassification.replaced_by`. The
+classification FQID is 2-segment (`class/<slug>`), so the edge endpoint is a single slug
+— no provider/register triple. Fields: `fqid` (best-effort `class/<slug>`, built via
+`_class_ref_fqid`; None only on a malformed slug), the load-bearing `slug`,
+`effective_year` (the succession year, or None), and `note` (build provenance —
+`derived:vintage_chain` for the auto edges, `curated:slug_toml` for the curated #579
+edges). There is no `reason`/`beskrivning` column on `classification_replaced_by` (that
+column exists only on the variable-grain `timeseries_event`), so `ClassificationRef`
+carries `note` where `VariableRef` carries `reason`. Succession references the **exact
+edition slug** as identity; `fqid` is best-effort to surface malformed slugs gracefully
+rather than raising.
 
 **`LineageEdge`** — one `variable_state_lineage` row (see reg_meta_build/DESIGN.md →
 Consumer-side lineage (variable_state_lineage); state grain): `consumer_state_id`,
@@ -1837,18 +1837,16 @@ materialize empty tag tables when the curation file is absent. The webapp consum
 memberships as catalog-node chips; tag-scoped search/facets and tag-backed search boost
 remain separate consumption work.
 
-**API**: `Catalog.list_tags()` → `TagSummary` (slug, label, description, `member_count`,
-`starred_count`) is the vocabulary with counts; `tags_for_variable(fqid)` /
-`tags_for_register(fqid)` → `TagMembership` (the tag's slug/label + this membership's
-`rank`/`starred`/`note`), ordered by rank then slug. `Catalog.resolve()` embeds those
-memberships on resolved register and variable nodes so consumers do not reimplement the
-reverse lookup. `ConceptGroupSummary.tags` aggregates member variable memberships, and
-`tags_for_variable()` also inherits group-level tag slugs onto untagged siblings as
-neutral memberships while direct variable memberships keep their rank/star/note. Callers
-that narrow a group first may supply that member set so aggregation/inheritance follows
-the narrowed surface; unscoped calls keep the full-catalog behavior. Build-side
-derivation + dangling-reference fail-fast live in `reg_meta_build/tags.py` (see
-`reg_meta_build/DESIGN.md`).
+**API**: `tags_for_variable(fqid)` / `tags_for_register(fqid)` → `TagMembership` (the
+tag's slug/label + this membership's `rank`/`starred`/`note`), ordered by rank then
+slug. `Catalog.resolve()` embeds those memberships on resolved register and variable
+nodes so consumers do not reimplement the reverse lookup. `ConceptGroupSummary.tags`
+aggregates member variable memberships, and `tags_for_variable()` also inherits
+group-level tag slugs onto untagged siblings as neutral memberships while direct
+variable memberships keep their rank/star/note. Callers that narrow a group first may
+supply that member set so aggregation follows the narrowed surface; unscoped calls keep
+the full-catalog behavior. Build-side derivation + dangling-reference fail-fast live in
+`reg_meta_build/tags.py` (see `reg_meta_build/DESIGN.md`).
 
 ## Storage optimization
 

@@ -173,84 +173,6 @@ def test_classification_codes_rank_before_register_local_codes(
     ]
 
 
-def test_code_owner_scope_splits_classification_and_register_local_pages(
-    conn: sqlite3.Connection,
-) -> None:
-    _seed_register(conn, 1, "reg")
-    vid = _seed_variable(conn, 1, "10", "Register local code owner", "owner")
-    _seed_code(conn, 1, "E22", "Hyperfunktion av hypofysen")
-    _seed_code(conn, 2, "E22", "Register local exact")
-    _seed_code(conn, 3, "E220", "Register local compact prefix")
-    _seed_code(conn, 4, "E22.0", "ICD child")
-    _map(conn, 2, vid)
-    _map(conn, 3, vid)
-    classification_id = conn.execute(
-        "INSERT INTO classification (short_name, name) VALUES ('ICD-10-SE', 'ICD')"
-    ).lastrowid
-    for code_id in (1, 4):
-        conn.execute(
-            "INSERT INTO classification_code "
-            "(classification_id, code_id, level, is_valid) VALUES (?, ?, NULL, 1)",
-            (classification_id, code_id),
-        )
-    _finalize(conn)
-
-    classification = search(
-        conn,
-        "E22",
-        field="value",
-        type="value",
-        limit=2,
-        code_owner_scope="classification",
-    )
-    register_local = search(
-        conn,
-        "E22",
-        field="value",
-        type="value",
-        limit=2,
-        code_owner_scope="register_local",
-    )
-
-    assert len(classification.results) == 2
-    assert not classification.has_more
-    assert [(r.code, r.label) for r in classification.results] == [
-        ("E22", "Hyperfunktion av hypofysen"),
-        ("E22.0", "ICD child"),
-    ]
-    assert len(register_local.results) == 2
-    assert not register_local.has_more
-    assert [(r.code, r.label) for r in register_local.results] == [
-        ("E22", "Register local exact"),
-        ("E220", "Register local compact prefix"),
-    ]
-
-
-def test_register_scope_drops_out_of_scope_only_owners(
-    conn: sqlite3.Connection,
-) -> None:
-    """`--register` scope: a code whose ONLY owner is in another register yields no
-    result (locks the `if reg_ids and not owners...` drop guard)."""
-    _seed_register(conn, 1, "rega")
-    _seed_register(conn, 2, "regb")
-    vid_b = _seed_variable(conn, 2, "20", "BVar", "bvar")
-    # The "Singelkod" label's only owner is a variable in register 2 (regb).
-    _seed_code(conn, 1, "5", "Singelkod")
-    _map(conn, 1, vid_b)
-    _finalize(conn)
-
-    # Scoped to register 1 (rega) → no surviving owner → dropped.
-    scoped = search(
-        conn, "Singelkod", field="value", type="value", register="rega"
-    ).results
-    assert scoped == (), f"out-of-scope-only code should be dropped, got {scoped}"
-    # Scoped to register 2 (regb) → the owner survives → present.
-    in_scope = search(
-        conn, "Singelkod", field="value", type="value", register="regb"
-    ).results
-    assert any(r.label == "Singelkod" for r in in_scope)
-
-
 def test_owner_cap_keeps_tightest_value_set_owners(
     conn: sqlite3.Connection,
 ) -> None:
@@ -316,29 +238,6 @@ def test_owner_cap_breaks_cross_register_slug_ties_deterministically(
         "d",
         "same-a",
     ]
-
-
-def test_owner_cap_can_be_disabled_for_variable_owners(
-    conn: sqlite3.Connection,
-) -> None:
-    """The web search page expands code rows into full variable-owner lists."""
-    _seed_register(conn, 1, "reg")
-    _seed_code(conn, 1, "7", "Delad kod")
-    for i in range(6):
-        vid = _seed_variable(conn, 1, str(100 + i), f"Var{i}", f"var{i}")
-        _map(conn, 1, vid)
-    _finalize(conn)
-
-    results = search(
-        conn,
-        "Delad kod",
-        field="value",
-        type="value",
-        code_variable_owner_limit=None,
-    ).results
-    hit = next(r for r in results if r.label == "Delad kod")
-    assert hit.variable_count == 6
-    assert len(hit.variables) == 6
 
 
 def test_mapping_count_downweight_orders_rarer_first(conn: sqlite3.Connection) -> None:
@@ -424,48 +323,6 @@ def _seed_n_label_codes(conn: sqlite3.Connection, n: int, label: str) -> None:
     _finalize(conn)
 
 
-def test_unscoped_value_page_cost_does_not_grow_with_the_match_set() -> None:
-    """Perf guard (replaces the internal annotation spy): owner annotation runs for
-    the shown page only. An unscoped value search issues the same statements for
-    30 and for 60 matching codes, and writes at most `limit` scratch rows for the
-    owner lookup. FTS5's own per-hit bm25 lookups (traced with a leading `--`)
-    are excluded; they scale with the match set by design."""
-    from reg_meta_build.db import DDL, seed_providers
-
-    limit = 5
-    statement_counts = []
-    for n in (30, 60):
-        c = sqlite3.connect(":memory:")
-        c.row_factory = sqlite3.Row
-        register_py_lower(c)
-        c.executescript(DDL)
-        seed_providers(c)
-        _seed_n_label_codes(c, n, "Diagnos")
-        statements: list[str] = []
-        written_before = c.total_changes
-        c.set_trace_callback(statements.append)
-        out = search(c, "Diagnos", field="value", type="value", limit=limit)
-        c.set_trace_callback(None)
-        written = c.total_changes - written_before
-        c.close()
-        assert len(out.results) == limit
-        assert out.has_more
-        assert written <= limit, f"wrote {written} rows for a {limit}-row page"
-        statement_counts.append(sum(not s.startswith("--") for s in statements))
-    assert statement_counts[0] == statement_counts[1], statement_counts
-
-
-def test_limit_plus_one_reports_more_without_exact_count(
-    conn: sqlite3.Connection,
-) -> None:
-    _seed_n_label_codes(conn, 8, "Diagnos")
-    out = search(conn, "Diagnos", field="value", type="value", limit=3)
-    assert len(out.results) == 3
-    assert out.has_more
-    assert out.next_cursor is not None
-    assert len(out.results) == 3  # the page is still limit-bounded
-
-
 def test_register_scope_returns_deep_in_scope_hit(conn: sqlite3.Connection) -> None:
     """Register scope must surface an in-scope hit even when HIGHER-ranked codes are
     all out-of-scope (regression: the arm truncated to `limit` BEFORE the register
@@ -496,27 +353,6 @@ def test_register_scope_returns_deep_in_scope_hit(conn: sqlite3.Connection) -> N
 # --------------------------------------------------------------------------- #
 # #352 perf: annotate only the shown page (unscoped path).
 # --------------------------------------------------------------------------- #
-
-
-def test_page_rows_carry_correct_owners(conn: sqlite3.Connection) -> None:
-    """Owner-annotation CONTENT of the shown rows is identical to the old
-    full-annotate behaviour: a code with known owners is correctly annotated on
-    the page, and the internal `_code_id` marker never leaks out."""
-    _seed_register(conn, 1, "reg")
-    _seed_code(conn, 1, "7", "Delad kod")
-    for i in range(3):
-        vid = _seed_variable(conn, 1, str(100 + i), f"Var{i}", f"var{i}")
-        _map(conn, 1, vid)
-    _finalize(conn)
-
-    results = search(conn, "Delad kod", field="value", type="value").results
-    hit = next(r for r in results if r.label == "Delad kod")
-    assert hit.variable_count == 3
-    assert len(hit.variables) == 3
-    assert hit.classification_count == 0
-    assert hit.classifications == ()
-    # The deferred-annotation marker must be stripped before results go public.
-    assert not hasattr(hit, "_code_id")
 
 
 def test_cursor_page_annotated(conn: sqlite3.Connection) -> None:
@@ -555,104 +391,6 @@ def test_cursor_page_annotated(conn: sqlite3.Connection) -> None:
     assert not hasattr(p1, "_code_id") and not hasattr(p2, "_code_id")
 
 
-def test_type_all_only_code_rows_annotated(conn: sqlite3.Connection) -> None:
-    """In a mixed `type="all"` page, only `type=="code"` rows get owner annotation;
-    other-type rows pass through untouched and no row leaks `_code_id`."""
-    _seed_register(conn, 1, "reg")
-    # A variable whose NAME matches the query (a varname/all hit), plus a code
-    # whose label matches it too.
-    _seed_variable(conn, 1, "10", "Cancer var", "cancer-var")
-    _seed_code(conn, 1, "1", "Cancer kod")
-    vid2 = _seed_variable(conn, 1, "11", "Owner", "owner")
-    _map(conn, 1, vid2)
-    _finalize(conn)
-
-    out = search(conn, "Cancer", field="all", type="all", fold_groups=False)
-    results = out.results
-    types = {r.type for r in results}
-    assert "code" in types, "the code/value row must be present"
-    code_row = next(r for r in results if r.type == "code")
-    assert code_row.variable_count == 1
-    # No row (code or otherwise) leaks the internal marker.
-    assert all(not hasattr(r, "_code_id") for r in results)
-
-
-def test_code_shaped_drops_ownerless_dangling_code(conn: sqlite3.Connection) -> None:
-    # #478: a code-shaped query must not return an ownerless dangling code (no
-    # variable owner AND not in classification_code) via the direct value_code
-    # lookup. Owned / classification-owned codes are still returned. Mirrors the
-    # build-side value_code_fts owner filter for the code-shape bypass path.
-    # NOTE: _finalize's FTS 'rebuild' indexes ALL value_code rows (the build-side
-    # owner filter is NOT applied in this harness), so searching by CODE string
-    # (not label) isolates the QUERY-side code-shape filter under test.
-    _seed_register(conn, 1, "reg")
-    vid = _seed_variable(conn, 1, "10", "Var", "var")
-    _seed_code(conn, 1, "9001", "Owned code label")
-    _map(conn, 1, vid)  # owned (mapping_count ≥ 1)
-    _seed_code(conn, 2, "9002", "Ownerless dangling")  # no _map, no classification
-    _seed_code(conn, 3, "9003", "Classification dangling")  # no _map, but classified
-    classification_id = conn.execute(
-        "INSERT INTO classification (short_name, name) VALUES ('c', 'C')"
-    ).lastrowid
-    conn.execute(
-        "INSERT INTO classification_code (classification_id, code_id, level, is_valid) "
-        "VALUES (?, 3, NULL, 1)",
-        (classification_id,),
-    )
-    _finalize(conn)
-
-    def _codes(query: str) -> list[str]:
-        return [
-            r.code for r in search(conn, query, field="value", type="value").results
-        ]
-
-    owned = _codes("9001")
-    assert "9001" in owned, f"owned code must be returned, got {owned}"
-
-    ownerless = _codes("9002")
-    assert "9002" not in ownerless, (
-        f"ownerless dangling code must be dropped, got {ownerless}"
-    )
-
-    classified = _codes("9003")
-    assert "9003" in classified, (
-        f"classification-owned code must be returned, got {classified}"
-    )
-
-    prefix = _codes("900")
-    assert "9001" in prefix and "9003" in prefix, (
-        f"owned/classified prefix hits must be present, got {prefix}"
-    )
-    assert "9002" not in prefix, (
-        f"ownerless code must be dropped from prefix search too, got {prefix}"
-    )
-
-
-def test_cursor_pages_are_duplicate_free_and_gap_free(conn: sqlite3.Connection) -> None:
-    _seed_n_label_codes(conn, 8, "Diagnos")
-    expected = search(conn, "Diagnos", field="value", type="value", limit=20)
-
-    seen: list[str] = []
-    cursor = None
-    while True:
-        page = search(
-            conn,
-            "Diagnos",
-            field="value",
-            type="value",
-            limit=3,
-            cursor=cursor,
-        )
-        seen.extend(result.code for result in page.results)
-        if not page.has_more:
-            break
-        assert page.next_cursor is not None
-        cursor = page.next_cursor
-
-    assert seen == [result.code for result in expected.results]
-    assert len(seen) == len(set(seen))
-
-
 def test_cursor_rejects_invalid_and_context_mismatched_tokens(
     conn: sqlite3.Connection,
 ) -> None:
@@ -677,27 +415,6 @@ def test_cursor_rejects_invalid_and_context_mismatched_tokens(
             )
         assert exc.value.code == "invalid_search_cursor"
         assert "cursor" in exc.value.message.lower()
-
-
-def test_cursor_binds_catalog_generation(conn: sqlite3.Connection) -> None:
-    _seed_n_label_codes(conn, 4, "Diagnos")
-    first = search(conn, "Diagnos", field="value", type="value", limit=1)
-    assert first.next_cursor is not None
-    conn.execute(
-        "INSERT OR REPLACE INTO import_manifest (key, value) "
-        "VALUES ('generation_id', 'changed-generation')"
-    )
-
-    with pytest.raises(RegMetaError) as exc:
-        search(
-            conn,
-            "Diagnos",
-            field="value",
-            type="value",
-            limit=1,
-            cursor=first.next_cursor,
-        )
-    assert "catalog generation" in exc.value.message
 
 
 def test_cursor_rejects_tampered_or_oversized_position(

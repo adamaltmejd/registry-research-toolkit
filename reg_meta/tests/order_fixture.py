@@ -261,21 +261,6 @@ def finding_codes(result) -> list[str]:
     return [finding.code for finding in result.findings]
 
 
-def add_window(
-    conn: sqlite3.Connection, *, variable_slug: str, column: str, lo: str, hi: str
-) -> None:
-    """One raw `variable_alias_window` row (#319) on the fixture's variant — a
-    monthly family's month column inside its annual claim."""
-    conn.execute(
-        "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
-        "delivery_column_name, valid_from, valid_to) "
-        "SELECT variable_id, 10, ?, ?, ? FROM variable "
-        "WHERE register_id = 1 AND slug = ?",
-        (column, lo, hi, variable_slug),
-    )
-    conn.commit()
-
-
 def resolve_project_binding(
     conn, variable: str, period: object, representation: str | None = None
 ):

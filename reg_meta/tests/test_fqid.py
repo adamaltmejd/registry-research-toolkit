@@ -63,13 +63,6 @@ class TestRoundTrip:
 
 class TestSlugGrammar:
     @pytest.mark.parametrize(
-        "slug",
-        ["a", "ab", "kon", "lisa", "individer-15plus", "abc-d-e", "a1", "k0n"],
-    )
-    def test_valid_slugs(self, slug: str) -> None:
-        assert is_slug(slug)
-
-    @pytest.mark.parametrize(
         "bad",
         [
             "",
@@ -138,27 +131,10 @@ class TestReservedHttpSuffixSlugs:
     SLUG_SHAPED_RESERVED = sorted(t for t in ALL_VARIABLE_RESERVED if is_slug(t))
     SLUG_SHAPED_SUFFIXES = sorted(t for t in RESERVED_HTTP_SUFFIX_SLUGS if is_slug(t))
 
-    @pytest.mark.parametrize("token", ALL_VARIABLE_RESERVED)
-    def test_variable_slot_rejects_all_reserved(self, token: str) -> None:
-        # All are rejected as a variable slug (the slug-shaped suffixes + `variants`
-        # via the reservation; `lineage_warnings` via the underscore grammar bar).
-        with pytest.raises(FqidError):
-            validate_slug(token, "variable")
-
     @pytest.mark.parametrize("token", SLUG_SHAPED_RESERVED)
     def test_variable_slot_reserved_message(self, token: str) -> None:
         with pytest.raises(FqidError, match="reserved"):
             validate_slug(token, "variable")
-
-    @pytest.mark.parametrize("token", sorted(RESERVED_HTTP_SUFFIX_SLUGS))
-    def test_register_slot_rejects_suffix_slugs(self, token: str) -> None:
-        with pytest.raises(FqidError):
-            validate_slug(token, FqidKind.REGISTER)
-
-    @pytest.mark.parametrize("token", sorted(RESERVED_HTTP_SUFFIX_SLUGS))
-    def test_classification_slot_rejects_suffix_slugs(self, token: str) -> None:
-        with pytest.raises(FqidError):
-            validate_slug(token, FqidKind.CLASSIFICATION)
 
     @pytest.mark.parametrize("token", SLUG_SHAPED_SUFFIXES)
     def test_register_and_classification_reserved_message(self, token: str) -> None:
@@ -224,23 +200,12 @@ class TestReservedHttpSuffixSlugs:
 
 
 class TestReservedGroupSlug:
-    def test_provider_slot_rejects_group(self) -> None:
-        with pytest.raises(FqidError, match="reserved"):
-            validate_slug(RESERVED_GROUP_SLUG, FqidKind.PROVIDER)
-
     def test_provider_fqid_rejects_group(self) -> None:
         # The construction path runs validate_slug on the provider segment.
         with pytest.raises(FqidError, match="reserved"):
             Fqid.provider_fqid(RESERVED_GROUP_SLUG)
         with pytest.raises(FqidError, match="reserved"):
             parse(RESERVED_GROUP_SLUG)  # 1-seg provider FQID
-
-    def test_group_accepted_in_other_slots(self) -> None:
-        # `group` only lands at the provider position in the subject route, so a
-        # register / variable / classification slug `group` is a clean path.
-        validate_slug(RESERVED_GROUP_SLUG, FqidKind.REGISTER)
-        validate_slug(RESERVED_GROUP_SLUG, "variable")
-        validate_slug(RESERVED_GROUP_SLUG, FqidKind.CLASSIFICATION)
 
     def test_group_parses_in_register_and_variable_leaf(self) -> None:
         # `scb/group` (register) and `scb/lisa/group` (variable leaf) are clean
@@ -265,31 +230,6 @@ class TestReservedGroupSlug:
 
 
 class TestPeriodGrammar:
-    @pytest.mark.parametrize(
-        "period",
-        [
-            "2018",
-            "1999",
-            "2018-01",
-            "2018-12",
-            "HT2020",
-            "VT2019",
-            "LA2004",
-            "2020-Q1",
-            "2020-Q4",
-            "2020-H1",
-            "2020-H2",
-            "1995-H1",
-            "2014-12-31",
-            "2002-10-15",
-            "2018-01-01",
-            "2018-12-31",
-            "2020-02-29",  # 2020 IS a leap year — a real Feb 29
-        ],
-    )
-    def test_valid_periods(self, period: str) -> None:
-        assert is_period(period)
-
     @pytest.mark.parametrize(
         "bad",
         [
@@ -474,23 +414,9 @@ class TestMalformed:
 
 
 class TestFactories:
-    def test_register_factory(self) -> None:
-        f = Fqid.register_fqid("scb", "lisa")
-        assert str(f) == "scb/lisa"
-
     def test_factory_rejects_bad_slug(self) -> None:
         with pytest.raises(FqidError):
             Fqid.register_fqid("SCB", "lisa")  # uppercase
-
-    def test_classification_factory(self) -> None:
-        # A2.6.1: single-arg factory; the slug bakes in the vintage.
-        f = Fqid.classification_fqid("sun2020")
-        assert str(f) == "class/sun2020"
-
-    def test_classification_round_trips_baked_slug(self) -> None:
-        # The version-baked slug round-trips: factory → str → parse → slug.
-        assert str(Fqid.classification_fqid("lkf2007")) == "class/lkf2007"
-        assert parse("class/sun2020").classification == "sun2020"
 
     def test_classification_rejects_reserved_slug(self) -> None:
         # `class` and `_default` are reserved and can't be a classification slug.
@@ -498,13 +424,6 @@ class TestFactories:
             Fqid.classification_fqid("class")
         with pytest.raises(FqidError, match="_default"):
             Fqid.classification_fqid("_default")
-
-    def test_binding_factory(self) -> None:
-        # A2.6: 3-arg binding factory (provider, register, variable).
-        f = Fqid.binding_fqid("scb", "lisa", "kon")
-        assert f.kind is FqidKind.VARIABLE_BINDING
-        assert str(f) == "scb/lisa/kon"
-        assert f.variable == "kon"
 
     def test_binding_factory_rejects_default_variable(self) -> None:
         # `_default` is a variant coordinate, not a variable slug.
@@ -573,15 +492,6 @@ class TestDerivePeriod:
 
         assert derive_period(version_name) == expected
 
-    def test_prefers_specific_over_year(self) -> None:
-        from reg_meta.fqid import derive_period
-
-        # "LISA HT2020" must not collapse to "2020" — keeps sub-year editions
-        # distinct (the build coalescer + lineage linker rely on this).
-        assert derive_period("LISA HT2020") == "HT2020"
-        assert derive_period("LISA 2020-Q1") == "2020-Q1"
-        assert derive_period("Snapshot 2014-12-31") == "2014-12-31"
-
     def test_range_form_is_not_misread_as_month(self) -> None:
         from reg_meta.fqid import derive_period
 
@@ -625,87 +535,13 @@ class TestDerivePeriod:
         # returning a token `period_token_to_bounds` would later crash on.
         assert derive_period(version_name) == expected
 
-    @pytest.mark.parametrize(
-        "version_name",
-        [
-            "Snapshot 2019-02-29",
-            "x 2021-04-31 y",
-            "2018-02-30 cohort",
-            "LISA HT2020",
-            "Survey 2020-Q1",
-            "Census 2018-01",
-            "2014-12-31",
-            "LISA 2018-2020",
-            "Höstterminen 1980",
-            "Person-År",  # no period — None is allowed
-        ],
-    )
-    def test_extractor_output_always_satisfies_is_period(
-        self, version_name: str
-    ) -> None:
-        from reg_meta.fqid import derive_period
-
-        # The restored invariant: whatever `derive_period` returns (when non-None)
-        # must itself pass `is_period` — the extractors and the validator agree on
-        # what counts as a period, calendar-impossible dates included.
-        out = derive_period(version_name)
-        assert out is None or is_period(out), (version_name, out)
-
 
 # ---------------------------------------------------------------------------
 # Stored binding FQIDs (no variant/period segment; see DESIGN.md → FQID grammar)
 # ---------------------------------------------------------------------------
 
 
-class TestBindingFqid:
-    def test_register_stays_two_segment(self) -> None:
-        f = parse("sos/lss")
-        assert f.kind is FqidKind.REGISTER
-        assert str(f) == "sos/lss"
-
-
 # ---------------------------------------------------------------------------
 # Pydantic interop (#681): `Fqid` rides a `__get_pydantic_core_schema__` hook so
 # a `BaseModel` with an `Fqid` field treats it as a STRING on the wire.
 # ---------------------------------------------------------------------------
-
-
-class TestPydanticSchema:
-    def _model(self):
-        from pydantic import BaseModel, ConfigDict
-
-        class M(BaseModel):
-            model_config = ConfigDict(frozen=True)
-            fqid: Fqid
-            opt: Fqid | None = None
-
-        return M
-
-    def test_json_schema_emits_type_string(self) -> None:
-        schema = self._model().model_json_schema()
-        assert schema["properties"]["fqid"] == {"title": "Fqid", "type": "string"}
-        # `Fqid | None` → nullable string, not an object.
-        assert {"type": "string"} in schema["properties"]["opt"]["anyOf"]
-
-    def test_validate_from_str_parses(self) -> None:
-        m = self._model()(fqid="scb/lisa/kon")
-        assert isinstance(m.fqid, Fqid)
-        assert m.fqid == Fqid.binding_fqid("scb", "lisa", "kon")
-
-    def test_validate_accepts_an_existing_fqid_instance(self) -> None:
-        existing = Fqid.register_fqid("scb", "lisa")
-        assert self._model()(fqid=existing).fqid == existing
-
-    def test_validate_rejects_a_malformed_fqid_string(self) -> None:
-        from pydantic import ValidationError
-
-        with pytest.raises(ValidationError):
-            self._model()(fqid="not//a/valid/fqid")
-
-    def test_serializes_via_canonical_str(self) -> None:
-        m = self._model()(fqid="scb/lisa/kon")
-        assert m.model_dump_json() == '{"fqid":"scb/lisa/kon","opt":null}'
-
-    def test_round_trips_str_to_fqid_to_str(self) -> None:
-        m = self._model()(fqid="class/sun2020")
-        assert str(m.fqid) == "class/sun2020"

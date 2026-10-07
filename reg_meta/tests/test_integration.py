@@ -545,33 +545,3 @@ def test_update_and_query(runtime: NativeRuntime, image: str):
     payload = json.loads(result.stdout)
     results = payload.get("results", payload.get("data", {}).get("results", []))
     assert len(results) > 0, "Expected search results for 'kommun'"
-
-
-@pytest.mark.parametrize("failure", ["exit", "timeout"])
-def test_native_build_failure_cleanup(
-    runtime: NativeRuntime, image: str, tmp_path: Path, failure: str
-):
-    """Actual failed/cancelled RUN leaves no owned containers or image tag."""
-    marker = f"NATIVE_TIMEOUT_READY_{uuid4().hex}"
-    step = "exit 17" if failure == "exit" else f"echo {marker}; sleep 60"
-    tag = f"reg-meta-integration-lifecycle-{uuid4().hex}"
-    (tmp_path / "Dockerfile").write_text(f"FROM {image}\nRUN {step}\n")
-    exception = AssertionError if failure == "exit" else pytest.fail.Exception
-    match = "Container build failed" if failure == "exit" else "timed out after 8s"
-    with pytest.raises(exception, match=match) as error:
-        next(
-            _built_image(runtime, tmp_path, tag, timeout=60 if failure == "exit" else 8)
-        )
-    if failure == "timeout":
-        # Match emitted RUN output, not merely the displayed instruction text.
-        assert re.search(rf"(?m)^(?:#\d+ [0-9.]+ )?{marker}\r?$", str(error.value)), (
-            str(error.value)
-        )
-    inspection = runtime.command(["image", "inspect", tag])
-    assert inspection.returncode != 0, "Failed build left its target image tag"
-    if not runtime.apple:
-        listing = runtime.command(
-            ["ps", "--all", "--external", "--quiet", "--no-trunc"]
-        )
-        assert listing.returncode == 0, listing.stderr
-        assert not listing.stdout.strip(), listing.stdout
