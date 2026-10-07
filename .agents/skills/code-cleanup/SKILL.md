@@ -54,8 +54,9 @@ family's mid tier (in Claude, Sonnet); the work is lookup.
   imports and what runs it outside Python imports: entry points, Dockerfiles and
   entrypoint scripts, CI workflows (`uvicorn` is only invoked from
   `reg_webapp/docker-entrypoint.sh`). For the frontend, `package.json` dependencies and
-  devDependencies against imports, package scripts, `vite.config.ts` and CI steps. A
-  dependency in one and not the other is a finding.
+  devDependencies against imports, package scripts, `vite.config.ts` and CI steps. The
+  workspace-root `[dependency-groups].dev` against tests, tooling, build configuration
+  and CI. A dependency in one and not the other is a finding.
 - **Dead code.** `uvx --from vulture==2.16 vulture <dir>/src --min-confidence 80`.
   Confirm each hit with `rg` across the workspace and the frontend before calling it
   dead.
