@@ -388,18 +388,13 @@ citation of a slug with no live row AND no successor edge still 404s.)
 reg_meta/DESIGN.md → Concept groups) ALONGSIDE the complete flat `children` list:
 grouped members appear in both, so the contract stays additive and group-unaware
 consumers keep working. The SPA folds client-side (`catalog.ts::foldGroupedRows`):
-grouped leaves hide under one expandable `ConceptGroupRow` (a month×rank value matrix
-for two facet axes, chips for faceted members — months/vintages in single-axis variable
-groups, curated labels in axis-less classification umbrellas — and a plain member list
-for edge groups), ungrouped leaves render as before, and the type-to-filter matches a
-group on its label/key OR any member's name/FQID (`groupMatchesFilter`) so member
-searches still surface the folded group. `ConceptGroupRow` takes an optional `onpick`
-that renders members as pick buttons instead of catalogHref links (#322) — a browse/pick
-mode switch, currently dormant since the #991 cart model retired the only `onpick`
-consumer (`CatalogPicker.svelte`; picking now happens from the catalog subject page's
-own picker, see § The picker — slice axis × time axis, which does not use
-`ConceptGroupRow`'s pick mode). `foldGroupedRows` tolerates a stale pre-`groups`
-edge-cached payload (#317) by degrading to the flat list.
+grouped leaves hide under one `ConceptGroupRow`, a link to the group's subject page
+(#673 for register groups, #756 for classification umbrellas) carrying the label and the
+distinct-member count; the members, their facets and picking live on that page.
+Ungrouped leaves render as before, and the type-to-filter matches a group on its
+label/key OR any member's name/FQID (`groupMatchesFilter`) so member searches still
+surface the folded group. `foldGroupedRows` tolerates a stale pre-`groups` edge-cached
+payload (#317) by degrading to the flat list.
 
 **`/lineage` shape.** Maps what reg_meta's `LineageEdge` carries (`consumer_state_id`,
 `source_state_id`, the validity intersection, `source_fqid`). A richer per-source-state
@@ -1367,10 +1362,10 @@ Load-bearing decisions downstream children (#806–#809) must not re-litigate:
   `clip-path: inset(50%)`, not the legacy `clip` property) is the second cross-component
   utility in `lib/ui/utilities.css`. It removes content from the visual layout while
   keeping it in the accessibility tree — unlike `display:none`, which severs both. Used
-  by `ConceptGroupNavigator`'s filter-pill checkboxes. `DataTable`'s stacked `<thead>`
-  is sr-only only under `@media (max-width: 48rem)`, so it cannot apply the
-  (unconditional) class and keeps a media-scoped inline copy held identical to the
-  utility — the sr-only analog of the `td::before` micro-label exception.
+  by `FilterChip`'s checkbox. `DataTable`'s stacked `<thead>` is sr-only only under
+  `@media (max-width: 48rem)`, so it cannot apply the (unconditional) class and keeps a
+  media-scoped inline copy held identical to the utility — the sr-only analog of the
+  `td::before` micro-label exception.
 - **`.cbox` global utility.** The app's checkbox face, in `lib/ui/utilities.css`. Every
   tick in the app is a real native `<input type="checkbox">` — the role, the keyboard
   control and the `:checked`/`:indeterminate` states are the platform's — and this class
@@ -1548,14 +1543,13 @@ kind:
   filter only when it discriminates (≥2 distinct values across all visible rows);
   single-value dimensions are invisible. Filtering is a client-side presentation lens: a
   hidden-but-selected row still commits, and the footer signals this. The filter logic
-  mirrors the #819 `ConceptGroupNavigator`: OR within a dimension, AND across. When the
-  group's graph is edge-bearing, small enough to draw cleanly, and maps every selectable
-  graph cell one-to-one to the visible picker rows, the same picker may switch to graph
-  / time-band mode instead of the list. The #908 dimension filter strip stays above
-  either render mode; active filters narrow graph cells through the same filtered row
-  model as the compact list. Leaf graph context with no selectable delivery-column row
-  still renders in graph mode as unavailable context cells, so no-column bindings keep
-  their succession/group context.
+  is OR within a dimension, AND across. When the group's graph is edge-bearing, small
+  enough to draw cleanly, and maps every selectable graph cell one-to-one to the visible
+  picker rows, the same picker may switch to graph / time-band mode instead of the list.
+  The #908 dimension filter strip stays above either render mode; active filters narrow
+  graph cells through the same filtered row model as the compact list. Leaf graph
+  context with no selectable delivery-column row still renders in graph mode as
+  unavailable context cells, so no-column bindings keep their succession/group context.
 
   Two **succession-collapse** folds ship in #902, both client-side and purely
   presentational:
