@@ -1,0 +1,14 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/steward/id": "global",
+      "/steward/catalog_period_span": null,
+      "/reg_meta/schema_version": "9.0.0",
+      "/reg_meta/import_date": "2026-06-01T00:00:00Z",
+      "/reg_meta/catalog_artifact_kind": "catalog",
+      "/reg_meta/steward": null,
+      "/reg_meta/default_scope": "reference"
+    }
+  }
+]

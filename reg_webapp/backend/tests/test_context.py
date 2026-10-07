@@ -1,51 +1,13 @@
-"""``GET /api/context`` smoke against the manifest-only fixture DB."""
+"""``GET /api/context``: the steward period span is capped to the import vintage.
+
+The catalog-kind and steward-kind context bodies are pinned by
+``conformance/cases/http_context``.
+"""
 
 from __future__ import annotations
 
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
-from reg_webapp.models import ContextResponse
-
-
-def test_context_returns_200_and_shape(
-    compatible_db, fixture_schema_version, fixture_import_date
-):
-    # TestClient drives the lifespan, opening the fixture DB read-only.
-    with TestClient(create_app()) as client:
-        resp = client.get("/api/context")
-    assert resp.status_code == 200
-
-    body = resp.json()
-    # The committed response_model shape — parses cleanly into the Pydantic model.
-    ctx = ContextResponse.model_validate(body)
-
-    assert ctx.steward.id == "global"
-    assert ctx.steward.name
-    assert ctx.steward.long_name
-
-    # The fixture's schema_version differs from reg_meta.SCHEMA_VERSION in the
-    # patch, so this proves /api/context surfaces the MANIFEST value.
-    assert ctx.reg_meta.schema_version == fixture_schema_version
-    assert ctx.reg_meta.import_date == fixture_import_date
-    assert ctx.reg_meta.catalog_artifact_kind == "catalog"
-    assert ctx.reg_meta.steward is None
-    assert ctx.reg_meta.default_scope == "reference"
-    assert len(ctx.reg_meta.generation_id) == 64
-    assert "catalog_drift_warnings" not in body
-
-    assert ctx.webapp.version
-    assert ctx.webapp.reg_meta_version
-    assert ctx.steward.catalog_period_span is None
-
-
-def test_context_uses_compiled_physical_periods(steward_db):
-    with TestClient(create_app()) as client:
-        body = client.get("/api/context").json()
-    assert body["reg_meta"]["catalog_artifact_kind"] == "steward"
-    assert body["reg_meta"]["steward"] == "swecov"
-    assert body["reg_meta"]["default_scope"] == "holdings"
-    assert body["steward"]["catalog_period_span"] == {"from": 2018, "to": 2019}
-    assert "catalog_drift_warnings" not in body
 
 
 def test_context_caps_physical_span_to_import_vintage(tmp_path, monkeypatch):

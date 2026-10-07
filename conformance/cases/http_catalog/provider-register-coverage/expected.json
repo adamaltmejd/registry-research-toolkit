@@ -1,0 +1,14 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/children/*/fqid": ["scb/example"],
+      "/children/0/coverage": {
+        "variable_count": 16,
+        "coverage_from": "2005-01-01",
+        "coverage_to": null,
+        "open_ended": true
+      }
+    }
+  }
+]
