@@ -9,10 +9,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from _curation_fixtures import write_lisa_errata, write_lisa_slug_dir
+from _curation_fixtures import write_lisa_errata
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta_build.curation_tree import load_classifications, load_register_files
 from reg_meta_build.scb_errata import (
-    load_scb_errata,
+    resolve_scb_errata,
     scoped_state_provenance,
 )
 
@@ -51,12 +52,7 @@ def _version(name: str) -> str:
     )
 
 
-@pytest.fixture
-def slug_dir(tmp_path: Path) -> Path:
-    return write_lisa_slug_dir(tmp_path / "fqid_slugs")
-
-
-def _load(tmp_path: Path, slug_dir: Path, body: str):
+def _load(tmp_path: Path, body: str):
     root = write_lisa_errata(tmp_path / "curation", body)
     classes = root / "classifications"
     classes.mkdir(exist_ok=True)
@@ -65,33 +61,37 @@ def _load(tmp_path: Path, slug_dir: Path, body: str):
         'name = "SSYK 96"\ncodes_file = "ssyk96.csv"\n',
         encoding="utf-8",
     )
-    return load_scb_errata(root, slug_dir)
+    # The build's own call (`curation_compile`): loaded registers, loaded books.
+    return resolve_scb_errata(
+        load_register_files(root),
+        classifications=frozenset(
+            item.classification.short_name for item in load_classifications(root)
+        ),
+    )
 
 
-def _refused(tmp_path: Path, slug_dir: Path, body: str):
+def _refused(tmp_path: Path, body: str):
     with pytest.raises(RegMetaError) as exc:
-        _load(tmp_path, slug_dir, body)
+        _load(tmp_path, body)
     assert exc.value.exit_code == EXIT_CONFIG
     assert exc.value.remediation
     return exc.value
 
 
 class TestVersionEntry:
-    def test_historical_year_parses(self, tmp_path: Path, slug_dir: Path) -> None:
-        (entry,) = _load(tmp_path, slug_dir, _version("2001")).versions
+    def test_historical_year_parses(self, tmp_path: Path) -> None:
+        (entry,) = _load(tmp_path, _version("2001")).versions
         assert entry.name == "2001"
 
-    def test_name_without_claimed_year_fails(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
-        err = _refused(tmp_path, slug_dir, _version("Äldre leverans"))
+    def test_name_without_claimed_year_fails(self, tmp_path: Path) -> None:
+        err = _refused(tmp_path, _version("Äldre leverans"))
         assert err.code == "scb_errata_version_year_unknown"
         assert "four-digit year" in err.remediation
 
 
 class TestDeliveredEntry:
     def test_native_variable_anchor_resolves_from_tracked_entry(
-        self, tmp_path: Path, slug_dir: Path
+        self, tmp_path: Path
     ) -> None:
         body = (
             "[[errata.delivered]]\n"
@@ -99,12 +99,10 @@ class TestDeliveredEntry:
             'versions = ["2010"]\nnative_variable_id = 39310\n'
             'evidence = "The steward holds it."\nnoted = "2026-09-12"\n'
         )
-        (entry,) = _load(tmp_path, slug_dir, body).delivered
+        (entry,) = _load(tmp_path, body).delivered
         assert entry.native_variable_id == 39310
 
-    def test_entry_naming_one_version_twice_fails(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
+    def test_entry_naming_one_version_twice_fails(self, tmp_path: Path) -> None:
         # A version named twice in one `versions` list would mint the same synthetic
         # row twice and die on the id collision mid-insert. Catch it at load, where
         # the maintainer gets a remediation instead of a primary-key error.
@@ -116,14 +114,14 @@ class TestDeliveredEntry:
             'evidence = "SWECOV holds the column in those years"\n'
             'noted = "2026-09-11"\n'
         )
-        err = _refused(tmp_path, slug_dir, body)
+        err = _refused(tmp_path, body)
         assert err.code == "scb_errata_invalid"
         assert "2010" in err.message
         assert "once" in err.remediation
 
     @pytest.mark.parametrize("second_version", ["2011", "2010"])
     def test_delivered_subsets_require_disjoint_versions(
-        self, tmp_path: Path, slug_dir: Path, second_version: str
+        self, tmp_path: Path, second_version: str
     ) -> None:
         first = (
             "[[errata.delivered]]\n"
@@ -139,11 +137,11 @@ class TestDeliveredEntry:
             'evidence = "Existing holdings assertion."\nnoted = "2026-09-12"\n'
         )
         if second_version == "2010":
-            err = _refused(tmp_path, slug_dir, first + second)
+            err = _refused(tmp_path, first + second)
             assert "duplicate delivered column" in err.message
             assert "2010" in err.message
         else:
-            entries = _load(tmp_path, slug_dir, first + second).delivered
+            entries = _load(tmp_path, first + second).delivered
             assert [e.versions for e in entries] == [("2010",), ("2011",)]
             assert all(e.native_variable_id == 39310 for e in entries)
             assert entries[0].provenance.startswith(
@@ -151,31 +149,27 @@ class TestDeliveredEntry:
             )
             assert entries[1].provenance.startswith("errata:omitted-column-in-version")
 
-    def test_evidence_and_default_class_form_provenance(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
+    def test_evidence_and_default_class_form_provenance(self, tmp_path: Path) -> None:
         body = (
             "[[errata.delivered]]\n"
             'variant = "individer-15plus"\ncolumn = "Kon"\n'
             'versions = ["2010"]\nevidence = "The steward holds it."\n'
             'noted = "2026-09-12"\n'
         )
-        (entry,) = _load(tmp_path, slug_dir, body).delivered
+        (entry,) = _load(tmp_path, body).delivered
         assert entry.native_variable_id is None
         assert entry.provenance == (
             "errata:omitted-column-in-version\nThe steward holds it."
         )
 
-    def test_upstream_value_is_the_correction_class(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
+    def test_upstream_value_is_the_correction_class(self, tmp_path: Path) -> None:
         body = (
             "[[errata.delivered]]\n"
             'variant = "individer-15plus"\ncolumn = "Kon"\n'
             'versions = ["2010"]\nevidence = "SCB left the name blank."\n'
             'noted = "2026-09-12"\nupstream = "blank-column-name-in-version"\n'
         )
-        (entry,) = _load(tmp_path, slug_dir, body).delivered
+        (entry,) = _load(tmp_path, body).delivered
         assert entry.provenance == (
             "errata:blank-column-name-in-version\nSCB left the name blank."
         )
@@ -184,7 +178,7 @@ class TestDeliveredEntry:
         "reserved", ["scoped-attributions", "overlapping-attributions"]
     )
     def test_builder_provenance_classes_are_reserved(
-        self, tmp_path: Path, slug_dir: Path, reserved: str
+        self, tmp_path: Path, reserved: str
     ) -> None:
         body = (
             "[[errata.delivered]]\n"
@@ -192,23 +186,21 @@ class TestDeliveredEntry:
             'versions = ["2010"]\nevidence = "The steward holds it."\n'
             f'noted = "2026-09-12"\nupstream = "{reserved}"\n'
         )
-        err = _refused(tmp_path, slug_dir, body)
+        err = _refused(tmp_path, body)
         assert "reserved" in err.message
 
-    def test_provenance_class_rejects_line_breaks(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
+    def test_provenance_class_rejects_line_breaks(self, tmp_path: Path) -> None:
         body = (
             "[[errata.delivered]]\n"
             'variant = "individer-15plus"\ncolumn = "Kon"\n'
             'versions = ["2010"]\nevidence = "The steward holds it."\n'
             'noted = "2026-09-12"\nupstream = """specific\ncorrection"""\n'
         )
-        err = _refused(tmp_path, slug_dir, body)
+        err = _refused(tmp_path, body)
         assert "line breaks" in err.message
 
     def test_multiline_evidence_round_trips_loader_and_scoped_formatter(
-        self, tmp_path: Path, slug_dir: Path
+        self, tmp_path: Path
     ) -> None:
         body = (
             "[[errata.delivered]]\n"
@@ -216,7 +208,7 @@ class TestDeliveredEntry:
             'versions = ["2010"]\nevidence = """First paragraph.\n\n'
             'Second paragraph."""\nnoted = "2026-09-12"\n'
         )
-        (entry,) = _load(tmp_path, slug_dir, body).delivered
+        (entry,) = _load(tmp_path, body).delivered
         assert entry.provenance == (
             "errata:omitted-column-in-version\nFirst paragraph.\n\nSecond paragraph."
         )
@@ -229,21 +221,14 @@ class TestDeliveredEntry:
 
 
 class TestColumnEntry:
-    def test_curated_identifier_is_retained(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
+    def test_curated_identifier_is_retained(self, tmp_path: Path) -> None:
         (entry,) = _load(
-            tmp_path, slug_dir, _toml(source='"steward-holdings"', is_identifier="true")
+            tmp_path, _toml(source='"steward-holdings"', is_identifier="true")
         ).columns
         assert entry.is_identifier is True
 
-    def test_absent_file_is_empty(self, slug_dir: Path) -> None:
-        errata = load_scb_errata(None, slug_dir)
-        assert not errata
-        assert errata.columns == ()
-
-    def test_full_entry_parses(self, tmp_path: Path, slug_dir: Path) -> None:
-        (entry,) = _load(tmp_path, slug_dir, _toml()).columns
+    def test_full_entry_parses(self, tmp_path: Path) -> None:
+        (entry,) = _load(tmp_path, _toml()).columns
         assert (entry.register_id, entry.register_variant_id) == (34, 153)
         assert entry.column == "Ssyk4_J16"
         assert entry.name == "Yrke enligt SSYK 96"
@@ -260,79 +245,57 @@ class TestColumnEntry:
         assert entry.classification is None
         assert (entry.is_identifier, entry.is_sensitive) == (False, False)
 
-    def test_all_versions_parses_as_none(self, tmp_path: Path, slug_dir: Path) -> None:
-        (entry,) = _load(
-            tmp_path, slug_dir, _toml(versions=None, all_versions="true")
-        ).columns
+    def test_all_versions_parses_as_none(self, tmp_path: Path) -> None:
+        (entry,) = _load(tmp_path, _toml(versions=None, all_versions="true")).columns
         assert entry.versions is None
 
-    def test_holdings_period_parses_as_raw_range(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
+    def test_holdings_period_parses_as_raw_range(self, tmp_path: Path) -> None:
         (entry,) = _load(
-            tmp_path, slug_dir, _toml(versions=None, holdings_period='"2002-2020"')
+            tmp_path, _toml(versions=None, holdings_period='"2002-2020"')
         ).columns
         assert entry.versions is None
         assert entry.holdings_period == "2002-2020"
 
-    def test_holdings_period_full_dates_parse(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
+    def test_holdings_period_full_dates_parse(self, tmp_path: Path) -> None:
         (entry,) = _load(
             tmp_path,
-            slug_dir,
             _toml(versions=None, holdings_period='"2002-03-01/2020-11-30"'),
         ).columns
         assert entry.holdings_period == "2002-03-01/2020-11-30"
 
-    def test_holdings_period_reversed_fails(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
-        err = _refused(
-            tmp_path, slug_dir, _toml(versions=None, holdings_period='"2020-2002"')
-        )
+    def test_holdings_period_reversed_fails(self, tmp_path: Path) -> None:
+        err = _refused(tmp_path, _toml(versions=None, holdings_period='"2020-2002"'))
         assert "before it starts" in err.message
 
-    def test_holdings_period_bad_shape_fails(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
-        err = _refused(
-            tmp_path, slug_dir, _toml(versions=None, holdings_period='"2002"')
-        )
+    def test_holdings_period_bad_shape_fails(self, tmp_path: Path) -> None:
+        err = _refused(tmp_path, _toml(versions=None, holdings_period='"2002"'))
         assert "YYYY-YYYY" in err.message
 
-    def test_holdings_period_with_versions_fails(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
-        err = _refused(tmp_path, slug_dir, _toml(holdings_period='"2002-2020"'))
+    def test_holdings_period_with_versions_fails(self, tmp_path: Path) -> None:
+        err = _refused(tmp_path, _toml(holdings_period='"2002-2020"'))
         assert "exactly one" in err.message
 
-    def test_holdings_period_with_all_versions_fails(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
+    def test_holdings_period_with_all_versions_fails(self, tmp_path: Path) -> None:
         err = _refused(
             tmp_path,
-            slug_dir,
             _toml(versions=None, all_versions="true", holdings_period='"2002-2020"'),
         )
         assert "exactly one" in err.message
 
     def test_holdings_period_with_false_all_versions_fails(
-        self, tmp_path: Path, slug_dir: Path
+        self, tmp_path: Path
     ) -> None:
         # Key presence decides: a second placement key fails fast even when its
         # value claims nothing.
         err = _refused(
             tmp_path,
-            slug_dir,
             _toml(versions=None, all_versions="false", holdings_period='"2002-2020"'),
         )
         assert "exactly one" in err.message
 
-    def test_optional_identity_parses(self, tmp_path: Path, slug_dir: Path) -> None:
+    def test_optional_identity_parses(self, tmp_path: Path) -> None:
         (entry,) = _load(
             tmp_path,
-            slug_dir,
             _toml(data_type='"text"', is_identifier="true", is_sensitive="true"),
         ).columns
         assert entry.data_type == "text"
@@ -350,113 +313,77 @@ class TestColumnEntry:
             "noted",
         ],
     )
-    def test_required_key_missing_fails(
-        self, tmp_path: Path, slug_dir: Path, key: str
-    ) -> None:
-        assert _refused(tmp_path, slug_dir, _toml(**{key: None})).code
+    def test_required_key_missing_fails(self, tmp_path: Path, key: str) -> None:
+        assert _refused(tmp_path, _toml(**{key: None})).code
 
-    def test_unknown_key_fails(self, tmp_path: Path, slug_dir: Path) -> None:
-        err = _refused(tmp_path, slug_dir, _toml(valid_from='"2010-01-01"'))
+    def test_unknown_key_fails(self, tmp_path: Path) -> None:
+        err = _refused(tmp_path, _toml(valid_from='"2010-01-01"'))
         assert "valid_from" in err.message
 
-    def test_versions_and_all_versions_together_fail(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
-        err = _refused(tmp_path, slug_dir, _toml(all_versions="true"))
+    def test_versions_and_all_versions_together_fail(self, tmp_path: Path) -> None:
+        err = _refused(tmp_path, _toml(all_versions="true"))
         assert "exactly one" in err.message
 
-    def test_neither_versions_nor_all_versions_fails(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
-        err = _refused(tmp_path, slug_dir, _toml(versions=None))
+    def test_neither_versions_nor_all_versions_fails(self, tmp_path: Path) -> None:
+        err = _refused(tmp_path, _toml(versions=None))
         assert "exactly one" in err.message
 
-    def test_repeated_version_fails(self, tmp_path: Path, slug_dir: Path) -> None:
-        err = _refused(tmp_path, slug_dir, _toml(versions='["2010", "2010"]'))
+    def test_repeated_version_fails(self, tmp_path: Path) -> None:
+        err = _refused(tmp_path, _toml(versions='["2010", "2010"]'))
         assert "repeats" in err.message
 
-    def test_unknown_source_fails(self, tmp_path: Path, slug_dir: Path) -> None:
-        err = _refused(tmp_path, slug_dir, _toml(source='"a-hunch"'))
+    def test_unknown_source_fails(self, tmp_path: Path) -> None:
+        err = _refused(tmp_path, _toml(source='"a-hunch"'))
         assert "a-hunch" in err.message
 
-    def test_unknown_data_type_fails(self, tmp_path: Path, slug_dir: Path) -> None:
-        err = _refused(tmp_path, slug_dir, _toml(data_type='"txt"'))
+    def test_unknown_data_type_fails(self, tmp_path: Path) -> None:
+        err = _refused(tmp_path, _toml(data_type='"txt"'))
         assert "txt" in err.message
 
-    def test_entry_cannot_override_its_register_file(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
-        err = _refused(tmp_path, slug_dir, _toml(register='"sos/lisa"'))
+    def test_entry_cannot_override_its_register_file(self, tmp_path: Path) -> None:
+        err = _refused(tmp_path, _toml(register='"sos/lisa"'))
         assert err.exit_code == EXIT_CONFIG
         assert "register" in err.message
 
-    def test_uncurated_variant_fails(self, tmp_path: Path, slug_dir: Path) -> None:
-        err = _refused(tmp_path, slug_dir, _toml(variant='"foretag"'))
+    def test_uncurated_variant_fails(self, tmp_path: Path) -> None:
+        err = _refused(tmp_path, _toml(variant='"foretag"'))
         assert err.code == "scb_errata_unknown_variant"
 
-    def test_non_bool_flag_fails(self, tmp_path: Path, slug_dir: Path) -> None:
-        assert _refused(tmp_path, slug_dir, _toml(is_identifier='"yes"')).code
+    def test_non_bool_flag_fails(self, tmp_path: Path) -> None:
+        assert _refused(tmp_path, _toml(is_identifier='"yes"')).code
 
-    def test_declared_classification_passes(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
-        (entry,) = _load(tmp_path, slug_dir, _toml(classification='"SSYK96"')).columns
+    def test_declared_classification_passes(self, tmp_path: Path) -> None:
+        (entry,) = _load(tmp_path, _toml(classification='"SSYK96"')).columns
         assert entry.classification == "SSYK96"
 
-    def test_classification_added_only_to_candidate_tree_passes(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
-        root = write_lisa_errata(
-            tmp_path / "candidate" / "curation", _toml(classification='"NEW-BOOK"')
-        )
-        classes = root / "classifications"
-        classes.mkdir()
-        (classes / "NEW-BOOK.toml").write_text(
-            '[classification]\nshort_name = "NEW-BOOK"\nslug = "new-book"\n'
-            'name = "New book"\ncodes_file = "new-book.csv"\n',
-            encoding="utf-8",
-        )
-        (entry,) = load_scb_errata(root, slug_dir).columns
-        assert entry.classification == "NEW-BOOK"
-
-    def test_undeclared_classification_fails(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
+    def test_undeclared_classification_fails(self, tmp_path: Path) -> None:
         # The candidate feed drops an unknown short_name with no row and no
         # error, so a typo would ship an untagged state.
-        err = _refused(tmp_path, slug_dir, _toml(classification='"SSYK69"'))
+        err = _refused(tmp_path, _toml(classification='"SSYK69"'))
         assert "SSYK69" in err.message
         assert "registers/scb/lisa.toml" in err.message
         assert "errata.column" in err.message and "entry 1" in err.message
 
-    def test_duplicate_column_on_one_variant_fails(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
-        err = _refused(tmp_path, slug_dir, _toml() + "\n" + _toml())
+    def test_duplicate_column_on_one_variant_fails(self, tmp_path: Path) -> None:
+        err = _refused(tmp_path, _toml() + "\n" + _toml())
         assert "duplicate" in err.message
 
-    def test_a_column_is_delivered_or_minted_never_both(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
+    def test_a_column_is_delivered_or_minted_never_both(self, tmp_path: Path) -> None:
         delivered = (
             '[[errata.delivered]]\nvariant = "individer-15plus"\n'
             'column = "Ssyk4_J16"\nversions = ["2010"]\n'
             'evidence = "holdings"\nnoted = "2026-09-12"\n'
         )
-        err = _refused(tmp_path, slug_dir, delivered + "\n" + _toml())
+        err = _refused(tmp_path, delivered + "\n" + _toml())
         assert "[[errata.delivered]]" in err.remediation
 
-    def test_same_column_on_two_variants_is_one_variable(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
+    def test_same_column_on_two_variants_is_one_variable(self, tmp_path: Path) -> None:
         both = _toml() + "\n" + _toml(variant='"individer-16plus"')
-        first, second = _load(tmp_path, slug_dir, both).columns
+        first, second = _load(tmp_path, both).columns
         assert first.key == second.key
         assert first.register_variant_id != second.register_variant_id
 
-    def test_two_variants_may_have_different_evidence(
-        self, tmp_path: Path, slug_dir: Path
-    ) -> None:
+    def test_two_variants_may_have_different_evidence(self, tmp_path: Path) -> None:
         both = (
             _toml()
             + "\n"
@@ -464,17 +391,17 @@ class TestColumnEntry:
                 variant='"individer-16plus"', evidence='"The second holdings list."'
             )
         )
-        first, second = _load(tmp_path, slug_dir, both).columns
+        first, second = _load(tmp_path, both).columns
         assert first.key == second.key
         assert first.provenance != second.provenance
 
     def test_two_variants_disagreeing_about_the_variable_fail(
-        self, tmp_path: Path, slug_dir: Path
+        self, tmp_path: Path
     ) -> None:
         both = (
             _toml()
             + "\n"
             + _toml(variant='"individer-16plus"', name='"Something else"')
         )
-        err = _refused(tmp_path, slug_dir, both)
+        err = _refused(tmp_path, both)
         assert "different variable" in err.message

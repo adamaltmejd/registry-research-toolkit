@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "variable_state: 9999-prefixed valid_to that is not exactly '9999-12-31': '9999-06-30'"
+  ]
+}

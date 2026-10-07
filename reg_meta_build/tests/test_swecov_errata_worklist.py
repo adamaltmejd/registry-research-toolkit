@@ -160,7 +160,7 @@ def test_errata_worklist_splits_version_missing_from_column_missing(
         )
     )
 
-    # Complete entries, not fragments: every key `load_scb_errata` requires is
+    # Complete entries, not fragments: every key `resolve_scb_errata` requires is
     # present, with the curator's own two as TODO placeholders.
     todo = {
         "evidence": "TODO: the evidence that SCB delivered this row",

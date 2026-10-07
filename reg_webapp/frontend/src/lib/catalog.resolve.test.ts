@@ -2,7 +2,7 @@
 // the single source of truth for the subject-page staged picker's resolve-once-at-
 // pick-time adds (the #991 write-once model). Mocks `./api`'s getCatalogNode so the
 // resolve branches (period-unset / no-states / derived / ambiguous) are covered
-// without a backend. Kept out of the PURE catalog.test.ts so that file needs no
+// without a backend. Kept out of the PURE catalog.*.test.ts files so they need no
 // module mock.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { StatesResponse, VariableStateModel } from "./api";

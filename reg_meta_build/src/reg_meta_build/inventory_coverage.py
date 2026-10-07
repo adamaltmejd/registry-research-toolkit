@@ -105,7 +105,7 @@ _PairIds = tuple[int, int]
 _Coord = tuple[str, str]
 
 # The curator's own two fields. Emitted as real TOML values, not comments, so a
-# stanza is COMPLETE the moment it is pasted — every key `load_scb_errata`
+# stanza is COMPLETE the moment it is pasted — every key `resolve_scb_errata`
 # requires is present. `noted` is the one placeholder the loader refuses (it
 # demands a canonical `YYYY-MM-DD`), which is the point: an undated entry, and so
 # an uncurated one, cannot reach a build.
@@ -382,7 +382,7 @@ def version_candidates(
     """The `[[errata.version]]` entries the `scb` misses in `misses` need: one `(register,
     variant, Registerversionnamn)` per version the catalog does not know at all,
     deduped and ordered. Two columns omitted from the same undocumented edition need
-    the version minted ONCE — `load_scb_errata` refuses a duplicate `(variant,
+    the version minted ONCE — `resolve_scb_errata` refuses a duplicate `(variant,
     name)`. A miss on another provider contributes nothing: it is not errata.
     """
     return tuple(
@@ -402,7 +402,7 @@ def errata_stanzas(misses: Sequence[CoverageMiss]) -> str:
     every independently missing `[[errata.version]]`, then one `[[errata.delivered]]` for each
     SCB-export variable with a source row the loader can clone.
 
-    Valid, complete TOML — it parses, and `load_scb_errata` accepts its shape but
+    Valid, complete TOML — it parses, and `resolve_scb_errata` accepts its shape but
     for the placeholder `noted`. A candidate all the same, NOT a drop-in: only the
     maintainer can write the `evidence` that makes an entry an upstream-error
     record rather than a window override, and the date it was found.
@@ -857,7 +857,7 @@ def _stanza(
     fields: tuple[tuple[str, str], ...],
     evidence: str = _TODO_EVIDENCE,
 ) -> str:
-    """One entry as valid, complete TOML — every key `load_scb_errata` requires,
+    """One entry as valid, complete TOML — every key `resolve_scb_errata` requires,
     with the curator's own two as TODO placeholders."""
     body = "".join(f"{key} = {value}\n" for key, value in fields)
     return (

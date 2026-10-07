@@ -1,0 +1,9 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "panel_entity_key 'ghost' resolves to no variable.slug"
+  ],
+  "failures_absent": [
+    "'kon' resolves to no variable.slug"
+  ]
+}

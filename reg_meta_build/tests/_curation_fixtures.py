@@ -9,24 +9,14 @@ if TYPE_CHECKING:
 
 
 def write_lisa_errata(root: Path, body: str) -> Path:
-    """Write an errata fragment unchanged into LISA's strict register file."""
+    """Write an errata fragment unchanged into LISA's strict register file, beside
+    the two individual-frame variants its entries resolve against."""
     path = root / "registers" / "scb" / "lisa.toml"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "34"\n\n' + body,
-        encoding="utf-8",
-    )
-    return root
-
-
-def write_lisa_slug_dir(root: Path) -> Path:
-    """Write a curated `scb.toml` carrying the two LISA individual-frame variants
-    errata entries resolve against (`register` 34, variants 153 / 1335)."""
-    root.mkdir(parents=True)
-    (root / "scb.toml").write_text(
-        '[register."34"]\nslug = "lisa"\n'
-        '[register_variant."34.153"]\nslug = "individer-15plus"\n'
-        '[register_variant."34.1335"]\nslug = "individer-16plus"\n',
+        '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "34"\n\n'
+        '[[variant]]\nnative_id = "34.153"\nslug = "individer-15plus"\n\n'
+        '[[variant]]\nnative_id = "34.1335"\nslug = "individer-16plus"\n\n' + body,
         encoding="utf-8",
     )
     return root

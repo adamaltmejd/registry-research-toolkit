@@ -1360,7 +1360,7 @@ function latestRepresentativeState<S extends { state_id: string }>(
  * null bound (the graph's unbounded side) is normalized to the `0001`/`9999`
  * sentinel `formatWindow`/`rowWirePeriod` already understand, so a graph-sourced
  * row renders identically to a leaf-sourced one. Pure — unit-tested in
- * catalog.test.ts. */
+ * catalog.picker.test.ts. */
 export function pickerRepresentations(
   states: readonly PickerStateInput[],
 ): PickerRepresentation[] {
@@ -1653,7 +1653,7 @@ export function deliveryColumnRows(
  *     (an empty `?value_set_version=` can't ride in the URL).
  * Either modifier `null` is a no-op on that axis; BOTH null returns the states
  * unchanged (the full-history default — behavior is unchanged when no modifier is
- * active). Pure — unit-tested in catalog.test.ts. Generic over the shared
+ * active). Pure — unit-tested in catalog.picker.test.ts. Generic over the shared
  * `PickerStateInput` shape so it composes directly before `pickerRepresentations`. */
 export function narrowStatesByModifier<
   S extends Pick<PickerStateInput, "variant" | "value_set_version_label">,
@@ -1687,8 +1687,9 @@ export function narrowStatesByModifier<
 // VARYING (>1), HOIST the constants to the band header (rendered once as quiet
 // context), and show only the VARYING dimensions on each row. Rows within one
 // variable share the same dim SET (consistent); the shape may differ across
-// variables (intended). Pure — unit-tested in catalog.test.ts. The selection key
-// and commit payload are unchanged: this is DISPLAY only.
+// variables (intended). Pure; the rendered rows are pinned in
+// BindingLeafView.rows.browser.test.ts. The selection key and commit payload are
+// unchanged: this is DISPLAY only.
 
 /** A row's adaptive display projection: the prominent `primary` label (mono when
  * it is the delivery column — the picker renders a mono primary as a COLUMN CHIP),
@@ -2030,7 +2031,8 @@ export interface PickerFilterOptions {
  * the declared facet axes first (curator-ordered via `axes`), then `variant`, then
  * `coding`. Each is emitted ONLY when it discriminates — ≥2 distinct values across
  * the bands' rows — so a single-population, single-coding, single-axis-value group
- * surfaces NO filter (the controls collapse). Pure — unit-tested in catalog.test.ts. */
+ * surfaces NO filter (the controls collapse). Pure — unit-tested in
+ * catalog.picker-filters.test.ts. */
 export function pickerFilterDimensions(
   bands: readonly PickerBandFacets[],
   axes: readonly GroupAxisModel[],
@@ -2179,7 +2181,8 @@ export function pickerRowPasses(
 // row adaptiveness: classify each identity dimension as CONSTANT (≤1 distinct
 // value) or VARYING, HOIST the constants (the name is already the page <h2>; the
 // prefix is in the breadcrumb), and lead each band with its DISTINGUISHING
-// identity. Pure — unit-tested in catalog.test.ts.
+// identity. Pure; the rendered bands are pinned in ConceptGroupView.browser.test.ts
+// (adaptive variable identity).
 
 /** The identity dimensions of ONE member band — the inputs to `bandLabeling`. The
  * `distinguisher` is the band's natural technical differentiator (a SINGLE-COLUMN

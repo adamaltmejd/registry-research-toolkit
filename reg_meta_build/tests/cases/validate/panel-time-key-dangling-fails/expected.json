@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "panel_time_key 'nonexistent_slug' resolves to no variable.slug in that register"
+  ]
+}

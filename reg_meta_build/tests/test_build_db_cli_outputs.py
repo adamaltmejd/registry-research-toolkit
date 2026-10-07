@@ -328,7 +328,7 @@ def test_outputs_cannot_overlap_slug_tree(
 def test_prepared_pins_are_checked(
     catalog: CatalogFixture, tmp_path: Path, local: bool
 ) -> None:
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="prepared input commit pin mismatch"):
         if local:
             check_curation(
                 catalog.prepared,
@@ -374,7 +374,11 @@ def test_strict_corpus_failure_preserves_previous_catalog(
     output = tmp_path / "active.db"
     output.write_bytes(b"previous catalog")
     report = tmp_path / "report"
-    with pytest.raises(ValueError, match="resolved catalog validation failed"):
+    # A strict build validates against the corpus floors, which the synthetic
+    # sources cannot meet.
+    with pytest.raises(
+        ValueError, match="resolved catalog validation failed.*corpus build"
+    ):
         catalog.build(output, report)
     summary = json.loads((report / "summary.json").read_text(encoding="utf-8"))
     assert summary["status"] == "engineering_failure"

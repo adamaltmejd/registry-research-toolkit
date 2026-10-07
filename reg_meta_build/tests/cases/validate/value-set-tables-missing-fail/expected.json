@@ -1,0 +1,7 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "value_set missing",
+    "value_set_member missing"
+  ]
+}
