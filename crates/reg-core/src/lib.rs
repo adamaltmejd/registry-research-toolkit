@@ -1,20 +1,23 @@
 //! `reg-core`: contracts shared by the Rust runtime and, through bindings, the build.
 //!
-//! This crate holds the text folds of `RUST_RUNTIME_SPEC.md` section 5. Each fold
-//! matches today's Python reader (`reg_meta`) byte for byte, except on characters
-//! whose Unicode data changed after Python's UCD version.
+//! This crate holds the FQID and period grammars ([`Fqid`], [`Period`]) and the text
+//! folds of `RUST_RUNTIME_SPEC.md` section 5. Each fold matches today's Python reader
+//! (`reg_meta`) byte for byte, except on characters whose Unicode data changed after
+//! Python's UCD version.
 //!
 //! All Unicode data is on one version, [`UNICODE_VERSION`] (17.0.0): Rust std's
 //! `to_lowercase` and `White_Space`, `unicode-normalization` 0.1.25 (NFKD, canonical
 //! combining class), `unicode-properties` 0.1.4 (general category) and the generated
 //! case-folding table.
 //!
-//! The oracle is `conformance/cases/folds/`.
+//! The oracles are `conformance/cases/folds/` and `conformance/cases/grammar/`.
 
 mod case_folding;
+mod grammar;
 
 use case_folding::CASE_FOLDING;
 pub use case_folding::UNICODE_VERSION;
+pub use grammar::{Fqid, GrammarError, Period, PeriodToken, Term};
 use unicode_normalization::UnicodeNormalization;
 use unicode_normalization::char::canonical_combining_class;
 use unicode_properties::{GeneralCategoryGroup, UnicodeGeneralCategory};
