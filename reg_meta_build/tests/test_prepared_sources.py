@@ -351,6 +351,22 @@ def test_native_family_register_filter_preserves_grouping_and_order(
     assert (
         tuple(
             filtered.iter_native_families(
+                revision.dataset, {first_register}, families=(needed,)
+            )
+        )
+        == selected_native
+    )
+    assert (
+        tuple(
+            filtered.iter_native_families(
+                revision.dataset, families=(needed[:-1] + ("absent",),)
+            )
+        )
+        == ()
+    )
+    assert (
+        tuple(
+            filtered.iter_native_families(
                 revision.dataset, {first_register}, select_family=set().__contains__
             )
         )

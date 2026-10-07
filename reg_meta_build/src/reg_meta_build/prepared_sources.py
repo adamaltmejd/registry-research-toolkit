@@ -953,6 +953,20 @@ def _register_payloads(
             yield provider, register_payload, register
 
 
+def _family_payload_id(conn: sqlite3.Connection, family: NativeKey) -> int | None:
+    """Resolve an exact native-family key through the writer's content key."""
+    body = _json(family)
+    row = conn.execute(
+        "SELECT id, body FROM payload WHERE kind = 'native_family' AND digest = ?",
+        (hashlib.sha256(body.encode("utf-8")).digest(),),
+    ).fetchone()
+    if row is None:
+        return None
+    if row["body"] != body:
+        raise PreparedSourceError("prepared payload content-key collision")
+    return row["id"]
+
+
 @dataclass(frozen=True)
 class PreparedSourceRecords:
     """A reusable accepted reader; records are decoded only when iterated or selected."""
@@ -1055,6 +1069,8 @@ class PreparedSourceRecords:
         source: str,
         registers: Collection[NativeKey | None] | None = None,
         select_family: Callable[[NativeKey], bool] | None = None,
+        *,
+        families: Collection[NativeKey] | None = None,
     ) -> Iterator[tuple[NativeKey, tuple[SourceRecord, ...]]]:
         """Decode one source-native family at a time using the cold-prepared index.
 
@@ -1064,16 +1080,31 @@ class PreparedSourceRecords:
         not a declaration that each group is one catalog variable. Duplicate rows
         keep source order. Families retain payload-ID order, and records within each
         family retain occurrence order. Given `registers`, SQL excludes other
-        registers before any family records are decoded. Records without a complete
-        family are available separately.
+        registers before any family records are decoded; given exact `families`,
+        SQL seeks only those families instead of scanning the source. Records
+        without a complete family are available separately.
         """
         with _decoded_database(self.root, self.manifest) as (conn, payload):
             join = self._selected_register_join(conn, payload, source, registers)
+            selected = ""
+            parameters: tuple[Any, ...] = (source,)
+            if families is not None:
+                ids = tuple(
+                    sorted(
+                        family_id
+                        for family in families
+                        if (family_id := _family_payload_id(conn, family)) is not None
+                    )
+                )
+                selected = (
+                    f"AND occurrence.family_payload IN ({','.join('?' * len(ids))}) "
+                )
+                parameters += ids
             rows = conn.execute(
                 f"SELECT occurrence.* FROM occurrence {join}"
                 "WHERE occurrence.source=? AND occurrence.family_payload IS NOT NULL "
-                "ORDER BY family_payload, ordinal",
-                (source,),
+                f"{selected}ORDER BY family_payload, ordinal",
+                parameters,
             )
             for family, members in groupby(rows, key=lambda row: row["family_payload"]):
                 family_key = payload(family, "native_family")

@@ -2203,7 +2203,7 @@ def _partition_originals(
         prepared.records.iter_native_families(
             source,
             (native[:5],),
-            select_family=lambda key: key == native,
+            families=(native,),
         )
     )
     if len(families) != 1 or families[0][0] != native:
