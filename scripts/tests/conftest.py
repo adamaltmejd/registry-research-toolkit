@@ -38,20 +38,37 @@ def load_scripts_module(name: str) -> ModuleType:
     return module
 
 
+def _repo_files(pathspec: str) -> list[Path]:
+    """Tracked and unignored files matching a git pathspec (`*` crosses `/`)."""
+    root = _SCRIPTS.parent
+    names = subprocess.check_output(
+        [
+            "git",
+            "ls-files",
+            "--cached",
+            "--others",
+            "--exclude-standard",
+            "--",
+            pathspec,
+        ],
+        cwd=root,
+        text=True,
+    ).splitlines()
+    return sorted({root / name for name in names if (root / name).is_file()})
+
+
 @pytest.fixture(scope="session")
 def python_test_files() -> list[Path]:
     """Discover tracked and unignored Python test/support files once per scan."""
     root = _SCRIPTS.parent
-    names = subprocess.check_output(
-        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--", "*.py"],
-        cwd=root,
-        text=True,
-    ).splitlines()
-    return sorted(
-        {
-            root / name
-            for name in names
-            if ("tests" in Path(name).parts or "conformance" in Path(name).parts)
-            and (root / name).is_file()
-        }
-    )
+    return [
+        path
+        for path in _repo_files("*.py")
+        if {"tests", "conformance"} & set(path.relative_to(root).parts)
+    ]
+
+
+@pytest.fixture(scope="session")
+def frontend_test_files() -> list[Path]:
+    """Discover tracked and unignored Vitest files (unit and browser projects)."""
+    return _repo_files("reg_webapp/frontend/src/*.test.ts")
