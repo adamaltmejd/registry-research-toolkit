@@ -640,6 +640,29 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     order_p.add_argument("project", help="Path to the project_data.json to order.")
 
+    validate_p = sub.add_parser(
+        "validate",
+        help="Validate a project_data.json against this catalog DB.",
+        description=(
+            "Validate a project against this compiled catalog DB — the SAME\n"
+            "validator the webapp serves, so both emit byte-identical findings\n"
+            "(REFACTOR_SPEC.md §12).\n\n"
+            "Writes the findings JSON ({ok, issues}) to stdout, or to --output.\n"
+            "Exits 0 when the project has no error-level issue and 17 when it\n"
+            "has one (the findings are written either way). An unreadable or\n"
+            "malformed project file, a missing catalog or another catalog\n"
+            "configuration error exits 10. A valid project is resolvable, not\n"
+            "proven orderable: `reg-meta order` still gates physical coverage.\n\n"
+            "Examples:\n"
+            "  reg-meta validate project_data.json\n"
+            "  reg-meta validate project_data.json --output findings.json"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    validate_p.add_argument(
+        "project", help="Path to the project_data.json to validate."
+    )
+
     # --- doc command family ---
     doc_p = sub.add_parser(
         "docs",
@@ -832,6 +855,40 @@ def _cmd_order(args: argparse.Namespace) -> int:
         )
     write_to(result.manifest.to_json(), args.output, truncate=True)
     return EXIT_SUCCESS
+
+
+def _cmd_validate(args: argparse.Namespace) -> int:
+    """`reg-meta validate` — the CLI adapter over `semantic.validate_project`.
+
+    A THIN adapter (§12), the counterpart of `_cmd_order`: the composition,
+    every issue and the serialization belong to `semantic.py`, so this function
+    only moves bytes. It writes `semantic.validation_json` VERBATIM (not the CLI
+    envelope, and not through `--format`) — byte-identity with the FastAPI
+    adapter is the contract.
+
+    A failing project is the command's RESULT, not an error, so its findings
+    are written like a passing one's; the exit code says which: 0 no
+    error-level issue, 17 (`EXIT_NO_MATCH`, the blocked-order code) at least
+    one. An unreadable or malformed project file, a missing catalog or another
+    catalog configuration error is 10 (`EXIT_CONFIG`) through the envelope.
+    The artifact is opened only if the DB-free layers pass, as on the web."""
+    from contextlib import closing
+
+    from .db import require_db_file
+    from .order import read_project
+    from .semantic import validate_project, validation_json
+
+    # The catalog is resolved and its file required up front, so a usage error
+    # or a missing catalog fails fast whatever the project; it is OPENED only
+    # if the DB-free layers pass.
+    db_path = db_path_from_args(args.db, catalog=args.catalog)
+    require_db_file(db_path)
+    raw = read_project(Path(args.project))
+    result = validate_project(
+        raw, lambda: closing(open_db(db_path, catalog=_selected_name(args)))
+    )
+    write_to(validation_json(result), args.output, truncate=True)
+    return EXIT_SUCCESS if result.ok else EXIT_NO_MATCH
 
 
 # ---------------------------------------------------------------------------
@@ -3299,13 +3356,14 @@ def run(argv: list[str] | None = None) -> int:
             getattr(args, "output", None),
         )
 
-    # `order` writes the canonical manifest bytes (`OrderManifest.to_json`)
-    # verbatim, so it bypasses the envelope/`--format` pipeline below —
-    # byte-identity with the FastAPI adapter is the §12 contract. Errors still
-    # render through the shared envelope + exit codes.
-    if args.command == "order":
+    # `order` and `validate` write their canonical bytes
+    # (`OrderManifest.to_json`, `semantic.validation_json`) verbatim, so they
+    # bypass the envelope/`--format` pipeline below — byte-identity with the
+    # FastAPI adapters is the §12 contract. Errors still render through the
+    # shared envelope + exit codes.
+    if args.command in ("order", "validate"):
         try:
-            return _cmd_order(args)
+            return _cmd_order(args) if args.command == "order" else _cmd_validate(args)
         except Exception as exc:  # noqa: BLE001 — CLI boundary: envelope + stable exit code
             return handle_cli_exception(exc, getattr(args, "output", None))
 

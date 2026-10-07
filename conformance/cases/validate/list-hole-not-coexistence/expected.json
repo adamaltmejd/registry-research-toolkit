@@ -1,0 +1,24 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/ok": false,
+      "/issues": [
+        {
+          "code": "binding_state_drifts_within_period",
+          "level": "info",
+          "message": "column 'scb/example/overlapp' spans 2 states across a transition within period 2010,2020",
+          "path": "/sources/0/bindings/0/variable",
+          "successor_fqid": null
+        },
+        {
+          "code": "binding_value_set_version_ambiguous",
+          "level": "error",
+          "message": "column 'scb/example/overlapp' resolves to co-existing representations ['Overlapp', 'OverlappNy'] at scb/example/annual; pin one with `representation` — a manifest never guesses",
+          "path": "/sources/1/bindings/0/variable",
+          "successor_fqid": null
+        }
+      ]
+    }
+  }
+]

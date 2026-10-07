@@ -1,0 +1,24 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/ok": false,
+      "/issues": [
+        {
+          "code": "fqid_unresolved",
+          "level": "error",
+          "message": "register_variant 'scb/nosuchregister/annual' resolves to no register or no variants in reg_meta",
+          "path": "/sources/0/register_variant",
+          "successor_fqid": null
+        },
+        {
+          "code": "fqid_unresolved",
+          "level": "error",
+          "message": "column 'scb/nosuchregister/x' resolves to no variable in reg_meta",
+          "path": "/sources/0/bindings/0/variable",
+          "successor_fqid": null
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,24 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/ok": false,
+      "/issues": [
+        {
+          "code": "period_outside_state_validity",
+          "level": "error",
+          "message": "column 'scb/example/kon' has no state covering scb/example/annual anywhere in 2015",
+          "path": "/sources/0/bindings/0/variable",
+          "successor_fqid": null
+        },
+        {
+          "code": "period_outside_state_validity",
+          "level": "error",
+          "message": "column 'scb/example/kon' has no state covering scb/example/annual anywhere in 2010..2015",
+          "path": "/sources/1/bindings/0/variable",
+          "successor_fqid": null
+        }
+      ]
+    }
+  }
+]

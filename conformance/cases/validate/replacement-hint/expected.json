@@ -1,0 +1,24 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/ok": true,
+      "/issues": [
+        {
+          "code": "variable_replaced",
+          "level": "info",
+          "message": "column 'scb/example/bransch' has replacement 'scb/example/bransch-ny' effective 2019 by requested period 2020",
+          "path": "/sources/0/bindings/0/variable",
+          "successor_fqid": "scb/example/bransch-ny"
+        },
+        {
+          "code": "variable_replaced",
+          "level": "info",
+          "message": "column 'scb/example/bransch' has replacement 'scb/example/bransch-ny' effective 2019 by requested period 2018..2020",
+          "path": "/sources/2/bindings/0/variable",
+          "successor_fqid": "scb/example/bransch-ny"
+        }
+      ]
+    }
+  }
+]
