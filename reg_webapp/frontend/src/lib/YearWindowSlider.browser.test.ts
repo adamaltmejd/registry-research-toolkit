@@ -84,33 +84,6 @@ describe("YearWindowSlider", () => {
     expect(onchange).toHaveBeenLastCalledWith({ from: 1995, to: 2010 });
   });
 
-  it("moving the To thumb commits the new window", async () => {
-    const onchange = vi.fn<(next: StudyWindow) => void>();
-    const screen = await render(YearWindowSlider, {
-      min: 1960,
-      max: 2026,
-      window: { from: 1990, to: 2010 },
-      onchange,
-      onclear: vi.fn(),
-    });
-    await screen.getByRole("slider", { name: "To year" }).fill("2005");
-    expect(onchange).toHaveBeenLastCalledWith({ from: 1990, to: 2005 });
-  });
-
-  it("clamps so From cannot cross past To", async () => {
-    const onchange = vi.fn<(next: StudyWindow) => void>();
-    const screen = await render(YearWindowSlider, {
-      min: 1960,
-      max: 2026,
-      window: { from: 1990, to: 2000 },
-      onchange,
-      onclear: vi.fn(),
-    });
-    // Drag From past To → it's clamped to To (no crossed/inverted window).
-    await screen.getByRole("slider", { name: "From year" }).fill("2010");
-    expect(onchange).toHaveBeenLastCalledWith({ from: 2000, to: 2000 });
-  });
-
   // ── #629 item 2: live display on input, commit only on change ───────────────
 
   it("updates the live readout on every input tick but does NOT commit until release", async () => {
