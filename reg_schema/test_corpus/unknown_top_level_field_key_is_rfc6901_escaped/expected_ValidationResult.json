@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "unexpected_field",
+      "path": "/weird~1block~0x",
+      "message": "unexpected key 'weird/block~x' on project root"
+    }
+  ]
+}

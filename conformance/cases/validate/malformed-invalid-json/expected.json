@@ -1,0 +1,14 @@
+[
+  {
+    "status": 400,
+    "json": {
+      "/detail": "project is not valid JSON: Expecting ',' delimiter: line 1 column 268 (char 267)"
+    }
+  },
+  {
+    "status": 400,
+    "json": {
+      "/detail": "project is not valid JSON: Expecting ',' delimiter: line 1 column 268 (char 267)"
+    }
+  }
+]

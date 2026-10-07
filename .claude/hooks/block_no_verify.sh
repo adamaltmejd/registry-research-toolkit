@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# PreToolUse hook: refuse Bash calls that skip pre-commit / pre-push hooks.
+# PreToolUse hook: refuse Bash calls that skip git hooks (pre-commit).
 #
 # Two layers in this repo work together:
 #   - `.claude/settings.json` permissions.deny catches the simplest forms
@@ -38,7 +38,7 @@ esac
 # Deny payload is fixed content, so we hardcode it — no python3 dependency on
 # the emit path. (Keep the JSON one-line so harness parsing is robust.)
 deny() {
-	printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"Refusing to skip pre-commit/pre-push hooks via --no-verify/-n. If a hook fails, fix the underlying issue rather than bypassing."}}'
+	printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"Refusing to skip git hooks (pre-commit) via --no-verify/-n. If a hook fails, fix the underlying issue rather than bypassing."}}'
 	exit 0
 }
 

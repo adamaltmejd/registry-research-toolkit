@@ -1,0 +1,17 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/ok": true,
+      "/issues": [
+        {
+          "code": "range_period_partially_covered",
+          "level": "info",
+          "message": "column 'scb/example/lonfink' is available for only part of requested period 2018-Q1 at scb/example/annual; it is ordered for 2018-03",
+          "path": "/sources/0/bindings/0/variable",
+          "successor_fqid": null
+        }
+      ]
+    }
+  }
+]

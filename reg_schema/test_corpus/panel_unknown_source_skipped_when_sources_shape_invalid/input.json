@@ -1,0 +1,21 @@
+{
+  "schema_version": "2.0.0",
+  "steward": "global",
+  "reg_meta_version": "reg_meta/v1.0.0",
+  "name": "demo",
+  "sources": {
+    "not": "an array"
+  },
+  "panels": [
+    {
+      "panel_id": "p",
+      "entity_key": "LopNr_PersonNr",
+      "members": [
+        {
+          "source": "lisa_2018",
+          "time_key": 2018
+        }
+      ]
+    }
+  ]
+}

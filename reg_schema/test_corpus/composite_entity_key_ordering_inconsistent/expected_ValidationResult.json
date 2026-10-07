@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "composite_key_inconsistent",
+      "path": "/panels/0/members/1/entity_key",
+      "message": "composite entity_key ['LopNr_CFAR', 'LopNr_PeOrgNr'] differs from ['LopNr_PeOrgNr', 'LopNr_CFAR'] at /panels/0/entity_key"
+    }
+  ]
+}

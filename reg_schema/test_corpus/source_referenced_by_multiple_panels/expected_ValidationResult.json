@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "source_referenced_by_multiple_panels",
+      "path": "/panels/1/members/0",
+      "message": "source 'lisa_2018' already referenced by panel at /panels/0"
+    }
+  ]
+}

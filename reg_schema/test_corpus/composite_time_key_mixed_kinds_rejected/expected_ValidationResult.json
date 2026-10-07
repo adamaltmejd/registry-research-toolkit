@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "composite_time_key_mixed_kinds",
+      "path": "/panels/0/members/0/time_key",
+      "message": "composite time_key array must be homogeneous: all column refs or all literals"
+    }
+  ]
+}

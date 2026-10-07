@@ -174,7 +174,7 @@ class TestManifestContract:
     def test_an_unpartitioned_manifest_carries_no_partition_key(
         self, conn, inventory
     ) -> None:
-        """§12's partition arm must be invisible to an inventory that uses no
+        """The disjoint-partition arm must be invisible to an inventory that uses no
         partitions: the absent key is the None spelling, so these bytes are the
         ones the contract had before the arm existed."""
         project = order_project(
@@ -231,7 +231,7 @@ class TestManifestContract:
 
 
 class TestDisjointPartitions:
-    """§12's disjoint-partition arm: every partition of a matched cell is
+    """The disjoint-partition arm: every partition of a matched cell is
     emitted, and extraction preserves delivery topology — what goes in as two
     tables comes out as two files."""
 

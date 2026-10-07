@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_field_type",
+      "path": "/panels/0/members/0/entity_key",
+      "message": "panel member 'entity_key' must not be null when present"
+    }
+  ]
+}

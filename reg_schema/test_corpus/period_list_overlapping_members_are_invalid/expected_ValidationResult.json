@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_period",
+      "path": "/sources/0/period/1",
+      "message": "period list members must not overlap: member 1 starts 2010-01-01, inside member 0 (ends 2015-12-31)"
+    }
+  ]
+}

@@ -7,6 +7,7 @@ import {
 } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import SourceEditor from "./SourceEditor.svelte";
+import StudyWindowSummary from "./StudyWindowSummary.svelte";
 import {
   Button,
   ConfirmDialog,
@@ -16,7 +17,7 @@ import {
   Panel,
 } from "./ui";
 import ValidationPanel from "./ValidationPanel.svelte";
-import { windowCoverageHints } from "./validation";
+import { windowCoverageHints, windowDisjointFindings } from "./validation";
 
 // The /project page — a READ-ONLY data-order CART (#991/#993), not an editor.
 // Under #991 the project IS the cart: it SHOWS what the researcher picked while
@@ -187,6 +188,7 @@ onDestroy(() => {
          either. -->
     {@const studyWindow = safeStudyWindow(draft.window)}
     {@const coverageHints = windowCoverageHints(studyWindow, sources)}
+    {@const windowFindings = windowDisjointFindings(studyWindow, sources)}
     <header class="editor-head">
       <h2>
         {draft.name || "Untitled project"}
@@ -213,7 +215,9 @@ onDestroy(() => {
         disabled={!projectStore.canDownloadOrder}
         title={projectStore.canDownloadOrder
           ? "Download the order manifest"
-          : "Not available yet — see the validation results below"}
+          : projectStore.windowBlocked
+            ? "Blocked — a source has no years inside the study window; see below"
+            : "Not available yet — see the validation results below"}
         onclick={() => projectStore.downloadOrder()}
       >
         {projectStore.orderBusy ? "Downloading…" : "Download order.json"}
@@ -253,6 +257,9 @@ onDestroy(() => {
         {#if sources.length === 0}
           <EmptyState title="No sources yet. Browse the catalog to add data to your project." />
         {:else}
+          <!-- The common study window the cards below are marked against, and the
+               one action that rewrites their periods to it. -->
+          <StudyWindowSummary {sources} {studyWindow} />
           <div class="source-list">
             {#each sources as source, i (projectStore.sourceId(i))}
               <SourceEditor
@@ -275,6 +282,7 @@ onDestroy(() => {
       requestErrorSource={projectStore.requestErrorSource}
       orderFindings={projectStore.orderFindings}
       windowHints={coverageHints}
+      {windowFindings}
       {sources}
       onRetry={() => projectStore.validate()}
       onRetryOrder={() => projectStore.downloadOrder()}

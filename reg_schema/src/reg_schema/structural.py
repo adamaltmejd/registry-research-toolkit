@@ -1,15 +1,17 @@
 """Structural validator for ``project_data.json`` (see DESIGN.md → Structural rules and issue codes).
 
-Pure-stdlib, reg_meta-free. The entrypoint operates on a parsed dict
-(typically ``json.loads(...)`` output), not on the model-layer
-dataclasses (see DESIGN.md → Two layers: models vs. validator), because
-rules like "type is one of the enum values" must
-fire on raw JSON values before any ``Literal`` cast — the dataclass
-constructors deliberately don't enforce them (see ``project_data.py``).
+Stdlib-only rules, reg_meta-free. The entrypoint operates on a parsed dict
+(typically ``json.loads(...)`` output), not on the Pydantic models (see
+DESIGN.md → Two layers: models vs. validator), because rules like "type is
+one of the enum values" must fire on raw JSON values before any ``Literal``
+cast — the models deliberately don't enforce them (see ``project_data.py``).
+From the model layer it reads only names: the ``Literal`` values and each
+closed object's wire keys.
 
-Same code is consumed by multiple runtimes (browser SPA via TS mirror,
-webapp via direct import); see ``DESIGN.md`` for the dependency
-direction. FQID well-formedness is checked locally (segment count +
+This is the one implementation. The webapp backend (project routes and the
+semantic pass) and ``reg_meta.order`` import it directly; the SPA receives its
+issues over HTTP and renders them by ``code``. See ``DESIGN.md`` for the
+dependency direction. FQID well-formedness is checked locally (segment count +
 per-segment chars) rather than importing reg_meta — reg_schema is the
 lightweight canonical-schema package and depending on the heavier
 catalog-query reg_meta would invert the layering, so the dependency
@@ -25,10 +27,24 @@ import re
 from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import date
-from typing import Any, get_args
+from typing import TYPE_CHECKING, Any, get_args
 
-from .project_data import ColumnType, IdSubtype, NumericSubtype, Steward
+from .project_data import (
+    Binding,
+    ColumnType,
+    IdSubtype,
+    NumericSubtype,
+    Panel,
+    PanelMember,
+    ProjectData,
+    Source,
+    Steward,
+    StudyWindow,
+)
 from .validation import ValidationIssue, ValidationResult
+
+if TYPE_CHECKING:
+    from pydantic import BaseModel
 
 # Mirror the model Literal types (see DESIGN.md → Two layers: models vs. validator) at runtime so the structural layer
 # can't drift from the dataclass declarations. Same drift-protection
@@ -39,45 +55,33 @@ _COLUMN_TYPES: frozenset[str] = frozenset(get_args(ColumnType))
 _ID_SUBTYPES: frozenset[str] = frozenset(get_args(IdSubtype))
 _NUMERIC_SUBTYPES: frozenset[str] = frozenset(get_args(NumericSubtype))
 
-_TOP_LEVEL_REQUIRED: tuple[str, ...] = (
-    "schema_version",
-    "steward",
-    "reg_meta_version",
-    "name",
-    "sources",
-)
-_TOP_LEVEL_OPTIONAL: tuple[str, ...] = ("panels", "window")
-_PROJECT_KEYS: frozenset[str] = frozenset(_TOP_LEVEL_REQUIRED + _TOP_LEVEL_OPTIONAL)
-
 # Allowed-key sets for the CLOSED objects (`_Model` subclasses with
 # ``extra="forbid"`` in ``project_data.py``). An unrecognized key on any of
-# these emits ``unexpected_field``. Mirror the Pydantic model field sets
-# exactly — the drift guard is ``test_structural.py``'s pinning test, which
-# asserts each frozenset equals ``Model.model_fields``.
-_SOURCE_KEYS: frozenset[str] = frozenset(
-    {"name", "register_variant", "period", "bindings"}
-)
-_BINDING_KEYS: frozenset[str] = frozenset(
-    {
-        "variable",
-        "type",
-        "display_name",
-        "id_subtype",
-        "numeric_subtype",
-        "date_format",
-        "datetime_format",
-        "value_set",
-        "representation",
-    }
-)
-_PANEL_KEYS: frozenset[str] = frozenset(
-    {"panel_id", "members", "entity_key", "time_key", "comment"}
-)
-_PANEL_MEMBER_KEYS: frozenset[str] = frozenset({"source", "entity_key", "time_key"})
-# ``StudyWindow`` is a CLOSED object (``extra="forbid"``) — like Source/Binding,
-# an unknown key is ``unexpected_field``. Wire keys: ``from`` is the alias of the
-# Python-safe ``from_`` field.
-_WINDOW_KEYS: frozenset[str] = frozenset({"from", "to"})
+# these emits ``unexpected_field``. Read from the models' WIRE keys
+# (``field.alias or name``: ``StudyWindow``'s ``from`` is the alias of the
+# Python-safe ``from_``) for the same drift-protection as the Literal mirrors
+# above: a field added to a model is accepted here with no second edit. Only the
+# key names are read; validation itself never touches the models.
+
+
+def _wire_keys(
+    model: type[BaseModel], *, required: bool | None = None
+) -> tuple[str, ...]:
+    return tuple(
+        field.alias or name
+        for name, field in model.model_fields.items()
+        if required is None or field.is_required() == required
+    )
+
+
+_TOP_LEVEL_REQUIRED: tuple[str, ...] = _wire_keys(ProjectData, required=True)
+_TOP_LEVEL_OPTIONAL: tuple[str, ...] = _wire_keys(ProjectData, required=False)
+_PROJECT_KEYS: frozenset[str] = frozenset(_wire_keys(ProjectData))
+_SOURCE_KEYS: frozenset[str] = frozenset(_wire_keys(Source))
+_BINDING_KEYS: frozenset[str] = frozenset(_wire_keys(Binding))
+_PANEL_KEYS: frozenset[str] = frozenset(_wire_keys(Panel))
+_PANEL_MEMBER_KEYS: frozenset[str] = frozenset(_wire_keys(PanelMember))
+_WINDOW_KEYS: frozenset[str] = frozenset(_wire_keys(StudyWindow))
 
 # Subtype/format fields are only valid on the matching column type
 # (see DESIGN.md → Structural rules and issue codes). Mapping a field to its owning type keeps the per-field check
@@ -96,7 +100,7 @@ _SUBTYPE_FIELDS: dict[str, str] = {
 # segment (see reg_meta/DESIGN.md → FQID grammar) — it is the ``Source.period`` field, checked separately by
 # ``_check_period``. This layer only checks a segment is non-empty and free
 # of stray characters. The value set is determined by the resolved
-# ``(variable, variant, period)`` (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)), never pinned on the FQID, so a
+# ``(variable, variant, period)`` (see reg_meta/DESIGN.md → Project semantic validation (semantic.py)), never pinned on the FQID, so a
 # binding leaf is a bare slug — there is no ``@version`` suffix to split off.
 _FQID_TOKEN: re.Pattern[str] = re.compile(r"^[A-Za-z0-9_-]+$")
 
@@ -110,8 +114,8 @@ def validate_structural(data: Mapping[str, object]) -> ValidationResult:
     Accepts a ``Mapping`` (typically a dict from ``json.loads``).
     Returns a ``ValidationResult`` whose ``issues`` capture every
     structural problem found. The result is dependency-free: nothing
-    here consults reg_meta. Semantic resolution (see reg_webapp/DESIGN.md
-    → Semantic validation (semantic.py)) is owned by another layer.
+    here consults reg_meta. Semantic resolution (see reg_meta/DESIGN.md
+    → Project semantic validation (semantic.py)) is owned by another layer.
     """
 
     issues: list[ValidationIssue] = []
@@ -242,7 +246,7 @@ def _is_register_variant_coord(value: object) -> bool:
 
     Not an FQID *kind* (the variant is not addressable as an FQID), but the
     same 3-part grammar. The structural layer only checks shape; resolution
-    to a real ``variant`` row is reg_meta's job (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)).
+    to a real ``variant`` row is reg_meta's job (see reg_meta/DESIGN.md → Project semantic validation (semantic.py)).
     """
     if not isinstance(value, str):
         return False
@@ -255,7 +259,7 @@ def _parse_binding_fqid(value: object) -> list[str] | None:
 
     3-segment ``<provider>/<register>/<slug>`` (see reg_meta/DESIGN.md → FQID grammar): the FQID names the
     variable; its value set is determined by the resolved ``(variable, variant,
-    period)`` (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)), not pinned on the FQID. Returns the three parts, else
+    period)`` (see reg_meta/DESIGN.md → Project semantic validation (semantic.py)), not pinned on the FQID. Returns the three parts, else
     ``None`` (wrong arity, a ``class/`` prefix, or a stray character — including
     the retired ``@`` version delimiter, which ``_FQID_TOKEN`` rejects).
     """
@@ -786,8 +790,8 @@ def _check_source(
     # Per-source explicit-display_name collisions (`display_name_collision`;
     # see DESIGN.md → Structural rules and issue codes). The other half of
     # the spec — one explicit + one resolving to the same reg_meta default —
-    # needs reg_meta and lives in the semantic layer (see reg_webapp/DESIGN.md
-    # → Semantic validation (semantic.py)).
+    # needs reg_meta and lives in the semantic layer (see reg_meta/DESIGN.md
+    # → Project semantic validation (semantic.py)).
     seen_display_names: dict[str, str] = {}
     for j, binding in enumerate(bindings):
         bbase = f"{base}/bindings/{j}"
@@ -955,7 +959,7 @@ def _is_literal_period_obj(value: object) -> bool:
     period = value["period"]
     # The object form's job is to disambiguate a literal period from a bare
     # column ref; unlike Source.period, the string's period-token validity is
-    # NOT grammar-checked here — that is a reg_meta semantic concern (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)).
+    # NOT grammar-checked here — that is a reg_meta semantic concern (see reg_meta/DESIGN.md → Project semantic validation (semantic.py)).
     return _is_int_literal(period) or isinstance(period, str)
 
 

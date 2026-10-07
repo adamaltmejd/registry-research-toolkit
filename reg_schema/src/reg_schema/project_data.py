@@ -120,7 +120,7 @@ class Binding(_Model):
     3/4/5-digit, age 5/10-yr brackets). ``representation`` selects which one (by
     its ``variable_alias.delivery_column_name``); it is required only when the
     concept resolves to >1 column at the source's ``(variant, period)`` — the
-    semantic validator (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)) flags an ambiguous binding that omits it, and the
+    semantic validator (see reg_meta/DESIGN.md → Project semantic validation (semantic.py)) flags an ambiguous binding that omits it, and the
     SPA offers a chooser. A single-representation concept leaves it ``None``.
 
     ``display_name`` is optional: when absent, reg_meta-backed consumers

@@ -48,7 +48,7 @@ def _decode_expected(payload: object) -> ValidationResult:
     and ``message`` are runtime-typed as ``str`` because the Python
     dataclass only enforces ``level`` — without that check a corpus
     case like ``{"code": 123}`` would pass here while still failing
-    the SPA/bundle decoders the corpus exists to pin against.
+    the SPA's typed import of the same expected JSON.
     """
 
     if not isinstance(payload, dict):
@@ -117,15 +117,14 @@ def test_validate_structural_matches_expected(case_dir: Path) -> None:
     """``validate_structural(input)`` produces the expected issue set.
 
     Compared unordered: rule-emission order is an implementation detail
-    of the Python validator, but the SPA and bundle ports run their
-    own traversals and shouldn't be forced into lock-step.
+    of the validator, not part of the corpus contract (see
+    ``test_corpus/README.md``).
     """
 
     # No dict-only guard: malformed root shapes (array, scalar, null)
     # are in scope for this corpus — `validate_structural` emits
-    # `invalid_root` for them, and the SPA / bundle ports must agree.
-    # Gating those out here would create a silent blind spot in the
-    # cross-runtime contract.
+    # `invalid_root` for them. Gating those out here would create a
+    # silent blind spot in the corpus contract.
     payload = json.loads((case_dir / "input.json").read_text(encoding="utf-8"))
     actual = validate_structural(payload)
     expected = _decode_expected(

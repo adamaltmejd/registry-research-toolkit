@@ -988,48 +988,6 @@ describe("BindingLeafView representation picker (#678)", () => {
     );
   });
 
-  it("applying a dimmed folded family row falls back to concrete segment spans", async () => {
-    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
-      const variant =
-        typeof params?.variant === "string" ? params.variant : undefined;
-      return statesResponse(
-        foldedVariantStates.filter(
-          (s) => variant === undefined || s.variant === variant,
-        ),
-      );
-    });
-    router.navigate("/catalog/scb/lisa/kon?period=1980");
-
-    await render(BindingLeafView, {
-      fqidPath: "scb/lisa/kon",
-      node: node(foldedVariantStates),
-      regMetaVersion: SEED.regMetaVersion,
-      steward: SEED.steward,
-      windowMinYear: SEED.windowMinYear,
-      vintageYear: 2024,
-    });
-
-    await page.getByRole("checkbox", { name: /Kon/ }).click();
-    await page
-      .getByRole("button", {
-        name: /Add to project|Remove from project|Apply changes/,
-      })
-      .click();
-
-    const sourcePeriods = new Map(
-      projectStore.draft?.sources?.map((source) => [
-        source.register_variant,
-        source.period,
-      ]),
-    );
-    expect(sourcePeriods).toEqual(
-      new Map([
-        ["scb/lisa/individer-16plus", { from: 1990, to: 2009 }],
-        ["scb/lisa/individer-15plus", { from: 2010, to: 2023 }],
-      ]),
-    );
-  });
-
   it("resolves a staged add against the final merged source period", async () => {
     projectStore.applyStagedDiff({
       adds: [

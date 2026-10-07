@@ -50,11 +50,13 @@ import {
   safeSourceName,
   safeSourceRegisterVariant,
   safeSourceSlots,
+  safeStudyWindow,
   serializeProjectData,
   sourceSnapshot,
   uniqueSourceName,
   updateField,
 } from "./project_data";
+import { windowDisjointFindings } from "./validation";
 import { windowStore } from "./window.svelte";
 
 /** The autosave store's OWN schema version (distinct from `project_data`'s
@@ -336,12 +338,26 @@ const validationStatus = $derived.by<ValidationStatus>(() => {
   return validation.issues.length > 0 ? "warnings" : "ok";
 });
 
+/** A source the common study window has left with NO years inside it blocks the
+ * order (reg_webapp/DESIGN.md → "Common study window"): the source keeps its
+ * explicit period — a window edit never rewrites one — so the project stays
+ * blocked until the researcher moves that period, applies the overlap, removes the
+ * source or moves the window. An SPA authoring gate: the backend reads no window. */
+const windowBlocked = $derived(
+  draft != null &&
+    windowDisjointFindings(
+      safeStudyWindow(draft.window),
+      safeSourceSlots(draft.sources),
+    ).length > 0,
+);
+
 // `requestError` closes the gate too: `/order` can fail-close a project that
 // VALIDATES clean (a steward-provenance mismatch, an uncovered period), and an
 // enabled accent CTA that can only repeat the same 422 reads as "ready". Any
 // edit re-runs validation, which clears `requestError` and reopens the gate.
 const canDownloadOrder = $derived(
   validatedClean &&
+    !windowBlocked &&
     requestError == null &&
     !validationScheduled &&
     !validationBusy &&
@@ -558,6 +574,11 @@ export const projectStore = {
   get validationStatus() {
     return validationStatus;
   },
+  /** Whether a source is disjoint from the common study window — one of the
+   * reasons `canDownloadOrder` is closed, read by the page to say which. */
+  get windowBlocked() {
+    return windowBlocked;
+  },
   /** Resolves once the load-at-init restore has settled. Catalog authoring
    * awaits it before creating or mutating a draft: a cold entry at /catalog
    * would otherwise read the still-empty store, mint a SECOND project on Add,
@@ -770,7 +791,9 @@ export const projectStore = {
    * findings become `orderFindings`, which the ValidationPanel renders one by
    * one like validation issues. */
   async downloadOrder(): Promise<void> {
-    if (draft == null) {
+    // The window gate holds here too, not only on the button: an order for a
+    // project the authoring rules call blocked must not be requested at all.
+    if (draft == null || windowBlocked) {
       return;
     }
     // Snapshot the draft + generation like `validate` does: a mid-flight edit

@@ -33,7 +33,7 @@ self=${BASH_SOURCE[0]}
 VENV_MARKER=".venv/.wt-provisioned"
 NODE_MARKER="reg_webapp/frontend/node_modules/.wt-provisioned"
 HOOK_SHIM_MARKER="registry-research-toolkit linked-worktree GIT_WORK_TREE shim"
-PRE_PUSH_ISOLATION_SENTINEL="unset GIT_DIR GIT_WORK_TREE GIT_COMMON_DIR GIT_INDEX_FILE"
+HOOK_LAUNCHER_ID="ID: 138fd403232d2ddd5efb44317e38bf03" # pre-commit's generated-launcher id
 
 fingerprint() { # $1 = lockfile; stable digest, or 'none' if absent (cksum is POSIX)
 	if [ -f "$1" ]; then cksum <"$1" | cut -d' ' -f1; else echo none; fi
@@ -53,27 +53,6 @@ needs_provision() { # $1 = root; 0 if anything is missing/stale
 
 # pre-commit config is too late for this: the generated Git hook launcher starts
 # pre-commit, and pre-commit may run Git before any repo-local hook entry.
-# Pre-push only: enter the resolved checkout, then drop repository-routing
-# state so Git-backed fixtures created by hooks discover their own
-# repository from cwd instead of targeting the outer checkout.
-isolate_pre_push_shim() { # $1 = pre-push launcher; appends the isolation after the old shim
-	local path=$1 tmp
-	tmp="${path}.regmeta.$$"
-	awk '
-		{ print }
-		$0 ~ /linked-worktree GIT_WORK_TREE shim/ { in_shim = 1 }
-		in_shim && $0 == "fi" {
-			print "if [ -n \"${GIT_WORK_TREE:-}\" ]; then"
-			print "    cd \"${GIT_WORK_TREE}\" || exit 1"
-			print "fi"
-			print "unset GIT_DIR GIT_WORK_TREE GIT_COMMON_DIR GIT_INDEX_FILE"
-			in_shim = 0
-		}
-	' "$path" >"$tmp" || { rm -f "$tmp"; return 1; }
-	chmod +x "$tmp"
-	mv "$tmp" "$path" || { rm -f "$tmp"; return 1; }
-}
-
 repair_pre_commit_hooks() { # $1 = root; idempotently patch generated hooks for linked worktrees
 	local root=$1 common_dir hooks_dir hook path tmp
 	common_dir=$(env -u GIT_DIR -u GIT_WORK_TREE git -C "$root" rev-parse --git-common-dir 2>/dev/null) || return 0
@@ -84,16 +63,21 @@ repair_pre_commit_hooks() { # $1 = root; idempotently patch generated hooks for 
 	hooks_dir="$common_dir/hooks"
 	[ -d "$hooks_dir" ] || return 0
 
-	for hook in pre-commit pre-push post-checkout; do
+	# The pre-push test gate was dropped (CI is the test gate). Remove the
+	# launcher an earlier `pre-commit install` generated so existing checkouts
+	# stop running it; a hook without pre-commit's marker is the user's own and
+	# stays. Restore a hook pre-commit set aside as .legacy, as
+	# `pre-commit uninstall` does.
+	path="$hooks_dir/pre-push"
+	if [ -f "$path" ] && { grep -q "$HOOK_LAUNCHER_ID" "$path" 2>/dev/null || grep -q "$HOOK_SHIM_MARKER" "$path" 2>/dev/null; }; then
+		rm -f "$path"
+		[ -f "$path.legacy" ] && mv "$path.legacy" "$path"
+	fi
+
+	for hook in pre-commit post-checkout; do
 		path="$hooks_dir/$hook"
 		[ -f "$path" ] || continue
-		grep -q 'ID: 138fd403232d2ddd5efb44317e38bf03' "$path" 2>/dev/null || continue
-		if [ "$hook" = "pre-push" ] && grep -q "$HOOK_SHIM_MARKER" "$path" 2>/dev/null; then
-			if ! grep -q "$PRE_PUSH_ISOLATION_SENTINEL" "$path" 2>/dev/null; then
-				isolate_pre_push_shim "$path" || continue
-			fi
-			continue
-		fi
+		grep -q "$HOOK_LAUNCHER_ID" "$path" 2>/dev/null || continue
 		grep -q "$HOOK_SHIM_MARKER" "$path" 2>/dev/null && continue
 
 		tmp="${path}.regmeta.$$"
@@ -126,13 +110,6 @@ repair_pre_commit_hooks() { # $1 = root; idempotently patch generated hooks for 
 		}
 		chmod +x "$tmp"
 		mv "$tmp" "$path" || rm -f "$tmp"
-		# Fresh pre-push launchers just received the old shim above; bring them
-		# to the isolated form in the same run.
-		if [ "$hook" = "pre-push" ] && grep -q "$HOOK_SHIM_MARKER" "$path" 2>/dev/null; then
-			if ! grep -q "$PRE_PUSH_ISOLATION_SENTINEL" "$path" 2>/dev/null; then
-				isolate_pre_push_shim "$path" || continue
-			fi
-		fi
 	done
 }
 

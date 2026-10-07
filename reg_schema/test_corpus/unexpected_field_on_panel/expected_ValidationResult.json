@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "unexpected_field",
+      "path": "/panels/0/coment",
+      "message": "unexpected key 'coment' on panel"
+    }
+  ]
+}

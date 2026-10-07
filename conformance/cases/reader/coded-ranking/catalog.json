@@ -1,0 +1,252 @@
+[
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "rega",
+      "name": "RegA"
+    },
+    "slug": "charlie",
+    "provider_key": "1",
+    "name": "Charlie",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Charlie",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "C1",
+              "Label C1"
+            ],
+            [
+              "C2",
+              "Label C2"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "rega",
+      "name": "RegA"
+    },
+    "slug": "bravo",
+    "provider_key": "2",
+    "name": "Bravo",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Bravo",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "B1",
+              "Label B1"
+            ],
+            [
+              "B2",
+              "Label B2"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "rega",
+      "name": "RegA"
+    },
+    "slug": "alpha",
+    "provider_key": "3",
+    "name": "Alpha",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Alpha",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "A1",
+              "Label A1"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "regb",
+      "name": "RegB"
+    },
+    "slug": "alpha",
+    "provider_key": "3",
+    "name": "Alpha",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Alpha",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "A1",
+              "Label A1"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "rega",
+      "name": "RegA"
+    },
+    "slug": "delta",
+    "provider_key": "4",
+    "name": "Delta",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Delta",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "D1",
+              "Label D1"
+            ],
+            [
+              "D2",
+              "Label D2"
+            ],
+            [
+              "D3",
+              "Label D3"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "regb",
+      "name": "RegB"
+    },
+    "slug": "echo",
+    "provider_key": "5",
+    "name": "Echo",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Echo",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "E1",
+              "Label E1"
+            ]
+          ]
+        }
+      }
+    ]
+  }
+]

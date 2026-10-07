@@ -13,8 +13,8 @@
  * 2. The `KNOWN_CODES` registry: every stable validation code → a friendly label +
  *    the level it's typically raised at. Hand-maintained from the validator
  *    sources: structural (`reg_schema/structural.py`; see reg_schema/DESIGN.md →
- *    Structural rules and issue codes), semantic (see reg_webapp/DESIGN.md →
- *    Semantic validation (semantic.py)) and the ORDER MATERIALIZER's findings
+ *    Structural rules and issue codes), semantic (see reg_meta/DESIGN.md →
+ *    Project semantic validation (semantic.py)) and the ORDER MATERIALIZER's findings
  *    (`reg_meta/order.py`), which the panel renders through the same path. An
  *    UNKNOWN code degrades gracefully (the issue is still shown with its raw
  *    code + level).
@@ -22,7 +22,12 @@
 
 import type { components } from "./api-types";
 import { catalogHref, registerPrefixOf } from "./catalog";
-import { periodYearIntervals } from "./period";
+import {
+  periodLabel,
+  periodWindowRelation,
+  periodYearIntervals,
+  yearWindowLabel,
+} from "./period";
 import {
   type Period,
   type PeriodSegment,
@@ -110,7 +115,7 @@ export interface CodeInfo {
  * new codes are ADDITIVE, so a code missing here is not a bug, it just
  * renders with its raw code (see `codeLabel`). Sourced from:
  * - structural (`reg_schema/structural.py`; see reg_schema/DESIGN.md → Structural rules and issue codes)
- * - semantic (`reg_webapp.semantic`; see reg_webapp/DESIGN.md → Semantic validation (semantic.py))
+ * - semantic (`reg_meta/semantic.py`; see reg_meta/DESIGN.md → Project semantic validation (semantic.py))
  * - the order materializer's findings (`reg_meta/order.py`; see reg_meta/DESIGN.md → Order materializer and manifest)
  */
 export const KNOWN_CODES: Record<string, CodeInfo> = {
@@ -215,7 +220,7 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     hint: "info",
   },
   range_period_partially_covered: {
-    // Intersection semantics (§12): the clipped part IS ordered, so this reports
+    // Intersection semantics: the clipped part IS ordered, so this reports
     // what is available rather than a fault. It also covers a #307 list period's
     // uncovered segment, so the label must not read as "one continuous range".
     label: "The column is available for only part of the requested period",
@@ -229,7 +234,7 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     label: "The column has a replacement edge at/before this period",
     hint: "info",
   },
-  // ── order materializer (§12) ──────────────────────────────────────────────
+  // ── order materializer ────────────────────────────────────────────────────
   // Every one BLOCKS the order: the materializer is fail-closed and emits a
   // manifest or findings, never a partial order. Most reach the panel from
   // `/order`'s 422 — but `/validate` runs the materializer's own availability
@@ -409,6 +414,11 @@ export function windowCoverageHints(
     if (period == null) {
       continue;
     }
+    // A source with NO years in the window is not a coverage gap but a blocked
+    // order, and `windowDisjointFindings` says so at error level — said once.
+    if (periodWindowRelation(period, window) === "disjoint") {
+      continue;
+    }
     const intervals = periodYearIntervals(period);
     if (intervals == null) {
       continue;
@@ -437,6 +447,41 @@ export function windowCoverageHints(
     });
   }
   return hints;
+}
+
+/** One source whose period has NO years inside the study window: the project's
+ * blocking authoring finding (reg_webapp/DESIGN.md → "Common study window"). */
+export interface WindowDisjointFinding {
+  message: string;
+  location: FindingLocation | null;
+}
+
+/** Every source left disjoint from the common study window — what blocks the
+ * order download while the source keeps its explicit period. An SPA authoring
+ * rule, not a re-implementation of a server one: the backend reads no `window`
+ * (reg_schema documents it as an authoring seed), so this is the one place it is
+ * enforced. Located through `findingLocation`, so the panel renders it with the
+ * same locate + catalog links a validation issue gets. */
+export function windowDisjointFindings(
+  window: StudyWindow | null,
+  sources: readonly SafeSource[],
+): WindowDisjointFinding[] {
+  if (window === null) {
+    return [];
+  }
+  const findings: WindowDisjointFinding[] = [];
+  for (const [index, source] of sources.entries()) {
+    const period = safeSourcePeriod(source);
+    if (periodWindowRelation(period, window) !== "disjoint") {
+      continue;
+    }
+    const years = periodLabel(period as Period) ?? "";
+    findings.push({
+      message: `Its period ${years} has no years inside the study window ${yearWindowLabel(window)}. Change the period to overlap the window, or remove the source.`,
+      location: findingLocation(jsonPointer(["sources", index]), sources),
+    });
+  }
+  return findings;
 }
 
 export function findingLocation(

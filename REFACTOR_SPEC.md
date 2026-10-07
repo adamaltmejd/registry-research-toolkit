@@ -25,11 +25,18 @@ mock-data subsystem (kit-build, the realign-then-extract MONA workflow,
 to branch `archive/mona-subsystem` (tag `mona-subsystem-pre-rebuild`), pending a
 from-scratch rebuild tracked in #707 (archived under #699).
 
-**Remaining (this document):** composite panel keys, the open items of the shipped
-compiled-holdings cut (§12), the remaining real steward coverage, measured web
-performance hardening, the `reg_meta_build` restructuring, and the v1 slug freeze.
-(Webapp deployment — step 6.5 — shipped 2026-06-11; the webapp-authoring hard-cut — step
-7 — shipped 2026-06-11.)
+**Remaining (this document):** composite panel keys, the remaining real steward
+coverage, measured web performance hardening, the `reg_meta_build` restructuring, and
+the v1 slug freeze. (Webapp deployment — step 6.5 — shipped 2026-06-11; the
+webapp-authoring hard-cut — step 7 — shipped 2026-06-11.)
+
+**Shipped (step 12):** the steward delivery inventory and normalized order manifest
+shipped as compiled holdings (schema 9, released as `reg_meta/v0.41.0` and deployed
+2026-10-06), and its open items followed: the reader defects (#1166), the per-package
+test sweep (#1169), the shared semantic pass in `reg_meta` (#1167) and the SPA common
+study window (#1168). Its decisions live in `reg_meta/DESIGN.md` → "Holdings resolution
+invariants" and "Order materializer and manifest", `reg_meta_build/DESIGN.md` →
+"Holdings curation rules" and `reg_webapp/DESIGN.md` → "Common study window".
 
 ## Sequence
 
@@ -44,7 +51,7 @@ step numbering.
   | 8/9/10a | MONA bundle + mock-data subsystem — **archived** (see below)              | —        | #707             |
   | 10b     | Composite `entity_key` / `time_key` support (gates on MONA rebuild, #707) | —        | —                |
   | 11      | Steward catalogs (ifau, swecov)                                           | 7.5      | #206             |
-  | 12      | Delivery inventory + shared normalized order manifest                     | 11       | —                |
+  | 12      | Delivery inventory + shared normalized order manifest — **shipped**       | 11       | —                |
   | P       | Remaining cache, classification-payload, and static-asset hardening       | 6.5      | —                |
   | R       | `reg_meta_build` restructuring; no catalog release until parity           | —        | —                |
   | —       | v1 slug freeze + arm immutability                                         | all      | #209, #196, #197 |
@@ -139,223 +146,13 @@ steward-diff CLI remain deferred post-v1. Holdings are authored or generated bui
 inputs, not another `ProjectData` catalog filter. Both product surfaces emit the
 normalized JSON order manifest documented in the owning reader design.
 
-## 12 — Steward delivery inventory + normalized order manifest
-
-**Compiled holdings shipped (schema 9, accepted, released as `reg_meta/v0.41.0` and
-deployed 2026-10-06).** One self-identifying SQLite generation carries catalog, holdings
-and order facts; there is no runtime inventory. Owning contracts live in
-`ARCHITECTURE.md`, `reg_meta/DESIGN.md` and `reg_meta_build/DESIGN.md`. The ratified
-decision text below remains only because product comments cite it as `REFACTOR_SPEC.md`
-§12; the open items are listed at the end of this section. One common manifest, no
-per-steward export templates. A `project_data.json` source is a logical selection; a
-steward's physical delivery topology is separate data. Each inventory table has an
-opaque identifier (an exact filename or schema-qualified SQL table), one explicit
-physical edition, and its literal, case-preserving physical columns. Edition uses the
-existing finite period grammar — year, month, day, quarter, semester, or a finite
-multi-period range/list. Explicit year-independent scope uses `"_default"` without date
-intervals; retained unknown scope carries authored evidence and is nonorderable. Neither
-scope is inferred as an unbounded "all periods" sentinel. A table without an edition
-encoded in its name still requires an explicit curated edition; filename inference must
-fail for review on zero or ambiguous period tokens rather than guess.
-
-Each physical column has zero or more semantic mappings. A mapping names
-`register_variant`, variable FQID and required literal `representation`. The compiler
-stores their catalog IDs and the representative spelling of the resolver-emitted
-delivery column the literal folds onto under shared `lower()`; semantic applicability is
-resolved only at query time. Zero mappings keep an unresolved physical column in the
-coverage denominator without admitting or ordering it. Several mappings let one physical
-table/column serve multiple register variants (the existing combined Utrikeshandel table
-does); several tables may map the same logical coordinate over **disjoint** editions
-(the ordinary annual series).
-
-**One-to-one resolution invariant (ratified 2026-09-01).** Every admitted
-`(register_variant, variable, representation, period)` cell resolves to exactly **one**
-physical `(table, column)` — the extraction tool never chooses between sources.
-Inventory validation (and therefore the compiled steward artifact's build) **errors**
-whenever two mappings could serve the same cell: same variant + variable, same canonical
-representation and overlapping editions, whether across tables or across columns of one
-table. The inventory describes **current holdings only**: a superseded delivery (a
-cumulative re-delivery replacing an earlier snapshot, e.g. the dated `FHM_NVR_Covid*`
-series) is discarded at curation, and this validation error is the supersession worklist
-— the generator must fail for review on each conflict rather than auto-picking a
-survivor (a filename date is not proof of supersession). Zero-column cells are not
-errors; they are simply not admitted. A **special-purpose sub-extract** — data already
-held, re-delivered at another level of detail for a narrow purpose (the `RTB_SaBo_*`
-extracts, the `SWECOV_SOS_*_comorb` comorbidity tables) — is likewise excluded from the
-order surface at curation, under its own exclusion reason class distinct from
-supersession (ratified 2026-09-01).
-
-**Disjoint-partition arm (ratified 2026-09-01).** Some registers arrive as several
-tables partitioned by sub-population **within one edition** — survey strata
-(`ITftg_Mikro`/`ITftg_Stora`), reporter streams (`Arb_`/`Soc_AGIIndivid`),
-administrative splits (`NDR_adults` over/under 70), per-municipality deliveries (SÄBO) —
-and are deliberately unified as **one** user-facing variant: nothing semantic differs
-across the shards, and no researcher should have to know delivery trivia to get the
-whole register. Partitions are therefore an inventory/order-layer concept, never a
-catalog concept. An inventory table may carry an optional `partition` label (a short
-slug). The one-to-one invariant then holds per `(cell × partition)`: two tables mapping
-the same cell over overlapping editions conflict **unless** they carry distinct
-partition labels. Labels are explicit curated facts, never inferred — so a true
-redelivery cannot hide behind partitions without a reviewable curation line saying so.
-The materializer matches every partition of a cell, and **extraction preserves delivery
-topology: what goes in as two tables comes out as two files** — one output file per
-contributing inventory table, the filename gaining a partition token
-(`agi_individuppgifter-agi_arb_2021-03.csv`). Never a union: shard identity (reporter
-stream, municipality) may not exist as a column, so concatenation would destroy
-information; an identity-redundant split merely costs the researcher one concatenation
-they can always do themselves. Under the invariant, "one file per (ordered variant,
-edition segment, partition)" and "one file per table" coincide; a combined table backing
-several ordered variants still emits per ordered variant.
-
-Accepted inventory TOML, policy and raw census are builder inputs. Four physical
-relations plus manifest identity are the sole runtime holdings truth. Derive exact
-edition-aware admission, coverage, browse unions and order materialization from those
-facts and query-time resolution. No compiled semantic segments, findings relation,
-excluded rows or second runtime inventory model. Replace `steward.project_data.json` in
-the same pre-v1 cutover rather than adding a dual-source compatibility path. **Format
-(ratified 2026-08-31): the inventory is authored as TOML**, following the repo's
-generated-`auto.toml`-plus-curated-overrides pattern — humans touch it (explicitly
-curated editions, comments carrying curation rationale), so a comment-capable format is
-required. Inventory version stays 1 because the required representation rule changes no
-accepted bytes. The compiled relational contract is fixed in the owning designs.
-Inventory ↔ reg_meta DB consistency (every mapping's
-`(register_variant, variable FQID, representation)` resolves against the flavored DB) is
-a **standing build/CI gate**, not a one-off check.
-
-**The v1 order manifest is a versioned JSON contract (ratified 2026-08-31, replacing the
-earlier nine-column CSV decision).** It is machine-written by the materializer and
-machine-read by the steward-side extract system (MONA for SWECOV; other stewards on
-their own private runtimes), never hand-edited, and validated by a Pydantic contract at
-both boundaries. It must be **self-contained for offline steward-side extraction** — no
-network, no catalog lookup: order metadata plus provenance (steward, catalog/DB
-versions, project identity/hash) plus resolved entries, each carrying the logical
-coordinate (`provider,register,variant,variable`), the requested period, and the
-physical coordinate (`edition,table,column`). Serialization is deterministic (sorted
-keys, stable entry order). Extraction output is one UTF-8 CSV per (variant, edition
-segment, partition), named in **slug spelling** derived from the manifest entry (e.g.
-`lisa_individer-15plus_2019.csv`; a partitioned table adds its partition token; a
-multi-period range segment renders `lo..hi` and extracts whole as one file — v1 has no
-row filter, so a range is never split per year). The naming convention is pinned in the
-order contract, not improvised by the extractor; steward display casing is not carried
-in the manifest (decided 2026-08-31, A-28 — re-add only if a steward-side consumer
-concretely needs display-cased filenames). A human-readable table rendering of the
-manifest may exist as a derived view for the executing data manager; the JSON is the
-contract.
-
-Rules:
-
-- every researcher project declares an explicit requested period. Finite sources use the
-  shared period grammar; the whole `"_default"` selects year-independent data only at an
-  explicit concrete variant with matching year-independent states/holdings. It cannot be
-  an all-years sentinel or accompany the variant-less `_default` coordinate; missing or
-  incompatible independent holdings block the order, never gain dates;
-- the SPA's common study window is an authoring default, not hidden schema inheritance.
-  When a source has any overlap, adding it persists the full available intersection by
-  default, preserving every disjoint segment. With no overlap, block the add and explain
-  the incompatibility in the picker rather than inventing a period. If a later common-
-  window edit leaves an existing source disjoint, retain its explicit period and mark
-  the project blocking. Highlight every divergence in both the picker and project page.
-  A common-window edit never silently rewrites existing source periods; an explicit
-  "apply overlap to all" action performs that rewrite where overlap exists;
-- **intersection semantics (ratified 2026-08-31):** a source period expresses "these
-  columns, wherever each is available inside this window." Before slicing, clip each
-  binding to that column's documented availability window; a clip is **reported
-  informationally per binding** ("DispInk09: available from 2019, ordered 2019–2020"),
-  never silent, and never an error. This is what resolves the variable-by-period matrix
-  (dogfood 2026-08-30 P0.4) without schema change: one source per variant, no
-  cross-product over-order;
-- for each selected binding, after availability clipping, resolve any representation
-  changes into deterministic logical slices. A steward table matches a slice only when
-  its mapping exactly matches `(register_variant, variable, representation)` and its
-  physical edition overlaps that slice; overlap elsewhere in the overall request does
-  not match. The edition contributes only its overlap with that slice to coverage. The
-  union of those slice-clipped contributions must cover the full availability-clipped
-  requested period, including every segment of a disjoint request. Any uncovered
-  subperiod **within a column's availability window** blocks the entire order with the
-  exact gaps; overlap alone never permits a partial manifest;
-- after that coverage gate passes, emit every table matching at least one slice by
-  default — every partition included; v1 has no table chooser and no separate population
-  field;
-- a matching multi-period table is ordered whole, even when its matched slice covers
-  only a subset of the table's edition;
-- steward entries carry the literal physical `table` and physical `column`. The
-  canonical `representation` is a join discriminator, not an output substitute, and
-  `display_name` is not a delivery coordinate;
-- the confirmed global-deployment fallback is the same entry shape with blank `table`,
-  the resolved canonical column in `column`, and `edition = requested_period` until a
-  physical global inventory exists. It obeys the same full-coverage gate using canonical
-  resolution; if representation changes across the request, fan out deterministically,
-  and block unresolved or ambiguous bindings and any gaps within the
-  availability-clipped request; availability clipping itself remains informational;
-- `steward` names the active deployment/artifact. `ProjectData.steward` is provenance
-  and must match before ordering;
-- uploading a project to a steward deployment always validates it against that
-  deployment's compiled holdings. A provenance mismatch blocks ordering. Steward
-  retargeting is deliberately not an application feature: a user who intends to change
-  provenance edits the JSON and uploads it again;
-- an empty project remains a structurally valid editable draft but is not order-ready
-  and cannot produce a header-only manifest;
-- missing, unresolved, or ambiguous logical-to-physical mappings are blocking order
-  errors, never best-effort labels;
-- preserve project source/binding order and sort fan-out rows deterministically by
-  table, canonical edition, then physical column;
-- the materializer and semantic resolution are shared `reg_meta` domain code, with thin
-  FastAPI and CLI/plugin adapters. FastAPI serves the SPA; the local agent/CLI loads the
-  selected compiled SQLite generation directly. Both adapters must emit byte-identical
-  results. This deliberately adds `reg_meta → reg_schema` rather than creating another
-  package.
-
-**Deferred (2026-08-31): per-binding period override.** No schema change now —
-intersection semantics above cover every observed case. If a researcher ever
-deliberately wants *less* than the availability intersection, the shape is a
-binding-level period override narrowing below the variant-level source period
-independent of availability (e.g. source LISA 2000–2020 but `DispInk09` only 2000–2002
-even though it exists later too). File it when someone actually asks; the availability
-clip leaves the seam (an override is just a further clip).
-
-`simplify:` v1 records no row filter and includes the whole matching table. Add
-table-specific period predicates when steward delivery/extraction consumes the manifest.
-SWECOV's one-large-SQL-table-per-SoS-register delivery is the known upgrade trigger; it
-will need period-column `WHERE` clauses later.
-
-### Status and remaining items
-
-The compiled-holdings cut shipped through plans 00 to 05b of the series and passed
-independent acceptance on 2026-10-06 against the pinned schema-9 public and SWECOV
-steward artifacts. It was released the same day as `reg_meta/v0.41.0` and
-`reg_meta_build/v0.31.0`, after the builder defect fix (#1160) filled
-`classification_fts` and added `ANALYZE` to builds, and both deployments serve schema 9.
-The closed project root (#1134) and the 2026-07-14 interface decisions now live in
-`reg_schema/DESIGN.md`, `reg_meta/DESIGN.md` and `reg_webapp/DESIGN.md`.
-
-Still open under this section:
-
-- **Package test sweep:** see "Remaining test coverage" below.
-- **Reader defects found by the sweep:** CLI alias fallback returns unheld reference
-  metadata under holdings scope; concept-group `matched_count` counts hit rows, not
-  distinct members; `--no-fold` page-1 order depends on `limit`; the three-hint cap
-  drops the "Table view truncated" hint; the first-run docs download ignores the
-  selected catalog. Each needs a regression case in the owning reader corpus.
-- **Shared semantic pass:** the project semantic layer still lives in the webapp
-  (`reg_webapp/DESIGN.md` → "Current semantic validation"); the rules above place it in
-  shared `reg_meta` code.
-- **Common study window:** the SPA authoring default in the rules above is not built
-  (`reg_webapp/DESIGN.md`, "Still to come").
-- **Citation retarget:** every `rg '§12'` hit across tracked files, including the
-  codegen'd frontend types, cites this section as decision text. Move the per-binding
-  period-override deferral and the row-filter `simplify:` into `reg_meta/DESIGN.md` →
-  "Order materializer and manifest", retarget those citations to the owning
-  `reg_meta/DESIGN.md` sections, then delete this section.
-
-Diagnostic and MONA/PII guards remain intact.
-
 ## P — Measured web performance hardening
 
 The 2026-07-14 production trace establishes the v1 baseline and rationale in
-`reg_webapp/DESIGN.md` → "Production performance baseline". This lane gates v1 quality
-but is file-disjoint enough to run alongside the steward inventory/order work. Do not
-turn it into generic frontend optimization: the home page and interactions are already
-fast, and DevTools estimated zero FCP/LCP savings from removing render-blocking CSS.
+`reg_webapp/DESIGN.md` → "Production performance baseline". This lane gates v1 quality.
+Do not turn it into generic frontend optimization: the home page and interactions are
+already fast, and DevTools estimated zero FCP/LCP savings from removing render-blocking
+CSS.
 
 The first two corrections shipped 2026-07-14. #1135 replaced full-result/count work with
 bounded, stable-cursor search and measured a 276.1 ms direct-origin p95 plus 380 ms
@@ -457,7 +254,11 @@ freeze.
 ## Remaining test coverage
 
 Carried from the testing strategy; the shipped categories are in
-[`ARCHITECTURE.md`](ARCHITECTURE.md). Still to build:
+[`ARCHITECTURE.md`](ARCHITECTURE.md). The per-package test sweep is finished: root
+`conformance/` owns the relocated corpora and synthetic/real artifact checks, every
+package suite follows the `AGENTS.md` policy (plans 06a–06c and #1169), and the test
+lints carry no allowlists. Accepted-private-input census ships via opt-in
+`--holdings-input`. Still to build:
 
 - **Kit reproducibility** — same spec + codes + stats → identical kit zip. Deferred to
   the MONA rebuild (#707; was gated on `/api/kit`).
@@ -466,20 +267,11 @@ Carried from the testing strategy; the shipped categories are in
   the cold-query budget without relying on edge hits; bound classification detail
   payloads independently of corpus cardinality; retain controlled cold/repeat CLS trace
   evidence; and probe immutable hashed assets plus the search edge MISS→HIT contract.
-  See `ARCHITECTURE.md` → Repo-wide invariants.
-- **Per-package test sweep** — root `conformance/` now owns the relocated corpora and
-  synthetic/real artifact checks. The `reg_webapp` backend, `reg_meta` and
-  `reg_meta_build` suites were swept under the `AGENTS.md` policy (plans 06a–06c: #1153,
-  #1155 to #1159, #1161 and #1162). Left: sweep `reg_schema`, and drain the remaining
-  allowlist entries (private boundaries: `reg_meta_build/tests/_shared_fixtures.py`,
-  `reg_meta_build/tests/test_source_scope.py`, `reg_schema/tests/test_structural.py`,
-  `scripts/tests/test_gh_issue.py`, `scripts/tests/test_prototype_scb_inputs.py`; size:
-  `reg_schema/tests/test_structural.py`). Accepted-private-input census is shipped via
-  opt-in `--holdings-input`. Historical-order comparisons, latency and cold-boot
-  measurements remain separate maintainer checks. At the schema-9 acceptance, local
-  TestClient measurements were within every holdings budget and cold boot showed no
-  regression against `b45f916d` in the same environment; nothing was measured on Fly.
-  See `ARCHITECTURE.md` → Testing strategy.
+  Historical-order comparisons, latency and cold-boot measurements remain separate
+  maintainer checks. At the schema-9 acceptance, local TestClient measurements were
+  within every holdings budget and cold boot showed no regression against `b45f916d` in
+  the same environment; nothing was measured on Fly. See `ARCHITECTURE.md` → Repo-wide
+  invariants and Testing strategy.
 
 ## Open / deferred decisions
 
@@ -515,13 +307,13 @@ Carried from the testing strategy; the shipped categories are in
 ## Tracking issues
 
 Open issues seeded from or feeding this plan: #707 (from-scratch MONA bundle + mock-data
-rebuild epic), #1134 (closed project root), #206 (steward admission keying — decided
-column-based 2026-06-11 and implemented), #209 (v1 slug freeze), #196 + #197
-(identity-churning curation — pre-freeze), and #200 + #266 (authoring-UX ride-alongs for
-the 7.5 dogfood). Deferred beyond v1 but recorded so pointers resolve: #212
-(materializer-owned value tables) and #271 (interval-native resolver). Resolved since
-this spec was seeded: #1135 (bounded search, PR #1138), #1136 (catalog layout stability,
-PR #1139), #699 (MONA bundle and mock-data archive, closed when PR #700 removed the
+rebuild epic), #206 (steward admission keying — decided column-based 2026-06-11 and
+implemented), #209 (v1 slug freeze), #196 + #197 (identity-churning curation —
+pre-freeze), and #200 + #266 (authoring-UX ride-alongs for the 7.5 dogfood). Deferred
+beyond v1 but recorded so pointers resolve: #212 (materializer-owned value tables) and
+#271 (interval-native resolver). Resolved since this spec was seeded: #1134 (closed
+project root), #1135 (bounded search, PR #1138), #1136 (catalog layout stability, PR
+#1139), #699 (MONA bundle and mock-data archive, closed when PR #700 removed the
 subsystem), #220 + #224 + #278 (the 6.5 deployment set, closed when 6.5 shipped
 2026-06-11), #210 (SOS classification path, closed via PRs #273/#274), #211 (LOVA/LVM
 deldatamängd→variant curation, shipped early via PR #359 2026-06-12 instead of batching

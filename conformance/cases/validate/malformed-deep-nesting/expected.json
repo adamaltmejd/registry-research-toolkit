@@ -1,0 +1,14 @@
+[
+  {
+    "status": 400,
+    "json": {
+      "/detail": "project JSON is nested too deeply"
+    }
+  },
+  {
+    "status": 400,
+    "json": {
+      "/detail": "project JSON is nested too deeply"
+    }
+  }
+]

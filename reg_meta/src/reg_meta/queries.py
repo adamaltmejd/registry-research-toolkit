@@ -13,6 +13,7 @@ import unicodedata
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 from binascii import Error as Base64Error
 from hashlib import sha256
+from itertools import groupby
 from typing import TYPE_CHECKING, Any
 
 from .catalog import (
@@ -208,9 +209,9 @@ def _encode_search_cursor(context: str, offset: int, after: str) -> str:
 # This literal MIRRORS `reg_meta_build/id.py::_MINT_BIT` (= 1 << 62) — the
 # build/runtime boundary keeps `_MINT_BIT` out of reg_meta, so it's duplicated,
 # not imported. If `_MINT_BIT` ever moves, update this too;
-# `test_band_constant_in_sync_with_build` in
-# `reg_meta/tests/test_var_id_nonnumeric.py` asserts equality and will fail CI
-# if the two literals diverge.
+# `test_pipeline_built_non_scb_variable_reports_no_var_id` in
+# `reg_meta/tests/test_var_id_nonnumeric.py` reads a pipeline-built artifact
+# through this band and fails CI if the two boundaries diverge.
 _SCB_ID_CEILING = 2**62
 _VAR_ID_EXPR = (
     "CASE WHEN {vid} < " + str(_SCB_ID_CEILING) + " "
@@ -697,13 +698,13 @@ def search(
     # A prefix that grows with each cursor can therefore change already-consumed
     # identities when a later sibling enters the fold. Use one fixed, bounded
     # horizon for every foldable branch so all pages see the same fold universe.
-    # Non-foldable register/value branches keep the cheaper limit+1 prefix.
-    fold_candidate_limit = _MAX_CURSOR_POSITION + 1 if fold_groups else candidate_limit
-    entity_candidate_limit = (
-        _MAX_CURSOR_POSITION + 1
-        if type in {"all", "register", "variable", "classification"}
-        else fold_candidate_limit
-    )
+    # The identity-promotion swamp gate below counts the same universe, folded
+    # or not: an adaptive limit+1 prefix would let the page size decide whether
+    # generic exact matches are promoted. So every arm whose rows can carry an
+    # identity score runs at the horizon, the same SQL bound as the default
+    # folded search. Only the value arm (codes carry no identity score) keeps the
+    # cheaper limit+1 prefix.
+    horizon_limit = _MAX_CURSOR_POSITION + 1
     branch_offset = 0
 
     reg_ids: set[int] | None = None
@@ -731,7 +732,7 @@ def search(
 
     def add_candidates(rows: list[dict[str, Any]], branch_limit: int) -> None:
         nonlocal candidate_saturated
-        # Only an adaptive prefix can be expanded. A foldable branch already ran
+        # Only an adaptive prefix can be expanded. A horizon branch already ran
         # at the absolute bounded horizon and is stable across every cursor.
         if branch_limit < _MAX_CURSOR_POSITION + 1:
             candidate_saturated = candidate_saturated or len(rows) >= branch_limit
@@ -778,12 +779,12 @@ def search(
                 conn,
                 like_pattern,
                 reg_ids,
-                fold_candidate_limit,
+                horizon_limit,
                 branch_offset,
                 year_range=year_range,
                 scope=scope,
             ),
-            fold_candidate_limit,
+            horizon_limit,
         )
 
     if field in ("varname", "all") and type in ("variable", "all"):
@@ -792,12 +793,12 @@ def search(
                 conn,
                 like_pattern,
                 reg_ids,
-                fold_candidate_limit,
+                horizon_limit,
                 branch_offset,
                 year_range=year_range,
                 scope=scope,
             ),
-            fold_candidate_limit,
+            horizon_limit,
         )
 
     if field in ("description", "all") and fts_query is not None:
@@ -808,12 +809,12 @@ def search(
                     fts_query,
                     reg_ids,
                     exclude_fqids is not None,
-                    entity_candidate_limit,
+                    horizon_limit,
                     branch_offset,
                     year_range=year_range,
                     scope=scope,
                 ),
-                entity_candidate_limit,
+                horizon_limit,
             )
         if type in ("variable", "all"):
             add_candidates(
@@ -821,23 +822,23 @@ def search(
                     conn,
                     fts_query,
                     reg_ids,
-                    limit=entity_candidate_limit,
+                    limit=horizon_limit,
                     offset=branch_offset,
                     year_range=year_range,
                     scope=scope,
                 ),
-                entity_candidate_limit,
+                horizon_limit,
             )
         if type in ("classification", "all") and classification_surfaces_on:
             cls_rows = _search_classifications(
                 conn,
                 fts_query,
                 exclude_fqids is not None,
-                entity_candidate_limit,
+                horizon_limit,
                 branch_offset,
             )
             classification_name_ids.update(r["_classification_id"] for r in cls_rows)
-            add_candidates(cls_rows, entity_candidate_limit)
+            add_candidates(cls_rows, horizon_limit)
 
     # Code-aware classification surfacing (#393 item 5): a code-shaped query also
     # surfaces the classifications that CONTAIN a matching code (C12 -> ICD-10-SE),
@@ -857,10 +858,10 @@ def search(
                 conn,
                 query,
                 classification_name_ids,
-                fold_candidate_limit,
+                horizon_limit,
                 branch_offset,
             ),
-            fold_candidate_limit,
+            horizon_limit,
         )
 
     # Code/value search (#352): FTS over value_code labels + exact/prefix code
@@ -916,7 +917,7 @@ def search(
                 type=type,
                 year_range=year_range,
                 scope=scope,
-                limit=fold_candidate_limit,
+                limit=horizon_limit,
                 offset=branch_offset,
             )
             if field in ("varname", "description", "all") and fts_query is not None
@@ -1138,7 +1139,7 @@ def _search_identity_score(query: str, row: dict[str, Any]) -> int:
 
 def _search_group_authority_bonus(row: dict[str, Any]) -> int:
     if row.get("type") == "group" and row.get("label_matched"):
-        return 50 + min(len(row.get("matched") or ()), 50)
+        return 50 + min(row.get("matched_count", 0), 50)
     return 0
 
 
@@ -1152,12 +1153,6 @@ def _search_display_score(query: str, row: dict[str, Any]) -> int:
     results.
     """
     return _search_identity_score(query, row) + _search_group_authority_bonus(row)
-
-
-def _matched_count(row: dict[str, Any]) -> int:
-    """How many leaf hits a fold row (`group` / `classification_succession`)
-    collapsed — the length of its `matched` list."""
-    return len(row.get("matched") or [])
 
 
 def _member_models(row: dict[str, Any]) -> tuple[ConceptGroupMember, ...]:
@@ -1235,7 +1230,7 @@ def _row_to_model(row: dict[str, Any]) -> SearchResult:
                 )
                 for e in row.get("editions", [])
             ),
-            matched_count=_matched_count(row),
+            matched_count=row["matched_count"],
             rank=rank,
         )
     if row_type == "group":
@@ -1246,7 +1241,7 @@ def _row_to_model(row: dict[str, Any]) -> SearchResult:
             source=row.get("group_source"),
             register=row.get("register_name"),
             member_count=row.get("member_count", 0),
-            matched_count=_matched_count(row),
+            matched_count=row["matched_count"],
             label_matched=row.get("label_matched", False),
             members=_member_models(row),
             rank=rank,
@@ -2593,6 +2588,10 @@ def _classification_succession_row(
         "classification_name": terminal["name"] if terminal else None,
         "editions": editions,
         "matched": matched,
+        # Distinct editions, not hit rows. The code-containment arm excludes
+        # editions the name arm already returned, so today each edition arrives
+        # once; counting ids keeps the count right if an arm stops excluding.
+        "matched_count": len({h["_classification_id"] for h in matched}),
         "fts_rank": min((h.get("fts_rank", 0) for h in matched), default=0),
         "_classification_id": terminal["id"] if terminal else None,
     }
@@ -2875,6 +2874,9 @@ def _group_result_row(
         "member_count": len(members),
         "members": members,
         "matched": matched,
+        # Distinct members, not hit rows: `--field all` reaches one member
+        # through both the variable and the varname arm.
+        "matched_count": len({_member_key(h) for h in matched}),
         "label_matched": label_matched,
         "fts_rank": min((h.get("fts_rank", 0) for h in matched), default=0),
     }
@@ -3268,12 +3270,15 @@ def get_varinfo(
             "JOIN register r ON v.register_id = r.register_id "
             "WHERE py_lower(a.delivery_column_name) = py_lower(?)"
         )
+        alias_params: list[Any] = [variable]
         if reg_ids:
-            ph = _in_placeholders(reg_ids)
-            alias_sql += f" AND v.register_id IN ({ph})"
-            matched_vars = conn.execute(alias_sql, [variable, *reg_ids]).fetchall()
-        else:
-            matched_vars = conn.execute(alias_sql, (variable,)).fetchall()
+            alias_sql += f" AND v.register_id IN ({_in_placeholders(reg_ids)})"
+            alias_params.extend(reg_ids)
+        # The alias arm is scoped like the id/name arms: an unheld variable
+        # must not resolve through its column header under holdings scope.
+        matched_vars = _scoped_variable_rows(
+            conn, alias_sql, alias_params, scope=scope
+        ).fetchall()
 
     if not matched_vars:
         raise RegMetaError(
@@ -3798,12 +3803,15 @@ def get_values_by_variable(
             "JOIN variable v ON a.variable_id = v.variable_id "
             "WHERE py_lower(a.delivery_column_name) = py_lower(?)"
         )
+        alias_params: list[Any] = [variable]
         if reg_ids:
-            ph = _in_placeholders(reg_ids)
-            alias_sql += f" AND v.register_id IN ({ph})"
-            matched = conn.execute(alias_sql, [variable, *reg_ids]).fetchall()
-        else:
-            matched = conn.execute(alias_sql, (variable,)).fetchall()
+            alias_sql += f" AND v.register_id IN ({_in_placeholders(reg_ids)})"
+            alias_params.extend(reg_ids)
+        # Scoped like the id/name arms: an unheld variable must not resolve
+        # through its column header under holdings scope.
+        matched = _scoped_variable_rows(
+            conn, alias_sql, alias_params, scope=scope
+        ).fetchall()
 
         # Generic column aliases (e.g. "Rad", "Kolumn1", "OBS_VALUE") map to
         # many unrelated variables. Refuse to silently merge their value sets
@@ -4475,13 +4483,19 @@ def get_coded_variables(
     `n_instances` counts distinct states now — the per-era shape is the unit the
     shipped DB carries.
     """
+    if limit == 0:
+        return []
     scope = resolve_scope(conn, scope)
     register_catalog_udfs(conn)
+    # Counting distinct codes is the expensive part: joining every coded state
+    # to its value-set members fans out to ~50M rows on the release catalog
+    # (~70 s). So aggregate at state grain first, carrying each name's distinct
+    # value sets, and count codes only for the n_registers tiers the ranking
+    # reaches. A state counts only when its value set has a member, exactly as
+    # the member join used to require.
     rows = conn.execute(
-        "SELECT v.name AS variable_name, "
-        "COUNT(DISTINCT vc.code) as n_distinct_codes, "
-        "COUNT(DISTINCT v.register_id) as n_registers, "
-        "COUNT(DISTINCT vs.state_id) as n_instances "
+        "WITH coded AS ("
+        "SELECT v.name, v.register_id, vs.state_id, coding.value_set_id "
         "FROM variable v "
         "JOIN variable_state vs ON vs.variable_id = v.variable_id "
         "JOIN (SELECT state_id, value_set_id FROM variable_state WHERE value_set_id IS NOT NULL "
@@ -4490,8 +4504,6 @@ def get_coded_variables(
         "AND w.register_variant_id = vs.register_variant_id "
         "AND w.valid_from <= vs.valid_to AND w.valid_to >= vs.valid_from "
         "WHERE w.coding_metadata = 'per_column') coding ON coding.state_id = vs.state_id "
-        "JOIN value_set_member vsm ON coding.value_set_id = vsm.value_set_id "
-        "JOIN value_code vc ON vsm.code_id = vc.code_id "
         "WHERE "
         + scope_predicate(
             scope,
@@ -4502,22 +4514,51 @@ def get_coded_variables(
             period_scope_sql="vs.period_scope",
             bounds_sql=("vs.valid_from", "vs.valid_to"),
         )
-        + " "
-        "GROUP BY v.name "
-        "HAVING n_distinct_codes >= ? AND n_registers >= ? "
-        "ORDER BY n_registers DESC, n_distinct_codes DESC "
-        "LIMIT ?",
-        (min_codes, min_registers, limit),
+        + " AND EXISTS (SELECT 1 FROM value_set_member vsm "
+        "WHERE vsm.value_set_id = coding.value_set_id)) "
+        "SELECT name AS variable_name, "
+        "COUNT(DISTINCT register_id) AS n_registers, "
+        "COUNT(DISTINCT state_id) AS n_instances, "
+        "json_group_array(DISTINCT value_set_id) AS value_set_ids "
+        "FROM coded GROUP BY name "
+        "HAVING n_registers >= ? "
+        "ORDER BY n_registers DESC, name",
+        (min_registers,),
     ).fetchall()
-    return [
-        {
-            "variable_name": r["variable_name"],
-            "n_distinct_codes": r["n_distinct_codes"],
-            "n_registers": r["n_registers"],
-            "n_instances": r["n_instances"],
-        }
-        for r in rows
-    ]
+    ranked: list[dict[str, Any]] = []
+    for _, group in groupby(rows, key=lambda r: r["n_registers"]):
+        tier = list(group)
+        # One query per tier, one value-set list per name, in tier order. The
+        # `IN` subqueries dedupe integer code_ids before any code text is
+        # compared, which is several times cheaper than COUNT(DISTINCT) over
+        # every member row of a name with many overlapping vintages.
+        counts = [
+            count
+            for (count,) in conn.execute(
+                "SELECT (SELECT COUNT(DISTINCT vc.code) FROM value_code vc "
+                "WHERE vc.code_id IN (SELECT vsm.code_id FROM value_set_member vsm "
+                "WHERE vsm.value_set_id IN (SELECT value FROM json_each(t.value)))) "
+                "FROM json_each(?) t ORDER BY t.key",
+                ("[" + ",".join(r["value_set_ids"] for r in tier) + "]",),
+            )
+        ]
+        found = [
+            {
+                "variable_name": r["variable_name"],
+                "n_distinct_codes": counts[position],
+                "n_registers": r["n_registers"],
+                "n_instances": r["n_instances"],
+            }
+            for position, r in enumerate(tier)
+            if counts[position] >= min_codes
+        ]
+        # Stable sort: equal code counts keep the tier query's name order.
+        found.sort(key=lambda r: -r["n_distinct_codes"])
+        ranked.extend(found)
+        if 0 < limit <= len(ranked):
+            break
+    # A negative limit means no limit, as SQLite's LIMIT read it.
+    return ranked if limit < 0 else ranked[:limit]
 
 
 def resolve(

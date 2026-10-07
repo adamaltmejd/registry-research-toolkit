@@ -19,7 +19,7 @@ from .doc_db import (
     DOCS_SOURCE_FILE,
     open_doc_db,
 )
-from .errors import EXIT_CONFIG, EXIT_NETWORK, RegMetaError
+from .errors import EXIT_CONFIG, EXIT_NETWORK, EXIT_USAGE, RegMetaError
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -284,15 +284,46 @@ def _write_source_tag(path: Path, tag: str) -> None:
         )
 
 
+def confirm_db_download(tag: str, destination: Path) -> bool:
+    """Ask on the terminal before a main-DB download; False means declined.
+
+    Without a terminal there is no one to answer, so this is a usage error
+    naming --yes rather than an EOF crash. Ctrl-D at the prompt declines."""
+    if not sys.stdin.isatty():
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="usage_error",
+            error_class="usage",
+            message="Downloading the database needs confirmation, but stdin is not a terminal.",
+            remediation="Pass --yes to `reg-meta update` to download without a prompt.",
+        )
+    sys.stderr.write(
+        f"This will download ~400 MB and decompress to ~1.6 GB.\n"
+        f"  Tag:         {tag}\n"
+        f"  Destination: {destination}\n"
+        f"Continue? [y/N] "
+    )
+    sys.stderr.flush()
+    try:
+        answer = input().strip().lower()
+    except EOFError:
+        answer = ""
+    if answer in ("y", "yes"):
+        return True
+    sys.stderr.write("Aborted.\n")
+    return False
+
+
 def download_db(
     db_dir: Path | None = None,
     *,
     tag: str = "latest",
     catalog: str = "global",
     force: bool = False,
-    yes: bool = False,
 ) -> dict[str, Any]:
     """Download pre-built main database from GitHub Releases.
+
+    Callers confirm first (`confirm_db_download`) unless the user passed --yes.
 
     Returns dict with db_path, tag, and size_bytes.
     """
@@ -320,26 +351,15 @@ def download_db(
                 code="no_db_in_release",
                 error_class="configuration",
                 message="No recent release includes a database asset.",
-                remediation="Specify --tag explicitly, or build from CSV with "
-                "`reg-meta-build build-db`.",
+                remediation=(
+                    "Pass a release that carries one to `reg-meta update --tag`, "
+                    f"or report the missing asset at https://github.com/{GITHUB_REPO}/issues."
+                ),
             )
         resolved_tag = resolution.db_tag
     else:
         resolved_tag = tag
     url = DOWNLOAD_URL.format(tag=resolved_tag, asset=catalog_asset_name(catalog))
-
-    if not yes:
-        sys.stderr.write(
-            f"This will download ~400 MB and decompress to ~1.6 GB.\n"
-            f"  Tag:         {resolved_tag}\n"
-            f"  Destination: {final_path}\n"
-            f"Continue? [y/N] "
-        )
-        sys.stderr.flush()
-        answer = input().strip().lower()
-        if answer not in ("y", "yes"):
-            sys.stderr.write("Aborted.\n")
-            return {"aborted": True}
 
     db_dir.mkdir(parents=True, exist_ok=True)
     tmp_zst = final_path.with_suffix(".db.zst.tmp")
@@ -405,7 +425,9 @@ def download_docs_db(
 
     Mirrors :func:`download_db` but for the doc asset. The asset is small
     (~600 KB compressed → ~3 MB on disk) so there is no confirmation
-    prompt. ``tag="latest"`` resolves via the release walker.
+    prompt. ``tag="latest"`` resolves via the release walker to the newest
+    release carrying the shared docs asset; that pick does not depend on the
+    selected catalog.
     """
     if db_dir is None:
         db_dir = default_db_dir()
@@ -429,8 +451,9 @@ def download_docs_db(
                 error_class="configuration",
                 message="No recent release includes a doc DB asset.",
                 remediation=(
-                    "Specify --tag explicitly, or build from markdown with "
-                    "`reg-meta-build build-docs`."
+                    "Metadata commands work without the doc DB. Pass a release "
+                    "that carries one to `reg-meta update --tag`, or report the "
+                    f"missing asset at https://github.com/{GITHUB_REPO}/issues."
                 ),
             )
         resolved_tag = resolution.docs_tag

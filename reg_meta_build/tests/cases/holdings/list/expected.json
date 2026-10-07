@@ -43,7 +43,5 @@
       "representation_canonical": "Value"
     }
   ],
-  "warnings": [
-    "holding_temporally_unassessed"
-  ]
+  "warnings": []
 }

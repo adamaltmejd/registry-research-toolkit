@@ -49,6 +49,7 @@ import {
   applyStagedPicks,
   committedPickerRows,
   type StagedApplyOutcome,
+  stagedApplyRefusal,
 } from "./staged_picker";
 import TechnicalDetails from "./TechnicalDetails.svelte";
 import { KeyValue, type KeyValueRow, Tag } from "./ui";
@@ -666,10 +667,18 @@ const committedRows = $derived(
 /** The applied outcome (drives the inline confirmation). */
 let applyOutcome = $state<StagedApplyOutcome | null>(null);
 
-/** Set when an Apply was refused because a staged add resolved no finite period
- * (drives the inline notice). Retired by a resolution change (the effect below)
+/** Why the last Apply authored NOTHING, else null — a staged add that resolved no
+ * finite period, or one with no years inside the add window (drives the inline
+ * notice). Retired by a resolution change, a study-window move (the effects below)
  * and by any staging change, so it never outlives the pick it refused. */
-let periodRequired = $state(false);
+let addRefusal = $state<string | null>(null);
+
+// Moving the study window is what an outside-window refusal asks for, so it
+// retires the refusal (only the refusal: a confirmation still describes its Add).
+$effect(() => {
+  void pickerWindow;
+  addRefusal = null;
+});
 
 // A fresh resolution / leaf change clears the stale confirmation. Tracking
 // `fqidPath` (the navigation key) re-invalidates on a leaf change independent of
@@ -681,7 +690,7 @@ $effect(() => {
   void params.value_set_version;
   void fqidPath;
   applyOutcome = null;
-  periodRequired = false;
+  addRefusal = null;
 });
 
 /** So a pick still waiting on the restore gate is abandoned rather than committed
@@ -692,12 +701,14 @@ const unmounted = unmountedFlag();
  * which owns the fan-out, the resolve and the ONE store mutation; this view owns
  * only the lines it says about the result. */
 async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
+  const scope = { period: activePickerPeriod, window: pickerWindow };
   const result = await applyStagedPicks(payload, {
-    scope: { period: activePickerPeriod, window: pickerWindow },
+    scope,
+    studyWindow: boundedProjectWindow,
     seed: { regMetaVersion, steward },
     cancelled: unmounted,
   });
-  periodRequired = result.kind === "period-required";
+  addRefusal = stagedApplyRefusal(result, scope, ADD_PERIOD_REQUIRED_MESSAGE);
   if (result.kind === "applied") {
     applyOutcome = result.outcome;
   }
@@ -813,6 +824,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
       bands={pickerBands}
       window={pickerWindow}
       canAdd={seedReady}
+      studyWindow={boundedProjectWindow}
       {committedRows}
       activePeriod={activePickerPeriod}
       graph={graphReady ? graph : null}
@@ -821,7 +833,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
       onstagechange={(hasDiff) => {
         // Clearing the staging retires the refusal too (there is no longer a pick
         // to author), so the notice can never outlive the diff it described.
-        periodRequired = false;
+        addRefusal = null;
         if (hasDiff) {
           applyOutcome = null;
         }
@@ -833,7 +845,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
        hence the refusal's "select and add again" rather than a bare retry. -->
   <StagedAddStatus
     outcome={applyOutcome}
-    blocked={periodRequired ? ADD_PERIOD_REQUIRED_MESSAGE : null}
+    blocked={addRefusal}
   />
 
   {#if params.period && (params.variant || params.value_set_version)}

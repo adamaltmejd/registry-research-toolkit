@@ -34,11 +34,10 @@ def select_json(value, path):
     return walk(value, parts)
 
 
-def assert_http_case(case, tmp_path, monkeypatch):
+def case_artifact(request, tmp_path, monkeypatch):
+    """Build a case's readable source and point the app at it; return its path."""
     from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
 
-    request = json.loads((case / "request.json").read_text())
-    expected = json.loads((case / "expected.json").read_text())
     kind = request.get("kind", "steward")
     fixture = request.get("fixture", "compiled")
     source = fixture if fixture.startswith("reader") else CASES / "fixtures" / fixture
@@ -52,6 +51,14 @@ def assert_http_case(case, tmp_path, monkeypatch):
     monkeypatch.setenv(
         "REG_WEBAPP_STEWARD", "swecov" if kind == "steward" else "global"
     )
+    return path
+
+
+def assert_http_case(case, tmp_path, monkeypatch):
+    request = json.loads((case / "request.json").read_text())
+    expected = json.loads((case / "expected.json").read_text())
+    kind = request.get("kind", "steward")
+    path = case_artifact(request, tmp_path, monkeypatch)
     if "golden_config" in request:
         # Pins are loaded at import, so exercise packaged files in a fresh runtime.
         runtime = tmp_path / "runtime"
@@ -100,6 +107,29 @@ def assert_http_case(case, tmp_path, monkeypatch):
         )
 
 
+def raw_body(step):
+    """A step's raw request bytes, or None when it sends `body` as JSON.
+
+    `content` is a string sent verbatim, encoded with the step's `encoding`
+    (default UTF-8), for documents a JSON value cannot spell: a duplicate key,
+    a byte-order mark, another encoding. `nested_arrays: N` is a root object
+    whose one value nests N arrays deep, too large to spell literally."""
+    if "nested_arrays" in step:
+        depth = step["nested_arrays"]
+        return b'{"nested": ' + b"[" * depth + b"]" * depth + b"}"
+    if "content" in step:
+        return step["content"].encode(step.get("encoding", "utf-8"))
+    return None
+
+
+def request_body(step):
+    """The `TestClient.request` keyword arguments for a step's body."""
+    raw = raw_body(step)
+    if raw is not None:
+        return {"content": raw, "headers": {"content-type": "application/json"}}
+    return {"json": step.get("body")}
+
+
 def run_http_requests(steps):
     """Exercise app responses, including fail-fast packaged configuration errors."""
     responses = []
@@ -116,7 +146,7 @@ def run_http_requests(steps):
                 step.get("method", "GET"),
                 step["path"],
                 params=params,
-                json=step.get("body"),
+                **request_body(step),
                 follow_redirects=False,
             )
             body = (

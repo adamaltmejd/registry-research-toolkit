@@ -1,0 +1,43 @@
+{
+  "kind": "catalog",
+  "fixture": "semantic",
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Synthetic semantic",
+        "sources": [
+          {
+            "name": "point",
+            "register_variant": "scb/example/annual",
+            "period": 2015,
+            "bindings": [
+              {
+                "variable": "scb/example/kon",
+                "type": "categorical"
+              }
+            ]
+          },
+          {
+            "name": "range",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2010,
+              "to": 2015
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/kon",
+                "type": "categorical"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -7,22 +7,10 @@ import json
 import subprocess
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-from reg_meta_build.input_snapshot import (
-    SCB_CSV_FILES,
-    SnapshotMaterializationError,
-    SnapshotStats,
-    prepare_snapshot,
-)
-
-from conftest import load_scripts_module
-
-if TYPE_CHECKING:
-    import pytest
+from reg_meta_build.input_snapshot import SCB_CSV_FILES, prepare_snapshot
 
 _MODULE = Path(__file__).resolve().parents[1] / "prototype_scb_inputs.py"
-prototype_scb_inputs = load_scripts_module("prototype_scb_inputs")
 
 
 def _run(*args: object) -> subprocess.CompletedProcess[str]:
@@ -89,60 +77,6 @@ def test_executable_verifies_a_prepared_snapshot(tmp_path: Path) -> None:
         "records": 1,
         "status": "verified",
     }
-
-
-def test_verify_reports_the_precise_sparse_hydration_action(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    repository = tmp_path / "accepted-inputs"
-    commit = "a" * 40
-    role = "snapshot/files/Vardemangder.csv"
-
-    def require_materialization(_snapshot: Path) -> None:
-        raise SnapshotMaterializationError(repository, commit, role)
-
-    monkeypatch.setattr(
-        prototype_scb_inputs, "verify_snapshot", require_materialization
-    )
-    assert prototype_scb_inputs.main(["verify", str(repository / "snapshot")]) == 2
-    error = capsys.readouterr().err
-    assert str(repository) in error
-    assert commit in error
-    assert role in error
-    assert "sparse-checkout add --stdin" in error
-
-
-def test_prepare_derives_provenance_from_the_executed_cli(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    inventory = tmp_path / "inventory.json"
-    output = tmp_path / "snapshot"
-    calls: list[Path] = []
-
-    def provenance(cli_path: Path) -> str:
-        calls.append(cli_path)
-        return "b" * 40
-
-    monkeypatch.setattr(prototype_scb_inputs, "converter_source_commit", provenance)
-    monkeypatch.setattr(
-        prototype_scb_inputs,
-        "prepare_snapshot",
-        lambda *_args, **_kwargs: SnapshotStats(
-            raw_bytes=0,
-            normalized_bytes=0,
-            records=0,
-            elapsed_seconds=0,
-            codec_sample={},
-        ),
-    )
-
-    args = prototype_scb_inputs._parser().parse_args(
-        ["prepare", str(inventory), str(output)]
-    )
-    assert prototype_scb_inputs._run(args)["records"] == 0
-    assert calls == [_MODULE]
 
 
 def test_identity_commands_reject_caller_supplied_checkouts(tmp_path: Path) -> None:

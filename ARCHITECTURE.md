@@ -64,11 +64,13 @@ A web application (FastAPI + Svelte SPA), designed for three steward-scoped flav
 one image, that lets researchers browse a catalog, author a per-project variable list,
 and export it as a data order. The human SPA and agent/CLI are equal v1 product
 surfaces: `POST /api/project/order` and `reg-meta order` are both thin adapters over the
-same `reg_meta.order.materialize_order`, pinned byte-identical by a cross-adapter test.
-`reg-meta` ships no separate `validate` subcommand — `reg-meta order` fails closed on
-any bad input, exit 10 for an unreadable/invalid project or catalog configuration and
-exit 17 for an order blocked by materialization findings — while the SPA validates the
-draft automatically on every edit.
+same `reg_meta.order.materialize_order`, and `POST /api/project/validate` and
+`reg-meta validate` over the same `reg_meta.semantic.validate_project`; each pair is
+pinned byte-identical by cross-adapter conformance tests. `reg-meta order` fails closed
+on any bad input, exit 10 for an unreadable/invalid project or catalog configuration and
+exit 17 for an order blocked by materialization findings; `reg-meta validate` writes its
+findings either way and exits 17 when one is an error. The SPA validates the draft
+automatically on every edit.
 
 The unifying research-intent artifact is **`project_data.json`** — written by the
 webapp, consumed by the shared materializer above and the planned MONA runner rebuild.
@@ -77,8 +79,9 @@ Its schema and structural validator are `reg_schema`
 physical filenames or SQL tables. Compiled physical holdings
 (`table + edition → literal columns → zero-or-more explicit logical mappings`) join a
 project and query-time reg_meta resolution to produce one normalized, versioned JSON
-order manifest for web and CLI. The materializer reads the selected compiled artifact
-for `global`/`swecov`; inventory remains a builder input.
+order manifest for web and CLI, with no per-steward export template. The materializer
+reads the selected compiled artifact for `global`/`swecov`; inventory remains a builder
+input.
 
 Current shipped coverage is browse/search the catalog → choose variables and periods →
 automatic validation → the versioned JSON order manifest. The former mock-data bootstrap
@@ -134,6 +137,11 @@ Each Python package releases to PyPI on its own tag (`reg_meta/v*`, `reg_meta_bu
   (webapp authors it, future exporters and the planned MONA runner rebuild read it).
   Tiny, focused, no `reg_meta` dep: the schema uses string IDs and leaves resolution to
   the consumer.
+- **`reg_meta → reg_schema`** — the order materializer and project semantic resolution
+  consume `ProjectData`, so they live in `reg_meta` as shared domain code. Taking this
+  edge was deliberate, rather than creating another package for them (2026-07-14,
+  #1137). Their thin-adapter contract is `reg_meta/DESIGN.md` → "Order materializer and
+  manifest".
 
 ### Accepted source revisions and catalog generations
 
@@ -336,9 +344,9 @@ steward reference visibility does not grant orderability. The existing
 `reg_schema/test_corpus/` stays in place for its Python and TS consumers.
 
 The corpus depends on public contracts rather than private Python internals. Private
-imports/internal patches and oversized test modules are gated by repo lints: zero
-conformance exemptions, frozen package file allowlists that only shrink as the package
-test sweep proceeds. A future language-independent reader port reuses these oracles.
+imports/internal patches and oversized test modules are gated by repo lints with no
+exemptions or file allowlists; the per-package test sweep (plans 06a–06c, #1169) emptied
+the last ones. A future language-independent reader port reuses these oracles.
 
 ### Discipline against ballooning
 
@@ -365,15 +373,15 @@ revisited only when the toolkit graduates to a wider user base.
 The Model A refactor spec dissolved into the docs below. Per-PR landing history lives in
 git (the `MIGRATION_PLAN.md` tracker was retired once A5 shipped).
 
-  | Old spec section                                                                                                    | New home                            |
-  | ------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-  | §1 background, §2/§3 product, §4 layout/deps, §9.3 REST, §11 changes, §12 invariants, §13 policy, §16 overview      | this file                           |
-  | §5 object model, FQID grammar, edge semantics, library API, glossary                                                | `reg_meta/DESIGN.md`                |
-  | §4.4 IR/adapter, §5.3 slug curation, §5.4 immutability, §5.6 lineage, §5.7 triage, ID minting                       | `reg_meta_build/DESIGN.md`          |
-  | §5.9, §6 `project_data.json` schema + structural/return-shape rules                                                 | `reg_schema/DESIGN.md`              |
-  | §6.8.3 semantic rules, §9 webapp                                                                                    | `reg_webapp/DESIGN.md`              |
-  | §7 (bundle), §10-bundle, §16 PII/determinism (archived)                                                             | `archive/mona-subsystem`            |
-  | §6.6 codes, §8 stats+kit, §9 deployment/stewards, §10 mockdata, §14 open decisions, §15 steps 6.5–12, remaining §16 | `REFACTOR_SPEC.md` (remaining work) |
+  | Old spec section                                                                                                        | New home                            |
+  | ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+  | §1 background, §2/§3 product, §4 layout/deps, §9.3 REST, §11 changes, §12 invariants, §13 policy, §16 overview          | this file                           |
+  | §5 object model, FQID grammar, edge semantics, library API, glossary; §6.8.3 semantic rules; §15 step 12 order manifest | `reg_meta/DESIGN.md`                |
+  | §4.4 IR/adapter, §5.3 slug curation, §5.4 immutability, §5.6 lineage, §5.7 triage, ID minting                           | `reg_meta_build/DESIGN.md`          |
+  | §5.9, §6 `project_data.json` schema + structural/return-shape rules                                                     | `reg_schema/DESIGN.md`              |
+  | §9 webapp                                                                                                               | `reg_webapp/DESIGN.md`              |
+  | §7 (bundle), §10-bundle, §16 PII/determinism (archived)                                                                 | `archive/mona-subsystem`            |
+  | §6.6 codes, §8 stats+kit, §9 deployment/stewards, §10 mockdata, §14 open decisions, §15 steps 6.5–11, remaining §16     | `REFACTOR_SPEC.md` (remaining work) |
 
 Shared literal source evidence types belong to `reg_meta`: the consumer must be able to
 validate documentary catalog relationships without importing the builder.

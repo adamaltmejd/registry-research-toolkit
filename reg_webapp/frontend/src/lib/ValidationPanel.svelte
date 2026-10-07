@@ -13,6 +13,7 @@ import {
   orderFindingPointer,
   type ValidationIssue,
   type WindowCoverageHint,
+  type WindowDisjointFinding,
 } from "./validation";
 
 // The validation echo (see reg_schema/DESIGN.md → Structural rules and issue
@@ -34,6 +35,7 @@ const {
   requestErrorSource,
   orderFindings = [],
   windowHints,
+  windowFindings = [],
   sources,
   onRetry,
   onRetryOrder,
@@ -48,6 +50,10 @@ const {
    * shape as a validation issue — they are findings, not a message. */
   orderFindings?: readonly OrderFinding[];
   windowHints: readonly WindowCoverageHint[];
+  /** Sources the common study window has left with no years inside it — the SPA's
+   * own blocking authoring finding (`windowDisjointFindings`), rendered like a
+   * blocked order's findings because it blocks the order the same way. */
+  windowFindings?: readonly WindowDisjointFinding[];
   sources: readonly SafeSource[];
   /** Re-runs `/validate`. Offered ONLY for a failed validation REQUEST — see the
    * banner below. */
@@ -199,6 +205,31 @@ const LEVEL_LABEL: Record<Level, string> = {
     </div>
   {/if}
 
+  <!-- Sources the study window has moved off: each keeps its explicit period (a
+       window edit never rewrites one), so the ORDER is blocked until the researcher
+       decides — an authoring finding, not a validator's, ahead of the validator's
+       verdict because it is the one that closes the download. -->
+  {#if windowFindings.length > 0}
+    <div class="group error" role="group" aria-labelledby="window-findings-heading">
+      <h4 class="micro-label" id="window-findings-heading">
+        Blocking the order: outside the study window ({windowFindings.length})
+      </h4>
+      <ul>
+        {#each windowFindings as finding, i (i)}
+          <li>
+            <div class="issue-head">
+              <span class="label">No years inside the study window</span>
+            </div>
+            <p class="message">{finding.message}</p>
+            {#if finding.location}
+              {@render locators(finding.location)}
+            {/if}
+          </li>
+        {/each}
+      </ul>
+    </div>
+  {/if}
+
   <!-- The summary is suppressed while a request error stands: `/order` can
        fail-close a project that VALIDATES clean (a steward-provenance mismatch,
        an uncovered period), and "Draft valid" directly under "Order blocked"
@@ -262,7 +293,7 @@ const LEVEL_LABEL: Record<Level, string> = {
       {/if}
     {/each}
     {#if status === "warnings"}
-      <!-- Order materialization is a SEPARATE check (§12): a draft that validates
+      <!-- Order materialization is a SEPARATE check: a draft that validates
            clean here can still be blocked there, and the banner above is where that
            verdict lands. Below the findings because it is what the NEXT step does —
            muted, and deliberately outside the live region so it isn't re-announced
@@ -318,7 +349,7 @@ const LEVEL_LABEL: Record<Level, string> = {
   .request-error {
     display: flex;
     /* Wraps because this banner now carries the order materializer's full
-       fail-closed message (§12), not just a short 4xx string — unwrapped, the
+       fail-closed message, not just a short 4xx string — unwrapped, the
        retry button holds its width and squeezes the text into a narrow gutter
        at 375px. Mirrors `.issue-head` / `.locators` below. */
     flex-wrap: wrap;

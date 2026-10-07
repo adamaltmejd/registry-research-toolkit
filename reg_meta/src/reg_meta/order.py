@@ -1,4 +1,6 @@
-"""Order materializer + the JSON order-manifest contract (REFACTOR_SPEC.md §12).
+"""Order materializer + the JSON order-manifest contract.
+
+Decision text: reg_meta/DESIGN.md → "Order materializer and manifest".
 
 A validated project meets compiled physical facts through
 `materialize_order(project, conn)`. Both adapters emit its canonical bytes.
@@ -9,7 +11,7 @@ Pipeline, per `sources[*].bindings[*]` in project declaration order:
 
 1+2. **Availability clip and representation slicing** — `resolve_binding`, the
    SHARED pass. A source period means "these columns, wherever each is available
-   inside this window" (§12 intersection semantics). Each binding is clipped to
+   inside this window" (intersection semantics). Each binding is clipped to
    its own documented availability — the union of its `variable_state` windows at
    the source's variant — so a column delivered only for a suffix of the window
    does not widen the order into a cross-product; the clipped request is then
@@ -18,8 +20,8 @@ Pipeline, per `sources[*].bindings[*]` in project declaration order:
    not re-derived here. Two columns co-existing at one instant with no
    `Binding.representation` pin is ambiguity, and blocks. Every clip is reported
    per binding (`OrderResult.clips`, and on the manifest itself when one is
-   produced), never silently, and never as an error. The webapp's
-   `/api/project/validate` calls `resolve_binding` too, so validation and
+   produced), never silently, and never as an error. Project validation
+   (`semantic.py`) calls `resolve_binding` too, so validation and
    ordering answer the availability question ONCE, and a clip alone is
    informational on both sides. It is not a clean bill of health: the same
    binding can still block here on representation ambiguity, and below on the
@@ -31,6 +33,7 @@ Pipeline, per `sources[*].bindings[*]` in project declaration order:
 
 from __future__ import annotations
 
+import codecs
 import hashlib
 import json
 from datetime import date, timedelta
@@ -41,9 +44,9 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 # Runtime imports (not just TYPE_CHECKING): the requested-period conversion
 # branches on `isinstance(..., PeriodRange)`, and the adapter door below builds
 # and structurally gates the `ProjectData` model itself. This is the `reg_meta →
-# reg_schema` dependency §12 sanctions — the materializer consumes
-# `ProjectData`, and adding a third package to hold one function was
-# explicitly ruled out.
+# reg_schema` dependency ARCHITECTURE.md → "Why this split" sanctions — the
+# materializer consumes `ProjectData`, and adding a third package to hold one
+# function was explicitly ruled out.
 from reg_schema.project_data import PeriodRange, ProjectData
 from reg_schema.structural import validate_structural
 from reg_schema.validation import ValidationIssue
@@ -118,8 +121,8 @@ class LogicalCoordinate(_OrderModel):
     `PhysicalCoordinate.column`).
 
     `register` is a `BaseModel` method, so the Python attr is `register_name`
-    with a `"register"` alias — the wire key stays the §12 coordinate spelling
-    (same pattern as `catalog.BindingGroupRef`)."""
+    with a `"register"` alias — the wire key stays the order-contract coordinate
+    spelling (same pattern as `catalog.BindingGroupRef`)."""
 
     provider: str
     register_name: str = Field(alias="register")
@@ -137,13 +140,13 @@ class PhysicalCoordinate(_OrderModel):
     period token, an explicit `lo..hi` range, or a comma-joined list for an
     interrupted series).
 
-    `partition` is the table's §12 disjoint-partition label when it carries one
+    `partition` is the table's disjoint-partition label when it carries one
     — the shard of the edition's population this table delivers — so the
     extractor can see it; it is absent from the JSON otherwise. Extraction
     preserves delivery topology: what goes in as two partitions comes out as two
     files, distinguished by the partition token `extraction_filenames` adds.
 
-    In §12's global-deployment fallback there is no physical topology: `table`
+    In the global-deployment fallback there is no physical topology: `table`
     is blank, `column` carries the resolved canonical column, `edition` equals
     the entry's requested period, and there is no partition."""
 
@@ -159,7 +162,7 @@ class OrderEntry(_OrderModel):
     `source` is the project source name, so an entry stays traceable to the
     binding that produced it. `requested_period` is the AVAILABILITY-CLIPPED
     period this table serves (canonically rendered), not the source's raw
-    declared period — the table itself is ordered whole regardless (§12)."""
+    declared period — the table itself is ordered whole regardless."""
 
     source: str
     logical: LogicalCoordinate
@@ -168,7 +171,7 @@ class OrderEntry(_OrderModel):
 
 
 class ClipReport(_OrderModel):
-    """One informational availability clip (§12: reported, never silent, never
+    """One informational availability clip (reported, never silent, never
     an error): the binding asked for `requested_period` and is ordered for
     `ordered_period`, because that is where the column is documented as
     available. Emitted only when the clip actually narrows the request."""
@@ -182,13 +185,13 @@ class ClipReport(_OrderModel):
 class OrderProvenance(_OrderModel):
     """Everything the steward-side extract system needs to know WHICH project,
     against WHICH catalog, for WHICH deployment — so the manifest is
-    self-contained offline (§12: no network, no catalog lookup at extract time).
+    self-contained offline (no network, no catalog lookup at extract time).
 
     `project_hash` is the SHA-256 of the project's canonical JSON, so a manifest
     can be tied back to the exact uploaded project bytes.
 
     `mode` names what GROUNDED the entries — a steward's compiled holdings or
-    §12's global fallback (canonical resolution alone, blank `table`) — so a
+    the global fallback (canonical resolution alone, blank `table`) — so a
     reader never has to infer it from the entry shape."""
 
     mode: Literal["steward_holdings", "global_fallback"]
@@ -215,7 +218,7 @@ class OrderManifest(_OrderModel):
         """The canonical serialization: sorted keys, stable entry order, UTF-8,
         trailing newline. Deterministic — two runs over the same project
         and artifact produce byte-identical output, which is what lets the
-        FastAPI and CLI adapters be compared byte-for-byte (§12).
+        FastAPI and CLI adapters be compared byte-for-byte.
 
         `exclude_none` is the spelling of an absent optional: an unpartitioned
         entry omits `partition` entirely rather than carrying an explicit
@@ -256,7 +259,7 @@ class OrderResult(_OrderModel):
     manifest or a non-empty finding set. Never both, never partial.
 
     `clips` carries every availability clip the pass accumulated, blocked or
-    not: §12 reports clips per binding and never silently, and a blocked
+    not: clips are reported per binding and never silently, and a blocked
     researcher fixing the whole order in one pass needs to see the clipped
     windows the findings are stated against. A produced manifest repeats them —
     it is the self-contained artifact record."""
@@ -285,11 +288,11 @@ class StateWindow(_OrderModel):
 
 class BindingResolution(_OrderModel):
     """What one binding resolves to inside one requested period — the SHARED
-    availability/slicing facts `materialize_order` and the webapp's
-    `/api/project/validate` both read (`resolve_binding`, steps 1+2).
+    availability/slicing facts `materialize_order` and project validation
+    (`semantic.py`) both read (`resolve_binding`, steps 1+2).
 
     `finding` is the blocking reason there is nothing orderable here, or `None`.
-    A resolution can carry BOTH a `clip` and a `finding`: §12 reports every clip
+    A resolution can carry BOTH a `clip` and a `finding`: every clip is reported
     per binding, never silently, and a blocked researcher needs to see the
     clipped window the finding is stated against.
 
@@ -326,7 +329,7 @@ class BindingResolution(_OrderModel):
 
 def extraction_filenames(entry: OrderEntry) -> tuple[str, ...]:
     """The extraction output file name(s) for `entry` — one UTF-8 CSV per
-    variant + partition + period unit (§12 pins the convention in the order
+    variant + partition + period unit (the convention is pinned in the order
     contract so the extractor never improvises it), e.g.
     `lisa_individer-15plus_2019.csv`.
 
@@ -339,13 +342,13 @@ def extraction_filenames(entry: OrderEntry) -> tuple[str, ...]:
     A partitioned entry inserts its label after the variant slug
     (`agi_individuppgifter-agi_arb_2021-03.csv`), which is what keeps two
     partitions of one (variant, edition segment) from colliding into one file —
-    §12 extracts them separately because shard identity (reporter stream,
+    they are extracted separately because shard identity (reporter stream,
     municipality) may not exist as a column, so a union would destroy it. An
     unpartitioned entry renders exactly as before the arm existed.
 
     simplify: names use the reg_meta SLUG spelling (`lisa_individer-15plus_…`),
-    not the steward's display casing (§12's illustrative `LISA_Individ_2019` is
-    not derivable from a slug); a non-grammar edition segment renders as its
+    not the steward's display casing (an illustrative `LISA_Individ_2019` is
+    not derivable from a slug; A-28); a non-grammar edition segment renders as its
     `lo..hi` range. Revisit when a steward's extractor needs its own casing —
     the rule lives here, so it changes in one place.
     """
@@ -361,7 +364,7 @@ def extraction_filenames(entry: OrderEntry) -> tuple[str, ...]:
 #
 # GAPS live here because only the coverage gate needs them; adjacency joining
 # (`_merge`, `_next_day`), intersection and period rendering live in
-# `inventory.py`, which shares them with the §12 conflict validator and the
+# `inventory.py`, which shares them with the one-to-one conflict validator and the
 # catalog's delivery windows.
 
 
@@ -406,8 +409,8 @@ def requested_intervals(period: Period) -> tuple[_Interval, ...]:
     project period and a physical edition can never disagree about bounds.
 
     Raises `ValueError` / `TypeError` for a period that is not orderable — a
-    malformed segment type, an unparseable token, or an inverted range. §12
-    requires every project period to be explicit and finite, so a period that
+    malformed segment type, an unparseable token, or an inverted range. The order
+    contract requires every project period to be explicit and finite, so a period that
     expands to no interval is a blocking finding, never a guessed window."""
     if period == "_default":
         return ()
@@ -447,11 +450,11 @@ def resolve_binding(
     requested: tuple[_Interval, ...],
 ) -> BindingResolution:
     """Resolve one binding inside `requested` (from `requested_intervals`) —
-    §12's steps 1+2, and the ONE place the availability question is answered.
+    steps 1+2 of the pipeline, and the ONE place the availability question is answered.
 
     `materialize_order` consumes the slices to match the steward's topology;
-    the webapp's `/api/project/validate` consumes the same facts to report
-    them, so the two never disagree about what is available. §12 intersection
+    project validation (`semantic.py`) consumes the same facts to report
+    them, so the two never disagree about what is available. Intersection
     semantics: each selected binding is requested wherever it is available
     inside the source window, so availability NARROWER than the request is a
     reported clip, and only availability that is empty everywhere in the request
@@ -563,7 +566,7 @@ def resolve_binding(
                 {"from": req[0], "to": req[1]},
                 variant=source.register_variant.split("/")[2],
                 # State METADATA only: nothing below reads code membership, and
-                # the webapp's validate path must not hydrate a geography
+                # the validate path must not hydrate a geography
                 # variable's code lists to answer a question about its windows.
                 with_codes=False,
             ):
@@ -633,7 +636,7 @@ def resolve_binding(
         )
     )
     # The clip is decided BEFORE the ambiguity gate: a binding that is both
-    # clipped and ambiguous must surface both, since §12 reports every clip per
+    # clipped and ambiguous must surface both, since every clip is reported per
     # binding, never silently, and the finding is stated against the clipped
     # window the researcher has to reason about.
     availability = _merge([(lo, hi) for lo, hi, _ in slices])
@@ -685,7 +688,7 @@ def materialize_order(
     )
     steward = identity["steward"] if inventory is not None else GLOBAL_STEWARD
     if project.steward != steward:
-        # §12: provenance is checked before anything resolves, and retargeting
+        # Provenance is checked before anything resolves, and retargeting
         # is deliberately not an application feature — the rule the message's
         # closing sentence states in the researcher's own terms.
         return _blocked(
@@ -734,7 +737,7 @@ def materialize_order(
 
 # ── adapter door ───────────────────────────────────────────────────────────
 # The FastAPI endpoint and the `reg-meta order` CLI are THIN adapters over
-# `materialize_order` (§12), so the two things they would otherwise each re-type
+# `materialize_order`, so the two things they would otherwise each re-type
 # — the untrusted-input gate and the blocked-result wording — live here, once.
 
 
@@ -743,25 +746,97 @@ def load_project(path: Path) -> ProjectData:
 
     The CLI adapter's input door (mirrors `inventory.load_inventory`); the
     FastAPI adapter already holds the raw body and calls `project_from_raw`
-    directly. Fail-closed: an unreadable or non-JSON-object file raises
+    directly."""
+    return project_from_raw(read_project(path))
+
+
+def read_project(path: Path) -> dict[str, Any]:
+    """Read a `project_data.json` file as the raw JSON object both CLI doors
+    take — `project_from_raw` (order) and `semantic.validate_project` (validate),
+    the CLI counterparts of the FastAPI adapters' raw request body. The bytes go
+    through `parse_project`, the same reader the FastAPI body uses.
+
+    Fail-closed: an unreadable file or a malformed document raises
     `RegMetaError` (`project_unreadable`, EXIT_CONFIG)."""
     try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        data = path.read_bytes()
+    except OSError as exc:
         raise _order_config_error(
             "project_unreadable",
             f"Could not read project {path}: {exc}",
-            "The project must be a UTF-8 `project_data.json` document (see "
-            "reg_schema/DESIGN.md).",
+            _PROJECT_DOCUMENT_REMEDIATION,
         ) from exc
-    if not isinstance(raw, dict):
-        raise _order_config_error(
-            "project_unreadable",
-            f"Project {path} is not a JSON object (got {type(raw).__name__}).",
-            "The project must be a UTF-8 `project_data.json` document (see "
-            "reg_schema/DESIGN.md).",
+    return parse_project(data)
+
+
+_PROJECT_DOCUMENT_REMEDIATION = (
+    "The project must be a UTF-8 `project_data.json` document (see "
+    "reg_schema/DESIGN.md)."
+)
+
+
+def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    """``json.loads`` ``object_pairs_hook`` that raises on a duplicate JSON key.
+
+    The default keeps the last value silently — a hand-edited project_data.json
+    with a duplicated field would validate against the wrong (last-wins) value.
+    Fires at every nesting depth (the hook runs per object)."""
+    seen: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in seen:
+            raise ValueError(f"duplicate key {key!r} in project JSON")
+        seen[key] = value
+    return seen
+
+
+def parse_project(data: bytes) -> dict[str, Any]:
+    """Parse untrusted `project_data.json` bytes into the raw JSON object every
+    door takes, or raise `RegMetaError` (`project_unreadable`, EXIT_CONFIG).
+
+    The ONE read boundary for both adapters: the CLI's file
+    (`read_project`) and the FastAPI request body, which maps the raise to a
+    400 whose `detail` is this error's `message` — so the two refuse the same
+    bytes with the same words. The message therefore never names a file path.
+
+    Malformed means: not strict UTF-8 (RFC 8259 §8.1 — no byte-order mark, and
+    no UTF-16/32, which `json.loads(bytes)` would otherwise sniff and accept),
+    not JSON, a duplicate key at any depth (last-wins would silently validate or
+    order the wrong value), nesting deep enough to exhaust the recursion limit,
+    or a non-object top level. A well-formed object that fails the contract is
+    NOT malformed: that is the version/structural layers' diagnosis, not a read
+    failure."""
+
+    def unreadable(message: str) -> RegMetaError:
+        return _order_config_error(
+            "project_unreadable", message, _PROJECT_DOCUMENT_REMEDIATION
         )
-    return project_from_raw(raw)
+
+    if data.startswith(codecs.BOM_UTF8):
+        raise unreadable("project JSON must be UTF-8 without a byte-order mark")
+    try:
+        # Decoding first is what makes the reader strict: a `str` reaches
+        # `json.loads` with no encoding left to detect.
+        text = data.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise unreadable(f"project JSON is not valid UTF-8: {exc}") from exc
+    try:
+        parsed = json.loads(text, object_pairs_hook=_reject_duplicate_keys)
+    except json.JSONDecodeError as exc:
+        raise unreadable(f"project is not valid JSON: {exc}") from exc
+    except RecursionError as exc:
+        # A small document can still nest past the recursion limit; that is a
+        # malformed input, not a crash. `RecursionError` is a `RuntimeError`,
+        # so it needs its own clause.
+        raise unreadable("project JSON is nested too deeply") from exc
+    except ValueError as exc:
+        # The duplicate-key hook's ValueError.
+        raise unreadable(str(exc)) from exc
+    if not isinstance(parsed, dict):
+        raise unreadable(
+            "project must be a JSON object (project_data.json shape), got "
+            f"{type(parsed).__name__}"
+        )
+    return parsed
 
 
 def project_from_raw(raw: dict[str, Any]) -> ProjectData:
@@ -815,9 +890,9 @@ def project_from_raw(raw: dict[str, Any]) -> ProjectData:
 
 def schema_version_issue(raw: dict[str, Any]) -> ValidationIssue | None:
     """The ONE supported-version decision every SERVER-SIDE consumer of a raw
-    project applies: `project_from_raw` above (both order adapters) and the
-    webapp's `/api/project/validate`, which needs the finding as an ISSUE rather
-    than a raise. (The SPA keeps its own partial open-time gate over a file the
+    project applies: `project_from_raw` above (both order adapters) and
+    `semantic.validate_project` (both validate adapters), which needs the
+    finding as an ISSUE rather than a raise. (The SPA keeps its own partial open-time gate over a file the
     researcher picks; the backend stays the canonical answer.) Returns `None`
     when the project is on the contract this build reads.
 
@@ -851,7 +926,7 @@ def schema_version_issue(raw: dict[str, Any]) -> ValidationIssue | None:
 def blocked_message(result: OrderResult) -> str:
     """Every blocking finding of `result` as one human-readable message.
 
-    §12's byte-identical-adapters rule covers the FAIL-CLOSED path too, not just
+    The byte-identical-adapters rule covers the FAIL-CLOSED path too, not just
     a produced manifest: the FastAPI 422 detail and the CLI's error envelope say
     exactly the same thing about the same order because both render it here.
     Findings come in the materializer's own accumulation order, each prefixed
@@ -1097,7 +1172,7 @@ def _materialize_binding(
     # the clipped request, then emit.
     contributions: dict[tuple[str, str, str], list[_Interval]] = {}
     editions: dict[tuple[str, str, str], tuple[_Interval, ...]] = {}
-    # §12 partition label per contributing table; absent for the global
+    # Disjoint-partition label per contributing table; absent for the global
     # fallback, which has no physical topology to shard.
     partitions: dict[tuple[str, str, str], str | None] = {}
     blocked = False
@@ -1105,7 +1180,7 @@ def _materialize_binding(
         matched = False
         covered: list[_Interval] = []
         if inventory is None:
-            # §12 global fallback: canonical resolution IS the topology. The
+            # Global fallback: canonical resolution IS the topology. The
             # slice is served by the canonical column it resolved to, under a
             # blank table; it covers itself exactly, so the gate below (which
             # still runs) can only fail on what resolution itself did not
@@ -1158,7 +1233,7 @@ def _materialize_binding(
         return
 
     if inventory is None:
-        # §12: a fallback entry's `edition` IS its requested period — known only
+        # A fallback entry's `edition` IS its requested period — known only
         # once the slices contributing to one canonical column are collected.
         for key, intervals in contributions.items():
             editions[key] = _merge(intervals)

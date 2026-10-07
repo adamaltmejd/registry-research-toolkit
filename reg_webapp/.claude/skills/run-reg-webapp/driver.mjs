@@ -541,7 +541,9 @@ async function orderRetryCase(page, counts, shoot, project, expected) {
   check(
     manifest.provenance.mode === expected.mode &&
       manifest.provenance.steward === expected.steward &&
-      manifest.provenance.catalog_import_date === expected.importDate,
+      manifest.provenance.artifact_kind === expected.artifactKind &&
+      manifest.provenance.catalog_generation_id === expected.generationId &&
+      manifest.provenance.catalog_schema_version === expected.schemaVersion,
     `manifest provenance ${JSON.stringify(manifest.provenance)}`,
   );
   check(manifest.entries.length === 1, `manifest has ${manifest.entries.length} entries`);
@@ -1177,10 +1179,15 @@ try {
         },
       ],
     };
+    // The manifest names the catalog it was materialized against by the SAME
+    // identity `/api/context` reports for the served artifact (reg_meta
+    // `OrderProvenance`): its kind, generation and schema — not its import date.
     const expected = {
       mode: "global_fallback",
       steward: deployment.steward.id,
-      importDate: deployment.reg_meta.import_date,
+      artifactKind: deployment.reg_meta.catalog_artifact_kind,
+      generationId: deployment.reg_meta.generation_id,
+      schemaVersion: deployment.reg_meta.schema_version,
     };
     console.log(
       `flows: ${BASE} steward=${deployment.steward.id} ` +

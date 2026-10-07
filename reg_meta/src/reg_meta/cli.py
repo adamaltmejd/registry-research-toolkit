@@ -628,7 +628,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "Materialize a project against this compiled catalog DB\n"
             "into the canonical JSON order\n"
             "manifest — the SAME materializer the webapp serves, so both emit\n"
-            "byte-identical manifests (REFACTOR_SPEC.md §12).\n\n"
+            "byte-identical manifests.\n\n"
             "Writes the manifest to stdout, or to --output. A blocked order\n"
             "writes the JSON error envelope naming every finding and exits 17;\n"
             "an unreadable/invalid project exits 10.\n\n"
@@ -639,6 +639,28 @@ def _build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     order_p.add_argument("project", help="Path to the project_data.json to order.")
+
+    validate_p = sub.add_parser(
+        "validate",
+        help="Validate a project_data.json against this catalog DB.",
+        description=(
+            "Validate a project against this compiled catalog DB — the SAME\n"
+            "validator the webapp serves, so both emit byte-identical findings.\n\n"
+            "Writes the findings JSON ({ok, issues}) to stdout, or to --output.\n"
+            "Exits 0 when the project has no error-level issue and 17 when it\n"
+            "has one (the findings are written either way). An unreadable or\n"
+            "malformed project file, a missing catalog or another catalog\n"
+            "configuration error exits 10. A valid project is resolvable, not\n"
+            "proven orderable: `reg-meta order` still gates physical coverage.\n\n"
+            "Examples:\n"
+            "  reg-meta validate project_data.json\n"
+            "  reg-meta validate project_data.json --output findings.json"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    validate_p.add_argument(
+        "project", help="Path to the project_data.json to validate."
+    )
 
     # --- doc command family ---
     doc_p = sub.add_parser(
@@ -800,7 +822,7 @@ def _cmd_update(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 def _cmd_order(args: argparse.Namespace) -> int:
     """`reg-meta order` — the CLI adapter over `order.materialize_order`.
 
-    A THIN adapter (§12): every gate, every finding and the serialization itself
+    A THIN adapter: every gate, every finding and the serialization itself
     belong to `order.py`, so this function only moves bytes. It writes
     `OrderManifest.to_json()` VERBATIM (not the CLI envelope, and not through
     `--format`) — that canonical serialization IS the artifact, and byte-identity
@@ -832,6 +854,40 @@ def _cmd_order(args: argparse.Namespace) -> int:
         )
     write_to(result.manifest.to_json(), args.output, truncate=True)
     return EXIT_SUCCESS
+
+
+def _cmd_validate(args: argparse.Namespace) -> int:
+    """`reg-meta validate` — the CLI adapter over `semantic.validate_project`.
+
+    A THIN adapter, the counterpart of `_cmd_order`: the composition,
+    every issue and the serialization belong to `semantic.py`, so this function
+    only moves bytes. It writes `semantic.validation_json` VERBATIM (not the CLI
+    envelope, and not through `--format`) — byte-identity with the FastAPI
+    adapter is the contract.
+
+    A failing project is the command's RESULT, not an error, so its findings
+    are written like a passing one's; the exit code says which: 0 no
+    error-level issue, 17 (`EXIT_NO_MATCH`, the blocked-order code) at least
+    one. An unreadable or malformed project file, a missing catalog or another
+    catalog configuration error is 10 (`EXIT_CONFIG`) through the envelope.
+    The artifact is opened only if the DB-free layers pass, as on the web."""
+    from contextlib import closing
+
+    from .db import require_db_file
+    from .order import read_project
+    from .semantic import validate_project, validation_json
+
+    # The catalog is resolved and its file required up front, so a usage error
+    # or a missing catalog fails fast whatever the project; it is OPENED only
+    # if the DB-free layers pass.
+    db_path = db_path_from_args(args.db, catalog=args.catalog)
+    require_db_file(db_path)
+    raw = read_project(Path(args.project))
+    result = validate_project(
+        raw, lambda: closing(open_db(db_path, catalog=_selected_name(args)))
+    )
+    write_to(validation_json(result), args.output, truncate=True)
+    return EXIT_SUCCESS if result.ok else EXIT_NO_MATCH
 
 
 # ---------------------------------------------------------------------------
@@ -1607,7 +1663,16 @@ def _cmd_resolve(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     else:
         raw = sys.stdin.read().strip()
         if raw:
-            parsed = json.loads(raw)
+            try:
+                parsed = json.loads(raw)
+            except json.JSONDecodeError as exc:
+                raise RegMetaError(
+                    exit_code=EXIT_USAGE,
+                    code="usage_error",
+                    error_class="usage",
+                    message=f"stdin is not valid JSON: {exc}",
+                    remediation="Use --columns or pass JSON array of strings on stdin.",
+                ) from exc
             if isinstance(parsed, list):
                 columns = [item for item in parsed if isinstance(item, str)]
 
@@ -2469,13 +2534,14 @@ def _collect_hints(
     if key == ("search", None):
         results = data.get("results", [])
         group_rows = [r for r in results if r.get("type") == "group"]
-        # The typed group rows (#701) carry the scalar `matched_count` (the raw
-        # `matched` leaf list is folded away in reg_meta — not on the wire).
+        # The typed group rows (#701) carry the scalar `matched_count` (distinct
+        # members hit; the raw `matched` leaf list is folded away in reg_meta —
+        # not on the wire).
         folded = sum(r.get("matched_count") or 0 for r in group_rows)
         if folded:
             hint_add(
                 hints,
-                f"{folded} hit(s) folded into {len(group_rows)} concept group(s) "
+                f"{folded} member(s) folded into {len(group_rows)} concept group(s) "
                 "(--no-fold to flatten; members in --format json)",
             )
         if getattr(args, "field", "all") == "all":
@@ -3212,15 +3278,18 @@ def _prompt_first_run_download(
         f"{header}\nMissing: " + ", ".join(parts) + ".\nDownload now? [y/N] "
     )
     sys.stderr.flush()
-    if input().strip().lower() not in ("y", "yes"):
+    try:
+        answer = input()
+    except EOFError:  # Ctrl-D at the prompt declines, like an empty answer.
+        answer = ""
+    if answer.strip().lower() not in ("y", "yes"):
         return
 
     from .download import download_db, download_docs_db
 
+    catalog = _selected_name(args) or "global"
     if missing_main:
-        download_db(
-            db_dir=db_path.parent, catalog=_selected_name(args) or "global", yes=True
-        )
+        download_db(db_dir=db_path.parent, catalog=catalog)
     if missing_docs:
         download_docs_db(db_dir=docs_path.parent)
     sys.stderr.write("\n")
@@ -3299,13 +3368,14 @@ def run(argv: list[str] | None = None) -> int:
             getattr(args, "output", None),
         )
 
-    # `order` writes the canonical manifest bytes (`OrderManifest.to_json`)
-    # verbatim, so it bypasses the envelope/`--format` pipeline below —
-    # byte-identity with the FastAPI adapter is the §12 contract. Errors still
-    # render through the shared envelope + exit codes.
-    if args.command == "order":
+    # `order` and `validate` write their canonical bytes
+    # (`OrderManifest.to_json`, `semantic.validation_json`) verbatim, so they
+    # bypass the envelope/`--format` pipeline below — byte-identity with the
+    # FastAPI adapters is the order contract. Errors still render through the
+    # shared envelope + exit codes.
+    if args.command in ("order", "validate"):
         try:
-            return _cmd_order(args)
+            return _cmd_order(args) if args.command == "order" else _cmd_validate(args)
         except Exception as exc:  # noqa: BLE001 — CLI boundary: envelope + stable exit code
             return handle_cli_exception(exc, getattr(args, "output", None))
 
@@ -3366,14 +3436,9 @@ def run(argv: list[str] | None = None) -> int:
                 new_ver = update_checker.get_newer_version()
                 if not new_ver and not update_checker.completed:
                     # Background check timed out — fall back to persistent flag
-                    from . import __version__
-                    from .update import _parse_version, read_pending_update
+                    from .update import read_pending_update
 
-                    flagged = read_pending_update()
-                    if flagged and _parse_version(flagged) > _parse_version(
-                        __version__
-                    ):
-                        new_ver = flagged
+                    new_ver = read_pending_update()
                 if new_ver:
                     from . import __version__
 

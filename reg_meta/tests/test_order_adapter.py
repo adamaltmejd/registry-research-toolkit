@@ -107,7 +107,7 @@ class TestSupportedSchemaVersion:
 class TestCliAdapter:
     """`reg-meta order` — the CLI adapter over `materialize_order`.
 
-    A thin adapter (§12), so what is pinned here is the adapter contract only:
+    A thin adapter, so what is pinned here is the adapter contract only:
     the manifest's own canonical bytes reach stdout/`--output` UNCHANGED (never
     the CLI envelope, never `--format`), and each failure gets a stable exit
     code from the existing error classes. The materializer's rules are pinned by

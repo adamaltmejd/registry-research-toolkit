@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_field_type",
+      "path": "/panels/0/panel_id",
+      "message": "panel 'panel_id' must not be null"
+    }
+  ]
+}

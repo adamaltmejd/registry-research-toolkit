@@ -495,17 +495,21 @@ def register_py_lower(conn: sqlite3.Connection) -> None:
     )
 
 
-def open_db(
+_DB_NOT_FOUND_REMEDIATION = (
+    "Run `reg-meta update` to fetch the pre-built DB, "
+    "or see `reg-meta-build build-db --help` to build from pinned prepared sources."
+)
+
+
+def require_db_file(
     db_path: Path,
     *,
-    check_schema: bool = True,
-    catalog: str | None = None,
     error_code: str = "db_not_found",
-    remediation: str = (
-        "Run `reg-meta update` to fetch the pre-built DB, "
-        "or see `reg-meta-build build-db --help` to build from pinned prepared sources."
-    ),
-) -> sqlite3.Connection:
+    remediation: str = _DB_NOT_FOUND_REMEDIATION,
+) -> None:
+    """Fail (EXIT_CONFIG) when no DB file exists at ``db_path`` — a stat, not an
+    open, for a caller that must fail fast on a missing catalog before it has
+    decided to open one (``reg-meta validate``)."""
     if not db_path.exists():
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
@@ -514,6 +518,17 @@ def open_db(
             message=f"Database not found: {db_path}",
             remediation=remediation,
         )
+
+
+def open_db(
+    db_path: Path,
+    *,
+    check_schema: bool = True,
+    catalog: str | None = None,
+    error_code: str = "db_not_found",
+    remediation: str = _DB_NOT_FOUND_REMEDIATION,
+) -> sqlite3.Connection:
+    require_db_file(db_path, error_code=error_code, remediation=remediation)
     # `immutable=1` (read-only path only): the published DB assets ship in WAL
     # journal mode, and a plain `mode=ro` open of a WAL DB still tries to create
     # the `-wal`/`-shm` sidecars — which crashes ("attempt to write a readonly

@@ -4170,8 +4170,25 @@ class Catalog:
                     hi = min(hi, state.valid_to, bounds[1] if bounds else hi)
                     if lo <= hi:
                         intervals.append((lo, hi))
+            # A held window narrower than the state re-derives every
+            # window-derived field, as `_expand_state_windows` does per alias window.
             out.extend(
-                state.model_copy(update={"valid_from": lo, "valid_to": hi})
+                state
+                if (lo, hi) == (state.valid_from, state.valid_to)
+                else state.model_copy(
+                    update={
+                        "valid_from": lo,
+                        "valid_to": hi,
+                        "period_token": self._period_token_for_window(lo, hi),
+                        "warning_ids": self._state_warning_ids(
+                            state.state_id,
+                            state.variant,
+                            state.delivery_column_name,
+                            lo,
+                            hi,
+                        ),
+                    }
+                )
                 for lo, hi in _merge(intervals)
             )
         return out

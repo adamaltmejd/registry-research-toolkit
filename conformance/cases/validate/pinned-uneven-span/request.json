@@ -1,0 +1,48 @@
+{
+  "kind": "catalog",
+  "fixture": "semantic",
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Synthetic semantic",
+        "sources": [
+          {
+            "name": "detail",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2010,
+              "to": 2020
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/ojamn",
+                "type": "categorical",
+                "representation": "OjamnDetalj"
+              }
+            ]
+          },
+          {
+            "name": "long",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2010,
+              "to": 2020
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/ojamn",
+                "type": "categorical",
+                "representation": "Ojamn"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

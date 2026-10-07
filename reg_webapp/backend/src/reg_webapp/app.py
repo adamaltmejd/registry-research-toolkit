@@ -139,9 +139,10 @@ def create_app(*, rate_limit_per_minute: int = RATE_LIMIT_PER_MINUTE) -> FastAPI
 
     ``rate_limit_per_minute`` defaults to the cost-protection budget; it's a parameter ONLY
     so tests that need to drive the write endpoints harder than 30 req/min (the
-    cross-thread concurrency smoke tests) can raise it without disabling the
-    middleware — the limiter is still IN the stack, just with a higher ceiling.
-    Production callers use the default."""
+    cross-thread concurrency smoke tests, and the run-reg-webapp skill's one-shot
+    driver modes, which replay a scenario matrix from one IP) can raise it without
+    disabling the middleware — the limiter is still IN the stack, just with a higher
+    ceiling. Production callers use the default."""
     # redoc_url=None: the deployed edge worker forwards a fixed backend-path set
     # (/api, /openapi.json, /docs — see reg_webapp/edge/), and /redoc would fall
     # through to the SPA shell there; disable it so the local and deployed

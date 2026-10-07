@@ -1,4 +1,4 @@
-"""Per-deploy smoke gate (REFACTOR_SPEC.md → Remaining test coverage).
+"""Per-deploy smoke gate (reg_webapp/DESIGN.md → Deployment).
 
 Probes a RUNNING reg_webapp over loopback: a golden ``/api/context`` shape check
 plus a shallow ``/api/catalog`` walk (root → first provider node). Run by the

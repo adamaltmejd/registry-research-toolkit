@@ -1,0 +1,12 @@
+{
+  "fixture": "reader/concept-group-cli",
+  "artifact": "catalog",
+  "argv": [
+    "search",
+    "--query",
+    "Lönesumma",
+    "--field",
+    "all"
+  ],
+  "observe": "search-groups"
+}

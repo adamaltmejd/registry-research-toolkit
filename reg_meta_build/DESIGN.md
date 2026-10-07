@@ -1543,8 +1543,12 @@ require applicable column windows and reject uncovered requests. The compiler re
 delivery universe through the reader's public `Catalog.delivery_columns`; there is no
 second expansion.
 
-The existing coverage assessment keeps range/list editions "temporally unassessed";
-reuse `data_warning` for that disposition. Single-period assessment's flat union is
+The existing coverage assessment keeps range/list editions "temporally unassessed". That
+disposition is builder accounting only: it is derivable from
+`holding_table.edition_json` and reaches curators as the coverage report's
+skipped-tables line (`inventory_coverage.skipped_tables_line`). It is not written as a
+`data_warning`, which carries source limitations and interpretation assumptions only
+(`reg_meta/DESIGN.md` → "Data warnings"). Single-period assessment's flat union is
 source accounting, not `Catalog` semantic resolution. The latter remains query-time,
 including per-column storage/coding intersections, shared-window containment,
 replacement participation/fallback and additive curated windows. The compiled
@@ -1658,6 +1662,32 @@ policies; a tracked default policy is not evidence that a later private candidat
 identical dispositions. Changed policy or inventory bytes require a fresh acceptance.
 The public prepared sources and builder code remain separately pinned.
 
+### Holdings curation rules
+
+These rules govern how the steward inventory is curated. The resolver invariants the
+curated inventory must satisfy are `reg_meta/DESIGN.md` → "Holdings resolution
+invariants".
+
+**Editions (2026-07-14, #1137).** Each inventory table carries one explicit physical
+edition in the shared finite period grammar. A table without an edition encoded in its
+name still requires an explicit curated edition; filename inference fails for review on
+zero or ambiguous period tokens rather than guessing. Neither explicit year-independent
+scope nor retained unknown scope is inferred as an unbounded "all periods" sentinel.
+
+**Current holdings only (ratified 2026-09-01).** The inventory describes current
+holdings: a superseded delivery (a cumulative re-delivery replacing an earlier snapshot,
+e.g. the dated `FHM_NVR_Covid*` series) is discarded at curation. The one-to-one
+validation error is the supersession worklist. The generator fails for review on each
+conflict rather than auto-picking a survivor; a filename date is not proof of
+supersession. A **special-purpose sub-extract** (data already held, re-delivered at
+another level of detail for a narrow purpose: the `RTB_SaBo_*` extracts, the
+`SWECOV_SOS_*_comorb` comorbidity tables) is likewise excluded from the order surface at
+curation, under its own exclusion reason class distinct from supersession.
+
+**Partition labels (ratified 2026-09-01).** Disjoint-partition labels are explicit
+curated facts, never inferred, so a true redelivery cannot hide behind partitions
+without a reviewable curation line saying so.
+
 Inventory generation retains accepted catalog placement bounds and resolves each finite
 table edition through positively covering declared owners. Missing coverage or
 simultaneous owners produces a worklist before the inventory can be replaced. Each
@@ -1665,6 +1695,13 @@ literal representation must cover the edition; sibling spellings cannot supply i
 dates. Source-backed stock-file overrides may name an exact snapshot date, including
 October school censuses, while retaining the original catalog state windows. A source
 snapshot date alone does not establish the delivery date of a derived geocoded extract.
+A cumulative register's stock file is not a one-year edition: when the source documents
+one cumulative register version, the override spans that version's start through the
+stock date (Flergenerationsregistret: 1961 through the snapshot year). Older cumulative
+snapshots are then excluded as superseded. Without that documentation the name-derived
+year stands (fail-closed: it understates holdings and blocks orders rather than
+over-admitting) until a maintainer-run, aggregate-only date-span check on MONA
+establishes the span (#1170 tracks the open cases).
 
 Unsupported physical fields remain in the inventory with unavailable mappings and
 explicit reasons. Exact auxiliary fields can also retain a known owner and meaning in

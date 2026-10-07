@@ -316,7 +316,7 @@ def extend_db(
         generation_id,
     )
     from .holdings_accounting import account_holdings
-    from .holdings_compile import compile_holdings, write_holdings_assessment_warnings
+    from .holdings_compile import compile_holdings
 
     with ExitStack() as inputs:
         revision = builder_commit() if not diagnostic else None
@@ -473,7 +473,6 @@ def extend_db(
                 compiled = compile_holdings(
                     conn, holdings_input, steward=steward, accounting=accounting
                 )
-                counts["data_warnings"] += write_holdings_assessment_warnings(conn)
                 manifest.update(
                     {
                         "catalog_artifact_kind": "steward",

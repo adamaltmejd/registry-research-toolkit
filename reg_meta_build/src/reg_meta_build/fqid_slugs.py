@@ -3253,7 +3253,7 @@ def format_default_slug_hints(
 
 
 # A4.4c-ii panel proposer defaults: the LISA-style delivery-aligned majority
-# (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)). The rare row-level case (PAR-style `indatum`) is left to A4.4d hand
+# (see reg_meta/DESIGN.md → Project semantic validation (semantic.py)). The rare row-level case (PAR-style `indatum`) is left to A4.4d hand
 # curation — auto-detecting it inline is brittle, so the proposer never emits it.
 _PANEL_DEFAULT_TIME_KEY = "period"
 _PANEL_DEFAULT_TIME_GRAIN = "delivery"

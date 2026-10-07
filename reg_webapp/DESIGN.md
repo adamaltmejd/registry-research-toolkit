@@ -859,13 +859,12 @@ variable pages to add one column each.
   of its own — is refused on its own terms ("Not delivered", naming no window, since
   none would lift it): it has no row to stage, and a checkbox that ticks and commits
   nothing is a control that lies.
-- **The subject page's fallback stops at the list.** A subject page's picker only DIMS
-  such a row and still lets it be picked, and `rowAddSegments` deliberately FALLS BACK
-  to a row's whole span when the window clips it to nothing so that pick still adds
-  something — that page has a Period control to say what. Here the window is the only
-  period there is, so inheriting that fallback would author years the researcher never
-  asked for: the page refuses the row before staging it, and the bar's count never
-  promises a column an Add cannot commit.
+- **The list refuses before staging; a subject page refuses at Add.** Neither invents a
+  period for a column the window clips to nothing (see "Common study window" below). A
+  subject page's picker only DIMS such a row and still lets it be ticked, then refuses
+  the Add by name (`outside-scope`); here the window is the only period there is, so the
+  page refuses the row before staging it, and the bar's count never promises a column an
+  Add cannot commit.
 - **The list's windows are EXACT (Y-104), so an Add reads nothing extra.** Each delivery
   carries its own DISJOINT `windows` beside the MIN/MAX `coverage` span, so a column
   delivered 1968, then 1995–1996, then 1998– says so on the wire. `deliveryColumnRows`
@@ -1952,13 +1951,16 @@ boundary unchanged.
 - **`/validate` status discipline.** A spec that FAILS validation is a *successful
   validation response* — **HTTP 200 with `ok=false` + the issues**. 4xx is reserved for
   a malformed REQUEST (non-JSON, duplicate JSON keys, a too-deeply-nested or non-object
-  body, an oversized body). It runs the §6.8.0 composition (supported version →
-  structural → semantic) and returns the **concatenated** issue list; the DB-free layers
-  run first, so a rejected body costs no DB hit. The supported-version decision is
-  reg_meta's shared `order.schema_version_issue` — the same one `/order` and
-  `reg-meta order` gate on, so a project written for another schema contract gets one
-  answer from every consumer — and it returns **alone**: the layers under it read the
-  document as the current contract, which is the claim it just rejected.
+  body, an oversized body). Apart from the size cap, that refusal is reg_meta's shared
+  `order.parse_project`, the same reader the CLI applies to a file, and the 400 `detail`
+  is its message. Everything after the body read is a thin adapter over reg_meta's
+  `semantic.validate_project` (supported version → structural → semantic, the
+  **concatenated** issue list; see `reg_meta/DESIGN.md` → Project semantic validation).
+  The adapter hands it `per_request_conn` as the opener, so the DB-free layers still run
+  first and a rejected body costs no DB hit. The 200 body is `semantic.validation_json`
+  VERBATIM (a raw `Response`, like `/order`), so the SPA and `reg-meta validate` read
+  byte-identical findings, pinned by the conformance corpus;
+  `response_model=ValidationResultModel` still publishes the typed contract.
 - **`/order`** materializes the JSON order manifest and serves it as an `order.json`
   download (see below). Unlike `/validate`, it **gates** first: you cannot materialize
   an order from an invalid spec → 422.
@@ -1992,19 +1994,6 @@ directly. The pipeline and every fail-closed finding live in `reg_meta/DESIGN.md
   `validation.orderFindingPointer` resolves the materializer's by-VALUE coordinates to
   the by-POSITION pointer `findingLocation` already locates a card by).
 
-**Still to come (decision 2026-07-11).** The SPA will expose one common study window as
-the project-authoring default. When a source has any overlap, adding it will immediately
-persist the full available intersection, including every disjoint segment; this will be
-the default action, not a suggestion the user must accept. With no overlap, the picker
-will block the add and explain the incompatibility rather than inventing a period. If a
-later common-window edit leaves an existing source disjoint, its explicit period will
-remain and the project will become blocking. The picker and project page will highlight
-every divergence. The common window will never become hidden inheritance, and an
-explicit apply-to-all action will rewrite only sources with an overlap.
-
-Shared `reg_meta` project code still has to absorb the semantic pass (`semantic.py`
-below); `REFACTOR_SPEC.md` §12 tracks that.
-
 **Connection model = per-request open ON ONE THREAD** (the locked cross-thread guard).
 `/validate` and `/order` are `async` only to read the body off the wire; the blocking
 work (structural parse + per-binding sqlite resolution) is offloaded via
@@ -2012,118 +2001,12 @@ work (structural parse + per-binding sqlite resolution) is offloaded via
 a `with`-block — NEVER a generator `Depends` (which can run on a different AnyIO thread
 → `sqlite3.ProgrammingError`).
 
-## Current semantic validation (`semantic.py`)
+## Semantic validation
 
-The current §6.8.3 reg_meta-backed validation layer lives in the webapp, not
-`reg_schema`: `reg_schema` stays reg_meta-free and cannot resolve against a live DB.
-`reg_schema` lists these codes as defined-but-not-emitted on its own surface. The webapp
-currently invokes `semantic.py` with the structural and owning-package block validators;
-it emits the same frozen `reg_schema.ValidationIssue` shape, takes a `Catalog`, and
-leaves connection ownership to its caller.
-
-This location is provisional. Order materialization has already moved to shared
-`reg_meta` project code (`order.py`, above), which is what lets the FastAPI SPA adapter
-and the local CLI execute one implementation; the availability/representation-slicing
-decisions have followed it there (`order.resolve_binding`, consumed below), and the rest
-of semantic validation follows on the same path. `reg_schema` remains independent; the
-dependency direction is `reg_meta -> reg_schema`, never the reverse.
-
-Rules, walking each source's `register_variant` + every binding:
-
-- The `register_variant` coordinate resolves to a known variant; the binding `variable`
-  (3-segment FQID) resolves to a known variable (following `same_as` links —
-  `Catalog.variable_identity` does that). Unresolved → `fqid_unresolved` (error).
-- **Availability is not decided here.** The source period is expanded
-  (`order.requested_intervals`) and each binding resolved by the SHARED reg_meta pass
-  the order materializer runs (`order.resolve_binding` — steps 1+2 in
-  `reg_meta/DESIGN.md` → Order materializer); this layer only translates those facts
-  into issues, so the two never disagree about what is available. Intersection semantics
-  apply: a binding is requested wherever it IS available inside the source window, so
-  narrower availability — a leading/trailing shortfall, an **internal** gap, or a pinned
-  `representation` that covers only part of the request — is an informational clip
-  (`range_period_partially_covered`, naming the period actually ordered), never an error
-  by itself. A clip is not a clean bill of health: the same binding can still block on
-  representation/value-set ambiguity here, and on the steward's coverage gate at order
-  time. A **#307 list period** (interrupted series; structurally sorted + disjoint, wire
-  form comma-joined — `2005..2010,2015..2020`) is one request with holes, not a series
-  of independent ones: it reports ONE clip for the whole request, and its holes are
-  genuinely absent from the question — a request that skips a year is NOT equivalent to
-  the range enclosing it, since a column co-existing only inside a hole is not ambiguity
-  and a column delivered only inside a hole is not availability. Availability empty
-  across the whole request still blocks. The pass's blocking findings map onto this
-  surface's codes — `variable_unresolved` → `fqid_unresolved`, `binding_unavailable` →
-  `period_outside_state_validity`, `representation_unknown` →
-  `binding_representation_unknown`, `representation_ambiguous` →
-  `binding_value_set_version_ambiguous`, and `representation_unresolved` under its own
-  name. The kept states still carry the request instants they are available for, so the
-  per-instant probes (the co-delivered-value-set backstop) keep segment precision
-  without re-deriving the clip, and `binding_state_drifts_within_period` (info) reports
-  a request spanning a sequential state transition. Steps 3+4 of the materializer (the
-  steward's physical topology and its coverage gate) do NOT run here: a clean validation
-  is a resolvable project, never a proof of physical order readiness.
-- Resolved variable metadata can emit non-blocking hints. `deprecated_traversal` (info)
-  fires when the binding resolves to a variable marked deprecated; the binding remains
-  valid. `variable_replaced` (info) fires when a `variable_replaced_by` edge is
-  effective at or before the requested period and carries `successor_fqid` when the
-  successor resolves to a binding FQID.
-- The binding's `value_set` (a `class/<slug>` FQID) resolves to a known classification →
-  else `value_set_missing` (error).
-
-**This layer reads identity and state metadata, never code membership.** So it takes the
-narrow reg_meta reads (see `reg_meta/DESIGN.md` → Catalog API surface):
-`Catalog.variable_identity` for the FQID and its replacement hints, and (inside the
-shared pass) `resolve_at(..., with_codes=False)` for the states. The full `resolve`
-would hydrate every historical state's code list to answer a question about one period —
-on a geography variable whose yearly states share one large code list that is most of
-the request. Diagnostics are unchanged: aliases, expanded monthly windows,
-representation identity (`state_id`, `delivery_column_name`, `valid_from`) and code-set
-identity (`value_set_id`) all come from the same code path.
-
-**Representation, not `@version`.** A FQID names one concept, but a concept may carry
-several **co-existing delivery columns** at the same instant — parallel representations
-(SSYK 3/4/5-digit, age brackets). When ≥2 distinct delivery columns co-exist
-(overlapping windows inside the REQUESTED instants — the shared pass's test, so a
-sibling that overlaps only in a hole of a list period is not co-existence) and the
-binding sets no `representation`, the extract would pull more than one column →
-`binding_value_set_version_ambiguous` (error); the author must pick one via
-`Binding.representation` (the delivery column name; the SPA offers a chooser). This is
-exactly the job the retired `@version` pin used to do, now keyed on the delivery column.
-A `representation` reg_meta no longer delivers as a column →
-`binding_representation_unknown` (error). Crucially, the co-existence test keys on
-**overlapping** windows: distinct columns in *non*-overlapping windows are a sequential
-rename (drift), NOT ambiguity, and must not demand a `representation`. A separate
-defensive backstop (`binding_value_set_version_ambiguous` on ≥2 distinct `value_set_id`s
-on **one** column) should be unreachable against a clean catalog — the reg_meta build
-enforces one value set per `(variable, variant, period, delivery_column)`.
-
-**Onboarding.** Stewards declare a subset of what reg_meta knows; data without an FQID
-can't be authored (no `{display_name + type, no FQID}` escape hatch in v1). New
-variables/registers/classifications onboard via slug-TOML PRs against `reg_meta_build`;
-the steward authors accepted builder inventory and publishes a new compiled generation.
-
-**Steward catalog filtering — `fqid_outside_steward_catalog` /
-`representation_outside_steward_catalog`.** When a researcher's project references a
-binding outside the loaded steward catalog, the column-based admission check (#206)
-emits one of two **warnings** (not errors): `fqid_outside_steward_catalog` when the
-steward holds *no* column of the concept, and the distinct
-`representation_outside_steward_catalog` when the steward holds the concept but not the
-column the binding **resolves** to — its message enumerates what the steward *does* hold
-("available there as 'Ssyk1' only" is the actionable form of "not available"). These are
-warnings during editing so an uploaded project can be inspected, but `/order` does not
-consume them: the materializer runs its fail-closed compiled-holdings/resolution gate
-and blocks these conditions with its own findings, so a steward-catalog warning never
-silently becomes an order. There is no cross- steward preview, retarget, or one-click
-mutation feature: the active deployment is the validation target, and the user edits and
-re-uploads the JSON if they intend to change it. The warning codes remain; the
-implementation reads compiled SQL mappings at the source's exact variant. It runs after
-shared period/representation resolution. `Holdings.binding_ids` and `Holdings.columns`
-distinguish an unheld binding or variant from a held binding with an unheld
-representation. Canonical column lookup handles spelling without granting a sibling
-variant or representation. If resolution is indeterminate, its existing error remains
-and only the binding-level admission check runs. Catalog artifacts emit neither steward
-warning. An unresolved source variant skips the probe. Admission uses the literal
-authored FQID; a same-as relationship is reference evidence and grants no physical
-membership. Physical period gaps remain the order materializer's responsibility.
+The reg_meta-backed semantic layer, its rules and its issue codes live in shared
+`reg_meta` project code: see `reg_meta/DESIGN.md` → Project semantic validation
+(`semantic.py`). `/validate` (above) is one of its two thin adapters; the other is
+`reg-meta validate`.
 
 ## Cost protection (`limits.py`)
 
@@ -2204,11 +2087,12 @@ to get wrong. A source's bindings can go stale relative to its period after the 
 (e.g. the author widens the period); that drift is the **server validator's job** to
 surface (`range_period_partially_covered` for a widening past availability,
 `period_outside_state_validity` when nothing is left,
-`binding_state_drifts_within_period` across a transition — see § Semantic validation) —
-the auto-validate flow that surfaces this on every edit is the sibling #994 (shipped —
-see § "Browser storage + project-file persistence" below). `ValidationPanel` carries a
-"Fix in catalog" link on each finding that resolves a catalog coordinate, so the
-remediation path is always back to the catalog, never a cart-side patch.
+`binding_state_drifts_within_period` across a transition — see `reg_meta/DESIGN.md` →
+Project semantic validation) — the auto-validate flow that surfaces this on every edit
+is the sibling #994 (shipped — see § "Browser storage + project-file persistence"
+below). `ValidationPanel` carries a "Fix in catalog" link on each finding that resolves
+a catalog coordinate, so the remediation path is always back to the catalog, never a
+cart-side patch.
 
 The one field a pick does NOT write is `display_name`, which it leaves **absent**. The
 field is optional — an absent one resolves to the reg_meta default from `variable_alias`
@@ -2259,12 +2143,13 @@ Remove (hidden at one row) — and writes back through the same wire shaping a p
 Applying sorts and merges the rows into the disjoint ascending wire `mergePeriods` would
 produce, refusing a within-row disorder or a genuine cross-row overlap in the same
 status line rather than silently collapsing one; a token period (`HT2018`) is a
-different vocabulary the rows do not author, and is shown as it stands. Where the
-period's overall span (first From to last To) differs from the project's `window` the
-card MARKS it ("Differs from study window 2005–2020"): the window is an authoring seed,
-not an inheritance (reg_schema puts `period` on `Source` alone), so divergence is shown
-rather than warned about — whether the window is actually left uncovered is a validation
-finding and has one.
+different vocabulary the rows do not author, and is shown as it stands. Where the years
+the period covers differ from the project's `window` (narrower, wider, or holed;
+`periodWindowRelation`) the card MARKS it ("Differs from study window 2005–2020"): the
+window is an authoring seed, not an inheritance (reg_schema puts `period` on `Source`
+alone), so divergence is shown rather than warned about. The one divergence that is more
+than shown is a period with no years inside the window at all, which blocks the order
+(see "Common study window").
 
 The rewrite goes through `applySourcePeriodEdit`, keyed by source **name** as well as
 coordinate: a draft may carry several differently named sources on one register variant
@@ -2424,6 +2309,63 @@ deployments seed the rail and per-page picker bounds from
 admitted physical holding-period bounds and capped at the catalog import year. Catalog
 artifacts and holdings without dated periods fall back to the fixed 1960 →
 catalog-vintage bounds.
+
+## Common study window (decision 2026-07-11)
+
+The project's common study window is the authoring default for every dated source. It is
+never schema inheritance: each `Source` keeps its own explicit `period` in
+`project_data.json`, and nothing derives a period from the window at read time.
+
+- **Where it lives: the existing `window` field, no schema change.**
+  `ProjectData.window` (reg_schema `StudyWindow`, optional since #611) already persists
+  the window with the draft, so it survives download, open and the autosave.
+- **The rules are SPA authoring rules; nothing past the SPA enforces them (decision
+  2026-10-07).** The window is an authoring default and every source carries its own
+  explicit period, so the period is the whole order request: neither `reg-meta order`
+  nor the HTTP `/api/project/order` endpoint reads `window`, and neither refuses a
+  project whose source is disjoint from it. The SPA's block is a gate on its own
+  download control, not a contract on the file. Enforcing it everywhere would make the
+  window a constraint on the order — a reg_schema structural rule and a `schema_version`
+  change — which is deliberately not taken.
+- **An add persists the full available intersection.** A catalog Add clips each picked
+  column's delivery windows to the add window (the rail's window, or a subject page's
+  own `?period`) and commits every surviving era (`windowsAddPeriod`), so an interrupted
+  delivery keeps its gap as the #307 list form. This is the Add itself, not a
+  suggestion.
+- **No overlap blocks the add.** A column with no years inside the add window has no
+  period to commit, and none is invented from its own span (the earlier dimmed-row
+  fallback is gone). The register list does not offer the tick; a subject page refuses
+  the whole Apply before the store is touched (`applyStagedPicks` → `outside-scope`) and
+  names the columns and the window in the picker's status row. A subject page's own
+  `?period` overrides the add window, so the study window is checked as well: an add the
+  page period resolves wholly outside it would author a source that blocks the order,
+  and is refused the same way (`outside-study-window`), naming the study window.
+- **A window edit never rewrites a source period.** The rail writes `window` and nothing
+  else. A source the new window leaves with no years inside it keeps its period and
+  blocks the order: `projectStore.canDownloadOrder` closes and `downloadOrder` refuses,
+  the card shows an error row, and the validation panel lists each such source
+  (`windowDisjointFindings`) with the same locate and catalog links a finding gets. The
+  rail's project chip says "Order blocked" (the panel's own wording) wherever validation
+  alone would read "Draft valid" or "Warnings". The draft itself stays valid and
+  downloadable.
+- **Every divergence is marked.** On `/project` the card marks a differing period and,
+  at error tone, a disjoint one; the head of the sources list names the window and
+  counts both kinds. In the catalog, a committed column's "In project" tag says when its
+  source's years differ from the window, or that it is outside it (`committedMarker`,
+  shared by the subject-page picker and the register list); the subject page's own
+  `?period` deviation keeps the period picker's existing hint.
+- **"Apply window overlap" is the one rewrite.** It reads each dated source's register
+  (the register list's `VariableDelivery.windows`), plans each source's overlap from its
+  own columns at its own variant (`planWindowOverlap`), and asks before writing: the
+  dialog lists every period it replaces and every source it leaves alone. Only sources
+  whose columns reach the window are rewritten, in one period-only `applyStagedDiff`; a
+  source with no overlap keeps its period, and keeps blocking if it is disjoint. So does
+  a source one of whose columns has no delivery at its variant in the read: narrowing it
+  to the columns that were found would silently drop the missing column's years. A draft
+  that moves while the reads are out drops the plan rather than writing it onto a
+  project nobody looked at. Once a plan has left nothing to change (a press that changed
+  nothing, or a rewrite that just landed), the action stays frozen (`aria-disabled`, so
+  focus stays put) until a source or the window moves.
 
 ## API surface
 
