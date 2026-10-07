@@ -243,9 +243,10 @@ if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
 fi
 ```
 
-**No hook tests this push.** The step 5 full-suite run is the release's pre-push gate;
-do not push the bump commit until it is green. CI re-runs the suite on main after the
-push.
+**No hook tests this push.** The step 5 full-suite run is the release's test gate; do
+not push the bump commit until it is green. If you rebased the bump onto a moved
+`origin/main` after step 5, re-run step 5 before pushing. CI re-runs the suite on main
+after the push.
 
 ### 7. Create draft GitHub release
 
