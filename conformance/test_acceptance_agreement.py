@@ -6,6 +6,7 @@ Real failures contain counts and contract descriptions, never private identities
 from __future__ import annotations
 
 import json
+import shutil
 from collections import Counter
 from pathlib import Path
 
@@ -18,7 +19,7 @@ from acceptance_requests import (
 )
 from artifact_requests import require, sample_project
 from fastapi.testclient import TestClient
-from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
+from reader_artifacts import CASES, FIXTURE_IMPORT_DATE, build_reader_artifact
 from reg_meta.cli import run
 from reg_meta.db import get_manifest, open_db
 from reg_webapp.app import create_app
@@ -31,24 +32,97 @@ def cli_json(directory, capsys, arguments):
     return json.loads(captured.out)
 
 
-def http_search_contains(client, query, scope, binding):
+# reg_meta/DESIGN.md: search continuation has a hard 1,000-result depth ceiling and a
+# researcher who reaches it must refine the query. A binding whose generic name (the
+# real catalogs share "År" across dozens of registers) ranks it past that depth is,
+# by contract, unreachable through that name alone.
+SEARCH_DEPTH_CEILING = 1_000
+
+
+def http_search_traversal(client, query, scope, binding):
+    """Follow HTTP variable cursors; return (found, top-level rows consumed)."""
     params = {"q": query, "type": "variable", "limit": 100, "scope": scope}
     cursors = set()
+    consumed = 0
     while True:
         response = client.get("/api/search", params=params)
         require(response.status_code == 200, "Acceptance HTTP search failed")
         groups = response.json()["groups"]
         if binding in response_fqids(groups):
-            return True
+            return True, consumed
+        consumed += sum(len(group["results"]) for group in groups)
         group = next((group for group in groups if group["has_more"]), None)
         if group is None:
-            return False
+            return False, consumed
         cursor = group["next_cursor"]
         require(
             cursor and cursor not in cursors, "Acceptance HTTP search cursor stalled"
         )
         cursors.add(cursor)
         params["cursor"] = cursor
+
+
+def http_search_contains(client, query, scope, binding):
+    return http_search_traversal(client, query, scope, binding)[0]
+
+
+def cli_search_traversal(directory, capsys, argv, binding):
+    """Follow CLI cursors; return (found, rows consumed)."""
+    page = cli_json(directory, capsys, argv)
+    cursors = set()
+    consumed = 0
+    while binding not in response_fqids(page["results"]):
+        consumed += len(page["results"])
+        if not page["has_more"]:
+            return False, consumed
+        cursor = page["next_cursor"]
+        require(cursor and cursor not in cursors, "Sample CLI search cursor stalled")
+        cursors.add(cursor)
+        page = cli_json(directory, capsys, [*argv, "--cursor", cursor])
+    return True, consumed
+
+
+def require_search_reaches(directory, client, capsys, query, scope, binding):
+    """Require CLI and HTTP name search to reach an admitted binding.
+
+    A traversal may miss it only after consuming the whole depth ceiling; the
+    researcher's documented refinement, the reader's register-scoped search, must
+    then find it. HTTP search has no register refinement, so a ceiling-bound HTTP
+    miss is proven through that same refined reader search. Returns whether the
+    refinement was needed.
+    """
+    argv = [
+        "--scope",
+        scope,
+        "search",
+        "--query",
+        query,
+        "--type",
+        "variable",
+        "--no-fold",
+        "--limit",
+        "100",
+    ]
+    cli_found, cli_consumed = cli_search_traversal(directory, capsys, argv, binding)
+    require(
+        cli_found or cli_consumed >= SEARCH_DEPTH_CEILING,
+        "Sample missing from CLI search traversal",
+    )
+    http_found, http_consumed = http_search_traversal(client, query, scope, binding)
+    require(
+        http_found or http_consumed >= SEARCH_DEPTH_CEILING,
+        "Sample missing from HTTP search traversal",
+    )
+    if cli_found and http_found:
+        return False
+    refined, _ = cli_search_traversal(
+        directory, capsys, [*argv, "--register", binding.rsplit("/", 1)[0]], binding
+    )
+    require(
+        refined,
+        "Sample past the search depth ceiling missing from register-refined CLI search",
+    )
+    return True
 
 
 def scopes(manifest):
@@ -120,6 +194,7 @@ def check_generation_seeded_stratified_binding_agreement(
         "Sample did not select 50 applicable bindings from a large proposal set",
     )
     require(sample == repeated, "Generation-seeded sample is not reproducible")
+    ceiling_refined = 0
     for candidate in sample:
         for scope in scopes(manifest):
             browse = artifact_client.get(
@@ -164,33 +239,8 @@ def check_generation_seeded_stratified_binding_agreement(
                 candidate.variable in response_fqids(cli_browse),
                 "Sample missing from CLI logical browse",
             )
-            argv = [
-                "--scope",
-                scope,
-                "search",
-                "--query",
-                query,
-                "--type",
-                "variable",
-                "--no-fold",
-                "--limit",
-                "100",
-            ]
-            page = cli_json(artifact_dir, capsys, argv)
-            cli_found = candidate.variable in response_fqids(page["results"])
-            cursors = set()
-            while not cli_found and page["has_more"]:
-                cursor = page["next_cursor"]
-                require(
-                    cursor and cursor not in cursors, "Sample CLI search cursor stalled"
-                )
-                cursors.add(cursor)
-                page = cli_json(artifact_dir, capsys, [*argv, "--cursor", cursor])
-                cli_found = candidate.variable in response_fqids(page["results"])
-            require(cli_found, "Sample missing from CLI search traversal")
-            require(
-                http_search_contains(artifact_client, query, scope, candidate.variable),
-                "Sample missing from HTTP search traversal",
+            ceiling_refined += require_search_reaches(
+                artifact_dir, artifact_client, capsys, query, scope, candidate.variable
             )
         project = candidate.project(manifest.get("steward", "global"))
         validated = artifact_client.post("/api/project/validate", json=project)
@@ -218,21 +268,19 @@ def check_generation_seeded_stratified_binding_agreement(
             ordered.status_code == 200, "Sample HTTP order disagrees with admission"
         )
         require(cli_bytes == ordered.text, "Sample CLI/HTTP order bytes disagree")
-    print(
-        json.dumps(
-            {
-                "sample_count": len(sample),
-                "sample_sha256": identity_digest([c.identity() for c in sample]),
-                "generation_id": manifest["generation_id"],
-                "raw_proposal_strata": available_strata,
-                "raw_proposal_bindings": available_bindings,
-                "selected_strata": dict(
-                    Counter(stratum for c in sample for stratum in c.strata)
-                ),
-            },
-            sort_keys=True,
-        )
-    )
+    receipt = {
+        "sample_count": len(sample),
+        "sample_sha256": identity_digest([c.identity() for c in sample]),
+        "generation_id": manifest["generation_id"],
+        "raw_proposal_strata": available_strata,
+        "raw_proposal_bindings": available_bindings,
+        "selected_strata": dict(
+            Counter(stratum for c in sample for stratum in c.strata)
+        ),
+        "search_ceiling_refined": ceiling_refined,
+    }
+    print(json.dumps(receipt, sort_keys=True))
+    return receipt
 
 
 def test_generation_seeded_stratified_binding_agreement(
@@ -281,11 +329,13 @@ def test_unheld_deep_link_and_reference_search_do_not_admit_order(
         "/api/catalog/" + binding, params={"scope": "reference"}
     )
     require(reference.status_code == 200, "Unheld reference deep link is missing")
-    require(
-        http_search_contains(
-            artifact_client, reference.json()["name"], "reference", binding
-        ),
-        "Unheld binding missing from reference search",
+    require_search_reaches(
+        artifact_dir,
+        artifact_client,
+        capsys,
+        reference.json()["name"],
+        "reference",
+        binding,
     )
     require(
         not http_search_contains(
@@ -362,3 +412,55 @@ def test_source_built_stratified_boundary_agreement(
         check_generation_seeded_stratified_binding_agreement(
             path.parent, client, tmp_path, capsys
         )
+
+
+def test_binding_past_search_depth_ceiling_is_reached_by_refinement(
+    tmp_path, monkeypatch, capsys
+):
+    # Unheld same-token fillers, as many as the depth ceiling, outrank the sampled
+    # "Year" in reference scope once identity promotion is gated off.
+    case = CASES / "reader/search-ceiling"
+    request = json.loads((case / "request.json").read_text())
+    source = tmp_path / "source"
+    shutil.copytree(case, source)
+    catalog = json.loads((case / "catalog.json").read_text())
+    filler = next(
+        variable
+        for variable in catalog
+        if "/".join(
+            (
+                variable["register"]["provider"],
+                variable["register"]["slug"],
+                variable["slug"],
+            )
+        )
+        == request["filler"]
+    )
+    catalog.remove(filler)
+    catalog.extend(
+        {
+            **filler,
+            "slug": f"{filler['slug']}-{index}",
+            "provider_key": f"{filler['provider_key']}-{index}",
+        }
+        for index in range(request["copies"])
+    )
+    (source / "catalog.json").write_text(json.dumps(catalog))
+    path = build_reader_artifact(
+        tmp_path / "artifact",
+        source,
+        "steward",
+        identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
+    )
+    monkeypatch.setenv("REG_META_DB", str(path.parent))
+    monkeypatch.setenv("REG_WEBAPP_STEWARD", "swecov")
+    monkeypatch.setenv(
+        "REG_WEBAPP_STEWARDS_DIR",
+        str(Path(__file__).resolve().parents[1] / "reg_webapp/stewards"),
+    )
+    with TestClient(create_app(rate_limit_per_minute=1000)) as client:
+        receipt = check_generation_seeded_stratified_binding_agreement(
+            path.parent, client, tmp_path, capsys
+        )
+    # Holdings scope sees no fillers; only the reference traversal hits the ceiling.
+    assert receipt["search_ceiling_refined"] == 1
