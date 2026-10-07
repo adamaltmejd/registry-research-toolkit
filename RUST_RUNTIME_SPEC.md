@@ -260,6 +260,22 @@ the loop:
   reviewed it. The review is a PR review that lists each acceptance command it reran
   with its result, and checks the diff against the package's paths and out-of-scope
   list. The implementing agent never declares its own work done.
+- **Build only what is needed.** A package builds what its stated behavior requires and
+  nothing more: no speculative options, retries for unlikely races, extra layers, or
+  tests beyond about one per stated behavior. Load-bearing guards (CLAUDE.md) and
+  regression cases are never extra, and an existing capability is extended before
+  anything new is added. Every PR ends with a simplification pass over its own diff,
+  listed in a "Simplification" section of the PR body. Reviewers report defects in the
+  stated behavior, rule violations and simplifications; an idea that adds scope goes in
+  one line under "Not requested", and the orchestrating session declines it unless it
+  fixes a defect.
+- **Tests are end-to-end or integration by default, at a public boundary**: the built
+  artifact, HTTP, MCP, order bytes, `project_data.json` validation. Unit tests are the
+  exception: one is allowed only where it pins behavior a boundary test cannot reach
+  well, never an implementation shape that makes the code harder to change. One test per
+  guarantee, at its hardest case, with expected values from outside the code under test
+  and a comment naming the change that would make it fail. A bug fix extends its
+  guarantee's test rather than adding one. G0 stays fast enough to run on every change.
 - **Escalate, don't decide.** An agent stops instead of changing any of: the operation
   table or error catalog (`conformance/api/`), a decision in section 13, the meaning of
   an existing golden expected file, the schema major version, a gate budget, or a new
