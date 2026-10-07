@@ -20,15 +20,17 @@ package. The pass reads the whole tree, not a diff.
 Take the numbers before anything moves, and again at the end.
 
 ```sh
-last=$(git describe --tags --abbrev=0 --match '<package>/v*')
+last=$(git describe --tags --abbrev=0 --match '<package>/v*' 2>/dev/null ||
+  git rev-list --max-parents=0 HEAD)  # no reachable tag: count from the root
 git log --oneline "$last"..HEAD -- <package> | wc -l
-fd -e py . <package>/src | xargs wc -l | tail -1
-fd -e py . <package>/tests | xargs wc -l | tail -1
+git ls-files '<package>/src/*.py' | xargs wc -l | tail -1
+git ls-files '<package>/tests/*.py' | xargs wc -l | tail -1
 uv run python -m pytest <package> -n auto -q --durations=20
 ```
 
-The frontend: `fd -e ts -e svelte . reg_webapp/frontend/src | xargs wc -l` and
-`bun run test` from `reg_webapp/frontend`. Compare each suite's wall time with its
+The frontend:
+`git ls-files 'reg_webapp/frontend/src/*.ts' 'reg_webapp/frontend/src/*.svelte' | xargs wc -l | tail -1`
+and `bun run test` from `reg_webapp/frontend`. Compare each suite's wall time with its
 budget in ARCHITECTURE.md → "Tiers".
 
 ## 1. Mechanical checks
