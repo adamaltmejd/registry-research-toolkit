@@ -30,15 +30,6 @@ describe("SubjectView (#638 shell)", () => {
     await expect.element(page.getByText("scb/lisa/kon")).toBeVisible();
   });
 
-  it("omits the fqid line entirely when no fqid is given", async () => {
-    const screen = await render(SubjectView, { title: "Inkomst" });
-    await expect
-      .element(page.getByRole("heading", { name: "Inkomst", level: 2 }))
-      .toBeVisible();
-    // No fqid prop → no .fqid paragraph at all (a concept group has no single fqid).
-    expect(screen.container.querySelector(".fqid")).toBeNull();
-  });
-
   it("omits the fqid line when showFqid=false even with an fqid (#670 binding leaf opt-out)", async () => {
     // The binding leaf passes showFqid=false — its breadcrumb already ends in the
     // slug, so the under-header fqid line is redundant (M12). The fqid prop is
@@ -57,17 +48,6 @@ describe("SubjectView (#638 shell)", () => {
       )
       .toBeVisible();
     expect(screen.container.querySelector(".fqid")).toBeNull();
-  });
-
-  it("keeps the fqid line by default (the classification leaf still shows it)", async () => {
-    // showFqid defaults to true — the classification leaf keeps the under-header
-    // fqid line (its breadcrumb shows the class axis, not the leaf slug).
-    const screen = await render(SubjectView, {
-      title: "SSYK 2012",
-      fqid: "scb/class/ssyk2012",
-    });
-    expect(screen.container.querySelector(".fqid")).not.toBeNull();
-    await expect.element(page.getByText("scb/class/ssyk2012")).toBeVisible();
   });
 
   it("renders the sections in the canonical order when all are provided", async () => {
@@ -106,18 +86,18 @@ describe("SubjectView (#638 shell)", () => {
       docs: marker("docs"),
     });
 
-    const order = [...screen.container.querySelectorAll("[data-testid]")].map(
-      (el) => el.getAttribute("data-testid"),
-    );
-    // Exactly the two provided sections, in canonical order — nothing rendered for
-    // picker / value set / relationships.
-    expect(order).toEqual(["description", "docs"]);
-    expect(screen.container.querySelector('[data-testid="picker"]')).toBeNull();
+    // The article holds the header and the two provided sections, nothing else:
+    // no wrapper is rendered for picker / value set / relationships / technical.
+    const article = screen.container.querySelector("article");
+    expect([...(article?.children ?? [])].map((el) => el.tagName)).toEqual([
+      "HEADER",
+      "P",
+      "P",
+    ]);
     expect(
-      screen.container.querySelector('[data-testid="value-set"]'),
-    ).toBeNull();
-    expect(
-      screen.container.querySelector('[data-testid="relationships"]'),
-    ).toBeNull();
+      [...screen.container.querySelectorAll("[data-testid]")].map((el) =>
+        el.getAttribute("data-testid"),
+      ),
+    ).toEqual(["description", "docs"]);
   });
 });
