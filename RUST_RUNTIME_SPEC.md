@@ -104,8 +104,8 @@ About 70% of the hotspots are A or B. The main ones:
   | ------------------------------------------------------------------------------------------------------------------------ | ----- | ----------------------------------------------------------------------- |
   | `py_lower(col) LIKE py_lower(?)` scans (alias 82k rows, variable 54k)                                                    | B     | `*_folded` columns + index; trigram FTS5 for substring match            |
   | `py_catalog_column` UDF, `representative_columns`, spelling caches                                                       | A     | `canonical_column` stored on states, aliases, windows, warnings         |
-  | `_expand_state_windows`, alias-window participation rules                                                                | A     | `variable_state` stores the projected states (delta ~2.3k rows)         |
-  | `register_variable_deliveries`, `_fuse_windows`, coverage                                                                | A     | `delivery` and `delivery_window` tables                                 |
+  | `_expand_state_windows`, alias-window participation rules                                                                | A + C | `state_projection` relation (see below); request fallback stays         |
+  | `register_variable_deliveries`, `_fuse_windows`, coverage                                                                | A     | `browse_delivery`, `delivery_window` and `resolver_column` (see below)  |
   | `_fuse_provider_held_deliveries`, `scope_predicate` string splicing                                                      | A     | Per-scope rows (`scope = 'holdings'`) in steward artifacts              |
   | `_state_warning_ids` (one `data_warnings` call per state)                                                                | A     | `state_warning` link table                                              |
   | Classification/variable chains, terminal successors, editions, families                                                  | A     | `succession_terminal`, `classification_chain`, `classification_family`  |
@@ -121,22 +121,40 @@ Consequences:
   alias-window, replacement and coding rules are implemented once, in Python, where
   validation can check them. The reader never re-implements them. This is the largest
   reduction in port risk: the hardest semantics never need a second implementation.
+- **Window participation is only partly compiled.** Which windows a state has, and their
+  representation metadata, are artifact facts. Whether a window *replaces* its base
+  state depends on the requested period: a period that no window overlaps falls back to
+  the base state (`_participating_windows` in `catalog.py`; pinned by
+  `test_gap_year_month_falls_back_to_annual_state`). That fallback stays in the reader
+  (class C), as a small rule over compiled rows. Gap, partial-overlap and spanning cases
+  are pinned as `api` cases before the moved code is reduced.
+- **Projected states are their own relation.** `variable_state.state_id` is a primary
+  key, and a year's month windows share their annual state's `state_id`, so projected
+  states cannot be rows of `variable_state` without changing its grain under the Python
+  reader. `state_projection` has its own identity, references the source state, and
+  links warnings and lineage through it.
+- **Browse and resolver eligibility are different contracts.** Browse deliberately keeps
+  alias windows that no state contains (`register_variable_deliveries`); holdings
+  accepts only resolver-emitted columns (`holdings_compile.py`). `browse_delivery`
+  serves browse; `resolver_column` is the only relation that authorizes a holdings
+  mapping. Each has its own invariants.
 - **The compiler stops importing the reader.** `holdings_compile` canonicalizes against
-  the derived `delivery` table.
+  the derived `resolver_column` relation.
 - **Scope becomes data.** Only two scopes exist (`reference`, `holdings`), and holdings
   exists only in steward artifacts. Precomputing per-scope rows replaces the
   string-spliced predicates in ~25 queries.
 - **Reader size.** Of ~10.9k lines in `catalog.py` + `queries.py`, an estimated 35–40%
   of lines and 10–15% of the algorithmic logic remain. The remainder is mostly SQL plus
   sort/merge.
-- **Artifact size.** Roughly +70–100 MB (6–8%). Do not add a second copy of the
-  projected states (+200 MB) or precomputed code owners (up to 3.9M rows).
-- **New invariants the derive validator must own:** delivery windows disjoint and equal
-  to the fuse of projected states; one canonical spelling per (variable, variant, fold);
-  chain/terminal tables acyclic and consistent with `*_replaced_by` at the manifest
-  year; `state_warning` equal to the attribution predicate; held-\* tables equal to
-  holdings facts; aggregate tables equal to a recomputation; fixed insertion order for
-  byte-identical output.
+- **Artifact size.** Roughly +70–100 MB (6–8%) before `state_projection`, which slice 3b
+  re-estimates. Keep it a narrow relation referencing base states, not a copy of their
+  content (+200 MB). Do not precompute code owners (up to 3.9M rows).
+- **New invariants the derive validator must own:** browse delivery windows disjoint;
+  `resolver_column` equal to the resolver's emitted columns; one canonical spelling per
+  (variable, variant, fold); chain/terminal tables acyclic and consistent with
+  `*_replaced_by` at the manifest year; `state_warning` equal to the attribution
+  predicate; held-\* tables equal to holdings facts; aggregate tables equal to a
+  recomputation; fixed insertion order for byte-identical output.
 - **Lost test seam.** The `classification_as_of_year` override goes away. Tests build
   artifacts with a different manifest year instead.
 
@@ -153,8 +171,20 @@ downstream of curation.
   track (section 11) speeds it up.
 - **Derive** — a new step, `reg-meta-build derive`, that reads a built database and
   writes the derived tables of section 3. It is a pure function of the base artifact,
-  deterministic, and has its own validator. Steward artifacts run it after `extend-db`;
-  `holdings_compile` uses the reference-scope derived tables from the global base.
+  deterministic, and has its own validator. Steward artifacts interleave it with
+  `extend-db`, because holdings must see the steward's own metadata (`extend_db.py`
+  inserts the steward core graph before compiling holdings): insert the steward core →
+  derive the reference tables over base plus overlay → compile holdings → derive the
+  holdings tables.
+
+**The derived artifact has its own identity contract** (stage 2). Base identity,
+derivation identity (derive code and schema minor) and the admitted schema versions all
+feed the served generation, so a re-derived artifact can never answer under a cursor
+issued for the previous one. Derive reads an immutable base, publishes atomically,
+leaves base bytes unchanged, rejects a stale derivation, and is byte-identical on
+repeat. Today the builder requires exact schema equality (`db.py`) and the generation
+records one schema version and builder commit (`artifact_identity.py`); both change in
+stage 2.
 
 **Bootstrap derive by moving, not rewriting.** The first implementation of each derived
 table calls today's reader functions (`Catalog.states`, the delivery fusing, the chain
@@ -176,11 +206,18 @@ reader. Neither waits for the other.
 
 **Three verification tiers, with budgets.**
 
-  | Tier | What runs                                                                                                                                                                                                  | Budget      | When                                         |
-  | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | -------------------------------------------- |
-  | 0    | Unit tests and conformance on synthetic artifacts, Python and Rust. Today 215 conformance cases take 12 s, synthetic builds included.                                                                      | under 30 s  | every change                                 |
-  | 1    | Derive on the pinned real base, then a differential run: current Python reader vs derived tables vs Rust reader, over generated queries (every register, sampled variables, the search-eval corpus terms). | under 5 min | every PR touching derive or the reader       |
-  | 2    | Full base build plus derive and tier 1 on the result.                                                                                                                                                      | ~1 h today  | batch checkpoints and releases, never per PR |
+  | Tier | What runs                                                                                                                                                                                      | Budget      | When                                         |
+  | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | -------------------------------------------- |
+  | 0    | Unit tests and conformance on synthetic artifacts, Python and Rust. Today 215 conformance cases take 12 s, synthetic builds included.                                                          | under 30 s  | every change                                 |
+  | 1    | Derive on the pinned real base, then a differential run of the baseline reader against derived tables (from stage 2) and the Rust reader (per operation, as it lands), on both artifact kinds. | under 5 min | every PR touching derive or the reader       |
+  | 2    | Full base build plus derive and tier 1 on the result.                                                                                                                                          | ~1 h today  | batch checkpoints and releases, never per PR |
+
+The tier-1 baseline is the Python reader **at a pinned commit, installed in its own
+environment**, never the checkout under change, so a regression moved into derive cannot
+validate itself. It runs on both artifact kinds (the global catalog and the SWECOV
+steward artifact) and both scopes, over generated queries (every register, seeded
+variable samples, holdings-specific strata, the search-eval corpus terms). Each accepted
+difference is recorded as a named semantic exception in the harness.
 
 A slow tier is a defect to fix, not a reason to skip the tier. If derive exceeds its
 budget, make the slow table set-based before adding more tables.
@@ -204,9 +241,11 @@ the loop:
   has reviewed it against its package and this file. The implementing agent never
   declares its own work done.
 - **Escalate, don't decide.** An agent stops and reports instead of changing any of: the
-  operation table or error catalog (section 7), a decision in section 13, an existing
-  golden expected file, the schema major version, a tier budget, or the dependency list
-  this file names. Everything else it decides, and records in the PR.
+  operation table or error catalog (section 7), a decision in section 13, the meaning of
+  an existing golden expected file, the schema major version, a tier budget, or the
+  dependency list this file names. A golden change that only converts a shape as the
+  approved operation table prescribes is not an escalation; it is reviewed like any
+  diff. Everything else the agent decides, and records in the PR.
 - **Small PRs, squash-merged to main.** Everything before stage 4 is additive (schema
   9.x minor bumps, a new server beside FastAPI), so main stays deployable and there is
   no long-lived integration branch.
@@ -216,9 +255,10 @@ the loop:
 - **Tier 2 never runs inside a package.** The maintainer runs it at checkpoints, in the
   background.
 - **Four maintainer checkpoints:** (1) end of stage 1: approve the operation table,
-  error catalog and fold spec; (2) after slice 3a: approve the pattern the other slices
-  copy; (3) before stage 4: go or no-go on the cutover, with hosted MCP already live; (4)
-  stage 5 done, and this file deleted.
+  error catalog, surface inventory and fold spec, and decide whether indexed text is
+  pre-folded (section 5); (2) after slice 3a: approve the pattern the other slices copy; (3)
+  before stage 4: go or no-go on the cutover, with hosted MCP already live; (4) stage 5
+  done, and this file deleted.
 
 ## 5. Principle 2: one implementation per contract
 
@@ -243,7 +283,11 @@ Notes:
     Final_Sigma) and the column identity rule. In Rust it is `str::to_lowercase`.
   - `fold_search` — strip, full case folding, NFKD, drop characters with a nonzero
     canonical combining class, collapse whitespace. This is today's search-text fold and
-    is aligned with FTS5 `unicode61`.
+    is *not* what FTS5 `unicode61` does to indexed text: `unicode61` folds neither ß nor
+    ligatures nor full-width forms (`straße`/`strasse`, `ﬁlm`/`film`, `ＡＢＣ`/`abc`
+    match under `fold_search` but not under `unicode61`). Whether indexed text is
+    pre-folded with `fold_search` or stays raw is decided at checkpoint 1, with the
+    distinguishing cases in the fold corpus.
   - Helper classes follow Python, not Rust's std: whitespace is `White_Space` plus
     U+001C..U+001F; "alphanumeric" (`[^\W_]`) is general category L\* or N\*, not Rust's
     `Alphabetic` property.
@@ -345,9 +389,10 @@ OpenAPI and MCP `tools/list` are the self-description; there is no separate `des
 
 Rules (settled 2026-10-07; first agreed for the CLI, carried over to the API):
 
-- **JSON only, `{data, meta}` on every response.** `data` is the result; `meta` holds
-  the contract version, catalog generation and scope. Agents always know which catalog
-  answered.
+- **JSON only, `{data, meta}` on every response**, except raw-bytes downloads (document
+  PDFs, the order manifest file), which carry their media type and have a JSON operation
+  for their metadata. `data` is the result; `meta` holds the contract version, catalog
+  generation and scope. Agents always know which catalog answered.
 - **Deterministic responses.** `meta` carries no timing, so the same request on the same
   catalog returns the same bytes and goldens compare raw output. Performance is measured
   by the tier-1 harness.
@@ -415,21 +460,27 @@ operation's parameter and result schemas.
 The conformance corpus is the acceptance gate, and HTTP is its single transport. Today
 every runner calls Python in-process, so it must become implementation-neutral first:
 
-- Add a runner seam: HTTP cases take a base URL instead of a `TestClient`, so the same
-  corpus runs against FastAPI today and `reg-meta serve` later.
+- Add a runner seam: HTTP cases run against a server process started by a command
+  template, so the same corpus runs against FastAPI today and `reg-meta serve` later.
+  Servers are reused per artifact **and** configuration (search settings differ between
+  cases).
+- Process-boundary cases stay process-level: startup admission failure (a server that
+  never listens), catalog selection and `fetch`.
 - Rewrite the CLI argv cases (`cli_scope`, `selection`), the 42 `logical` cases and the
   5 `coverage` cases as HTTP request cases against the new API. Write them against the
   new API directly, not against today's surface.
-- MCP is checked by an equivalence suite: for a sample of operations, the MCP tool call
-  and the HTTP request return the same `data`. The generated wiring makes this a thin
-  check, not a second corpus.
+- MCP is checked by an equivalence suite: for every operation, a representative success
+  and each applicable domain error (including scope, generation and stale-cursor
+  errors), the MCP tool call and the HTTP request return the same `data`, `meta` and
+  error document. Transport-level parse errors are specified separately per transport.
 - Order cases compare against committed `order.json` bytes, not against Python's own
   output.
 - `fetch` cases use a local HTTP fixture server and a URL override
   (`REG_META_RELEASES_URL`) instead of patching `urlopen`.
 - Fixtures: a script builds each synthetic (fixture, kind) artifact once through the
-  real Python pipeline, cached by a hash of the fixture sources and build code. Rust
-  tests and conformance read the same built files. Determinism makes caching safe.
+  real Python pipeline, cached by a hash of every transitive build input. Entries are
+  immutable; a case that mutates an artifact copies it first. Rust tests and conformance
+  read the same built files. Determinism makes caching safe.
 - The tier-1 differential harness (section 4) maps new API results back to the current
   reader's results where the shapes differ; the mapping is part of the harness, not the
   product.
@@ -450,29 +501,35 @@ running on every intermediate release until stage 4 replaces it.
    in `reg-core`, the fixture cache, the out-of-process HTTP runner and the tier-1
    differential harness. Its PRs are gated by tier 0 and review only, because the tier-1
    harness is one of its deliverables. Ends at checkpoint 1.
-2. **Derive framework.** `reg-meta-build derive` with its validator and the pattern for
-   registering a derived table, shipped as a schema 9.x minor. The reader functions
-   `holdings_compile` needs move into `reg_meta_build` (section 4, "bootstrap by
-   moving"), so it stops importing `Catalog`. The derived tables themselves are built in
-   the stage-3 slice that reads them, so no table shape is designed before something
+2. **Derive framework.** `reg-meta-build derive` with its validator, the pattern for
+   registering a derived table, the derived-artifact identity contract and the steward
+   ordering (section 4), shipped as a schema 9.x minor. Tier 1 compares the baseline
+   reader against derived tables from here on. The derived tables themselves are built
+   in the stage-3 slice that reads them, so no table shape is designed before something
    consumes it.
 3. **Rust operation slices.** Each slice is its `api` cases (written red from the
    approved operation table), its derived tables (a schema 9.x minor), then its Rust
    operations over HTTP and MCP, in one to three PRs: (a) admission + search, (b) show /
    states / values, (c) schema / diff / coverage / coded, (d) chains and graph, (e)
    order and project validation. Slice (a) runs alone: it creates `reg-catalog`, the
-   `reg-meta` binary, the envelope, error, paging and MCP wiring, and `reg-core-py`, and
-   ends at checkpoint 2. Then (b), (c) and (d) run in parallel; (e) follows (b). The new
-   API runs beside FastAPI and is not yet used by the SPA. The build switches to
-   `reg-core-py` for FQID, folds and hashing. Gated by tiers 0 and 1. The hosted MCP
-   endpoint goes live once slice (a) passes.
+   `reg-meta` binary, the envelope, error, paging and MCP wiring, and `reg-core-py`,
+   plus a deployment package (edge routing for `/mcp`, separate rate limits, the new
+   server beside FastAPI, a public-host MCP smoke test). It ends at checkpoint 2. Then
+   (b), (c) and (d) run in parallel; (e) follows (b). Slice (b) owns `state_projection`,
+   `browse_delivery` and `resolver_column`, and switches `holdings_compile` to
+   `resolver_column`. Slice (e) starts by porting the project types and structural
+   validator from `reg_schema` into `reg-core`, keeping its raw-input, accumulated
+   diagnostics. Docs, context, stats and `fetch` are assigned to slices by the surface
+   inventory in 1.1. The new API runs beside FastAPI and is not yet used by the SPA. The
+   build switches to `reg-core-py` for FQID, folds and hashing. Gated by tiers 0 and 1.
+   The hosted MCP endpoint goes live once slice (a) passes.
 4. **Cutover.** Starts at checkpoint 3. The SPA moves to the Rust server's API
    (regenerate types, adapt calls); the agent plugin moves to MCP; the Dockerfile and
-   publish workflow drop the CLI. Move `reg_schema` into `reg-core`. The modules the
-   build still imports from `reg_meta` (`source_evidence`, `documentary`, `inventory`,
-   `cli_common`) move into `reg_meta_build`; they cannot move earlier because the Python
-   reader imports them too. Delete the FastAPI backend, the Python `reg_meta` package
-   with its CLI, and `reg_schema`. Bump the schema major.
+   publish workflow drop the CLI. The modules the build still imports from `reg_meta`
+   (`source_evidence`, `documentary`, `inventory`, `cli_common`) move into
+   `reg_meta_build`; they cannot move earlier because the Python reader imports them
+   too. Delete the FastAPI backend, the Python `reg_meta` package with its CLI, and
+   `reg_schema`. Bump the schema major.
 5. **SPA on WASM.** Replace `period.ts`, `validation.ts` and the hand-written
    `project_data.ts` with `reg-core` compiled to WASM plus generated types. Ends at
    checkpoint 4.
@@ -494,6 +551,9 @@ branches from main.
   tool, parameters, result shape, error codes) and the error catalog (code, class, HTTP
   status). The `api` case format is documented in `conformance/README.md`; cases for
   slice (a) (admission errors, search) go under `conformance/cases/api/`.
+- A surface inventory in section 7: every current HTTP route, CLI command and public
+  library entry point, marked retained, replaced or removed, with its owning slice and
+  acceptance case. Nothing the cutover needs may be unowned.
 - Expected values may start from the current Python reader's output mapped to the new
   shape; each is reviewed as content.
 - Out of scope: any runner or implementation.
@@ -520,31 +580,38 @@ branches from main.
 **1.3 Fixture cache.** Implements section 9, "Fixtures".
 
 - Changes: a builder that makes each synthetic (fixture, kind) artifact once through the
-  real pipeline into a cache directory, keyed by a hash of the fixture sources and the
-  `reg_meta_build` source. Conformance session fixtures read from it.
+  real pipeline into a cache directory. The key hashes every transitive build input:
+  fixture sources, the `reg_meta_build`, `reg_meta` and `reg_schema` sources (the
+  fixture builder imports identity and fallback policy from `reg_meta`), builder options
+  and `uv.lock`. Entries are immutable; cases that mutate an artifact copy it.
+  Conformance session fixtures read from the cache.
 - Out of scope: changing any fixture or golden.
-- Acceptance: a second conformance run builds nothing; a cache hit is byte-identical to
-  a fresh build; total conformance time does not regress.
+- Acceptance: `uv run python -m pytest conformance -q` twice, and the second run builds
+  nothing; a cache hit is byte-identical to a fresh build; touching each input class
+  invalidates its entries (tested); total conformance time does not regress.
 
 **1.4 Out-of-process HTTP runner.** Implements section 9, "runner seam".
 
 - Changes: conformance takes `--server-cmd` (a template with `{db}` and `{port}`),
-  starts the server once per cached fixture artifact, and runs HTTP cases over a real
-  socket. The `api` corpus is collected only with this option.
+  starts one server per cached fixture artifact and server configuration, and runs HTTP
+  cases over a real socket. The `api` corpus is collected only with this option.
+  Startup-failure cases stay process-level.
 - Out of scope: rewriting existing cases.
 - Acceptance: the existing HTTP and validate cases pass with `--server-cmd` starting the
   FastAPI app under uvicorn; the default in-process run is unchanged.
 
 **1.5 Tier-1 differential harness.** Implements section 4, tier 1.
 
-- Changes: the harness under `conformance/differential/`. It pins the latest release
-  base (tag and SHA-256, recorded in section 4), fetched to a cache directory. Its query
-  generator covers every register, seeded samples of variables, and the search-eval
-  corpus terms. It is seeded from `spike/stage0/scripts/parity_fts.py`.
+- Changes: the harness under `conformance/differential/`. It pins the latest release's
+  global and SWECOV artifacts (tag and SHA-256, recorded in section 4), fetched to a
+  cache directory, and the baseline reader commit, installed in its own environment. Its
+  query generator covers every register, seeded variable samples, holdings strata and
+  the search-eval corpus terms, in both scopes. It is seeded from
+  `spike/stage0/scripts/parity_fts.py`.
 - Deletes `spike/stage0/`; the fold parity sweep lives on in 1.2.
 - Out of scope: mappings for the new API's shapes, which each slice adds.
-- Acceptance: a Python-against-Python run reports zero differences in under 5 minutes,
-  and a deliberately perturbed reader is reported.
+- Acceptance: a baseline-against-checkout run on unchanged main reports zero differences
+  in under 5 minutes, and a deliberately perturbed checkout reader is reported.
 
 ### Stage 0 results (2026-10-07)
 
@@ -685,6 +752,9 @@ moving. The first layer is cheap to fix in Python.
 
 - **Maintenance surface.** Two languages instead of one (Python for the build, Rust for
   the runtime). Rust build times and toolchain pinning in CI.
+- **Self-validating oracle.** If tier 1 compared against the checkout's own reader, a
+  regression moved into derive would validate itself. Mitigated by the pinned,
+  separately installed baseline reader and recorded semantic exceptions.
 - **Fold parity.** The main source of silent drift. Mitigated by computing folded
   columns through the same code via bindings, and a property corpus.
 - **Native extension in the build.** The build needs a compiled `reg-core-py`. That is
