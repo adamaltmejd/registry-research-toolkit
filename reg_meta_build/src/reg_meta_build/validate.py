@@ -219,6 +219,7 @@ def validate_built_db(
         _check_variable_alias_covers_state_columns(conn, result, tables)
         _check_delivery_column_hygiene(conn, result, tables)
         _check_name_field_hygiene(conn, result, tables)
+        _check_nameless_variables_named_per_state(conn, result, tables)
         _check_slugs_present(conn, result, tables)
         _check_panel_refs_resolve(conn, result, tables)
         _check_panel_refs_have_states(conn, result, tables)
@@ -1030,6 +1031,60 @@ def _check_name_field_hygiene(
             )
         else:
             result.ok(f"no {table}.{column} with surrounding whitespace")
+
+
+def _check_nameless_variables_named_per_state(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """A variable with a NULL common `name` names every one of its states.
+
+    `ResolvedVariable` admits a missing common name only when it has at least
+    one delivery state and each state carries a positive name (reg_meta/DESIGN.md:
+    "a variable with no common name requires positive names for every delivered
+    state"); readers and search fall back to those names. This rechecks the
+    writer's output so a regression cannot ship a variable with no name at all,
+    whether it dropped one state's name or every state. A state-less name-less
+    variable is therefore an offender here, for every provider."""
+    result.section("[name-less variables: per-state names]")
+    if not {"variable", "variable_state", "register", "provider"}.issubset(tables):
+        result.ok("variable / variable_state / register / provider absent — skipped")
+        return
+    # Positivity in Python, not SQL: `str.strip()` is the IR's definition (all
+    # Unicode whitespace); SQLite TRIM() strips ASCII spaces only.
+    labels: dict[int, str] = {}
+    offenders: dict[int, list[str]] = {}
+    for provider, register, variable, variable_id, state_id, state_name in conn.execute(
+        "SELECT p.slug, r.slug, v.slug, v.variable_id, vs.state_id, vs.name "
+        "FROM variable v "
+        "JOIN register r ON r.register_id = v.register_id "
+        "JOIN provider p ON p.provider_id = r.provider_id "
+        "LEFT JOIN variable_state vs ON vs.variable_id = v.variable_id "
+        "WHERE v.name IS NULL "
+        "ORDER BY p.slug, r.slug, v.slug, v.variable_id, vs.state_id"
+    ):
+        # Keyed by variable_id: slugs are nullable and only provider-unique, so
+        # two offenders' printed labels may coincide.
+        labels[variable_id] = (
+            f"{provider}/{register}/{variable or f'<variable_id {variable_id}>'}"
+        )
+        if state_id is None:
+            offenders[variable_id] = ["no states"]
+        elif state_name is None or not state_name.strip():
+            offenders.setdefault(variable_id, []).append(f"state {state_id}")
+    if offenders:
+        sample = "; ".join(
+            f"{labels[vid]} ({', '.join(where)})"
+            for vid, where in list(offenders.items())[:5]
+        )
+        result.fail(
+            f"{len(offenders)} name-less variable(s) lack a positive delivery "
+            f"name on every state (writer dropped a state name?): {sample}"
+        )
+    else:
+        result.ok(
+            f"all {len(labels):,} name-less variable(s) carry a positive "
+            "name on every state"
+        )
 
 
 def _check_slugs_present(

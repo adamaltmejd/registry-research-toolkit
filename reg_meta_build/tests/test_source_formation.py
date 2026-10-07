@@ -7,6 +7,7 @@ from dataclasses import replace
 from typing import TYPE_CHECKING
 
 import pytest
+from _csv_fixtures import SCB_REVISION
 from _curation_fixtures import write_fdb_partition_curation
 from _prepared_fixtures import accept_prepared
 from catalog_manifest import synthetic_manifest
@@ -52,7 +53,6 @@ if TYPE_CHECKING:
 from _source_formation_support import (
     FLAGS as _FLAGS,
     REGISTER as _REGISTER,
-    REVISION as _REVISION,
     form_family as _form,
     formation_record as _record,
 )
@@ -162,7 +162,7 @@ def test_prepared_native_family_forms_and_writes_without_handwritten_cases(
     manifest = prepare_source_records(
         artifact,
         records=records,
-        revisions=(_REVISION,),
+        revisions=(SCB_REVISION,),
         scope="complete synthetic source",
     )
     commit = accept_prepared(artifact)

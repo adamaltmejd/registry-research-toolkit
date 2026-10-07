@@ -1,0 +1,10 @@
+{
+  "fixture": "reader/coded-ranking",
+  "artifact": "catalog",
+  "operation": "get_coded_variables",
+  "args": [],
+  "kwargs": {
+    "min_registers": 2
+  },
+  "observe": "coded-ranked"
+}

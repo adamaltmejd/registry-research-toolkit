@@ -604,12 +604,21 @@ branch whose rows can carry an identity score (registers, variable names, delive
 columns, classification names and code containment, group labels) uses one fixed
 1,001-row horizon, folded or not: every cursor sees the same complete bounded fold
 universe, so a later sibling cannot turn an already-consumed leaf into a group or
-succession row. The identity-promotion gate counts that same universe. It switches
-exact/prefix promotion off when more than 50 rows match by identity, so generic exact
-matches cannot swamp the ranked order, and the page size cannot change that decision
-(`--no-fold` included). The cost is the default folded search's SQL bound. Only the
-value branch, whose code rows carry no identity score, keeps an adaptive `limit + 1`
-prefix and backfills when in-scope shaping consumes a page. Type/register/year/group
+succession row. An exact identity match always leads the order (#1180): a researcher
+typing a whole name ("År", "Kön") gets the variables carrying it first, however many
+registers share it. A short generic name prefix-matches tens of thousands of FTS rows
+and bm25 does not prefer a whole-name hit, so every bounded variable arm (FTS, name
+LIKE, delivery-column LIKE) orders exact name or in-scope delivery-column matches ahead
+of its LIMIT. One bounded prefetch finds them: FTS token candidates on the name and
+alias columns, then the identity fold. Exact names are therefore reachable within the
+depth ceiling unless exact rows alone fill it. Prefix and group-label promotion keep the
+swamp gate: it counts the same universe and switches them off when more than 50 rows
+match by identity, so a generic prefix ("ar" → "arbete…") cannot pull hundreds of weaker
+hits ahead of the ranked order, and the page size cannot change that decision
+(`--no-fold` included). The prefetch costs a few milliseconds on the real catalog; the
+identity arms otherwise keep the default folded search's SQL bound. Only the value
+branch, whose code rows carry no identity score, keeps an adaptive `limit + 1` prefix
+and backfills when in-scope shaping consumes a page. Type/register/year/group
 eligibility, classification-code exclusions, and the value surface's published
 bm25-plus-mapping-count rank are applied inside SQL before each branch's bound. This is
 the search-surface analog of the catalog-typing move (#681): the webapp's per-result
@@ -692,18 +701,20 @@ retain inherited metadata. Checked calendar-month families expose their literal 
 definitions here; a varying common definition remains NULL at variable grain. Checked
 source names and descriptions follow the same rule; a variable with no common name
 requires positive names for every delivered state. Search indexes the retained delivery
-text when the common text is NULL. Coding uses its separate window mode; state identity
-remains shared. This does not assert interchangeable storage or statistical
-comparability between source editions. A nullable window-level `provenance` uses the
-same contract as `variable_state.provenance`: source-derived windows leave it NULL,
-retain the existing replacement/participation semantics, and inherit the base state's
-provenance. An exact-edition curated alias carries the correction class, evidence, and
-source-edition scope; the reader adds it to the source result rather than making it
-participate in replacement. This preserves the original base state, including its
-operational definition, without a synthetic full-state window. A variable with no window
-rows maps 1:1, byte-identically. The monthly merge is explicitly retained under
-#518/#523; the retention rationale and the #523↔#496 two-layer boundary are recorded in
-`reg_meta_build/DESIGN.md` → *Consumers: monthly column families*.
+text when the common text is NULL. The name-keyed `get coded-variables` ranking skips
+such a variable rather than merging every NULL name into one row (#1177). Coding uses
+its separate window mode; state identity remains shared. This does not assert
+interchangeable storage or statistical comparability between source editions. A nullable
+window-level `provenance` uses the same contract as `variable_state.provenance`:
+source-derived windows leave it NULL, retain the existing replacement/participation
+semantics, and inherit the base state's provenance. An exact-edition curated alias
+carries the correction class, evidence, and source-edition scope; the reader adds it to
+the source result rather than making it participate in replacement. This preserves the
+original base state, including its operational definition, without a synthetic
+full-state window. A variable with no window rows maps 1:1, byte-identically. The
+monthly merge is explicitly retained under #518/#523; the retention rationale and the
+#523↔#496 two-layer boundary are recorded in `reg_meta_build/DESIGN.md` → *Consumers:
+monthly column families*.
 
 **`Period`** — `int | str | dict`, the polymorphic period `resolve_at` accepts: a bare
 year (`2018`), a period token

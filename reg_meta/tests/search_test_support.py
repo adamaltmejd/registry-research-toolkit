@@ -8,11 +8,12 @@ search tests that seed explicit rows.
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from reader_artifacts import build_reader_artifact
+from reader_artifacts import CASES, build_reader_artifact, replicate_filler
 from reg_meta.db import open_db
 
 sys.path.insert(
@@ -46,13 +47,22 @@ __all__ = [
 
 
 def reader_search_conn(
-    tmp_path_factory: pytest.TempPathFactory, source: str
+    tmp_path_factory: pytest.TempPathFactory, source: str, kind: str = "catalog"
 ) -> sqlite3.Connection:
-    """Open the catalog artifact built from `conformance/cases/reader/<source>`."""
-    path = build_reader_artifact(
-        tmp_path_factory.mktemp(source), f"reader/{source}", "catalog"
+    """Open the artifact built from `conformance/cases/reader/<source>`.
+
+    A case whose `request.json` names a `filler` is expanded first
+    (`replicate_filler`); other reader cases use `request.json` differently.
+    """
+    directory = tmp_path_factory.mktemp(source)
+    case = CASES / "reader" / source
+    request = case / "request.json"
+    fixture = (
+        replicate_filler(case, directory / "source")
+        if request.exists() and "filler" in json.loads(request.read_text())
+        else case
     )
-    return open_db(path)
+    return open_db(build_reader_artifact(directory / "artifact", fixture, kind))
 
 
 def rebuild_fts(conn: sqlite3.Connection) -> None:

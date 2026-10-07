@@ -6,7 +6,6 @@ Real failures contain counts and contract descriptions, never private identities
 from __future__ import annotations
 
 import json
-import shutil
 from collections import Counter
 from pathlib import Path
 
@@ -25,7 +24,12 @@ from artifact_requests import (
     sample_project,
 )
 from fastapi.testclient import TestClient
-from reader_artifacts import CASES, FIXTURE_IMPORT_DATE, build_reader_artifact
+from reader_artifacts import (
+    CASES,
+    FIXTURE_IMPORT_DATE,
+    build_reader_artifact,
+    replicate_filler,
+)
 from reg_meta.cli import run
 from reg_meta.db import get_manifest, open_db
 from reg_webapp.app import create_app
@@ -323,35 +327,9 @@ def test_source_built_stratified_boundary_agreement(
 def test_binding_past_search_depth_ceiling_is_reached_by_refinement(
     tmp_path, monkeypatch, capsys
 ):
-    # Unheld same-token fillers, as many as the depth ceiling, outrank the sampled
-    # "Year" in reference scope once identity promotion is gated off.
-    case = CASES / "reader/search-ceiling"
-    request = json.loads((case / "request.json").read_text())
-    source = tmp_path / "source"
-    shutil.copytree(case, source)
-    catalog = json.loads((case / "catalog.json").read_text())
-    filler = next(
-        variable
-        for variable in catalog
-        if "/".join(
-            (
-                variable["register"]["provider"],
-                variable["register"]["slug"],
-                variable["slug"],
-            )
-        )
-        == request["filler"]
-    )
-    catalog.remove(filler)
-    catalog.extend(
-        {
-            **filler,
-            "slug": f"{filler['slug']}-{index}",
-            "provider_key": f"{filler['provider_key']}-{index}",
-        }
-        for index in range(request["copies"])
-    )
-    (source / "catalog.json").write_text(json.dumps(catalog))
+    # Unheld fillers sharing the sampled "Year"'s exact name, as many as the depth
+    # ceiling, outrank it in reference scope: exact-name matches alone fill it.
+    source = replicate_filler(CASES / "reader/search-ceiling", tmp_path / "source")
     path = build_reader_artifact(
         tmp_path / "artifact",
         source,

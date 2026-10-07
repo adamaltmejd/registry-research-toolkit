@@ -246,9 +246,9 @@ enforced by `scripts/tests/test_skill_gh_reads.py`.
 
 - Never run `git commit --no-verify`, `git commit -n`, or `git push --no-verify`. If a
   pre-commit hook fails, fix the underlying issue rather than bypassing.
-- Develop on an isolated branch or worktree. A PR needs green CI and the maintainer's
-  review before it merges. Coordinate concurrent work and keep main to a single write
-  path.
+- Develop on an isolated branch or worktree. A PR needs green CI and an independent
+  review (a fresh agent that did not write the change counts) before it merges.
+  Coordinate concurrent work and keep main to a single write path.
 - Dependency maintenance uses [upgrade-deps](.agents/skills/upgrade-deps/SKILL.md),
   releases use [release](.agents/skills/release/SKILL.md), and real-seed verification
   uses [build-db](.agents/skills/build-db/SKILL.md).

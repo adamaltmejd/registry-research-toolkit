@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
-from reg_meta.source_evidence import SourceRevision
+from _csv_fixtures import scb_record
 from reg_meta_build.resolved_catalog import (
     ResolvedRegister,
     ResolvedVariant,
@@ -41,7 +40,6 @@ from reg_meta_build.source_records import (
 from reg_meta_build.source_representations import (
     resolve_representation_cases,
 )
-from reg_meta_build.sources.scb_records import clean_scb_row
 
 KEY = ("accepted", "fixture", "income")
 
@@ -49,19 +47,9 @@ KEY = ("accepted", "fixture", "income")
 def representation_records(
     *, vardef="A generic family label", varopdef="", data_type="int"
 ):
-    revision = SourceRevision.create(
-        dataset="fixture",
-        publisher="SCB",
-        purpose="test",
-        upstream_revision="1",
-        artifact_path="rows.csv",
-        artifact_size=1,
-        artifact_sha256="a" * 64,
-    )
-    header = REGISTERINFORMATION_HEADER.split("|")
-    result = []
-    for i, column in enumerate(("First", "Second")):
-        values = var_row(
+    return tuple(
+        scb_record(
+            i + 1,
             colname=column,
             cvid=100 + i,
             var_id=i + 1,
@@ -70,19 +58,9 @@ def representation_records(
             vardef=vardef if i else "A generic family label",
             varopdef=varopdef if i else "",
             data_type=data_type if i else "int",
-        ).split("|")
-        result.append(
-            clean_scb_row(
-                header,
-                i + 1,
-                {
-                    name: (True, value, value)
-                    for name, value in zip(header, values, strict=True)
-                },
-                revision,
-            ).record
         )
-    return tuple(result)
+        for i, column in enumerate(("First", "Second"))
+    )
 
 
 def representation_setup(records=None, claims=None):

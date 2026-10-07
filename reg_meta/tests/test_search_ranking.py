@@ -121,29 +121,107 @@ def test_excluded_identity_is_removed_before_limit_and_binds_the_cursor(
     assert exc.value.code == "invalid_search_cursor"
 
 
-def test_generic_identity_matches_do_not_swamp_the_ranked_order(
+def test_exact_identity_matches_lead_however_many_share_the_name(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:
     """51 classifications named exactly `C12` (owning only `C120`) and one
     `zz-discriminative` whose description repeats `C12`, which makes it the
     best-ranked name hit without an identity match. More than 50 identity matches
-    switch identity promotion off, so the ranked order stands."""
+    switch prefix promotion off, but every exact match still leads (#1180)."""
     conn = reader_search_conn(tmp_path_factory, "search-identity-swamp")
     first = search(conn, "C12", field="description", type="classification", limit=25)
-    assert str(first.results[0].fqid) == "class/zz-discriminative"
     assert first.next_cursor is not None
     second = search(
         conn,
         "C12",
         field="description",
         type="classification",
-        limit=25,
+        limit=50,
         cursor=first.next_cursor,
     )
 
     combined = _fqids(first, second)
     assert len(combined) == len(set(combined))
-    assert combined[0] == "class/zz-discriminative"
+    assert set(combined[:51]) == {f"class/generic-{index:02d}" for index in range(51)}
+    assert combined[51] == "class/zz-discriminative"
+
+
+@pytest.fixture(scope="module")
+def admission_conn(tmp_path_factory: pytest.TempPathFactory) -> sqlite3.Connection:
+    """1,001 `Annual year` fillers (delivery column `Annual year`, definition
+    repeating `year` and `bø`) fill every bounded variable prefix ahead of
+    `Year` (exact name) and of `Target` and `Place`, exact only through their
+    delivery columns `Year` and `Bø`: they outrank them by bm25 and sort before
+    them by name and by delivery column."""
+    return reader_search_conn(tmp_path_factory, "search-exact-admission")
+
+
+@pytest.mark.parametrize(
+    ("field", "fold_groups", "exact"),
+    [
+        ("description", True, ["Target", "Year"]),
+        ("all", False, ["Target", "Target", "Year", "Year"]),
+        ("varname", False, ["Year"]),
+        ("datacolumn", False, ["Target"]),
+    ],
+)
+def test_exact_name_is_admitted_and_leads_past_full_candidate_prefixes(
+    admission_conn: sqlite3.Connection,
+    field: str,
+    fold_groups: bool,
+    exact: list[str],
+) -> None:
+    """Every bounded variable arm admits exact name and delivery-column matches
+    before its LIMIT, and they lead the order (#1180). Unfolded, one variable
+    can lead through several arms."""
+    page = search(
+        admission_conn,
+        "year",
+        field=field,
+        type="variable",
+        limit=len(exact) + 1,
+        fold_groups=fold_groups,
+    )
+
+    names = [result.name for result in page.results]
+    assert sorted(names[:-1]) == exact
+    assert names[-1] == "Annual year"
+
+
+def test_exact_name_without_an_ascii_fold_is_admitted(
+    admission_conn: sqlite3.Connection,
+) -> None:
+    """`ø` has no decomposition, so an ASCII fold of the query deletes it: the
+    exact delivery column `Bø` must still admit `Place` past the fillers whose
+    definition repeats `bø`."""
+    page = search(admission_conn, "Bø", field="description", type="variable", limit=2)
+
+    assert [result.name for result in page.results] == ["Place", "Annual year"]
+
+
+def test_unheld_exact_alias_does_not_win_admission(
+    tmp_path_factory: pytest.TempPathFactory,
+) -> None:
+    """In holdings scope 1,001 held `Annual year` columns fill the
+    delivery-column prefix. `Target` holds the exact column `Year`; `Unheld`
+    holds only `Year count` and has an unheld `Year` alias, which must not admit
+    it ahead of the fillers."""
+    conn = reader_search_conn(tmp_path_factory, "search-exact-holdings", kind="steward")
+
+    page = search(
+        conn,
+        "year",
+        scope="holdings",
+        field="datacolumn",
+        type="variable",
+        limit=3,
+    )
+
+    assert [(result.datacolumn, result.name) for result in page.results] == [
+        ("Year", "Target"),
+        ("Annual year", "Filler"),
+        ("Annual year", "Filler"),
+    ]
 
 
 def test_unfolded_identity_swamp_gate_does_not_depend_on_page_size(

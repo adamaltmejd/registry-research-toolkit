@@ -1394,9 +1394,10 @@ remain errors, and complete builds never use this slice deferral. Unbound list s
 include the source revision, complete descriptor digest, literal lookup tokens and
 physical association count, so an empty target reference cannot become a general future
 acknowledgment. Explicit source-diagnostic acknowledgments require equality with the
-positively observed delivery register; ordinary occurrence-reference ownership guards
-remain unchanged. No support flags, coding domains or missing variable targets are
-inferred.
+positively observed delivery register. An ordinary issue is acknowledgeable only when it
+names source refs that are all present among its scope's originals, so a stale case
+naming an absent record stays an error. No support flags, coding domains or missing
+variable targets are inferred.
 
 The scoped output is create-only and marked incomplete and nonpublishable in both modes.
 The summary records the register list, `publication_ready` false and `corpus_validation`
@@ -1702,6 +1703,13 @@ snapshots are then excluded as superseded. Without that documentation the name-d
 year stands (fail-closed: it understates holdings and blocks orders rather than
 over-admitting) until a maintainer-run, aggregate-only date-span check on MONA
 establishes the span (#1170 tracks the open cases).
+
+Admitted literals of one owner and variant that differ only in case fold to one compiled
+triple, so the generator emits one mapping for them. Precedence: the curated
+`[[mapping]]` spelling, then the literal equal to the physical field, then the spelling
+the compiler stores for that delivery column; with none of these among the twins, or two
+curated twins, the column goes to the worklist. Spellings under different variants or
+owners never fold.
 
 Unsupported physical fields remain in the inventory with unavailable mappings and
 explicit reasons. Exact auxiliary fields can also retain a known owner and meaning in
