@@ -248,5 +248,147 @@
         }
       }
     ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "rega",
+      "name": "RegA"
+    },
+    "slug": "foxtrot",
+    "provider_key": "6",
+    "name": null,
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Foxtrot",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "name": "Foxtrot first label",
+        "value_set": {
+          "members": [
+            [
+              "F1",
+              "Label F1"
+            ],
+            [
+              "F2",
+              "Label F2"
+            ],
+            [
+              "F3",
+              "Label F3"
+            ],
+            [
+              "F4",
+              "Label F4"
+            ]
+          ]
+        }
+      },
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2019-01-01",
+        "valid_to": "2019-12-31",
+        "delivery_column_name": "Foxtrot",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "name": "Foxtrot second label",
+        "value_set": {
+          "members": [
+            [
+              "F1",
+              "Label F1"
+            ],
+            [
+              "F2",
+              "Label F2"
+            ],
+            [
+              "F3",
+              "Label F3"
+            ],
+            [
+              "F4",
+              "Label F4"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "regb",
+      "name": "RegB"
+    },
+    "slug": "golf",
+    "provider_key": "7",
+    "name": null,
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Golf",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "name": "Golf label",
+        "value_set": {
+          "members": [
+            [
+              "G1",
+              "Label G1"
+            ],
+            [
+              "G2",
+              "Label G2"
+            ],
+            [
+              "G3",
+              "Label G3"
+            ],
+            [
+              "G4",
+              "Label G4"
+            ],
+            [
+              "G5",
+              "Label G5"
+            ]
+          ]
+        }
+      }
+    ]
   }
 ]
