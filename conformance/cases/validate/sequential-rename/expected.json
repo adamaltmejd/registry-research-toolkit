@@ -23,6 +23,14 @@
         "Observed",
         "Observed"
       ],
+      "/entries/*/physical/table": [
+        "Annual2018",
+        "Annual2019"
+      ],
+      "/entries/*/physical/edition": [
+        "2018",
+        "2019"
+      ],
       "/clips": [],
       "/provenance/mode": "steward_holdings"
     }
