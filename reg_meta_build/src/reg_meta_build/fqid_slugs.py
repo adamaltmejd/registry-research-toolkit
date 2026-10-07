@@ -874,7 +874,18 @@ def _git_committed_paths(directory: Path) -> set[str] | None:
     return {name for name in listed.stdout.split("\0") if name}
 
 
-def untracked_pinned_autos(slug_dir: Path) -> list[Path]:
+def _register_auto_path(root: Path, provider: str, register_slug: str) -> Path:
+    """The generated pin file for one register in the register-owned layout.
+
+    It sits at the provider root, keyed by register slug, even when the register's
+    own TOML is nested in a family folder. The loader, the writer and the
+    untracked-pin guard all resolve it here."""
+    return root / "registers" / provider / f"{register_slug}{AUTO_FILE_SUFFIX}"
+
+
+def untracked_pinned_autos(
+    slug_dir: Path, *, registers: Sequence[RegisterCuration] | None = None
+) -> list[Path]:
     """Pinned (curating/frozen) auto files present on disk but absent from the
     committed HEAD tree, sorted.
 
@@ -884,17 +895,30 @@ def untracked_pinned_autos(slug_dir: Path) -> list[Path]:
     checkout, taking the pin with it. The build is git-agnostic, so ``precheck-slugs``
     reports this. A pinned zone with no auto file on disk is not reported: the build's
     ``slug_freeze_auto_missing`` guard owns that case and exempts a provider without
-    variables. Outside a git work tree (a wheel install) nothing is reported."""
+    variables. Outside a git work tree (a wheel install) nothing is reported.
+
+    Only the paths the loader reads are candidates; an auto file anywhere else
+    pins nothing. ``registers`` is ``load_register_files(slug_dir)`` when the caller
+    already has it; ``None`` parses it here."""
     pinned = pinned_zones(load_freeze_states(slug_dir))
     if not pinned:
         return []
-    registers = slug_dir / "registers"
-    if registers.is_dir():
-        # The zone is the provider directory; a register family nests one deeper.
+    if (slug_dir / "registers").is_dir():
+        from .curation_tree import load_register_files
+
+        if registers is None:
+            registers = load_register_files(slug_dir)
         candidates = [
             path
-            for path in registers.rglob(f"*{AUTO_FILE_SUFFIX}")
-            if path.relative_to(registers).parts[0] in pinned
+            for register in registers
+            if register.register_info.provider in pinned
+            and (
+                path := _register_auto_path(
+                    slug_dir,
+                    register.register_info.provider,
+                    register.register_info.slug,
+                )
+            ).is_file()
         ]
     else:
         candidates = [
@@ -961,7 +985,8 @@ def _load_register_slug_tree(
     authored_only: bool = False,
     registers: Sequence[RegisterCuration] | None = None,
 ) -> list[SlugEntry]:
-    """Read register-owned slugs, with generated pins beside each register."""
+    """Read register-owned slugs, with each register's generated pin from the
+    provider root (``_register_auto_path``)."""
     from .curation_tree import load_register_files
 
     states = states if states is not None else load_freeze_states(root)
@@ -1046,7 +1071,7 @@ def _load_register_slug_tree(
         if authored_only or freeze_state(states, provider) == "churning":
             entries.extend(local)
             continue
-        auto_path = root / "registers" / provider / f"{identity.slug}{AUTO_FILE_SUFFIX}"
+        auto_path = _register_auto_path(root, provider, identity.slug)
         if not auto_path.is_file():
             entries.extend(local)
             continue
@@ -2556,10 +2581,7 @@ def populate_variable_slugs(
                 and entry.slug is not None
             ):
                 global_auto_paths[entry.provider][entry.source_id] = (
-                    slug_dir
-                    / "registers"
-                    / entry.provider
-                    / f"{entry.slug}{AUTO_FILE_SUFFIX}"
+                    _register_auto_path(slug_dir, entry.provider, entry.slug)
                 )
 
     # #786 frozen-fallback gate: a `frozen` provider's auto slugs are immutable,
@@ -3559,7 +3581,7 @@ def seed_all(conn: sqlite3.Connection, out_dir: Path) -> dict[str, Path]:
                 (register_id,),
             )
         }
-        path = out_dir / "registers" / provider / f"{register_slug}{AUTO_FILE_SUFFIX}"
+        path = _register_auto_path(out_dir, provider, register_slug)
         path.parent.mkdir(parents=True, exist_ok=True)
         derivation = read_auto_derivations(path)
         if path.is_file():
@@ -3652,7 +3674,7 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
             f"{path}: pinned auto file is not in the committed HEAD tree, so a "
             "clean checkout would lose its slugs. Commit it: "
             f"`git add -f {path} && git commit`."
-            for path in untracked_pinned_autos(slug_dir)
+            for path in untracked_pinned_autos(slug_dir, registers=registers)
         )
 
     by_provider_kind: dict[tuple[str, str], set[str]] = {}

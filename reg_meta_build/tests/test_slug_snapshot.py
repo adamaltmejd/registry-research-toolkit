@@ -21,9 +21,9 @@ from reg_meta_build.db import DDL, seed_providers
 
 from reg_meta_build.fqid_slugs import (
     FREEZE_STATE_FILE,
+    GLOBAL_FREEZE_STATE_FILE,
     SNAPSHOT_FILENAME,
-    repo_slug_dir,
-    untracked_pinned_autos,
+    snapshot_path,
 )
 
 if TYPE_CHECKING:
@@ -166,37 +166,39 @@ def test_inherited_git_routing_ignored(tmp_path, capsys, monkeypatch):
     assert len(data["parse_errors"]) == 1
 
 
-def test_register_tree_pins_found_at_any_depth(tmp_path):
-    """In the register-owned layout the zone is the provider directory, and a
-    register family nests its files one directory deeper."""
+def test_register_tree_guard_reads_the_loaders_pin_path(tmp_path, capsys):
+    """In the register-owned layout a register's pin sits at the provider root,
+    keyed by register slug, even when its TOML is in a family folder. An auto file
+    beside the nested TOML pins nothing, so it is neither refused nor loaded."""
+    db_dir, _ = _layout(tmp_path, freeze="curating", auto=False)
     root = tmp_path / "curation"
-    family = root / "registers" / "scb" / "komvux"
-    family.mkdir(parents=True)
-    (root / "registers" / "sos").mkdir()
-    (root / "slug_state.toml").write_text('scb = "curating"\n', encoding="utf-8")
-    (family / "komvux-a.toml").write_text("", encoding="utf-8")
+    provider = root / "registers" / "scb"
+    (provider / "komvux").mkdir(parents=True)
+    (root / GLOBAL_FREEZE_STATE_FILE).write_text('scb = "curating"\n', encoding="utf-8")
+    (provider / "komvux" / "lisa.toml").write_text(
+        '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "1"\n'
+        '[[variant]]\nnative_id = "1.10"\nslug = "individer"\n',
+        encoding="utf-8",
+    )
     _git(root, "init")
     _git(root, "add", "-A")
     _git(root, "commit", "-m", "init")
-    autos = [
-        root / "registers" / "scb" / "lisa.auto.toml",
-        family / "komvux-a.auto.toml",
-    ]
-    for path in [*autos, root / "registers" / "sos" / "lmed.auto.toml"]:
-        path.write_text("", encoding="utf-8")
+    pin = provider / "lisa.auto.toml"
+    pin.write_text('[[variable]]\nnative_id = "1.44"\nslug = "kon"\n', "utf-8")
+    (provider / "komvux" / "lisa.auto.toml").write_text(
+        '[[variable]]\nnative_id = "1.45"\nslug = "alder"\n', encoding="utf-8"
+    )
 
-    assert untracked_pinned_autos(root) == sorted(autos)
+    code, data = _precheck(db_dir, root, capsys)
 
-    _git(root, "add", "-f", *map(str, autos))
+    assert code == 10
+    (error,) = data["parse_errors"]
+    assert str(pin) in error
+
+    _git(root, "add", "-f", str(pin))
     _git(root, "commit", "-m", "pin")
-    assert untracked_pinned_autos(root) == []
+    code, data = _precheck(db_dir, root, capsys)
 
-
-def test_checkout_pins_are_committed():
-    """The same check on this checkout: cheap (git ls-tree plus a glob), so a local
-    run catches a pin that was never committed. A clean CI checkout has no
-    uncommitted files, so there it can only pass."""
-    slug_dir = repo_slug_dir()
-    if slug_dir is None:
-        pytest.skip("curation tree not present (wheel install)")
-    assert untracked_pinned_autos(slug_dir) == []
+    assert code == 0, data["parse_errors"]
+    snapshot = json.loads(snapshot_path(root).read_text(encoding="utf-8"))
+    assert snapshot["variable"] == {"scb/1.44": "kon"}
