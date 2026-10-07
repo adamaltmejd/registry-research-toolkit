@@ -7,6 +7,7 @@ check skipped the whole suite from a checkout under a directory named `integrati
 
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 import sys
@@ -54,6 +55,9 @@ def _outcomes(tmp_path: Path, name: str, *args: str) -> dict[str, str]:
     result = subprocess.run(
         [sys.executable, "-m", "pytest", "-v", "-p", "no:cacheprovider", *args],
         cwd=tmp_path,
+        # The `-v` line parsing below assumes plain output; a developer's
+        # PYTEST_ADDOPTS (e.g. `-n 2`) would change it.
+        env={k: v for k, v in os.environ.items() if k != "PYTEST_ADDOPTS"},
         capture_output=True,
         text=True,
         check=False,
@@ -81,4 +85,9 @@ def test_only_marked_tests_skip_under_marker_named_directory(
 
 @pytest.mark.parametrize("name", ["integration", "release"])
 def test_opt_in_flag_runs_marked_tests(tmp_path: Path, name: str) -> None:
-    assert set(_outcomes(tmp_path, name, f"--run-{name}").values()) == {"PASSED"}
+    assert _outcomes(tmp_path, name, f"--run-{name}") == {
+        "test_unmarked": "PASSED",
+        "test_decorated": "PASSED",
+        "test_param_marked[1]": "PASSED",
+        "test_module_marked": "PASSED",
+    }
