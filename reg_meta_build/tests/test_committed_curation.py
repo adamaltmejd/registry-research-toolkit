@@ -8,6 +8,7 @@ real exports) is checked by the maintainer's real-seed strict build, not here.
 
 from __future__ import annotations
 
+from dataclasses import fields
 from typing import TYPE_CHECKING, get_origin
 
 from _repo_curation_support import REPO_CURATION, REPO_ROOT
@@ -62,7 +63,10 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
     # non-empty for "loads" to mean anything.
     assert tree.registers
     assert tree.classifications
-    assert tree.relations.same_as and tree.relations.replaced_by
+    # Every relation kind (same_as, replaced_by, derived_from, ...) stays declared.
+    assert all(getattr(tree.relations, kind.name) for kind in fields(tree.relations)), (
+        tree.relations
+    )
     assert tree.tags
     assert tree.classification_groups.classification_group
     assert tree.lineage.defaults
