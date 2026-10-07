@@ -860,13 +860,14 @@ def _git_unreadable(directory: Path, detail: str) -> RegMetaError:
     )
 
 
-def _git_committed_paths(directory: Path) -> set[str] | None:
-    """Paths under ``directory`` (relative to it) in the committed HEAD tree, or
-    ``None`` when no ``.git`` sits at or above ``directory`` (a wheel install) or
-    HEAD is unborn.
+def _git_paths_unlike_head(directory: Path) -> tuple[set[str], set[str]] | None:
+    """``(committed, changed)``: paths under ``directory`` (relative to it) in the
+    committed HEAD tree, and those whose working-tree or index copy differs from
+    HEAD (a staged or unstaged edit). ``None`` when no ``.git`` sits at or above
+    ``directory`` (a wheel install) or HEAD is unborn.
 
-    Reads HEAD, not the index: a staged-but-uncommitted file would not survive a
-    clean checkout either, and the index would report it as fine.
+    Reads HEAD, not the index: a staged-but-uncommitted file or edit would not
+    survive a clean checkout either, and the index would report it as fine.
 
     Fails closed: a ``.git`` that git cannot read (a broken worktree link,
     "dubious ownership", git missing from PATH) raises a configuration error.
@@ -894,15 +895,27 @@ def _git_committed_paths(directory: Path) -> set[str] | None:
         except OSError as exc:
             raise _git_unreadable(directory, str(exc)) from exc
 
+    def names(result: subprocess.CompletedProcess[str]) -> set[str]:
+        if result.returncode != 0:
+            raise _git_unreadable(directory, result.stderr)
+        return {name for name in result.stdout.split("\0") if name}
+
     head = git("rev-parse", "--verify", "--quiet", "HEAD^{commit}")
     if head.returncode == 1 and not head.stderr.strip():
         return None  # unborn HEAD: nothing committed yet
     if head.returncode != 0:
         raise _git_unreadable(directory, head.stderr)
-    listed = git("ls-tree", "-z", "-r", "--name-only", "HEAD", "--", ".")
-    if listed.returncode != 0:
-        raise _git_unreadable(directory, listed.stderr)
-    return {name for name in listed.stdout.split("\0") if name}
+    committed = names(git("ls-tree", "-z", "-r", "--name-only", "HEAD", "--", "."))
+    # `--relative`: diff prints repo-root paths by default, ls-tree cwd-relative
+    # ones; without it a slug dir below the repo root would never match.
+    diff = ("diff", "--name-only", "-z", "--relative", "--no-renames", "--no-ext-diff")
+    # `diff HEAD` compares the working tree only; a staged edit whose working copy
+    # was restored to HEAD shows up only under `--cached`, and the next commit
+    # would publish it.
+    changed = names(git(*diff, "HEAD", "--", ".")) | names(
+        git(*diff, "--cached", "HEAD", "--", ".")
+    )
+    return committed, changed
 
 
 def _register_auto_path(root: Path, provider: str, register_slug: str) -> Path:
@@ -910,21 +923,22 @@ def _register_auto_path(root: Path, provider: str, register_slug: str) -> Path:
 
     It sits at the provider root, keyed by register slug, even when the register's
     own TOML is nested in a family folder. The loader, the writer and the
-    untracked-pin guard all resolve it here."""
+    uncommitted-pin guard all resolve it here."""
     return root / "registers" / provider / f"{register_slug}{AUTO_FILE_SUFFIX}"
 
 
-def _untracked_pinned_autos(
+def _uncommitted_pin_errors(
     slug_dir: Path, *, registers: Sequence[RegisterCuration] | None = None
-) -> list[Path]:
-    """Pinned (curating/frozen) auto files present on disk but absent from the
-    committed HEAD tree, sorted.
+) -> list[RegMetaError]:
+    """One ``slug_pin_uncommitted`` error per pinned (curating/frozen) auto file
+    on disk that a clean checkout of HEAD would not reproduce, sorted by path.
 
     A pinned zone reads its slugs back from its ``*.auto.toml``. The file is
     gitignored, so a leftover from a churning build, or one that was ``git add -f``'d
     but never committed, passes every on-disk check and then vanishes on a clean
-    checkout, taking the pin with it. The build is git-agnostic, so ``precheck-slugs``
-    reports this. A pinned zone with no auto file on disk is not reported: the build's
+    checkout, taking the pin with it. A committed file edited (staged or not) but
+    not committed is the same defect: the checkout restores the old pins. The
+    build is git-agnostic, so ``precheck-slugs`` reports both. A pinned zone with no auto file on disk is not reported: the build's
     ``slug_freeze_auto_missing`` guard owns that case and exempts a provider without
     variables. Outside a git work tree (a wheel install) nothing is reported; a
     ``.git`` that git cannot read raises a configuration error.
@@ -960,14 +974,34 @@ def _untracked_pinned_autos(
         ]
     if not candidates:
         return []
-    committed = _git_committed_paths(slug_dir)
-    if committed is None:
+    head = _git_paths_unlike_head(slug_dir)
+    if head is None:
         return []
-    return sorted(
-        path
-        for path in candidates
-        if path.relative_to(slug_dir).as_posix() not in committed
-    )
+    committed, changed = head
+    errors: list[RegMetaError] = []
+    for path in sorted(candidates):
+        rel = path.relative_to(slug_dir).as_posix()
+        if rel not in committed:
+            errors.append(
+                _err(
+                    "slug_pin_uncommitted",
+                    f"{path}: pinned auto file is not in the committed HEAD tree, "
+                    "so a clean checkout would lose its slugs.",
+                    f"Commit it: `git add -f {path} && git commit`.",
+                )
+            )
+        elif rel in changed:
+            errors.append(
+                _err(
+                    "slug_pin_uncommitted",
+                    f"{path}: pinned auto file differs from the committed HEAD "
+                    "tree, so a clean checkout would restore its old slugs.",
+                    f"Commit the edit (`git add -f {path} && git commit`) or "
+                    f"discard it (`git restore --source=HEAD --staged --worktree "
+                    f"{path}`).",
+                )
+            )
+    return errors
 
 
 def load_slug_dir(
@@ -3643,7 +3677,8 @@ class PrecheckResult:
     # colliding version checks; version slugs are neither curated nor persisted.
     missing_registers: tuple[tuple[str, str, str], ...]  # (provider, id, name)
     missing_variants: tuple[tuple[str, str, str], ...]
-    parse_errors: tuple[str, ...]
+    # Each a `RegMetaError.to_dict()`: code, class, message, remediation.
+    parse_errors: tuple[dict[str, str], ...]
     # Reverse direction: TOML source IDs that don't (or no longer) exist in
     # the DB and would fail `populate_slugs(strict=True)` at build time.
     # Deprecated entries are excluded — they're allowed to outlive their DB
@@ -3688,7 +3723,7 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
     """
     from .curation_tree import load_register_files
 
-    parse_errors: list[str] = []
+    parse_errors: list[dict[str, str]] = []
     entries: list[SlugEntry] = []
     # Parse the register tree once for both readers below.
     registers: tuple[RegisterCuration, ...] | None = None
@@ -3697,16 +3732,14 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
             registers = load_register_files(slug_dir)
         entries = load_slug_dir(slug_dir, registers=registers)
     except RegMetaError as exc:
-        parse_errors.append(exc.message)
+        parse_errors.append(exc.to_dict())
     else:
         # Reported as parse errors: the slugs just loaded include a pin a clean
         # checkout would not have, so `ok` must fail and `--update-snapshot` must
         # not bake them into the baseline (it refuses on any parse error).
         parse_errors.extend(
-            f"{path}: pinned auto file is not in the committed HEAD tree, so a "
-            "clean checkout would lose its slugs. Commit it: "
-            f"`git add -f {path} && git commit`."
-            for path in _untracked_pinned_autos(slug_dir, registers=registers)
+            exc.to_dict()
+            for exc in _uncommitted_pin_errors(slug_dir, registers=registers)
         )
 
     by_provider_kind: dict[tuple[str, str], set[str]] = {}
