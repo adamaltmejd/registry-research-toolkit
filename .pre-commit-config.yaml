@@ -54,6 +54,15 @@ repos:
         pass_filenames: false
         files: \.md$
         stages: [pre-commit]
+      # Formats the Rust workspace in place, like ruff-format; CI's `rust` job runs
+      # the `--check` form. Whole workspace, so pass_filenames: false.
+      - id: cargo-fmt
+        name: cargo fmt
+        entry: cargo fmt --all
+        language: system
+        pass_filenames: false
+        files: \.rs$
+        stages: [pre-commit]
       # post-checkout only: provision a freshly checked-out / `git worktree add`ed
       # tree (its own .venv + node_modules) so worktrees created mid-session — by
       # `git worktree add`, or the harness (which uses it under the hood) — are

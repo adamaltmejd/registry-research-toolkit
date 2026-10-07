@@ -16,14 +16,13 @@ as a bound parameter.
 from __future__ import annotations
 
 import re
-import unicodedata
 from dataclasses import dataclass
 from time import perf_counter
 from typing import TYPE_CHECKING, Any, cast
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from reg_meta.errors import RegMetaError
-from reg_meta.queries import SEARCH_TYPES, search as reg_meta_search
+from reg_meta.queries import SEARCH_TYPES, fold_search, search as reg_meta_search
 
 from reg_webapp import golden
 from reg_webapp.conn import catalog_conn
@@ -135,13 +134,6 @@ def _has_searchable_token(q: str) -> bool:
     return _WORD_CHAR.search(q) is not None
 
 
-def _fold_match_text(value: object) -> str:
-    text = str(value).strip().casefold()
-    decomposed = unicodedata.normalize("NFKD", text)
-    folded = "".join(ch for ch in decomposed if not unicodedata.combining(ch))
-    return re.sub(r"\s+", " ", folded)
-
-
 def _fqid_leaf(value: object | None) -> str | None:
     if value is None:
         return None
@@ -199,7 +191,7 @@ def _candidate_identity_texts(result: SearchResult) -> tuple[str, ...]:
                 texts.extend((facet.value, facet.label))
     elif result.type == "code":
         texts.extend((result.code, result.label, result.code_system))
-    return tuple(_fold_match_text(text) for text in texts if text is not None)
+    return tuple(fold_search(text) for text in texts if text is not None)
 
 
 def _type_prior(result: SearchResult) -> int:
@@ -224,7 +216,7 @@ def _group_authority_bonus(result: SearchResult) -> int:
 
 
 def _best_bet_score(query: str, result: SearchResult) -> int:
-    folded_query = _fold_match_text(query)
+    folded_query = fold_search(query)
     identity_texts = _candidate_identity_texts(result)
     if not folded_query or not identity_texts:
         return _type_prior(result)
@@ -235,7 +227,7 @@ def _best_bet_score(query: str, result: SearchResult) -> int:
     # in its purpose or definition. `exact` above still reads the whole identity,
     # so an exact label ("Man" — the researcher naming the value) keeps its signal.
     prefix_texts = (
-        (_fold_match_text(result.code),) if result.type == "code" else identity_texts
+        (fold_search(result.code),) if result.type == "code" else identity_texts
     )
     prefix = any(text.startswith(folded_query) for text in prefix_texts)
     return (

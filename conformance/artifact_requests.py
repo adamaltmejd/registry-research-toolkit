@@ -120,11 +120,15 @@ SEARCH_DEPTH_CEILING = 1_000
 
 
 def _fold(text):
-    """The reader's documented identity fold: casefold, no diacritics, one space."""
-    decomposed = unicodedata.normalize("NFKD", text.strip().casefold())
-    return " ".join(
-        "".join(ch for ch in decomposed if not unicodedata.combining(ch)).split()
-    )
+    """The documented search fold (`fold_search`, RUST_RUNTIME_SPEC.md section 5),
+    restated so the oracle does not share the reader's code: casefold, NFKD, drop
+    combining marks, until nothing changes; then one space between words."""
+    while True:
+        decomposed = unicodedata.normalize("NFKD", text.casefold())
+        folded = "".join(ch for ch in decomposed if not unicodedata.combining(ch))
+        if folded == text:
+            return " ".join(text.split())
+        text = folded
 
 
 def _identity_texts(row):

@@ -1087,17 +1087,40 @@ def _search_result_identity(row: dict[str, Any]) -> str:
     )
 
 
-def _fold_search_text(value: object) -> str:
-    text = str(value).strip().casefold()
-    decomposed = unicodedata.normalize("NFKD", text)
-    return re.sub(
-        r"\s+", " ", "".join(ch for ch in decomposed if not unicodedata.combining(ch))
+# Two passes change any string at most (NFKD can emit a capital the first case fold
+# could not see: U+1D2C MODIFIER LETTER CAPITAL A -> "A" -> "a"); the third confirms.
+_FOLD_SEARCH_MAX_PASSES = 3
+
+
+def _fold_search_pass(text: str) -> str:
+    decomposed = unicodedata.normalize("NFKD", text.casefold())
+    return "".join(ch for ch in decomposed if not unicodedata.combining(ch))
+
+
+def fold_search(value: object) -> str:
+    """The search-text fold (`fold_search`, RUST_RUNTIME_SPEC.md section 5).
+
+    Case fold, NFKD, drop characters with a nonzero canonical combining class,
+    repeated until the text stops changing; then split on whitespace and join with
+    single spaces. Idempotent. Each pass maps characters independently, so a bound
+    that holds for every scalar holds for every string; reaching the pass cap is a
+    bug, not an input error.
+    """
+    text = str(value)
+    for _ in range(_FOLD_SEARCH_MAX_PASSES):
+        folded = _fold_search_pass(text)
+        if folded == text:
+            return " ".join(text.split())
+        text = folded
+    raise AssertionError(
+        f"fold_search found no fixed point in {_FOLD_SEARCH_MAX_PASSES} passes: "
+        f"{value!r}"
     )
 
 
 def _sql_search_fold(value: object) -> str | None:
-    """`py_search_fold`: `_fold_search_text` for SQL, NULL-preserving."""
-    return None if value is None else _fold_search_text(value)
+    """`py_search_fold`: `fold_search` for SQL, NULL-preserving."""
+    return None if value is None else fold_search(value)
 
 
 def _fill_exact_variables(
@@ -1124,7 +1147,7 @@ def _fill_exact_variables(
     conn.execute(
         "CREATE TEMP TABLE _search_exact_variables (variable_id INTEGER PRIMARY KEY)"
     )
-    folded_query = _fold_search_text(query)
+    folded_query = fold_search(query)
     phrases = _fts_quoted_tokens(query)
     if not folded_query or not phrases:
         return
@@ -1208,7 +1231,7 @@ def _search_identity_texts(row: dict[str, Any]) -> tuple[str, ...]:
                 texts.extend((facet.get("value"), facet.get("label")))
     elif row_type == "code":
         texts.extend((row.get("code"), row.get("label")))
-    return tuple(_fold_search_text(text) for text in texts if text is not None)
+    return tuple(fold_search(text) for text in texts if text is not None)
 
 
 def _search_identity_score(query: str, row: dict[str, Any]) -> int:
@@ -1218,7 +1241,7 @@ def _search_identity_score(query: str, row: dict[str, Any]) -> int:
     # entity-name score over that rank or an exact generic label can undo it.
     if row.get("type") == "code":
         return 0
-    folded_query = _fold_search_text(query)
+    folded_query = fold_search(query)
     texts = _search_identity_texts(row)
     exact = bool(folded_query) and any(text == folded_query for text in texts)
     prefix = bool(folded_query) and any(text.startswith(folded_query) for text in texts)

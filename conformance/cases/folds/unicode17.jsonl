@@ -1,0 +1,16 @@
+{"op": "fold_identity", "in": "꟎", "out": "꟏", "note": "U+A7CE new in 17.0; UnicodeData lowercase A7CF"}
+{"op": "fold_search", "in": "꟎", "out": "꟏", "note": "CaseFolding.txt 17.0: A7CE; C; A7CF"}
+{"op": "normalized_search_query", "in": "꟒", "out": "ꟓ", "note": "CaseFolding.txt 17.0: A7D2; C; A7D3"}
+{"op": "fold_search", "in": "꟔", "out": "ꟕ", "note": "CaseFolding.txt 17.0: A7D4; C; A7D5"}
+{"op": "fold_identity", "in": "𖺠", "out": "𖺻", "note": "U+16EA0 Beria Erfe, new in 17.0; UnicodeData lowercase 16EBB"}
+{"op": "fold_search", "in": "𖺠", "out": "𖺻", "note": "CaseFolding.txt 17.0: 16EA0; C; 16EBB"}
+{"op": "fts_match_query", "in": "𖺠", "out": "\"𖺠\"*", "note": "U+16EA0 is Lu in 17.0, so a word character"}
+{"op": "fts_match_query", "in": "𑷠", "out": "\"𑷠\"*", "note": "U+11DE0 TOLONG SIKI DIGIT ZERO, Nd in 17.0"}
+{"op": "fts_match_query", "in": "⃁", "out": null, "note": "U+20C1 SAUDI RIYAL SIGN, Sc in 17.0, not a word character"}
+{"op": "fts_match_query", "in": "᫏", "out": null, "note": "U+1ACF COMBINING DOUBLE CARON, Mn in 17.0, not a word character"}
+{"op": "fold_search", "in": "a᫏", "out": "a", "note": "U+1ACF has ccc 230 in 17.0, dropped"}
+{"op": "fold_search", "in": "x᫝", "out": "x", "note": "U+1ADD COMBINING DOT-AND-RING BELOW has ccc 220 in 17.0, dropped"}
+{"op": "fold_search", "in": "꟱", "out": "s", "note": "U+A7F1 MODIFIER LETTER CAPITAL S: no CaseFolding entry; NFKD <super> 0053 gives S, which the second pass folds (CaseFolding 0053; C; 0073)"}
+{"op": "fold_identity", "in": "ʕ", "out": "ʕ", "note": "U+0295 has no lowercase mapping"}
+{"op": "fold_identity", "in": "ΑΣʕ", "out": "αςʕ", "note": "U+0295 is Lo in 17.0 (Ll in 16.0): not Cased, not Case_Ignorable, so the sigma is final"}
+{"op": "fold_identity", "in": "ΑʕΣ", "out": "αʕσ", "note": "U+0295 is not Cased in 17.0, so no cased letter precedes the sigma: not final"}

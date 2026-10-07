@@ -1,0 +1,16 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/group": "top_results",
+      "/groups/0/results/*/type": [
+        "variable",
+        "register",
+        "group"
+      ],
+      "/groups/0/results/0/fqid": "scb/lisa/gender",
+      "/groups/0/results/1/fqid": "scb/konj",
+      "/groups/0/results/2/group_key": "kontroll"
+    }
+  }
+]
