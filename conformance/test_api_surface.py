@@ -28,7 +28,8 @@ DISPOSITIONS = {"retained", "replaced", "removed"}
 OWNERS = {"3a", "3b", "3c", "3d", "3e", "4", "5"}
 REQUIRED = {"kind", "id", "disposition", "owner", "covered_by"}
 # `operation` is added by package 1.1 and checked by its test_api_spec.py.
-OPTIONAL = {"note", "used_by", "operation"}
+# `pending = true` marks a row whose item an in-flight PR adds; drop it once it exists.
+OPTIONAL = {"note", "used_by", "operation", "pending"}
 
 
 def _rows(kind: str | None = None) -> list[dict]:
@@ -170,8 +171,12 @@ def _ids(kind: str) -> set[str]:
 
 def _assert_same(kind: str, discovered: set[str]) -> None:
     rows = _ids(kind)
+    pending = {r["id"] for r in _rows(kind) if r.get("pending")}
     assert not discovered - rows, f"{kind} without a row: {sorted(discovered - rows)}"
-    assert not rows - discovered, f"stale {kind} rows: {sorted(rows - discovered)}"
+    stale = rows - discovered - pending
+    assert not stale, f"stale {kind} rows: {sorted(stale)}"
+    landed = pending & discovered
+    assert not landed, f"{kind} rows still marked pending: {sorted(landed)}"
 
 
 def test_rows_are_well_formed():
@@ -209,7 +214,7 @@ def test_every_reg_meta_import_has_a_row():
     wrong = {
         r["id"]: sorted(discovered[r["id"]])
         for r in _rows("import")
-        if set(r["used_by"]) != discovered[r["id"]]
+        if r["id"] in discovered and set(r["used_by"]) != discovered[r["id"]]
     }
     assert not wrong, f"used_by differs from the importing roots: {wrong}"
 

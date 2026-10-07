@@ -35,6 +35,8 @@
 #              (paths; empty means none). For imports this is a proxy: the nearest test of
 #              the name's behavior, not of each consumer's use of it.
 # used_by      import rows: the consumer roots that import the name.
+# pending      true while an in-flight PR adds the item; the test fails once it exists
+#              (drop the key then).
 
 # Routes
 
@@ -1418,6 +1420,16 @@ disposition = "retained"
 owner = "4"
 covered_by = ["reg_meta_build/tests/test_build_db.py"]
 note = "Judgment: a version-name year heuristic, not the period grammar, so it moves rather than going to reg-core-py."
+
+[[row]]
+kind = "import"
+id = "reg_meta.queries.fold_search"
+used_by = ["reg_webapp"]
+disposition = "replaced"
+owner = "3a"
+covered_by = ["conformance/cases/http_search/golden-normalization", "reg_meta/tests/test_search_ranking.py"]
+note = "Package 1.2 makes it public for the webapp's search route; reg-core's `fold_search` (section 5) replaces it when 3a ports search."
+pending = true
 
 [[row]]
 kind = "import"
