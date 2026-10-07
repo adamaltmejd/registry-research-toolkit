@@ -1,10 +1,11 @@
 # SWECOV steward configuration
 
-`steward.toml` supplies identity and branding for the SWECOV deployment. The webapp
-serves a compiled steward artifact whose manifest names `swecov`; boot checks that
-identity against `REG_WEBAPP_STEWARD`. It does not load an inventory or reconstruct
-holdings at runtime. See `reg_webapp/DESIGN.md` → *Compiled artifact identity and read
-scope* and `reg_meta_build/DESIGN.md` for the compiler contract.
+`steward.json` supplies identity and branding for the SWECOV deployment (JSON, so no
+runtime parses TOML). The webapp serves a compiled steward artifact whose manifest names
+`swecov`; boot checks that identity against `REG_WEBAPP_STEWARD` (FastAPI) or
+`--catalog` (`reg-meta serve`). It does not load an inventory or reconstruct holdings at
+runtime. See `reg_webapp/DESIGN.md` → *Compiled artifact identity and read scope* and
+`reg_meta_build/DESIGN.md` for the compiler contract.
 
 `inventory_overlay.toml` and `source_policy.toml` are builder inputs. Generated
 inventory, physical census, intermediate reports, and confidential source inputs stay

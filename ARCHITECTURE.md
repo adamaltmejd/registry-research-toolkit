@@ -103,9 +103,9 @@ registry-research-toolkit/
     backend/        # FastAPI; depends on reg_meta + reg_schema
     frontend/       # Svelte 5 + Vite (bun)
     stewards/
-      global/       # steward.toml only (full universe)
-      ifau/         # steward.toml (holdings artifact planned)
-      swecov/       # steward.toml (compiled holdings artifact)
+      global/       # steward.json only (full universe)
+      ifau/         # steward.json (holdings artifact planned)
+      swecov/       # steward.json (compiled holdings artifact)
 ```
 
 > The `reg_monabundle` and `mock_data_wizard` packages have been archived to

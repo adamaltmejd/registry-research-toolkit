@@ -60,7 +60,7 @@ class CatalogPeriodSpan(BaseModel):
 
 
 class StewardInfo(BaseModel):
-    """Deployment identity + branding, from ``steward.toml``."""
+    """Deployment identity + branding, from ``steward.json``."""
 
     id: str
     name: str
