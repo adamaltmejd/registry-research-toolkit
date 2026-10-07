@@ -52,10 +52,17 @@ export default defineConfig({
     projects: [
       {
         extends: true,
-        // catalog.fold.test.ts reads the server fold's corpus as text (`?raw`),
-        // which Vite refuses outside the allowed roots (default: this package).
-        // Allow that one directory beside the package, not the whole repo.
-        server: { fs: { allow: [".", "../../conformance/cases/folds"] } },
+        // Unit tests read two cross-package oracles as text (`?raw`), which Vite
+        // refuses outside the allowed roots (default: this package): the server
+        // fold's corpus (catalog.fold.test.ts) and reg_schema's version
+        // (project_data.test.ts). Allow those directories, not the whole repo. A
+        // single-file entry does not work here: Vite compares it against the id
+        // with its `?raw` query attached.
+        server: {
+          fs: {
+            allow: [".", "../../conformance/cases/folds", "../../reg_schema"],
+          },
+        },
         test: {
           name: "unit",
           environment: "jsdom",

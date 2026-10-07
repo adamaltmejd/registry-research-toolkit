@@ -1567,10 +1567,10 @@ kind:
     windows. Earlier column names appear as a quiet inline hint ("was DINF, DINF83, …")
     via `renamedColumns` on `PickerRepresentation`. Genuinely parallel
     (overlapping-window) columns stay separate rows. The coexist-vs-rename test is the
-    shared `coexistingColumns` leaf — also used by the binding-leaf editor's
-    `representationsFromStates` chooser — so the two surfaces can never drift on the
-    distinction. The #904 graph/time-band mode renders those eras as selectable cells
-    when the graph gate chooses the graph renderer.
+    shared `coexistingColumns` leaf — also `resolveBindingAt`'s gate for an ambiguous
+    add — so the two surfaces can never drift on the distinction. The #904
+    graph/time-band mode renders those eras as selectable cells when the graph gate
+    chooses the graph renderer.
 
   - **Inter-variable succession fold** (`successionFold` derived in
     `ConceptGroupView.svelte`): the group graph's `succession` edges (#761 contract) are

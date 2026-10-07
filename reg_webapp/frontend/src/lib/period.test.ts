@@ -15,7 +15,6 @@ import {
   periodTokenForBounds,
   periodToWire,
   periodWireBounds,
-  periodYearCoverage,
   periodYearIntervals,
   queryFromParams,
   resolveYearEntry,
@@ -889,25 +888,6 @@ describe("sameYearWindow", () => {
     expect(sameYearWindow(null, null)).toBe(true);
     expect(sameYearWindow({ from: 2000, to: 2010 }, null)).toBe(false);
     expect(sameYearWindow(null, { from: 2000, to: 2010 })).toBe(false);
-  });
-});
-
-describe("periodYearCoverage", () => {
-  it("returns the outer bounds for year-shaped scalar, range, and list periods", () => {
-    expect(periodYearCoverage(2018)).toEqual({ from: 2018, to: 2018 });
-    expect(periodYearCoverage({ from: "2015", to: 2020 })).toEqual({
-      from: 2015,
-      to: 2020,
-    });
-    expect(periodYearCoverage([2018, { from: 2020, to: 2022 }])).toEqual({
-      from: 2018,
-      to: 2022,
-    });
-  });
-
-  it("returns null for token and mixed-token periods", () => {
-    expect(periodYearCoverage("HT2020")).toBeNull();
-    expect(periodYearCoverage([2018, "2020-Q3"])).toBeNull();
   });
 });
 
