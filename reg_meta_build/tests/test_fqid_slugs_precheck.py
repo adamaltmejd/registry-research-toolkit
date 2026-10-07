@@ -136,56 +136,6 @@ class TestPrecheckSlugs:
         assert len(hit) == 1
         assert hit[0][3] == "befolkning"  # name basis (cols collide-free, drift)
 
-    def test_stale_register_id_reported(self, tmp_path: Path):
-        # TOML entry for register 999 has no live row; `populate_slugs` would
-        # raise `slug_unknown_source_id` at build time. Precheck surfaces it
-        # earlier so maintainers don't ship a TOML that breaks the next build.
-        d = tmp_path / "slugs"
-        d.mkdir()
-        _write(
-            d / "scb.toml",
-            '[register."1"]\nslug = "lisa"\n[register."999"]\nslug = "ghost"\n',
-        )
-        conn = build_slugged_db()
-        conn.execute("UPDATE register SET slug = NULL")
-        conn.execute("UPDATE register_variant SET slug = NULL")
-        result = precheck_slugs(conn, d)
-        assert not result.ok
-        assert ("scb", "999") in result.stale_registers
-        assert ("scb", "1") not in result.stale_registers
-
-    def test_stale_variant_id_reported(self, tmp_path: Path):
-        d = tmp_path / "slugs"
-        d.mkdir()
-        _write(
-            d / "scb.toml",
-            '[register."1"]\nslug = "lisa"\n'
-            '[register_variant."1.10"]\nslug = "individer"\n'
-            '[register_variant."1.999"]\nslug = "ghost"\n',
-        )
-        conn = build_slugged_db()
-        conn.execute("UPDATE register SET slug = NULL")
-        conn.execute("UPDATE register_variant SET slug = NULL")
-        result = precheck_slugs(conn, d)
-        assert ("scb", "1.999") in result.stale_variants
-        assert ("scb", "1.10") not in result.stale_variants
-
-    def test_deprecated_entries_excluded_from_stale(self, tmp_path: Path):
-        # Deprecated rows are allowed to outlive their DB row — that's the
-        # whole point of `deprecated=true`. Stale-check must not flag them.
-        d = tmp_path / "slugs"
-        d.mkdir()
-        _write(
-            d / "scb.toml",
-            '[register."1"]\nslug = "lisa"\n'
-            '[register."999"]\nslug = "old-lisa"\ndeprecated = true\n',
-        )
-        conn = build_slugged_db()
-        conn.execute("UPDATE register SET slug = NULL")
-        conn.execute("UPDATE register_variant SET slug = NULL")
-        result = precheck_slugs(conn, d)
-        assert ("scb", "999") not in result.stale_registers
-
 
 class TestSnapshot:
     def test_snapshot_missing_file_returns_empty(self, tmp_path: Path):

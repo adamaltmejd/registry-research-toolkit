@@ -7,7 +7,7 @@ import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
-from _fqid_slug_support import write_text_file as _write
+from _fqid_slug_support import write_register_file, write_text_file as _write
 from _slugged_db import (
     add_register,
     add_state,
@@ -197,24 +197,25 @@ class TestSeedSlugs:
     def test_writes_only_register_auto_files(self, tmp_path: Path):
         conn = build_slugged_db()
         out = tmp_path / "out"
+        authored = write_register_file(out, "lisa", "1")
+        before = authored.read_bytes()
         written = seed_all(conn, out)
         assert set(written) == {"registers/scb/lisa.auto.toml"}
         body = written["registers/scb/lisa.auto.toml"].read_text()
         assert "[[variable]]" in body
         assert 'native_id = "1.44"' in body
         assert "[register]" not in body
-        assert not (out / "registers" / "scb" / "lisa.toml").exists()
+        assert authored.read_bytes() == before
 
     def test_authored_pin_removes_matching_generated_pin_on_regeneration(
         self, tmp_path: Path
     ):
         conn = build_slugged_db()
         out = tmp_path / "out"
+        write_register_file(out, "lisa", "1")
         seed_all(conn, out)
-        authored = out / "registers" / "scb" / "lisa.toml"
-        authored.write_text(
-            '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "1"\n'
-            '[[variable]]\nnative_id = "1.44"\nslug = "kon"\n'
+        write_register_file(
+            out, "lisa", "1", body='[[variable]]\nnative_id = "1.44"\nslug = "kon"\n'
         )
         seed_all(conn, out)
         body = (out / "registers" / "scb" / "lisa.auto.toml").read_text()
@@ -297,11 +298,13 @@ class TestProposePanel:
         conn = build_slugged_db()
         _flag_identifier(conn, register_id=1, var_id=44)
         out = tmp_path / "out"
+        authored = write_register_file(out, "lisa", "1")
+        before = authored.read_bytes()
         seed_all(conn, out)
         body = (out / "registers" / "scb" / "lisa.auto.toml").read_text()
         assert "panel_entity_key" not in body
         assert "panel_time_key" not in body
-        assert not (out / "registers" / "scb" / "lisa.toml").exists()
+        assert authored.read_bytes() == before
 
 
 class TestVariableOverridesAcceptedByPopulateSlugs:
