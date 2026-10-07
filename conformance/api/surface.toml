@@ -11,8 +11,7 @@
 #                     (plugins/microdata-tools-se/skills/register-metadata-search/SKILL.md),
 #                     id = its text as written there.
 #              import: a `reg_meta` name imported by any git-visible .py file outside
-#                     reg_meta/ (tests, scripts and tools included; the throwaway stage-0
-#                     spike, which package 1.5 deletes, is skipped).
+#                     reg_meta/ (tests, scripts and tools included).
 #                     `from M import N` is "M.N"; `import M` is "M".
 # disposition  route, command, skill:
 #                retained  the same surface stays.

@@ -641,12 +641,11 @@ is deleted".
 
 - Changes: `conformance/api/surface.toml`, one row per current HTTP route, `reg-meta`
   subcommand, and `reg_meta` name imported by any git-visible Python file outside
-  `reg_meta/` (tests, scripts and tools included; the stage-0 spike skipped), plus the
-  commands the `register-metadata-search` skill documents (listed by hand). Each row:
-  disposition (retained, replaced, removed), owning slice or stage, and the existing
-  test or conformance case that covers it today (1.1 adds the `api` case for each
-  `replaced` route or command row). Every build-side import gets its stage-4
-  destination.
+  `reg_meta/` (tests, scripts and tools included), plus the commands the
+  `register-metadata-search` skill documents (listed by hand). Each row: disposition
+  (retained, replaced, removed), owning slice or stage, and the existing test or
+  conformance case that covers it today (1.1 adds the `api` case for each `replaced`
+  route or command row). Every build-side import gets its stage-4 destination.
 - Paths: `conformance/api/`, `conformance/test_api_surface.py`, this package's text.
 - Acceptance: `uv run python -m pytest conformance/test_api_surface.py -q`, which fails
   if any route in the committed `reg_webapp/backend/openapi.json`, any `add_parser` name
