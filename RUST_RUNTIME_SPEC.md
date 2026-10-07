@@ -461,10 +461,10 @@ Rules (settled 2026-10-07; first agreed for the CLI, carried over to the API):
   same on every operation; `scope` is valid on every read because scope is reader state.
 - **One result shape per operation.** The shape does not depend on result count. Every
   list is `{"items": [...], "next_cursor": ...}` inside `data`.
-- **Errors** are `{code, class, message, remediation, fields}`, with a stable `code`
-  catalog. HTTP maps each class to a status (usage 400/422, not found 404, ambiguous ref
-  or no match 409, order blocked 422, catalog unavailable 503, internal 500; the codes
-  are in `conformance/api/errors.toml`); MCP returns the same document as a tool error.
+- **Errors** are `{error, meta}`, where `error` is
+  `{code, class, message, remediation, fields}` with a stable `code` catalog.
+  `conformance/api/errors.toml` maps each code to its class and HTTP status; MCP returns
+  the same document as a tool error.
 - **Order manifests keep their bytes.** The order operation returns
   `{data: manifest, meta}`; the HTTP download route serves the exact manifest bytes,
   which is what the byte-identity contract and the SPA download use.

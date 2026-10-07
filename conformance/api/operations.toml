@@ -17,16 +17,18 @@
 #   tool     the MCP tool that exposes it. A tool exposing several operations takes an
 #            `operation` argument naming one; its other arguments are that operation's
 #            params. No tool: HTTP only, and `note` says why.
-#   params   name = type. Types: ref (FQID or bare name, section 7), period (the
-#            FQID/project period grammar), scope ("holdings" | "reference", default the
+#   params   name = type. Types: ref (FQID or bare name, section 7; a one-segment ref
+#            resolves as a FQID first, then as a bare name, so an exact ref never turns
+#            ambiguous), period (the FQID/project period grammar), scope ("holdings" | "reference", default the
 #            artifact's), limit (1..200, default 50), cursor (opaque `next_cursor`),
 #            string, integer, boolean, string[], enum(a|b), project (a project_data.json
 #            document as the body). A trailing `?` marks optional.
 #   result   the `data` shape: a [shape.*] name, `Page<T>` (= {items: [T], next_cursor:
-#            cursor | null}) or a description against today's model.
+#            cursor | null}) or a description against today's model. A list bounded by
+#            the request or the entity (a variable's warnings, a register's documents) is
+#            a plain array, not a page.
 #   errors   codes from errors.toml it can return beyond the ones every operation can:
 #            invalid_parameter, catalog_unavailable, internal_error.
-#   process  true for a run mode of the binary rather than a served operation.
 
 contract_version = "4.0.0"
 
@@ -47,7 +49,8 @@ list is {items, next_cursor}"). `q` is at most 200 characters with no NUL; a que
 no letter or digit returns no items, not an error. `field` and `--no-fold` go: the \
 description and value arms are chosen by `type`, exact column names are `resolve`, and \
 concept groups always fold. `register` and `period` replace the CLI's `--register` and \
-`--years`. Paging stops at depth 1000 (today's ceiling)."""
+`--years`. Paging stops at depth 1000 (today's ceiling). Default limit 50 (today 3 on HTTP), \
+maximum 200 (today 50 on HTTP, none on the CLI)."""
 
 [[operation]]
 name = "context"
@@ -88,18 +91,32 @@ today's `/api/catalog/{fqid}/<facet>`, which a variable slug such as `states` co
 shadow."""
 
 [[operation]]
+name = "warnings"
+slice = "3b"
+http = ["GET /api/warnings/{ref}"]
+params = { ref = "ref", period = "period?", variant = "string?", representation = "string?", unassigned_only = "boolean?", scope = "scope?" }
+result = "[today's DataWarning], deduplicated and ordered by warning_id"
+errors = ["invalid_ref", "not_found", "ambiguous_ref", "invalid_period", "scope_unavailable"]
+note = """A register's or variable's data warnings, today's /data_warnings. The filters \
+need the period grammar and the delivery-column alias mapping, so they stay server-side. \
+No MCP tool: the SPA's project editor is the consumer."""
+
+[[operation]]
 name = "values"
 slice = "3b"
 http = ["GET /api/values/{ref}"]
 tool = "values"
-params = { ref = "ref", state = "integer?", partition = "enum(source_extensions|canonical|nonstandard|sentinels)?", classification = "string?", column = "string?", alias_window_from = "string?", q = "string?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
+params = { ref = "ref", state = "integer?", partition = "enum(source_extensions|canonical|nonstandard|sentinels)?", classification = "ref?", column = "string?", alias_window_from = "string?", q = "string?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
 result = "Page<Value> plus `total` (matches of `q` in the whole set)"
 errors = ["invalid_ref", "not_found", "ambiguous_ref", "scope_unavailable", "invalid_cursor", "stale_cursor"]
 note = """A classification's codes, or the value set of one state of a variable (`state` \
 required for a variable). Value is today's ValueSetMember | \
 ClassificationExtensionMember. Offset paging becomes cursor paging; `total` stays \
 because the SPA shows it. The CLI's per-instance grouping goes: an agent lists states, \
-then values per state."""
+then values per state. `partition` defaults to `source_extensions`. \
+`alias_window_from` is an identity key: with `column` it selects which delivered alias's \
+codes, not a time filter, so it stays a string rather than a period. Default limit 50 \
+(today 200), maximum 200 (today 1000)."""
 
 [[operation]]
 name = "graph"
@@ -200,7 +217,7 @@ slice = "3b"
 http = ["GET /api/docs/search"]
 tool = "docs"
 params = { q = "string?", register = "ref?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
-result = "Page<today's DocResult>"
+result = "Page<today's DocResult> plus `total` and `register_ingested` (whether `register` has ingested docs)"
 errors = ["docs_unavailable", "invalid_ref", "not_found", "ambiguous_ref", "invalid_cursor", "stale_cursor"]
 note = """Absorbs `docs list` (no `q`) and /docs/for-variable (`q` = the variable name). A \
 catalog without docs answers `docs_unavailable`, replacing `ingested: false`."""
@@ -211,29 +228,18 @@ slice = "3b"
 http = ["GET /api/docs/doc/{identifier}"]
 tool = "docs"
 params = { identifier = "string", scope = "scope?" }
-result = "today's DocDetail with the full `body` instead of the 500-character excerpt"
+result = "today's DocDetail, with its 500-character `excerpt`"
 errors = ["docs_unavailable", "not_found"]
 
 [[operation]]
 name = "docs_related"
 slice = "3b"
-http = ["GET /api/docs/related/{register}"]
+http = ["GET /api/docs/related/{ref}"]
 tool = "docs"
-params = { register = "ref", scope = "scope?", limit = "limit?", cursor = "cursor?" }
-result = "Page<today's related document {title, filename, source_url, license, fetched, sha256, byte_size}>"
-errors = ["docs_unavailable", "invalid_ref", "not_found", "ambiguous_ref", "invalid_cursor", "stale_cursor"]
-note = "The JSON metadata for the document download route."
-
-[[operation]]
-name = "fetch"
-slice = "3a"
-process = true
-params = { catalog = "string?" }
-result = "exit 0 with the activated catalog's generation on stdout"
-errors = ["release_not_found", "download_failed", "no_db_in_release", "incompatible_db_asset", "checksum_mismatch"]
-note = """`reg-meta fetch` (section 6), which replaces `reg-meta update`: download the \
-release, verify SHA-256, activate atomically. A run mode, so no route or tool; listed \
-so the `update` surface row and the fetch codes have a home."""
+params = { ref = "ref", scope = "scope?" }
+result = "[today's related document {title, filename, source_url, license, fetched, sha256, byte_size}]"
+errors = ["docs_unavailable", "invalid_ref", "not_found", "ambiguous_ref"]
+note = "A register's related documents; the JSON metadata for the document download route."
 
 [[download]]
 route = "POST /api/project/order/manifest"
@@ -242,7 +248,7 @@ operation = "order"
 note = "The manifest bytes byte-identical to `order`'s `data`, as `attachment; filename=\"order.json\"`."
 
 [[download]]
-route = "GET /api/docs/file/{register}/{filename}"
+route = "GET /api/docs/file/{ref}/{filename}"
 media_type = "application/pdf"
 operation = "docs_related"
 note = "Served inline, as today."
@@ -267,7 +273,9 @@ type = "\"register\" | \"variable\" | \"group\" | \"classification\" | \"classif
 note = """`rank` goes (the order is the contract), and so do the fields the SPA never reads: \
 `concept_group`, `concept_group_label`, `source`, `member_count`, `label_matched`. \
 `register` becomes `register_name`, since `register` is a ref everywhere else, and a \
-group's `group_key`/`group_label` become `key`/`label` as on concept-group nodes."""
+group's `group_key`/`group_label` become `key`/`label` as on concept-group nodes. A \
+group's `matched_count` and `members[].delivery_column` stay: agents consume them \
+through MCP."""
 register = "fqid, name, purpose"
 variable = "fqid, name, register_name, definition, operational_definition, delivery_column_names"
 group = "kind (\"variable\" | \"classification\"), key, label, register_name, matched_count, members [{fqid, name, delivery_column}]"
@@ -276,11 +284,9 @@ classification_succession = "fqid, short_name, name, matched_count, editions [{s
 code = "code, label, code_system, variable_count, variables [{fqid, name, register_name}] (at most 5), classification_count, classifications [{fqid, short_name, name}] (at most 5)"
 
 [shape.Context]
-artifact_kind = "\"catalog\" | \"steward\""
 steward = "{id, name, long_name}"
 schema_version = "string"
 import_date = "string"
-default_scope = "\"holdings\" | \"reference\""
 period_span = "{from: integer, to: integer} | null; as today's catalog_period_span"
 reg_meta_version = "string; the server's version, which seeds a new project's reg_meta_version"
 sizes = "{providers, registers, variables} in the requested scope; today's /api/stats"
@@ -290,8 +296,6 @@ note = """A `kind`-tagged summary: root, provider, register, variable, classific
 classification, concept_group, classification_group, classification_family, from today's \
 CatalogNode and group node models. Heavy parts move to facets: a variable's states \
 (`states`), lineage and succession chain (`lineage`, `graph`), a classification's edition \
-chain (`graph`). A register carries its variants (today's /variants) and a register or \
-variable its data warnings (today's /data_warnings), which the project editor filters \
-by period, variant and column client-side (rejected alternative: a `warnings` \
-operation with those filters, as today's route; cheap to restore if a register's \
-warnings make the summary heavy)."""
+chain (`graph`), a classification's codes (`values`), data warnings (`warnings`). A \
+register carries its variants (today's /variants) and a classification its owning \
+variables (`get classification --variables`), both unpaged."""

@@ -82,8 +82,9 @@ additions:
   same fixture and kind with those `identity.json` overrides (a new generation); a step
   with `artifact: <name>` is sent to it. The stale-cursor case uses this.
 - A startup case sets `serve: {"catalog": <name>}` and optional `manifest` overrides,
-  and expects `{"startup_error": {"code": ...}}`: the server refuses to start and never
-  answers the probe step.
+  which are written to `import_manifest` after the build, and expects
+  `{"startup_error": {"code": ...}}`: the server refuses to start and never answers the
+  probe step.
 
 The out-of-process runner (package 1.4) does not yet run `artifacts` or startup cases;
 both are slice 3a runner extensions.

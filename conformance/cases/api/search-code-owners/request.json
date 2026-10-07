@@ -6,7 +6,7 @@
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Sharedchoice",
+        "q": "Shared choice",
         "type": "register_value",
         "limit": 1
       }

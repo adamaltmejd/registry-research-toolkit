@@ -57,6 +57,16 @@
     }
   },
   {
-    "status": 200
+    "status": 200,
+    "json": {
+      "/data/items/*/type": [
+        "code",
+        "code",
+        "code",
+        "code",
+        "code"
+      ],
+      "/data/next_cursor": null
+    }
   }
 ]
