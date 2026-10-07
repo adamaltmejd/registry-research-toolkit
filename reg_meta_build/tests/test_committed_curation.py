@@ -40,6 +40,11 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
     assert tree.tags
     assert tree.classification_groups.classification_group
     assert tree.lineage.defaults
+    # Register-scoped overlays default to empty lists, and a strict real-seed build
+    # accepts their absence, so dropping every declaration would pass silently.
+    assert any(register.group for register in tree.registers)
+    assert any(register.code_label_pair for register in tree.registers)
+    assert any(register.representation.period_family for register in tree.registers)
 
     slug_dir = repo_slug_dir()
     assert slug_dir == REPO_CURATION
