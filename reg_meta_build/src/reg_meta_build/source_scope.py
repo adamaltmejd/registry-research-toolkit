@@ -228,11 +228,6 @@ def resolve_source_scope(
                     if ref in guarded_refs:
                         guarded_originals[ref].append(item.record)
     guarded_coding: dict[SourceRecordRef, list[str]] = defaultdict(list)
-    original_registers = (
-        {record_ref(item): source_register_key(item) for item in originals}
-        if acknowledgements
-        else {}
-    )
     # Errors an acknowledgement names, settled once the whole scope is resolved.
     held: dict[
         tuple[
@@ -292,10 +287,6 @@ def resolve_source_scope(
                 source_register == match[1].register_key
                 if source_register is not None
                 else bool(issue.refs)
-                and all(
-                    original_registers.get(ref) == match[1].register_key
-                    for ref in issue.refs
-                )
             ):
                 match[2].append(issue)
                 return
