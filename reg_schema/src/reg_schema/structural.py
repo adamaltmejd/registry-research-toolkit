@@ -24,7 +24,6 @@ codes; the SPA maps them to UI affordances; new codes are additive.
 from __future__ import annotations
 
 import re
-from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import date
 from typing import TYPE_CHECKING, Any, get_args
@@ -108,18 +107,18 @@ _FQID_TOKEN: re.Pattern[str] = re.compile(r"^[A-Za-z0-9_-]+$")
 # --- Entrypoint ---------------------------------------------------------
 
 
-def validate_structural(data: Mapping[str, object]) -> ValidationResult:
+def validate_structural(data: dict[str, object]) -> ValidationResult:
     """Run structural rules against ``data``.
 
-    Accepts a ``Mapping`` (typically a dict from ``json.loads``).
-    Returns a ``ValidationResult`` whose ``issues`` capture every
+    Accepts the parsed JSON document (``json.loads`` output); a non-object
+    root is an ``invalid_root`` issue, not a raise. Returns a ``ValidationResult`` whose ``issues`` capture every
     structural problem found. The result is dependency-free: nothing
     here consults reg_meta. Semantic resolution (see reg_meta/DESIGN.md
     → Project semantic validation (semantic.py)) is owned by another layer.
     """
 
     issues: list[ValidationIssue] = []
-    if not isinstance(data, Mapping):
+    if not isinstance(data, dict):
         issues.append(
             _error("invalid_root", "", "project_data.json root must be an object")
         )
@@ -148,7 +147,7 @@ def _jp_escape(token: str) -> str:
 
 
 def _check_unexpected_keys(
-    container: Mapping[str, object],
+    container: dict[str, object],
     allowed: frozenset[str],
     base: str,
     label: str,
@@ -174,7 +173,7 @@ def _check_unexpected_keys(
 
 
 def _present_and_not_null(
-    container: Mapping[str, object],
+    container: dict[str, object],
     field: str,
     base: str,
     label: str,
@@ -210,7 +209,7 @@ def _present_and_not_null(
 
 
 def _reject_null_override(
-    container: Mapping[str, object],
+    container: dict[str, object],
     field: str,
     base: str,
     issues: list[ValidationIssue],
@@ -344,7 +343,7 @@ def _is_period_range_obj(value: object) -> bool:
     ``PeriodRange`` model backs both ``Source.period`` and ``TimeRange.range``.
     """
     return (
-        isinstance(value, Mapping)
+        isinstance(value, dict)
         and set(value.keys()) == {"from", "to"}
         and _is_period_endpoint(value["from"])
         and _is_period_endpoint(value["to"])
@@ -399,7 +398,7 @@ def _endpoint_bounds(value: int | str) -> tuple[str, str]:
 def _segment_bounds(segment: object) -> tuple[str, str]:
     """Inclusive ISO ``(lo, hi)`` for a VALID period segment (endpoint or
     ``{"from","to"}`` range object)."""
-    if isinstance(segment, Mapping):
+    if isinstance(segment, dict):
         lo, _ = _endpoint_bounds(segment["from"])
         _, hi = _endpoint_bounds(segment["to"])
         return lo, hi
@@ -522,7 +521,7 @@ def _check_period(period: object, base: str, issues: list[ValidationIssue]) -> N
             )
         )
         return
-    if isinstance(period, Mapping):
+    if isinstance(period, dict):
         if _is_period_range_obj(period):
             return
         issues.append(
@@ -551,7 +550,7 @@ def _check_period(period: object, base: str, issues: list[ValidationIssue]) -> N
 
 
 def _check_top_level_fields(
-    data: Mapping[str, object], issues: list[ValidationIssue]
+    data: dict[str, object], issues: list[ValidationIssue]
 ) -> None:
     _check_unexpected_keys(data, _PROJECT_KEYS, "", "project root", issues)
 
@@ -626,7 +625,7 @@ def _check_window(window: object, issues: list[ValidationIssue]) -> None:
     """
     if window is None:
         return  # absent (or null, already flagged by the baseline check)
-    if not isinstance(window, Mapping):
+    if not isinstance(window, dict):
         issues.append(
             _error(
                 "invalid_field_type",
@@ -685,7 +684,7 @@ def _check_sources(sources: object, issues: list[ValidationIssue]) -> None:
     seen_names: dict[str, int] = {}
     for i, source in enumerate(sources):
         base = f"/sources/{i}"
-        if not isinstance(source, Mapping):
+        if not isinstance(source, dict):
             issues.append(
                 _error("invalid_field_type", base, "source must be an object")
             )
@@ -694,7 +693,7 @@ def _check_sources(sources: object, issues: list[ValidationIssue]) -> None:
 
 
 def _check_source(
-    source: Mapping[str, object],
+    source: dict[str, object],
     base: str,
     index: int,
     seen_names: dict[str, int],
@@ -795,7 +794,7 @@ def _check_source(
     seen_display_names: dict[str, str] = {}
     for j, binding in enumerate(bindings):
         bbase = f"{base}/bindings/{j}"
-        if not isinstance(binding, Mapping):
+        if not isinstance(binding, dict):
             issues.append(
                 _error("invalid_field_type", bbase, "binding must be an object")
             )
@@ -817,7 +816,7 @@ def _check_source(
 
 
 def _check_binding(
-    binding: Mapping[str, object],
+    binding: dict[str, object],
     base: str,
     rv_prefix: list[str] | None,
     issues: list[ValidationIssue],
@@ -952,7 +951,7 @@ def _check_binding(
 
 
 def _is_literal_period_obj(value: object) -> bool:
-    if not isinstance(value, Mapping):
+    if not isinstance(value, dict):
         return False
     if set(value.keys()) != {"period"}:
         return False
@@ -971,7 +970,7 @@ def _is_time_range_obj(value: object) -> bool:
     unambiguous. The inner object reuses ``_is_period_range_obj``.
     """
     return (
-        isinstance(value, Mapping)
+        isinstance(value, dict)
         and set(value.keys()) == {"range"}
         and _is_period_range_obj(value["range"])
     )
@@ -1032,7 +1031,7 @@ def _build_source_index(sources: object) -> dict[str, dict[str, Any]]:
     if not isinstance(sources, list):
         return index
     for source in sources:
-        if not isinstance(source, Mapping):
+        if not isinstance(source, dict):
             continue
         name = source.get("name")
         if not isinstance(name, str) or name in index:
@@ -1048,7 +1047,7 @@ def _build_source_index(sources: object) -> dict[str, dict[str, Any]]:
         all_have_display = isinstance(bindings, list)
         if isinstance(bindings, list):
             for binding in bindings:
-                if not isinstance(binding, Mapping):
+                if not isinstance(binding, dict):
                     all_have_display = False
                     continue
                 dn = binding.get("display_name")
@@ -1122,7 +1121,7 @@ def _check_time_key_shape(
         return "ref_scalar"
     if _is_literal_period_obj(value) or _is_time_range_obj(value):
         return "literal_scalar"
-    if isinstance(value, Mapping):
+    if isinstance(value, dict):
         issues.append(
             _error(
                 "literal_period_invalid",
@@ -1247,7 +1246,7 @@ def _check_panels(
 
     for pi, panel in enumerate(panels):
         pbase = f"/panels/{pi}"
-        if not isinstance(panel, Mapping):
+        if not isinstance(panel, dict):
             issues.append(
                 _error("invalid_field_type", pbase, "panel must be an object")
             )
@@ -1265,7 +1264,7 @@ def _check_panels(
 
 
 def _check_panel(
-    panel: Mapping[str, object],
+    panel: dict[str, object],
     base: str,
     panel_index: int,
     source_index: dict[str, dict[str, Any]],
@@ -1402,7 +1401,7 @@ def _check_panel_member(
         eff_time = scope.panel_time
         eff_time_path = f"{pbase}/time_key"
         eff_time_kind = scope.panel_time_kind
-    elif isinstance(member, Mapping):
+    elif isinstance(member, dict):
         _check_unexpected_keys(
             member, _PANEL_MEMBER_KEYS, mbase, "panel member", issues
         )
@@ -1537,7 +1536,7 @@ def _check_panel_member(
             issues.append(
                 _error(
                     "panel_member_unknown_source",
-                    f"{mbase}/source" if isinstance(member, Mapping) else mbase,
+                    f"{mbase}/source" if isinstance(member, dict) else mbase,
                     f"panel member references source {source_name!r} which is "
                     "not defined in /sources",
                 )
@@ -1591,7 +1590,7 @@ def _check_panel_member(
 
 
 def _resolve_member_source(
-    member: Mapping[str, object], mbase: str, issues: list[ValidationIssue]
+    member: dict[str, object], mbase: str, issues: list[ValidationIssue]
 ) -> str | None:
     """Extract and validate ``member['source']``, returning the string or None."""
     if not _present_and_not_null(

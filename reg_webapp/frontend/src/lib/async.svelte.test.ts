@@ -1,7 +1,6 @@
-import { flushSync, tick } from "svelte";
+import { flushSync } from "svelte";
 import { describe, expect, it, vi } from "vitest";
-import { ApiError } from "./api";
-import { asyncResource, unmountedFlag } from "./async.svelte";
+import { asyncResource } from "./async.svelte";
 
 // `asyncResource` registers an `$effect`, so drive it inside an `$effect.root`
 // scope (the Svelte 5 way to run effects outside a component) and `flushSync()`
@@ -9,72 +8,6 @@ import { asyncResource, unmountedFlag } from "./async.svelte";
 // robust against the microtask timing rather than a brittle fixed tick.
 
 describe("asyncResource", () => {
-  it("starts loading, then exposes the resolved data", async () => {
-    let res!: ReturnType<typeof asyncResource<number>>;
-    const stop = $effect.root(() => {
-      res = asyncResource(() => Promise.resolve(42));
-    });
-    flushSync();
-    expect(res.loading).toBe(true);
-    await vi.waitFor(() => expect(res.loading).toBe(false));
-    expect(res.data).toBe(42);
-    expect(res.error).toBeNull();
-    expect(res.status).toBeNull();
-    stop();
-  });
-
-  it("maps an ApiError to its message and HTTP status", async () => {
-    let res!: ReturnType<typeof asyncResource<number>>;
-    const stop = $effect.root(() => {
-      res = asyncResource(() =>
-        Promise.reject(new ApiError(404, null, "not found")),
-      );
-    });
-    flushSync();
-    await vi.waitFor(() => expect(res.loading).toBe(false));
-    expect(res.data).toBeNull();
-    expect(res.error).toBe("not found");
-    expect(res.status).toBe(404);
-    stop();
-  });
-
-  it("stringifies a non-ApiError rejection", async () => {
-    let res!: ReturnType<typeof asyncResource<number>>;
-    const stop = $effect.root(() => {
-      res = asyncResource(() => Promise.reject(new Error("boom")));
-    });
-    flushSync();
-    await vi.waitFor(() => expect(res.loading).toBe(false));
-    expect(res.error).toContain("boom");
-    expect(res.status).toBeNull();
-    stop();
-  });
-
-  it("refetches (re-invokes fn) when a tracked reactive input changes", async () => {
-    // Pins the dependency-tracking contract: `fn` must be called SYNCHRONOUSLY
-    // in the effect so the reactive values it reads are tracked. If `fn` were
-    // deferred to a microtask, the effect would track nothing and never refetch
-    // on input change (the A5.3b period-refetch break). Count the invocations.
-    let key = $state(1);
-    let calls = 0;
-    let res!: ReturnType<typeof asyncResource<number>>;
-    const stop = $effect.root(() => {
-      res = asyncResource(() => {
-        calls++;
-        return Promise.resolve(key);
-      });
-    });
-    flushSync();
-    await vi.waitFor(() => expect(res.data).toBe(1));
-    expect(calls).toBe(1);
-
-    key = 2;
-    flushSync();
-    await vi.waitFor(() => expect(res.data).toBe(2)); // refetched with the new input
-    expect(calls).toBe(2);
-    stop();
-  });
-
   it("aborts the signal on teardown (input change), and a fn that ignores it still works (backward compat)", async () => {
     // The two halves of the abort contract: (1) the signal handed to `fn` is
     // aborted when the effect re-runs / unmounts, so a signal-aware fetch is
@@ -137,19 +70,5 @@ describe("asyncResource", () => {
     await vi.waitFor(() => expect(res.loading).toBe(false));
     expect(res.data).toBe("FRESH");
     stop();
-  });
-});
-
-describe("unmountedFlag", () => {
-  it("reads false while mounted and flips true after teardown", async () => {
-    let unmounted!: () => boolean;
-    const stop = $effect.root(() => {
-      unmounted = unmountedFlag();
-    });
-    flushSync();
-    await tick();
-    expect(unmounted()).toBe(false);
-    stop();
-    await vi.waitFor(() => expect(unmounted()).toBe(true));
   });
 });

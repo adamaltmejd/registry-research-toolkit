@@ -19,16 +19,18 @@ different shape; do not conflate.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Literal, get_args
+from typing import Literal
 
+# A typing hint only, like the tuple `issues`: every producer passes a literal
+# level and a tuple (checked by ty), and no product path decodes JSON into these
+# dataclasses. JSON is checked where it is read (see DESIGN.md → What this layer
+# does NOT validate). `ok` does not rely on the hint: it fails closed below.
 IssueLevel = Literal["error", "warning", "info"]
 
-# Mirrored at runtime because `Literal` is a typing hint, not a runtime
-# guard — JSON deserialization (SPA, bundle) and ignore-pragma paths can
-# otherwise smuggle in `"ERROR"` / `"fatal"` and silently flip
-# `ValidationResult.ok` to True for a result that should block.
-# Derived from `IssueLevel` so the two cannot drift.
-_VALID_LEVELS: frozenset[str] = frozenset(get_args(IssueLevel))
+# The `IssueLevel` values that do not block `ok`. Listed by hand rather than
+# derived (`IssueLevel` minus "error") so that a level added to `IssueLevel`
+# blocks until someone decides it should not.
+_NON_BLOCKING: frozenset[str] = frozenset({"warning", "info"})
 
 
 @dataclass(frozen=True)
@@ -45,32 +47,21 @@ class ValidationIssue:
     # remains hashable for set/equality-based tests.
     successor_fqid: str | None = None
 
-    def __post_init__(self) -> None:
-        if self.level not in _VALID_LEVELS:
-            raise ValueError(
-                f"invalid level {self.level!r}; expected one of {sorted(_VALID_LEVELS)}"
-            )
-
 
 @dataclass(frozen=True)
 class ValidationResult:
     issues: tuple[ValidationIssue, ...]
 
-    def __post_init__(self) -> None:
-        # Coerce list/generator/etc. to tuple so the frozen+hashable
-        # contract holds regardless of how callers construct the value.
-        # `object.__setattr__` is the standard frozen-dataclass escape.
-        if not isinstance(self.issues, tuple):
-            object.__setattr__(self, "issues", tuple(self.issues))
-
     @property
     def ok(self) -> bool:
-        # `ok = True` means no error-level issues — warnings and infos never
-        # flip it. It is NOT a clean bill of health: the semantic layer (see
+        # `ok = True` means every issue is explicitly non-blocking (`warning`
+        # or `info`). It fails closed: an unknown or mis-cased level
+        # (`"ERROR"`, smuggled past the `Literal` hint) blocks rather than
+        # passes. It is NOT a clean bill of health: the semantic layer (see
         # reg_meta/DESIGN.md → Project semantic validation (semantic.py))
         # reports a binding the steward does not hold as a `warning`
         # (`*_outside_steward_catalog`) and an availability clip as `info`,
         # and a valid project is resolvable, not proven orderable — the order
         # materializer still gates physical coverage. Callers that care must
         # inspect the non-error issues.
-        return not any(i.level == "error" for i in self.issues)
+        return all(i.level in _NON_BLOCKING for i in self.issues)

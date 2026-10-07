@@ -527,21 +527,6 @@ export function periodYearIntervals(period: Period): StudyWindow[] | null {
   return coalesceYearIntervals(intervals).map(([from, to]) => ({ from, to }));
 }
 
-/** The outer year bounds of a whole `Source.period` when every segment is
- * year-shaped (ints and `{from,to}` year ranges), else `null`. Used by the
- * project-cart outer-bound hint. Token periods (`HT2020`, `2020-Q3`) are
- * intentionally skipped rather than guessed. */
-export function periodYearCoverage(period: Period): StudyWindow | null {
-  const intervals = periodYearIntervals(period);
-  if (intervals === null) {
-    return null;
-  }
-  return {
-    from: Math.min(...intervals.map(({ from }) => from)),
-    to: Math.max(...intervals.map(({ to }) => to)),
-  };
-}
-
 /** One inclusive year interval → its structured segment: a point year (`lo === hi`)
  * collapses to the bare `number` arm, else the `{from, to}` range object (the only
  * range shape `Source.period` accepts — see `segmentFromWire`). */
