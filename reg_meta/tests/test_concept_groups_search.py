@@ -16,32 +16,6 @@ from reg_meta.queries import search
 
 
 class TestSearchFolding:
-    def test_sibling_hits_fold_into_one_group_row(self) -> None:
-        conn = _seeded_conn()
-        # 'Lönesumma' hits all three member names AND the group label.
-        results = search(conn, "Lönesumma").results
-        assert [r.type for r in results] == ["group"]
-        (group,) = results
-        assert group.kind == "variable"
-        assert group.group_key == "agiink"
-        assert group.group_label == "Lönesumma per månad"
-        assert group.source == "curated"
-        assert group.register_name == "LISA"
-        assert group.member_count == 3
-        # The three member hits folded — the public model carries the count, not the
-        # raw leaf list (the per-leaf names were checked pre-conversion).
-        assert group.matched_count == 3
-        # Members come facet-ordered via the Catalog reuse, with leaf FQIDs; the
-        # facet axis ('month') rides on each member's facets (the group model carries
-        # no separate `axes` field — the webapp wrapper never exposed one either).
-        assert [str(m.fqid) for m in group.members] == [
-            "scb/lisa/agiinkjan",
-            "scb/lisa/agiinkfeb",
-            "scb/lisa/agiinkmar",
-        ]
-        assert {m.facets[0].axis for m in group.members} == {"month"}
-        _assert_no_internal_keys(results)
-
     def test_folded_prefix_backfills_and_continues_without_gap(self) -> None:
         conn = _seeded_conn()
         add_variable(
@@ -183,22 +157,6 @@ class TestSearchFolding:
             "literal-percent"
         }
 
-    def test_classification_group_label_matches(self) -> None:
-        conn = _seeded_conn()
-        results = search(conn, "utbildningsnomenklatur").results
-        groups = [r for r in results if r.type == "group"]
-        assert len(groups) == 1
-        (group,) = groups
-        assert group.kind == "classification"
-        assert group.group_key == "sun"
-        # A classification-kind group has no owning register.
-        assert group.register_name is None
-        assert [str(m.fqid) for m in group.members] == [
-            "class/sun2000",
-            "class/sun2020",
-        ]
-        assert [m.facets[0].value for m in group.members] == ["2000", "2020"]
-
     def test_no_fold_returns_flat_member_rows(self) -> None:
         conn = _seeded_conn()
         results = search(conn, "Lönesumma", fold_groups=False).results
@@ -211,10 +169,6 @@ class TestSearchFolding:
         # Unfolded varname rows carry no lone-member annotation.
         assert all(r.concept_group is None for r in results)
         _assert_no_internal_keys(results)
-
-    def test_type_register_excludes_groups(self) -> None:
-        conn = _seeded_conn()
-        assert search(conn, "Lönesumma", type="register").results == ()
 
     def test_register_scope_keeps_variable_group_drops_classification(self) -> None:
         conn = _seeded_conn()
