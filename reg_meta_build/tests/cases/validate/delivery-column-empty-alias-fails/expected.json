@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "1 empty-string delivery_column_name value(s)"
+  ]
+}

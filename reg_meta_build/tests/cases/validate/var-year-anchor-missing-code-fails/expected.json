@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "var_id 24193 year 2010 missing codes ['04']"
+  ]
+}

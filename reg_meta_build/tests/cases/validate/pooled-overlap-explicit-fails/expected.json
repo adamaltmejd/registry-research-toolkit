@@ -1,0 +1,10 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "pooled ↔ explicit overlapping state pair"
+  ],
+  "failures_absent": [
+    "code-less ↔ code-bearing overlapping state pair",
+    "resolves to >1 value set"
+  ]
+}

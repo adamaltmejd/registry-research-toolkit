@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "report_contains": [
+    "no variant carries an entity key — nothing to curate"
+  ]
+}

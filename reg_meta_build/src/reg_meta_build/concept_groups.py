@@ -23,7 +23,6 @@ if TYPE_CHECKING:
 from ._curation import (
     curation_error,
     load_curation_entries,
-    require_fqid,
     require_str,
 )
 
@@ -211,14 +210,6 @@ _require_str = functools.partial(
     code="concept_groups_invalid",
     prefix="concept_groups",
     file_name="worklists/concept_groups.auto.toml",
-)
-
-_require_pair_fqid = functools.partial(
-    require_fqid,
-    code="code_label_pairs_invalid",
-    prefix="code_label_pairs",
-    entry_table="[[pair]]",
-    file_name="curation/registers/<provider>/<slug>.toml",
 )
 
 
@@ -636,60 +627,6 @@ def load_classification_groups(path: Path | None) -> tuple[ClassificationGroup, 
         out.append(
             ClassificationGroup(key=key, label=label, axis=axis, members=tuple(members))
         )
-    return tuple(out)
-
-
-def load_code_label_pairs(path: Path | None) -> tuple[CodeLabelPair, ...]:
-    """Parse the curated code↔label pair TOML (`reg_meta_build/curation/registers/<provider>/<slug>.toml`,
-    #923). Empty when no file (synthetic test builds, wheel installs).
-
-    Load-time validation (all EXIT_CONFIG, actionable): only `[[pair]]` top-level;
-    each entry sets `code` AND `label`, each a 3-segment `provider/register/variable`
-    FQID; `(code, label)` FQID tuples are unique (a duplicate pair is drift, mirroring
-    the duplicate-key rejection in `load_concept_groups`). Endpoint RESOLUTION (do the
-    variables exist? is the code the value-set owner? are they co-delivered?) happens
-    during common resolution over the built DB (`_append_code_label_edges`), not here."""
-    out: list[CodeLabelPair] = []
-    seen_pairs: set[tuple[tuple[str, str, str], tuple[str, str, str]]] = set()
-    for register_file in _register_files(path):
-        for declaration in register_file.code_label_pair:
-            entry = declaration.model_dump(mode="python")
-            code = _require_pair_fqid(entry, "code")
-            label = _require_pair_fqid(entry, "label")
-            # Reject a self-pair (code == label): a variable can't be both endpoints of
-            # a code↔label decode. Caught here with a clear loader error rather than
-            # letting the contradictory value_set guards fire during offline conversion.
-            if code == label:
-                raise curation_error(
-                    "code_label_pairs_invalid",
-                    f"code_label_pairs pair has identical `code` and `label` FQID "
-                    f"{'/'.join(code)!r}.",
-                    "A code↔label pair needs two distinct variables. Fix or drop the "
-                    "pair in reg_meta_build/curation/registers/<provider>/<slug>.toml.",
-                )
-            # Reject duplicate (code, label) FQID tuples (mirrors `load_concept_groups`
-            # rejecting duplicate keys in the same file). The committed TOML is
-            # deduplicated, so this is a drift guard; the full FQID keys the set since
-            # two registers can share a variable slug.
-            if (code, label) in seen_pairs:
-                raise curation_error(
-                    "code_label_pairs_invalid",
-                    f"code_label_pairs duplicate pair {'/'.join(code)!r} <-> "
-                    f"{'/'.join(label)!r}.",
-                    "List each (code, label) pair once in "
-                    "reg_meta_build/curation/registers/<provider>/<slug>.toml.",
-                )
-            seen_pairs.add((code, label))
-            out.append(
-                CodeLabelPair(
-                    code_provider=code[0],
-                    code_register=code[1],
-                    code_variable=code[2],
-                    label_provider=label[0],
-                    label_register=label[1],
-                    label_variable=label[2],
-                )
-            )
     return tuple(out)
 
 

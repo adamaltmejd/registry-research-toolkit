@@ -1,0 +1,9 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "scope to a `variant` that is not a live register_variant"
+  ],
+  "failures_absent": [
+    "representation succession edge(s) reference an unknown"
+  ]
+}

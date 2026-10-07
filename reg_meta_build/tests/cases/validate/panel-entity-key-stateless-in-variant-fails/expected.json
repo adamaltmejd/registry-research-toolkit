@@ -1,0 +1,9 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "panel_entity_key 'kon' has no variable_state rows in that variant"
+  ],
+  "failures_absent": [
+    "resolves to no variable.slug"
+  ]
+}

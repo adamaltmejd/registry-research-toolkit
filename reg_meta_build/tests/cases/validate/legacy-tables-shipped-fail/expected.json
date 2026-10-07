@@ -1,0 +1,8 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "cvid_value_code should have been dropped",
+    "value_item should have been dropped",
+    "value_item_validity should have been dropped"
+  ]
+}

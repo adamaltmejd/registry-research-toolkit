@@ -225,7 +225,7 @@ def test_derive_keeps_inputs_differing_only_in_identity_distinct(
     assert derived_a["generation_id"] != derived_b["generation_id"]
 
 
-def test_compilation_consumes_snapshot_after_accepted_source_changes(
+def test_compiling_a_materialized_snapshot_ignores_later_candidate_edits(
     tmp_path: Path,
 ) -> None:
     case = CASES / "accepted-snapshot"

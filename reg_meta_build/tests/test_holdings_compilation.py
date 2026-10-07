@@ -5,13 +5,12 @@ from __future__ import annotations
 import json
 import shutil
 import sqlite3
-import subprocess
-import sys
 from pathlib import Path
 
 import pytest
 from catalog_manifest import synthetic_manifest
 from reg_meta_build.artifact_identity import committed_steward_slugs, generation_id
+from reg_meta_build.cli import run
 from reg_meta_build.holdings_compile import compile_holdings
 from reg_meta_build.resolved_catalog import ResolvedVariable, write_resolved_catalog
 from reg_meta_build.validate import validate_built_db
@@ -155,21 +154,19 @@ def test_inventory_compiles_to_physical_facts(case: Path, tmp_path: Path) -> Non
 @pytest.mark.parametrize(
     "case", sorted((CASES / "cli").iterdir()), ids=lambda path: path.name
 )
-def test_publishable_extension_rejects_unpinned_or_skipped_inputs(case: Path) -> None:
+def test_publishable_extension_rejects_unpinned_or_skipped_inputs(
+    case: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     request = json.loads((case / "request.json").read_text())
     expected = json.loads((case / "expected.json").read_text())
-    result = subprocess.run(
-        [sys.executable, "-m", "reg_meta_build.cli", *request["args"]],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    returncode = run(request["args"])
+    captured = capsys.readouterr()
     if "stderr_contains" in expected:
-        assert result.returncode == expected["returncode"]
-        assert expected["stderr_contains"] in result.stderr
+        assert returncode == expected["returncode"]
+        assert expected["stderr_contains"] in captured.err
     else:
-        assert result.returncode != 0
-        output = json.loads(result.stdout)
+        assert returncode != 0
+        output = json.loads(captured.out)
         assert output["error"]["code"] == expected["error_code"]
 
 

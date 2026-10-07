@@ -84,7 +84,7 @@ def test_a_placed_gapfill_column_is_a_complete_column_entry(
     """The candidate is a whole `[[column]]`: the variant the mapping placed it on,
     the description as both `name` and `definition`, `all_versions = true` because a
     holdings list dates nothing — and the curator's two fields as TODO placeholders,
-    `noted` in the form `load_scb_errata` refuses. No `data_type`: the delivery
+    `noted` in the form `resolve_scb_errata` refuses. No `data_type`: the delivery
     spells `varchar`, which is not one of the four the loader accepts."""
     text = _grafts_text(
         tmp_path,
@@ -189,17 +189,17 @@ def test_the_emitted_candidates_load_as_scb_errata(
     tmp_path: Path, flavored_db: Path
 ) -> None:
     """The output IS the repair candidate, so its `[[errata.column]]` table parses,
-    and `load_scb_errata` accepts its shape against the repo's curated SCB slugs.
+    and `resolve_scb_errata` accepts its shape against LISA's curated variants.
 
     `noted` is the one field a placeholder cannot satisfy — the loader demands a
     canonical `YYYY-MM-DD`, which is exactly what stops an uncurated paste from
     reaching a build — so the proof is the same one `inventory_coverage`'s worklist
     carries: refused while undated, loads once dated, every other key already what
-    the loader wants. Real repo slugs, because that is what the stanzas name.
+    the loader wants. The fixture declares LISA's real variant slugs, because that
+    is what the stanzas name.
     """
-    from reg_meta_build.scb_errata import load_scb_errata
-
-    from reg_meta_build.fqid_slugs import repo_slug_dir
+    from reg_meta_build.curation_tree import load_register_files
+    from reg_meta_build.scb_errata import resolve_scb_errata
 
     text = _grafts_text(
         tmp_path,
@@ -211,14 +211,14 @@ def test_the_emitted_candidates_load_as_scb_errata(
     root = write_lisa_errata(tmp_path / "curation", text)
 
     with pytest.raises(RegMetaError) as exc:
-        load_scb_errata(root, repo_slug_dir())
+        resolve_scb_errata(load_register_files(root), classifications=frozenset())
     assert "`noted`" in exc.value.message
 
     root = write_lisa_errata(
         root,
         text.replace('noted = "TODO: YYYY-MM-DD"', 'noted = "2026-09-12"'),
     )
-    errata = load_scb_errata(root, repo_slug_dir())
+    errata = resolve_scb_errata(load_register_files(root), classifications=frozenset())
     assert {(column.column, column.source) for column in errata.columns} == {
         ("Ssyk4_J16", "scb-docs"),
         ("FastBet", "steward-holdings"),

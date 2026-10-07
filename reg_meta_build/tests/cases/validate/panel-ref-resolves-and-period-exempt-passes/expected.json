@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "report_contains": [
+    "all 1 panel ref(s) across 1 variant(s) resolve",
+    "all 1 panel ref(s) across 1 variant(s) have states in their variant",
+    "entity-key curation gate skipped (no slug_dir)"
+  ]
+}
