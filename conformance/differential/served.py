@@ -54,10 +54,11 @@ def context_cases(
     log_dir: Path,
 ) -> list[tuple[str, dict, dict]]:
     """``(case id, baseline result, checkout result)`` for every context case."""
-    log_dir.mkdir(parents=True, exist_ok=True)
+    for arm in ("baseline", "rust"):
+        (log_dir / arm).mkdir(parents=True, exist_ok=True)
     baseline = ServerPool(
         shlex.join([str(baseline_python), "-I", "-c", BASELINE_APP, "{port}"]),
-        log_dir,
+        log_dir / "baseline",
     )
     rust = ServerPool(
         shlex.join(
@@ -74,7 +75,7 @@ def context_cases(
                 "{port}",
             ]
         ),
-        log_dir,
+        log_dir / "rust",
     )
     cases = []
     try:
