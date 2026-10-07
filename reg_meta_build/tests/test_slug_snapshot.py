@@ -11,25 +11,25 @@ from __future__ import annotations
 
 import json
 import os
-import sqlite3
 import subprocess
 from typing import TYPE_CHECKING
 
 import pytest
 from reg_meta_build.cli import run
-from reg_meta_build.db import DDL, seed_providers
 
 from reg_meta_build.fqid_slugs import (
     FREEZE_STATE_FILE,
     GLOBAL_FREEZE_STATE_FILE,
-    SNAPSHOT_FILENAME,
     snapshot_path,
 )
 
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from _pipeline_catalog_support import CatalogFixture
+
 _AUTO = "scb.auto.toml"
+_PIN = '[variable."1.44"]\nslug = "kon"\n'
 
 
 def _git(cwd: Path, *args: str) -> None:
@@ -44,46 +44,51 @@ def _git(cwd: Path, *args: str) -> None:
     )
 
 
-def _layout(tmp_path: Path, *, freeze: str, auto: bool) -> tuple[Path, Path]:
-    """A one-register DB and a committed flat slug dir pinning ``scb`` to
-    ``freeze``. The auto file, when written, is left uncommitted."""
-    db_dir = tmp_path / "db"
-    db_dir.mkdir()
-    conn = sqlite3.connect(db_dir / "reg_meta.db")
-    conn.executescript(DDL)
-    seed_providers(conn)
-    conn.execute(
-        "INSERT INTO register (register_id, provider_id, name, slug) "
-        "VALUES (1, 1, 'LISA', 'lisa')"
-    )
-    conn.execute(
-        "INSERT INTO register_variant (register_variant_id, register_id, slug, name) "
-        "VALUES (10, 1, 'individer', 'Individer')"
-    )
-    conn.execute("INSERT INTO import_manifest VALUES ('schema_version', '3.1.0')")
-    conn.commit()
-    conn.close()
+def _commit_all(root: Path, message: str) -> None:
+    _git(root, "init")
+    _git(root, "add", "-A")
+    _git(root, "commit", "-m", message)
 
+
+def _built_db(catalog: CatalogFixture, tmp_path: Path) -> Path:
+    """The `--db` dir of a catalog built from the synthetic SCB source."""
+    output = tmp_path / "db" / "reg_meta.db"
+    output.parent.mkdir()
+    assert (
+        catalog.build(output, tmp_path / "report", registers=("1",))["status"]
+        == "complete"
+    )
+    return output.parent
+
+
+def _layout(
+    catalog: CatalogFixture, tmp_path: Path, *, freeze: str, auto: bool
+) -> tuple[Path, Path]:
+    """The built catalog and a committed flat slug dir pinning ``scb`` to
+    ``freeze``. The auto file, when written, is left uncommitted."""
+    db_dir = _built_db(catalog, tmp_path)
     slug_dir = tmp_path / "slugs"
     slug_dir.mkdir()
     (slug_dir / FREEZE_STATE_FILE).write_text(f'scb = "{freeze}"\n', encoding="utf-8")
     (slug_dir / "scb.toml").write_text(
-        '[register."1"]\nslug = "lisa"\n[register_variant."1.10"]\nslug = "individer"\n',
+        '[register."1"]\nslug = "sample"\n[register_variant."1.10"]\nslug = "people"\n',
         encoding="utf-8",
     )
-    _git(slug_dir, "init")
-    _git(slug_dir, "add", "-A")
-    _git(slug_dir, "commit", "-m", "init")
+    _commit_all(slug_dir, "init")
     if auto:
-        (slug_dir / _AUTO).write_text(
-            '[variable."1.44"]\nslug = "kon"\n', encoding="utf-8"
-        )
+        (slug_dir / _AUTO).write_text(_PIN, encoding="utf-8")
     return db_dir, slug_dir
 
 
 def _precheck(
     db_dir: Path, slug_dir: Path, capsys: pytest.CaptureFixture[str]
 ) -> tuple[int, dict]:
+    """Run ``precheck-slugs --update-snapshot``.
+
+    The exit code alone cannot tell a refused pin from an accepted one: the
+    precheck's missing/stale check keys the catalog by surrogate ``register_id``
+    and the slug TOMLs by native id, so every run against a built catalog exits
+    10. The tests read the refusal from ``parse_errors`` and the snapshot status."""
     capsys.readouterr()
     code = run(
         [
@@ -98,32 +103,41 @@ def _precheck(
     return code, json.loads(capsys.readouterr().out)
 
 
+def _snapshot_variables(slug_dir: Path) -> dict[str, str]:
+    return json.loads(snapshot_path(slug_dir).read_text(encoding="utf-8"))["variable"]
+
+
+def _assert_refused(code: int, data: dict, slug_dir: Path, pin: Path) -> None:
+    assert code == 10
+    (error,) = data["parse_errors"]
+    assert str(pin) in error
+    assert "git add -f" in error
+    assert data["snapshot"]["update_skipped_reason"] == "parse_errors"
+    assert not snapshot_path(slug_dir).exists()
+
+
 @pytest.mark.parametrize("staged", [False, True], ids=["untracked", "staged"])
-def test_uncommitted_pinned_auto_refused(tmp_path, capsys, staged):
-    db_dir, slug_dir = _layout(tmp_path, freeze="curating", auto=True)
+def test_uncommitted_pinned_auto_refused(catalog, tmp_path, capsys, staged):
+    db_dir, slug_dir = _layout(catalog, tmp_path, freeze="curating", auto=True)
     if staged:
         # Staging is not enough: the push publishes HEAD, not the index.
         _git(slug_dir, "add", "-f", _AUTO)
 
     code, data = _precheck(db_dir, slug_dir, capsys)
 
-    assert code == 10
-    (error,) = data["parse_errors"]
-    assert str(slug_dir / _AUTO) in error
-    assert "git add -f" in error
-    assert not (slug_dir / SNAPSHOT_FILENAME).exists()
+    _assert_refused(code, data, slug_dir, slug_dir / _AUTO)
 
 
-def test_committed_pinned_auto_accepted(tmp_path, capsys):
-    db_dir, slug_dir = _layout(tmp_path, freeze="curating", auto=True)
+def test_committed_pinned_auto_accepted(catalog, tmp_path, capsys):
+    db_dir, slug_dir = _layout(catalog, tmp_path, freeze="curating", auto=True)
     _git(slug_dir, "add", "-f", _AUTO)
     _git(slug_dir, "commit", "-m", "pin")
 
-    code, data = _precheck(db_dir, slug_dir, capsys)
+    _, data = _precheck(db_dir, slug_dir, capsys)
 
-    assert code == 0, data["parse_errors"]
-    snapshot = json.loads((slug_dir / SNAPSHOT_FILENAME).read_text(encoding="utf-8"))
-    assert snapshot["variable"] == {"scb/1.44": "kon"}
+    assert data["parse_errors"] == []
+    assert data["snapshot"]["updated"] is True
+    assert _snapshot_variables(slug_dir) == {"scb/1.44": "kon"}
 
 
 @pytest.mark.parametrize(
@@ -131,24 +145,24 @@ def test_committed_pinned_auto_accepted(tmp_path, capsys):
     [("churning", True), ("curating", False)],
     ids=["churning-leftover", "pinned-without-auto"],
 )
-def test_unpinned_or_absent_auto_not_refused(tmp_path, capsys, freeze, auto):
+def test_unpinned_or_absent_auto_not_refused(catalog, tmp_path, capsys, freeze, auto):
     """A churning zone's leftover auto file is ephemeral: not refused, and not
     loaded into the snapshot either. A pinned zone with no auto file is the build
     guard's case (it exempts providers without variables), not this check's."""
-    db_dir, slug_dir = _layout(tmp_path, freeze=freeze, auto=auto)
+    db_dir, slug_dir = _layout(catalog, tmp_path, freeze=freeze, auto=auto)
 
-    code, data = _precheck(db_dir, slug_dir, capsys)
+    _, data = _precheck(db_dir, slug_dir, capsys)
 
-    assert code == 0, data["parse_errors"]
-    snapshot = json.loads((slug_dir / SNAPSHOT_FILENAME).read_text(encoding="utf-8"))
-    assert snapshot["variable"] == {}
+    assert data["parse_errors"] == []
+    assert data["snapshot"]["updated"] is True
+    assert _snapshot_variables(slug_dir) == {}
 
 
-def test_inherited_git_routing_ignored(tmp_path, capsys, monkeypatch):
+def test_inherited_git_routing_ignored(catalog, tmp_path, capsys, monkeypatch):
     """A git hook exports GIT_DIR/GIT_INDEX_FILE, and a config block can carry a
     routing key. The check must still read the slug dir's own repo: a retarget at
     the unborn outer repo would find no HEAD and report nothing."""
-    db_dir, slug_dir = _layout(tmp_path, freeze="curating", auto=True)
+    db_dir, slug_dir = _layout(catalog, tmp_path, freeze="curating", auto=True)
     outer = tmp_path / "outer"
     outer.mkdir()
     _git(outer, "init")
@@ -162,43 +176,34 @@ def test_inherited_git_routing_ignored(tmp_path, capsys, monkeypatch):
 
     code, data = _precheck(db_dir, slug_dir, capsys)
 
-    assert code == 10
-    assert len(data["parse_errors"]) == 1
+    _assert_refused(code, data, slug_dir, slug_dir / _AUTO)
 
 
-def test_register_tree_guard_reads_the_loaders_pin_path(tmp_path, capsys):
+def test_register_tree_guard_reads_the_loaders_pin_path(catalog, tmp_path, capsys):
     """In the register-owned layout a register's pin sits at the provider root,
     keyed by register slug, even when its TOML is in a family folder. An auto file
     beside the nested TOML pins nothing, so it is neither refused nor loaded."""
-    db_dir, _ = _layout(tmp_path, freeze="curating", auto=False)
-    root = tmp_path / "curation"
+    db_dir = _built_db(catalog, tmp_path)
+    root = catalog.curation
     provider = root / "registers" / "scb"
-    (provider / "komvux").mkdir(parents=True)
+    (provider / "family").mkdir()
+    (provider / "sample.toml").rename(provider / "family" / "sample.toml")
     (root / GLOBAL_FREEZE_STATE_FILE).write_text('scb = "curating"\n', encoding="utf-8")
-    (provider / "komvux" / "lisa.toml").write_text(
-        '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "1"\n'
-        '[[variant]]\nnative_id = "1.10"\nslug = "individer"\n',
-        encoding="utf-8",
-    )
-    _git(root, "init")
-    _git(root, "add", "-A")
-    _git(root, "commit", "-m", "init")
-    pin = provider / "lisa.auto.toml"
+    _commit_all(root, "init")
+    pin = provider / "sample.auto.toml"
     pin.write_text('[[variable]]\nnative_id = "1.44"\nslug = "kon"\n', "utf-8")
-    (provider / "komvux" / "lisa.auto.toml").write_text(
+    (provider / "family" / "sample.auto.toml").write_text(
         '[[variable]]\nnative_id = "1.45"\nslug = "alder"\n', encoding="utf-8"
     )
 
     code, data = _precheck(db_dir, root, capsys)
 
-    assert code == 10
-    (error,) = data["parse_errors"]
-    assert str(pin) in error
+    _assert_refused(code, data, root, pin)
 
     _git(root, "add", "-f", str(pin))
     _git(root, "commit", "-m", "pin")
-    code, data = _precheck(db_dir, root, capsys)
+    _, data = _precheck(db_dir, root, capsys)
 
-    assert code == 0, data["parse_errors"]
-    snapshot = json.loads(snapshot_path(root).read_text(encoding="utf-8"))
-    assert snapshot["variable"] == {"scb/1.44": "kon"}
+    assert data["parse_errors"] == []
+    assert data["snapshot"]["updated"] is True
+    assert _snapshot_variables(root) == {"scb/1.101": "value", "scb/1.44": "kon"}
