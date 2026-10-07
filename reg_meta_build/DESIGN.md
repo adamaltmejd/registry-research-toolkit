@@ -1543,8 +1543,12 @@ require applicable column windows and reject uncovered requests. The compiler re
 delivery universe through the reader's public `Catalog.delivery_columns`; there is no
 second expansion.
 
-The existing coverage assessment keeps range/list editions "temporally unassessed";
-reuse `data_warning` for that disposition. Single-period assessment's flat union is
+The existing coverage assessment keeps range/list editions "temporally unassessed". That
+disposition is builder accounting only: it is derivable from
+`holding_table.edition_json` and reaches curators as the coverage report's
+skipped-tables line (`inventory_coverage.skipped_tables_line`). It is not written as a
+`data_warning`, which carries source limitations and interpretation assumptions only
+(`reg_meta/DESIGN.md` → "Data warnings"). Single-period assessment's flat union is
 source accounting, not `Catalog` semantic resolution. The latter remains query-time,
 including per-column storage/coding intersections, shared-window containment,
 replacement participation/fallback and additive curated windows. The compiled

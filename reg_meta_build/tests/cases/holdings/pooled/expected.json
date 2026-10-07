@@ -35,9 +35,7 @@
       "representation_canonical": "Value"
     }
   ],
-  "warnings": [
-    "holding_temporally_unassessed"
-  ],
+  "warnings": [],
   "states": [
     {
       "variable": "scb/example/value",

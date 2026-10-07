@@ -12,10 +12,7 @@ from pathlib import Path
 import pytest
 from catalog_manifest import synthetic_manifest
 from reg_meta_build.artifact_identity import committed_steward_slugs, generation_id
-from reg_meta_build.holdings_compile import (
-    compile_holdings,
-    write_holdings_assessment_warnings,
-)
+from reg_meta_build.holdings_compile import compile_holdings
 from reg_meta_build.resolved_catalog import ResolvedVariable, write_resolved_catalog
 from reg_meta_build.validate import validate_built_db
 
@@ -76,7 +73,6 @@ def test_inventory_compiles_to_physical_facts(case: Path, tmp_path: Path) -> Non
             assert conn.execute("SELECT COUNT(*) FROM holding_table").fetchone()[0] == 0
             return
         compiled = compile_holdings(conn, candidate, steward="swecov")
-        write_holdings_assessment_warnings(conn)
         actual = {
             "warnings": [
                 row[0]
