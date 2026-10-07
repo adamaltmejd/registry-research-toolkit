@@ -92,6 +92,10 @@ def _tag_dir(tag: str) -> str:
 
 @contextmanager
 def locked(root: Path) -> Iterator[None]:
+    # Runs prune `artifacts/`, `baseline/` and `report/` under the root, so never
+    # adopt an existing non-empty directory that is not already a G1 cache.
+    if root.is_dir() and any(root.iterdir()) and not (root / ".lock").exists():
+        raise RuntimeError(f"{root} is not a G1 cache (no .lock); pick an empty dir")
     root.mkdir(parents=True, exist_ok=True)
     with (root / ".lock").open("w") as handle:
         fcntl.flock(handle, fcntl.LOCK_EX)
@@ -230,8 +234,9 @@ def ensure_baseline(pins: Pins) -> Path:
     sys.stderr.write(f"g1: installing the baseline reader at {commit}\n")
     archive = subprocess.run(
         ["git", "archive", "--format=tar", commit, *BASELINE_PATHS],
-        cwd=Path(__file__).parent,
-        capture_output=True,
+        # Pathspecs are relative to cwd, so archive from the repo root.
+        cwd=Path(__file__).resolve().parents[2],
+        stdout=subprocess.PIPE,
         check=True,
     ).stdout
     env = isolated_env()

@@ -38,7 +38,7 @@ SEARCH_EVAL = REPO / "reg_webapp" / "backend" / "search_eval.toml"
 
 # Sample sizes, fixed so a run fits the G1 budget; the seed varies the draw. The
 # expensive reads set them: holdings-scope schema reads of the largest registers take
-# seconds, `get classification --variables` scans every variable (~0.9 s), and a
+# seconds, `get classification --variables` scans every variable (~9 s), and a
 # `search` averages ~0.4 s.
 HELD_REGISTERS = 24
 UNHELD_REGISTERS = 8
@@ -296,7 +296,6 @@ def _variable_cases(
                     ["get", "varinfo", provider_key, "--register", register],
                     scope=scope,
                 )
-                b.add(f"get-varinfo-name/{key}", ["get", "varinfo", label], scope=scope)
                 b.add(
                     f"get-values/{key}",
                     ["get", "values", label, "--register", register],
