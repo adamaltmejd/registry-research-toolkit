@@ -15,8 +15,8 @@ decompressed, so no ``.zst`` is kept. A stamp beside the database records the
 verified asset digest and the file's size and mtime; a later run refetches when they
 no longer match (readers open the files immutable, so they never change). A derived
 copy is ``reg-meta-build derive`` of its catalog, stamped the same way with a key over
-the base's asset digest and the builder source tree, and remade when either changes. Anything not pinned is deleted, so the cache never holds more than the
-pinned set. Callers hold ``locked`` for a whole run, which serializes runs from
+the base's asset digest and the builder source tree, and remade when either changes.
+Anything not pinned is deleted, so the cache never holds more than the pinned set. Callers hold ``locked`` for a whole run, which serializes runs from
 concurrent worktrees (they share the report directory and the CPU budget).
 """
 
