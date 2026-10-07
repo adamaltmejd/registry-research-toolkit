@@ -947,7 +947,10 @@ same_as reference edge never grants possession of a different binding.
 
 An interval holding contributes only the intersection of its exact periods with the
 request and resolved applicability; year-independent holdings require compatible
-year-independent resolver output, never artificial dates. Unknown never contributes.
+year-independent resolver output, never artificial dates. A state narrowed to its held
+window re-derives every window-derived field from that window (`period_token`,
+`warning_ids`), so a narrowed state never reports its semantic window's token or
+out-of-window warnings. `pooled` stays the source fact. Unknown never contributes.
 Without a period filter, membership uses any applicable interval or year-independent
 mapping; with one, it requires an overlap in that scope. Discovery may union admitted
 variants for a binding, but variant-specific leaves, validation and order never do.

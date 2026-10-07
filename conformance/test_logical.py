@@ -156,6 +156,12 @@ def test_logical_export_scope(case: Path, tmp_path: Path) -> None:
                     "columns": [s.delivery_column_name for s in result],
                     "windows": [[s.valid_from, s.valid_to] for s in result],
                 }
+            elif observe == "state-tokens":
+                actual = {
+                    "windows": [
+                        [s.valid_from, s.valid_to, s.period_token] for s in result
+                    ]
+                }
             else:
                 actual = {"present": bool(result)}
     assert actual == expected
