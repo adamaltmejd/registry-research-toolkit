@@ -1662,6 +1662,32 @@ policies; a tracked default policy is not evidence that a later private candidat
 identical dispositions. Changed policy or inventory bytes require a fresh acceptance.
 The public prepared sources and builder code remain separately pinned.
 
+### Holdings curation rules
+
+These rules govern how the steward inventory is curated. The resolver invariants the
+curated inventory must satisfy are `reg_meta/DESIGN.md` → "Holdings resolution
+invariants".
+
+**Editions (2026-07-14, #1137).** Each inventory table carries one explicit physical
+edition in the shared finite period grammar. A table without an edition encoded in its
+name still requires an explicit curated edition; filename inference fails for review on
+zero or ambiguous period tokens rather than guessing. Neither explicit year-independent
+scope nor retained unknown scope is inferred as an unbounded "all periods" sentinel.
+
+**Current holdings only (ratified 2026-09-01).** The inventory describes current
+holdings: a superseded delivery (a cumulative re-delivery replacing an earlier snapshot,
+e.g. the dated `FHM_NVR_Covid*` series) is discarded at curation. The one-to-one
+validation error is the supersession worklist. The generator fails for review on each
+conflict rather than auto-picking a survivor; a filename date is not proof of
+supersession. A **special-purpose sub-extract** (data already held, re-delivered at
+another level of detail for a narrow purpose: the `RTB_SaBo_*` extracts, the
+`SWECOV_SOS_*_comorb` comorbidity tables) is likewise excluded from the order surface at
+curation, under its own exclusion reason class distinct from supersession.
+
+**Partition labels (ratified 2026-09-01).** Disjoint-partition labels are explicit
+curated facts, never inferred, so a true redelivery cannot hide behind partitions
+without a reviewable curation line saying so.
+
 Inventory generation retains accepted catalog placement bounds and resolves each finite
 table edition through positively covering declared owners. Missing coverage or
 simultaneous owners produces a worklist before the inventory can be replaced. Each

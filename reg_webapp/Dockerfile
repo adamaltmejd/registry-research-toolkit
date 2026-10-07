@@ -251,6 +251,6 @@ EXPOSE 8000
 
 # The entrypoint runs the per-deploy smoke gate (golden /api/context + shallow
 # /api/catalog walk) IN-PROCESS before exec'ing uvicorn — a smoke failure exits
-# non-zero and the container never serves traffic (REFACTOR_SPEC.md → Remaining
-# test coverage → Per-deploy smoke tests).
+# non-zero and the container never serves traffic (reg_webapp/DESIGN.md →
+# Deployment).
 ENTRYPOINT ["docker-entrypoint.sh"]

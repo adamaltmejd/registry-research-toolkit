@@ -770,8 +770,9 @@ export async function applyStagedPicks(
     return { kind: "outside-scope", columns: outside };
   }
   // The add window may be the page's own `?period`, not the study window. An add
-  // it resolves wholly outside the study window is the disjoint source §12 blocks —
-  // refused here, naming the window, rather than "applied" into a blocked project.
+  // it resolves wholly outside the study window is a disjoint source, which blocks
+  // the order (reg_webapp/DESIGN.md → Common study window) — refused here, naming
+  // the window, rather than "applied" into a blocked project.
   const studyWindow = ctx.studyWindow ?? null;
   if (studyWindow !== null) {
     const disjoint = [

@@ -1,4 +1,6 @@
-# SWECOV delivery-inventory curation overlay (REFACTOR_SPEC.md §12).
+# SWECOV delivery-inventory curation overlay. Curation rules: reg_meta_build/DESIGN.md
+# → Holdings curation rules. Invariants: reg_meta/DESIGN.md → Holdings resolution
+# invariants.
 #
 # POLICY side of the inventory build: the holdings CSV
 # (input_data/swecov/SWECOV_variables_full_<date>.csv, untracked) is the
@@ -10,7 +12,7 @@
 #
 # Sections:
 #   [[exclude]]  table, reason
-#       Discard a superseded delivery. The §12 one-to-one validator turns any
+#       Discard a superseded delivery. The one-to-one validator turns any
 #       still-overlapping pair into a red build — each conflict line gets an
 #       exclude (or an edition fix) here, with the rationale in `reason`.
 #   [[edition]]  table, edition
@@ -33,7 +35,7 @@
 #       inferred. A table whose registers' rules disagree, or a rule no
 #       emitted table's register matches, is refused as a stale entry.
 #   [[partition]] table, label
-#       §12 disjoint-partition label (a slug): names which sub-population
+#       Disjoint-partition label (a slug): names which sub-population
 #       shard of one edition this table carries (survey stratum, reporter
 #       stream, municipality). Distinct labels legalize overlapping tables of
 #       one cell; extraction emits one file per shard. Explicit curated facts,
@@ -56,7 +58,8 @@ reason = "cumulative NVR covid re-delivery; superseded by FHM_NVR_Covid_20240422
 # ── DECIDED (maintainer-approved 2026-09-01): mechanical translation of the drop rules in the
 # maintainer's MONA-side get_all_variables.R (the full→curated CSV filter,
 # lines 182-205) — the pre-existing supersession policy, moved into the
-# committed overlay so §12 owns it. APPROVED by maintainer 2026-09-01.
+# committed overlay so the holdings curation rules own it. APPROVED by
+# maintainer 2026-09-01.
 
 [[exclude]]
 table = "AGIHuvud202101_Prel"
@@ -1925,7 +1928,8 @@ edition = 2020
 
 # ── DECIDED (maintainer, 2026-09-01): special-purpose sub-extracts — data
 # already held, re-delivered at another level of detail for a narrow purpose.
-# Excluded from the order surface; NOT supersessions (REFACTOR_SPEC.md §12).
+# Excluded from the order surface; NOT supersessions (reg_meta_build/DESIGN.md →
+# Holdings curation rules).
 
 [[exclude]]
 table = "RTB_SaBo_InrFlyttFlode2015"
@@ -1959,7 +1963,7 @@ reason = "special-purpose sub-extract: derived comorbidity view over SWECOV_SOS_
 table = "SWECOV_SOS_OV_comorb"
 reason = "special-purpose sub-extract: derived comorbidity view over SWECOV_SOS_OV"
 
-# ── DECIDED (maintainer-approved 2026-09-01): §12 disjoint-partition labels for the ratified
+# ── DECIDED (maintainer-approved 2026-09-01): disjoint-partition labels for the ratified
 # population-split families (default spellings — landed reg_meta partition
 # arm, Y-27). APPROVED by maintainer 2026-09-01. Prel tables are already excluded,
 # so only _Def AGI streams get labels.
@@ -2939,7 +2943,7 @@ table = "FHM_LAB_ANM"
 reason = "raw laboratory-notification stream; FHM_SMI_FALL (merged per-case) is canonical"
 
 # ── DECIDED (maintainer 2026-09-02): GbgKom SÄBO care forms are disjoint
-# sub-population shards of one variant (§12 partitions).
+# sub-population shards of one variant (disjoint partitions).
 
 [[partition]]
 table = "GbgKom_Aldreboende"
@@ -3045,7 +3049,7 @@ table = "SWECOV_SOS_EKB_HUSH"
 column = "AR"
 
 # ── DECIDED (maintainer 2026-09-02): Swedbank views + Inera ordering systems
-# are §12 PARTITIONS, not variants (supersedes the 2026-09-01 variant-split
+# are disjoint PARTITIONS, not variants (supersedes the 2026-09-01 variant-split
 # ruling): "users will always want everything (in a group) when they order" —
 # the partition test verbatim. The slicing dimension of the Swedbank views is
 # deliberately NOT modeled (labels are opaque); each view is a disjoint slice
@@ -3294,7 +3298,7 @@ table = "FK_VB_lev4"
 register_variant = "fk/vardbidrag/_default"
 
 # FK_MEKB/FK_MEKV are the barn/vuxna population shards of one variant
-# (merkostnadsersattning/mottagare) with overlapping editions — §12 disjoint
+# (merkostnadsersattning/mottagare) with overlapping editions — disjoint
 # partitions, opaque labels.
 [[partition]]
 table = "FK_MEKB_lev4"
@@ -3311,7 +3315,7 @@ label = "vuxna"
 # GDB deliveries — "closest catalog home" ruling, incl. GDB_Skolor despite its
 # catalog-homeless school-unit key (skolkod→skolenhetskod). Five name-pattern
 # groups (Ind, Ind_250m, Ast, Ast_250m, Skolor × ~35 years); same-year groups
-# share mapped columns (DeSO etc.), so each group carries a §12 partition
+# share mapped columns (DeSO etc.), so each group carries a partition
 # label below.
 
 [[assign]]

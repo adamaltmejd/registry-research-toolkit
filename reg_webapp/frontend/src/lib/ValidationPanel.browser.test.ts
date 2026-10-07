@@ -239,10 +239,10 @@ describe("ValidationPanel — researcher-language findings", () => {
   });
 
   // The WARNING label, on the partial-availability clip that now reads as one (Y-45
-  // widened the same code to disjoint requested periods): §12 orders the part that
-  // IS available, so the label reports availability rather than a fault, and says
-  // nothing about continuous ranges. The code, the info level, the diagnostic path
-  // and the requested/ordered message are the stable part — only the label moved.
+  // widened the same code to disjoint requested periods): the order includes the part
+  // that IS available, so the label reports availability rather than a fault, and says
+  // nothing about continuous ranges. The code, the info level, the diagnostic path and
+  // the requested/ordered message are the stable part — only the label moved.
   it("labels a clean result with notes, reading its partial-availability clip as information", async () => {
     await render(ValidationPanel, {
       result: {
@@ -425,7 +425,7 @@ describe("ValidationPanel — researcher-language findings", () => {
     expect(onRetry).not.toHaveBeenCalled();
   });
 
-  it("yields the green summary to a standing request error (a blocked order, §12)", async () => {
+  it("yields the green summary to a standing request error (a blocked order)", async () => {
     // `/order` fail-closes projects that VALIDATE clean, so the last green
     // result can coexist with an order block. Announcing both — the block
     // directly above "Draft valid" — tells the researcher two contradictory
@@ -446,7 +446,7 @@ describe("ValidationPanel — researcher-language findings", () => {
     expect(document.body.textContent).not.toContain(ORDER_NOTE);
   });
 
-  it("renders each order finding like a validation issue, located by its coordinates (§12)", async () => {
+  it("renders each order finding like a validation issue, located by its coordinates", async () => {
     // The 422 carries findings as DATA, so each one gets its own row — human
     // title, demoted code, message, and the card it points at — instead of one
     // flattened blob. The materializer names its location by VALUE (source name

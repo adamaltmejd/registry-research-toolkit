@@ -998,6 +998,12 @@ Exceptions are explicit:
 
 ### Inventory TOML authoring contract (`inventory.py`)
 
+**Format (ratified 2026-08-31): the inventory is authored as TOML**, following the
+repo's generated-`auto.toml`-plus-curated-overrides pattern. Humans touch it (explicitly
+curated editions, comments carrying curation rationale), so a comment-capable format is
+required. A `project_data.json` source is a logical selection; a steward's physical
+delivery topology is this separate data.
+
 Keep `version = 1`: requiring `ColumnMapping.representation` changes validation, not
 accepted bytes (both accepted and legacy inventories are fully explicit). Changed input
 bytes still require fresh acceptance. Frozen models reject unknown keys, malformed
@@ -1020,6 +1026,38 @@ Partitions keep `validate_slug`'s lowercase, letter-initial, single-hyphen gramm
 `_default`, `class` and period-shaped values are rejected. They describe explicit shards
 of delivery, not researcher-selectable catalog populations. Unmapped physical columns
 retain their authored nonblank reason where supplied; no reason is synthesized.
+
+### Holdings resolution invariants (ratified 2026-09-01)
+
+**One-to-one resolution.** Every admitted
+`(register_variant, variable, representation, period)` cell resolves to exactly **one**
+physical `(table, column)`: the extraction tool never chooses between sources. Inventory
+validation, and therefore the compiled steward artifact's build, **errors** whenever two
+mappings could serve the same cell: same variant + variable, same canonical
+representation and overlapping editions, whether across tables or across columns of one
+table. This error is also the supersession worklist; the curation rules that resolve it
+(current holdings only, supersession, sub-extract exclusions) are
+`reg_meta_build/DESIGN.md` → "Holdings curation rules". Zero-column cells are not
+errors; they are simply not admitted. Several mappings may still let one physical
+table/column serve several register variants (the combined Utrikeshandel table), and
+several tables may map the same logical coordinate over **disjoint** editions (the
+ordinary annual series).
+
+**Disjoint-partition arm.** Some registers arrive as several tables partitioned by
+sub-population **within one edition**: survey strata (`ITftg_Mikro`/`ITftg_Stora`),
+reporter streams (`Arb_`/`Soc_AGIIndivid`), administrative splits (`NDR_adults` over/
+under 70), per-municipality deliveries (SÄBO). They are deliberately unified as **one**
+user-facing variant: nothing semantic differs across the shards, and no researcher
+should have to know delivery trivia to get the whole register. Partitions are therefore
+an inventory/order-layer concept, never a catalog concept. The one-to-one invariant
+holds per `(cell × partition)`: two tables mapping the same cell over overlapping
+editions conflict **unless** they carry distinct partition labels (curated, never
+inferred: `reg_meta_build/DESIGN.md` → "Holdings curation rules"). The materializer
+matches every partition of a cell, and **extraction preserves delivery topology: what
+goes in as two tables comes out as two files**, never a union (see "Order materializer
+and manifest" below). Under the invariant, "one file per (ordered variant, edition
+segment, partition)" and "one file per table" coincide; a combined table backing several
+ordered variants still emits per ordered variant.
 
 ### Build-time consistency gate
 
@@ -1048,7 +1086,9 @@ selection meets a steward's physical delivery topology. It returns either a comp
 `OrderManifest` or a non-empty set of `OrderFinding`s — never a partial order. The
 compiled contract above owns the facts. The FastAPI endpoint and the CLI/plugin are thin
 adapters over this one function, which is what makes their results byte-identical; all
-logic (and all fail-closing) lives here.
+logic (and all fail-closing) lives here. There is one common manifest and no per-steward
+export template (2026-07-14, #1137). Why this domain code lives in `reg_meta` rather
+than a new package is `ARCHITECTURE.md` → "Why this split".
 
 **Artifact-driven materialization.** `import_manifest.catalog_artifact_kind = "catalog"`
 selects the **global-deployment fallback**: it has no physical delivery topology, so
@@ -1062,15 +1102,18 @@ other: `ProjectData.steward` must equal `"global"` (`order.GLOBAL_STEWARD`).
 
 Per `sources[*].bindings[*]`, in project declaration order:
 
-1. **Availability clip first.** A source period means "these columns, wherever each is
-   available inside this window". Each binding is clipped to its own availability — the
-   union of its `variable_state` windows at the source's variant, via
-   `Catalog.resolve_at` — so a column first delivered in 2019 under a 2018–2020 source
-   does not widen the order into a cross-product. Every clip is reported as a
-   `ClipReport` on the manifest: informational, never silent, never an error — and
-   recorded BEFORE the ambiguity gate can return, so a binding that is both clipped and
-   ambiguous surfaces both. This is also the seam a deferred per-binding period override
-   would narrow (§12); no schema change was needed.
+1. **Availability clip first (intersection semantics, ratified 2026-08-31).** A source
+   period means "these columns, wherever each is available inside this window". This
+   resolves the variable-by-period matrix (dogfood 2026-08-30 P0.4) without a schema
+   change: one source per variant, no cross-product over-order. Each binding is clipped
+   to its own availability — the union of its `variable_state` windows at the source's
+   variant, via `Catalog.resolve_at` — so a column first delivered in 2019 under a
+   2018–2020 source does not widen the order into a cross-product. Every clip is
+   reported as a `ClipReport` on the manifest: informational, never silent, never an
+   error — and recorded BEFORE the ambiguity gate can return, so a binding that is both
+   clipped and ambiguous surfaces both. This is also the seam a deferred per-binding
+   period override would narrow (see "Deferred (2026-08-31): per-binding period
+   override" below); no schema change was needed.
 2. **Representation slicing.** The clipped request is partitioned into slices of
    constant canonical representation (`delivery_column_name`). A sequential rename fans
    out into two slices; two columns valid at the SAME instant with no
@@ -1100,24 +1143,27 @@ Per `sources[*].bindings[*]`, in project declaration order:
    of the availability-clipped request left uncovered blocks the WHOLE order with the
    exact gap (`coverage_gap`), and a slice no mapping serves blocks with
    `mapping_missing`. Overlap alone never buys a partial manifest. The materializer
-   never CHOOSES between tables and needs no chooser: §12's one-to-one resolution
-   invariant (previous section) means a valid inventory offers at most one
-   `(table, column)` per cell instant **per partition**, so the several contributions
-   one slice can collect are either disjoint pieces of it (the annual series) or
-   distinct partitions of it (the sub-population split), and both are wanted whole.
-   Coverage needs no partition arm of its own: contributions already union across
+   never CHOOSES between tables and needs no chooser: the one-to-one resolution
+   invariant ("Holdings resolution invariants" above) means a valid inventory offers at
+   most one `(table, column)` per cell instant **per partition**, so the several
+   contributions one slice can collect are either disjoint pieces of it (the annual
+   series) or distinct partitions of it (the sub-population split), and both are wanted
+   whole. Coverage needs no partition arm of its own: contributions already union across
    matching tables, and partitions are simply more matching tables. In global-fallback
    mode the slice's own canonical column serves it under a blank table, so the slice
    covers itself exactly and the same gate runs unchanged — what canonical resolution
    did not deliver has already blocked upstream as an unresolved, unavailable or
    ambiguous binding.
 4. **Emission.** Every matching table is emitted whole, **every partition included** —
-   v1 has no table chooser, no population field and no row filter (the §12 `simplify:`
-   stands, with SWECOV's one-large-SQL-table-per-register delivery as the upgrade
-   trigger). Entries preserve project source/binding order; the fan-out inside a binding
-   sorts by table, canonical edition, then physical column. A partitioned table's entry
-   carries its label on the physical coordinate, so extraction preserves delivery
-   topology: what goes in as two tables comes out as two files.
+   v1 has no table chooser, no population field and no row filter (see the row-filter
+   `simplify:` below). A matching multi-period table is ordered whole, even when its
+   matched slice covers only a subset of the table's edition. Steward entries carry the
+   literal physical `table` and physical `column`: the canonical `representation` is a
+   join discriminator, not an output substitute, and `display_name` is not a delivery
+   coordinate. Entries preserve project source/binding order; the fan-out inside a
+   binding sorts by table, canonical edition, then physical column. A partitioned
+   table's entry carries its label on the physical coordinate, so extraction preserves
+   delivery topology: what goes in as two tables comes out as two files.
 
 **Fail-closed, one pass.** A blocking result enumerates every finding across every
 binding — `steward_mismatch`, `project_empty`, `period_not_orderable`,
@@ -1126,23 +1172,29 @@ binding — `steward_mismatch`, `project_empty`, `period_not_orderable`,
 `coverage_gap`, `column_window_unavailable` — so a researcher fixes the whole order in
 one edit instead of one gap per round trip. `ProjectData.steward` must equal the
 deployment's steward — the manifest's, or `"global"` in fallback mode (provenance is
-checked before anything resolves; retargeting is deliberately not a feature) — and an
-empty project stays a valid draft that cannot produce a header-only manifest.
+checked before anything resolves; retargeting is deliberately not a feature: a user who
+intends to change provenance edits the JSON and uploads it again, and an upload to a
+steward deployment is always validated against that deployment's compiled holdings) —
+and an empty project stays a valid draft that cannot produce a header-only manifest.
+Missing, unresolved or ambiguous logical-to-physical mappings are blocking findings,
+never best-effort labels.
 
-**The manifest is a versioned JSON contract.** Version 1 is **in definition** while it
-has no external consumer: shape changes stay within version 1 rather than churning the
-number (operator decision, Y-19/1 review). Bump discipline — an incompatible change
-bumps `ORDER_MANIFEST_VERSION`, pre-v1 changed-not-migrated — binds from the first
-external reader (the steward-side extract system). `OrderManifest` (version
-`ORDER_MANIFEST_VERSION`) carries provenance (mode, steward, project name / schema
-version / declared reg_meta version / SHA-256 of the project's canonical JSON, plus the
-catalog DB's `schema_version` and `generation_id`), the resolved entries — logical
-coordinate (`provider,register,variant,variable` + the canonical representation), the
-availability-clipped `requested_period`, and the physical coordinate
-(`edition`,`table`,`column`, plus the table's `partition` label when it has one) — and
-the informational clips. `partition` is the manifest's only optional field: an absent
-key IS the "no partition" spelling (`to_json` serializes with `exclude_none`), so an
-inventory that uses no partitions produces exactly the bytes it did before the arm
+**The manifest is a versioned JSON contract (ratified 2026-08-31, replacing the earlier
+nine-column CSV decision).** A human-readable table rendering may exist as a derived
+view for the executing data manager; the JSON is the contract. Version 1 is **in
+definition** while it has no external consumer: shape changes stay within version 1
+rather than churning the number (operator decision, Y-19/1 review). Bump discipline — an
+incompatible change bumps `ORDER_MANIFEST_VERSION`, pre-v1 changed-not-migrated — binds
+from the first external reader (the steward-side extract system). `OrderManifest`
+(version `ORDER_MANIFEST_VERSION`) carries provenance (mode, steward, project name /
+schema version / declared reg_meta version / SHA-256 of the project's canonical JSON,
+plus the catalog DB's `schema_version` and `generation_id`), the resolved entries —
+logical coordinate (`provider,register,variant,variable` + the canonical
+representation), the availability-clipped `requested_period`, and the physical
+coordinate (`edition`,`table`,`column`, plus the table's `partition` label when it has
+one) — and the informational clips. `partition` is the manifest's only optional field:
+an absent key IS the "no partition" spelling (`to_json` serializes with `exclude_none`),
+so an inventory that uses no partitions produces exactly the bytes it did before the arm
 existed, and any future optional field must accept the same reading. This shape change
 stays within version 1 under the in-definition rule above. It is machine-written here
 and machine-read offline by the steward-side extract system, so it is self-contained: no
@@ -1151,13 +1203,19 @@ frozen `extra="forbid"` models. `to_json()` is the canonical serialization (sort
 stable entry order, trailing newline); repeated runs over the same inputs are
 byte-identical. Periods render through the shared grammar's inverse
 (`period_token_for_bounds`), so a manifest speaks the same period spelling as a project
-period and an inventory edition. `extraction_filenames(entry)` pins §12's output-naming
-rule — one UTF-8 CSV per variant + partition + period unit — in the contract rather than
-leaving it to the extractor. A partitioned entry inserts its label after the variant
-slug (`agi_individuppgifter-agi_arb_2021-03.csv`), which is what keeps two partitions of
-one (variant, edition segment) from colliding into one file; §12 extracts them
-separately rather than unioning them, because shard identity (reporter stream,
-municipality) may not exist as a column, so a union would destroy information.
+period and an inventory edition. `extraction_filenames(entry)` pins the output-naming
+rule — one UTF-8 CSV per variant + partition + period unit, in **slug spelling** derived
+from the manifest entry (`lisa_individer-15plus_2019.csv`) — in the contract rather than
+leaving it to the extractor. A multi-period range segment renders `lo..hi` and extracts
+whole as one file: v1 has no row filter, so a range is never split per year. Steward
+display casing is not carried in the manifest (decided 2026-08-31, A-28; re-add it only
+if a steward-side consumer concretely needs display-cased filenames). A partitioned
+entry inserts its label after the variant slug
+(`agi_individuppgifter-agi_arb_2021-03.csv`), which is what keeps two partitions of one
+(variant, edition segment) from colliding into one file. They are extracted separately
+rather than unioned because shard identity (reporter stream, municipality) may not exist
+as a column, so a union would destroy information; an identity-redundant split merely
+costs the researcher one concatenation they can always do themselves.
 
 Pure domain code: no FastAPI, no filesystem writes, no timestamps (the only time-shaped
 manifest values come from the DB manifest and the project). A global-fallback entry is
@@ -1165,9 +1223,22 @@ the same shape with a blank `table`, the canonical column in `column`, and
 `edition = requested_period`, so `extraction_filenames` gives it one file per requested
 period segment without a special case.
 
-**The adapter door.** §12's "both product surfaces emit byte-identical results" holds
-only if the adapters are genuinely thin, so the two things they would otherwise each
-re-type live here too, beside the materializer:
+**Deferred (2026-08-31): per-binding period override.** No schema change now:
+intersection semantics cover every observed case. If a researcher ever deliberately
+wants *less* than the availability intersection, the shape is a binding-level period
+override narrowing below the variant-level source period independent of availability
+(e.g. source LISA 2000–2020 but `DispInk09` only 2000–2002 even though it exists later
+too). File it when someone actually asks; the availability clip leaves the seam (an
+override is just a further clip).
+
+`simplify:` v1 records no row filter and includes the whole matching table. Add
+table-specific period predicates when steward delivery/extraction consumes the manifest.
+SWECOV's one-large-SQL-table-per-SoS-register delivery is the known upgrade trigger; it
+will need period-column `WHERE` clauses later.
+
+**The adapter door.** The rule that both product surfaces emit byte-identical results
+holds only if the adapters are genuinely thin, so the two things they would otherwise
+each re-type live here too, beside the materializer:
 
 - `parse_project(data)` is the ONE read boundary for untrusted project bytes, used by
   the CLI's `read_project(path)` and the FastAPI body reader alike. It refuses a
@@ -1268,11 +1339,11 @@ built when the first real extraction needs a companion file:
 ## Project semantic validation (`semantic.py`)
 
 The §6.8.3 reg_meta-backed validation layer is shared `reg_meta` project code beside the
-order materializer (§12: "the materializer and semantic resolution are shared `reg_meta`
-domain code, with thin FastAPI and CLI/plugin adapters"). It cannot live in
-`reg_schema`: `reg_schema` stays reg_meta-free and cannot resolve against a live DB, and
-lists these codes as defined-but-not-emitted on its own surface. The dependency
-direction is `reg_meta → reg_schema`, never the reverse.
+order materializer: the materializer and semantic resolution are shared `reg_meta`
+domain code, with thin FastAPI and CLI/plugin adapters (see "Order materializer and
+manifest"). It cannot live in `reg_schema`: `reg_schema` stays reg_meta-free and cannot
+resolve against a live DB, and lists these codes as defined-but-not-emitted on its own
+surface. The dependency direction is `reg_meta → reg_schema`, never the reverse.
 `validate_semantic(project, catalog)` emits the same frozen `reg_schema.ValidationIssue`
 shape as the structural layer, takes a `Catalog`, and leaves connection ownership to its
 caller.
