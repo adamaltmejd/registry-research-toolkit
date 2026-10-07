@@ -1664,7 +1664,16 @@ def _cmd_resolve(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     else:
         raw = sys.stdin.read().strip()
         if raw:
-            parsed = json.loads(raw)
+            try:
+                parsed = json.loads(raw)
+            except json.JSONDecodeError as exc:
+                raise RegMetaError(
+                    exit_code=EXIT_USAGE,
+                    code="usage_error",
+                    error_class="usage",
+                    message=f"stdin is not valid JSON: {exc}",
+                    remediation="Use --columns or pass JSON array of strings on stdin.",
+                ) from exc
             if isinstance(parsed, list):
                 columns = [item for item in parsed if isinstance(item, str)]
 
@@ -3270,7 +3279,11 @@ def _prompt_first_run_download(
         f"{header}\nMissing: " + ", ".join(parts) + ".\nDownload now? [y/N] "
     )
     sys.stderr.flush()
-    if input().strip().lower() not in ("y", "yes"):
+    try:
+        answer = input()
+    except EOFError:  # Ctrl-D at the prompt declines, like an empty answer.
+        answer = ""
+    if answer.strip().lower() not in ("y", "yes"):
         return
 
     from .download import download_db, download_docs_db

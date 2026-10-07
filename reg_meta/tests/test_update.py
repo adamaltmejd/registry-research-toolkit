@@ -384,6 +384,16 @@ def test_first_run_docs_download_reports_missing_docs_asset(
     )
 
 
+def test_unconfirmed_update_without_tty_is_a_usage_error(net, uv, monkeypatch, capsys):
+    net.releases = [release("reg_meta/v99.0.0", DB, DOCS)]
+    monkeypatch.setattr(sys, "stdin", io.StringIO(""))
+    code = run(["--format", "json", "update"])
+    error = json.loads(capsys.readouterr().out)["error"]
+    assert (code, error["code"]) == (2, "usage_error")
+    assert "--yes" in error["remediation"]
+    assert net.downloads == []
+
+
 # --- package upgrade decision -------------------------------------------------
 
 

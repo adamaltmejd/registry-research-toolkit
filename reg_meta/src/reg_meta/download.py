@@ -19,7 +19,7 @@ from .doc_db import (
     DOCS_SOURCE_FILE,
     open_doc_db,
 )
-from .errors import EXIT_CONFIG, EXIT_NETWORK, RegMetaError
+from .errors import EXIT_CONFIG, EXIT_NETWORK, EXIT_USAGE, RegMetaError
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -331,6 +331,14 @@ def download_db(
     url = DOWNLOAD_URL.format(tag=resolved_tag, asset=catalog_asset_name(catalog))
 
     if not yes:
+        if not sys.stdin.isatty():
+            raise RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="usage_error",
+                error_class="usage",
+                message="Downloading the database needs confirmation, but stdin is not a terminal.",
+                remediation="Pass --yes to `reg-meta update` to download without a prompt.",
+            )
         sys.stderr.write(
             f"This will download ~400 MB and decompress to ~1.6 GB.\n"
             f"  Tag:         {resolved_tag}\n"
@@ -338,7 +346,10 @@ def download_db(
             f"Continue? [y/N] "
         )
         sys.stderr.flush()
-        answer = input().strip().lower()
+        try:
+            answer = input().strip().lower()
+        except EOFError:  # Ctrl-D at the prompt declines, like an empty answer.
+            answer = ""
         if answer not in ("y", "yes"):
             sys.stderr.write("Aborted.\n")
             return {"aborted": True}
