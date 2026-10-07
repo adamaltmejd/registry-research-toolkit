@@ -1,4 +1,4 @@
-# Stage-0 spike (RUST_RUNTIME_SPEC.md §10). Throwaway: deleted when stage 1 starts.
+# Stage-0 spike (RUST_RUNTIME_SPEC.md §10). Throwaway: deleted by stage-1 package 1.5.
 [workspace]
 resolver = "3"
 members = ["core", "server"]

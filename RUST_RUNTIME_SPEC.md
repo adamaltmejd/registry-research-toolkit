@@ -63,7 +63,7 @@ Duplication found along the way:
   applies its own best-bets ranking and golden pins (`routes/search.py`, `golden.py`).
   CLI users and agents never see that ranking.
 - **Four period grammars.** `reg_meta/fqid.py`, `reg_schema/structural.py`, and the
-  frontend's hand-written `period.ts` (1,115 lines) and `validation.ts`. A parity test
+  frontend's hand-written `period.ts` (1,173 lines) and `validation.ts`. A parity test
   keeps two of them aligned.
 - **Four text folds.** Python `str.lower` (`py_lower`), `str.casefold`,
   NFKD-strip-casefold, and SQLite's ASCII-only `NOCASE`/`LOWER`, mixed without a stated
@@ -104,7 +104,7 @@ About 70% of the hotspots are A or B. The main ones:
   | ------------------------------------------------------------------------------------------------------------------------ | ----- | ----------------------------------------------------------------------- |
   | `py_lower(col) LIKE py_lower(?)` scans (alias 82k rows, variable 54k)                                                    | B     | `*_folded` columns + index; trigram FTS5 for substring match            |
   | `py_catalog_column` UDF, `representative_columns`, spelling caches                                                       | A     | `canonical_column` stored on states, aliases, windows, warnings         |
-  | `_expand_state_windows`, alias-window participation rules                                                                | A + C | `state_projection` relation (see below); request fallback stays         |
+  | `_expand_state_windows`, alias-window participation rules                                                                | A + C | `expanded_state` relation (see below); request fallback stays           |
   | `register_variable_deliveries`, `_fuse_windows`, coverage                                                                | A     | `browse_delivery`, `delivery_window` and `resolver_column` (see below)  |
   | `_fuse_provider_held_deliveries`, `scope_predicate` string splicing                                                      | A     | Per-scope rows (`scope = 'holdings'`) in steward artifacts              |
   | `_state_warning_ids` (one `data_warnings` call per state)                                                                | A     | `state_warning` link table                                              |
@@ -119,25 +119,36 @@ Consequences:
 
 - **The resolver gets one home, in the build** (the derive step, section 4). The
   alias-window, replacement and coding rules are implemented once, in Python, where
-  validation can check them. The reader never re-implements them. This is the largest
-  reduction in port risk: the hardest semantics never need a second implementation.
+  validation can check them. The reader keeps only two small request-dependent rules
+  over compiled rows: the window fallback and warning clipping (below). This is the
+  largest reduction in port risk: the hardest semantics never need a second
+  implementation.
 - **Window participation is only partly compiled.** Which windows a state has, and their
   representation metadata, are artifact facts. Whether a window *replaces* its base
-  state depends on the requested period: a period that no window overlaps falls back to
-  the base state (`_participating_windows` in `catalog.py`; pinned by
-  `test_gap_year_month_falls_back_to_annual_state`). That fallback stays in the reader
-  (class C), as a small rule over compiled rows. Gap, partial-overlap and spanning cases
-  are pinned as `api` cases before the moved code is reduced.
+  state depends on the requested period (`_applicable_alias_windows` in `catalog.py`;
+  pinned by `test_gap_year_month_falls_back_to_annual_state`). The rule: windows replace
+  the base state only when a source (non-curated) window whose spelling matches the base
+  column overlaps the request; curated windows are always additive; a period no source
+  window overlaps falls back to the base state. That rule stays in the reader (class C).
+  Gap, partial-overlap and spanning cases are pinned as `api` cases before the moved
+  code is reduced.
 - **Projected states are their own relation.** `variable_state.state_id` is a primary
   key, and a year's month windows share their annual state's `state_id`, so projected
   states cannot be rows of `variable_state` without changing its grain under the Python
-  reader. `state_projection` has its own identity, references the source state, and
-  links warnings and lineage through it.
+  reader. `expanded_state` has its own identity and references the source state; lineage
+  keeps the source state's identity.
+- **Warning attribution is A + C.** Warning ids are computed per expanded window today,
+  then again after clipping to held and requested periods (`_state_warning_ids` calls in
+  `catalog.py`; oracle `conformance/cases/logical/narrowed-state-warnings`). So warning
+  candidates belong to each expanded state (base fallback included), with column, scope
+  and bounds; the reader filters them after request-dependent clipping. A join through
+  the source state alone would leak or drop warnings.
 - **Browse and resolver eligibility are different contracts.** Browse deliberately keeps
   alias windows that no state contains (`register_variable_deliveries`); holdings
   accepts only resolver-emitted columns (`holdings_compile.py`). `browse_delivery`
   serves browse; `resolver_column` is the only relation that authorizes a holdings
-  mapping. Each has its own invariants.
+  mapping. It is the whole-history reference universe of resolver-emitted columns, not
+  applicability to one holding edition. Each has its own invariants.
 - **The compiler stops importing the reader.** `holdings_compile` canonicalizes against
   the derived `resolver_column` relation.
 - **Scope becomes data.** Only two scopes exist (`reference`, `holdings`), and holdings
@@ -146,17 +157,20 @@ Consequences:
 - **Reader size.** Of ~10.9k lines in `catalog.py` + `queries.py`, an estimated 35–40%
   of lines and 10–15% of the algorithmic logic remain. The remainder is mostly SQL plus
   sort/merge.
-- **Artifact size.** Roughly +70–100 MB (6–8%) before `state_projection`, which slice 3b
+- **Artifact size.** Roughly +70–100 MB (6–8%) before `expanded_state`, which slice 3b
   re-estimates. Keep it a narrow relation referencing base states, not a copy of their
   content (+200 MB). Do not precompute code owners (up to 3.9M rows).
-- **New invariants the derive validator must own:** browse delivery windows disjoint;
-  `resolver_column` equal to the resolver's emitted columns; one canonical spelling per
-  (variable, variant, fold); chain/terminal tables acyclic and consistent with
-  `*_replaced_by` at the manifest year; `state_warning` equal to the attribution
-  predicate; held-\* tables equal to holdings facts; aggregate tables equal to a
-  recomputation; fixed insertion order for byte-identical output.
+- **New invariants `validate_built_db` must own** (one validator, extended; not a second
+  one): browse delivery windows disjoint; `resolver_column` equal to the resolver's
+  emitted columns; one canonical spelling per (variable, variant, fold); chain/terminal
+  tables acyclic and consistent with `*_replaced_by` at the manifest year;
+  `state_warning` equal to the attribution predicate; held-\* tables equal to holdings
+  facts; aggregate tables equal to a recomputation; fixed insertion order for
+  byte-identical output.
 - **Lost test seam.** The `classification_as_of_year` override goes away. Tests build
-  artifacts with a different manifest year instead.
+  artifacts with a different manifest year instead. The build's own validator also uses
+  it (`classification_succession_as_of_year` in `reg_meta_build/validate.py`), so its
+  replacement lands with the chains slice (3d).
 
 ## 4. Working structure: decouple the refactor from the slow build
 
@@ -171,20 +185,21 @@ downstream of curation.
   track (section 11) speeds it up.
 - **Derive** — a new step, `reg-meta-build derive`, that reads a built database and
   writes the derived tables of section 3. It is a pure function of the base artifact,
-  deterministic, and has its own validator. Steward artifacts interleave it with
-  `extend-db`, because holdings must see the steward's own metadata (`extend_db.py`
-  inserts the steward core graph before compiling holdings): insert the steward core →
-  derive the reference tables over base plus overlay → compile holdings → derive the
-  holdings tables.
+  deterministic, and its checks join `validate_built_db`. Steward artifacts interleave
+  it with `extend-db`, because holdings must see the steward's own metadata
+  (`extend_db.py` inserts the steward core graph before compiling holdings): insert the
+  steward core (graph, slugs and warnings) → derive the reference tables over base plus
+  overlay → compile holdings → derive the holdings tables.
 
 **The derived artifact has its own identity contract** (stage 2). Base identity,
 derivation identity (derive code and schema minor) and the admitted schema versions all
-feed the served generation, so a re-derived artifact can never answer under a cursor
-issued for the previous one. Derive reads an immutable base, publishes atomically,
-leaves base bytes unchanged, rejects a stale derivation, and is byte-identical on
-repeat. Today the builder requires exact schema equality (`db.py`) and the generation
-records one schema version and builder commit (`artifact_identity.py`); both change in
-stage 2.
+feed the served generation. Changed derivation inputs change the generation, so no
+cursor outlives them; identical inputs give an identical generation and identical bytes.
+Derive reads an immutable base, publishes atomically, leaves base bytes unchanged and
+rejects a stale derivation. Today the builder requires exact schema equality
+(`reg_meta_build`'s `db.py`; the reader already accepts a higher minor) and the
+generation records one schema version and builder commit (`artifact_identity.py`); both
+change in stage 2.
 
 **Bootstrap derive by moving, not rewriting.** The first implementation of each derived
 table calls today's reader functions (`Catalog.states`, the delivery fusing, the chain
@@ -192,40 +207,44 @@ walks), moved into `reg_meta_build`. Its output then equals what the current rea
 returns, by construction, and the risky resolver logic moves without semantic change.
 Measured cost: `Catalog.states` over a 300-variable sample takes 6 ms per variable, so
 all 54k variables take ~5 min on one core, about 1 min in parallel. Replace a moved
-function with set-based SQL only when the tier-1 budget below requires it.
+function with set-based SQL only when the G1 budget below requires it.
 
 **Ship derived tables additively.** The schema gate accepts a database whose minor
 version is at least the code's. Derived tables land as schema 9.x minor bumps, so the
 current Python reader and webapp keep working on every intermediate release. There is no
 big-bang artifact cutover; the major bump comes only when the Python reader is deleted.
 
-**Develop against pinned artifacts.** Refactor work uses a pinned release base (0.41.0
-today, moved forward only at agreed checkpoints) plus the synthetic conformance
-fixtures. Curation work keeps changing the base; the refactor changes derive and the
-reader. Neither waits for the other.
+**Develop against pinned artifacts.** Refactor work uses a pinned release (recorded by
+package 1.5) plus the synthetic conformance fixtures. Curation work keeps changing the
+base; the refactor changes derive and the reader. Neither waits for the other. A
+**re-pin package** moves the pin to a newer release: it runs G1 on the old and new pin
+and records any difference. Re-pin at least at every maintainer checkpoint.
 
-**Three verification tiers, with budgets.**
+**Three verification gates, with budgets.** They are named G0–G2 so they are not
+confused with the test tiers 1–3 in `ARCHITECTURE.md`.
 
-  | Tier | What runs                                                                                                                                                                                      | Budget      | When                                         |
-  | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | -------------------------------------------- |
-  | 0    | Unit tests and conformance on synthetic artifacts, Python and Rust. Today 215 conformance cases take 12 s, synthetic builds included.                                                          | under 30 s  | every change                                 |
-  | 1    | Derive on the pinned real base, then a differential run of the baseline reader against derived tables (from stage 2) and the Rust reader (per operation, as it lands), on both artifact kinds. | under 5 min | every PR touching derive or the reader       |
-  | 2    | Full base build plus derive and tier 1 on the result.                                                                                                                                          | ~1 h today  | batch checkpoints and releases, never per PR |
+  | Gate | What runs                                                                                                                                                                                                                                                     | Budget      | When                                   |
+  | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | -------------------------------------- |
+  | G0   | `uv run python -m pytest conformance <touched packages> -n auto -q` and `cargo test --workspace`, all on synthetic artifacts. Conformance alone took 24 s serially (299 cases, 2026-10-07).                                                                   | under 60 s  | every change                           |
+  | G1   | Derive on the pinned real artifacts, then the differential harness: the baseline reader against derived tables (from stage 2) and the Rust server (per operation, as it lands), on both artifact kinds. Runs locally from a shared artifact cache, not in CI. | under 5 min | every PR touching derive or the reader |
+  | G2   | Full base build plus derive and G1 on the result.                                                                                                                                                                                                             | ~1 h today  | checkpoints and releases, never per PR |
 
-The tier-1 baseline is the Python reader **at a pinned commit, installed in its own
+The G1 baseline is the Python reader **at a pinned commit, installed in its own
 environment**, never the checkout under change, so a regression moved into derive cannot
-validate itself. It runs on both artifact kinds (the global catalog and the SWECOV
-steward artifact) and both scopes, over generated queries (every register, seeded
+validate itself. It reads the original pinned artifacts; the implementations under test
+read derived copies of them. It runs on both artifact kinds (the global catalog and the
+SWECOV steward artifact) and both scopes, over generated queries (every register, seeded
 variable samples, holdings-specific strata, the search-eval corpus terms). Each accepted
 difference is recorded as a named semantic exception in the harness.
 
-A slow tier is a defect to fix, not a reason to skip the tier. If derive exceeds its
+A slow gate is a defect to fix, not a reason to skip the gate. If derive exceeds its
 budget, make the slow table set-based before adding more tables.
 
-**Work in vertical slices.** Each slice adds derived tables, the Rust reader functions
-that read them, and their conformance and differential cases, and is verified at tiers 0
-and 1 only. Slices share the pinned base, so independent slices can be built in parallel
-by separate agents. Slice order is set by risk: admission + search first, order last.
+**Work in vertical slices.** Each slice adds derived tables, the Rust operations that
+read them, their conformance and differential cases, and the SPA's switch to them, and
+is verified at G0 and G1 only. Slices share the pinned artifacts, so independent slices
+can be built in parallel by separate agents. Slice order is set by risk: admission +
+search first, order last.
 
 **Execution protocol** *(decision 14)*. Agents build the refactor, one work package per
 PR. These rules keep them on target between maintainer checkpoints without a human in
@@ -236,29 +255,38 @@ the loop:
   scope, its acceptance commands and case IDs, and what it depends on. A package that
   does not fit in about ten lines is split. A stage's packages are written when the
   stage starts, against the merged state, never further ahead.
-- **Done is mechanical.** A PR is done when its acceptance commands pass, tier 0 (and,
-  from stage 2, tier 1) is green within budget, and a fresh agent that did not write it
-  has reviewed it against its package and this file. The implementing agent never
-  declares its own work done.
-- **Escalate, don't decide.** An agent stops and reports instead of changing any of: the
-  operation table or error catalog (section 7), a decision in section 13, the meaning of
-  an existing golden expected file, the schema major version, a tier budget, or the
-  dependency list this file names. A golden change that only converts a shape as the
-  approved operation table prescribes is not an escalation; it is reviewed like any
-  diff. Everything else the agent decides, and records in the PR.
+- **Done is mechanical.** A PR is done when its acceptance commands pass, G0 (and, from
+  stage 2, G1) is green within budget, and a fresh agent that did not write it has
+  reviewed it. The review is a PR review that lists each acceptance command it reran
+  with its result, and checks the diff against the package's paths and out-of-scope
+  list. The implementing agent never declares its own work done.
+- **Escalate, don't decide.** An agent stops instead of changing any of: the operation
+  table or error catalog (`conformance/api/`), a decision in section 13, the meaning of
+  an existing golden expected file, the schema major version, a gate budget, or the
+  dependency list this file names. It records the question as a PR comment, marks the
+  package blocked, and the orchestrating session takes it to the maintainer. A golden
+  change that only converts a shape as the approved operation table prescribes is not an
+  escalation; it is reviewed like any diff. Everything else the agent decides, and
+  records in the PR.
+- **Tracker corrections are not escalations.** A PR that fixes a verifiable code fact in
+  this file (a wrong name, count or path) goes through like any other. A correction that
+  changes a decision, a package's scope or its acceptance is an escalation.
+- **Who merges.** The orchestrating session squash-merges a PR once CI is green and the
+  review passes, and keeps the in-flight list. Packages do not edit this file except
+  where their package says so.
 - **Small PRs, squash-merged to main.** Everything before stage 4 is additive (schema
-  9.x minor bumps, a new server beside FastAPI), so main stays deployable and there is
-  no long-lived integration branch.
+  9.x minor bumps, a new server beside FastAPI with the edge routing ported paths to
+  it), so main stays deployable and there is no long-lived integration branch.
 - **At most three packages in flight.** Files every slice would edit (route and tool
-  registration, the derived-table list, conformance indexes) are split into one file per
-  slice. Schema minor bumps merge one at a time.
-- **Tier 2 never runs inside a package.** The maintainer runs it at checkpoints, in the
+  registration, the derived-table list, conformance indexes, the edge route list) are
+  split into one file per slice. Schema minor bumps merge one at a time.
+- **G2 never runs inside a package.** The maintainer runs it at checkpoints, in the
   background.
-- **Four maintainer checkpoints:** (1) end of stage 1: approve the operation table,
-  error catalog, surface inventory and fold spec, and decide whether indexed text is
+- **Four maintainer checkpoints:** (1) end of stage 1: approve the surface inventory,
+  operation table, error catalog and fold spec, and decide whether indexed text is
   pre-folded (section 5); (2) after slice 3a: approve the pattern the other slices copy; (3)
-  before stage 4: go or no-go on the cutover, with hosted MCP already live; (4) stage 5
-  done, and this file deleted.
+  before stage 4: go or no-go on retiring the Python runtime; (4) stage 5 done, and this
+  file deleted.
 
 ## 5. Principle 2: one implementation per contract
 
@@ -340,7 +368,8 @@ Rust workspace (`crates/`):
   schema gate, identity checks), owns scope as reader state, and defines the operation
   set: one function per operation, typed parameters and results with JSON Schemas.
   Includes search (one ranking, including the webapp's best-bets and golden pins, which
-  become curated build input), order materialization and project semantic validation.
+  become curated build input in slice 3a), order materialization and project semantic
+  validation.
 - `reg-meta` — the binary, with run modes only:
   - `serve` — the HTTP API for the SPA (axum + utoipa; ETag, body-size limit and rate
     limit as tower layers) and a remote MCP endpoint over streamable HTTP for hosted
@@ -352,9 +381,11 @@ Rust workspace (`crates/`):
 - `reg-core-py` — the PyO3 module the build imports.
 
 What is deleted: the Python `reg_meta` package including its CLI, `reg_schema`, the
-FastAPI backend, and the frontend's hand-written grammar and validation mirrors. Modules
-the build shares with the Python reader (`source_evidence`, `documentary`, `cli_common`,
-inventory TOML loading) move into `reg_meta_build` at the stage-4 cutover.
+FastAPI backend, and the frontend's hand-written grammar and validation mirrors. The
+build imports twelve `reg_meta` modules today (`source_evidence`, `fqid`, `errors`,
+`inventory`, `db`, `catalog`, `documentary`, `doc_db`, `queries`, `cli_common` and
+others); the surface inventory (package 1.1a) gives each a disposition: into
+`reg_meta_build`, or replaced by `reg-core-py`. The moves happen in stage 4.
 
 Why the HTTP server moves to Rust rather than FastAPI calling Rust through bindings:
 
@@ -365,6 +396,14 @@ Why the HTTP server moves to Rust rather than FastAPI calling Rust through bindi
   it too. The rest is HTTP glue that axum and tower handle directly.
 - The deploy image becomes one static binary plus the baked DBs. Keep the 1 GB Fly VM
   for the page cache.
+- Local MCP needs no Python environment: agents install one binary. The server, the MCP
+  tools and the SPA (through WASM) share one project validator and one grammar.
+
+Performance is not the reason: section 1 shows query cost is a design problem that
+derive fixes in either language. The alternative considered was `reg-core` alone
+(bindings plus WASM) with the server staying Python over derived tables. It was rejected
+because it keeps two definitions of every result type and a Python install for local
+MCP.
 
 ## 7. Agent and web interface
 
@@ -395,7 +434,7 @@ Rules (settled 2026-10-07; first agreed for the CLI, carried over to the API):
   generation and scope. Agents always know which catalog answered.
 - **Deterministic responses.** `meta` carries no timing, so the same request on the same
   catalog returns the same bytes and goldens compare raw output. Performance is measured
-  by the tier-1 harness.
+  by the G1 harness.
 - **A ref is an FQID or a bare name.** Any entity is a ref: `provider`,
   `provider/register`, `provider/register/slug`, `class/slug`, group keys, or a bare
   name. A unique name resolves; an ambiguous one returns the candidates with their FQIDs
@@ -462,17 +501,21 @@ every runner calls Python in-process, so it must become implementation-neutral f
 
 - Add a runner seam: HTTP cases run against a server process started by a command
   template, so the same corpus runs against FastAPI today and `reg-meta serve` later.
-  Servers are reused per artifact **and** configuration (search settings differ between
-  cases).
+  Servers are reused per artifact. The eight `golden_config` cases swap an import-time
+  pins file, so they stay in-process until slice 3a makes search pins build input.
 - Process-boundary cases stay process-level: startup admission failure (a server that
   never listens), catalog selection and `fetch`.
-- Rewrite the CLI argv cases (`cli_scope`, `selection`), the 42 `logical` cases and the
-  5 `coverage` cases as HTTP request cases against the new API. Write them against the
-  new API directly, not against today's surface.
+- Rewrite the CLI argv cases (`cli_scope`), the 49 `logical` cases and the 5 `coverage`
+  cases as HTTP request cases against the new API. Write them against the new API
+  directly, not against today's surface.
 - MCP is checked by an equivalence suite: for every operation, a representative success
   and each applicable domain error (including scope, generation and stale-cursor
   errors), the MCP tool call and the HTTP request return the same `data`, `meta` and
   error document. Transport-level parse errors are specified separately per transport.
+  Raw-bytes downloads are HTTP-only: their cases compare exact bytes, media type and the
+  required headers, and agreement with the JSON metadata operation. The current runner
+  decodes non-JSON bodies as text and drops headers (`http_cases.py`), so 1.4 extends
+  it.
 - Order cases compare against committed `order.json` bytes, not against Python's own
   output.
 - `fetch` cases use a local HTTP fixture server and a URL override
@@ -481,55 +524,63 @@ every runner calls Python in-process, so it must become implementation-neutral f
   real Python pipeline, cached by a hash of every transitive build input. Entries are
   immutable; a case that mutates an artifact copies it first. Rust tests and conformance
   read the same built files. Determinism makes caching safe.
-- The tier-1 differential harness (section 4) maps new API results back to the current
-  reader's results where the shapes differ; the mapping is part of the harness, not the
-  product.
+- The G1 differential harness (section 4) maps new API results back to the pinned
+  baseline reader's results where the shapes differ; the mapping is part of the harness,
+  not the product.
 - Expected outputs change where the new API changes the surface. Those diffs are
   reviewed as content decisions, per the testing policy.
 
 ## 10. Staging
 
 There are no users, so each surface switches over in one step, with no compatibility
-layers. The derived tables ship additively (section 4), so the deployed webapp keeps
-running on every intermediate release until stage 4 replaces it.
+layers. The derived tables ship additively (section 4). From slice 3a the image runs
+both servers, and the edge sends each ported path to the Rust server *(decision 15)*.
 
 0. **Prove (days).** A throwaway Rust spike: open with schema gate plus `search` against
    the pinned base, served over HTTP and MCP. Measure search latency, check fold parity
    with a property corpus, and confirm maturin + PyO3 + uv workspace ergonomics. Adjust
    the plan if anything is worse than expected.
-1. **Groundwork (packages below).** The operation table and error catalog, the fold spec
-   in `reg-core`, the fixture cache, the out-of-process HTTP runner and the tier-1
-   differential harness. Its PRs are gated by tier 0 and review only, because the tier-1
-   harness is one of its deliverables. Ends at checkpoint 1.
-2. **Derive framework.** `reg-meta-build derive` with its validator, the pattern for
-   registering a derived table, the derived-artifact identity contract and the steward
-   ordering (section 4), shipped as a schema 9.x minor. Its acceptance proves the tier-1
-   harness on a trivial derived table; real tables arrive with the slices. The derived
-   tables themselves are built in the stage-3 slice that reads them, so no table shape
-   is designed before something consumes it.
+1. **Groundwork (packages below).** The surface inventory, operation table and error
+   catalog, the fold spec in `reg-core`, the fixture cache, the out-of-process HTTP
+   runner and the G1 differential harness. Its PRs are gated by G0 and review only,
+   because the G1 harness is one of its deliverables. Ends at checkpoint 1.
+2. **Derive framework.** `reg-meta-build derive`, its checks in `validate_built_db`, the
+   pattern for registering a derived table, the derived-artifact identity contract and
+   the steward ordering (section 4), shipped as a schema 9.x minor. Its acceptance
+   proves G1 on a trivial derived table; real tables arrive with the slices, so no table
+   shape is designed before something consumes it.
 3. **Rust operation slices.** Each slice is its `api` cases (written red from the
-   approved operation table), its derived tables (a schema 9.x minor), then its Rust
-   operations over HTTP and MCP, in one to three PRs: (a) admission + search, (b) show /
-   states / values, (c) schema / diff / coverage / coded, (d) chains and graph, (e)
-   order and project validation. Slice (a) runs alone: it creates `reg-catalog`, the
-   `reg-meta` binary, the envelope, error, paging and MCP wiring, and `reg-core-py`,
-   plus a deployment package (edge routing for `/mcp`, separate rate limits, the new
-   server beside FastAPI, a public-host MCP smoke test). It ends at checkpoint 2. Then
-   (b), (c) and (d) run in parallel; (e) follows (b). Slice (b) owns `state_projection`,
-   `browse_delivery` and `resolver_column`, and switches `holdings_compile` to
-   `resolver_column`. Slice (e) starts by porting the project types and structural
-   validator from `reg_schema` into `reg-core`, keeping its raw-input, accumulated
-   diagnostics. Docs, context, stats and `fetch` are assigned to slices by the surface
-   inventory in 1.1. The new API runs beside FastAPI and is not yet used by the SPA. The
-   build switches to `reg-core-py` for FQID, folds and hashing. Gated by tiers 0 and 1.
-   The hosted MCP endpoint goes live once slice (a) passes.
-4. **Cutover.** Starts at checkpoint 3. The SPA moves to the Rust server's API
-   (regenerate types, adapt calls); the agent plugin moves to MCP; the Dockerfile and
-   publish workflow drop the CLI. The modules the build still imports from `reg_meta`
-   (`source_evidence`, `documentary`, `inventory`, `cli_common`) move into
-   `reg_meta_build`; they cannot move earlier because the Python reader imports them
-   too. Delete the FastAPI backend, the Python `reg_meta` package with its CLI, and
-   `reg_schema`. Bump the schema major.
+   approved operation table), its derived tables (a schema 9.x minor), its Rust
+   operations over HTTP and MCP, and finally the SPA's switch: regenerate the SPA types
+   for its routes, route those paths at the edge to the Rust server, and delete the
+   replaced FastAPI routes. One to four PRs per slice.
+   - **(a) admission + search** runs alone. It creates `reg-catalog`, the `reg-meta`
+     binary, the envelope, error, paging and MCP wiring, and `reg-core-py`; turns the
+     webapp's search pins and best-bets into curated build input (re-fixturing the eight
+     `golden_config` cases); applies the checkpoint-1 indexing decision; and has a
+     deployment package (both servers in one image, edge routing for `/mcp` and the
+     ported paths, separate MCP rate limits, a public-host MCP smoke test). The
+     exhaustive Python-against-Rust fold sweep joins G1 here. Hosted MCP goes live when (a)
+     passes. Ends at checkpoint 2.
+   - **(b) show / states / values** starts with one PR for the `expanded_state`,
+     `browse_delivery` and `resolver_column` schema, derivation and validator checks,
+     and switches `holdings_compile` to `resolver_column`. That PR merges before
+     anything in (c) consumes expanded states (schema, diff and held coverage all do).
+   - Then the rest of (b), **(c) schema / diff / coverage / coded** and **(d) chains and
+     graph** run in parallel. **(e) order and project validation** follows (b). It
+     starts by porting the project types and structural validator from `reg_schema` into
+     `reg-core`, keeping its raw-input, accumulated diagnostics, and pins `serde_json`
+     output to both serializations in use: `order.py` writes
+     `indent=2, ensure_ascii=False`; `canonical_json` writes sorted keys, compact
+     separators and non-ASCII as is.
+   - Docs, context, stats and `fetch` go to the slices the surface inventory assigns.
+     The build switches to `reg-core-py` for FQID, folds and hashing as each function
+     lands. Gated by G0 and G1.
+4. **Retire the Python runtime.** Starts at checkpoint 3. Delete the remaining FastAPI
+   code; the agent plugin moves to MCP; the Dockerfile and publish workflow drop the CLI
+   (until then they keep using it). The build's `reg_meta` imports move as the surface
+   inventory says. Delete the Python `reg_meta` package with its CLI, and `reg_schema`.
+   Bump the schema major.
 5. **SPA on WASM.** Replace `period.ts`, `validation.ts` and the hand-written
    `project_data.ts` with `reg-core` compiled to WASM plus generated types. Ends at
    checkpoint 4.
@@ -538,97 +589,114 @@ The build track (section 11) runs alongside, independent of these stages.
 
 ### Stage 1 packages
 
-Each package follows the execution protocol (section 4). Order: 1.0 first; then 1.1, 1.2
-and 1.3 in parallel; then 1.1b, 1.4 (after 1.1 and 1.3) and 1.5 (after 1.2).
+Each package follows the execution protocol (section 4). Order: 1.0 first; then 1.1a,
+1.2 and 1.3 in parallel; then 1.1 (after 1.1a), 1.4 (after 1.3) and 1.5 (after 1.2).
 
 **1.0 Land this tracker.** PR for `claude/reg-meta-rust-port-d3d5bc` (this file, the
 governance exception, `spike/stage0/`), reviewed and merged. Every later package
 branches from main.
 
+**1.1a Surface inventory.** Implements section 7, "No query CLI", and section 6, "What
+is deleted".
+
+- Changes: `conformance/api/surface.toml`, one row per current HTTP route, `reg-meta`
+  subcommand, and `reg_meta` name imported by `reg_webapp`, `reg_meta_build` or
+  `conformance/`, plus the commands the `register-metadata-search` skill documents
+  (listed by hand). Each row: disposition (retained, replaced, removed), owning slice or
+  stage, acceptance case. Every build-side import gets its stage-4 destination.
+- Paths: `conformance/api/`, `conformance/test_api_surface.py`.
+- Acceptance: `uv run python -m pytest conformance/test_api_surface.py -q`, which fails
+  if any route decorator under `reg_webapp/backend/src/reg_webapp/routes/`, any
+  `add_parser` name in `reg_meta/src/reg_meta/cli.py`, or any imported `reg_meta` name
+  lacks a row.
+
 **1.1 Operation table and error catalog.** Implements section 7.
 
-- Changes: section 7 gains the operation table (operation, HTTP method and route, MCP
-  tool, parameters, result shape, error codes) and the error catalog (code, class, HTTP
-  status). The `api` case format is documented in `conformance/README.md`; cases for
-  slice (a) (admission errors, search) go under `conformance/cases/api/`.
-- Expected values may start from the current Python reader's output mapped to the new
-  shape; each is reviewed as content.
-- Paths: this file, `conformance/README.md`, `conformance/cases/api/`, one test module
-  under `conformance/`.
+- Changes: `conformance/api/operations.toml` (operation, HTTP method and route, MCP
+  tool, parameters, result shape, error codes) and `conformance/api/errors.toml` (code,
+  class, HTTP status). Section 7 references them and keeps only the rules. The `api`
+  case format is documented in `conformance/README.md`; cases for slice (a) (admission
+  errors, search) go under `conformance/cases/api/`. Expected values may start from the
+  current Python reader's output mapped to the new shape; each is reviewed as content.
+- Paths: `conformance/api/`, `conformance/cases/api/`, `conformance/README.md`,
+  `conformance/test_api_spec.py`, section 7 of this file.
 - Out of scope: any runner or implementation.
-- Acceptance: a tier-0 test checks that every `api` case parses, names an operation in
-  the table and references an existing fixture.
-- Ends at checkpoint 1, together with 1.2.
-
-**1.1b Surface inventory.** Implements section 7, "No query CLI".
-
-- Changes: a table in section 7 of every current HTTP route, CLI command and public
-  library entry point, marked retained, replaced or removed, with its owning slice and
-  acceptance case. Nothing the cutover needs may be unowned (docs, context, stats and
-  `fetch` included).
-- Paths: this file only.
-- Acceptance: every route in `reg_webapp/backend/src/reg_webapp/routes/` and every
-  `reg-meta` subcommand appears in the table.
-- Ends at checkpoint 1.
+- Acceptance: `uv run python -m pytest conformance/test_api_spec.py -q`, which checks
+  that every `api` case parses, names an operation in `operations.toml`, uses only codes
+  in `errors.toml` and references an existing fixture, and that every `replaced` row in
+  `surface.toml` names an existing operation.
 
 **1.2 `reg-core` with the folds.** Implements the fold spec (section 5).
 
-- Changes: the `crates/` workspace (edition 2024, resolver 3, workspace lints) and
-  `crates/reg-core` with `fold_identity`, `fold_search`, the query normalizer and the
-  FTS query builder, ported from the spike. `caseless` is replaced by a case-folding
-  table generated from Unicode 17 `CaseFolding.txt`, with the generator and its output
-  committed.
-- Adds a fold golden corpus as data under `conformance/cases/folds/`. Characters whose
-  properties differ between Unicode 16 and 17 are verified by hand, not generated from
-  Python.
-- Adds a CI job (`cargo fmt --check`, `cargo clippy -D warnings`, `cargo test`) and a
-  pre-commit `cargo fmt` hook.
+- Changes: the `crates/` workspace (edition 2024, resolver 3, workspace lints;
+  `exclude = ["spike"]` until 1.5) and `crates/reg-core` with `fold_identity`,
+  `fold_search`, the query normalizer and the FTS query builder, ported from the spike.
+  `caseless` is replaced by a case-folding table generated from Unicode 17
+  `CaseFolding.txt`, with the generator and its output committed. Which text the FTS
+  index stores is decided at checkpoint 1 and applied in 3a; 1.2 needs only the
+  functions.
+- Fold corpus: a generator script (adapted from `spike/stage0/scripts/parity_folds.py`;
+  a tool, not a test, so it may call Python's folds) writes a sampled corpus to
+  `conformance/cases/folds/`: every scalar whose fold is not the identity, seeded
+  samples, and hand-verified Unicode 17 cases, under about 1 MB.
+- CI: a Rust job (`cargo fmt --check`, `cargo clippy --workspace -- -D warnings`,
+  `cargo test --workspace`); the lint job installs the Rust toolchain because pre-commit
+  gains a `cargo fmt` hook.
 - Paths: `crates/`, root `Cargo.toml` and `Cargo.lock`, `conformance/cases/folds/`,
   `.github/workflows/`, `.pre-commit-config.yaml`.
 - Out of scope: Python bindings (slice 3a), the FQID and period grammars.
-- Acceptance: `cargo test` passes the corpus and a sweep over every scalar value; CI is
-  green.
+- Acceptance: `cargo test --workspace` passes the corpus and a property sweep over every
+  scalar value (total, no panic, `fold_search` idempotent); CI is green.
 
 **1.3 Fixture cache.** Implements section 9, "Fixtures".
 
-- Changes: a builder that makes each synthetic (fixture, kind) artifact once through the
-  real pipeline into a cache directory. The key hashes every transitive build input:
-  fixture sources, the `reg_meta_build`, `reg_meta` and `reg_schema` sources (the
-  fixture builder in `reg_meta/tests/reader_artifacts.py` imports from `reg_meta`),
-  builder options and `uv.lock`. Entries are immutable; cases that mutate an artifact
-  copy it. Conformance session fixtures read from the cache.
-- Paths: `conformance/conftest.py`, `conformance/` helpers,
+- Changes: a builder that makes each synthetic artifact once through the real pipeline
+  into a cache directory. Both build paths use it: the session fixtures in
+  `conformance/conftest.py`, and per-case builds through `http_cases.case_artifact` and
+  `reader_artifacts.build_reader_artifact`. The key covers fixture, kind,
+  `identity_overrides` and every transitive build input, at least: fixture sources; the
+  `reg_meta_build`, `reg_meta` and `reg_schema` sources (the fixture builder imports
+  from `reg_meta`); builder options; `uv.lock`; Python and SQLite versions. Entries are
+  immutable; cases that mutate an artifact copy it.
+- Paths: `conformance/conftest.py`, `conformance/http_cases.py`, `conformance/` helpers,
   `reg_meta/tests/reader_artifacts.py`, a cache builder script.
 - Out of scope: changing any fixture or golden.
 - Acceptance: `uv run python -m pytest conformance -q` twice, and the second run builds
   nothing; a cache hit is byte-identical to a fresh build; touching each input class
-  invalidates its entries (tested); total conformance time does not regress.
+  invalidates its entries (tested); conformance time does not regress.
 
 **1.4 Out-of-process HTTP runner.** Implements section 9, "runner seam".
 
-- Changes: conformance takes `--server-cmd` (a template with `{db}` and `{port}`),
-  starts one server per cached fixture artifact and server configuration, and runs HTTP
-  cases over a real socket. The `api` corpus is collected only with this option.
-  Startup-failure cases stay process-level.
+- Changes: conformance takes `--server-cmd`, a template with `{db}` and `{port}` that
+  also receives the environment the app needs (`REG_META_DB`, `REG_WEBAPP_STEWARD`,
+  `REG_WEBAPP_STEWARDS_DIR`). It starts one server per cached artifact and runs HTTP
+  cases over a real socket, comparing raw-bytes responses by bytes, media type and
+  headers. The `api` corpus is collected only with this option. Startup-failure and
+  `golden_config` cases stay in-process.
 - Paths: `conformance/conftest.py`, `conformance/http_cases.py`,
   `conformance/README.md`.
 - Out of scope: rewriting existing cases.
-- Acceptance: the existing HTTP and validate cases pass with `--server-cmd` starting the
-  FastAPI app under uvicorn; the default in-process run is unchanged.
+- Acceptance: `uv run python -m pytest conformance -q --server-cmd='uv run uvicorn …'`
+  (the exact command recorded in `conformance/README.md`) passes the existing HTTP and
+  validate cases; the default in-process run is unchanged.
 
-**1.5 Tier-1 differential harness.** Implements section 4, tier 1.
+**1.5 G1 differential harness.** Implements section 4, G1.
 
-- Changes: the harness under `conformance/differential/`. It pins the latest release's
-  global and SWECOV artifacts (tag and SHA-256, recorded in section 4), fetched to a
-  cache directory, and the baseline reader commit, installed in its own environment. Its
-  query generator covers every register, seeded variable samples, holdings strata and
-  the search-eval corpus terms, in both scopes. It is seeded from
-  `spike/stage0/scripts/parity_fts.py`.
-- Deletes `spike/stage0/`; the fold parity sweep lives on in 1.2.
-- Paths: `conformance/differential/`, section 4 of this file, `spike/stage0/` (deleted).
+- Changes: the harness under `conformance/differential/`, run as
+  `uv run python -m conformance.differential`. It pins the latest release's global and
+  SWECOV artifacts (tag and SHA-256, recorded in section 4) in a shared cache directory,
+  and the baseline reader commit, installed in its own environment and driven through
+  its CLI JSON. The compared operations are every `reg-meta` read command: `search`, the
+  `get` subcommands, `resolve`, `validate`, `order` and `doc`. Queries cover every
+  register, seeded variable samples, holdings strata and the search-eval corpus terms,
+  in both scopes, run by parallel workers. Seeded from `parity_fts.py`.
+- Deletes `spike/stage0/` and the workspace `exclude`.
+- Paths: `conformance/differential/`, section 4 of this file, root `Cargo.toml`,
+  `spike/stage0/` (deleted).
 - Out of scope: mappings for the new API's shapes, which each slice adds.
-- Acceptance: a baseline-against-checkout run on unchanged main reports zero differences
-  in under 5 minutes, and a deliberately perturbed checkout reader is reported.
+- Acceptance: a baseline-against-checkout run on unchanged main reports zero
+  differences, and a deliberately perturbed checkout reader is reported. The PR records
+  the measured wall time, which must be under 5 minutes.
 
 ### Stage 0 results (2026-10-07)
 
@@ -697,7 +765,7 @@ Stage-1 consequences:
    older UCD only matters to the transitional differential harness, which tolerates
    characters unassigned there.
 2. Give `reg-core-py` `cache-keys` from the start, and keep the parity sweep and the
-   search-parity harness as the seed of the tier-1 harness.
+   search-parity harness as the seed of the G1 harness.
 
 ## 11. The build: faster, incremental, still Python
 
@@ -769,34 +837,41 @@ moving. The first layer is cheap to fix in Python.
 
 - **Maintenance surface.** Two languages instead of one (Python for the build, Rust for
   the runtime). Rust build times and toolchain pinning in CI.
-- **Self-validating oracle.** If tier 1 compared against the checkout's own reader, a
+- **Self-validating oracle.** If G1 compared against the checkout's own reader, a
   regression moved into derive would validate itself. Mitigated by the pinned,
   separately installed baseline reader and recorded semantic exceptions.
 - **Fold parity.** The main source of silent drift. Mitigated by computing folded
   columns through the same code via bindings, and a property corpus.
 - **Native extension in the build.** The build needs a compiled `reg-core-py`. That is
   only for the maintainer and CI, but it is a new prerequisite.
-- **Derive speed.** Derive is fast only while it stays set-based or parallel. The tier-1
+- **Derive speed.** Derive is fast only while it stays set-based or parallel. The G1
   budget is the early warning.
 - **Cache keys in the incremental build.** A key that misses an input yields a stale,
   wrong artifact. Mitigated by the periodic uncached byte-compare.
-- **Frontend churn in stages 4–5.** Type regeneration will move many generated names.
+- **Two servers in one image** from slice 3a until stage 4: two processes, an edge route
+  list kept in step with the ported paths, and two places a fix might be needed. Kept
+  short by deleting each FastAPI route as its slice switches.
+- **Pinned artifacts drifting** from weekly curation releases. Mitigated by re-pin
+  packages at every checkpoint.
+- **Frontend churn during the slices and stage 5.** Type regeneration will move many
+  generated names.
 
 ## 13. Decisions (2026-10-07)
 
-  | #   | Question                               | Decision                                                                                                                                                                                                                                                                                                   |
-  | --- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | 1   | Where are catalog facts resolved? (§3) | **Compiled in the build**, in the derive step (§4). Reverses "No state/window resolution is compiled" in `reg_meta/DESIGN.md`.                                                                                                                                                                             |
-  | 2   | What serves the webapp API? (§6)       | **Rust server** (`reg-meta serve`). The FastAPI backend is deleted in stage 4.                                                                                                                                                                                                                             |
-  | 3   | `reg_schema`? (§5)                     | **Merged into `reg-core`.** The Python package is deleted in stage 4.                                                                                                                                                                                                                                      |
-  | 4   | CLI v4 surface                         | **Superseded by decision 11.** Its settled rules carry over to the API (§7).                                                                                                                                                                                                                               |
-  | 5   | MCP server mode                        | **Yes. Now the primary agent interface** (decision 11), built with each operation slice in stage 3.                                                                                                                                                                                                        |
-  | 6   | WASM in the SPA                        | **Yes, as the last stage** (stage 5).                                                                                                                                                                                                                                                                      |
-  | 7   | Parallel per-register resolve (§11)    | **Yes**, after the family-scan fix (landed in #1181).                                                                                                                                                                                                                                                      |
-  | 8   | Where this plan lives                  | **Its own root tracker**, with the governance rule amended to allow one tracker per concurrent refactor.                                                                                                                                                                                                   |
-  | 9   | How to avoid full rebuilds per step    | **Base/derive split, pinned artifacts, three tiers with budgets, incremental base build** (§4, §11).                                                                                                                                                                                                       |
-  | 10  | Who the runtime is designed for        | **Agents and the webapp only.** No human-oriented features (text output, prompts, progress, notebook import) while building; re-evaluated after stage 5 (§7).                                                                                                                                              |
-  | 11  | Query CLI?                             | **None.** One operation set exposed over HTTP and MCP; the binary has run modes only (`serve`, `mcp`, `fetch`) (§6, §7).                                                                                                                                                                                   |
-  | 12  | Where agents reach MCP                 | **Hosted and local.** Remote MCP endpoint on `serve` at catalog.swecov.se; `reg-meta mcp` over stdio for offline use and private steward catalogs (§7).                                                                                                                                                    |
-  | 13  | Tooling and versions                   | **Latest everywhere.** Newest stable versions of languages, crates, packages and SDKs, and modern methods; no compatibility work for older toolchains. Windows later, via hosted MCP unless a local binary is effortless (§8).                                                                             |
-  | 14  | How agents execute it                  | **Execution protocol (§4).** Work packages in this file, written per stage; mechanical done (acceptance + tiers + fresh-agent review); escalate-don't-decide list; small squash PRs to main; ≤3 in flight; four maintainer checkpoints. Stage 2 builds only the derive framework; slices own their tables. |
+  | #   | Question                               | Decision                                                                                                                                                                                                                                                                                                                                            |
+  | --- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | 1   | Where are catalog facts resolved? (§3) | **Compiled in the build**, in the derive step (§4). Reverses "No state/window resolution is compiled" in `reg_meta/DESIGN.md`.                                                                                                                                                                                                                      |
+  | 2   | What serves the webapp API? (§6)       | **Rust server** (`reg-meta serve`). The FastAPI backend is deleted in stage 4.                                                                                                                                                                                                                                                                      |
+  | 3   | `reg_schema`? (§5)                     | **Merged into `reg-core`.** The Python package is deleted in stage 4.                                                                                                                                                                                                                                                                               |
+  | 4   | CLI v4 surface                         | **Superseded by decision 11.** Its settled rules carry over to the API (§7).                                                                                                                                                                                                                                                                        |
+  | 5   | MCP server mode                        | **Yes. Now the primary agent interface** (decision 11), built with each operation slice in stage 3.                                                                                                                                                                                                                                                 |
+  | 6   | WASM in the SPA                        | **Yes, as the last stage** (stage 5).                                                                                                                                                                                                                                                                                                               |
+  | 7   | Parallel per-register resolve (§11)    | **Yes**, after the family-scan fix (landed in #1181).                                                                                                                                                                                                                                                                                               |
+  | 8   | Where this plan lives                  | **Its own root tracker**, with the governance rule amended to allow one tracker per concurrent refactor.                                                                                                                                                                                                                                            |
+  | 9   | How to avoid full rebuilds per step    | **Base/derive split, pinned artifacts, three gates (G0–G2) with budgets, incremental base build** (§4, §11).                                                                                                                                                                                                                                        |
+  | 10  | Who the runtime is designed for        | **Agents and the webapp only.** No human-oriented features (text output, prompts, progress, notebook import) while building; re-evaluated after stage 5 (§7).                                                                                                                                                                                       |
+  | 11  | Query CLI?                             | **None.** One operation set exposed over HTTP and MCP; the binary has run modes only (`serve`, `mcp`, `fetch`) (§6, §7).                                                                                                                                                                                                                            |
+  | 12  | Where agents reach MCP                 | **Hosted and local.** Remote MCP endpoint on `serve` at catalog.swecov.se; `reg-meta mcp` over stdio for offline use and private steward catalogs (§7).                                                                                                                                                                                             |
+  | 13  | Tooling and versions                   | **Latest everywhere.** Newest stable versions of languages, crates, packages and SDKs, and modern methods; no compatibility work for older toolchains. Windows later, via hosted MCP unless a local binary is effortless (§8).                                                                                                                      |
+  | 14  | How agents execute it                  | **Execution protocol (§4).** Work packages in this file, written per stage; mechanical done (acceptance + gates + fresh-agent review); escalate-don't-decide list; small squash PRs to main; ≤3 in flight; four maintainer checkpoints. Stage 2 builds only the derive framework; slices own their tables.                                          |
+  | 15  | How the SPA moves to the Rust server   | **Per slice.** Each slice ends by switching the SPA's calls for its routes to the Rust server and deleting the replaced FastAPI routes; the edge routes ported paths. Stage 4 retires what remains. Chosen as simpler long term: the shortest window with two implementations, and the Rust server is deployed from slice 3a anyway for hosted MCP. |
