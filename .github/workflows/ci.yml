@@ -77,21 +77,24 @@ jobs:
 
   package-integration:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Successful runs take 33-111 s (median 47 s). The bound sits just above
+    # the test's own 300 s image-build timeout, so a hung build fails with
+    # pytest's located error instead of a bare runner cancellation.
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: astral-sh/setup-uv@v10.0.1
         with:
           version: "0.12.11"
       - run: uv sync --frozen
-      - name: Prepare rootless Podman
+      # The ubuntu-24.04 runner image ships Podman (4.9.3), so there is no
+      # apt step: `apt-get update` only exposed the job to Ubuntu mirror
+      # stalls, which hung it until the timeout on 2026-10-07. If an image
+      # drops Podman, `podman: command not found` fails this step.
+      - name: Check rootless Podman
+        timeout-minutes: 2
         run: |
-          sudo apt-get update
-          sudo apt-get install --yes podman
           podman --version
-          podman build --help
-          podman run --help
-          podman rmi --help
           podman info
       # Source coherence only: registry dependencies and release assets have
       # separate publication gates in publish_reg_meta.yml / integration.yml.
