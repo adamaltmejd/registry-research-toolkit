@@ -83,12 +83,12 @@ selects applicable native spellings within independently derived physical mappin
 `get schema` exposes applicable delivery columns, so it cannot establish the whole
 variable-node census; name search also omits unnamed variables and has a bounded cursor.
 A sampled binding must appear in its CLI and HTTP name-search traversals unless that
-traversal consumed the whole 1,000-result depth ceiling and more than 50 of its rows
-match the query by name, which proves identity promotion is off. Past the ceiling a
-generic name is unreachable by contract, so the register-refined CLI search must find
-the binding instead. That proves reader reachability; HTTP search has no register
-refinement, and the catalog browse checks prove HTTP reachability. The receipt counts
-these refinements.
+traversal consumed the whole 1,000-result depth ceiling and every consumed row matches
+the query exactly. Exact identity matches always lead the order, so only a name shared
+by more bindings than the ceiling holds can push one past it. Such a name is unreachable
+by contract, so the register-refined CLI search must find the binding instead. That
+proves reader reachability; HTTP search has no register refinement, and the catalog
+browse checks prove HTTP reachability. The receipt counts these refinements.
 
 `integration.yml` downloads the global catalog and SWECOV steward assets from the
 selected release, verifies each digest and admits its embedded manifest before running

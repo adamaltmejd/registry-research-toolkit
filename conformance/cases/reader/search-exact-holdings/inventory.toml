@@ -1,0 +1,18 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "Annual2018"
+edition = 2018
+[[table.column]]
+name = "Observed"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/target"
+representation = "Year"
+[[table.column]]
+name = "Counted"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/unheld"
+representation = "Year count"

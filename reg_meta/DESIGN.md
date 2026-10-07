@@ -604,12 +604,21 @@ branch whose rows can carry an identity score (registers, variable names, delive
 columns, classification names and code containment, group labels) uses one fixed
 1,001-row horizon, folded or not: every cursor sees the same complete bounded fold
 universe, so a later sibling cannot turn an already-consumed leaf into a group or
-succession row. The identity-promotion gate counts that same universe. It switches
-exact/prefix promotion off when more than 50 rows match by identity, so generic exact
-matches cannot swamp the ranked order, and the page size cannot change that decision
-(`--no-fold` included). The cost is the default folded search's SQL bound. Only the
-value branch, whose code rows carry no identity score, keeps an adaptive `limit + 1`
-prefix and backfills when in-scope shaping consumes a page. Type/register/year/group
+succession row. An exact identity match always leads the order (#1180): a researcher
+typing a whole name ("År", "Kön") gets the variables carrying it first, however many
+registers share it. A short generic name prefix-matches tens of thousands of FTS rows
+and bm25 does not prefer a whole-name hit, so every bounded variable arm (FTS, name
+LIKE, delivery-column LIKE) orders exact name or in-scope delivery-column matches ahead
+of its LIMIT. One bounded prefetch finds them: FTS token candidates on the name and
+alias columns, then the identity fold. Exact names are therefore reachable within the
+depth ceiling unless exact rows alone fill it. Prefix and group-label promotion keep the
+swamp gate: it counts the same universe and switches them off when more than 50 rows
+match by identity, so a generic prefix ("ar" → "arbete…") cannot pull hundreds of weaker
+hits ahead of the ranked order, and the page size cannot change that decision
+(`--no-fold` included). The prefetch costs a few milliseconds on the real catalog; the
+identity arms otherwise keep the default folded search's SQL bound. Only the value
+branch, whose code rows carry no identity score, keeps an adaptive `limit + 1` prefix
+and backfills when in-scope shaping consumes a page. Type/register/year/group
 eligibility, classification-code exclusions, and the value surface's published
 bm25-plus-mapping-count rank are applied inside SQL before each branch's bound. This is
 the search-surface analog of the catalog-typing move (#681): the webapp's per-result

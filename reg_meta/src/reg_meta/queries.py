@@ -60,6 +60,7 @@ _YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
 # webapp.
 _CODE_OWNERS_PER_HIT = 5
 _MAX_IDENTITY_PROMOTION_MATCHES = 50
+_EXACT_IDENTITY_SCORE = 1000
 _CURSOR_VERSION = 1
 _MAX_CURSOR_POSITION = 1_000
 _CURSOR_INTEGRITY_DOMAIN = "reg-meta-search-cursor-v1"
@@ -465,12 +466,21 @@ def _fts_match_query(raw: str) -> str | None:
     folds both the index AND query side (å→a), so a Python fold would be
     redundant (and would double-fold). Returns None when no token carries an
     alphanumeric char (empty / whitespace / punctuation-only)."""
-    terms = [
-        f'"{tok.replace(chr(34), chr(34) * 2)}"*'
+    terms = [f"{phrase}*" for phrase in _fts_quoted_tokens(raw)]
+    return " ".join(terms) if terms else None
+
+
+def _fts_quoted_tokens(raw: str) -> list[str]:
+    """Each whitespace token with a word char as a quoted FTS5 phrase, raw.
+
+    The raw token reaches unicode61, which tokenizes and folds it exactly as the
+    index; a Python ASCII fold would delete letters with no decomposition (ø, æ,
+    ß, ł) instead of matching them."""
+    return [
+        f'"{tok.replace(chr(34), chr(34) * 2)}"'
         for tok in raw.split()
         if _FTS_WORD_CHAR.search(tok)
     ]
-    return " ".join(terms) if terms else None
 
 
 def _fold_fts_text(text: str) -> str:
@@ -628,6 +638,7 @@ def search(
     scope = resolve_scope(conn, scope)
     register_catalog_udfs(conn)
     conn.create_function("py_fts_term", 2, _matches_fts_term, deterministic=True)
+    conn.create_function("py_search_fold", 1, _sql_search_fold, deterministic=True)
     if field not in SEARCH_FIELDS:
         raise RegMetaError(
             exit_code=EXIT_USAGE,
@@ -700,7 +711,7 @@ def search(
     # horizon for every foldable branch so all pages see the same fold universe.
     # The identity-promotion swamp gate below counts the same universe, folded
     # or not: an adaptive limit+1 prefix would let the page size decide whether
-    # generic exact matches are promoted. So every arm whose rows can carry an
+    # generic prefix matches are promoted. So every arm whose rows can carry an
     # identity score runs at the horizon, the same SQL bound as the default
     # folded search. Only the value arm (codes carry no identity score) keeps the
     # cheaper limit+1 prefix.
@@ -759,6 +770,21 @@ def search(
     # survive. The vintage lives in the slug, not a comparable column; vintage-year
     # filtering is future work.
     classification_surfaces_on = reg_ids is None and year_range is None
+
+    # Exact-name admission (#1180). A short generic name ("År") prefix-matches tens
+    # of thousands of FTS rows, and bm25 does not prefer a whole-name match, so the
+    # variables actually named that way can rank past the bounded horizon and
+    # never enter the candidate set at all. Every bounded variable arm therefore
+    # orders the variables in this temp table (exact name or delivery column)
+    # ahead of its LIMIT.
+    if type in ("variable", "all") and field != "value":
+        _fill_exact_variables(
+            conn,
+            query,
+            scope=scope,
+            bounds=_year_bounds(year_range),
+            limit=horizon_limit,
+        )
 
     # Classifications surfaced by the name-FTS arm, plus caller-excluded identities;
     # the code-containment arm excludes both before its SQL LIMIT. That arm is the
@@ -943,7 +969,7 @@ def search(
     promote_identity = identity_match_count <= _MAX_IDENTITY_PROMOTION_MATCHES
     all_results.sort(
         key=lambda row: (
-            -(_search_display_score(query, row) if promote_identity else 0),
+            -_search_display_score(query, row, promote=promote_identity),
             row.get("fts_rank", 0),
             _search_result_identity(row),
         )
@@ -1069,6 +1095,68 @@ def _fold_search_text(value: object) -> str:
     )
 
 
+def _sql_search_fold(value: object) -> str | None:
+    """`py_search_fold`: `_fold_search_text` for SQL, NULL-preserving."""
+    return None if value is None else _fold_search_text(value)
+
+
+def _fill_exact_variables(
+    conn: sqlite3.Connection,
+    query: str,
+    *,
+    scope: ReadScope,
+    bounds: tuple[str, str] | None,
+    limit: int,
+) -> None:
+    """Fill `_search_exact_variables`, which every bounded variable arm orders first.
+
+    It holds the variables whose `variable.name` or in-scope delivery column (the
+    ranking aliases, so an unheld alias cannot win admission) folds, as
+    `_search_identity_score` folds, to the query. FTS phrase matches of the raw
+    query tokens on those two columns narrow the candidates.
+
+    Admission is narrower than the scorer, which also treats an FQID or slug leaf
+    as exact and, for a variable with no `variable.name`, reads the state and
+    alias-window names `variable_fts.name` falls back to. Rows exact only by those
+    texts are promoted when the bound already holds them, not admitted.
+    """
+    conn.execute("DROP TABLE IF EXISTS _search_exact_variables")
+    conn.execute(
+        "CREATE TEMP TABLE _search_exact_variables (variable_id INTEGER PRIMARY KEY)"
+    )
+    folded_query = _fold_search_text(query)
+    phrases = _fts_quoted_tokens(query)
+    if not folded_query or not phrases:
+        return
+    # `variable.name`, not `variable_fts.name`: reading an external-content column
+    # evaluates the whole content view per row, ~25x slower.
+    # simplify: past `limit` exact matches the admitted subset is by id, not by
+    # rank; rank them in SQL if a real name is ever shared by ~1,000 variables.
+    conn.execute(
+        "INSERT INTO _search_exact_variables (variable_id) "
+        "SELECT v.variable_id FROM variable_fts vf "
+        "JOIN variable v ON v.variable_id = vf.rowid "
+        "WHERE variable_fts MATCH ? AND (py_search_fold(v.name) = ? OR EXISTS ("
+        "SELECT 1 FROM variable_alias va WHERE va.variable_id = v.variable_id "
+        "AND py_search_fold(va.delivery_column_name) = ? AND "
+        + scope_predicate(
+            scope,
+            "variable",
+            "va",
+            bounds=bounds,
+            variant_sql="va.register_variant_id",
+            representation_sql="py_catalog_column(va.variable_id, va.register_variant_id, va.delivery_column_name)",
+        )
+        + ")) ORDER BY v.variable_id LIMIT ?",
+        (
+            "{name delivery_column_names} : (" + " ".join(phrases) + ")",
+            folded_query,
+            folded_query,
+            limit,
+        ),
+    )
+
+
 def _search_identity_texts(row: dict[str, Any]) -> tuple[str, ...]:
     """Identity-bearing text used by the published exact/prefix relevance order."""
     row_type = row.get("type")
@@ -1134,7 +1222,9 @@ def _search_identity_score(query: str, row: dict[str, Any]) -> int:
     texts = _search_identity_texts(row)
     exact = bool(folded_query) and any(text == folded_query for text in texts)
     prefix = bool(folded_query) and any(text.startswith(folded_query) for text in texts)
-    return (1000 if exact else 0) + (100 if prefix and not exact else 0)
+    return (_EXACT_IDENTITY_SCORE if exact else 0) + (
+        100 if prefix and not exact else 0
+    )
 
 
 def _search_group_authority_bonus(row: dict[str, Any]) -> int:
@@ -1143,16 +1233,21 @@ def _search_group_authority_bonus(row: dict[str, Any]) -> int:
     return 0
 
 
-def _search_display_score(query: str, row: dict[str, Any]) -> int:
+def _search_display_score(query: str, row: dict[str, Any], *, promote: bool) -> int:
     """Stable query-sensitive score for one row.
 
-    The final ordering suppresses display-score promotion when more than the default
-    50-row search window matches exactly/prefix-wise. Applying an unbounded exact
-    and group-label bonus to a generic label such as ``Civilstånd`` would otherwise
-    pull dozens of weaker FTS hits ahead of the previously top-ranked discriminative
-    results.
+    An exact identity match always leads (#1180): a researcher typing a variable's
+    whole name ("År", "Kön") must get those variables first, however many
+    registers share the name, and the arms admit them before their bound. Prefix
+    and group-label promotion are suppressed (``promote=False``) when more than the
+    default 50-row search window matches exactly/prefix-wise: a short generic
+    prefix ("ar" -> "arbete...") otherwise pulls hundreds of weaker hits ahead of
+    the top-ranked discriminative results.
     """
-    return _search_identity_score(query, row) + _search_group_authority_bonus(row)
+    score = _search_identity_score(query, row)
+    if not promote:
+        return score if score >= _EXACT_IDENTITY_SCORE else 0
+    return score + _search_group_authority_bonus(row)
 
 
 def _member_models(row: dict[str, Any]) -> tuple[ConceptGroupMember, ...]:
@@ -1358,7 +1453,9 @@ def _search_datacolumns(
         + " "
         + register_filter
         + year_filter
-        + "ORDER BY va.delivery_column_name, v.register_id, v.variable_id LIMIT ? OFFSET ?",
+        # Exact-name variables first (#1180); `search` fills the temp table.
+        + "ORDER BY va.variable_id NOT IN (SELECT variable_id FROM _search_exact_variables), "
+        "va.delivery_column_name, v.register_id, v.variable_id LIMIT ? OFFSET ?",
         (like_pattern, *register_params, *year_params, limit, offset),
     ).fetchall()
     results = []
@@ -1410,7 +1507,9 @@ def _search_varnames(
         + " "
         + register_filter
         + year_filter
-        + "ORDER BY v.name, v.register_id, v.variable_id LIMIT ? OFFSET ?",
+        # Exact-name variables first (#1180); `search` fills the temp table.
+        + "ORDER BY v.variable_id NOT IN (SELECT variable_id FROM _search_exact_variables), "
+        "v.name, v.register_id, v.variable_id LIMIT ? OFFSET ?",
         (like_pattern, *register_params, *year_params, limit, offset),
     ).fetchall()
     results = []
@@ -1571,7 +1670,9 @@ def _search_description_variables(
         + register_filter
         + year_filter
         + evidence_filter
-        + "ORDER BY rank, vf.rowid LIMIT ? OFFSET ?",
+        # Exact-name variables first (#1180); `search` fills the temp table.
+        + "ORDER BY vf.rowid NOT IN (SELECT variable_id FROM _search_exact_variables), "
+        "rank, vf.rowid LIMIT ? OFFSET ?",
         (query, *register_params, *year_params, *evidence_params, limit, offset),
     ).fetchall()
     ranking_delivery_columns = _delivery_column_names_for_variables(

@@ -29,6 +29,70 @@ FIXTURE_IMPORT_DATE = json.loads(
 )["import_date"]
 
 
+def replicate_filler(case: Path, destination: Path) -> Path:
+    """Copy a reader case, expanding its `request.json` filler into copies.
+
+    `request.json` names one `filler` binding of the case's `catalog.json` and a
+    `copies` count; the filler is replaced by that many copies whose slug and
+    provider key carry a `-N` suffix. An optional `held_table` `{id, edition}`
+    also holds every copy: one inventory column and census row per copy, with the
+    holdings policy re-pinned to the expanded census. Returns the expanded source
+    directory.
+    """
+    request = json.loads((case / "request.json").read_text())
+    shutil.copytree(case, destination)
+    catalog = json.loads((case / "catalog.json").read_text())
+    filler = next(
+        variable
+        for variable in catalog
+        if "/".join(
+            (
+                variable["register"]["provider"],
+                variable["register"]["slug"],
+                variable["slug"],
+            )
+        )
+        == request["filler"]
+    )
+    catalog.remove(filler)
+    catalog.extend(
+        {
+            **filler,
+            "slug": f"{filler['slug']}-{index}",
+            "provider_key": f"{filler['provider_key']}-{index}",
+        }
+        for index in range(request["copies"])
+    )
+    (destination / "catalog.json").write_text(json.dumps(catalog))
+    table = request.get("held_table")
+    if table is not None:
+        state = filler["states"][0]
+        provider, register = filler["register"]["provider"], filler["register"]["slug"]
+        mappings = "".join(
+            f'[[table.column]]\nname = "Copy{index}"\n[[table.column.mapping]]\n'
+            f'register_variant = "{provider}/{register}/{state["variant"]["slug"]}"\n'
+            f'variable = "{provider}/{register}/{filler["slug"]}-{index}"\n'
+            f'representation = "{state["delivery_column_name"]}"\n'
+            for index in range(request["copies"])
+        )
+        with (destination / "inventory.toml").open("a") as inventory:
+            inventory.write(
+                f'\n[[table]]\nid = "{table["id"]}"\nedition = {table["edition"]}\n'
+                + mappings
+            )
+        census = destination / "census.csv"
+        with census.open("a") as rows:
+            rows.writelines(
+                f"Fixture,,{table['id']},Copy{index},\n"
+                for index in range(request["copies"])
+            )
+        digest = hashlib.sha256(census.read_bytes()).hexdigest()
+        (destination / "holdings_policy.toml").write_text(
+            f'source_sha256 = "{digest}"\n'
+        )
+    return destination
+
+
 def build_reader_artifact(
     directory: Path,
     fixture: str | Path,

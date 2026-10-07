@@ -1,0 +1,126 @@
+[
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "value",
+    "provider_key": "44",
+    "name": "Year",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2019-12-31",
+        "delivery_column_name": "Value",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "target",
+    "provider_key": "46",
+    "name": "Target",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2019-12-31",
+        "delivery_column_name": "Year",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "place",
+    "provider_key": "47",
+    "name": "Place",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2019-12-31",
+        "delivery_column_name": "Bø",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "filler",
+      "name": "Filler"
+    },
+    "slug": "filler",
+    "provider_key": "45",
+    "name": "Annual year",
+    "definition": "Year year year. Bø bø bø.",
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2019-12-31",
+        "delivery_column_name": "Annual year",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  }
+]
