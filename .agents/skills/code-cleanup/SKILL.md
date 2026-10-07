@@ -31,12 +31,19 @@ git ls-files '<dir>/tests/*.py' | xargs wc -l | tail -1
 uv run python -m pytest <dir> -n auto -q --durations=20
 ```
 
-The frontend:
-`git ls-files 'reg_webapp/frontend/src/*.ts' 'reg_webapp/frontend/src/*.svelte' | xargs wc -l | tail -1`
-and `bun run test` from `reg_webapp/frontend`. Compare each suite's wall time with its
-budget in ARCHITECTURE.md → "Tiers". Rust: `git ls-files 'crates/*.rs' | xargs wc -l`
-and `cargo test --workspace`; its dependency check is `cargo tree --workspace --depth 1`
-against each crate's `Cargo.toml`.
+The frontend counts product, colocated tests and the generated `api-types.ts` apart:
+
+```sh
+cd reg_webapp/frontend
+git ls-files 'src/*.ts' 'src/*.svelte' | rg -v '\.test\.ts$|api-types\.ts$' | xargs wc -l | tail -1
+git ls-files 'src/*.test.ts' | xargs wc -l | tail -1
+bun run test
+```
+
+Compare each suite's wall time with its budget in ARCHITECTURE.md → "Tiers". Rust:
+`git ls-files 'crates/*.rs' | xargs wc -l` and `cargo test --workspace`; its dependency
+check traces each direct dependency in a crate's `Cargo.toml` to a use in that crate's
+sources, tests, examples or `build.rs` (`rg`).
 
 ## 1. Mechanical checks
 
