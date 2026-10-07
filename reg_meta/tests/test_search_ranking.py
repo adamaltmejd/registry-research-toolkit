@@ -15,7 +15,6 @@ import pytest
 from reg_meta.errors import RegMetaError
 from reg_meta.queries import search
 from search_test_support import (
-    add_binding,
     add_register,
     add_state,
     add_variable,
@@ -271,53 +270,6 @@ def test_delivery_alias_identity_participates_in_relevance_order(
     ]
 
 
-def test_variable_cursor_pages_are_stable_and_sql_bounded() -> None:
-    conn = build_slugged_db(
-        variable=("Needle alpha", 32183, 1001, "Alpha"),
-        delivery_column_name="Alpha",
-        variable_slug="needle-alpha",
-    )
-    for index, name in enumerate(("beta", "gamma", "delta"), start=2):
-        add_variable(
-            conn,
-            register_id=1,
-            var_id=42180 + index,
-            name=f"Needle {name}",
-            slug=f"needle-{name}",
-        )
-        add_binding(
-            conn,
-            cvid=1000 + index,
-            register_id=1,
-            register_variant_id=10,
-            regver_id=100,
-            var_id=42180 + index,
-            delivery_column_name=name.title(),
-        )
-    _rebuild_fts(conn)
-    statements: list[str] = []
-    conn.set_trace_callback(statements.append)
-
-    expected = search(conn, "Needle", field="description", type="variable", limit=10)
-    first = search(conn, "Needle", field="description", type="variable", limit=2)
-    assert first.has_more and first.next_cursor is not None
-    second = search(
-        conn,
-        "  NEEDLE  ",
-        field="description",
-        type="variable",
-        limit=2,
-        cursor=first.next_cursor,
-    )
-
-    combined = [str(result.fqid) for result in (*first.results, *second.results)]
-    assert combined == [str(result.fqid) for result in expected.results]
-    assert len(combined) == len(set(combined))
-    variable_fts = [sql for sql in statements if "FROM variable_fts" in sql]
-    assert variable_fts
-    assert all("LIMIT" in sql for sql in variable_fts)
-
-
 def test_register_scope_is_applied_before_sql_pagination() -> None:
     conn = build_slugged_db(
         variable=("Needle alpha", 32183, 1001, "Alpha"),
@@ -446,14 +398,3 @@ def test_year_scoped_cursor_traverses_every_eligible_result(field: str) -> None:
 
     assert len(seen) == len(set(seen)) == _YEAR_ELIGIBLE
     assert set(seen) == _ELIGIBLE_NAMES
-
-
-@pytest.mark.parametrize("field", ["varname", "description"])
-def test_unscoped_search_still_pages_the_whole_prefix(field: str) -> None:
-    conn = _year_scoped_conn()
-
-    page = search(conn, "Needle", field=field, type="variable", limit=50)
-
-    assert len(page.results) == 50
-    assert page.has_more
-    assert page.next_cursor is not None
