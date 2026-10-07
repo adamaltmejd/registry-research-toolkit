@@ -1665,6 +1665,11 @@ literal representation must cover the edition; sibling spellings cannot supply i
 dates. Source-backed stock-file overrides may name an exact snapshot date, including
 October school censuses, while retaining the original catalog state windows. A source
 snapshot date alone does not establish the delivery date of a derived geocoded extract.
+A cumulative register's stock file is not a one-year edition: when the source documents
+one cumulative register version, the override spans that version's start through the
+stock date (Flergenerationsregistret: 1961 through the snapshot year). Older cumulative
+snapshots are then excluded as superseded. Without that documentation the name-derived
+year stands until a holdings probe establishes the span.
 
 Unsupported physical fields remain in the inventory with unavailable mappings and
 explicit reasons. Exact auxiliary fields can also retain a known owner and meaning in
