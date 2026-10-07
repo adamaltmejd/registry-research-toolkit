@@ -1295,16 +1295,10 @@ friction) still stands wherever a future `Command`-hosted list meets grouped row
 Load-bearing decisions downstream children (#806–#809) must not re-litigate:
 
 - **`DataTable` ARIA roles — explicit and unconditional.** Every table element carries
-  its ARIA role explicitly (`table`/`grid`, `rowgroup`, `row`, `columnheader`,
-  `cell`/`gridcell`) regardless of the selectable variant. This is required because the
-  responsive stacked form switches `display` to `block`, which strips native table roles
-  in Firefox/Safari — explicit roles keep the semantics intact across that change.
-- **`DataTable` selection — ARIA grid, not roving tabindex.** The selectable variant
-  sets `role="grid"` on the table; each selectable row carries `aria-selected` and
-  `tabindex=0` (its own tab stop). This is deliberately **not** a single-tab-stop
-  roving-tabindex grid — list keyboard navigation belongs to Bits UI `Command`
-  elsewhere. API: `getRowId` + `selectedId` + `onselect`; omit them for a plain static
-  table (`role="table"`).
+  its ARIA role explicitly (`table`, `rowgroup`, `row`, `columnheader`, `cell`). This is
+  required because the responsive stacked form switches `display` to `block`, which
+  strips native table roles in Firefox/Safari — explicit roles keep the semantics intact
+  across that change. `getRowId` only keys the rows; there is no selectable variant.
 - **`DataTable` row navigation — link delegation, not selection.** Browse tables whose
   primary cell is a link opt into `rowNavigation`; rows stay in plain `role="table"`
   semantics with no row `tabindex` or `aria-selected`, and the anchor remains the only
