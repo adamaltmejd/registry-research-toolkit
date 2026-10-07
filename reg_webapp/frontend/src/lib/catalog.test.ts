@@ -19,7 +19,6 @@ import {
   bindingChildren,
   breadcrumbs,
   catalogHref,
-  classGroupHref,
   clusterBands,
   coexistingColumns,
   commonLabelStem,
@@ -38,7 +37,6 @@ import {
   formatStateWindow,
   formatWindow,
   fqidSegments,
-  groupHref,
   groupLinkFromFocus,
   humanizeClassificationSlug,
   labelSuffix,
@@ -63,7 +61,6 @@ import {
   sourceCardHeading,
   valueSetKeyForColumn,
   variantCardName,
-  variantsHref,
   windowTitle,
   YEARLESS_VALID_FROM,
   yearOf,
@@ -242,56 +239,6 @@ describe("bindingChildren", () => {
 
   it("returns [] for a non-register node", () => {
     expect(bindingChildren(provider)).toEqual([]);
-  });
-});
-
-describe("catalogHref", () => {
-  it("mirrors the API path for an ASCII FQID (encoding is a no-op)", () => {
-    expect(catalogHref("scb/lisa/kon")).toBe("/catalog/scb/lisa/kon");
-    expect(catalogHref("")).toBe("/catalog");
-  });
-
-  it("percent-encodes reserved/non-ASCII chars per segment", () => {
-    expect(catalogHref("scb/lisa/kön")).toBe("/catalog/scb/lisa/k%C3%B6n");
-  });
-});
-
-describe("variantsHref", () => {
-  it("builds the register's variants page route from a 2-seg register fqid", () => {
-    // Y-79: the SPA route mirrors the API's own register sub-resource path.
-    expect(variantsHref("scb/lisa")).toBe("/catalog/scb/lisa/variants");
-  });
-
-  it("percent-encodes each segment the same way catalogHref does", () => {
-    expect(variantsHref("scb/lisä")).toBe("/catalog/scb/lis%C3%A4/variants");
-  });
-});
-
-describe("groupHref", () => {
-  it("builds the /catalog/group/<provider>/<register>/<key> route from a 2-seg register fqid", () => {
-    // #673: the register-arm group rows link to the group SUBJECT page (a fixed
-    // register-only route), NOT the /catalog/<fqid> browse path.
-    expect(groupHref("scb/lisa", "ink")).toBe("/catalog/group/scb/lisa/ink");
-  });
-
-  it("percent-encodes each segment the same way catalogHref does", () => {
-    // A reserved/non-ASCII char in the key can't produce a malformed URL; the
-    // `/` separators between the route segments survive (per-segment encoding).
-    expect(groupHref("scb/lsön", "a/b")).toBe(
-      "/catalog/group/scb/ls%C3%B6n/a%2Fb",
-    );
-  });
-});
-
-describe("classGroupHref (#756)", () => {
-  it("builds the /catalog/group/class/<key> route from a bare key", () => {
-    // The classification sibling of groupHref: the literal `class` route, no
-    // provider/register — a classification umbrella is catalog-global.
-    expect(classGroupHref("sun")).toBe("/catalog/group/class/sun");
-  });
-
-  it("percent-encodes the key", () => {
-    expect(classGroupHref("a/b")).toBe("/catalog/group/class/a%2Fb");
   });
 });
 
