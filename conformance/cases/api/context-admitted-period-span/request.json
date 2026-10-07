@@ -1,0 +1,4 @@
+{
+  "fixture": "period-bounds",
+  "requests": [{"operation": "context", "path": "/api/context"}]
+}

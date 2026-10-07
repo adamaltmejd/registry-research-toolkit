@@ -1,0 +1,10 @@
+{
+  "fixture": "reader",
+  "kind": "steward",
+  "requests": [
+    {"operation": "context", "path": "/api/context"},
+    {"operation": "context", "path": "/api/context", "query": {"scope": "reference"}},
+    {"operation": "context", "path": "/api/context", "query": {"scope": "global"}},
+    {"operation": "context", "path": "/api/context", "query": {"years": "2015"}}
+  ]
+}
