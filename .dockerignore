@@ -42,5 +42,7 @@ reg_webapp/frontend/dist/
 # `readme = "README.md"`, so hatchling's editable build reads them in-image.
 archive/
 REFACTOR_SPEC.md
+RUST_RUNTIME_SPEC.md
+spike/
 ARCHITECTURE.md
 AGENTS.md

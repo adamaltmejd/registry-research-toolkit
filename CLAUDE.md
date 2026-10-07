@@ -1,8 +1,9 @@
 # Registry Research Toolkit
 
 Multi-package workspace for Swedish register research: catalog metadata, schema
-validation, and project authoring. See `ARCHITECTURE.md` for the cross-package design
-and `REFACTOR_SPEC.md` for the remaining (post-A5) work.
+validation, and project authoring. See `ARCHITECTURE.md` for the cross-package design,
+`REFACTOR_SPEC.md` for the remaining (post-A5) work, and `RUST_RUNTIME_SPEC.md` for the
+Rust runtime and compiled-catalog refactor.
 
 ## Packages
 
@@ -33,11 +34,12 @@ state.
   `reg_webapp/DESIGN.md` keeps the engineering rationale.
 - No frozen specs or **permanent** implementation trackers — design decisions live in
   DESIGN.md, implementation history lives in git.
-- **Exception**: a multi-PR refactor spanning weeks may keep a single root-level tracker
-  (currently `REFACTOR_SPEC.md`, scoping the remaining post-A5 work; the earlier
-  `MIGRATION_PLAN.md` was retired once A5 shipped) for cross-PR coordination. The
-  tracker is **scoped and self-deleting**: it ships with an explicit completion gate
-  (e.g. "deleted when stage X ships"), gets deleted at that gate, and never outlives the
+- **Exception**: each multi-PR refactor spanning weeks may keep one root-level tracker
+  for cross-PR coordination. Current trackers: `REFACTOR_SPEC.md` (the remaining post-A5
+  work; the earlier `MIGRATION_PLAN.md` was retired once A5 shipped) and
+  `RUST_RUNTIME_SPEC.md` (the Rust runtime and compiled-catalog refactor). Each tracker
+  is **scoped and self-deleting**: it ships with an explicit completion gate (e.g.
+  "deleted when stage X ships"), gets deleted at that gate, and never outlives the
   refactor it tracks. Per-package DESIGN.md notes for the same effort are still
   preferred where the scope is package-local.
 
@@ -154,7 +156,8 @@ when writing, changing or deleting a test.
 
 Current state (the Model A refactor through A5 has shipped). See `ARCHITECTURE.md` for
 the cross-package invariants and each `<package>/DESIGN.md` for the detail;
-`REFACTOR_SPEC.md` tracks the remaining work.
+`REFACTOR_SPEC.md` tracks the remaining work and `RUST_RUNTIME_SPEC.md` the Rust runtime
+refactor.
 
 - **Library packages** (`reg_meta`, `reg_meta_build`):
   - Modeling: `reg_meta` uses frozen Pydantic v2 (`_CatalogModel` base) so FastAPI can
@@ -257,4 +260,4 @@ For per-package design rationale, see `<package>/DESIGN.md` (the reg_meta object
 lives in `reg_meta/DESIGN.md`; per-provider source-delivery shapes in
 `reg_meta_build/DESIGN.md`). For the cross-package design (topology, dependency graph,
 repo-wide invariants), see `ARCHITECTURE.md`; for the remaining post-A5 work, see
-`REFACTOR_SPEC.md`.
+`REFACTOR_SPEC.md`; for the Rust runtime refactor, see `RUST_RUNTIME_SPEC.md`.
