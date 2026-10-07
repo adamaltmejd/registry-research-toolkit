@@ -1,0 +1,7 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "2 name-less variable(s) have a state without a positive delivery name",
+    "testreg/kon (state 2); testreg/testcol (state 3)"
+  ]
+}
