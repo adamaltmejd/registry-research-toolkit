@@ -28,7 +28,6 @@ from reg_meta_build.fqid_slugs import (
     repo_slug_dir,
     snapshot_path,
     snapshot_payload,
-    untracked_pinned_autos,
 )
 
 if TYPE_CHECKING:
@@ -114,9 +113,6 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
             f"{snapshot_path(directory)} is stale; run "
             f"`reg-meta-build precheck-slugs --update-snapshot`: {stale}"
         )
-        # A pin that was never committed: CI's clean checkout can only pass this,
-        # so it catches the case in a local run.
-        assert untracked_pinned_autos(directory, registers=registers) == []
 
     # The build's own call: errata resolve against the already-loaded registers.
     errata = resolve_scb_errata(

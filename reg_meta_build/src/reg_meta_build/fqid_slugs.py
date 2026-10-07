@@ -883,7 +883,7 @@ def _register_auto_path(root: Path, provider: str, register_slug: str) -> Path:
     return root / "registers" / provider / f"{register_slug}{AUTO_FILE_SUFFIX}"
 
 
-def untracked_pinned_autos(
+def _untracked_pinned_autos(
     slug_dir: Path, *, registers: Sequence[RegisterCuration] | None = None
 ) -> list[Path]:
     """Pinned (curating/frozen) auto files present on disk but absent from the
@@ -3674,7 +3674,7 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
             f"{path}: pinned auto file is not in the committed HEAD tree, so a "
             "clean checkout would lose its slugs. Commit it: "
             f"`git add -f {path} && git commit`."
-            for path in untracked_pinned_autos(slug_dir, registers=registers)
+            for path in _untracked_pinned_autos(slug_dir, registers=registers)
         )
 
     by_provider_kind: dict[tuple[str, str], set[str]] = {}
@@ -4091,7 +4091,6 @@ __all__ = (
     "seed_all",
     "seed_provider_toml",
     "snapshot_payload",
-    "untracked_pinned_autos",
     "write_auto_toml",
     "write_entity_key_pins",
     "write_snapshot",
