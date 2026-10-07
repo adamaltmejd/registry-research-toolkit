@@ -88,9 +88,10 @@ the block and the helpers it orphans, one commit per test file or package. A kep
 that fails on main is a product bug: reproduce it at the boundary and file it (search
 first; read through `scripts/gh_issue.py`), never delete it.
 
-Before pushing, always `uv run python -m pytest <package> conformance -n auto -q` (just
-`conformance` when no Python package is touched), plus the tree's own gate: for the
-frontend `bun run check && bun run lint && bun run test && bun run build`, then
+Before pushing, always `uv run python -m pytest <tree> conformance -n auto -q`, where
+`<tree>` is the touched Python package or `scripts/tests` (just `conformance` when
+neither is touched), plus the tree's own gate: for the frontend
+`bun run check && bun run lint && bun run test && bun run build`, then
 `bun run gen:types && git diff --exit-code src/lib/api-types.ts`, in
 `reg_webapp/frontend`; for `crates/` `cargo fmt --all --check`,
 `cargo clippy --workspace --all-targets --locked -- -D warnings` and
