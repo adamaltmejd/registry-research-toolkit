@@ -37,7 +37,10 @@ These answer without judgment. Run them first, by one subagent on the tier below
 family's mid tier (in Claude, Sonnet); the work is lookup.
 
 - **Dependencies.** Each package's `[project] dependencies` against what its `src/`
-  imports. A dependency in one and not the other is a finding.
+  imports and what runs it outside Python imports: entry points, Dockerfiles and
+  entrypoint scripts, CI workflows (`uvicorn` is only invoked from
+  `reg_webapp/docker-entrypoint.sh`). A dependency in one and not the other is a
+  finding.
 - **Dead code.** `uvx --from vulture==2.16 vulture <package>/src --min-confidence 80`.
   Confirm each hit with `rg` across the workspace and the frontend before calling it
   dead.
