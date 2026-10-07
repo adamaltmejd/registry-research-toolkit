@@ -1398,10 +1398,7 @@ def _resolve_slug_dir(slug_arg: str | None) -> Path:
                 "Slug TOMLs not found. Pass --slug-dir or run from a reg_meta "
                 "checkout containing reg_meta_build/curation/."
             ),
-            remediation=(
-                "Run from a repo checkout, or `reg-meta-build seed-slugs` "
-                "to bootstrap a new slug directory."
-            ),
+            remediation=("Run from a repo checkout, or pass --slug-dir."),
         )
     return resolved
 

@@ -26,6 +26,21 @@ def write_text_file(path: Path, body: str) -> Path:
     return path
 
 
+def write_register_file(
+    root: Path, slug: str, native_id: str, *, provider: str = "scb", body: str = ""
+) -> Path:
+    """Author a register file under ``root``; seed-slugs reads the register's
+    native id from it."""
+    path = root / "registers" / provider / f"{slug}.toml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        f'[register]\nprovider = "{provider}"\nslug = "{slug}"\n'
+        f'native_id = "{native_id}"\n{body}',
+        encoding="utf-8",
+    )
+    return path
+
+
 def run_precheck(
     db_dir: Path,
     slug_dir: Path,

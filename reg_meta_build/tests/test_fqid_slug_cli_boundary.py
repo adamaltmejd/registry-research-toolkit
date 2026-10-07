@@ -1,12 +1,16 @@
 """`reg-meta-build seed-slugs` driven through `cli.run` against a file DB: exit code,
-stdout JSON, the `_default` hint block on stderr, and the generated pin files."""
+stdout JSON, the `_default` hint block on stderr, and the generated pin files. The
+pin keys are proven on a pipeline-built catalog, whose register ids are surrogates."""
 
 from __future__ import annotations
 
 import json
 import sqlite3
+import tomllib
 from typing import TYPE_CHECKING
 
+from _fqid_slug_support import write_register_file
+from _pipeline_catalog_support import built_db_dir
 from _slugged_db import add_register, add_variant, build_slugged_db
 from reg_meta_build.cli import run
 from reg_meta_build.db import SCHEMA_VERSION
@@ -15,6 +19,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     import pytest
+    from _pipeline_catalog_support import CatalogFixture
 
 _AUTO = ("registers", "scb", "lisa.auto.toml")
 
@@ -50,8 +55,10 @@ def _db_dir(tmp_path: Path) -> Path:
 def _seed(
     capsys: pytest.CaptureFixture[str], db_dir: Path, out: Path, *flags: str
 ) -> tuple[int, dict, str]:
-    """Run seed-slugs; `flags` go after the subcommand (the global `--quiet` is
-    reordered by the CLI)."""
+    """Run seed-slugs into `out`, which holds both registers' files; `flags` go
+    after the subcommand (the global `--quiet` is reordered by the CLI)."""
+    write_register_file(out, "lisa", "1")
+    write_register_file(out, "komvux", "42")
     code = run(["--db", str(db_dir), "seed-slugs", "--out-dir", str(out), *flags])
     captured = capsys.readouterr()
     return code, json.loads(captured.out), captured.err
@@ -99,3 +106,45 @@ def test_pins_byte_identical_with_or_without_hint(
     assert "scb/42.124" in err
     quiet = (tmp_path / "quiet").joinpath(*_AUTO).read_bytes()
     assert (tmp_path / "loud").joinpath(*_AUTO).read_bytes() == quiet
+
+
+def test_pipeline_catalog_pins_key_on_native_register_id(
+    catalog: CatalogFixture, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The built catalog keeps no native register id, so the pin prefix comes from
+    the register file. Fails if seed-slugs keys pins by the catalog's surrogate
+    ``register_id`` (#1215): the build then rejects the pin as not belonging to
+    register ``1``."""
+    db_dir = built_db_dir(catalog, tmp_path)
+    register = catalog.curation / "registers" / "scb" / "sample.toml"
+    # Drop the authored variable pin so its slug is left to the generated file.
+    register.write_text(
+        register.read_text(encoding="utf-8").split("[[variable]]", 1)[0],
+        encoding="utf-8",
+    )
+
+    code = run(["--db", str(db_dir), "seed-slugs", "--out-dir", str(catalog.curation)])
+
+    assert code == 0
+    pins = register.with_name("sample.auto.toml").read_text(encoding="utf-8")
+    assert tomllib.loads(pins) == {
+        "variable": [{"native_id": "1.101", "slug": "value"}]
+    }
+
+
+def test_pipeline_catalog_register_without_file_refused(
+    catalog: CatalogFixture, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """With no register file to name its native id, a register cannot be pinned:
+    seed-slugs refuses and writes nothing. Fails if it falls back to the
+    surrogate id or skips the register silently."""
+    db_dir = built_db_dir(catalog, tmp_path)
+    out = tmp_path / "empty"
+
+    code = run(["--db", str(db_dir), "seed-slugs", "--out-dir", str(out)])
+
+    assert code == 10
+    error = json.loads(capsys.readouterr().out)["error"]
+    assert error["code"] == "slug_seed_register_unknown"
+    assert "scb/sample" in error["message"]
+    assert not list(out.rglob("*.auto.toml"))

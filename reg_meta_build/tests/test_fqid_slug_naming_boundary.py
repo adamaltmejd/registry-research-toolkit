@@ -8,6 +8,7 @@ import tomllib
 from typing import TYPE_CHECKING
 
 import pytest
+from _fqid_slug_support import write_register_file
 from _slugged_db import add_state, add_variable, build_slugged_db
 from reg_meta.errors import RegMetaError
 from reg_meta.fqid import validate_slug
@@ -73,12 +74,10 @@ def test_malformed_variable_key_rejected_at_load(
 
 
 def _pin_register(out: Path) -> None:
-    """Author LISA's register file and pin the scb zone, so `load_slug_dir` reads
-    the seeded `lisa.auto.toml` back as LISA's generated pins."""
-    (out / "registers" / "scb" / "lisa.toml").write_text(
-        '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "1"\n',
-        encoding="utf-8",
-    )
+    """Author LISA's register file (seed-slugs reads its native id) and pin the
+    scb zone, so `load_slug_dir` reads the seeded `lisa.auto.toml` back as LISA's
+    generated pins."""
+    write_register_file(out, "lisa", "1")
     (out / GLOBAL_FREEZE_STATE_FILE).write_text('scb = "curating"\n', encoding="utf-8")
 
 
@@ -88,14 +87,15 @@ def _variable_pins(out: Path) -> dict[str, str | None]:
 
 def test_seeded_pins_load_as_register_variables(tmp_path: Path) -> None:
     out = tmp_path / "curation"
-    seed_all(build_slugged_db(), out)
     _pin_register(out)
+    seed_all(build_slugged_db(), out)
     assert _variable_pins(out) == {"1.44": "kon"}
 
 
 def test_reseed_keeps_first_sight_pin(tmp_path: Path) -> None:
     conn = build_slugged_db()
     out = tmp_path / "curation"
+    _pin_register(out)
     seed_all(conn, out)
     conn.execute("UPDATE variable SET slug = 'changed' WHERE provider_key = '44'")
     seed_all(conn, out)
@@ -103,7 +103,6 @@ def test_reseed_keeps_first_sight_pin(tmp_path: Path) -> None:
         (out / "registers" / "scb" / "lisa.auto.toml").read_text(encoding="utf-8")
     )
     assert body == {"variable": [{"native_id": "1.44", "slug": "kon"}]}
-    _pin_register(out)
     assert _variable_pins(out) == {"1.44": "kon"}
 
 

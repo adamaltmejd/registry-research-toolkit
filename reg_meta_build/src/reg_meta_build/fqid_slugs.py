@@ -1864,11 +1864,13 @@ class EntityKeyVariable:
     source_id: str
 
 
-def _variable_source_ids(conn: sqlite3.Connection, register_id: int) -> dict[int, str]:
+def _variable_source_ids(
+    conn: sqlite3.Connection, register_id: int, *, register_native_id: str
+) -> dict[int, str]:
     """`{variable_id: source_id}` for every variable in ``register_id``.
 
-    Reuses the build's source-ID grammar: `<register_id>.<provider_key>`, or
-    `<register_id>.<provider_key>.<discriminator>` when the provider_key is a
+    Reuses the build's source-ID grammar: `<register_native_id>.<provider_key>`,
+    or `<register_native_id>.<provider_key>.<discriminator>` when the provider_key is a
     SPLIT sibling (shared `provider_key`, disambiguated by `_split_sibling_disc`
     — the same helper `populate_variable_slugs` uses). A provider_key containing
     '.' is rejected (it would mis-parse as a phantom split discriminator),
@@ -1899,9 +1901,9 @@ def _variable_source_ids(conn: sqlite3.Connection, register_id: int) -> dict[int
         if len(vids) > 1:  # split siblings share one provider_key — discriminate
             disc = _split_sibling_disc(conn, register_id, pk)
             for variable_id in vids:
-                out[variable_id] = f"{register_id}.{pk}.{disc[variable_id]}"
+                out[variable_id] = f"{register_native_id}.{pk}.{disc[variable_id]}"
         else:
-            out[vids[0]] = f"{register_id}.{pk}"
+            out[vids[0]] = f"{register_native_id}.{pk}"
     return out
 
 
@@ -1970,7 +1972,7 @@ def iter_entity_key_variables(
             seen.add(variable_id)
             if register_id not in source_ids_by_register:
                 source_ids_by_register[register_id] = _variable_source_ids(
-                    conn, register_id
+                    conn, register_id, register_native_id=str(register_id)
                 )
             yield EntityKeyVariable(
                 provider_slug=row["provider_slug"],
@@ -3625,10 +3627,11 @@ def seed_all(conn: sqlite3.Connection, out_dir: Path) -> dict[str, Path]:
 
     out_dir.mkdir(parents=True, exist_ok=True)
     written: dict[str, Path] = {}
-    curated = {
-        (register.register_info.provider, register.register_info.slug): {
-            row.native_id for row in register.variable if row.slug is not None
-        }
+    # A built catalog keys registers by a surrogate minted from the slug path
+    # and keeps no native id (#1215), so each register's native id, the prefix
+    # of its variable pins, comes from its register file in ``out_dir``.
+    registers = {
+        (register.register_info.provider, register.register_info.slug): register
         for register in load_register_files(out_dir)
     }
     rows = conn.execute(
@@ -3639,7 +3642,19 @@ def seed_all(conn: sqlite3.Connection, out_dir: Path) -> dict[str, Path]:
     for provider, register_id, register_slug in rows:
         if not register_slug:
             continue
-        source_ids = _variable_source_ids(conn, register_id)
+        register = registers.get((provider, register_slug))
+        native_id = register.register_info.native_id if register else None
+        if register is None or native_id is None:
+            raise _err(
+                "slug_seed_register_unknown",
+                f"{provider}/{register_slug}: no register file under "
+                f"{out_dir / 'registers' / provider} names its native id.",
+                "Seed into the curation tree that built the catalog (`--out-dir`).",
+            )
+        curated = {row.native_id for row in register.variable if row.slug is not None}
+        source_ids = _variable_source_ids(
+            conn, register_id, register_native_id=native_id
+        )
         slugs = {
             source_ids[var_id]: slug
             for var_id, slug in conn.execute(
@@ -3652,14 +3667,14 @@ def seed_all(conn: sqlite3.Connection, out_dir: Path) -> dict[str, Path]:
         derivation = read_auto_derivations(path)
         if path.is_file():
             existing = _auto_variable_slugs(
-                _load_register_auto_file(path, provider, str(register_id))
+                _load_register_auto_file(path, provider, native_id)
             )
             # Generated pins retain retired rows and their first-sight spelling.
             slugs = {**slugs, **existing}
         slugs = {
             source_id: slug
             for source_id, slug in slugs.items()
-            if source_id not in curated.get((provider, register_slug), set())
+            if source_id not in curated
         }
         write_auto_toml(path, provider, slugs, derivation)
         written[path.relative_to(out_dir).as_posix()] = path
