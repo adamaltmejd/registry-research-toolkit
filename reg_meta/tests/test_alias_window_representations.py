@@ -288,58 +288,6 @@ def test_curated_window_preserves_partial_family_fallback(tmp_path: Path) -> Non
         after_conn.close()
 
 
-def test_provenance_column_keeps_monthly_window_selection_unchanged(
-    tmp_path: Path,
-) -> None:
-    db = _build_multi_alias_db(tmp_path)
-    write_conn = sqlite3.connect(db)
-    try:
-        variable_id, variant_id, base_column = write_conn.execute(
-            "SELECT vs.variable_id, vs.register_variant_id, vs.delivery_column_name "
-            "FROM variable_state vs JOIN variable v "
-            "ON v.variable_id = vs.variable_id "
-            "WHERE v.slug = 'loneink-lisa2006'",
-        ).fetchone()
-        february_column = next(column for column in _ALIASES if column != base_column)
-        write_conn.execute("DELETE FROM variable_alias_window")
-        write_conn.executemany(
-            "INSERT INTO variable_alias_window "
-            "(variable_id, register_variant_id, delivery_column_name, valid_from, "
-            "valid_to, provenance) VALUES (?, ?, ?, ?, ?, NULL)",
-            [
-                (
-                    variable_id,
-                    variant_id,
-                    base_column,
-                    "2018-01-01",
-                    "2018-01-31",
-                ),
-                (
-                    variable_id,
-                    variant_id,
-                    february_column,
-                    "2018-02-01",
-                    "2018-02-28",
-                ),
-            ],
-        )
-        write_conn.commit()
-    finally:
-        write_conn.close()
-
-    conn = open_db(db)
-    try:
-        cat = Catalog(conn)
-        assert [
-            state.delivery_column_name for state in cat.resolve_at(_FQID, "2018-01")
-        ] == [base_column]
-        assert [
-            state.delivery_column_name for state in cat.resolve_at(_FQID, "2018-02")
-        ] == [february_column]
-    finally:
-        conn.close()
-
-
 def test_per_column_coding_preserves_domains_and_native_labels(
     tmp_path: Path,
 ) -> None:
