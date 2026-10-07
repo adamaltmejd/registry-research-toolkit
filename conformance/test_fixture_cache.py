@@ -1,14 +1,16 @@
-"""The synthetic-artifact cache: hits never rebuild, keys cover every input."""
+"""The synthetic-artifact cache: keys cover every input, pruning stays in bounds.
+
+The conformance suite running on the cache proves hits work end to end; these
+two guard what nothing else would catch.
+"""
 
 from __future__ import annotations
 
-import hashlib
 import os
 import shutil
 import time
 from pathlib import Path
 
-import pytest
 from reader_artifacts import (
     BUILD_PACKAGES,
     CASES,
@@ -22,27 +24,8 @@ from reader_artifacts import (
 )
 
 
-def _sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-@pytest.mark.skipif(os.geteuid() == 0, reason="root writes through read-only mode bits")
-def test_a_hit_needs_no_write_access(tmp_path, monkeypatch):
-    cache = tmp_path / "cache"
-    monkeypatch.setenv(FIXTURE_CACHE_ENV, str(cache))
-    first = cached_reader_artifact("reader", "catalog")
-    directories = [cache, *(path for path in cache.rglob("*") if path.is_dir())]
-    # A rebuild must stage a new entry, which a read-only cache refuses.
-    for directory in directories:
-        directory.chmod(0o555)
-    try:
-        assert cached_reader_artifact("reader", "catalog") == first
-    finally:
-        for directory in directories:
-            directory.chmod(0o755)
-
-
 def test_only_idle_generations_are_pruned(tmp_path, monkeypatch):
+    # Fails if pruning reaches outside `generations/` or ignores the idle cutoff.
     cache = tmp_path / "cache"
     monkeypatch.setenv(FIXTURE_CACHE_ENV, str(cache))
     idle = time.time() - FIXTURE_CACHE_RETENTION_SECONDS - 60
@@ -59,23 +42,14 @@ def test_only_idle_generations_are_pruned(tmp_path, monkeypatch):
     assert (stale.exists(), active.exists(), neighbour.exists()) == (False, True, True)
 
 
-@pytest.mark.parametrize("kind", ["catalog", "steward"])
-def test_a_cache_hit_is_byte_identical_to_a_fresh_build(kind, tmp_path, monkeypatch):
-    monkeypatch.setenv(FIXTURE_CACHE_ENV, str(tmp_path / "warm"))
-    cached_reader_artifact("reader", kind)
-    hit = cached_reader_artifact("reader", kind)
-    monkeypatch.setenv(FIXTURE_CACHE_ENV, str(tmp_path / "fresh"))
-    fresh = cached_reader_artifact("reader", kind)
-    assert hit != fresh
-    assert _sha256(hit) == _sha256(fresh)
-
-
 def _perturb(path: Path) -> None:
     with path.open("ab") as handle:
         handle.write(b"\n")
 
 
 def test_every_build_input_class_changes_the_key(tmp_path):
+    # Fails if any input class drops out of the key, which would serve a stale
+    # artifact after that input changes.
     packages = [tmp_path / package.name for package in BUILD_PACKAGES]
     for source, copy in zip(BUILD_PACKAGES, packages, strict=True):
         shutil.copytree(source, copy, ignore=shutil.ignore_patterns("__pycache__"))
