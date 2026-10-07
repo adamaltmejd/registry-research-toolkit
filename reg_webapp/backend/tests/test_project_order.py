@@ -135,16 +135,23 @@ def test_empty_project_is_blocked_not_a_header_only_manifest(client):
     assert [f["code"] for f in body["findings"]] == ["project_empty"]
 
 
-@pytest.mark.parametrize("period", ["notaperiod", "_default"])
-def test_structurally_invalid_spec_is_422(client, period):
+@pytest.mark.parametrize(
+    ("period", "codes"),
+    [("notaperiod", []), ("_default", ["binding_unavailable"])],
+)
+def test_bad_period_is_422_never_a_manifest(client, period, codes):
     """The shared gate (`order.project_from_raw`) runs before materialization: a
     Pydantic-valid but structurally invalid spec (a bad period token — a `str`,
-    so the model accepts it) is a 422, not a manifest of a bad provider order.
-    The retired whole-history `_default` sentinel is now one of those tokens."""
+    so the model accepts it) is a 422 with an EMPTY findings array, since nothing
+    was ordered. The retired whole-history `_default` sentinel passes the gate
+    as a year-independent request and is blocked by the materializer instead:
+    still a 422, now naming its finding."""
     spec = _spec(period=period)
     resp = client.post("/api/project/order", json=spec)
     assert resp.status_code == 422, f"bad period → {resp.status_code}"
-    assert "entries" not in resp.json()
+    body = resp.json()
+    assert "entries" not in body
+    assert [f["code"] for f in body["findings"]] == codes
 
 
 def test_concurrent_order_no_cross_thread_error(catalog_db):
