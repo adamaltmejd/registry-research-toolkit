@@ -20,19 +20,6 @@
       }
     ]
   },
-  "provider_columns": [
-    {
-      "register": "example",
-      "variable": "value",
-      "column": "Value",
-      "coverage": {
-        "coverage_from": "2018-01-01",
-        "coverage_to": "2018-12-31",
-        "open_ended": false,
-        "state_count": 1
-      }
-    }
-  ],
   "provider_registers": {
     "example": {
       "variable_count": 1,

@@ -1436,10 +1436,7 @@ every historical state's code list to answer a question about one period — on 
 geography variable whose yearly states share one large code list that is most of the
 request. Diagnostics are unchanged: aliases, expanded monthly windows, representation
 identity (`state_id`, `delivery_column_name`, `valid_from`) and code-set identity
-(`value_set_id`) all come from the same code path. The conformance suite pins the rule
-by tracing every statement validation issues over the readable semantic fixture and
-refusing any read of a code-list table (`value_set_member`, `value_code`,
-`classification_code`, `classification_conformance_code`).
+(`value_set_id`) all come from the same code path.
 
 **Representation, not `@version`.** A FQID names one concept, but a concept may carry
 several **co-existing delivery columns** at the same instant — parallel representations

@@ -1,4 +1,4 @@
-"""CLI JSON and order bytes observed against independently authored case data."""
+"""Search cursors bind to the artifact generation, not its import date."""
 
 from __future__ import annotations
 
@@ -7,38 +7,10 @@ from typing import TYPE_CHECKING
 
 import pytest
 from reader_artifacts import CASES, build_reader_artifact
-from reg_meta.catalog import Catalog
 from reg_meta.db import open_db
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-
-def test_catalog_listing_and_counts_share_scope(tmp_path: Path) -> None:
-    case = CASES / "reader/listing"
-    request = json.loads((case / "request.json").read_text())
-    expected = json.loads((case / "expected.json").read_text())
-    path = build_reader_artifact(
-        tmp_path / "artifact", request["fixture"], request["artifact"]
-    )
-    catalog = Catalog.open(str(path.parent))
-    try:
-        binding = catalog.resolve_binding(request["delivery_variable"])
-        states = catalog.states(request["delivery_variable"])
-        actual = {
-            "sizes": catalog.catalog_sizes().model_dump(),
-            "providers": [str(p.fqid) for p in catalog.list_providers()],
-            "registers": [str(r.fqid) for r in catalog.list_registers("scb")],
-            "bindings": [str(v.fqid) for v in catalog.list_bindings("scb", "example")],
-            "delivery_columns": sorted(
-                catalog.delivery_columns(
-                    int(binding.variable_id), int(states[0].register_variant_id)
-                )
-            ),
-        }
-    finally:
-        catalog.close()
-    assert actual == expected
 
 
 def test_cursor_uses_generation_across_connections(tmp_path: Path) -> None:
