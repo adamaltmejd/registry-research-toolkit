@@ -228,10 +228,12 @@ def resolve_source_scope(
                     if ref in guarded_refs:
                         guarded_originals[ref].append(item.record)
     guarded_coding: dict[SourceRecordRef, list[str]] = defaultdict(list)
-    original_registers = (
-        {record_ref(item): source_register_key(item) for item in originals}
+    # An ordinary error is acknowledgeable only when every ref it names is one of
+    # this scope's originals; a stale case's absent authored ref never qualifies.
+    original_refs = (
+        frozenset(record_ref(item) for item in originals)
         if acknowledgements
-        else {}
+        else frozenset()
     )
     # Errors an acknowledgement names, settled once the whole scope is resolved.
     held: dict[
@@ -291,11 +293,7 @@ def resolve_source_scope(
             if match is not None and (
                 source_register == match[1].register_key
                 if source_register is not None
-                else bool(issue.refs)
-                and all(
-                    original_registers.get(ref) == match[1].register_key
-                    for ref in issue.refs
-                )
+                else bool(issue.refs) and original_refs.issuperset(issue.refs)
             ):
                 match[2].append(issue)
                 return

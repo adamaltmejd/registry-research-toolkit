@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from reg_meta.source_evidence import RecordLocator, SourceRevision
+from _csv_fixtures import SCB_REVISION
+from reg_meta.source_evidence import RecordLocator
 from reg_meta_build.resolved_catalog import (
     ResolvedRegister,
     ResolvedVariant,
@@ -31,17 +32,6 @@ from reg_meta_build.source_records import (
 
 if TYPE_CHECKING:
     from reg_meta_build.sources.swecov_column_types import StewardColumnStorage
-
-REVISION = SourceRevision.create(
-    dataset="fixture",
-    publisher="SCB",
-    purpose="Formation fixture",
-    upstream_revision="1",
-    artifact_path="input.csv",
-    artifact_size=1,
-    artifact_sha256="a" * 64,
-)
-
 
 REGISTER = ResolvedRegister(provider="scb", slug="example", name="Example")
 
@@ -71,7 +61,7 @@ def formation_record(
     row: str = "",
 ) -> SourceRecord:
     return SourceRecord.create(
-        revision=REVISION,
+        revision=SCB_REVISION,
         locators=(
             RecordLocator(
                 semantic_record_key=("variable:4", f"year:{year}{row}"),

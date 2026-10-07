@@ -2,8 +2,7 @@
 
 from dataclasses import replace
 
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
-from reg_meta.source_evidence import SourceRevision
+from _csv_fixtures import scb_record
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
     ResolvedClassificationCode,
@@ -34,7 +33,6 @@ from reg_meta_build.source_records import (
     TemporalScope,
     value_field,
 )
-from reg_meta_build.sources.scb_records import clean_scb_row
 
 
 def sole_classification(state):
@@ -56,30 +54,14 @@ def sole_conformance(state):
 
 
 def binding_setup(*, code="01", inline=True, sentinels=()):
-    revision = SourceRevision.create(
-        dataset="fixture",
-        publisher="SCB",
-        purpose="test",
-        upstream_revision="1",
-        artifact_path="rows.csv",
-        artifact_size=1,
-        artifact_sha256="a" * 64,
-    )
-    header = REGISTERINFORMATION_HEADER.split("|")
-    values = var_row(
+    record = scb_record(
         colname="Column",
         var_id=1,
         cvid=100,
         varname="Variable",
         year="2020",
         data_type="int",
-    ).split("|")
-    record = clean_scb_row(
-        header,
-        1,
-        {k: (True, v, v) for k, v in zip(header, values, strict=True)},
-        revision,
-    ).record
+    )
     occurrence = source_occurrence(record)
     assert occurrence.column_key is not None
     classification = ResolvedClassification(
@@ -118,7 +100,7 @@ def binding_setup(*, code="01", inline=True, sentinels=()):
         peer_guards=(
             PeerGuard(
                 guard_id="membership",
-                source="fixture",
+                source=record.source,
                 native=NativeCoordinates(register_id=1, variable_id=1),
                 edition_scopes=(record.edition_scope,),
                 expected_members=tuple(e.ref for e in expected),

@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
-from reg_meta.source_evidence import SourceRevision
+from _csv_fixtures import SCB_REVISION, scb_record
 from reg_meta_build.curation_compile import compile_coding_register
 from reg_meta_build.curation_tree import RegisterCuration
 from reg_meta_build.pipeline import CompiledScope
@@ -37,7 +36,6 @@ from reg_meta_build.source_records import (
     SourceRecord,
     TemporalScope,
 )
-from reg_meta_build.sources.scb_records import clean_scb_row
 
 from reg_meta_build.fqid_slugs import SlugEntry
 
@@ -62,33 +60,14 @@ def column_scopes(
 def choice_record(
     year: int = 2020, column: str = "VALUE", *, variable: int = 5
 ) -> SourceRecord:
-    revision = SourceRevision.create(
-        dataset="scb-fixture",
-        publisher="SCB",
-        purpose="coding fixture",
-        upstream_revision="1",
-        artifact_path="records.csv",
-        artifact_size=1,
-        artifact_sha256="a" * 64,
-    )
-    header = REGISTERINFORMATION_HEADER.split("|")
-    values = var_row(
+    return scb_record(
         cvid=year,
         var_id=variable,
         colname=column,
         register=("TEST", 1, 2),
         regver_id=year,
         year=str(year),
-    ).split("|")
-    return clean_scb_row(
-        header,
-        1,
-        {
-            name: (True, value, value)
-            for name, value in zip(header, values, strict=True)
-        },
-        revision,
-    ).record
+    )
 
 
 def list_claim(
@@ -263,17 +242,8 @@ def row_authority(record, claims, source_scope=None):
     from reg_meta_build.curation_tree import PreparedCodingAuthority
     from reg_meta_build.source_coding import copied_coding_fingerprints
 
-    revision = SourceRevision.create(
-        dataset="scb-fixture",
-        publisher="SCB",
-        purpose="coding fixture",
-        upstream_revision="1",
-        artifact_path="records.csv",
-        artifact_size=1,
-        artifact_sha256="a" * 64,
-    )
     return PreparedCodingAuthority(
-        revision=revision,
+        revision=SCB_REVISION,
         source_scope=source_scope,
         locators=list(record.locators),
         records=list(

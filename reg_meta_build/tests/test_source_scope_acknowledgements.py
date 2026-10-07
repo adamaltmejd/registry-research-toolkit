@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytest
+from _source_effects_support import effect_case, effect_field
 from _source_scope_support import acknowledge, names, record, resolve
 from reg_meta.source_evidence import SourceField, SourceRevision
 from reg_meta_build.source_coordinates import (
@@ -76,6 +77,30 @@ def test_a_stale_acknowledgement_is_an_error():
         ("unresolved_catalog_identity", "error"),
         ("stale_curation_entry", "error"),
     ]
+
+
+def test_an_issue_naming_a_ref_outside_the_scope_cannot_be_acknowledged():
+    """A stale correction names its authored target, absent from this scope. The
+    resulting `target_missing` error names a ref no original carries, so an exact
+    acknowledgement of it stays stale and the error stays an error."""
+    item, absent = record(), record(2, year="2021")
+    correction = effect_case(absent, effect_field(absent, "name", "Renamed"))
+    (missing,) = (
+        issue
+        for issue in resolve((item,), cases=(correction,)).diagnostics
+        if issue.code == "target_missing"
+    )
+    assert missing.refs == (record_ref(absent),)
+    result = resolve((item,), cases=(correction, acknowledge(missing, item)))
+    assert [
+        (d.code, d.severity, d.case_id)
+        for d in result.diagnostics
+        if d.code in {"target_missing", "stale_curation_entry"}
+    ] == [
+        ("target_missing", "error", "accepted"),
+        ("stale_curation_entry", "error", "acknowledged"),
+    ]
+    assert result.acknowledged == {}
 
 
 def test_acknowledged_warning_persists_reviewed_reason_and_diagnostic_hash():
