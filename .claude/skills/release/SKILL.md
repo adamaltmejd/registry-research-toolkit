@@ -84,7 +84,7 @@ difference:
 
 - **`main` may carry coherent unpublished sibling changes.** A schema bump lands on main
   with reg_meta's raised floor in the same push, and the schema publisher only runs
-  *after* that push and its GitHub release. So the pre-push gate (step 6) runs the
+  *after* that push and its GitHub release. So the full-suite run in step 5 includes the
   reg_meta package integration module in `--install-mode workspace`: it builds this
   checkout's reg_schema **and** reg_meta wheels in a pinned container and installs both.
   Green means the two sources are mutually installable. It is **not** evidence that
@@ -198,8 +198,26 @@ uv run ruff format --check
 uvx --from ty==0.0.79 ty check
 ```
 
-This pytest is a fast per-package pre-flight; the **full** suite runs at push time (step
-6). If anything fails, stop and fix. Do not release broken code.
+The per-package pytest is a fast pre-flight. There is no pre-push test hook, so the
+**full** suite is an explicit gate here, run on the version-bumped tree before the
+commit is pushed to main (#710):
+
+```sh
+uv run python -m pytest -n auto -q --run-integration --install-mode workspace
+```
+
+This runs the whole suite — including the `reg_meta` native container integration test
+as a *hard* gate (`--run-integration`, so its runtime fixture **fails** rather than
+skips). **Apple Container (macOS) or Podman (Linux) must be healthy**; if it is not,
+start it and re-run. The release-marked `test_update_and_query`, which downloads the
+published asset, is not selected (no `--run-release`) and runs only post-publish — see
+step 10.
+
+`--install-mode workspace` (see Two packaging phases) proves this checkout's reg_schema
+and reg_meta wheels install together, so a schema bump can land on main before its
+release. Reaching PyPI is a separate gate — step 8e for reg_meta.
+
+If anything fails, stop and fix. Do not release broken code.
 
 ### 6. Commit and push
 
@@ -225,18 +243,9 @@ if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
 fi
 ```
 
-**The push runs the full pre-push gate** (#710): the entire pytest suite — including the
-`reg_meta` native container integration test as a *hard* gate (`--run-integration`, so
-its runtime fixture **fails** rather than skips) — runs at push time, not commit. The
-bump commit touches `pyproject.toml` and `__init__.py`, which the push range gate
-matches, so the suite **will** run on this push. **Apple Container (macOS) or Podman
-(Linux) must be healthy** or the push is blocked — start it and push again, never bypass
-with `--no-verify`. (The release-marked `test_update_and_query`, which downloads the
-published asset, is carved off pre-push and runs only post-publish — see step 10.)
-
-This gate runs `--install-mode workspace` (see Two packaging phases): it proves this
-checkout's reg_schema and reg_meta wheels install together, so a schema bump can land on
-main before its release. Reaching PyPI is a separate gate — step 8e for reg_meta.
+**No hook tests this push.** The step 5 full-suite run is the release's pre-push gate;
+do not push the bump commit until it is green. CI re-runs the suite on main after the
+push.
 
 ### 7. Create draft GitHub release
 
@@ -592,11 +601,11 @@ re-release it over this. Beyond the upload, a green `publish` job certifies only
   nonpublishable, or mismatched artifact. Repair the build or selected asset; never
   resurrect loose runtime inventory as a workaround.
 
-The release-asset test is carved off pre-push and ordinary push/PR CI, so a CLI-surface
-change can strand them silently until this gate. Fix the cause — on main, or on the
-release's assets — and re-validate with `gh workflow run integration.yml --ref main`
-(then watch that dispatched run). Do **not** re-release a working package over a stale
-test.
+The release-asset test is carved off the full-suite run and ordinary push/PR CI, so a
+CLI-surface change can strand them silently until this gate. Fix the cause — on main, or
+on the release's assets — and re-validate with
+`gh workflow run integration.yml --ref main` (then watch that dispatched run). Do
+**not** re-release a working package over a stale test.
 
 If the package has no publish workflow, report the release is done after the tag is
 created.

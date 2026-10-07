@@ -7,8 +7,8 @@ Tests decorated with these markers are skipped unless explicitly opted in.
     pytest --run-integration        # include integration tests
 
 --install-mode picks which installation the package integration module builds.
-It is registered HERE, not in reg_meta/tests/conftest.py, because the pre-push
-hook invokes the WHOLE suite in one process (`pytest -n auto --run-integration
+It is registered HERE, not in reg_meta/tests/conftest.py, because a run can invoke
+the WHOLE suite in one process (`pytest -n auto --run-integration
 --install-mode workspace`): an option registered under a subdirectory conftest
 is unknown at argument-parse time and would abort that run.
 """
@@ -28,9 +28,9 @@ OPTIONAL_MARKERS: dict[str, str] = {
     # Tests that need a PUBLISHED release asset: either downloaded from GitHub
     # (a subset of the container integration tests) or already fetched and selected
     # with --artifact-dir for conformance checks (which need no container).
-    # Gated separately so the pre-push hook (which opts into
-    # `integration` as a hard native container gate) does NOT block a push when
-    # a release is merely owed — these belong in a post-release / scheduled CI job.
+    # Gated separately so a run that opts into `integration` as a hard native
+    # container gate (CI's package-integration job) does NOT fail when a release
+    # is merely owed — these belong in a post-release / scheduled CI job.
     "release": "run tests that need a published release asset",
 }
 

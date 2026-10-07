@@ -354,12 +354,12 @@ def test_untracked_pinned_auto_detected(tmp_path):
 
 
 def test_staged_but_uncommitted_pinned_auto_flagged(tmp_path):
-    """The exact Codex P2: the suite runs as a pre-push hook, so a pinned auto file
-    that was ``git add -f``'d but NEVER committed sits in the index yet is absent
-    from the committed tree the push will publish. Reading the index (the old
-    ``git ls-files``) would treat it as fine and let the push through; the pushed
-    commit lacks the file, so it vanishes on a clean checkout. Reading HEAD
-    (``git ls-tree``) flags it. Self-contained — does not read the repo's state."""
+    """The exact Codex P2: a pinned auto file that was ``git add -f``'d but NEVER
+    committed sits in the index yet is absent from the committed tree a clean
+    checkout (CI) sees. Reading the index (the old ``git ls-files``) would treat it
+    as fine and let it through; the pushed commit lacks the file, so it vanishes on
+    a clean checkout. Reading HEAD (``git ls-tree``) flags it.
+    Self-contained — does not read the repo's state."""
     subprocess.run(
         ["git", "init"], cwd=tmp_path, capture_output=True, check=True, env=_git_env()
     )
