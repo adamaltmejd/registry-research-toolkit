@@ -544,23 +544,15 @@ def errata_worklist(report: CoverageReport) -> str:
 
 @dataclass(frozen=True)
 class _Windows:
-    """The catalog's merged delivery windows at the two grains the gate asks
-    about: one column of one binding, and any column of one binding (the
-    single-representation arm)."""
+    """The catalog's merged delivery windows per column of one binding, the
+    grain every mapping's required `representation` names."""
 
     by_column: dict[tuple[_PairIds, str], tuple[_Interval, ...]]
-    by_pair: dict[_PairIds, tuple[_Interval, ...]]
     independent_columns: frozenset[tuple[_PairIds, str]] = frozenset()
 
-    def for_mapping(
-        self, pair: _PairIds, representation: str | None
-    ) -> tuple[_Interval, ...]:
-        """The windows a mapping's coverage is judged against. An explicit
-        `representation` names ONE canonical column; `None` means "the concept's
-        single representation", which any of the binding's columns can
-        answer, so it is judged against the binding as a whole."""
-        if representation is None:
-            return self.by_pair.get(pair, ())
+    def for_mapping(self, pair: _PairIds, representation: str) -> tuple[_Interval, ...]:
+        """The windows a mapping's coverage is judged against: its required
+        `representation` names ONE canonical column of the binding."""
         return self.by_column.get((pair, _fold(representation)), ())
 
 
@@ -576,7 +568,6 @@ def _load_windows(conn: sqlite3.Connection, pairs: set[_PairIds]) -> _Windows:
     every comparison downstream fold against fold.
     """
     by_column: dict[tuple[_PairIds, str], list[_Interval]] = {}
-    by_pair: dict[_PairIds, list[_Interval]] = {}
     independent_columns = set()
     for delivery_table in ("variable_state", "variable_alias_window"):
         scope = "period_scope" if delivery_table == "variable_state" else "'intervals'"
@@ -598,14 +589,12 @@ def _load_windows(conn: sqlite3.Connection, pairs: set[_PairIds]) -> _Windows:
                 if column is not None:
                     independent_columns.add((pair, _fold(column)))
                 continue
-            by_pair.setdefault(pair, []).append((valid_from, valid_to))
             if column is not None:
                 by_column.setdefault((pair, _fold(column)), []).append(
                     (valid_from, valid_to)
                 )
     return _Windows(
         by_column={key: _merge(rows) for key, rows in by_column.items()},
-        by_pair={key: _merge(rows) for key, rows in by_pair.items()},
         independent_columns=frozenset(independent_columns),
     )
 
@@ -693,7 +682,7 @@ def _placements(
         register, _, variant = mapping.register_variant.rpartition("/")
         placed.append(
             _Placement(
-                key=(register, variant, mapping.representation or column.name),
+                key=(register, variant, mapping.representation),
                 windows=windows.for_mapping(pair, mapping.representation),
                 variable_id=pair[0],
                 variant_id=pair[1],
