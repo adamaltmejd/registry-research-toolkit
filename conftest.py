@@ -73,5 +73,8 @@ def pytest_collection_modifyitems(
             continue
         skip = pytest.mark.skip(reason=f"needs --run-{name} to run")
         for item in items:
-            if name in item.keywords:
+            # Not `name in item.keywords`: keywords also hold directory, module and
+            # parametrize-id names, so a checkout under `.../integration/` skipped
+            # the whole suite while reporting green.
+            if item.get_closest_marker(name) is not None:
                 item.add_marker(skip)
