@@ -1,34 +1,34 @@
 """The surface inventory (`conformance/api/surface.toml`) matches the source.
 
-Routes, `reg-meta` subcommands and `reg_meta` imports are discovered with `ast` from
-the source; the skill's commands are matched against its SKILL.md text. A discovered
-item without a row fails, and so does a row whose item no longer exists. Imports are
-read from every git-visible `.py` file (tracked or untracked, not ignored) under the
-consumer roots, so the 14 GB untracked seed under `reg_meta_build/input_data` and
-virtualenvs are never walked.
+Routes come from the committed OpenAPI snapshot; `reg-meta` subcommands and
+`reg_meta` imports are discovered with `ast`; the skill's commands are matched against
+its SKILL.md text. A discovered item without a row fails, and so does a row whose item
+no longer exists. Discovery fails closed on source forms it does not model.
 """
 
 from __future__ import annotations
 
 import ast
+import json
 import subprocess
 import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SURFACE = ROOT / "conformance/api/surface.toml"
-ROUTES = ROOT / "reg_webapp/backend/src/reg_webapp/routes"
+OPENAPI = ROOT / "reg_webapp/backend/openapi.json"
 CLI = ROOT / "reg_meta/src/reg_meta/cli.py"
 SKILL = ROOT / "plugins/microdata-tools-se/skills/register-metadata-search/SKILL.md"
-CONSUMERS = ("conformance", "reg_meta_build", "reg_webapp")
-HTTP_METHODS = {"get", "post", "put", "patch", "delete", "head", "options"}
+PROVIDER = "reg_meta"
 
 KINDS = {"route", "command", "import", "skill"}
 DISPOSITIONS = {"retained", "replaced", "removed"}
-OWNERS = {"3a", "3b", "3c", "3d", "3e", "4", "5"}
+# "1": the stage-0 spike, deleted by stage-1 package 1.5.
+OWNERS = {"1", "3a", "3b", "3c", "3d", "3e", "4", "5"}
 REQUIRED = {"kind", "id", "disposition", "owner", "covered_by"}
 # `operation` is added by package 1.1 and checked by its test_api_spec.py.
-# `pending = true` marks a row whose item an in-flight PR adds; drop it once it exists.
+# `pending = true` marks a row whose item (and covered_by paths) an in-flight PR adds;
+# drop it once the item exists. simplify: temporary, removed after #1189 merges.
 OPTIONAL = {"note", "used_by", "operation", "pending"}
 
 
@@ -37,97 +37,81 @@ def _rows(kind: str | None = None) -> list[dict]:
     return [r for r in rows if kind is None or r["kind"] == kind]
 
 
-def _str_arg(call: ast.Call) -> str | None:
-    if call.args and isinstance(call.args[0], ast.Constant):
-        value = call.args[0].value
-        return value if isinstance(value, str) else None
-    return None
-
-
 def _discover_routes() -> set[str]:
-    found = set()
-    for path in sorted(ROUTES.glob("*.py")):
-        tree = ast.parse(path.read_text(encoding="utf-8"), str(path))
-        prefixes = {}
-        for node in ast.walk(tree):
-            if (
-                isinstance(node, ast.Assign)
-                and isinstance(node.value, ast.Call)
-                and isinstance(node.value.func, ast.Name)
-                and node.value.func.id == "APIRouter"
-            ):
-                prefix = next(
-                    (
-                        k.value.value
-                        for k in node.value.keywords
-                        if k.arg == "prefix" and isinstance(k.value, ast.Constant)
-                    ),
-                    "",
-                )
-                for target in node.targets:
-                    assert isinstance(target, ast.Name), path
-                    prefixes[target.id] = prefix
-        for node in ast.walk(tree):
-            if not isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef):
-                continue
-            for deco in node.decorator_list:
-                if (
-                    isinstance(deco, ast.Call)
-                    and isinstance(deco.func, ast.Attribute)
-                    and deco.func.attr in HTTP_METHODS
-                    and isinstance(deco.func.value, ast.Name)
-                    and deco.func.value.id in prefixes
-                ):
-                    route = _str_arg(deco)
-                    assert route is not None, f"{path}:{deco.lineno} non-literal route"
-                    prefix = prefixes[deco.func.value.id]
-                    found.add(f"{deco.func.attr.upper()} {prefix}{route}")
-    return found
+    """Routes as the committed OpenAPI schema lists them.
+
+    `reg_webapp/backend/tests/test_openapi_snapshot.py` keeps the snapshot equal to
+    the app's rendered schema, so a route cannot exist without appearing here.
+    """
+    paths = json.loads(OPENAPI.read_text(encoding="utf-8"))["paths"]
+    return {f"{method.upper()} {path}" for path, ops in paths.items() for method in ops}
 
 
 def _discover_commands() -> set[str]:
+    """Argv paths of every `add_parser` in the CLI.
+
+    Fails closed on any form the walk does not model: a parser or subparsers variable
+    assigned twice, `aliases=`, a non-literal name, a result bound to anything but a
+    plain name, or a subparsers action that does not hang off a known parser.
+    """
     tree = ast.parse(CLI.read_text(encoding="utf-8"), str(CLI))
+    parents = {
+        child: node for node in ast.walk(tree) for child in ast.iter_child_nodes(node)
+    }
     subparsers: dict[str, str] = {}  # subparsers-action var -> owning parser var
     parsers: dict[str, tuple[str, str]] = {}  # parser var -> (subparsers var, name)
-    calls: list[tuple[str, str]] = []
+    leaves: list[tuple[str, str]] = []  # (subparsers var, name) of discarded results
     for node in ast.walk(tree):
-        if (
-            isinstance(node, ast.Assign)
-            and isinstance(node.value, ast.Call)
-            and isinstance(node.value.func, ast.Attribute)
-            and isinstance(node.value.func.value, ast.Name)
-            and len(node.targets) == 1
-            and isinstance(node.targets[0], ast.Name)
-        ):
-            owner, target = node.value.func.value.id, node.targets[0].id
-            if node.value.func.attr == "add_subparsers":
-                subparsers[target] = owner
-            elif node.value.func.attr == "add_parser":
-                parsers[target] = (owner, _str_arg(node.value) or "")
-        if (
+        if not (
             isinstance(node, ast.Call)
             and isinstance(node.func, ast.Attribute)
-            and node.func.attr == "add_parser"
-            and isinstance(node.func.value, ast.Name)
+            and node.func.attr in {"add_parser", "add_subparsers"}
         ):
-            name = _str_arg(node)
-            assert name is not None, f"{CLI}:{node.lineno} non-literal subcommand"
-            calls.append((node.func.value.id, name))
+            continue
+        where = f"{CLI.name}:{node.lineno}"
+        assert isinstance(node.func.value, ast.Name), f"{where} non-name receiver"
+        receiver = node.func.value.id
+        parent = parents[node]
+        if isinstance(parent, ast.Assign):
+            assert len(parent.targets) == 1, where
+            assert isinstance(parent.targets[0], ast.Name), where
+            target = parent.targets[0].id
+            assert target not in parsers and target not in subparsers, (
+                f"{where} {target} assigned twice"
+            )
+        else:
+            assert isinstance(parent, ast.Expr), f"{where} unmodelled result binding"
+            target = None
+        if node.func.attr == "add_subparsers":
+            assert target is not None, f"{where} unbound subparsers action"
+            subparsers[target] = receiver
+            continue
+        first = node.args[0] if node.args else None
+        name = first.value if isinstance(first, ast.Constant) else None
+        assert isinstance(name, str), f"{where} non-literal subcommand name"
+        assert all(k.arg != "aliases" for k in node.keywords), f"{where} aliases="
+        if target is None:
+            leaves.append((receiver, name))
+        else:
+            parsers[target] = (receiver, name)
+    roots = {owner for owner in subparsers.values() if owner not in parsers}
+    assert len(roots) == 1, f"expected one root parser, found {sorted(roots)}"
 
-    def parser_path(var: str) -> list[str]:
-        if var not in parsers:
-            return []
-        action, name = parsers[var]
-        return [*parser_path(subparsers[action]), name]
+    def path(action: str, name: str) -> str:
+        assert action in subparsers, f"{action} is not a subparsers action"
+        owner = subparsers[action]
+        prefix = path(*parsers[owner]) + " " if owner in parsers else ""
+        return prefix + name
 
-    return {
-        " ".join([*parser_path(subparsers[action]), name]) for action, name in calls
-    }
+    return {path(action, name) for action, name in [*parsers.values(), *leaves]}
 
 
 def _consumer_files() -> list[Path]:
+    """Every git-visible `.py` file (tracked, or untracked and not ignored) outside
+    `reg_meta/` itself, so ignored trees such as the build seed and virtualenvs are
+    never walked."""
     listed = subprocess.run(
-        ["git", "ls-files", "-z", "-co", "--exclude-standard", "--", *CONSUMERS],
+        ["git", "ls-files", "-z", "-co", "--exclude-standard"],
         cwd=ROOT,
         capture_output=True,
         check=True,
@@ -135,7 +119,9 @@ def _consumer_files() -> list[Path]:
     return sorted(
         ROOT / p
         for p in listed.split("\0")
-        if p.endswith(".py") and (ROOT / p).exists()
+        if p.endswith(".py")
+        and not p.startswith(f"{PROVIDER}/")
+        and (ROOT / p).exists()
     )
 
 
@@ -190,9 +176,11 @@ def test_rows_are_well_formed():
         assert row["disposition"] in DISPOSITIONS, label
         assert row["owner"] in OWNERS, label
         missing = [p for p in row["covered_by"] if not (ROOT / p).exists()]
-        assert not missing, f"{label} covered_by paths do not exist: {missing}"
+        assert row.get("pending") or not missing, (
+            f"{label} covered_by paths do not exist: {missing}"
+        )
         if row["kind"] == "import":
-            assert set(row["used_by"]) <= set(CONSUMERS), label
+            assert row["used_by"] and PROVIDER not in row["used_by"], label
             # Build-side names move (or go) when stage 4 deletes reg_meta.
             if "reg_meta_build" in row["used_by"]:
                 assert row["owner"] == "4", label

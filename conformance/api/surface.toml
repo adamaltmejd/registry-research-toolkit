@@ -4,15 +4,15 @@
 # something that no longer exists. Reviewed at checkpoint 1; judgment calls say so in
 # `note`.
 #
-# kind         route: a FastAPI route decorator under reg_webapp/backend/src/reg_webapp/routes/,
-#                     id = "METHOD /full/path" (router prefix included).
+# kind         route: an operation in the committed reg_webapp/backend/openapi.json,
+#                     id = "METHOD /path" as OpenAPI writes it (no `:path` converter).
 #              command: an `add_parser` in reg_meta/src/reg_meta/cli.py, id = the argv path.
 #              skill: a command the register-metadata-search skill documents
 #                     (plugins/microdata-tools-se/skills/register-metadata-search/SKILL.md),
 #                     id = its text as written there.
-#              import: a `reg_meta` name imported by conformance/, reg_meta_build/ or
-#                     reg_webapp/ (tests and scripts included). `from M import N` is "M.N";
-#                     `import M` is "M".
+#              import: a `reg_meta` name imported by any git-visible .py file outside
+#                     reg_meta/ (tests, scripts, tools and the spike included).
+#                     `from M import N` is "M.N"; `import M` is "M".
 # disposition  route, command, skill:
 #                retained  the same surface stays.
 #                replaced  route and command rows: a Rust operation covers it (HTTP and
@@ -27,16 +27,18 @@
 #                removed   no Python consumer remains; the Rust reader owns the behavior.
 # owner        the stage-3 slice that ports the surface (3a admission + search, 3b show /
 #              states / values, 3c schema / diff / coverage / coded, 3d chains and graph,
-#              3e order and project validation), or stage 4 / 5. For an import only the
+#              3e order and project validation), or stage 4 / 5; "1" for the stage-0
+#              spike, which package 1.5 deletes. For an import only the
 #              webapp or conformance uses, the slice whose route deletions remove its last
 #              importer; anything imported by a module several slices share (models.py,
 #              app wiring) goes in stage 4. Build-side imports are always stage 4.
 # covered_by   the existing tests or conformance cases that exercise the surface today
 #              (paths; empty means none). For imports this is a proxy: the nearest test of
 #              the name's behavior, not of each consumer's use of it.
-# used_by      import rows: the consumer roots that import the name.
-# pending      true while an in-flight PR adds the item; the test fails once it exists
-#              (drop the key then).
+# used_by      import rows: the top-level directories whose files import the name.
+# pending      temporary: true while an in-flight PR adds the item (its covered_by may
+#              name paths that PR adds). The test fails once the item exists; drop the
+#              key then. The mechanism goes once package 1.2 (#1189) merges.
 
 # Routes
 
@@ -50,7 +52,7 @@ note = "Scoped provider list plus the classification root: show on the catalog r
 
 [[row]]
 kind = "route"
-id = "GET /api/catalog/group/class/{key:path}"
+id = "GET /api/catalog/group/class/{key}"
 disposition = "replaced"
 owner = "3b"
 covered_by = ["reg_webapp/backend/tests/test_catalog_classifications.py", "reg_webapp/backend/tests/test_catalog_groups.py"]
@@ -58,14 +60,14 @@ note = "Show on a classification umbrella group or succession family. Judgment: 
 
 [[row]]
 kind = "route"
-id = "GET /api/catalog/group/class/{key:path}/graph"
+id = "GET /api/catalog/group/class/{key}/graph"
 disposition = "replaced"
 owner = "3d"
 covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
 
 [[row]]
 kind = "route"
-id = "GET /api/catalog/group/{provider}/{register}/{key:path}"
+id = "GET /api/catalog/group/{provider}/{register}/{key}"
 disposition = "replaced"
 owner = "3b"
 covered_by = ["conformance/cases/http_catalog/group-coverage", "conformance/cases/http_catalog/unheld-group", "reg_webapp/backend/tests/test_catalog_groups.py"]
@@ -73,14 +75,14 @@ note = "Show on a register concept group."
 
 [[row]]
 kind = "route"
-id = "GET /api/catalog/group/{provider}/{register}/{key:path}/graph"
+id = "GET /api/catalog/group/{provider}/{register}/{key}/graph"
 disposition = "replaced"
 owner = "3d"
 covered_by = ["conformance/cases/http_catalog/whole-variable-group-graph", "conformance/cases/http_catalog/unheld-group"]
 
 [[row]]
 kind = "route"
-id = "GET /api/catalog/{fqid:path}"
+id = "GET /api/catalog/{fqid}"
 disposition = "replaced"
 owner = "3b"
 covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "conformance/cases/http_catalog/redirects", "reg_webapp/backend/tests/test_catalog_tree.py"]
@@ -88,7 +90,7 @@ note = "Show for every ref kind. The `?period` states subset becomes the states 
 
 [[row]]
 kind = "route"
-id = "GET /api/catalog/{fqid:path}/data_warnings"
+id = "GET /api/catalog/{fqid}/data_warnings"
 disposition = "replaced"
 owner = "3b"
 covered_by = ["conformance/cases/http_catalog/warnings", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
@@ -96,7 +98,7 @@ note = "Judgment: warnings render on the register and binding pages, so they shi
 
 [[row]]
 kind = "route"
-id = "GET /api/catalog/{fqid:path}/dimensions"
+id = "GET /api/catalog/{fqid}/dimensions"
 disposition = "removed"
 owner = "3d"
 covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
@@ -104,14 +106,14 @@ note = "The SPA stopped fetching it (#678); the graph carries group membership. 
 
 [[row]]
 kind = "route"
-id = "GET /api/catalog/{fqid:path}/graph"
+id = "GET /api/catalog/{fqid}/graph"
 disposition = "replaced"
 owner = "3d"
 covered_by = ["conformance/cases/http_catalog/reference-edges", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
 
 [[row]]
 kind = "route"
-id = "GET /api/catalog/{fqid:path}/lineage"
+id = "GET /api/catalog/{fqid}/lineage"
 disposition = "removed"
 owner = "3d"
 covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
@@ -119,7 +121,7 @@ note = "The SPA does not call it (the graph replaced the lineage panel). Agents 
 
 [[row]]
 kind = "route"
-id = "GET /api/catalog/{fqid:path}/lineage_warnings"
+id = "GET /api/catalog/{fqid}/lineage_warnings"
 disposition = "replaced"
 owner = "3d"
 covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
@@ -127,7 +129,7 @@ note = "The SPA's lineage details fetch it."
 
 [[row]]
 kind = "route"
-id = "GET /api/catalog/{fqid:path}/predecessors"
+id = "GET /api/catalog/{fqid}/predecessors"
 disposition = "removed"
 owner = "3d"
 covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
@@ -135,14 +137,14 @@ note = "The SPA stopped fetching it: the node's embedded succession chain and th
 
 [[row]]
 kind = "route"
-id = "GET /api/catalog/{fqid:path}/states"
+id = "GET /api/catalog/{fqid}/states"
 disposition = "replaced"
 owner = "3b"
 covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "conformance/cases/http_catalog/redirects", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
 
 [[row]]
 kind = "route"
-id = "GET /api/catalog/{fqid:path}/successors"
+id = "GET /api/catalog/{fqid}/successors"
 disposition = "removed"
 owner = "3d"
 covered_by = ["conformance/cases/http_catalog/reference-edges", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
@@ -254,7 +256,7 @@ kind = "command"
 id = "docs get"
 disposition = "replaced"
 owner = "3b"
-covered_by = ["reg_meta/tests/test_doc_commands.py", "conformance/cases/selection/doc-cursor-expected.json"]
+covered_by = ["reg_meta/tests/test_doc_commands.py"]
 
 [[row]]
 kind = "command"
@@ -269,7 +271,7 @@ kind = "command"
 id = "docs search"
 disposition = "replaced"
 owner = "3b"
-covered_by = ["reg_meta/tests/test_doc_commands.py", "conformance/cases/selection/doc-cursor-expected.json"]
+covered_by = ["reg_meta/tests/test_doc_commands.py"]
 note = "Docs go with show; see the docs route rows."
 
 [[row]]
@@ -396,9 +398,9 @@ covered_by = ["conformance/cases/cli_scope/search-reference-1", "conformance/cas
 kind = "command"
 id = "update"
 disposition = "replaced"
-owner = "4"
+owner = "3a"
 covered_by = ["conformance/cases/selection/empty-explicit-update", "conformance/cases/update", "reg_meta/tests/test_update.py"]
-note = "Fetch judgment: replaced by the `reg-meta fetch` run mode (section 6) for local MCP installs and by curl, SHA-256 and zstd for the Docker bake (section 7). Stage 4, because the Dockerfile, publish workflow and agent plugin use `update` until then, and `fetch` must exist when the plugin moves to MCP."
+note = "Replaced by the `reg-meta fetch` run mode (section 6), owned by 3a because local `reg-meta mcp` needs a catalog from 3a on; the Docker bake moves to curl, SHA-256 and zstd (section 7). The Dockerfile, publish workflow and agent plugin keep using `update` until stage 4 drops the CLI."
 
 [[row]]
 kind = "command"
@@ -462,10 +464,10 @@ kind = "skill"
 id = "--format json"
 disposition = "removed"
 owner = "4"
-covered_by = ["conformance/cases/cli_scope"]
+covered_by = ["conformance/test_cli_scope.py"]
 note = "Responses are JSON only (section 7), so the flag has nothing to select."
 
-# reg_meta names imported by conformance, reg_meta_build and reg_webapp
+# reg_meta names imported outside reg_meta/
 
 [[row]]
 kind = "import"
@@ -829,7 +831,7 @@ note = "The artifact schema and its gate have one home, reg_meta_build (section 
 [[row]]
 kind = "import"
 id = "reg_meta.db.db_path_from_args"
-used_by = ["reg_meta_build", "reg_webapp"]
+used_by = ["reg_meta_build", "reg_webapp", "scripts"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/cases/selection"]
@@ -856,7 +858,7 @@ note = "Build-side artifact IO (extend-db, validate_built_db, derive); conforman
 [[row]]
 kind = "import"
 id = "reg_meta.db.open_db"
-used_by = ["conformance", "reg_meta_build", "reg_webapp"]
+used_by = ["conformance", "reg_meta_build", "reg_webapp", "scripts", "spike"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_artifact.py"]
@@ -1083,7 +1085,7 @@ id = "reg_meta.errors.EXIT_SUCCESS"
 used_by = ["conformance"]
 disposition = "removed"
 owner = "3e"
-covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
+covered_by = ["conformance/test_validate.py"]
 
 [[row]]
 kind = "import"
@@ -1097,7 +1099,7 @@ note = "The build's error class and exit codes; the Rust reader has its own erro
 [[row]]
 kind = "import"
 id = "reg_meta.errors.RegMetaError"
-used_by = ["conformance", "reg_meta_build", "reg_webapp"]
+used_by = ["conformance", "reg_meta_build", "reg_webapp", "scripts"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
@@ -1398,7 +1400,7 @@ covered_by = ["conformance/test_order.py", "reg_webapp/backend/tests/test_projec
 [[row]]
 kind = "import"
 id = "reg_meta.queries"
-used_by = ["conformance", "reg_meta_build"]
+used_by = ["conformance", "reg_meta_build", "spike"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_logical.py", "reg_meta_build/tests/test_source_inspection.py"]
@@ -1414,6 +1416,42 @@ covered_by = ["conformance/cases/http_search"]
 
 [[row]]
 kind = "import"
+id = "reg_meta.queries._FTS_WORD_CHAR"
+used_by = ["spike"]
+disposition = "removed"
+owner = "1"
+covered_by = ["reg_meta/tests/test_search_ranking.py"]
+note = "Private-name import, which the repo rules forbid. Imported by the stage-0 spike (spike/stage0/scripts/), which package 1.5 deletes."
+
+[[row]]
+kind = "import"
+id = "reg_meta.queries._fold_search_text"
+used_by = ["spike"]
+disposition = "removed"
+owner = "1"
+covered_by = ["conformance/cases/http_search/golden-normalization"]
+note = "Private-name import, which the repo rules forbid. Imported by the stage-0 spike (spike/stage0/scripts/), which package 1.5 deletes."
+
+[[row]]
+kind = "import"
+id = "reg_meta.queries._fts_match_query"
+used_by = ["spike"]
+disposition = "removed"
+owner = "4"
+covered_by = ["reg_meta/tests/test_search_ranking.py"]
+note = "Private-name import, which the repo rules forbid. Imported by the stage-0 spike (spike/stage0/scripts/), which package 1.5 deletes. The fold corpus generator (crates/reg-core/tools/gen_fold_corpus.py, package 1.2) imports it too. The corpus is frozen data and the generator is only rerun deliberately, so its rows go when stage 4 deletes reg_meta. used_by gains `crates` when 1.2 lands."
+
+[[row]]
+kind = "import"
+id = "reg_meta.queries._normalized_search_query"
+used_by = ["spike"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/cases/http_search/golden-normalization"]
+note = "Private-name import, which the repo rules forbid. Imported by the stage-0 spike (spike/stage0/scripts/), which package 1.5 deletes. The fold corpus generator (crates/reg-core/tools/gen_fold_corpus.py, package 1.2) imports it too. The corpus is frozen data and the generator is only rerun deliberately, so its rows go when stage 4 deletes reg_meta. used_by gains `crates` when 1.2 lands."
+
+[[row]]
+kind = "import"
 id = "reg_meta.queries.extract_year"
 used_by = ["reg_meta_build"]
 disposition = "retained"
@@ -1424,11 +1462,11 @@ note = "Judgment: a version-name year heuristic, not the period grammar, so it m
 [[row]]
 kind = "import"
 id = "reg_meta.queries.fold_search"
-used_by = ["reg_webapp"]
-disposition = "replaced"
-owner = "3a"
-covered_by = ["conformance/cases/http_search/golden-normalization", "reg_meta/tests/test_search_ranking.py"]
-note = "Package 1.2 makes it public for the webapp's search route; reg-core's `fold_search` (section 5) replaces it when 3a ports search."
+used_by = ["conformance", "crates", "reg_webapp"]
+disposition = "removed"
+owner = "4"
+covered_by = ["conformance/cases/http_search/top-results-exact-spacing-accent", "conformance/cases/http_search/golden-normalization"]
+note = "Package 1.2 makes it public. The webapp search route's import is removed in 3a with that route, unless checkpoint 1 decides the index is pre-folded, in which case reg-core-py provides `fold_search` to the build. The fold corpus generator and conformance/test_folds.py import it until stage 4 (see the generator's rows), so the row is owned by stage 4. used_by is the value once 1.2 lands."
 pending = true
 
 [[row]]
