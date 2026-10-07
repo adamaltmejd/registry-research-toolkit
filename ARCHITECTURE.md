@@ -302,12 +302,14 @@ return-model cases retain contracts that have no equivalent CLI or HTTP projecti
 
 ### Tiers
 
-1. **Commit (seconds).** Contract tests over synthetic fixtures built from readable
-   source, property tests, golden corpora. Run narrowed by package while iterating.
-2. **Push / CI (minutes).** The full synthetic build through the real pipeline, the
-   conformance suite against its output, the OpenAPI snapshot and codegen drift checks,
-   the frontend suites, and the Playwright smoke driver against the fixture DB.
-   `@pytest.mark.integration` adds the container-backed tests.
+1. **Package suite (budgeted, every change).** Contract tests over synthetic fixtures
+   built from readable source, property tests, golden corpora: the default
+   `pytest -m "not integration"` and `bun run test`. Run narrowed by package while
+   iterating. Each package stays inside its budget below.
+2. **Push / CI.** The package suites as separate jobs, the OpenAPI snapshot and codegen
+   drift checks, and the Playwright smoke driver against the fixture DB.
+   `@pytest.mark.integration` adds the container-backed tests, which are not budgeted
+   here.
 3. **Artifact (maintainer or release gate).** Run
    `pytest conformance --run-release --artifact-dir=/path/to/catalog`. The reader admits
    the selected artifact before execution; incompatible or non-publishable artifacts
@@ -323,6 +325,26 @@ return-model cases retain contracts that have no equivalent CLI or HTTP projecti
    requests from the artifact. CLI delivery schemas expose a different membership grain.
    Pinned historical baseline acceptance, exhaustive representative resolution,
    performance and rendered checks remain separate maintainer work.
+
+Budgets are what a lean suite for the package needs, derived from its boundaries, not
+from the suite's current size. Local is wall time with `pytest <tree> -n auto -q` (or
+`bun run test`) on a 10-core developer Mac; CI is the job's `timeout-minutes` on
+`ubuntu-latest`, including setup. A suite over budget is a finding for the `test-audit`
+skill, not a reason to raise the number.
+
+  | Suite                      | Local | CI job | Rationale                                                                                                                            |
+  | -------------------------- | ----- | ------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+  | `reg_meta_build/tests`     | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation.  |
+  | `conformance`              | 25 s  | 4 min  | Session-built catalog and steward artifacts once, then data-driven CLI, HTTP, order and validate cases.                              |
+  | `reg_meta/tests`           | 15 s  | 3 min  | Stateless reader: CLI JSON and grammar cases over one session-built synthetic artifact.                                              |
+  | `reg_webapp/backend/tests` | 10 s  | 3 min  | Only what conformance cannot reach: boot, middleware, docs routes and the `openapi.json` snapshot, over a TestClient.                |
+  | `reg_schema/tests`         | 5 s   | 2 min  | One validator over `reg_schema/test_corpus/`, pure and in-process.                                                                   |
+  | frontend (`bun run test`)  | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds. |
+
+The reader-side rows plus conformance sum to under 60 s, so a change touching any of
+those packages fits G0 of `RUST_RUNTIME_SPEC.md` §4. G1 (under 5 min) and G2 run on real
+artifacts in tier 3 and are not package budgets. `reg_meta_build` stays Python and is
+outside G0.
 
 ### Conformance suite
 
