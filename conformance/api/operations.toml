@@ -199,7 +199,7 @@ name = "docs_search"
 slice = "3b"
 http = ["GET /api/docs/search"]
 tool = "docs"
-params = { q = "string?", register = "ref?", limit = "limit?", cursor = "cursor?" }
+params = { q = "string?", register = "ref?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
 result = "Page<today's DocResult>"
 errors = ["docs_unavailable", "invalid_ref", "not_found", "ambiguous_ref", "invalid_cursor", "stale_cursor"]
 note = """Absorbs `docs list` (no `q`) and /docs/for-variable (`q` = the variable name). A \
@@ -210,7 +210,7 @@ name = "docs_get"
 slice = "3b"
 http = ["GET /api/docs/doc/{identifier}"]
 tool = "docs"
-params = { identifier = "string" }
+params = { identifier = "string", scope = "scope?" }
 result = "today's DocDetail with the full `body` instead of the 500-character excerpt"
 errors = ["docs_unavailable", "not_found"]
 
@@ -219,7 +219,7 @@ name = "docs_related"
 slice = "3b"
 http = ["GET /api/docs/related/{register}"]
 tool = "docs"
-params = { register = "ref", limit = "limit?", cursor = "cursor?" }
+params = { register = "ref", scope = "scope?", limit = "limit?", cursor = "cursor?" }
 result = "Page<today's related document {title, filename, source_url, license, fetched, sha256, byte_size}>"
 errors = ["docs_unavailable", "invalid_ref", "not_found", "ambiguous_ref", "invalid_cursor", "stale_cursor"]
 note = "The JSON metadata for the document download route."
@@ -292,4 +292,6 @@ CatalogNode and group node models. Heavy parts move to facets: a variable's stat
 (`states`), lineage and succession chain (`lineage`, `graph`), a classification's edition \
 chain (`graph`). A register carries its variants (today's /variants) and a register or \
 variable its data warnings (today's /data_warnings), which the project editor filters \
-by period, variant and column client-side."""
+by period, variant and column client-side (rejected alternative: a `warnings` \
+operation with those filters, as today's route; cheap to restore if a register's \
+warnings make the summary heavy)."""

@@ -13,7 +13,8 @@
 #            `fetch` run mode.
 # status     the HTTP status (operation and http codes).
 # exit       the process exit status (startup and fetch codes): 2 usage, 10
-#            configuration, 25 network, as today's EXIT_* constants.
+#            configuration, 25 network, as today's EXIT_* constants. A process run
+#            with a bad argument prints invalid_parameter and exits 2.
 # replaces   today's reg_meta codes and webapp HTTP errors it takes over.
 #
 # Not carried over: uv_not_found, upgrade_failed, pypi_lookup_failed (the binary does
