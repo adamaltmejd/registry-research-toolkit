@@ -782,10 +782,14 @@ the `context` operation.
   `reg-meta`, serves each derived copy, and installs the baseline commit's `reg_webapp`
   as the oracle; `context` maps to its `/api/context` plus `/api/stats`.
 - Cases: `api/context-*` twins of `http_context/*`, `http_scope/stats` and
-  `http_scope/stats-catalog`, written red first.
+  `http_scope/stats-catalog`, plus `scope=holdings` on a catalog (`scope_unavailable`)
+  and an invalid `scope` (`invalid_parameter`), written red first. `context` gains
+  `errors = ["scope_unavailable"]` in `operations.toml`, which section 7 already implies
+  (`scope` is valid on every read).
 - Paths: `crates/reg-catalog/`, `crates/reg-meta/`, `Cargo.*`,
   `conformance/{http_cases,conftest,test_http}.py`, `conformance/README.md`,
-  `conformance/cases/api/`, `conformance/differential/`, `reg_webapp/stewards/`,
+  `conformance/cases/api/`, `conformance/api/operations.toml` (`context`'s errors only),
+  `conformance/differential/`, `reg_webapp/stewards/`,
   `reg_webapp/backend/src/reg_webapp/{stewards,models}.py` with `backend/openapi.json`
   and `frontend/src/lib/api-types.ts` (docstring drift), `reg_webapp/DESIGN.md`,
   `conformance/test_boot.py`, `.github/workflows/ci.yml`, `scripts/check_versions.sh`,
@@ -906,7 +910,7 @@ and the single ranking of section 6.
   `conformance/cases/http_context/`, `conformance/cases/http_scope/`,
   `conformance/test_http.py`, `conformance/api/surface.toml`, `reg_webapp/DESIGN.md`.
   The `/api/stats` steps in `http_scope/catalog-refuses-holdings` and `invalid-scope`
-  go; `api/scope-unavailable` and `invalid-parameters` pin that behavior.
+  go; 3a.4's `api/context-*` scope cases pin that behavior.
 - Acceptance: G0; `bun run check`, `lint`, `test` and `gen:types` with no diff; the
   image boots and the dev setup renders Home and the footer from the Rust server.
 
@@ -969,8 +973,10 @@ Resolved by the orchestrator:
 
 - Keep utoipa plus schemars with a G0 schema-agreement test; best-bets is ranking code,
   not data (tracker correction); `surface.toml` row upkeep on deletion is mechanical.
-- The Rust HTTP run joins G0 from 3a.4; the HTTP adapter strips `__edge_v`; no MCP
-  disable flag, the SWECOV worker does not route `/mcp`.
+- `context` lists `scope_unavailable` (section 7 makes `scope` valid on every read; the
+  operation table had omitted it). The Rust HTTP run joins G0 from 3a.4; the HTTP
+  adapter strips `__edge_v`; no MCP disable flag, the SWECOV worker does not route
+  `/mcp`.
 - Rate limits: fix a demonstrated defect only and keep direct-origin protection; no
   clap, base64, tower-http or runtime `toml` (`toml` is dev-only).
 
