@@ -3,7 +3,8 @@
 Cross-cutting design for the Registry Research Toolkit — the topology, dependency graph,
 and repo-wide invariants that no single package owns. Package-local rationale lives in
 each `<package>/DESIGN.md`; remaining (not-yet-built) work lives in
-[`REFACTOR_SPEC.md`](REFACTOR_SPEC.md).
+[`REFACTOR_SPEC.md`](REFACTOR_SPEC.md) and, for the Rust runtime and compiled-catalog
+refactor, [`RUST_RUNTIME_SPEC.md`](RUST_RUNTIME_SPEC.md).
 
 This document is the durable home for what used to be §1–§4, §9.3, §11–§13, and the §16
 overview of the now-dissolved Model A refactor spec. The Model A migration (the

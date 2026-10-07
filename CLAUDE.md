@@ -1,8 +1,9 @@
 # Registry Research Toolkit
 
 Multi-package workspace for Swedish register research: catalog metadata, schema
-validation, and project authoring. See `ARCHITECTURE.md` for the cross-package design
-and `REFACTOR_SPEC.md` for the remaining (post-A5) work.
+validation, and project authoring. See `ARCHITECTURE.md` for the cross-package design,
+`REFACTOR_SPEC.md` for the remaining (post-A5) work, and `RUST_RUNTIME_SPEC.md` for the
+Rust runtime and compiled-catalog refactor.
 
 ## Packages
 
@@ -33,11 +34,12 @@ state.
   `reg_webapp/DESIGN.md` keeps the engineering rationale.
 - No frozen specs or **permanent** implementation trackers — design decisions live in
   DESIGN.md, implementation history lives in git.
-- **Exception**: a multi-PR refactor spanning weeks may keep a single root-level tracker
-  (currently `REFACTOR_SPEC.md`, scoping the remaining post-A5 work; the earlier
-  `MIGRATION_PLAN.md` was retired once A5 shipped) for cross-PR coordination. The
-  tracker is **scoped and self-deleting**: it ships with an explicit completion gate
-  (e.g. "deleted when stage X ships"), gets deleted at that gate, and never outlives the
+- **Exception**: each multi-PR refactor spanning weeks may keep one root-level tracker
+  for cross-PR coordination. Current trackers: `REFACTOR_SPEC.md` (the remaining post-A5
+  work; the earlier `MIGRATION_PLAN.md` was retired once A5 shipped) and
+  `RUST_RUNTIME_SPEC.md` (the Rust runtime and compiled-catalog refactor). Each tracker
+  is **scoped and self-deleting**: it ships with an explicit completion gate (e.g.
+  "deleted when stage X ships"), gets deleted at that gate, and never outlives the
   refactor it tracks. Per-package DESIGN.md notes for the same effort are still
   preferred where the scope is package-local.
 
