@@ -218,8 +218,10 @@ big-bang artifact cutover; the major bump comes only when the Python reader is d
 **Develop against pinned artifacts.** Refactor work uses a pinned release (recorded by
 package 1.5) plus the synthetic conformance fixtures. Curation work keeps changing the
 base; the refactor changes derive and the reader. Neither waits for the other. A
-**re-pin package** moves the pin to a newer release: it runs G1 on the old and new pin
-and records any difference. Re-pin at least at every maintainer checkpoint.
+**re-pin package** moves the pin to a newer release, and the baseline reader commit with
+it when the new release needs a newer reader: it runs G1 on the old pin (with its
+baseline) and the new pin (with its baseline) and records any difference. Re-pin at
+least at every maintainer checkpoint.
 
 **Current pin** (package 1.5; the data lives in `conformance/differential/config.toml`):
 
@@ -238,7 +240,7 @@ confused with the test tiers 1–3 in `ARCHITECTURE.md`.
 
   | Gate | What runs                                                                                                                                                                                                                                                     | Budget      | When                                   |
   | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | -------------------------------------- |
-  | G0   | `uv run python -m pytest conformance <touched packages> -n auto -q` and, once `crates/` exists, `cargo test --workspace`, all on synthetic artifacts. Conformance alone took 23 s serially (299 test items, 2026-10-07).                                      | under 60 s  | every change                           |
+  | G0   | `uv run python -m pytest conformance <touched packages> -n auto -q`, `cargo test --workspace` and, from slice 3a, the Rust HTTP run (section 10), all on synthetic artifacts. Conformance alone took 23 s serially (299 test items, 2026-10-07).              | under 60 s  | every change                           |
   | G1   | Derive on the pinned real artifacts, then the differential harness: the baseline reader against derived tables (from stage 2) and the Rust server (per operation, as it lands), on both artifact kinds. Runs locally from a shared artifact cache, not in CI. | under 5 min | every PR touching derive or the reader |
   | G2   | Full base build plus derive and G1 on the result.                                                                                                                                                                                                             | ~1 h today  | checkpoints and releases, never per PR |
 
@@ -417,8 +419,8 @@ Rust workspace (`crates/`):
     it, for local `mcp` installs.
 - `reg-core-py` — the PyO3 module the build imports.
 
-Runtime crates are the ones this file names, plus tokio and sha2, which axum/rmcp and
-the SHA-256 contract imply.
+Runtime crates are the ones this file names, plus tokio and sha2 (implied by axum/rmcp
+and the SHA-256 contract; ratified at checkpoint 2, question 2).
 
 What is deleted: the Python `reg_meta` package including its CLI, `reg_schema`, the
 FastAPI backend, and the frontend's hand-written grammar and validation mirrors. The
@@ -586,7 +588,7 @@ both servers, and the edge sends each ported path to the Rust server *(decision 
 1. **Groundwork (shipped 2026-10-07).** The surface inventory, operation table and error
    catalog (`conformance/api/`), `reg-core` with the folds, the fixture cache, the
    out-of-process HTTP runner and the G1 differential harness. Checkpoint 1 passed.
-2. **Derive framework (shipped 2026-10-08).** The derive step with its checks in
+2. **Derive framework (shipped 2026-10-07).** The derive step with its checks in
    `validate_built_db`, the steward ordering, `resolver_column` (read by
    `holdings_compile`) and the standalone `reg-meta-build derive` with the
    derived-artifact identity contract (section 4), as builder schema 9.1.0; G1 runs on
@@ -618,8 +620,8 @@ both servers, and the edge sends each ported path to the Rust server *(decision 
      `indent=2, ensure_ascii=False`; `canonical_json` writes sorted keys, compact
      separators and non-ASCII as is.
    - Docs, context, stats and `fetch` go to the slices the surface inventory assigns.
-     The build switches to `reg-core-py` for FQID, folds and hashing as each function
-     lands. Gated by G0 and G1.
+     The build switches to `reg-core-py` for folds in slice 3a; FQID and hashing move
+     with the build's other `reg_meta` imports in stage 4. Gated by G0 and G1.
 4. **Retire the Python runtime.** Starts at checkpoint 3. Delete the remaining FastAPI
    code; the agent plugin moves to MCP; the Dockerfile and publish workflow drop the CLI
    (until then they keep using it). The build's `reg_meta` imports move as the surface
@@ -638,9 +640,6 @@ at `8a232636`, reviewed by Astra (codex `gpt-6-astra`) and revised. Package numb
 (G1 wiring, folded into each operation package) and 3a.12 (`fetch`, proposed for stage 4)
 are withdrawn.
 
-Tracker correction (section 6): tokio and sha2 are implied by the named axum/rmcp and
-the SHA-256 contract.
-
 Order and parallelism (at most three in flight):
 
 - Wave 1: **3a.1a**, **3a.3**, **3a.4**. 3a.1a and 3a.4 share `Cargo.lock` and `ci.yml`;
@@ -654,7 +653,7 @@ Order and parallelism (at most three in flight):
   merge, deploys pause until the maintainer releases at 9.3.0 (container-build schema
   guard).
 
-Activation rule: a path is served by Rust on the public port only in the PR that
+Activation rule: an SPA path is served by Rust on the public port only in the PR that
 switches its SPA consumer (3a.10, 3a.11). Conformance and G1 run the Rust server
 directly, with every operation, so they are unaffected.
 
@@ -707,8 +706,8 @@ Shared definitions:
   `py_fts_term` becomes `fold_search`; display text from base tables. Builder and
   `reg_meta` `SCHEMA_VERSION` 9.2.0.
 - `validate_built_db`: one check per table that its stored text equals `fold_search` of
-  the source and its rowids equal the source's (today `classification_fts` has a rowid
-  check and `value_code_fts` only a count check).
+  the source and its rowids equal the indexed source set (today `classification_fts` has
+  a rowid check and `value_code_fts` only a count check).
 - Paths:
   `reg_meta_build/src/reg_meta_build/{derive,db,resolved_catalog,extend_db,validate}.py`,
   `reg_meta/src/reg_meta/{queries,db}.py`, `conformance/differential/config.toml`,
@@ -729,9 +728,9 @@ curated input; an unresolved pin is a build error).
   `search_pin` table (key `fold_search(query)`, type, position, entity) and a manifest
   key `search_pins_sha256` that joins `GENERATION_KEYS`. A complete build fails with a
   located error on an unresolved pin; a scoped (`--registers`) or diagnostic build
-  writes no pins and the empty-pins hash. Derive creates the empty table on an older
-  base. FastAPI's `golden.py` and `run_search_eval.py` read the table. Builder and
-  `reg_meta` schema 9.3.0.
+  writes no pins and the empty-pins hash. Derive writes the empty table and the
+  empty-pins `search_pins_sha256` on an older base. FastAPI's `golden.py` and
+  `run_search_eval.py` read the table. Builder and `reg_meta` schema 9.3.0.
 - Fixtures: no default pins; a request key names a case-local pins file, passed to the
   build, so its content enters the generation. The in-process `golden_config` path goes.
 - Paths: `reg_meta_build/curation/search_pins.toml`,
@@ -740,12 +739,13 @@ curated input; an unresolved pin is a build error).
   `reg_webapp/backend/src/reg_webapp/{golden.py,search_golden.toml}`,
   `reg_webapp/backend/{scripts/run_search_eval.py,tests/test_search_golden_config.py}`,
   `reg_meta/tests/reader_artifacts.py`, `conformance/{http_cases.py,README.md}`,
+  `conformance/cases/reader/fixture/identity.json`,
   `conformance/cases/http_search/golden-*`,
   `reg_meta_build/tests/test_curation_toml_load_boundary.py`, the DESIGN.md files.
-- Goldens: ten cases. The eight `golden_config` cases keep their expected files;
-  `golden-pin` gets a case-local pin file; `golden-classification` drops its `stalebook`
-  pin and two 500 steps, keeping both `choicebook` `type=classification` steps;
-  `golden-stale-register` goes. Both 500s become one located build-failure case.
+- Goldens: ten cases. Seven of the eight `golden_config` cases keep their expected
+  files; `golden-pin` gets a case-local pin file; `golden-classification` drops its
+  `stalebook` pin and two 500 steps, keeping both `choicebook` `type=classification`
+  steps; `golden-stale-register` goes. Both 500s become one located build-failure case.
 - Acceptance: G0; the failure case names file, entry and FQID; every `golden-*` case
   passes out of process.
 
@@ -786,8 +786,10 @@ the `context` operation.
 - Paths: `crates/reg-catalog/`, `crates/reg-meta/`, `Cargo.*`,
   `conformance/{http_cases,conftest,test_http}.py`, `conformance/README.md`,
   `conformance/cases/api/`, `conformance/differential/`, `reg_webapp/stewards/`,
-  `reg_webapp/backend/src/reg_webapp/stewards.py`, `conformance/test_boot.py`,
-  `.github/workflows/ci.yml`, `scripts/check_versions.sh`, `ARCHITECTURE.md`, this file.
+  `reg_webapp/backend/src/reg_webapp/{stewards,models}.py` with `backend/openapi.json`
+  and `frontend/src/lib/api-types.ts` (docstring drift), `reg_webapp/DESIGN.md`,
+  `conformance/test_boot.py`, `.github/workflows/ci.yml`, `scripts/check_versions.sh`,
+  `ARCHITECTURE.md`, this file.
 - Acceptance: G0 with `-k '[api/admission or [api/context'`; G1 reports 0 differences
   for `context`.
 
@@ -805,8 +807,9 @@ the `context` operation.
 - The variable arm ports today's behavior: exact identity first, concept-group hits with
   `matched_count` and members, delivery-column chips, scope. The Rust minimum schema
   becomes 9.2.
-- Cases (red first): twins of `column-chips`, `cursor-scope`, `group-members`,
-  `pagination`; register resolution (FQID, unique bare name, ambiguous, unknown,
+- Cases: `column-chips`, `pagination`, `group-members` and `cursor-scope` already have
+  twins (`api/search-scope`, `search-paging`, `search-group-hit`, `cursor-invalid`).
+  New, red first: register resolution (FQID, unique bare name, ambiguous, unknown,
   malformed); period (variable overlap, register-wide, group by members,
   `invalid_period`); a 9.1 manifest refused. The PR names which cases cover
   `cli_scope/search-holdings-1` and `search-reference-2`. A G1 mapping compares typed
@@ -831,12 +834,14 @@ and the single ranking of section 6.
   (pin order), then best-bets score descending, then arm order, then the arm's own
   position, then the hit's FQID or key. The cursor is a keyset position in that order.
 - The Rust minimum schema becomes 9.3.
-- Cases (red first): twins of `golden-*`, `top-results-*`, `codes-reference`,
-  `code-owner-ranking`, `bounded-code-owners` and `punctuation-only` (`limit-clamp` is
-  now `[api/invalid-parameters]`); an untyped search followed across three pages; period
-  and register filters on the classification and code arms; a 9.2 manifest refused. G1
-  maps each typed page to the baseline webapp's group and an untyped first page at
-  `limit=5` to its `top_results`.
+- Cases: existing twins are `api/search-no-token` (`punctuation-only`),
+  `search-code-owners` (`bounded-code-owners`), `search-all-types`
+  (`top-results-exact-leaf`) and `invalid-parameters` (`limit-clamp`). New, red first:
+  twins of `golden-*`, the other `top-results-*`, `codes-reference` and
+  `code-owner-ranking`; an untyped search followed across three pages; period and
+  register filters on the classification and code arms; a 9.2 manifest refused. G1 maps
+  each typed page to the baseline webapp's group and an untyped first page at `limit=5`
+  to its `top_results`.
 - Paths: `crates/reg-catalog/`, `conformance/cases/api/`, `conformance/differential/`.
 - Acceptance: G0 with all of `[api/`; G1 differences only as named exceptions.
 
@@ -877,7 +882,8 @@ and the single ranking of section 6.
   rules are a maintainer step listed in the PR.
 - Paths: `reg_webapp/{Dockerfile,docker-entrypoint.sh,fly.toml,fly.swecov.toml}`,
   `reg_webapp/backend/src/reg_webapp/{smoke,limits}.py`, `reg_webapp/edge/`,
-  `.github/workflows/container-build.yml`, `crates/reg-meta/`, `reg_webapp/DESIGN.md`.
+  `.github/workflows/container-build.yml`, `scripts/schema_pending_bump.py`,
+  `crates/reg-meta/`, `reg_webapp/DESIGN.md`.
 - Acceptance: G0; the image builds and boots against a fixture catalog with
   `/api/context` and `/api/search` still answered by FastAPI; after the 9.3.0 release,
   the public smoke step is green and a burst gets `rate_limited`.
@@ -898,7 +904,9 @@ and the single ranking of section 6.
   `reg_webapp/Dockerfile`, `reg_webapp/edge/`,
   `reg_webapp/.claude/skills/run-reg-webapp/`, `.github/workflows/ci.yml`,
   `conformance/cases/http_context/`, `conformance/cases/http_scope/`,
-  `conformance/api/surface.toml`, `reg_webapp/DESIGN.md`.
+  `conformance/test_http.py`, `conformance/api/surface.toml`, `reg_webapp/DESIGN.md`.
+  The `/api/stats` steps in `http_scope/catalog-refuses-holdings` and `invalid-scope`
+  go; `api/scope-unavailable` and `invalid-parameters` pin that behavior.
 - Acceptance: G0; `bun run check`, `lint`, `test` and `gen:types` with no diff; the
   image boots and the dev setup renders Home and the footer from the Rust server.
 
@@ -914,8 +922,12 @@ atomically.
   3a.10.
 - Paths: `crates/reg-meta/`, `reg_webapp/frontend/src/lib/` (search files and tests),
   `reg_webapp/backend/`, `reg_webapp/edge/`, `conformance/cases/http_search/`,
-  `conformance/api/surface.toml`, `reg_webapp/DESIGN.md`. Out of scope: the CLI `search`
-  (stage 4; the G1 baseline uses it).
+  `conformance/cases/http_scope/`, `conformance/test_http.py`,
+  `conformance/{artifact_requests,test_acceptance_agreement,test_artifact_sample}.py`,
+  `conformance/api/surface.toml`, `reg_webapp/DESIGN.md`. The in-process `/api/search`
+  callers move to the Rust server through `--server-cmd` (the release admission
+  traversal included), and the remaining `/api/search` steps in `http_scope/` go to
+  their `api` twins. Out of scope: the CLI `search` (stage 4; the G1 baseline uses it).
 - Acceptance: G0; the frontend gates as in 3a.10; G1 green; the deployed search page's
   calls are answered by the Rust server.
 
@@ -925,9 +937,9 @@ atomically.
   (`760d70fa`) would show folded text on any 9.2+ artifact. Both pins move: the artifact
   to the 9.3.0 release, and the baseline reader commit to main after 3a.2, which reads
   9.3 and takes display text from base tables (its webapp still serves `/api/search`).
-- G1 runs on the old pin and the new pin, both with the new baseline, and records each
-  difference; the PR updates section 4's "Current pin" and
-  `conformance/differential/config.toml`.
+- G1 runs on the old pin with the old baseline and on the new pin with the new baseline
+  (a 9.3 reader refuses the 9.0 originals), and records each difference; the PR updates
+  section 4's "Current pin" and `conformance/differential/config.toml`.
 - Acceptance: G1 on both pins, under 5 min each. Depends on: 3a.11 and the release.
 
 #### Checkpoint 2 questions for the maintainer
@@ -936,8 +948,10 @@ atomically.
    one internal port per service and a shared IPv4 serves only 80/443. *Recommend:*
    `serve --proxy-to` fronts the public port and proxies unported paths to uvicorn until
    stage 4. Blocks 3a.9, 3a.10, 3a.11.
-2. **`hyper-util`** (the proxy's client), the only unnamed runtime crate left, needed
-   only if question 1 is accepted. *Recommend:* approve with question 1. Blocks 3a.9.
+2. **Runtime crates.** tokio and sha2 are used from 3a.4 because axum/rmcp cannot run
+   without tokio and the SHA-256 contract needs sha2; `hyper-util` (the proxy's client)
+   is needed only if question 1 is accepted. *Recommend:* ratify tokio and sha2; approve
+   `hyper-util` with question 1. Blocks 3a.9.
 3. **Decision 16 covers the catalog indexes only.** `doc_fts` needs `snippet()`
    positions that folding can shift. *Recommend:* the slice that ports docs designs its
    folding. Blocks nothing in 3a.
@@ -948,6 +962,7 @@ atomically.
 5. **Move `fetch` to stage 4** with local binary distribution: nothing in 3a uses it
    (`surface.toml` owner change). *Recommend:* yes. Blocks nothing.
 6. **Action: one `reg_meta` release at schema 9.3.0** after 3a.2 merges (G2 build).
+   Deploys pause from 3a.1b's merge until this release (container-build schema guard).
    Blocks 3a.9's live acceptance and 3a.13.
 
 Resolved by the orchestrator:
@@ -956,8 +971,8 @@ Resolved by the orchestrator:
   not data (tracker correction); `surface.toml` row upkeep on deletion is mechanical.
 - The Rust HTTP run joins G0 from 3a.4; the HTTP adapter strips `__edge_v`; no MCP
   disable flag, the SWECOV worker does not route `/mcp`.
-- Rate limits: fix a demonstrated defect only and keep direct-origin protection; runtime
-  crates are the named ones plus tokio and sha2, with `toml` dev-only.
+- Rate limits: fix a demonstrated defect only and keep direct-origin protection; no
+  clap, base64, tower-http or runtime `toml` (`toml` is dev-only).
 
 ### Stage 0 results (2026-10-07)
 
@@ -1136,5 +1151,5 @@ moving. The first layer is cheap to fix in Python.
   | 13  | Tooling and versions                   | **Latest everywhere.** Newest stable versions of languages, crates, packages and SDKs, and modern methods; no compatibility work for older toolchains. Windows later, via hosted MCP unless a local binary is effortless (§8).                                                                                                                      |
   | 14  | How agents execute it                  | **Execution protocol (§4).** Work packages in this file, written per stage; mechanical done (acceptance + gates + fresh-agent review); escalate-don't-decide list; small squash PRs to main; ≤3 in flight; four maintainer checkpoints. Stage 2 builds only the derive framework; slices own their tables.                                          |
   | 15  | How the SPA moves to the Rust server   | **Per slice.** Each slice ends by switching the SPA's calls for its routes to the Rust server and deleting the replaced FastAPI routes; the edge routes ported paths. Stage 4 retires what remains. Chosen as simpler long term: the shortest window with two implementations, and the Rust server is deployed from slice 3a anyway for hosted MCP. |
-  | 16  | Full-text index folding                | **Pre-folded with `fold_search`** (checkpoint 1): one fold definition in `reg-core` for the build and the reader instead of `fold_search` plus SQLite's `unicode61`. Applied in slice 3a.                                                                                                                                                           |
+  | 16  | Full-text index folding                | **Pre-folded with `fold_search`** (checkpoint 1): one fold definition in `reg-core` for the build and the reader instead of `fold_search` plus SQLite's `unicode61` folding; `unicode61 remove_diacritics 0` stays as the tokenizer only. Applied in slice 3a.                                                                                      |
   | 17  | Search result shape                    | **One ranked list per call** (checkpoint 1); the SPA makes one call per typed group.                                                                                                                                                                                                                                                                |
