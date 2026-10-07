@@ -1064,8 +1064,7 @@ class RepresentationSuccessionRef(_CatalogModel):
 class ClassificationRef(_CatalogModel):
     """A classification-grain succession edge endpoint (#571): one
     `classification_replaced_by` neighbor of a classification edition. Carried by
-    `classification_predecessors`/`classification_successors` and
-    `ResolvedClassification.replaced_by`.
+    `classification_predecessors` and `ResolvedClassification.replaced_by`.
 
     The classification FQID is 2-segment (`class/<slug>`), so the edge endpoint is
     a single slug — no provider/register triple (unlike `VariableRef`). There is
@@ -5052,19 +5051,10 @@ class Catalog:
             ).fetchall()
         }
 
-    def classification_successors(self, fqid: str | Fqid) -> list[ClassificationRef]:
-        """The editions that replaced this classification edition (outbound
-        succession, #571). Keyed on the literal slug — succession tolerates a DEAD
-        predecessor edition (a renamed/retired slug still carries edges), so unlike
-        `successors` this does NOT require the slug to resolve to a live row."""
-        return list(
-            self._classification_successor_edges(self._parse_classification(fqid))
-        )
-
     def classification_predecessors(self, fqid: str | Fqid) -> list[ClassificationRef]:
         """The editions this classification edition replaced (inbound succession,
-        #571). Keyed on the literal slug; tolerates a dead edition like
-        `classification_successors`."""
+        #571). Keyed on the literal slug, so a dead edition still reports its
+        edges."""
         return list(
             self._classification_predecessor_edges(self._parse_classification(fqid))
         )
@@ -5077,16 +5067,6 @@ class Catalog:
         classification succession."""
         return list(
             self._classification_derived_from_edges(self._parse_classification(fqid))
-        )
-
-    def classification_derivatives(
-        self, fqid: str | Fqid
-    ) -> list[ClassificationDerivedFromRef]:
-        """The non-temporal specialized classifications derived from this
-        classification (#779). Keyed on the literal slug and intentionally
-        independent of classification succession."""
-        return list(
-            self._classification_derivative_edges(self._parse_classification(fqid))
         )
 
     def classification_chain(self, fqid: str | Fqid) -> list[ClassificationEdition]:

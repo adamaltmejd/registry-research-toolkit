@@ -215,8 +215,8 @@ fails on any `classification_replaced_by` edge whose endpoint has no live row), 
 `fqid` is None only on a malformed/unresolvable slug (rendered as plain text, not a
 link). The earlier immediate-neighbor routes (`/classification_predecessors`,
 `/classification_successors`) were retired — the embedded full chain subsumes them.
-(reg_meta's `Catalog.classification_successors`/`classification_predecessors` accessors
-remain as public API and back the chain walk.)
+(reg_meta's `Catalog.classification_predecessors` accessor remains public API; the chain
+walk reads the same edges.)
 
 At the current head, the classification leaf also embeds further payloads inline for
 synchronous SPA render: `codes` (reg_meta's `ClassificationCode`, embedded directly from

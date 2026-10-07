@@ -88,29 +88,6 @@ class TestEdgeAccessors:
         assert ref.note == "Primary-care setting variant"
         assert resolved.derivatives == ()
 
-    def test_classification_derivatives_use_source_index(self) -> None:
-        conn = build_slugged_db()
-        self._seed_classification(
-            conn,
-            slug="ks87-p",
-            short_name="KS87-P",
-            name="Klassifikation av sjukdomar 1987, primärvård",
-        )
-        self._seed_classification_derived_from(
-            conn,
-            derived="ks87-p",
-            source="sun2020",
-            note="Primary-care setting variant",
-        )
-
-        refs = Catalog(conn).classification_derivatives("class/sun2020")
-
-        assert [r.slug for r in refs] == ["ks87-p"]
-        assert refs[0].short_name == "KS87-P"
-        assert Catalog(conn).classification_derived_from("class/ks87-p")[0].slug == (
-            "sun2020"
-        )
-
     @staticmethod
     def _seed_classification(
         conn: sqlite3.Connection,
