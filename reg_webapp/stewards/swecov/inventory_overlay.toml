@@ -5350,6 +5350,24 @@ edition = "2023-12-31"
 table = "RTBFamilj2024"
 edition = "2024-12-31"
 
+# Cumulative Flergenerationsregistret stock files: the 8-digit name token is the
+# stock date, not a single-year edition. SCB documents ONE register version for
+# each variant, "1961-01-01 –– 2025-12-31" (catalog register_version
+# 3064084485438625825 folkbokforda-biologiska, 3232397471433435131
+# folkbokforda-adoptivforaldrar; both last approved 2026-02-23). The register
+# holds persons born 1932 onward who were folkbokförda at some point since 1961,
+# so the version span (1961), not the birth cohort (1932), bounds the edition.
+# Each snapshot is cumulative, which is why the 2020–2022 snapshots above are
+# excluded as superseded: the surviving 2024-12-31 stock covers 1961..2024.
+
+[[edition]]
+table = "FlerGen_Adopforaldrar_20241231"
+edition = { from = 1961, to = 2024 }
+
+[[edition]]
+table = "FlerGen_Bioforaldrar_20241231"
+edition = { from = 1961, to = 2024 }
+
 # Retain intentionally unowned CIS matrix columns as physical holdings.
 
 [[unmap]]
