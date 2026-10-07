@@ -1,9 +1,7 @@
-# Rust runtime workspace (RUST_RUNTIME_SPEC.md). `spike/` is the stage-0 throwaway with
-# its own workspace; package 1.5 deletes it and this exclude.
+# Rust runtime workspace (RUST_RUNTIME_SPEC.md).
 [workspace]
 resolver = "3"
 members = ["crates/*"]
-exclude = ["spike"]
 
 [workspace.package]
 edition = "2024"

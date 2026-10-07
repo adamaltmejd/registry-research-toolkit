@@ -106,7 +106,7 @@ def _discover_commands() -> set[str]:
 def _consumer_files() -> list[Path]:
     """Every git-visible `.py` file (tracked, or untracked and not ignored) outside
     `reg_meta/` itself, so ignored trees such as the build seed and virtualenvs are
-    never walked. The throwaway stage-0 spike is skipped; package 1.5 deletes it."""
+    never walked."""
     listed = subprocess.run(
         ["git", "ls-files", "-z", "-co", "--exclude-standard"],
         cwd=ROOT,
@@ -117,7 +117,7 @@ def _consumer_files() -> list[Path]:
         ROOT / p
         for p in listed.split("\0")
         if p.endswith(".py")
-        and not p.startswith((f"{PROVIDER}/", "spike/"))
+        and not p.startswith(f"{PROVIDER}/")
         and (ROOT / p).exists()
     )
 
