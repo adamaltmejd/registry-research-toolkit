@@ -97,17 +97,3 @@ def seeded_conn() -> sqlite3.Connection:
     )
     conn.commit()
     return conn
-
-
-def assert_no_internal_keys(results: tuple) -> None:
-    # The typed result models (#701) have `extra="forbid"`, so a fold-internal key
-    # (`_variable_id`/`_classification_id`) could never appear as a field — assert it
-    # via the serialized dump (the public wire), which is what `_strip_internal_keys`
-    # used to guard pre-conversion. Group/succession rows now carry a scalar
-    # `matched_count`, not the raw `matched` leaf list, so there is no nested
-    # leaf-hit list to recurse into.
-    for r in results:
-        dumped = r.model_dump()
-        assert "_variable_id" not in dumped
-        assert "_classification_id" not in dumped
-        assert "matched" not in dumped

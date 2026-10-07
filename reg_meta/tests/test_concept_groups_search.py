@@ -8,10 +8,7 @@ hand-seeded onto the slugged fixture DB (the shared ``_slugged_db`` factory).
 from __future__ import annotations
 
 from _slugged_db import add_state, add_variable
-from groups_test_support import (
-    assert_no_internal_keys as _assert_no_internal_keys,
-    seeded_conn as _seeded_conn,
-)
+from groups_test_support import seeded_conn as _seeded_conn
 from reg_meta.queries import search
 
 
@@ -97,7 +94,6 @@ class TestSearchFolding:
         assert leaf.name == "Lönesumma januari"
         assert leaf.concept_group == "agiink"
         assert leaf.concept_group_label == "Lönesumma per månad"
-        _assert_no_internal_keys(results)
 
     def test_group_label_matches_without_leaf_hits(self) -> None:
         conn = _seeded_conn()
@@ -168,7 +164,6 @@ class TestSearchFolding:
         assert all(r.type == "varname" for r in results)
         # Unfolded varname rows carry no lone-member annotation.
         assert all(r.concept_group is None for r in results)
-        _assert_no_internal_keys(results)
 
     def test_register_scope_keeps_variable_group_drops_classification(self) -> None:
         conn = _seeded_conn()

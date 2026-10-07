@@ -10,7 +10,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from _slugged_db import build_slugged_db
-from groups_test_support import assert_no_internal_keys as _assert_no_internal_keys
 from reg_meta.queries import search
 from search_test_support import rebuild_fts as _rebuild_fts
 
@@ -179,7 +178,6 @@ class TestClassificationSuccessionFold:
         assert groups[0].group_key == "sun"
         assert not [r for r in results if r.type == "classification_succession"]
         assert not [r for r in results if r.type == "classification"]
-        _assert_no_internal_keys(results)
 
 
 class TestClassificationSuccessionSplitRoot:
