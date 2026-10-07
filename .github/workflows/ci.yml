@@ -77,9 +77,10 @@ jobs:
 
   package-integration:
     runs-on: ubuntu-latest
-    # Successful runs take 33-111 s (median 47 s). A bound near that makes a
-    # stall fail in minutes instead of holding the PR for half an hour.
-    timeout-minutes: 5
+    # Successful runs take 33-111 s (median 47 s). The bound sits just above
+    # the test's own 300 s image-build timeout, so a hung build fails with
+    # pytest's located error instead of a bare runner cancellation.
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: astral-sh/setup-uv@v10.0.1
