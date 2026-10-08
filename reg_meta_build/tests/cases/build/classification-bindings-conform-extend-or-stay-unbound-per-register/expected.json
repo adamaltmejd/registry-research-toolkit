@@ -1,5 +1,6 @@
 {
   "status": "diagnostic_complete",
+  "rebuilt_identical": true,
   "projections": [
     {
       "table": "state_classifications",
