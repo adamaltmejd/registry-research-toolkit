@@ -1,8 +1,0 @@
-{
-  "replaces": [
-    "test_curation_compile_owner_alternatives.py::test_global_event_acknowledgement_is_routed_out_of_local_scope[unresolved_source_event_endpoint-False]"
-  ],
-  "fails_if": "the curation compiler routes an unguarded `unresolved_source_event_endpoint` acknowledgement to the scoped resolver instead of refusing it, so a global acknowledgement could match without its evidence and diagnostic digests",
-  "sources": "scb-value",
-  "note": "Event and lineage acknowledgements are matched outside a register's scope, so they must carry both digests; the build refuses one without them before any event is resolved."
-}
