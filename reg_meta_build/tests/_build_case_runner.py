@@ -760,8 +760,8 @@ def _alias_windows(outcome: Outcome) -> list[dict]:
         f"SELECT {key}, r.slug AS register, v.slug AS variable, rv.slug AS variant, "
         "w.delivery_column_name AS column, w.valid_to, w.column_metadata, "
         "w.coding_metadata, w.data_type, w.data_length, w.definition, "
-        "w.measurement_unit, w.name, w.description, w.operational_definition "
-        "FROM variable_alias_window w JOIN variable v USING (variable_id) "
+        "w.measurement_unit, w.name, w.description, w.operational_definition, "
+        "w.source_register_text FROM variable_alias_window w JOIN variable v USING (variable_id) "
         "JOIN register r ON r.register_id = v.register_id "
         "JOIN register_variant rv ON rv.register_variant_id = w.register_variant_id"
     ):
@@ -905,7 +905,14 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     ),
     "conformance_codes": _conformance_codes,
     "classifications": lambda o: o._sql(
-        "SELECT slug, short_name, name, name_en FROM classification"
+        "SELECT c.slug, c.short_name, c.name, c.name_en, c.publisher, c.valid_from, "
+        "c.valid_to, c.description, c.url, c.code_count, c.valid_code_count, "
+        "p.slug AS supersedes FROM classification c "
+        "LEFT JOIN classification p ON p.id = c.supersedes_id"
+    ),
+    "classification_successions": lambda o: o._sql(
+        "SELECT predecessor_slug AS predecessor, successor_slug AS successor, "
+        "effective_year, note FROM classification_replaced_by"
     ),
     "relationships": lambda o: o._sql(
         "SELECT kind, binding_status, source_dataset, v.slug AS owner, "
@@ -946,8 +953,8 @@ FIELDS: dict[str, frozenset[str]] = {
         "aliases": "register variable variant column",
         "alias_windows": "register variable variant column valid_from valid_to "
         "column_metadata coding_metadata data_type data_length definition "
-        "measurement_unit name description operational_definition codes "
-        "classifications",
+        "measurement_unit name description operational_definition "
+        "source_register_text codes classifications",
         "concept_groups": "variables",
         "warnings": "register variable column valid_from valid_to code variant detail "
         "summary fields refs",
@@ -960,7 +967,9 @@ FIELDS: dict[str, frozenset[str]] = {
         "status checked matched nonconforming overlap",
         "conformance_codes": "register variable column valid_from valid_to "
         "classification code label member_kind sentinel_meaning scoped_windows",
-        "classifications": "slug short_name name name_en",
+        "classifications": "slug short_name name name_en publisher valid_from "
+        "valid_to description url code_count valid_code_count supersedes",
+        "classification_successions": "predecessor successor effective_year note",
         "relationships": "kind binding_status source_dataset owner endpoints",
         "evidence": "kind disposition",
         "source_issues": "kind severity descriptor_key physical_associations refs",
