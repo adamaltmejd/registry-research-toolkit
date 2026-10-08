@@ -104,10 +104,6 @@ from .source_inspection import (
     write_scb_observation_census,
 )
 from .sources.sos import SosParseError, parse_directory, parse_register_file
-from .split_sibling_suspects import (
-    infer_split_sibling_suspects,
-    render_suspects_toml,
-)
 from .succession_candidates import (
     infer_succession_candidates,
     render_succession_toml,
@@ -740,48 +736,6 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
 
-    suspects_p = sub.add_parser(
-        "split-sibling-suspects",
-        help="Emit the #918 split-sibling curation worklist (maintainer review).",
-        description=(
-            "Emit the #918 split-sibling SUSPECT worklist from a BUILT DB: the A2.2\n"
-            "triage siblings (variables sharing one (register, provider_key)) that\n"
-            "were CO-DELIVERED (overlap in some register_variant era) and whose\n"
-            "representative shapes signal a curation question. The reason follows the\n"
-            "build-time fold-gate precedence: code_vs_label (a code column + its\n"
-            "<stem>namn label — a representation/fold candidate, not a mis-import),\n"
-            "type_flip (numeric-vs-text), or length_disagree (an unclassifiable type\n"
-            "with differing widths). A non-co-delivered pair (a temporal rename/split\n"
-            "that never overlapped) is NOT a suspect. #800 retired the `related` edge\n"
-            "and its import_bug_suspect kind; this re-derives the signal READ-ONLY\n"
-            "from variable_state for the deferred fold-or-sever curation. Reads a\n"
-            "built DB; NEVER mutates it and NOTHING is materialized.\n\n"
-            "For each suspect PAIR it reports both siblings' FQID + name + delivery\n"
-            "column, each side's data_type / data_length / value-set presence, the\n"
-            "reason, and whether the pair is already co-grouped (shares a\n"
-            "concept_group — the resolved fold; a SEPARATE axis from co-delivery). The\n"
-            "classifier reuses the SAME code-vs-label + numeric/text/other helpers the\n"
-            "build-time fold gate uses.\n\n"
-            "-o/--output-toml writes a comment-rich worklist (one `[[pair]]` per\n"
-            "suspect, grouped by family, high-value-first) with a `disposition`\n"
-            'placeholder for the maintainer to set to "fold" or "distinct". NOTHING\n'
-            "loads it — the fold lands via curation/registers/<provider>/<slug>.toml; a sever is a no-op.\n\n"
-            "Examples:\n"
-            "  reg-meta-build --db <built-db> split-sibling-suspects -o /tmp/split.toml\n"
-            "  reg-meta-build --db <built-db> split-sibling-suspects  # counts only"
-        ),
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    suspects_p.add_argument(
-        "-o",
-        "--output-toml",
-        default=None,
-        help=(
-            "Write the suspect worklist TOML to this path. Without it the JSON counts "
-            "summary still prints; the TOML is included in the payload."
-        ),
-    )
-
     succession_p = sub.add_parser(
         "succession-candidates",
         help="Emit the succession-candidate curation worklist (maintainer review).",
@@ -790,29 +744,23 @@ def _build_parser() -> argparse.ArgumentParser:
             "catalog variables that look like consecutive ERAS of one delivered\n"
             "column. A candidate pair is two variable_state rows in ONE register\n"
             "whose windows are disjoint and ADJACENT (the later valid_from is the\n"
-            "day, or the year, after the earlier valid_to) and either the SAME\n"
-            "delivery column under two SCB var_ids, in any variant coordinate\n"
-            "(cross_var_id — a re-minted variable), or two split-container siblings\n"
-            "of one var_id whose columns DIFFER, both eras INSIDE one\n"
-            "register_variant (split_rename — a never-co-delivered rename, scoped\n"
-            "to that variant and emitted once per variant it is evidenced in; an\n"
-            "era pair meeting ACROSS variants is DROPPED).\n"
+            "day, or the year, after the earlier valid_to) carrying the SAME\n"
+            "delivery column under two SCB var_ids, in any variant coordinate (a\n"
+            "re-minted variable).\n"
             "A pair already joined by a variable/representation replaced_by edge in\n"
-            "either direction is skipped, and so is a CO-DELIVERED pair — that is\n"
-            "split-sibling-suspects' territory (#918 gates ON co-delivery; this\n"
-            "gates it out). Reads a built DB; NEVER mutates it and NOTHING is\n"
-            "materialized.\n\n"
+            "either direction is skipped, and so is a CO-DELIVERED pair (the two\n"
+            "shipped together, so neither succeeds the other). Reads a built DB;\n"
+            "NEVER mutates it and NOTHING is materialized.\n\n"
             "SCB variable identity is (register_id, var_id) and there is no automatic\n"
             "pooling across var_ids, so a never-co-delivered rename becomes two\n"
             "unrelated browse rows for one column. The designed fix is a curated\n"
             "replaced_by edge; this is the diagnostic that finds the candidates.\n\n"
-            "The JSON summary reports the total plus per-register and per-kind counts.\n"
-            "-o/--output-toml writes the candidates as `[[edge]]` tables in the EXACT\n"
-            "curation/relations.toml grammar (variable grain for cross_var_id;\n"
-            "representation grain — from_column / to_column plus the delivering\n"
-            "variant — for split_rename), preceded by evidence comments, so a\n"
-            "CONFIRMED candidate copies across verbatim. NOTHING loads the emitted\n"
-            "file: the maintainer curates relations.toml by hand.\n\n"
+            "The JSON summary reports the total plus per-register counts.\n"
+            "-o/--output-toml writes the candidates as variable-grain `[[edge]]`\n"
+            "tables in the EXACT curation/relations.toml grammar, preceded by\n"
+            "evidence comments, so a CONFIRMED candidate copies across verbatim.\n"
+            "NOTHING loads the emitted file: the maintainer curates relations.toml\n"
+            "by hand.\n\n"
             "Examples:\n"
             "  reg-meta-build --db <built-db> succession-candidates -o /tmp/succ.toml\n"
             "  reg-meta-build --db <built-db> succession-candidates  # counts only"
@@ -2019,40 +1967,6 @@ def _cmd_classification_residue(
     ), 0
 
 
-def _cmd_split_sibling_suspects(
-    args: argparse.Namespace,
-) -> tuple[dict[str, Any], int]:
-    start = time.perf_counter()
-    db = db_path_from_args(args.db)
-    # Schema-checked open: the diagnostic reads current-schema tables (variable,
-    # variable_state, concept_group_variable), so a stale DB should fail fast with
-    # the standard actionable schema-mismatch error — same as the residue command.
-    conn = open_built_db(db)
-    try:
-        result = infer_split_sibling_suspects(conn)
-    finally:
-        conn.close()
-
-    toml = render_suspects_toml(result)
-
-    data: dict[str, Any] = {
-        "total_pairs": result.total_pairs,
-        "family_count": result.family_count,
-        "family_variable_count": result.family_variable_count,
-        "co_grouped_count": result.co_grouped_count,
-    }
-    _emit_toml(args.output_toml, toml, data)
-
-    duration_ms = int((time.perf_counter() - start) * 1000)
-    return success_envelope(
-        command="split-sibling-suspects",
-        args_payload={"output_toml": args.output_toml},
-        db_info=None,
-        data=data,
-        duration_ms=duration_ms,
-    ), 0
-
-
 def _cmd_succession_candidates(
     args: argparse.Namespace,
 ) -> tuple[dict[str, Any], int]:
@@ -2060,8 +1974,7 @@ def _cmd_succession_candidates(
     db = db_path_from_args(args.db)
     # Schema-checked open: the diagnostic reads current-schema tables (variable,
     # variable_state, variable_replaced_by, representation_replaced_by), so a stale
-    # DB should fail fast with the standard actionable schema-mismatch error — same
-    # as the split-sibling-suspects command.
+    # DB should fail fast with the standard actionable schema-mismatch error.
     conn = open_built_db(db)
     try:
         result = infer_succession_candidates(conn)
@@ -2073,7 +1986,6 @@ def _cmd_succession_candidates(
     data: dict[str, Any] = {
         "total": result.total,
         "per_register_counts": result.per_register_counts,
-        "per_kind_counts": result.per_kind_counts,
     }
     _emit_toml(args.output_toml, toml, data)
 
@@ -2150,7 +2062,6 @@ COMMAND_DISPATCH: dict[
     "entity-key-pins": _cmd_entity_key_pins,
     "concept-group-candidates": _cmd_concept_group_candidates,
     "classification-residue": _cmd_classification_residue,
-    "split-sibling-suspects": _cmd_split_sibling_suspects,
     "succession-candidates": _cmd_succession_candidates,
     "doc-coverage": _cmd_doc_coverage,
 }
@@ -2228,10 +2139,6 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
     (
         "classification-residue [-o TOML]",
         "Emit the #416 classification-linkage residue worklist (maintainer review).",
-    ),
-    (
-        "split-sibling-suspects [-o TOML]",
-        "Emit the #918 split-sibling curation worklist (maintainer review).",
     ),
     (
         "succession-candidates [-o TOML]",
