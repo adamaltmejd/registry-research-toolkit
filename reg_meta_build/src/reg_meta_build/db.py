@@ -352,10 +352,9 @@ CREATE TABLE IF NOT EXISTS delivery_window (
     PRIMARY KEY (browse_delivery_id, valid_from)
 ) WITHOUT ROWID;
 
--- Derived (derive/states.py): the projection of expanded_state that some request
--- emits: the whole-history universe of resolver-emitted delivery
--- columns, the only relation that authorizes a holdings mapping. Browse eligibility
--- is a different contract and never reads it.
+-- Derived (derive/states.py): the projection of expanded_state onto the columns some
+-- request emits, the whole-history universe of resolver-emitted delivery columns. The
+-- only relation that authorizes a holdings mapping; browse never reads it.
 CREATE TABLE IF NOT EXISTS resolver_column (
     -- Owning variable; never a same_as donor.
     variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
@@ -369,7 +368,7 @@ CREATE TABLE IF NOT EXISTS resolver_column (
 ) WITHOUT ROWID;
 """
 
-# Derived search indexes (derive.py `derive_search_indexes`). Regular FTS5 tables
+# Derived search indexes (derive/search_index.py `derive_search_indexes`). Regular FTS5 tables
 # holding `fold_search` text, so one fold serves the build and the reader
 # (RUST_RUNTIME_SPEC.md decision 16): the tokenizer only splits. Key columns are
 # stored verbatim and UNINDEXED, so joins hold and they never match as tokens.

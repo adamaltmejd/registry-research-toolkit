@@ -838,13 +838,60 @@ sub-resource coordinate (passed to `resolve_at`), not a slash-path FQID segment.
 v0.x per-edition `resolve()` behavior was deleted, not aliased — pre-v1 policy (no
 shims).
 
+## Compiled states and browse deliveries
+
+Since schema 9.4.0 (RUST_RUNTIME_SPEC.md section 3, package 3b.1), derive compiles what
+the resolver computes from the artifact alone. The Python reader does not read these
+tables; the Rust reader does, and applies only the request-dependent rules below.
+
+- `expanded_state`: every representation the resolver can emit over a base state's whole
+  history, one row per base state plus one per participating alias window. Its `kind` is
+  `base` (always emitted), `base_fallback` (a base that some source window spelled like
+  it replaces), `source_window`, `coded_window` (a per-column coded window, clipped to
+  its state) or `curated_window` (additive). Each row carries its own bounds, the
+  emitted `delivery_column_name`, the window's `variable_alias_window` key start and
+  `canonical_column`, the one spelling of its column fold for the (variable, variant).
+  Content stays on the state and the window row. `resolver_column` is its projection:
+  the canonical columns of every row that is not `base_fallback`.
+- `browse_delivery` and `delivery_window`: `register_variable_deliveries` per scope,
+  with the disjoint windows of each delivery. `holdings` rows exist only in a steward
+  artifact.
+
+**Window fallback (request time).** For a requested interval, a state with a
+`base_fallback` row emits its `source_window` and `coded_window` rows that overlap the
+request, unless none overlaps, in which case it emits the base. Its `curated_window`
+rows that overlap the request are always added. A `base` row is always emitted. Without
+a requested period every row but `base_fallback` is emitted.
+
+**Warning attribution (request time, not compiled).** A compiled link table was measured
+at over 2.2M rows keyed by 64-character warning ids, larger than every other derived
+table together, while one variable's warnings read in about 1 ms (stage 3b–3e decision
+2). A warning `w` applies to an emitted representation `e` with bounds `[lo, hi]` (after
+held and requested clipping) exactly when:
+
+- `w.variable_id = e.variable_id` and `w.register_id` is the variable's register;
+- `w.register_variant_id IS NULL` or equals `e.register_variant_id`;
+- `w.delivery_column_name IS NULL`, or `py_lower(w.delivery_column_name)` equals
+  `py_lower(e.canonical_column)`; a representation without a column gets only
+  column-less warnings;
+- `w.valid_from IS NULL` or (`hi` is not NULL and `w.valid_from <= hi`), and
+  `w.valid_to IS NULL` or (`lo` is not NULL and `w.valid_to >= lo`). The dates are
+  exact: the Python reader's SQL filter rounds the bounds out to whole months, but its
+  post-filter applies these exact comparisons, so a year-independent representation gets
+  only unbounded warnings.
+
+Holdings scope adds nothing for an emitted held representation: clipping to held periods
+already implies the reader's held-mapping predicate.
+
 ## Compiled holdings relations and read scope
 
 **Compiled-holdings contract (2026-10-04).** The activated SQLite artifact is the sole
 runtime source of physical holdings. Accepted inventory TOML is a builder input
 contract, not a second runtime catalog. Reference metadata describes meaning and
 validity; holdings describe possession; the existing `Catalog` resolver determines
-semantic applicability at query time. No state/window resolution is compiled.
+semantic applicability at query time. Whole-history state and window participation is
+compiled by derive ("Compiled states and browse deliveries" above); the
+request-dependent rules stay in the reader.
 
 Four relations retain these facts:
 

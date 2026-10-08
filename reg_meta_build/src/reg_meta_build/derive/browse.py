@@ -49,28 +49,26 @@ def browse_deliveries(conn: sqlite3.Connection, scope: Scope) -> list[BrowseRow]
             "JOIN provider p USING(provider_id) "
             "WHERE r.slug IS NOT NULL ORDER BY p.slug, r.slug"
         ).fetchall()
+        # A delivery names a variant some row of its variable references; the
+        # reader joins it without requiring it to share the register.
+        keys = {
+            (register_id, variable, variant): (variable_id, variant_id)
+            for register_id, variable, variable_id, variant, variant_id in conn.execute(
+                "SELECT v.register_id, v.slug, v.variable_id, rv.slug, "
+                "rv.register_variant_id FROM (SELECT variable_id, register_variant_id "
+                "FROM variable_state UNION SELECT variable_id, register_variant_id "
+                "FROM variable_alias_window UNION SELECT variable_id, "
+                "register_variant_id FROM variable_alias) JOIN variable v "
+                "USING(variable_id) JOIN register_variant rv USING(register_variant_id)"
+            )
+        }
         out: list[BrowseRow] = []
         for provider, register, register_id in registers:
-            # A delivery names a variant some row of its variable references; the
-            # reader joins it without requiring it to share the register.
-            keys = {
-                (variable, variant): (variable_id, variant_id)
-                for variable, variable_id, variant, variant_id in conn.execute(
-                    "SELECT v.slug, v.variable_id, rv.slug, rv.register_variant_id "
-                    "FROM variable v JOIN (SELECT variable_id, register_variant_id "
-                    "FROM variable_state UNION SELECT variable_id, "
-                    "register_variant_id FROM variable_alias_window UNION SELECT "
-                    "variable_id, register_variant_id FROM variable_alias) "
-                    "USING(variable_id) JOIN register_variant rv "
-                    "USING(register_variant_id) WHERE v.register_id = ?",
-                    (register_id,),
-                )
-            }
             deliveries = catalog.register_variable_deliveries(provider, register)
             out.extend(
                 (
                     scope,
-                    *keys[slug, delivery.variant],
+                    *keys[register_id, slug, delivery.variant],
                     delivery.column,
                     delivery.period_scope,
                     delivery.coverage.state_count,
