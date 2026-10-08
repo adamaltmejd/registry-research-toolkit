@@ -1,0 +1,24 @@
+{
+  "note": "Twins of cli_scope/values-* and logical/{values-holdings,get_values_by_variable-unheld-holdings,saturated-reference-values}. Fails if a state's codes drift from its value set in reference scope, if holdings scope answers a state that is not held (the 2020 and archive states) or a variable that is not held, if a delivered column name starts resolving as a bare name, or if a book's codes stop paging to the end one at a time.",
+  "fixture": "reader/logical",
+  "kind": "steward",
+  "requests": [
+    {"operation": "states", "path": "/api/states/scb/example/value", "query": {"scope": "reference"}},
+    {"operation": "values", "path": "/api/values/scb/example/value", "query": {"scope": "reference"}, "query_from": {"state": [0, "/data/items/0/state_id"]}},
+    {"operation": "values", "path": "/api/values/scb/example/value", "query": {"scope": "reference"}, "query_from": {"state": [0, "/data/items/1/state_id"]}},
+    {"operation": "values", "path": "/api/values/scb/example/value", "query": {"scope": "reference"}, "query_from": {"state": [0, "/data/items/2/state_id"]}},
+    {"operation": "values", "path": "/api/values/scb/example/value", "query": {"scope": "reference"}, "query_from": {"state": [0, "/data/items/3/state_id"]}},
+    {"operation": "states", "path": "/api/states/scb/example/value", "query": {"scope": "holdings"}},
+    {"operation": "values", "path": "/api/values/scb/example/value", "query": {"scope": "holdings"}, "query_from": {"state": [5, "/data/items/0/state_id"]}},
+    {"operation": "values", "path": "/api/values/scb/example/value", "query": {"scope": "holdings"}, "query_from": {"state": [5, "/data/items/1/state_id"]}},
+    {"operation": "values", "path": "/api/values/scb/example/value", "query": {"scope": "holdings"}, "query_from": {"state": [0, "/data/items/3/state_id"]}},
+    {"operation": "values", "path": "/api/values/scb/example/value", "query": {"scope": "holdings"}, "query_from": {"state": [0, "/data/items/1/state_id"]}},
+    {"operation": "states", "path": "/api/states/Value reference", "query": {"scope": "reference"}},
+    {"operation": "values", "path": "/api/values/Value reference", "query": {"scope": "reference"}, "query_from": {"state": [10, "/data/items/0/state_id"]}},
+    {"operation": "values", "path": "/api/values/Value reference", "query": {"scope": "holdings"}, "query_from": {"state": [10, "/data/items/0/state_id"]}},
+    {"operation": "values", "path": "/api/values/Valuereference", "query": {"scope": "reference", "state": "1"}},
+    {"operation": "values", "path": "/api/values/class/example-codes", "query": {"scope": "reference", "limit": 1}},
+    {"operation": "values", "path": "/api/values/class/example-codes", "query": {"scope": "reference", "limit": 1}, "cursor_from": [14, "/data/next_cursor"]},
+    {"operation": "values", "path": "/api/values/class/example-codes", "query": {"scope": "reference", "limit": 1}, "cursor_from": [15, "/data/next_cursor"]}
+  ]
+}

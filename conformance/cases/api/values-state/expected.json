@@ -1,0 +1,36 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/valid_from": ["2018-01-01", "2019-01-01"],
+      "/data/items/*/coding_window_from": [null, "2019-01-01"]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items": [
+        {"code": "1", "label": "Chefer"},
+        {"code": "11", "label": "Politiker"},
+        {"code": "2", "label": "Specialister"},
+        {"code": "21", "label": "Ingenjörer"},
+        {"code": "7", "label": "Lokal kod"},
+        {"code": "98", "label": "Uppgift saknas"},
+        {"code": "99", "label": "Okänd"}
+      ],
+      "/data/total": 7,
+      "/data/next_cursor": null
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items": [{"code": "1", "label": "Chefer"}, {"code": "8", "label": "Annan"}],
+      "/data/total": 2
+    }
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "scb/example/yrke"}
+  }
+]

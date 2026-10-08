@@ -1,0 +1,28 @@
+[
+  {"status": 422, "json": {"/error/code": "invalid_ref", "/error/fields": {"ref": "scb/example"}}},
+  {"status": 404, "json": {"/error/code": "not_found", "/error/fields": {"ref": "scb/example/missing"}}},
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields": {
+        "candidates": [
+          {"fqid": "class/yrke", "kind": "classification", "name": "Yrke"},
+          {"fqid": "scb/example/yrke", "kind": "variable", "name": "Yrke"}
+        ],
+        "ref": "Yrke"
+      }
+    }
+  },
+  {"status": 422, "json": {"/error/code": "scope_unavailable", "/error/fields": {"scope": "holdings"}}},
+  {"status": 422, "json": {"/error/code": "invalid_parameter", "/error/fields": {"parameter": "state"}}},
+  {"status": 422, "json": {"/error/code": "invalid_parameter", "/error/fields": {"parameter": "state"}}},
+  {"status": 404, "json": {"/error/code": "not_found", "/error/fields": {"ref": "scb/example/yrke"}}},
+  {"status": 422, "json": {"/error/code": "invalid_parameter", "/error/fields": {"parameter": "state"}}},
+  {"status": 422, "json": {"/error/code": "invalid_parameter", "/error/fields": {"parameter": "partition"}}},
+  {"status": 422, "json": {"/error/code": "invalid_parameter", "/error/fields": {"parameter": "partition"}}},
+  {"status": 422, "json": {"/error/code": "invalid_parameter", "/error/fields": {"parameter": "partition"}}},
+  {"status": 422, "json": {"/error/code": "invalid_parameter", "/error/fields": {"parameter": "alias_window_from"}}},
+  {"status": 422, "json": {"/error/code": "invalid_parameter", "/error/fields": {"parameter": "limit"}}},
+  {"status": 422, "json": {"/error/code": "invalid_parameter", "/error/fields": {"parameter": "q"}}}
+]

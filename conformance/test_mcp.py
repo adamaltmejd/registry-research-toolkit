@@ -56,6 +56,12 @@ EQUIVALENCE = {
     ),
     "show": ("show-provider", "show-bare-names"),
     "states": ("states-paging", "states-errors", "states-stale-cursor"),
+    "values": (
+        "values-classification",
+        "values-state",
+        "values-errors",
+        "values-stale-cursor",
+    ),
     "graph": ("graph-succession", "graph-unheld", "graph-errors"),
     "lineage": ("lineage", "lineage-unheld-reference", "graph-errors"),
     "schema": ("schema-paging", "schema-errors"),
@@ -142,6 +148,10 @@ def test_tool_matches_http(servers, operation):
             if "cursor_from" in step:
                 source, pointer = step["cursor_from"]
                 arguments["cursor"] = select_json(documents[source], pointer)
+            # The identifier comes from the HTTP response: its source step may be
+            # another operation's, which has no tool call here.
+            for name, (source, pointer) in step.get("query_from", {}).items():
+                arguments[name] = select_json(http[source]["body"], pointer)
             is_error, document = call(
                 clients[step.get("artifact")], tool["name"], arguments
             )
