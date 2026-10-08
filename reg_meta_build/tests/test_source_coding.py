@@ -127,6 +127,41 @@ def test_coding_source_hash_keeps_the_committed_ordered_json_encoding() -> None:
     assert coding_source_sha256(deduplicated) != coding_source_sha256(claim)
 
 
+def test_member_validity_splits_at_exact_days_across_a_leap_day() -> None:
+    """Input: a 2020 list with `0` all year and `1` valid only 2020-02-29..2020-03-02.
+    Output: three segments, cut at those exact days: `0` to 2020-02-28, `0` and `1`
+    from the leap day to 2020-03-02, `0` again from 2020-03-03.
+
+    No boundary reaches it: SCB sets aside item validity narrower than the item's
+    edition (`item_validity_set_aside`) and SOS Kodlista periods are whole years, so
+    no delivery cuts a member inside a year
+    (`cases/build/value-code-lists-withhold-only-contested-or-unknown-periods` pins
+    the year-grain form).
+
+    Fails if the fold rounds member scopes to calendar years (`1` then covers all of
+    2020) or mishandles an interior day boundary (an off-by-one segment end, or a
+    lost leap day).
+    """
+    result = resolve_code_membership(
+        (
+            _claim(
+                "a",
+                _member("0"),
+                _member("1", scope=_scope("2020-02-29", "2020-03-02")),
+            ),
+        )
+    )
+    assert result.issues == ()
+    assert [
+        (s.valid_from, s.valid_to, s.code_set.members if s.code_set else None)
+        for s in result.segments
+    ] == [
+        ("2020-01-01", "2020-02-28", (("0", "Label"),)),
+        ("2020-02-29", "2020-03-02", (("0", "Label"), ("1", "Label"))),
+        ("2020-03-03", "2020-12-31", (("0", "Label"),)),
+    ]
+
+
 def test_code_constraints_clip_to_actual_occurrence_and_preserve_disjoint_gaps() -> (
     None
 ):

@@ -222,12 +222,16 @@ Every key is optional, and only the keys that are present get checked.
   compared; a missing key reads as `null`, and a list names members that must be
   present.
 - `rebuilt_identical: true`: the runner builds the same step a second time, in a fresh
-  interpreter with `PYTHONHASHSEED=0`, with decision dumps on; the artifact, the report
-  ledger and the dumped decisions must be byte-identical. The first build runs under the
-  test process's random hash seed, so an output that depends on set or dict iteration
-  order over strings shows up as a difference. It costs a second build and an
-  interpreter start, so one case per compile surface with no other byte-identity witness
-  carries it: `coding-entries-apply-or-go-stale-per-register` for `[[coding.*]]`.
+  interpreter with decision dumps on; the artifact, the report ledger and the dumped
+  decisions must be byte-identical. The first build runs under the test process's hash
+  seed (random unless `PYTHONHASHSEED` fixes it). The rebuild runs with
+  `PYTHONHASHSEED=0`, or `1` when the test process already runs under `0`, so the two
+  builds never share a fixed seed and an output that depends on set or dict iteration
+  order over strings shows up as a difference. One distinct seed catches such an output
+  only when the two seeds happen to order the strings differently. It costs a second
+  build and an interpreter start, so one case per compile surface with no other
+  byte-identity witness carries it: `coding-entries-apply-or-go-stale-per-register` for
+  `[[coding.*]]`.
 - `error`: the build or check must refuse. Only the keys present are compared:
   - `code` and `exit_code` are the located error the `build-db` and `check-curation`
     commands report. A `RegMetaError` keeps its own; a `ValueError`, `OSError` or

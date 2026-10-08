@@ -1008,15 +1008,17 @@ build_catalog(
 
 
 def _rebuild_in_fresh_process(args: dict) -> None:
-    """Build again in a new interpreter under another string-hash seed.
+    """Build again in a new interpreter under a different string-hash seed.
 
-    The first build runs under this process's random seed; seed 0 disables hash
-    randomization, so set and dict iteration order over strings differs between the
-    two builds and an output that depends on it shows up as a byte difference.
+    The first build ran under this process's seed: random unless `PYTHONHASHSEED`
+    fixes it. The rebuild takes seed 0, or 1 when this process already runs under 0,
+    so the two builds never share a fixed seed and an output that depends on set or
+    dict iteration order over strings shows up as a byte difference.
     """
+    seed = "1" if os.environ.get("PYTHONHASHSEED") == "0" else "0"
     subprocess.run(
         [sys.executable, "-c", _REBUILD, json.dumps(args)],
-        env={**os.environ, "PYTHONHASHSEED": "0"},
+        env={**os.environ, "PYTHONHASHSEED": seed},
         check=True,
         capture_output=True,
     )
