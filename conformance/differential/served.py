@@ -32,12 +32,12 @@ from conformance.http_cases import ServerPool
 if TYPE_CHECKING:
     from pathlib import Path
 
-# The production rate limit (30 writes per minute) does not bind GETs; this matches
-# the conformance runner's FastAPI template.
+WORKERS = 8
+# The production rate limit (30 writes per minute) does not bind GETs. Worker
+# processes, since one Python process serves one search at a time.
 BASELINE_APP = (
-    "import sys, uvicorn; from reg_webapp.app import create_app; "
-    "uvicorn.run(create_app(rate_limit_per_minute=1000), port=int(sys.argv[1]), "
-    "log_level='warning')"
+    "import sys, uvicorn; uvicorn.run('reg_webapp.app:create_app', factory=True, "
+    f"workers={WORKERS}, port=int(sys.argv[1]), log_level='warning')"
 )
 # The baseline caps a group at 50; two pages of ten cover a continuation.
 PAGE_LIMIT = 10
@@ -64,7 +64,7 @@ SHAPES = {
     ),
 }
 # Requests in flight per server pair; each search takes ~0.4 s on the baseline.
-PARALLEL = 8
+PARALLEL = 16
 
 
 def _result(value) -> dict:

@@ -286,14 +286,15 @@ def ensure_derived(pins: Pins, dirs: dict[str, Path]) -> dict[str, Path]:
 
 
 def ensure_server() -> Path:
-    """Build the checkout's ``reg-meta`` and return the binary."""
+    """Build the checkout's ``reg-meta`` and return the binary: optimized, as served,
+    which also keeps the served cases inside the G1 budget."""
     subprocess.run(
-        ["cargo", "build", "--quiet", "--locked", "-p", "reg-meta"],
+        ["cargo", "build", "--quiet", "--locked", "--release", "-p", "reg-meta"],
         cwd=REPO_ROOT,
         check=True,
     )
     target = REPO_ROOT / os.environ.get("CARGO_TARGET_DIR", "target")
-    return target / "debug" / "reg-meta"
+    return target / "release" / "reg-meta"
 
 
 def isolated_env() -> dict[str, str]:

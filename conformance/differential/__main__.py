@@ -41,6 +41,7 @@ import threading
 import time
 import tomllib
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from conformance.differential import cache, cases, folds, served
@@ -172,7 +173,10 @@ def run(config: dict) -> int:
     report_dir = cache.cache_root() / "report"
     shutil.rmtree(report_dir, ignore_errors=True)
     all_cases = cases.generate(dirs, config, report_dir / "projects")
-    served_cases = served.served_cases(
+    # The served cases run beside the CLI arms (G1 budget).
+    served_pool = ThreadPoolExecutor(1)
+    served_future = served_pool.submit(
+        served.served_cases,
         baseline_python,
         baseline_python.parents[2] / "stewards",
         server,
@@ -234,7 +238,7 @@ def run(config: dict) -> int:
     for t in threads:
         t.join()
     fold_sweep = folds.sweep(baseline_python, dirs)
-    for case_id, base, cand in served_cases:
+    for case_id, base, cand in served_future.result():
         compared[case_id.split("/")[2]] += 1
         if (diff := compare(case_id, base, cand)) is not None:
             differences.append(diff)
