@@ -1,0 +1,17 @@
+{
+  "fixture": "reader",
+  "kind": "catalog",
+  "docs": "docs",
+  "requests": [
+    {
+      "operation": "docs_get",
+      "path": "/api/docs/doc/Kon",
+      "query": {"scope": "holdings"}
+    },
+    {
+      "operation": "docs_related",
+      "path": "/api/docs/related/scb/example",
+      "query": {"scope": "holdings"}
+    }
+  ]
+}

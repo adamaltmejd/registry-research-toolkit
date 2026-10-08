@@ -47,8 +47,13 @@ EQUIVALENCE = {
         "cursor-invalid",
         "cursor-stale",
     ),
-    "docs_get": ("docs-get", "docs-unavailable"),
-    "docs_related": ("docs-related", "docs-related-ambiguous", "docs-unavailable"),
+    "docs_get": ("docs-get", "docs-unavailable", "docs-scope-unavailable"),
+    "docs_related": (
+        "docs-related",
+        "docs-related-ambiguous",
+        "docs-unavailable",
+        "docs-scope-unavailable",
+    ),
 }
 READER = {"fixture": "reader"}
 # The `tools/list` result, schemas included: a change to a tool is a reviewed diff here.
