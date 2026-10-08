@@ -482,6 +482,45 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
 }
 
 
+# The fields of each table, as cases/build/README.md documents them.
+FIELDS: dict[str, frozenset[str]] = {
+    "issues": frozenset(
+        ("code", "severity", "subject", "case_id", "locator", "detail")
+    ),
+    "uses": frozenset(
+        (
+            "source",
+            "native_variable",
+            "key",
+            "column_name",
+            "data_type",
+            "name",
+            "description",
+            "use",
+            "variable",
+        )
+    ),
+    "states": frozenset(
+        (
+            "register",
+            "variable",
+            "variant",
+            "column",
+            "valid_from",
+            "valid_to",
+            "data_type",
+            "name",
+            "provenance",
+        )
+    ),
+    "state_codes": frozenset(
+        ("register", "variable", "column", "valid_from", "valid_to", "code", "label")
+    ),
+    "variables": frozenset(("register", "variable", "column")),
+    "warnings": frozenset(("column", "valid_from", "valid_to")),
+}
+
+
 def _matches(row: dict, where: dict) -> bool:
     for key, wanted in where.items():
         value = row[key]
@@ -508,12 +547,18 @@ def _sorted(rows: list[list]) -> list[list]:
 
 def project(outcome: Outcome, spec: dict) -> dict:
     """The actual value of one expected projection, shaped like ``spec``."""
-    table = outcome.table(spec["table"])
-    if (
-        table
-        and not set(spec["fields"]) | set(spec.get("where", {})) <= table[0].keys()
-    ):
+    known = FIELDS[spec["table"]]
+    where = spec.get("where", {})
+    if not set(spec["fields"]) | set(where) <= known:
         raise ValueError(f"unknown field in projection {spec}")
+    if any(isinstance(w, dict) and w.keys() != {"contains"} for w in where.values()):
+        raise ValueError(f"unknown where operator in projection {spec}")
+    if spec.get("match", "exact") not in {"exact", "set", "includes"}:
+        raise ValueError(f"unknown match in projection {spec}")
+    table = outcome.table(spec["table"])
+    # Every row must carry exactly the documented fields, so an empty table
+    # cannot hide a misspelled field.
+    assert all(row.keys() == known for row in table), spec["table"]
     rows = [
         [row[field] for field in spec["fields"]]
         for row in table
