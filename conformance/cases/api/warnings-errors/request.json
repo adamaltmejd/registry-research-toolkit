@@ -1,0 +1,35 @@
+{
+  "note": "Twin of logical/warnings-unheld-owner: fails if an unheld variable answers in holdings scope, a provider ref is accepted, or a blank representation, a non-boolean unassigned_only or a bad period is not refused.",
+  "fixture": "reader/logical",
+  "requests": [
+    {
+      "operation": "warnings",
+      "path": "/api/warnings/scb/example/reference"
+    },
+    {
+      "operation": "warnings",
+      "path": "/api/warnings/scb"
+    },
+    {
+      "operation": "warnings",
+      "path": "/api/warnings/scb/example",
+      "query": {
+        "representation": " "
+      }
+    },
+    {
+      "operation": "warnings",
+      "path": "/api/warnings/scb/example",
+      "query": {
+        "unassigned_only": "yes"
+      }
+    },
+    {
+      "operation": "warnings",
+      "path": "/api/warnings/scb/example",
+      "query": {
+        "period": "2020-13"
+      }
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_ref",
+      "/error/fields": {
+        "ref": "scb/example"
+      }
+    }
+  },
+  {
+    "status": 404,
+    "json": {
+      "/error/code": "not_found",
+      "/error/fields": {
+        "ref": "scb/example/missing"
+      }
+    }
+  },
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields": {
+        "candidates": [
+          {
+            "fqid": "class/kon",
+            "kind": "classification",
+            "name": "Kön"
+          },
+          {
+            "fqid": "scb/example/kon",
+            "kind": "variable",
+            "name": "Kön"
+          }
+        ],
+        "ref": "Kön"
+      }
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_period",
+      "/error/fields": {
+        "parameter": "period"
+      }
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "scope_unavailable",
+      "/error/fields": {
+        "scope": "holdings"
+      }
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields": {
+        "parameter": "limit"
+      }
+    }
+  }
+]

@@ -1,0 +1,80 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/variant": [
+        "fixed"
+      ],
+      "/data/items/*/valid_from": [
+        null
+      ],
+      "/data/items/*/value_set_version_label": [
+        ""
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/variant": [
+        "annual"
+      ],
+      "/data/items/*/valid_from": [
+        "2018-01-01"
+      ],
+      "/data/items/*/value_set_version_label": [
+        "v1"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/variant": [
+        "fixed"
+      ],
+      "/data/items/*/valid_from": [
+        null
+      ],
+      "/data/items/*/value_set_version_label": [
+        ""
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/variant": [
+        "annual"
+      ],
+      "/data/items/*/valid_from": [
+        "2018-01-01"
+      ],
+      "/data/items/*/value_set_version_label": [
+        "v1"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/variant": [],
+      "/data/items/*/valid_from": [],
+      "/data/items/*/value_set_version_label": []
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/variant": [
+        "annual"
+      ],
+      "/data/items/*/valid_from": [
+        "2019-01-01"
+      ],
+      "/data/items/*/value_set_version_label": [
+        "kod"
+      ]
+    }
+  }
+]

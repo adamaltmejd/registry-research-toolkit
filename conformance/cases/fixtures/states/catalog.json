@@ -1,0 +1,347 @@
+[
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "lonfink",
+    "provider_key": "1",
+    "name": "Lön per månad",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "LonFinkJan",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ],
+    "aliases": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "delivery_column_name": "LonFinkJan",
+        "windows": [
+          {
+            "valid_from": "2018-01-01",
+            "valid_to": "2018-01-31"
+          }
+        ]
+      },
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "delivery_column_name": "LonFinkFeb",
+        "windows": [
+          {
+            "valid_from": "2018-02-01",
+            "valid_to": "2018-02-28"
+          }
+        ]
+      },
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "delivery_column_name": "LonFinkMars",
+        "windows": [
+          {
+            "valid_from": "2018-03-01",
+            "valid_to": "2018-03-31"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "kod",
+    "provider_key": "2",
+    "name": "Kod",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2019-12-31",
+        "delivery_column_name": "Kod",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ],
+    "aliases": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "delivery_column_name": "KodAlt",
+        "windows": [
+          {
+            "valid_from": "2019-01-01",
+            "valid_to": "2019-12-31",
+            "provenance": "curation:fixture"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "alder",
+    "provider_key": "3",
+    "name": "Ålder",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "fixed",
+          "name": "Fixed"
+        },
+        "period_scope": "year_independent",
+        "delivery_column_name": "Alder",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      },
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Alder",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "0",
+              "0 år"
+            ],
+            [
+              "1",
+              "1 år"
+            ],
+            [
+              "2",
+              "2 år"
+            ],
+            [
+              "3",
+              "3 år"
+            ],
+            [
+              "4",
+              "4 år"
+            ],
+            [
+              "5",
+              "5 år"
+            ],
+            [
+              "6",
+              "6 år"
+            ],
+            [
+              "7",
+              "7 år"
+            ],
+            [
+              "8",
+              "8 år"
+            ],
+            [
+              "9",
+              "9 år"
+            ]
+          ]
+        },
+        "value_set_version_label": "v1",
+        "classification_links": [
+          {
+            "classification": "alder",
+            "conformance": {
+              "declared_classification": "alder",
+              "status": "extended",
+              "checked_codes": [
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9"
+              ],
+              "nonconforming_members": [
+                [
+                  "9",
+                  "9 år"
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "kon",
+    "provider_key": "4",
+    "name": "Kön",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2019-01-01",
+        "valid_to": "2019-12-31",
+        "delivery_column_name": "KonA",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ],
+    "aliases": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "delivery_column_name": "KonA",
+        "windows": [
+          {
+            "valid_from": "2019-01-01",
+            "valid_to": "2019-12-31",
+            "coding_metadata": "per_column",
+            "value_set_version_label": "kod",
+            "value_set": {
+              "members": [
+                [
+                  "1",
+                  "Man"
+                ],
+                [
+                  "2",
+                  "Kvinna"
+                ],
+                [
+                  "9",
+                  "Okänt"
+                ]
+              ]
+            },
+            "classification_links": [
+              {
+                "classification": "kon",
+                "conformance": {
+                  "declared_classification": "kon",
+                  "status": "extended",
+                  "checked_codes": [
+                    "1",
+                    "2",
+                    "9"
+                  ],
+                  "nonconforming_members": [
+                    [
+                      "9",
+                      "Okänt"
+                    ]
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "delivery_column_name": "KonB",
+        "windows": [
+          {
+            "valid_from": "2019-01-01",
+            "valid_to": "2019-12-31",
+            "coding_metadata": "per_column",
+            "value_set_version_label": "text",
+            "value_set": {
+              "members": [
+                [
+                  "K",
+                  "Kvinna"
+                ],
+                [
+                  "M",
+                  "Man"
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

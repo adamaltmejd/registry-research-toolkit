@@ -1,0 +1,50 @@
+{
+  "note": "Fails if `variant` or `value_set_version` stop narrowing without a period (today they need one), if `_none` stops naming the empty label, if a period admits a year-independent state, or if an unknown variant is an error rather than no states.",
+  "fixture": "states",
+  "kind": "catalog",
+  "requests": [
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/alder",
+      "query": {
+        "variant": "fixed"
+      }
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/alder",
+      "query": {
+        "value_set_version": "v1"
+      }
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/alder",
+      "query": {
+        "value_set_version": "_none"
+      }
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/alder",
+      "query": {
+        "period": "2018"
+      }
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/alder",
+      "query": {
+        "variant": "missing"
+      }
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/kon",
+      "query": {
+        "period": "2019",
+        "value_set_version": "kod"
+      }
+    }
+  ]
+}

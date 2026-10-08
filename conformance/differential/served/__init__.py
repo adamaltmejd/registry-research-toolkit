@@ -12,6 +12,7 @@ cases' result form (``exit``, ``stdout``, ``stderr``).
   and each related document's download.
 - ``show``: every catalog node kind per named scope, retired refs, and owning
   variables against the CLI baseline.
+- ``states``: ``states`` and ``warnings`` for sampled variables and their registers.
 
 ``show``'s ``cases`` also takes ``baseline_cli``, a future of the CLI arm's baseline
 results by case id, set once the CLI arms finish, so it compares with a CLI baseline
@@ -26,14 +27,14 @@ import time
 from typing import TYPE_CHECKING
 
 from conformance.differential.cache import REPO_ROOT
-from conformance.differential.served import context, docs, search, show
+from conformance.differential.served import context, docs, search, show, states
 from conformance.http_cases import ServerPool
 
 if TYPE_CHECKING:
     from concurrent.futures import Future
     from pathlib import Path
 
-FAMILIES = (context, search, docs, show)
+FAMILIES = (context, search, docs, show, states)
 # The production rate limit (30 writes per minute) does not bind GETs. Eight worker
 # processes, since one Python process serves one search at a time (G1 budget).
 BASELINE_APP = (

@@ -290,11 +290,15 @@ pub struct Conformance {
 #[derive(Serialize, ToSchema)]
 #[allow(clippy::struct_field_names)] // `state_id` is the wire name.
 pub struct State {
+    #[serde(serialize_with = "storage_id")]
+    #[schema(value_type = String)]
     state_id: i64,
     variant: String,
     variant_label: Option<String>,
     variant_family: Option<String>,
     variant_family_label: Option<String>,
+    #[serde(serialize_with = "storage_id")]
+    #[schema(value_type = String)]
     register_variant_id: i64,
     /// `intervals` or `year_independent`.
     period_scope: String,
@@ -316,6 +320,8 @@ pub struct State {
     value_set_version_label: String,
     /// The coding window's start, for a column coded on its own.
     coding_window_from: Option<String>,
+    #[serde(serialize_with = "optional_storage_id")]
+    #[schema(value_type = Option<String>)]
     value_set_id: Option<i64>,
     /// Always null: a state's codes are the `values` facet.
     #[schema(value_type = Option<Vec<Value>>)]
@@ -326,6 +332,24 @@ pub struct State {
     /// The coarsest period token of the bounds; `_default` when year-independent,
     /// null when open-ended.
     period_token: Option<String>,
+}
+
+/// A storage id as a decimal string, which JSON clients keep exactly (today's
+/// `CatalogStorageId`).
+#[allow(clippy::trivially_copy_pass_by_ref)] // serde's `serialize_with` signature
+pub(super) fn storage_id<S: serde::Serializer>(id: &i64, serializer: S) -> Result<S::Ok, S::Error> {
+    serializer.collect_str(id)
+}
+
+#[allow(clippy::ref_option)] // serde's `serialize_with` signature
+pub(super) fn optional_storage_id<S: serde::Serializer>(
+    id: &Option<i64>,
+    serializer: S,
+) -> Result<S::Ok, S::Error> {
+    match id {
+        Some(id) => serializer.collect_str(id),
+        None => serializer.serialize_none(),
+    }
 }
 
 #[derive(Serialize, ToSchema)]

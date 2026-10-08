@@ -1,0 +1,61 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/delivery_column_name": [
+        "Kod",
+        "KodAlt"
+      ],
+      "/data/items/*/valid_from": [
+        "2018-01-01",
+        "2019-01-01"
+      ],
+      "/data/items/*/valid_to": [
+        "2019-12-31",
+        "2019-12-31"
+      ],
+      "/data/items/*/period_token": [
+        "2018-01-01..2019-12-31",
+        "2019"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/delivery_column_name": [
+        "Kod"
+      ],
+      "/data/items/*/valid_from": [
+        "2018-01-01"
+      ],
+      "/data/items/*/valid_to": [
+        "2019-12-31"
+      ],
+      "/data/items/*/period_token": [
+        "2018-01-01..2019-12-31"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/delivery_column_name": [
+        "Kod",
+        "KodAlt"
+      ],
+      "/data/items/*/valid_from": [
+        "2018-01-01",
+        "2019-01-01"
+      ],
+      "/data/items/*/valid_to": [
+        "2019-12-31",
+        "2019-12-31"
+      ],
+      "/data/items/*/period_token": [
+        "2018-01-01..2019-12-31",
+        "2019"
+      ]
+    }
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "note": "Fails if a curated window stops being additive: it must appear beside its base, with or without a period, and only where it overlaps the request.",
+  "fixture": "states",
+  "kind": "catalog",
+  "requests": [
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/kod"
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/kod",
+      "query": {
+        "period": "2018"
+      }
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/kod",
+      "query": {
+        "period": "2019"
+      }
+    }
+  ]
+}

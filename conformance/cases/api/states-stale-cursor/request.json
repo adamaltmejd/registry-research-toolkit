@@ -1,0 +1,33 @@
+{
+  "note": "Fails if a cursor issued on another catalog generation is accepted.",
+  "fixture": "states",
+  "kind": "catalog",
+  "artifacts": {
+    "regenerated": {
+      "identity": {
+        "curation_tree_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      }
+    }
+  },
+  "requests": [
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/lonfink",
+      "query": {
+        "limit": 1
+      }
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/lonfink",
+      "query": {
+        "limit": 1
+      },
+      "artifact": "regenerated",
+      "cursor_from": [
+        0,
+        "/data/next_cursor"
+      ]
+    }
+  ]
+}
