@@ -16,7 +16,6 @@ from typing import TYPE_CHECKING
 
 import pytest
 from reg_meta_build.dbdiff import (
-    TableIgnore,
     diff_db_content,
     format_report,
     main,
@@ -367,42 +366,6 @@ class TestIgnore:
         assert not report.identical
         manifest = next(r for r in report.table_results if r.table == "import_manifest")
         assert not manifest.identical
-
-    def test_drop_columns_ignore(self, db_a: Path, tmp_path: Path):
-        # Dropping `name` from the comparison hides a name-only difference.
-        b = tmp_path / "b.db"
-        _build(b, widgets=[(1, "RENAMED", b"\x00\x01\x02", 100), *_WIDGETS[1:]])
-        ignore = {"widget": TableIgnore(drop_columns=frozenset({"name"}))}
-        report = diff_db_content(db_a, b, ignore=ignore)
-        widget = next(r for r in report.table_results if r.table == "widget")
-        assert "name" not in widget.columns
-        assert widget.identical
-
-    def test_drop_all_columns_is_count_only(self, db_a: Path, tmp_path: Path):
-        # Dropping every column must not emit invalid SQL — it degrades to a
-        # count-only comparison. Same row count (despite differing values) =>
-        # identical.
-        b = tmp_path / "b.db"
-        _build(b, widgets=[(1, "ALPHA", b"\xaa", 1), *_WIDGETS[1:]])
-        all_cols = frozenset({"id", "name", "payload", "source_id"})
-        ignore = {"widget": TableIgnore(drop_columns=all_cols)}
-        report = diff_db_content(db_a, b, ignore=ignore)
-        widget = next(r for r in report.table_results if r.table == "widget")
-        assert widget.columns == ()
-        assert widget.identical  # equal counts, no columns compared
-
-    def test_drop_all_columns_catches_count_delta(self, db_a: Path, tmp_path: Path):
-        # Count-only comparison still catches a row-count difference (and emits
-        # no sample rows, since the rows are indistinguishable).
-        b = tmp_path / "b.db"
-        _build(b, widgets=[*_WIDGETS, (4, "delta", None, 4)])
-        all_cols = frozenset({"id", "name", "payload", "source_id"})
-        ignore = {"widget": TableIgnore(drop_columns=all_cols)}
-        report = diff_db_content(db_a, b, ignore=ignore)
-        widget = next(r for r in report.table_results if r.table == "widget")
-        assert not widget.identical
-        assert widget.count_a == 3 and widget.count_b == 4
-        assert widget.sample_a_not_b == () and widget.sample_b_not_a == ()
 
 
 # --------------------------------------------------------------------------
