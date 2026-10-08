@@ -2,8 +2,8 @@
 # their type's search list in order, even when full-text search would not surface them.
 #
 # The build stores them in the `search_pin` table keyed by `fold_search(query)` (case
-# fold, diacritics and surrounding whitespace dropped), which the reader applies to
-# `q`. A pin has a `type` (register | classification) and `fqids` of that type. A
+# fold, diacritics dropped, whitespace trimmed and runs collapsed to one space), which
+# the reader applies to `q`. A pin has a `type` (register | classification) and `fqids` of that type. A
 # complete build fails with a located error when a pin does not resolve; scoped and
 # diagnostic builds store no pins.
 

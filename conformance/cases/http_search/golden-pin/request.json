@@ -5,7 +5,7 @@
     {
       "path": "/api/search",
       "query": {
-        "q": "sysselsättning",
+        "q": "syssels\u00e4ttning",
         "type": "register",
         "scope": "holdings"
       }
@@ -13,7 +13,7 @@
     {
       "path": "/api/search",
       "query": {
-        "q": "sysselsättning",
+        "q": "syssels\u00e4ttning",
         "type": "register",
         "scope": "reference"
       }

@@ -35,7 +35,8 @@ def search_pins_sha256(rows: Iterable[tuple[str, str, int, str]]) -> str:
     """Hash of the `search_pin` rows `(key, type, position, entity)` in key order.
 
     It hashes what the artifact stores, so a pin file's comments and notes leave
-    the generation unchanged; no pins hash as `[]`.
+    this key unchanged (`curation_tree_sha256` still hashes the file's bytes); no
+    pins hash as `[]`.
     """
     return canonical_sha256(sorted(rows))
 

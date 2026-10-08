@@ -14,7 +14,7 @@ from graphlib import CycleError, TopologicalSorter
 from itertools import combinations
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Annotated, Literal, Self
+from typing import TYPE_CHECKING, Annotated, Literal, Self
 
 from pydantic import (
     Field,
@@ -66,6 +66,9 @@ from reg_meta_build.resolved_metadata import (
     write_resolved_metadata,
 )
 from reg_meta_build.validate import column_state_overlap_failure, validate_built_db
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 CURATION_TREE_SHA256_KEY = "curation_tree_sha256"
 
@@ -1034,12 +1037,14 @@ def _write_conformance(
 
 
 def _write_search_pins(
-    conn: sqlite3.Connection, search_pins: tuple[SearchPin, ...]
+    conn: sqlite3.Connection,
+    search_pins: tuple[SearchPin, ...],
+    rows: Iterable[tuple[str, str, int, str]],
 ) -> None:
-    """Store the pins after their registers and classifications; one that does not
-    resolve fails the build, located by entry and FQID."""
+    """Store `rows`, the pins' rows, after their registers and classifications; a
+    pin that does not resolve fails the build, located by entry and FQID."""
     for index, pin in enumerate(search_pins, start=1):
-        for position, fqid in enumerate(pin.fqids):
+        for fqid in pin.fqids:
             if pin.type == "register":
                 provider, register = fqid.split("/")
                 resolves = resolve_register_id(conn, provider, register) is not None
@@ -1058,11 +1063,10 @@ def _write_search_pins(
                     f"resolve to a {pin.type} in this catalog.",
                     "Fix the FQID or drop it from the pin.",
                 )
-            conn.execute(
-                "INSERT INTO search_pin (key, type, position, entity) "
-                "VALUES (?, ?, ?, ?)",
-                (pin.key, pin.type, position, fqid),
-            )
+    conn.executemany(
+        "INSERT INTO search_pin (key, type, position, entity) VALUES (?, ?, ?, ?)",
+        rows,
+    )
 
 
 def write_resolved_catalog(
@@ -1437,7 +1441,7 @@ def write_resolved_catalog(
                                     else None,
                                 ),
                             )
-            _write_search_pins(conn, search_pins)
+            _write_search_pins(conn, search_pins, pin_rows)
             write_data_warnings(conn, data_warnings, demote_missing_variables=True)
             write_resolved_metadata(conn, metadata_rows)
             conn.execute(

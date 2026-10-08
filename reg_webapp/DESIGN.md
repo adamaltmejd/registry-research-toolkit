@@ -543,8 +543,8 @@ present on the wire as the shared sort key.
   There is no in-process response cache.
 - **Golden-boost** (`golden.apply_golden_boost`, #393 item 4 / #311): a curated-pin
   INJECTION (no longer the old no-op seam). For an exact query under `fold_search` (case
-  fold, diacritics and surrounding whitespace dropped — so `sysselsattning` matches the
-  `sysselsättning` pin), a curated pin (build input,
+  fold, diacritics dropped, whitespace trimmed and runs collapsed to one space — so
+  `sysselsattning` matches the `sysselsättning` pin), a curated pin (build input,
   `reg_meta_build/curation/search_pins.toml`, read from the catalog's `search_pin`
   table) prepends a canonical result to the TOP of its group even when FTS would not
   surface it — e.g. `sysselsättning` → `scb/lisa` (RAMS is stale → BAS; steer to LISA)

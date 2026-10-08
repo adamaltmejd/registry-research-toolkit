@@ -20,7 +20,7 @@ from reg_meta.db import SCHEMA_VERSION, open_db
 from reg_meta.source_evidence import canonical_json, canonical_sha256
 from reg_meta_build.artifact_identity import generation_id
 from reg_meta_build.holdings_compile import compile_holdings
-from reg_meta_build.pipeline import load_search_pins
+from reg_meta_build.pipeline import load_search_pins  # tests skip private _curation
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
     ResolvedClassificationSuccession,
