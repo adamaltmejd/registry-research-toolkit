@@ -1,0 +1,18 @@
+{
+  "loader": "relations",
+  "replaces": [
+    "test_relation_declaration_loading.py::TestReplacedByLoad::test_representation_case_only_self_loop_rejected",
+    "test_relation_declaration_loading.py::TestReplacedByLoad::test_representation_self_loop_same_column_rejected",
+    "test_relation_declaration_loading.py::TestReplacedByLoad::test_self_loop_rejected",
+    "test_relation_declaration_loading.py::TestReplacedByLoad::test_classification_self_loop_rejected"
+  ],
+  "fails_if": "load_relations compares representation columns case-sensitively, or stops refusing a replaced_by edge from an entity to itself",
+  "note": "The build matches columns case-insensitively, so Col -> col on one variable is a self-loop: the hardest form of the one self-loop guard every grain shares.",
+  "error": {
+    "code": "relations_invalid",
+    "locator": "relations [[edge]] type='replaced_by'",
+    "message_contains": [
+      "self-loop on 'scb/lisa/x' column 'Col'"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "loader": "worklist_concept_groups",
+  "replaces": "test_concept_groups.py::TestLoader::test_invalid_shapes_fail[4]",
+  "fails_if": "load_worklist_concept_groups lets one group reference the same (variable, delivery_column) twice",
+  "note": "The two members differ in their facet value, so only the (variable, delivery_column) reference repeats.",
+  "error": {
+    "code": "concept_groups_invalid",
+    "locator": "concept_groups.auto.toml [[variable_group]] entry 1",
+    "message_contains": [
+      "references 'g'/None twice"
+    ]
+  }
+}

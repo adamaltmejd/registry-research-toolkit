@@ -1,0 +1,13 @@
+[register]
+provider = "scb"
+slug = "test"
+native_id = "1"
+
+[[acknowledge]]
+code = "issue"
+subject = "scb/test/subject"
+refs = ["source"]
+reason = "reason"
+evidence = "evidence"
+valid_from = "2020-02-01"
+valid_to = "2020-01-31"

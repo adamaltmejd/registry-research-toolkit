@@ -1,0 +1,10 @@
+{
+  "loader": "relations",
+  "replaces": "test_relation_declaration_loading.py::TestLoaderDispatch::test_present_but_empty_file_is_empty",
+  "fails_if": "load_relations refuses a relations.toml that has no [[edge]] array yet",
+  "loads": {
+    "same_as": [],
+    "replaced_by": [],
+    "derived_from": []
+  }
+}

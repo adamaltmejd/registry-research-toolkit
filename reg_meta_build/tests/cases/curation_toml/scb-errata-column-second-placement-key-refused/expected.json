@@ -1,0 +1,19 @@
+{
+  "loader": "scb_errata",
+  "replaces": [
+    "test_scb_errata.py::TestColumnEntry::test_holdings_period_with_false_all_versions_fails",
+    "test_scb_errata.py::TestColumnEntry::test_holdings_period_with_versions_fails",
+    "test_scb_errata.py::TestColumnEntry::test_holdings_period_with_all_versions_fails",
+    "test_scb_errata.py::TestColumnEntry::test_versions_and_all_versions_together_fail",
+    "test_scb_errata.py::TestColumnEntry::test_neither_versions_nor_all_versions_fails"
+  ],
+  "fails_if": "resolve_scb_errata decides placement by key value instead of key presence, or stops requiring exactly one of `versions`, `all_versions`, `holdings_period`",
+  "note": "One guard counts the placement keys present. Key presence decides: `all_versions = false` beside a `holdings_period` still counts, which is the hardest form.",
+  "error": {
+    "code": "scb_errata_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[errata.column]] entry 1 (scb/lisa)/individer-15plus/Ssyk4_J16",
+    "message_contains": [
+      "exactly one"
+    ]
+  }
+}

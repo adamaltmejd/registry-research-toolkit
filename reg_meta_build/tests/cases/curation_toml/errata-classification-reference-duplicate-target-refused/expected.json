@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_tree.py::test_sos_classification_reference_duplicate_and_non_sos_rejected",
+  "fails_if": "the register loader keeps two [[errata.classification_reference]] corrections for one Deldatamängd, variable and column",
+  "note": "The entries differ in evidence, so only the one-correction-per-target rule can refuse the second.",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/sos/sample.toml [[errata.classification_reference]] entry 2",
+    "message_contains": [
+      "duplicate classification reference target"
+    ]
+  }
+}

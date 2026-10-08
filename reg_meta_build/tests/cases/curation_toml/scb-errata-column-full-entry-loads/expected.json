@@ -1,0 +1,34 @@
+{
+  "loader": "scb_errata",
+  "replaces": "test_scb_errata.py::TestColumnEntry::test_full_entry_parses",
+  "fails_if": "resolve_scb_errata misresolves an [[errata.column]] entry's register or variant, drops a field, guesses a data_type or classification, or defaults is_identifier / is_sensitive to anything but false, or keys the minted variable by the column's unfolded spelling",
+  "note": "`key` is the minted variable's identity, the register id with the column folded to lower case (the runner projects it beside the column's fields). The PII flags default to off and the optional identity stays unstated.",
+  "loads": {
+    "versions": [],
+    "delivered": [],
+    "columns": [
+      {
+        "register_id": 34,
+        "register_variant_id": 153,
+        "column": "Ssyk4_J16",
+        "name": "Yrke enligt SSYK 96",
+        "definition": "Yrkeskod pa 4-siffernivan.",
+        "versions": [
+          "2010",
+          "2011"
+        ],
+        "source": "scb-docs",
+        "provenance": "errata:scb-docs\nSCB doc library lisa-bakgrundsfakta-1990-2017.",
+        "data_type": null,
+        "classification": null,
+        "is_identifier": false,
+        "is_sensitive": false,
+        "holdings_period": null,
+        "key": [
+          34,
+          "ssyk4_j16"
+        ]
+      }
+    ]
+  }
+}

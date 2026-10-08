@@ -1,0 +1,32 @@
+{
+  "loader": "curated_source",
+  "match": "includes",
+  "args": {
+    "file": "scb_canonical.toml",
+    "provider": "scb"
+  },
+  "replaces": "test_curated_source_records.py::test_canonical_scb_uses_the_same_toml_reader_without_binding_codes",
+  "fails_if": "read_curated_source binds a canonical-SCB declared value_set to codes or associations at read time instead of only declaring the list name",
+  "loads": {
+    "records": [
+      {
+        "$any": true
+      },
+      {
+        "subject": {
+          "provider": "scb"
+        },
+        "fields": {
+          "value_set_declared": {
+            "value": "riktning"
+          }
+        },
+        "code_set_references": []
+      }
+    ],
+    "declared_value_lists": [
+      "riktning"
+    ],
+    "associations": []
+  }
+}

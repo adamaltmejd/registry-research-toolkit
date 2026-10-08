@@ -1,0 +1,4 @@
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/v/2020"
+to = "scb/lisa/v/2021"

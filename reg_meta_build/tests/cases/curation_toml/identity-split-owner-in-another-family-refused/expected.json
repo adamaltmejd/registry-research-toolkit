@@ -1,0 +1,15 @@
+{
+  "loader": "register_files",
+  "replaces": [
+    "test_curation_tree_registers.py::test_register_scoped_entries_reject_wrong_register[9]"
+  ],
+  "fails_if": "the register loader checks only the first [[identity.split]] part's owner against the register's native_id",
+  "note": "The first part's owner belongs to this register; only the second part's does not.",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/test.toml [[identity.split]] entry 1",
+    "message_contains": [
+      "split owner '2.NAME.integer' does not belong"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_tree.py::test_sos_classification_reference_entry_is_bounded_and_keeps_inner_spaces",
+  "fails_if": "the register loader accepts an [[errata.classification_reference]] text field with leading or trailing whitespace",
+  "note": "Collapses the test's trimmed-text parameters (deldatamangd, variable, column, expected_reference, expected_representation, evidence) into their hardest form: a leading space on the one field that keeps inner spaces.",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/sos/sample.toml [[errata.classification_reference.expected_representation]] entry 1",
+    "message_contains": [
+      "nonempty and trimmed"
+    ]
+  }
+}

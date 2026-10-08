@@ -1,0 +1,12 @@
+{
+  "loader": "scb_errata",
+  "replaces": "test_scb_errata.py::TestColumnEntry::test_two_variants_disagreeing_about_the_variable_fail",
+  "fails_if": "resolve_scb_errata lets two variants' [[errata.column]] entries for one column describe different variables",
+  "error": {
+    "code": "scb_errata_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[errata.column]] entry 2 (scb/lisa)/individer-16plus/Ssyk4_J16",
+    "message_contains": [
+      "different variable"
+    ]
+  }
+}

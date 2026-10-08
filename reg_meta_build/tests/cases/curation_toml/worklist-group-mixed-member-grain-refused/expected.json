@@ -1,0 +1,12 @@
+{
+  "loader": "worklist_concept_groups",
+  "replaces": "test_concept_groups.py::TestLoader::test_rejects_mixed_whole_and_representation_grain_per_variable",
+  "fails_if": "load_worklist_concept_groups lets one group name a variable both whole and by delivery column",
+  "error": {
+    "code": "concept_groups_invalid",
+    "locator": "concept_groups.auto.toml [[variable_group]] entry 1",
+    "message_contains": [
+      "mixes whole-variable and delivery-column members"
+    ]
+  }
+}

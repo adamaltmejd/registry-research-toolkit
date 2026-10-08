@@ -1,0 +1,12 @@
+{
+  "loader": "relations",
+  "replaces": "test_relation_declaration_loading.py::TestReplacedByLoad::test_variant_endpoints_are_both_or_neither",
+  "fails_if": "load_relations accepts a variant-grain succession that names only one of `from_variant` / `to_variant`",
+  "error": {
+    "code": "relations_invalid",
+    "locator": "relations [[edge]] type='replaced_by'",
+    "message_contains": [
+      "has exactly one of `from_variant` / `to_variant`"
+    ]
+  }
+}

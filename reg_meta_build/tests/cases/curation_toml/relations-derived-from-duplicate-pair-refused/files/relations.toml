@@ -1,0 +1,9 @@
+[[edge]]
+type = "derived_from"
+derived = "class/ks87-p"
+source = "class/icd-9-ks87"
+
+[[edge]]
+type = "derived_from"
+derived = "class/ks87-p"
+source = "class/icd-9-ks87"

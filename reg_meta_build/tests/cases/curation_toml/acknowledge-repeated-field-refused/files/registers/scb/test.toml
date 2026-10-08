@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "test"
+native_id = "1"
+
+[[acknowledge]]
+code = "issue"
+subject = "scb/test/subject"
+refs = ["source"]
+reason = "reason"
+evidence = "evidence"
+fields = ["name", "name"]

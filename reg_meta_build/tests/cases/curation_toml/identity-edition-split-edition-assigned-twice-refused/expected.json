@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_tree_registers.py::test_edition_split_requires_declared_native_split_and_unique_names",
+  "fails_if": "the register loader lets two [[identity.edition_split]] entries assign the same variant edition",
+  "note": "The entries differ in evidence, so only the one-owner-per-edition rule can refuse the second.",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/test.toml [[identity.edition_split]] entry 2",
+    "message_contains": [
+      "editions assigned twice"
+    ]
+  }
+}

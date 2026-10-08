@@ -1,0 +1,6 @@
+[register]
+provider = "scb"
+slug = "second"
+native_id = "2"
+
+source_labels = ["shared source (agi)"]

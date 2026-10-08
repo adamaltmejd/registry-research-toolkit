@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_tree.py::test_sos_data_type_row_is_checked_at_load[expected_representation = \" \"-nonempty and trimmed]",
+  "fails_if": "the register loader accepts a blank expected_representation in an [[errata.data_type]] correction",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/sos/sample.toml [[errata.data_type.expected_representation]] entry 1",
+    "message_contains": [
+      "nonempty and trimmed"
+    ]
+  }
+}

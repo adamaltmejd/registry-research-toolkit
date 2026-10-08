@@ -1,0 +1,12 @@
+{
+  "loader": "related_documents",
+  "replaces": "test_repo_curation_docs.py::test_related_documents_malformed_entry_raises_curation_error",
+  "fails_if": "load_related_documents accepts a document filename that escapes the register's docs directory",
+  "error": {
+    "code": "related_documents_invalid",
+    "locator": "related_documents `aes` entry #2",
+    "message_contains": [
+      "filename"
+    ]
+  }
+}

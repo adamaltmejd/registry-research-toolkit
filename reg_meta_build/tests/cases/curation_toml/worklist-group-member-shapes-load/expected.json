@@ -1,0 +1,84 @@
+{
+  "loader": "worklist_concept_groups",
+  "match": "includes",
+  "replaces": [
+    "test_concept_groups.py::TestLoader::test_parses_valid_family",
+    "test_concept_groups.py::TestLoader::test_parses_axisless_variable_umbrella",
+    "test_concept_groups.py::TestLoader::test_parses_single_explicit_axis_with_flat_member_facets",
+    "test_concept_groups.py::TestLoader::test_parses_multi_axis_whole_variable_member"
+  ],
+  "fails_if": "load_worklist_concept_groups misparses a member shape: drops the provider, gives an axis-less member coords, loses an explicit axis label, or misorders multi-axis coords",
+  "note": "The four member shapes: legacy single `axis` with flat value/label, axis-less `axes = []`, one explicit axis with flat facets, and multi-axis `coords` on a whole-variable member.",
+  "loads": [
+    {
+      "provider": "scb",
+      "members": [
+        {
+          "variable": "agi1ink"
+        },
+        {
+          "variable": "extra"
+        }
+      ]
+    },
+    {
+      "axes": [],
+      "members": [
+        {
+          "variable": "vara",
+          "delivery_column": null,
+          "coords": []
+        },
+        {
+          "variable": "varb",
+          "delivery_column": null,
+          "coords": []
+        }
+      ]
+    },
+    {
+      "axes": [
+        [
+          "rank",
+          "Förvärvskälla"
+        ]
+      ],
+      "members": [
+        {
+          "coords": [
+            [
+              "rank",
+              "1",
+              "största"
+            ]
+          ]
+        },
+        {
+          "$any": true
+        }
+      ]
+    },
+    {
+      "members": [
+        {
+          "delivery_column": null,
+          "coords": [
+            [
+              "source",
+              "agi",
+              "AGI"
+            ],
+            [
+              "rank",
+              "1",
+              "största"
+            ]
+          ]
+        },
+        {
+          "$any": true
+        }
+      ]
+    }
+  ]
+}

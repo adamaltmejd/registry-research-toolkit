@@ -1,0 +1,12 @@
+{
+  "loader": "scb_errata",
+  "replaces": "test_scb_errata.py::TestColumnEntry::test_uncurated_variant_fails",
+  "fails_if": "resolve_scb_errata resolves an errata entry against a variant its register file does not curate",
+  "error": {
+    "code": "scb_errata_unknown_variant",
+    "locator": "curation/registers/scb/lisa.toml [[errata.column]] entry 1 (scb/lisa)/foretag",
+    "message_contains": [
+      "does not name a curated SCB register variant"
+    ]
+  }
+}

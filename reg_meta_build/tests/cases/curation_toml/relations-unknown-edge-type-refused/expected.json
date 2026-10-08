@@ -1,0 +1,18 @@
+{
+  "loader": "relations",
+  "replaces": [
+    "test_relation_declaration_loading.py::TestLoaderDispatch::test_unknown_type_rejected",
+    "test_relation_declaration_loading.py::TestLoaderDispatch::test_missing_type_rejected"
+  ],
+  "fails_if": "load_relations accepts an [[edge]] whose `type` is missing or not same_as / replaced_by / derived_from",
+  "note": "A missing `type` fails the same guard. The remediation lists the legal types so a typo is self-correcting.",
+  "error": {
+    "code": "relations_invalid",
+    "locator": "relations [[edge]] has missing/unknown `type` 'is_a'",
+    "remediation_contains": [
+      "same_as",
+      "replaced_by",
+      "derived_from"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "loader": "classification_groups",
+  "replaces": [
+    "test_concept_groups.py::TestClassificationGroupLoader::test_invalid_shapes_fail[3]",
+    "test_concept_groups.py::TestClassificationGroupLoader::test_invalid_shapes_fail[2]"
+  ],
+  "fails_if": "load_classification_groups accepts a classification umbrella with fewer than two members",
+  "note": "A group needs at least two members. One member is the hardest form; a group with no members array fails the same claim.",
+  "error": {
+    "code": "concept_groups_invalid",
+    "locator": "classification_group 'sun'",
+    "message_contains": [
+      ">= 2"
+    ]
+  }
+}

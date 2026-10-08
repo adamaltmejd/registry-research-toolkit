@@ -1,0 +1,16 @@
+[register]
+provider = "sos"
+slug = "sample"
+native_id = "1"
+
+[[errata.occurrence_period]]
+variable = "1.ATC"
+variant = "PAR_OV"
+column = "ATC"
+expected_fields = [{ name = "name", status = "value", value = "Name" }, { name = "description", status = "absent" }, { name = "definition", status = "absent" }, { name = "operational_definition", status = "absent" }]
+expected_scope = { kind = "unknown", label = "Original" }
+expected_period = { kind = "not_applicable" }
+edition_scope = { kind = "intervals", intervals = [{ start = "2011", end = "2011" }, { start = "2013", end = "2013" }] }
+edition_period_scope = { kind = "not_applicable" }
+evidence = "Exact original source bounds"
+noted = "2026-09-30"

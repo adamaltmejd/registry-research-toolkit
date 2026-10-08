@@ -1,0 +1,25 @@
+{
+  "loader": "matrix_evidence",
+  "args": {
+    "source_mode": "documented_blank",
+    "expected_selector": {
+      "register": "scb/innovation-foretag",
+      "register_id": 257,
+      "variant": "_default",
+      "register_variant_id": 553,
+      "edition": "2012 - 2014",
+      "regver_id": 7293,
+      "var_id": 15662,
+      "cvid": 400684
+    }
+  },
+  "replaces": "test_scb_adapter.py::TestCis2014MatrixProjection::test_answer_facts_are_required_and_strict[0]",
+  "fails_if": "load_matrix accepts a documented_blank matrix with no reviewed answer_facts",
+  "error": {
+    "code": "matrix_evidence_invalid",
+    "locator": "answer_facts",
+    "message_contains": [
+      "Field required"
+    ]
+  }
+}

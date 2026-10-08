@@ -1,0 +1,72 @@
+{
+  "selector": {
+    "register": "scb/testreg",
+    "register_id": 1,
+    "variant": "individer",
+    "register_variant_id": 10,
+    "edition": "2014 - 2016",
+    "regver_id": 11529,
+    "var_id": 15662,
+    "cvid": 469456
+  },
+  "evidence": {
+    "document": "Synthetic CIS2016 concordance",
+    "url": "https://example.test/cis2016.pdf#page=23",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "question": "Question 18",
+    "noted": "2026-09-13"
+  },
+  "question_label": "Typ av samarbetspartner geografiskt fördelat",
+  "axes": [
+    {
+      "key": "partner",
+      "label_en": "Cooperation partner"
+    },
+    {
+      "key": "response",
+      "label_en": "Location or response"
+    }
+  ],
+  "answers": [
+    {
+      "key": "group-enterprises-sweden",
+      "slug": "cis2016-cooperation-group-enterprises-sweden",
+      "columns": [
+        "CO11"
+      ],
+      "label_en": "Cooperation with group enterprises in Sweden",
+      "definition_en": "Cooperation with group enterprises in Sweden.",
+      "partner": {
+        "key": "group_enterprises",
+        "label_en": "Group enterprises"
+      },
+      "response": {
+        "key": "sweden",
+        "label_en": "Sweden"
+      },
+      "source_pages": {
+        "CO11": 23
+      }
+    },
+    {
+      "key": "group-enterprises-not-applicable",
+      "slug": "cis2016-cooperation-group-enterprises-not-applicable",
+      "columns": [
+        "CO11"
+      ],
+      "label_en": "Cooperation with group enterprises: not applicable",
+      "definition_en": "Cooperation with group enterprises: not applicable.",
+      "partner": {
+        "key": "group_enterprises",
+        "label_en": "Group enterprises"
+      },
+      "response": {
+        "key": "not_applicable",
+        "label_en": "Not applicable"
+      },
+      "source_pages": {
+        "CO11": 23
+      }
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+[register]
+provider = "scb"
+slug = "lisa"
+native_id = "34"
+
+[[variant]]
+native_id = "34.153"
+slug = "individer-15plus"
+
+[[variant]]
+native_id = "34.1335"
+slug = "individer-16plus"
+
+[[errata.delivered]]
+variant = "individer-15plus"
+column = "Kon"
+versions = ["2010"]
+native_variable_id = 39310
+upstream = "blank-column-name-in-version"
+evidence = "Exact blank source row."
+noted = "2026-09-12"
+[[errata.delivered]]
+variant = "individer-15plus"
+column = "KON"
+versions = ["2010"]
+native_variable_id = 39310
+evidence = "Existing holdings assertion."
+noted = "2026-09-12"

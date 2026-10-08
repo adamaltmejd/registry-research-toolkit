@@ -1,0 +1,58 @@
+[[variable_group]]
+register = "scb/lisa"
+key = "legacy"
+label = "Familj"
+axis = "rank"
+[[variable_group.members]]
+variable = "agi1ink"
+value = "1"
+label = "största"
+[[variable_group.members]]
+variable = "extra"
+value = "2"
+label = "annan"
+
+[[variable_group]]
+register = "scb/lisa"
+key = "axisless"
+label = "Familj"
+axes = []
+[[variable_group.members]]
+variable = "vara"
+[[variable_group.members]]
+variable = "varb"
+
+[[variable_group]]
+register = "scb/lisa"
+key = "one-axis"
+label = "Familj"
+axes = [{ axis = "rank", label = "Förvärvskälla" }]
+[[variable_group.members]]
+variable = "agi1ink"
+value = "1"
+label = "största"
+[[variable_group.members]]
+variable = "agi2ink"
+value = "2"
+label = "näst"
+
+[[variable_group]]
+register = "scb/lisa"
+key = "multi-axis"
+label = "Familj"
+axes = [
+  { axis = "source", label = "Källa" },
+  { axis = "rank", label = "Förvärvskälla" },
+]
+[[variable_group.members]]
+variable = "agi1ink"
+coords = [
+  { axis = "source", value = "agi", label = "AGI" },
+  { axis = "rank", value = "1", label = "största" },
+]
+[[variable_group.members]]
+variable = "ku1ink"
+coords = [
+  { axis = "source", value = "ku", label = "KU" },
+  { axis = "rank", value = "1", label = "största" },
+]

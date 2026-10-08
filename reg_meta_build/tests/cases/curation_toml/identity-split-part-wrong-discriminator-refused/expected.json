@@ -1,0 +1,16 @@
+{
+  "loader": "register_files",
+  "replaces": [
+    "test_curation_tree.py::test_identity_split_part_requires_matching_discriminator[2]",
+    "test_curation_tree.py::test_identity_split_part_requires_matching_discriminator[3]",
+    "test_curation_tree.py::test_identity_split_part_requires_matching_discriminator[5]"
+  ],
+  "fails_if": "the register loader accepts an [[identity.split]] whose parts are discriminated by another field than its `by`",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/sos/par.toml [[identity.split]] entry 1",
+    "message_contains": [
+      "split parts must use deldatamangd when by = 'deldatamangd'"
+    ]
+  }
+}

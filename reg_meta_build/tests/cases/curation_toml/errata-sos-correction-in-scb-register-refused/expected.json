@@ -1,0 +1,16 @@
+{
+  "loader": "register_files",
+  "replaces": [
+    "test_curation_tree.py::test_sos_data_type_duplicate_target_and_non_sos_rejected",
+    "test_curation_tree.py::test_sos_classification_reference_duplicate_and_non_sos_rejected"
+  ],
+  "fails_if": "the register loader accepts an SOS-only errata correction in an SCB register file",
+  "note": "[[errata.data_type]] and [[errata.classification_reference]] share one SOS-only guard.",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/sample.toml [[errata.classification_reference]] entry 1",
+    "message_contains": [
+      "applies to SOS registers"
+    ]
+  }
+}

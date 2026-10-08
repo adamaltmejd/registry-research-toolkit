@@ -1,0 +1,38 @@
+{
+  "loader": "provider_slugs",
+  "match": "includes",
+  "replaces": [
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_slug_repeats_across_registers",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variable_slug_repeats_across_registers",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_split_without_partition_cannot_reuse_base_slug"
+  ],
+  "fails_if": "the provider slug loader scopes variant or variable slugs provider-wide, or refuses a split sibling that shares its own base family's slug",
+  "note": "Variant and variable slugs are unique per parent register, so the same slug under registers 34 and 26 is no collision. A split sibling (34.4.kon) may share its own base family's slug in a provider file; the register tree adds the identity-declaration requirement (slugs-split-sibling-without-identity-reuses-base-slug-refused).",
+  "loads": [
+    {
+      "kind": "register_variant",
+      "source_id": "34.151",
+      "slug": "individer"
+    },
+    {
+      "kind": "register_variant",
+      "source_id": "26.157",
+      "slug": "individer"
+    },
+    {
+      "kind": "variable",
+      "source_id": "34.4",
+      "slug": "kon"
+    },
+    {
+      "kind": "variable",
+      "source_id": "26.4",
+      "slug": "kon"
+    },
+    {
+      "kind": "variable",
+      "source_id": "34.4.kon",
+      "slug": "kon"
+    }
+  ]
+}

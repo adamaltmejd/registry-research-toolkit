@@ -1,0 +1,10 @@
+[register]
+provider = "sos"
+slug = "par"
+native_id = "5891427617861710725"
+name = "Patientregistret"
+
+[[identity.split]]
+variable = "ATC"
+by = "deldatamangd"
+parts = [{ data_type = "text", deldatamangd = "PAR_OV", owner = "5891427617861710725.ATC.atc" }]

@@ -1,0 +1,17 @@
+{
+  "loader": "provider_slugs",
+  "replaces": [
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_panel_field_rejected_on_non_variant_kind",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_unknown_field_rejected"
+  ],
+  "fails_if": "the provider slug loader accepts a field outside the entry kind's allowed fields",
+  "note": "A panel field is valid on a register_variant entry, which makes it the hardest unknown field for a register entry; a plain typo (`bogus`) runs the same per-kind allowed-field check. The register tree refuses these earlier in its strict model, so this is the provider-file check.",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "register.'34'",
+    "message_contains": [
+      "unknown field(s)",
+      "panel_entity_key"
+    ]
+  }
+}

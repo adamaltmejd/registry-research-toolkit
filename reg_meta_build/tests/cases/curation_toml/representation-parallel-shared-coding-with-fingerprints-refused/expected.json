@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_tree.py::test_parallel_coding_fingerprints_load_from_toml_without_weakening_runtime",
+  "fails_if": "the register loader accepts per-column coding fingerprints on a [[representation.parallel]] entry with shared coding",
+  "note": "The allowed twin is representation-parallel-coding-fingerprints-load: the same file with per_column coding.",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/sample.toml [[representation.parallel]] entry 1",
+    "message_contains": [
+      "per-column coding needs positive source fingerprints; shared coding has none"
+    ]
+  }
+}

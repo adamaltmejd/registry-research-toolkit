@@ -1,0 +1,9 @@
+{
+  "loader": "classifications",
+  "replaces": "test_curation_tree.py::test_slug_in_two_files_fails",
+  "fails_if": "load_classifications lets two books declare the same slug",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "classifications/B.toml: slug 'same' is also declared in classifications/A.toml."
+  }
+}

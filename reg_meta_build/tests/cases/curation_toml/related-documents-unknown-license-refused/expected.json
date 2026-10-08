@@ -1,0 +1,12 @@
+{
+  "loader": "related_documents",
+  "replaces": "test_repo_curation_docs.py::test_related_documents_invalid_license_raises_curation_error",
+  "fails_if": "load_related_documents accepts a license outside its rehostable set",
+  "error": {
+    "code": "related_documents_invalid",
+    "locator": "related_documents `aes` entry #2",
+    "message_contains": [
+      "license"
+    ]
+  }
+}

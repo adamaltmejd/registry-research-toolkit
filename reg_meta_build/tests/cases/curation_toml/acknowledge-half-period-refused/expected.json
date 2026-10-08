@@ -1,0 +1,15 @@
+{
+  "loader": "register_files",
+  "replaces": [
+    "test_curation_tree_registers.py::test_acknowledge_rejects_invalid_fields_and_period[override1-both be set or both omitted]",
+    "test_curation_tree_registers.py::test_acknowledge_rejects_invalid_fields_and_period[override2-both be set or both omitted]"
+  ],
+  "fails_if": "the register loader accepts an [[acknowledge]] with only one period bound",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/test.toml [[acknowledge]] entry 1",
+    "message_contains": [
+      "both be set or both omitted"
+    ]
+  }
+}

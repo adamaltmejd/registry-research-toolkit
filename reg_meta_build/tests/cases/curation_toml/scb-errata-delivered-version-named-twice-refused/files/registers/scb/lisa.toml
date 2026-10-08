@@ -1,0 +1,19 @@
+[register]
+provider = "scb"
+slug = "lisa"
+native_id = "34"
+
+[[variant]]
+native_id = "34.153"
+slug = "individer-15plus"
+
+[[variant]]
+native_id = "34.1335"
+slug = "individer-16plus"
+
+[[errata.delivered]]
+variant = "individer-15plus"
+column = "DispInkKE"
+versions = ["2010", "2011", "2010"]
+evidence = "SWECOV holds the column in those years"
+noted = "2026-09-11"

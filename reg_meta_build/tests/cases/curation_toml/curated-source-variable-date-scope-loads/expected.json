@@ -1,0 +1,106 @@
+{
+  "loader": "curated_source",
+  "match": "includes",
+  "args": {
+    "file": "agency.toml",
+    "provider": "agency"
+  },
+  "replaces": [
+    "test_curated_source_records.py::test_only_literal_complete_valid_bounds_form_a_date_scope[0]",
+    "test_curated_source_records.py::test_only_literal_complete_valid_bounds_form_a_date_scope[1]",
+    "test_curated_source_records.py::test_only_literal_complete_valid_bounds_form_a_date_scope[2]",
+    "test_curated_source_records.py::test_only_literal_complete_valid_bounds_form_a_date_scope[3]",
+    "test_curated_source_records.py::test_only_literal_complete_valid_bounds_form_a_date_scope[4]"
+  ],
+  "fails_if": "read_curated_source infers a missing endpoint, accepts reversed bounds or an impossible calendar date as a date scope, or drops a bound's raw value",
+  "note": "Only a complete, valid, ordered pair of literal bounds forms a date scope; a single bound, reversed bounds or an impossible calendar date (2010-02-30, shape-valid) leave the scope unknown while the raw bounds stay on the record.",
+  "loads": {
+    "records": [
+      {
+        "$any": true
+      },
+      {
+        "edition_scope": {
+          "kind": "not_applicable"
+        },
+        "edition_period_scope": {
+          "kind": "unknown"
+        },
+        "fields": {
+          "coverage_from": {
+            "raw_value": "2010-01-01"
+          },
+          "coverage_to": null
+        }
+      },
+      {
+        "edition_scope": {
+          "kind": "not_applicable"
+        },
+        "edition_period_scope": {
+          "kind": "unknown"
+        },
+        "fields": {
+          "coverage_from": null,
+          "coverage_to": {
+            "raw_value": "2010-12-31"
+          }
+        }
+      },
+      {
+        "edition_scope": {
+          "kind": "not_applicable"
+        },
+        "edition_period_scope": {
+          "kind": "intervals",
+          "intervals": [
+            {
+              "start": "2010-01-01",
+              "end": "2012-12-31"
+            }
+          ]
+        },
+        "fields": {
+          "coverage_from": {
+            "raw_value": "2010-01-01"
+          },
+          "coverage_to": {
+            "raw_value": "2012-12-31"
+          }
+        }
+      },
+      {
+        "edition_scope": {
+          "kind": "not_applicable"
+        },
+        "edition_period_scope": {
+          "kind": "unknown"
+        },
+        "fields": {
+          "coverage_from": {
+            "raw_value": "2012-01-01"
+          },
+          "coverage_to": {
+            "raw_value": "2010-12-31"
+          }
+        }
+      },
+      {
+        "edition_scope": {
+          "kind": "not_applicable"
+        },
+        "edition_period_scope": {
+          "kind": "unknown"
+        },
+        "fields": {
+          "coverage_from": {
+            "raw_value": "2010-02-30"
+          },
+          "coverage_to": {
+            "raw_value": "2010-12-31"
+          }
+        }
+      }
+    ]
+  }
+}

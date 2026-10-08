@@ -1,0 +1,13 @@
+{
+  "loader": "slug_dir",
+  "replaces": "test_fqid_slugs_provider_toml.py::TestProviderToml::test_finite_column_owner_retains_only_its_own_base_slug[34.4.other]",
+  "fails_if": "the register slug tree accepts any column_owner on the family instead of one naming this split",
+  "note": "The family declares a column owner, but another split: only the declared owner may keep the base slug.",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[variable]] entry 2",
+    "message_contains": [
+      "reused"
+    ]
+  }
+}

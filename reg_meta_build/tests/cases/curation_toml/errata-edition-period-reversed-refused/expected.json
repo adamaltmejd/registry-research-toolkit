@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_tree.py::test_edition_period_entry_is_strict[valid_to = \"2017-12-31\"-valid_to must not precede valid_from]",
+  "fails_if": "the register loader accepts an [[errata.edition_period]] whose valid_to precedes its valid_from",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/sample.toml [[errata.edition_period]] entry 1",
+    "message_contains": [
+      "valid_to must not precede valid_from"
+    ]
+  }
+}

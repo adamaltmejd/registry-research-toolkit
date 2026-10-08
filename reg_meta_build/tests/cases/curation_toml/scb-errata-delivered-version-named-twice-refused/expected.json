@@ -1,0 +1,15 @@
+{
+  "loader": "scb_errata",
+  "replaces": "test_scb_errata.py::TestDeliveredEntry::test_entry_naming_one_version_twice_fails",
+  "fails_if": "resolve_scb_errata lets one `versions` list name a version twice, which mints the same synthetic row twice",
+  "error": {
+    "code": "scb_errata_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[errata.delivered]] entry 1 (scb/lisa)/individer-15plus/DispInkKE",
+    "message_contains": [
+      "2010"
+    ],
+    "remediation_contains": [
+      "once"
+    ]
+  }
+}

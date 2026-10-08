@@ -1,0 +1,9 @@
+[register]
+provider = "scb"
+slug = "agi"
+native_id = "1"
+
+[[enrichment.description]]
+register = "scb/lisa"
+variable = "kon"
+description = "Kön"

@@ -1,0 +1,66 @@
+{
+  "loader": "curated_source",
+  "match": "includes",
+  "args": {
+    "file": "agency.toml",
+    "provider": "agency"
+  },
+  "replaces": "test_curated_source_records.py::test_omitted_flag_keys_read_as_explicit_false",
+  "fails_if": "read_curated_source reads an omitted is_identifier as unknown instead of false, invents an evidence cell for it, synthesizes a variant for an empty variants list, or drops the raw bytes of a blank definition or classification",
+  "note": "is_sensitive is declared false and is_identifier is omitted: omission in a maintainer-authored TOML is a deliberate false claim, but it leaves no evidence cell (the cell list has no is_identifier).",
+  "loads": {
+    "records": [
+      {
+        "$any": true
+      },
+      {
+        "fields": {
+          "identifier": {
+            "value": false
+          },
+          "sensitivity": {
+            "value": false
+          },
+          "definition": {
+            "status": "unknown",
+            "raw_value": ""
+          },
+          "classification_declared": {
+            "raw_value": "   "
+          }
+        },
+        "subject": {
+          "variant_references": []
+        },
+        "delivered_cells": [
+          {
+            "name": "name"
+          },
+          {
+            "name": "column"
+          },
+          {
+            "name": "data_type"
+          },
+          {
+            "name": "definition",
+            "raw_value": ""
+          },
+          {
+            "name": "variants",
+            "raw_value": "[]",
+            "raw_type": "list"
+          },
+          {
+            "name": "is_sensitive",
+            "raw_value": "false",
+            "raw_type": "bool"
+          },
+          {
+            "name": "classification"
+          }
+        ]
+      }
+    ]
+  }
+}

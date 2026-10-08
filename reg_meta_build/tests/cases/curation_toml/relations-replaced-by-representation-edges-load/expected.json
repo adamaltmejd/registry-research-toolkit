@@ -1,0 +1,62 @@
+{
+  "loader": "relations",
+  "match": "includes",
+  "replaces": [
+    "test_relation_declaration_loading.py::TestReplacedByLoad::test_parses_representation_edge",
+    "test_relation_declaration_loading.py::TestReplacedByLoad::test_representation_same_variable_different_column_allowed",
+    "test_relation_declaration_loading.py::TestReplacedByLoad::test_representation_no_variant_defaults_empty",
+    "test_relation_declaration_loading.py::TestReplacedByLoad::test_representation_same_register_different_variable_allowed",
+    "test_relation_declaration_loading.py::TestReplacedByLoad::test_representation_variant_parses"
+  ],
+  "fails_if": "load_relations refuses a same-variable column rename or an intra-register cross-variable one, drops the columns, effective_year or note, or stops defaulting `variant` to ''",
+  "note": "A representation edge may repeat its variable FQID when the columns differ, may move a column between two variables of one register, and takes an optional `variant` scope that defaults to the variable level ('').",
+  "loads": {
+    "replaced_by": [
+      {
+        "predecessor": {
+          "kind": "variable_binding",
+          "provider": "scb",
+          "register": "lisa",
+          "variable": "dispink",
+          "classification": null
+        },
+        "successor": {
+          "kind": "variable_binding",
+          "provider": "scb",
+          "register": "lisa",
+          "variable": "dispink",
+          "classification": null
+        },
+        "predecessor_column": "DispInk04",
+        "successor_column": "DispInk10",
+        "effective_year": 2010,
+        "note": "recut"
+      },
+      {
+        "variant": ""
+      },
+      {
+        "predecessor": {
+          "kind": "variable_binding",
+          "provider": "scb",
+          "register": "lisa",
+          "variable": "a",
+          "classification": null
+        },
+        "successor": {
+          "kind": "variable_binding",
+          "provider": "scb",
+          "register": "lisa",
+          "variable": "b",
+          "classification": null
+        },
+        "predecessor_column": "A",
+        "successor_column": "B"
+      },
+      {
+        "variant": "punktskatter-for-energi",
+        "effective_year": 2014
+      }
+    ]
+  }
+}

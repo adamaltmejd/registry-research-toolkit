@@ -1,0 +1,16 @@
+{
+  "loader": "register_files",
+  "replaces": [
+    "test_curation_tree.py::test_top_level_flags_table_is_unknown",
+    "test_curation_tree_registers.py::test_unknown_top_level_table_fails"
+  ],
+  "fails_if": "the register loader ignores an unknown top-level table such as a retired [[flags]] table carrying is_sensitive",
+  "note": "A retired [[flags]] table carrying is_sensitive is the hardest unknown top-level table: silently ignoring it would drop a disclosure flag.",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/sample.toml flags",
+    "message_contains": [
+      "Extra inputs are not permitted"
+    ]
+  }
+}

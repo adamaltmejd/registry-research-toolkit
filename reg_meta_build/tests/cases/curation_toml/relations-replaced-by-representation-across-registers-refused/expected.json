@@ -1,0 +1,12 @@
+{
+  "loader": "relations",
+  "replaces": "test_relation_declaration_loading.py::TestReplacedByLoad::test_representation_cross_register_rejected",
+  "fails_if": "load_relations accepts a representation (column-rename) edge whose endpoints sit in two registers",
+  "error": {
+    "code": "relations_invalid",
+    "locator": "relations [[edge]] type='replaced_by'",
+    "message_contains": [
+      "crosses registers"
+    ]
+  }
+}

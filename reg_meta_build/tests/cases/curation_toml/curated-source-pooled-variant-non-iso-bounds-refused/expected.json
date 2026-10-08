@@ -1,0 +1,16 @@
+{
+  "loader": "curated_source",
+  "args": {
+    "file": "agency.toml",
+    "provider": "agency"
+  },
+  "replaces": "test_curated_source_records.py::test_pooled_delivery_requires_explicit_valid_ordered_iso_bounds[4]",
+  "fails_if": "read_curated_source accepts a pooled variant with year-only (non-ISO) bounds",
+  "error": {
+    "type": "CuratedSourceError",
+    "locator": "register.0.variant.1",
+    "message_contains": [
+      "pooled variant requires ISO date bounds"
+    ]
+  }
+}

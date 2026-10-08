@@ -1,0 +1,5 @@
+[[edge]]
+type = "same_as"
+a = "scb/lisa/x"
+b = "scb/rams/y"
+note = ""

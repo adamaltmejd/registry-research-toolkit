@@ -1,0 +1,9 @@
+{
+  "loader": "provider_slugs",
+  "replaces": "test_fqid_slugs_provider_toml.py::TestProviderToml::test_reserved_slug_class_rejected",
+  "fails_if": "the slug loader drops `class` from the reserved slug tokens",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "register.'34'"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "loader": "tags",
+  "replaces": "test_tags.py::test_load_tags_rejects_unknown_top_level_key",
+  "fails_if": "load_tags silently ignores an unknown top-level table such as a misspelled [[tags]]",
+  "error": {
+    "code": "tags_invalid",
+    "locator": "tags"
+  }
+}

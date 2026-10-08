@@ -1,0 +1,15 @@
+{
+  "loader": "scb_errata",
+  "replaces": "test_scb_errata.py::TestVersionEntry::test_name_without_claimed_year_fails",
+  "fails_if": "resolve_scb_errata accepts an [[errata.version]] name with no four-digit year the coalescer can place",
+  "error": {
+    "code": "scb_errata_version_year_unknown",
+    "locator": "curation/registers/scb/lisa.toml [[errata.version]] entry 1 (scb/lisa)/individer-15plus/Äldre leverans",
+    "message_contains": [
+      "no parseable claimed year"
+    ],
+    "remediation_contains": [
+      "four-digit year"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "loader": "relations",
+  "replaces": "test_relation_declaration_loading.py::TestReplacedByLoad::test_variant_grain_rejected",
+  "fails_if": "load_relations accepts a 4-segment variant-grain replaced_by endpoint",
+  "error": {
+    "code": "relations_invalid",
+    "locator": "relations [[edge]] type='replaced_by' `from` 'scb/lisa/v/2020'"
+  }
+}

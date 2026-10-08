@@ -1,0 +1,23 @@
+[register]
+provider = "scb"
+slug = "lisa"
+native_id = "34"
+
+[[variant]]
+native_id = "34.153"
+slug = "individer-15plus"
+
+[[variant]]
+native_id = "34.1335"
+slug = "individer-16plus"
+
+[[errata.column]]
+variant = "individer-15plus"
+column = "Ssyk4_J16"
+name = "Yrke enligt SSYK 96"
+definition = "Yrkeskod pa 4-siffernivan."
+versions = ["2010", "2011"]
+source = "scb-docs"
+evidence = "SCB doc library lisa-bakgrundsfakta-1990-2017."
+noted = "2026-09-12"
+is_identifier = "yes"

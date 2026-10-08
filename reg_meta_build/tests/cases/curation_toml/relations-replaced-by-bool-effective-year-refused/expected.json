@@ -1,0 +1,13 @@
+{
+  "loader": "relations",
+  "replaces": "test_relation_declaration_loading.py::TestReplacedByLoad::test_bool_effective_year_rejected",
+  "fails_if": "load_relations accepts a boolean `effective_year` as an integer year",
+  "note": "A Python bool is an int, so a bare `true` would pass as the year 1 without this guard.",
+  "error": {
+    "code": "relations_invalid",
+    "locator": "relations [[edge]] type='replaced_by'",
+    "message_contains": [
+      "`effective_year` must be an integer when present, got bool"
+    ]
+  }
+}

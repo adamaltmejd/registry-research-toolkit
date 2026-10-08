@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_tree.py::test_sos_data_type_row_is_checked_at_load[expected_type = \"date\"-expected_type and data_type must differ]",
+  "fails_if": "the register loader accepts an [[errata.data_type]] correction whose corrected type equals the expected one",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/sos/sample.toml [[errata.data_type]] entry 1",
+    "message_contains": [
+      "expected_type and data_type must differ"
+    ]
+  }
+}

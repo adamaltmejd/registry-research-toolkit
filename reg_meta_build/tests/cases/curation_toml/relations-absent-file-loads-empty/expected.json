@@ -1,0 +1,10 @@
+{
+  "loader": "relations",
+  "replaces": "test_relation_declaration_loading.py::TestLoaderDispatch::test_missing_file_is_empty",
+  "fails_if": "load_relations starts requiring curation/relations.toml, which synthetic builds and wheel installs do not ship",
+  "loads": {
+    "same_as": [],
+    "replaced_by": [],
+    "derived_from": []
+  }
+}

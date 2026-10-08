@@ -1,0 +1,16 @@
+{
+  "loader": "register_files",
+  "replaces": [
+    "test_curation_tree_registers.py::test_register_scoped_entries_reject_wrong_register[8]",
+    "test_curation_tree_registers.py::test_register_scoped_entries_reject_wrong_register[10]"
+  ],
+  "fails_if": "the register loader accepts SOS identity routing or renaming in an SCB register file",
+  "note": "[[identity.route]] and [[identity.rename]] share one SOS-only guard.",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/test.toml [[identity.route]] entry 1",
+    "message_contains": [
+      "SOS registers"
+    ]
+  }
+}

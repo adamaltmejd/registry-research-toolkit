@@ -1,0 +1,12 @@
+{
+  "loader": "worklist_concept_groups",
+  "replaces": "test_concept_groups.py::TestLoader::test_invalid_shapes_fail[1]",
+  "fails_if": "load_worklist_concept_groups accepts a group member that names no `variable`",
+  "error": {
+    "code": "concept_groups_invalid",
+    "locator": "concept_groups.auto.toml [[variable_group]] entry 1",
+    "message_contains": [
+      "member needs `variable` as a non-empty string"
+    ]
+  }
+}

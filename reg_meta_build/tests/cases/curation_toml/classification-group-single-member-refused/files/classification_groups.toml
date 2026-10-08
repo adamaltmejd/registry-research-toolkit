@@ -1,0 +1,8 @@
+[[classification_group]]
+key = "sun"
+label = "SUN"
+axis = "dimension"
+[[classification_group.members]]
+classification = "a"
+value = "1"
+label = "x"

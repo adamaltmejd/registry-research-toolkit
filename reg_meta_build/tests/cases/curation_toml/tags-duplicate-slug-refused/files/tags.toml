@@ -1,0 +1,10 @@
+[[tag]]
+slug = "income"
+label = "A"
+  [[tag.member]]
+  register = "scb/lisa"
+[[tag]]
+slug = "income"
+label = "B"
+  [[tag.member]]
+  register = "scb/rams"

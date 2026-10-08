@@ -1,0 +1,17 @@
+{
+  "loader": "register_files",
+  "replaces": [
+    "test_curation_tree.py::test_identity_split_part_requires_matching_discriminator[0]",
+    "test_curation_tree.py::test_identity_split_part_requires_matching_discriminator[1]",
+    "test_curation_tree.py::test_identity_split_part_requires_matching_discriminator[4]"
+  ],
+  "fails_if": "the register loader accepts an [[identity.split]] part with more or fewer than one discriminator",
+  "note": "The part carries the `by` discriminator, so the matching rule passes; only the exactly-one-discriminator rule refuses it. A part with none is the easy form.",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/sos/par.toml [[identity.split.parts]] entry 1",
+    "message_contains": [
+      "exactly one of data_type, deldatamangd, name or description"
+    ]
+  }
+}

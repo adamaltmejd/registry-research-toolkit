@@ -1,0 +1,80 @@
+{
+  "selector": {
+    "register": "scb/innovation-foretag",
+    "register_id": 257,
+    "variant": "_default",
+    "register_variant_id": 553,
+    "edition": "2012 - 2014",
+    "regver_id": 7293,
+    "var_id": 15662,
+    "cvid": 400684
+  },
+  "source_mode": "documented_blank",
+  "answer_facts": {
+    "data_type": "decimal",
+    "data_type_evidence": "SWECOV CIS2014=float",
+    "is_identifier": false,
+    "is_sensitive": false,
+    "flag_evidence": "SCB adjacent wave declares both flags 0"
+  },
+  "evidence": {
+    "document": "Synthetic CIS2014 concordance",
+    "url": "https://example.test/cis2014.pdf#page=23",
+    "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "question": "VariabelRegister_Källa is Fråga 18 i enkäten Innovationsverksamhet 2012-2014; the native edition is 2012 - 2014, while stale VariabelReferenstid says 2010–2012.",
+    "noted": "2026-09-14"
+  },
+  "question_label": "Typ av samarbetspartner geografiskt fördelat",
+  "axes": [
+    {
+      "key": "partner",
+      "label_en": "Cooperation partner"
+    },
+    {
+      "key": "response",
+      "label_en": "Location or response"
+    }
+  ],
+  "answers": [
+    {
+      "key": "group-enterprises-sweden",
+      "slug": "cis2014-cooperation-group-enterprises-sweden",
+      "columns": [
+        "CO11"
+      ],
+      "label_en": "Cooperation with group enterprises in Sweden",
+      "definition_en": "Cooperation with group enterprises in Sweden.",
+      "partner": {
+        "key": "group_enterprises",
+        "label_en": "Group enterprises"
+      },
+      "response": {
+        "key": "sweden",
+        "label_en": "Sweden"
+      },
+      "source_pages": {
+        "CO11": 23
+      }
+    },
+    {
+      "key": "group-enterprises-other-europe",
+      "slug": "cis2014-cooperation-group-enterprises-other-europe",
+      "columns": [
+        "CO12"
+      ],
+      "label_en": "Cooperation with group enterprises elsewhere in Europe",
+      "definition_en": "Cooperation with group enterprises elsewhere in Europe.",
+      "partner": {
+        "key": "group_enterprises",
+        "label_en": "Group enterprises"
+      },
+      "response": {
+        "key": "other_europe",
+        "label_en": "Other Europe"
+      },
+      "source_pages": {
+        "CO12": 23
+      }
+    }
+  ]
+}

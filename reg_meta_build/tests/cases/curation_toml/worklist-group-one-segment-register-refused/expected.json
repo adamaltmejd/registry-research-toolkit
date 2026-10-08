@@ -1,0 +1,12 @@
+{
+  "loader": "worklist_concept_groups",
+  "replaces": "test_concept_groups.py::TestLoader::test_invalid_shapes_fail[2]",
+  "fails_if": "load_worklist_concept_groups accepts a `register` that is not a 2-segment provider/register FQID",
+  "error": {
+    "code": "concept_groups_invalid",
+    "locator": "concept_groups.auto.toml [[variable_group]] entry 1",
+    "message_contains": [
+      "register 'lisa' must be a 2-segment"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+[register]
+provider = "scb"
+slug = "test"
+native_id = "1"
+
+[[errata.delivered]]
+variant = "v"
+column = "C"
+versions = ["2020"]
+evidence = "source"
+noted = "2026-09-24"
+
+[[errata.delivered]]
+variant = "v"
+column = "D"
+versions = ["2020"]
+evidence = "source"
+noted = "2026-09-24"
+definition = "Definition"

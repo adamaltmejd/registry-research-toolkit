@@ -1,0 +1,14 @@
+{
+  "loader": "valid_codes",
+  "replaces": [
+    "test_classification_storage.py::TestLoadValidCodes::test_loads_simple",
+    "test_classification_storage.py::TestLoadValidCodes::test_strips_whitespace",
+    "test_classification_storage.py::TestLoadValidCodes::test_skips_blank_lines"
+  ],
+  "fails_if": "load_valid_codes stops stripping codes and labels, or treats a blank row as a code",
+  "note": "The SCB header; a padded code and label are stripped, and an empty line and an all-blank row are skipped.",
+  "loads": {
+    "A": "Alpha label",
+    "B": "Bravo"
+  }
+}

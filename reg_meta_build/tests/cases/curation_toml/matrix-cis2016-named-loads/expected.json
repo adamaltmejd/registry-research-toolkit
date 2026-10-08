@@ -1,0 +1,39 @@
+{
+  "loader": "matrix_evidence",
+  "match": "includes",
+  "args": {
+    "source_mode": "named",
+    "expected_selector": {
+      "register": "scb/testreg",
+      "register_id": 1,
+      "variant": "individer",
+      "register_variant_id": 10,
+      "edition": "2014 - 2016",
+      "regver_id": 11529,
+      "var_id": 15662,
+      "cvid": 469456
+    }
+  },
+  "replaces": [
+    "test_scb_adapter.py::TestCis2016MatrixProjection::test_rejects_blank_answer_facts",
+    "test_scb_adapter.py::TestCis2016MatrixProjection::test_duplicate_and_conflicting_answer_selectors_fail_config"
+  ],
+  "fails_if": "load_matrix refuses a complete named-mode CIS2016 matrix",
+  "note": "The allowed twin of every CIS2016 refusal.",
+  "loads": {
+    "answers": [
+      {
+        "key": "group-enterprises-sweden",
+        "columns": [
+          "CO11"
+        ]
+      },
+      {
+        "key": "group-enterprises-not-applicable",
+        "columns": [
+          "CONA1"
+        ]
+      }
+    ]
+  }
+}

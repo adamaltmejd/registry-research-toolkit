@@ -1,0 +1,12 @@
+[[tag]]
+slug = "income"
+label = "Income & earnings"
+description = "Income measures"
+  [[tag.member]]
+  variable = "scb/lisa/dispink04"
+  starred = true
+  rank = 0
+  note = "primary income measure"
+  [[tag.member]]
+  register = "scb/lisa"
+  rank = 1

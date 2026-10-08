@@ -1,0 +1,18 @@
+{
+  "loader": "relations",
+  "replaces": [
+    "test_relation_declaration_loading.py::TestSameAsLoad::test_bad_fqid_arity_rejected[scb//x]",
+    "test_relation_declaration_loading.py::TestSameAsLoad::test_bad_fqid_arity_rejected[scb]",
+    "test_relation_declaration_loading.py::TestSameAsLoad::test_bad_fqid_arity_rejected[scb/lisa/x/y]",
+    "test_relation_declaration_loading.py::TestSameAsLoad::test_bad_fqid_arity_rejected[]"
+  ],
+  "fails_if": "load_relations accepts a same_as endpoint with an empty FQID segment",
+  "note": "`scb//x` has three segments, so it passes the grain-length gate that refuses `scb`, `scb/lisa/x/y` and `` beside a 3-segment endpoint; only the FQID check refuses its empty register.",
+  "error": {
+    "code": "relations_invalid",
+    "locator": "relations `a` 'scb//x'",
+    "message_contains": [
+      "must be a 3-segment `provider/register/variable` FQID"
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+[[edge]]
+type = "is_a"
+a = "scb/lisa/x"
+b = "scb/rams/y"

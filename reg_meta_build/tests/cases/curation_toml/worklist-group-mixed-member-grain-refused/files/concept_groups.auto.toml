@@ -1,0 +1,21 @@
+[[variable_group]]
+register = "scb/lisa"
+key = "fam"
+label = "Familj"
+axes = [
+  { axis = "source", label = "Källa" },
+  { axis = "rank", label = "Förvärvskälla" },
+]
+[[variable_group.members]]
+variable = "agi1ink"
+coords = [
+  { axis = "source", value = "agi", label = "AGI" },
+  { axis = "rank", value = "all", label = "Alla" },
+]
+[[variable_group.members]]
+variable = "agi1ink"
+delivery_column = "AGI1INK"
+coords = [
+  { axis = "source", value = "agi", label = "AGI" },
+  { axis = "rank", value = "1", label = "största" },
+]

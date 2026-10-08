@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_tree_registers.py::test_two_files_for_one_register_fail",
+  "fails_if": "the register loader accepts a family-directory file declaring a provider/slug another register file already declares",
+  "note": "The two files carry different native ids, so only the one-file-per-register rule can refuse them.",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/test.toml [register]",
+    "message_contains": [
+      "duplicate register scb/test"
+    ]
+  }
+}

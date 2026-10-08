@@ -1,0 +1,12 @@
+{
+  "loader": "worklist_concept_groups",
+  "replaces": "test_concept_groups.py::TestLoader::test_axisless_variable_umbrella_rejects_facet_fields[delivery_column = \"COL\"]",
+  "fails_if": "load_worklist_concept_groups lets a member of an axis-less umbrella name a delivery column",
+  "error": {
+    "code": "concept_groups_invalid",
+    "locator": "concept_groups.auto.toml [[variable_group]] entry 1",
+    "message_contains": [
+      "cannot set `delivery_column`"
+    ]
+  }
+}

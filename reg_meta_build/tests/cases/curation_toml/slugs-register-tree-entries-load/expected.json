@@ -1,0 +1,142 @@
+{
+  "loader": "slug_dir",
+  "replaces": [
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_minimal_register",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_with_display_group",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_display_group_whitespace_trimmed",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_with_panel_simple_entity_key",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_with_panel_composite_entity_key",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_with_panel_composite_time_key",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_panel_time_key_period_or_slug",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_panel_time_key_period_and_valid_slug_still_accepted",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_panel_time_key_grain_consistent_accepted[0]",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_panel_time_key_grain_consistent_accepted[1]",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_panel_time_key_grain_consistent_accepted[2]",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_panel_time_key_grain_consistent_accepted[3]",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_panel_time_key_grain_consistent_accepted[4]",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_panel_time_key_grain_consistent_accepted[5]",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variable_override",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variable_without_slug_keeps_metadata"
+  ],
+  "fails_if": "the slug loader stops trimming display_group, mis-stores a composite panel key (not as a list), requires a panel_time_grain beside every panel_time_key, rejects the bare \"period\" sentinel, or requires a slug on a variable entry that only carries deprecation metadata",
+  "note": "One register file carries every entry shape: the register slug; all six panel-time shapes (the \"period\" sentinel, a slug key and a composite key, each with its grain and with the grain left unset, since the coupling is optional); a bare and a composite entity key; display_group trimmed and a whitespace-only display_group dropped; a variable override; and a slug-less variable that keeps only deprecation metadata. Each entry is exact: the fixture's keys over SlugEntry's declared defaults, the provider read from the register file.",
+  "loads": [
+    {
+      "kind": "register",
+      "source_id": "34",
+      "slug": "lisa",
+      "provider": "scb",
+      "display_group": null,
+      "panel_entity_key": null,
+      "panel_time_key": null,
+      "panel_time_grain": null,
+      "deprecated": false,
+      "replaced_by": null
+    },
+    {
+      "kind": "register_variant",
+      "source_id": "34.151",
+      "slug": "individer-15plus",
+      "provider": "scb",
+      "display_group": "Individer",
+      "panel_entity_key": "personnummer",
+      "panel_time_key": "period",
+      "panel_time_grain": "delivery",
+      "deprecated": false,
+      "replaced_by": null
+    },
+    {
+      "kind": "register_variant",
+      "source_id": "34.152",
+      "slug": "foretag",
+      "provider": "scb",
+      "display_group": null,
+      "panel_entity_key": [
+        "foretag",
+        "arbetsstalle"
+      ],
+      "panel_time_key": "manad",
+      "panel_time_grain": "row",
+      "deprecated": false,
+      "replaced_by": null
+    },
+    {
+      "kind": "register_variant",
+      "source_id": "34.153",
+      "slug": "utrikeshandel-tjanster",
+      "provider": "scb",
+      "display_group": null,
+      "panel_entity_key": "kon",
+      "panel_time_key": [
+        "ar",
+        "kvartal"
+      ],
+      "panel_time_grain": null,
+      "deprecated": false,
+      "replaced_by": null
+    },
+    {
+      "kind": "register_variant",
+      "source_id": "34.154",
+      "slug": "period-ungrained",
+      "provider": "scb",
+      "display_group": null,
+      "panel_entity_key": null,
+      "panel_time_key": "period",
+      "panel_time_grain": null,
+      "deprecated": false,
+      "replaced_by": null
+    },
+    {
+      "kind": "register_variant",
+      "source_id": "34.155",
+      "slug": "manad-ungrained",
+      "provider": "scb",
+      "display_group": null,
+      "panel_entity_key": null,
+      "panel_time_key": "manad",
+      "panel_time_grain": null,
+      "deprecated": false,
+      "replaced_by": null
+    },
+    {
+      "kind": "register_variant",
+      "source_id": "34.156",
+      "slug": "composite-row",
+      "provider": "scb",
+      "display_group": null,
+      "panel_entity_key": null,
+      "panel_time_key": [
+        "ar",
+        "kvartal"
+      ],
+      "panel_time_grain": "row",
+      "deprecated": false,
+      "replaced_by": null
+    },
+    {
+      "kind": "variable",
+      "source_id": "34.4",
+      "slug": "kon",
+      "provider": "scb",
+      "display_group": null,
+      "panel_entity_key": null,
+      "panel_time_key": null,
+      "panel_time_grain": null,
+      "deprecated": false,
+      "replaced_by": null
+    },
+    {
+      "kind": "variable",
+      "source_id": "34.99",
+      "slug": null,
+      "provider": "scb",
+      "display_group": null,
+      "panel_entity_key": null,
+      "panel_time_key": null,
+      "panel_time_grain": null,
+      "deprecated": true,
+      "replaced_by": null
+    }
+  ]
+}

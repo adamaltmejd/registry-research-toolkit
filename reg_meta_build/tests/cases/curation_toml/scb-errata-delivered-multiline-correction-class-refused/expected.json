@@ -1,0 +1,12 @@
+{
+  "loader": "scb_errata",
+  "replaces": "test_scb_errata.py::TestDeliveredEntry::test_provenance_class_rejects_line_breaks",
+  "fails_if": "resolve_scb_errata accepts an `upstream` correction class with a line break, which would split the provenance header",
+  "error": {
+    "code": "scb_errata_invalid",
+    "locator": "scb_errata `upstream` correction class",
+    "message_contains": [
+      "line breaks"
+    ]
+  }
+}

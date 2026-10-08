@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_tree_registers.py::test_acknowledge_rejects_invalid_fields_and_period[override0-valid_to must not precede]",
+  "fails_if": "the register loader accepts an [[acknowledge]] whose valid_to precedes its valid_from",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/test.toml [[acknowledge]] entry 1",
+    "message_contains": [
+      "valid_to must not precede"
+    ]
+  }
+}

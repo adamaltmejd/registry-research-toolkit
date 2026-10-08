@@ -1,0 +1,22 @@
+{
+  "loader": "curated_source",
+  "args": {
+    "file": "agency.toml",
+    "provider": "agency"
+  },
+  "replaces": [
+    "test_curated_source_records.py::test_thin_data_warning_requires_nonblank_text[\"\"]",
+    "test_curated_source_records.py::test_thin_data_warning_requires_nonblank_text[\"   \"]",
+    "test_curated_source_records.py::test_thin_data_warning_requires_nonblank_text[false]",
+    "test_curated_source_records.py::test_thin_data_warning_requires_nonblank_text[12]"
+  ],
+  "fails_if": "read_curated_source accepts a data_warning that is blank, whitespace-only or not text",
+  "note": "Whitespace-only text passes the non-empty length check, so only the non-blank rule refuses it; empty text and non-string values run the same field's checks.",
+  "error": {
+    "type": "CuratedSourceError",
+    "locator": "register.0.variable.0.data_warning",
+    "message_contains": [
+      "invalid global curated TOML"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[representation.parallel]]
+variable = "1.5"
+variant = "1.10"
+coding_metadata = "per_column"
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+evidence = "Complete finite native domains"
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "First"
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+source_editions = ["2020"]
+expected_codings = ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]
+[[representation.parallel.columns]]
+column = "Second"
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+source_editions = ["2020"]
+expected_codings = ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]
