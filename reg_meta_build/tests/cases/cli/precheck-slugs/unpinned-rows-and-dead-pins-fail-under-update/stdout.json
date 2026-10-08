@@ -1,0 +1,25 @@
+{
+  "missing_registers": [],
+  "missing_variants": [
+    {
+      "provider": "scb",
+      "slug": "other/people"
+    }
+  ],
+  "stale_registers": [
+    {
+      "provider": "scb",
+      "source_id": "999"
+    }
+  ],
+  "stale_variants": [
+    {
+      "provider": "scb",
+      "source_id": "1.999"
+    },
+    {
+      "provider": "scb",
+      "source_id": "5.50"
+    }
+  ]
+}

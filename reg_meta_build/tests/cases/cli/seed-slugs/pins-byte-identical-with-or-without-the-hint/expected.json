@@ -1,0 +1,14 @@
+{
+  "exit_code": 0,
+  "stderr": {
+    "contains": [
+      "'Nybörjare i Komvux'"
+    ]
+  },
+  "same_bytes": [
+    [
+      "quiet/registers/scb/sample.auto.toml",
+      "loud/registers/scb/sample.auto.toml"
+    ]
+  ]
+}
