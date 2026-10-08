@@ -32,8 +32,8 @@ jobs:
       - run: uv run ruff format --check
       # Backstop: run the pre-commit-stage hooks that an agent could have
       # bypassed locally with `--no-verify`. Covers panache + ty + ruff. There
-      # is no local pytest hook; the `test` and `package-integration` jobs
-      # below are the test gate.
+      # is no local pytest hook; the per-suite `test` matrix and
+      # `package-integration` below are the test gate.
       - run: uvx --from pre-commit==4.6.2 pre-commit run --all-files
       # Type check via ty (Astral, beta). Pinned via uvx so CI, pre-commit,
       # and cached Codex environments resolve the same checker without making
@@ -47,6 +47,9 @@ jobs:
   # the workspace has no minimum-version policy.
   rust:
     runs-on: ubuntu-latest
+    # The crates/ CI budget (ARCHITECTURE.md "Tiers"). The job also builds
+    # reg-meta and runs the Rust HTTP cases; all of it fits on a rust-cache miss.
+    timeout-minutes: 3
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: dtolnay/rust-toolchain@stable
@@ -81,8 +84,33 @@ jobs:
       - run: uv sync --frozen
       - run: bash scripts/check_versions.sh
 
+  # One leg per root `testpaths` entry (pyproject.toml); keep the two lists in
+  # step. `budget` is the suite's CI-job budget in ARCHITECTURE.md "Tiers",
+  # setup included: a leg over it is a test-audit finding, not a reason to
+  # raise the number.
   test:
+    name: test (${{ matrix.suite }})
     runs-on: ubuntu-latest
+    timeout-minutes: ${{ matrix.budget }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - suite: reg_meta_build
+            budget: 6
+          # The full suite against the in-process Python adapters. The `rust`
+          # job reruns the admission/context cases against the Rust server:
+          # the same cases, a different implementation under test.
+          - suite: conformance
+            budget: 4
+          - suite: reg_meta
+            budget: 3
+          - suite: reg_webapp/backend/tests
+            budget: 3
+          - suite: reg_schema
+            budget: 2
+          - suite: scripts/tests
+            budget: 2
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: astral-sh/setup-uv@v10.0.1
@@ -92,7 +120,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2.9.2
       - run: uv sync --frozen
-      - run: uv run python -m pytest -m "not integration"
+      - run: uv run python -m pytest "${{ matrix.suite }}" -m "not integration"
 
   package-integration:
     runs-on: ubuntu-latest
@@ -148,6 +176,8 @@ jobs:
 
   reg-webapp-frontend:
     runs-on: ubuntu-latest
+    # The frontend CI budget (ARCHITECTURE.md "Tiers").
+    timeout-minutes: 6
     needs: changes
     if: needs.changes.outputs.webapp == 'true'
     defaults:
