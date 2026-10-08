@@ -72,7 +72,9 @@ Duplication found along the way:
 Smaller defects (not blocking, listed so they are not ported):
 
 - Row-order-dependent results: the `same_as` BFS and the classification editions year
-  map read rows without `ORDER BY`.
+  map read rows without `ORDER BY`. The BFS is also unreachable: the writer requires
+  both endpoints of every `same_as` edge to be live (`resolved_metadata.py`), so a
+  direct lookup never misses on a `same_as` source (3d.1).
 - CLI inconsistencies: register is positional in some commands and `--register` in
   others (defined 11 times); years are `--years`, `--year` or `--from/--to`; pagination
   is `--cursor` or `--offset`; `data` changes shape with result cardinality;
@@ -109,7 +111,7 @@ About 70% of the hotspots are A or B. The main ones:
   | `_fuse_provider_held_deliveries`, `scope_predicate` string splicing                                                      | A     | Per-scope rows (`scope = 'holdings'`) in steward artifacts              |
   | `_state_warning_ids` (one `data_warnings` call per state)                                                                | C     | One indexed `data_warning` read per variable over `canonical_column`    |
   | Classification/variable chains, terminal successors, editions, families                                                  | A     | `succession_terminal`, `classification_chain`, `classification_family`  |
-  | `same_as` BFS                                                                                                            | A     | `same_as_resolution` table                                              |
+  | `same_as` BFS                                                                                                            | A     | none: unreachable, not ported (3d.1)                                    |
   | Concept-group tag N+1, group member assembly                                                                             | A     | `concept_group_tag`, pre-ordered member rows                            |
   | `get coded-variables` (72 s)                                                                                             | A     | `coded_variable_stats` per scope; reader applies only filters and limit |
   | `variable_search_text` view (correlated `group_concat` for 43k variables)                                                | A     | Materialized FTS content table                                          |
@@ -1266,6 +1268,7 @@ in-flight list.
   | Two project validators and project-schema versions (`reg_schema`, `reg-core`)                                                                                 | stage 4                                                                                             |
   | Request-time terminal walks (search's `terminal()` reading the `classification_succession_as_of_year` manifest key; 3b.3's refs) beside `succession_terminal` | 3d.2                                                                                                |
   | CLI-era cases and runners (`cli_scope`, `logical`, `coverage`, `reader`, their `test_*.py`)                                                                   | stage 4 (proven twins earlier)                                                                      |
+  | Frozen Python `same_as` BFS (`_resolve_*_via_same_as` in `catalog.py`), unreachable since the writer requires live `same_as` endpoints (3d.1); not ported     | stage 4 (deleted with the Python runtime)                                                           |
   | `scripts/check_versions.sh` keeping the `reg-meta` crate and `reg_meta` versions equal                                                                        | stage 4                                                                                             |
   | Docs DB symlinked unfolded into G1's candidate directories                                                                                                    | 3b.6 (candidate copy refolded)                                                                      |
 
@@ -1460,35 +1463,42 @@ operations.
 - Acceptance: full gate; G1 0 differences outside named exceptions, time recorded.
   Depends on: 3c.2.
 
-**3d.1 Chain, family and `same_as` tables.** Implements the chain rows of section 3.
+**3d.1 Chain and family tables.** Implements the chain rows of section 3.
 
 - Changes: `succession_terminal` (registers, variables, classifications),
-  `classification_chain`, `classification_family` and `same_as_resolution`; derive
-  family module `chains.py`; next free minor. Succession is computed at the manifest's
+  `classification_chain` and `classification_family`; derive family module `chains.py`;
+  next free minor. Succession is computed at the manifest's
   `classification_succession_as_of_year`, and `validate.py` keeps reading that year from
   the manifest; tests that need another policy year build artifacts with it.
-  `same_as_resolution` orders neighbors deterministically, correcting the frozen
-  reader's unordered BFS (`catalog.py` ~3066–3091) in derive (preamble: the build is not
-  frozen).
+  `same_as_resolution` was dropped (orchestrator, 2026-10-08): the reader's `same_as`
+  BFS runs only when a direct lookup misses, and the writer requires both endpoints of
+  every `variable_same_as` and `classification_same_as` edge to be live
+  (`resolved_metadata.py` 743–757). On the v0.42.0 pin, 0 of 1,640 `variable_same_as`
+  source keys are dead and `classification_same_as` is empty. The table would always be
+  empty, so the unordered-BFS defect cannot be reached.
 - `validate_built_db`: acyclic, consistent with `*_replaced_by` at the manifest year,
   equal to a recomputation.
 - Paths: `reg_meta_build/src/reg_meta_build/{derive/,db,validate}.py`,
   `reg_meta/src/reg_meta/db.py` (version), the fixture scripts, tests and generations,
   `reg_meta_build/DESIGN.md`.
-- Acceptance: full gate; byte-identical rebuild, including with shuffled `same_as`
-  insertion order; a synthetic cycle in `variable_replaced_by` fails with a located
-  message; G1 0 differences; times recorded. Depends on: 3b.1 (merge order of minors).
+- Acceptance: full gate; byte-identical rebuild; a synthetic cycle in
+  `variable_replaced_by` fails with a located message; G1 0 differences; times recorded.
+  Depends on: 3b.1 (merge order of minors).
 
 **3d.2 `graph` and `lineage`.** Implements both on the `graph` tool.
 
 - Changes: one `graph` route for variable, classification and group refs; `lineage` with
   edges, warnings and per-register provenance. The refs module and search's
-  classification arm read `succession_terminal`; their request-time walks go.
+  classification arm read `succession_terminal`; their request-time walks go. The reader
+  does not port the `same_as` fallback (unreachable, 3d.1). `succession_terminal` stops
+  at a split and applies the policy year to every kind (search's rule); the baseline's
+  `resolve_terminal_successor` takes the first branch of a split and ignores the year
+  for registers and variables, so a retired ref at a split or behind a future-dated edge
+  differs from the baseline's 301 target under a narrow `rust-only fix:` exception.
 - Cases: twins of `http_catalog/{reference-edges,whole-variable-group-graph}`,
   `cli_scope/lineage-unheld-reference` and
   `logical/{edges-unheld-owner,unheld-terminal-*}`; a split successor; a retired ref
-  through `show`, `graph` and `search` on one chain; the corrected `same_as` order
-  pinned in an `api` case, with its narrow named `rust-only fix:` G1 exception; MCP
+  through `show`, `graph` and `search` on one chain; a retired ref at a split; MCP
   equivalence for both operations.
 - G1 (run in C): webapp baseline for the three graph routes and `/lineage_warnings`; CLI
   baseline `get lineage`.
