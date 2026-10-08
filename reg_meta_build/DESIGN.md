@@ -1355,6 +1355,16 @@ IDs, and writes each final row once. It preserves separately resolved parent met
 even when variables are withheld. Search indexes derive from those rows. No
 SQL-to-IR-to-SQL round trip or provider semantic pass follows materialization.
 
+Succession is compiled the same way (`derive/chains.py`). `succession_terminal` holds
+the active terminal of every register, variable or classification with an active
+outbound edge at the manifest's `classification_succession_as_of_year`: the walk follows
+the sole active successor, and a split is its own terminal, so no citation is sent down
+one arbitrary branch. `classification_chain` holds each edition's anchored chain and
+`classification_family` the one-dimensional families. `validate_built_db` refuses a
+cycle in any `*_replaced_by` table, naming a node on it, and requires each table to
+equal its recomputation. The `same_as` closure is not compiled: the writer requires live
+endpoints on every `same_as` edge, so a lookup never needs to follow one.
+
 Structural validation is required for a diagnostic DB. Corpus volume guards remain
 unchanged and are separately reported against incomplete output; their failures require
 an explained omission audit. Strict builds require both before publication. A failed

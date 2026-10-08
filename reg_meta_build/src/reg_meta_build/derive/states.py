@@ -12,6 +12,7 @@ from __future__ import annotations
 import os
 import sqlite3
 from concurrent.futures import ProcessPoolExecutor
+from contextlib import contextmanager
 from typing import TYPE_CHECKING, Literal
 
 # Bootstrap by calling the reader (RUST_RUNTIME_SPEC.md section 4): the resolver
@@ -21,6 +22,8 @@ from reg_meta.catalog import Catalog, _applicable_alias_windows
 from reg_meta.db import register_py_lower
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
+
     from reg_meta_build.validate import ValidationResult
 
 # simplify: worker startup costs more than the work below this many pairs, so
@@ -57,13 +60,25 @@ RESOLVER_COLUMN_SOURCE = (
 _worker_catalog: Catalog | None = None
 
 
-def reader_catalog(
+def _reader(
     conn: sqlite3.Connection, scope: Literal["reference", "holdings"] = "reference"
 ) -> Catalog:
-    """The reader over `conn` as derive calls it; sets the row factory it needs."""
     conn.row_factory = sqlite3.Row
     register_py_lower(conn)
     return Catalog(conn, scope=scope)
+
+
+@contextmanager
+def reader_catalog(
+    conn: sqlite3.Connection, scope: Literal["reference", "holdings"] = "reference"
+) -> Iterator[Catalog]:
+    """The reader over `conn` as derive calls it, with the row factory it needs;
+    `conn`'s own row factory is restored on exit."""
+    factory = conn.row_factory
+    try:
+        yield _reader(conn, scope)
+    finally:
+        conn.row_factory = factory
 
 
 def _window_kind(window: tuple) -> str:
@@ -113,7 +128,7 @@ def _expanded(catalog: Catalog, pairs: list[tuple[int, int]]) -> list[ExpandedRo
 def _open_worker(path: str) -> None:
     global _worker_catalog
     # A plain connection, never immutable: an extend-db overlay lives in the WAL.
-    _worker_catalog = reader_catalog(sqlite3.connect(path))
+    _worker_catalog = _reader(sqlite3.connect(path))
 
 
 def _worker_expanded(pairs: list[tuple[int, int]]) -> list[ExpandedRow]:
@@ -142,11 +157,8 @@ def expanded_states(conn: sqlite3.Connection) -> list[ExpandedRow]:
         row[2] for row in conn.execute("PRAGMA database_list") if row[1] == "main"
     )
     if len(pairs) < _PARALLEL_MIN_PAIRS or not path:
-        factory = conn.row_factory
-        try:
-            return _expanded(reader_catalog(conn), pairs)
-        finally:
-            conn.row_factory = factory
+        with reader_catalog(conn) as catalog:
+            return _expanded(catalog, pairs)
     if conn.in_transaction:
         raise ValueError("Derive workers read committed rows; commit before deriving")
     workers = os.process_cpu_count() or 1
