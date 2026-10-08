@@ -37,10 +37,13 @@ _PIN = '[variable."1.44"]\nslug = "kon"\n'
 
 
 def _git(cwd: Path, *args: str) -> None:
-    # Strip inherited routing (a git hook's GIT_DIR) so setup targets ``cwd``.
+    # Strip inherited routing (a git hook's GIT_DIR) so setup targets ``cwd``. Commit
+    # signing is off, as in `_csv_fixtures.init_fixture_repo`: a fixture commit never
+    # uses the developer's key.
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    identity = ("-c", "user.email=t@example.com", "-c", "user.name=t")
     subprocess.run(
-        ["git", "-c", "user.email=t@example.com", "-c", "user.name=t", *args],
+        ["git", *identity, "-c", "commit.gpgsign=false", *args],
         cwd=cwd,
         capture_output=True,
         check=True,
