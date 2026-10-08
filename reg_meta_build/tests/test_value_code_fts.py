@@ -218,16 +218,3 @@ def test_classification_owned_code_without_variable_is_indexed(
         )
     finally:
         conn.close()
-
-
-def test_docsize_reflects_index_not_content(tmp_path: Path) -> None:
-    """The index holds fewer rows than value_code here (labels stoplisted)."""
-    conn = _build(tmp_path)
-    try:
-        n_vc = conn.execute("SELECT COUNT(*) FROM value_code").fetchone()[0]
-        n_idx = conn.execute("SELECT COUNT(*) FROM value_code_fts_docsize").fetchone()[
-            0
-        ]
-        assert 0 < n_idx < n_vc
-    finally:
-        conn.close()

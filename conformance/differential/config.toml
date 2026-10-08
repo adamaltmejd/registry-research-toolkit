@@ -38,17 +38,16 @@ reason = "`context` reports the served artifact's schema version: the derived co
 case = "*/*/context"
 paths = ["/data/schema_version"]
 
-# 3a.1b pre-folds the catalog indexes with `fold_search` (decision 16). Both entries
-# are deleted at 3a.13, whose re-pinned baseline reads pre-folded indexes.
+# 3a.1b pre-folds the catalog indexes with `fold_search` (decision 16).
 [[exception]]
 name = "fold-search-matches"
-reason = "The three terms that unicode61 alone did not fold now match as fold_search folds them: `ß` as `ss`, `ﬁlm` as `film`, `ＡＢＣ` as `abc` (0 rows before, up to 565 variables and 1,315 value labels after)."
+reason = "The three terms that unicode61 alone did not fold now match as fold_search folds them: `ß` as `ss`, `ﬁlm` as `film`, `ＡＢＣ` as `abc` (0 rows before, up to 565 variables and 1,315 value labels after). Provisional: deleted by the reference-baseline package, or at the latest by 3a.13."
 case = "*/*/search/7[467]"
 paths = ["/results", "/has_more", "/next_cursor"]
 
 [[exception]]
 name = "folded-index-bm25"
-reason = "For every other G1 term, each catalog index's full MATCH rowid set is identical on both arms; only bm25's row-length statistics moved (`register_id` is UNINDEXED, so register_fts and variable_fts rows lose a token; NFKD changes a few token counts). Ranks move by at most 3.3% for the same row, and near ties reorder and cross the page limit."
+reason = "For the other 115 of 118 G1 terms, each catalog index's full MATCH rowid set is identical on both arms; only bm25's row-length statistics moved (`register_id` is UNINDEXED, so register_fts and variable_fts rows lose a token; NFKD changes a few token counts). Ranks move by at most 3.6% for the same row. Of the 327 differing search outputs, 246 differ only in `rank`, 60 reorder within the page and 21 swap a row at the page limit. Provisional: deleted by the reference-baseline package, or at the latest by 3a.13."
 case = "*/*/search*"
 paths = ["/results", "/next_cursor"]
 
