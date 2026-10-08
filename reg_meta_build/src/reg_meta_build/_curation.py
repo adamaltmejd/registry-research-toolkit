@@ -1,7 +1,7 @@
 """Shared helpers for the maintainer-edited curation TOML loaders.
 
 The TOML scaffold and field helpers serve concept-group worklists, tags,
-SCB errata, and curated relations. Register contracts use Pydantic models in
+SCB errata, curated relations and search pins. Register contracts use Pydantic models in
 `curation_tree.py`; checked decisions compile in `curation_compile.py`.
 
 Canonical integers reject coercions that would silently change native IDs.
@@ -16,9 +16,16 @@ import tomllib
 import unicodedata
 from datetime import date
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
-from pydantic import BaseModel, ConfigDict, ValidationError, field_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    ValidationError,
+    field_validator,
+    model_validator,
+)
+from reg_core_py import fold_search
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
 from reg_meta_build._resolved_common import _require_trimmed
@@ -519,3 +526,82 @@ def resolve_register_id(
         (provider, register),
     ).fetchone()
     return row[0] if row is not None else None
+
+
+SEARCH_PINS_FILE = "search_pins.toml"
+
+
+class SearchPin(BaseModel):
+    """One curated search pin: `fqids` lead the `type` list, in order, for `query`.
+
+    The lookup key is `fold_search(query)`, the fold the reader applies to `q`.
+    `fqids` parse as FQIDs of `type`; whether they resolve is checked by the writer.
+    """
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    query: str
+    type: Literal["register", "classification"]
+    fqids: tuple[str, ...]
+    note: str | None = None
+
+    @field_validator("query")
+    @classmethod
+    def _query_has_a_key(cls, value: str) -> str:
+        if not fold_search(value):
+            raise ValueError("`query` must be non-blank")
+        return value
+
+    @model_validator(mode="after")
+    def _fqids_of_type(self) -> SearchPin:
+        from reg_meta.fqid import FqidError, parse
+
+        if not self.fqids:
+            raise ValueError("`fqids` must be non-empty")
+        if len(set(self.fqids)) != len(self.fqids):
+            raise ValueError("duplicate `fqids`")
+        for fqid in self.fqids:
+            try:
+                kind = str(parse(fqid).kind)
+            except FqidError as exc:
+                raise ValueError(f"invalid fqid {fqid!r}: {exc}") from exc
+            if kind != self.type:
+                raise ValueError(f"{fqid!r} is a {kind} FQID, not a {self.type}")
+        return self
+
+    @property
+    def key(self) -> str:
+        return fold_search(self.query)
+
+
+def load_search_pins(path: Path | None) -> tuple[SearchPin, ...]:
+    """Load `search_pins.toml` in file order; an absent file has no pins."""
+    entries = load_curation_entries(
+        path,
+        entry_key="pin",
+        label="search pins",
+        prefix=SEARCH_PINS_FILE,
+        code_base="search_pins",
+        file_name=f"curation/{SEARCH_PINS_FILE}",
+        entry_fields="`query`, `type` and `fqids`",
+    )
+    pins: list[SearchPin] = []
+    for index, entry in enumerate(entries, start=1):
+        context = f"{SEARCH_PINS_FILE} [[pin]] entry {index}"
+        try:
+            pin = SearchPin.model_validate(entry)
+        except ValidationError as exc:
+            raise curation_error(
+                "search_pins_invalid",
+                f"{context}: {exc.errors(include_url=False)[0]['msg']}.",
+                "Each pin needs a non-blank `query`, `type` (register or "
+                "classification) and distinct `fqids` of that type.",
+            ) from exc
+        if any((seen.key, seen.type) == (pin.key, pin.type) for seen in pins):
+            raise curation_error(
+                "search_pins_invalid",
+                f"{context}: duplicate {pin.type} pin for query key {pin.key!r}.",
+                "Merge the pins: queries that fold alike share one entry.",
+            )
+        pins.append(pin)
+    return tuple(pins)

@@ -1,9 +1,0 @@
-[[pin]]
-query = "choicebook"
-group = "classification"
-fqids = ["class/example-codes"]
-
-[[pin]]
-query = "stalebook"
-group = "classification"
-fqids = ["class/missing-codes"]

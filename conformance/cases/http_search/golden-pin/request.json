@@ -1,10 +1,11 @@
 {
   "fixture": "compiled",
+  "search_pins": "search_pins.toml",
   "requests": [
     {
       "path": "/api/search",
       "query": {
-        "q": "syssels\u00e4ttning",
+        "q": "sysselsättning",
         "type": "register",
         "scope": "holdings"
       }
@@ -12,7 +13,7 @@
     {
       "path": "/api/search",
       "query": {
-        "q": "syssels\u00e4ttning",
+        "q": "sysselsättning",
         "type": "register",
         "scope": "reference"
       }

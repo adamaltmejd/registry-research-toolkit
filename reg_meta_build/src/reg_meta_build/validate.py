@@ -53,11 +53,13 @@ from datetime import date
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
+from reg_core_py import fold_search
 from reg_meta.catalog import _decode_panel_entity_key
 from reg_meta.db import classification_succession_as_of_year, open_db
 from reg_meta.errors import RegMetaError
 
 from reg_meta_build._resolved_common import remaining_windows
+from reg_meta_build.artifact_identity import search_pins_sha256
 from reg_meta_build.db import (
     _PROVIDER_SEED,
     _VALID_TO_SENTINEL,
@@ -255,6 +257,7 @@ def validate_built_db(
         _check_variable_replaced_by_vintage_lift(conn, result, tables, corpus=corpus)
         _check_representation_replaced_by(conn, result, tables, corpus=corpus)
         _check_resolver_column(conn, result, tables)
+        _check_search_pins(conn, result, tables)
         result.section("[compiled holdings]")
         from .holdings_validation import validate_compiled_holdings
 
@@ -306,6 +309,7 @@ def _check_schema_shape(
         "holding_column",
         "holding_mapping",
         "resolver_column",
+        "search_pin",
     ):
         if required in tables:
             result.ok(f"{required} present")
@@ -1652,6 +1656,50 @@ def _check_resolver_column(
     orphans = conn.execute("PRAGMA foreign_key_check(resolver_column)").fetchall()
     if orphans:
         result.fail(f"{len(orphans):,} resolver_column row(s) with dangling keys")
+
+
+def _check_search_pins(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """Each ``search_pin`` row has a folded key, dense positions per (key, type)
+    and an entity of its type; the manifest's ``search_pins_sha256`` hashes them."""
+    result.section("[search_pin]")
+    if "search_pin" not in tables:
+        return  # _check_schema_shape already failed.
+    rows = [
+        (key, kind, position, entity)
+        for key, kind, position, entity in conn.execute(
+            "SELECT key, type, position, entity FROM search_pin"
+        )
+    ]
+    failures = len(result.failures)
+    if any(fold_search(key) != key for key, *_ in rows):
+        result.fail("search_pin keys must be fold_search-folded")
+    if conn.execute(
+        "SELECT 1 FROM search_pin GROUP BY key, type "
+        "HAVING MAX(position) + 1 != COUNT(*)"
+    ).fetchone():
+        result.fail("search_pin positions must run 0..n-1 per (key, type)")
+    unresolved = [
+        entity
+        for (entity,) in conn.execute(
+            "SELECT entity FROM search_pin pin WHERE NOT EXISTS ("
+            "SELECT 1 FROM register r JOIN provider p USING (provider_id) "
+            "WHERE pin.type = 'register' AND p.slug || '/' || r.slug = pin.entity "
+            "UNION ALL SELECT 1 FROM classification c "
+            "WHERE pin.type = 'classification' AND 'class/' || c.slug = pin.entity"
+            ") ORDER BY entity"
+        )
+    ]
+    if unresolved:
+        result.fail(f"search_pin entities do not resolve: {', '.join(unresolved)}")
+    stored = conn.execute(
+        "SELECT value FROM import_manifest WHERE key = 'search_pins_sha256'"
+    ).fetchone()
+    if stored is None or stored[0] != search_pins_sha256(rows):
+        result.fail("manifest search_pins_sha256 does not hash the search_pin rows")
+    if len(result.failures) == failures:
+        result.ok(f"search_pin consistent ({len(rows):,} rows)")
 
 
 def _check_tags(

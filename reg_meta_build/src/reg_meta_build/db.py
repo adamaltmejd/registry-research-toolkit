@@ -22,7 +22,7 @@ from reg_meta.db import (
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
 # Produced catalog schema; readers gate their independently supported version.
-SCHEMA_VERSION = "9.2.0"
+SCHEMA_VERSION = "9.3.0"
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
@@ -388,6 +388,22 @@ CREATE VIRTUAL TABLE value_code_fts USING fts5(
     label,
     tokenize='unicode61 remove_diacritics 0'
 );
+"""
+
+# Curated search pins (`curation/search_pins.toml`), written by a complete build only.
+# Base content, never derived: `derive` creates it empty on an older-minor base.
+SEARCH_PIN_DDL = """\
+CREATE TABLE IF NOT EXISTS search_pin (
+    -- fold_search(query): the reader looks a pin up by fold_search(q).
+    key TEXT NOT NULL CHECK (length(key) > 0),
+    type TEXT NOT NULL CHECK (type IN ('register', 'classification')),
+    -- 0-based order in which the pinned entities lead the type's list.
+    position INTEGER NOT NULL CHECK (position >= 0),
+    -- Canonical FQID of a register or classification of `type`.
+    entity TEXT NOT NULL,
+    PRIMARY KEY (key, type, position),
+    UNIQUE (key, type, entity)
+) WITHOUT ROWID;
 """
 
 
@@ -1602,6 +1618,7 @@ CREATE INDEX idx_holding_mapping_variable_variant
 """
     + DERIVED_DDL
     + SEARCH_INDEX_DDL
+    + SEARCH_PIN_DDL
     + """
 CREATE TABLE import_manifest (
     key TEXT PRIMARY KEY,

@@ -20,6 +20,7 @@ from reg_meta.db import SCHEMA_VERSION, open_db
 from reg_meta.source_evidence import canonical_json, canonical_sha256
 from reg_meta_build.artifact_identity import generation_id
 from reg_meta_build.holdings_compile import compile_holdings
+from reg_meta_build.pipeline import load_search_pins
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
     ResolvedClassificationSuccession,
@@ -226,12 +227,14 @@ def artifact_key(
     kind: str,
     *,
     identity_overrides: Mapping[str, str] | None = None,
+    search_pins: Path | None = None,
     build_inputs: str | None = None,
 ) -> str:
     """Cache key of one synthetic artifact: its sources, options and build inputs.
 
     Every build also reads the shared `reader/fixture` identity and steward policy
-    fallbacks, so that directory is keyed alongside the named source.
+    fallbacks, so that directory is keyed alongside the named source, and a case's
+    `search_pins` file alongside both.
     """
     return canonical_sha256(
         {
@@ -240,6 +243,7 @@ def artifact_key(
             "defaults": _tree_digest(CASES / "reader/fixture"),
             "kind": kind,
             "identity_overrides": dict(identity_overrides or {}),
+            "search_pins": _tree_digest(search_pins) if search_pins else None,
         }
     )
 
@@ -266,6 +270,7 @@ def cached_reader_artifact(
     kind: str,
     *,
     identity_overrides: Mapping[str, str] | None = None,
+    search_pins: Path | None = None,
 ) -> Path:
     """Return the cached, read-only `reg_meta.db`, building it on first use.
 
@@ -275,14 +280,16 @@ def cached_reader_artifact(
     same key never expose a partial entry; the loser discards its copy.
     """
     entry = _generation_dir() / artifact_key(
-        fixture, kind, identity_overrides=identity_overrides
+        fixture, kind, identity_overrides=identity_overrides, search_pins=search_pins
     )
     path = entry / "reg_meta.db"
     if path.exists():
         return path
     staging = Path(tempfile.mkdtemp(prefix=".staging-", dir=entry.parent))
     try:
-        _build_artifact(staging, fixture_source(fixture), kind, identity_overrides)
+        _build_artifact(
+            staging, fixture_source(fixture), kind, identity_overrides, search_pins
+        )
         (staging / "reg_meta.db").chmod(0o444)
         try:
             staging.rename(entry)
@@ -316,9 +323,12 @@ def _build_artifact(
     source: Path,
     kind: str,
     identity_overrides: Mapping[str, str] | None,
+    search_pins: Path | None = None,
 ) -> Path:
     identity = json.loads((CASES / "reader/fixture/identity.json").read_text())
     identity.update(identity_overrides or {})
+    # The writer hashes the pins it stores.
+    del identity["search_pins_sha256"]
     variables = tuple(
         ResolvedVariable.model_validate_json(json.dumps(value))
         for value in json.loads((source / "catalog.json").read_text())
@@ -366,6 +376,7 @@ def _build_artifact(
         classification_successions=successions,
         metadata=metadata,
         data_warnings=warnings,
+        search_pins=load_search_pins(search_pins),
     )
     if kind == "steward":
         base_digest = hashlib.file_digest(path.open("rb"), "sha256").hexdigest()

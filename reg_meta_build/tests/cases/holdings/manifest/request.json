@@ -2,5 +2,6 @@
   "builder_commit": "0000000000000000000000000000000000000000",
   "prepared_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   "prepared_manifest_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-  "curation_tree_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  "curation_tree_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "search_pins_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
 }

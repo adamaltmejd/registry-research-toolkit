@@ -239,7 +239,7 @@ id = "GET /api/search"
 disposition = "replaced"
 operation = "search"
 owner = "3a"
-covered_by = ["conformance/cases/http_search", "reg_webapp/backend/tests/test_search_results.py", "reg_webapp/backend/tests/test_search_golden_config.py"]
+covered_by = ["conformance/cases/http_search", "reg_webapp/backend/tests/test_search_results.py"]
 
 [[row]]
 kind = "route"

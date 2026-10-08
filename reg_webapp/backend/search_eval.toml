@@ -72,7 +72,7 @@ group = "register"
 intended = "scb/lisa"
 expect = "hit"
 confirmed = true
-note = "Steer employment queries to LISA. RAMS (ranks ~3 today) is stale, superseded by BAS (scb/bas); LISA does NOT surface for 'sysselsättning' via FTS, so it is pinned to the top of the register group by the golden-boost (search_golden.toml, #311 / #393 item 4)."
+note = "Steer employment queries to LISA. RAMS (ranks ~3 today) is stale, superseded by BAS (scb/bas); LISA does NOT surface for 'sysselsättning' via FTS, so it is pinned to the top of the register group by the golden-boost (reg_meta_build/curation/search_pins.toml, #311 / #393 item 4)."
 
 [[case]]
 query = "diagnos"
@@ -80,7 +80,7 @@ group = "register"
 intended = "sos/par"
 expect = "hit"
 confirmed = true
-note = "Patientregistret is the broad diagnosis register but does NOT surface for 'diagnos' via FTS (only Cancerregistret does, via its purpose text), so it is pinned to the top of the register group by the golden-boost (search_golden.toml, #311 / #393 item 4)."
+note = "Patientregistret is the broad diagnosis register but does NOT surface for 'diagnos' via FTS (only Cancerregistret does, via its purpose text), so it is pinned to the top of the register group by the golden-boost (reg_meta_build/curation/search_pins.toml, #311 / #393 item 4)."
 
 [[case]]
 query = "läkemedel"

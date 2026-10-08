@@ -1,7 +1,7 @@
 """Curated golden-boost for `/api/search` (#393 item 4 / #311).
 
 A *golden pin* promotes a canonical result to the TOP (rank 1) of its search group
-for an exact (normalized) query, even when FTS would not surface it. If the pinned
+for an exact (folded) query, even when FTS would not surface it. If the pinned
 entity is already on the result page it is deduped — removed from its FTS slot and
 re-prepended at rank 1, not duplicated. This closes confirmed eval gaps where the
 register a researcher should land on does not rank for a topical term
@@ -13,33 +13,22 @@ route AND the eval runner (`scripts/run_search_eval.py`) apply the SAME function
 That is what makes the eval measure the route's TRUE behavior rather than an
 approximation of it.
 
-The curated pins live in ``reg_webapp/backend/src/reg_webapp/search_golden.toml``
-(INSIDE the importable package so it travels with the src tree the runtime Docker
-stage copies — `search_eval.toml` stays at `reg_webapp/backend/`, read only by the
-dev eval runner, never shipped). Steward-authored, grow as needed. The TOML is parsed
-once at import and validated fail-fast (CLAUDE.md): a pin with an unknown ``group`` or
-an unsupported group is a config error at LOAD, not a silent no-op. A MISSING file is
-likewise a packaging bug, not a "no pins" state — `_load_pins` raises rather than
-silently disabling the feature; to intentionally ship no pins, commit a TOML with no
-``[[pin]]`` entries (parses to ``{}`` gracefully). fqid RESOLVABILITY needs a DB
-connection, so it is checked at apply time — a typo'd fqid raises there rather than
-silently dropping the pin.
+The pins are curated build input (``reg_meta_build/curation/search_pins.toml``)
+stored in the catalog's ``search_pin`` table, keyed by ``fold_search(query)``. The
+build guarantees that every stored pin resolves, so a lookup needs no validation.
 """
 
 from __future__ import annotations
 
 import json
-import tomllib
-import unicodedata
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 from binascii import Error as Base64Error
-from dataclasses import dataclass
 from hashlib import sha256
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from reg_meta.catalog import Catalog
-from reg_meta.fqid import FqidError, parse as parse_fqid
+from reg_meta.fqid import parse as parse_fqid
+from reg_meta.queries import fold_search
 from reg_meta.search import ClassificationSearchResult, RegisterSearchResult
 
 if TYPE_CHECKING:
@@ -49,41 +38,10 @@ if TYPE_CHECKING:
     from reg_meta.holdings import ReadScope
     from reg_meta.search import SearchResult
 
-# Packaged INSIDE reg_webapp (beside this module) so it ships with the src tree the
-# runtime Docker stage copies (Dockerfile: `COPY .../reg_webapp/backend/src ...`); a
-# sibling TOML at backend/ would be absent in the deployed image → silent no-op.
-GOLDEN_PATH = Path(__file__).resolve().parent / "search_golden.toml"
-
-
-def _normalize(query: str) -> str:
-    """The pin lookup key normalization: ASCII-fold diacritics, then casefold +
-    strip. Mirrors a forgiving omnibox match (case-insensitive, surrounding
-    whitespace ignored, diacritics folded). The diacritic fold (NFKD decompose +
-    drop combining marks) keeps the pin lookup consistent with the rest of
-    `/api/search`, where FTS unicode61 folds å/ä→a, ö→o on both index and query
-    side — so a diacriticless `sysselsattning` still hits the `sysselsättning` pin.
-    Same ASCII-fold approach as `reg_meta.fqid.derive_variable_slug`. Pin keys are
-    built via this too, so both sides fold identically."""
-    folded = "".join(
-        ch
-        for ch in unicodedata.normalize("NFKD", query)
-        if not unicodedata.combining(ch)
-    )
-    return folded.casefold().strip()
-
-
-@dataclass(frozen=True)
-class _Pin:
-    query: str
-    group: str
-    fqids: tuple[str, ...]
-    note: str | None
-
 
 def _register_pin(conn: sqlite3.Connection, fqid: str) -> RegisterSearchResult:
     """Build the `RegisterSearchResult` model for a pinned register fqid (#701).
-    Resolves the 2-seg fqid (`provider/register`) by slug. A pin is order-prepended,
-    not rank-sorted, so `rank=0.0`."""
+    A pin is order-prepended, not rank-sorted, so `rank=0.0`."""
     parsed = parse_fqid(fqid)
     row = conn.execute(
         "SELECT r.name AS register_name, r.purpose AS register_purpose "
@@ -92,8 +50,6 @@ def _register_pin(conn: sqlite3.Connection, fqid: str) -> RegisterSearchResult:
         "WHERE p.slug = ? AND r.slug = ?",
         (parsed.provider, parsed.register),
     ).fetchone()
-    if row is None:
-        raise ValueError(f"golden pin fqid {fqid!r} does not resolve to a register")
     # Pass the parsed `Fqid` (not the raw string) — the field is `Fqid | None`; it
     # serializes back to the identical canonical string on the wire.
     return RegisterSearchResult(
@@ -108,20 +64,13 @@ def _classification_pin(
     conn: sqlite3.Connection, fqid: str
 ) -> ClassificationSearchResult:
     """Build the `ClassificationSearchResult` model for a pinned classification fqid
-    (#701). Resolves ``class/<slug>`` by slug; `rank=0.0` (a pin is order-prepended,
-    not rank-sorted)."""
+    (#701); `rank=0.0` (a pin is order-prepended, not rank-sorted)."""
     parsed = parse_fqid(fqid)
     row = conn.execute(
         "SELECT short_name, name AS classification_name "
         "FROM classification WHERE slug = ?",
         (parsed.classification,),
     ).fetchone()
-    if row is None:
-        raise ValueError(
-            f"golden pin fqid {fqid!r} does not resolve to a classification"
-        )
-    # Pass the parsed `Fqid` (see `_register_pin`): the field is `Fqid | None` and
-    # serializes back to the identical canonical string.
     return ClassificationSearchResult(
         fqid=parsed,
         short_name=row["short_name"],
@@ -130,84 +79,11 @@ def _classification_pin(
     )
 
 
-# Builders are the single source of truth for which groups golden-boost supports;
-# _SUPPORTED_GROUPS is DERIVED from them so a group can never be declared supported
-# (passing load-validation) without a builder to back it (which would KeyError at
-# apply). register + classification both resolve cheaply by slug; variable/value
-# pins are NOT implemented — a pin targeting them is a config error at load (fail
-# fast) rather than a silent no-op.
+# The pin types the build stores; other groups never have pins.
 _PIN_BUILDERS: dict[str, Callable[[sqlite3.Connection, str], SearchResult]] = {
     "register": _register_pin,
     "classification": _classification_pin,
 }
-_SUPPORTED_GROUPS = frozenset(_PIN_BUILDERS)
-
-
-def _load_pins(path: Path) -> dict[tuple[str, str], _Pin]:
-    """Parse + validate ``search_golden.toml`` into a ``(normalized_query, group)``
-    lookup. Validates structure eagerly (fail fast): each pin needs a non-empty
-    ``query``, a supported ``group``, and a non-empty ``fqids`` list whose entries
-    parse as FQIDs of the group's kind. Resolvability against the DB is deferred to
-    `apply_golden_boost` (no connection at import)."""
-    # The config is committed AND packaged inside reg_webapp, so its absence is a
-    # packaging bug — fail loud (CLAUDE.md fail-fast) rather than silently disabling
-    # golden-boost. To ship NO pins, commit a TOML with no `[[pin]]` entries (it
-    # parses to `{}` gracefully via the loop below).
-    if not path.exists():
-        raise FileNotFoundError(
-            f"golden config missing at {path} (it is committed + packaged with "
-            "reg_webapp — its absence is a packaging bug; to ship no pins, commit a "
-            "TOML with no `[[pin]]` entries)"
-        )
-    raw = tomllib.loads(path.read_text(encoding="utf-8"))
-    pins: dict[tuple[str, str], _Pin] = {}
-    for i, p in enumerate(raw.get("pin", [])):
-        query = p.get("query")
-        group = p.get("group")
-        fqids = p.get("fqids")
-        if not query or not isinstance(query, str):
-            raise ValueError(f"golden pin #{i}: missing/invalid `query`")
-        if group not in _SUPPORTED_GROUPS:
-            raise ValueError(
-                f"golden pin #{i} ({query!r}): unsupported group {group!r} "
-                f"(supported: {sorted(_SUPPORTED_GROUPS)})"
-            )
-        if not fqids or not isinstance(fqids, list):
-            raise ValueError(f"golden pin #{i} ({query!r}): missing/empty `fqids`")
-        if len(fqids) != len(set(fqids)):
-            raise ValueError(f"golden pin #{i} ({query!r}): duplicate `fqids`")
-        for fqid in fqids:
-            _validate_pin_fqid(query, group, fqid)
-        key = (_normalize(query), group)
-        if key in pins:
-            raise ValueError(f"golden pin #{i}: duplicate (query, group) {key!r}")
-        pins[key] = _Pin(
-            query=query,
-            group=group,
-            fqids=tuple(fqids),
-            note=p.get("note"),
-        )
-    return pins
-
-
-def _validate_pin_fqid(query: str, group: str, fqid: str) -> None:
-    """A pin's fqid must parse as an FQID of the group's kind (a register pin needs
-    a 2-seg register fqid; a classification pin needs a ``class/<slug>`` fqid).
-    Structural validation only — resolvability is checked at apply time."""
-    try:
-        parsed = parse_fqid(fqid)
-    except FqidError as exc:
-        raise ValueError(
-            f"golden pin ({query!r}): invalid fqid {fqid!r}: {exc}"
-        ) from exc
-    if str(parsed.kind) != group:
-        raise ValueError(
-            f"golden pin ({query!r}): fqid {fqid!r} is a {parsed.kind} FQID, "
-            f"but the pin's group is {group!r}"
-        )
-
-
-_PINS = _load_pins(GOLDEN_PATH)
 _CURSOR_PREFIX = "golden."
 _CURSOR_VERSION = 1
 _CURSOR_DOMAIN = "reg-webapp-golden-cursor-v1"
@@ -219,7 +95,7 @@ class GoldenCursorError(ValueError):
 
 def _cursor_context(query: str, group: str, fqids: tuple[str, ...]) -> str:
     value = json.dumps(
-        {"query": _normalize(query), "group": group, "fqids": fqids},
+        {"query": fold_search(query), "group": group, "fqids": fqids},
         ensure_ascii=False,
         sort_keys=True,
         separators=(",", ":"),
@@ -295,24 +171,24 @@ def encode_continuation(
     return _CURSOR_PREFIX + urlsafe_b64encode(raw).decode().rstrip("=")
 
 
-def pinned_fqids(query: str, group: str) -> tuple[str, ...]:
+def pinned_fqids(conn: sqlite3.Connection, query: str, group: str) -> tuple[str, ...]:
     """Return curated identities that origin search must exclude on every page."""
-    pin = _PINS.get((_normalize(query), group))
-    return () if pin is None else pin.fqids
+    return tuple(
+        entity
+        for (entity,) in conn.execute(
+            "SELECT entity FROM search_pin WHERE key = ? AND type = ? "
+            "ORDER BY position",
+            (fold_search(query), group),
+        )
+    )
 
 
 def eligible_pinned_fqids(
     conn: sqlite3.Connection, query: str, group: str, *, scope: ReadScope
 ) -> tuple[str, ...]:
-    """Validate reference pins before filtering their scoped eligibility."""
-    fqids = pinned_fqids(query, group)
-    if not fqids:
-        return ()
-    reference = Catalog(conn, scope="reference")
-    for fqid in fqids:
-        if not reference.exists(fqid):
-            raise ValueError(f"golden pin fqid {fqid!r} does not resolve to a {group}")
-    if scope == "reference":
+    """The pins for ``(query, group)`` that exist in ``scope``."""
+    fqids = pinned_fqids(conn, query, group)
+    if not fqids or scope == "reference":
         return fqids
     catalog = Catalog(conn, scope=scope)
     return tuple(fqid for fqid in fqids if catalog.exists(fqid))
@@ -330,8 +206,8 @@ def apply_golden_boost(
 ) -> list[SearchResult]:
     """Promote any curated pin for ``(query, group)`` to the TOP of ``results``.
 
-    For a pin matching the normalized query + group, each pin fqid is resolved into
-    its reg_meta result MODEL and PREPENDED (in pin order) to the front. Any existing
+    Each pin fqid (``fqids``, or the stored pins when ``None``) is resolved into its
+    reg_meta result MODEL and PREPENDED (in pin order) to the front. Any existing
     entry in ``results`` whose ``fqid`` equals a pin fqid is REMOVED first, so the
     pinned entity is promoted to rank 1 rather than duplicated. Net effect on length:
 
@@ -340,21 +216,20 @@ def apply_golden_boost(
     - pin not on the page → prepended → ``len`` +1, so the route can retain
       continuation for the displaced origin row without computing an exact total.
 
-    The common case — no matching pin — returns ``results`` as a list unchanged (kept
-    cheap: one dict lookup).
+    The common case — no matching pin — returns ``results`` as a list unchanged.
 
     Operates on the reg_meta typed search models (#701) so the route and the eval
-    runner share one behavior. A pin whose fqid does not resolve raises (fail fast)
-    rather than silently dropping. Dedup compares the SERIALIZED fqid string (a result
+    runner share one behavior. Dedup compares the SERIALIZED fqid string (a result
     model's `fqid` is an `Fqid | None`; a pin's fqids are the canonical strings). A
     `ConceptGroupSearchResult` (foldable into the classification arm) carries no
     `fqid` field, so `getattr(..., None)` treats it as un-pinnable — never deduped.
 
-    Callers exclude ``pinned_fqids(query, group)`` from origin search on every page,
-    so a pinned identity cannot reappear at its natural deep FTS position.
+    Callers exclude ``pinned_fqids(conn, query, group)`` from origin search on every
+    page, so a pinned identity cannot reappear at its natural deep FTS position.
     """
-    pin = _PINS.get((_normalize(query), group))
-    selected_fqids = pin.fqids if fqids is None and pin is not None else fqids
+    if group not in _PIN_BUILDERS:
+        return list(results)
+    selected_fqids = pinned_fqids(conn, query, group) if fqids is None else fqids
     if not selected_fqids:
         return list(results)
     build = _PIN_BUILDERS[group]

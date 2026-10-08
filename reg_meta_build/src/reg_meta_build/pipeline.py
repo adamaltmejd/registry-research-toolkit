@@ -16,6 +16,7 @@ from typing import TYPE_CHECKING
 from pydantic import BaseModel, ConfigDict
 from reg_meta.source_evidence import canonical_sha256
 
+from reg_meta_build._curation import SEARCH_PINS_FILE, load_search_pins
 from reg_meta_build.catalog_dependencies import (
     DEFERRED_REFERENCE,
     CoverageObligation,
@@ -458,6 +459,9 @@ def _run_pipeline(
     _emit_timing("pipeline: load prepared sources and scope indexes", input_started)
     curation_started = time.perf_counter()
     tree = load_curation_tree(curation_dir)
+    # Loaded in every mode so a malformed pin fails early; only a complete build
+    # stores them (`write_resolved_catalog`).
+    search_pins = load_search_pins(curation_dir / SEARCH_PINS_FILE)
     references, family_references = _classification_references(tree)
     label_rules = {
         label: entry.classification.slug
@@ -1657,6 +1661,7 @@ def _run_pipeline(
                         data_warnings=tuple(
                             data_warnings[k] for k in sorted(data_warnings)
                         ),
+                        search_pins=search_pins,
                     )
                     build_result.update(
                         status="diagnostic_complete" if diagnostic else "complete",

@@ -1,4 +1,5 @@
-"""Curation-TOML load and located-failure cases for the relations and doc-source maps.
+"""Curation-TOML load and located-failure cases for the relations, search-pin and
+doc-source maps.
 
 - A curated same_as identity component may hold up to 32 FQIDs, the cap stated only in
   the comment on ``relations.py``'s private cap constant (the committed
@@ -7,6 +8,9 @@
   register whose curated relations chain N variables).
 - The build refuses a duplicated, non-variable or self-referencing curated
   code<->label pair with an error naming its register file.
+- Any build, diagnostic included, refuses a malformed ``search_pins.toml`` entry with
+  a located ``search_pins_invalid`` error. An unresolved pin is a complete-build
+  failure, pinned by ``conformance/cases/http_search/golden-unresolved``.
 - A malformed ``doc_sources.toml`` entry fails ``reg-meta-build build-docs`` with a
   located ``doc_sources_invalid`` configuration error (synthetic TOML written into
   a copied builder package, since the map resolves relative to the package file).
@@ -116,6 +120,43 @@ def test_malformed_code_label_pair_fails_the_build_located(
         assert error.exit_code == EXIT_CONFIG
     assert "registers/scb/sample.toml" in message
     assert located in message
+
+
+_PIN = '[[pin]]\nquery = "{}"\ntype = "register"\nfqids = [{}]\n'
+
+
+@pytest.mark.parametrize(
+    ("pins", "located"),
+    [
+        (_PIN.format("q", '"scb/a", "scb/a"'), "entry 1: Value error, duplicate"),
+        (_PIN.format("q", '"class/a"'), "entry 1: Value error, 'class/a' is a"),
+        (
+            _PIN.format("Sysselsättning", '"scb/a"')
+            + _PIN.format(" sysselsattning", '"scb/b"'),
+            "entry 2: duplicate register pin",
+        ),
+    ],
+    ids=["duplicate-fqid", "wrong-type", "duplicate-folded-query"],
+)
+def test_malformed_search_pin_fails_the_build_located(
+    tmp_path: Path, pins: str, located: str
+) -> None:
+    """A pin listing an fqid twice, an fqid of another type, or a query that folds
+    like an earlier pin's fails even a diagnostic build, before anything is
+    resolved. Fails if the pipeline stops loading the pins outside complete builds,
+    or if `fold_search` no longer keys the duplicate check."""
+    with pytest.raises(RegMetaError) as exc_info:
+        build_scb_catalog(
+            tmp_path,
+            curation={"search_pins.toml": pins},
+            registerinformation_rows=[
+                var_row(cvid=1000, var_id=100, colname="Kod", varname="Kod")
+            ],
+        )
+    assert exc_info.value.code == "search_pins_invalid"
+    assert exc_info.value.exit_code == EXIT_CONFIG
+    assert exc_info.value.message.startswith("search_pins.toml [[pin]] ")
+    assert located in exc_info.value.message
 
 
 @pytest.fixture(scope="module")

@@ -1,4 +1,4 @@
 [[pin]]
 query = "Sysselsättning"
-group = "register"
+type = "register"
 fqids = ["scb/lisa"]
