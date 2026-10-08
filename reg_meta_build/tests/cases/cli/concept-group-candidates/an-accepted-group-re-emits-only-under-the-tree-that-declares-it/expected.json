@@ -4,6 +4,9 @@
     "accepts.toml": {
       "contains": [
         "key = \"morsak\"",
+        "variable = \"dodsorsak2\""
+      ],
+      "excludes": [
         "variable = \"dodsorsak1\""
       ]
     },

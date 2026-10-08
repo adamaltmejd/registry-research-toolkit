@@ -137,6 +137,9 @@ class _RawVar:
     register_slug: str
     slug: str
     name: str | None
+    # The key of the accepted `[[group]]` that claims it, if any: the variable
+    # may re-emit only under that key, never as a member of another family.
+    accepted_key: str | None = None
 
 
 def _evaluate_fold(
@@ -195,26 +198,34 @@ def _load_ungrouped_variables(
     auto family as a `curated` concept group at build time, which would otherwise
     drop that family from the next regeneration (its members are now grouped). So a
     variable whose ONLY group is an accepted family — `(provider, register,
-    group_key)` in `accepted_scopes` — stays candidate-eligible. Variables in a
+    group_key)` in `accepted_scopes` — stays candidate-eligible, carrying that
+    `group_key` as its `accepted_key`: it may re-emit only under that key, so a
+    member of a hand-curated group keyed off its stem (`dodsorsak-forsta` claiming
+    `dodsorsak1`) is never re-proposed into the stem's family. Variables in a
     NON-accepted group (custom `[[variable_group]]`, edge/token/vintage) remain
     excluded. With an empty `accepted_scopes` this is byte-identical to the plain
     `NOT EXISTS` exclusion."""
     # Two-step exclusion: collect the grouped-but-NOT-accepted variable_ids, then
     # exclude only those — re-including variables grouped solely by an accepted
     # family. (A variable belongs to at most one group, so its scope is unambiguous.)
-    grouped_excluded = {
-        row["variable_id"]
-        for row in conn.execute(
-            "SELECT m.variable_id, p.slug AS provider_slug, "
-            "r.slug AS register_slug, g.group_key "
-            "FROM concept_group_variable m "
-            "JOIN concept_group g ON m.group_id = g.group_id "
-            "JOIN register r ON g.register_id = r.register_id "
-            "JOIN provider p ON r.provider_id = p.provider_id"
-        )
-        if (row["provider_slug"], row["register_slug"], row["group_key"])
-        not in accepted_scopes
-    }
+    grouped_excluded = set()
+    accepted_keys: dict[int, str] = {}
+    for row in conn.execute(
+        "SELECT m.variable_id, p.slug AS provider_slug, "
+        "r.slug AS register_slug, g.group_key "
+        "FROM concept_group_variable m "
+        "JOIN concept_group g ON m.group_id = g.group_id "
+        "JOIN register r ON g.register_id = r.register_id "
+        "JOIN provider p ON r.provider_id = p.provider_id"
+    ):
+        if (
+            row["provider_slug"],
+            row["register_slug"],
+            row["group_key"],
+        ) in accepted_scopes:
+            accepted_keys[row["variable_id"]] = row["group_key"]
+        else:
+            grouped_excluded.add(row["variable_id"])
     rows = conn.execute(
         "SELECT v.variable_id, v.register_id, p.slug AS provider_slug, "
         "r.slug AS register_slug, v.slug AS variable_slug, v.name "
@@ -231,6 +242,7 @@ def _load_ungrouped_variables(
             register_slug=row["register_slug"],
             slug=row["variable_slug"],
             name=row["name"],
+            accepted_key=accepted_keys.get(row["variable_id"]),
         )
         for row in rows
         if row["variable_id"] not in grouped_excluded
@@ -396,7 +408,8 @@ def infer_concept_group_candidates(
     `[[group]]` entries. Each such family is materialized as a `curated` concept
     group at build time, so a naive regeneration against a normal built DB would
     drop it as grouped and skip its key as a self-collision. Passing those scopes
-    re-includes its members and exempts its key from that collision guard. With an
+    re-includes its members (each only for the family keyed like its group) and
+    exempts its key from that collision guard. With an
     empty `accepted_scopes` (no matching groups), behavior is byte-identical to a
     plain scan.
 
@@ -420,6 +433,8 @@ def infer_concept_group_candidates(
         if split is None:
             continue
         key_stem, raw_stem, suffix = split
+        if var.accepted_key not in (None, key_stem):
+            continue
         families.setdefault((var.register_id, key_stem), []).append(
             (raw_stem, suffix, var)
         )
