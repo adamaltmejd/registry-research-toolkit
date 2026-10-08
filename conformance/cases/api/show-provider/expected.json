@@ -24,5 +24,9 @@
   {
     "status": 422,
     "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "bogus"}
+  },
+  {
+    "status": 200,
+    "json": {"/data/kind": "root", "/data/children/*/fqid": ["scb", "class"]}
   }
 ]

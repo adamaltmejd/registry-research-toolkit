@@ -340,14 +340,7 @@ pub(crate) fn register(conn: &Connection, scope: Scope, value: &str) -> Result<R
                 vec![value.into()],
             ));
         };
-        let sql = format!(
-            "SELECT r.register_id FROM register r JOIN provider p USING(provider_id) \
-             WHERE p.slug = ? AND r.slug = ? AND {in_scope}"
-        );
-        let id: Option<i64> = conn
-            .query_row(&sql, [&provider, &register], |row| row.get(0))
-            .optional()?;
-        return id
+        return register_id(conn, scope, &[provider, register.clone()])?
             .map(|id| Register {
                 id,
                 slug: Some(register),

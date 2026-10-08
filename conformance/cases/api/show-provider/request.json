@@ -4,6 +4,7 @@
     {"operation": "show", "path": "/api/catalog/scb", "query": {"scope": "reference"}},
     {"operation": "show", "path": "/api/catalog/fk"},
     {"operation": "show", "path": "/api/catalog/fk", "query": {"scope": "reference"}},
-    {"operation": "show", "path": "/api/catalog/scb", "query": {"bogus": "1"}}
+    {"operation": "show", "path": "/api/catalog/scb", "query": {"bogus": "1"}},
+    {"operation": "show", "path": "/api/catalog"}
   ]
 }

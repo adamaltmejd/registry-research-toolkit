@@ -660,10 +660,7 @@ fn variants(
     provider: &str,
     register: &str,
 ) -> Result<Vec<Variant>, Error> {
-    let in_scope = match scope {
-        Scope::Reference => "1".to_owned(),
-        Scope::Holdings => held::variant(scope, "rv.register_variant_id"),
-    };
+    let in_scope = held::variant(scope, "rv.register_variant_id");
     let sql = format!(
         "SELECT rv.register_variant_id, rv.slug, rv.name, rv.description, rv.display_group, \
          rv.panel_entity_key, rv.panel_time_key, rv.panel_time_grain FROM register_variant rv \
