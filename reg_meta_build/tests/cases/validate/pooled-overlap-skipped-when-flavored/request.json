@@ -1,4 +1,5 @@
 {
   "damage": "damage.sql",
-  "flavored": true
+  "flavored": true,
+  "derive": true
 }

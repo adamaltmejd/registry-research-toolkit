@@ -190,7 +190,7 @@ def build_catalog_fixture_db(db_path: Path) -> None:
     _seed_rename_chain(src, add_variable, add_state)
     _seed_many_state_binding(src, add_variable, add_state, add_value_set)
     _seed_data_warnings(src)
-    _rebuild_fts(src)
+    _derive(src)
     stamp_manifest(src)
 
     dst = sqlite3.connect(db_path)
@@ -310,12 +310,13 @@ def _seed_first_provider_register(
     )
 
 
-def _rebuild_fts(src: sqlite3.Connection) -> None:
-    """Fill the search indexes from the seeded rows, as derive does, so the
-    slugged fixture exercises ``/api/search`` (#350/#352)."""
-    from reg_meta_build.derive import derive_search_indexes
+def _derive(src: sqlite3.Connection) -> None:
+    """Recompute every derived table from the seeded rows, as the build does, so
+    the slugged fixture exercises ``/api/search`` (#350/#352) and carries the
+    tables the Rust reader reads."""
+    from reg_meta_build.derive import derive
 
-    derive_search_indexes(src)
+    derive(src)
 
 
 def _seed_tags(src: sqlite3.Connection) -> None:
@@ -501,7 +502,7 @@ def seed_topical_rows(src: sqlite3.Connection) -> None:
         "UPDATE value_code SET mapping_count = ("
         "SELECT COUNT(*) FROM code_variable_map WHERE code_id = value_code.code_id)"
     )
-    _rebuild_fts(src)
+    _derive(src)
 
 
 def seed_case_twin_column(src: sqlite3.Connection) -> None:
@@ -587,7 +588,7 @@ def seed_case_twin_column(src: sqlite3.Connection) -> None:
             "(member_id, axis, value, label) VALUES (?, 'era', ?, ?)",
             (cur.lastrowid, value, label),
         )
-    _rebuild_fts(src)
+    _derive(src)
 
 
 def _seed_merged_family(src: sqlite3.Connection, add_variable, add_state) -> None:
