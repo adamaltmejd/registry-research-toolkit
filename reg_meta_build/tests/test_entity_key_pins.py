@@ -255,23 +255,6 @@ class TestEnumerate:
         assert ek.source_id.count(".") == 2
         assert (ek.source_id, ek.variable_slug) == ("1.50.lopnrny", "lopnr")
 
-    def test_dot_in_provider_key_raises(self):
-        """A `provider_key` containing '.' would mis-parse the source-ID as a
-        phantom split-sibling 3-part key, so enumeration fails fast (the build's
-        own guard) rather than mis-attributing a pin to the wrong sibling."""
-        conn = _db_with_entity_key("kon")
-        # A dotted provider_key in the entity-key var's OWN register trips the
-        # source-ID grammar when `_variable_source_ids` enumerates the register.
-        conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name, slug) "
-            "VALUES (1, 'FOO.BAR', 'Foo', 'foo')"
-        )
-        conn.commit()
-        with pytest.raises(RegMetaError) as exc:
-            list(iter_entity_key_variables(conn, _NATIVE_IDS))
-        assert exc.value.code == "slug_toml_invalid"
-        assert "contains '.'" in exc.value.message
-
 
 class TestGenerator:
     def test_emits_pin_for_non_curated(self, tmp_path: Path):

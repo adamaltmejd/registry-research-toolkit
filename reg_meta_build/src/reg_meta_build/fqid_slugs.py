@@ -1871,19 +1871,24 @@ def _variable_source_ids(
 ) -> dict[int, str]:
     """`{variable_id: source_id}` for every variable in ``register_id``.
 
-    Reuses the build's source-ID grammar: `<register_native_id>.<provider_key>`,
-    or `<register_native_id>.<provider_key>.<discriminator>` when the provider_key is a
-    SPLIT sibling (shared `provider_key`, disambiguated by `_split_sibling_disc`
-    — the same helper `populate_variable_slugs` uses). A provider_key containing
-    '.' is rejected (it would mis-parse as a phantom split discriminator),
-    matching the build's fail-fast.
+    A variable with its own `provider_key` keys as
+    `<register_native_id>.<provider_key>`. The global pipeline stores each
+    variable's curated native id minus the register prefix as its provider_key,
+    so a sibling an `[[identity.partition]]` splits off already carries its
+    discriminator (`15169.ng1` → `131.15169.ng1`) and is never shared.
 
-    Scope: this matches `populate_variable_slugs`'s keys only on the GLOBAL
-    (non-incremental) build — the one path `entity-key-pins` and the curation
-    gate run on. The build computes `split_pk` over its (possibly
-    incremental-filtered) `variables` set, whereas this counts ALL variables in
-    the register, so the split discriminators can diverge on an
-    incremental/extend-db DB; do NOT reuse this against a flavored DB."""
+    Variables that SHARE one provider_key key as
+    `<register_native_id>.<provider_key>.<discriminator>` via
+    `_split_sibling_disc`, the grammar of `populate_variable_slugs` (the
+    extend-db overlay's split siblings). A shared provider_key containing '.' is
+    rejected, as that path rejects it: the discriminator would make a phantom
+    fourth segment. On the pipeline only a CIS matrix's cells share a
+    provider_key (`cis2016_matrix`), and no panel entity key names one.
+
+    The split discriminators match `populate_variable_slugs`'s only when it
+    sees every variable of the register; it filters to new variables on an
+    incremental/extend-db DB, so do NOT reuse this for a flavored DB's global
+    registers."""
     rows = conn.execute(
         "SELECT variable_id, provider_key FROM variable WHERE register_id = ?",
         (register_id,),
@@ -1893,6 +1898,9 @@ def _variable_source_ids(
         by_pk[str(pk)].append(variable_id)
     out: dict[int, str] = {}
     for pk, vids in by_pk.items():
+        if len(vids) == 1:
+            out[vids[0]] = f"{register_native_id}.{pk}"
+            continue
         if "." in pk:
             raise _err(
                 "slug_toml_invalid",
@@ -1900,12 +1908,9 @@ def _variable_source_ids(
                 "'.', which collides with the source-ID segment separator.",
                 "Rename the source column / provider_key so it has no dot.",
             )
-        if len(vids) > 1:  # split siblings share one provider_key — discriminate
-            disc = _split_sibling_disc(conn, register_id, pk)
-            for variable_id in vids:
-                out[variable_id] = f"{register_native_id}.{pk}.{disc[variable_id]}"
-        else:
-            out[vids[0]] = f"{register_native_id}.{pk}"
+        disc = _split_sibling_disc(conn, register_id, pk)
+        for variable_id in vids:
+            out[variable_id] = f"{register_native_id}.{pk}.{disc[variable_id]}"
     return out
 
 

@@ -1,9 +1,10 @@
 """A catalog whose structural validation fails is never placed.
 
 The failures are genuine `validate_built_db` refusals of the staged artifact: a
-variant panel key that names no variable in its register (the build pipeline
-refuses that curation earlier, so the writer is called directly), and a small
-catalog written against the real-corpus volume floors.
+variant panel key that names no variable in its register, an entity-key variable
+with no curated pin (the build pipeline refuses both curations earlier, so the
+writer is called directly), and a small catalog written against the real-corpus
+volume floors.
 """
 
 from __future__ import annotations
@@ -136,6 +137,33 @@ def test_catalog_failing_validation_keeps_the_previous_catalog(
 
     assert output.read_bytes() == previous
     assert sorted(path.name for path in active.iterdir()) == ["reg_meta.db"]
+
+
+def test_catalog_refuses_an_unpinned_entity_key_variable(tmp_path: Path) -> None:
+    """Given the curation tree, the writer runs the entity-key curation gate, which
+    the strict build passes it (#1222). Fails if the writer drops `slug_dir`: the
+    gate is then skipped and the catalog is placed."""
+    curation = tmp_path / "curation"
+    (curation / "registers" / "scb").mkdir(parents=True)
+    (curation / "registers" / "scb" / "example.toml").write_text(
+        '[register]\nprovider = "scb"\nslug = "example"\nnative_id = "1"\n',
+        encoding="utf-8",
+    )
+    output = tmp_path / "catalog.db"
+
+    with pytest.raises(
+        ValueError,
+        match=rf"{VALIDATION_FAILED}.*example/value \(source_id 1\.101, "
+        r"panel_entity_key 'value'\) has no curated \[variable\] slug pin",
+    ):
+        write_resolved_catalog(
+            (_variable(panel_entity_key="value"),),
+            output,
+            manifest=synthetic_manifest(),
+            slug_dir=curation,
+        )
+
+    assert not output.exists()
 
 
 def test_diagnostic_never_replaces_a_destination_created_during_the_build(
