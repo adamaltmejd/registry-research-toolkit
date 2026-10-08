@@ -441,13 +441,34 @@ def test_strict_corpus_failure_preserves_previous_catalog(
     assert not output.with_suffix(".db.prev").exists()
 
 
-@pytest.mark.parametrize("catalog", [True], indirect=True)
+@pytest.mark.parametrize(
+    ("catalog", "spec", "code", "message"),
+    [
+        (True, "1,3", "pipeline_registers_unknown", "names no selected scope: ['3']"),
+        (
+            "thin_twin",
+            "1",
+            "pipeline_registers_ambiguous",
+            "qualify as SOURCE:ID: ['1']",
+        ),
+    ],
+    indirect=["catalog"],
+    ids=["unknown", "ambiguous"],
+)
 @pytest.mark.parametrize("command", ["build-db", "check-curation"])
-def test_unknown_register_scope_is_refused(
-    catalog: CatalogFixture, tmp_path: Path, capsys, command: str
+def test_unresolvable_register_scope_is_refused(
+    catalog: CatalogFixture,
+    tmp_path: Path,
+    capsys,
+    command: str,
+    spec: str,
+    code: str,
+    message: str,
 ) -> None:
-    # Fails if an unknown --registers spec stops being a usage refusal with its own
-    # code (e.g. the CLI rewraps it as pipeline_build_failed) or writes any output.
+    # Fails if an unknown --registers spec, or a bare id that SCB register 1 and the
+    # FK thin register keyed 1 both expose, stops being a usage refusal with its own
+    # code (e.g. the CLI rewraps it as pipeline_build_failed, or `_selected_scopes`
+    # drops its ambiguity check and selects both scopes) or writes any output.
     prefix = ["--db", str(tmp_path / "db-dir")] if command == "build-db" else []
     args = [
         command,
@@ -463,12 +484,12 @@ def test_unknown_register_scope_is_refused(
         "--report-dir",
         str(tmp_path / "report"),
         "--registers",
-        "1,3",
+        spec,
     ]
     assert run(args) == EXIT_USAGE
     error = json.loads(capsys.readouterr().out)["error"]
-    assert error["code"] == "pipeline_registers_unknown"
-    assert "names no selected scope: ['3']" in error["message"]
+    assert error["code"] == code
+    assert message in error["message"]
     assert not (tmp_path / "db-dir").exists()
     assert not (tmp_path / "report").exists()
 
