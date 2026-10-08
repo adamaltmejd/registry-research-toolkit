@@ -1,0 +1,18 @@
+{
+  "replaces": [
+    "test_curation_thin_register_boundary.py::test_pooled_thin_variant_keeps_one_pooled_state_with_its_warning"
+  ],
+  "note": "A pooled authored variant yields one pooled HEADER state whose window is the variable's own dates inside the variant's, plus the declared data warning on the name, definition and coding fields.",
+  "sources": {
+    "description": "Authored FK register r with no dates, one pooled variant `table` (2020-01-01..2021-12-31) and one variable HEADER (2020-06-01..2021-06-30) with a data warning. Plus the SCB sample.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_type": "int"}
+      ],
+      "unika": ["TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0"]
+    },
+    "files": {
+      "Forsakringskassan/fk.toml": "\n[[register]]\nkey = \"r\"\nname = \"Register with unknown inception\"\n[[register.variant]]\nkey = \"table\"\nname = \"Pooled table\"\nvalid_from = \"2020-01-01\"\nvalid_to = \"2021-12-31\"\nperiod_scope = \"pooled\"\n[[register.variable]]\nname = \"Literal header\"\ncolumn = \"HEADER\"\ndata_type = \"text\"\ndata_warning = \"Header-only metadata; response codes unavailable.\"\nvariants = [\"table\"]\nvalid_from = \"2020-06-01\"\nvalid_to = \"2021-06-30\"\n"
+    }
+  }
+}

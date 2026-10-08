@@ -1,16 +1,10 @@
-"""Shared builders for the curation-TOML and doc-DB boundary cases.
+"""Shared builders for the doc-curation boundary cases.
 
-Two shapes, both driven from readable synthetic sources:
-
-- ``build_scb_catalog`` writes SCB delivery CSV rows (plus optional authored
-  Försäkringskassan TOML), runs them through ``prepare_catalog_sources`` and
-  ``build_catalog`` in diagnostic mode with a synthetic curation tree, and returns
-  the built database and report directory.
-- ``builder_copy`` / ``run_build_docs`` run the ``reg-meta-build build-docs`` CLI in a
-  subprocess against a copy of the imported builder package. The curated doc files
-  (``doc_sources.toml``, ``related_documents.toml``) and the related-document binary
-  root (``input_data/SCB/docs``) resolve relative to the package file, so the cases
-  write synthetic files into the copy; nothing under the real checkout is read.
+``builder_copy`` / ``run_build_docs`` run the ``reg-meta-build build-docs`` CLI in a
+subprocess against a copy of the imported builder package. The curated doc files
+(``doc_sources.toml``, ``related_documents.toml``) and the related-document binary
+root (``input_data/SCB/docs``) resolve relative to the package file, so the cases
+write synthetic files into the copy; nothing under the real checkout is read.
 """
 
 from __future__ import annotations
@@ -23,74 +17,10 @@ import sys
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from _csv_fixtures import write_scb_input
-from _pipeline_catalog_support import (
-    BuiltCatalog,
-    prepare_accepted,
-    write_curation_tree,
-)
 from _snapshot_fixtures import copied_builder_checkout
-from reg_meta_build.pipeline import build_catalog
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-SCB_SAMPLE_REGISTER = (
-    '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
-    '[[variant]]\nnative_id = "1.10"\nslug = "people"\n'
-)
-
-
-def build_scb_catalog(
-    tmp_path: Path,
-    *,
-    curation: dict[str, str],
-    registerinformation_rows: list[str],
-    unika_rows: list[str] | None = None,
-    vardemangder_rows: list[str] | None = None,
-    valid_dates_rows: list[str] | None = None,
-    fk_toml: str | None = None,
-) -> BuiltCatalog:
-    """Prepare and build a diagnostic catalog from synthetic sources.
-
-    Only the SCB files whose rows are given are written. ``curation`` maps
-    curation-tree relative paths to TOML or JSON text. ``fk_toml`` is an authored
-    ``Forsakringskassan/fk.toml``.
-    """
-    source = tmp_path / "source"
-    optional = {
-        "unika": unika_rows,
-        "vardemangder": vardemangder_rows,
-        "valid_dates": valid_dates_rows,
-    }
-    write_scb_input(
-        source,
-        registerinformation_rows=registerinformation_rows,
-        unika_rows=unika_rows or [],
-        vardemangder_rows=vardemangder_rows or [],
-        valid_dates_rows=valid_dates_rows,
-        include=(
-            "registerinformation",
-            *(name for name, rows in optional.items() if rows is not None),
-        ),
-    )
-    if fk_toml is not None:
-        (source / "Forsakringskassan").mkdir()
-        (source / "Forsakringskassan" / "fk.toml").write_text(fk_toml, encoding="utf-8")
-    prepared, commit, digest = prepare_accepted(tmp_path, source)
-    root = write_curation_tree(tmp_path / "curation", curation)
-    db = tmp_path / "db" / "reg_meta.db"
-    report = tmp_path / "report"
-    result = build_catalog(
-        prepared,
-        commit,
-        digest,
-        db,
-        report,
-        curation_dir=root,
-        diagnostic=True,
-    )
-    return BuiltCatalog(result, report, db)
 
 
 def builder_copy(tmp_path: Path) -> Path:

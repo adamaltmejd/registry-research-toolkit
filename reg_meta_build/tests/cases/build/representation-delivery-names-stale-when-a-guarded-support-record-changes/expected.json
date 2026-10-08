@@ -1,0 +1,29 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code", "subject"],
+      "match": "includes",
+      "rows": [
+        ["stale_curation_entry", "1.5.ku"],
+        ["unresolved_variable_name", "scb/sample/ku"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["locator"],
+      "match": "includes",
+      "rows": [
+        ["curation/registers/scb/sample.toml#/representation.delivery_metadata/1"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"variable": "ku"},
+      "fields": ["column", "valid_from", "state_name"],
+      "rows": []
+    }
+  ]
+}

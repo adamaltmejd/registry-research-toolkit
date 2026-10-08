@@ -1,0 +1,106 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.100"
+slug = "v0"
+[[variable]]
+native_id = "1.101"
+slug = "v1"
+[[variable]]
+native_id = "1.102"
+slug = "v2"
+[[variable]]
+native_id = "1.103"
+slug = "v3"
+[[variable]]
+native_id = "1.104"
+slug = "v4"
+[[variable]]
+native_id = "1.105"
+slug = "v5"
+[[variable]]
+native_id = "1.106"
+slug = "v6"
+[[variable]]
+native_id = "1.107"
+slug = "v7"
+[[variable]]
+native_id = "1.108"
+slug = "v8"
+[[variable]]
+native_id = "1.109"
+slug = "v9"
+[[variable]]
+native_id = "1.110"
+slug = "v10"
+[[variable]]
+native_id = "1.111"
+slug = "v11"
+[[variable]]
+native_id = "1.112"
+slug = "v12"
+[[variable]]
+native_id = "1.113"
+slug = "v13"
+[[variable]]
+native_id = "1.114"
+slug = "v14"
+[[variable]]
+native_id = "1.115"
+slug = "v15"
+[[variable]]
+native_id = "1.116"
+slug = "v16"
+[[variable]]
+native_id = "1.117"
+slug = "v17"
+[[variable]]
+native_id = "1.118"
+slug = "v18"
+[[variable]]
+native_id = "1.119"
+slug = "v19"
+[[variable]]
+native_id = "1.120"
+slug = "v20"
+[[variable]]
+native_id = "1.121"
+slug = "v21"
+[[variable]]
+native_id = "1.122"
+slug = "v22"
+[[variable]]
+native_id = "1.123"
+slug = "v23"
+[[variable]]
+native_id = "1.124"
+slug = "v24"
+[[variable]]
+native_id = "1.125"
+slug = "v25"
+[[variable]]
+native_id = "1.126"
+slug = "v26"
+[[variable]]
+native_id = "1.127"
+slug = "v27"
+[[variable]]
+native_id = "1.128"
+slug = "v28"
+[[variable]]
+native_id = "1.129"
+slug = "v29"
+[[variable]]
+native_id = "1.130"
+slug = "v30"
+[[variable]]
+native_id = "1.131"
+slug = "v31"
+[[variable]]
+native_id = "1.132"
+slug = "v32"

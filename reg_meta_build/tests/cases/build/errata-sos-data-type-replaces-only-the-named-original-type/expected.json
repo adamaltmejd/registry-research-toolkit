@@ -1,0 +1,56 @@
+{
+  "projections": [
+    {
+      "table": "cases",
+      "fields": ["case_id", "status"],
+      "rows": [
+        ["curation/registers/sos/syx.toml#/errata.data_type/1", "applicable"]
+      ]
+    },
+    {
+      "table": "case_uses",
+      "fields": ["case_id"],
+      "rows": [
+        ["curation/registers/sos/syx.toml#/errata.data_type/1"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {"register": "syx", "variable": "datum", "variant": "syx-a"},
+      "fields": ["data_type", "provenance"],
+      "rows": [
+        ["date", "curation/registers/sos/syx.toml#/errata.data_type/1: Workbook row declares a date."]
+      ]
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": "syx", "variable": "datum", "variant": "syx-a"},
+      "fields": ["code", "label"],
+      "rows": [
+        [null, null]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": "syx", "variable": "datum", "variant": "syx-b"},
+      "fields": ["data_type", "provenance"],
+      "rows": [
+        ["Decimal", null]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": "syy", "variable": "datum", "variant": "syx-a"},
+      "fields": ["data_type", "provenance"],
+      "rows": [
+        ["Decimal", null]
+      ]
+    }
+  ]
+}

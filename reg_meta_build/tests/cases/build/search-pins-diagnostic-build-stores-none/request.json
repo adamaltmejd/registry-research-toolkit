@@ -1,0 +1,13 @@
+{
+  "replaces": ["test_curation_toml_load_boundary.py::test_diagnostic_build_stores_no_search_pins"],
+  "note": "A diagnostic build stores no pins, so an unresolved one is not an error, and records the empty-pins hash (sha256 of `[]`).",
+  "sources": {
+    "description": "Register 1 delivers Kod (var_id 100).",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1000, "var_id": 100, "colname": "Kod", "varname": "Kod"}
+      ],
+      "unika": ["TESTREG|Testregistret|Individer|Individer|Kod|Kod|2020|2020|0|0|0"]
+    }
+  }
+}

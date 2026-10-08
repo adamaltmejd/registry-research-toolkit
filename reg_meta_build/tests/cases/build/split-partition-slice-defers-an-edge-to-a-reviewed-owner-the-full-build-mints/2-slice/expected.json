@@ -1,0 +1,16 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "subject"],
+      "rows": [
+        ["deferred_out_of_slice_reference", "variable_same_as:0"]
+      ]
+    },
+    {
+      "table": "same_as",
+      "fields": ["a", "b"],
+      "rows": []
+    }
+  ]
+}

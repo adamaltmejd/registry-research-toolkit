@@ -1,0 +1,34 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "fields": ["variable", "name", "column", "data_type", "valid_from", "valid_to", "pooled"],
+      "rows": [
+        ["answer-sweden", "Sweden", "CO11", "decimal", "2012-01-01", "2014-12-31", 1],
+        ["answer-abroad", "Abroad", "CO12", "decimal", "2012-01-01", "2014-12-31", 1]
+      ]
+    },
+    {
+      "table": "variables",
+      "fields": ["variable", "provider_key", "is_identifier", "is_sensitive"],
+      "rows": [
+        ["answer-sweden", "15662", 0, 0],
+        ["answer-abroad", "15662", 0, 0]
+      ]
+    },
+    {
+      "table": "state_codes",
+      "fields": ["column", "code", "label"],
+      "rows": [
+        ["CO11", "1", "Yes"],
+        ["CO12", "1", "Yes"]
+      ]
+    }
+  ]
+}

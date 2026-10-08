@@ -1,0 +1,64 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["case_id"],
+      "rows": [
+        ["curation/registers/sos/syx.toml#/errata.classification_reference/2"],
+        ["curation/registers/sos/syx.toml#/errata.classification_reference/3"],
+        ["curation/registers/sos/syx.toml#/errata.classification_reference/4"],
+        ["curation/registers/sos/syx.toml#/errata.classification_reference/5"],
+        ["curation/registers/sos/syx.toml#/errata.classification_reference/7"],
+        ["curation/registers/sos/syx.toml#/errata.classification_reference/8"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "overbroad_curation_entry"},
+      "fields": ["case_id"],
+      "rows": [
+        ["curation/registers/sos/syx.toml#/errata.classification_reference/9"]
+      ]
+    },
+    {
+      "table": "case_uses",
+      "fields": ["case_id"],
+      "rows": [
+        ["curation/registers/sos/syx.toml#/errata.classification_reference/1"],
+        ["curation/registers/sos/syx.toml#/errata.classification_reference/6"]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "unresolved_classification_reference"},
+      "fields": ["key"],
+      "match": "includes",
+      "rows": [
+        [
+          ["register:Syntetiskt felregister", "deldatamangd:SYX_A", "variable:ANNATVITTNE"]
+        ],
+        [
+          ["register:Syntetiskt felregister", "deldatamangd:SYX_A", "variable:UTANVITTNE"]
+        ],
+        [
+          ["register:Syntetiskt felregister", "deldatamangd:SYX_A", "variable:ANNANREPR"]
+        ],
+        [
+          ["register:Syntetiskt felregister", "deldatamangd:SYX_A", "variable:FLER"]
+        ]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": "unresolved_classification_reference",
+        "key": [
+          ["register:Syntetiskt felregister", "deldatamangd:SYX_A", "variable:VITTNE"]
+        ]
+      },
+      "fields": ["key"],
+      "rows": []
+    }
+  ]
+}

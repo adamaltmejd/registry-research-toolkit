@@ -1,0 +1,30 @@
+{
+  "replaces": ["test_curation_topology_sos_boundary.py::test_a_named_subset_no_longer_delivered_is_stale"],
+  "sources": {
+    "description": "SOS BU without a Deldatamängder sheet: the variable rows name their subsets. Plus the SCB sample VALUE column.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "sos": [
+      {
+        "abbrev": "BU",
+        "title": "Barn och unga",
+        "description": "Ett syntetiskt SOS-register för testbygget.",
+        "subsets": [],
+        "variables": [
+          {
+            "label": "Col",
+            "description": null,
+            "data_type": "Sträng (text)",
+            "data_from": 2001,
+            "data_to": 2020,
+            "name": "COL",
+            "deldatamangd": "B"
+          }
+        ]
+      }
+    ]
+  }
+}

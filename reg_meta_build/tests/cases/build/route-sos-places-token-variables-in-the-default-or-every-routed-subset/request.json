@@ -1,0 +1,9 @@
+{
+  "replaces": [
+    "test_curation_sos_route_boundary.py::test_variantless_workbook_places_token_variables_in_the_default_variant",
+    "test_curation_sos_route_boundary.py::test_routed_token_places_its_variable_in_every_named_subset",
+    "test_curation_sos_route_boundary.py::test_route_with_an_absent_token_or_subset_is_stale"
+  ],
+  "note": "A variant-less workbook places every variable in the synthesized default variant; a routed token places its variables in every named subset; a route naming an absent token (MISSING) or an absent subset (HALV -> SAKNAS) is stale, and HALV still places its variable in the delivered subset.",
+  "sources": "sos-routes"
+}

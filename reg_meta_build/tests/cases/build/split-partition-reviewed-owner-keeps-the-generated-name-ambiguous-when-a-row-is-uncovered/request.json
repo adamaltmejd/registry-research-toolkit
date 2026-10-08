@@ -1,0 +1,33 @@
+{
+  "replaces": [
+    "test_curation_owner_column_boundary.py::test_reviewed_owner_replaces_generated_name_only_with_complete_coverage[years1-extra1]"
+  ],
+  "note": "`sample.auto.toml` generates `1.5.answer`; the reviewed owner takes 2020. Issue codes carried over from the replaced test, whose docstring says they were recorded from a build run.",
+  "sources": {
+    "description": "Variable 5 delivers ANSWER in 2020 and 2021.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2]
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021,
+          "register": ["TEST", 1, 2]
+        }
+      ],
+      "unika": [
+        "TEST|Testregistret|Individer|Individer|GenericVar|ANSWER|2020|2020|0|0|0",
+        "TEST|Testregistret|Individer|Individer|GenericVar|ANSWER|2021|2021|0|0|0"
+      ]
+    }
+  }
+}

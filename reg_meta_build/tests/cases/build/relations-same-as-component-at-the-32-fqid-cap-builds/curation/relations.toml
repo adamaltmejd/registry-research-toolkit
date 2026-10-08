@@ -1,0 +1,124 @@
+[[edge]]
+type = "same_as"
+a = "scb/sample/v0"
+b = "scb/sample/v1"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v1"
+b = "scb/sample/v2"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v2"
+b = "scb/sample/v3"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v3"
+b = "scb/sample/v4"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v4"
+b = "scb/sample/v5"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v5"
+b = "scb/sample/v6"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v6"
+b = "scb/sample/v7"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v7"
+b = "scb/sample/v8"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v8"
+b = "scb/sample/v9"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v9"
+b = "scb/sample/v10"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v10"
+b = "scb/sample/v11"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v11"
+b = "scb/sample/v12"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v12"
+b = "scb/sample/v13"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v13"
+b = "scb/sample/v14"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v14"
+b = "scb/sample/v15"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v15"
+b = "scb/sample/v16"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v16"
+b = "scb/sample/v17"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v17"
+b = "scb/sample/v18"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v18"
+b = "scb/sample/v19"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v19"
+b = "scb/sample/v20"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v20"
+b = "scb/sample/v21"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v21"
+b = "scb/sample/v22"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v22"
+b = "scb/sample/v23"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v23"
+b = "scb/sample/v24"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v24"
+b = "scb/sample/v25"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v25"
+b = "scb/sample/v26"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v26"
+b = "scb/sample/v27"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v27"
+b = "scb/sample/v28"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v28"
+b = "scb/sample/v29"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v29"
+b = "scb/sample/v30"
+[[edge]]
+type = "same_as"
+a = "scb/sample/v30"
+b = "scb/sample/v31"

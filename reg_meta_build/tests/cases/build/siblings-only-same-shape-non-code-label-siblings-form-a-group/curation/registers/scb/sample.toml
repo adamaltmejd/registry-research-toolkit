@@ -1,0 +1,55 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.100.lid"
+slug = "lid"
+[[variable]]
+native_id = "1.100.lnamn"
+slug = "lnamn"
+[[variable]]
+native_id = "1.200.kommun"
+slug = "kommun"
+[[variable]]
+native_id = "1.200.kommunnamn"
+slug = "kommunnamn"
+[[variable]]
+native_id = "1.300.fornamn"
+slug = "fornamn"
+[[variable]]
+native_id = "1.300.efternamn"
+slug = "efternamn"
+[[variable]]
+native_id = "1.400.belopp"
+slug = "belopp"
+[[variable]]
+native_id = "1.400.belopptxt"
+slug = "belopptxt"
+[[variable]]
+native_id = "1.500.dag"
+slug = "dag"
+[[variable]]
+native_id = "1.500.dagtxt"
+slug = "dagtxt"
+[[variable]]
+native_id = "1.600.sun2000kod"
+slug = "sun-kod"
+[[variable]]
+native_id = "1.600.sun2000namn"
+slug = "namn-sun"
+[[variable]]
+native_id = "1.700.antal"
+slug = "antal"
+[[variable]]
+native_id = "1.700.antaltxt"
+slug = "antaltxt"
+[[variable]]
+native_id = "1.800.x"
+slug = "x"
+[[variable]]
+native_id = "1.800.xtxt"
+slug = "xtxt"

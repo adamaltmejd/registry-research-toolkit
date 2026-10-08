@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_curation_partition_deferred_boundary.py::test_slice_refuses_edge_to_a_name_the_full_build_does_not_mint[reviewed-owner-answer]"
+  ],
+  "note": "`answer` is the generated name a complete reviewed owner replaces.",
+  "sources": "scb-anchor-and-reviewed-owner",
+  "registers": ["9"]
+}
