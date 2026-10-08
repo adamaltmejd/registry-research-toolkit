@@ -40,7 +40,6 @@ from _csv_fixtures import (
 )
 from _pipeline_catalog_support import prepare_accepted, report_events
 from _sos_fixtures import (
-    SosCodeList,
     SosRegister,
     SosSubset,
     SosVariable,
@@ -55,7 +54,10 @@ from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
     open_prepared_catalog_sources,
 )
-from reg_meta_build.source_coding import coding_source_sha256
+from reg_meta_build.source_coding import (
+    coding_source_sha256,
+    copied_coding_fingerprints,
+)
 from reg_meta_build.source_coordinates import native_variant_key
 from reg_meta_build.source_curation import (
     acknowledgement_evidence_sha256,
@@ -156,10 +158,6 @@ def write_sources(spec: dict, source: Path) -> None:
             deldatamangder=tuple(
                 SosSubset(**row) for row in register.get("subsets", ())
             ),
-            kodlistor=tuple(
-                SosCodeList(hint, tuple(tuple(row) for row in rows))
-                for hint, rows in register.get("code_lists", {}).items()
-            ),
         )
         sos_dir = write_sos_input(source, registers=(workbook_spec,))
         path = (
@@ -170,7 +168,17 @@ def write_sources(spec: dict, source: Path) -> None:
         workbook = load_workbook(path)
         sheet = workbook["Metadata - Variabelnivå"]
         sheet.cell(row=1, column=sheet.max_column + 1, value="Kopplingsvariabel")
-        for name, sheet_rows in register.get("sheets", {}).items():
+        # A delivered Kodlista names its variable in a `Variabelnamn` preamble row;
+        # without it the build cannot bind the list (`unresolved_list_reference`).
+        code_lists = {
+            f"Kodlista_{name}": [
+                ["Variabelnamn", name],
+                ["Tidsperiod", "Kod", "Beskrivning"],
+                *rows,
+            ]
+            for name, rows in register.get("code_lists", {}).items()
+        }
+        for name, sheet_rows in {**code_lists, **register.get("sheets", {})}.items():
             extra = workbook.create_sheet(name)
             for row in sheet_rows:
                 extra.append(row)
@@ -197,13 +205,13 @@ class PreparedSet:
         with open_value_bindings(self.opened().value_sources) as sessions:
             return bind_code_lists(record, sessions)
 
+    def claims(self, records: tuple[SourceRecord, ...]) -> list:
+        """The code-list claims the prepared value store binds to ``records``."""
+        return [claim for record in records for claim in self.bindings(record).claims]
+
     def coding_sha256(self, records: tuple[SourceRecord, ...]) -> list[str]:
         """The bound physical code-list evidence of ``records``, as curators pin it."""
-        return [
-            coding_source_sha256(claim)
-            for record in records
-            for claim in self.bindings(record).claims
-        ]
+        return [coding_source_sha256(claim) for claim in self.claims(records)]
 
     def opened(self):
         return _opened(self.prepared, self.commit, self.digest)
@@ -463,6 +471,10 @@ _DIRECTIVES: dict[str, Callable[[PreparedSet, dict[str, str]], object]] = {
         for locator in record.locators
     ],
     "marker_bindings": lambda s, a: _marker_bindings(s, _one(s.records(), a), a),
+    "raw_codings": lambda s, a: sorted(set(s.coding_sha256(_select(s.records(), a)))),
+    "source_codings": lambda s, a: list(
+        copied_coding_fingerprints(s.claims(_select(s.records(), a)))
+    ),
     "relationship_row": lambda s, a: s.relationship(a["table"]).locator.physical_record,
     "relationship_sha256": lambda s, a: canonical_sha256(
         s.relationship(a["table"]).model_dump(mode="json")
@@ -936,6 +948,17 @@ def _refusal(error: Exception, expected: dict) -> dict:
     return {key: refusal[key] for key in expected if key in refusal}
 
 
+def _tree_bytes(path: Path) -> dict[str, bytes]:
+    """Every file under ``path`` (or ``path`` itself), by relative name."""
+    if path.is_file():
+        return {"": path.read_bytes()}
+    return {
+        str(file.relative_to(path)): file.read_bytes()
+        for file in sorted(path.rglob("*"))
+        if file.is_file()
+    }
+
+
 def run_step(step: Path, cache: PreparedCache, scratch: Path) -> tuple[dict, dict]:
     """Run one case step; return ``(actual, expected)`` in the same shape."""
     request = json.loads((step / "request.json").read_text(encoding="utf-8"))
@@ -950,6 +973,21 @@ def run_step(step: Path, cache: PreparedCache, scratch: Path) -> tuple[dict, dic
     curation = render_curation(step / "curation", scratch / "curation", authored)
     output, report = scratch / "reg_meta.db", scratch / "report"
     registers = tuple(request.get("registers", ()))
+    rebuild = bool(expected.get("rebuilt_identical"))
+
+    def build(output: Path, report: Path, decisions: Path | None) -> dict:
+        return build_catalog(
+            built.prepared,
+            built.commit,
+            built.digest,
+            output,
+            report,
+            curation_dir=curation,
+            diagnostic=request.get("diagnostic", True),
+            registers=registers,
+            dump_decisions=decisions,
+        )
+
     try:
         if request.get("mode", "build") == "check":
             result = check_curation(
@@ -961,21 +999,20 @@ def run_step(step: Path, cache: PreparedCache, scratch: Path) -> tuple[dict, dic
                 registers=registers,
             )
         else:
-            result = build_catalog(
-                built.prepared,
-                built.commit,
-                built.digest,
-                output,
-                report,
-                curation_dir=curation,
-                diagnostic=request.get("diagnostic", True),
-                registers=registers,
-            )
+            result = build(output, report, scratch / "decisions" if rebuild else None)
     except (RegMetaError, ValueError, OSError, KeyError) as error:
         if "error" not in expected:
             raise
         return {"error": _refusal(error, expected["error"])}, expected
     actual: dict = {}
+    if rebuild:
+        again = scratch / "rebuild"
+        again.mkdir()
+        build(again / "reg_meta.db", again / "report", again / "decisions")
+        actual["rebuilt_identical"] = all(
+            _tree_bytes(scratch / name) == _tree_bytes(again / name)
+            for name in ("reg_meta.db", "report/events.jsonl.gz", "decisions")
+        )
     if "error" in expected:
         actual["error"] = None
     if "status" in expected:

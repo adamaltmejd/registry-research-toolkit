@@ -21,6 +21,13 @@
       "rows": [
         ["curation/registers/sos/syn.toml#/coding.documented/1/period/1"]
       ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "unresolved_list_reference"},
+      "fields": ["subject"],
+      "rows": [],
+      "note": "The new Kodlista_KON names its variable and binds, so the certificate goes stale on a list the build sees. Before the runner wrote the `Variabelnamn` row the sheet stayed unbound (`unresolved_list_reference`) and the case passed for that reason; `unresolved_member_list` is the certified inline cell itself and stays."
     }
   ]
 }

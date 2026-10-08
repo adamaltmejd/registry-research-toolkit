@@ -33,38 +33,38 @@ the behavior in plain words. For example,
 `coding-choice-stale-when-competing-list-changes` or
 `split-partition-native-stale-when-a-reviewed-column-is-missing`.
 
-  | Surface prefix         | Covers                                                                                                                  |
-  | ---------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-  | `coding-`              | `[[coding.choice]]`, `[[coding.warning]]`, `[[coding.documented]]`, `[[coding.sentinel]]` and `[[coding.uncoded]]`      |
-  | `support-errata-`      | `[[errata.support]]` source-support decisions                                                                           |
-  | `split-sos-`           | SOS `[[identity.split]]` and `[[identity.rename]]`                                                                      |
-  | `split-partition-`     | SCB `[[identity.partition]]`, `[[identity.column_owner]]` and `[[identity.unassigned]]`, and slices that reference them |
-  | `errata-delivered-`    | `[[errata.delivered]]` additions                                                                                        |
-  | `errata-column-`       | `[[errata.column]]` placements, flags and steward storage types, and `[[errata.version]]` declared editions             |
-  | `errata-sos-`          | SOS `[[errata.data_type]]` and `[[errata.classification_reference]]`                                                    |
-  | `errata-field-`        | `[[errata.field]]` checked corrections of one source occurrence                                                         |
-  | `errata-period-`       | `[[errata.occurrence_period]]` checked period corrections                                                               |
-  | `checked-corrections-` | several checked corrections in one build, one register per claim                                                        |
-  | `enrichment-`          | `[[enrichment.description]]` and `[[enrichment.alias]]`                                                                 |
-  | `route-sos-`           | SOS `[[identity.route]]` and styrtabell lookup subsets                                                                  |
-  | `topology-sos-`        | SOS variants formed from delivered subset names                                                                         |
-  | `thin-`                | authored thin-provider registers (`Forsakringskassan/`, `scb_canonical/`)                                               |
-  | `representation-`      | `[[representation.delivery_metadata]]` and `[[representation.parallel]]`                                                |
-  | `matrix-`              | `[[representation.matrix]]` answer matrices                                                                             |
-  | `siblings-`            | sibling grouping of co-delivered columns                                                                                |
-  | `relations-`           | `relations.toml` edges                                                                                                  |
-  | `code-label-pair-`     | `[[code_label_pair]]`                                                                                                   |
-  | `search-pins-`         | `search_pins.toml`                                                                                                      |
-  | `acknowledge-`         | `[[acknowledge]]` entries matched against build issues                                                                  |
-  | `classification-`      | classification books, references and label bindings                                                                     |
-  | `scope-`               | register-scoped builds and checks, and references out of the slice                                                      |
-  | `period-family-`       | relations into a curated `[[representation.period_family]]`                                                             |
-  | `source-relation-`     | literal source relationships, unbound code lists and source findings                                                    |
-  | `value-`               | source code lists bound to native members                                                                               |
-  | `naming-`              | generated and authored slug pins under the zone freeze states                                                           |
-  | `edition-`             | SCB preliminary/final editions, `[[identity.edition_split]]` and `[[errata.edition_period]]`                            |
-  | `dependency-`          | curated groups, tags, panel keys and relations whose catalog dependency is withheld                                     |
-  | `coverage-`            | delivery the formed variables owe the catalog, written or explicitly withdrawn                                          |
+  | Surface prefix         | Covers                                                                                                                                                                           |
+  | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `coding-`              | `[[coding.choice]]`, `[[coding.warning]]`, `[[coding.uncoded]]`, `[[coding.omit]]`, `[[coding.extend]]`, `[[coding.documented]]`, `[[coding.sentinel]]` and `[[coding.support]]` |
+  | `support-errata-`      | `[[errata.support]]` source-support decisions                                                                                                                                    |
+  | `split-sos-`           | SOS `[[identity.split]]` and `[[identity.rename]]`                                                                                                                               |
+  | `split-partition-`     | SCB `[[identity.partition]]`, `[[identity.column_owner]]` and `[[identity.unassigned]]`, and slices that reference them                                                          |
+  | `errata-delivered-`    | `[[errata.delivered]]` additions                                                                                                                                                 |
+  | `errata-column-`       | `[[errata.column]]` placements, flags and steward storage types, and `[[errata.version]]` declared editions                                                                      |
+  | `errata-sos-`          | SOS `[[errata.data_type]]` and `[[errata.classification_reference]]`                                                                                                             |
+  | `errata-field-`        | `[[errata.field]]` checked corrections of one source occurrence                                                                                                                  |
+  | `errata-period-`       | `[[errata.occurrence_period]]` checked period corrections                                                                                                                        |
+  | `checked-corrections-` | several checked corrections in one build, one register per claim                                                                                                                 |
+  | `enrichment-`          | `[[enrichment.description]]` and `[[enrichment.alias]]`                                                                                                                          |
+  | `route-sos-`           | SOS `[[identity.route]]` and styrtabell lookup subsets                                                                                                                           |
+  | `topology-sos-`        | SOS variants formed from delivered subset names                                                                                                                                  |
+  | `thin-`                | authored thin-provider registers (`Forsakringskassan/`, `scb_canonical/`)                                                                                                        |
+  | `representation-`      | `[[representation.delivery_metadata]]` and `[[representation.parallel]]`                                                                                                         |
+  | `matrix-`              | `[[representation.matrix]]` answer matrices                                                                                                                                      |
+  | `siblings-`            | sibling grouping of co-delivered columns                                                                                                                                         |
+  | `relations-`           | `relations.toml` edges                                                                                                                                                           |
+  | `code-label-pair-`     | `[[code_label_pair]]`                                                                                                                                                            |
+  | `search-pins-`         | `search_pins.toml`                                                                                                                                                               |
+  | `acknowledge-`         | `[[acknowledge]]` entries matched against build issues                                                                                                                           |
+  | `classification-`      | classification books, references and label bindings                                                                                                                              |
+  | `scope-`               | register-scoped builds and checks, and references out of the slice                                                                                                               |
+  | `period-family-`       | relations into a curated `[[representation.period_family]]`                                                                                                                      |
+  | `source-relation-`     | literal source relationships, unbound code lists and source findings                                                                                                             |
+  | `value-`               | source code lists bound to native members                                                                                                                                        |
+  | `naming-`              | generated and authored slug pins under the zone freeze states                                                                                                                    |
+  | `edition-`             | SCB preliminary/final editions, `[[identity.edition_split]]` and `[[errata.edition_period]]`                                                                                     |
+  | `dependency-`          | curated groups, tags, panel keys and relations whose catalog dependency is withheld                                                                                              |
+  | `coverage-`            | delivery the formed variables owe the catalog, written or explicitly withdrawn                                                                                                   |
 
 Later stages add their own prefixes to this table.
 
@@ -131,9 +131,11 @@ case cannot fail and does not belong here.
     `data_type` (default `Sträng (text)`), `value_set`, `external_classification`,
     `data_from`, `data_to`.
   - `code_lists` maps a variable to its `Kodlista_<variable>` rows
-    `[period, code, label]`.
+    `[period, code, label]`. The sheet opens with a `Variabelnamn` row naming the
+    variable, so the build binds the list to it.
   - `sheets` maps an extra sheet name to its raw rows, for example a recode table or a
-    code list in another shape.
+    code list in another shape. A `Kodlista_` sheet here without a `Variabelnamn` row is
+    a list the build cannot bind (`unresolved_list_reference`).
   - `blank_dataset: true` blanks the `Datamängd` cell of `Generell information`, so the
     workbook names no register.
   - Every workbook gets a blank delivered `Kopplingsvariabel` column. That column is
@@ -164,23 +166,25 @@ helpers a curator uses:
 expected_evidence_sha256 = {{coding_evidence_sha256 key=member:1001}}
 ```
 
-  | Placeholder              | Renders                                                                                      |
-  | ------------------------ | -------------------------------------------------------------------------------------------- |
-  | `evidence_sha256`        | `acknowledgement_evidence_sha256` of the selected records                                    |
-  | `coding_evidence_sha256` | the same, plus the bound physical code-list evidence of each record (`coding_source_sha256`) |
-  | `expected_records`       | `capture_expectations(..., parents=True, coding=True)` of the selected records               |
-  | `expected_fields`        | the captured fields of one record                                                            |
-  | `period_text`            | one record's original period text                                                            |
-  | `edition_scope`          | one record's edition scope; `end=` replaces its first interval's end                         |
-  | `period_scope`           | one record's edition period scope                                                            |
-  | `revision`               | one record's source revision                                                                 |
-  | `locators`               | the locators of the selected records                                                         |
-  | `marker_bindings`        | one record's marker-binding fingerprints over `from=`..`to=`                                 |
-  | `relationship_row`       | the physical row of the one literal relationship delivered in `table=`                       |
-  | `relationship_sha256`    | the content hash of that relationship's declaration                                          |
-  | `table_sha256`           | the content hash of the one prepared evidence table named `table=`                           |
-  | `naming_id`              | `authored_naming_id(kind=, provider=, register_key=, member_key=)`, a thin or SOS native id  |
-  | `variant_key`            | one record's native variant key                                                              |
+  | Placeholder              | Renders                                                                                          |
+  | ------------------------ | ------------------------------------------------------------------------------------------------ |
+  | `evidence_sha256`        | `acknowledgement_evidence_sha256` of the selected records                                        |
+  | `coding_evidence_sha256` | the same, plus the bound physical code-list evidence of each record (`coding_source_sha256`)     |
+  | `expected_records`       | `capture_expectations(..., parents=True, coding=True)` of the selected records                   |
+  | `expected_fields`        | the captured fields of one record                                                                |
+  | `period_text`            | one record's original period text                                                                |
+  | `edition_scope`          | one record's edition scope; `end=` replaces its first interval's end                             |
+  | `period_scope`           | one record's edition period scope                                                                |
+  | `revision`               | one record's source revision                                                                     |
+  | `locators`               | the locators of the selected records                                                             |
+  | `marker_bindings`        | one record's marker-binding fingerprints over `from=`..`to=`                                     |
+  | `raw_codings`            | the sorted distinct `coding_source_sha256` of the code-list claims bound to the selected records |
+  | `source_codings`         | `copied_coding_fingerprints` of those claims                                                     |
+  | `relationship_row`       | the physical row of the one literal relationship delivered in `table=`                           |
+  | `relationship_sha256`    | the content hash of that relationship's declaration                                              |
+  | `table_sha256`           | the content hash of the one prepared evidence table named `table=`                               |
+  | `naming_id`              | `authored_naming_id(kind=, provider=, register_key=, member_key=)`, a thin or SOS native id      |
+  | `variant_key`            | one record's native variant key                                                                  |
 
 Record selectors are `key=value` arguments, and all of them must match. A
 comma-separated value lists alternatives. An argument value cannot contain a space.
@@ -215,6 +219,10 @@ Every key is optional, and only the keys that are present get checked.
 - `result`: keys of the build or check result dict, nested. Only the named keys are
   compared; a missing key reads as `null`, and a list names members that must be
   present.
+- `rebuilt_identical: true`: the runner builds the same step a second time, with
+  decision dumps on, and the artifact, the report ledger and the dumped decisions must
+  be byte-identical. It costs a second build, so only cases whose compile has no other
+  byte-identity witness carry it (the `[[coding.*]]` folds).
 - `error`: the build or check must refuse. Only the keys present are compared:
   - `code` and `exit_code` are the located error the `build-db` and `check-curation`
     commands report. A `RegMetaError` keeps its own; a `ValueError`, `OSError` or
