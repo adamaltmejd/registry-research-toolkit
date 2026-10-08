@@ -6,6 +6,7 @@
   },
   "replaces": "test_curated_source_records.py::test_raw_toml_values_and_exact_key_locations_are_retained",
   "fails_if": "read_curated_source normalizes a cell's raw value, deduplicates or keeps the padding of declared variant references, or drops a key's exact location from the record locator",
+  "note": "The variants cell's raw_value is the fixture's TOML array `[\" x \", \"y\", \"y\"]` written as compact JSON, the form a delivered cell carries a non-string TOML value in: the padding and the duplicate survive in the cell while the variant references are trimmed.",
   "loads": {
     "records": [
       {},
@@ -50,6 +51,7 @@
           },
           {
             "name": "variants",
+            "raw_value": "[\" x \",\"y\",\"y\"]",
             "raw_type": "list"
           }
         ]
