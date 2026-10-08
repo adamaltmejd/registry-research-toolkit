@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_representation_delivery_metadata.py::test_delivery_metadata_exact_open_scope_is_not_a_finite_window_exemption",
+  "fails_if": "`DeliveryMetadataColumn._bounded` accepts a source scope that is not one positive supplied interval, so an unknown scope loads",
+  "note": "The replaced test's unknown-scope leg.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[representation.delivery_metadata.columns]] entry 1",
+    "message_contains": [
+      "delivery metadata bounds must exactly match positive supplied source scope"
+    ]
+  }
+}

@@ -1,37 +1,31 @@
-"""Accepted parallel columns: checked delivery metadata retain literals, coverage and field permissions."""
+"""Delivery metadata: the two checks no build reaches (delivery coverage of literal
+units and texts, and the open source-scope comparison). The reachable behavior is the
+build case `representation-delivery-metadata-keeps-literal-units-and-texts` and the
+`representation-delivery-metadata-*` loader cases."""
 
 from __future__ import annotations
 
-from contextlib import closing
 from dataclasses import replace
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
-from _source_representation_support import coding_claim as _claim
-from catalog_manifest import synthetic_manifest
 from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.catalog_dependencies import (
     check_delivery_coverage,
 )
-from reg_meta_build.db import open_built_db
 from reg_meta_build.resolved_catalog import (
     ResolvedRegister,
     ResolvedVariant,
-    write_resolved_catalog,
 )
 from reg_meta_build.source_coding import (
     resolve_code_membership,
 )
 from reg_meta_build.source_curation import (
-    CheckedFieldChange,
     CurationCase,
-    FieldExpectation,
-    OccurrenceCorrectionDecision,
     PeerGuard,
     capture_expectations,
 )
 from reg_meta_build.source_effects import (
-    apply_occurrence_cases,
     record_ref,
 )
 from reg_meta_build.source_formation import form_native_variable
@@ -49,7 +43,7 @@ from reg_meta_build.source_representations import (
 from reg_meta_build.sources.scb_records import clean_scb_row
 
 
-def _unit_fixture(*, overlap=False):
+def _unit_fixture():
     from reg_meta_build.source_curation import (
         DeliveryMetadataColumn,
         DeliveryMetadataDecision,
@@ -67,7 +61,7 @@ def _unit_fixture(*, overlap=False):
     header = REGISTERINFORMATION_HEADER.split("|")
     records = []
     for index, (year, unit) in enumerate(
-        (("2020", "100-tal kronor"), ("2020" if overlap else "2021", "Kronor (SEK)"))
+        (("2020", "100-tal kronor"), ("2021", "Kronor (SEK)"))
     ):
         values = var_row(
             colname="VALUE",
@@ -117,7 +111,7 @@ def _unit_fixture(*, overlap=False):
                     variant_key=first.variant_key,
                     column="VALUE",
                     valid_from="2020-01-01",
-                    valid_to="2020-12-31" if overlap else "2021-12-31",
+                    valid_to="2021-12-31",
                     expected_codings=(),
                 ),
             ),
@@ -133,12 +127,9 @@ def _unit_fixture(*, overlap=False):
     )
 
 
-def _form_units(fixture, *, cases=None, records=None):
-    original, case, variants, coding = fixture
-    records = original if records is None else records
-    resolution = resolve_representation_cases(
-        records, (case,) if cases is None else cases, coding=coding
-    )
+def _form_units(fixture):
+    records, case, variants, coding = fixture
+    resolution = resolve_representation_cases(records, (case,), coding=coding)
     formed = form_native_variable(
         tuple(source_occurrence(record) for record in records),
         register=ResolvedRegister(provider="scb", slug="example", name="Example"),
@@ -154,28 +145,24 @@ def _form_units(fixture, *, cases=None, records=None):
     return resolution, formed
 
 
-def test_checked_delivery_metadata_retain_literals_and_coverage(tmp_path):
+def test_delivery_coverage_refuses_a_changed_literal_unit_or_description():
+    """Delivery coverage refuses a written state whose literal unit or text moved.
+
+    Input: the two-edition fixture (2020 '100-tal kronor', 2021 'Kronor (SEK)') formed
+    with its name permission, then each built state rewritten with the 2021 unit, or one
+    state given another description. Expected: `check_delivery_coverage` accepts the
+    formed variable and refuses each rewrite ("literal delivery unit changed" /
+    "literal delivery description changed"). No build reaches this: formation writes the
+    claimed literal, so only a defect between formation and the writer could move it;
+    the build cases `representation-delivery-metadata-keeps-literal-units-and-texts`
+    show the literal values that reach the artifact. Fails if `check_delivery_coverage`
+    stops comparing a claimed unit or description with the written state.
+    """
     fixture = _unit_fixture()
-    records, _, _, _ = fixture
-    _, baseline = _form_units(fixture, cases=())
-    assert any(
-        issue.code == "conflicting_variable_fact" and issue.fields == ("name",)
-        for issue in baseline.diagnostics
-    )
-    resolution, formed = _form_units(fixture)
-    assert not resolution.diagnostics
-    assert formed.variable is not None and formed.variable.measurement_unit is None
-    assert not any(issue.severity == "error" for issue in formed.diagnostics)
-    assert {state.measurement_unit for state in formed.variable.states} == {
-        "100-tal kronor",
-        "Kronor (SEK)",
-    }
-    assert tuple(record.fields.measurement_unit.value for record in records) == (
-        "100-tal kronor",
-        "Kronor (SEK)",
-    )
+    _, formed = _form_units(fixture)
+    assert formed.variable is not None
     check_delivery_coverage((formed.variable,), formed.coverage, withheld={})
-    wrong = formed.variable.model_copy(
+    wrong_unit = formed.variable.model_copy(
         update={
             "states": tuple(
                 state.model_copy(update={"measurement_unit": "Kronor (SEK)"})
@@ -184,104 +171,9 @@ def test_checked_delivery_metadata_retain_literals_and_coverage(tmp_path):
         }
     )
     with pytest.raises(ValueError, match="literal delivery unit changed"):
-        check_delivery_coverage((wrong,), formed.coverage, withheld={})
-    write_resolved_catalog(
-        (formed.variable,), tmp_path / "reg_meta.db", manifest=synthetic_manifest()
-    )
-    with closing(open_built_db(tmp_path / "reg_meta.db")) as conn:
-        assert {
-            row[0]
-            for row in conn.execute("SELECT measurement_unit FROM variable_state")
-        } == {"100-tal kronor", "Kronor (SEK)"}
-
-
-@pytest.mark.parametrize("drift", ["missing", "changed", "new", "partial", "owner"])
-def test_checked_delivery_metadata_fail_closed(drift):
-    fixture = _unit_fixture()
+        check_delivery_coverage((wrong_unit,), formed.coverage, withheld={})
     records, case, variants, coding = fixture
-    if drift == "missing":
-        records = records[:-1]
-    elif drift == "changed":
-        records = (
-            records[0],
-            records[1].model_copy(
-                update={
-                    "fields": records[1].fields.model_copy(
-                        update={"measurement_unit": value_field("other unit")}
-                    )
-                }
-            ),
-        )
-    elif drift == "new":
-        records = (
-            *records,
-            records[1].model_copy(
-                update={
-                    "locators": (
-                        records[1]
-                        .locators[0]
-                        .model_copy(
-                            update={
-                                "semantic_record_key": (
-                                    *records[1].locators[0].semantic_record_key,
-                                    "new-peer",
-                                )
-                            }
-                        ),
-                    )
-                }
-            ),
-        )
-    elif drift == "partial":
-        case = case.model_copy(update={"targets": case.targets[:-1]})
-    elif drift == "owner":
-        case = case.model_copy(
-            update={
-                "decision": case.decision.model_copy(
-                    update={"variable_key": ("different", "owner")}
-                )
-            }
-        )
-    fixture = (fixture[0], case, variants, coding)
-    if drift == "owner":
-        with pytest.raises(ValueError, match="unconverted column coding"):
-            _form_units(fixture, records=records)
-        return
-    resolution, formed = _form_units(fixture, records=records)
-    if drift in {"missing", "changed", "new"}:
-        assert resolution.diagnostics and not resolution.cases
-    else:
-        assert any(
-            issue.code == "conflicting_variable_fact" for issue in formed.diagnostics
-        )
-
-
-def test_checked_delivery_metadata_do_not_resolve_same_column_conflicts():
-    _, formed = _form_units(_unit_fixture(overlap=True))
-    assert any(
-        issue.severity == "error" and "measurement_unit" in issue.fields
-        for issue in formed.diagnostics
-    )
-
-
-def test_checked_delivery_metadata_reject_changed_coding():
-    fixture = _unit_fixture()
-    records, case, variants, coding = fixture
-    key = next(iter(coding))
-    changed_coding = {key: resolve_code_membership((_claim("new supplied list", "1"),))}
-    resolution, _ = _form_units((records, case, variants, changed_coding))
-    assert not resolution.cases
-    assert any(
-        issue.code == "stale_representation_coding" for issue in resolution.diagnostics
-    )
-
-
-@pytest.mark.parametrize("name_permission", [False, True])
-def test_checked_delivery_text_keeps_source_names_without_common_winner(
-    name_permission,
-):
-    records, case, variants, coding = _unit_fixture()
-    records = tuple(
+    texts = tuple(
         record.model_copy(
             update={
                 "fields": record.fields.model_copy(
@@ -297,91 +189,52 @@ def test_checked_delivery_text_keeps_source_names_without_common_winner(
         )
         for index, record in enumerate(records)
     )
-    decision = case.decision.model_copy(
+    text_case = case.model_copy(
         update={
-            "fields": ("name", "description") if name_permission else ("description",)
-        }
-    )
-    case = case.model_copy(
-        update={
-            "decision": decision,
+            "decision": case.decision.model_copy(
+                update={"fields": ("name", "description")}
+            ),
             "targets": capture_expectations(
-                records,
+                texts,
                 fields=tuple(SourceFields.model_fields),
                 parents=True,
                 coding=True,
             ),
         }
     )
-    resolution, formed = _form_units((records, case, variants, coding))
-    assert resolution.cases == (case,)
-    if not name_permission:
-        assert formed.variable is None
-        assert any(d.code == "unresolved_variable_name" for d in formed.diagnostics)
-        return
-    variable = formed.variable
-    assert variable is not None
-    assert variable.name is None and variable.description is None
-    assert [(s.name, s.description) for s in variable.states] == [
-        ("Visit", "Visited facility"),
-        ("Admission", "Admitting facility"),
-    ]
-    assert not any(d.severity == "error" for d in formed.diagnostics)
-    check_delivery_coverage((variable,), formed.coverage, withheld={})
-    changed = variable.model_copy(
+    _, formed = _form_units((texts, text_case, variants, coding))
+    assert formed.variable is not None
+    check_delivery_coverage((formed.variable,), formed.coverage, withheld={})
+    borrowed = formed.variable.model_copy(
         update={
             "states": (
-                variable.states[0].model_copy(
+                formed.variable.states[0].model_copy(
                     update={"description": "Borrowed sibling description"}
                 ),
-                *variable.states[1:],
+                *formed.variable.states[1:],
             )
         }
     )
     with pytest.raises(ValueError, match="literal delivery description changed"):
-        check_delivery_coverage((changed,), formed.coverage, withheld={})
-    unknown = records[0].model_copy(
-        update={"fields": records[0].fields.model_copy(update={"name": None})}
-    )
-    unknown_case = case.model_copy(
-        update={
-            "targets": capture_expectations(
-                (unknown, records[1]),
-                fields=tuple(SourceFields.model_fields),
-                parents=True,
-                coding=True,
-            )
-        }
-    )
-    with pytest.raises(ValueError, match="positive permitted source facts"):
-        resolve_representation_cases(
-            (unknown, records[1]), (unknown_case,), coding=coding
-        )
-
-
-def test_delivery_metadata_permissions_do_not_cover_an_enlarged_effective_scope():
-    records, case, variants, coding = _unit_fixture()
-    column = case.decision.columns[0].model_copy(update={"valid_to": "2020-12-31"})
-    case = case.model_copy(
-        update={"decision": case.decision.model_copy(update={"columns": (column,)})}
-    )
-    resolution, formed = _form_units((records, case, variants, coding))
-    assert resolution.cases == (case,)
-    assert any(
-        d.code == "conflicting_variable_fact" and d.fields == ("name",)
-        for d in formed.diagnostics
-    )
-
-
-def test_delivery_metadata_requires_unique_explicit_field_permissions():
-    _, case, _, _ = _unit_fixture()
-    decision = type(case.decision)
-    for fields in ((), ("name", "name"), ("data_type",)):
-        with pytest.raises(ValueError):
-            decision.model_validate({**case.decision.model_dump(), "fields": fields})
+        check_delivery_coverage((borrowed,), formed.coverage, withheld={})
 
 
 def test_delivery_metadata_exact_open_scope_is_not_a_finite_window_exemption():
+    """An open supplied source scope (2020-) keeps its open end; a changed scope stales.
+
+    Input: one SCB record whose edition scope is the open interval `2020-`, and a
+    delivery-metadata column over 2020-01-01..9999-12-31 that names that scope. Expected:
+    the column applies and the state ends 9999-12-31; the same column naming another open
+    scope (2020-01-01-), or the record's effective scope changed to 2019- or 2020..2021,
+    is refused as `stale_delivery_metadata_scope`. No build reaches this: SCB delivers no
+    open edition scope, and `compile_delivery_metadata` refuses a changed source scope
+    before resolution (stale_curation_entry), so this runtime check is defense in depth.
+    The column-model refusals are the loader cases
+    `representation-delivery-metadata-*-source-scope-refused` and
+    `...-open-ended-window-without-source-scope-refused`.
+    Fails if `resolve_representation_cases` stops comparing a column's `source_scope`
+    with the effective occurrence scopes it covers.
+    """
     from reg_meta_build.source_curation import DeliveryMetadataColumn, SourceEvidence
 
     original, case, variants, coding = _unit_fixture()
@@ -421,14 +274,6 @@ def test_delivery_metadata_exact_open_scope_is_not_a_finite_window_exemption():
     assert resolution.cases == (case,) and formed.variable is not None
     assert formed.variable.states[0].valid_to == "9999-12-31"
     assert record.edition_scope.intervals[0].end is None
-    for bad in (
-        {"source_scope": None},
-        {"valid_to": "2021-12-31"},
-        {"source_scope": TemporalScope(kind="unknown", label="unknown supplied scope")},
-        {"source_scope": TemporalScope(kind="year_independent")},
-    ):
-        with pytest.raises(ValueError):
-            DeliveryMetadataColumn.model_validate({**column.model_dump(), **bad})
     # Equal derived dates still do not imply the same supplied source scope.
     other_scope = TemporalScope(
         kind="intervals", intervals=(ScopeInterval(start="2020-01-01", end=None),)
@@ -457,63 +302,3 @@ def test_delivery_metadata_exact_open_scope_is_not_a_finite_window_exemption():
         assert any(
             d.code == "stale_delivery_metadata_scope" for d in rejected.diagnostics
         )
-
-
-@pytest.mark.parametrize("changed_field", ["name", "measurement_unit"])
-def test_delivery_metadata_keeps_unrelated_checked_field_corrections(changed_field):
-    from reg_meta_build.source_curation import SourceEvidence
-
-    records, metadata, variants, coding = _unit_fixture()
-    correction = metadata.model_copy(
-        update={
-            "case_id": "checked-source-field",
-            "decision": OccurrenceCorrectionDecision(
-                reviewed=True,
-                effects=tuple(
-                    CheckedFieldChange(
-                        ref=record_ref(record),
-                        replacement=FieldExpectation(
-                            name=changed_field,
-                            status="value",
-                            value="Checked source wording",
-                        ),
-                    )
-                    for record in records[:1]
-                ),
-                reason="Independent supplied source correction",
-                provenance="exact fixture",
-            ),
-        }
-    )
-    corrected = apply_occurrence_cases(records, (correction,))
-    assert not corrected.diagnostics
-    evidence = SourceEvidence(records, effective_occurrences=corrected.occurrences)
-    representations = resolve_representation_cases(evidence, (metadata,), coding=coding)
-    formed = form_native_variable(
-        corrected.occurrences,
-        register=ResolvedRegister(provider="scb", slug="example", name="Example"),
-        variants=variants,
-        slug="income",
-        provider_key="1",
-        flags=SourceFields(
-            sensitivity=value_field(False), identifier=value_field(False)
-        ),
-        coding=coding,
-        representations=representations.cases,
-    )
-    unit_conflicts = [
-        d
-        for d in formed.diagnostics
-        if d.code == "conflicting_variable_fact" and d.fields == ("measurement_unit",)
-    ]
-    assert not unit_conflicts
-    assert any(d.code == "delivery_units_vary" for d in formed.diagnostics)
-    if changed_field == "name":
-        # The checked text permission cannot waive an independent field correction.
-        assert any(
-            d.code == "conflicting_variable_fact" and d.fields == ("name",)
-            for d in formed.diagnostics
-        )
-        assert corrected.occurrences[0].fields.name is not None
-        assert corrected.occurrences[0].fields.name.value == "Checked source wording"
-        assert corrected.occurrences[0].source_records == (records[0],)

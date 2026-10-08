@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_representation_delivery_metadata.py::test_delivery_metadata_requires_unique_explicit_field_permissions",
+  "fails_if": "`DeliveryMetadataDecision.require_fields` stops refusing a repeated field permission, so `fields = [\"name\", \"name\"]` loads",
+  "note": "Only the permission list is wrong: the record's alternative supplies a positive name, which the entry's next rule checks.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[representation.delivery_metadata]] entry 1",
+    "message_contains": [
+      "delivery metadata field permissions must be nonempty, unique name or description fields"
+    ]
+  }
+}
