@@ -3,6 +3,7 @@
     "test_curation_toml_load_boundary.py::test_malformed_search_pin_fails_the_build_located[duplicate-fqid]"
   ],
   "note": "A malformed pin fails even a diagnostic build, before anything is resolved.",
+  "fails_if": "`SearchPin._fqids_of_type` stops rejecting a pin that lists the same fqid twice (`[\"scb/a\", \"scb/a\"]`), or the pipeline stops loading `search_pins.toml` in diagnostic builds",
   "sources": {
     "description": "Register 1 delivers Kod (var_id 100); no Unika file.",
     "scb": {

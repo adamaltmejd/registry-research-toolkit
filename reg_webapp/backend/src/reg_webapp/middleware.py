@@ -76,7 +76,7 @@ class ETagMiddleware(BaseHTTPMiddleware):
         headers = dict(response.headers)
         headers["etag"] = etag
         # Per-route Cache-Control (two tiers, see cache_control_for): the fold-bearing
-        # /api/catalog/* and /api/search reads carry a short 60s window so curated
+        # /api/catalog/* reads carry a short 60s window so curated
         # concept-group folds surface promptly for returning users; the
         # rebuild-stable /api/docs/* reads keep the 24h policy. Computed from
         # request.url.path (query stripped) once here so both the 200 and the

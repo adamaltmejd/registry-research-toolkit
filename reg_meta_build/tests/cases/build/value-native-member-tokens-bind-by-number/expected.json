@@ -1,0 +1,29 @@
+{
+  "projections": [
+    {
+      "table": "state_codes",
+      "fields": ["valid_from", "valid_to", "code", "label"],
+      "rows": [
+        ["2020-01-01", "2020-12-31", "01", "One"],
+        ["2020-01-01", "2020-12-31", "02", "Two"]
+      ]
+    },
+    {
+      "table": "issues",
+      "fields": ["code", "severity"],
+      "rows": [
+        ["unknown_native_member_token", "error"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": {"contains": ", 1, ('broken',))"}
+      },
+      "fields": ["code"],
+      "rows": [
+        ["unknown_native_member_token"]
+      ]
+    }
+  ]
+}

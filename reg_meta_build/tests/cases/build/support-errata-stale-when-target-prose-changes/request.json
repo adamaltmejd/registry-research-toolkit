@@ -3,6 +3,7 @@
     "test_curation_support_errata_boundary.py::test_checked_support_is_stale_when_its_shared_target_changes[target-prose]"
   ],
   "note": "The contradicted projection still selects, but its guarded prose changed.",
+  "fails_if": "`_occurrence_correction_matches(entry, selected)` for the support target stops comparing its prose `expected_fields`, so the contradicted FIRST projection's changed definition (vardef) leaves the decision applied",
   "sources": {
     "description": "scb-support-question changed: The contradicted projection still selects, but its guarded prose changed.",
     "scb": {

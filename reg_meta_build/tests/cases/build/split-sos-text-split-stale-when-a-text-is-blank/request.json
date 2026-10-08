@@ -2,6 +2,7 @@
   "replaces": [
     "test_curation_split_sos_boundary.py::test_text_split_is_stale_unless_the_delivered_texts_match[name-blank-text]"
   ],
+  "fails_if": "the SOS split check in `curation_compile` accepts delivered names that are a subset of the declared parts, so with Other's row now blank the First and Second rows are routed to their owners although the declared Other is missing",
   "sources": {
     "description": "PAR_OV ATC rows of one source record key whose labels are First, Second, None.",
     "scb": {

@@ -6,7 +6,8 @@
       "rows": []
     },
     {
-      "table": "same_as",
+      "table": "edges",
+      "where": {"type": "same_as"},
       "fields": ["a", "b"],
       "match": "includes",
       "rows": [

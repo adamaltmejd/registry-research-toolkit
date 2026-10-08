@@ -437,147 +437,55 @@ NEVER a FastAPI generator `Depends` (which is entered on a different threadpool 
 cross-thread `ProgrammingError`). Each DB-backed route gets its OWN `ThreadPoolExecutor`
 concurrency smoke (the `TestClient` sequential default masks the bug).
 
-## Global catalog search (`routes/search.py` + `conn.py`)
+## Global catalog search (the Rust server, 3a.11)
 
-`GET /api/search?q=&limit=&type=&cursor=&scope=` (#350) is the discovery surface
-consumed by the global header omnibox (`SearchOmnibox.svelte`, shipped in this PR). It
-returns **typed result groups** over the shipped FTS5 indexes, reusing reg_meta's
-concept-group-folded `search` (`reg_meta.queries.search`, #322) — the webapp does NOT
-reimplement folding or FTS. `?type=` (#393) scopes the search to ONE group: `all` (the
-default, or omitted) preserves the fixed-order four-group response; any single type
-(`register` / `variable` / `classification` / `value`) runs AND emits only that one
-group. An unknown value 422s at the boundary (the valid set mirrors reg_meta's
-`SEARCH_TYPES`). Holdings scope restricts register and variable rows through the
-compiled SQL predicate before grouping and pagination; see § Compiled artifact identity
-and read scope. Classification and code surfaces remain reference evidence in both
-scopes.
+`GET /api/search` is answered by the Rust server (`reg-meta serve`, the `search`
+operation in `conformance/api/operations.toml`): one ranked list per call (decision 17),
+as `{data: {items, next_cursor}, meta}`. With `type` the list is one arm's hits
+(`register`, `variable`, `classification`, `classification_code`, `register_value`), its
+curated pins first; without it, every arm's hits ranked together, grouped variable
+members hidden. Ranking, curated pins (`reg_meta_build/curation/search_pins.toml`, read
+from the catalog's `search_pin` table), concept-group folding, input limits and cursors
+live in `crates/reg-catalog`. Locally, the Vite dev proxy sends `/api/search` to the
+Rust server. Maintainers measure relevance with `scripts/run_search_eval.py`
+(`search_eval.toml`, #393 item 10) against a running `reg-meta serve`.
 
 The SPA surface: a global `<SearchOmnibox>` in the app header routes to a shareable
-`/search?q=` results page (`SearchView.svelte`) that renders an optional compact
-cross-group `Top results` group above the four typed groups when multiple candidates
-compete, with navigation to catalog nodes. The router gained `search` and `doc` routes
-(query lives in `?q=`, keyed on pathname so the page re-runs on every query change) and
-a `router.replace()` method (mirrors the `?period` URL-as-single-source-of-truth
-pattern: the omnibox syncs back to the URL, and the URL drives the view). `api.ts`
-gained `search(q, {limit?, type?, cursor?})` typed off the codegen'd contract. Off
-`/search`, typing in the omnibox stays local until Enter/form submit and shows an Enter
-hint while focused; on `/search`, typing live-refines with replaceState. `SearchView`
-renders an "All · Registers · Variables · Classifications · Codes" scope toggle backed
-by `?type=` (URL state, like `?q=`/`?period`; `all` is omitted from the canonical URL),
-a Close control that `replace()`s back to the route that entered search (or `/catalog`
-for a cold deep-link), and variable rows whose heading carries delivery-column pills
-while register, definition, and `operational_definition` live in the muted detail line.
-When several search hits address the same variable, `SearchView` folds them into one row
-and merges the delivery-column pills so a column-code search shows one variable with the
-matched columns inline; the "Variables" group heading itself stays plain text. The
-omnibox preserves an active scope when re-querying. Global search does **not** render
-documentation results; documentation is reached from item pages via `DocMentionsPanel`
-and then the `/doc/<filename>` route (router `Route` union arm
-`{name:"doc",identifier}`), which renders `DocView.svelte`: title,
+`/search?q=` results page (`SearchView.svelte`) with navigation to catalog nodes. The
+router has `search` and `doc` routes (query lives in `?q=`, keyed on pathname so the
+page re-runs on every query change) and a `router.replace()` method (mirrors the
+`?period` URL-as-single-source-of-truth pattern: the omnibox syncs back to the URL, and
+the URL drives the view). `api.ts` has `search(q, {limit?, type?, cursor?})` typed off
+the generated `api-types-rust.ts`. Off `/search`, typing in the omnibox stays local
+until Enter/form submit and shows an Enter hint while focused; on `/search`, typing
+live-refines with replaceState. `SearchView` renders an "All · Registers · Variables ·
+Classifications · Codes" scope toggle backed by `?type=` (URL state, like
+`?q=`/`?period`; `all` is omitted from the canonical URL; `value` is the SPA's name for
+both code arms), a Close control that `replace()`s back to the route that entered search
+(or `/catalog` for a cold deep-link), and variable rows whose heading carries
+delivery-column pills while register, definition, and `operational_definition` live in
+the muted detail line. The omnibox preserves an active scope when re-querying. Global
+search does **not** render documentation results; documentation is reached from item
+pages via `DocMentionsPanel` and then the `/doc/<filename>` route (router `Route` union
+arm `{name:"doc",identifier}`), which renders `DocView.svelte`: title,
 register/variable/tags, a `source_url` link to the SCB source PDF (resolved from the
 curated map at doc-DB build, #372; None when uncurated) with `source_title` as label,
 and a bounded `excerpt`; 404 distinguishes "not ingested" vs "not found";
 `snippet`/`excerpt` are rendered as TEXT, never `{@html}`, and the full converted body
 is never fetched.
 
-Each rendered group starts with at most 3 results. A `Load more` control requests that
-group's cursor and appends the next bounded page; query or scope changes discard the
-continuation state. The heading uses `N+ results` while `has_more` is true, rather than
-claiming an exact total. The control is keyboard-native, announces its busy state, and
-keeps continuation errors local to the group.
-
-**The response contract is the point — designed to extend.** The body is
-`{kind, query, groups: SearchGroup[]}`; each `SearchGroup` is a discriminated arm
-(`group` literal) carrying bounded typed `results`, `has_more`, and `next_cursor`.
-`top_results` is presentation-only and never paginates. Today: `top_results` (#393 items
-6/7 — optional, all-scope-only, and emitted only when multiple candidates compete; built
-from the already-prepared typed rows, exact identifier/name/code matches first, then
-type priors register → variable/group → classification → code; a code row earns *prefix*
-authority from its code identifier only, its label and owning code system counting as
-identity on an exact match alone, so a topical term that merely starts an incidental
-value label cannot displace the register or variable carrying that term in its purpose
-or definition), `registers`, `variables` (leaf hits ⧺ folded concept groups),
-`classifications` (leaf hits ⧺ folded classification-succession rows
-(`type: "classification_succession"`, #571 — a query that hits ≥2 editions of the same
-chain collapses to one `ClassificationSuccessionSearchResult` keyed on the terminal
-edition, carrying the full `editions` chain and `matched_count`) ⧺ folded umbrella
-concept-group rows (`type: "group"`, #516 — e.g. `group:sun`)), and `codes` (#352 —
-value-label hits annotated with their owning variables/classifications). The reserved
-docs arm remains unused by global search; docs stay on the separate `/api/docs/*`
-endpoints and item-page hooks. The SPA must tolerate an unknown `group` value (skip it)
-so a new group can ship before the SPA renders it (the same payload-skew tolerance the
-`?period` additive fields rely on). Each result carries its navigable `fqid` and a
-`rank: float` (the FTS rank the CLI's doc-merge interleaves by, #701); results within a
-group are pre-sorted by FTS rank before grouping, so the SPA may ignore `rank` — it is
-present on the wire as the shared sort key.
-
-- **One reg_meta call per group**: register/variable/classification via the FTS
-  `field="description"` path; **codes (#352) via the `field="value", type="value"`
-  path** (`value_code_fts` label match + code-shape exact/prefix on `value_code.code`,
-  ranked bm25 + rarity-downweight, owner-annotated — see reg_meta DESIGN.md → FTS5
-  configuration). Each group gets its own bounded page and context-bound cursor; codes
-  don't fold into concept groups (`fold_groups=False`). The codes page is then re-ranked
-  (#393) so classification-backed (curated) codes lead, then by `classification_count`,
-  then `variable_count` — but only WITHIN the FTS-top-N page reg_meta already annotated,
-  so it can't pull a curated code that ranked below the FTS cutoff into view. Each
-  `CodeSearchResult` carries `code_system` (the primary owning classification's
-  `short_name`, else null); the SPA renders the codes group in per-code-system
-  subsections, register-local/bespoke (null) codes last.
-- **Input gates** (`query_input.validate_text_query` / `_validated_limit` /
-  `_has_searchable_token`): a query is length-capped (422 over 200 chars) and
-  NUL-rejected (422); `limit` is clamped to \[1, 50\] (not 422'd). A blank / whitespace
-  / punctuation-only query returns ALL groups EMPTY (200, not 422) — it never reaches
-  reg_meta (whose LIKE label-fold would otherwise turn `%%` into a match-everything).
-  FTS-operator neutralization + prefix-matching + diacritic folding all live in reg_meta
-  (`_fts_match_query`); the webapp passes the raw query through. The query reaches FTS
-  only as a bound parameter (no SQLi surface), so the gates guard cost/abuse, not
-  injection.
-- **Bounded-origin budget (#1135):** every reg_meta SQL arm receives a finite prefix
-  bound and expensive folding, owner annotation, golden construction, and top-results
-  construction operate only on bounded candidates. The default is 3 per group (maximum
-  50). The route emits per-phase `Server-Timing` entries for controlled profiling.
-  Representative broad all-scope cache-miss p95 is budgeted at 500 ms and browser-cold
-  search LCP below 2.5 s; edge-cache hits are not accepted as cold-origin evidence.
-  Invalid/context-stale cursors map to an actionable HTTP 422 at the route boundary.
-  There is no in-process response cache.
-- **Golden-boost** (`golden.apply_golden_boost`, #393 item 4 / #311): a curated-pin
-  INJECTION (no longer the old no-op seam). For an exact query under `fold_search` (case
-  fold, diacritics dropped, whitespace trimmed and runs collapsed to one space — so
-  `sysselsattning` matches the `sysselsättning` pin), a curated pin (build input,
-  `reg_meta_build/curation/search_pins.toml`, read from the catalog's `search_pin`
-  table) prepends a canonical result to the TOP of its group even when FTS would not
-  surface it — e.g. `sysselsättning` → `scb/lisa` (RAMS is stale → BAS; steer to LISA)
-  and `diagnos` → `sos/par` (Patientregistret), both registers that don't rank for those
-  terms today. It operates on reg_meta's typed search models (the `SearchResult` union,
-  #701) so the route AND the eval runner (`scripts/run_search_eval.py`) apply the SAME
-  function — that's what makes the eval measure the route's TRUE behavior. Pins dedup by
-  `fqid` (a pin already an FTS hit injects nothing). The route passes every matching pin
-  to reg_meta's cursor-bound `exclude_fqids`, so the origin universe omits it on every
-  page and a deep natural FTS hit cannot duplicate the injected pin. When a net-new pin
-  displaces an origin row, continuation advances only past the origin prefix actually
-  shown, so the displaced row appears on the next page. If configured pins outnumber the
-  requested page limit, a signed opaque wrapper carries the next pin position plus the
-  unchanged reg_meta origin cursor; its context binds the normalized query, group,
-  ordered pin identities, and the origin cursor retains the catalog/steward binding.
-  Pins therefore span pages in config order without being duplicated or lost; only the
-  current page's pin slice is resolved, keeping golden construction bounded by the
-  requested limit. Pins exist for `register` and `classification` only. The build
-  validates them and refuses a complete catalog whose pin does not resolve, so the
-  webapp reads them without checks; a catalog without pins boosts nothing. Eval gaps the
-  pins close are flipped to `expect = "hit"` in `search_eval.toml` (SUN remains the lone
-  gap — a concept-group modeling issue, not a golden-boost one).
-- **ETag/cache-header wiring is automatic; cache effectiveness is not assumed**:
-  `/api/search` is a GET, so the `ETagMiddleware` stamps a body-derived ETag (the query
-  is part of the URL → part of the CF edge cache key, and part of the body → part of the
-  ETag). No per-route caching code. The pending v1 performance probe must separately
-  prove edge MISS→HIT and no-origin warm behavior for this query route.
-- **Connection seam** (`conn.py`): the per-request read-only open (`catalog_conn`, the
-  threadpool-safe pattern from #168) is shared with the catalog routes — extracted to
-  `conn.py` so search doesn't import the catalog route module just for the connection.
-
-The shared `?q=` input gate (`query_input.validate_text_query`: length cap + NUL reject,
-both → 422) is reused by the docs endpoints below; per-group `?limit` is clamped, not
-422'd.
+Under `All`, `SearchView` makes one untyped call (5 hits) for a `Top results` strip,
+shown only when it ranks more than one hit, and one call per arm (3 hits each) for the
+sections below it, in the fixed order registers → variables → classifications →
+classification codes → register-local value sets. A scoped `?type=` asks only its arm
+(`value` asks both code arms). Any failed call fails the search as a whole. Each section
+has a `Load more` control that requests that section's cursor at the same page size and
+appends the next page; query or scope changes discard the continuation state. A
+section's heading uses `N+ results` while it has a `next_cursor`, rather than claiming
+an exact total. The control is keyboard-native, announces its busy state, and keeps
+continuation errors local to the section. Classification codes render in per-code-system
+subsections, register-local value sets in their own section; a code's owning variables
+and classifications are its navigable targets.
 
 ## Docs library endpoints (`routes/docs.py`)
 
@@ -619,24 +527,22 @@ query logic beyond plumbing + the response policy.
   (search / for-variable / related metadata) or 404 "not ingested" (doc get / PDF file).
   When present, the per-request open is `conn.docs_conn` (same threadpool-safe model as
   `catalog_conn`, `check_schema=False`).
-- **Not folded into `/api/search` or global SearchView**: the `SearchGroup` union
-  reserves a `docs` arm (#350 contract), but it remains unused — the docs index is a
-  *separate optional DB* and its `ingested` degradation doesn't map onto a group's
-  `total_count`/`results` shape, so folding it into the omnibox endpoint would couple
-  `/api/search` to a second DB open on every search request. `SearchView.svelte` no
-  longer calls `/api/docs/search` or renders a docs section; the docs search endpoint
-  remains available for doc-specific callers, while the SPA entrypoint is through item
-  pages. The `/api/docs/for-variable` leaf hook has its own SPA consumer (#402):
-  `BindingLeafView.svelte` renders a `DocMentionsPanel` sibling of the lineage panels,
-  firing a SEPARATE independent `asyncResource` at `/api/docs/for-variable` — a distinct
-  failure domain (a docs error, timeout, or absent index never blanks the leaf). The
-  panel omits the entire section when the response is empty in any sense
-  (`ingested:false`, `register_ingested:false`, or zero results), mirroring the
-  omit-when-empty behaviour of the picker graph mode and `LineageDetails` (#612);
-  loading and error states still render inline, so an in-flight or errored fetch never
-  reads as a confirmed absence. When results are present, fuzzy hits are labelled as
-  such; each hit links to the `/doc/<filename>` viewer and renders the FTS snippet via a
-  safe inline-emphasis subset (`**…**` → `<mark>` for matched-term highlight,
+- **Not folded into `/api/search` or global SearchView**: the docs index is a *separate
+  optional DB* and its `ingested` degradation doesn't map onto a ranked list, so folding
+  it into the omnibox search would couple `/api/search` to a second DB open on every
+  search request. `SearchView.svelte` does not call `/api/docs/search` or render a docs
+  section; the docs search endpoint remains available for doc-specific callers, while
+  the SPA entrypoint is through item pages. The `/api/docs/for-variable` leaf hook has
+  its own SPA consumer (#402): `BindingLeafView.svelte` renders a `DocMentionsPanel`
+  sibling of the lineage panels, firing a SEPARATE independent `asyncResource` at
+  `/api/docs/for-variable` — a distinct failure domain (a docs error, timeout, or absent
+  index never blanks the leaf). The panel omits the entire section when the response is
+  empty in any sense (`ingested:false`, `register_ingested:false`, or zero results),
+  mirroring the omit-when-empty behaviour of the picker graph mode and `LineageDetails`
+  (#612); loading and error states still render inline, so an in-flight or errored fetch
+  never reads as a confirmed absence. When results are present, fuzzy hits are labelled
+  as such; each hit links to the `/doc/<filename>` viewer and renders the FTS snippet
+  via a safe inline-emphasis subset (`**…**` → `<mark>` for matched-term highlight,
   `*…*`/`_…_` → `<em>`) through auto-escaped Svelte interpolation — never `{@html}`,
   still excerpt-only.
 - **Source documents on register pages (#742/#967)**: `CatalogNodeView.svelte` renders
@@ -931,16 +837,16 @@ rest of `/api` here.
 ## ETag / Cache-Control (`etag.py` + `middleware.py`)
 
 Every read endpoint (the `/api/catalog` root + catch-all, the 7 binding-suffix
-sub-endpoints, search and docs) carries an ETag derived from the full catalog
-generation, effective read scope, package version, steward identity, and response body
-and a per-route `Cache-Control` (`cache_control_for`) in two tiers: scope-sensitive
-reads (`/api/catalog/*` and `/api/search`) keep `public, max-age=60, must-revalidate`;
-rebuild-stable doc-library reads (`/api/docs/*`) keep
-`public, max-age=86400, must-revalidate`. A matching `If-None-Match` yields a **304**
-with no body, but the current body-derived middleware still executes the route and
-serializes the response first: it saves transfer, not origin computation or latency. The
-pure logic lives in `etag.py` (`compute_etag` + `etag_matches` + `cache_control_for`);
-an ASGI middleware (`ETagMiddleware`) wires it DRY onto every GET read response.
+sub-endpoints and docs) carries an ETag derived from the full catalog generation,
+effective read scope, package version, steward identity, and response body and a
+per-route `Cache-Control` (`cache_control_for`) in two tiers: scope-sensitive reads
+(`/api/catalog/*`) keep `public, max-age=60, must-revalidate`; rebuild-stable
+doc-library reads (`/api/docs/*`) keep `public, max-age=86400, must-revalidate`. A
+matching `If-None-Match` yields a **304** with no body, but the current body-derived
+middleware still executes the route and serializes the response first: it saves
+transfer, not origin computation or latency. The pure logic lives in `etag.py`
+(`compute_etag` + `etag_matches` + `cache_control_for`); an ASGI middleware
+(`ETagMiddleware`) wires it DRY onto every GET read response.
 
 **V1 early-revalidation correction (decision 2026-07-14; not implemented at this
 head).** App code, compiled catalog DB, steward branding configuration and paired docs
@@ -1042,14 +948,14 @@ steward. A mismatch fails with the DB path and `REG_WEBAPP_STEWARD` locator. Onl
 reconciliation, drift warnings, the in-memory index, and the runtime release gate are
 removed; builder publication validation owns those invariants.
 
-Catalog, search, and stats accept `?scope=holdings|reference`. Catalog artifacts default
-to reference and reject holdings; steward artifacts default to holdings and allow
-reference. Scope is applied inside the shared reader before hydration, grouping,
-ranking, counts, or pagination. The adapter consumes scoped pages directly. Finite
-curated pins are admitted through `Catalog.exists` before ranking and pagination.
-Cursors bind both scope and the full artifact generation. Project endpoints reject any
-`scope` query parameter with a located 422; browse scope cannot override the selected
-artifact's orderability.
+Catalog reads, and the Rust server's `context` and `search`, accept
+`?scope=holdings|reference`. Catalog artifacts default to reference and reject holdings;
+steward artifacts default to holdings and allow reference. Scope is applied inside the
+shared reader before hydration, grouping, ranking, counts, or pagination. The adapter
+consumes scoped pages directly. Finite curated pins are admitted through
+`Catalog.exists` before ranking and pagination. Cursors bind both scope and the full
+artifact generation. Project endpoints reject any `scope` query parameter with a located
+422; browse scope cannot override the selected artifact's orderability.
 
 Provider and register discovery requires a mapped binding. Variable discovery unions
 mappings across source variants; states and deliveries retain their actual mapped
@@ -1417,13 +1323,12 @@ invariant removes the spurious refetch, not the teardown.
 - **Dev** serving Just Works: the Vite dev server's default `appType: 'spa'` rewrites
   unknown paths to `index.html`, and `vite.config.ts` proxies `/api` to the backend on
   `:8000`. Deep-linking to `/catalog/...` in `bun run dev` works.
-- **Production** SPA fallback is a **deploy/maintainer task**, NOT backend code. The
-  backend is a pure JSON API — `create_app` mounts no `StaticFiles` and serves no
-  `index.html` (keeping `/api`, `/openapi.json`, `/docs` un-shadowed). The SPA is served
-  by the edge (Cloudflare), which must rewrite a cold-load deep link to any non-`/api`
-  path → `index.html` (a `_redirects` / 404-rewrite rule). This mirrors the "edge config
-  is a maintainer task" pattern (ETag section above); see the comment atop
-  `router.svelte.ts`.
+- **Production** SPA fallback is edge config, NOT server code. The origin
+  (`reg-meta serve`) is a pure JSON API and serves no `index.html`, keeping `/api`,
+  `/openapi.json` and `/mcp` un-shadowed. The SPA is served by the edge worker
+  (Cloudflare static assets, `not_found_handling: single-page-application`), which
+  answers a cold-load deep link to any non-origin path with `index.html` (Deployment →
+  Edge workers below); see the comment atop `router.svelte.ts`.
 
 The fetch wrapper (`src/lib/api.ts`) types every response off
 `components["schemas"][...]` from the codegen'd `api-types.ts`, so the SPA and the
@@ -1732,6 +1637,29 @@ and officially documents the Cloudflare-in-front topology
 (`fly.io/docs/networking/understanding-cloudflare`). Lock-in is nil: the artifact is the
 plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
 
+- **The image runs the Rust server alone** (RUST_RUNTIME_SPEC.md package 3a.9, decision
+  15): `reg-meta serve` with the baked DB pair and the steward branding, no uvicorn and
+  no Python at runtime. The Dockerfile has three stages: the `regmeta-db` bake (still
+  the Python `reg-meta update` fetch until stage 4), a pinned Rust stage building
+  `reg-meta`, and a Debian slim runtime with `curl` for the smoke gate. The image serves
+  the API and `/mcp` only; the edge workers serve the SPA, which `container-build.yml`'s
+  edge jobs build themselves. The FastAPI routes not yet ported to Rust (browse, project
+  authoring, orders) are unavailable in production until their slice ships (checkpoint
+  2: no users, so no proxy or fallback); the backend package stays for dev and tests
+  until stage 4.
+- **Hosted MCP** (decision 12): `/mcp` on `catalog.swecov.se`. The global worker
+  forwards `/mcp` (`ROUTE_MCP` in `wrangler.jsonc` only; the SWECOV worker does not,
+  since a steward catalog is never served over hosted MCP), and `fly.toml` passes
+  `REG_META_PUBLIC_HOST`, which rmcp's allowed hosts admit beside the loopback names.
+  `/mcp` rate-limits per client address (60 a minute, apart from the SPA's limits).
+  Behind Fly the peer is Fly's proxy, so the worker proves a request came through the
+  edge with a shared secret (`EDGE_TOKEN` on the worker, `REG_META_EDGE_TOKEN` on the
+  Fly app, sent as `x-edge-token`); only such a request is keyed on its
+  `CF-Connecting-IP`. Any other request, a direct-origin hit included, is keyed on its
+  peer, so a forged `CF-Connecting-IP` buys nothing. Without the secret every edge
+  `/mcp` client shares the proxy's bucket. After each global edge deploy,
+  `container-build.yml` sends `initialize`, `tools/list` and one `search` to the public
+  `/mcp`.
 - **Apps**: `reg-webapp-global` serves `catalog.swecov.se`; `reg-webapp-swecov` serves
   `data.swecov.se`. Each is a single always-on `shared-cpu-1x`/1GB machine in `arn`
   (Stockholm, where the users are). Always-on is deliberate: Fly's ephemeral-rootfs I/O
@@ -1743,72 +1671,73 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   into the image and replaced with it. No volume, no LiteFS, nothing persists.
 - **Deploys**: one workflow (`container-build.yml`) owns both origin apps plus the edge
   workers, scoped by a `changes` paths-filter job. Image-affecting main pushes
-  (Dockerfile COPY surfaces + bake inputs — NOT baked deps reg_schema, which need a
-  manual `workflow_dispatch` — decided 2026-06-11: that is the rule, not a gap) build,
-  push to `registry.fly.io` (SHA-tagged), and `flyctl deploy --image` each affected
-  origin. The bake build-arg is the RESOLVED newest `reg_meta/v*` tag (never `latest` —
-  a literal `latest` makes the bake layer's buildx cache key insensitive to data-only
-  releases and can even resurrect a stale cached layer after a pinned dispatch). The
-  global Fly app uses `FLY_API_TOKEN`; SWECOV uses the separate app-scoped
-  `FLY_API_TOKEN_SWECOV`. The SWECOV image also requires a matching
-  `reg_meta_swecov.db.zst` asset on the resolved `reg_meta/v*` release: the bake runs
-  `reg-meta update --catalog swecov --tag <tag>`, which fetches that asset and the
-  shared docs asset into the steward's own directory and fails the build (exit 10) when
-  the release lacks it. The SWECOV metadata is non-confidential for the current testing
-  steward, so the flavored DB is a public release asset. An explicit `--db` update
-  cannot bootstrap an empty image layer (reg_meta/DESIGN.md → Artifact selection), which
-  is why the bake uses the named catalog. Nothing deploys without green CI: a `wait-ci`
-  job polls this commit's ci.yml run and the origin/edge deploy jobs require its success
-  — an image that builds but fails lint/ty/pytest never ships. Each deploy job carries a
-  HEAD-of-main guard (GHA concurrency serializes by build-completion order, not commit
-  order — without the guard an older commit's slow build could overwrite a newer deploy;
-  it also makes non-main dispatches deploy-inert). Two gates guard a bad image: the
-  entrypoint smoke gate (container exits non-zero before ever serving when artifact
-  admission or a required route fails) and fly.toml's `/api/catalog` HTTP check (flyctl
-  reports failure if it never passes). Rollback: `flyctl releases --image` lists
-  history; `flyctl deploy --image <old>` restores in seconds.
+  (Dockerfile COPY surfaces + bake inputs) build, push to `registry.fly.io`
+  (SHA-tagged), and `flyctl deploy --image` each affected origin. The bake build-arg is
+  the RESOLVED newest `reg_meta/v*` tag (never `latest` — a literal `latest` makes the
+  bake layer's buildx cache key insensitive to data-only releases and can even resurrect
+  a stale cached layer after a pinned dispatch). The global Fly app uses
+  `FLY_API_TOKEN`; SWECOV uses the separate app-scoped `FLY_API_TOKEN_SWECOV`. The
+  SWECOV image also requires a matching `reg_meta_swecov.db.zst` asset on the resolved
+  `reg_meta/v*` release: the bake runs `reg-meta update --catalog swecov --tag <tag>`,
+  which fetches that asset and the shared docs asset into the steward's own directory
+  and fails the build (exit 10) when the release lacks it. The SWECOV metadata is
+  non-confidential for the current testing steward, so the flavored DB is a public
+  release asset. An explicit `--db` update cannot bootstrap an empty image layer
+  (reg_meta/DESIGN.md → Artifact selection), which is why the bake uses the named
+  catalog. Nothing deploys without green CI: a `wait-ci` job polls this commit's ci.yml
+  run and the origin/edge deploy jobs require its success — an image that builds but
+  fails lint/ty/pytest never ships. Each deploy job carries a HEAD-of-main guard (GHA
+  concurrency serializes by build-completion order, not commit order — without the guard
+  an older commit's slow build could overwrite a newer deploy; it also makes non-main
+  dispatches deploy-inert). Two gates guard a bad image: the entrypoint smoke gate (it
+  probes `context`, `search` and `/mcp` with `curl`, each carrying `__edge_v`, and the
+  container exits non-zero before ever serving when artifact admission or a probe fails)
+  and fly.toml's `/api/context` HTTP check (flyctl reports failure if it never passes).
+  Rollback: `flyctl releases --image` lists history; `flyctl deploy --image <old>`
+  restores in seconds.
 - **Pending-schema-bump guard (#448)**: when `main`'s `SCHEMA_VERSION` /
-  `DOC_SCHEMA_VERSION` is AHEAD of the latest released `reg_meta/v*` asset (same major,
-  higher minor), the bake's `reg-meta update` would refuse the behind-schema asset (exit 10)
-  and turn `build-image` red — pausing **all** deploys for a state that is expected (the
-  owed reg_meta release ships the matching asset). A standalone `schema-guard` job
-  compares the code constants against the released tag's (`git show <tag>:…`) via the
-  pure `scripts/schema_pending_bump.py` helper, which returns a three-way verdict
-  (`break` / `pending` / `compatible`). On a detected code-ahead `pending` bump (with
-  both assets present) it publishes a `pending_bump=true` job output that defers the
-  bake + deploy with a GREEN `build-image` and a `::notice::`. The guard is its **own**
-  job (not a step inside `build-image`) so **every** deploy path can consult it —
-  `build-image`, `deploy`, AND `edge-deploy` all gate on
-  `needs.schema-guard.result == 'success'` (and on `pending_bump`); it runs whenever the
-  image OR edge filter matches (or on dispatch), so an edge-only push still gets a
-  verdict even though `build-image` is skipped. Once the owed release ships, the
-  **build** self-clears on the next image-affecting main push (the bake now passes), and
-  the **deploy** is self-clearing on release too: publishing the owed `reg_meta/v*`
-  release auto-dispatches `container-build.yml` (via `publish_reg_meta.yml`'s
-  `deploy-image` job, after the PyPI publish succeeds), which re-resolves the
-  now-current asset and deploys — no manual `workflow_dispatch` needed. During a
-  pending-bump window a later **edge-only** main push now correctly waits too:
-  `schema-guard` ran (the edge filter matched), so `edge-deploy` sees
-  `pending_bump == true` and holds its SPA/cache-gen ship alongside the origin, rather
-  than going live against the still-pre-bump origin. The guard green-neutralizes
-  **only** the safe code-ahead case; on a genuine **major break** — or a `pending`
-  release that is ALSO **missing** a `.zst` asset (a #343 invariant violation, verified
-  via `gh release view`) — `schema-guard` **fails red (exits non-zero)** rather than
-  emitting `pending_bump=false`. Because all three deploy jobs gate on
-  `needs.schema-guard.result == 'success'`, a failed guard cleanly blocks build-image +
-  deploy + edge-deploy — closing the edge-only hole where a skipped bake left nothing to
-  fail (pre-fix the break surfaced only as the bake's exit 10 on image pushes, so an
-  edge-only push shipped a new SPA/cache generation against a still-stuck origin) and
-  giving a clearer red than a bake exit-10. The guard is also bypassed for an explicit
-  `workflow_dispatch` `reg_meta_tag` pin — a deliberate pin of a specific (possibly
-  older) release has no owed release coming, so it must fail loud in the bake if
-  incompatible, not green-no-op (and dispatch always runs build-image, so there is no
+  `DOC_SCHEMA_VERSION` or the Rust server's minimum (`SCHEMA` in
+  `crates/reg-catalog/src/lib.rs`) is AHEAD of the latest released `reg_meta/v*` asset
+  (same major, higher minor), the bake's `reg-meta update` would refuse the
+  behind-schema asset (exit 10), or the image would refuse to boot on it, and turn
+  `build-image` red — pausing **all** deploys for a state that is expected (the owed
+  reg_meta release ships the matching asset). A standalone `schema-guard` job compares
+  the code constants against the released tag's (`git show <tag>:…`) via the pure
+  `scripts/schema_pending_bump.py` helper, which returns a three-way verdict (`break` /
+  `pending` / `compatible`). On a detected code-ahead `pending` bump (with both assets
+  present) it publishes a `pending_bump=true` job output that defers the bake + deploy
+  with a GREEN `build-image` and a `::notice::`. The guard is its **own** job (not a
+  step inside `build-image`) so **every** deploy path can consult it — `build-image`,
+  `deploy`, AND `edge-deploy` all gate on `needs.schema-guard.result == 'success'` (and
+  on `pending_bump`); it runs whenever the image OR edge filter matches (or on
+  dispatch), so an edge-only push still gets a verdict even though `build-image` is
+  skipped. Once the owed release ships, the **build** self-clears on the next
+  image-affecting main push (the bake now passes), and the **deploy** is self-clearing
+  on release too: publishing the owed `reg_meta/v*` release auto-dispatches
+  `container-build.yml` (via `publish_reg_meta.yml`'s `deploy-image` job, after the PyPI
+  publish succeeds), which re-resolves the now-current asset and deploys — no manual
+  `workflow_dispatch` needed. During a pending-bump window a later **edge-only** main
+  push now correctly waits too: `schema-guard` ran (the edge filter matched), so
+  `edge-deploy` sees `pending_bump == true` and holds its SPA/cache-gen ship alongside
+  the origin, rather than going live against the still-pre-bump origin. The guard
+  green-neutralizes **only** the safe code-ahead case; on a genuine **major break** — or
+  a `pending` release that is ALSO **missing** a `.zst` asset (a #343 invariant
+  violation, verified via `gh release view`) — `schema-guard` **fails red (exits
+  non-zero)** rather than emitting `pending_bump=false`. Because all three deploy jobs
+  gate on `needs.schema-guard.result == 'success'`, a failed guard cleanly blocks
+  build-image + deploy + edge-deploy — closing the edge-only hole where a skipped bake
+  left nothing to fail (pre-fix the break surfaced only as the bake's exit 10 on image
+  pushes, so an edge-only push shipped a new SPA/cache generation against a still-stuck
+  origin) and giving a clearer red than a bake exit-10. The guard is also bypassed for
+  an explicit `workflow_dispatch` `reg_meta_tag` pin — a deliberate pin of a specific
+  (possibly older) release has no owed release coming, so it must fail loud in the bake
+  if incompatible, not green-no-op (and dispatch always runs build-image, so there is no
   edge-only leak there). The comparison rule is unit-tested because CI can't reach the
   code-ahead branch on a normal commit (main's schema usually equals the latest
-  release); its source of truth is `_check_schema_compat` in
-  `reg_meta/src/reg_meta/db.py`. Trade-off: during the bump window the Dockerfile bake
-  isn't exercised (a build-only PR goes green-skipped), re-exercised once the release
-  lands.
+  release); its sources of truth are `_check_schema_compat` in
+  `reg_meta/src/reg_meta/db.py` and `reg-catalog`'s schema gate. Trade-off: during the
+  bump window the Dockerfile bake isn't exercised (a build-only PR goes green-skipped),
+  re-exercised once the release lands.
 - **Build/registry economics (#290)**: the reg_meta DB bake lives in its own Dockerfile
   stage (`regmeta-db`) whose cache key covers only the workspace skeleton, the reg_meta
   source tree, and `REG_META_TAG` — app-code edits reuse the cached DB layer instead of
@@ -1832,17 +1761,16 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   `catalog.swecov.se/*` and `data.swecov.se/*` serving the SPA `dist/` with
   `single-page-application` deep-link fallback. They use the same Worker source and SPA
   assets, but separate Worker names/configs so each hostname gets an independent
-  `DEPLOY_VERSION` cache generation after its own Fly origin deploys. Backend paths
-  (`/api/*`, `/openapi.json`, `/docs`) are `run_worker_first` + `fetch(request)`
-  passthrough to the incoming hostname's zone origin (Fly), so the origin
-  ETag/`Cache-Control` contract governs API caching as a classic proxied origin.
+  `DEPLOY_VERSION` cache generation after its own Fly origin deploys. Origin paths
+  (`/api/*`, `/openapi.json`, and `/mcp` on the global worker) are `run_worker_first` +
+  `fetch(request)` passthrough to the incoming hostname's zone origin (Fly), so the
+  origin ETag/`Cache-Control` contract governs API caching as a classic proxied origin.
   `run_worker_first` is required: SPA mode otherwise serves `index.html` to browser
   navigations without invoking the worker, shadowing `/api` deep-opens. The glob list
   and the worker's `ORIGIN_PATHS` regexes are a LOCKSTEP pair (comments in both files);
-  the backend disables `/redoc` (`create_app` passes `redoc_url=None`) so its surface is
-  exactly the forwarded set. Cloudflare downgrades the origin's strong ETag to weak
-  (`W/`) when compression applies — weak comparison is correct for GET revalidation, not
-  a bug.
+  `reg-meta serve` answers exactly the forwarded set. Cloudflare downgrades the origin's
+  strong ETag to weak (`W/`) when compression applies — weak comparison is correct for
+  GET revalidation, not a bug.
 - **Edge cache generations (#318)**: the worker stamps a per-deploy `DEPLOY_VERSION`
   (wrangler var; CI passes the commit SHA, `-<run_id>`-suffixed on dispatch so same-SHA
   data-only rebuilds still count) onto every origin-bound URL as an `__edge_v` query
@@ -1850,27 +1778,29 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   cache entries — fresh payloads immediately after deploy, while the per-route TTL still
   bounds origin traffic *within* a generation (60s for catalog + search, 24h for
   doc-library). This is the free-plan substitute for `cf.cacheKey` (Enterprise-only) and
-  needs no purge credentials. Origin-side the param is inert: FastAPI ignores undeclared
-  query params and the ETag is content-derived. Consequence: `edge-deploy` runs on
-  **image-affecting** pushes too, not just edge paths — an origin deploy that changes
-  API payloads without touching the SPA/contract must still ship a new cache generation.
-  The motivating incident (#303 rollout) had the edge serving 11h-old pre-deploy catalog
-  JSON against a freshly deployed SPA; the #317 defensive-rendering rule (SPA tolerates
-  one cache generation of payload skew on additive fields) stays in force regardless,
-  for clients holding *browser*-cached payloads (catalog + search browser TTL is 60s;
-  doc-library is 86400s — both unversioned). Deploys: the `edge-deploy` job in
-  `container-build.yml` rebuilds the SPA (bun pinned to the Dockerfile's version — bump
-  together) and runs `wrangler deploy` on main pushes touching the SPA, the edge worker,
-  the committed `openapi.json`, or the image surface (cache generation, above)
-  (`CLOUDFLARE_API_TOKEN` repo secret, "Edit Cloudflare Workers" template scoped to the
-  account + swecov.se). The job `needs:` the origin deploy — on a contract-changing push
-  the SPA never goes live before the origin serves the new endpoints (deploy-skew guard;
-  skew 404s are NOT negatively cached: the Cache Rule's Edge TTL is "bypass if no
-  cache-control", and the origin only stamps 200s). After each edge deploy a probe
-  asserts a catalog read returns `CF-Cache-Status: HIT` with a young `Age` (a stale
-  `Age` means cache-key versioning broke) and an edge 304 — the #220 gate as a standing
-  regression check against silent Cache Rule / zone drift. Manual fallback: build the
-  SPA, then `wrangler deploy` with a FRESH `--var DEPLOY_VERSION:...` (exact command in
+  needs no purge credentials. Origin-side the param is inert: `reg-meta serve` drops it
+  before validating the query (it rejects every other unknown parameter) and the ETag is
+  content-derived. Consequence: `edge-deploy` runs on **image-affecting** pushes too,
+  not just edge paths — an origin deploy that changes API payloads without touching the
+  SPA/contract must still ship a new cache generation. The motivating incident (#303
+  rollout) had the edge serving 11h-old pre-deploy catalog JSON against a freshly
+  deployed SPA; the #317 defensive-rendering rule (SPA tolerates one cache generation of
+  payload skew on additive fields) stays in force regardless, for clients holding
+  *browser*-cached payloads (catalog + search browser TTL is 60s; doc-library is 86400s
+  — both unversioned). Deploys: the `edge-deploy` job in `container-build.yml` rebuilds
+  the SPA (bun pinned to ci.yml's frontend job — bump together) and runs
+  `wrangler deploy` on main pushes touching the SPA, the edge worker, the committed
+  `openapi.json`, or the image surface (cache generation, above) (`CLOUDFLARE_API_TOKEN`
+  repo secret, "Edit Cloudflare Workers" template scoped to the account + swecov.se).
+  The job `needs:` the origin deploy — on a contract-changing push the SPA never goes
+  live before the origin serves the new endpoints (deploy-skew guard; skew 404s are NOT
+  negatively cached: the Cache Rule's Edge TTL is "bypass if no cache-control", and the
+  origin only stamps 200s). After each edge deploy a probe asserts a catalog read
+  returns `CF-Cache-Status: HIT` with a young `Age` (a stale `Age` means cache-key
+  versioning broke) and an edge 304 — the #220 gate as a standing regression check
+  against silent Cache Rule / zone drift. It reads `/api/search`, the cacheable Rust
+  route (`/api/context` is `no-cache`). Manual fallback: build the SPA, then
+  `wrangler deploy` with a FRESH `--var DEPLOY_VERSION:...` (exact command in
   `wrangler.jsonc`'s header — the config's literal `"dev"` default must not ship).
 - **Zone rules (dashboard, free plan)**: a Cache Rule making `/api/*` on the hostname
   cache-eligible (Cloudflare never caches extensionless API paths by default, even with
@@ -1910,7 +1840,7 @@ Backend tests build artifacts in temporary directories and point the app at them
 `REG_META_DB`; they do not fetch released DB assets. Compiled stewardship cases load
 readable logical JSON, inventory TOML, policies, and census CSV through the real builder
 and compiler. HTTP requests and expected status/body projections live in the owning JSON
-corpora. Boot cases vary manifest admission and deployment identity; catalog, search,
+corpora. Boot cases vary manifest admission and deployment identity; catalog,
 validation, scope, and cache cases assert their public boundaries. No runtime index
 fixtures or release-marked inventory reconciliation suite remains.
 
@@ -2356,7 +2286,7 @@ POSTs are not. Catalog browse paths use FQID segments directly.
   | ------ | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | GET    | `/api/context`                                   | The Rust server's `context`: branding, build info, period span, catalog sizes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
   | GET    | `/api/catalog`                                   | Top-level: every provider the steward exposes + the `class` root.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-  | GET    | `/api/search`                                    | Global FTS search → bounded typed groups (`top_results`, `registers`, folded `variables`, `classifications`, `classification_codes`, `register_value_sets`); extensible, with unknown groups skipped by the SPA. Each emitted group carries `has_more` and an opaque `next_cursor`. `?q=` is required; `?limit=` caps each group; `?type=` scopes the response (`all` default); `?cursor=` continues the requested context-bound page. Documentation is not rendered in global search.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+  | GET    | `/api/search`                                    | The Rust server's `search`: one ranked list per call (`?type=` keeps one arm), `{items, next_cursor}`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
   | GET    | `/api/docs/search`                               | Docs FTS search (excerpts + source pointer), optional `?register=`; `ingested=false` when no docs index.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
   | GET    | `/api/docs/doc/{identifier}`                     | One doc by variable/filename — metadata + source pointer + bounded excerpt (never full body).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
   | GET    | `/api/docs/for-variable`                         | Parsed-document hook: fuzzy name/`provider_key` matches + `register_ingested` coverage flag.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -2374,8 +2304,8 @@ POSTs are not. Catalog browse paths use FQID segments directly.
   | POST   | `/api/project/validate`                          | Three-layer validation; 200 + `ok` + issues.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
   | POST   | `/api/project/order`                             | The materialized JSON order manifest, downloaded as `order.json`; 422 (`OrderBlockedModel`: `detail` + typed `findings`) when the result is not an order.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
-Global FTS search shipped as `GET /api/search` (#350); the docs library shipped as
-`/api/docs/*` (#354).
+Global FTS search shipped as `GET /api/search` (#350) and moved to the Rust server in
+3a.11; the docs library shipped as `/api/docs/*` (#354).
 
 ## §16 input-validation gates (security boundary)
 

@@ -1,0 +1,14 @@
+{
+  "result": {
+    "counts": {"deferred_references": 1}
+  },
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "severity"],
+      "rows": [
+        ["deferred_out_of_slice_reference", "warning"]
+      ]
+    }
+  ]
+}

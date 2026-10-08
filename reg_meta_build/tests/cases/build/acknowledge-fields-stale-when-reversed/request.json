@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_source_acknowledgement_boundary.py::test_acknowledged_fields_match_only_in_the_issue_order[reversed]"
+  ],
+  "fails_if": "the acknowledgement matcher in source_scope.py compares `fields` as an unordered set, so an entry listing (column_name, identity) acknowledges the issue whose fields are (identity, column_name)",
+  "sources": "scb-value-two-spellings"
+}

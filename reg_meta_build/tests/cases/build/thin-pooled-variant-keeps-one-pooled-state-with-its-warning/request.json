@@ -3,6 +3,7 @@
     "test_curation_thin_register_boundary.py::test_pooled_thin_variant_keeps_one_pooled_state_with_its_warning"
   ],
   "note": "A pooled authored variant yields one pooled HEADER state whose window is the variable's own dates inside the variant's, plus the declared data warning on the name, definition and coding fields.",
+  "fails_if": "`_compile_thin_register` stops giving a pooled authored variant a pooled period (or drops the variable's `data_warning` on name, definition and coding), so HEADER's state is not pooled 2020-06-01..2021-06-30 with its warning",
   "sources": {
     "description": "Authored FK register r with no dates, one pooled variant `table` (2020-01-01..2021-12-31) and one variable HEADER (2020-06-01..2021-06-30) with a data warning. Plus the SCB sample.",
     "scb": {

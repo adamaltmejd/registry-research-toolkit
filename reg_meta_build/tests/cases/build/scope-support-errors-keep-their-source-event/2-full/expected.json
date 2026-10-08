@@ -1,0 +1,34 @@
+{
+  "projections": [
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": ["unknown_support_key", "deferred_out_of_slice_reference"]
+      },
+      "fields": ["code", "severity", "source"],
+      "rows": [
+        ["unknown_support_key", "error", "scb-unikaregisterochvariabler"],
+        ["unknown_support_key", "error", "scb-unikaregisterochvariabler"]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": ["unknown_support_key", "deferred_out_of_slice_reference"]
+      },
+      "fields": ["ref"],
+      "rows": {
+        "refs_of": {
+          "table": "source_issues",
+          "where": {"kind": "support_source_issue"}
+        }
+      }
+    },
+    {
+      "table": "source_issues",
+      "where": {"kind": "support_source_issue"},
+      "fields": ["severity"],
+      "rows": [["error"]]
+    }
+  ]
+}

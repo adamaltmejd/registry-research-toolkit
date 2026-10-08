@@ -1,0 +1,9 @@
+{
+  "description": "Variable 1.102 has no catalog naming, so its one member 1003 reports an unresolved catalog identity; 1.101 is the named neighbour.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
+      {"cvid": 1003, "var_id": 102, "colname": "OTHER", "vardef": "A generic family label"}
+    ]
+  }
+}

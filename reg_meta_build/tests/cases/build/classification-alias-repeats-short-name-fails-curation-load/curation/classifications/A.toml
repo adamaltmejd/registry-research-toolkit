@@ -1,0 +1,6 @@
+[classification]
+short_name = "A"
+slug = "a"
+name = "A"
+codes_file = "a.csv"
+aliases = ["B"]

@@ -1,0 +1,6 @@
+{
+  "replaces": ["test_build_db_scope_selection.py::test_reference_into_unselected_thin_provider_is_deferred"],
+  "fails_if": "a slice of SCB register 1 stops compiling deferred naming for the unvisited thin source Forsakringskassan/fk.toml, so fk/remote/amount is not an `unselected` declaration and the same_as edge raises CatalogDependencyError instead of one deferred_out_of_slice_reference warning",
+  "sources": "scb-value-fk-remote",
+  "registers": ["1"]
+}

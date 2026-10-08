@@ -11,10 +11,8 @@ was Codex P1 on #168, reproduced 72/80 before the fix). Opening within the
 handler body keeps open + query + close on one thread.
 
 It opens from the boot-resolved ``app.state.db_path`` with ``check_schema=False``
-— the lifespan (``app.py``) already validated the schema at boot. Both
-``routes/catalog.py`` and ``routes/search.py`` use it; it lives here (not in
-``routes/catalog.py``) so the search router doesn't import a sibling route module
-just for the connection seam.
+— the lifespan (``app.py``) already validated the schema at boot.
+``routes/catalog.py`` uses it.
 """
 
 from __future__ import annotations

@@ -12,23 +12,16 @@ from __future__ import annotations
 import json
 import tomllib
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
-from _build_case_runner import (
-    PreparedCache,
-    cache_root,
-    case_dirs,
-    case_steps,
-    run_step,
-)
+from _build_case_runner import case_dirs, case_steps, run_step
 from reg_meta_build.source_naming import authored_naming_id
 
+if TYPE_CHECKING:
+    from _build_case_runner import PreparedCache
+
 LOVA_TOML = Path(__file__).resolve().parents[1] / "curation/registers/sos/lova.toml"
-
-
-@pytest.fixture(scope="session")
-def prepared_cache(tmp_path_factory: pytest.TempPathFactory) -> PreparedCache:
-    return PreparedCache(cache_root(tmp_path_factory.getbasetemp()))
 
 
 @pytest.mark.parametrize("case", case_dirs(), ids=lambda case: case.name)
@@ -97,6 +90,8 @@ def test_committed_lova_routes_choose_distinct_labelled_rows(
     )
     window = {"data_from": 2005, "data_to": 2015}
     request = {
+        "fails_if": "a committed sos/lova.toml route edit sends A_LOVA and "
+        "A_LOVA_LISA to one subset row, or names a row the register does not declare",
         "sources": {
             "description": "Two LOVA subset rows named by the committed routes "
             "(labelled without their 'LOVA / ' prefix), one variable under each "
@@ -128,7 +123,7 @@ def test_committed_lova_routes_choose_distinct_labelled_rows(
                     ],
                 }
             ],
-        }
+        },
     }
     expected = {
         "projections": [

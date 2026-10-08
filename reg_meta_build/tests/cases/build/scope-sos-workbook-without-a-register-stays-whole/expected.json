@@ -1,0 +1,6 @@
+{
+  "status": "diagnostic_complete",
+  "result": {
+    "counts": {"scopes": 1, "physical_occurrences": 6}
+  }
+}

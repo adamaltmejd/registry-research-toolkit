@@ -1,6 +1,7 @@
 {
   "replaces": ["test_curation_toml_load_boundary.py::test_diagnostic_build_stores_no_search_pins"],
   "note": "A diagnostic build stores no pins, so an unresolved one is not an error, and records the empty-pins hash (sha256 of `[]`).",
+  "fails_if": "`write_resolved_catalog` validates and stores `search_pins` in a partial (diagnostic) build instead of `()`, so the unresolved `sos/par` pin fails resolution or is written and `search_pins_sha256` is no longer the hash of `[]`",
   "sources": {
     "description": "Register 1 delivers Kod (var_id 100).",
     "scb": {

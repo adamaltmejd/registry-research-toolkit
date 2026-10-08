@@ -2,6 +2,7 @@
   "replaces": [
     "test_curation_partition_map_boundary.py::test_map_that_misses_a_delivered_or_names_an_absent_literal_is_stale[columns0-uncovered0-absent0]"
   ],
+  "fails_if": "the explicit-map coverage check in `_column_partition_plan` only requires every mapped literal to be delivered, so a delivered MISSING column the map does not name no longer makes the partition stale",
   "sources": {
     "description": "Variable 5 delivers ANSWER, OTHER, MISSING in 2020.",
     "scb": {

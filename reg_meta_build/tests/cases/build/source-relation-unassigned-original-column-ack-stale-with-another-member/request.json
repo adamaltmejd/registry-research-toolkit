@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_build_catalog_source_relationship_boundary.py::test_unassigned_original_column_finding_reaches_exact_ack[ALTVALUE_REF1]"
+  ],
+  "fails_if": "`acknowledged_diagnostic` stops comparing the issue's refs with the acknowledgement's refs, so an ack citing member:1001 acknowledges the ALTVALUE (member:1002) unassigned_original_columns finding and is not reported stale",
+  "sources": "scb-sos-crosswalk",
+  "registers": ["1"]
+}

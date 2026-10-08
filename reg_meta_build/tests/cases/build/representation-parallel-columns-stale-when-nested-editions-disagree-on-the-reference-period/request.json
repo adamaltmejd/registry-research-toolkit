@@ -3,6 +3,7 @@
     "test_curation_support_delivery_boundary.py::test_parallel_columns_are_stale_unless_nested_editions_cover_exactly[nested-reference-period-conflict]"
   ],
   "note": "A parallel window must match its originals' coverage and agreeing metadata.",
+  "fails_if": "`compile_parallel_representations` leaves `reference_period` out of the fields whose conflict between overlapping nested editions invalidates the entry",
   "sources": {
     "description": "Variable 1: First is pooled 2020-2022 (CVID 100) and again nested 2021-2022 (CVID 103); Second is 2022-2024 (CVID 101). The two First editions state contrary reference periods.",
     "scb": {

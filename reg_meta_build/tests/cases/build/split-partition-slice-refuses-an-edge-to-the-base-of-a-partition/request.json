@@ -1,8 +1,0 @@
-{
-  "replaces": [
-    "test_curation_partition_deferred_boundary.py::test_slice_refuses_edge_to_a_name_the_full_build_does_not_mint[partition-unsplit]"
-  ],
-  "note": "A partition replaces the base variable, so its name is never minted.",
-  "sources": "scb-anchor-and-partition",
-  "registers": ["9"]
-}

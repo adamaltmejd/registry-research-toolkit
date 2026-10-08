@@ -3,6 +3,7 @@
     "test_curation_support_errata_boundary.py::test_checked_support_is_stale_when_its_authority_changes[authority-prose]"
   ],
   "note": "The authority still selects, but its guarded prose changed.",
+  "fails_if": "the authority check in `compile_occurrence_corrections` drops `_occurrence_correction_matches(entry.authority, authority)` and accepts any single selected authority record, so the authority's changed name (varname) goes unseen",
   "sources": {
     "description": "scb-support-question changed: The authority still selects, but its guarded prose changed.",
     "scb": {

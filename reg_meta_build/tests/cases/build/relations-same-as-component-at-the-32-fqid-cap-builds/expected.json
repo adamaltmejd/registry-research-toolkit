@@ -2,7 +2,8 @@
   "status": "diagnostic_complete",
   "projections": [
     {
-      "table": "same_as",
+      "table": "edges",
+      "where": {"type": "same_as"},
       "fields": ["a", "b"],
       "rows": [
         ["scb/sample/v0", "scb/sample/v1"],

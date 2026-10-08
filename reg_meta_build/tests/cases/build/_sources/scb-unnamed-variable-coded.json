@@ -1,0 +1,10 @@
+{
+  "description": "scb-unnamed-variable with a bound source code list on member 1003.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
+      {"cvid": 1003, "var_id": 102, "colname": "OTHER", "vardef": "A generic family label"}
+    ],
+    "vardemangder": ["Kön|1|1|Man|1003|5001", "Kön|1|2|Kvinna|1003|5002"]
+  }
+}

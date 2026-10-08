@@ -1,0 +1,27 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.101"
+slug = "value"
+
+[[coding.support]]
+variable = "1.999"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+code = "1"
+label = "erroneous"
+association = "row:bad"
+expected_association = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+authority_code = "2"
+authority_label = "correct"
+authority_association = "row:correct"
+expected_authority_association = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+expected_source_codings = ["cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"]
+reason = "Reviewed exact association"
+source = "fixture"

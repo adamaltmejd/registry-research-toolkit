@@ -1,0 +1,31 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "unresolved_catalog_identity"},
+      "fields": ["severity", "acknowledged_by"],
+      "rows": [
+        ["error", null]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["case_id"],
+      "rows": [
+        ["curation/registers/scb/sample.toml#/acknowledge/1"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry",
+        "detail": {"contains": "has changed original or coding evidence"}
+      },
+      "fields": ["case_id"],
+      "rows": [
+        ["curation/registers/scb/sample.toml#/acknowledge/1"]
+      ]
+    }
+  ]
+}

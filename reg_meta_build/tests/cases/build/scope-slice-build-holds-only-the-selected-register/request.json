@@ -1,0 +1,7 @@
+{
+  "replaces": ["test_build_catalog_scope_boundary.py::test_slice_build_holds_only_the_selected_register"],
+  "fails_if": "`--registers 2` stops narrowing a strict build: `visit` keeps every prepared scope, so register 1 (scb/sample) is formed beside scb/other and scopes, physical_occurrences and variables rise to 2",
+  "sources": "scb-two-registers",
+  "registers": ["2"],
+  "diagnostic": false
+}

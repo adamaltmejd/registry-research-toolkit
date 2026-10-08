@@ -1,0 +1,9 @@
+{
+  "description": "Native variable 101 delivered under two literal column spellings in one edition: an unresolved identity over the fields (identity, column_name).",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
+      {"cvid": 1002, "var_id": 101, "colname": "VALUE2"}
+    ]
+  }
+}

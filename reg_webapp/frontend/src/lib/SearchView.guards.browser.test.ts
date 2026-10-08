@@ -10,7 +10,7 @@ import SearchView from "./SearchView.svelte";
 // actually runs end to end against a controllable fetch. Each case sets `?q=` on
 // the real router (the view's single input) before rendering.
 
-const EMPTY_SEARCH_BODY = { kind: "search", query: "", groups: [] };
+const EMPTY_SEARCH_BODY = { data: { items: [], next_cursor: null }, meta: {} };
 
 function setQuery(q: string): void {
   // Reset to a sentinel URL so `navigate` isn't a no-op (its guard compares the
@@ -30,7 +30,7 @@ describe("SearchView — request cancellation (supersede)", () => {
     // First query's fetch never resolves on its own — it can only END by abort.
     // Capture the signal it received so we can assert the supersede aborts it.
     let firstSignal: AbortSignal | undefined;
-    const fetchMock = vi.fn((_url: string, init?: RequestInit) => {
+    const fetchMock = vi.fn((url: string, init?: RequestInit) => {
       if (firstSignal === undefined) {
         firstSignal = init?.signal ?? undefined;
         // A never-settling promise that rejects only when the signal aborts (the
@@ -41,29 +41,27 @@ describe("SearchView — request cancellation (supersede)", () => {
           );
         });
       }
-      // The superseding query resolves cleanly with one register hit.
+      // Every other call resolves cleanly: the register arm with one hit.
       return Promise.resolve({
         ok: true,
         status: 200,
-        json: async () => ({
-          kind: "search",
-          query: "kon",
-          groups: [
-            {
-              group: "registers",
-              has_more: false,
-              next_cursor: null,
-              results: [
-                {
-                  type: "register",
-                  fqid: "scb/lisa",
-                  name: "LISA",
-                  purpose: null,
+        json: async () =>
+          /type=register(&|$)/.test(url)
+            ? {
+                data: {
+                  items: [
+                    {
+                      type: "register",
+                      fqid: "scb/lisa",
+                      name: "LISA",
+                      purpose: null,
+                    },
+                  ],
+                  next_cursor: null,
                 },
-              ],
-            },
-          ],
-        }),
+                meta: {},
+              }
+            : EMPTY_SEARCH_BODY,
       });
     });
     vi.stubGlobal("fetch", fetchMock);

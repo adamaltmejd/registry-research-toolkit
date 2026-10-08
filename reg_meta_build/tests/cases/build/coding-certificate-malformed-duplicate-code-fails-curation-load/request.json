@@ -2,5 +2,6 @@
   "replaces": [
     "test_source_coding_choices_boundary.py::test_malformed_certificate_fails_curation_load_at_its_entry[duplicate-code]"
   ],
+  "fails_if": "`SourceEnumeration._explicit_decimal_lines` stops refusing repeated codes, so the enumeration lines `0=giltigt pnr` and `0=Ogiltigt pnr` load instead of failing with 'enumeration codes must be unique'",
   "sources": "sos-kon-decimal-comma-open"
 }

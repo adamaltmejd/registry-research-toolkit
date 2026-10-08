@@ -3,6 +3,7 @@
     "test_curation_split_partition_boundary.py::test_scoped_owner_withholds_the_unowned_projection_of_a_shared_record[later-edition]"
   ],
   "note": "An edition-scoped owner takes only its literal column at its editions; the other projection of the shared record and the same column at a later edition stay with the unnamed base family, whose catalog formation is withheld.",
+  "fails_if": "`_scoped_column_owners` stops filtering matched records by `source_editions`, so the 2020-scoped CODE owner also selects the 2021 CODE record (CVID 21) and the owner is reported stale or applied beyond its edition instead of leaving that record unowned",
   "sources": {
     "description": "Variable 1.5 delivers CODE and NAME under one source record (CVID 20) in 2020, and CODE again in 2021 (CVID 21).",
     "scb": {

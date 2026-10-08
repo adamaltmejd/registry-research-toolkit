@@ -1,0 +1,15 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "case_id": {"contains": "coding.support/1/period/1"}
+      },
+      "fields": ["code"],
+      "rows": [
+        ["stale_curation_entry"]
+      ]
+    }
+  ]
+}

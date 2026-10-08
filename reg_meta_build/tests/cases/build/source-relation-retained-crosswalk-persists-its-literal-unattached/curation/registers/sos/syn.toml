@@ -1,0 +1,27 @@
+[register]
+provider = "sos"
+slug = "syn"
+name = "Syntetiskt register"
+native_id = {{naming_id kind=register provider=sos register_key=syn}}
+[[variant]]
+slug = "syn-a"
+native_id = {{naming_id kind=register_variant provider=sos register_key=syn member_key=SYN_A}}
+[[variant]]
+slug = "syn-b"
+native_id = {{naming_id kind=register_variant provider=sos register_key=syn member_key=SYN_B}}
+[[variable]]
+slug = "diagnos"
+native_id = {{naming_id kind=variable provider=sos register_key=syn member_key=DIAGNOS}}
+[[variable]]
+slug = "kon"
+native_id = {{naming_id kind=variable provider=sos register_key=syn member_key=KON}}
+
+[[documentary.retained]]
+source = "Socialstyrelsen/Metadata Syntetiskt register (SYN)_webb.xlsx"
+table = "Kodlista_CROSSWALK"
+row = {{relationship_row table=Kodlista_CROSSWALK}}
+payload_sha256 = {{relationship_sha256 table=Kodlista_CROSSWALK}}
+table_sha256 = {{table_sha256 table=Kodlista_CROSSWALK}}
+reason = "No supplied variable or encoding endpoint; retain literal codes unattached."
+evidence = "Complete exact table reviewed."
+noted = "2026-10-02"

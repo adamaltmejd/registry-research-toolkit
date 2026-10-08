@@ -5,5 +5,6 @@
     "test_curation_sos_route_boundary.py::test_route_with_an_absent_token_or_subset_is_stale"
   ],
   "note": "A variant-less workbook places every variable in the synthesized default variant; a routed token places its variables in every named subset; a route naming an absent token (MISSING) or an absent subset (HALV -> SAKNAS) is stale, and HALV still places its variable in the delivered subset.",
+  "fails_if": "`_compile_sos_register` accepts a route when only some of its named subsets are delivered, so HALV -> [A, SAKNAS] is no longer reported stale, or it stops placing a variant-less workbook's COL in the synthesized `_default` variant",
   "sources": "sos-routes"
 }

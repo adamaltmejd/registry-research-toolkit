@@ -1,0 +1,21 @@
+{
+  "status": "diagnostic_complete",
+  "result": {
+    "counts": {"deferred_references": 2}
+  },
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "severity"],
+      "rows": [
+        ["deferred_out_of_slice_reference", "warning"],
+        ["deferred_out_of_slice_reference", "warning"]
+      ]
+    },
+    {
+      "table": "edges",
+      "fields": ["type"],
+      "rows": []
+    }
+  ]
+}

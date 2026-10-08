@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_build_catalog_period_family_boundary.py::test_slice_defers_relation_into_unselected_period_family"
+  ],
+  "fails_if": "`CatalogDependencies.require` stops deferring a key whose declared entities all lie in unselected scopes, so the same_as edge into the curation-only variable scb/other/calendar is a missing dependency in a register-1 slice",
+  "sources": "scb-calendar-months",
+  "registers": ["1"]
+}

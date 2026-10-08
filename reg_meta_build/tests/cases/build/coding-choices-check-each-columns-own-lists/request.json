@@ -2,6 +2,7 @@
   "replaces": [
     "test_source_coding_choices_boundary.py::test_compact_choices_on_two_columns_check_each_columns_own_lists"
   ],
+  "fails_if": "`compile_coding_register` caches compact coding evidence per variable instead of per effective column, so the OTHER choice (keep2 over other2) is checked against VALUE's lists and goes stale",
   "sources": {
     "description": "VALUE (CVID 1001) and OTHER (CVID 1002) of variable 101, each under its own two competing lists.",
     "scb": {

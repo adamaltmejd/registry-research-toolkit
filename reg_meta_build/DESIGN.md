@@ -1528,6 +1528,15 @@ pins; no skip flag bypasses compilation or accounting. Provider regeneration and
 acceptance remain separate maintainer operations. Diagnostic output remains explicitly
 nonpublishable and cannot replace the active artifact.
 
+Panel entity keys must not drift with a reslug (#546). On the global build, compile
+enforces this: every variable needs an authored `[[variable]]` pin, and a variable
+without one is refused as `unresolved_catalog_identity`, entity key or not. A separate
+validation gate would add nothing there, so it was retired (#1222). extend-db auto-slugs
+overlay variables, so the steward path keeps the gate (`_check_entity_key_vars_curated`,
+#559). It requires a pin in the steward slug dir for every entity-key variable of the
+steward registers. `entity-key-pins --slug-dir <steward dir>` generates the missing
+pins.
+
 Compile the four relations specified in `reg_meta/DESIGN.md` → "Compiled holdings
 relations and read scope". Reuse inventory models, edition/interval primitives, catalog
 IDs and the common atomic writer. Preserve exact physical identifiers, authored edition

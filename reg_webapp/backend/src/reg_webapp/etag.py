@@ -1,6 +1,6 @@
 """Response-body validators bound to package, steward, generation and read scope.
 
-Catalog and search reads have a 60-second window and document reads a 24-hour
+Catalog reads have a 60-second window and document reads a 24-hour
 window. The full compiled generation invalidates the keyspace even when a route body
 is unchanged. Conditional reads still execute the route before hashing its serialized
 bytes.
@@ -12,7 +12,7 @@ import hashlib
 
 CACHE_CONTROL = "public, max-age=86400, must-revalidate"
 
-# Short window for fold-bearing reads (catalog + search). A fresh fold or steward
+# Short window for fold-bearing reads (catalog). A fresh fold or steward
 # catalog edit must surface promptly for a returning user whose browser holds the
 # unversioned cached copy. The body-hash
 # ETag already changes when the body changes, but the 24h `CACHE_CONTROL` window
@@ -27,14 +27,9 @@ CACHE_CONTROL_SHORT = "public, max-age=60, must-revalidate"
 # match. The catalog read surface is `/api/catalog`, `/api/catalog/{...}/variants`,
 # the `{fqid:path}` suffixed sub-endpoints (states/predecessors/successors
 # /dimensions/lineage/lineage_warnings), and the `/api/catalog/{fqid:path}`
-# catch-all — all share the `/api/catalog` prefix. `/api/search` is the
-# variable/code search route (routes/search.py); it embeds the same #322
-# concept-group folds, so it shares the staleness gap and the short window (#506).
-# The doc-library search lives at `/api/docs/search` (under the `/api/docs` prefix)
-# and is rebuild-stable, so it correctly stays on the 24h tier: it does NOT start
-# with any short-cache prefix here (`/api/docs/search`.startswith(`/api/search`)
-# is False).
-SHORT_CACHE_PATH_PREFIXES = ("/api/catalog", "/api/search")
+# catch-all — all share the `/api/catalog` prefix. The doc-library search at
+# `/api/docs/search` is rebuild-stable, so it stays on the 24h tier.
+SHORT_CACHE_PATH_PREFIXES = ("/api/catalog",)
 
 # 16 hex chars of the body sha256 — enough to make per-URL ETags
 # collision-safe in practice while keeping the header short.
@@ -47,7 +42,7 @@ def cache_control_for(path: str) -> str:
     Two tiers:
 
     - ``SHORT_CACHE_PATH_PREFIXES`` (prefix match, the fold- or steward-dependent
-      ``/api/catalog/*`` and ``/api/search`` reads) → ``CACHE_CONTROL_SHORT``
+      ``/api/catalog/*`` reads) → ``CACHE_CONTROL_SHORT``
       (60s): curated folds and steward catalog edits must surface promptly.
     - everything else (the rebuild-stable ``/api/docs/*`` reads) → the 24h
       ``CACHE_CONTROL``."""

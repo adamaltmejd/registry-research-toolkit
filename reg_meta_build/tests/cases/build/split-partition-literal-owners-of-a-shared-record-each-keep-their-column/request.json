@@ -2,6 +2,7 @@
   "replaces": [
     "test_curation_split_partition_boundary.py::test_shared_ref_literal_owners_each_keep_their_own_column"
   ],
+  "fails_if": "`_scoped_column_owners` keys ownership by source record alone instead of (record, literal column), so the FIRST and SECOND owners of the one CVID 20 record collide as competing owners and both go stale",
   "sources": {
     "description": "Variable 1.5 delivers FIRST and SECOND under one source record (CVID 20).",
     "scb": {

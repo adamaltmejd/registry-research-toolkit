@@ -30,7 +30,7 @@ from .limits import (
     RateLimitMiddleware,
 )
 from .middleware import ETagMiddleware
-from .routes import catalog, docs, project, search
+from .routes import catalog, docs, project
 from .stewards import load_steward
 
 if TYPE_CHECKING:
@@ -140,9 +140,6 @@ def create_app(*, rate_limit_per_minute: int = RATE_LIMIT_PER_MINUTE) -> FastAPI
     app.add_middleware(BodySizeLimitMiddleware)
     app.add_middleware(RateLimitMiddleware, per_minute=rate_limit_per_minute)
     app.include_router(catalog.router)
-    # Global FTS search (#350) — a GET read, so it rides the same ETag/edge-cache
-    # axis as the catalog routes.
-    app.include_router(search.router)
     # Docs library (#354) — GET reads over the optional reg_meta_docs.db; same
     # ETag/edge-cache axis as the catalog routes.
     app.include_router(docs.router)

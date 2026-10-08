@@ -3,6 +3,7 @@
     "test_curation_support_errata_boundary.py::test_checked_support_is_stale_when_authority_codes_change"
   ],
   "note": "The records still select and match; only the coding fingerprint sees the authority's changed external code label.",
+  "fails_if": "the support compile stops comparing `_support_coding_sha256` with `expected_coding_sha256` (or treats a mismatch as valid), so the authority's changed external code label leaves the support decision applied",
   "sources": {
     "description": "scb-support-question changed: The records still select and match; only the coding fingerprint sees the authority's changed external code label.",
     "scb": {

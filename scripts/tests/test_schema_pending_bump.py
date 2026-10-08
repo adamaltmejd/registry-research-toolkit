@@ -20,7 +20,8 @@ spb = load_scripts_module("schema_pending_bump")
 
 
 def _verdict(code_db: str, code_doc: str, asset_db: str, asset_doc: str) -> str:
-    verdict, _ = spb.classify_overall(code_db, code_doc, asset_db, asset_doc)
+    # The Rust server's minimum equal to the Python reader's, as on main today.
+    verdict, _ = spb.classify_overall(code_db, code_doc, code_db, asset_db, asset_doc)
     return verdict
 
 
@@ -31,6 +32,14 @@ def test_pending_on_doc_minor_behind() -> None:
 
 def test_pending_on_db_minor_behind() -> None:
     assert _verdict("5.4.0", "1.1.0", "5.3.0", "1.1.0") == "pending"
+
+
+def test_pending_on_rust_minimum_ahead_of_python() -> None:
+    # Fails when the guard stops reading the Rust server's minimum: the bake would
+    # pass the 9.2 asset, the image would refuse to boot on it, and the deploy
+    # would go red instead of waiting for the owed release.
+    verdict, _ = spb.classify_overall("9.2.0", "1.2.0", "9.3", "9.2.0", "1.2.0")
+    assert verdict == "pending"
 
 
 def test_compatible_when_asset_equals_code() -> None:
@@ -76,6 +85,8 @@ def test_malformed_version_nonzero_exit() -> None:
             "5",
             "--code-doc",
             "1.1.0",
+            "--code-rust",
+            "5.4",
             "--asset-db",
             "5.4.0",
             "--asset-doc",
@@ -96,6 +107,8 @@ def test_subprocess_stdout_contract() -> None:
             "5.4.0",
             "--code-doc",
             "1.1.0",
+            "--code-rust",
+            "5.4",
             "--asset-db",
             "5.4.0",
             "--asset-doc",

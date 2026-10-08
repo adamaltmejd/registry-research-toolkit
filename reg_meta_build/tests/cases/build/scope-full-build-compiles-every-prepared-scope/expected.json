@@ -1,0 +1,15 @@
+{
+  "status": "diagnostic_complete",
+  "result": {
+    "counts": {"physical_occurrences": 2, "scopes": 2},
+    "variables": 2
+  },
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code"],
+      "rows": []
+    }
+  ]
+}

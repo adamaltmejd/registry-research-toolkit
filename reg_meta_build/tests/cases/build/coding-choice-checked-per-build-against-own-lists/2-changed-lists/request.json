@@ -1,1 +1,4 @@
-{"sources": "scb-value-changed-competing-list"}
+{
+  "fails_if": "coding evidence is memoized across `build_catalog` calls in one process (e.g. `compact_evidence` hoisted to module scope, keyed by column), so the second build checks its choice against the first input's `other` list (02, not 03) and goes stale",
+  "sources": "scb-value-changed-competing-list"
+}

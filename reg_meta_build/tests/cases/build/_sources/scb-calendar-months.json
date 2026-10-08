@@ -1,0 +1,92 @@
+{
+  "description": "Register 1 delivers VALUE; register 2 (OTHERREG) delivers twelve month columns Calendar<Month>.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
+      {
+        "cvid": 2101,
+        "var_id": 211,
+        "colname": "CalendarJan",
+        "varname": "CalendarJan",
+        "register": ["OTHERREG", 2, 20]
+      },
+      {
+        "cvid": 2102,
+        "var_id": 212,
+        "colname": "CalendarFeb",
+        "varname": "CalendarFeb",
+        "register": ["OTHERREG", 2, 20]
+      },
+      {
+        "cvid": 2103,
+        "var_id": 213,
+        "colname": "CalendarMar",
+        "varname": "CalendarMar",
+        "register": ["OTHERREG", 2, 20]
+      },
+      {
+        "cvid": 2104,
+        "var_id": 214,
+        "colname": "CalendarApr",
+        "varname": "CalendarApr",
+        "register": ["OTHERREG", 2, 20]
+      },
+      {
+        "cvid": 2105,
+        "var_id": 215,
+        "colname": "CalendarMaj",
+        "varname": "CalendarMaj",
+        "register": ["OTHERREG", 2, 20]
+      },
+      {
+        "cvid": 2106,
+        "var_id": 216,
+        "colname": "CalendarJun",
+        "varname": "CalendarJun",
+        "register": ["OTHERREG", 2, 20]
+      },
+      {
+        "cvid": 2107,
+        "var_id": 217,
+        "colname": "CalendarJul",
+        "varname": "CalendarJul",
+        "register": ["OTHERREG", 2, 20]
+      },
+      {
+        "cvid": 2108,
+        "var_id": 218,
+        "colname": "CalendarAug",
+        "varname": "CalendarAug",
+        "register": ["OTHERREG", 2, 20]
+      },
+      {
+        "cvid": 2109,
+        "var_id": 219,
+        "colname": "CalendarSep",
+        "varname": "CalendarSep",
+        "register": ["OTHERREG", 2, 20]
+      },
+      {
+        "cvid": 2110,
+        "var_id": 220,
+        "colname": "CalendarOkt",
+        "varname": "CalendarOkt",
+        "register": ["OTHERREG", 2, 20]
+      },
+      {
+        "cvid": 2111,
+        "var_id": 221,
+        "colname": "CalendarNov",
+        "varname": "CalendarNov",
+        "register": ["OTHERREG", 2, 20]
+      },
+      {
+        "cvid": 2112,
+        "var_id": 222,
+        "colname": "CalendarDec",
+        "varname": "CalendarDec",
+        "register": ["OTHERREG", 2, 20]
+      }
+    ]
+  }
+}

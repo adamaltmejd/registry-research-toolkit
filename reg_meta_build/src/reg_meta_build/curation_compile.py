@@ -246,7 +246,7 @@ _SENTINELS = TypeAdapter(list[SentinelCode])
 _CODE_LABEL_PAIR = "code_label_pair_invalid"
 _CODE_LABEL_PAIR_FIX = (
     "Give each [[code_label_pair]] two distinct variable FQIDs "
-    "(provider/register/variable), listed once."
+    "(provider/register/variable)."
 )
 _THIN_WINDOW = "thin_coverage_window_invalid"
 _THIN_WINDOW_FIX = (
@@ -6986,8 +6986,9 @@ def compile_curation(
         )
         for entry in tree.classifications
     )
+    # Repeated pairs are refused at load: the loader confines both endpoints to the
+    # file's own register and rejects an exact repeated row.
     pairs = []
-    seen_pairs: set[tuple[str, str]] = set()
     event_acknowledgements: list[CurationCase] = []
     lineage_acknowledgements: list[CurationCase] = []
     for register in sorted(tree.registers, key=lambda item: item.source_file):
@@ -7003,13 +7004,6 @@ def compile_curation(
                         f"{case_id}: invalid variable FQID {ref!r}",
                         _CODE_LABEL_PAIR_FIX,
                     ) from exc
-            if (pair.code, pair.label) in seen_pairs:
-                raise curation_error(
-                    _CODE_LABEL_PAIR,
-                    f"{case_id}: duplicate code/label pair",
-                    _CODE_LABEL_PAIR_FIX,
-                )
-            seen_pairs.add((pair.code, pair.label))
             if not _edge_registers((pair.code, pair.label), selected):
                 unmatched.append(case_id)
             code, label = pair.code.split("/"), pair.label.split("/")

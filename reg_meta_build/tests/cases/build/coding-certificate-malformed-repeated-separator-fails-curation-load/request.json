@@ -2,5 +2,6 @@
   "replaces": [
     "test_source_coding_choices_boundary.py::test_malformed_certificate_fails_curation_load_at_its_entry[repeated-separator]"
   ],
+  "fails_if": "`SourceEnumeration._explicit_decimal_lines` stops refusing a repeated separator, so `assignment_separators = [',', ',']` loads instead of failing with 'separators require literal decimal assignments'",
   "sources": "sos-kon-decimal-comma-open"
 }

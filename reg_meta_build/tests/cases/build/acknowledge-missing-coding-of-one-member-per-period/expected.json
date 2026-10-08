@@ -1,0 +1,36 @@
+{
+  "result": {
+    "acknowledged": {"missing_coding_period": 1}
+  },
+  "projections": [
+    {
+      "table": "issue_refs",
+      "where": {"code": "missing_coding_period"},
+      "fields": ["source", "key", "valid_from", "severity", "acknowledged_by"],
+      "rows": [
+        [
+          "scb-registerinformation",
+          ["register:1", "variant:10", "edition:110", "variable:1", "member:1005"],
+          "2020-01-01",
+          "warning",
+          "curation/registers/scb/sample.toml#/acknowledge/1"
+        ],
+        [
+          "scb-registerinformation",
+          ["register:1", "variant:10", "edition:110", "variable:1", "member:1005"],
+          "2022-01-01",
+          "error",
+          null
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": ["stale_curation_entry", "overbroad_curation_entry"]
+      },
+      "fields": ["code"],
+      "rows": []
+    }
+  ]
+}

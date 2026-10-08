@@ -1,0 +1,10 @@
+[register]
+provider = "fk"
+slug = "aktivitetsstod"
+native_id = {{naming_id kind=register provider=fk register_key=aktivitetsstod}}
+[[variant]]
+slug = "default"
+native_id = {{naming_id kind=register_variant provider=fk register_key=aktivitetsstod member_key=_default}}
+[[variable]]
+slug = "benefit"
+native_id = {{naming_id kind=variable provider=fk register_key=aktivitetsstod member_key=BENEFIT}}

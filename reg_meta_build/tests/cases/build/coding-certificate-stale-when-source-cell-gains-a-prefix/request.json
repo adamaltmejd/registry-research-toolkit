@@ -3,6 +3,7 @@
     "test_source_coding_choices_boundary.py::test_changed_source_cell_makes_the_certificate_stale[prefixed]"
   ],
   "note": "The parsed assignments are unchanged; only the exact source cell differs.",
+  "fails_if": "`compile_coding_register`'s source-authority guard keeps the comma-enumeration certificate matched after KON's cell gains `Prefix ` — its captured-record comparison, `SourceEnumeration.matches_fields` and the revision check each catch the change, so all must loosen",
   "sources": {
     "description": "sos-kon-decimal-comma with text before its enumeration.",
     "scb": {
