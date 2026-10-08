@@ -4,8 +4,8 @@
   "fails_if": "load_curation_tree accepts a per-variable [lineage.\"...\"] override that no build stage consumes",
   "note": "load_lineage_config parses per-variable overrides; the curation tree refuses them because nothing consumes them.",
   "error": {
-    "code": "lineage_invalid",
-    "locator": "lineage.toml",
+    "code": "lineage_override_unconsumed",
+    "locator": "curation/lineage.toml",
     "message_contains": [
       "overrides have no consumer"
     ]

@@ -4,8 +4,8 @@
   "fails_if": "the register loader keeps two period families with one family_stem",
   "note": "The entries differ in label, so only the one-family-per-stem rule can refuse them.",
   "error": {
-    "code": "classification_curation_invalid",
-    "locator": "curation/registers/scb/lisa.toml representation.period_family",
+    "code": "register_duplicate_entry",
+    "locator": "curation/registers/scb/lisa.toml [[representation.period_family]] entry 2",
     "message_contains": [
       "duplicate period-family stem"
     ]

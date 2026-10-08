@@ -15,7 +15,7 @@ from reg_meta.source_evidence import (
     SourceRevision,
 )
 
-from reg_meta_build._curation import data_type_class
+from reg_meta_build._curation import data_type_class, printable_error
 from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_periods import SourcePeriodIssue, source_scopes
 from reg_meta_build.source_records import (
@@ -75,15 +75,17 @@ def _scb_native_id(
     try:
         return int(value)
     except ValueError as exc:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="scb_native_id_invalid",
-            error_class="configuration",
-            message=(
-                f"Invalid SCB native ID in {filename} "
-                f"at row {row_number}, field {field}: {value!r}."
-            ),
-            remediation="Re-export the file from mikrometadata.scb.se.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="scb_native_id_invalid",
+                error_class="configuration",
+                message=(
+                    f"Invalid SCB native ID in {filename} "
+                    f"at row {row_number}, field {field}: {value!r}."
+                ),
+                remediation="Re-export the file from mikrometadata.scb.se.",
+            )
         ) from exc
 
 

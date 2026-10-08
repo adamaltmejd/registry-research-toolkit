@@ -7,7 +7,7 @@
   "fails_if": "the register loader accepts an SOS-only errata correction in an SCB register file",
   "note": "[[errata.data_type]] and [[errata.classification_reference]] share one SOS-only guard.",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_misplaced",
     "locator": "curation/registers/scb/sample.toml [[errata.classification_reference]] entry 1",
     "message_contains": [
       "applies to SOS registers"

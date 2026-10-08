@@ -7,7 +7,7 @@
   "fails_if": "load_classification_groups accepts a present-but-blank `axis` (or `key`) instead of refusing it",
   "note": "`key`, `label` and `axis` share one non-blank validator. A blank optional `axis` is the hardest form: absent is allowed, present-but-blank is drift.",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "classification_group_invalid",
     "locator": "curation/classification_groups.toml [[classification_group.axis]] entry 1",
     "message_contains": [
       "must be nonempty and trimmed"

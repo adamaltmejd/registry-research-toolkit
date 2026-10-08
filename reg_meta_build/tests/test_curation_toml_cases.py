@@ -4,8 +4,7 @@ Each case directory is one boundary claim (`cases/curation_toml/README.md`): a t
 of files as a curator commits them, the public loader that reads them, and the
 oracle in `expected.json`. The oracle is either the loaded result, projected
 through the loader's public return model, or the located configuration error the
-loader refuses with (for a loader that still refuses with a plain exception, its
-class and message). Expected values are read from the test each case replaces.
+loader refuses with. Expected values are read from the test each case replaces.
 
 Every loader reads the case's `files/` directory in place, so the corpus costs no
 fixture IO and no subprocess.
@@ -29,12 +28,12 @@ from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.cis2016_matrix import MatrixSelector, load_matrix
 from reg_meta_build.classifications import load_valid_codes
 from reg_meta_build.concept_groups import (
-    load_classification_groups,
     load_concept_groups,
     load_worklist_concept_groups,
 )
 from reg_meta_build.curation_tree import (
     load_classification_families,
+    load_classification_groups,
     load_classifications,
     load_curation_tree,
     load_register_files,
@@ -56,6 +55,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
 CASES = Path(__file__).resolve().parent / "cases" / "curation_toml"
+REPO = Path(__file__).resolve().parents[2]
 
 
 def _sole(files: Path, pattern: str) -> Path:
@@ -258,31 +258,25 @@ def read_case(case: Path) -> dict[str, Any]:
     if problem := unclaimed(expected.get("loads"), exact=exact):
         raise ValueError(f"{case.name}: {problem}")
     error = expected.get("error", {})
-    if error and ("code" in error) == ("type" in error):
-        raise ValueError(f"{case.name}: error needs a located `code` or a `type`")
-    if "type" in error and {"exit_code", "remediation_contains"} & error.keys():
-        raise ValueError(
-            f"{case.name}: a plain `type` refusal has no exit code or remediation"
-        )
+    if error and "code" not in error:
+        raise ValueError(f"{case.name}: error needs a located `code`")
     return expected
 
 
-def check_error(exc: Exception, error: dict[str, Any]) -> str | None:
-    if "type" in error:
-        # A loader that raises a plain exception has no located code yet: the
-        # case asserts the exception class and its message as raised.
-        if type(exc).__name__ != error["type"]:
-            return f"raised {type(exc).__name__} != {error['type']}: {exc}"
-        message, remediation = str(exc), ""
-    else:
-        if not isinstance(exc, RegMetaError):
-            return f"raised {type(exc).__name__}, expected {error['code']}: {exc}"
-        if exc.code != error["code"]:
-            return f"code {exc.code!r} != {error['code']!r}: {exc.message}"
-        exit_code = error.get("exit_code", EXIT_CONFIG)
-        if exc.exit_code != exit_code:
-            return f"exit code {exc.exit_code} != {exit_code}"
-        message, remediation = exc.message, exc.remediation
+def check_error(exc: RegMetaError, error: dict[str, Any]) -> str | None:
+    if exc.code != error["code"]:
+        return f"code {exc.code!r} != {error['code']!r}: {exc.message}"
+    exit_code = error.get("exit_code", EXIT_CONFIG)
+    if exc.exit_code != exit_code:
+        return f"exit code {exc.exit_code} != {exit_code}"
+    # Fails if a build-side refusal skips `printable_error`: its str() and any
+    # log or traceback would print empty.
+    if str(exc) != exc.message:
+        return f"str(exc) {str(exc)!r} != message {exc.message!r}"
+    # Fails if a refusal prints a checkout path absolute instead of repo-relative.
+    if str(REPO) in exc.message:
+        return f"absolute path in message {exc.message!r}"
+    message, remediation = exc.message, exc.remediation
     locator = error.get("locator")
     if not isinstance(locator, str) or not locator:
         return "error.locator must name where the refusal points"
@@ -305,13 +299,8 @@ def run_case(case: Path) -> str | None:
         if error is None:
             return f"refused {exc.code}: {exc.message}"
         return check_error(exc, error)
-    except Exception as exc:
-        # A plain exception is a defect unless the case claims it by `type`.
-        if error is None or "type" not in error:
-            raise
-        return check_error(exc, error)
     if error is not None:
-        return f"loaded, expected {error.get('code') or error['type']}"
+        return f"loaded, expected {error['code']}"
     if expected["loads"] is not True:
         return mismatch(
             to_json(result),

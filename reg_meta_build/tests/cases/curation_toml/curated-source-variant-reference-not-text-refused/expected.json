@@ -7,7 +7,7 @@
   "replaces": "test_curated_source_records.py::test_broken_actual_format_contracts_fail_without_silent_fallback[variants = [1]]",
   "fails_if": "read_curated_source accepts a non-string variant reference",
   "error": {
-    "type": "CuratedSourceError",
+    "code": "curated_source_invalid",
     "locator": "register.0.variable.0.variants.0",
     "message_contains": [
       "valid string"

@@ -3,7 +3,7 @@
   "replaces": "test_curation_tree.py::test_period_correction_requires_provider_source_coordinates[sos-False-False-require both supplied coverage guards]",
   "fails_if": "the register loader accepts an SOS [[errata.occurrence_period]] that does not guard coverage_from and coverage_to",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_invalid",
     "locator": "curation/registers/sos/sample.toml [[errata.occurrence_period]] entry 1",
     "message_contains": [
       "require both supplied coverage guards"

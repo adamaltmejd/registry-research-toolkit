@@ -7,7 +7,7 @@
   "fails_if": "the classification-reference noted check accepts any date fromisoformat parses instead of the canonical YYYY-MM-DD form",
   "note": "[[representation.alias_window]] reuses this table's noted validator, so the alias-window 'soon' refusal is a twin; 20260929 is the harder form because fromisoformat parses it.",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_invalid",
     "locator": "curation/registers/sos/sample.toml [[errata.classification_reference.noted]] entry 1",
     "message_contains": [
       "canonical ISO date"

@@ -11,8 +11,7 @@ import sys
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
-
+from ._curation import curation_error, display_path
 from .fqid_slugs import _toml_comment, _toml_str
 
 if TYPE_CHECKING:
@@ -46,6 +45,7 @@ def load_valid_codes(path: Path) -> dict[str, str]:
     stripped of leading/trailing whitespace before use (matches the rule used
     at query time). Duplicate codes raise.
     """
+    file = display_path(path)
     try:
         with path.open(encoding="utf-8", newline="") as fh:
             reader = csv.reader(fh)
@@ -54,64 +54,52 @@ def load_valid_codes(path: Path) -> dict[str, str]:
                 header is None
                 or tuple(h.strip() for h in header[:2]) not in _VALID_CODES_HEADERS
             ):
-                raise RegMetaError(
-                    exit_code=EXIT_CONFIG,
-                    code="classification_csv_invalid",
-                    error_class="configuration",
-                    message=(
-                        f"{path}: first two columns must be "
+                raise curation_error(
+                    "classification_csv_invalid",
+                    (
+                        f"{file}: first two columns must be "
                         f"'vardekod,vardebenamning' or 'code,label' "
                         f"(got {header!r})."
                     ),
-                    remediation="Fix the CSV header.",
+                    "Fix the CSV header.",
                 )
             out: dict[str, str] = {}
             for lineno, row in enumerate(reader, start=2):
                 if not row or all(not c.strip() for c in row):
                     continue
                 if len(row) < 2:
-                    raise RegMetaError(
-                        exit_code=EXIT_CONFIG,
-                        code="classification_csv_invalid",
-                        error_class="configuration",
-                        message=f"{path}:{lineno}: expected 2 columns, got {len(row)}.",
-                        remediation="Each row must be 'vardekod,vardebenamning'.",
+                    raise curation_error(
+                        "classification_csv_invalid",
+                        f"{file}:{lineno}: expected 2 columns, got {len(row)}.",
+                        "Each row must be 'vardekod,vardebenamning'.",
                     )
                 code = row[0].strip()
                 label = row[1].strip()
                 if not code:
-                    raise RegMetaError(
-                        exit_code=EXIT_CONFIG,
-                        code="classification_csv_invalid",
-                        error_class="configuration",
-                        message=f"{path}:{lineno}: empty vardekod.",
-                        remediation="Remove the row or supply a code.",
+                    raise curation_error(
+                        "classification_csv_invalid",
+                        f"{file}:{lineno}: empty vardekod.",
+                        "Remove the row or supply a code.",
                     )
                 if code in out:
-                    raise RegMetaError(
-                        exit_code=EXIT_CONFIG,
-                        code="classification_csv_invalid",
-                        error_class="configuration",
-                        message=f"{path}:{lineno}: duplicate vardekod {code!r}.",
-                        remediation="Each vardekod must appear once.",
+                    raise curation_error(
+                        "classification_csv_invalid",
+                        f"{file}:{lineno}: duplicate vardekod {code!r}.",
+                        "Each vardekod must appear once.",
                     )
                 out[code] = label
             if not out:
-                raise RegMetaError(
-                    exit_code=EXIT_CONFIG,
-                    code="classification_csv_invalid",
-                    error_class="configuration",
-                    message=f"{path}: no data rows.",
-                    remediation="The CSV must contain at least one code.",
+                raise curation_error(
+                    "classification_csv_invalid",
+                    f"{file}: no data rows.",
+                    "The CSV must contain at least one code.",
                 )
             return out
     except OSError as exc:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="classification_csv_unreadable",
-            error_class="configuration",
-            message=f"Could not read {path}: {exc}",
-            remediation="Check the file path and permissions.",
+        raise curation_error(
+            "classification_csv_unreadable",
+            f"Could not read {file}: {exc}",
+            "Check the file path and permissions.",
         ) from exc
 
 

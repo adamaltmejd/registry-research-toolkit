@@ -1,5 +1,5 @@
 {
   "replaces": ["test_curation_support_errata_boundary.py::test_nonphysical_support_requires_a_negative_column"],
-  "fails_if": "`ErrataSupportEntry._same_physical_question` stops requiring `column == \"\"` for a `nonphysical_projection`, so an entry naming the physical FIRST column loads instead of being refused with `classification_curation_invalid`",
+  "fails_if": "`ErrataSupportEntry._same_physical_question` stops requiring `column == \"\"` for a `nonphysical_projection`, so an entry naming the physical FIRST column loads instead of being refused with `register_entry_invalid`",
   "sources": "scb-support-nonphysical"
 }

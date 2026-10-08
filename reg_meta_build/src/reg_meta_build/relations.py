@@ -23,6 +23,7 @@ from reg_meta.fqid import (
 from ._curation import (
     curation_error,
     load_curation_entries,
+    located,
     require_fqid,
 )
 
@@ -751,44 +752,45 @@ def load_relations(path: Path | None) -> CuratedRelations:
     # something to silently dedup.
     seen_same_as: set[frozenset[str]] = set()
     seen_derived_from: set[tuple[str, str]] = set()
-    for entry in entries:
-        edge_type = entry.get("type")
-        if not isinstance(edge_type, str) or edge_type not in _EDGE_TYPES:
-            raise curation_error(
-                "relations_invalid",
-                f"relations [[edge]] has missing/unknown `type` {edge_type!r}.",
-                f"Set `type` to one of {sorted(_EDGE_TYPES)} in "
-                "reg_meta_build/curation/relations.toml.",
-            )
-        if edge_type == "same_as":
-            edge = _load_same_as(entry)
-            pair = frozenset({edge.a_fqid(), edge.b_fqid()})
-            if pair in seen_same_as:
+    for index, entry in enumerate(entries, start=1):
+        with located(f"curation/relations.toml [[edge]] entry {index}"):
+            edge_type = entry.get("type")
+            if not isinstance(edge_type, str) or edge_type not in _EDGE_TYPES:
                 raise curation_error(
                     "relations_invalid",
-                    f"relations has a duplicate same_as pair "
-                    f"{{{edge.a_fqid()}, {edge.b_fqid()}}}.",
-                    "List each pair once (same_as is symmetric — a->b and b->a "
-                    "are the same edge).",
+                    f"relations [[edge]] has missing/unknown `type` {edge_type!r}.",
+                    f"Set `type` to one of {sorted(_EDGE_TYPES)} in "
+                    "reg_meta_build/curation/relations.toml.",
                 )
-            seen_same_as.add(pair)
-            same_as.append(edge)
-        elif edge_type == "replaced_by":
-            replaced_by.append(_load_replaced_by(entry))
-        else:  # derived_from
-            edge = _load_derived_from(entry)
-            assert edge.derived.classification is not None
-            assert edge.source.classification is not None
-            pair = (edge.derived.classification, edge.source.classification)
-            if pair in seen_derived_from:
-                raise curation_error(
-                    "relations_invalid",
-                    f"relations has a duplicate derived_from pair "
-                    f"{str(edge.derived)!r} -> {str(edge.source)!r}.",
-                    "List each derived_from pair once.",
-                )
-            seen_derived_from.add(pair)
-            derived_from.append(edge)
+            if edge_type == "same_as":
+                edge = _load_same_as(entry)
+                pair = frozenset({edge.a_fqid(), edge.b_fqid()})
+                if pair in seen_same_as:
+                    raise curation_error(
+                        "relations_invalid",
+                        f"relations has a duplicate same_as pair "
+                        f"{{{edge.a_fqid()}, {edge.b_fqid()}}}.",
+                        "List each pair once (same_as is symmetric — a->b and b->a "
+                        "are the same edge).",
+                    )
+                seen_same_as.add(pair)
+                same_as.append(edge)
+            elif edge_type == "replaced_by":
+                replaced_by.append(_load_replaced_by(entry))
+            else:  # derived_from
+                edge = _load_derived_from(entry)
+                assert edge.derived.classification is not None
+                assert edge.source.classification is not None
+                pair = (edge.derived.classification, edge.source.classification)
+                if pair in seen_derived_from:
+                    raise curation_error(
+                        "relations_invalid",
+                        f"relations has a duplicate derived_from pair "
+                        f"{str(edge.derived)!r} -> {str(edge.source)!r}.",
+                        "List each derived_from pair once.",
+                    )
+                seen_derived_from.add(pair)
+                derived_from.append(edge)
     return CuratedRelations(
         same_as=tuple(same_as),
         replaced_by=tuple(replaced_by),

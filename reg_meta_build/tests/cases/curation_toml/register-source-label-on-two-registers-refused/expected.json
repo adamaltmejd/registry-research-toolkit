@@ -4,7 +4,7 @@
   "fails_if": "the register loader compares source labels case-sensitively and lets one provider's label name two registers",
   "note": "The labels differ only in case, so the rule must compare them case-folded.",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_duplicate",
     "locator": "curation/registers/scb/second.toml [register].source_labels",
     "message_contains": [
       "duplicate source label",

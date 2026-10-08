@@ -4,8 +4,8 @@
   "fails_if": "the register loader compares alias-window columns case-sensitively and keeps AEBUY and aebuy as two windows",
   "note": "The two columns differ only in case, so they are one delivered column once folded.",
   "error": {
-    "code": "classification_curation_invalid",
-    "locator": "curation/registers/scb/testreg.toml representation.alias_window",
+    "code": "register_duplicate_entry",
+    "locator": "curation/registers/scb/testreg.toml [[representation.alias_window]] entry 2",
     "message_contains": [
       "duplicate alias-window column"
     ]

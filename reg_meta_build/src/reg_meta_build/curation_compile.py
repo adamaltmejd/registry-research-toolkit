@@ -253,6 +253,12 @@ _THIN_WINDOW_FIX = (
     "Fix valid_from/valid_to in the authored provider TOML so the register, "
     "variant and variable windows overlap; a pooled variant needs an end."
 )
+_THIN_DECLARATION = "thin_declaration_invalid"
+_THIN_DECLARATION_FIX = (
+    "Declare one [[register]] with uniquely keyed [[register.variant]] tables in "
+    "the authored provider TOML, and name only those keys in a variable's "
+    "`variants`."
+)
 
 
 def validate_sentinels(raw: object, *, subject: str) -> tuple[SentinelCode, ...]:
@@ -4643,8 +4649,10 @@ def _compile_thin_register(
         if parent.kind == "register"
     )
     if len(register_facts) != 1:
-        raise ValueError(
-            f"{records[0].source}: thin register needs one parent declaration"
+        raise curation_error(
+            _THIN_DECLARATION,
+            f"{records[0].source}: thin register needs one parent declaration",
+            _THIN_DECLARATION_FIX,
         )
     register = register_facts[0]
     variants = {}
@@ -4655,8 +4663,10 @@ def _compile_thin_register(
                 continue
             name = parent.variant.native_id if parent.variant is not None else None
             if not isinstance(name, str) or name in variants:
-                raise ValueError(
-                    f"{record.source}: duplicate or missing thin variant key {name!r}"
+                raise curation_error(
+                    _THIN_DECLARATION,
+                    f"{record.source}: duplicate or missing thin variant key {name!r}",
+                    _THIN_DECLARATION_FIX,
                 )
             variants[name] = parent
             variant_periods[name] = record.edition_period_scope
@@ -4690,12 +4700,20 @@ def _compile_thin_register(
             else:
                 parent = variants.get(name)
                 if parent is None:
-                    raise ValueError(f"{case_id}: unknown declared variant {name!r}")
+                    raise curation_error(
+                        _THIN_DECLARATION,
+                        f"{case_id}: unknown declared variant {name!r}",
+                        _THIN_DECLARATION_FIX,
+                    )
                 variant_key = native_parent_key(
                     record.source, record.subject.provider, parent
                 )
                 if variant_key is None:
-                    raise ValueError(f"{case_id}: variant has no native parent key")
+                    raise curation_error(
+                        _THIN_DECLARATION,
+                        f"{case_id}: variant {name!r} has no native parent key",
+                        _THIN_DECLARATION_FIX,
+                    )
                 variant_from = _source_text(parent.fields.coverage_from)
                 variant_to = _source_text(parent.fields.coverage_to)
             starts = [

@@ -7,7 +7,7 @@
   "fails_if": "the register loader accepts a key the [[errata.column]] model does not declare, such as a `register` override",
   "note": "`register` is legal in other register-file tables (enrichment), so it is the hardest unknown key: the register is implied by the file.",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_unknown_key",
     "locator": "curation/registers/scb/lisa.toml [[errata.column.register]] entry 1",
     "message_contains": [
       "Extra inputs are not permitted"

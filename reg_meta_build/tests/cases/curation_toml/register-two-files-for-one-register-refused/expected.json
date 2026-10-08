@@ -4,7 +4,7 @@
   "fails_if": "the register loader accepts a family-directory file declaring a provider/slug another register file already declares",
   "note": "The two files carry different native ids, so only the one-file-per-register rule can refuse them.",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_duplicate",
     "locator": "curation/registers/scb/test.toml [register]",
     "message_contains": [
       "duplicate register scb/test"

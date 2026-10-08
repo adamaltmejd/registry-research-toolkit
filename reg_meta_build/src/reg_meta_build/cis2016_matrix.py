@@ -27,7 +27,7 @@ from pydantic import (
 )
 from reg_meta.fqid import derive_variable_slug
 
-from ._curation import curation_error
+from ._curation import curation_error, display_path
 from .fqid_slugs import SlugEntry
 from .source_coordinates import source_register_key
 from .source_curation import (
@@ -227,8 +227,8 @@ def load_matrix(
     except (OSError, ValidationError) as exc:
         raise curation_error(
             "matrix_evidence_invalid",
-            f"Could not load matrix evidence {path}: {exc}",
-            f"Fix the selectors and evidence in {path}.",
+            f"Could not load matrix evidence {display_path(path)}: {exc}",
+            f"Fix the selectors and evidence in {display_path(path)}.",
         ) from exc
 
     if matrix.selector != expected_selector:

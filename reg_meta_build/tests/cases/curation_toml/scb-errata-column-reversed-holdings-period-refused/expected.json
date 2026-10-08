@@ -4,8 +4,9 @@
   "fails_if": "resolve_scb_errata accepts a `holdings_period` that ends before it starts",
   "error": {
     "code": "scb_errata_invalid",
-    "locator": "holdings_period '2020-2002'",
+    "locator": "curation/registers/scb/lisa.toml [[errata.column]] entry 1 (scb/lisa)/individer-15plus/Ssyk4_J16",
     "message_contains": [
+      "holdings_period '2020-2002'",
       "before it starts"
     ]
   }

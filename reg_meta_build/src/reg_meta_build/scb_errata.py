@@ -8,7 +8,6 @@ occurrences and checked common-layer decisions; builds do not clone SQL rows.
 from __future__ import annotations
 
 import functools
-import json
 import re
 from dataclasses import dataclass, field, fields
 from datetime import date
@@ -21,6 +20,7 @@ from ._curation import (
     curation_error,
     data_type_class,
     fold_column,
+    located,
     require_bool,
     require_evidence,
     require_str,
@@ -259,33 +259,6 @@ def _state_provenance(class_name: str, evidence: str) -> str:
     return f"errata:{class_name}\n{evidence}"
 
 
-def scoped_state_provenance(
-    attributions: list[tuple[str, str]], *, provider_documented: bool = True
-) -> str:
-    """Encode ordered correction provenance with explicit source-edition scope."""
-    grouped: dict[str, list[str]] = {}
-    for provenance, edition in attributions:
-        editions = grouped.setdefault(provenance, [])
-        if edition not in editions:
-            editions.append(edition)
-
-    records = []
-    for provenance, editions in grouped.items():
-        header, evidence = provenance.split("\n", maxsplit=1)
-        records.append(
-            {
-                "class": header.removeprefix("errata:"),
-                "evidence": evidence,
-                "source_editions": editions,
-            }
-        )
-    payload = json.dumps(
-        records, ensure_ascii=False, separators=(",", ":"), sort_keys=True
-    )
-    kind = "scoped-attributions" if provider_documented else "overlapping-attributions"
-    return f"errata:{kind}\n{payload}"
-
-
 def _resolve_variant(
     entry: _CurationEntry,
     table: str,
@@ -427,13 +400,15 @@ def resolve_scb_errata(
             )
         delivered_versions.setdefault(key, set()).update(named)
         seen_columns.add(key)
+        with located(ctx):
+            provenance = _state_provenance(upstream, evidence)
         delivered.append(
             ErrataDelivered(
                 register_id,
                 variant_id,
                 column,
                 named,
-                _state_provenance(upstream, evidence),
+                provenance,
                 cast("int | None", values.get("native_variable_id")),
             )
         )
@@ -608,7 +583,8 @@ def _column_placement(
         )
     if "holdings_period" in entry:
         raw = _require_str(entry, "holdings_period", ctx)
-        holdings_period_bounds(raw)  # fail fast: refuse the bad range here
+        with located(ctx):
+            holdings_period_bounds(raw)  # fail fast: refuse the bad range here
         return None, raw
     if "all_versions" in entry:
         if not all_versions:

@@ -19,7 +19,7 @@ import tomllib
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path, PurePosixPath
-from typing import TYPE_CHECKING, Annotated, Literal
+from typing import TYPE_CHECKING, Annotated, Any, Literal
 
 from pydantic import (
     BaseModel,
@@ -35,7 +35,7 @@ from reg_meta.documentary import (
     DocumentaryVariableReference,
     UnresolvedDocumentaryReference,
 )
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta.errors import RegMetaError
 from reg_meta.fqid import validate_slug
 from reg_meta.source_evidence import (  # noqa: TC002 - Pydantic resolves nested authority models at runtime.
     RecordLocator,
@@ -75,7 +75,7 @@ from .source_records import SourceFields, TemporalScope
 from .tags import load_tags
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Callable, Sequence
 
     from .fqid_slugs import LineageConfig
     from .relations import CuratedRelations
@@ -83,6 +83,17 @@ if TYPE_CHECKING:
 
 CLASSIFICATIONS_DIR = "classifications"
 _CODE = "classification_curation_invalid"
+# Register-file refusals, one code per rule family so a curator (and a test) can
+# tell an unknown key from an entry filed under the wrong register.
+_REGISTER_UNREADABLE = "register_toml_unreadable"
+_REGISTER_UNKNOWN_KEY = "register_unknown_key"
+_REGISTER_INVALID = "register_entry_invalid"
+_REGISTER_MISPLACED = "register_entry_misplaced"
+_REGISTER_DUPLICATE_ENTRY = "register_duplicate_entry"
+_REGISTER_PATH = "register_path_mismatch"
+_REGISTER_DUPLICATE = "register_duplicate"
+_CLASSIFICATION_GROUP_UNREADABLE = "classification_group_toml_unreadable"
+_CLASSIFICATION_GROUP = "classification_group_invalid"
 
 
 class _CurationModel(BaseModel):
@@ -847,18 +858,6 @@ class EnrichmentCuration(_CurationModel):
     description: list[EnrichmentDescriptionEntry] = Field(default_factory=list)
     alias: list[EnrichmentAliasEntry] = Field(default_factory=list)
 
-    @model_validator(mode="after")
-    def _unique_targets(self) -> EnrichmentCuration:
-        descriptions = [entry.variable for entry in self.description]
-        aliases = [
-            (entry.variable, entry.delivery_column.lower()) for entry in self.alias
-        ]
-        if len(descriptions) != len(set(descriptions)):
-            raise ValueError("duplicate description target")
-        if len(aliases) != len(set(aliases)):
-            raise ValueError("duplicate alias target")
-        return self
-
 
 class GroupAxis(_CurationModel):
     axis: str
@@ -1420,39 +1419,6 @@ class RepresentationCuration(_CurationModel):
     delivery_metadata: list[DeliveryMetadataEntry] = Field(default_factory=list)
     alias_window: list[AliasWindowEntry] = Field(default_factory=list)
     parallel: list[ParallelRepresentationEntry] = Field(default_factory=list)
-
-    @field_validator("matrix")
-    @classmethod
-    def _unique_matrix_editions(
-        cls, value: list[MatrixRepresentationEntry]
-    ) -> list[MatrixRepresentationEntry]:
-        editions = [entry.selector.edition for entry in value]
-        if len(editions) != len(set(editions)):
-            raise ValueError("matrix declarations must select distinct editions")
-        return value
-
-    @field_validator("alias_window")
-    @classmethod
-    def _unique_alias_columns(
-        cls, value: list[AliasWindowEntry]
-    ) -> list[AliasWindowEntry]:
-        keys = [
-            (entry.variable, entry.variant, fold_column(entry.column))
-            for entry in value
-        ]
-        if len(keys) != len(set(keys)):
-            raise ValueError("duplicate alias-window column")
-        return value
-
-    @field_validator("period_family")
-    @classmethod
-    def _unique_family_stems(
-        cls, value: list[PeriodFamilyEntry]
-    ) -> list[PeriodFamilyEntry]:
-        stems = [entry.family_stem for entry in value]
-        if len(stems) != len(set(stems)):
-            raise ValueError("duplicate period-family stem")
-        return value
 
 
 class CodingEntry(_CurationModel):
@@ -2040,12 +2006,10 @@ class CurationTree:
 def _require_repo_curation_dir() -> Path:
     root = repo_curation_dir()
     if root is None:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="curation_tree_not_found",
-            error_class="configuration",
-            message="reg_meta_build/curation/ not found; cannot read curation.",
-            remediation="Run from the maintainer repo checkout.",
+        raise curation_error(
+            "curation_tree_not_found",
+            "reg_meta_build/curation/ not found; cannot read curation.",
+            "Run from the maintainer repo checkout.",
         )
     return root
 
@@ -2205,7 +2169,7 @@ def _register_path(directory: Path, path: Path) -> tuple[str, str]:
     parts = relative.parts
     if len(parts) not in (2, 3):
         raise curation_error(
-            _CODE,
+            _REGISTER_PATH,
             f"curation/registers/{relative.as_posix()}.toml: expected "
             "<provider>/<slug>.toml or <provider>/<family>/<slug>.toml.",
             "Keep register files at one or two directories below registers/.",
@@ -2219,14 +2183,14 @@ def _check_register_ref(
     parts = value.split("/")
     if len(parts) != 2 or not all(parts):
         raise curation_error(
-            _CODE,
+            _REGISTER_INVALID,
             f"{file} [[{table}]] entry {index}: register {value!r} must be "
             "a provider/register coordinate.",
             "Use the register file's [register] provider and slug.",
         )
     if value != expected:
         raise curation_error(
-            _CODE,
+            _REGISTER_MISPLACED,
             f"{file} [[{table}]] entry {index}: register {value!r} does not "
             f"match {expected!r}.",
             "Move the entry to its register file or correct its register field.",
@@ -2244,7 +2208,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
             or item.variable.split(".")[0] != identity.native_id
         ):
             raise curation_error(
-                _CODE,
+                _REGISTER_MISPLACED,
                 f"{file} [[identity.unassigned]] entry {index}: "
                 "unassigned family must belong to this SCB register.",
                 "Use the owning register's canonical native variable key.",
@@ -2262,13 +2226,13 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
             f"{identity.native_id}."
         ):
             raise curation_error(
-                _CODE,
+                _REGISTER_MISPLACED,
                 f"{where}: edition split must belong to this SCB register.",
                 "Use the owning SCB register and native variant.",
             )
         if split.split not in variant_ids:
             raise curation_error(
-                _CODE,
+                _REGISTER_INVALID,
                 f"{where}: split {split.split!r} has no [[variant]] entry.",
                 "Declare the split variant and its slug.",
             )
@@ -2276,7 +2240,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
         repeated = edition_owners.intersection(pairs)
         if repeated:
             raise curation_error(
-                _CODE,
+                _REGISTER_DUPLICATE_ENTRY,
                 f"{where}: editions assigned twice: {sorted(repeated)!r}.",
                 "Assign each edition name once.",
             )
@@ -2285,7 +2249,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
         identity.native_id is None or not identity.native_id.isdecimal()
     ):
         raise curation_error(
-            _CODE,
+            _REGISTER_INVALID,
             f"{file} [register]: native_id must be a decimal string for "
             f"{identity.provider!r}, got {identity.native_id!r}.",
             "Set the register's source native id in this file.",
@@ -2307,7 +2271,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                     )
                 ):
                     raise curation_error(
-                        _CODE,
+                        _REGISTER_MISPLACED,
                         f"{file} [[{table}]] entry {index}: matrix selector/path must belong to this register and native variant.",
                         "Use the owning register's evidence path and declared native variant.",
                     )
@@ -2315,7 +2279,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                 identity.provider != "scb" or row.variant not in native_variant_slugs
             ):
                 raise curation_error(
-                    _CODE,
+                    _REGISTER_MISPLACED,
                     f"{file} [[{table}]] entry {index}: variant {row.variant!r} "
                     "must name a native variant of an SCB register.",
                     "Use a native [[variant]] slug in the owning SCB register file.",
@@ -2327,7 +2291,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                 and identity.provider != "sos"
             ):
                 raise curation_error(
-                    _CODE,
+                    _REGISTER_MISPLACED,
                     f"{file} [[{table}]] entry {index}: "
                     f"{'data type correction' if isinstance(row, ErrataDataTypeEntry) else 'classification reference correction'} applies "
                     f"to SOS registers, not {identity.provider!r}.",
@@ -2351,7 +2315,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
             elif isinstance(row, AliasWindowEntry):
                 if identity.provider != "scb":
                     raise curation_error(
-                        _CODE,
+                        _REGISTER_MISPLACED,
                         f"{file} [[{table}]] entry {index}: alias windows require an SCB register.",
                         "Use the owning SCB register's source-edition declaration.",
                     )
@@ -2378,7 +2342,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                     native_id + "."
                 ):
                     raise curation_error(
-                        _CODE,
+                        _REGISTER_MISPLACED,
                         f"{file} [[{table}]] entry {index}: variable "
                         f"{row.variable!r} does not belong to native_id {native_id!r}.",
                         "Move the entry to the register file owning that native family.",
@@ -2389,7 +2353,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                 and row.edition is None
             ):
                 raise curation_error(
-                    _CODE,
+                    _REGISTER_INVALID,
                     f"{file} [[{table}]] entry {index}: SCB period corrections require an exact native edition.",
                     "Supply the native source edition; only SOS can omit that coordinate.",
                 )
@@ -2401,7 +2365,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                 )
             ):
                 raise curation_error(
-                    _CODE,
+                    _REGISTER_INVALID,
                     f"{file} [[{table}]] entry {index}: SOS period corrections require both supplied coverage guards.",
                     "Guard coverage_from and coverage_to alongside all four supplied prose fields.",
                 )
@@ -2411,7 +2375,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                     for part in row.parts:
                         if not part.owner.startswith(native_id + "."):
                             raise curation_error(
-                                _CODE,
+                                _REGISTER_MISPLACED,
                                 f"{file} [[{table}]] entry {index}: split owner "
                                 f"{part.owner!r} does not belong to native_id "
                                 f"{native_id!r}.",
@@ -2422,11 +2386,67 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                 and identity.provider != "sos"
             ):
                 raise curation_error(
-                    _CODE,
+                    _REGISTER_MISPLACED,
                     f"{file} [[{table}]] entry {index}: identity routing and "
                     f"renaming applies to SOS registers, not {identity.provider!r}.",
                     "Move the entry to the SOS register file it describes.",
                 )
+
+
+# The coordinate each entry of a table may claim once: the entry type, its
+# target, what the target names, and the fix. Checked here rather than in the
+# table models so a refusal names the file and the repeating entry.
+_UNIQUE_TARGETS: tuple[tuple[type, Callable[[Any], object], str, str], ...] = (
+    (
+        ErrataClassificationReferenceEntry,
+        lambda row: (row.deldatamangd, row.variable, row.column),
+        "classification reference target",
+        "Keep one correction per Deldatamängd, variable and column.",
+    ),
+    (
+        ErrataDataTypeEntry,
+        lambda row: (row.deldatamangd, row.variable, row.column),
+        "data type target",
+        "Keep one correction per Deldatamängd, variable and column.",
+    ),
+    (
+        ErrataEditionPeriodEntry,
+        lambda row: (row.variant, row.name),
+        "edition period",
+        "Keep one period per variant and edition name.",
+    ),
+    (
+        EnrichmentDescriptionEntry,
+        lambda row: row.variable,
+        "description target",
+        "Keep one description per variable.",
+    ),
+    (
+        EnrichmentAliasEntry,
+        lambda row: (row.variable, row.delivery_column.lower()),
+        "alias target",
+        "Keep one alias per variable and delivery column; spellings that differ "
+        "only in case are one column.",
+    ),
+    (
+        AliasWindowEntry,
+        lambda row: (row.variable, row.variant, fold_column(row.column)),
+        "alias-window column",
+        "Keep one window per variable, variant and folded column spelling.",
+    ),
+    (
+        PeriodFamilyEntry,
+        lambda row: row.family_stem,
+        "period-family stem",
+        "Keep one period family per stem.",
+    ),
+    (
+        MatrixRepresentationEntry,
+        lambda row: row.selector.edition,
+        "matrix edition",
+        "Select each edition in one matrix declaration.",
+    ),
+)
 
 
 def _load_register_file(path: Path, directory: Path) -> RegisterCuration:
@@ -2436,7 +2456,9 @@ def _load_register_file(path: Path, directory: Path) -> RegisterCuration:
         raw = tomllib.loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
         raise curation_error(
-            _CODE, f"Could not parse {file}: {exc}", "Fix the register TOML syntax."
+            _REGISTER_UNREADABLE,
+            f"Could not parse {file}: {exc}",
+            "Fix the register TOML syntax.",
         ) from exc
     try:
         entry = RegisterCuration.model_validate(raw)
@@ -2446,16 +2468,23 @@ def _load_register_file(path: Path, directory: Path) -> RegisterCuration:
         table = ".".join(str(part) for part in parts if not isinstance(part, int))
         index = next((part + 1 for part in parts if isinstance(part, int)), None)
         where = f"[[{table}]] entry {index}" if index is not None else table
+        if error["type"] == "extra_forbidden":
+            raise curation_error(
+                _REGISTER_UNKNOWN_KEY,
+                f"{file} {where}: {error['msg']}.",
+                "Remove or correct the key; register files accept only the "
+                "documented tables and fields.",
+            ) from exc
         raise curation_error(
-            _CODE,
+            _REGISTER_INVALID,
             f"{file} {where}: {error['msg']}.",
-            "Use only the documented strict register tables and fields.",
+            "Correct the value to the documented shape of that register field.",
         ) from exc
 
     provider, slug = _register_path(directory, path)
     if (entry.register_info.provider, entry.register_info.slug) != (provider, slug):
         raise curation_error(
-            _CODE,
+            _REGISTER_PATH,
             f"{file} [register] ({entry.register_info.provider}/"
             f"{entry.register_info.slug}) does not match its path ({provider}/{slug}).",
             "Match [register].provider and [register].slug to the file path.",
@@ -2464,45 +2493,28 @@ def _load_register_file(path: Path, directory: Path) -> RegisterCuration:
     _validate_register_scope(entry, file)
     for table, rows in _register_arrays(entry):
         seen: set[str] = set()
-        edition_period_keys: set[tuple[str, str]] = set()
-        data_type_keys: set[tuple[str, str, str]] = set()
-        classification_reference_keys: set[tuple[str, str, str]] = set()
+        targets: set[object] = set()
         for index, row in enumerate(rows, start=1):
-            if isinstance(row, ErrataClassificationReferenceEntry):
-                coordinate = (row.deldatamangd, row.variable, row.column)
-                if coordinate in classification_reference_keys:
+            unique = next(
+                (rule for rule in _UNIQUE_TARGETS if isinstance(row, rule[0])), None
+            )
+            if unique is not None:
+                _, target_of, noun, remediation = unique
+                target = target_of(row)
+                if target in targets:
                     raise curation_error(
-                        _CODE,
-                        f"{file} [[{table}]] entry {index}: duplicate classification reference target {coordinate!r}.",
-                        "Keep one correction per Deldatamängd, variable and column.",
+                        _REGISTER_DUPLICATE_ENTRY,
+                        f"{file} [[{table}]] entry {index}: duplicate {noun} "
+                        f"{target!r}.",
+                        remediation,
                     )
-                classification_reference_keys.add(coordinate)
-            if isinstance(row, ErrataDataTypeEntry):
-                coordinate = (row.deldatamangd, row.variable, row.column)
-                if coordinate in data_type_keys:
-                    raise curation_error(
-                        _CODE,
-                        f"{file} [[{table}]] entry {index}: duplicate data type "
-                        f"target {coordinate!r}.",
-                        "Keep one correction per Deldatamängd, variable and column.",
-                    )
-                data_type_keys.add(coordinate)
-            if isinstance(row, ErrataEditionPeriodEntry):
-                coordinate = (row.variant, row.name)
-                if coordinate in edition_period_keys:
-                    raise curation_error(
-                        _CODE,
-                        f"{file} [[{table}]] entry {index}: duplicate edition period "
-                        f"for {coordinate!r}.",
-                        "Keep one period per variant and edition name.",
-                    )
-                edition_period_keys.add(coordinate)
+                targets.add(target)
             key = json.dumps(
                 row.model_dump(mode="json"), ensure_ascii=False, sort_keys=True
             )
             if key in seen:
                 raise curation_error(
-                    _CODE,
+                    _REGISTER_DUPLICATE_ENTRY,
                     f"{file} [[{table}]] entry {index}: duplicate entry.",
                     "Keep one declaration for each entry.",
                 )
@@ -2524,7 +2536,7 @@ def load_register_files(root: Path) -> tuple[RegisterCuration, ...]:
             continue
         if not path.is_file():
             raise curation_error(
-                _CODE,
+                _REGISTER_PATH,
                 f"curation/{path.relative_to(root).as_posix()} is not a file.",
                 "Keep only register TOML files under curation/registers/.",
             )
@@ -2534,7 +2546,7 @@ def load_register_files(root: Path) -> tuple[RegisterCuration, ...]:
         key = (identity.provider, identity.slug)
         if key in owners:
             raise curation_error(
-                _CODE,
+                _REGISTER_DUPLICATE,
                 f"curation/{rel} [register]: duplicate register {key[0]}/{key[1]} "
                 f"also declared in curation/{owners[key]}.",
                 "Keep one file per provider/register.",
@@ -2544,7 +2556,7 @@ def load_register_files(root: Path) -> tuple[RegisterCuration, ...]:
             label_key = identity.provider, label.casefold()
             if (prior := label_owners.get(label_key)) and prior[0] != identity.slug:
                 raise curation_error(
-                    _CODE,
+                    _REGISTER_DUPLICATE,
                     f"curation/{rel} [register].source_labels: duplicate source "
                     f"label {label!r} for {identity.provider}/{identity.slug}; "
                     f"also declared by {identity.provider}/{prior[0]} in "
@@ -2556,7 +2568,7 @@ def load_register_files(root: Path) -> tuple[RegisterCuration, ...]:
             native_key = (identity.provider, identity.native_id)
             if native_key in native_ids:
                 raise curation_error(
-                    _CODE,
+                    _REGISTER_DUPLICATE,
                     f"curation/{rel} [register]: duplicate native_id "
                     f"{identity.native_id!r} also declared in "
                     f"curation/{native_ids[native_key]}.",
@@ -2578,7 +2590,9 @@ def load_classification_groups(root: Path) -> ClassificationGroups:
         groups = ClassificationGroups.model_validate(raw)
     except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
         raise curation_error(
-            _CODE, f"Could not parse {file}: {exc}", "Fix the TOML syntax."
+            _CLASSIFICATION_GROUP_UNREADABLE,
+            f"Could not parse {file}: {exc}",
+            "Fix the TOML syntax.",
         ) from exc
     except ValidationError as exc:
         error = exc.errors(include_url=False)[0]
@@ -2587,19 +2601,37 @@ def load_classification_groups(root: Path) -> ClassificationGroups:
         table = ".".join(str(part) for part in location if not isinstance(part, int))
         where = f"[[{table}]] entry {index}" if index is not None else f"[[{table}]]"
         raise curation_error(
-            _CODE,
+            _CLASSIFICATION_GROUP,
             f"{file} {where}: {error['msg']}.",
             "Use only the documented classification-group tables and fields.",
         ) from exc
     seen: set[str] = set()
     for index, group in enumerate(groups.classification_group, start=1):
+        where = f"{file} [[classification_group]] entry {index}"
         if group.key in seen:
             raise curation_error(
-                _CODE,
-                f"{file} [[classification_group]] entry {index}: duplicate key {group.key!r}.",
+                _CLASSIFICATION_GROUP,
+                f"{where}: duplicate key {group.key!r}.",
                 "Keep each classification-group key once.",
             )
         seen.add(group.key)
+        classifications = [member.classification for member in group.members]
+        if len(classifications) < 2:
+            raise curation_error(
+                _CLASSIFICATION_GROUP,
+                f"{where}: classification_group {group.key!r} has "
+                f"{len(classifications)} member(s); a group needs >= 2.",
+                "A single-member umbrella is not a group: add members or remove it.",
+            )
+        for position, classification in enumerate(classifications, start=1):
+            if classification in classifications[: position - 1]:
+                raise curation_error(
+                    _CLASSIFICATION_GROUP,
+                    f"{where} [[classification_group.members]] entry {position}: "
+                    f"classification_group {group.key!r} references classification "
+                    f"{classification!r} twice.",
+                    "List each member classification once.",
+                )
     return groups
 
 
@@ -2608,8 +2640,9 @@ def load_curation_tree(root: Path) -> CurationTree:
     lineage = load_lineage_config(root / "lineage.toml")
     if lineage.overrides:
         raise curation_error(
-            "lineage_invalid",
-            'lineage.toml: per-variable [lineage."…"] overrides have no consumer.',
+            "lineage_override_unconsumed",
+            'curation/lineage.toml: per-variable [lineage."…"] overrides have no '
+            "consumer.",
             'Remove the [lineage."…"] tables; keep [lineage_defaults] only.',
         )
     classifications = load_classifications(root)

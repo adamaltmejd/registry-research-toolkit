@@ -4,9 +4,10 @@
   "fails_if": "load_classification_groups lets one umbrella reference the same classification twice",
   "note": "The two members differ in value and label, so only the classification slug repeats.",
   "error": {
-    "code": "concept_groups_invalid",
-    "locator": "classification_group 'sun'",
+    "code": "classification_group_invalid",
+    "locator": "curation/classification_groups.toml [[classification_group]] entry 1 [[classification_group.members]] entry 2",
     "message_contains": [
+      "classification_group 'sun'",
       "references classification 'a' twice"
     ]
   }

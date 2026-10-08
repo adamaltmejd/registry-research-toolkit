@@ -5,6 +5,9 @@
   "note": "A misspelled [[edges]] would silently disable every curated edge.",
   "error": {
     "code": "relations_invalid",
-    "locator": "relations TOML has unknown top-level key(s): ['edges']"
+    "locator": "curation/relations.toml",
+    "message_contains": [
+      "relations TOML has unknown top-level key(s): ['edges']"
+    ]
   }
 }
