@@ -50,20 +50,16 @@ def _copied_builder_checkout(tmp_path: Path) -> tuple[Path, Path]:
     return checkout, package_dir
 
 
-@pytest.mark.parametrize(
-    "case", json.loads((CASES / "tracked-builder/request.json").read_text())
-)
-def test_writer_pins_tracked_sources_with_untracked_outputs(
-    tmp_path: Path, case: dict
-) -> None:
-    expected = json.loads((CASES / "tracked-builder/expected.json").read_text())
+def test_writer_pins_tracked_sources_with_untracked_outputs(tmp_path: Path) -> None:
+    # The output and a local config file are untracked files in the builder's own
+    # checkout root; the dirty-tracked-source refusal is
+    # test_cli_refuses_unpinned_builder_sources[dirty-checkout] (same guard).
+    # Fails if builder identity counts untracked files as a dirty checkout.
+    case = json.loads((CASES / "tracked-builder/request.json").read_text())
     checkout, package_dir = _copied_builder_checkout(tmp_path)
     local_config = checkout / ".codex/config.toml"
     local_config.parent.mkdir()
     local_config.write_text("# unrelated local configuration\n")
-    source = package_dir / "reg_meta_build/pipeline.py"
-    if case["tracked_change"]:
-        source.write_bytes(source.read_bytes() + b"\n")
     output = checkout / case["output"]
     result = subprocess.run(
         [
@@ -75,11 +71,7 @@ from reg_meta_build.resolved_catalog import ResolvedVariable,write_resolved_cata
 manifest=json.loads(Path(sys.argv[3]).read_text())
 manifest.pop('builder_commit')
 variables=tuple(ResolvedVariable.model_validate_json(json.dumps(x)) for x in json.loads(Path(sys.argv[2]).read_text()))
-try:
-    write_resolved_catalog(variables,Path(sys.argv[1]),manifest=manifest)
-except ValueError as exc:
-    print(json.dumps({'error':str(exc)}))
-    sys.exit(1)
+write_resolved_catalog(variables,Path(sys.argv[1]),manifest=manifest)
 """,
             str(output),
             str(CASES / "annual-series/catalog.json"),
@@ -90,35 +82,30 @@ except ValueError as exc:
         text=True,
         check=False,
     )
-    if case["tracked_change"]:
-        assert result.returncode != 0
-        assert expected["error_contains"] in json.loads(result.stdout)["error"]
-        assert not output.exists()
-    else:
-        assert result.returncode == 0, result.stderr
-        with sqlite3.connect(output) as conn:
-            manifest = dict(conn.execute("SELECT key,value FROM import_manifest"))
-        assert manifest["catalog_publishable"] == "true"
-        assert (
-            manifest["builder_commit"]
-            == subprocess.check_output(
-                ["git", "-C", str(checkout), "rev-parse", "HEAD"], text=True
-            ).strip()
+    assert result.returncode == 0, result.stderr
+    with sqlite3.connect(output) as conn:
+        manifest = dict(conn.execute("SELECT key,value FROM import_manifest"))
+    assert manifest["catalog_publishable"] == "true"
+    assert (
+        manifest["builder_commit"]
+        == subprocess.check_output(
+            ["git", "-C", str(checkout), "rev-parse", "HEAD"], text=True
+        ).strip()
+    )
+    assert (
+        subprocess.check_output(
+            [
+                "git",
+                "-C",
+                str(checkout),
+                "status",
+                "--porcelain",
+                "--untracked-files=no",
+            ],
+            text=True,
         )
-        assert (
-            subprocess.check_output(
-                [
-                    "git",
-                    "-C",
-                    str(checkout),
-                    "status",
-                    "--porcelain",
-                    "--untracked-files=no",
-                ],
-                text=True,
-            )
-            == ""
-        )
+        == ""
+    )
     assert local_config.read_text() == "# unrelated local configuration\n"
 
 
