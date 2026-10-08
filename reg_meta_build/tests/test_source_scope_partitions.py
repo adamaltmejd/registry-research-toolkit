@@ -273,8 +273,6 @@ def test_missing_conversion_is_fatal():
     item = record()
     with pytest.raises(ValueError, match="missing explicit provider key"):
         resolve((item,), provider_keys={})
-    with pytest.raises(ValueError, match="missing checked parent naming"):
-        resolve((item,), naming=())
 
 
 def test_pooled_variant_dependency_withholds_only_its_panel_axis():

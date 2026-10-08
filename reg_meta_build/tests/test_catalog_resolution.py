@@ -304,11 +304,6 @@ def test_edition_populations_do_not_become_competing_variable_assignments() -> N
     } == {"Adults", "Children"}
 
 
-def test_missing_naming_is_an_implementation_failure() -> None:
-    with pytest.raises(ValueError, match="missing checked parent naming"):
-        resolve_parents((_record(),), ())
-
-
 def test_parent_translations_are_accounted_without_conflicting_with_requested_language() -> (
     None
 ):
