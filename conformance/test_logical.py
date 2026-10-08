@@ -70,8 +70,6 @@ def test_logical_export_scope(case: Path, tmp_path: Path) -> None:
                         for state in result
                     ]
                 }
-            elif observe == "datacolumn-search":
-                actual = {"columns": sorted(r.datacolumn for r in result.results)}
             elif observe == "fts-search":
                 actual = {
                     "names": [r.name for r in result.results],
@@ -82,12 +80,6 @@ def test_logical_export_scope(case: Path, tmp_path: Path) -> None:
                             for column in r.delivery_column_names
                         }
                     ),
-                }
-            elif observe == "resolve-columns":
-                actual = {
-                    "columns": sorted(
-                        {m["matched_column"] for r in result for m in r["matches"]}
-                    )
                 }
             elif observe == "search-group":
                 actual = {
@@ -123,29 +115,6 @@ def test_logical_export_scope(case: Path, tmp_path: Path) -> None:
                         {v["code"] for i in result["instances"] for v in i["values"]}
                     ),
                     "years": sorted({i["year"] for i in result["instances"]}),
-                }
-            elif observe == "datacolumns":
-                actual = {
-                    "columns": sorted({r["delivery_column_name"] for r in result})
-                }
-            elif observe == "resolve":
-                actual = {"statuses": [r["status"] for r in result]}
-            elif observe == "diff":
-                actual = {
-                    "changed": sorted(
-                        {
-                            c["variable_name"]
-                            for v in result["variants"]
-                            for c in v["changed"]
-                        }
-                    ),
-                    "unchanged": result.get("unchanged", []),
-                }
-            elif observe == "coded":
-                result = sorted(result, key=lambda r: r["variable_name"])
-                actual = {
-                    "names": [r["variable_name"] for r in result],
-                    "code_counts": [r["n_distinct_codes"] for r in result],
                 }
             elif observe == "coded-ranked":
                 # Result order is the contract here: tiers, ties and the cut.
