@@ -35,6 +35,7 @@ from __future__ import annotations
 import hashlib
 import json
 import sqlite3
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import closing
 from pathlib import Path
 from urllib.parse import quote
@@ -52,6 +53,7 @@ HEADERS = (
 )
 # The CLI's and the webapp's default page size.
 LIMIT = 20
+PARALLEL = 16
 LIST_KEYS = ("filename", "variable", "display_name", "tags")
 
 
@@ -109,70 +111,95 @@ def _search_page(answer: dict) -> dict:
     return {"total": data["total"], "results": data["items"]}
 
 
-def _cli_cases(
-    cand, providers, identifiers, baseline_cli
-) -> list[tuple[str, dict, dict]]:
-    terms = [*eval_terms(), *EDGE_TERMS]
-    out = []
-    for case_id, base_cli in sorted(baseline_cli.result().items()):
-        catalog, _, command, *key = case_id.split("/")
-        if catalog != "global" or command not in {
-            "docs-search",
-            "docs-list",
-            "docs-get",
-        }:
-            continue
-        name = "/".join(key)
-        if command == "docs-search" and key:
-            expected = _cli(
-                base_cli,
-                lambda body: {
-                    "total": body["total_count"],
-                    "results": [
-                        _without(r, "type", "fts_rank") for r in body["results"]
-                    ],
-                },
+def _cli_case(cand, providers, identifiers, terms, case_id, base_cli) -> list:
+    """The served cases one CLI baseline case maps to (none for other commands)."""
+    catalog, _, command, *key = case_id.split("/")
+    name = "/".join(key)
+    if catalog != "global" or not key:
+        return []
+    if command == "docs-search":
+        expected = _cli(
+            base_cli,
+            lambda body: {
+                "total": body["total_count"],
+                "results": [_without(r, "type", "fts_rank") for r in body["results"]],
+            },
+        )
+        actual = _search_page(
+            get(
+                cand,
+                "/api/docs/search",
+                {"q": terms[int(name)], "limit": LIMIT, **REFERENCE},
             )
-            actual = _search_page(
-                get(
-                    cand,
-                    "/api/docs/search",
-                    {"q": terms[int(name)], "limit": LIMIT, **REFERENCE},
-                )
-            )
-            out.append((f"reference/docs_search-cli/{name}", expected, actual))
-        elif command == "docs-list" and key:
-            expected = _cli(
-                base_cli,
-                lambda body: {
-                    "total": body["total_count"],
-                    "items": body["results"],
-                },
-            )
-            for provider in providers.get(name, []):
-                found = _all_pages(cand, {"register": f"{provider}/{name}"})
-                actual = (
-                    {
-                        "total": found["total"],
-                        "items": [{k: r[k] for k in LIST_KEYS} for r in found["items"]],
-                    }
-                    if "items" in found
-                    else found
-                )
-                out.append(
-                    (f"reference/docs_list-cli/{provider}/{name}", expected, actual)
-                )
-        elif command == "docs-get":
-            expected = _cli(base_cli, lambda body: _without(body, "body_clean"))
-            identifier = quote(identifiers[name], safe="")
-            answer = get(cand, f"/api/docs/doc/{identifier}", REFERENCE)
+        )
+        return [(f"reference/docs_search-cli/{name}", expected, actual)]
+    if command == "docs-list":
+        expected = _cli(
+            base_cli,
+            lambda body: {"total": body["total_count"], "items": body["results"]},
+        )
+        out = []
+        for provider in providers.get(name, []):
+            found = _all_pages(cand, {"register": f"{provider}/{name}"})
             actual = (
-                _without(answer["body"]["data"], "excerpt")
-                if answer["status"] == 200
-                else {"status": answer["status"]}
+                {
+                    "total": found["total"],
+                    "items": [{k: r[k] for k in LIST_KEYS} for r in found["items"]],
+                }
+                if "items" in found
+                else found
             )
-            out.append((f"reference/docs_get-cli/{name}", expected, actual))
-    return out
+            out.append((f"reference/docs_list-cli/{provider}/{name}", expected, actual))
+        return out
+    if command == "docs-get":
+        expected = _cli(base_cli, lambda body: _without(body, "body_clean"))
+        identifier = quote(identifiers[name], safe="")
+        answer = get(cand, f"/api/docs/doc/{identifier}", REFERENCE)
+        actual = (
+            _without(answer["body"]["data"], "excerpt")
+            if answer["status"] == 200
+            else {"status": answer["status"]}
+        )
+        return [(f"reference/docs_get-cli/{name}", expected, actual)]
+    return []
+
+
+def _get_case(base, cand, filename, variable) -> tuple[str, dict, dict]:
+    path = f"/api/docs/doc/{quote(variable or Path(filename).stem, safe='')}"
+    expected = _data(get(base, path), lambda body: _without(body, "kind"))
+    actual = _data(
+        get(cand, path, REFERENCE), lambda body: _without(body["data"], "body")
+    )
+    return f"reference/docs_get/{filename}", expected, actual
+
+
+def _mention_case(base, cand, q, register, provider) -> tuple[str, dict, dict]:
+    expected = _data(
+        get(
+            base,
+            "/api/docs/for-variable",
+            {"q": q, "register": register, "limit": LIMIT},
+        ),
+        lambda body: {
+            "total": body["total_count"],
+            "register_ingested": body["register_ingested"],
+            "items": [_without(r, "fuzzy") for r in body["results"]],
+        },
+    )
+    actual = _data(
+        get(
+            cand,
+            "/api/docs/search",
+            {"q": q, "register": f"{provider}/{register}", "limit": LIMIT, **REFERENCE},
+        ),
+        lambda body: {
+            "total": body["data"]["total"],
+            "register_ingested": body["data"]["register_ingested"],
+            "items": body["data"]["items"],
+        },
+    )
+    key = f"reference/docs_search-for-variable/{provider}/{register}/{q}"
+    return key, expected, actual
 
 
 def cases(
@@ -213,18 +240,6 @@ def cases(
         ).fetchone()
     out = []
     if catalog == "global":
-        for filename, variable, _ in documents:
-            identifier = quote(variable or Path(filename).stem, safe="")
-            path = f"/api/docs/doc/{identifier}"
-            expected = _data(
-                get(base, path),
-                lambda body: _without(body, "kind"),
-            )
-            actual = _data(
-                get(cand, path, REFERENCE),
-                lambda body: _without(body["data"], "body"),
-            )
-            out.append((f"reference/docs_get/{filename}", expected, actual))
         mentions = [
             (variable, register, provider)
             for _, variable, register in documents
@@ -234,48 +249,21 @@ def cases(
         if undocumented:
             provider, register = undocumented
             mentions.append(("Kon", register, provider))
-        for q, register, provider in mentions:
-            expected = _data(
-                get(
-                    base,
-                    "/api/docs/for-variable",
-                    {"q": q, "register": register, "limit": LIMIT},
-                ),
-                lambda body: {
-                    "total": body["total_count"],
-                    "register_ingested": body["register_ingested"],
-                    "items": [_without(r, "fuzzy") for r in body["results"]],
-                },
-            )
-            actual = _data(
-                get(
-                    cand,
-                    "/api/docs/search",
-                    {
-                        "q": q,
-                        "register": f"{provider}/{register}",
-                        "limit": LIMIT,
-                        **REFERENCE,
-                    },
-                ),
-                lambda body: {
-                    "total": body["data"]["total"],
-                    "register_ingested": body["data"]["register_ingested"],
-                    "items": body["data"]["items"],
-                },
-            )
-            out.append(
-                (
-                    f"reference/docs_search-for-variable/{provider}/{register}/{q}",
-                    expected,
-                    actual,
-                )
-            )
         identifiers = {
             filename: variable or Path(filename).stem
             for filename, variable, _ in documents
         }
-        out += _cli_cases(cand, providers, identifiers, baseline_cli)
+        terms = [*eval_terms(), *EDGE_TERMS]
+        with ThreadPoolExecutor(PARALLEL) as pool:
+            out += pool.map(lambda d: _get_case(base, cand, *d[:2]), documents)
+            out += pool.map(lambda m: _mention_case(base, cand, *m), mentions)
+            # `docs search|list|get` against the CLI arm's baseline results, reused
+            # by case id.
+            for found in pool.map(
+                lambda item: _cli_case(cand, providers, identifiers, terms, *item),
+                sorted(baseline_cli.result().items()),
+            ):
+                out += found
     for register in registers:
         for provider in providers[register]:
             expected = _data(

@@ -97,6 +97,18 @@ reason = "rust-only fix: reference `coverage` names the columns the resolver emi
 case = "*/reference/get-availability-variable/*"
 paths = ["/registers/*/3/*"]
 
+[[exception]]
+name = "docs-fold-search"
+reason = "Docs folding (decision 16, 3b.6): doc_fts now holds fold_search text, so fold_search's full case folding and NFKD apply where unicode61 did not. The edge terms `ß` (folds to `ss`) and `ﬁlm` (NFKD `film`) find documents the baseline's unicode61 index never matched; both readers, the checkout's Python docs search and Rust docs_search, now find them."
+case = "global/*/docs*-*/3[47]"
+paths = ["/results", "/total", "/total_count"]
+
+[[exception]]
+name = "docs-fold-search-hint"
+reason = "As docs-fold-search: the CLI search mixes docs search's hits into its results and its doc_hint, so the same two edge terms (`ß`, `ﬁlm`) gain doc rows, which also moves the cursor and, in a full page, the trailing catalog rows."
+case = "*/*/search/7[47]"
+paths = ["/doc_hint", "/next_cursor", "/results"]
+
 # The baseline reader (CLI and webapp), run from a detached worktree with its own
 # locked environment. It reads the release originals, so code under change never
 # derives what it is compared against. 553ea622 (main after 3a.2) is the last commit
