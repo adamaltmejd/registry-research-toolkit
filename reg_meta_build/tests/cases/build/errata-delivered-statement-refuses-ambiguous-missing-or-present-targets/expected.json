@@ -3,10 +3,7 @@
   "projections": [
     {
       "table": "issues",
-      "where": {
-        "code": ["stale_curation_entry", "overbroad_curation_entry"],
-        "detail": {"contains": "#/errata.delivered/"}
-      },
+      "where": {"code": ["stale_curation_entry", "overbroad_curation_entry"]},
       "fields": ["code", "detail"],
       "rows": [
         ["overbroad_curation_entry", "curation/registers/scb/sample.toml#/errata.delivered/1: ambiguous_documented_column_identity"],
@@ -19,6 +16,16 @@
     {
       "table": "states",
       "where": {"valid_from": "2020-01-01", "column": ["AMB", "MISS", "ADDW"]},
+      "fields": ["variable", "column"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {
+        "valid_from": "2020-01-01",
+        "column": ["NOW", "ADDN"],
+        "provenance": {"contains": "errata:"}
+      },
       "fields": ["variable", "column"],
       "rows": []
     }

@@ -16,6 +16,12 @@
       "rows": [
         ["scb/sample/undated"]
       ]
+    },
+    {
+      "table": "issues",
+      "where": {"subject": "scb/sample/pool"},
+      "fields": ["code"],
+      "rows": []
     }
   ]
 }

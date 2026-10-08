@@ -45,10 +45,13 @@
     },
     {
       "table": "issues",
-      "where": {
-        "code": "stale_curation_entry",
-        "detail": {"contains": "#/errata.column/"}
-      },
+      "where": {"subject": ["scb/sample/c-stew", "scb/sample/c-cur"]},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
       "fields": ["detail"],
       "rows": [
         ["curation/registers/scb/sample.toml#/errata.column/5: column_now_documented"]

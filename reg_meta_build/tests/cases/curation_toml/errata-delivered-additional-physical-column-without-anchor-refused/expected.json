@@ -2,7 +2,7 @@
   "loader": "register_files",
   "replaces": "test_source_effect_delivery.py::test_additional_delivery_requires_anchor_and_refuses_present_column",
   "fails_if": "ErrataDeliveredEntry._additional_delivery_anchor stops requiring native_variable_id when upstream is additional-physical-column-in-version, so an unanchored additional delivery loads",
-  "note": "The replaced test's first refusal (ValidationError 'requires native_variable_id' on the entry model). Its present-column half is in cases/build/errata-delivered-statement-refuses-ambiguous-missing-or-present-targets.",
+  "note": "The replaced test's first refusal (ValidationError 'requires native_variable_id' on the entry model). Its present-column half is in cases/build/errata-delivered-statement-refuses-ambiguous-missing-or-present-targets. Allowed twin: cases/build/errata-delivered-additional-physical-column-keeps-its-siblings, whose anchored entries (native_variable_id 27 and 28) load and apply.",
   "error": {
     "code": "register_entry_invalid",
     "locator": "curation/registers/scb/test.toml [[errata.delivered]] entry 1",

@@ -3,10 +3,7 @@
   "projections": [
     {
       "table": "issues",
-      "where": {
-        "code": "stale_curation_entry",
-        "detail": {"contains": "complete columns and split keys"}
-      },
+      "where": {"code": "stale_curation_entry"},
       "fields": ["locator"],
       "rows": [
         ["curation/registers/scb/sample.toml#/identity.partition/1"]

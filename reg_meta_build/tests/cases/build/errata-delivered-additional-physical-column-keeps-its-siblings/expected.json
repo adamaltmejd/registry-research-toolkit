@@ -21,6 +21,12 @@
         ["v27-add", null],
         ["v28-addp", "text"]
       ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": ["stale_curation_entry", "overbroad_curation_entry"]},
+      "fields": ["case_id"],
+      "rows": []
     }
   ]
 }

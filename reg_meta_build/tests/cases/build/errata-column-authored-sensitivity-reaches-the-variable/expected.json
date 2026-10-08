@@ -13,6 +13,12 @@
     },
     {
       "table": "issues",
+      "where": {"subject": ["scb/sample/new-on", "scb/sample/new-off", "scb/sample/held"]},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "issues",
       "where": {"code": "unresolved_flag"},
       "fields": ["subject", "severity"],
       "rows": [

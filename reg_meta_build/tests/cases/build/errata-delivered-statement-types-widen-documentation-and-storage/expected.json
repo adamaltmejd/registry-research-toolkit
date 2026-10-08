@@ -45,6 +45,22 @@
       "rows": [
         ["scb/sample/v12"]
       ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "unknown_data_type", "valid_from": "2020-01-01"},
+      "fields": ["subject"],
+      "rows": [
+        ["scb/sample/v10"],
+        ["scb/sample/v11"],
+        ["scb/sample/v12"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": ["stale_curation_entry", "overbroad_curation_entry"]},
+      "fields": ["case_id"],
+      "rows": []
     }
   ]
 }

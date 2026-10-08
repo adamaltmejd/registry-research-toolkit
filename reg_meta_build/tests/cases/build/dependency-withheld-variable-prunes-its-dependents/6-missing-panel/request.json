@@ -1,6 +1,6 @@
 {
   "replaces": ["test_catalog_dependency_withholding.py::test_dependency_failure_reports_every_missing_endpoint[panel]"],
-  "note": "Neither composite panel member is declared; both are reported (old: error.missing names both members, so 2).",
+  "note": "Neither composite panel member is declared; both are reported (old: error.missing names both members, so 2). Allowed twin: step 1, whose composite panel key of declared members (one withheld) is pruned instead of refused.",
   "fails_if": "`resolve_panel_dependencies` (catalog_dependencies.py) stops requiring a composite key's members after the first unsupported one, so only scb/sample/nokey is reported",
   "sources": "scb-withheld-key-and-gone"
 }

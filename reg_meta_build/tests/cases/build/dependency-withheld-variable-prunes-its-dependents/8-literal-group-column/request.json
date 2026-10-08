@@ -1,6 +1,6 @@
 {
   "replaces": ["test_catalog_dependency_withholding.py::test_representation_withholding_is_literal_but_succession_preserves_its_contract"],
-  "note": "Delivered columns are VALUE and TWO. A group member naming column 'value' is literal, so it is missing (old: 'unexplained missing catalog dependenc'); the replaced_by from_column 'Value' to_column 'tWO' resolves case-insensitively (old: the succession metadata is unchanged). Every entry is required before the refusal, so exactly 1 missing.",
+  "note": "Delivered columns are VALUE and TWO. A group member naming column 'value' is literal, so it is missing (old: 'unexplained missing catalog dependenc'); the replaced_by from_column 'Value' to_column 'tWO' resolves case-insensitively (old: the succession metadata is unchanged). Every entry is required before the refusal, so exactly 1 missing. The allowed twin is in this step: the member naming column 'TWO' exactly as delivered resolves and is not counted.",
   "fails_if": "`representation()` inside `resolve_metadata_dependencies` (catalog_dependencies.py) lowercases a literal group column (the refusal disappears), or stops lowercasing succession columns (the count becomes 3)",
   "sources": "scb-withheld-key-and-gone"
 }

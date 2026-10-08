@@ -8,6 +8,11 @@
         ["answer-sweden", "15662", 0, 1],
         ["answer-abroad", "15662", 0, 1]
       ]
+    },
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": []
     }
   ]
 }

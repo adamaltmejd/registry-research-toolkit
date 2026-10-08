@@ -2,8 +2,8 @@
   "projections": [
     {
       "table": "issues",
-      "where": {"code": "stale_curation_entry"},
-      "fields": ["locator"],
+      "where": {"severity": "error"},
+      "fields": ["code"],
       "rows": []
     },
     {
