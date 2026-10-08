@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from reg_meta_build.input_snapshot import (
-    _committed_inventory_sizes,
+    _committed_inventory,
     _git,
     _git_bytes,
     _index_tags,
@@ -84,23 +84,24 @@ def check_accepted_files(
             or re.fullmatch(r"[0-9a-f]{40}", blob) is None
         ):
             raise PreparedInputError(f"invalid prepared file proof: {name}")
-    inventory = _committed_inventory_sizes(
+    committed = _committed_inventory(
         repo,
         commit,
         relative,
         (_snapshot_repo_path(relative, "files"),),
         context="prepared sources",
     )
+    inventory = {name: size for name, (size, _) in committed.items()}
     if inventory != {name: proof[0] for name, proof in proofs.items()}:
         raise PreparedInputError(
             "prepared source committed inventory differs from manifest"
         )
-    for name, (_, blob) in proofs.items():
-        member = _snapshot_repo_path(relative, name)
-        if _git(repo, "rev-parse", "--verify", f"{commit}:{member}") != blob:
-            raise PreparedInputError(
-                "prepared source committed database differs from its preparation proof"
-            )
+    # The tree listing carries each committed blob id: the id `git rev-parse
+    # --verify <commit>:<path>` would return, without a process per file.
+    if any(committed[name][1] != blob for name, (_, blob) in proofs.items()):
+        raise PreparedInputError(
+            "prepared source committed database differs from its preparation proof"
+        )
     tags = _index_tags(repo)
     if any(
         tags.get(_snapshot_repo_path(relative, name)) != "H"
