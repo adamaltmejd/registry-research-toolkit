@@ -311,14 +311,14 @@ fn page(
         (Some((offset, after)), Some(_)) => {
             if *offset > hits.len() || (*offset > 0 && identity(&hits[offset - 1]) != *after) {
                 return Err(cursor::invalid(
-                    "Search cursor no longer matches the result ordering.",
+                    "Cursor no longer matches the result ordering.",
                 ));
             }
             *offset
         }
         (Some((_, after)), None) => {
-            let after: Key = serde_json::from_str(after)
-                .map_err(|_| cursor::invalid("Search cursor is malformed."))?;
+            let after: Key =
+                serde_json::from_str(after).map_err(|_| cursor::invalid("Cursor is malformed."))?;
             keys.partition_point(|key| *key <= after)
         }
     };

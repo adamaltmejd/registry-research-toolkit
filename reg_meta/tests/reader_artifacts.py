@@ -302,7 +302,7 @@ def cached_reader_artifact(
             staging, fixture_source(fixture), kind, identity_overrides, search_pins
         )
         if docs is not None:
-            build_docs(docs, staging)
+            build_docs(docs, staging).chmod(0o444)
         (staging / "reg_meta.db").chmod(0o444)
         try:
             staging.rename(entry)

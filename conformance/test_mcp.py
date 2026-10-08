@@ -151,13 +151,18 @@ def test_tool_matches_http(servers, operation):
 
 def test_tool_of_several_needs_an_operation(servers):
     # Fails when a tool of several operations answers a call that names none of them
-    # (it would have to guess one) with anything but `invalid_parameter`.
+    # (it would have to guess one), or one that omits its operation's required
+    # parameter, with anything but `invalid_parameter` naming the parameter.
     client = servers.client(artifact_env(cached_case_artifact(READER), "steward"))
-    for arguments in ({"identifier": "Kon"}, {"operation": "search", "q": "Kon"}):
+    for arguments, parameter in (
+        ({"identifier": "Kon"}, "operation"),
+        ({"operation": "search", "q": "Kon"}, "operation"),
+        ({"operation": "docs_get"}, "identifier"),
+    ):
         is_error, document = call(client, "docs", arguments)
         assert is_error
         assert document["error"]["code"] == "invalid_parameter"
-        assert document["error"]["fields"] == {"parameter": "operation"}
+        assert document["error"]["fields"] == {"parameter": parameter}
 
 
 def test_tools_list_matches_golden(servers):

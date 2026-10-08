@@ -23,7 +23,7 @@
     "status": 404,
     "json": {
       "/error/code": "not_found",
-      "/error/fields/ref": "missing.pdf"
+      "/error/fields/ref": "scb/example/missing.pdf"
     }
   }
 ]

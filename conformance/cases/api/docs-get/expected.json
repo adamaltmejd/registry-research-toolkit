@@ -49,7 +49,7 @@
     "status": 422,
     "json": {
       "/error/code": "invalid_parameter",
-      "/error/fields/parameter": "register"
+      "/error/fields/parameter": "ref"
     }
   }
 ]

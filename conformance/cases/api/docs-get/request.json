@@ -14,7 +14,7 @@
     {
       "operation": "docs_get",
       "path": "/api/docs/doc/Kon",
-      "query": {"register": "example"}
+      "query": {"ref": "scb/example"}
     }
   ]
 }

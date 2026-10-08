@@ -165,7 +165,7 @@ pub fn file(server: &Server, scope: Scope, params: &Params) -> Result<Raw, Error
         Error::new(
             Code::NotFound,
             format!("No related document {filename:?} for register {reference:?}."),
-            vec![filename.into()],
+            vec![format!("{reference}/{filename}").into()],
         )
     })?;
     Ok(Raw {
@@ -178,7 +178,8 @@ pub fn file(server: &Server, scope: Scope, params: &Params) -> Result<Raw, Error
 }
 
 /// Today's `_content_disposition`: inline, with a printable-ASCII fallback name and
-/// the exact name as RFC 8187 UTF-8 percent-encoding.
+/// the exact name as RFC 8187 UTF-8 percent-encoding. The docs build stores only
+/// non-empty basenames, so the fallback is never empty.
 fn content_disposition(filename: &str) -> String {
     let fallback: String = filename
         .chars()
@@ -187,11 +188,6 @@ fn content_disposition(filename: &str) -> String {
             _ => '_',
         })
         .collect();
-    let fallback = if fallback.is_empty() {
-        "document.pdf".to_owned()
-    } else {
-        fallback
-    };
     // Python's `quote(filename, safe="")`: every byte but the unreserved ones.
     let encoded: String = filename
         .bytes()
