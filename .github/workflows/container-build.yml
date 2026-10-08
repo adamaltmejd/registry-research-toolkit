@@ -27,11 +27,6 @@
 # Nothing deploys without green CI: a `wait-ci` job polls the ci.yml run for
 # this commit and both deploy jobs require its success — an image that builds
 # but fails lint/types/tests never ships.
-#
-# Image filter scope (DECIDED 2026-06-11): reg_schema is a baked dep but
-# deliberately NOT in the image filter — it'd rebuild on most monorepo PRs and is
-# already exercised by ci.yml's test job. After a baked-dep change that should
-# ship, run the manual `workflow_dispatch`. That is the rule, not a gap.
 
 name: Container build
 
@@ -40,9 +35,8 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  # Manual escape hatch: rebuild + deploy after a baked-dep (reg_schema)
-  # change the image filter intentionally skips, or after a
-  # DATA-only reg_meta release. The bake build-arg always carries the CONCRETE
+  # Manual escape hatch: rebuild + deploy after a DATA-only reg_meta
+  # release. The bake build-arg always carries the CONCRETE
   # newest reg_meta/v* tag (resolved per run, below), so a data-only release
   # busts the bake layer's cache by itself — no input needed unless pinning an
   # OLDER release.
@@ -573,16 +567,16 @@ jobs:
       - uses: actions/setup-node@v7.0.0
         with:
           node-version: "26.8.1"
-      # Pinned to the same bun `reg_webapp/Dockerfile`'s frontend stage uses —
-      # bump both together. A floating toolchain here would make the production
-      # SPA bundle non-reproducible while the image-baked copy stays pinned.
+      # Pinned to the same bun as ci.yml's frontend job — bump both together.
+      # A floating toolchain here would make the production SPA bundle
+      # non-reproducible and untested by CI.
       - uses: oven-sh/setup-bun@v2.2.0
         with:
           bun-version: "1.4.2"
       - run: bun install --frozen-lockfile
         working-directory: reg_webapp/frontend
-      # Same build sequence as the Dockerfile's frontend stage: regenerate
-      # types from the committed contract (no-op on a clean tree), then build.
+      # Regenerate types from the committed contracts (no-op on a clean tree;
+      # ci.yml gates drift), then build.
       - run: bun run gen:types && bun run build
         working-directory: reg_webapp/frontend
       # Same stale-deploy guard as the origin job (see comment there).

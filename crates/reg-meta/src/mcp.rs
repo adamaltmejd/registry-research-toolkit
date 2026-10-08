@@ -242,7 +242,8 @@ impl Bucket {
 
 impl Limits {
     /// The address a request is limited by: the edge-supplied `CF-Connecting-IP` when
-    /// the request carries the edge token, otherwise its peer.
+    /// the request carries the edge token, otherwise its peer; an IPv6 address as its
+    /// /64.
     fn client(&self, headers: &HeaderMap, peer: IpAddr) -> IpAddr {
         let header = |name| headers.get(name).and_then(|value| value.to_str().ok());
         let from_edge = self.edge_token.is_some_and(|token| {
@@ -256,10 +257,16 @@ impl Limits {
                 diff == 0
             })
         });
-        from_edge
+        let client = from_edge
             .then(|| header("cf-connecting-ip")?.parse().ok())
             .flatten()
-            .unwrap_or(peer)
+            .unwrap_or(peer);
+        // One host holds a whole IPv6 /64, so it is one client: keyed on the full
+        // address, it could rotate through fresh buckets.
+        match client.to_canonical() {
+            IpAddr::V6(v6) => IpAddr::V6((u128::from(v6) & !u128::from(u64::MAX)).into()),
+            v4 @ IpAddr::V4(_) => v4,
+        }
     }
 
     /// Take a token from `client`'s bucket; false when it is empty.

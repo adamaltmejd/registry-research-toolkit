@@ -1671,31 +1671,30 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   into the image and replaced with it. No volume, no LiteFS, nothing persists.
 - **Deploys**: one workflow (`container-build.yml`) owns both origin apps plus the edge
   workers, scoped by a `changes` paths-filter job. Image-affecting main pushes
-  (Dockerfile COPY surfaces + bake inputs — NOT baked deps reg_schema, which need a
-  manual `workflow_dispatch` — decided 2026-06-11: that is the rule, not a gap) build,
-  push to `registry.fly.io` (SHA-tagged), and `flyctl deploy --image` each affected
-  origin. The bake build-arg is the RESOLVED newest `reg_meta/v*` tag (never `latest` —
-  a literal `latest` makes the bake layer's buildx cache key insensitive to data-only
-  releases and can even resurrect a stale cached layer after a pinned dispatch). The
-  global Fly app uses `FLY_API_TOKEN`; SWECOV uses the separate app-scoped
-  `FLY_API_TOKEN_SWECOV`. The SWECOV image also requires a matching
-  `reg_meta_swecov.db.zst` asset on the resolved `reg_meta/v*` release: the bake runs
-  `reg-meta update --catalog swecov --tag <tag>`, which fetches that asset and the
-  shared docs asset into the steward's own directory and fails the build (exit 10) when
-  the release lacks it. The SWECOV metadata is non-confidential for the current testing
-  steward, so the flavored DB is a public release asset. An explicit `--db` update
-  cannot bootstrap an empty image layer (reg_meta/DESIGN.md → Artifact selection), which
-  is why the bake uses the named catalog. Nothing deploys without green CI: a `wait-ci`
-  job polls this commit's ci.yml run and the origin/edge deploy jobs require its success
-  — an image that builds but fails lint/ty/pytest never ships. Each deploy job carries a
-  HEAD-of-main guard (GHA concurrency serializes by build-completion order, not commit
-  order — without the guard an older commit's slow build could overwrite a newer deploy;
-  it also makes non-main dispatches deploy-inert). Two gates guard a bad image: the
-  entrypoint smoke gate (it probes `context`, `search` and `/mcp` with `curl`, each
-  carrying `__edge_v`, and the container exits non-zero before ever serving when
-  artifact admission or a probe fails) and fly.toml's `/api/context` HTTP check (flyctl
-  reports failure if it never passes). Rollback: `flyctl releases --image` lists
-  history; `flyctl deploy --image <old>` restores in seconds.
+  (Dockerfile COPY surfaces + bake inputs) build, push to `registry.fly.io`
+  (SHA-tagged), and `flyctl deploy --image` each affected origin. The bake build-arg is
+  the RESOLVED newest `reg_meta/v*` tag (never `latest` — a literal `latest` makes the
+  bake layer's buildx cache key insensitive to data-only releases and can even resurrect
+  a stale cached layer after a pinned dispatch). The global Fly app uses
+  `FLY_API_TOKEN`; SWECOV uses the separate app-scoped `FLY_API_TOKEN_SWECOV`. The
+  SWECOV image also requires a matching `reg_meta_swecov.db.zst` asset on the resolved
+  `reg_meta/v*` release: the bake runs `reg-meta update --catalog swecov --tag <tag>`,
+  which fetches that asset and the shared docs asset into the steward's own directory
+  and fails the build (exit 10) when the release lacks it. The SWECOV metadata is
+  non-confidential for the current testing steward, so the flavored DB is a public
+  release asset. An explicit `--db` update cannot bootstrap an empty image layer
+  (reg_meta/DESIGN.md → Artifact selection), which is why the bake uses the named
+  catalog. Nothing deploys without green CI: a `wait-ci` job polls this commit's ci.yml
+  run and the origin/edge deploy jobs require its success — an image that builds but
+  fails lint/ty/pytest never ships. Each deploy job carries a HEAD-of-main guard (GHA
+  concurrency serializes by build-completion order, not commit order — without the guard
+  an older commit's slow build could overwrite a newer deploy; it also makes non-main
+  dispatches deploy-inert). Two gates guard a bad image: the entrypoint smoke gate (it
+  probes `context`, `search` and `/mcp` with `curl`, each carrying `__edge_v`, and the
+  container exits non-zero before ever serving when artifact admission or a probe fails)
+  and fly.toml's `/api/context` HTTP check (flyctl reports failure if it never passes).
+  Rollback: `flyctl releases --image` lists history; `flyctl deploy --image <old>`
+  restores in seconds.
 - **Pending-schema-bump guard (#448)**: when `main`'s `SCHEMA_VERSION` /
   `DOC_SCHEMA_VERSION` or the Rust server's minimum (`SCHEMA` in
   `crates/reg-catalog/src/lib.rs`) is AHEAD of the latest released `reg_meta/v*` asset
@@ -1789,7 +1788,7 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   payload skew on additive fields) stays in force regardless, for clients holding
   *browser*-cached payloads (catalog + search browser TTL is 60s; doc-library is 86400s
   — both unversioned). Deploys: the `edge-deploy` job in `container-build.yml` rebuilds
-  the SPA (bun pinned to the Dockerfile's version — bump together) and runs
+  the SPA (bun pinned to ci.yml's frontend job — bump together) and runs
   `wrangler deploy` on main pushes touching the SPA, the edge worker, the committed
   `openapi.json`, or the image surface (cache generation, above) (`CLOUDFLARE_API_TOKEN`
   repo secret, "Edit Cloudflare Workers" template scoped to the account + swecov.se).
