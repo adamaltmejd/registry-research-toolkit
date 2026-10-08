@@ -1,0 +1,9 @@
+[classification]
+short_name = "B"
+slug = "b"
+name = "B"
+codes_file = "b.csv"
+family = "pair"
+
+[binding]
+value_set_labels = ["Bee"]

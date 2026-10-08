@@ -1,0 +1,15 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[variant]]
+native_id = "1.2"
+slug = "people"
+[[errata.edition_period]]
+variant = "people"
+name = "Födelseland"
+valid_from = "2018-02-30"
+valid_to = "2018-12-31"
+evidence = "Documentation"
+noted = "2026-09-26"

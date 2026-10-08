@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_tree.py::test_edition_period_rejects_duplicate_named_edition",
+  "fails_if": "the register loader keeps two periods for one variant and edition name",
+  "note": "The two entries differ in period and evidence, so only the one-period-per-edition rule can refuse them.",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/sample.toml [[errata.edition_period]] entry 2",
+    "message_contains": [
+      "duplicate edition period"
+    ]
+  }
+}

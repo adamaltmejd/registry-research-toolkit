@@ -1,0 +1,7 @@
+[classification]
+short_name = "B"
+slug = "same"
+name = "B"
+codes_file = "same.csv"
+
+[binding]

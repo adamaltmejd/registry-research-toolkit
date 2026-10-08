@@ -1,0 +1,10 @@
+{
+  "loader": "classifications",
+  "replaces": "test_curation_tree.py::test_variable_bound_twice_in_one_file_fails",
+  "fails_if": "load_classifications checks bound variables across books only and accepts a variable bound twice in one book",
+  "note": "Both bindings sit in one book: the one-owner rule applies within a file, not only across files.",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "classifications/A.toml: variable 'scb/ulf/kod' is also declared in classifications/A.toml."
+  }
+}

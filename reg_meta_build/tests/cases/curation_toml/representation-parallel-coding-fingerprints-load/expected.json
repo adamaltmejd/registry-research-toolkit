@@ -1,0 +1,28 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_tree.py::test_parallel_coding_fingerprints_load_from_toml_without_weakening_runtime",
+  "fails_if": "[[representation.parallel.columns]] expected_codings stops accepting a TOML array of source coding fingerprints",
+  "note": "A TOML array loads into the per-column fingerprint tuple.",
+  "loads": [
+    {
+      "representation": {
+        "parallel": [
+          {
+            "columns": [
+              {
+                "expected_codings": [
+                  "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                ]
+              },
+              {
+                "expected_codings": [
+                  "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

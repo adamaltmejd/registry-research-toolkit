@@ -1,0 +1,14 @@
+[register]
+provider = "sos"
+slug = "sample"
+native_id = "1"
+
+[[errata.data_type]]
+deldatamangd = "A_LOVA_HOSP"
+variable = "DESLEG_DATUM"
+column = "DESLEG_DATUM"
+expected_type = "Decimal"
+expected_representation = " "
+data_type = "date"
+evidence = "Workbook row 28"
+noted = "2026-09-29"

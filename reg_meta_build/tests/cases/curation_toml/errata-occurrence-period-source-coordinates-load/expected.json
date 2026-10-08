@@ -1,0 +1,25 @@
+{
+  "loader": "register_files",
+  "replaces": [
+    "test_curation_tree.py::test_period_correction_requires_provider_source_coordinates[sos-True-False-None]",
+    "test_curation_tree.py::test_period_correction_requires_provider_source_coordinates[scb-False-True-None]"
+  ],
+  "fails_if": "the register loader requires SOS coverage guards of an SCB period correction, or an exact native edition of an SOS one",
+  "note": "Each provider's coordinate guard leaves the other alone: SCB needs no coverage guards, SOS needs no native edition.",
+  "loads": [
+    {
+      "errata": {
+        "occurrence_period": [
+          {}
+        ]
+      }
+    },
+    {
+      "errata": {
+        "occurrence_period": [
+          {}
+        ]
+      }
+    }
+  ]
+}
