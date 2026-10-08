@@ -1,0 +1,50 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "scb/bands/scb-value"
+      ]
+    }
+  },
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields/ref": "band fixture",
+      "/error/fields/candidates": [
+        {
+          "fqid": "scb/bands",
+          "kind": "register",
+          "name": "Band fixture"
+        },
+        {
+          "fqid": "sos/bands",
+          "kind": "register",
+          "name": "Band fixture"
+        }
+      ]
+    }
+  },
+  {
+    "status": 404,
+    "json": {
+      "/error/code": "not_found",
+      "/error/fields/ref": "nonesuch"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_ref",
+      "/error/fields/ref": "scb/Bands"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_ref",
+      "/error/fields/ref": "scb/bands/scb-value"
+    }
+  }
+]

@@ -9,7 +9,6 @@
 //! every registered operation plus `/openapi.json` on 127.0.0.1. A refusal prints the
 //! error document on stderr and exits with the code's status.
 
-use std::fmt::Write as _;
 use std::path::PathBuf;
 use std::sync::Arc;
 
@@ -19,7 +18,7 @@ use axum::http::{HeaderMap, HeaderValue, StatusCode, header};
 use axum::response::{IntoResponse, Response};
 use axum::routing::get;
 use reg_catalog::ops::{self, Meta, Operation, Server, Steward};
-use reg_catalog::{Catalog, Error, Scope};
+use reg_catalog::{Catalog, Error, Scope, hex};
 use sha2::{Digest, Sha256};
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -144,10 +143,7 @@ async fn answer(
 /// Today's `etag.py`: a strong validator over the server version, catalog, generation,
 /// effective scope and the first 16 hex digits of the body's SHA-256.
 fn etag(server: &Server, scope: Scope, body: &[u8]) -> String {
-    let mut digest = String::new();
-    for byte in &Sha256::digest(body)[..8] {
-        write!(digest, "{byte:02x}").expect("write to String");
-    }
+    let digest = hex(&Sha256::digest(body)[..8]);
     let scope = serde_json::to_value(scope).expect("Scope serializes");
     format!(
         "\"{VERSION}-{}-{}-{}-{digest}\"",

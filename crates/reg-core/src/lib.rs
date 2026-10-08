@@ -120,3 +120,16 @@ pub fn fts_match_query(raw: &str) -> Option<String> {
         .collect();
     (!terms.is_empty()).then(|| terms.join(" "))
 }
+
+/// The search terms of a text: the alphanumeric runs (`[^\W_]+`) of its
+/// [`fold_search`] fold, in order.
+///
+/// Today's `reg_meta.queries._fts_terms`.
+#[must_use]
+pub fn fts_terms(s: &str) -> Vec<String> {
+    fold_search(s)
+        .split(|c: char| !py_isalnum(c))
+        .filter(|t| !t.is_empty())
+        .map(str::to_owned)
+        .collect()
+}

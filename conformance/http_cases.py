@@ -65,20 +65,25 @@ def fixture_source(request):
     return fixture if fixture.startswith("reader") else CASES / "fixtures" / fixture
 
 
-def case_artifact(request, monkeypatch, case=None):
-    """Point the app at a case's cached, read-only artifact; return its path.
-
-    A `search_pins` key names a pins file in the `case` directory that the build
-    stores; fixtures have no pins otherwise."""
+def cached_case_artifact(request, case=None, identity=None):
+    """A case's cached, read-only artifact. A `search_pins` key names a pins file
+    in the `case` directory that the build stores; fixtures have no pins
+    otherwise. `identity` overrides apply over the fixed import date (an
+    `artifacts` entry's other generation)."""
     from reader_artifacts import FIXTURE_IMPORT_DATE, cached_reader_artifact
 
-    kind = request.get("kind", "steward")
-    path = cached_reader_artifact(
+    return cached_reader_artifact(
         fixture_source(request),
-        kind,
-        identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
+        request.get("kind", "steward"),
+        identity_overrides={"import_date": FIXTURE_IMPORT_DATE, **(identity or {})},
         search_pins=case / request["search_pins"] if "search_pins" in request else None,
     )
+
+
+def case_artifact(request, monkeypatch, case=None):
+    """Point the app at a case's cached, read-only artifact; return its path."""
+    kind = request.get("kind", "steward")
+    path = cached_case_artifact(request, case)
     for name, value in artifact_env(path, kind).items():
         monkeypatch.setenv(name, value)
     return path
@@ -105,8 +110,16 @@ def assert_http_case(case, tmp_path, monkeypatch, servers=None):
         raise AssertionError("the artifact build was expected to fail")
     path = case_artifact(request, monkeypatch, case)
     if servers is not None:
-        client = servers.client(artifact_env(path, kind))
-        responses = run_http_requests(request["requests"], client)
+        clients = {
+            name: servers.client(
+                artifact_env(
+                    cached_case_artifact(request, case, spec["identity"]), kind
+                )
+            )
+            for name, spec in request.get("artifacts", {}).items()
+        }
+        clients[None] = servers.client(artifact_env(path, kind))
+        responses = run_http_requests(request["requests"], clients)
     else:
         responses = run_http_requests(request["requests"])
     for response, oracle in zip(responses, expected, strict=True):
@@ -182,15 +195,17 @@ def request_body(step):
     return {"json": step.get("body")}
 
 
-def run_http_requests(steps, client=None):
-    """Send the steps through `client`, or the app in this process."""
-    if client is None:
+def run_http_requests(steps, clients=None):
+    """Send the steps through `clients` (the case artifact's client under `None`,
+    each `artifacts` entry's under its name), or the app in this process."""
+    if clients is None:
         with TestClient(
             create_app(rate_limit_per_minute=1000), raise_server_exceptions=False
         ) as app_client:
-            return run_http_requests(steps, app_client)
+            return run_http_requests(steps, {None: app_client})
     responses = []
     for step in steps:
+        client = clients[step.get("artifact")]
         params = dict(step.get("query", {}))
         if "cursor_from" in step:
             idx, pointer = step["cursor_from"]

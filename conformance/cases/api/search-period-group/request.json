@@ -1,31 +1,42 @@
 {
   "fixture": "reader/logical",
+  "kind": "catalog",
   "requests": [
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Secret",
+        "q": "family",
         "type": "variable",
-        "scope": "holdings"
+        "period": "2012"
       }
     },
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Secret",
+        "q": "family",
         "type": "variable",
-        "scope": "reference"
+        "period": "2030"
       }
     },
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Valø",
+        "q": "Value",
         "type": "variable",
-        "scope": "reference"
+        "period": "2012"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Value",
+        "type": "variable",
+        "register": "scb/example",
+        "period": "2019"
       }
     }
   ]
