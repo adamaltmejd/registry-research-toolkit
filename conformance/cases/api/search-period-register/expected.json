@@ -1,0 +1,16 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "scb/example"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items": []
+    }
+  }
+]

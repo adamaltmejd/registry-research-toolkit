@@ -1,0 +1,16 @@
+{
+  "kind": "catalog",
+  "fixture": "search-ranking",
+  "search_pins": "search_pins.toml",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "sunx",
+        "type": "classification",
+        "limit": 5
+      }
+    }
+  ]
+}

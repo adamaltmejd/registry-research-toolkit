@@ -1,0 +1,16 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/type": [
+        "classification",
+        "group"
+      ],
+      "/data/items/0/fqid": "class/sunx2020",
+      "/data/items/1/key": "sunx",
+      "/data/next_cursor": null,
+      "/data/items/0/short_name": "SUNX2020",
+      "/data/items/0/name": "Sunx utbildning 2020"
+    }
+  }
+]

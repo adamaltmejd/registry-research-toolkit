@@ -1,0 +1,56 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "class/aset"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items": []
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items": []
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/code": [
+        "R3",
+        "R1"
+      ],
+      "/data/items/0/variables/*/fqid": [
+        "scb/example/v2",
+        "scb/example/v1",
+        "scb/example/v3"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/code": [
+        "R2",
+        "R3",
+        "R1",
+        "R5",
+        "R4"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/code": [
+        "R6"
+      ]
+    }
+  }
+]

@@ -1,0 +1,4 @@
+[[pin]]
+query = "example"
+type = "register"
+fqids = ["scb/example"]

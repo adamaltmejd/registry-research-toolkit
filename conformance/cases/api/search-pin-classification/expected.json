@@ -1,0 +1,30 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "class/example-codes"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "class/example-codes"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items": []
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items": []
+    }
+  }
+]

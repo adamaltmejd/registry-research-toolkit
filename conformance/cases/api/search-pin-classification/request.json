@@ -1,0 +1,43 @@
+{
+  "search_pins": "search_pins.toml",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "choicebook",
+        "type": "classification",
+        "scope": "holdings"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "choicebook",
+        "type": "classification",
+        "scope": "reference"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "choicebook",
+        "type": "classification",
+        "scope": "reference",
+        "period": "2019"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "choicebook",
+        "type": "classification",
+        "scope": "reference",
+        "register": "scb/example"
+      }
+    }
+  ]
+}
