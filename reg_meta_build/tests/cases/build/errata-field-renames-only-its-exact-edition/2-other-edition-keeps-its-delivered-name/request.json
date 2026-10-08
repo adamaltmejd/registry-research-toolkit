@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_curation_compile_occurrence_corrections.py::test_checked_occurrence_corrections_preserve_originals_and_unselected_editions[False]"
+  ],
+  "note": "Edition 100 keeps its delivered 'GenericVar'; the correction must not reach it, so the two editions now disagree on the name.",
+  "fails_if": "`compile_occurrence_corrections` applies an `[[errata.field]]` to every edition of the column instead of only its pinned `edition`, so edition 100 is renamed too and the names agree",
+  "sources": "scb-answer-2009-and-2017"
+}

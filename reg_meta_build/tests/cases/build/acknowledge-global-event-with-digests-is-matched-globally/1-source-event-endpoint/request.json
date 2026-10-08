@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_curation_compile_owner_alternatives.py::test_global_event_acknowledgement_is_routed_out_of_local_scope[unresolved_source_event_endpoint-True]"
+  ],
+  "fails_if": "the curation compiler keeps a guarded `unresolved_source_event_endpoint` acknowledgement among the register's scoped acknowledge cases instead of routing it to the global matcher, so the scoped matcher reports it stale",
+  "sources": "scb-value",
+  "note": "The source delivers no event, so the entry matches nothing. Which matcher reports it stale shows where it was routed: the global matcher's detail names a global acknowledgement, the scoped matcher's names changed original evidence."
+}

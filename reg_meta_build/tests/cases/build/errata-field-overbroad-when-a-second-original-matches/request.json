@@ -1,0 +1,50 @@
+{
+  "replaces": [
+    "test_curation_compile_occurrence_corrections.py::test_checked_occurrence_corrections_fail_closed_on_source_changes[new-match]"
+  ],
+  "fails_if": "`compile_occurrence_corrections` applies to the first matching original instead of refusing when the pinned prose and edition match more than one, so the `[[errata.field]]` entry still applies",
+  "sources": {
+    "description": "Edition 99 also delivers a second ANSWER member (CVID 22) with the same prose.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2009",
+          "regver_id": 99,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ]
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2017",
+          "regver_id": 100,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ]
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 22,
+          "var_id": 5,
+          "year": "2009",
+          "regver_id": 99,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ]
+        }
+      ]
+    }
+  },
+  "authored_from": "scb-answer-2009-and-2017"
+}

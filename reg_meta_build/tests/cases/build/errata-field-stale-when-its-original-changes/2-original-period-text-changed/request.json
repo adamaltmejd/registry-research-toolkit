@@ -1,0 +1,39 @@
+{
+  "replaces": [
+    "test_curation_compile_occurrence_corrections.py::test_checked_occurrence_corrections_fail_closed_on_source_changes[period-text]"
+  ],
+  "fails_if": "`compile_occurrence_corrections` stops comparing `expected_period_text` with the original's delivered edition text, so the `[[errata.field]]` entry still applies",
+  "sources": {
+    "description": "CVID 20's edition text changed after review.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2009",
+          "regver_id": 99,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ],
+          "versionname": "Changed original edition text"
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2017",
+          "regver_id": 100,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ]
+        }
+      ]
+    }
+  },
+  "authored_from": "scb-answer-2009-and-2017"
+}

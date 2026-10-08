@@ -1,0 +1,18 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "overbroad_curation_entry"
+      },
+      "fields": [
+        "locator"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/sample.toml#/errata.field/1"
+        ]
+      ]
+    }
+  ]
+}

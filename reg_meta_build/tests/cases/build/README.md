@@ -41,6 +41,8 @@ the behavior in plain words. For example,
   | `split-partition-`  | SCB `[[identity.partition]]` and `[[identity.column_owner]]`, and slices that reference them |
   | `errata-delivered-` | `[[errata.delivered]]` additions                                                             |
   | `errata-sos-`       | SOS `[[errata.data_type]]` and `[[errata.classification_reference]]`                         |
+  | `errata-field-`     | `[[errata.field]]` checked corrections of one source occurrence                              |
+  | `errata-period-`    | `[[errata.occurrence_period]]` checked period corrections                                    |
   | `enrichment-`       | `[[enrichment.description]]` and `[[enrichment.alias]]`                                      |
   | `route-sos-`        | SOS `[[identity.route]]` and styrtabell lookup subsets                                       |
   | `topology-sos-`     | SOS variants formed from delivered subset names                                              |

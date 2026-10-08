@@ -1,0 +1,23 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.2"
+slug = "people"
+[[variable]]
+native_id = "1.5"
+slug = "answer"
+[[errata.field]]
+variable = "1.5"
+variant = "1.2"
+column = "ANSWER"
+edition = "99"
+expected_fields = {{expected_fields key=member:20 fields=prose}}
+expected_period_text = {{period_text key=member:20}}
+expected_scope = {{edition_scope key=member:20}}
+expected_period = {{period_scope key=member:20}}
+evidence = "Exact supplied definition establishes the reviewed correction."
+noted = "2026-09-30"
+field = "name"
+value = "Reviewed label"

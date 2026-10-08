@@ -1,0 +1,39 @@
+{
+  "replaces": [
+    "test_curation_compile_delivery_metadata.py::test_period_correction_uses_exact_prose_to_distinguish_same_column_originals"
+  ],
+  "note": "The replaced test told the originals apart by name; name is one register-level fact, so a second name would stop ANSWER forming at all. They differ here in their operational definition, a delivery-level text the pin also covers.",
+  "fails_if": "`compile_occurrence_corrections` selects originals by column and edition alone, so CVID 21 (another operational definition) also moves to 2016, or the entry is refused as ambiguous",
+  "sources": {
+    "description": "Edition 99 (2009) delivers ANSWER twice for variable 5: CVID 20, and CVID 21 with operational definition 'Distinct ninth event'.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2009",
+          "regver_id": 99,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ]
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2009",
+          "regver_id": 99,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ],
+          "varopdef": "Distinct ninth event"
+        }
+      ]
+    }
+  }
+}
