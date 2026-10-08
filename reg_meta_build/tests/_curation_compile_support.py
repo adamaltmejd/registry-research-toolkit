@@ -5,17 +5,14 @@ from __future__ import annotations
 import json
 from dataclasses import replace
 from types import SimpleNamespace
-from typing import TYPE_CHECKING, Any, Literal, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from reg_meta.source_evidence import (
-    DeliveredCell,
-    RecordLocator,
     SourceRevision,
 )
 from reg_meta_build.curation_compile import (
     compile_occurrence_corrections,
-    compile_partitions,
 )
 from reg_meta_build.curation_tree import (
     ErrataFieldEntry,
@@ -38,19 +35,12 @@ from reg_meta_build.source_naming import (
     NamingDeclaration,
     NativeNamingTarget,
 )
-from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
-    CodeSetReference,
     NativeCoordinates,
     ScopeInterval,
     SourceCoordinate,
-    SourceFieldCells,
-    SourceFields,
-    SourceParentObservation,
     SourceRecord,
-    SourceSubject,
     TemporalScope,
-    value_field,
 )
 from reg_meta_build.sources.scb_records import clean_scb_row
 
@@ -254,114 +244,6 @@ def compiled_bytes(compiled) -> bytes:
     ).encode()
 
 
-def case_record(
-    *,
-    provider: str,
-    register: str,
-    variant: str | None = None,
-    variable: str | None = None,
-    parent: Literal["register", "variant"] | None = None,
-    fields: SourceFields | None = None,
-    references: tuple[str, ...] = (),
-    source: str | None = None,
-    code_set_references: tuple[CodeSetReference, ...] = (),
-    delivered_cells: tuple[DeliveredCell, ...] = (),
-) -> SourceRecord:
-    source = source or (
-        "Socialstyrelsen/test.xlsx" if provider == "sos" else "Agency/test.toml"
-    )
-    reg = SourceCoordinate(
-        status="value",
-        name=register if provider == "sos" else None,
-        native_id=register if provider != "sos" else None,
-    )
-    var = (
-        SourceCoordinate(
-            status="value",
-            name=variant if provider == "sos" else None,
-            native_id=variant if provider != "sos" else None,
-        )
-        if variant is not None
-        else SourceCoordinate(status="not_applicable")
-    )
-    col = (
-        SourceCoordinate(status="value", native_id=variable)
-        if variable
-        else SourceCoordinate(status="not_applicable")
-    )
-    subject = SourceSubject(
-        provider=provider,
-        register=reg,
-        variant=var,
-        variant_references=tuple(
-            SourceCoordinate(status="value", native_id=item) for item in references
-        ),
-        population=SourceCoordinate(status="unknown"),
-        variable=col,
-        member=col,
-        native=NativeCoordinates(),
-    )
-    facts = ()
-    cells = delivered_cells
-    if parent is not None:
-        coordinate = reg if parent == "register" else var
-        parent_fields = fields or SourceFields(name=value_field(variant or register))
-        names = tuple(
-            name
-            for name in SourceFields.model_fields
-            if getattr(parent_fields, name) is not None
-        )
-        cells = tuple(
-            DeliveredCell(
-                name=name,
-                present=True,
-                raw_value=str(getattr(parent_fields, name).value),
-                interpreted_value=str(getattr(parent_fields, name).value),
-            )
-            for name in names
-        )
-        facts = (
-            SourceParentObservation(
-                kind=parent,
-                coordinate=coordinate,
-                register=reg,
-                variant=var if parent == "variant" else None,
-                fields=parent_fields,
-                field_cells=tuple(
-                    SourceFieldCells(field=name, positions=(index,))
-                    for index, name in enumerate(names)
-                ),
-            ),
-        )
-    semantic = (
-        f"register:{register}",
-        f"variant:{variant}",
-        f"variable:{variable}",
-        f"parent:{parent}",
-    )
-    return SourceRecord.create(
-        revision=make_revision(source, artifact_path=source),
-        locators=(
-            RecordLocator(
-                semantic_record_key=semantic,
-                physical_file=source,
-                physical_table="fixture",
-                physical_record=repr(semantic),
-                physical_cells=tuple(
-                    f"fixture.{name}" for name in (cell.name for cell in cells)
-                ),
-            ),
-        ),
-        subject=subject,
-        edition_scope=TemporalScope(kind="not_applicable"),
-        edition_period_scope=TemporalScope(kind="not_applicable"),
-        fields=fields or SourceFields(),
-        parent_facts=facts,
-        delivered_cells=cells,
-        code_set_references=code_set_references,
-    )
-
-
 def partition_scope(records: tuple[SourceRecord, ...]) -> CompiledScope:
     first = records[0]
     register = source_register_key(first)
@@ -389,62 +271,6 @@ def partition_scope(records: tuple[SourceRecord, ...]) -> CompiledScope:
             ),
         ),
     )
-
-
-def compile_partition_fixture(
-    root: Path,
-    records: tuple[SourceRecord, ...],
-    *,
-    shuffled: bool = False,
-):
-    native = native_variable_key(records[0])
-    assert native is not None
-    reader = SimpleNamespace(
-        iter_partition_families=lambda source, registers=None, select_family=None: iter(
-            ((native, records),)
-        )
-    )
-    scope = partition_scope(records)
-    tree = load_curation_tree(root)
-    if shuffled:
-        tree = replace(tree, registers=tuple(reversed(tree.registers)))
-    return (
-        compile_partitions(
-            tree,
-            cast("Any", SimpleNamespace(records=reader)),
-            (scope,),
-        ),
-        (scope.source, None),
-        native,
-    )
-
-
-def scb_partition_records(
-    columns: tuple[str, ...],
-    *,
-    variants: tuple[int, ...] | None = None,
-    register_id: int = 1,
-    variable_id: int = 5,
-):
-    header = REGISTERINFORMATION_HEADER.split("|")
-    revision = make_revision("scb-registerinformation")
-    records = []
-    for index, column in enumerate(columns, 1):
-        row = var_row(
-            cvid=20 + index,
-            var_id=variable_id,
-            colname=column,
-            register=(
-                "TEST",
-                register_id,
-                (variants or (2,) * len(columns))[index - 1],
-            ),
-        ).split("|")
-        cells = {
-            name: (True, value, value) for name, value in zip(header, row, strict=True)
-        }
-        records.append(clean_scb_row(header, index, cells, revision).record)
-    return tuple(records)
 
 
 def errata_record(
@@ -505,42 +331,6 @@ def errata_fixture(tmp_path: Path, records: tuple[SourceRecord, ...], fragment: 
     )
 
 
-def scope_with_coding_names(
-    scope: CompiledScope, record: SourceRecord
-) -> CompiledScope:
-    occurrence = source_occurrence(record)
-    assert occurrence.variable_key is not None and occurrence.variant_key is not None
-    register = source_register_key(record)
-    assert register is not None
-    return scope.model_copy(
-        update={
-            "naming": (
-                *scope.naming,
-                NamingDeclaration(
-                    target=NativeNamingTarget(
-                        kind="register_variant",
-                        provider="scb",
-                        source_key=occurrence.variant_key,
-                        register_key=register,
-                    ),
-                    naming=SlugEntry("register_variant", "1.2", "people", "scb"),
-                    contributors=(),
-                ),
-                NamingDeclaration(
-                    target=NativeNamingTarget(
-                        kind="variable",
-                        provider="scb",
-                        source_key=occurrence.variable_key,
-                        register_key=register,
-                    ),
-                    naming=SlugEntry("variable", "1.5", "value", "scb"),
-                    contributors=(),
-                ),
-            )
-        }
-    )
-
-
 def enrichment_fixture(
     tmp_path: Path,
     records: tuple[SourceRecord, ...],
@@ -598,56 +388,6 @@ def scb_partition_tree(root: Path, extra: str):
     path = root / "registers" / "scb" / "sample.toml"
     path.write_text(path.read_text() + extra, encoding="utf-8")
     return tree
-
-
-def sos_partition_records(
-    *, rename: bool = False, subsets: tuple[str, ...] | None = None
-) -> tuple[SourceRecord, ...]:
-    source = "Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx"
-    revision = make_revision(source)
-    register = SourceCoordinate(status="value", name="Patientregistret")
-    variable = SourceCoordinate(
-        status="value", native_id="INVARN8" if rename else "ATC"
-    )
-    types = (
-        ("text",) * len(subsets)
-        if subsets is not None
-        else (("integer",) if rename else ("integer", "text"))
-    )
-    records = []
-    for index, data_type in enumerate(types, 1):
-        subset = subsets[index - 1] if subsets is not None else "PAR_OV"
-        subject = SourceSubject(
-            provider="sos",
-            register=register,
-            variant=SourceCoordinate(status="value", name=subset),
-            population=SourceCoordinate(status="not_applicable"),
-            variable=variable,
-            member=SourceCoordinate(status="value", native_id=str(index)),
-            native=NativeCoordinates(),
-        )
-        locator = RecordLocator(
-            semantic_record_key=(f"member:{index}",),
-            physical_file="fixture.xlsx",
-            physical_table=subset,
-            physical_record=str(index),
-            physical_cells=(),
-        )
-        records.append(
-            SourceRecord.create(
-                revision=revision,
-                locators=(locator,),
-                subject=subject,
-                edition_scope=TemporalScope(kind="not_applicable"),
-                edition_period_scope=TemporalScope(kind="not_applicable"),
-                fields=SourceFields(
-                    column_name=value_field("INVARN8" if rename else "ATC"),
-                    name=value_field("target" if rename else "ATC"),
-                    data_type=value_field(data_type),
-                ),
-            )
-        )
-    return tuple(records)
 
 
 def pooled_parallel_fixture(tmp_path, *, co_delivered=False):
