@@ -603,6 +603,7 @@ def _issue_row(event: dict) -> dict:
         "acknowledged_by": event.get("acknowledged_by"),
         "valid_from": event.get("valid_from"),
         "valid_to": event.get("valid_to"),
+        "fields": event.get("fields") or [],
     }
 
 
@@ -935,9 +936,9 @@ FIELDS: dict[str, frozenset[str]] = {
     name: frozenset(fields.split())
     for name, fields in {
         "issues": "code severity subject case_id locator detail acknowledged_by "
-        "valid_from valid_to",
+        "valid_from valid_to fields",
         "issue_refs": "code severity subject case_id locator detail acknowledged_by "
-        "valid_from valid_to source key ref",
+        "valid_from valid_to fields source key ref",
         "cases": "case_id status",
         "uses": "source native_variable key column_name data_type name description "
         "use variable",
