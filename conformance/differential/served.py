@@ -32,12 +32,11 @@ from conformance.http_cases import ServerPool
 if TYPE_CHECKING:
     from pathlib import Path
 
-WORKERS = 8
-# The production rate limit (30 writes per minute) does not bind GETs. Worker
-# processes, since one Python process serves one search at a time.
+# The production rate limit (30 writes per minute) does not bind GETs. Eight worker
+# processes, since one Python process serves one search at a time (G1 budget).
 BASELINE_APP = (
     "import sys, uvicorn; uvicorn.run('reg_webapp.app:create_app', factory=True, "
-    f"workers={WORKERS}, port=int(sys.argv[1]), log_level='warning')"
+    "workers=8, port=int(sys.argv[1]), log_level='warning')"
 )
 # The baseline caps a group at 50; two pages of ten cover a continuation.
 PAGE_LIMIT = 10
