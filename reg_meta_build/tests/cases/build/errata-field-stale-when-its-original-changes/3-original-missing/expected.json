@@ -13,6 +13,24 @@
           "curation/registers/scb/sample.toml#/errata.field/1"
         ]
       ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "answer"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "state_name"
+      ],
+      "rows": [
+        [
+          "2017-01-01",
+          "2017-12-31",
+          "GenericVar"
+        ]
+      ]
     }
   ]
 }

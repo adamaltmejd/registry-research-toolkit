@@ -23,5 +23,6 @@
         }
       ]
     }
-  }
+  },
+  "note": "The stale split moves nothing: the delivered '2007-12-31' row stays on flow and stock has no state."
 }

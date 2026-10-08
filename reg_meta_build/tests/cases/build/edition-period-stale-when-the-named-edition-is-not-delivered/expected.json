@@ -13,6 +13,17 @@
           "curation/registers/scb/sample.toml#/errata.edition_period/1"
         ]
       ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "a"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": []
     }
   ]
 }

@@ -30,6 +30,16 @@
           "stale_curation_entry"
         ]
       ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variant": "stock"
+      },
+      "fields": [
+        "column"
+      ],
+      "rows": []
     }
   ]
 }

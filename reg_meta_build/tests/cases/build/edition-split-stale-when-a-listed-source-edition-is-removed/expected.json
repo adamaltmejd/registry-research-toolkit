@@ -30,6 +30,24 @@
           "stale_curation_entry"
         ]
       ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "shared"
+      },
+      "fields": [
+        "variant",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "flow",
+          "2007-12-31",
+          "2007-12-31"
+        ]
+      ]
     }
   ]
 }
