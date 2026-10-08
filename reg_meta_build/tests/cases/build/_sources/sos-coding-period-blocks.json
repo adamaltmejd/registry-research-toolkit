@@ -1,0 +1,627 @@
+{
+  "description": "Ten SOS workbooks (PBA..PBJ), one per claim, each delivering one variable (VA..VJ). PBJ delivers VJ open-ended from 2020 with an open 2019- block (00 Original, undated blank Missing). The others deliver theirs over 2019-2021, and each Kodlista states a dated 2019-2020 block (00 Original, then the undated 2-3 Range token and blank No type) followed by a dated 2021 block (00 Later meaning, undated blank Later missing meaning). A blank period is a year-independent row.",
+  "scb": {
+    "registerinformation": [
+      {
+        "cvid": 1001,
+        "var_id": 101,
+        "colname": "VALUE"
+      }
+    ]
+  },
+  "sos": [
+    {
+      "abbrev": "PBA",
+      "title": "Applied",
+      "description": "Ett syntetiskt SOS-register med en periodbunden kodlista.",
+      "subsets": [
+        {
+          "name": "PBA_A",
+          "label": "Vy A",
+          "description": "Vy",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "variables": [
+        {
+          "name": "VA",
+          "deldatamangd": "PBA_A",
+          "label": "VA",
+          "description": "Kod",
+          "value_set": "Se kodlista",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "sheets": {
+        "Kodlista_VA": [
+          [
+            "Variabelnamn",
+            "VA"
+          ],
+          [
+            "Tidsperiod",
+            "Kod",
+            "Beskrivning"
+          ],
+          [
+            "2019-2020",
+            "00",
+            "Original"
+          ],
+          [
+            "",
+            "2-3",
+            "Range token"
+          ],
+          [
+            "",
+            "blank",
+            "No type"
+          ],
+          [
+            "2021",
+            "00",
+            "Later meaning"
+          ],
+          [
+            "",
+            "blank",
+            "Later missing meaning"
+          ]
+        ]
+      }
+    },
+    {
+      "abbrev": "PBE",
+      "title": "Outside",
+      "description": "Ett syntetiskt SOS-register med en periodbunden kodlista.",
+      "subsets": [
+        {
+          "name": "PBE_A",
+          "label": "Vy A",
+          "description": "Vy",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "variables": [
+        {
+          "name": "VE",
+          "deldatamangd": "PBE_A",
+          "label": "VE",
+          "description": "Kod",
+          "value_set": "Se kodlista",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "sheets": {
+        "Kodlista_VE": [
+          [
+            "Variabelnamn",
+            "VE"
+          ],
+          [
+            "Tidsperiod",
+            "Kod",
+            "Beskrivning"
+          ],
+          [
+            "2019-2020",
+            "00",
+            "Original"
+          ],
+          [
+            "",
+            "2-3",
+            "Range token"
+          ],
+          [
+            "",
+            "blank",
+            "No type"
+          ],
+          [
+            "2021",
+            "00",
+            "Later meaning"
+          ],
+          [
+            "",
+            "blank",
+            "Later missing meaning"
+          ]
+        ]
+      }
+    },
+    {
+      "abbrev": "PBB",
+      "title": "Anchor",
+      "description": "Ett syntetiskt SOS-register med en periodbunden kodlista.",
+      "subsets": [
+        {
+          "name": "PBB_A",
+          "label": "Vy A",
+          "description": "Vy",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "variables": [
+        {
+          "name": "VB",
+          "deldatamangd": "PBB_A",
+          "label": "VB",
+          "description": "Kod",
+          "value_set": "Se kodlista",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "sheets": {
+        "Kodlista_VB": [
+          [
+            "Variabelnamn",
+            "VB"
+          ],
+          [
+            "Tidsperiod",
+            "Kod",
+            "Beskrivning"
+          ],
+          [
+            "2019-2020",
+            "00",
+            "Original"
+          ],
+          [
+            "",
+            "2-3",
+            "Range token"
+          ],
+          [
+            "",
+            "blank",
+            "No type"
+          ],
+          [
+            "2021",
+            "00",
+            "Later meaning"
+          ],
+          [
+            "",
+            "blank",
+            "Later missing meaning"
+          ]
+        ]
+      }
+    },
+    {
+      "abbrev": "PBC",
+      "title": "Changed",
+      "description": "Ett syntetiskt SOS-register med en periodbunden kodlista.",
+      "subsets": [
+        {
+          "name": "PBC_A",
+          "label": "Vy A",
+          "description": "Vy",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "variables": [
+        {
+          "name": "VC",
+          "deldatamangd": "PBC_A",
+          "label": "VC",
+          "description": "Kod",
+          "value_set": "Se kodlista",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "sheets": {
+        "Kodlista_VC": [
+          [
+            "Variabelnamn",
+            "VC"
+          ],
+          [
+            "Tidsperiod",
+            "Kod",
+            "Beskrivning"
+          ],
+          [
+            "2019-2020",
+            "00",
+            "Original"
+          ],
+          [
+            "",
+            "2-3",
+            "Range token"
+          ],
+          [
+            "",
+            "blank",
+            "No type"
+          ],
+          [
+            "2021",
+            "00",
+            "Later meaning"
+          ],
+          [
+            "",
+            "blank",
+            "Later missing meaning"
+          ]
+        ]
+      }
+    },
+    {
+      "abbrev": "PBD",
+      "title": "Row",
+      "description": "Ett syntetiskt SOS-register med en periodbunden kodlista.",
+      "subsets": [
+        {
+          "name": "PBD_A",
+          "label": "Vy A",
+          "description": "Vy",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "variables": [
+        {
+          "name": "VD",
+          "deldatamangd": "PBD_A",
+          "label": "VD",
+          "description": "Kod",
+          "value_set": "Se kodlista",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "sheets": {
+        "Kodlista_VD": [
+          [
+            "Variabelnamn",
+            "VD"
+          ],
+          [
+            "Tidsperiod",
+            "Kod",
+            "Beskrivning"
+          ],
+          [
+            "2019-2020",
+            "00",
+            "Original"
+          ],
+          [
+            "",
+            "2-3",
+            "Range token"
+          ],
+          [
+            "",
+            "blank",
+            "No type"
+          ],
+          [
+            "2021",
+            "00",
+            "Later meaning"
+          ],
+          [
+            "",
+            "blank",
+            "Later missing meaning"
+          ]
+        ]
+      }
+    },
+    {
+      "abbrev": "PBF",
+      "title": "Sheet",
+      "description": "Ett syntetiskt SOS-register med en periodbunden kodlista.",
+      "subsets": [
+        {
+          "name": "PBF_A",
+          "label": "Vy A",
+          "description": "Vy",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "variables": [
+        {
+          "name": "VF",
+          "deldatamangd": "PBF_A",
+          "label": "VF",
+          "description": "Kod",
+          "value_set": "Se kodlista",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "sheets": {
+        "Kodlista_VF": [
+          [
+            "Variabelnamn",
+            "VF"
+          ],
+          [
+            "Tidsperiod",
+            "Kod",
+            "Beskrivning"
+          ],
+          [
+            "2019-2020",
+            "00",
+            "Original"
+          ],
+          [
+            "",
+            "2-3",
+            "Range token"
+          ],
+          [
+            "",
+            "blank",
+            "No type"
+          ],
+          [
+            "2021",
+            "00",
+            "Later meaning"
+          ],
+          [
+            "",
+            "blank",
+            "Later missing meaning"
+          ]
+        ]
+      }
+    },
+    {
+      "abbrev": "PBG",
+      "title": "Repeat",
+      "description": "Ett syntetiskt SOS-register med en periodbunden kodlista.",
+      "subsets": [
+        {
+          "name": "PBG_A",
+          "label": "Vy A",
+          "description": "Vy",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "variables": [
+        {
+          "name": "VG",
+          "deldatamangd": "PBG_A",
+          "label": "VG",
+          "description": "Kod",
+          "value_set": "Se kodlista",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "sheets": {
+        "Kodlista_VG": [
+          [
+            "Variabelnamn",
+            "VG"
+          ],
+          [
+            "Tidsperiod",
+            "Kod",
+            "Beskrivning"
+          ],
+          [
+            "2019-2020",
+            "00",
+            "Original"
+          ],
+          [
+            "",
+            "2-3",
+            "Range token"
+          ],
+          [
+            "",
+            "blank",
+            "No type"
+          ],
+          [
+            "2021",
+            "00",
+            "Later meaning"
+          ],
+          [
+            "",
+            "blank",
+            "Later missing meaning"
+          ]
+        ]
+      }
+    },
+    {
+      "abbrev": "PBH",
+      "title": "Later",
+      "description": "Ett syntetiskt SOS-register med en periodbunden kodlista.",
+      "subsets": [
+        {
+          "name": "PBH_A",
+          "label": "Vy A",
+          "description": "Vy",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "variables": [
+        {
+          "name": "VH",
+          "deldatamangd": "PBH_A",
+          "label": "VH",
+          "description": "Kod",
+          "value_set": "Se kodlista",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "sheets": {
+        "Kodlista_VH": [
+          [
+            "Variabelnamn",
+            "VH"
+          ],
+          [
+            "Tidsperiod",
+            "Kod",
+            "Beskrivning"
+          ],
+          [
+            "2019-2020",
+            "00",
+            "Original"
+          ],
+          [
+            "",
+            "2-3",
+            "Range token"
+          ],
+          [
+            "",
+            "blank",
+            "No type"
+          ],
+          [
+            "2021",
+            "00",
+            "Later meaning"
+          ],
+          [
+            "",
+            "blank",
+            "Later missing meaning"
+          ]
+        ]
+      }
+    },
+    {
+      "abbrev": "PBI",
+      "title": "Second",
+      "description": "Ett syntetiskt SOS-register med en periodbunden kodlista.",
+      "subsets": [
+        {
+          "name": "PBI_A",
+          "label": "Vy A",
+          "description": "Vy",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "variables": [
+        {
+          "name": "VI",
+          "deldatamangd": "PBI_A",
+          "label": "VI",
+          "description": "Kod",
+          "value_set": "Se kodlista",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "sheets": {
+        "Kodlista_VI": [
+          [
+            "Variabelnamn",
+            "VI"
+          ],
+          [
+            "Tidsperiod",
+            "Kod",
+            "Beskrivning"
+          ],
+          [
+            "2019-2020",
+            "00",
+            "Original"
+          ],
+          [
+            "",
+            "2-3",
+            "Range token"
+          ],
+          [
+            "",
+            "blank",
+            "No type"
+          ],
+          [
+            "2021",
+            "00",
+            "Later meaning"
+          ],
+          [
+            "",
+            "blank",
+            "Later missing meaning"
+          ]
+        ]
+      }
+    },
+    {
+      "abbrev": "PBJ",
+      "title": "Open",
+      "description": "Ett syntetiskt SOS-register med en periodbunden kodlista.",
+      "subsets": [
+        {
+          "name": "PBJ_A",
+          "label": "Vy A",
+          "description": "Vy",
+          "data_from": 2020
+        }
+      ],
+      "variables": [
+        {
+          "name": "VJ",
+          "deldatamangd": "PBJ_A",
+          "label": "VJ",
+          "description": "Kod",
+          "value_set": "Se kodlista",
+          "data_from": 2020
+        }
+      ],
+      "sheets": {
+        "Kodlista_VJ": [
+          [
+            "Variabelnamn",
+            "VJ"
+          ],
+          [
+            "Tidsperiod",
+            "Kod",
+            "Beskrivning"
+          ],
+          [
+            "2019-",
+            "00",
+            "Original"
+          ],
+          [
+            "",
+            "blank",
+            "Missing"
+          ]
+        ]
+      }
+    }
+  ]
+}

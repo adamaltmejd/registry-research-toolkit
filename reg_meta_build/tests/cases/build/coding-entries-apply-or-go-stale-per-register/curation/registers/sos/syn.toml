@@ -1,0 +1,49 @@
+[register]
+provider = "sos"
+slug = "syn"
+name = "Syntetiskt register"
+native_id = "8646299464352216667"
+[[variant]]
+slug = "syn-a"
+native_id = "8646299464352216667.8787440101791605432"
+[[variable]]
+slug = "short"
+native_id = "8646299464352216667.SHORT"
+[[variable]]
+slug = "vary"
+native_id = "8646299464352216667.VARY"
+[[variable]]
+slug = "empty"
+native_id = "8646299464352216667.EMPTY"
+
+[[coding.extend]]
+variable = "8646299464352216667.SHORT"
+variant = "8646299464352216667.8787440101791605432"
+column = "SHORT"
+periods = [["2019-01-01", "2019-12-31"]]
+list = ""
+list_members = [["01", "Label"]]
+witness = ["2020-01-01", "2020-12-31"]
+source_authority = { revision = {{revision source=Socialstyrelsen/ member=SHORT}}, locators = {{locators source=Socialstyrelsen/ member=SHORT}}, records = {{expected_records source=Socialstyrelsen/ member=SHORT}}, codings = {{source_codings source=Socialstyrelsen/ member=SHORT}}, raw_codings = {{raw_codings source=Socialstyrelsen/ member=SHORT}} }
+reason = "Reviewed coding"
+source = "fixture"
+
+[[coding.extend]]
+variable = "8646299464352216667.VARY"
+variant = "8646299464352216667.8787440101791605432"
+column = "VARY"
+periods = [["2019-01-01", "2019-12-31"]]
+list = ""
+list_members = [["01", "Label"]]
+witness = ["2020-01-01", "2021-12-31"]
+source_authority = { revision = {{revision source=Socialstyrelsen/ member=VARY}}, locators = {{locators source=Socialstyrelsen/ member=VARY}}, records = {{expected_records source=Socialstyrelsen/ member=VARY}}, codings = {{source_codings source=Socialstyrelsen/ member=VARY}}, raw_codings = {{raw_codings source=Socialstyrelsen/ member=VARY}} }
+reason = "Reviewed coding"
+source = "fixture"
+
+[[coding.uncoded]]
+variable = "8646299464352216667.EMPTY"
+variant = "8646299464352216667.8787440101791605432"
+column = "EMPTY"
+periods = [["2019-01-01", "2019-12-31"]]
+reason = "Reviewed coding"
+source = "fixture"

@@ -1,0 +1,240 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry",
+        "case_id": [
+          "curation/registers/scb/choice.toml#/coding.choice/1/period/1",
+          "curation/registers/scb/repeat.toml#/coding.choice/1/period/1",
+          "curation/registers/scb/extend.toml#/coding.extend/1/period/1",
+          "curation/registers/scb/labels.toml#/coding.documented/1/period/1",
+          "curation/registers/scb/support.toml#/coding.support/1/period/1",
+          "curation/registers/scb/rows.toml#/coding.documented/1/period/1",
+          "curation/registers/scb/rowskeep.toml#/coding.documented/1/period/1",
+          "curation/registers/scb/marker.toml#/coding.documented/1/period/1",
+          "curation/registers/scb/markerlater.toml#/coding.documented/1/period/1",
+          "curation/registers/scb/sentinel.toml#/coding.sentinel/1/period/1",
+          "curation/registers/scb/substantive.toml#/coding.sentinel/1/period/1",
+          "curation/registers/scb/pdf.toml#/coding.documented/1/period/1"
+        ]
+      },
+      "fields": [
+        "case_id"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/choice.toml#/coding.choice/1/period/1"
+        ],
+        [
+          "curation/registers/scb/repeat.toml#/coding.choice/1/period/1"
+        ],
+        [
+          "curation/registers/scb/extend.toml#/coding.extend/1/period/1"
+        ],
+        [
+          "curation/registers/scb/labels.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/scb/support.toml#/coding.support/1/period/1"
+        ],
+        [
+          "curation/registers/scb/rows.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/scb/marker.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/scb/markerlater.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/scb/sentinel.toml#/coding.sentinel/1/period/1"
+        ],
+        [
+          "curation/registers/scb/substantive.toml#/coding.sentinel/1/period/1"
+        ]
+      ],
+      "note": "Each drifted register's entry is stale at its own locator; the untouched rowskeep and pdf are not."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": [
+          "choice",
+          "repeat",
+          "extend",
+          "labels",
+          "support",
+          "rows",
+          "rowskeep",
+          "marker",
+          "markerlater",
+          "sentinel",
+          "substantive",
+          "pdf"
+        ],
+        "valid_from": [
+          "2020-01-01",
+          "2020-06-01",
+          "2020-07-01"
+        ]
+      },
+      "fields": [
+        "register",
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "choice",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "extend",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "labels",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "marker",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "markerlater",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "Label"
+        ],
+        [
+          "pdf",
+          "2020-01-01",
+          "2020-12-31",
+          "",
+          "inte tillfrågad"
+        ],
+        [
+          "pdf",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "ja"
+        ],
+        [
+          "repeat",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "rows",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "rowskeep",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "Included"
+        ],
+        [
+          "sentinel",
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Category"
+        ],
+        [
+          "sentinel",
+          "2020-01-01",
+          "2020-12-31",
+          "99",
+          "Unknown"
+        ],
+        [
+          "substantive",
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Category"
+        ],
+        [
+          "substantive",
+          "2020-01-01",
+          "2020-12-31",
+          "99",
+          "Not stated"
+        ],
+        [
+          "support",
+          "2020-01-01",
+          "2020-12-31",
+          "16310",
+          "Changed"
+        ],
+        [
+          "support",
+          "2020-01-01",
+          "2020-12-31",
+          "16310",
+          "Erroneous"
+        ],
+        [
+          "support",
+          "2020-01-01",
+          "2020-12-31",
+          "16320",
+          "Microgyria"
+        ]
+      ],
+      "note": "A stale guarded entry withholds its members (null row) or leaves the delivered list (markerlater's new list, support's three source rows); the stale sentinels keep the source list and no longer split the 2020 state."
+    },
+    {
+      "table": "warnings",
+      "where": {
+        "code": [
+          "sentinel_classification_codes",
+          "supported_erroneous_coding_association"
+        ]
+      },
+      "fields": [
+        "register",
+        "code",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [],
+      "note": "No sentinel binds and no support disposition is published."
+    },
+    {
+      "table": "state_classifications",
+      "fields": [
+        "column",
+        "classification"
+      ],
+      "rows": [],
+      "note": "Neither sentinel book is bound once its certificate is stale."
+    }
+  ]
+}

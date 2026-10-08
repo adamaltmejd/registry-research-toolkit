@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "digestdup"
+native_id = "55"
+[[variant]]
+native_id = "55.552"
+slug = "people"
+[[variable]]
+native_id = "55.5"
+slug = "value"
+
+[[coding.choice]]
+variable = "55.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "keep"
+keep_members_sha256 = "8fa2a4fd3efe691add51a157c83264a64cfa1ab02166f34a03d7d6f7364eb870"
+over = ["other"]
+reason = "Reviewed coding"
+source = "fixture"

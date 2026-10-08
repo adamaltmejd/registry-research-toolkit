@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_coding_documented.py::test_documented_coding_requires_exact_document_attribution[invalid2]",
+  "fails_if": "`CodingDocumentedEntry.document_pages` items lose `gt=0`, so page 0 loads",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[coding.documented.document_pages]] entry 1",
+    "message_contains": [
+      "Input should be greater than 0"
+    ]
+  }
+}

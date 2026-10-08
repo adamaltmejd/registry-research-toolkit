@@ -1,0 +1,17 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[coding.documented]]
+variable = "1.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+members = [["1", ""]]
+version_label = "Official 2020 questionnaire"
+document_url = "https://example.org/official.pdf"
+document_sha256 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+document_pages = [12]
+reason = "Reviewed coding"
+source = "fixture"

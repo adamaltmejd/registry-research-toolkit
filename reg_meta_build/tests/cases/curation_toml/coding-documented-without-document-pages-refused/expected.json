@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_coding_row_authority.py::test_documented_source_rows_guard_fresh_compile_and_replay[pdf_missing_page]",
+  "fails_if": "`CodingDocumentedEntry._finite_documented_periods` stops requiring all three PDF fields, so a PDF without pages loads as documentary authority",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[coding.documented]] entry 1",
+    "message_contains": [
+      "documented coding requires complete PDF authority or exact source rows"
+    ]
+  }
+}

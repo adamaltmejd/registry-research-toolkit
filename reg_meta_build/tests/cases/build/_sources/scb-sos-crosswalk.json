@@ -42,13 +42,12 @@
           "data_to": 2015
         }
       ],
-      "code_lists": {
-        "DIAGNOS": [
+      "sheets": {
+        "Kodlista_DIAGNOS": [
+          ["Tidsperiod", "Kod", "Beskrivning"],
           ["2005-2015", "A01", "Diagnos A"],
           ["2005-2015", "B02", "Diagnos B"]
-        ]
-      },
-      "sheets": {
+        ],
         "Kodlista_CROSSWALK": [
           ["Variabelnamn", "Tidsperiod", "Indata Kod", "Kodat till", "Beskrivning"],
           ["DIAGNOS", "2005-2015", "02", "03", "Recode declaration"]

@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "marker"
+native_id = "25"
+[[variant]]
+native_id = "25.2"
+slug = "people"
+[[variable]]
+native_id = "25.5"
+slug = "value"
+
+[[coding.documented]]
+variable = "25.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+members = [["1", "Less than 500"], ["2", "At least 500"], ["8", "Unknown"]]
+version_label = "Exact enumerated source"
+source_authority = { revision = {{revision key=member:2500}}, locators = {{locators key=member:2500}}, records = {{expected_records key=member:2500}}, codings = [], enumeration = { field = "definition", syntax = "ascii-decimal-dot-space", lines = ["1. Less than 500", "2. At least 500", "8. Unknown"] }, marker_bindings = {{marker_bindings key=member:2500 from=2020-01-01 to=2020-12-31}} }
+reason = "Reviewed coding"
+source = "fixture"

@@ -1,0 +1,28 @@
+[register]
+provider = "scb"
+slug = "split"
+native_id = "47"
+[[variant]]
+native_id = "47.472"
+slug = "people"
+[[variable]]
+native_id = "47.5"
+slug = "value"
+[[variable]]
+native_id = "47.5.a"
+slug = "value-a"
+[[identity.partition]]
+variable = "47.5"
+columns = { VALUE = "47.5.a" }
+columns_ref = "exact fixture"
+
+[[coding.choice]]
+variable = "47.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "keep"
+keep_members = [["01", "Label"]]
+over = ["keep", "other"]
+reason = "Reviewed coding"
+source = "fixture"

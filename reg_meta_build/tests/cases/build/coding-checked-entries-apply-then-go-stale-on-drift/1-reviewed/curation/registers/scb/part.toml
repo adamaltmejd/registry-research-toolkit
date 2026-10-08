@@ -1,0 +1,40 @@
+[register]
+provider = "scb"
+slug = "part"
+native_id = "24"
+[[variant]]
+native_id = "24.2"
+slug = "people"
+[[variable]]
+native_id = "24.5.part"
+slug = "value"
+[[identity.partition]]
+variable = "24.5"
+columns = { VALUE = "24.5.part" }
+columns_ref = "reviewed single-owner partition"
+
+[[coding.documented]]
+variable = "24.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+members = [["1", "ja"]]
+version_label = "Official 2020 questionnaire"
+document_url = "https://example.org/official.pdf"
+document_sha256 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+document_pages = [12]
+reason = "Reviewed coding"
+source = "fixture"
+
+[[coding.documented]]
+variable = "24.5.part"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+members = [["1", "ja"]]
+version_label = "Official 2020 questionnaire"
+document_url = "https://example.org/official.pdf"
+document_sha256 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+document_pages = [12]
+reason = "Reviewed coding"
+source = "fixture"

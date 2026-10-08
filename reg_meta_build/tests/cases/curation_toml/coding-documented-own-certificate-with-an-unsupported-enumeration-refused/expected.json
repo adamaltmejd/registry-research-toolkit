@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_coding_compact_choices.py::test_complete_own_source_certificate_rejects_mixed_authority[unsupported_enumeration]",
+  "fails_if": "`CodingDocumentedEntry._finite_documented_periods` accepts an own-source certificate (non-empty `raw_codings`) whose enumeration syntax is neither `kategori-alpha-equals` nor `ascii-decimal-comma-equals`",
+  "note": "The replaced test omitted `marker_bindings`, so the authority's own `enumeration requires checked binding evidence` check refused it first; this case supplies a marker binding so the certificate rule is the one that refuses. The same authority without an enumeration loads: coding-documented-own-certificate-loads.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[coding.documented]] entry 1",
+    "message_contains": [
+      "complete own-source certificates require finite periods and raw coding fingerprints"
+    ]
+  }
+}

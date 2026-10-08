@@ -1,0 +1,1709 @@
+{
+  "status": "diagnostic_complete",
+  "rebuilt_identical": true,
+  "projections": [
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "pinfree"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "choices.py::test_pin_free_choice_compiles_and_applies_from_literal_labels: the pin-free choice (no evidence digest) applies; VALUE 2020 publishes the kept list keep (01 Label)."
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "pinfree"
+      },
+      "fields": [
+        "provenance"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/pinfree.toml#/coding.choice/1/period/1: Reviewed coding\nfixture"
+        ]
+      ],
+      "note": "Same test: the applied case is `<file>#/coding.choice/1/period/1`; the state carries it as `<case id>: <reason>\\n<source>` (the provenance form choice_application.py::test_choice_changes_only_checked_window_and_feeds_ordinary_formation asserted)."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "31.5",
+          "scb/pinfree/value"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [],
+      "note": "Same test: `not diagnostics`; neither a stale entry nor the unresolved conflict of keep and other."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "uncoded"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "choices.py::test_pin_free_uncoded_and_omit_compile_without_nonempty_lists (uncoded): a column without a nonempty list accepts uncoded; the state publishes no value set."
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "uncoded"
+      },
+      "fields": [
+        "provenance"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/uncoded.toml#/coding.uncoded/1/period/1: Reviewed coding\nfixture"
+        ]
+      ],
+      "note": "Same test: the uncoded decision is applied and attributed to its entry."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "32.5",
+          "scb/uncoded/value"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [],
+      "note": "Same test: `not diagnostics`; the accepted uncoded period raises no missing-coding issue."
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "omit"
+      },
+      "fields": [
+        "valid_from"
+      ],
+      "rows": [],
+      "note": "choices.py::test_pin_free_uncoded_and_omit_compile_without_nonempty_lists (omit) and choice_application.py::test_omission_is_not_a_negative_availability_fact_or_a_new_formation_error: the omitted state is not formed (`formed.variable is None`)."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "33.5",
+          "scb/omit/value"
+        ],
+        "code": "curated_state_omission"
+      },
+      "fields": [
+        "severity",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "warning",
+          "2020-01-01",
+          "2020-12-31"
+        ]
+      ],
+      "note": "Same tests: the omission is reported as `curated_state_omission`, a warning, over the omitted window."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "33.5",
+          "scb/omit/value"
+        ],
+        "severity": "error"
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [],
+      "note": "Same tests: every diagnostic is a warning; the omission is no formation error and no stale entry."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "extend"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2019-01-01",
+          "2019-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "choices.py::test_pin_free_extend_compiles_from_finite_witness and choice_application.py::test_extension_checks_separate_witness_and_changes_only_exact_target: the witness list (01 Label, 2020) extends to the listless 2019 target with the same code set."
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "extend"
+      },
+      "fields": [
+        "valid_from",
+        "provenance"
+      ],
+      "rows": [
+        [
+          "2019-01-01",
+          "curation/registers/scb/extend.toml#/coding.extend/1/period/1: Reviewed coding\nfixture"
+        ],
+        [
+          "2020-01-01",
+          null
+        ]
+      ],
+      "note": "choice_application.py::test_extension_checks_separate_witness_and_changes_only_exact_target: only the extended target carries the decision's provenance; the witness state keeps its own source coding."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "34.5",
+          "scb/extend/value"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [],
+      "note": "Same tests: `not diagnostics`; the 2019 target raises no missing_coding_period."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "36.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/keepgone.toml#/coding.choice/1/period/1"
+        ]
+      ],
+      "note": "choices.py::test_pin_free_coding_staleness[choice-keep missing]: the kept label names no delivered list."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "37.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/overgone.toml#/coding.choice/1/period/1"
+        ]
+      ],
+      "note": "choices.py::test_pin_free_coding_staleness[choice-over gone]: `over` names a label the delivery lacks."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "38.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/keepmembers.toml#/coding.choice/1/period/1"
+        ]
+      ],
+      "note": "choices.py::test_pin_free_coding_staleness[choice-keep_members 99]: the literal kept members match no complete list."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "39.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "overbroad_curation_entry",
+          "curation/registers/scb/keeptwice.toml#/coding.choice/1/period/1"
+        ]
+      ],
+      "note": "choices.py::test_pin_free_coding_staleness[choice-two keep lists]: the kept label matches two distinct complete lists (01 and 03)."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "keepgone"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "keepgone: with the choice stale, the competing complete lists stay unresolved and publish no value set (as coding-competing-lists-without-choice-publish-no-value-set)."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "overgone"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "overgone: with the choice stale, the competing complete lists stay unresolved and publish no value set (as coding-competing-lists-without-choice-publish-no-value-set)."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "keepmembers"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "keepmembers: with the choice stale, the competing complete lists stay unresolved and publish no value set (as coding-competing-lists-without-choice-publish-no-value-set)."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "keeptwice"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "keeptwice: with the choice stale, the competing complete lists stay unresolved and publish no value set (as coding-competing-lists-without-choice-publish-no-value-set)."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "40.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/uncodedcoded.toml#/coding.uncoded/1/period/1"
+        ]
+      ],
+      "note": "choices.py::test_pin_free_coding_staleness[uncoded]: uncoded over a period with a complete nonempty list is stale."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "uncodedcoded"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "uncodedcoded: the stale uncoded entry leaves the source list coded."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "41.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/omitcoded.toml#/coding.omit/1/period/1"
+        ]
+      ],
+      "note": "choices.py::test_pin_free_coding_staleness[omit]: omit over a period with a complete nonempty list is stale."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "omitcoded"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "omitcoded: the stale omit entry omits nothing; the state keeps its list."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "42.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/extendgone.toml#/coding.extend/1/period/1"
+        ]
+      ],
+      "note": "choices.py::test_pin_free_coding_staleness[extend-list gone]: the extended label names no list in the witness."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "43.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/extendwitness.toml#/coding.extend/1/period/1"
+        ]
+      ],
+      "note": "choices.py::test_pin_free_coding_staleness[extend-witness without the list]: the witness window (2018) carries no complete list."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "44.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/extendcovered.toml#/coding.extend/1/period/1"
+        ]
+      ],
+      "note": "choices.py::test_pin_free_coding_staleness[extend-target has the list]: the extension period already has a complete nonempty list."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "45.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/extendmembers.toml#/coding.extend/1/period/1"
+        ]
+      ],
+      "note": "choices.py::test_pin_free_coding_staleness[extend-list_members 99]: the literal list members match no complete list in the witness."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "46.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "overbroad_curation_entry",
+          "curation/registers/scb/extendtwice.toml#/coding.extend/1/period/1"
+        ]
+      ],
+      "note": "choices.py::test_pin_free_coding_staleness[extend-two member sets]: the extended label matches two member sets (01 and 02) in the witness."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "extendgone",
+        "valid_from": "2019-01-01"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2019-01-01",
+          "2019-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "extendgone: the stale extension leaves the 2019 target without a value set."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "extendwitness",
+        "valid_from": "2019-01-01"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2019-01-01",
+          "2019-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "extendwitness: the stale extension leaves the 2019 target without a value set."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "extendmembers",
+        "valid_from": "2019-01-01"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2019-01-01",
+          "2019-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "extendmembers: the stale extension leaves the 2019 target without a value set."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "extendtwice",
+        "valid_from": "2019-01-01"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2019-01-01",
+          "2019-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "extendtwice: the stale extension leaves the 2019 target without a value set."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "extendcovered"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "extendcovered: the stale extension leaves the period's own list in place."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "split"
+      },
+      "fields": [
+        "variable",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "value-a",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "choices.py::test_pin_free_choice_member_disambiguation_and_split_key: the entry names the base variable 47.5 and resolves to its partition child 47.5.a (slug value-a); keep_members picks keep 01 over the other keep list (03)."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "47.5",
+          "scb/split/value"
+        ],
+        "code": [
+          "stale_curation_entry",
+          "overbroad_curation_entry"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [],
+      "note": "Same test: `not diagnostics` for the entry."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "50.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/cardinality.toml#/coding.uncoded/1/period/2"
+        ],
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/cardinality.toml#/coding.uncoded/2/period/1"
+        ]
+      ],
+      "note": "choices.py::test_pin_free_coding_period_and_column_cardinality_are_checked: the 2021 period without a column occurrence is stale at `/period/2` while period 1 applies; an entry on column MISSING is stale. Uncoded on a list-less column, not the replaced test's choice, so only the occurrence check can stale period 2 (a choice's 2021 period is also uncontested)."
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "cardinality"
+      },
+      "fields": [
+        "valid_from",
+        "provenance"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "curation/registers/scb/cardinality.toml#/coding.uncoded/1/period/1: Reviewed coding\nfixture"
+        ]
+      ],
+      "note": "Same test: `len(cases) == 1`: period 1 still applies."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "undated"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "choice_application.py::test_incomplete_and_pooled_claims_remain_unresolved_without_annual_inference (pooled half): a range-less pooled list on the same column does not block the 2020 choice; it applies."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "63.5",
+          "scb/undated/value"
+        ],
+        "code": [
+          "unsupported_coding_scope",
+          "stale_curation_entry",
+          "overbroad_curation_entry"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [
+        [
+          "unsupported_coding_scope"
+        ]
+      ],
+      "note": "Same test: the pooled list stays in accounting as `unsupported_coding_scope`; the choice is not stale."
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "undateduncoded"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "provenance"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "curation/registers/scb/undateduncoded.toml#/coding.uncoded/1/period/1: Reviewed coding\nfixture"
+        ]
+      ],
+      "note": "choice_application.py::test_undated_coding_is_not_consumed_by_finite_uncoded_acceptance: the finite uncoded acceptance applies to 2020 only."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "64.5",
+          "scb/undateduncoded/value"
+        ],
+        "code": [
+          "unsupported_coding_scope",
+          "stale_curation_entry",
+          "overbroad_curation_entry"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [
+        [
+          "unsupported_coding_scope"
+        ]
+      ],
+      "note": "Same test: the undated list is not consumed: its `unsupported_coding_scope` issue remains."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "digest"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "compact_choices.py::test_choice_member_digest_matches_verbose_exact_domain[None]: keep_members_sha256 = canonical_sha256([[\"01\", \"Label\"]]) selects list 01 between two lists both labelled list."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "56.5",
+          "scb/digest/value"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [],
+      "note": "Same test: `not issues`."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "57.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/digestdrift.toml#/coding.choice/1/period/1"
+        ]
+      ],
+      "note": "compact_choices.py::test_choice_member_digest_matches_verbose_exact_domain[label]: the kept list's label drifted to Changed, so the member digest matches no list."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "digestdrift"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "digestdrift: the stale choice leaves the two lists unresolved."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "digestdup"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "compact_choices.py::test_choice_member_digest_rejects_verbose_selector_and_retains_duplicate_claims: an identical duplicate of the kept list (keep level 2) does not make the digest-selected choice ambiguous; it applies."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "55.5",
+          "scb/digestdup/value"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [],
+      "note": "Same test: status applied, no diagnostics."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "dup"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2021-01-01",
+          "2021-12-31",
+          "03",
+          "Future"
+        ]
+      ],
+      "note": "choice_application.py::test_physical_duplicates_and_irrelevant_future_coding_do_not_expand_choice: a duplicate competing list (other level 2) and the 2021 list future leave the 2020 choice applied; 2021 keeps future (its last segment's version)."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "54.5",
+          "scb/dup/value"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [],
+      "note": "Same test: `result.diagnostics == ()`."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "window"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-03-31",
+          null,
+          null
+        ],
+        [
+          "2020-04-01",
+          "2020-06-30",
+          "01",
+          "Label"
+        ],
+        [
+          "2020-07-01",
+          "2020-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "choice_application.py::test_choice_changes_only_checked_window_and_feeds_ordinary_formation: the choice changes only 2020-04-01..2020-06-30; formation gives three states, the chosen one with first's code set."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "scb/window/value"
+      },
+      "fields": [
+        "code",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "conflicting_code_memberships",
+          "2020-01-01",
+          "2020-03-31"
+        ],
+        [
+          "conflicting_code_memberships",
+          "2020-07-01",
+          "2020-12-31"
+        ]
+      ],
+      "note": "Same test: the coding issues cover exactly the two unchosen windows; their code is the unresolved-conflict code of coding-competing-lists-without-choice-publish-no-value-set."
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "window",
+        "valid_from": "2020-04-01"
+      },
+      "fields": [
+        "provenance"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/window.toml#/coding.choice/1/period/1: Reviewed coding\nfixture"
+        ]
+      ],
+      "note": "Same test: the chosen state's provenance is `<case id>: <reason>\\n<source>`."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "conflict"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-04-30",
+          "01",
+          "Label"
+        ],
+        [
+          "2020-05-01",
+          "2020-08-31",
+          null,
+          null
+        ],
+        [
+          "2020-09-01",
+          "2020-12-31",
+          "02",
+          "Other"
+        ]
+      ],
+      "note": "choice_application.py::test_conflicting_choices_withhold_only_overlap_and_agreeing_choices_compose: the first choice keeps first to 2020-08-31, the second keeps second from 2020-05-01; only the overlap is withheld."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "52.5",
+          "scb/conflict/value"
+        ]
+      },
+      "fields": [
+        "code",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "conflicting_coding_choices",
+          "2020-05-01",
+          "2020-08-31"
+        ]
+      ],
+      "note": "Same test: one conflicting_coding_choices issue over the overlap and no stale entry. The two case ids it names appear only in the issue detail, which is not projected."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "agree"
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [
+        [
+          "01"
+        ]
+      ],
+      "note": "Same test, agreeing half: two overlapping choices that both keep first compose; every 2020 state publishes 01.",
+      "match": "set"
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "53.5",
+          "scb/agree/value"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [],
+      "note": "Same test: both applied, `issues == ()`."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "58.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/partial.toml#/coding.choice/1/period/1"
+        ]
+      ],
+      "note": "choice_application.py::test_selected_list_must_cover_whole_reviewed_period: keep is delivered for 2020 only, so it is no complete list over the reviewed 2020-2021 window and the choice is not applied."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "partial"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "2021-01-01",
+          "2021-12-31",
+          "02",
+          "Other"
+        ]
+      ],
+      "note": "partial: 2020 stays unresolved; 2021 has only other."
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "omitclash"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "2020-09-01",
+          "2020-12-31"
+        ]
+      ],
+      "note": "choice_application.py::test_omission_retains_evidence_and_withholds_conflicting_overlap: omit (to 2020-08-31) and uncoded (from 2020-05-01) give segments omit / withhold / include; only the include window forms a state."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "61.5",
+          "scb/omitclash/value"
+        ]
+      },
+      "fields": [
+        "code",
+        "severity",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "curated_state_omission",
+          "warning",
+          "2020-01-01",
+          "2020-04-30"
+        ],
+        [
+          "conflicting_coding_choices",
+          "error",
+          "2020-05-01",
+          "2020-08-31"
+        ]
+      ],
+      "note": "Same test: the overlap 2020-05-01..2020-08-31 is withheld with an issue; the omitted window is the curated omission."
+    },
+    {
+      "table": "warnings",
+      "where": {
+        "register": "warning"
+      },
+      "fields": [
+        "column",
+        "valid_from",
+        "valid_to",
+        "summary",
+        "fields"
+      ],
+      "rows": [
+        [
+          "VALUE",
+          "2020-01-01",
+          "2020-12-31",
+          "Integer storage and textual response codes disagree.",
+          [
+            "data_type",
+            "coding"
+          ]
+        ]
+      ],
+      "note": "compact_choices.py::test_guarded_coding_warning_retains_facts_and_rejects_changed_evidence: the digest-guarded warning applies and publishes its data_warning over its fields."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "warning"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "LA1501",
+          "Label"
+        ]
+      ],
+      "note": "Same test: the warning creates no coding assignment; the source list LA15 stays."
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "warning"
+      },
+      "fields": [
+        "data_type"
+      ],
+      "rows": [
+        [
+          "integer"
+        ]
+      ],
+      "note": "Same test: no type correction; the source int type stays."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "62.5",
+          "scb/warning/value"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [],
+      "note": "Same test: `not issues`."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "owncert"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "compact_choices.py::test_complete_own_source_certificate_retains_domain_and_refuses_drift[None]: a `[[coding.documented]]` own certificate (exact rows plus raw coding fingerprints, no enumeration) applies and keeps the source domain: list Own list, 01 Label."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "65.5",
+          "scb/owncert/value"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [],
+      "note": "compact_choices.py::test_complete_own_source_certificate_retains_domain_and_refuses_drift[None]: `len(cases) == 1 and not issues`."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "66.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/owncertraw.toml#/coding.documented/1/period/1"
+        ]
+      ],
+      "note": "compact_choices.py::test_complete_own_source_certificate_retains_domain_and_refuses_drift[fingerprint]: the certificate is stale: its raw coding fingerprint is owncert's: a list with the same content but another raw assertion."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "owncertraw"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "owncertraw: the stale certificate leaves the source list in place (the fixture's list)."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "67.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/owncertlabel.toml#/coding.documented/1/period/1"
+        ]
+      ],
+      "note": "compact_choices.py::test_complete_own_source_certificate_retains_domain_and_refuses_drift[label]: the certificate is stale: the source label is Changed, not the certified Label."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "owncertlabel"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Changed"
+        ]
+      ],
+      "note": "owncertlabel: the stale certificate leaves the source list in place (the fixture's list)."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "68.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/owncertmember.toml#/coding.documented/1/period/1"
+        ]
+      ],
+      "note": "compact_choices.py::test_complete_own_source_certificate_retains_domain_and_refuses_drift[member]: the certificate is stale: the source code is 02, not the certified 01."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "owncertmember"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "02",
+          "Label"
+        ]
+      ],
+      "note": "owncertmember: the stale certificate leaves the source list in place (the fixture's list)."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "69.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/owncertperiod.toml#/coding.documented/1/period/1"
+        ]
+      ],
+      "note": "compact_choices.py::test_complete_own_source_certificate_retains_domain_and_refuses_drift[period]: the certificate is stale: its periods reach 2019, which VALUE does not deliver."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "owncertperiod"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "owncertperiod: the stale certificate leaves the source list in place (the fixture's list)."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "70.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/docauthority.toml#/coding.documented/1/period/1"
+        ]
+      ],
+      "note": "compact_choices.py::test_ordinary_documented_authority_still_refuses_a_complete_existing_list: an exact-row authority without raw coding fingerprints is no own certificate, so documenting a period that already has a complete list (Own list, 01 Label) is stale. Its allowed twin is register owncert."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "docauthority"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "docauthority: the source list stays."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "syn",
+        "variable": "short"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2019-01-01",
+          "2019-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2021-01-01",
+          "2021-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "choices.py::test_extend_list_only_complete_inside_short_witness: SHORT's one list (SOS, no version label, so `list = \"\"` with exact rows) covers 2019-2021 but its member 01 is valid in 2020 only; the 2020 witness extends 01 Label to 2019, and 2021 keeps no value set."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "8646299464352216667.SHORT",
+          "sos/syn/short"
+        ],
+        "code": [
+          "stale_curation_entry",
+          "overbroad_curation_entry"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [],
+      "note": "Same test: `not diagnostics` for the extension."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "8646299464352216667.VARY"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syn.toml#/coding.extend/2/period/1"
+        ]
+      ],
+      "note": "choice_application.py::test_extension_rejects_varying_witness_but_same_period_selection_keeps_changes (varying witness): VARY's list carries 01 in 2020 and 02 in 2021, so the 2020-2021 witness has no constant member set and the extension is refused. The build refuses it at compile (stale), where the replaced test met it at application (`nonconstant_coding_witness`)."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "syn",
+        "variable": "vary",
+        "valid_from": "2019-01-01"
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [
+        [
+          null
+        ]
+      ],
+      "note": "Same test: the refused extension gives 2019 no value set."
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "syn",
+        "variable": "empty",
+        "valid_from": "2019-01-01"
+      },
+      "fields": [
+        "provenance"
+      ],
+      "rows": [
+        [
+          "curation/registers/sos/syn.toml#/coding.uncoded/1/period/1: Reviewed coding\nfixture"
+        ]
+      ],
+      "note": "choice_application.py::test_exact_empty_evidence_can_be_accepted_as_uncoded_without_guessing_members: EMPTY's list has no member active in 2019; uncoded is accepted there and attributed to its entry."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "syn",
+        "variable": "empty",
+        "valid_from": "2019-01-01"
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [
+        [
+          null
+        ]
+      ],
+      "note": "Same test: no members are guessed for the accepted window."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "8646299464352216667.EMPTY",
+          "sos/syn/empty"
+        ],
+        "code": [
+          "empty_active_coding",
+          "stale_curation_entry",
+          "overbroad_curation_entry"
+        ]
+      },
+      "fields": [
+        "code",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "empty_active_coding",
+          "2021-01-01",
+          "2021-12-31"
+        ]
+      ],
+      "note": "Same test: `empty_active_coding` remains only for the window the acceptance does not cover (2021; 2020 has member 01), and the entry is not stale."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "extendlater"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2019-01-01",
+          "2019-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2021-01-01",
+          "2021-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "choices.py::test_extend_ignores_incomplete_same_label_claim, at year grain: the 2020 witness list `list` (01 Label) extends to the listless 2019 target although a later 2021 claim also labelled `list` is incomplete (03 has no label). The 2021 row follows the fold's rule that a member without a label withholds its whole list where it applies."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "71.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [],
+      "note": "Same test: `not diagnostics` and one case: the incomplete same-label claim is no ambiguous competitor, so the extension is neither stale nor overbroad."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "scb/extendlater/value",
+        "code": "unknown_code_membership"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "2021-01-01",
+          "2021-12-31"
+        ]
+      ],
+      "note": "The incomplete 2021 claim stays an unknown-membership period of its own; the extension does not touch it."
+    }
+  ]
+}

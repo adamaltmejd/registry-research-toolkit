@@ -1,0 +1,26 @@
+[register]
+provider = "scb"
+slug = "omitclash"
+native_id = "61"
+[[variant]]
+native_id = "61.612"
+slug = "people"
+[[variable]]
+native_id = "61.5"
+slug = "value"
+
+[[coding.omit]]
+variable = "61.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-08-31"]]
+reason = "Reviewed coding"
+source = "fixture"
+
+[[coding.uncoded]]
+variable = "61.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-05-01", "2020-12-31"]]
+reason = "Reviewed coding"
+source = "fixture"

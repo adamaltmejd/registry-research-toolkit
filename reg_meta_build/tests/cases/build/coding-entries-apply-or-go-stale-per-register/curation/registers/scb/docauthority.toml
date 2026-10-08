@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "docauthority"
+native_id = "70"
+[[variant]]
+native_id = "70.702"
+slug = "people"
+[[variable]]
+native_id = "70.5"
+slug = "value"
+
+[[coding.documented]]
+variable = "70.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+members = [["01", "Label"]]
+version_label = "Own list"
+source_authority = { revision = {{revision key=member:7001}}, locators = {{locators key=member:7001}}, records = {{expected_records key=member:7001}}, codings = {{source_codings key=member:7001}} }
+reason = "Exact own source certificate"
+source = "Prepared source"

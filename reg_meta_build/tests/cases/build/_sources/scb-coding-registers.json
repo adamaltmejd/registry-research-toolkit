@@ -1,0 +1,705 @@
+{
+  "description": "One SCB delivery, one register per coding claim. Register n (native id n, variant n*10+2) delivers VALUE of variable 5 in 2020 as CVID n*100+1 unless noted; a list is written name (level): codes, and every item is valid 2000-2030. 31 pinfree, 36 keepgone, 37 overgone, 38 keepmembers: keep (1): 01 Label and other (1): 02 Other. 32 uncoded, 33 omit, 50 cardinality, 61 omitclash: no list. 34 extend, 42 extendgone, 43 extendwitness, 45 extendmembers: VALUE 2019 (CVID n*100+1, no list) and 2020 (CVID n*100+2) under list (1): 01 Label. 46 extendtwice: as 34, with a second list (2): 02 Label on 2020. 44 extendcovered: list (1): 01 Label. 40 uncodedcoded, 41 omitcoded: coded (1): 01 Label. 39 keeptwice and 47 split: keep (1): 01 Label, keep (2): 03 Label, other (1): 02 Other. 51 window, 52 conflict, 53 agree: first (1): 01 Label and second (1): 02 Other. 54 dup: keep (1): 01 Label, other (1): 02 Other and its duplicate other (2): 02 Other; VALUE 2021 (CVID 5402) under future (1): 03 Future. 55 digestdup: keep (1): 01 Label, its duplicate keep (2): 01 Label, other (1): 02 Other. 56 digest: list (1): 01 Label and list (2): 02 Label. 57 digestdrift: list (1): 01 Changed and list (2): 02 Label. 58 partial: VALUE 2020 under keep (1): 01 Label and other (1): 02 Other; VALUE 2021 (CVID 5802) under other (1): 02 Other alone. 62 warning: LA15 (1): LA1501 Label. 63 undated: as 31, plus VALUE in the range-less pooled edition 'HT 2021 - VT 2022' (RegVerID 2122, CVID 6302) under pooled (1): 03 Pooled. 64 undateduncoded: VALUE 2020 with no list, plus the same pooled edition (CVID 6402) under pooled (1): 03 Pooled. 65 owncert, 66 owncertraw, 69 owncertperiod, 70 docauthority: Own list (1): 01 Label. 67 owncertlabel: Own list (1): 01 Changed. 68 owncertmember: Own list (1): 02 Label. SOS register SYN (subset SYN_A, 2019-2021) delivers SHORT, whose Kodlista lists 01 Label for 2020 only, and VARY, whose Kodlista lists 01 Label for 2020 and 02 Label for 2021; EMPTY has the same list as SHORT. An SOS Kodlista has no version label. 71 extendlater: VALUE 2019 (CVID 7101), 2020 (7102), 2021 (7103); list (1): 01 Label in 2020, then 02 Label and 03 with a blank label in 2021.",
+  "scb": {
+    "registerinformation": [
+      {
+        "cvid": 3101,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "PINFREE",
+          31,
+          312
+        ]
+      },
+      {
+        "cvid": 3201,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "UNCODED",
+          32,
+          322
+        ]
+      },
+      {
+        "cvid": 3301,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "OMIT",
+          33,
+          332
+        ]
+      },
+      {
+        "cvid": 3401,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2019",
+        "regver_id": 2019,
+        "register": [
+          "EXTEND",
+          34,
+          342
+        ]
+      },
+      {
+        "cvid": 3402,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "EXTEND",
+          34,
+          342
+        ]
+      },
+      {
+        "cvid": 3601,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "KEEPGONE",
+          36,
+          362
+        ]
+      },
+      {
+        "cvid": 3701,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "OVERGONE",
+          37,
+          372
+        ]
+      },
+      {
+        "cvid": 3801,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "KEEPMEMBERS",
+          38,
+          382
+        ]
+      },
+      {
+        "cvid": 3901,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "KEEPTWICE",
+          39,
+          392
+        ]
+      },
+      {
+        "cvid": 4001,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "UNCODEDCODED",
+          40,
+          402
+        ]
+      },
+      {
+        "cvid": 4101,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "OMITCODED",
+          41,
+          412
+        ]
+      },
+      {
+        "cvid": 4201,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2019",
+        "regver_id": 2019,
+        "register": [
+          "EXTENDGONE",
+          42,
+          422
+        ]
+      },
+      {
+        "cvid": 4202,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "EXTENDGONE",
+          42,
+          422
+        ]
+      },
+      {
+        "cvid": 4301,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2019",
+        "regver_id": 2019,
+        "register": [
+          "EXTENDWITNESS",
+          43,
+          432
+        ]
+      },
+      {
+        "cvid": 4302,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "EXTENDWITNESS",
+          43,
+          432
+        ]
+      },
+      {
+        "cvid": 4401,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "EXTENDCOVERED",
+          44,
+          442
+        ]
+      },
+      {
+        "cvid": 4501,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2019",
+        "regver_id": 2019,
+        "register": [
+          "EXTENDMEMBERS",
+          45,
+          452
+        ]
+      },
+      {
+        "cvid": 4502,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "EXTENDMEMBERS",
+          45,
+          452
+        ]
+      },
+      {
+        "cvid": 4601,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2019",
+        "regver_id": 2019,
+        "register": [
+          "EXTENDTWICE",
+          46,
+          462
+        ]
+      },
+      {
+        "cvid": 4602,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "EXTENDTWICE",
+          46,
+          462
+        ]
+      },
+      {
+        "cvid": 4701,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "SPLIT",
+          47,
+          472
+        ]
+      },
+      {
+        "cvid": 5001,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "CARDINALITY",
+          50,
+          502
+        ]
+      },
+      {
+        "cvid": 6301,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "UNDATED",
+          63,
+          632
+        ]
+      },
+      {
+        "cvid": 6302,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2021",
+        "regver_id": 2122,
+        "register": [
+          "UNDATED",
+          63,
+          632
+        ],
+        "versionname": "HT 2021 - VT 2022"
+      },
+      {
+        "cvid": 6401,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "UNDATEDUNCODED",
+          64,
+          642
+        ]
+      },
+      {
+        "cvid": 6402,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2021",
+        "regver_id": 2122,
+        "register": [
+          "UNDATEDUNCODED",
+          64,
+          642
+        ],
+        "versionname": "HT 2021 - VT 2022"
+      },
+      {
+        "cvid": 5101,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "WINDOW",
+          51,
+          512
+        ]
+      },
+      {
+        "cvid": 5201,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "CONFLICT",
+          52,
+          522
+        ]
+      },
+      {
+        "cvid": 5301,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "AGREE",
+          53,
+          532
+        ]
+      },
+      {
+        "cvid": 5401,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "DUP",
+          54,
+          542
+        ]
+      },
+      {
+        "cvid": 5402,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2021",
+        "regver_id": 2021,
+        "register": [
+          "DUP",
+          54,
+          542
+        ]
+      },
+      {
+        "cvid": 5501,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "DIGESTDUP",
+          55,
+          552
+        ]
+      },
+      {
+        "cvid": 5601,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "DIGEST",
+          56,
+          562
+        ]
+      },
+      {
+        "cvid": 5701,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "DIGESTDRIFT",
+          57,
+          572
+        ]
+      },
+      {
+        "cvid": 5801,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "PARTIAL",
+          58,
+          582
+        ]
+      },
+      {
+        "cvid": 5802,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2021",
+        "regver_id": 2021,
+        "register": [
+          "PARTIAL",
+          58,
+          582
+        ]
+      },
+      {
+        "cvid": 6101,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "OMITCLASH",
+          61,
+          612
+        ]
+      },
+      {
+        "cvid": 6201,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "WARNING",
+          62,
+          622
+        ]
+      },
+      {
+        "cvid": 6501,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "OWNCERT",
+          65,
+          652
+        ]
+      },
+      {
+        "cvid": 6601,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "OWNCERTRAW",
+          66,
+          662
+        ]
+      },
+      {
+        "cvid": 6701,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "OWNCERTLABEL",
+          67,
+          672
+        ]
+      },
+      {
+        "cvid": 6801,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "OWNCERTMEMBER",
+          68,
+          682
+        ]
+      },
+      {
+        "cvid": 6901,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "OWNCERTPERIOD",
+          69,
+          692
+        ]
+      },
+      {
+        "cvid": 7001,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "DOCAUTHORITY",
+          70,
+          702
+        ]
+      },
+      {
+        "cvid": 7101,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2019",
+        "regver_id": 2019,
+        "register": [
+          "EXTENDLATER",
+          71,
+          712
+        ]
+      },
+      {
+        "cvid": 7102,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "EXTENDLATER",
+          71,
+          712
+        ]
+      },
+      {
+        "cvid": 7103,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2021",
+        "regver_id": 2021,
+        "register": [
+          "EXTENDLATER",
+          71,
+          712
+        ]
+      }
+    ],
+    "vardemangder": [
+      "keep|1|01|Label|3101|3101",
+      "other|1|02|Other|3101|3102",
+      "list|1|01|Label|3402|3401",
+      "keep|1|01|Label|3601|3601",
+      "other|1|02|Other|3601|3602",
+      "keep|1|01|Label|3701|3701",
+      "other|1|02|Other|3701|3702",
+      "keep|1|01|Label|3801|3801",
+      "other|1|02|Other|3801|3802",
+      "keep|1|01|Label|3901|3901",
+      "keep|2|03|Label|3901|3903",
+      "other|1|02|Other|3901|3902",
+      "coded|1|01|Label|4001|4001",
+      "coded|1|01|Label|4101|4101",
+      "list|1|01|Label|4202|4201",
+      "list|1|01|Label|4302|4301",
+      "list|1|01|Label|4401|4401",
+      "list|1|01|Label|4502|4501",
+      "list|1|01|Label|4602|4601",
+      "list|2|02|Label|4602|4602",
+      "keep|1|01|Label|4701|4701",
+      "keep|2|03|Label|4701|4703",
+      "other|1|02|Other|4701|4702",
+      "keep|1|01|Label|6301|6301",
+      "other|1|02|Other|6301|6302",
+      "pooled|1|03|Pooled|6302|6303",
+      "pooled|1|03|Pooled|6402|6403",
+      "first|1|01|Label|5101|5101",
+      "second|1|02|Other|5101|5102",
+      "first|1|01|Label|5201|5201",
+      "second|1|02|Other|5201|5202",
+      "first|1|01|Label|5301|5301",
+      "second|1|02|Other|5301|5302",
+      "keep|1|01|Label|5401|5401",
+      "other|1|02|Other|5401|5402",
+      "other|2|02|Other|5401|5403",
+      "future|1|03|Future|5402|5404",
+      "keep|1|01|Label|5501|5501",
+      "keep|2|01|Label|5501|5503",
+      "other|1|02|Other|5501|5502",
+      "list|1|01|Label|5601|5601",
+      "list|2|02|Label|5601|5602",
+      "list|1|01|Changed|5701|5701",
+      "list|2|02|Label|5701|5702",
+      "keep|1|01|Label|5801|5801",
+      "other|1|02|Other|5801|5802",
+      "other|1|02|Other|5802|5803",
+      "LA15|1|LA1501|Label|6201|6201",
+      "Own list|1|01|Label|6501|6501",
+      "Own list|1|01|Label|6601|6601",
+      "Own list|1|01|Changed|6701|6701",
+      "Own list|1|02|Label|6801|6801",
+      "Own list|1|01|Label|6901|6901",
+      "Own list|1|01|Label|7001|7001",
+      "list|1|01|Label|7102|7101",
+      "list|1|02|Label|7103|7102",
+      "list|1|03||7103|7103"
+    ]
+  },
+  "sos": [
+    {
+      "abbrev": "SYN",
+      "title": "Syntetiskt register",
+      "description": "Ett syntetiskt SOS-register för testbygget.",
+      "subsets": [
+        {
+          "name": "SYN_A",
+          "label": "Vy A",
+          "description": "Första vyn",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "variables": [
+        {
+          "name": "SHORT",
+          "deldatamangd": "SYN_A",
+          "label": "Kort",
+          "description": "Kort lista",
+          "value_set": "Se kodlista",
+          "data_from": 2019,
+          "data_to": 2021
+        },
+        {
+          "name": "VARY",
+          "deldatamangd": "SYN_A",
+          "label": "Varierande",
+          "description": "Varierande lista",
+          "value_set": "Se kodlista",
+          "data_from": 2019,
+          "data_to": 2021
+        },
+        {
+          "name": "EMPTY",
+          "deldatamangd": "SYN_A",
+          "label": "Tom",
+          "description": "Tom lista",
+          "value_set": "Se kodlista",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "code_lists": {
+        "SHORT": [
+          [
+            "2020",
+            "01",
+            "Label"
+          ]
+        ],
+        "VARY": [
+          [
+            "2020",
+            "01",
+            "Label"
+          ],
+          [
+            "2021",
+            "02",
+            "Label"
+          ]
+        ],
+        "EMPTY": [
+          [
+            "2020",
+            "01",
+            "Label"
+          ]
+        ]
+      }
+    }
+  ]
+}

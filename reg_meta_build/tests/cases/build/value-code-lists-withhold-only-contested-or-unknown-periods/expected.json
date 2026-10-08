@@ -1,0 +1,142 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": [
+          "conflicting_code_memberships",
+          "conflicting_coding_labels",
+          "empty_active_coding",
+          "unknown_code_membership",
+          "unsupported_coding_scope"
+        ]
+      },
+      "fields": ["subject", "code", "valid_from", "valid_to"],
+      "rows": [
+        ["sos/cod/butsatt", "conflicting_code_memberships", "1982-01-01", "1988-12-31"],
+        ["sos/cod/yind", "conflicting_code_memberships", "2019-01-01", "2021-12-31"],
+        ["sos/cod/ydate", "conflicting_code_memberships", "2020-01-01", "2020-12-31"],
+        ["sos/cod/nolabel", "unknown_code_membership", "2020-01-01", "2020-12-31"],
+        ["sos/cod/empty", "empty_active_coding", "2019-01-01", "2019-12-31"],
+        ["sos/cod/unk", "unknown_code_membership", "2019-01-01", "2021-12-31"],
+        ["sos/cod/rivboth", "conflicting_code_memberships", "2020-01-01", "2020-12-31"],
+        ["sos/cod/rivcode", "conflicting_code_memberships", "2020-01-01", "2020-12-31"],
+        ["sos/cod/rivlabel", "conflicting_code_memberships", "2020-01-01", "2020-12-31"],
+        ["scb/nocode/value", "unknown_code_membership", "2020-01-01", "2020-12-31"],
+        ["scb/versions/value", "conflicting_coding_labels", "2020-01-01", "2020-12-31"]
+      ],
+      "note": "Every coding issue of the build, exactly: one per withheld period, with that period's window. ADJ, YDUP, SPLIT, EQ and DUPS have none (the old tests' `issues == ()`)."
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": "cod", "variable": "butsatt"},
+      "fields": ["valid_from", "valid_to", "code", "label"],
+      "rows": [
+        ["1973-01-01", "1981-12-31", "1", "Till hemmet"],
+        ["1973-01-01", "1981-12-31", "2", "Till barnklinik"],
+        ["1973-01-01", "1981-12-31", "3", "Annan klinik"],
+        ["1973-01-01", "1981-12-31", "4", "Annan adress"],
+        ["1982-01-01", "1988-12-31", null, null],
+        ["1989-01-01", "1989-12-31", "1", "Till hemmet"],
+        ["1989-01-01", "1989-12-31", "2", "Till annan adress"],
+        ["1990-01-01", "1990-12-31", "1", "Till hemmet"],
+        ["1990-01-01", "1990-12-31", "2", "Till annan adress"],
+        ["1990-01-01", "1990-12-31", "3", "Ej utskriven vid 28 dygn"],
+        ["1991-01-01", "1998-12-31", "1", "Till hemmet"],
+        ["1991-01-01", "1998-12-31", "2", "Till annan adress"],
+        ["1991-01-01", "1998-12-31", "3", "Ej utskriven vid 28 dygn"],
+        ["1999-01-01", "2000-12-31", "1", "Ej hemskriven vid 28 dagar"]
+      ],
+      "note": "test_butsatt_source_blocks_withhold_the_1982_to_1988_overlap: one sheet relabels code 2 (Till barnklinik / Till annan adress) over 1982-1988, so only those years are withheld; the 1990 state ends 1990-12-31 with exactly codes 1-3. The other rows follow from the sheet's blocks."
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": "cod", "variable": "adj"},
+      "fields": ["valid_from", "valid_to", "code", "label"],
+      "rows": [
+        ["1982-01-01", "1989-12-31", "2", "Till barnklinik"],
+        ["1990-01-01", "1998-12-31", "2", "Till annan adress"]
+      ],
+      "note": "test_adjacent_dated_labels_for_one_code_keep_both_periods: adjacent dated labels of one code are a label history, not a conflict."
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": "cod", "variable": ["yind", "ydate"]},
+      "fields": ["variable", "valid_from", "valid_to", "code", "label"],
+      "rows": [
+        ["yind", "2019-01-01", "2021-12-31", null, null],
+        ["ydate", "2019-01-01", "2019-12-31", "16310", "pakygyri i cerebrala cortex"],
+        ["ydate", "2020-01-01", "2020-12-31", null, null],
+        ["ydate", "2021-01-01", "2021-12-31", "16310", "pakygyri i cerebrala cortex"]
+      ],
+      "note": "test_same_sheet_year_independent_conflicting_labels_withhold_coding[year_independent] (YIND: two undated labels of 16310 withhold the whole occurrence) and [intervals] (YDATE: the dated relabel withholds only 2020; the years beside it keep the undated label)."
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": "cod", "variable": "ydup"},
+      "fields": ["valid_from", "valid_to", "code", "label"],
+      "rows": [
+        ["2019-01-01", "2021-12-31", "01", "Same"]
+      ],
+      "note": "test_same_sheet_identical_year_independent_duplicates_are_harmless: a repeated identical row is one member."
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": "cod", "variable": ["nolabel", "unk"]},
+      "fields": ["variable", "valid_from", "valid_to", "code", "label"],
+      "rows": [
+        ["nolabel", "2019-01-01", "2019-12-31", "0", "Label"],
+        ["nolabel", "2020-01-01", "2020-12-31", null, null],
+        ["nolabel", "2021-01-01", "2021-12-31", "0", "Label"],
+        ["unk", "2019-01-01", "2021-12-31", null, null]
+      ],
+      "note": "test_missing_code_or_label_withholds_complete_list_only_where_member_applies[001-None] (NOLABEL: the blank label withholds the list only in 2020, where that member applies) and test_unknown_or_pooled_code_scope_cannot_be_filled_from_occurrence_year[unknown] (UNK: a member with a malformed period is not filled from the occurrence years, so the list is withheld throughout)."
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": "cod", "variable": ["split", "empty"]},
+      "fields": ["variable", "valid_from", "valid_to", "code", "label"],
+      "rows": [
+        ["split", "2019-01-01", "2019-12-31", "0", "Label"],
+        ["split", "2020-01-01", "2020-12-31", "0", "Label"],
+        ["split", "2020-01-01", "2020-12-31", "1", "Label"],
+        ["split", "2021-01-01", "2021-12-31", "0", "Label"],
+        ["empty", "2019-01-01", "2019-12-31", null, null],
+        ["empty", "2020-01-01", "2021-12-31", "1", "Label"]
+      ],
+      "note": "test_code_validity_splits_real_calendar_periods_without_annual_widening (SPLIT: a member valid only in 2020 cuts the occurrence into [0], [0, 1], [0]) and test_no_active_members_reports_missing_coding_and_keeps_occurrence_coverage (EMPTY: the year with no active member keeps its state, uncoded, beside the coded years)."
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": "cod", "variable": ["eq", "rivboth", "rivcode", "rivlabel"]},
+      "fields": ["variable", "valid_from", "valid_to", "code", "label"],
+      "rows": [
+        ["eq", "2019-01-01", "2021-12-31", "1", "Label"],
+        ["eq", "2019-01-01", "2021-12-31", "2", "Label"],
+        ["rivboth", "2019-01-01", "2019-12-31", "1", "Label"],
+        ["rivboth", "2020-01-01", "2020-12-31", null, null],
+        ["rivboth", "2021-01-01", "2021-12-31", "1", "Label"],
+        ["rivcode", "2019-01-01", "2019-12-31", "1", "Label"],
+        ["rivcode", "2020-01-01", "2020-12-31", null, null],
+        ["rivcode", "2021-01-01", "2021-12-31", "1", "Label"],
+        ["rivlabel", "2019-01-01", "2019-12-31", "1", "Label"],
+        ["rivlabel", "2020-01-01", "2020-12-31", null, null],
+        ["rivlabel", "2021-01-01", "2021-12-31", "1", "Label"]
+      ],
+      "note": "test_equivalent_independent_lists_agree_without_losing_their_references (EQ: two sheets with equal members, one repeating a row, publish one list and no issue) and test_conflicting_lists_withhold_only_the_contested_coding_period[rival0..2]: a second list naming code 2 beside 1 (RIVBOTH), 2 instead of 1 (RIVCODE) or 1 under another label (RIVLABEL) in 2020 withholds only 2020. This is the harder, period-bounded form of coding-competing-lists-without-choice-publish-no-value-set."
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": ["dups", "nocode", "versions"]},
+      "fields": ["register", "valid_from", "valid_to", "code", "label"],
+      "rows": [
+        ["dups", "2020-01-01", "2020-12-31", "001", "Another label"],
+        ["dups", "2020-01-01", "2020-12-31", "001", "Original label"],
+        ["nocode", "2020-01-01", "2020-12-31", null, null],
+        ["versions", "2020-01-01", "2020-12-31", "001", "Label"]
+      ],
+      "note": "test_exact_codes_labels_duplicates_and_occurrence_evidence_survive and test_non_sheet_annual_label_boundary_keeps_both_labels (DUPS: a Vardemangder list is not a sheet, so two labels of 001 are both kept and the repeated row is one member); test_missing_code_or_label_withholds_complete_list_only_where_member_applies[None-Label] (NOCODE: a blank Värdekod is unknown membership and withholds the list for the CVID's year); test_conflicting_labels_preserve_agreed_codes_without_selecting_a_label (VERSIONS: two version names with equal members keep 001 and report only the label conflict; the withheld version label itself has no projection)."
+    }
+  ]
+}
