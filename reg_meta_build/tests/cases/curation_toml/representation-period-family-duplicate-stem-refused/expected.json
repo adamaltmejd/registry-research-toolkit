@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_period_family_merges.py::test_load_period_family_rejects_duplicate_stem",
+  "fails_if": "the register loader keeps two period families with one family_stem",
+  "note": "The entries differ in label, so only the one-family-per-stem rule can refuse them.",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/lisa.toml representation.period_family",
+    "message_contains": [
+      "duplicate period-family stem"
+    ]
+  }
+}

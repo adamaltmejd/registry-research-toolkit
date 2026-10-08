@@ -1,0 +1,9 @@
+[register]
+provider = "scb"
+slug = "lisa"
+native_id = "34"
+
+[[representation.period_family]]
+register = "scb/lisa"
+family_stem = "lonfink"
+label = "Lön"
