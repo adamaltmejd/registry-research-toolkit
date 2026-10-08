@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "conflict"
+native_id = "24"
+[[variant]]
+native_id = "24.242"
+slug = "people"
+[[variable]]
+native_id = "24.5"
+slug = "v5"

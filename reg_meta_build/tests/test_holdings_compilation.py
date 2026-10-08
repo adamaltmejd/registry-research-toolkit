@@ -11,6 +11,7 @@ import pytest
 from catalog_manifest import synthetic_manifest
 from reg_meta_build.artifact_identity import committed_steward_slugs, generation_id
 from reg_meta_build.cli import run
+from reg_meta_build.derive import derive_holdings
 from reg_meta_build.holdings_compile import compile_holdings
 from reg_meta_build.resolved_catalog import ResolvedVariable, write_resolved_catalog
 from reg_meta_build.validate import validate_built_db
@@ -147,6 +148,8 @@ def test_inventory_compiles_to_physical_facts(case: Path, tmp_path: Path) -> Non
             "INSERT OR REPLACE INTO import_manifest(key, value) VALUES (?, ?)",
             sorted(manifest.items()),
         )
+        # As extend-db does once the manifest names the steward.
+        derive_holdings(conn)
     result = validate_built_db(output)
     assert result.passed, result.format_report()
 

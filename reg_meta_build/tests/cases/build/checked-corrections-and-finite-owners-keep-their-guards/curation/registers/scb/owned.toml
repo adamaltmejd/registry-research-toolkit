@@ -1,0 +1,22 @@
+[register]
+provider = "scb"
+slug = "owned"
+native_id = "2"
+[[variant]]
+native_id = "2.2"
+slug = "people"
+[[variable]]
+native_id = "2.5.answer"
+slug = "answer"
+[[identity.partition]]
+variable = "2.5"
+columns = { KNOWN = "2.5.answer" }
+unassigned_columns = ["ANSWER"]
+columns_ref = "Explicitly withheld except finite reviewed owners"
+[[identity.column_owner]]
+variable = "2.5"
+variant = "2.2"
+column = "ANSWER"
+owner = "2.5.answer"
+ref = "Reviewed 2020 and 2021 ANSWER owner"
+source_editions = ["2020", "2021"]

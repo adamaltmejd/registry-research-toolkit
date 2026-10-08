@@ -1,0 +1,16 @@
+[register]
+provider = "scb"
+slug = "conflict"
+native_id = "24"
+[[variant]]
+native_id = "24.242"
+slug = "people"
+[[variable]]
+native_id = "24.5"
+slug = "v5"
+
+[[errata.version]]
+variant = "people"
+name = "2019"
+evidence = "omitted edition"
+noted = "2026-09-25"

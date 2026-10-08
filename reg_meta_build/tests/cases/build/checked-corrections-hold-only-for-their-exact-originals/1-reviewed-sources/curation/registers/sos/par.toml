@@ -1,0 +1,51 @@
+[register]
+provider = "sos"
+slug = "par"
+name = "Patientregistret"
+native_id = "5891427617861710725"
+[[variant]]
+native_id = "5891427617861710725.5623677195158740599"
+slug = "par-ov"
+[[variant]]
+native_id = "5891427617861710725.6299896919770839454"
+slug = "par-sv"
+[[identity.split]]
+variable = "ATC"
+by = "deldatamangd"
+parts = [{ deldatamangd = "PAR_OV", owner = "5891427617861710725.ATC.outpatient" }, { deldatamangd = "PAR_SV", owner = "5891427617861710725.ATC.inpatient" }]
+expected_records = {{expected_records key=variable:ATC}}
+expected_evidence_sha256 = {{evidence_sha256 key=variable:ATC}}
+data_warning = "Separate source-defined clinical contexts; no equivalence inferred."
+[[identity.split]]
+variable = "KVA"
+by = "deldatamangd"
+parts = [{ deldatamangd = "PAR_OV", owner = "5891427617861710725.KVA.outpatient" }, { deldatamangd = "PAR_SV", owner = "5891427617861710725.KVA.inpatient" }]
+expected_records = {{expected_records key=variable:KVA}}
+expected_evidence_sha256 = {{evidence_sha256 key=variable:KVA}}
+data_warning = "Separate source-defined clinical contexts; no equivalence inferred."
+[[variable]]
+native_id = "5891427617861710725.ATC.outpatient"
+slug = "atc-outpatient"
+[[variable]]
+native_id = "5891427617861710725.ATC.inpatient"
+slug = "atc-inpatient"
+[[variable]]
+native_id = "5891427617861710725.KVA.outpatient"
+slug = "kva-outpatient"
+[[variable]]
+native_id = "5891427617861710725.KVA.inpatient"
+slug = "kva-inpatient"
+[[variable]]
+native_id = "5891427617861710725.DIA"
+slug = "dia"
+[[errata.occurrence_period]]
+variable = "5891427617861710725.DIA"
+variant = "PAR_OV"
+column = "DIA"
+expected_fields = [{ name = "name", status = "value", value = "DIA" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Diagnos" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2011 och 2013" }, { name = "coverage_to", status = "value", value = "2011 och 2013" }]
+expected_scope = { kind = "unknown", label = "Data från=2011 och 2013; Data till=2011 och 2013" }
+expected_period = { kind = "not_applicable" }
+edition_scope = { kind = "intervals", intervals = [{ start = "2011", end = "2011" }, { start = "2013", end = "2013" }] }
+edition_period_scope = { kind = "not_applicable" }
+evidence = "Both supplied coverage bounds name exactly 2011 and 2013."
+noted = "2026-09-30"

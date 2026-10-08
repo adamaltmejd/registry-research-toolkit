@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_tree.py::test_coding_register_invalid_entry_names_file_and_index[periods = [[\"2020-13-01\", \"2020-12-31\"]]\\n]",
+  "fails_if": "`_coding_window` checks only the yyyy-mm-dd shape of a coding window bound and stops parsing it as a date, so month 13 loads",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[coding.choice.periods]] entry 1",
+    "message_contains": [
+      "coding window bounds must be valid ISO dates"
+    ]
+  }
+}

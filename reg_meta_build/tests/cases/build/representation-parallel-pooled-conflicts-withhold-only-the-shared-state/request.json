@@ -1,0 +1,38 @@
+{
+  "replaces": [
+    "test_curation_compile_pooled_parallel.py::test_pooled_parallel_reconciliation_preserves_outer_windows_and_conflicts[fact]",
+    "test_curation_compile_pooled_parallel.py::test_pooled_parallel_reconciliation_preserves_outer_windows_and_conflicts[coding]"
+  ],
+  "note": "One build carries both conflicts: Second's data type (text against First's int) and its code list (02 against First's 01). Only the shared 2022 state withholds the conflicting fact and coding; the outer states keep their own.",
+  "fails_if": "`form_representations` selects one sibling's data type or code list for the shared 2022 state instead of withholding it, or withholds the outer First 2020-2021 (`integer`, 01) or Second 2023-2024 (`text`, 02) facts too",
+  "sources": {
+    "description": "Variable 1 (Income): First is pooled 2020-2022 (CVID 100, int, code 01), Second 2022-2024 (CVID 101, text, code 02).",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "First",
+          "cvid": 100,
+          "var_id": 1,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2020-2022",
+          "regver_id": 110
+        },
+        {
+          "colname": "Second",
+          "cvid": 101,
+          "var_id": 1,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2022-2024",
+          "regver_id": 111,
+          "data_type": "text"
+        }
+      ],
+      "vardemangder": [
+        "First|1|01|Label|100|7001",
+        "Second|1|02|Label|101|7002"
+      ]
+    }
+  }
+}

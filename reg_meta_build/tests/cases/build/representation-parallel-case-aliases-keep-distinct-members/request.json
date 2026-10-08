@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_curation_compile_pooled_parallel.py::test_case_aliases_keep_distinct_members_and_refuse_source_drift[None]"
+  ],
+  "note": "`case_aliases` binds two independent members whose literals differ only in case, without claiming they are delivered together. The same source under `co_delivered` is representation-parallel-co-delivered-stale-when-its-literals-are-separate-members.",
+  "fails_if": "`compile_parallel_representations` applies the co_delivered same-ref literal check to `case_aliases` entries, so the two distinct members go stale",
+  "sources": "scb-income-case-alias-members"
+}

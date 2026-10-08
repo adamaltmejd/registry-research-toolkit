@@ -1,0 +1,36 @@
+[register]
+provider = "sos"
+slug = "syd"
+name = "Syntetiskt distriktsregister"
+native_id = {{naming_id kind=register provider=sos register_key=syd}}
+[[variant]]
+slug = "syd-a"
+native_id = {{naming_id kind=register_variant provider=sos register_key=syd member_key=SYD_A}}
+[[variable]]
+slug = "distrikt"
+native_id = {{naming_id kind=variable provider=sos register_key=syd member_key=DISTRIKT}}
+[[variable]]
+slug = "distrikt2"
+native_id = {{naming_id kind=variable provider=sos register_key=syd member_key=DISTRIKT2}}
+[[errata.field]]
+variable = {{naming_id kind=variable provider=sos register_key=syd member_key=DISTRIKT}}
+variant = "SYD_A"
+column = "DISTRIKT"
+expected_fields = {{expected_fields source=Socialstyrelsen/ key=variable:DISTRIKT fields=name,definition,description,operational_definition,classification_declared,representation,data_type,coverage_from,coverage_to}}
+expected_scope = {{edition_scope source=Socialstyrelsen/ key=variable:DISTRIKT}}
+expected_period = {{period_scope source=Socialstyrelsen/ key=variable:DISTRIKT}}
+evidence = "The 2009 delivery names the wrong list; the codes are district codes."
+noted = "2026-09-30"
+field = "classification_declared"
+value = "District reference"
+[[errata.field]]
+variable = {{naming_id kind=variable provider=sos register_key=syd member_key=DISTRIKT2}}
+variant = "SYD_A"
+column = "DISTRIKT2"
+expected_fields = {{expected_fields source=Socialstyrelsen/ key=variable:DISTRIKT2 fields=name,definition,description,operational_definition,classification_declared,representation,data_type,coverage_from,coverage_to}}
+expected_scope = {{edition_scope source=Socialstyrelsen/ key=variable:DISTRIKT2}}
+expected_period = {{period_scope source=Socialstyrelsen/ key=variable:DISTRIKT2}}
+evidence = "The 2009 delivery names the wrong list; the codes are district codes."
+noted = "2026-09-30"
+field = "classification_declared"
+value = "District reference"

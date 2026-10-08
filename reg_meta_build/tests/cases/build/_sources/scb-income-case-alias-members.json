@@ -1,0 +1,25 @@
+{
+  "description": "Variable 1 (Income), edition 2022: two independent members whose columns differ only in case, First (CVID 100) and first (CVID 101).",
+  "scb": {
+    "registerinformation": [
+      {
+        "colname": "First",
+        "cvid": 100,
+        "var_id": 1,
+        "varname": "Income",
+        "year": "2022",
+        "versionname": "2022",
+        "regver_id": 110
+      },
+      {
+        "colname": "first",
+        "cvid": 101,
+        "var_id": 1,
+        "varname": "Income",
+        "year": "2022",
+        "versionname": "2022",
+        "regver_id": 110
+      }
+    ]
+  }
+}

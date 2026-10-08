@@ -1,0 +1,20 @@
+[register]
+provider = "scb"
+slug = "nodoc"
+native_id = "13"
+[[variant]]
+native_id = "13.132"
+slug = "people"
+[[variable]]
+native_id = "13.5"
+slug = "v5"
+[[variable]]
+native_id = "13.6"
+slug = "v6"
+
+[[errata.delivered]]
+variant = "people"
+column = "A"
+versions = ["2021"]
+evidence = "accepted delivery"
+noted = "2026-09-25"

@@ -1,0 +1,128 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": {
+          "contains": "conflicting_representation"
+        }
+      },
+      "fields": [
+        "code",
+        "subject"
+      ],
+      "rows": [
+        [
+          "conflicting_representation_fact",
+          "scb/sample/income"
+        ],
+        [
+          "conflicting_representation_coding",
+          "scb/sample/income"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "income"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "data_type",
+        "pooled"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2021-12-31",
+          "integer",
+          1
+        ],
+        [
+          "2022-01-01",
+          "2022-12-31",
+          null,
+          1
+        ],
+        [
+          "2023-01-01",
+          "2024-12-31",
+          "text",
+          1
+        ]
+      ]
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "variable": "income"
+      },
+      "fields": [
+        "valid_from",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "01",
+          "Label"
+        ],
+        [
+          "2022-01-01",
+          null,
+          null
+        ],
+        [
+          "2023-01-01",
+          "02",
+          "Label"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "income"
+      },
+      "fields": [
+        "column",
+        "valid_from",
+        "valid_to"
+      ],
+      "match": "includes",
+      "rows": [
+        [
+          "First",
+          "2020-01-01",
+          "2021-12-31"
+        ],
+        [
+          "Second",
+          "2023-01-01",
+          "2024-12-31"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "income",
+        "valid_from": "2022-01-01",
+        "provenance": {
+          "contains": "#/representation.parallel/1"
+        }
+      },
+      "fields": [
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "2022-12-31"
+        ]
+      ]
+    }
+  ]
+}

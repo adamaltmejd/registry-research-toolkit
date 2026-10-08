@@ -1,0 +1,51 @@
+{
+  "projections": [
+    {
+      "table": "warnings",
+      "where": {
+        "variable": "answer"
+      },
+      "fields": [
+        "column",
+        "summary",
+        "fields",
+        "refs"
+      ],
+      "rows": [
+        [
+          "ANSWER",
+          "Identity follows the exported source question",
+          [
+            "identity"
+          ],
+          [
+            "scb-registerinformation#register:3/variant:30/edition:320/variable:5/member:301"
+          ]
+        ]
+      ]
+    },
+    {
+      "table": "uses",
+      "where": {
+        "key": [
+          "member:301",
+          "member:302"
+        ]
+      },
+      "fields": [
+        "column_name",
+        "variable"
+      ],
+      "rows": [
+        [
+          "ANSWER",
+          "scb/warning/answer"
+        ],
+        [
+          "LEFT",
+          null
+        ]
+      ]
+    }
+  ]
+}

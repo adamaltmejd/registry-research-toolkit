@@ -1,0 +1,55 @@
+{
+  "description": "One delivery per checked-correction claim, each in its own register so their outcomes stay separable. SCB: registers 1 and 2 (witness) each deliver ANSWER (variable 5) in edition 99 (2009) named 'GenericVar' and in edition 100 (2017) named 'Canonical source label' by two physical rows that differ only in data length. Register 4 (conflict) delivers ANSWER in edition 99 named 'GenericVar' and in edition 100 named 'Reviewed label'. Register 5 (shared) delivers FIRST and SECOND under one record (CVID 60, 2020). Register 6 (period) delivers ANSWER and OTHER under one edition-99 record (CVID 70) and ANSWER again in edition 100. Registers 7 and 8 (sentinel) deliver VALUE in 2021 with the list 01 'Category' plus 99 'Unknown' or 99 'Substantive industry'. Register 9 (parallel) delivers First pooled 2020-2022 and Second 2022-2024, and Sibling as a second literal of First's record. SOS PAR: ATC and KVA in PAR_OV by two rows (2001-2010 and 2011-2020) and in PAR_SV; DIA in PAR_OV with coverage '2011 och 2013' on both bounds and in PAR_SV 2001-2020. Book FIX (01 'Canonical').",
+  "scb": {
+    "registerinformation": [
+      {"colname": "ANSWER", "cvid": 20, "var_id": 5, "year": "2009", "regver_id": 99, "register": ["AUTHORITY", 1, 2]},
+      {"colname": "ANSWER", "cvid": 21, "var_id": 5, "year": "2017", "regver_id": 100, "register": ["AUTHORITY", 1, 2], "varname": "Canonical source label"},
+      {"colname": "ANSWER", "cvid": 21, "var_id": 5, "year": "2017", "regver_id": 100, "register": ["AUTHORITY", 1, 2], "varname": "Canonical source label", "data_length": "2"},
+      {"colname": "ANSWER", "cvid": 30, "var_id": 5, "year": "2009", "regver_id": 99, "register": ["WITNESS", 2, 2]},
+      {"colname": "ANSWER", "cvid": 31, "var_id": 5, "year": "2017", "regver_id": 100, "register": ["WITNESS", 2, 2], "varname": "Canonical source label"},
+      {"colname": "ANSWER", "cvid": 31, "var_id": 5, "year": "2017", "regver_id": 100, "register": ["WITNESS", 2, 2], "varname": "Canonical source label", "data_length": "2"},
+      {"colname": "ANSWER", "cvid": 50, "var_id": 5, "year": "2009", "regver_id": 99, "register": ["CONFLICT", 4, 2]},
+      {"colname": "ANSWER", "cvid": 51, "var_id": 5, "year": "2017", "regver_id": 100, "register": ["CONFLICT", 4, 2], "varname": "Reviewed label"},
+      {"colname": "FIRST", "cvid": 60, "var_id": 5, "year": "2020", "regver_id": 2020, "register": ["SHARED", 5, 10]},
+      {"colname": "SECOND", "cvid": 60, "var_id": 5, "year": "2020", "regver_id": 2020, "register": ["SHARED", 5, 10]},
+      {"colname": "ANSWER", "cvid": 70, "var_id": 5, "year": "2009", "regver_id": 99, "register": ["PERIOD", 6, 2]},
+      {"colname": "OTHER", "cvid": 70, "var_id": 5, "year": "2009", "regver_id": 99, "register": ["PERIOD", 6, 2]},
+      {"colname": "ANSWER", "cvid": 71, "var_id": 5, "year": "2017", "regver_id": 100, "register": ["PERIOD", 6, 2]},
+      {"colname": "VALUE", "cvid": 80, "var_id": 5, "year": "2021", "regver_id": 2021, "register": ["SENTINEL", 7, 2]},
+      {"colname": "VALUE", "cvid": 90, "var_id": 5, "year": "2021", "regver_id": 2021, "register": ["SUBSTANTIVE", 8, 2]},
+      {"colname": "First", "cvid": 100, "var_id": 1, "varname": "Income", "year": "2020", "versionname": "2020-2022", "regver_id": 110, "register": ["PARALLEL", 9, 10]},
+      {"colname": "Second", "cvid": 101, "var_id": 1, "varname": "Income", "year": "2020", "versionname": "2022-2024", "regver_id": 111, "register": ["PARALLEL", 9, 10]},
+      {"colname": "Sibling", "cvid": 100, "var_id": 1, "varname": "Income", "year": "2020", "versionname": "2020-2022", "regver_id": 110, "register": ["PARALLEL", 9, 10]}
+    ],
+    "vardemangder": [
+      "list|1|01|Category|80|7001",
+      "list|1|99|Unknown|80|7002",
+      "list|1|01|Category|90|7003",
+      "list|1|99|Substantive industry|90|7004"
+    ]
+  },
+  "sos": [
+    {
+      "abbrev": "PAR",
+      "title": "Patientregistret",
+      "description": "Ett syntetiskt SOS-register för testbygget.",
+      "subsets": [
+        {"name": "PAR_OV", "label": "PAR_OV", "description": "Öppenvård", "data_from": 2001, "data_to": 2020},
+        {"name": "PAR_SV", "label": "PAR_SV", "description": "Slutenvård", "data_from": 2001, "data_to": 2020}
+      ],
+      "variables": [
+        {"name": "ATC", "deldatamangd": "PAR_OV", "label": "ATC", "description": "Läkemedel", "data_from": 2001, "data_to": 2010},
+        {"name": "ATC", "deldatamangd": "PAR_OV", "label": "ATC", "description": "Läkemedel", "data_from": 2011, "data_to": 2020},
+        {"name": "ATC", "deldatamangd": "PAR_SV", "label": "ATC", "description": "Läkemedel", "data_from": 2001, "data_to": 2020},
+        {"name": "KVA", "deldatamangd": "PAR_OV", "label": "KVA", "description": "Åtgärd", "data_from": 2001, "data_to": 2010},
+        {"name": "KVA", "deldatamangd": "PAR_OV", "label": "KVA", "description": "Åtgärd", "data_from": 2011, "data_to": 2020},
+        {"name": "KVA", "deldatamangd": "PAR_SV", "label": "KVA", "description": "Åtgärd", "data_from": 2001, "data_to": 2020},
+        {"name": "DIA", "deldatamangd": "PAR_OV", "label": "DIA", "description": "Diagnos", "data_from": "2011 och 2013", "data_to": "2011 och 2013"},
+        {"name": "DIA", "deldatamangd": "PAR_SV", "label": "DIA", "description": "Diagnos", "data_from": 2001, "data_to": 2020}
+      ]
+    }
+  ],
+  "files": {
+    "classifications/fixture.csv": ["code,label", "01,Canonical"]
+  }
+}

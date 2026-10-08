@@ -1,0 +1,65 @@
+{
+  "replaces": [
+    "test_curation_compile_delivery_metadata.py::test_delivery_metadata_compiler_keeps_complete_literal_source_guards[unit]",
+    "test_curation_compile_delivery_metadata.py::test_delivery_metadata_compiler_keeps_complete_literal_source_guards[missing]",
+    "test_curation_compile_delivery_metadata.py::test_delivery_metadata_compiler_keeps_complete_literal_source_guards[new]",
+    "test_curation_compile_delivery_metadata.py::test_delivery_metadata_compiler_keeps_complete_literal_source_guards[partial]",
+    "test_curation_compile_delivery_metadata.py::test_delivery_metadata_compiler_keeps_complete_literal_source_guards[window]"
+  ],
+  "note": "Each register carries the survivor's complete name-metadata entry, authored from the reviewed source, and one drift: `unit` changes the unit of a named KU row (CVID 131); `missing` stops delivering a named KU row (CVID 233); `new` delivers a second 2021 KU row (CVID 334) in an edition the entry covers; `partial` omits the 2021 KU row from `records`; `window` ends the authored KU window at 2020-12-31. Each entry goes stale at its own file; the survivor is the applied twin.",
+  "fails_if": "`compile_delivery_metadata` loosens one of its checks: skipping the target and peer evaluation keeps `unit`; skipping the column-window equality keeps `window`; skipping the owner-set equality together with the evaluation keeps `new` and `partial`. `missing` is refused by all three, and with all three skipped a later representation guard fails the build",
+  "sources": {
+    "description": "Five registers REG1..REG5, each the KU/AGI shape of representation-delivery-names-stay-on-the-partition-owner-states (KU 2020 final, AGI 2020 final, KU 2021, a superseded KU 2020 preliminary), with CVIDs and edition ids offset by 100 per register; REG1's CVID 131 unit changed, REG2 lacks CVID 233, REG3 adds CVID 334.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "KU", "cvid": 131, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 111, "vardef": "Supplied income quantity", "unit": "Kronor (SEK)", "register": ["REG1", 1, 10]},
+        {"colname": "AGI", "cvid": 132, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 111, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG1", 1, 10]},
+        {"colname": "KU", "cvid": 133, "var_id": 5, "varname": "Taxable income", "year": "2021", "versionname": "2021", "regver_id": 2121, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG1", 1, 10]},
+        {"colname": "KU", "cvid": 130, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, preliminär version", "regver_id": 110, "vardef": "Supplied income quantity", "unit": "Olika valutor", "register": ["REG1", 1, 10]},
+        {"colname": "KU", "cvid": 231, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 211, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG2", 2, 10]},
+        {"colname": "AGI", "cvid": 232, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 211, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG2", 2, 10]},
+        {"colname": "KU", "cvid": 230, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, preliminär version", "regver_id": 210, "vardef": "Supplied income quantity", "unit": "Olika valutor", "register": ["REG2", 2, 10]},
+        {"colname": "KU", "cvid": 331, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 311, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG3", 3, 10]},
+        {"colname": "AGI", "cvid": 332, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 311, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG3", 3, 10]},
+        {"colname": "KU", "cvid": 333, "var_id": 5, "varname": "Taxable income", "year": "2021", "versionname": "2021", "regver_id": 2321, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG3", 3, 10]},
+        {"colname": "KU", "cvid": 330, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, preliminär version", "regver_id": 310, "vardef": "Supplied income quantity", "unit": "Olika valutor", "register": ["REG3", 3, 10]},
+        {"colname": "KU", "cvid": 334, "var_id": 5, "varname": "Taxable income", "year": "2021", "versionname": "2021", "regver_id": 2321, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG3", 3, 10], "vardesc": "A second KU row"},
+        {"colname": "KU", "cvid": 431, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 411, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG4", 4, 10]},
+        {"colname": "AGI", "cvid": 432, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 411, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG4", 4, 10]},
+        {"colname": "KU", "cvid": 433, "var_id": 5, "varname": "Taxable income", "year": "2021", "versionname": "2021", "regver_id": 2421, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG4", 4, 10]},
+        {"colname": "KU", "cvid": 430, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, preliminär version", "regver_id": 410, "vardef": "Supplied income quantity", "unit": "Olika valutor", "register": ["REG4", 4, 10]},
+        {"colname": "KU", "cvid": 531, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 511, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG5", 5, 10]},
+        {"colname": "AGI", "cvid": 532, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 511, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG5", 5, 10]},
+        {"colname": "KU", "cvid": 533, "var_id": 5, "varname": "Taxable income", "year": "2021", "versionname": "2021", "regver_id": 2521, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG5", 5, 10]},
+        {"colname": "KU", "cvid": 530, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, preliminär version", "regver_id": 510, "vardef": "Supplied income quantity", "unit": "Olika valutor", "register": ["REG5", 5, 10]}
+      ]
+    }
+  },
+  "authored_from": {
+    "description": "Five registers REG1..REG5, each the KU/AGI shape of representation-delivery-names-stay-on-the-partition-owner-states (KU 2020 final, AGI 2020 final, KU 2021, a superseded KU 2020 preliminary), with CVIDs and edition ids offset by 100 per register, as reviewed.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "KU", "cvid": 131, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 111, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG1", 1, 10]},
+        {"colname": "AGI", "cvid": 132, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 111, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG1", 1, 10]},
+        {"colname": "KU", "cvid": 133, "var_id": 5, "varname": "Taxable income", "year": "2021", "versionname": "2021", "regver_id": 2121, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG1", 1, 10]},
+        {"colname": "KU", "cvid": 130, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, preliminär version", "regver_id": 110, "vardef": "Supplied income quantity", "unit": "Olika valutor", "register": ["REG1", 1, 10]},
+        {"colname": "KU", "cvid": 231, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 211, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG2", 2, 10]},
+        {"colname": "AGI", "cvid": 232, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 211, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG2", 2, 10]},
+        {"colname": "KU", "cvid": 233, "var_id": 5, "varname": "Taxable income", "year": "2021", "versionname": "2021", "regver_id": 2221, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG2", 2, 10]},
+        {"colname": "KU", "cvid": 230, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, preliminär version", "regver_id": 210, "vardef": "Supplied income quantity", "unit": "Olika valutor", "register": ["REG2", 2, 10]},
+        {"colname": "KU", "cvid": 331, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 311, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG3", 3, 10]},
+        {"colname": "AGI", "cvid": 332, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 311, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG3", 3, 10]},
+        {"colname": "KU", "cvid": 333, "var_id": 5, "varname": "Taxable income", "year": "2021", "versionname": "2021", "regver_id": 2321, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG3", 3, 10]},
+        {"colname": "KU", "cvid": 330, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, preliminär version", "regver_id": 310, "vardef": "Supplied income quantity", "unit": "Olika valutor", "register": ["REG3", 3, 10]},
+        {"colname": "KU", "cvid": 431, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 411, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG4", 4, 10]},
+        {"colname": "AGI", "cvid": 432, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 411, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG4", 4, 10]},
+        {"colname": "KU", "cvid": 433, "var_id": 5, "varname": "Taxable income", "year": "2021", "versionname": "2021", "regver_id": 2421, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG4", 4, 10]},
+        {"colname": "KU", "cvid": 430, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, preliminär version", "regver_id": 410, "vardef": "Supplied income quantity", "unit": "Olika valutor", "register": ["REG4", 4, 10]},
+        {"colname": "KU", "cvid": 531, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 511, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG5", 5, 10]},
+        {"colname": "AGI", "cvid": 532, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, slutlig version", "regver_id": 511, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG5", 5, 10]},
+        {"colname": "KU", "cvid": 533, "var_id": 5, "varname": "Taxable income", "year": "2021", "versionname": "2021", "regver_id": 2521, "vardef": "Supplied income quantity", "unit": "100-tal kronor", "register": ["REG5", 5, 10]},
+        {"colname": "KU", "cvid": 530, "var_id": 5, "varname": "Income", "year": "2020", "versionname": "2020, preliminär version", "regver_id": 510, "vardef": "Supplied income quantity", "unit": "Olika valutor", "register": ["REG5", 5, 10]}
+      ]
+    }
+  }
+}

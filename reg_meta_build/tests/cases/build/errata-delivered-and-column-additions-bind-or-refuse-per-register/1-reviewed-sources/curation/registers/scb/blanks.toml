@@ -1,0 +1,27 @@
+[register]
+provider = "scb"
+slug = "blanks"
+native_id = "18"
+[[variant]]
+native_id = "18.182"
+slug = "people"
+[[variable]]
+native_id = "18.5"
+slug = "v5"
+[[variable]]
+native_id = "18.6"
+slug = "v6"
+
+[[errata.delivered]]
+variant = "people"
+column = "A"
+versions = ["2021"]
+evidence = "accepted delivery"
+noted = "2026-09-25"
+
+[[errata.delivered]]
+variant = "people"
+column = "A"
+versions = ["2022"]
+evidence = "accepted missing-edition delivery"
+noted = "2026-09-25"

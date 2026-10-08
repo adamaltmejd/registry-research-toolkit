@@ -1,0 +1,86 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": [
+        "locator"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/partial.toml#/identity.partition/1"
+        ]
+      ]
+    },
+    {
+      "table": "variables",
+      "where": {
+        "register": "base"
+      },
+      "fields": [
+        "variable",
+        "column"
+      ],
+      "match": "set",
+      "rows": [
+        [
+          "quantity",
+          "OLD"
+        ],
+        [
+          "quantity",
+          "NEW"
+        ]
+      ]
+    },
+    {
+      "table": "uses",
+      "where": {
+        "key": [
+          "member:101",
+          "member:102"
+        ]
+      },
+      "fields": [
+        "column_name",
+        "key",
+        "use",
+        "variable"
+      ],
+      "rows": [
+        [
+          "OLD",
+          "member:101",
+          "catalog",
+          "scb/base/quantity"
+        ],
+        [
+          "OLD",
+          "member:101",
+          "catalog",
+          "scb/base/quantity"
+        ],
+        [
+          "NEW",
+          "member:102",
+          "catalog",
+          "scb/base/quantity"
+        ]
+      ]
+    },
+    {
+      "table": "variables",
+      "where": {
+        "register": "partial"
+      },
+      "fields": [
+        "variable",
+        "column"
+      ],
+      "match": "set",
+      "rows": []
+    }
+  ]
+}

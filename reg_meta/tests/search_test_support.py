@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING
 
 from reader_artifacts import CASES, build_reader_artifact, replicate_filler
 from reg_meta.db import open_db
-from reg_meta_build.derive import derive_search_indexes
+from reg_meta_build.derive.search_index import derive_search_indexes
 
 sys.path.insert(
     0, str(Path(__file__).resolve().parents[2] / "reg_meta_build" / "tests")
