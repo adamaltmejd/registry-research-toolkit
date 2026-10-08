@@ -3,5 +3,3 @@
 UPDATE variable SET name = NULL WHERE variable_id = 1;
 UPDATE variable_state SET name = 'Kön' WHERE state_id = 1;
 UPDATE variable_state SET name = 'Kön (ny)' WHERE state_id = 2;
--- The search row derive would write: the state names, folded and joined.
-UPDATE variable_fts SET name = 'kon kon (ny)' WHERE rowid = 1;

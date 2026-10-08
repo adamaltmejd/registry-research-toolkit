@@ -32,6 +32,7 @@ from reg_meta_build.db import (
 )
 from reg_meta_build.derive.browse import browse_scopes, derive_browse
 from reg_meta_build.derive.chains import CHAIN_TABLES, derive_chains
+from reg_meta_build.derive.schema import derive_coded
 from reg_meta_build.derive.search_index import derive_search_indexes
 from reg_meta_build.derive.states import derive_states
 
@@ -45,6 +46,7 @@ DERIVED_TABLES = (
     "delivery_window",
     "resolver_column",
     *CHAIN_TABLES,
+    "coded_variable_stats",
 )
 
 
@@ -55,7 +57,9 @@ def derive(conn: sqlite3.Connection) -> None:
     compiles them after deriving, then adds those rows with `derive_holdings`.
     """
     derive_states(conn)
-    derive_browse(conn, browse_scopes(conn))
+    scopes = browse_scopes(conn)
+    derive_browse(conn, scopes)
+    derive_coded(conn, scopes)
     derive_chains(conn)
     derive_search_indexes(conn)
 
@@ -63,6 +67,7 @@ def derive(conn: sqlite3.Connection) -> None:
 def derive_holdings(conn: sqlite3.Connection) -> None:
     """Recompute the holdings-scope rows from a steward's compiled holdings."""
     derive_browse(conn, ("holdings",))
+    derive_coded(conn, ("holdings",))
 
 
 def derive_artifact(base: Path, out: Path) -> None:

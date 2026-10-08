@@ -331,7 +331,8 @@ CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
 #   `browse_delivery` and `delivery_window`; only the Rust reader reads them.
 # 9.5.0: derived succession tables `succession_terminal`, `classification_chain` and
 #   `classification_family` (read by the Rust server only).
-SCHEMA_VERSION = "9.5.0"
+# 9.6.0: derived `coded_variable_stats` per scope; only the Rust reader reads it.
+SCHEMA_VERSION = "9.6.0"
 DB_FILENAME = "reg_meta.db"
 
 
