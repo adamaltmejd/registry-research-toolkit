@@ -452,6 +452,10 @@ def resolve_source_scope(
         for kind, key in names
         if kind == "register_variant"
     }
+    # An unnamed variant is withheld with its register. Carrying it as withheld
+    # lets curation compiled against it (an `[[enrichment.alias]]`) report a
+    # withheld dependency instead of an unconverted identity.
+    variants.update(dict.fromkeys(unnamed_variants, None))
     for key, variant in (declared_variants or {}).items():
         declaration = names.get(("register_variant", key))
         if declaration is None or declaration.naming.slug != variant.slug:
