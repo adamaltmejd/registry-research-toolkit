@@ -1,0 +1,27 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.5.first"
+slug = "first"
+[[identity.column_owner]]
+variable = "1.5"
+variant = "1.10"
+column = "FIRST"
+owner = "1.5.first"
+ref = "first construct"
+source_editions = ["2020"]
+[[variable]]
+native_id = "1.5.second"
+slug = "second"
+[[identity.column_owner]]
+variable = "1.5"
+variant = "1.10"
+column = "SECOND"
+owner = "1.5.second"
+ref = "second construct"
+source_editions = ["2020"]

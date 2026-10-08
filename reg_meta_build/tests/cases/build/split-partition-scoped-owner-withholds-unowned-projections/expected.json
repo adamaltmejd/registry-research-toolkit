@@ -1,0 +1,28 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": [
+        ["unresolved_catalog_identity"]
+      ]
+    },
+    {
+      "table": "states",
+      "fields": ["variable", "column", "valid_from", "valid_to"],
+      "rows": [
+        ["code", "CODE", "2020-01-01", "2020-12-31"]
+      ]
+    },
+    {
+      "table": "uses",
+      "where": {"source": "scb-registerinformation"},
+      "fields": ["column_name", "key", "use", "variable"],
+      "rows": [
+        ["CODE", "member:20", "catalog", "scb/sample/code"],
+        ["CODE", "member:21", "catalog", null],
+        ["NAME", "member:20", "catalog", null]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "replaces": [
+    "test_curation_split_partition_boundary.py::test_owner_alternatives_resolve_a_reference_from_an_unselected_register"
+  ],
+  "note": "Outside the slice, a column owner guarded by its complete originals is checked against them and resolves as a deferred reference; it stands for every [[identity.column_owner]] form.",
+  "sources": {
+    "description": "scb-partition-owner-alternatives plus register OTHERREG (native 2) delivering OTHER.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "varopdef": "Derived amount"
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "varopdef": "Sum of components"
+        },
+        {
+          "cvid": 90,
+          "var_id": 201,
+          "colname": "OTHER",
+          "register": ["OTHERREG", 2, 20]
+        }
+      ],
+      "vardemangder": ["Belopp|1|1|Ett|20|7001", "Belopp|1|1|Ett|21|7001"]
+    }
+  },
+  "registers": ["2"]
+}

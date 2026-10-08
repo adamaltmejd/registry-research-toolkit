@@ -1,0 +1,24 @@
+{
+  "description": "Variable 1.5 delivers ANSWER twice in 2020 (CVIDs 20, 21) with different operational definitions and one shared code list item.",
+  "scb": {
+    "registerinformation": [
+      {
+        "colname": "ANSWER",
+        "cvid": 20,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020,
+        "varopdef": "Derived amount"
+      },
+      {
+        "colname": "ANSWER",
+        "cvid": 21,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020,
+        "varopdef": "Sum of components"
+      }
+    ],
+    "vardemangder": ["Belopp|1|1|Ett|20|7001", "Belopp|1|1|Ett|21|7001"]
+  }
+}

@@ -1,0 +1,18 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.5.amount"
+slug = "amount"
+[[identity.column_owner]]
+variable = "1.5"
+variant = "1.10"
+column = "ANSWER"
+owner = "1.5.amount"
+ref = "explicit amount role"
+source_editions = ["2020"]
+expected_fields = [{ name = "measurement_unit", status = "value", value = "SEK" }, { name = "operational_definition", status = "value", value = "Amount" }, { name = "source_attribution", status = "value", value = "Authority" }]

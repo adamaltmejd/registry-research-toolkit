@@ -1,0 +1,30 @@
+{
+  "replaces": [
+    "test_curation_split_partition_boundary.py::test_owner_alternatives_are_stale_when_an_original_changes"
+  ],
+  "sources": {
+    "description": "scb-partition-owner-alternatives after CVID 21's operational definition changed.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "varopdef": "Derived amount"
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "varopdef": "Changed"
+        }
+      ],
+      "vardemangder": ["Belopp|1|1|Ett|20|7001", "Belopp|1|1|Ett|21|7001"]
+    }
+  },
+  "authored_from": "scb-partition-owner-alternatives"
+}
