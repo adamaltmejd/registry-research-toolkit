@@ -1,0 +1,30 @@
+{
+  "replaces": ["test_curation_partition_map_boundary.py::test_exact_literal_map_moves_each_column_to_its_owner"],
+  "sources": {
+    "description": "Variable 5 delivers ANSWER (CVID 21) and OTHER (CVID 22) in 2020.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2]
+        },
+        {
+          "colname": "OTHER",
+          "cvid": 22,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2]
+        }
+      ],
+      "unika": [
+        "TEST|Testregistret|Individer|Individer|GenericVar|ANSWER|2020|2020|0|0|0",
+        "TEST|Testregistret|Individer|Individer|GenericVar|OTHER|2020|2020|0|0|0"
+      ]
+    }
+  }
+}

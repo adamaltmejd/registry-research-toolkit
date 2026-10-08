@@ -1,0 +1,68 @@
+[register]
+provider = "sos"
+slug = "syx"
+name = "Syntetiskt felregister"
+native_id = "8048821168713678782"
+[[variant]]
+slug = "syx-a"
+native_id = "8048821168713678782.7994021338765250774"
+[[variant]]
+slug = "syx-b"
+native_id = "8048821168713678782.8584088951837986437"
+[[variable]]
+slug = "datum"
+native_id = "8048821168713678782.DATUM"
+[[variable]]
+slug = "typ"
+native_id = "8048821168713678782.TYP"
+[[variable]]
+slug = "repr"
+native_id = "8048821168713678782.REPR"
+[[variable]]
+slug = "utantyp"
+native_id = "8048821168713678782.UTANTYP"
+[[variable]]
+slug = "utanrepr"
+native_id = "8048821168713678782.UTANREPR"
+[[variable]]
+slug = "formel"
+native_id = "8048821168713678782.FORMEL"
+[[variable]]
+slug = "kolumn"
+native_id = "8048821168713678782.KOLUMN"
+[[variable]]
+slug = "dup"
+native_id = "8048821168713678782.DUP"
+[[variable]]
+slug = "mark"
+native_id = "8048821168713678782.MARK"
+[[variable]]
+slug = "annanlank"
+native_id = "8048821168713678782.ANNANLANK"
+[[variable]]
+slug = "annanrepr"
+native_id = "8048821168713678782.ANNANREPR"
+[[variable]]
+slug = "utanlank"
+native_id = "8048821168713678782.UTANLANK"
+[[variable]]
+slug = "vittne"
+native_id = "8048821168713678782.VITTNE"
+[[variable]]
+slug = "annatvittne"
+native_id = "8048821168713678782.ANNATVITTNE"
+[[variable]]
+slug = "utanvittne"
+native_id = "8048821168713678782.UTANVITTNE"
+[[variable]]
+slug = "fler"
+native_id = "8048821168713678782.FLER"
+[[errata.data_type]]
+deldatamangd = "SYX_A"
+variable = "DATUM"
+column = "DATUM"
+expected_type = "Decimal"
+expected_representation = "YYYY-MM-DD"
+data_type = "date"
+evidence = "Workbook row declares a date."
+noted = "2026-09-29"

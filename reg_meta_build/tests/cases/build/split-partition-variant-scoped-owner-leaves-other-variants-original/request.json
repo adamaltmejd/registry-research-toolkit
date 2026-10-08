@@ -1,0 +1,30 @@
+{
+  "replaces": [
+    "test_curation_owner_column_boundary.py::test_variant_scoped_owner_leaves_other_variants_original"
+  ],
+  "note": "Issue codes carried over from the replaced test, whose docstring says they were recorded from a build run.",
+  "sources": {
+    "description": "Variable 5 delivers ANSWER in variant 2 (CVID 21) and variant 3 (CVID 22).",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2]
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 22,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 3]
+        }
+      ],
+      "unika": ["TEST|Testregistret|Individer|Individer|GenericVar|ANSWER|2020|2020|0|0|0"]
+    }
+  }
+}

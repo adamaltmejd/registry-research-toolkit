@@ -1,0 +1,21 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "subject"],
+      "rows": [
+        [
+          "unresolved_catalog_identity",
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 5)"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "fields": ["variable", "variant", "valid_from", "column"],
+      "rows": [
+        ["answer", "people", "2020-01-01", "ANSWER"]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "replaces": ["test_curation_thin_coverage_boundary.py::test_thin_inverted_coverage_window_fails_the_build"],
+  "note": "An open variant from 2021 starts after the variable's 2019 end: no window.",
+  "sources": {
+    "description": "Authored FK register r (2000-2020), open variant v from 2021, variable COL (2005-2019). Plus the SCB sample.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "files": {
+      "Forsakringskassan/fk.toml": "[[register]]\nkey = \"r\"\nname = \"R\"\nvalid_from = \"2000-01-01\"\nvalid_to = \"2020-12-31\"\n[[register.variant]]\nkey = \"v\"\nname = \"V\"\nvalid_from = \"2021-01-01\"\n[[register.variable]]\nname = \"Col\"\ncolumn = \"COL\"\ndata_type = \"int\"\nvariants = [\"v\"]\nvalid_from = \"2005-01-01\"\nvalid_to = \"2019-12-31\"\n"
+    }
+  }
+}

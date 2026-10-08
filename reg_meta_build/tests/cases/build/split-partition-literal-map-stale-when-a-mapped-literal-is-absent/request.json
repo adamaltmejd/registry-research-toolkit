@@ -1,0 +1,21 @@
+{
+  "replaces": [
+    "test_curation_partition_map_boundary.py::test_map_that_misses_a_delivered_or_names_an_absent_literal_is_stale[columns1-uncovered1-absent1]"
+  ],
+  "sources": {
+    "description": "Variable 5 delivers ANSWER in 2020.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2]
+        }
+      ],
+      "unika": ["TEST|Testregistret|Individer|Individer|GenericVar|ANSWER|2020|2020|0|0|0"]
+    }
+  }
+}

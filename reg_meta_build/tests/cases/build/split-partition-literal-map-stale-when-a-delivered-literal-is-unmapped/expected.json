@@ -1,0 +1,30 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["detail"],
+      "rows": [
+        [
+          "curation/registers/scb/sample.toml#/identity.partition/1: explicit column ownership must cover the complete columns and split keys; uncovered literals=['MISSING']; absent literals=[]; unnamed owners=[]; unowned splits=[]"
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "fields": ["code", "subject"],
+      "match": "includes",
+      "rows": [
+        [
+          "unresolved_catalog_identity",
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 5)"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "fields": ["variable", "variant", "valid_from", "column"],
+      "rows": []
+    }
+  ]
+}

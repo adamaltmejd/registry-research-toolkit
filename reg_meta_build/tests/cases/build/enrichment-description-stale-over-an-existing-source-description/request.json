@@ -1,0 +1,23 @@
+{
+  "replaces": [
+    "test_curation_enrichment_target_boundary.py::test_description_over_an_existing_source_description_is_stale"
+  ],
+  "note": "The stale detail text is carried over from the replaced test, whose docstring says it was recorded from a build run.",
+  "sources": {
+    "description": "Variable 5 delivers A in 2020 (CVID 20) with the source description `Already`.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "A",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2],
+          "vardesc": "Already"
+        }
+      ],
+      "unika": ["TEST|Testregistret|Individer|Individer|GenericVar|A|2020|2020|0|0|0"]
+    }
+  }
+}

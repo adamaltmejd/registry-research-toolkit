@@ -1,0 +1,21 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["detail"],
+      "rows": [
+        [
+          "curation/registers/scb/sample.toml#/enrichment.description/1: target has no original records or already has a description"
+        ]
+      ]
+    },
+    {
+      "table": "variables",
+      "fields": ["variable", "provider_key", "description"],
+      "rows": [
+        ["a", "5", "Already"]
+      ]
+    }
+  ]
+}

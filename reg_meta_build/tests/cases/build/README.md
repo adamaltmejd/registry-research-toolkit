@@ -33,18 +33,31 @@ the behavior in plain words. For example,
 `coding-choice-stale-when-competing-list-changes` or
 `split-partition-native-stale-when-a-reviewed-column-is-missing`.
 
-  | Surface prefix     | Covers                                                                             |
-  | ------------------ | ---------------------------------------------------------------------------------- |
-  | `coding-`          | `[[coding.choice]]`, `[[coding.warning]]` and `[[coding.documented]]` certificates |
-  | `support-errata-`  | `[[errata.support]]` source-support decisions                                      |
-  | `split-sos-`       | SOS `[[identity.split]]` and `[[identity.rename]]`                                 |
-  | `split-partition-` | SCB `[[identity.partition]]` and `[[identity.column_owner]]`                       |
+  | Surface prefix      | Covers                                                                                       |
+  | ------------------- | -------------------------------------------------------------------------------------------- |
+  | `coding-`           | `[[coding.choice]]`, `[[coding.warning]]` and `[[coding.documented]]` certificates           |
+  | `support-errata-`   | `[[errata.support]]` source-support decisions                                                |
+  | `split-sos-`        | SOS `[[identity.split]]` and `[[identity.rename]]`                                           |
+  | `split-partition-`  | SCB `[[identity.partition]]` and `[[identity.column_owner]]`, and slices that reference them |
+  | `errata-delivered-` | `[[errata.delivered]]` additions                                                             |
+  | `errata-sos-`       | SOS `[[errata.data_type]]` and `[[errata.classification_reference]]`                         |
+  | `enrichment-`       | `[[enrichment.description]]` and `[[enrichment.alias]]`                                      |
+  | `route-sos-`        | SOS `[[identity.route]]` and styrtabell lookup subsets                                       |
+  | `topology-sos-`     | SOS variants formed from delivered subset names                                              |
+  | `thin-`             | authored thin-provider registers (`Forsakringskassan/`, `scb_canonical/`)                    |
+  | `representation-`   | `[[representation.delivery_metadata]]` and `[[representation.parallel]]`                     |
+  | `matrix-`           | `[[representation.matrix]]` answer matrices                                                  |
+  | `siblings-`         | sibling grouping of co-delivered columns                                                     |
+  | `relations-`        | `relations.toml` edges                                                                       |
+  | `code-label-pair-`  | `[[code_label_pair]]`                                                                        |
+  | `search-pins-`      | `search_pins.toml`                                                                           |
 
 Later stages add their own prefixes to this table.
 
-Refusals end in `-fails-curation-load` (the build refuses its curation) or name the
-stale outcome (`-stale-when-...`). A case that shows the allowed outcome of a guard sits
-beside its refusal twin.
+Refusals end in `-fails-curation-load` (the build refuses its curation),
+`-fails-the-build` or `-refuses-...` (the build stops after its curation loaded), or
+name the stale outcome (`-stale-when-...`). A case that shows the allowed outcome of a
+guard sits beside its refusal twin.
 
 ## `request.json`
 
@@ -75,12 +88,14 @@ beside its refusal twin.
 - `scb` is required, because every input bundle carries an SCB snapshot.
   - `registerinformation` rows are the keyword arguments of `_csv_fixtures.var_row`:
     `cvid`, `var_id`, `colname`, `year`, `regver_id`, `versionname`, `varname`,
-    `vardef`, `unit`, `varopdef`, `varsource`, and `register` as
-    `[name, register_id, variant_id]`. Fields left out take that function's defaults:
-    register `TESTREG` (native 1, variant 10), year 2020, type `int`.
+    `vardef`, `vardesc`, `unit`, `varopdef`, `varsource`, `data_type`, `data_length`,
+    and `register` as `[name, register_id, variant_id]`. Fields left out take that
+    function's defaults: register `TESTREG` (native 1, variant 10), year 2020, type
+    `int`. A row's optional `cells` maps a Registerinformation header to a raw cell
+    value that replaces the generated one, for cells `var_row` has no argument for.
   - `vardemangder` rows are raw pipe-delimited Vardemangder lines.
   - `unika` defaults to one non-sensitive, non-identifier summary row per delivered
-    column.
+    column. `null` delivers no Unika file.
   - `valid_dates` defaults to every value item being valid from 2000 to 2030.
 - `sos` lists Socialstyrelsen workbooks.
   - `subsets` are Deldatamängder rows: `name`, `label`, `description`, `data_from`,
@@ -92,6 +107,8 @@ beside its refusal twin.
     `[period, code, label]`.
   - Every workbook gets a blank delivered `Kopplingsvariabel` column. That column is
     SOS's explicit "not a linkage variable" claim.
+- `files` maps a path under the source directory to its text, for deliveries the other
+  keys do not model, such as an authored `Forsakringskassan/fk.toml`.
 
 The runner prepares each distinct spec once per test session and caches it by the spec's
 content hash.
@@ -121,6 +138,7 @@ expected_evidence_sha256 = {{coding_evidence_sha256 key=member:1001}}
   | `period_scope`           | one record's edition period scope                                                            |
   | `revision`               | one record's source revision                                                                 |
   | `locators`               | one record's locators                                                                        |
+  | `variant_key`            | one record's native variant key                                                              |
 
 Record selectors are `key=value` arguments, and all of them must match. A
 comma-separated value lists alternatives.
@@ -152,8 +170,10 @@ description, operational definition), or a comma-separated list.
 Every key is optional, and only the keys that are present get checked.
 
 - `status`: the build result's status.
-- `error`: the build must refuse with this located error code. Each string in
-  `message_contains` must appear in the error message.
+- `error`: the build must refuse with this located error `code` and, when given,
+  `exit_code`. Each string in `message_contains` must appear in the error message. A
+  build that raises a `ValueError`, `OSError` or `KeyError` refuses the way the `build`
+  command reports it: code `pipeline_build_failed`, exit code 10.
 - `projections`: the rows of one named table.
   - `where` filters rows before projecting. A scalar means equality. A list means
     membership. `{"contains": text}` or `{"contains": [text, ...]}` requires the text to
@@ -164,14 +184,23 @@ Every key is optional, and only the keys that are present get checked.
     - `set`: the distinct rows match.
     - `includes`: every expected row is present.
 
-  | Table         | One row per                                                             | Fields                                                                                                           |
-  | ------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-  | `issues`      | report-ledger issue                                                     | `code`, `severity`, `subject`, `case_id`, `locator` (the `curation/...` entry its detail names), `detail`        |
-  | `uses`        | ledger disposition of a prepared source record                          | `source`, `native_variable`, `key`, `column_name`, `data_type`, `name`, `description`, `use`, `variable`         |
-  | `states`      | built variable state                                                    | `register`, `variable`, `variant` (slugs), `column`, `valid_from`, `valid_to`, `data_type`, `name`, `provenance` |
-  | `state_codes` | built state and value-set member (or one null-code row)                 | `register`, `variable`, `column`, `valid_from`, `valid_to`, `code`, `label`                                      |
-  | `variables`   | built variable and delivery column (one null-column row if it has none) | `register`, `variable`, `column`                                                                                 |
-  | `warnings`    | built data warning                                                      | `column`, `valid_from`, `valid_to`                                                                               |
+  | Table            | One row per                                                             | Fields                                                                                                                                                                  |
+  | ---------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `issues`         | report-ledger issue                                                     | `code`, `severity`, `subject`, `case_id`, `locator` (the `curation/...` entry its detail names), `detail`                                                               |
+  | `issue_refs`     | source record a report-ledger issue cites                               | `code`, `case_id`, `source`, `key` (the full semantic record key, a list)                                                                                               |
+  | `cases`          | report-ledger curation case                                             | `case_id`, `status`                                                                                                                                                     |
+  | `uses`           | ledger disposition of a prepared source record                          | `source`, `native_variable`, `key`, `column_name`, `data_type`, `name`, `description`, `use`, `variable`                                                                |
+  | `case_uses`      | curation case a ledger disposition names                                | `case_id`, `source`, `key`, `use`, `variable`                                                                                                                           |
+  | `states`         | built variable state                                                    | `register`, `variable`, `variant` (slugs), `column`, `valid_from`, `valid_to`, `data_type`, `name` (the variable's), `state_name` (the state's), `provenance`, `pooled` |
+  | `state_codes`    | built state and value-set member (or one null-code row)                 | `register`, `variable`, `variant`, `column`, `valid_from`, `valid_to`, `code`, `label`                                                                                  |
+  | `variables`      | built variable and delivery column (one null-column row if it has none) | `register`, `variable`, `column`, `provider_key`, `description`, `is_identifier`, `is_sensitive`                                                                        |
+  | `variants`       | built register variant                                                  | `register`, `variant`, `name`                                                                                                                                           |
+  | `aliases`        | built search alias                                                      | `register`, `variable`, `variant`, `column`                                                                                                                             |
+  | `same_as`        | built same-as edge, each direction its own row                          | `a`, `b` (variable FQIDs)                                                                                                                                               |
+  | `concept_groups` | built concept group                                                     | `variables` (its member slugs, sorted)                                                                                                                                  |
+  | `warnings`       | built data warning                                                      | `column`, `valid_from`, `valid_to`, `variable_fqid`, `variant`, `summary`, `fields`                                                                                     |
+  | `search_pins`    | built search pin                                                        | `query` (the folded key), `type`, `position`, `entity`                                                                                                                  |
+  | `manifest`       | import-manifest entry                                                   | `key`, `value`                                                                                                                                                          |
 
 Expected values are read from the test a case replaces, or from the source fixture or
 the spec. Never copy them from a run of the code under test. A new table or placeholder

@@ -1,0 +1,25 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "variables",
+      "fields": ["variable", "provider_key", "description"],
+      "rows": [
+        ["answer", "5.answer", null],
+        ["other", "5.other", null]
+      ]
+    },
+    {
+      "table": "states",
+      "fields": ["variable", "variant", "valid_from", "column"],
+      "rows": [
+        ["answer", "people", "2020-01-01", "ANSWER"],
+        ["other", "people", "2020-01-01", "OTHER"]
+      ]
+    }
+  ]
+}

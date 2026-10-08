@@ -1,0 +1,19 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.2"
+slug = "people"
+[[variant]]
+native_id = "1.3"
+slug = "others"
+[[variable]]
+native_id = "1.5.answer"
+slug = "answer"
+[[identity.column_owner]]
+variable = "1.5"
+variant = "1.2"
+column = "ANSWER"
+owner = "1.5.answer"
+ref = "fixture variant"

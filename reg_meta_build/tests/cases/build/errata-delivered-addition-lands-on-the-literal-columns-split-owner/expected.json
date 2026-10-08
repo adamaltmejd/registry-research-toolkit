@@ -1,0 +1,31 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "fields": ["variable", "variant", "valid_from", "column"],
+      "rows": [
+        ["a", "people", "2020-01-01", "A"],
+        ["a", "people", "2021-01-01", "A"],
+        ["b", "people", "2020-01-01", "B"],
+        ["b6", "people", "2021-01-01", "B"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "a",
+        "valid_from": "2021-01-01",
+        "provenance": {"contains": "errata:omitted-column-in-version\naccepted delivery\n"}
+      },
+      "fields": ["variable", "valid_from"],
+      "rows": [
+        ["a", "2021-01-01"]
+      ]
+    }
+  ]
+}

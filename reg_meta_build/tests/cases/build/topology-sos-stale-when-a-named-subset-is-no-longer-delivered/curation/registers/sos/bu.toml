@@ -1,0 +1,14 @@
+[register]
+provider = "sos"
+slug = "bu"
+name = "Barn och unga"
+native_id = "7550156225339591583"
+[[variant]]
+native_id = "7550156225339591583.5937380882833177096"
+slug = "a"
+[[variant]]
+native_id = "7550156225339591583.5571160001006161371"
+slug = "b"
+[[variable]]
+native_id = "7550156225339591583.COL"
+slug = "col"

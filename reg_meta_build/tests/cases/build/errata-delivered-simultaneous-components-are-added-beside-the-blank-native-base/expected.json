@@ -1,0 +1,62 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "subject"],
+      "rows": [
+        [
+          "omitted_columnless_occurrence",
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 5)"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "fields": ["variable", "variant", "valid_from", "column"],
+      "rows": [
+        ["a", "people", "2020-01-01", "A"],
+        ["a", "people", "2021-01-01", "A"],
+        ["b", "people", "2020-01-01", "B"],
+        ["b", "people", "2021-01-01", "B"],
+        ["c", "people", "2020-01-01", "C"],
+        ["c", "people", "2021-01-01", "C"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "a",
+        "valid_from": "2021-01-01",
+        "provenance": {"contains": "errata:omitted-column-in-version\naccepted delivery\n"}
+      },
+      "fields": ["variable", "valid_from"],
+      "rows": [
+        ["a", "2021-01-01"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "b",
+        "valid_from": "2021-01-01",
+        "provenance": {"contains": "errata:omitted-column-in-version\naccepted delivery\n"}
+      },
+      "fields": ["variable", "valid_from"],
+      "rows": [
+        ["b", "2021-01-01"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "c",
+        "valid_from": "2021-01-01",
+        "provenance": {"contains": "errata:omitted-column-in-version\naccepted delivery\n"}
+      },
+      "fields": ["variable", "valid_from"],
+      "rows": [
+        ["c", "2021-01-01"]
+      ]
+    }
+  ]
+}

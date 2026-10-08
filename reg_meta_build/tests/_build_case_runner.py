@@ -29,7 +29,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from _csv_fixtures import summary_rows, var_row, write_scb_input
+from _csv_fixtures import (
+    replace_registerinformation_cell,
+    summary_rows,
+    var_row,
+    write_scb_input,
+)
 from _pipeline_catalog_support import prepare_accepted, report_events
 from _sos_fixtures import (
     SosCodeList,
@@ -39,10 +44,11 @@ from _sos_fixtures import (
     write_sos_input,
 )
 from openpyxl import load_workbook
-from reg_meta.errors import RegMetaError
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.pipeline import build_catalog
 from reg_meta_build.prepared_catalog import open_prepared_catalog_sources
 from reg_meta_build.source_coding import coding_source_sha256
+from reg_meta_build.source_coordinates import native_variant_key
 from reg_meta_build.source_curation import (
     acknowledgement_evidence_sha256,
     capture_expectations,
@@ -85,36 +91,45 @@ def source_spec(reference: str | dict) -> dict:
     return json.loads((SOURCES / f"{reference}.json").read_text(encoding="utf-8"))
 
 
-def _scb_rows(rows: list[dict]) -> list[str]:
-    return [
-        var_row(
-            **{
-                key: tuple(value) if key == "register" else value
-                for key, value in row.items()
-            }
-        )
-        for row in rows
-    ]
+def _scb_row(row: dict) -> str:
+    """One Registerinformation row: `var_row` arguments, then raw `cells` overrides."""
+    text = var_row(
+        **{
+            key: tuple(value) if key == "register" else value
+            for key, value in row.items()
+            if key != "cells"
+        }
+    )
+    for name, value in row.get("cells", {}).items():
+        text = replace_registerinformation_cell(text, name, value)
+    return text
 
 
 def write_sources(spec: dict, source: Path) -> None:
     """Materialize a source spec as provider deliveries under ``source``."""
     scb = spec["scb"]
-    rows = _scb_rows(scb["registerinformation"])
+    rows = [_scb_row(row) for row in scb["registerinformation"]]
     values = scb.get("vardemangder", [])
+    # `"unika": null` delivers no Unika summary file at all.
+    unika = scb.get("unika", summary_rows(rows))
     write_scb_input(
         source,
         registerinformation_rows=rows,
         vardemangder_rows=values,
-        unika_rows=scb.get("unika", summary_rows(rows)),
+        unika_rows=unika or [],
         # Default: every value item is valid over the whole fixture window.
         valid_dates_rows=scb.get(
             "valid_dates",
             sorted({f"{row.split('|')[-1]}|2000-01-01|2030-12-31" for row in values}),
         ),
-        include=("registerinformation", "unika")
+        include=("registerinformation",)
+        + (("unika",) if unika is not None else ())
         + (("vardemangder", "valid_dates") if values else ()),
     )
+    for relative, text in spec.get("files", {}).items():
+        path = source / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
     for register in spec.get("sos", ()):
         workbook_spec = SosRegister(
             abbrev=register["abbrev"],
@@ -340,7 +355,14 @@ _DIRECTIVES: dict[str, Callable[[PreparedSet, dict[str, str]], object]] = {
     "locators": lambda s, a: [
         locator.model_dump(mode="json") for locator in _one(s.records(), a).locators
     ],
+    "variant_key": lambda s, a: _variant_key(_one(s.records(), a)),
 }
+
+
+def _variant_key(record: SourceRecord) -> list:
+    key = native_variant_key(record)
+    assert key is not None, f"record has no native variant: {record.record_id}"
+    return list(key)
 
 
 def render_curation(source: Path, target: Path, authored: PreparedSet) -> Path:
@@ -402,8 +424,24 @@ def _issues(outcome: Outcome) -> list[dict]:
     ]
 
 
-def _uses(outcome: Outcome) -> list[dict]:
-    """One row per ledger disposition of a prepared source record occurrence."""
+def _issue_refs(outcome: Outcome) -> list[dict]:
+    """One row per source record an issue cites."""
+    return [
+        {
+            "code": event["code"],
+            "case_id": event.get("case_id"),
+            "source": ref["source"],
+            "key": ref["semantic_record_key"],
+        }
+        for event in outcome.events
+        if event["kind"] == "issue"
+        for ref in event.get("refs", ())
+    ]
+
+
+def _dispositions(outcome: Outcome) -> list[tuple[dict, list[str]]]:
+    """Each ledger disposition of a prepared source record occurrence as a `uses`
+    row, with the curation case ids the disposition names."""
     by_id = {
         event["record_id"]: event["dispositions"]
         for event in outcome.events
@@ -418,24 +456,36 @@ def _uses(outcome: Outcome) -> list[dict]:
             for name in ("column_name", "data_type", "name", "description")
         }
         for disposition in by_id.get(record.record_id, ()):
-            rows.append(
-                {
-                    "source": record.source,
-                    "native_variable": _FILTERS["variable"](record),
-                    "key": record.locators[0].semantic_record_key[-1],
-                    **fields,
-                    "use": disposition["use"],
-                    "variable": disposition["variable"],
-                }
-            )
+            row = {
+                "source": record.source,
+                "native_variable": _FILTERS["variable"](record),
+                "key": record.locators[0].semantic_record_key[-1],
+                **fields,
+                "use": disposition["use"],
+                "variable": disposition["variable"],
+            }
+            rows.append((row, disposition["cases"]))
     return rows
+
+
+def _case_uses(outcome: Outcome) -> list[dict]:
+    """One row per curation case a source record's ledger disposition names."""
+    return [
+        {"case_id": case_id, **{key: row[key] for key in _CASE_USE_FIELDS}}
+        for row, cases in _dispositions(outcome)
+        for case_id in cases
+    ]
+
+
+_CASE_USE_FIELDS = ("source", "key", "use", "variable")
 
 
 def _variables(outcome: Outcome) -> list[dict]:
     """Each built variable's distinct delivery columns; one null row when it has none."""
     rows = outcome._sql(
         "SELECT DISTINCT r.slug AS register, v.slug AS variable, "
-        "s.delivery_column_name AS column FROM variable v "
+        "s.delivery_column_name AS column, v.provider_key, v.description, "
+        "v.is_identifier, v.is_sensitive FROM variable v "
         "JOIN register r USING (register_id) "
         "LEFT JOIN variable_state s USING (variable_id)"
     )
@@ -449,6 +499,35 @@ def _variables(outcome: Outcome) -> list[dict]:
     ]
 
 
+def _concept_groups(outcome: Outcome) -> list[dict]:
+    """Each concept group as the sorted slugs of its member variables."""
+    groups: dict[int, list[str]] = {}
+    for row in outcome._sql(
+        "SELECT gv.group_id, v.slug FROM concept_group_variable gv "
+        "JOIN variable v USING (variable_id)"
+    ):
+        groups.setdefault(row["group_id"], []).append(row["slug"])
+    return [{"variables": sorted(slugs)} for slugs in groups.values()]
+
+
+def _warnings(outcome: Outcome) -> list[dict]:
+    return [
+        {
+            "column": row["delivery_column_name"],
+            "valid_from": payload["valid_from"],
+            "valid_to": payload["valid_to"],
+            "variable_fqid": payload.get("variable_fqid"),
+            "variant": payload.get("variant"),
+            "summary": payload.get("summary"),
+            "fields": payload.get("fields"),
+        }
+        for row in outcome._sql(
+            "SELECT delivery_column_name, warning_json FROM data_warning"
+        )
+        for payload in (json.loads(row["warning_json"]),)
+    ]
+
+
 _STATE_JOIN = (
     "FROM variable_state s JOIN variable v USING (variable_id) "
     "JOIN register r ON r.register_id = v.register_id "
@@ -456,68 +535,75 @@ _STATE_JOIN = (
 )
 _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     "issues": _issues,
-    "uses": _uses,
+    "issue_refs": _issue_refs,
+    "cases": lambda o: [
+        {"case_id": event["case_id"], "status": event["status"]}
+        for event in o.events
+        if event["kind"] == "case"
+    ],
+    "uses": lambda o: [row for row, _ in _dispositions(o)],
+    "case_uses": _case_uses,
     "states": lambda o: o._sql(
         "SELECT r.slug AS register, v.slug AS variable, rv.slug AS variant, "
         "s.delivery_column_name AS column, s.valid_from, s.valid_to, s.data_type, "
-        "v.name, s.provenance " + _STATE_JOIN
+        "v.name, s.name AS state_name, s.provenance, s.pooled " + _STATE_JOIN
     ),
     "state_codes": lambda o: o._sql(
-        "SELECT r.slug AS register, v.slug AS variable, "
+        "SELECT r.slug AS register, v.slug AS variable, rv.slug AS variant, "
         "s.delivery_column_name AS column, s.valid_from, s.valid_to, c.code, c.label "
         + _STATE_JOIN
         + "LEFT JOIN value_set_member m ON m.value_set_id = s.value_set_id "
         "LEFT JOIN value_code c ON c.code_id = m.code_id"
     ),
     "variables": _variables,
-    "warnings": lambda o: [
-        {
-            "column": row["delivery_column_name"],
-            "valid_from": payload["valid_from"],
-            "valid_to": payload["valid_to"],
-        }
-        for row in o._sql("SELECT delivery_column_name, warning_json FROM data_warning")
-        for payload in (json.loads(row["warning_json"]),)
-    ],
+    "variants": lambda o: o._sql(
+        "SELECT r.slug AS register, rv.slug AS variant, rv.name "
+        "FROM register_variant rv JOIN register r USING (register_id)"
+    ),
+    "aliases": lambda o: o._sql(
+        "SELECT r.slug AS register, v.slug AS variable, rv.slug AS variant, "
+        "a.delivery_column_name AS column FROM variable_alias a "
+        "JOIN variable v USING (variable_id) "
+        "JOIN register r ON r.register_id = v.register_id "
+        "JOIN register_variant rv ON rv.register_variant_id = a.register_variant_id"
+    ),
+    "same_as": lambda o: o._sql(
+        "SELECT a_provider || '/' || a_register || '/' || a_variable AS a, "
+        "b_provider || '/' || b_register || '/' || b_variable AS b "
+        "FROM variable_same_as"
+    ),
+    "concept_groups": _concept_groups,
+    "warnings": _warnings,
+    "search_pins": lambda o: o._sql(
+        "SELECT key AS query, type, position, entity FROM search_pin"
+    ),
+    "manifest": lambda o: o._sql("SELECT key, value FROM import_manifest"),
 }
 
 
 # The fields of each table, as cases/build/README.md documents them.
 FIELDS: dict[str, frozenset[str]] = {
-    "issues": frozenset(
-        ("code", "severity", "subject", "case_id", "locator", "detail")
-    ),
-    "uses": frozenset(
-        (
-            "source",
-            "native_variable",
-            "key",
-            "column_name",
-            "data_type",
-            "name",
-            "description",
-            "use",
-            "variable",
-        )
-    ),
-    "states": frozenset(
-        (
-            "register",
-            "variable",
-            "variant",
-            "column",
-            "valid_from",
-            "valid_to",
-            "data_type",
-            "name",
-            "provenance",
-        )
-    ),
-    "state_codes": frozenset(
-        ("register", "variable", "column", "valid_from", "valid_to", "code", "label")
-    ),
-    "variables": frozenset(("register", "variable", "column")),
-    "warnings": frozenset(("column", "valid_from", "valid_to")),
+    name: frozenset(fields.split())
+    for name, fields in {
+        "issues": "code severity subject case_id locator detail",
+        "issue_refs": "code case_id source key",
+        "cases": "case_id status",
+        "uses": "source native_variable key column_name data_type name description "
+        "use variable",
+        "case_uses": "case_id source key use variable",
+        "states": "register variable variant column valid_from valid_to data_type "
+        "name state_name provenance pooled",
+        "state_codes": "register variable variant column valid_from valid_to code label",
+        "variables": "register variable column provider_key description "
+        "is_identifier is_sensitive",
+        "variants": "register variant name",
+        "aliases": "register variable variant column",
+        "same_as": "a b",
+        "concept_groups": "variables",
+        "warnings": "column valid_from valid_to variable_fqid variant summary fields",
+        "search_pins": "query type position entity",
+        "manifest": "key value",
+    }.items()
 }
 
 
@@ -581,6 +667,25 @@ def project(outcome: Outcome, spec: dict) -> dict:
 # -- Running a step ---------------------------------------------------------------
 
 
+def _refusal(error: Exception) -> dict:
+    """A build refusal as `reg-meta-build build` reports it.
+
+    The command wraps a `ValueError`, `OSError` or `KeyError` from the build in the
+    configuration error `pipeline_build_failed` (`cli._cmd_build`).
+    """
+    if isinstance(error, RegMetaError):
+        return {
+            "code": error.code,
+            "exit_code": error.exit_code,
+            "message": error.message,
+        }
+    return {
+        "code": "pipeline_build_failed",
+        "exit_code": EXIT_CONFIG,
+        "message": str(error),
+    }
+
+
 def run_step(step: Path, cache: PreparedCache, scratch: Path) -> tuple[dict, dict]:
     """Run one case step; return ``(actual, expected)`` in the same shape."""
     request = json.loads((step / "request.json").read_text(encoding="utf-8"))
@@ -600,15 +705,16 @@ def run_step(step: Path, cache: PreparedCache, scratch: Path) -> tuple[dict, dic
             diagnostic=request.get("diagnostic", True),
             registers=tuple(request.get("registers", ())),
         )
-    except RegMetaError as error:
+    except (RegMetaError, ValueError, OSError, KeyError) as error:
         if "error" not in expected:
             raise
-        texts = expected["error"]["message_contains"]
+        refusal = _refusal(error)
+        wanted = expected["error"]
+        refusal["message_contains"] = [
+            text for text in wanted["message_contains"] if text in refusal["message"]
+        ]
         return {
-            "error": {
-                "code": error.code,
-                "message_contains": [text for text in texts if text in error.message],
-            }
+            "error": {key: refusal[key] for key in wanted if key in refusal}
         }, expected
     actual: dict = {}
     if "error" in expected:

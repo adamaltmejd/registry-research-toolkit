@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_curation_sos_errata_boundary.py::test_data_type_entry_over_several_subset_peers_is_over_broad"
+  ],
+  "note": "Two SYX_A rows for one variable make the entry over-broad, citing both.",
+  "sources": "sos-syx-errata"
+}

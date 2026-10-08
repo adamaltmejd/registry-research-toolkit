@@ -1,0 +1,49 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["case_id"],
+      "rows": [
+        ["curation/registers/sos/syx.toml#/errata.data_type/2"],
+        ["curation/registers/sos/syx.toml#/errata.data_type/3"],
+        ["curation/registers/sos/syx.toml#/errata.data_type/4"],
+        ["curation/registers/sos/syx.toml#/errata.data_type/5"],
+        ["curation/registers/sos/syx.toml#/errata.data_type/6"],
+        ["curation/registers/sos/syx.toml#/errata.data_type/7"],
+        ["curation/registers/sos/syx.toml#/errata.data_type/8"]
+      ]
+    },
+    {
+      "table": "case_uses",
+      "fields": ["case_id"],
+      "rows": [
+        ["curation/registers/sos/syx.toml#/errata.data_type/1"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": "syx", "variable": "repr", "variant": "syx-a"},
+      "fields": ["data_type", "provenance"],
+      "rows": [
+        ["Decimal", null]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": "syx", "variable": "kolumn", "variant": "syx-a"},
+      "fields": ["data_type", "provenance"],
+      "rows": [
+        ["Decimal", null]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": "syx", "variable": "typ", "variant": "syx-a"},
+      "fields": ["data_type", "provenance"],
+      "rows": [
+        ["date", null]
+      ]
+    }
+  ]
+}

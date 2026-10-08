@@ -1,0 +1,28 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code", "detail"],
+      "rows": []
+    },
+    {
+      "table": "variants",
+      "where": {"register": "bu"},
+      "fields": ["variant", "name"],
+      "rows": [
+        ["a", "A"],
+        ["b", "B"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": "bu"},
+      "fields": ["variable", "variant", "column", "data_type"],
+      "rows": [
+        ["col", "a", "COL", "date"],
+        ["col", "b", "COL", "text"]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry",
+        "detail": {"contains": "#/errata.delivered/"}
+      },
+      "fields": ["detail"],
+      "rows": [
+        [
+          "curation/registers/scb/sample.toml#/errata.delivered/1: target_under_other_column:2021:variable:5"
+        ],
+        [
+          "curation/registers/scb/sample.toml#/errata.delivered/2: target_under_other_column:2021:variable:5"
+        ],
+        [
+          "curation/registers/scb/sample.toml#/errata.delivered/3: target_under_other_column:2021:variable:5"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "fields": ["variable", "variant", "valid_from", "column"],
+      "rows": []
+    }
+  ]
+}

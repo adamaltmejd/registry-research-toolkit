@@ -1,0 +1,17 @@
+{
+  "replaces": [
+    "test_curation_thin_coverage_boundary.py::test_thin_delivery_period_intersects_register_variant_and_variable_bounds"
+  ],
+  "note": "Register 2000-2020, variant 2010-2018 and variable 2005-2019 give 2010-2018.",
+  "sources": {
+    "description": "Authored FK register r (2000-2020), variant v (2010-2018), variable COL (2005-2019). Plus the SCB sample.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "files": {
+      "Forsakringskassan/fk.toml": "[[register]]\nkey = \"r\"\nname = \"R\"\nvalid_from = \"2000-01-01\"\nvalid_to = \"2020-12-31\"\n[[register.variant]]\nkey = \"v\"\nname = \"V\"\nvalid_from = \"2010-01-01\"\nvalid_to = \"2018-12-31\"\n[[register.variable]]\nname = \"Col\"\ncolumn = \"COL\"\ndata_type = \"int\"\nvariants = [\"v\"]\nvalid_from = \"2005-01-01\"\nvalid_to = \"2019-12-31\"\n"
+    }
+  }
+}

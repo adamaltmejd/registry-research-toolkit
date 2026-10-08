@@ -1,0 +1,22 @@
+{
+  "replaces": [
+    "test_curation_enrichment_target_boundary.py::test_alias_of_a_declared_errata_column_attaches_to_its_variant"
+  ],
+  "note": "`new-col` exists only through `[[errata.column]]`; its alias still binds.",
+  "sources": {
+    "description": "Variable 5 delivers A in 2020 (CVID 20).",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "A",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2]
+        }
+      ],
+      "unika": ["TEST|Testregistret|Individer|Individer|GenericVar|A|2020|2020|0|0|0"]
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_curation_partition_deferred_boundary.py::test_slice_defers_edge_to_a_name_the_full_build_mints[partition-a]"
+  ],
+  "note": "The full build mints the edge's target; step 2 checks the slice defers to it.",
+  "sources": "scb-anchor-and-partition"
+}

@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "relations_same_as_component_too_large",
+    "exit_code": 10,
+    "message_contains": ["component of 33 FQIDs (cap 32)"]
+  }
+}

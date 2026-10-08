@@ -1,0 +1,20 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "overbroad_curation_entry"},
+      "fields": ["detail"],
+      "rows": [
+        ["curation/registers/scb/sample.toml#/errata.delivered/1: ambiguous_target:2021:variable:5"],
+        ["curation/registers/scb/sample.toml#/errata.delivered/2: ambiguous_target:2021:variable:5"],
+        ["curation/registers/scb/sample.toml#/errata.delivered/3: ambiguous_target:2021:variable:5"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"valid_from": "2021-01-01"},
+      "fields": ["variable", "variant", "valid_from", "column"],
+      "rows": []
+    }
+  ]
+}

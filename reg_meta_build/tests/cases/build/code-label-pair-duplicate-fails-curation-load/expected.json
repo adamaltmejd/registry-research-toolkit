@@ -1,0 +1,10 @@
+{
+  "error": {
+    "code": "classification_curation_invalid",
+    "exit_code": 10,
+    "message_contains": [
+      "registers/scb/sample.toml",
+      "[[code_label_pair]] entry 2: duplicate"
+    ]
+  }
+}
