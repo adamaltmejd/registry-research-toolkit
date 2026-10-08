@@ -1,13 +1,11 @@
-"""Curation compile order independence, event-source pairing, thin default-variant naming and the tree hash."""
+"""Curation compile event-source pairing, thin default-variant naming and the tree hash."""
 
 from __future__ import annotations
 
-from dataclasses import replace
 from types import SimpleNamespace
 from typing import Any, cast
 
 from _curation_compile_support import (
-    compiled_bytes as _bytes,
     make_naming_reader as _naming_reader,
     make_prepared as _prepared,
     make_revision as _revision,
@@ -37,18 +35,6 @@ from reg_meta_build.source_records import (
 )
 
 from reg_meta_build.fqid_slugs import SlugEntry
-
-
-def test_compilation_is_byte_identical_with_shuffled_register_order(tmp_path):
-    tree = _tree(tmp_path / "curation")
-    first = compile_curation(tree, _prepared(), (_scope(),))
-    second = compile_curation(tree, _prepared(), (_scope(),))
-    shuffled = compile_curation(
-        replace(tree, registers=tuple(reversed(tree.registers))),
-        _prepared(),
-        (_scope(),),
-    )
-    assert _bytes(first) == _bytes(second) == _bytes(shuffled)
 
 
 def test_event_sources_pair_within_same_snapshot_revision(tmp_path):

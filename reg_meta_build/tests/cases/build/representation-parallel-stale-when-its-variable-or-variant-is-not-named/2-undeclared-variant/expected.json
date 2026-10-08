@@ -3,10 +3,7 @@
     {
       "table": "issues",
       "where": {
-        "code": "stale_curation_entry",
-        "detail": {
-          "contains": "owner/variant is not unique"
-        }
+        "code": "stale_curation_entry"
       },
       "fields": [
         "locator"
@@ -30,6 +27,22 @@
           "scb/sample/income"
         ]
       ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "income",
+        "provenance": {
+          "contains": "#/representation.parallel/1"
+        }
+      },
+      "fields": [
+        "column",
+        "valid_from",
+        "valid_to"
+      ],
+      "note": "The artifact half: the stale entry reconciles nothing, so no income state carries its provenance. In the applied twin representation-parallel-pooled-columns-keep-their-outer-windows the shared 2022 state does.",
+      "rows": []
     }
   ]
 }

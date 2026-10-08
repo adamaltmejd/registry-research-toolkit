@@ -1,6 +1,8 @@
 {
-  "replaces": ["test_curation_compile_errata.py::test_errata_edition_bindings_refuse_conflicting_native_interpretation"],
-  "note": "Two rows of RegVerID 2020 name the edition '2020' and '2020 revised'. Any errata entry in the register binds its variant's editions, and the binding refuses the conflict.",
+  "replaces": [
+    "test_curation_compile_errata.py::test_errata_edition_bindings_refuse_conflicting_native_interpretation"
+  ],
+  "note": "Two rows of RegVerID 2020 name the edition '2020' and '2020 revised'. Any errata entry in the register binds its variant's editions, and the binding refuses the conflict. Allowed twin: every other register of errata-delivered-and-column-additions-bind-or-refuse-per-register, whose RegVerIDs each carry one interpretation and bind.",
   "fails_if": "`scb_errata.edition_bindings` keeps the first interpretation of a native edition instead of refusing a second, different one, so the build completes",
   "sources": "scb-errata-registers"
 }

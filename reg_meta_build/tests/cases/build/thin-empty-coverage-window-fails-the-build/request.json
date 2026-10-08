@@ -3,7 +3,7 @@
     "test_curation_compile_native_partitions.py::test_maintained_provider_coverage_uses_input_role_not_provider_name[None-thin_provider-scb]",
     "test_curation_compile_native_partitions.py::test_maintained_provider_coverage_uses_input_role_not_provider_name[None-thin_provider-fk]"
   ],
-  "note": "No start is declared anywhere, so the window is empty rather than inverted (thin-inverted-coverage-window-fails-the-build, an FK register). Here the provider is scb under the thin-provider input role. The register slice selects the thin register of the shared spec.",
+  "note": "No start is declared anywhere, so the window is empty rather than inverted (thin-inverted-coverage-window-fails-the-build, an FK register). Here the provider is scb under the thin-provider input role. The register slice selects the thin register of the shared spec. Allowed twin: thin-variable-carries-the-members-of-its-own-declared-list, whose register declares valid_from and forms an open state.",
   "fails_if": "`_compile_thin_register` stops refusing a coverage window without any declared start (register, variant or variable valid_from), so the build no longer refuses COL with `thin_coverage_window_invalid` at its entry",
   "sources": "scb-native-partitions-data-length-changed",
   "registers": [

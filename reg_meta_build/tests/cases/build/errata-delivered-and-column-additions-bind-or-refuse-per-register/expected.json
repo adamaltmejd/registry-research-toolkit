@@ -9,7 +9,10 @@
           "contains": "curation/registers/scb/split.toml#"
         }
       },
-      "fields": ["code", "locator"],
+      "fields": [
+        "code",
+        "locator"
+      ],
       "rows": []
     },
     {
@@ -18,12 +21,28 @@
       "where": {
         "register": "split"
       },
-      "fields": ["variable", "variant", "column"],
+      "fields": [
+        "variable",
+        "variant",
+        "column"
+      ],
       "match": "set",
       "rows": [
-        ["v5", "people", "A"],
-        ["v6", "people", "B"],
-        ["v7", "stock", "C"]
+        [
+          "v5",
+          "people",
+          "A"
+        ],
+        [
+          "v6",
+          "people",
+          "B"
+        ],
+        [
+          "v7",
+          "stock",
+          "C"
+        ]
       ]
     },
     {
@@ -35,9 +54,19 @@
           "contains": "errata:omitted-column-in-version"
         }
       },
-      "fields": ["variable", "variant", "column", "valid_from"],
+      "fields": [
+        "variable",
+        "variant",
+        "column",
+        "valid_from"
+      ],
       "rows": [
-        ["v5", "people", "A", "2021-01-01"]
+        [
+          "v5",
+          "people",
+          "A",
+          "2021-01-01"
+        ]
       ]
     },
     {
@@ -46,29 +75,24 @@
       "where": {
         "locator": {
           "contains": "curation/registers/scb/moved.toml#"
-        },
-        "detail": {
-          "contains": "('2021-12-31', '12.122.stock')"
         }
       },
-      "fields": ["code", "locator"],
+      "fields": [
+        "code",
+        "locator",
+        "detail"
+      ],
       "rows": [
-        ["stale_curation_entry", "curation/registers/scb/moved.toml#/errata.delivered/1"],
-        ["stale_curation_entry", "curation/registers/scb/moved.toml#/errata.column/1"]
-      ]
-    },
-    {
-      "note": "moved: no other entry issue.",
-      "table": "issues",
-      "where": {
-        "locator": {
-          "contains": "curation/registers/scb/moved.toml#"
-        }
-      },
-      "fields": ["code", "locator"],
-      "rows": [
-        ["stale_curation_entry", "curation/registers/scb/moved.toml#/errata.delivered/1"],
-        ["stale_curation_entry", "curation/registers/scb/moved.toml#/errata.column/1"]
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/moved.toml#/errata.delivered/1",
+          "curation/registers/scb/moved.toml#/errata.delivered/1: errata addition targets editions moved to split variants [('2021-12-31', '12.122.stock')]; add explicit rebinding for errata additions before curating those editions"
+        ],
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/moved.toml#/errata.column/1",
+          "curation/registers/scb/moved.toml#/errata.column/1: errata addition targets editions moved to split variants [('2021-12-31', '12.122.stock')]; add explicit rebinding for errata additions before curating those editions"
+        ]
       ]
     },
     {
@@ -76,11 +100,24 @@
       "table": "states",
       "where": {
         "register": "moved",
-        "column": ["A", "NewCol"]
+        "column": [
+          "A",
+          "NewCol"
+        ]
       },
-      "fields": ["variable", "variant", "column", "valid_from"],
+      "fields": [
+        "variable",
+        "variant",
+        "column",
+        "valid_from"
+      ],
       "rows": [
-        ["v5", "people", "A", "2020-01-01"]
+        [
+          "v5",
+          "people",
+          "A",
+          "2020-01-01"
+        ]
       ]
     },
     {
@@ -91,9 +128,17 @@
           "contains": "curation/registers/scb/nodoc.toml#"
         }
       },
-      "fields": ["code", "locator", "detail"],
+      "fields": [
+        "code",
+        "locator",
+        "detail"
+      ],
       "rows": [
-        ["stale_curation_entry", "curation/registers/scb/nodoc.toml#/errata.delivered/1", "curation/registers/scb/nodoc.toml#/errata.delivered/1: no_documented_column_identity"]
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/nodoc.toml#/errata.delivered/1",
+          "curation/registers/scb/nodoc.toml#/errata.delivered/1: no_documented_column_identity"
+        ]
       ]
     },
     {
@@ -105,7 +150,12 @@
           "contains": "errata:omitted-column-in-version"
         }
       },
-      "fields": ["variable", "variant", "column", "valid_from"],
+      "fields": [
+        "variable",
+        "variant",
+        "column",
+        "valid_from"
+      ],
       "rows": []
     },
     {
@@ -116,9 +166,17 @@
           "contains": "curation/registers/scb/twovars.toml#"
         }
       },
-      "fields": ["code", "locator", "detail"],
+      "fields": [
+        "code",
+        "locator",
+        "detail"
+      ],
       "rows": [
-        ["overbroad_curation_entry", "curation/registers/scb/twovars.toml#/errata.delivered/1", "curation/registers/scb/twovars.toml#/errata.delivered/1: ambiguous_documented_column_identity"]
+        [
+          "overbroad_curation_entry",
+          "curation/registers/scb/twovars.toml#/errata.delivered/1",
+          "curation/registers/scb/twovars.toml#/errata.delivered/1: ambiguous_documented_column_identity"
+        ]
       ]
     },
     {
@@ -130,7 +188,12 @@
           "contains": "errata:omitted-column-in-version"
         }
       },
-      "fields": ["variable", "variant", "column", "valid_from"],
+      "fields": [
+        "variable",
+        "variant",
+        "column",
+        "valid_from"
+      ],
       "rows": []
     },
     {
@@ -141,9 +204,17 @@
           "contains": "curation/registers/scb/present.toml#"
         }
       },
-      "fields": ["code", "locator", "detail"],
+      "fields": [
+        "code",
+        "locator",
+        "detail"
+      ],
       "rows": [
-        ["stale_curation_entry", "curation/registers/scb/present.toml#/errata.delivered/1", "curation/registers/scb/present.toml#/errata.delivered/1: now_present:2021"]
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/present.toml#/errata.delivered/1",
+          "curation/registers/scb/present.toml#/errata.delivered/1: now_present:2021"
+        ]
       ]
     },
     {
@@ -155,7 +226,12 @@
           "contains": "errata:omitted-column-in-version"
         }
       },
-      "fields": ["variable", "variant", "column", "valid_from"],
+      "fields": [
+        "variable",
+        "variant",
+        "column",
+        "valid_from"
+      ],
       "rows": []
     },
     {
@@ -166,9 +242,15 @@
           "contains": "curation/registers/scb/owners.toml#"
         }
       },
-      "fields": ["code", "locator"],
+      "fields": [
+        "code",
+        "locator"
+      ],
       "rows": [
-        ["overbroad_curation_entry", "curation/registers/scb/owners.toml#/errata.delivered/1"]
+        [
+          "overbroad_curation_entry",
+          "curation/registers/scb/owners.toml#/errata.delivered/1"
+        ]
       ]
     },
     {
@@ -178,7 +260,10 @@
         "register": "owners",
         "valid_from": "2021-01-01"
       },
-      "fields": ["variable", "column"],
+      "fields": [
+        "variable",
+        "column"
+      ],
       "rows": []
     },
     {
@@ -189,9 +274,15 @@
           "contains": "curation/registers/scb/unowned.toml#"
         }
       },
-      "fields": ["code", "locator"],
+      "fields": [
+        "code",
+        "locator"
+      ],
       "rows": [
-        ["stale_curation_entry", "curation/registers/scb/unowned.toml#/errata.delivered/1"]
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/unowned.toml#/errata.delivered/1"
+        ]
       ]
     },
     {
@@ -201,7 +292,10 @@
         "register": "unowned",
         "valid_from": "2021-01-01"
       },
-      "fields": ["variable", "column"],
+      "fields": [
+        "variable",
+        "column"
+      ],
       "rows": []
     },
     {
@@ -212,7 +306,10 @@
           "contains": "curation/registers/scb/blanks.toml#"
         }
       },
-      "fields": ["code", "locator"],
+      "fields": [
+        "code",
+        "locator"
+      ],
       "rows": []
     },
     {
@@ -223,10 +320,22 @@
           "contains": "scb/blanks/"
         }
       },
-      "fields": ["code", "subject", "valid_from"],
+      "fields": [
+        "code",
+        "subject",
+        "valid_from"
+      ],
       "rows": [
-        ["missing_coding_period", "scb/blanks/v5", "2021-01-01"],
-        ["missing_coding_period", "scb/blanks/v5", "2022-01-01"]
+        [
+          "missing_coding_period",
+          "scb/blanks/v5",
+          "2021-01-01"
+        ],
+        [
+          "missing_coding_period",
+          "scb/blanks/v5",
+          "2022-01-01"
+        ]
       ]
     },
     {
@@ -235,12 +344,42 @@
       "where": {
         "register": "blanks"
       },
-      "fields": ["variable", "variant", "column", "valid_from", "valid_to"],
+      "fields": [
+        "variable",
+        "variant",
+        "column",
+        "valid_from",
+        "valid_to"
+      ],
       "rows": [
-        ["v5", "people", "A", "2020-01-01", "2020-12-31"],
-        ["v5", "people", "A", "2021-01-01", "2021-12-31"],
-        ["v5", "people", "A", "2022-01-01", "2022-12-31"],
-        ["v6", "people", "B", "2022-01-01", "2022-12-31"]
+        [
+          "v5",
+          "people",
+          "A",
+          "2020-01-01",
+          "2020-12-31"
+        ],
+        [
+          "v5",
+          "people",
+          "A",
+          "2021-01-01",
+          "2021-12-31"
+        ],
+        [
+          "v5",
+          "people",
+          "A",
+          "2022-01-01",
+          "2022-12-31"
+        ],
+        [
+          "v6",
+          "people",
+          "B",
+          "2022-01-01",
+          "2022-12-31"
+        ]
       ]
     },
     {
@@ -252,10 +391,25 @@
           "contains": "errata:omitted-column-in-version"
         }
       },
-      "fields": ["variable", "variant", "column", "valid_from"],
+      "fields": [
+        "variable",
+        "variant",
+        "column",
+        "valid_from"
+      ],
       "rows": [
-        ["v5", "people", "A", "2021-01-01"],
-        ["v5", "people", "A", "2022-01-01"]
+        [
+          "v5",
+          "people",
+          "A",
+          "2021-01-01"
+        ],
+        [
+          "v5",
+          "people",
+          "A",
+          "2022-01-01"
+        ]
       ]
     },
     {
@@ -266,9 +420,15 @@
         "valid_from": "2022-01-01",
         "column": "A"
       },
-      "fields": ["code", "label"],
+      "fields": [
+        "code",
+        "label"
+      ],
       "rows": [
-        [null, null]
+        [
+          null,
+          null
+        ]
       ]
     },
     {
@@ -279,11 +439,23 @@
           "contains": "curation/registers/scb/columns.toml#"
         }
       },
-      "fields": ["case_id", "status"],
+      "fields": [
+        "case_id",
+        "status"
+      ],
       "rows": [
-        ["curation/registers/scb/columns.toml#/errata.column/1", "applicable"],
-        ["curation/registers/scb/columns.toml#/errata.column/2", "applicable"],
-        ["curation/registers/scb/columns.toml#/errata.column/3", "applicable"]
+        [
+          "curation/registers/scb/columns.toml#/errata.column/1",
+          "applicable"
+        ],
+        [
+          "curation/registers/scb/columns.toml#/errata.column/2",
+          "applicable"
+        ],
+        [
+          "curation/registers/scb/columns.toml#/errata.column/3",
+          "applicable"
+        ]
       ]
     },
     {
@@ -294,7 +466,10 @@
           "contains": "curation/registers/scb/columns.toml#"
         }
       },
-      "fields": ["code", "locator"],
+      "fields": [
+        "code",
+        "locator"
+      ],
       "rows": []
     },
     {
@@ -305,10 +480,22 @@
           "contains": "scb/columns/"
         }
       },
-      "fields": ["code", "subject", "valid_from"],
+      "fields": [
+        "code",
+        "subject",
+        "valid_from"
+      ],
       "rows": [
-        ["no_supported_states", "scb/columns/undated", null],
-        ["unsupported_occurrence", "scb/columns/undated", null]
+        [
+          "no_supported_states",
+          "scb/columns/undated",
+          null
+        ],
+        [
+          "unsupported_occurrence",
+          "scb/columns/undated",
+          null
+        ]
       ],
       "match": "set"
     },
@@ -317,12 +504,34 @@
       "table": "states",
       "where": {
         "register": "columns",
-        "column": ["Dated", "Undated", "Pooled"]
+        "column": [
+          "Dated",
+          "Undated",
+          "Pooled"
+        ]
       },
-      "fields": ["variable", "column", "valid_from", "valid_to", "pooled"],
+      "fields": [
+        "variable",
+        "column",
+        "valid_from",
+        "valid_to",
+        "pooled"
+      ],
       "rows": [
-        ["dated", "Dated", "2020-01-01", "2020-12-31", 0],
-        ["pooled", "Pooled", "2019-01-01", "2021-12-31", 1]
+        [
+          "dated",
+          "Dated",
+          "2020-01-01",
+          "2020-12-31",
+          0
+        ],
+        [
+          "pooled",
+          "Pooled",
+          "2019-01-01",
+          "2021-12-31",
+          1
+        ]
       ]
     },
     {
@@ -330,12 +539,34 @@
       "table": "variables",
       "where": {
         "register": "columns",
-        "column": ["Dated", "Undated", "Pooled"]
+        "column": [
+          "Dated",
+          "Undated",
+          "Pooled"
+        ]
       },
-      "fields": ["variable", "column", "provider_key", "is_identifier", "is_sensitive"],
+      "fields": [
+        "variable",
+        "column",
+        "provider_key",
+        "is_identifier",
+        "is_sensitive"
+      ],
       "rows": [
-        ["dated", "Dated", "Dated", 0, 0],
-        ["pooled", "Pooled", "Pooled", 0, 0]
+        [
+          "dated",
+          "Dated",
+          "Dated",
+          0,
+          0
+        ],
+        [
+          "pooled",
+          "Pooled",
+          "Pooled",
+          0,
+          0
+        ]
       ]
     },
     {
@@ -346,10 +577,19 @@
           "contains": "curation/registers/scb/declared.toml#"
         }
       },
-      "fields": ["case_id", "status"],
+      "fields": [
+        "case_id",
+        "status"
+      ],
       "rows": [
-        ["curation/registers/scb/declared.toml#/errata.column/1", "applicable"],
-        ["curation/registers/scb/declared.toml#/errata.column/2", "applicable"]
+        [
+          "curation/registers/scb/declared.toml#/errata.column/1",
+          "applicable"
+        ],
+        [
+          "curation/registers/scb/declared.toml#/errata.column/2",
+          "applicable"
+        ]
       ]
     },
     {
@@ -360,7 +600,10 @@
           "contains": "curation/registers/scb/declared.toml#"
         }
       },
-      "fields": ["code", "locator"],
+      "fields": [
+        "code",
+        "locator"
+      ],
       "rows": []
     },
     {
@@ -371,9 +614,15 @@
           "contains": "scb/declared/"
         }
       },
-      "fields": ["code", "subject"],
+      "fields": [
+        "code",
+        "subject"
+      ],
       "rows": [
-        ["unresolved_flag", "scb/declared/new-col"]
+        [
+          "unresolved_flag",
+          "scb/declared/new-col"
+        ]
       ]
     },
     {
@@ -381,11 +630,24 @@
       "table": "states",
       "where": {
         "register": "declared",
-        "column": ["NewCol", "Flagged"]
+        "column": [
+          "NewCol",
+          "Flagged"
+        ]
       },
-      "fields": ["variable", "column", "valid_from", "valid_to"],
+      "fields": [
+        "variable",
+        "column",
+        "valid_from",
+        "valid_to"
+      ],
       "rows": [
-        ["flagged", "Flagged", "2019-01-01", "2019-12-31"]
+        [
+          "flagged",
+          "Flagged",
+          "2019-01-01",
+          "2019-12-31"
+        ]
       ]
     },
     {
@@ -393,11 +655,24 @@
       "table": "variables",
       "where": {
         "register": "declared",
-        "column": ["NewCol", "Flagged"]
+        "column": [
+          "NewCol",
+          "Flagged"
+        ]
       },
-      "fields": ["variable", "provider_key", "is_identifier", "is_sensitive"],
+      "fields": [
+        "variable",
+        "provider_key",
+        "is_identifier",
+        "is_sensitive"
+      ],
       "rows": [
-        ["flagged", "Flagged", 0, 0]
+        [
+          "flagged",
+          "Flagged",
+          0,
+          0
+        ]
       ]
     },
     {
@@ -408,9 +683,17 @@
           "contains": "scb/pooledbare/"
         }
       },
-      "fields": ["code", "valid_from", "valid_to"],
+      "fields": [
+        "code",
+        "valid_from",
+        "valid_to"
+      ],
       "rows": [
-        ["conflicting_code_memberships", "2010-01-01", "2010-12-31"]
+        [
+          "conflicting_code_memberships",
+          "2010-01-01",
+          "2010-12-31"
+        ]
       ],
       "match": "includes"
     },
@@ -421,9 +704,15 @@
         "register": "pooledbare",
         "valid_from": "2010-01-01"
       },
-      "fields": ["valid_to", "code"],
+      "fields": [
+        "valid_to",
+        "code"
+      ],
       "rows": [
-        ["2010-12-31", null]
+        [
+          "2010-12-31",
+          null
+        ]
       ]
     },
     {
@@ -434,7 +723,10 @@
           "contains": "curation/registers/scb/pooled.toml#"
         }
       },
-      "fields": ["code", "locator"],
+      "fields": [
+        "code",
+        "locator"
+      ],
       "rows": []
     },
     {
@@ -446,7 +738,9 @@
         },
         "code": "conflicting_code_memberships"
       },
-      "fields": ["code"],
+      "fields": [
+        "code"
+      ],
       "rows": []
     },
     {
@@ -456,9 +750,17 @@
         "register": "pooled",
         "valid_from": "2010-01-01"
       },
-      "fields": ["valid_to", "code", "label"],
+      "fields": [
+        "valid_to",
+        "code",
+        "label"
+      ],
       "rows": [
-        ["2010-12-31", "1", "Ja"]
+        [
+          "2010-12-31",
+          "1",
+          "Ja"
+        ]
       ]
     },
     {
@@ -469,7 +771,10 @@
           "contains": "curation/registers/scb/twocols.toml#"
         }
       },
-      "fields": ["code", "locator"],
+      "fields": [
+        "code",
+        "locator"
+      ],
       "rows": []
     },
     {
@@ -479,10 +784,22 @@
         "register": "twocols",
         "valid_from": "2010-01-01"
       },
-      "fields": ["column", "valid_to", "code"],
+      "fields": [
+        "column",
+        "valid_to",
+        "code"
+      ],
       "rows": [
-        ["A", "2010-12-31", "1"],
-        ["B", "2010-12-31", "1"]
+        [
+          "A",
+          "2010-12-31",
+          "1"
+        ],
+        [
+          "B",
+          "2010-12-31",
+          "1"
+        ]
       ]
     }
   ]

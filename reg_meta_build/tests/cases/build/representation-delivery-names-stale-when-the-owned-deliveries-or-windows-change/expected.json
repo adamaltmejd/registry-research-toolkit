@@ -5,13 +5,46 @@
       "where": {
         "code": "stale_curation_entry"
       },
-      "fields": ["locator"],
+      "fields": [
+        "locator"
+      ],
       "rows": [
-        ["curation/registers/scb/unit.toml#/representation.delivery_metadata/1"],
-        ["curation/registers/scb/missing.toml#/representation.delivery_metadata/1"],
-        ["curation/registers/scb/new.toml#/representation.delivery_metadata/1"],
-        ["curation/registers/scb/partial.toml#/representation.delivery_metadata/1"],
-        ["curation/registers/scb/window.toml#/representation.delivery_metadata/1"]
+        [
+          "curation/registers/scb/unit.toml#/representation.delivery_metadata/1"
+        ],
+        [
+          "curation/registers/scb/missing.toml#/representation.delivery_metadata/1"
+        ],
+        [
+          "curation/registers/scb/new.toml#/representation.delivery_metadata/1"
+        ],
+        [
+          "curation/registers/scb/partial.toml#/representation.delivery_metadata/1"
+        ],
+        [
+          "curation/registers/scb/window.toml#/representation.delivery_metadata/1"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "ku"
+      },
+      "fields": [
+        "register",
+        "column",
+        "valid_from",
+        "state_name"
+      ],
+      "note": "The artifact half of each stale entry, as in the stale twin representation-delivery-names-stale-when-a-guarded-support-record-changes: without the entry, the two KU editions name the variable Income and Taxable income, so ku forms no state. Only in missing, where the 2021 KU row is no longer delivered, does the one remaining 2020 row keep its own name.",
+      "rows": [
+        [
+          "missing",
+          "KU",
+          "2020-01-01",
+          "Income"
+        ]
       ]
     }
   ]

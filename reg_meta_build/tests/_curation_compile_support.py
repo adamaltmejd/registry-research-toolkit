@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 from dataclasses import replace
 from types import SimpleNamespace
 from typing import TYPE_CHECKING, Any, cast
@@ -212,38 +211,6 @@ def make_prepared():
     )
 
 
-def compiled_bytes(compiled) -> bytes:
-    return json.dumps(
-        {
-            "fields": compiled.fields,
-            "cases": {repr(key): value for key, value in compiled.cases.items()},
-            "naming": {
-                repr(key): value for key, value in (compiled.naming or {}).items()
-            },
-            "provider_keys": {
-                repr(key): value
-                for key, value in (compiled.provider_keys or {}).items()
-            },
-            "naming_ambiguities": {
-                repr(key): value
-                for key, value in (compiled.naming_ambiguities or {}).items()
-            },
-            "variants": {
-                repr(key): value for key, value in (compiled.variants or {}).items()
-            },
-            "report": compiled.report,
-        },
-        default=lambda value: (
-            value.model_dump(mode="json")
-            if hasattr(value, "model_dump")
-            else value.__dict__
-        ),
-        ensure_ascii=False,
-        sort_keys=True,
-        separators=(",", ":"),
-    ).encode()
-
-
 def partition_scope(records: tuple[SourceRecord, ...]) -> CompiledScope:
     first = records[0]
     register = source_register_key(first)
@@ -301,86 +268,6 @@ def errata_record(
     return clean_scb_row(
         header, member, cells, make_revision("scb-registerinformation")
     ).record
-
-
-def errata_fixture(tmp_path: Path, records: tuple[SourceRecord, ...], fragment: str):
-    root = tmp_path / "curation"
-    make_tree(root)
-    path = root / "registers/scb/sample.toml"
-    path.write_text(
-        path.read_text()
-        + '\n[[variant]]\nnative_id = "1.2"\nslug = "people"\n'
-        + fragment
-        + (
-            '\n[[variable]]\nnative_id = "1.NewCol"\nslug = "new-col"\n'
-            if "[[errata.column]]" in fragment
-            else ""
-        ),
-        encoding="utf-8",
-    )
-    scope = partition_scope(records)
-    native = source_register_key(records[0])
-    assert native is not None
-    reader = SimpleNamespace(
-        iter_register_slices=lambda source, registers: iter(((native, records),))
-    )
-    return (
-        load_curation_tree(root),
-        cast("Any", SimpleNamespace(records=reader, iter_evidence=lambda: iter(()))),
-        scope,
-    )
-
-
-def enrichment_fixture(
-    tmp_path: Path,
-    records: tuple[SourceRecord, ...],
-    fragment: str,
-    *,
-    target: NativeNamingTarget | None = None,
-):
-    root = tmp_path / "curation"
-    make_tree(root)
-    path = root / "registers/scb/sample.toml"
-    path.write_text(path.read_text() + fragment, encoding="utf-8")
-    scope = partition_scope(records)
-    native = source_register_key(records[0])
-    variable = native_variable_key(records[0])
-    assert native is not None and variable is not None
-    declaration = NamingDeclaration(
-        target=target
-        or NativeNamingTarget(
-            kind="variable",
-            provider="scb",
-            source_key=variable,
-            register_key=native,
-        ),
-        naming=SlugEntry(kind="variable", provider="scb", source_id="1.5", slug="a"),
-        contributors=(),
-    )
-    reader = SimpleNamespace(
-        iter_register_slices=lambda source, registers: iter(((native, records),))
-    )
-    key = (scope.source, scope.register_key)
-    return (
-        load_curation_tree(root),
-        cast("Any", SimpleNamespace(records=reader)),
-        scope,
-        {key: (declaration,)},
-    )
-
-
-DESCRIPTION = (
-    '\n[[enrichment.description]]\nregister = "scb/sample"\n'
-    'variable = "a"\ndescription = "Accepted prose"\n'
-    'provenance = "delivery list"\n'
-)
-
-
-ALIAS = (
-    '\n[[enrichment.alias]]\nregister = "scb/sample"\n'
-    'variable = "a"\ndelivery_column = "FormerA"\n'
-    'provenance = "delivery list"\n'
-)
 
 
 def scb_partition_tree(root: Path, extra: str):
