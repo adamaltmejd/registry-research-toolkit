@@ -21,6 +21,9 @@ jobs:
       - uses: astral-sh/setup-uv@v10.0.1
         with:
           version: "0.12.11"
+      # `uv sync` builds the reg-core-py extension (maturin) from crates/.
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2.9.2
 
       # reg_schema ships nothing but the wheel — no DB release assets, no doc
       # DB, no container image — and it has no CLI entry point, so importing

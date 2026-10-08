@@ -88,6 +88,8 @@ jobs:
               - "reg_webapp/fly.toml"
               - "reg_webapp/fly.swecov.toml"
               - "reg_meta/**"
+              - "reg_meta_build/pyproject.toml"
+              - "crates/reg-core-py/pyproject.toml"
               - ".dockerignore"
               - ".github/workflows/container-build.yml"
               - "uv.lock"
