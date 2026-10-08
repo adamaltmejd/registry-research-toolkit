@@ -718,6 +718,11 @@ Shared definitions:
 - Acceptance: G0; byte-identical rebuild; G1 differences only from folding, each a named
   exception with its reason (for example `register_id` no longer matching as a token);
   the PR records derive time, G1 time (under 5 min) and the artifact size delta.
+- Recorded (2026-10-08, pinned `reg_meta/v0.42.0`): `derive` takes 118.5 s on the global
+  artifact and 93.7 s on SWECOV, of which the index step is 4.2 s and its validator
+  check 4.9 s (the rest is the stage-2 resolver and validation). G1 takes 282.4 s with a
+  re-derive (151.0 s of it deriving) and 126.1 s without. The index bytes grow from 67.8
+  to 120.2 MB (+52.4 MB); the derived global file grows 56.6 MB and SWECOV 55.2 MB.
 
 **3a.2 Search pins as curated build input.** Implements sections 6 and 10 (pins are
 curated input; an unresolved pin is a build error).
