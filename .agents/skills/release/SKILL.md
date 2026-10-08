@@ -218,9 +218,10 @@ step 10.
 and reg_meta wheels install together, so a schema bump can land on main before its
 release. Reaching PyPI is a separate gate — step 8e for reg_meta.
 
-Run it on a **committed** bump: commit the bump locally (step 6's message), run the
-suite, and push only once it is green. On an uncommitted bump the builder's
-clean-tracked-tree guard fails `test_build_db_cli_outputs`' strict-build cases.
+Run it on a **committed** bump: do step 6's content checks and create its bump commit
+locally first, then run the suite, and push only once it is green. On an uncommitted
+bump the builder's clean-tracked-tree guard fails `test_build_db_cli_outputs`'
+strict-build cases.
 
 If Rust compiles fail with `Operation not permitted` writing `deps/*.d` files, a shared
 `sccache` wrapper (`~/.cargo/config.toml`) is running under another session's sandbox.
