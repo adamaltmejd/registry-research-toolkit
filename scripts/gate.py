@@ -28,8 +28,7 @@ import subprocess
 import sys
 import tempfile
 import time
-from contextlib import contextmanager
-from functools import partial
+from contextlib import contextmanager, nullcontext
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -72,7 +71,7 @@ def crates() -> None:
     run("cargo machete")
 
 
-def g0(packages: list[str] | None) -> None:
+def g0(packages: list[str] | None = None) -> None:
     run("uv run ruff check")
     run("uv run ruff format --check")
     run("uvx --from panache-cli==3.9.0 panache format --check .")
@@ -183,18 +182,15 @@ def main() -> int:
     )
     args = parser.parse_args()
     names = [n for step in args.steps for n in (ALL if step == "all" else [step])]
+    steps = STEPS | {"g0": lambda: g0(args.packages)}
     times: list[str] = []
     failed = None
     for name in names:
         print(f"== gate {name}", flush=True)
-        step = partial(g0, args.packages) if name == "g0" else STEPS[name]
         started = time.monotonic()
         try:
-            if name in HEAVY:
-                with heavy_lock():
-                    step()
-            else:
-                step()
+            with heavy_lock() if name in HEAVY else nullcontext():
+                steps[name]()
         except subprocess.CalledProcessError as exc:
             failed = (
                 f"{name}: exit {exc.returncode} from {shlex.join(map(str, exc.cmd))}"

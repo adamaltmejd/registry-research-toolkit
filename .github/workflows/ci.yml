@@ -48,9 +48,10 @@ jobs:
   rust:
     runs-on: ubuntu-latest
     # The crates/ CI budget (ARCHITECTURE.md "Tiers"). The job also builds the
-    # workspace and runs the whole conformance suite against it. Measured on #1231
-    # (2026-10-08): 71 s warm; 2 min 10 s with dependencies compiled after a
-    # Cargo.lock change (rmcp's ~70 crates). A fully cold cache is unmeasured.
+    # workspace and runs the gate's `rust` and `release` steps. Measured on #1249
+    # (2026-10-08): 1 min 23 s warm. A Cargo.lock change adds about 1 min of
+    # dependency compiles (#1231: 71 s warm, 2 min 10 s after one), so expect
+    # about 2 min 40 s of the 3 min then. A fully cold cache is unmeasured.
     timeout-minutes: 3
     steps:
       - uses: actions/checkout@v7.0.1
