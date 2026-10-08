@@ -4,7 +4,9 @@
   "replaces": "test_fqid_slugs_provider_toml.py::TestProviderToml::test_finite_column_owner_retains_only_its_own_base_slug[34.4.kon]",
   "fails_if": "the register slug tree stops treating an [[identity.column_owner]] that names the split as authorization to keep the base slug",
   "loads": [
-    {},
+    {
+      "$any": true
+    },
     {
       "kind": "variable",
       "source_id": "34.4",

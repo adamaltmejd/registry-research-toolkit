@@ -10,7 +10,9 @@
   "note": "A bare variable omits both disclosure flags; each reads as false.",
   "loads": {
     "records": [
-      {},
+      {
+        "$any": true
+      },
       {
         "fields": {
           "identifier": {

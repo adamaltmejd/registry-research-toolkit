@@ -9,7 +9,9 @@
   "fails_if": "read_curated_source binds a canonical-SCB declared value_set to codes or associations at read time instead of only declaring the list name",
   "loads": {
     "records": [
-      {},
+      {
+        "$any": true
+      },
       {
         "subject": {
           "provider": "scb"

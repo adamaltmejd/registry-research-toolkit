@@ -16,7 +16,9 @@
   "note": "Only a complete, valid, ordered pair of literal bounds forms a date scope; a single bound, reversed bounds or an impossible calendar date (2010-02-30, shape-valid) leave the scope unknown while the raw bounds stay on the record.",
   "loads": {
     "records": [
-      {},
+      {
+        "$any": true
+      },
       {
         "edition_scope": {
           "kind": "not_applicable"

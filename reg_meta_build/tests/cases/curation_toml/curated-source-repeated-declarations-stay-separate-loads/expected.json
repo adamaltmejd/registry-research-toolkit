@@ -10,7 +10,9 @@
   "note": "Two declarations of one column share a semantic key but keep their own physical locations and conflicting values; an unmatched variant reference stays as written. The old test also asserted distinct record ids, which are content hashes and are not pinned here. The first declaration's delivered cells, and its register.variable table row's cells, are both its five authored keys in file order with their raw TOML values (a non-string value as compact JSON): the replaced test asserted the row keeps exactly the record's cells.",
   "loads": {
     "records": [
-      {},
+      {
+        "$any": true
+      },
       {
         "locators": [
           {

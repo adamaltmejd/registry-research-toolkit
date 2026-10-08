@@ -117,10 +117,18 @@ as sorted lists, and a tuple mapping key joined with `/` (`("scb", "rtb")` is
 
 - `exact` (the default): the result equals the expected value. An object names every
   key, so an extra key fails and `{}` claims an empty mapping.
-- `includes`: an object compares only the keys it names, and `{}` stands for an element
-  whose content is not claimed. Use it for a result model too large to state whole.
-  Inside an `includes` projection, `{"$exact": value}` compares that value exactly: for
-  example `"descriptors": {"$exact": {}}` claims an empty mapping.
+- `includes`: an object compares only the keys it names. Use it for a result model too
+  large to state whole. Inside an `includes` projection, `{"$exact": value}` compares
+  that value exactly: for example `"descriptors": {"$exact": {}}` claims an empty
+  mapping. `{"$any": true}` is a value that must be present but is not claimed, such as
+  a list element the replaced test never looked at, kept so the list still pins length
+  and position.
+
+The runner refuses a bare `{}` inside an `includes` projection: it would check only that
+some object is there, so a case whose `fails_if` names that element's content could not
+fail. Pin the element's values, or write `{"$any": true}` when the case claims nothing
+about it. `$any` is refused under `exact` and inside `$exact`, where it would weaken the
+claim.
 
 In both modes a list compares element by element, in order, and must have the same
 length; a scalar compares by value and JSON type, so `true` never matches `1`. There is

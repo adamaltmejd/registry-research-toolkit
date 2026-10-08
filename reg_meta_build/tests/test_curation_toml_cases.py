@@ -182,11 +182,14 @@ def mismatch(
     """Where `actual` departs from `expected`, or None.
 
     An exact object names every key, so an extra key fails and `{}` means empty;
-    an `includes` object compares only the keys it names, and `{"$exact": value}`
-    inside it compares that value exactly. A list compares element by element and
+    an `includes` object compares only the keys it names, `{"$exact": value}`
+    inside it compares that value exactly, and `{"$any": true}` inside it is a
+    value that is present but not claimed. A list compares element by element and
     must have the same length. A scalar compares by value and JSON type, so `true`
     never matches `1`.
     """
+    if isinstance(expected, dict) and expected.keys() == {"$any"}:
+        return None
     if isinstance(expected, dict) and expected.keys() == {"$exact"}:
         return mismatch(actual, expected["$exact"], path, exact=True)
     if isinstance(expected, dict):
@@ -212,6 +215,34 @@ def mismatch(
     return None
 
 
+def unclaimed(expected: Any, path: str = "$result", *, exact: bool) -> str | None:
+    """The first projection node that claims less than it looks like, or None.
+
+    Under `includes` a bare `{}` checks only that an object is there, so a case
+    whose `fails_if` names its content cannot fail; an unclaimed element is
+    written `{"$any": true}` instead. Under `exact` (and inside `$exact`) `{}`
+    means empty and `$any` would weaken the claim, so `$any` is refused there.
+    """
+    if isinstance(expected, dict):
+        if expected.keys() == {"$any"}:
+            if exact or expected["$any"] is not True:
+                return f'{path}: {{"$any": true}} is only for an `includes` projection'
+            return None
+        if expected.keys() == {"$exact"}:
+            return unclaimed(expected["$exact"], path, exact=True)
+        if not expected and not exact:
+            return f'{path}: a bare {{}} claims nothing; write {{"$any": true}}'
+        items = ((f"{path}.{key}", item) for key, item in expected.items())
+    elif isinstance(expected, list):
+        items = ((f"{path}[{index}]", item) for index, item in enumerate(expected))
+    else:
+        return None
+    for item_path, item in items:
+        if found := unclaimed(item, item_path, exact=exact):
+            return found
+    return None
+
+
 def read_case(case: Path) -> dict[str, Any]:
     expected = json.loads((case / "expected.json").read_text(encoding="utf-8"))
     fails_if = expected.get("fails_if")
@@ -223,6 +254,9 @@ def read_case(case: Path) -> dict[str, Any]:
         raise ValueError(f"{case.name}: expected.json needs `loads` or `error`")
     if expected.get("match", "exact") not in MATCH_MODES:
         raise ValueError(f"{case.name}: unknown match {expected['match']!r}")
+    exact = expected.get("match", "exact") == "exact"
+    if problem := unclaimed(expected.get("loads"), exact=exact):
+        raise ValueError(f"{case.name}: {problem}")
     error = expected.get("error", {})
     if error and ("code" in error) == ("type" in error):
         raise ValueError(f"{case.name}: error needs a located `code` or a `type`")

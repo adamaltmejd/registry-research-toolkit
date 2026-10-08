@@ -10,7 +10,9 @@
   "note": "is_sensitive is declared false and is_identifier is omitted: omission in a maintainer-authored TOML is a deliberate false claim, but it leaves no evidence cell (the cell list has no is_identifier).",
   "loads": {
     "records": [
-      {},
+      {
+        "$any": true
+      },
       {
         "fields": {
           "identifier": {

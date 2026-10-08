@@ -44,25 +44,37 @@
           }
         ],
         "column": [
-          {}
+          {
+            "$any": true
+          }
         ],
         "version": [
-          {}
+          {
+            "$any": true
+          }
         ]
       },
       "enrichment": {
         "description": [
-          {}
+          {
+            "$any": true
+          }
         ],
         "alias": [
-          {}
+          {
+            "$any": true
+          }
         ]
       },
       "group": [
-        {}
+        {
+          "$any": true
+        }
       ],
       "code_label_pair": [
-        {}
+        {
+          "$any": true
+        }
       ],
       "representation": {
         "period_family": [
@@ -86,13 +98,19 @@
       },
       "identity": {
         "partition": [
-          {}
+          {
+            "$any": true
+          }
         ],
         "column_owner": [
-          {}
+          {
+            "$any": true
+          }
         ],
         "split": [
-          {}
+          {
+            "$any": true
+          }
         ],
         "edition_split": [
           {
@@ -119,10 +137,14 @@
       },
       "identity": {
         "route": [
-          {}
+          {
+            "$any": true
+          }
         ],
         "rename": [
-          {}
+          {
+            "$any": true
+          }
         ]
       }
     }

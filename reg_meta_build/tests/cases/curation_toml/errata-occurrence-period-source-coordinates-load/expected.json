@@ -11,14 +11,18 @@
     {
       "errata": {
         "occurrence_period": [
-          {}
+          {
+            "$any": true
+          }
         ]
       }
     },
     {
       "errata": {
         "occurrence_period": [
-          {}
+          {
+            "$any": true
+          }
         ]
       }
     }
