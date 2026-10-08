@@ -1,0 +1,24 @@
+{
+  "loader": "register_files",
+  "replaces": "test_delivery_enrichment.py::test_valid_description_and_alias_parse",
+  "fails_if": "the register loader drops or misreads an [[enrichment.description]] or [[enrichment.alias]] entry",
+  "loads": [
+    {
+      "enrichment": {
+        "description": [
+          {
+            "register_fqid": "scb/agi",
+            "variable": "kon",
+            "description": "Kön"
+          }
+        ],
+        "alias": [
+          {
+            "variable": "kon",
+            "delivery_column": "KON"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+[register]
+provider = "scb"
+slug = "agi"
+native_id = "1"
+
+[[enrichment.alias]]
+register = "scb/agi"
+variable = "kon"
+delivery_column = "KON"
+[[enrichment.alias]]
+register = "scb/agi"
+variable = "kon"
+delivery_column = "kon"
