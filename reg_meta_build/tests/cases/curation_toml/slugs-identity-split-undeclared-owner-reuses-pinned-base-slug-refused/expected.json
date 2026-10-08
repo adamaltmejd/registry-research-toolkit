@@ -4,12 +4,12 @@
     "test_fqid_slugs_provider_toml.py::TestProviderToml::test_sos_split_retains_only_declared_owner_base_slug[undeclared-True]",
     "test_fqid_slugs_provider_toml.py::TestProviderToml::test_sos_split_retains_only_declared_owner_base_slug[undeclared-False]"
   ],
-  "fails_if": "the register slug tree lets a split that no [[identity.split]] part owns keep the pinned base slug",
+  "fails_if": "the register slug tree lets a split that no [[identity.split]] part owns keep the pinned base slug, or names the generated pin file other than curation-relative (an absolute path outside the checkout)",
   "error": {
     "code": "slug_toml_invalid",
     "locator": "curation/registers/sos/lova.toml [[variable]] entry 1",
     "message_contains": [
-      "variable slug 'examar' reused by"
+      "variable slug 'examar' reused by curation/registers/sos/lova.auto.toml [[variable]] entry 1 ('123.EXAMAR')"
     ]
   }
 }

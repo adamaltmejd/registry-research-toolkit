@@ -741,7 +741,8 @@ def _known_provider_stems(slug_dir: Path) -> frozenset[str]:
 
 
 def load_freeze_states(slug_dir: Path) -> dict[str, SlugFreezeState]:
-    """Parse ``<slug_dir>/freeze.toml`` into ``{zone: state}``.
+    """Parse the zone-state file into ``{zone: state}``: ``slug_state.toml`` in
+    a register-owned tree, else ``<slug_dir>/freeze.toml``.
 
     An absent file → ``{}`` (every zone defaults to "churning"). Fails fast
     (``EXIT_CONFIG``) on an unknown state value, a non-string value, or an
@@ -763,20 +764,20 @@ def load_freeze_states(slug_dir: Path) -> dict[str, SlugFreezeState]:
         if not isinstance(state, str):
             raise curation_error(
                 "slug_freeze_state_invalid",
-                f"{FREEZE_STATE_FILE}: zone {zone!r} state must be a string, "
+                f"{path.name}: zone {zone!r} state must be a string, "
                 f"got {type(state).__name__}.",
                 f"Set it to one of {sorted(_FREEZE_STATES)}.",
             )
         if state not in _FREEZE_STATES:
             raise curation_error(
                 "slug_freeze_state_invalid",
-                f"{FREEZE_STATE_FILE}: zone {zone!r} has unknown state {state!r}.",
+                f"{path.name}: zone {zone!r} has unknown state {state!r}.",
                 f"Use one of {sorted(_FREEZE_STATES)}.",
             )
         if zone not in known_zones:
             raise curation_error(
                 "slug_freeze_zone_unknown",
-                f"{FREEZE_STATE_FILE}: unknown zone {zone!r}.",
+                f"{path.name}: unknown zone {zone!r}.",
                 f"A zone is a provider stem ({sorted(known_zones)}).",
             )
         states[zone] = cast("SlugFreezeState", state)  # membership-checked above
@@ -1123,11 +1124,11 @@ def _load_register_slug_tree(
             entries.extend(local)
             continue
         auto_entries = _load_register_auto_file(auto_path, provider, reg_id)
+        # Named like the authored file (`curation/registers/...`), so the pair
+        # reads the same wherever the tree lives.
+        auto_file = f"curation/{auto_path.relative_to(root).as_posix()}"
         effective: dict[str, tuple[SlugEntry, str]] = {
-            entry.source_id: (
-                entry,
-                f"{display_path(auto_path)} [[variable]] entry {index}",
-            )
+            entry.source_id: (entry, f"{auto_file} [[variable]] entry {index}")
             for index, entry in enumerate(auto_entries, 1)
         }
         for entry in local:
