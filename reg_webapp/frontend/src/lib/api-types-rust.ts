@@ -159,6 +159,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/states/{ref}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description A variable's states: each representation it was delivered in, with its variant, bounds, column, coding and the ids of the data warnings that apply to it. Without `period`, the whole history; with `period`, the dated states overlapping it, a state's alias windows standing in for it where they overlap. `variant` and `value_set_version` (`_none` for the empty label) narrow the list. In holdings scope, only what is held, clipped to the held periods. `ref` is a variable FQID or a bare name. */
+        get: operations["states"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/warnings/{ref}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description A register's or variable's data warnings, ordered by id: a variable's include its register's unassigned ones. `period`, `variant` and `representation` (a delivery column) keep the warnings that may apply to them; `unassigned_only` keeps the register's unassigned ones. In holdings scope, a variable's warnings apply only to what is held. */
+        get: operations["warnings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -230,6 +264,30 @@ export interface components {
             source: string;
             tags: components["schemas"]["Tag"][];
         };
+        /**
+         * @description The delivered domain against its declared classification; the mismatching codes
+         *     are `values`' `nonstandard` and `sentinels` partitions.
+         */
+        Conformance: {
+            /** Format: int64 */
+            checked_code_count: number;
+            declared_classification_name: string;
+            declared_classification_short_name: string;
+            declared_classification_slug: string;
+            /** Format: int64 */
+            matched_code_count: number;
+            /** Format: int64 */
+            nonconforming_code_count: number;
+            /** @description Always empty here (today's light hydration). */
+            nonconforming_codes: unknown[];
+            /** Format: int64 */
+            nonstandard_code_count: number;
+            /** Format: double */
+            overlap: number;
+            /** Format: int64 */
+            sentinel_code_count: number;
+            status: string;
+        };
         /** @description `shape.Context`: branding, artifact identity and headline counts for the SPA. */
         Context: {
             import_date: string;
@@ -250,6 +308,32 @@ export interface components {
             open_ended: boolean;
             /** Format: int64 */
             state_count: number;
+        };
+        /**
+         * @description A retained source limitation or interpretation assumption: today's
+         *     `DataWarning`, as the build stored it.
+         */
+        DataWarning: {
+            acknowledged_by?: string | null;
+            case_id?: string | null;
+            code: string;
+            delivery_column_name?: string | null;
+            detail: string;
+            diagnostic_detail_sha256: string;
+            fields: string[];
+            refs: components["schemas"]["SourceRecordRef"][];
+            register_fqid: string;
+            /** @description `warning` or `error`. */
+            severity: string;
+            source_subject: string;
+            summary: string;
+            valid_from?: string | null;
+            valid_to?: string | null;
+            variable_fqid?: string | null;
+            variant?: string | null;
+            /** @description SHA-256 of the rest of the warning. */
+            warning_id: string;
+            withheld_output: string[];
         };
         /**
          * @description One `(variant, delivery column)` a variable is delivered under, with its disjoint
@@ -326,6 +410,12 @@ export interface components {
             delivery_column?: string | null;
             fqid: string;
             name?: string | null;
+        };
+        IntegerRange: {
+            /** Format: int64 */
+            max: number;
+            /** Format: int64 */
+            min: number;
         };
         /** @description A group member; two members of one variable differ by `delivery_column`. */
         Member: {
@@ -523,6 +613,66 @@ export interface components {
             /** Format: int64 */
             variables: number;
         };
+        /** @description One semantic source member a warning cites. */
+        SourceRecordRef: {
+            semantic_record_key: string[];
+            source: string;
+        };
+        /**
+         * @description A state: today's `VariableState` under the catalog page's light hydration (its
+         *     codes are the `values` facet).
+         */
+        State: {
+            classifications: components["schemas"]["StateClassification"][];
+            /** @description The coding window's start, for a column coded on its own. */
+            coding_window_from?: string | null;
+            data_length?: string | null;
+            data_type?: string | null;
+            definition?: string | null;
+            delivery_column_name?: string | null;
+            description?: string | null;
+            is_identifier: boolean;
+            measurement_unit?: string | null;
+            name?: string | null;
+            operational_definition?: string | null;
+            /** @description `intervals` or `year_independent`. */
+            period_scope: string;
+            /**
+             * @description The coarsest period token of the bounds; `_default` when year-independent,
+             *     null when open-ended.
+             */
+            period_token?: string | null;
+            pooled: boolean;
+            provenance?: string | null;
+            register_variant_id: string;
+            source_register_text?: string | null;
+            state_id: string;
+            valid_from?: string | null;
+            valid_to?: string | null;
+            /** @description Always null: a state's codes are the `values` facet. */
+            value_set?: unknown[] | null;
+            value_set_id?: string | null;
+            value_set_summary?: components["schemas"]["ValueSetSummary"] | null;
+            value_set_version_label: string;
+            variant: string;
+            variant_family?: string | null;
+            variant_family_label?: string | null;
+            variant_label?: string | null;
+            /** @description The data warnings that apply to this representation at its bounds. */
+            warning_ids: string[];
+        };
+        /** @description A classification linked to a representation, with its stored conformance verdict. */
+        StateClassification: {
+            conformance?: components["schemas"]["Conformance"] | null;
+            name: string;
+            provenance?: string | null;
+            short_name: string;
+            slug: string;
+        };
+        StatesPage: {
+            items: components["schemas"]["State"][];
+            next_cursor?: string | null;
+        };
         /** @description Deployment branding, `reg_webapp/stewards/<catalog>/steward.json`. */
         Steward: {
             id: string;
@@ -537,6 +687,14 @@ export interface components {
             rank: number;
             slug: string;
             starred: boolean;
+        };
+        /**
+         * @description `value_set_summary`: a value set's code count and, when its codes are a dense
+         *     integer run, its span.
+         */
+        ValueSetSummary: {
+            code_count: number;
+            integer_range?: components["schemas"]["IntegerRange"] | null;
         };
         /**
          * @description A variable's shared metadata. Its states, lineage and succession chain are the
@@ -816,6 +974,93 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["SearchPage"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    states: {
+        parameters: {
+            query?: {
+                period?: string;
+                variant?: string;
+                value_set_version?: string;
+                scope?: components["schemas"]["Scope"];
+                limit?: number;
+                cursor?: string;
+            };
+            header?: never;
+            path: {
+                ref: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["StatesPage"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    warnings: {
+        parameters: {
+            query?: {
+                period?: string;
+                variant?: string;
+                representation?: string;
+                unassigned_only?: boolean;
+                scope?: components["schemas"]["Scope"];
+            };
+            header?: never;
+            path: {
+                ref: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["DataWarning"][];
                         meta: components["schemas"]["Meta"];
                     };
                 };
