@@ -1,8 +1,8 @@
 """Shared helpers for the maintainer-edited curation TOML loaders.
 
 The TOML scaffold and field helpers serve concept-group worklists, tags,
-SCB errata, curated relations and search pins. Register contracts use Pydantic models in
-`curation_tree.py`; checked decisions compile in `curation_compile.py`.
+SCB errata, curated relations and search pins. Register contracts use Pydantic
+models in `curation_tree.py`; checked decisions compile in `curation_compile.py`.
 
 Canonical integers reject coercions that would silently change native IDs.
 Folded column keys are shared by source identity, curation bindings, and sibling
@@ -21,6 +21,7 @@ from typing import TYPE_CHECKING, Literal
 from pydantic import (
     BaseModel,
     ConfigDict,
+    Field,
     ValidationError,
     field_validator,
     model_validator,
@@ -542,7 +543,7 @@ class SearchPin(BaseModel):
 
     query: str
     type: Literal["register", "classification"]
-    fqids: tuple[str, ...]
+    fqids: tuple[str, ...] = Field(min_length=1)
     note: str | None = None
 
     @field_validator("query")
@@ -556,8 +557,6 @@ class SearchPin(BaseModel):
     def _fqids_of_type(self) -> SearchPin:
         from reg_meta.fqid import FqidError, parse
 
-        if not self.fqids:
-            raise ValueError("`fqids` must be non-empty")
         if len(set(self.fqids)) != len(self.fqids):
             raise ValueError("duplicate `fqids`")
         for fqid in self.fqids:
