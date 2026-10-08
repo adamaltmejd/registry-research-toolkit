@@ -871,8 +871,9 @@ and the single ranking of section 6.
   `meta` or error for a success and each of `invalid_parameter`, `invalid_ref`,
   `ambiguous_ref`, `not_found`, `invalid_period`, `scope_unavailable`, `invalid_cursor`
   and `stale_cursor`, plus one stdio session.
-- Paths: `crates/reg-meta/`, `crates/reg-catalog/src/ops/slice_3a.rs`,
-  `conformance/{test_mcp.py,conftest.py,README.md}`.
+- Paths: `crates/reg-meta/`, `crates/reg-catalog/src/ops/{mod,slice_3a}.rs` (an
+  operation's tool and description; branding optional for `mcp`), `Cargo.lock`,
+  `.github/workflows/ci.yml`, `conformance/{test_mcp.py,conftest.py,README.md}`.
 - Acceptance: G0; the PR rechecks the stage-0 202-on-DELETE papercut.
 
 **3a.9 Deployment: both servers in one image, hosted MCP.** Implements decisions 12 and

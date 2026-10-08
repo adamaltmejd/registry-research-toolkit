@@ -29,7 +29,9 @@ HEADERS = {
     "mcp-protocol-version": PROTOCOL,
 }
 # `search` cases of the `api` corpus whose steps cover a success and every domain
-# error `search` lists in `operations.toml`.
+# error `search` lists in `operations.toml`. Every `/mcp` request in this module on a
+# worker's shared server draws on one 127.0.0.1 rate bucket (60 a minute), so keep
+# their total well under it.
 SEARCH_CASES = (
     "meta",
     "invalid-parameters",
