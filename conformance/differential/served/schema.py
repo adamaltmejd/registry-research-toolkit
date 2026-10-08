@@ -40,17 +40,11 @@ LIMIT = 200
 COMMANDS = ("get-schema-summary", "get-schema-year", "get-diff", "get-datacolumns")
 
 
-def _argv(originals: Path, catalog: str, scopes: list[str]) -> dict[str, list[str]]:
+def _argv(originals: Path, catalog: str) -> dict[str, list[str]]:
     """The CLI argv of this family's cases, by case id, as `cases.py` generates them."""
-    builder = generator._Builder(catalog, originals)
-    named = [s for s in scopes if s is not None]
-    with closing(generator._connect(originals)) as conn:
-        generator._register_cases(builder, conn, named, SEED)
-        strata = generator._variable_strata(conn, catalog, "holdings" in named, SEED)
-    generator._variable_cases(builder, strata, named)
     return {
         case.id: case.argv
-        for case in builder.cases
+        for case in generator.register_and_variable_cases(catalog, originals, SEED)
         if case.id.split("/")[2] in COMMANDS
     }
 
@@ -189,7 +183,7 @@ def _datacolumns_refs(
 ) -> list[str]:
     """The FQIDs `get datacolumns <key> --register <register>` matches: by provider
     key or name (split siblings share a key), held ones only in holdings."""
-    held = "" if scope == "reference" else " AND " + generator._HELD
+    held = "" if scope == "reference" else " AND " + generator.HELD
     return [
         fqid
         for (fqid,) in conn.execute(
@@ -205,15 +199,16 @@ def _datacolumns_refs(
 def cases(
     base, cand, catalog, scopes, originals, baseline_cli
 ) -> list[tuple[str, dict, dict]]:
-    del base  # The CLI baseline is the oracle.
-    argv = _argv(originals, catalog, scopes)
+    # The CLI baseline is the oracle, and its cases fix the scopes.
+    del base, scopes
+    argv = _argv(originals, catalog)
     datacolumns = {
         case_id: (args[args.index("datacolumns") + 1], _flag(args, "--register"))
         for case_id, args in argv.items()
         if case_id.split("/")[2] == "get-datacolumns"
     }
     # Read before the parallel requests: one connection serves one thread.
-    with closing(generator._connect(originals)) as conn:
+    with closing(generator.connect(originals)) as conn:
         variant_slugs = dict(
             conn.execute("SELECT register_variant_id, slug FROM register_variant")
         )
