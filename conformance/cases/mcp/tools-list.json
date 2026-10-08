@@ -785,6 +785,69 @@
           ],
           "type": "object"
         },
+        "Coverage": {
+          "description": "The span a variable or column is delivered over: its earliest start and latest\nfinite end (null when unknown, or when `open_ended`), and the states (held\nperiods in holdings) behind it.",
+          "properties": {
+            "coverage_from": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "coverage_to": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "open_ended": {
+              "type": "boolean"
+            },
+            "state_count": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "open_ended",
+            "state_count"
+          ],
+          "type": "object"
+        },
+        "Delivery": {
+          "description": "One `(variant, delivery column)` a variable is delivered under, with its disjoint\nwindows by start and their span. `column` is null for a state SCB named no\ncolumn for.",
+          "properties": {
+            "column": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "coverage": {
+              "$ref": "#/$defs/Coverage"
+            },
+            "period_scope": {
+              "description": "`intervals`, or `year_independent` (no windows).",
+              "type": "string"
+            },
+            "variant": {
+              "type": "string"
+            },
+            "windows": {
+              "items": {
+                "$ref": "#/$defs/Window"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "variant",
+            "period_scope",
+            "coverage",
+            "windows"
+          ],
+          "type": "object"
+        },
         "Derivation": {
           "description": "A non-temporal derivation link between classifications.",
           "properties": {
@@ -932,6 +995,17 @@
         "Member": {
           "description": "A group member; two members of one variable differ by `delivery_column`.",
           "properties": {
+            "coverage": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Coverage",
+                  "description": "Present on a group's own page only: the member's coverage, its column's\nfor a representation member (empty when no state delivers the column)."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
             "delivery_column": {
               "type": [
                 "string",
@@ -1142,6 +1216,16 @@
         },
         "RegisterChild": {
           "properties": {
+            "coverage": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/RegisterCoverage"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
             "fqid": {
               "type": "string"
             },
@@ -1167,6 +1251,35 @@
           "required": [
             "fqid",
             "tags"
+          ],
+          "type": "object"
+        },
+        "RegisterCoverage": {
+          "description": "A register's span: its variables and the earliest and latest of their states.",
+          "properties": {
+            "coverage_from": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "coverage_to": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "open_ended": {
+              "type": "boolean"
+            },
+            "variable_count": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "variable_count",
+            "open_ended"
           ],
           "type": "object"
         },
@@ -1552,6 +1665,24 @@
         },
         "VariableChild": {
           "properties": {
+            "coverage": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Coverage",
+                  "description": "Null in holdings for a variable with no held delivery."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "deliveries": {
+              "description": "Every `(variant, column)` the variable is delivered under in scope.",
+              "items": {
+                "$ref": "#/$defs/Delivery"
+              },
+              "type": "array"
+            },
             "fqid": {
               "type": "string"
             },
@@ -1563,7 +1694,8 @@
             }
           },
           "required": [
-            "fqid"
+            "fqid",
+            "deliveries"
           ],
           "type": "object"
         },
@@ -1679,6 +1811,21 @@
           "required": [
             "populations",
             "object_types"
+          ],
+          "type": "object"
+        },
+        "Window": {
+          "properties": {
+            "valid_from": {
+              "type": "string"
+            },
+            "valid_to": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "valid_from",
+            "valid_to"
           ],
           "type": "object"
         }

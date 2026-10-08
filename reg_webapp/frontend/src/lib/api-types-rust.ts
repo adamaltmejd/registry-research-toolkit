@@ -239,6 +239,31 @@ export interface components {
             sizes: components["schemas"]["Sizes"];
             steward: components["schemas"]["Steward"];
         };
+        /**
+         * @description The span a variable or column is delivered over: its earliest start and latest
+         *     finite end (null when unknown, or when `open_ended`), and the states (held
+         *     periods in holdings) behind it.
+         */
+        Coverage: {
+            coverage_from?: string | null;
+            coverage_to?: string | null;
+            open_ended: boolean;
+            /** Format: int64 */
+            state_count: number;
+        };
+        /**
+         * @description One `(variant, delivery column)` a variable is delivered under, with its disjoint
+         *     windows by start and their span. `column` is null for a state SCB named no
+         *     column for.
+         */
+        Delivery: {
+            column?: string | null;
+            coverage: components["schemas"]["Coverage"];
+            /** @description `intervals`, or `year_independent` (no windows). */
+            period_scope: string;
+            variant: string;
+            windows: components["schemas"]["Window"][];
+        };
         /** @description A non-temporal derivation link between classifications. */
         Derivation: {
             fqid?: string | null;
@@ -304,6 +329,7 @@ export interface components {
         };
         /** @description A group member; two members of one variable differ by `delivery_column`. */
         Member: {
+            coverage?: components["schemas"]["Coverage"] | null;
             delivery_column?: string | null;
             facets: components["schemas"]["Facet"][];
             fqid: string;
@@ -356,10 +382,19 @@ export interface components {
             variants: components["schemas"]["Variant"][];
         };
         RegisterChild: {
+            coverage?: components["schemas"]["RegisterCoverage"] | null;
             fqid: string;
             name?: string | null;
             purpose?: string | null;
             tags: components["schemas"]["Tag"][];
+        };
+        /** @description A register's span: its variables and the earliest and latest of their states. */
+        RegisterCoverage: {
+            coverage_from?: string | null;
+            coverage_to?: string | null;
+            open_ended: boolean;
+            /** Format: int64 */
+            variable_count: number;
         };
         /** @description A related document's metadata; the download route serves its bytes. */
         RelatedDocument: {
@@ -525,6 +560,9 @@ export interface components {
             tags: components["schemas"]["Tag"][];
         };
         VariableChild: {
+            coverage?: components["schemas"]["Coverage"] | null;
+            /** @description Every `(variant, column)` the variable is delivered under in scope. */
+            deliveries: components["schemas"]["Delivery"][];
             fqid: string;
             name?: string | null;
         };
@@ -548,6 +586,10 @@ export interface components {
             name?: string | null;
             object_types: components["schemas"]["ObjectType"][];
             populations: components["schemas"]["Population"][];
+        };
+        Window: {
+            valid_from: string;
+            valid_to: string;
         };
     };
     responses: never;
