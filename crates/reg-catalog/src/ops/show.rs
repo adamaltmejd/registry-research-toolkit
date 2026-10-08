@@ -1149,28 +1149,31 @@ fn classification(
          ORDER BY e.derived_slug",
     )?;
     // Today's `search_variables_by_classification`, unpaged, with a slug tiebreak
-    // after its name order.
+    // after its name order: the (variable, variant) pairs with a state coded by the
+    // classification or overlapping a window coded by it, driven from the
+    // classification's links rather than from every state.
     let sql = format!(
-        "SELECT DISTINCT p.slug, r.slug, v.slug, v.name, r.name FROM variable_state vs \
-         JOIN variable v ON vs.variable_id = v.variable_id \
-         JOIN register r ON v.register_id = r.register_id \
-         JOIN provider p ON r.provider_id = p.provider_id \
-         WHERE {} AND (EXISTS (SELECT 1 FROM state_classification sc \
-         WHERE sc.state_id = vs.state_id AND sc.classification_id = ?1) \
-         OR EXISTS (SELECT 1 FROM alias_window_classification ac \
-         JOIN variable_alias_window aw ON aw.variable_id = ac.variable_id \
-         AND aw.register_variant_id = ac.register_variant_id \
+        "WITH owned(variable_id, register_variant_id) AS ( \
+         SELECT vs.variable_id, vs.register_variant_id FROM state_classification sc \
+         JOIN variable_state vs ON vs.state_id = sc.state_id WHERE sc.classification_id = ?1 \
+         UNION SELECT vs.variable_id, vs.register_variant_id \
+         FROM alias_window_classification ac JOIN variable_alias_window aw \
+         ON aw.variable_id = ac.variable_id AND aw.register_variant_id = ac.register_variant_id \
          AND aw.delivery_column_name = ac.delivery_column_name AND aw.valid_from = ac.valid_from \
-         WHERE ac.variable_id = vs.variable_id \
-         AND ac.register_variant_id = vs.register_variant_id \
+         JOIN variable_state vs ON vs.variable_id = ac.variable_id \
+         AND vs.register_variant_id = ac.register_variant_id \
          AND aw.valid_from <= vs.valid_to AND aw.valid_to >= vs.valid_from \
-         AND ac.classification_id = ?1)) \
+         WHERE ac.classification_id = ?1) \
+         SELECT DISTINCT p.slug, r.slug, v.slug, v.name, r.name FROM owned o \
+         JOIN variable v ON v.variable_id = o.variable_id \
+         JOIN register r ON v.register_id = r.register_id \
+         JOIN provider p ON r.provider_id = p.provider_id WHERE {} \
          ORDER BY r.name, v.name, p.slug, r.slug, v.slug",
         held::variable(
             scope,
             "v.variable_id",
             Narrow {
-                variant: Some("vs.register_variant_id"),
+                variant: Some("o.register_variant_id"),
                 ..Narrow::default()
             }
         )
