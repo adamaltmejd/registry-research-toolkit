@@ -1719,8 +1719,8 @@ so the deleting package removes the row mechanically (checkpoint 2):
 8. **Gate tooling.** `scripts/gate.py` holds the full gate (`all`: `g0`, `rust`,
    `release`, `flows`, `frontend`), `crates`, `regen` (every rebase-sensitive generated
    file), `g1` and `heavy -- CMD` (any other heavy command under the same lock). Heavy
-   steps take a machine-wide lock so one heavy job runs at a time; sccache shares
-   compiled crates across worktrees.
+   steps take one of three machine-wide slots, so at most three heavy jobs run at once;
+   sccache shares compiled crates across worktrees.
 9. **Sessions.** At most three concurrent slice sessions, each deleting its finished
    worktrees; the orchestrator is the only one who merges to main.
 10. **Reviews.** The author applies the reviewer's report directly; the orchestrator
