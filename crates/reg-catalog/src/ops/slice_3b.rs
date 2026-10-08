@@ -1,10 +1,29 @@
-//! Slice 3b's operations: `docs_get` and `docs_related`, and the related-document
-//! download.
+//! Slice 3b's operations: `show`, `docs_get` and `docs_related`, and the
+//! related-document download.
 
 use super::docs::{self, DocDetail};
+use super::show::{Show, show};
 use super::{Cache, Download, Operation, Param, Type, component};
 
 pub const OPERATIONS: &[Operation] = &[
+    Operation {
+        name: "show",
+        paths: &["/api/catalog", "/api/catalog/{ref}"],
+        tool: Some("show"),
+        description: "The summary of any ref, by `kind`: a provider, register, variable, \
+            classification, `class` (every classification) or a group \
+            (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the \
+            catalog root. A register lists its variables, groups and variants; a \
+            classification its owning variables. `ref` is a FQID or a bare name; a \
+            retired FQID answers for its successor, under the successor's `fqid`.",
+        params: &[
+            Param::optional("ref", Type::Ref),
+            Param::optional("scope", Type::Scope),
+        ],
+        cache: Cache::Minute,
+        run: show,
+        result: component::<Show>,
+    },
     Operation {
         name: "docs_get",
         paths: &["/api/docs/doc/{identifier}"],

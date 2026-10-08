@@ -1,12 +1,317 @@
-//! Refs (section 7): a FQID or a bare name, resolved in the read scope. Today: a
-//! register ref (`search`'s `register`, `docs_related`).
+//! Refs (section 7): a FQID, a group ref or a bare name, resolved in the read scope.
+//! [`resolve`] takes any kind (`show`); [`register`] takes a register only
+//! (`search`'s `register`, `docs_related`).
+
+use std::collections::BTreeSet;
 
 use reg_core::Fqid;
-use rusqlite::{Connection, OptionalExtension};
+use rusqlite::{Connection, OptionalExtension, params_from_iter};
 use serde_json::json;
 
-use crate::held;
+use crate::held::{self, Narrow};
 use crate::{Code, Error, Scope};
+
+/// The first segment of classification FQIDs and of classification group refs.
+const CLASS: &str = "class";
+/// The first segment of group refs.
+const GROUP: &str = "group";
+
+/// What a ref names, resolved in the read scope.
+pub(crate) enum Target {
+    /// No ref: the catalog root.
+    Root,
+    Provider {
+        id: i64,
+        slug: String,
+    },
+    Register {
+        id: i64,
+        provider: String,
+        slug: String,
+    },
+    Variable {
+        id: i64,
+    },
+    /// `class`: every classification.
+    ClassificationRoot,
+    Classification {
+        id: i64,
+        slug: String,
+    },
+    /// `group/<provider>/<register>/<key>`; whether the group has members in scope
+    /// is the caller's to decide.
+    Group {
+        provider: String,
+        register: String,
+        key: String,
+    },
+    /// `group/class/<key>`: a classification group or family, or nothing.
+    ClassificationGroup {
+        key: String,
+    },
+}
+
+pub(crate) fn not_found(value: &str) -> Error {
+    Error::new(
+        Code::NotFound,
+        format!("Nothing named {value:?} in this scope."),
+        vec![value.into()],
+    )
+}
+
+fn invalid(value: &str) -> Error {
+    Error::new(
+        Code::InvalidRef,
+        format!("{value:?} is not a FQID, a group ref or a name."),
+        vec![value.into()],
+    )
+}
+
+/// Resolve `value` (`None` is the root): `class`; a group ref; a FQID, where a
+/// retired register or variable resolves to its terminal successor when that is in
+/// scope (today's 301), and one live outside the scope is `not_found`; otherwise a
+/// bare name. A one-segment ref is a provider first, then a bare name, so an exact
+/// ref never turns ambiguous.
+pub(crate) fn resolve(
+    conn: &Connection,
+    scope: Scope,
+    value: Option<&str>,
+) -> Result<Target, Error> {
+    let Some(value) = value else {
+        return Ok(Target::Root);
+    };
+    if value == CLASS {
+        return Ok(Target::ClassificationRoot);
+    }
+    let segments: Vec<&str> = value.split('/').collect();
+    if segments[0] == GROUP {
+        return group(conn, value, &segments[1..]);
+    }
+    match value.parse::<Fqid>() {
+        Ok(Fqid::Provider { provider }) => {
+            let sql = format!(
+                "SELECT provider_id FROM provider p WHERE slug = ? AND {}",
+                held::provider(scope, "p.provider_id")
+            );
+            if let Some(id) = conn
+                .query_row(&sql, [&provider], |row| row.get(0))
+                .optional()?
+            {
+                return Ok(Target::Provider { id, slug: provider });
+            }
+            bare(conn, scope, value)
+        }
+        Ok(Fqid::Register { provider, register }) => {
+            let found = live_or_terminal(
+                conn,
+                scope,
+                &[provider, register],
+                register_id,
+                "SELECT successor_provider, successor_register FROM register_replaced_by \
+                 WHERE predecessor_provider = ? AND predecessor_register = ? \
+                 ORDER BY successor_provider, successor_register LIMIT 1",
+            )?;
+            let (id, slugs) = found.ok_or_else(|| not_found(value))?;
+            let [provider, slug] = <[String; 2]>::try_from(slugs).expect("a register pair");
+            Ok(Target::Register { id, provider, slug })
+        }
+        Ok(Fqid::Variable {
+            provider,
+            register,
+            variable,
+        }) => {
+            let found = live_or_terminal(
+                conn,
+                scope,
+                &[provider, register, variable],
+                variable_id,
+                "SELECT successor_provider, successor_register, successor_variable \
+                 FROM variable_replaced_by WHERE predecessor_provider = ? \
+                 AND predecessor_register = ? AND predecessor_variable = ? \
+                 ORDER BY successor_provider, successor_register, successor_variable LIMIT 1",
+            )?;
+            let (id, _) = found.ok_or_else(|| not_found(value))?;
+            Ok(Target::Variable { id })
+        }
+        // Classifications are scope-independent. The build refuses a succession or
+        // same_as edge to a slug with no row, so a missing slug has no successor.
+        Ok(Fqid::Classification { classification }) => conn
+            .query_row(
+                "SELECT id FROM classification WHERE slug = ?",
+                [&classification],
+                |row| row.get(0),
+            )
+            .optional()?
+            .map(|id| Target::Classification {
+                id,
+                slug: classification,
+            })
+            .ok_or_else(|| not_found(value)),
+        Err(_) if !value.is_empty() && !value.contains('/') => bare(conn, scope, value),
+        Err(_) => Err(invalid(value)),
+    }
+}
+
+/// `group/class/<key>` or `group/<provider>/<register>/<key>`.
+fn group(conn: &Connection, value: &str, rest: &[&str]) -> Result<Target, Error> {
+    match rest {
+        [CLASS, key] if !key.is_empty() => Ok(Target::ClassificationGroup {
+            key: (*key).to_owned(),
+        }),
+        [provider, register, key] if !key.is_empty() => {
+            let Ok(Fqid::Register { provider, register }) =
+                format!("{provider}/{register}").parse()
+            else {
+                return Err(invalid(value));
+            };
+            // Membership in scope decides the group; the register need only exist.
+            register_id(
+                conn,
+                Scope::Reference,
+                &[provider.clone(), register.clone()],
+            )?
+            .ok_or_else(|| not_found(value))?;
+            Ok(Target::Group {
+                provider,
+                register,
+                key: (*key).to_owned(),
+            })
+        }
+        _ => Err(invalid(value)),
+    }
+}
+
+type Lookup = fn(&Connection, Scope, &[String]) -> Result<Option<i64>, Error>;
+
+/// The entity at `slugs` in scope; else, when it is live in no scope, the terminal
+/// successor `successor` walks to, if that is in scope. Returns the id and the
+/// slugs it was found at.
+fn live_or_terminal(
+    conn: &Connection,
+    scope: Scope,
+    slugs: &[String],
+    lookup: Lookup,
+    successor: &str,
+) -> Result<Option<(i64, Vec<String>)>, Error> {
+    if let Some(id) = lookup(conn, scope, slugs)? {
+        return Ok(Some((id, slugs.to_vec())));
+    }
+    if scope == Scope::Holdings && lookup(conn, Scope::Reference, slugs)?.is_some() {
+        return Ok(None);
+    }
+    let Some(terminal) = terminal(conn, successor, slugs)? else {
+        return Ok(None);
+    };
+    Ok(lookup(conn, scope, &terminal)?.map(|id| (id, terminal)))
+}
+
+/// Today's `resolve_terminal_successor` walk: follow the first successor (in
+/// `successor`'s order, so a split picks deterministically) to the chain's end.
+/// None when `start` has no successor.
+fn terminal(
+    conn: &Connection,
+    successor: &str,
+    start: &[String],
+) -> Result<Option<Vec<String>>, Error> {
+    let mut stmt = conn.prepare(successor)?;
+    let mut seen = BTreeSet::from([start.to_vec()]);
+    let mut current = start.to_vec();
+    while let Some(next) = stmt
+        .query_row(params_from_iter(&current), |row| {
+            (0..current.len())
+                .map(|i| row.get(i))
+                .collect::<rusqlite::Result<Vec<String>>>()
+        })
+        .optional()?
+    {
+        // A cycle (a malformed artifact) stops the walk.
+        if !seen.insert(next.clone()) {
+            break;
+        }
+        current = next;
+    }
+    Ok((current != start).then_some(current))
+}
+
+fn register_id(conn: &Connection, scope: Scope, slugs: &[String]) -> Result<Option<i64>, Error> {
+    let sql = format!(
+        "SELECT r.register_id FROM register r JOIN provider p USING(provider_id) \
+         WHERE p.slug = ? AND r.slug = ? AND {}",
+        held::register(scope, "r.register_id")
+    );
+    Ok(conn
+        .query_row(&sql, params_from_iter(slugs), |row| row.get(0))
+        .optional()?)
+}
+
+fn variable_id(conn: &Connection, scope: Scope, slugs: &[String]) -> Result<Option<i64>, Error> {
+    // The register subquery keys idx_variable_slug(register_id, slug).
+    let sql = format!(
+        "SELECT v.variable_id FROM variable v WHERE v.register_id IN (SELECT r.register_id \
+         FROM register r JOIN provider p USING(provider_id) WHERE p.slug = ? AND r.slug = ?) \
+         AND v.slug = ? AND {}",
+        held::variable(scope, "v.variable_id", Narrow::default())
+    );
+    Ok(conn
+        .query_row(&sql, params_from_iter(slugs), |row| row.get(0))
+        .optional()?)
+}
+
+/// A bare name: the registers, variables (by `fold_identity` of their name) and
+/// classifications (of their short name or name) in scope. One resolves; several
+/// are `ambiguous_ref` with their FQIDs. Delivered column names are not names
+/// (`resolve` maps them).
+fn bare(conn: &Connection, scope: Scope, value: &str) -> Result<Target, Error> {
+    // simplify: fold_identity over every variable name per request; give `variable`
+    // a folded-name column if the measured request time on the real artifact grows.
+    let sql = format!(
+        "SELECT 'register', p.slug, r.slug, NULL, r.name FROM register r \
+         JOIN provider p USING(provider_id) \
+         WHERE r.slug IS NOT NULL AND fold_identity(r.name) = fold_identity(?1) AND {} \
+         UNION ALL \
+         SELECT 'variable', p.slug, r.slug, v.slug, v.name FROM variable v \
+         JOIN register r USING(register_id) JOIN provider p USING(provider_id) \
+         WHERE v.slug IS NOT NULL AND r.slug IS NOT NULL \
+         AND fold_identity(v.name) = fold_identity(?1) AND {} \
+         UNION ALL \
+         SELECT 'classification', '{CLASS}', c.slug, NULL, c.short_name FROM classification c \
+         WHERE c.slug IS NOT NULL AND (fold_identity(c.short_name) = fold_identity(?1) \
+         OR fold_identity(c.name) = fold_identity(?1))",
+        held::register(scope, "r.register_id"),
+        held::variable(scope, "v.variable_id", Narrow::default()),
+    );
+    let mut stmt = conn.prepare(&sql)?;
+    let mut found: Vec<(String, &'static str, Option<String>)> = stmt
+        .query_map([value], |row| {
+            let kind: String = row.get(0)?;
+            let slugs: [Option<String>; 3] = [row.get(1)?, row.get(2)?, row.get(3)?];
+            let present: Vec<Option<String>> = slugs.into_iter().flatten().map(Some).collect();
+            let kind = match kind.as_str() {
+                "register" => "register",
+                "variable" => "variable",
+                _ => "classification",
+            };
+            Ok((fqid(&present).unwrap_or_default(), kind, row.get(4)?))
+        })?
+        .collect::<rusqlite::Result<_>>()?;
+    found.retain(|(fqid, ..)| !fqid.is_empty());
+    found.sort();
+    match found.as_slice() {
+        [] => Err(not_found(value)),
+        [(fqid, ..)] => resolve(conn, scope, Some(fqid)),
+        _ => Err(Error::new(
+            Code::AmbiguousRef,
+            format!("{} entities are named {value:?}.", found.len()),
+            vec![
+                value.into(),
+                found
+                    .iter()
+                    .map(|(fqid, kind, name)| json!({"fqid": fqid, "kind": kind, "name": name}))
+                    .collect(),
+            ],
+        )),
+    }
+}
 
 /// A resolved register.
 pub(crate) struct Register {

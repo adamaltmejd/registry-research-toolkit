@@ -8,6 +8,7 @@ mod cursor;
 mod docs;
 mod refs;
 mod search;
+mod show;
 pub mod slice_3a;
 pub mod slice_3b;
 
