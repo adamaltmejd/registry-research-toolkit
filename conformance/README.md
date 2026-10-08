@@ -81,13 +81,12 @@ directory that the artifact build stores (fixtures have no pins otherwise); an e
 `build_error` is that build's located refusal, and such a case sends no requests. Every
 other suite, boot cases included, is unchanged.
 
-The Rust server (`reg-meta serve`), on the cases of the operations it implements and the
-MCP equivalence suite (the Rust HTTP run of `RUST_RUNTIME_SPEC.md` section 10, part of
-G0 and CI):
+The Rust server (`reg-meta serve`), on the whole `api` corpus and the MCP equivalence
+suite (the Rust HTTP run of `RUST_RUNTIME_SPEC.md` section 10, part of G0 and CI):
 
 ```sh
 cargo build --workspace
-uv run python -m pytest conformance -q -n auto -k '[api/admission or [api/context or [api/meta] or [api/cursor- or [api/invalid-parameters] or [api/scope-unavailable] or [api/search-paging] or [api/search-scope] or [api/search-group-hit] or [api/search-register or [api/search-period or [api/search-reference-paging] or test_mcp' --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}' --mcp-cmd='target/debug/reg-meta mcp --db {db} --catalog {catalog}'
+uv run python -m pytest conformance -q -n auto -k '[api/ or test_mcp' --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}' --mcp-cmd='target/debug/reg-meta mcp --db {db} --catalog {catalog}'
 ```
 
 `test_mcp.py` (section 9's MCP equivalence) sends raw JSON-RPC to `/mcp` on the
