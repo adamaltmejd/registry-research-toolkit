@@ -100,7 +100,6 @@ def assert_http_case(case, tmp_path, monkeypatch, servers=None):
         assert servers is not None, "startup cases need --server-cmd"
         assert_startup_refusal(request, expected["startup_error"], servers, tmp_path)
         return
-    kind = request.get("kind", "steward")
     if "build_error" in expected:
         try:
             case_artifact(request, monkeypatch, case)
@@ -108,18 +107,11 @@ def assert_http_case(case, tmp_path, monkeypatch, servers=None):
             assert {"code": exc.code, "message": exc.message} == expected["build_error"]
             return
         raise AssertionError("the artifact build was expected to fail")
-    path = case_artifact(request, monkeypatch, case)
+    case_artifact(request, monkeypatch, case)
     if servers is not None:
-        clients = {
-            name: servers.client(
-                artifact_env(
-                    cached_case_artifact(request, case, spec["identity"]), kind
-                )
-            )
-            for name, spec in request.get("artifacts", {}).items()
-        }
-        clients[None] = servers.client(artifact_env(path, kind))
-        responses = run_http_requests(request["requests"], clients)
+        responses = run_http_requests(
+            request["requests"], case_clients(request, case, servers)
+        )
     else:
         responses = run_http_requests(request["requests"])
     for response, oracle in zip(responses, expected, strict=True):
@@ -140,6 +132,22 @@ def assert_http_case(case, tmp_path, monkeypatch, servers=None):
             projection,
             oracle.get("json", {}),
         )
+
+
+def case_clients(request, case, servers):
+    """The `servers` clients of a case: its artifact's under `None`, each
+    `artifacts` entry's under its name."""
+    kind = request.get("kind", "steward")
+    clients = {
+        name: servers.client(
+            artifact_env(cached_case_artifact(request, case, spec["identity"]), kind)
+        )
+        for name, spec in request.get("artifacts", {}).items()
+    }
+    clients[None] = servers.client(
+        artifact_env(cached_case_artifact(request, case), kind)
+    )
+    return clients
 
 
 def assert_startup_refusal(request, refusal, servers, tmp_path):

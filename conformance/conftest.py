@@ -18,6 +18,12 @@ def pytest_addoption(parser):
         help="run conformance HTTP cases against a server started from this "
         "command template ({db}, {port}); see conformance/README.md",
     )
+    parser.addoption(
+        "--mcp-cmd",
+        default=None,
+        help="run the MCP stdio session against a process started from this "
+        "command template ({db}, {catalog}); see conformance/README.md",
+    )
 
 
 def pytest_configure(config):

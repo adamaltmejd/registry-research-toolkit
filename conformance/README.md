@@ -81,13 +81,26 @@ directory that the artifact build stores (fixtures have no pins otherwise); an e
 `build_error` is that build's located refusal, and such a case sends no requests. Every
 other suite, boot cases included, is unchanged.
 
-The Rust server (`reg-meta serve`), on the cases of the operations it implements (the
-Rust HTTP run of `RUST_RUNTIME_SPEC.md` section 10, part of G0 and CI):
+The Rust server (`reg-meta serve`), on the cases of the operations it implements and the
+MCP equivalence suite (the Rust HTTP run of `RUST_RUNTIME_SPEC.md` section 10, part of
+G0 and CI):
 
 ```sh
-cargo build -p reg-meta
-uv run python -m pytest conformance -q -n auto -k '[api/admission or [api/context or [api/meta] or [api/cursor- or [api/invalid-parameters] or [api/scope-unavailable] or [api/search-paging] or [api/search-scope] or [api/search-group-hit] or [api/search-register or [api/search-period or [api/search-reference-paging]' --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}'
+cargo build --workspace
+uv run python -m pytest conformance -q -n auto -k '[api/admission or [api/context or [api/meta] or [api/cursor- or [api/invalid-parameters] or [api/scope-unavailable] or [api/search-paging] or [api/search-scope] or [api/search-group-hit] or [api/search-register or [api/search-period or [api/search-reference-paging] or test_mcp' --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}' --mcp-cmd='target/debug/reg-meta mcp --db {db} --catalog {catalog}'
 ```
+
+`test_mcp.py` (section 9's MCP equivalence) sends raw JSON-RPC to `/mcp` on the
+`--server-cmd` server: each `search` step of the `api` cases it names, as a tool call,
+returns the HTTP body as `structuredContent` (an error with `isError`), and those steps
+cover every error `search` lists in `operations.toml`. `tools/list`, over HTTP and
+stdio, equals the golden `cases/mcp/tools-list.json`, and its names are the `tool` of
+each served operation. The server builds each tool's schemas from its OpenAPI entry, so
+a schema change shows as a reviewed diff of that file. The body cap and the rate limit
+on `/mcp` answer with their error documents; the burst runs on a server of its own.
+`--mcp-cmd` is a command template (`{db}`, `{catalog}`) for one stdio session:
+initialize, list the tools and call `search`. Without `--server-cmd` the module skips;
+without `--mcp-cmd` the stdio session does.
 
 ## Fixture cache
 

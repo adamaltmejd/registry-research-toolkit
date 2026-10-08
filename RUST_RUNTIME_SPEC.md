@@ -326,15 +326,15 @@ the loop:
 Each contract that crosses a language or package boundary has exactly one
 implementation:
 
-  | Contract                              | Single home                           | Reached from                                         |
-  | ------------------------------------- | ------------------------------------- | ---------------------------------------------------- |
-  | Artifact schema (DDL, manifest)       | `reg_meta_build` (Python)             | Rust reader reads it; `SCHEMA_VERSION` gate          |
-  | Resolver semantics                    | `reg_meta_build` derive (Python)      | Compiled into the artifact                           |
-  | FQID and period grammar               | Rust core crate                       | Build via Python bindings; SPA via WASM              |
-  | Text folds                            | Rust core crate                       | Build via Python bindings (fills `*_folded` columns) |
-  | Canonical JSON + SHA-256              | Rust core crate                       | Build via Python bindings                            |
-  | Project schema + structural validator | Rust core crate (replaces reg_schema) | Server, MCP; SPA via WASM; JSON Schema export        |
-  | Result types                          | Rust structs (serde + schemars)       | HTTP OpenAPI, MCP tool schemas, frontend TS types    |
+  | Contract                              | Single home                           | Reached from                                          |
+  | ------------------------------------- | ------------------------------------- | ----------------------------------------------------- |
+  | Artifact schema (DDL, manifest)       | `reg_meta_build` (Python)             | Rust reader reads it; `SCHEMA_VERSION` gate           |
+  | Resolver semantics                    | `reg_meta_build` derive (Python)      | Compiled into the artifact                            |
+  | FQID and period grammar               | Rust core crate                       | Build via Python bindings; SPA via WASM               |
+  | Text folds                            | Rust core crate                       | Build via Python bindings (fills `*_folded` columns)  |
+  | Canonical JSON + SHA-256              | Rust core crate                       | Build via Python bindings                             |
+  | Project schema + structural validator | Rust core crate (replaces reg_schema) | Server, MCP; SPA via WASM; JSON Schema export         |
+  | Result types                          | Rust structs (serde + utoipa)         | OpenAPI; MCP tool schemas and TS types derive from it |
 
 Notes:
 
@@ -665,7 +665,7 @@ Shared definitions:
 
 - G0: `uv run python -m pytest conformance <touched packages> -n auto -q` and
   `cargo test --workspace`.
-- The Rust HTTP run (from 3a.4, part of G0 and CI): `cargo build -p reg-meta`, then
+- The Rust HTTP run (from 3a.4, part of G0 and CI): `cargo build --workspace`, then
   `uv run python -m pytest conformance -q -k '<selection>' --server-cmd='<template>'`;
   3a.4 documents the template. Each package names a selection that passes; 3a.6 and
   later run all of `[api/`.
@@ -865,14 +865,17 @@ and the single ranking of section 6.
   and streamable HTTP (`/mcp` on `serve`). A domain error is the same error document as
   a tool error. `/mcp` has axum's `DefaultBodyLimit` (`payload_too_large`) and a
   hand-written per-client token bucket (`rate_limited`), separate from any SPA limit.
-- G0: `tools/list` matches `operations.toml`; for each operation, the OpenAPI and MCP
-  schemas (utoipa and schemars) agree. `conformance/test_mcp.py` (raw JSON-RPC over
-  `httpx2`) checks that `search`'s tool call and HTTP request return the same `data`,
-  `meta` or error for a success and each of `invalid_parameter`, `invalid_ref`,
-  `ambiguous_ref`, `not_found`, `invalid_period`, `scope_unavailable`, `invalid_cursor`
-  and `stale_cursor`, plus one stdio session.
-- Paths: `crates/reg-meta/`, `crates/reg-catalog/src/ops/slice_3a.rs`,
-  `conformance/{test_mcp.py,conftest.py,README.md}`.
+- G0: `tools/list` is built from the OpenAPI document, matches `operations.toml`'s tool
+  names and equals its golden (`conformance/cases/mcp/tools-list.json`).
+  `conformance/test_mcp.py` (raw JSON-RPC over `httpx2`) checks that `search`'s tool
+  call and HTTP request return the same `data`, `meta` or error for a success and each
+  of `invalid_parameter`, `invalid_ref`, `ambiguous_ref`, `not_found`, `invalid_period`,
+  `scope_unavailable`, `invalid_cursor` and `stale_cursor`, plus one stdio session.
+- Paths: `crates/reg-meta/`, `crates/reg-catalog/src/ops/{mod,slice_3a}.rs` (an
+  operation's tool and description; branding optional for `mcp`), `Cargo.lock`,
+  `.github/workflows/ci.yml`,
+  `conformance/{test_mcp.py,conftest.py,http_cases.py,README.md}` (`case_clients`
+  hoisted), `conformance/cases/mcp/`.
 - Acceptance: G0; the PR rechecks the stage-0 202-on-DELETE papercut.
 
 **3a.9 Deployment: both servers in one image, hosted MCP.** Implements decisions 12 and
@@ -1010,8 +1013,10 @@ merged only on approval).** Implements section 4 (G1 independence).
 
 Resolved by the orchestrator:
 
-- Keep utoipa plus schemars with a G0 schema-agreement test; best-bets is ranking code,
-  not data (tracker correction); `surface.toml` row upkeep on deletion is mechanical.
+- One schema source: utoipa's OpenAPI document, from which the MCP tool schemas are
+  built (no schemars derivation, so the transports cannot drift; 3a.7 pins `tools/list`
+  with a golden); best-bets is ranking code, not data (tracker correction);
+  `surface.toml` row upkeep on deletion is mechanical.
 - `context` lists `scope_unavailable` (section 7 makes `scope` valid on every read; the
   operation table had omitted it). The Rust HTTP run joins G0 from 3a.4; the HTTP
   adapter strips `__edge_v`; no MCP disable flag, the SWECOV worker does not route
