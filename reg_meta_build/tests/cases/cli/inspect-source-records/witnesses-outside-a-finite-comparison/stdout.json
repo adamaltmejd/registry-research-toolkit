@@ -1,0 +1,33 @@
+{
+  "summary": {
+    "workbook_selected_occurrences": 2,
+    "workbook_year_independent_occurrences": 2,
+    "scb_retained_occurrences": 0,
+    "comparison_outcomes": 2,
+    "outcome_counts": {"unknown_applicability": 2}
+  },
+  "target_preview": {
+    "documented_edition_scope": {"$absent": true},
+    "expected_source_target_count": 0,
+    "target_record_ids": [],
+    "assumption_ids": ["unestablished-workbook-to-scb-variant-scope"]
+  },
+  "source_records": {"$length": 2, "$contains": [{"record_id": "Individ!row:42"}, {"record_id": "Individ årsoberoende!row:43"}]},
+  "comparison_outcomes": {
+    "$length": 2,
+    "$contains": [
+      {
+        "status": "unknown_applicability",
+        "column_name": "Inv_UtvGrEg5",
+        "workbook_record_ids": ["Individ!row:42"],
+        "assumption_ids": ["unestablished-workbook-to-scb-variant-scope"]
+      },
+      {
+        "status": "unknown_applicability",
+        "column_name": "Inv_UtvGrEg5",
+        "workbook_record_ids": ["Individ årsoberoende!row:43"],
+        "assumption_ids": ["unestablished-workbook-to-scb-variant-scope"]
+      }
+    ]
+  }
+}

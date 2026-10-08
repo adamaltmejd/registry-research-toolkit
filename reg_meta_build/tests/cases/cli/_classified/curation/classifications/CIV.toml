@@ -1,0 +1,11 @@
+[classification]
+short_name = "CIV"
+slug = "civ"
+name = "Civilstånd"
+codes_file = "civ.csv"
+
+[[binding.variable]]
+variable = "scb/ulf/civ"
+
+[[binding.variable]]
+variable = "scb/par/pciv"

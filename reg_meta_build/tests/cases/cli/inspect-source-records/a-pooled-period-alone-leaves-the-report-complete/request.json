@@ -1,0 +1,78 @@
+{
+  "replaces": [
+    "test_source_inspection.py::test_filtered_report_retains_unscoped_same_variable_witness_but_not_target[pooled]",
+    "test_source_inspection.py::test_source_only_unknown_period_survives_full_and_filtered_inspection[pooled]"
+  ],
+  "fails_if": "inspect_bundle_source_records (and the report model's completeness check) marks a report incomplete because it holds a pooled-period issue, although only an unparseable period leaves an observation's edition unknown",
+  "note": "The two old [pooled] parameters in one bundle with no unparseable period: AmPolTyp cvid 1 (VarId 31619, variant 153) named in 2020 and cvid 2, a blank on its VarId with the pooled period 2020-2021; OnlyScb cvid 11 (VarId 9, variant 152) named in 2019 and cvid 12, a blank with the pooled period 2018-2019. The workbook is the unedited synthetic one. The old tests claimed both the full and the filtered report complete; `witnesses-outside-a-finite-comparison` holds unparseable periods beside the pooled ones, so its reports are incomplete and cannot carry this claim. Each pooled issue is not incomplete, and each pooled blank stays an unknown-applicability witness, never a target.",
+  "input_bundle": {
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1, "var_id": 31619, "colname": "AmPolTyp", "year": "2020", "regver_id": 200, "register": ["LISA", 34, 153]},
+        {
+          "cvid": 2,
+          "var_id": 31619,
+          "colname": "",
+          "year": "2021",
+          "regver_id": 201,
+          "versionname": "2020-2021",
+          "register": ["LISA", 34, 153]
+        },
+        {"cvid": 11, "var_id": 9, "colname": "OnlyScb", "year": "2019", "regver_id": 1101, "register": ["LISA", 34, 152]},
+        {
+          "cvid": 12,
+          "var_id": 9,
+          "colname": "",
+          "year": "2020",
+          "regver_id": 1102,
+          "versionname": "2018-2019",
+          "register": ["LISA", 34, 152]
+        }
+      ]
+    },
+    "lisa": true
+  },
+  "runs": [
+    {
+      "argv": [
+        "--output",
+        "{work}/full.json",
+        "inspect-source-records",
+        "--input-bundle",
+        "{bundle}",
+        "--input-commit",
+        "{bundle_commit}",
+        "--input-manifest-sha256",
+        "{bundle_manifest}"
+      ]
+    },
+    {
+      "argv": [
+        "--output",
+        "{work}/ampoltyp.json",
+        "inspect-source-records",
+        "--input-bundle",
+        "{bundle}",
+        "--input-commit",
+        "{bundle_commit}",
+        "--input-manifest-sha256",
+        "{bundle_manifest}",
+        "--column",
+        "AmPolTyp"
+      ]
+    },
+    {
+      "argv": [
+        "inspect-source-records",
+        "--input-bundle",
+        "{bundle}",
+        "--input-commit",
+        "{bundle_commit}",
+        "--input-manifest-sha256",
+        "{bundle_manifest}",
+        "--column",
+        "OnlyScb"
+      ]
+    }
+  ]
+}
