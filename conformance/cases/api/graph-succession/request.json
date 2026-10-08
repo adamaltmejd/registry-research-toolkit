@@ -1,5 +1,5 @@
 {
-  "note": "Succession through graph on the show fixture. A retired variable draws its terminal's graph; a retired ref at a split is ambiguous_ref with the split's successors; a live variable that splits draws both branches (today's variable_chain follows the first successor only, a rust-only fix); one classification chain (icd-9 to icd-10) reads alike through show, graph, the family graph and search's succession fold. Fails if graph follows one branch of a split, focuses the retired ref, or reads the classification chain from another anchor.",
+  "note": "Succession through graph on the show fixture. A retired variable draws its terminal's graph; a retired ref at a split is ambiguous_ref with the split's successors; a live variable that splits draws both branches (today's variable_chain follows the first successor only, a rust-only fix) and its representation edge; one classification chain (icd-9 to icd-10) reads alike through show, graph, the family graph and search's succession fold. Fails if graph follows one branch of a split, drops a representation edge's columns, focuses the retired ref, or reads the classification chain from another anchor.",
   "fixture": "show",
   "kind": "catalog",
   "requests": [

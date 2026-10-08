@@ -140,7 +140,11 @@ pub fn graph(server: &Server, scope: Scope, params: &Params) -> Result<Value, Er
             let fqid = format!("class/{slug}");
             for group in show::classification_groups(&conn)? {
                 if group.members.iter().any(|m| m.fqid == fqid) {
-                    builder.add_classification_group(&group.key, &group.label, &group)?;
+                    builder.add_classification_group(
+                        &group.key,
+                        &group.label,
+                        &member_slugs(&group),
+                    )?;
                 }
             }
             focus
@@ -162,18 +166,18 @@ pub fn graph(server: &Server, scope: Scope, params: &Params) -> Result<Value, Er
                 .into_iter()
                 .find(|g| g.key == key)
             {
-                builder.add_classification_group(&group.key, &group.label, &group)?;
+                builder.add_classification_group(
+                    &group.key,
+                    &group.label,
+                    &member_slugs(&group),
+                )?;
             } else {
                 let family = show::families(&conn)?
                     .into_iter()
                     .find(|f| f.key == key)
                     .ok_or_else(|| refs::not_found(value))?;
-                let members: BTreeSet<String> =
-                    family.editions.iter().map(|e| e.slug.clone()).collect();
-                let grouping = (format!("class/{key}"), family.label.clone(), members);
-                for edition in &family.editions {
-                    builder.add_classification(&edition.slug, Some(&grouping))?;
-                }
+                let slugs: Vec<String> = family.editions.into_iter().map(|e| e.slug).collect();
+                builder.add_classification_group(&key, &family.label, &slugs)?;
             }
             None
         }
@@ -196,6 +200,15 @@ fn slugs(conn: &Connection, id: i64) -> Result<[String; 3], Error> {
         [id],
         |row| Ok([row.get(0)?, row.get(1)?, row.get(2)?]),
     )?)
+}
+
+/// A classification group's member slugs.
+fn member_slugs(group: &Group) -> Vec<String> {
+    group
+        .members
+        .iter()
+        .filter_map(|m| m.fqid.strip_prefix("class/").map(str::to_owned))
+        .collect()
 }
 
 /// The key of a variable's concept group (`show`'s `group`).
@@ -795,23 +808,20 @@ impl<'c> Builder<'c> {
         }
     }
 
+    /// Every edition of a classification group or family, its members carrying
+    /// the group's key and label.
     fn add_classification_group(
         &mut self,
         key: &str,
         label: &str,
-        group: &Group,
+        slugs: &[String],
     ) -> Result<(), Error> {
-        let slugs: Vec<String> = group
-            .members
-            .iter()
-            .filter_map(|m| m.fqid.strip_prefix("class/").map(str::to_owned))
-            .collect();
         let grouping = (
             format!("class/{key}"),
             label.to_owned(),
             slugs.iter().cloned().collect(),
         );
-        for slug in &slugs {
+        for slug in slugs {
             self.add_classification(slug, Some(&grouping))?;
         }
         Ok(())

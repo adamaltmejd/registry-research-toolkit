@@ -185,7 +185,7 @@ pub struct ClassificationGroup {
 /// A group as listed by its register, classification root or member classification.
 #[derive(Clone, Serialize, ToSchema)]
 pub struct Group {
-    pub(super) fqid: String,
+    fqid: String,
     pub(super) key: String,
     pub(super) label: String,
     source: String,
@@ -197,7 +197,7 @@ pub struct Group {
 /// A one-dimensional classification succession family (ICD, LKF, SNI, SSYK).
 #[derive(Clone, Serialize, ToSchema)]
 pub struct Family {
-    pub(super) fqid: String,
+    fqid: String,
     pub(super) key: String,
     pub(super) label: String,
     /// Its editions in chain order.
@@ -208,7 +208,7 @@ pub struct Family {
 #[derive(Clone, Serialize, ToSchema)]
 pub struct FamilyEdition {
     pub(super) slug: String,
-    pub(super) fqid: String,
+    fqid: String,
     name: Option<String>,
     short_name: Option<String>,
     /// The year of the edge by which the edition is superseded on the chain.
@@ -224,7 +224,7 @@ pub struct FamilyEdition {
 #[derive(Clone, Serialize, ToSchema)]
 pub struct Axis {
     name: String,
-    pub(super) label: String,
+    label: String,
 }
 
 /// A group member; two members of one variable differ by `delivery_column`.
