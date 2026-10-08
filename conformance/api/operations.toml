@@ -230,7 +230,7 @@ http = ["GET /api/docs/doc/{identifier}"]
 tool = "docs"
 params = { identifier = "string", scope = "scope?" }
 result = "today's DocDetail, with its 500-character `excerpt` (the SPA) and the full `body` (agents; today's `docs get` output)"
-errors = ["docs_unavailable", "not_found"]
+errors = ["docs_unavailable", "not_found", "scope_unavailable"]
 
 [[operation]]
 name = "docs_related"
@@ -239,7 +239,7 @@ http = ["GET /api/docs/related/{ref}"]
 tool = "docs"
 params = { ref = "ref", scope = "scope?" }
 result = "[today's related document {title, filename, source_url, license, fetched, sha256, byte_size}]"
-errors = ["docs_unavailable", "invalid_ref", "not_found", "ambiguous_ref"]
+errors = ["docs_unavailable", "invalid_ref", "not_found", "ambiguous_ref", "scope_unavailable"]
 note = "A register's related documents; the JSON metadata for the document download route."
 
 [[download]]

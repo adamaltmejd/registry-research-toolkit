@@ -1,0 +1,66 @@
+[
+  {
+    "status": 200,
+    "headers": {"cache-control": "public, max-age=86400, must-revalidate"},
+    "json": {
+      "/data": [
+        {
+          "title": "Example register documentation",
+          "filename": "Registerdokumentation.pdf",
+          "source_url": "https://www.scb.se/example-related",
+          "license": "CC BY 4.0",
+          "fetched": "2026-06-01",
+          "sha256": "90140a04b0e3e592a0f9b6814aa09005ed655441336747cec5f1cfbe3fc7b0d7",
+          "byte_size": 48
+        },
+        {
+          "title": "Bilaga för registret",
+          "filename": "Bilaga för register.pdf",
+          "source_url": "https://mikrometadata.scb.se/",
+          "license": "CC BY 4.0",
+          "fetched": "2026-06-23",
+          "sha256": "ded2102f44a3d07016204a60b6d50cea2dec8c8d0d891342cacc3b1da39bbdb9",
+          "byte_size": 24
+        }
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/*/filename": ["Registerdokumentation.pdf", "Bilaga för register.pdf"]
+    }
+  },
+  {
+    "status": 404,
+    "json": {
+      "/error/code": "not_found",
+      "/error/fields/ref": "sos/unheld"
+    }
+  },
+  {
+    "status": 200,
+    "json": {"/data": [], "/meta/scope": "reference"}
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_ref",
+      "/error/fields/ref": "scb/Example"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_ref",
+      "/error/fields/ref": "scb/example/value"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "scope"
+    }
+  }
+]

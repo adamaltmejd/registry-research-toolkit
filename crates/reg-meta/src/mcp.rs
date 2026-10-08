@@ -1,6 +1,6 @@
 //! MCP (section 7): `reg-meta mcp` over stdio and `/mcp` on `serve` over streamable
-//! HTTP. Every registered operation with a `tool` is one tool. Its schemas are the
-//! operation's `OpenAPI` ones, and a call returns the HTTP response document: `{data,
+//! HTTP. A tool exposes the registered operations that name it. Its schemas are the
+//! operations' `OpenAPI` ones, and a call returns the HTTP response document: `{data,
 //! meta}`, or `{error, meta}` as a tool error.
 
 use std::collections::HashMap;
@@ -14,7 +14,7 @@ use axum::extract::{ConnectInfo, DefaultBodyLimit, FromRequest, Request, State};
 use axum::http::{HeaderMap, StatusCode, header};
 use axum::middleware::{Next, from_fn_with_state};
 use axum::response::{IntoResponse, Response};
-use reg_catalog::ops::{self, Server};
+use reg_catalog::ops::{self, Operation, Server};
 use reg_catalog::{Code, Error};
 use rmcp::model::{
     CallToolRequestParams, CallToolResponse, CallToolResult, Implementation, JsonObject,
@@ -54,39 +54,76 @@ struct Tools {
 impl Tools {
     fn new(server: Arc<Server>) -> Self {
         let openapi = serde_json::to_value(ops::openapi(VERSION)).expect("OpenAPI serializes");
-        let tools = ops::all()
-            .filter_map(|op| {
-                let operation = &openapi["paths"][op.path]["get"];
-                Some(tool(&openapi, operation, op.tool?, op.description))
-            })
+        let tools = ops::tools()
+            .into_iter()
+            .map(|(name, ops)| tool(&openapi, name, &ops))
             .collect();
         Self { server, tools }
     }
 }
 
-/// A tool from its operation's `OpenAPI` entry: the query parameters as the input
-/// object, and the success and error envelopes as the output.
-fn tool(openapi: &Value, operation: &Value, name: &'static str, description: &str) -> Tool {
+/// A tool from its operations' `OpenAPI` entries: the parameters as the input object,
+/// and the success and error envelopes as the output. A tool of several operations
+/// takes an `operation` argument naming one, and its other arguments are that
+/// operation's parameters. They stay one flat object, since agent APIs reject a
+/// top-level `oneOf` input; each operation's parameters are listed in the description
+/// and checked per call.
+fn tool(openapi: &Value, name: &'static str, ops: &[&Operation]) -> Tool {
+    let entries: Vec<&Value> = ops
+        .iter()
+        .map(|op| &openapi["paths"][op.path]["get"])
+        .collect();
     let mut properties = Map::new();
     let mut required = Vec::new();
-    for param in operation["parameters"].as_array().expect("parameters") {
-        let name = param["name"].as_str().expect("parameter name");
-        properties.insert(name.to_owned(), param["schema"].clone());
-        if param["required"] == true {
-            required.push(name);
+    let mut signatures = Vec::new();
+    for entry in &entries {
+        let mut signature = Vec::new();
+        for param in entry["parameters"].as_array().expect("parameters") {
+            let name = param["name"].as_str().expect("parameter name");
+            let schema = param["schema"].clone();
+            let previous = properties.insert(name.to_owned(), schema.clone());
+            assert!(
+                previous.is_none_or(|previous| previous == schema),
+                "parameter {name:?} has two schemas"
+            );
+            let optional = if param["required"] == true { "" } else { "?" };
+            signature.push(format!("{name}{optional}"));
+            if param["required"] == true && ops.len() == 1 {
+                required.push(name.to_owned());
+            }
         }
+        signatures.push(signature.join(", "));
     }
-    let input = json!({"type": "object", "properties": properties, "required": required});
-    let envelope = |status: &str| {
-        operation["responses"][status]["content"]["application/json"]["schema"].clone()
+    let description = if let [op] = ops {
+        op.description.to_owned()
+    } else {
+        properties.insert(
+            "operation".to_owned(),
+            json!({"type": "string", "enum": ops.iter().map(|op| op.name).collect::<Vec<_>>()}),
+        );
+        required.push("operation".to_owned());
+        let lines = ops
+            .iter()
+            .zip(&signatures)
+            .map(|(op, signature)| format!("- `{}` ({signature}): {}", op.name, op.description));
+        std::iter::once(
+            "`operation` names one of these operations; the other arguments are its \
+            parameters (`?` marks an optional one)."
+                .to_owned(),
+        )
+        .chain(lines)
+        .collect::<Vec<_>>()
+        .join("\n")
     };
-    let output = json!({"type": "object", "oneOf": [envelope("200"), envelope("default")]});
-    Tool::new_with_raw(
-        name,
-        Some(description.to_owned().into()),
-        with_defs(input, openapi),
-    )
-    .with_raw_output_schema(with_defs(output, openapi))
+    let input = json!({"type": "object", "properties": properties, "required": required});
+    let envelope = |entry: &Value, status: &str| {
+        entry["responses"][status]["content"]["application/json"]["schema"].clone()
+    };
+    let mut outputs: Vec<Value> = entries.iter().map(|entry| envelope(entry, "200")).collect();
+    outputs.push(envelope(entries[0], "default"));
+    let output = json!({"type": "object", "oneOf": outputs});
+    Tool::new_with_raw(name, Some(description.into()), with_defs(input, openapi))
+        .with_raw_output_schema(with_defs(output, openapi))
 }
 
 /// `schema` self-contained: the components it references, transitively, become its
@@ -129,8 +166,24 @@ fn rebase(value: &mut Value, names: &mut Vec<String>) {
     }
 }
 
-/// The tool arguments as an HTTP query: a string as is, a number in its JSON spelling
-/// (`limit: 5` is `limit=5`); any other value is `invalid_parameter`.
+/// The operation a call names among its tool's `ops`: the only one, or the one the
+/// `operation` argument of a tool of several names (taken out of `arguments`).
+fn operation(
+    ops: &[&'static Operation],
+    arguments: &mut JsonObject,
+) -> Result<&'static Operation, Error> {
+    if let [op] = ops {
+        return Ok(op);
+    }
+    let name = arguments.remove("operation");
+    ops.iter()
+        .find(|op| name.as_ref().and_then(Value::as_str) == Some(op.name))
+        .copied()
+        .ok_or_else(|| Error::invalid_parameter("operation"))
+}
+
+/// The tool arguments as the request's parameters: a string as is, a number in its
+/// JSON spelling (`limit: 5` is `limit=5`); any other value is `invalid_parameter`.
 fn query(arguments: JsonObject) -> Result<Vec<(String, String)>, Error> {
     arguments
         .into_iter()
@@ -161,13 +214,20 @@ impl ServerHandler for Tools {
         request: CallToolRequestParams,
         _: RequestContext<RoleServer>,
     ) -> Result<CallToolResponse, ErrorData> {
-        let op = ops::all()
-            .find(|op| op.tool == Some(&*request.name))
-            .ok_or_else(|| {
-                ErrorData::invalid_params(format!("Unknown tool {:?}.", request.name), None)
-            })?;
-        let answer = match query(request.arguments.unwrap_or_default()) {
-            Ok(query) => run(&self.server, op, query).await,
+        let ops: Vec<&Operation> = ops::all()
+            .filter(|op| op.tool == Some(&*request.name))
+            .collect();
+        if ops.is_empty() {
+            return Err(ErrorData::invalid_params(
+                format!("Unknown tool {:?}.", request.name),
+                None,
+            ));
+        }
+        let mut arguments = request.arguments.unwrap_or_default();
+        let call = operation(&ops, &mut arguments)
+            .and_then(|op| query(arguments).map(|query| (op, query)));
+        let answer = match call {
+            Ok((op, query)) => run(&self.server, op, query).await,
             Err(err) => Answer::new(&self.server, self.server.catalog.default_scope(), Err(err)),
         };
         Ok(if answer.status == StatusCode::OK {

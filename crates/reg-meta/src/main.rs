@@ -6,12 +6,14 @@
 //! reg-meta mcp --db DIR [--catalog NAME]
 //! ```
 //!
-//! Both admit `DIR/reg_meta.db` (as `--catalog NAME` when given). `serve` loads the
-//! catalog's branding from `DIR/<catalog>/steward.json` under `--stewards` and serves
-//! every registered operation, `/openapi.json` and MCP at `/mcp` on `--host` (default
+//! Both admit `DIR/reg_meta.db` (as `--catalog NAME` when given) and, when present,
+//! `DIR/reg_meta_docs.db`. `serve` loads the catalog's branding from
+//! `DIR/<catalog>/steward.json` under `--stewards` and serves every registered
+//! operation and download, `/openapi.json` and MCP at `/mcp` on `--host` (default
 //! 127.0.0.1); `/mcp` admits the `Host` header `--public-host` besides the loopback
-//! names, and the edge token in `REG_META_EDGE_TOKEN` (`mcp.rs`). `mcp` serves the MCP tools over stdio. A refusal prints the error document on
-//! stderr and exits with the code's status.
+//! names, and the edge token in `REG_META_EDGE_TOKEN` (`mcp.rs`). `mcp` serves the MCP
+//! tools over stdio. A refusal prints the error document on stderr and exits with the
+//! code's status.
 
 mod mcp;
 
@@ -20,12 +22,12 @@ use std::path::PathBuf;
 use std::sync::Arc;
 
 use axum::Router;
-use axum::extract::{Query, State};
+use axum::extract::{Path, Query, State};
 use axum::http::{HeaderMap, HeaderValue, StatusCode, header};
 use axum::response::{IntoResponse, Response};
 use axum::routing::get;
-use reg_catalog::ops::{self, Meta, Operation, Server, Steward};
-use reg_catalog::{Catalog, Error, Scope, hex};
+use reg_catalog::ops::{self, Cache, Download, Meta, Operation, Param, Raw, Run, Server, Steward};
+use reg_catalog::{Catalog, Docs, Error, Scope, hex};
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 
@@ -112,6 +114,7 @@ async fn main() {
     let args = parse_args(std::env::args().skip(1)).unwrap_or_else(|err| refuse(&err));
     let catalog =
         Catalog::open(&args.db, args.catalog.as_deref()).unwrap_or_else(|err| refuse(&err));
+    let docs = Docs::open(&args.db).unwrap_or_else(|err| refuse(&err));
     match args.mode {
         Mode::Serve {
             stewards,
@@ -123,6 +126,7 @@ async fn main() {
                 Steward::load(&stewards, catalog.name()).unwrap_or_else(|err| refuse(&err));
             let server = Server {
                 catalog,
+                docs,
                 steward: Some(steward),
                 version: VERSION,
             };
@@ -131,6 +135,7 @@ async fn main() {
         Mode::Mcp => {
             let server = Server {
                 catalog,
+                docs,
                 steward: None,
                 version: VERSION,
             };
@@ -144,8 +149,14 @@ async fn serve(server: Arc<Server>, addr: SocketAddr, public_host: Option<String
     let mut app = Router::new().route("/openapi.json", get(|| async move { json(openapi) }));
     for op in ops::all() {
         app = app.route(
-            op.path,
-            get(move |state, query, headers| answer(op, state, query, headers)),
+            &axum_route(op.path),
+            get(move |state, path, query, headers| answer(op, state, path, query, headers)),
+        );
+    }
+    for download in ops::downloads() {
+        app = app.route(
+            &axum_route(download.path),
+            get(move |state, path, query, headers| fetch(download, state, path, query, headers)),
         );
     }
     let app = app
@@ -190,12 +201,22 @@ impl Answer {
     }
 }
 
-/// Answer `op` for the request's parameters on the blocking pool.
-async fn run(server: &Arc<Server>, op: &'static Operation, query: Vec<(String, String)>) -> Answer {
+/// Answer a route's parameters with `run` on the blocking pool.
+async fn call<T: Send + 'static>(
+    server: &Arc<Server>,
+    params: &'static [Param],
+    run: Run<T>,
+    query: Vec<(String, String)>,
+) -> (Scope, Result<T, Error>) {
     let task = Arc::clone(server);
-    let (scope, result) = tokio::task::spawn_blocking(move || ops::call(&task, op, &query))
+    tokio::task::spawn_blocking(move || ops::call(&task, params, run, &query))
         .await
-        .expect("operation task");
+        .expect("operation task")
+}
+
+/// Answer `op` for the request's parameters.
+async fn run(server: &Arc<Server>, op: &'static Operation, query: Vec<(String, String)>) -> Answer {
+    let (scope, result) = call(server, op.params, op.run, query).await;
     Answer::new(server, scope, result)
 }
 
@@ -207,30 +228,127 @@ fn json(body: String) -> Response {
 /// part of the edge cache key, never an operation parameter.
 const EDGE_VERSION_PARAM: &str = "__edge_v";
 
+/// An operation-table route as an axum route: `{ref}` spans segments, so it and the
+/// segments after it are one wildcard, which [`request_params`] splits again.
+fn axum_route(template: &str) -> String {
+    template.split_once("{ref}").map_or_else(
+        || template.to_owned(),
+        |(head, _)| format!("{head}{{*ref}}"),
+    )
+}
+
+/// A request's parameters: the path's, named by `template`, then the query's
+/// without the edge's cache parameter. `{ref}` keeps the segments the names after
+/// it leave.
+fn request_params(
+    template: &str,
+    path: Vec<(String, String)>,
+    mut query: Vec<(String, String)>,
+) -> Vec<(String, String)> {
+    query.retain(|(name, _)| name != EDGE_VERSION_PARAM);
+    let Some((_, after)) = template.split_once("{ref}") else {
+        return [path, query].concat();
+    };
+    let tail = path.into_iter().map(|(_, tail)| tail).collect::<String>();
+    let mut rest = tail.as_str();
+    let mut params = Vec::new();
+    for name in after
+        .rsplit('/')
+        .filter_map(|segment| segment.strip_prefix('{')?.strip_suffix('}'))
+    {
+        let Some((head, last)) = rest.rsplit_once('/') else {
+            break;
+        };
+        params.push((name.to_owned(), last.to_owned()));
+        rest = head;
+    }
+    params.push(("ref".to_owned(), rest.to_owned()));
+    [params, query].concat()
+}
+
 /// One operation over HTTP: `{data, meta}` with today's `ETag` and `Cache-Control`
 /// policy and a 304 for a matching `If-None-Match`, or `{error, meta}` with the
 /// code's status.
 async fn answer(
     op: &'static Operation,
     State(server): State<Arc<Server>>,
-    Query(mut query): Query<Vec<(String, String)>>,
+    Path(path): Path<Vec<(String, String)>>,
+    Query(query): Query<Vec<(String, String)>>,
     headers: HeaderMap,
 ) -> Response {
-    query.retain(|(name, _)| name != EDGE_VERSION_PARAM);
-    let answer = run(&server, op, query).await;
+    let answer = run(&server, op, request_params(op.path, path, query)).await;
     let body = answer.body.to_string();
     if answer.status != StatusCode::OK {
         return (answer.status, json(body)).into_response();
     }
-    let etag = etag(&server, answer.scope, body.as_bytes());
-    let revalidated = headers
+    let raw = Raw {
+        bytes: body.into_bytes(),
+        headers: Vec::new(),
+    };
+    cached(
+        &server,
+        answer.scope,
+        op.cache,
+        &headers,
+        "application/json",
+        raw,
+    )
+}
+
+/// One download over HTTP: the raw bytes with its media type, under the same
+/// validators and tier as an operation, or `{error, meta}` with the code's status.
+async fn fetch(
+    download: &'static Download,
+    State(server): State<Arc<Server>>,
+    Path(path): Path<Vec<(String, String)>>,
+    Query(query): Query<Vec<(String, String)>>,
+    headers: HeaderMap,
+) -> Response {
+    let params = request_params(download.path, path, query);
+    match call(&server, download.params, download.run, params).await {
+        (scope, Ok(raw)) => cached(
+            &server,
+            scope,
+            download.cache,
+            &headers,
+            download.media_type,
+            raw,
+        ),
+        (scope, Err(err)) => {
+            let answer = Answer::new(&server, scope, Err(err));
+            (answer.status, json(answer.body.to_string())).into_response()
+        }
+    }
+}
+
+/// A 200 of `raw` with its `ETag`, `Cache-Control` and extra headers, or a 304 for a
+/// matching `If-None-Match`.
+fn cached(
+    server: &Server,
+    scope: Scope,
+    cache: Cache,
+    request: &HeaderMap,
+    media_type: &'static str,
+    raw: Raw,
+) -> Response {
+    let Raw {
+        bytes: body,
+        headers: extra,
+    } = raw;
+    let etag = etag(server, scope, &body);
+    let revalidated = request
         .get(header::IF_NONE_MATCH)
         .and_then(|value| value.to_str().ok())
         .is_some_and(|value| etag_matches(value, &etag));
     let mut response = if revalidated {
         StatusCode::NOT_MODIFIED.into_response()
     } else {
-        json(body)
+        let mut response = ([(header::CONTENT_TYPE, media_type)], body).into_response();
+        for (name, value) in extra {
+            let value = HeaderValue::from_str(&value).expect("a header value");
+            response.headers_mut().insert(name, value);
+        }
+        response
     };
     let validators = response.headers_mut();
     validators.insert(
@@ -239,7 +357,7 @@ async fn answer(
     );
     validators.insert(
         header::CACHE_CONTROL,
-        HeaderValue::from_static(cache_control(op.path)),
+        HeaderValue::from_static(cache.header()),
     );
     response
 }
@@ -263,16 +381,4 @@ fn etag_matches(if_none_match: &str, etag: &str) -> bool {
         .split(',')
         .map(str::trim)
         .any(|tag| tag == "*" || tag.strip_prefix("W/").unwrap_or(tag) == etag)
-}
-
-/// Today's three tiers: identity reads revalidate every request, fold-bearing reads
-/// get a 60 s window, and the rest (documents) a day.
-fn cache_control(path: &str) -> &'static str {
-    if path == "/api/context" {
-        "no-cache"
-    } else if path.starts_with("/api/catalog") || path.starts_with("/api/search") {
-        "public, max-age=60, must-revalidate"
-    } else {
-        "public, max-age=86400, must-revalidate"
-    }
 }
