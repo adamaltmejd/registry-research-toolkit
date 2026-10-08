@@ -1,0 +1,21 @@
+{
+  "loader": "curated_source",
+  "args": {
+    "file": "agency.toml",
+    "provider": "agency"
+  },
+  "replaces": [
+    "test_curated_source_records.py::test_broken_actual_format_contracts_fail_without_silent_fallback[is_sensitive = \"false\"]",
+    "test_curated_source_records.py::test_broken_actual_format_contracts_fail_without_silent_fallback[is_sensitive = \"\"]"
+  ],
+  "fails_if": "read_curated_source coerces a quoted is_sensitive value to a Boolean instead of refusing it",
+  "note": "The string \"false\" reads like a Boolean, so it is the hardest non-Boolean sensitivity flag; a blank string runs the same strict check.",
+  "error": {
+    "code": "source_preparation_failed",
+    "locator": "register.0.variable.0.is_sensitive",
+    "message_contains": [
+      "invalid global curated TOML",
+      "valid boolean"
+    ]
+  }
+}

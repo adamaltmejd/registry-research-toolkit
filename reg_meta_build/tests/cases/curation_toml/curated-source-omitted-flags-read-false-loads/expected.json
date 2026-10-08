@@ -1,0 +1,25 @@
+{
+  "loader": "curated_source",
+  "args": {
+    "file": "agency.toml",
+    "provider": "agency"
+  },
+  "replaces": "test_curated_source_records.py::test_omitted_flag_keys_read_as_explicit_false",
+  "fails_if": "read_curated_source reads an omitted is_sensitive or is_identifier as unknown (or true) instead of the explicit false a maintainer-authored omission declares",
+  "note": "A bare variable omits both disclosure flags; each reads as false.",
+  "loads": {
+    "records": [
+      {},
+      {
+        "fields": {
+          "identifier": {
+            "value": false
+          },
+          "sensitivity": {
+            "value": false
+          }
+        }
+      }
+    ]
+  }
+}

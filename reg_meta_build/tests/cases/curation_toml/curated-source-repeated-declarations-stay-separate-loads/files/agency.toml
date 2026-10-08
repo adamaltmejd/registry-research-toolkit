@@ -1,0 +1,19 @@
+[[register]]
+key = "sample-register"
+name = "Sample register"
+valid_from = "2001-01-01"
+purpose = "A declared purpose"
+
+[[register.variable]]
+name = "A variable"
+column = "CODE"
+data_type = "text"
+variants = ["not-yet-declared"]
+is_sensitive = false
+
+[[register.variable]]
+name = "A variable"
+column = "CODE"
+data_type = "integer"
+variants = ["not-yet-declared"]
+is_sensitive = true

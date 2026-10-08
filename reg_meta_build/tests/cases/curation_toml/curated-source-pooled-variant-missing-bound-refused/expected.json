@@ -1,0 +1,21 @@
+{
+  "loader": "curated_source",
+  "args": {
+    "file": "agency.toml",
+    "provider": "agency"
+  },
+  "replaces": [
+    "test_curated_source_records.py::test_pooled_delivery_requires_explicit_valid_ordered_iso_bounds[0]",
+    "test_curated_source_records.py::test_pooled_delivery_requires_explicit_valid_ordered_iso_bounds[1]",
+    "test_curated_source_records.py::test_pooled_delivery_requires_explicit_valid_ordered_iso_bounds[2]"
+  ],
+  "fails_if": "read_curated_source accepts a pooled variant with only one date bound, inferring the other",
+  "note": "One bound present is the hardest missing-bound form.",
+  "error": {
+    "code": "source_preparation_failed",
+    "locator": "register.0.variant.1",
+    "message_contains": [
+      "pooled variant requires both explicit date bounds"
+    ]
+  }
+}

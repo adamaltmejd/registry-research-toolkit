@@ -1,0 +1,11 @@
+[[register]]
+key = "sample-register"
+name = "Sample register"
+valid_from = "2001-01-01"
+purpose = "A declared purpose"
+
+[[register.variable]]
+name = "A variable"
+column = "CODE"
+data_type = "text"
+is_identifier = ""

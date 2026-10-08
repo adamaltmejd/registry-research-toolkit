@@ -1,0 +1,18 @@
+{
+  "loader": "curated_source",
+  "args": {
+    "file": "agency.toml",
+    "provider": "agency",
+    "revision_from": "agency.reviewed.toml"
+  },
+  "replaces": "test_curated_source_records.py::test_reader_requires_exact_source_revision_bytes",
+  "fails_if": "read_curated_source reads a file whose bytes no longer match its declared source revision",
+  "note": "agency.toml was edited after the reviewed bytes (agency.reviewed.toml) were declared as its revision.",
+  "error": {
+    "code": "source_preparation_failed",
+    "locator": "agency.reviewed.toml",
+    "message_contains": [
+      "differs from its declared revision"
+    ]
+  }
+}

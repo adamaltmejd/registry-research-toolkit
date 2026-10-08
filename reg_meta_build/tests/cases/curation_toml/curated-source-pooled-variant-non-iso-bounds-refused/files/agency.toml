@@ -1,0 +1,16 @@
+[[register]]
+key = "sample-register"
+name = "Sample register"
+valid_from = "2001-01-01"
+purpose = "A declared purpose"
+
+[[register.variant]]
+key = "table"
+name = "Table"
+
+[[register.variant]]
+key = "pooled"
+name = "Pooled"
+period_scope = "pooled"
+valid_from = "2020"
+valid_to = "2021"

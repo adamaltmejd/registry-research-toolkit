@@ -1,0 +1,23 @@
+[[register]]
+key = "sample-register"
+name = "Sample register"
+valid_from = "2001-01-01"
+purpose = "A declared purpose"
+
+[[register.variant]]
+key = "first"
+name = "First delivery"
+valid_from = "2005-01-01"
+valid_to = "2009-12-31"
+[[register.variant]]
+key = "second"
+name = "Second delivery"
+
+[[register.variable]]
+name = "A variable"
+column = "CODE"
+data_type = "text"
+variants = ["first", "second"]
+is_identifier = false
+is_sensitive = true
+classification = "Unresolved declared classification"

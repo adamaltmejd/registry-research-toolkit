@@ -1,0 +1,59 @@
+{
+  "loader": "curated_source",
+  "args": {
+    "file": "agency.toml",
+    "provider": "agency"
+  },
+  "replaces": "test_curated_source_records.py::test_raw_toml_values_and_exact_key_locations_are_retained",
+  "fails_if": "read_curated_source normalizes a cell's raw value, deduplicates or keeps the padding of declared variant references, or drops a key's exact location from the record locator",
+  "loads": {
+    "records": [
+      {},
+      {
+        "fields": {
+          "definition": {
+            "value": "  First\n  second",
+            "raw_value": "  First\n  second  "
+          }
+        },
+        "subject": {
+          "variant_references": [
+            {
+              "native_id": "x"
+            },
+            {
+              "native_id": "y"
+            },
+            {
+              "native_id": "y"
+            }
+          ]
+        },
+        "locators": [
+          {
+            "physical_cells": [
+              "register[0].variable[0].name",
+              "register[0].variable[0].column",
+              "register[0].variable[0].data_type",
+              "register[0].variable[0].definition",
+              "register[0].variable[0].variants"
+            ]
+          }
+        ],
+        "delivered_cells": [
+          {},
+          {},
+          {},
+          {
+            "name": "definition",
+            "raw_value": "  First\n  second  "
+          },
+          {
+            "name": "variants",
+            "raw_type": "list"
+          }
+        ]
+      }
+    ]
+  }
+}
