@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import subprocess
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -1228,6 +1229,16 @@ def write_scb_input(
     return scb_dir
 
 
+def _git(repo: Path, *args: str) -> None:
+    # An absolute executable and `close_fds=False` let CPython posix_spawn git
+    # instead of forking the test process, as `input_snapshot._git_bytes` does.
+    subprocess.run(
+        [shutil.which("git") or "git", "-C", str(repo), *args],
+        check=True,
+        close_fds=False,
+    )
+
+
 def init_fixture_repo(repo: Path, *, name: str, email: str) -> None:
     """Create a fixture Git repository that commits the same on every machine.
 
@@ -1237,7 +1248,7 @@ def init_fixture_repo(repo: Path, *, name: str, email: str) -> None:
     `.git/config` directly, the file `git config` would write, because a `git
     config` process per key was a measurable share of the suite's CPU.
     """
-    subprocess.run(["git", "init", "-q", "-b", "main", str(repo)], check=True)
+    _git(repo, "init", "-q", "-b", "main")
     with (repo / ".git" / "config").open("a", encoding="utf-8") as config:
         config.write(
             f"[user]\n\tname = {name}\n\temail = {email}\n"
@@ -1247,11 +1258,8 @@ def init_fixture_repo(repo: Path, *, name: str, email: str) -> None:
 
 def commit_fixture(repo: Path, message: str, *paths: str) -> str:
     """Stage ``paths`` (default: everything), commit, and return the new commit."""
-    subprocess.run(
-        ["git", "-C", str(repo), "add", *(("--", *paths) if paths else ("-A",))],
-        check=True,
-    )
-    subprocess.run(["git", "-C", str(repo), "commit", "-q", "-m", message], check=True)
+    _git(repo, "add", *(("--", *paths) if paths else ("-A",)))
+    _git(repo, "commit", "-q", "-m", message)
     # The commit just wrote HEAD's loose ref; reading it skips a `git rev-parse`.
     head = (repo / ".git" / "HEAD").read_text(encoding="utf-8").strip()
     if not head.startswith("ref: "):
