@@ -736,6 +736,35 @@ def _warnings(outcome: Outcome) -> list[dict]:
     ]
 
 
+def _conformance_codes(outcome: Outcome) -> list[dict]:
+    """Each source member a state's book conformance records outside the book.
+
+    A scoped sentinel certificate is projected as its window only; its fingerprints
+    restate the code under test.
+    """
+    return [
+        {
+            **{key: row[key] for key in row.keys() - {"scoped_sentinels"}},
+            "scoped_windows": [
+                [certificate["valid_from"], certificate["valid_to"]]
+                for certificate in json.loads(row["scoped_sentinels"])
+            ],
+        }
+        for row in outcome._sql(
+            "SELECT r.slug AS register, v.slug AS variable, "
+            "s.delivery_column_name AS column, s.valid_from, s.valid_to, "
+            "c.slug AS classification, vc.code, vc.label, cc.member_kind, "
+            "cc.sentinel_meaning, cc.scoped_sentinels "
+            "FROM classification_conformance_code cc "
+            "JOIN classification c ON c.id = cc.declared_classification_id "
+            "JOIN value_code vc ON vc.code_id = cc.code_id "
+            "JOIN variable_state s ON s.state_id = cc.state_id "
+            "JOIN variable v ON v.variable_id = s.variable_id "
+            "JOIN register r ON r.register_id = v.register_id"
+        )
+    ]
+
+
 _STATE_JOIN = (
     "FROM variable_state s JOIN variable v USING (variable_id) "
     "JOIN register r ON r.register_id = v.register_id "
@@ -805,11 +834,28 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "FROM variable_replaced_by"
     ),
     "state_classifications": lambda o: o._sql(
-        "SELECT s.delivery_column_name AS column, c.slug AS classification "
+        "SELECT r.slug AS register, v.slug AS variable, "
+        "s.delivery_column_name AS column, s.valid_from, s.valid_to, "
+        "c.slug AS classification, sc.provenance "
         "FROM state_classification sc "
         "JOIN classification c ON c.id = sc.classification_id "
-        "JOIN variable_state s ON s.state_id = sc.state_id"
+        "JOIN variable_state s ON s.state_id = sc.state_id "
+        "JOIN variable v ON v.variable_id = s.variable_id "
+        "JOIN register r ON r.register_id = v.register_id"
     ),
+    "conformance": lambda o: o._sql(
+        "SELECT r.slug AS register, v.slug AS variable, "
+        "s.delivery_column_name AS column, s.valid_from, s.valid_to, "
+        "c.slug AS classification, cc.status, cc.checked_code_count AS checked, "
+        "cc.matched_code_count AS matched, "
+        "cc.nonconforming_code_count AS nonconforming, cc.overlap "
+        "FROM classification_conformance cc "
+        "JOIN classification c ON c.id = cc.declared_classification_id "
+        "JOIN variable_state s ON s.state_id = cc.state_id "
+        "JOIN variable v ON v.variable_id = s.variable_id "
+        "JOIN register r ON r.register_id = v.register_id"
+    ),
+    "conformance_codes": _conformance_codes,
     "classifications": lambda o: o._sql(
         "SELECT slug, short_name, name, name_en FROM classification"
     ),
@@ -855,7 +901,12 @@ FIELDS: dict[str, frozenset[str]] = {
         "search_pins": "query type position entity",
         "manifest": "key value",
         "edges": "type a b",
-        "state_classifications": "column classification",
+        "state_classifications": "register variable column valid_from valid_to "
+        "classification provenance",
+        "conformance": "register variable column valid_from valid_to classification "
+        "status checked matched nonconforming overlap",
+        "conformance_codes": "register variable column valid_from valid_to "
+        "classification code label member_kind sentinel_meaning scoped_windows",
         "classifications": "slug short_name name name_en",
         "relationships": "kind binding_status source_dataset owner endpoints",
         "evidence": "kind disposition",

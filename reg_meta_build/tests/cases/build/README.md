@@ -267,11 +267,17 @@ Every key is optional, and only the keys that are present get checked.
   | `warnings`              | built data warning                                                      | `register`, `variable` (slugs), `column`, `valid_from`, `valid_to`, `code`, `variant`, `detail`, `summary`, `fields`, `refs`                                            |
   | `search_pins`           | built search pin                                                        | `query` (the folded key), `type`, `position`, `entity`                                                                                                                  |
   | `manifest`              | import-manifest entry                                                   | `key`, `value`                                                                                                                                                          |
-  | `state_classifications` | built state bound to a classification                                   | `column`, `classification` (slug)                                                                                                                                       |
+  | `state_classifications` | built state bound to a classification                                   | `register`, `variable` (slugs), `column`, `valid_from`, `valid_to`, `classification` (slug), `provenance` (the binding's)                                               |
+  | `conformance`           | built state's conformance to one bound book                             | `register`, `variable`, `column`, `valid_from`, `valid_to`, `classification`, `status`, `checked`, `matched`, `nonconforming` (code counts), `overlap`                  |
+  | `conformance_codes`     | source member a state's book conformance records outside the book       | `register`, `variable`, `column`, `valid_from`, `valid_to`, `classification`, `code`, `label`, `member_kind`, `sentinel_meaning`, `scoped_windows`                      |
   | `classifications`       | built classification                                                    | `slug`, `short_name`, `name`, `name_en`                                                                                                                                 |
   | `relationships`         | built literal source relationship                                       | `kind`, `binding_status`, `source_dataset`, `owner` (variable slug), `endpoints` (bound variables)                                                                      |
   | `evidence`              | ledger disposition of prepared auxiliary evidence                       | `kind`, `disposition`                                                                                                                                                   |
   | `source_issues`         | ledger support- and value-source issue (the evidence behind issues)     | `kind`, `severity`, `descriptor_key`, `physical_associations`, `refs`                                                                                                   |
+
+A `conformance_codes` row's `member_kind` is `nonstandard` or `sentinel`.
+`scoped_windows` lists, as `[valid_from, valid_to]`, the scoped sentinel certificates
+(`[[coding.sentinel]]`) that name the member; their fingerprints are not projected.
 
 A `refs` value (on `warnings` and `source_issues`) lists source record refs as
 `<source>#<semantic key parts joined by />`. An issue's refs are the `issue_refs` rows,
