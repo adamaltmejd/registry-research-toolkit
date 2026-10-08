@@ -487,3 +487,19 @@ class TestCli:
         widget = next(t for t in payload["tables"] if t["table"] == "widget")
         assert widget["identical"] is False
         assert widget["sample_a_not_b"]
+
+    def test_json_sample_cells_keep_storage_class(self, tmp_path: Path, capsys):
+        # A no-affinity column holds integer 1 in A and text '1' in B. Fails if the
+        # JSON sample renders every cell as a string: both rows then print "1".
+        a = tmp_path / "a.db"
+        b = tmp_path / "b.db"
+        for path, value in ((a, 1), (b, "1")):
+            conn = sqlite3.connect(path)
+            conn.execute("CREATE TABLE t (v)")
+            conn.execute("INSERT INTO t VALUES (?)", (value,))
+            conn.commit()
+            conn.close()
+        assert main(["--json", str(a), str(b)]) == 1
+        (table,) = json.loads(capsys.readouterr().out)["tables"]
+        assert table["sample_a_not_b"] == [{"net": 1, "row": {"v": 1}}]
+        assert table["sample_b_not_a"] == [{"net": -1, "row": {"v": "1"}}]

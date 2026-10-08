@@ -758,9 +758,21 @@ def format_report(report: DiffReport) -> str:
     return "\n".join(out)
 
 
+def _json_cell(value: object) -> object:
+    """A sample cell as JSON that keeps its SQLite storage class: NULL is null,
+    INTEGER and REAL stay numbers, TEXT is a string (long text truncated) and a
+    BLOB is a ``{"blob": preview}`` object. Integer 1, text '1', blob b'1' and NULL
+    are different rows to the diff, so they must not print alike."""
+    if isinstance(value, (bytes, bytearray, memoryview)):
+        return {"blob": _fmt_cell(value)}
+    if isinstance(value, str):
+        return _fmt_cell(value, width=200)
+    return value
+
+
 def _report_to_dict(report: DiffReport) -> dict[str, object]:
-    """JSON-serializable view (sample row values are rendered to strings so
-    BLOBs/long text stay printable)."""
+    """JSON-serializable view; sample cells keep their storage class
+    (``_json_cell``)."""
 
     def cells(
         rows: Iterable[SampleRow], cols: Sequence[str]
@@ -768,7 +780,7 @@ def _report_to_dict(report: DiffReport) -> dict[str, object]:
         return [
             {
                 "net": row.net,
-                "row": {c: _fmt_cell(v, width=200) for c, v in zip(cols, row.values)},
+                "row": {c: _json_cell(v) for c, v in zip(cols, row.values)},
             }
             for row in rows
         ]
