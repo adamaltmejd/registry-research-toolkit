@@ -136,6 +136,37 @@ struct Rep {
     row: SchemaColumn,
 }
 
+type Key<'a> = Option<&'a str>;
+
+impl Rep {
+    /// A page's order: variant (unslugged last), window, variable, column, label.
+    fn page_order(&self) -> (bool, Key<'_>, Key<'_>, Key<'_>, Key<'_>, Key<'_>, &str) {
+        let r = &self.row;
+        (
+            r.variant.is_none(),
+            r.variant.as_deref(),
+            r.valid_from.as_deref(),
+            r.valid_to.as_deref(),
+            self.variable_slug.as_deref(),
+            r.column.as_deref(),
+            &r.value_set_version_label,
+        )
+    }
+
+    /// `get diff`'s order within a variable: the state's column, the state, then the
+    /// representation's window and column.
+    fn state_order(&self) -> (Key<'_>, i64, Key<'_>, Key<'_>, Key<'_>) {
+        let r = &self.row;
+        (
+            self.state_column.as_deref(),
+            self.state_id,
+            r.valid_from.as_deref(),
+            r.valid_to.as_deref(),
+            r.column.as_deref(),
+        )
+    }
+}
+
 pub fn schema(server: &Server, scope: Scope, params: &Params) -> Result<Value, Error> {
     let catalog = &server.catalog;
     let limit = match params.get("limit") {
@@ -169,20 +200,7 @@ pub fn schema(server: &Server, scope: Scope, params: &Params) -> Result<Value, E
     if let Some(years) = period.map(Period::years) {
         reps.retain(|rep| overlaps(&rep.row, years));
     }
-    reps.sort_by(|a, b| {
-        let key = |r: &Rep| {
-            (
-                r.row.variant.is_none(),
-                r.row.variant.clone(),
-                r.row.valid_from.clone(),
-                r.row.valid_to.clone(),
-                r.variable_slug.clone(),
-                r.row.column.clone(),
-                r.row.value_set_version_label.clone(),
-            )
-        };
-        key(a).cmp(&key(b))
-    });
+    reps.sort_by(|a, b| a.page_order().cmp(&b.page_order()));
     // The cursor binds what selects and orders the rows, never `limit`.
     let context = json!([value, period.map(|p| p.to_string()), variant, scope]);
     let context = hex(&Sha256::digest(context.to_string().as_bytes()));
@@ -326,26 +344,14 @@ fn overlaps(row: &SchemaColumn, (lo, hi): (u16, u16)) -> bool {
     }
 }
 
-/// Each variable's first representation in `period` (in `get diff`'s state order:
-/// by the state's column, then the state, then the representation's window and
-/// column), by variable id.
+/// Each variable's first representation in `period` (`Rep::state_order`), by
+/// variable id.
 fn columns_at(reps: &[Rep], period: Period) -> BTreeMap<i64, DiffColumn> {
     let mut found: Vec<&Rep> = reps
         .iter()
         .filter(|r| overlaps(&r.row, period.years()))
         .collect();
-    found.sort_by(|a, b| {
-        let key = |r: &Rep| {
-            (
-                r.state_column.clone(),
-                r.state_id,
-                r.row.valid_from.clone(),
-                r.row.valid_to.clone(),
-                r.row.column.clone(),
-            )
-        };
-        key(a).cmp(&key(b))
-    });
+    found.sort_by(|a, b| a.state_order().cmp(&b.state_order()));
     let mut out = BTreeMap::new();
     for rep in found {
         out.entry(rep.variable_id).or_insert_with(|| DiffColumn {
@@ -366,6 +372,22 @@ fn by_fqid<'a>(columns: impl Iterator<Item = (&'a i64, &'a DiffColumn)>) -> Vec<
     out
 }
 
+/// `slug` names a variant of the register in scope.
+fn require_variant(
+    conn: &Connection,
+    scope: Scope,
+    register_id: i64,
+    slug: &str,
+) -> Result<(), Error> {
+    let sql = format!(
+        "SELECT 1 FROM register_variant rv WHERE rv.register_id = ? AND rv.slug = ? AND {}",
+        held::variant(scope, "rv.register_variant_id")
+    );
+    conn.query_row(&sql, (register_id, slug), |_| Ok(()))
+        .optional()?
+        .ok_or_else(|| refs::not_found(slug))
+}
+
 /// The register's representations in scope, or one variable's, of the variant
 /// `variant` (a slug) when given.
 fn representations(
@@ -375,23 +397,14 @@ fn representations(
     variable_id: Option<i64>,
     variant: Option<&str>,
 ) -> Result<Vec<Rep>, Error> {
-    let in_scope = held::variant(scope, "rv.register_variant_id");
     if let Some(slug) = variant {
-        let sql = format!(
-            "SELECT 1 FROM register_variant rv WHERE rv.register_id = ? AND rv.slug = ? \
-             AND {in_scope}"
-        );
-        if conn
-            .query_row(&sql, (register_id, slug), |_| Ok(()))
-            .optional()?
-            .is_none()
-        {
-            return Err(refs::not_found(slug));
-        }
+        require_variant(conn, scope, register_id, slug)?;
     }
     // A window's own content replaces its state's only where the window is per
     // column, and a window never inherits its state's operational definition
     // (today's `_expand_state_windows`). SCB's `var_id` is today's `_VAR_ID_EXPR`.
+    // Holdings needs no variant predicate here: `held_clip` keeps only mapped
+    // representations, whose variant is therefore held.
     let per_column = |field: &str| {
         format!("CASE WHEN w.column_metadata = 'per_column' THEN w.{field} ELSE vs.{field} END")
     };
@@ -420,7 +433,7 @@ fn representations(
          AND w.delivery_column_name = es.delivery_column_name \
          AND w.valid_from = es.window_valid_from \
          WHERE v.register_id = ?1 AND (?2 IS NULL OR v.variable_id = ?2) \
-         AND (?3 IS NULL OR rv.slug = ?3) AND es.kind != 'base_fallback' AND {in_scope} \
+         AND (?3 IS NULL OR rv.slug = ?3) AND es.kind != 'base_fallback' \
          ORDER BY es.expanded_state_id",
         per_column("data_type"),
         per_column("data_length"),
