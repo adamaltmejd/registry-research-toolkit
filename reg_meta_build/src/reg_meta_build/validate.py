@@ -55,6 +55,7 @@ from typing import TYPE_CHECKING, Literal
 
 from reg_meta.catalog import _decode_panel_entity_key
 from reg_meta.db import classification_succession_as_of_year, open_db
+from reg_meta.errors import RegMetaError
 
 from reg_meta_build._resolved_common import remaining_windows
 from reg_meta_build.db import (
@@ -1288,6 +1289,10 @@ def _check_entity_key_vars_curated(
     provider's entity-key slug can churn and dangle a panel ref, so every provider
     present in the build-db DB is enforced — no provider filter (the set is
     whatever the DB holds, so onboarding a provider can't silently drop it).
+    A variable's ``source_id`` takes its register's native id from the slug dir's
+    register entry for the catalog row's slug path, since a built catalog's
+    ``register_id`` is a surrogate (#1215); a register no entry names fails with
+    ``entity_key_register_unknown``.
 
     FLAVORED extend-db (``flavored=True``, #559): the steward overlay threads its
     own ``slug_dir`` here, and the gate scopes to the STEWARD REGISTERS that dir
@@ -1321,11 +1326,18 @@ def _check_entity_key_vars_curated(
         iter_entity_key_variables,
     )
 
-    # Glob the curated dir once: the curated slug map and (flavored) the steward
-    # register scope both come from the same entry list. Shared with the generator
+    # Glob the curated dir once: the curated slug map and the register native ids
+    # (the steward scope, when flavored) both come from the same entry list. Shared with the generator
     # so gate and generator read the identical basis.
-    curated, scope = _entity_key_curation_basis(slug_dir, flavored=flavored)
-    entity_key_vars = list(iter_entity_key_variables(conn, register_ids=scope))
+    curated, native_ids = _entity_key_curation_basis(slug_dir)
+    try:
+        entity_key_vars = list(
+            iter_entity_key_variables(conn, native_ids, scoped=flavored)
+        )
+    except RegMetaError as exc:
+        result.fail(f"{exc.code}: {exc.message}")
+        result.info(exc.remediation)
+        return
     if not entity_key_vars:
         result.ok("no variant carries an entity key — nothing to curate")
         return
